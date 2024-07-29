@@ -31,7 +31,7 @@ Lastly, I want to make this package fast, and make sure the download doesn't tak
 
 
 ### Planned directory structure:
-
+```
 MATPredict/
 │
 ├── MATPredict/
@@ -57,4 +57,4 @@ MATPredict/
 ├── README.md
 ├── requirements.txt
 └── .gitignore
-
+```

@@ -37,20 +37,25 @@ MATPredict/
 ├── MATPredict/
 │   ├── __init__.py 
 │   ├── data_processing.py
-│   ├── model.py
-│   ├── training.py
 │   ├── prediction.py
+│   ├── main.py
 │   └── utils.py
 │
 ├── tests/
-│   ├── __init__.py
+│   ├── __init__.py 
 │   ├── test_data_processing.py
-│   ├── test_model.py
-│   ├── test_training.py
-│   └── test_prediction.py
+│   ├── test_prediction.py
+│   ├── test_main.py
+│   └── test_utils.py
+│
+├── model_build/
+│   ├── __init__.py
+│   ├── get_MAT.py
+│   ├── model_build.py
+│   ├── get_testset.py
+│   └── viz.py
 │
 ├── examples/
-│   ├── example_training.py
 │   └── example_prediction.py
 │
 ├── setup.py

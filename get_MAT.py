@@ -10,7 +10,9 @@ query = '"Mating-type" OR "mating-type"'
 max_sequences = 50000
 
 # Maximum sequence length
-max_length = 1500
+max_length = 3000
+
+min_length = 500
 
 # Search for sequences
 print("Searching for sequences...")
@@ -51,7 +53,9 @@ for seq_id in id_list:
         # Check the sequence length
         sequence_length = len(record.seq)
         if sequence_length > max_length:
-            print(f"Sequence with ID: {seq_id} exceeds maximum length and was skipped.")
+            #truncate sequence
+            sequence_length = max_length
+            print(f"Sequence with ID: {seq_id} exceeds maximum length and was truncated.")
             continue
 
         # Convert the record to FASTA format

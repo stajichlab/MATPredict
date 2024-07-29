@@ -7,7 +7,7 @@ Entrez.email = "kkell060@ucr.edu"
 query = '"Mating-type" OR "mating-type"'
 
 # Maximum number of sequences to download
-max_sequences = 50000
+max_sequences = 100000
 
 # Maximum sequence length
 max_length = 3000
@@ -53,9 +53,12 @@ for seq_id in id_list:
         # Check the sequence length
         sequence_length = len(record.seq)
         if sequence_length > max_length:
-            #truncate sequence
-            sequence_length = max_length
+            # Truncate sequence
+            record.seq = record.seq[:max_length]
             print(f"Sequence with ID: {seq_id} exceeds maximum length and was truncated.")
+        #skip short sequences
+        if sequence_length < min_length:
+            print(f"Sequence with ID: {seq_id} is too short and was skipped.")
             continue
 
         # Convert the record to FASTA format

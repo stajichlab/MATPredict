@@ -1,9 +1,15 @@
 # MATPredict: prediction of MAT loci in fungi
 
 <div style="text-align: center;">
-  <img src="logo.jpg" alt="Logo" width="600"/>
+  <img src="misc/logo.jpg" alt="Logo" width="500" style="display: block; margin: 0 auto;"/>
 </div>
 
+Framework:
+The premise for this should be develop model MAT locus representation for taxonomic groups.
+Build and use HMMs for specific taxonomic groups
+Syntenic searching with something like [https://github.com/gamcil/cblaster](cblaster). 
+
+Description:
 This repository is dedicated to the development of a tool that can predict MAT loci in fungal genomes via a machine learning approach. No tool has attempted to predict MAT loci in fungi. This is important because not only are MAT loci important for the evolution and sexual recombination of fungi, but their status is often associated with pathogenicity phenotypes in fungi. Understanding the distribution of MAT loci may facilitate pathogen identification and disease management.
 
 ### Preliminary goals: 

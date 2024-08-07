@@ -1,11 +1,16 @@
 ---
 organism: Phycomyces blakesleeanus
   - taxon: k__Fungi; p__Mucoromycota; subphylum__Mucoromycotina; c_Mucoromycetes; o__Mucorales; f__Phycomycetaceae; g__Phycomyces; s__Phycomyces_blakesleeanus
-    loci:
-      - tptA: B0F2G7_PHYBL
-      - sexM: B0F2G8_PHYBL
-      - sexP: A0A078N0N5_9FUNG
-      - rnhA: B0F2G9_PHYBL
+  - MAT type: Plus
+    - tptA: B0F2G7_PHYBL
+    - sexP: A0A078N0N5_9FUNG
+    - rnhA: B0F2G9_PHYBL
+  - MAT type: Minus
+    - accession: EU009461.1
+    - tptA: B0F2G7_PHYBL
+    - sexM: B0F2G8_PHYBL
+    - rnhA: B0F2G9_PHYBL
+
 
 organism: Rhizopus oryzae
   - taxon: k__Fungi; p__Mucoromycota; subphylum__Mucoromycotina; c_Mucoromycetes; o__Mucorales; f__Mucoraceae; g__Rhizopus; s__Rhizopus oryzae

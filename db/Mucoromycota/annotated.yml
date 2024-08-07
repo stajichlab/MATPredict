@@ -14,18 +14,24 @@ organism: Phycomyces blakesleeanus
 
 organism: Rhizopus oryzae
   - taxon: k__Fungi; p__Mucoromycota; subphylum__Mucoromycotina; c_Mucoromycetes; o__Mucorales; f__Mucoraceae; g__Rhizopus; s__Rhizopus oryzae
-    loci:
+    - MAT type: Plus
       - tptA: 
-      - sexM:
       - sexP:
+      - rnhA:
+    - MAT type: Minus
+      - tptA:
+      - sexM:
       - rnhA:
 
 organism: Mucoraceaee sp. AI-2023a
   - taxon: k__Fungi; p__Mucoromycota; subphylum__Mucoromycotina; c_Mucoromycetes; o__Mucorales; f__Mucoraceae; g__Mucoraceae; s__Mucoraceae_sp._AI-2023a
-    loci:
+    - MAT type: Plus
       - algA: WZC35661
       - tptA: WZC35662
-      - sexM:
       - sexP: WZC35663
       - rnhA: WZC35664
-      - glrA: WZC35665.1
+      - glrA: WZC35665
+    - MAT type: Minus
+      - tptA:
+      - sexM:
+      - rnhA:

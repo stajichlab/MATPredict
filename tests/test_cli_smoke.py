@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 
 import duckdb
 import yaml
 
 from MATPredict.__main__ import main
+from MATPredict.db.validate import validate_record
 
 
 def test_help_exits_zero(capsys):
@@ -45,6 +47,28 @@ def _fake_requests_get(monkeypatch, response_text: str):
     monkeypatch.setattr("MATPredict.db.cli.requests.get", _get)
 
 
+def _fake_taxonkit_run(cmd, **kwargs):
+    """Stand-in for subprocess.run(["taxonkit", ...]) — never touch the real binary/taxdump."""
+    return SimpleNamespace(returncode=0, stdout="4837\tk__Fungi;p__Mucoromycota;...;s__Phycomyces_blakesleeanus\n")
+
+
+def _patch_taxonomy_runner(monkeypatch):
+    """Replace validate_record's bound default `taxonomy_runner=subprocess.run` with a fake.
+
+    `_cmd_validate` calls `validate_record(record, ncbi=ncbi, uniprot=uniprot)` with no
+    `taxonomy_runner` argument, so it always falls through to validate.py's default value,
+    which was bound to the real `subprocess.run` function object at module-import time.
+    Monkeypatching `subprocess.run` (globally or via `MATPredict.db.taxonomy.subprocess.run`)
+    has *no effect* here: a function's default argument value is evaluated once, at
+    definition time, and is not re-looked-up on each call — patching the `subprocess`
+    module's `run` attribute afterward does not change what's already stored in
+    `validate_record.__defaults__`. Patching `__defaults__` itself is the only way to
+    intercept this without touching validate.py's public interface; pytest's monkeypatch
+    fixture restores the original tuple automatically at teardown.
+    """
+    monkeypatch.setattr(validate_record, "__defaults__", (_fake_taxonkit_run,))
+
+
 def _write_candidate(tmp_path, phylum: str, record_id: str, validation_status: str) -> Path:
     record = {
         "record_id": record_id,
@@ -71,6 +95,7 @@ def test_validate_forces_needs_review_on_accession_not_resolved(tmp_path, monkey
     monkeypatch.setenv("MATPREDICT_CACHE_DIR", str(tmp_path / "cache"))
     metadata_path = _write_candidate(tmp_path, "Mucoromycota", "rec1", validation_status="accepted")
     _fake_requests_get(monkeypatch, _ESUMMARY_SUPPRESSED)
+    _patch_taxonomy_runner(monkeypatch)
 
     exit_code = main(["curate-db", "validate", "--phylum", "Mucoromycota", "--record-id", "rec1"])
     assert exit_code == 0
@@ -85,6 +110,7 @@ def test_validate_never_un_rejects_a_rejected_record(tmp_path, monkeypatch):
     monkeypatch.setenv("MATPREDICT_CACHE_DIR", str(tmp_path / "cache"))
     metadata_path = _write_candidate(tmp_path, "Mucoromycota", "rec2", validation_status="rejected")
     _fake_requests_get(monkeypatch, _ESUMMARY_SUPPRESSED)
+    _patch_taxonomy_runner(monkeypatch)
 
     exit_code = main(["curate-db", "validate", "--phylum", "Mucoromycota", "--record-id", "rec2"])
     assert exit_code == 0

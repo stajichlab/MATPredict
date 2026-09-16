@@ -1,0 +1,113 @@
+"$schema": "http://json-schema.org/draft-07/schema#"
+title: MATPredict locus metadata record
+type: object
+required: [record_id, record_version, taxonomy, organism, mating_type, locus, genes, evidence, validation, curation]
+properties:
+  record_id: {type: string, pattern: "^[0-9]+_[a-z0-9-]+_[A-Za-z0-9]+_[A-Za-z0-9]+$"}
+  record_version: {type: integer, minimum: 1}
+  taxonomy:
+    type: object
+    required: [taxid, lineage, lineage_resolved_date]
+    properties:
+      taxid: {type: integer}
+      lineage: {type: string}
+      lineage_resolved_date: {type: string, format: date}
+  organism:
+    type: object
+    required: [species, strain]
+    properties:
+      species: {type: string}
+      strain:
+        type: object
+        required: [name, known]
+        properties:
+          name: {type: [string, "null"]}
+          known: {type: boolean}
+          culture_collection_ids: {type: array, items: {type: string}}
+          differs_from_sequenced: {type: boolean}
+  mating_type:
+    type: object
+    required: [locus_name, idiomorphs, system]
+    properties:
+      locus_name: {type: string}
+      idiomorphs: {type: array, items: {type: string}, minItems: 1}
+      system: {enum: [heterothallic, homothallic, pseudohomothallic]}
+  locus:
+    type: object
+    required: [coordinate_provenance, excluded_from_coordinate_benchmark]
+    properties:
+      coordinate_provenance: {enum: [published_explicit, curator_derived, not_available]}
+      excluded_from_coordinate_benchmark: {type: boolean}
+      core:
+        type: object
+        properties:
+          completeness: {enum: [complete, partial, fragmented]}
+          reference_orientation: {type: string}
+          definition_note: {type: string}
+          segments:
+            type: array
+            items:
+              type: object
+              required: [segment_index, sequence_source, start, end]
+              properties:
+                segment_index: {type: integer, minimum: 0}
+                sequence_source:
+                  type: object
+                  required: [type]
+                  properties:
+                    type: {enum: [assembly, insdc_nucleotide, none]}
+                    accession: {type: [string, "null"]}
+                    seq_region: {type: [string, "null"]}
+                start: {type: integer, minimum: 1}
+                end: {type: integer, minimum: 1}
+                contig_edge_distance: {type: [integer, "null"]}
+                sequence_checksum: {type: [string, "null"]}
+      extended_flank: {type: array}
+  genes:
+    type: array
+    items:
+      type: object
+      required: [gene_index, name, role, present]
+      properties:
+        gene_index: {type: integer, minimum: 0}
+        name: {type: string}
+        protein_accession: {type: [string, "null"], pattern: "^(ncbi_protein|uniprotkb):.+"}
+        role: {enum: [core_MAT, flanking_conserved, flanking_variable]}
+        present: {type: boolean}
+        locus_tag: {type: [string, "null"]}
+        segment_index: {type: [integer, "null"]}
+        start: {type: [integer, "null"]}
+        end: {type: [integer, "null"]}
+        strand: {type: [string, "null"], enum: ["+", "-", null]}
+        order_in_locus: {type: [integer, "null"]}
+  evidence:
+    type: object
+    required: [locus_existence, boundaries, idiomorph_assignment]
+    additionalProperties:
+      type: object
+      required: [tier, citations]
+      properties:
+        tier: {type: integer, enum: [1, 2]}
+        experimental_method: {type: [string, "null"]}
+        citations:
+          type: array
+          items:
+            type: object
+            properties:
+              pmid: {type: [string, "null"]}
+              doi: {type: [string, "null"]}
+  validation:
+    type: object
+    required: [status]
+    properties:
+      status: {enum: [accepted, needs_review, rejected]}
+      rejection_reason: {type: [string, "null"]}
+  curation:
+    type: object
+    required: [proposed_by]
+    properties:
+      proposed_by: {type: string}
+      proposal_dedupe_key: {type: [string, "null"]}
+      reviewed_by: {type: [string, "null"]}
+      reviewed_date: {type: [string, "null"], format: date}
+  model_provenance: {type: [object, "null"]}

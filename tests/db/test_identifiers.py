@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from MATPredict.db.identifiers import build_record_id, slugify_strain
 
 
@@ -19,3 +21,8 @@ def test_slugify_unknown_strain_gets_counter():
 def test_build_record_id():
     rid = build_record_id(taxid=4837, strain_slug="nrrl-1555", locus_name="MAT", idiomorph_key="Plus")
     assert rid == "4837_nrrl-1555_MAT_Plus"
+
+
+def test_slugify_known_strain_with_only_punctuation_raises():
+    with pytest.raises(ValueError, match="produced an empty slug"):
+        slugify_strain("---", known=True, existing_slugs=set())

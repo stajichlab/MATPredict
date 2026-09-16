@@ -16,6 +16,8 @@ def slugify_strain(name: str | None, known: bool, existing_slugs: set[str]) -> s
     slug = re.sub(r"\s+", "-", slug)
     slug = re.sub(r"[^a-z0-9-]", "", slug)
     slug = re.sub(r"-{2,}", "-", slug).strip("-")
+    if not slug:
+        raise ValueError(f"strain name '{name}' produced an empty slug")
     return slug
 
 

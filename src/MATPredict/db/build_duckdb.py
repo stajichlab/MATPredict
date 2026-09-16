@@ -19,6 +19,21 @@ def _phylum_from_path(db_root: Path, metadata_path: Path) -> str:
     return parts[1] if parts[0] == "candidates" else parts[0]
 
 
+def _order_or_family_from_path(db_root: Path, metadata_path: Path) -> str | None:
+    """Derive the order/family directory name, or None for a candidate.
+
+    Accepted records live at <db_root>/<Phylum>/<Order>/<record_id>/metadata.yaml
+    (parts = [Phylum, Order, record_id, "metadata.yaml"], so the order/family
+    name is parts[-3]). Candidates live at
+    <db_root>/candidates/<Phylum>/<record_id>/metadata.yaml -- there is no
+    order/family level in that layout at all, so this returns None for them.
+    """
+    parts = metadata_path.relative_to(db_root).parts
+    if parts[0] == "candidates":
+        return None
+    return parts[-3]
+
+
 def _generated_file_paths(record: dict, record_dir: Path) -> tuple[str | None, str | None, str | None]:
     """Compute gff3/gbk/proteins-fasta paths for a record, or (None, None, None).
 
@@ -51,7 +66,7 @@ def build(db_root: Path, out_path: Path) -> None:
     for metadata_path in _find_metadata_files(db_root):
         record = yaml.safe_load(metadata_path.read_text())
         phylum = _phylum_from_path(db_root, metadata_path)
-        order_or_family = metadata_path.relative_to(db_root).parts[-2]
+        order_or_family = _order_or_family_from_path(db_root, metadata_path)
         record_dir = metadata_path.parent
 
         con.execute(

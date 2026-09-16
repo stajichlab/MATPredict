@@ -43,6 +43,48 @@ def test_build_loads_all_records(tmp_path):
     con.close()
 
 
+def test_order_or_family_is_the_order_directory_not_the_record_id(tmp_path):
+    """Regression test: order_or_family was previously computed as parts[-2],
+    which for an accepted record's path (Phylum/Order/record_id/metadata.yaml)
+    gives the record_id directory itself, not the order/family name."""
+    record_dir = tmp_path / "Mucoromycota" / "Mucorales" / RECORD["record_id"]
+    record_dir.mkdir(parents=True)
+    (record_dir / "metadata.yaml").write_text(yaml.safe_dump(RECORD))
+
+    out_path = tmp_path / "matpredict.duckdb"
+    build(db_root=tmp_path, out_path=out_path)
+
+    con = duckdb.connect(str(out_path))
+    row = con.execute(
+        "SELECT order_or_family FROM locus_record WHERE record_id = ?", [RECORD["record_id"]]
+    ).fetchone()
+    con.close()
+
+    assert row == ("Mucorales",)
+
+
+def test_order_or_family_is_null_for_a_candidate(tmp_path):
+    """Candidates live at candidates/<Phylum>/<record_id>/ with no order/family
+    level at all, so order_or_family should be NULL, not a fabricated value."""
+    record = copy.deepcopy(RECORD)
+    record["record_id"] = "4837_nrrl-1555_MAT_Plus_candidate2"
+    record["validation"] = {"status": "needs_review", "rejection_reason": None}
+    record_dir = tmp_path / "candidates" / "Mucoromycota" / record["record_id"]
+    record_dir.mkdir(parents=True)
+    (record_dir / "metadata.yaml").write_text(yaml.safe_dump(record))
+
+    out_path = tmp_path / "matpredict.duckdb"
+    build(db_root=tmp_path, out_path=out_path)
+
+    con = duckdb.connect(str(out_path))
+    row = con.execute(
+        "SELECT order_or_family FROM locus_record WHERE record_id = ?", [record["record_id"]]
+    ).fetchone()
+    con.close()
+
+    assert row == (None,)
+
+
 def test_accepted_record_with_generated_files_gets_real_paths(tmp_path):
     record = copy.deepcopy(RECORD)
     record["record_id"] = "4837_nrrl-1555_MAT_Plus_files"

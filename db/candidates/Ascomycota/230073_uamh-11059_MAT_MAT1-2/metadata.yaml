@@ -1,0 +1,133 @@
+record_id: 230073_uamh-11059_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 230073
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Ophiostomatales;f__Ophiostomataceae;g__Ophiostoma;s__Ophiostoma_montium
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Ophiostoma montium
+  strain:
+    name: UAMH 11059
+    known: true
+    culture_collection_ids:
+    - UAMH 11059
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: SLA2->truncated_MAT1-1-1->MAT1-2-1
+    definition_note: 'Paired MAT1-2 idiomorph to 230073_uamh-1363_MAT_MAT1-1 (different
+      isolate, same species -- expected for a heterothallic species, each isolate
+      carries only one idiomorph). Central finding of Tsui et al. 2013: this MAT1-2
+      idiomorph contains a TRUNCATED MAT1-1-1 remnant (alpha-box domain deleted, gene_index
+      1 below) immediately upstream of the functional MAT1-2-1 gene, attributed to
+      an ancient unequal recombination event. The truncated gene is included here
+      as present:true with role core_MAT (it has a real annotated CDS in GenBank,
+      AGH03258.1) but is almost certainly non-functional as a transcription factor
+      per the paper''s analysis -- this is a genuine biological finding to preserve
+      in the record, not a data-quality issue with this curation.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JX402994.1
+        seq_region: JX402994.1
+      start: 1
+      end: 4803
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: SLA2
+  protein_accession: ncbi_protein:AGH03257.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 344
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:AGH03258.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1678
+  end: 2352
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AGH03259.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3572
+  end: 4540
+  strand: +
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: genome/PCR-based cloning and sequencing of the MAT1-2 idiomorph
+      across 8 Ophiostomatales species
+    citations:
+    - pmid: '23450093'
+      doi: 10.1534/g3.112.004986
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing (Tsui et al. 2013); coordinates
+      independently reconfirmed by the curator via NCBI efetch
+    citations:
+    - pmid: '23450093'
+      doi: 10.1534/g3.112.004986
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: HMG-domain identity of MAT1-2-1; dotplot comparison confirming
+      truncated MAT1-1-1 origin against the MAT1-1 idiomorph
+    citations:
+    - pmid: '23450093'
+      doi: 10.1534/g3.112.004986
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JX402994.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 23450093|230073|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

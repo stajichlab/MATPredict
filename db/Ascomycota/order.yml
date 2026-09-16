@@ -5,6 +5,8 @@ loci:
     idiomorph_values: ["MAT1-1", "MAT1-2"]
     genes:
       - {name: MAT1-1-1, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: MAT1-1-2, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: MAT1-1-3, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
       - {name: MAT1-2-1, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
       - {name: APN2, role: flanking_conserved}
       - {name: SLA2, role: flanking_conserved}

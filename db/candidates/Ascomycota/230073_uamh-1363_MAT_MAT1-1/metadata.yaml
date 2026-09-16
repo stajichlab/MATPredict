@@ -1,0 +1,149 @@
+record_id: 230073_uamh-1363_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 230073
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Ophiostomatales;f__Ophiostomataceae;g__Ophiostoma;s__Ophiostoma_montium
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Ophiostoma montium
+  strain:
+    name: UAMH 1363
+    known: true
+    culture_collection_ids:
+    - UAMH 1363
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: SLA2->MAT1-1-1->MAT1-1-2->MAT1-1-3
+    definition_note: 'Uses the existing Pezizomycotina "MAT" locus_name (idiomorphs
+      MAT1-1/MAT1-2). Added MAT1-1-2 and MAT1-1-3 to order.yml''s gene list for this
+      locus (previously only MAT1-1-1/MAT1-2-1 were listed) since this species (like
+      Neurospora, Podospora, Schizothecium, and others in Sordariales) carries all
+      three MAT1-1 genes. This is one of eight Ophiostomatales species with identical
+      MAT gene organization reported by Tsui et al. 2013; O. montium was chosen over
+      the CSV''s headline species (Grosmannia clavigera) because this specific accession
+      (JX402993.1) has a complete, directly fetchable GenBank CDS annotation for all
+      four genes on one contiguous 6814 bp segment, whereas no single clean per-locus
+      accession for G. clavigera itself was found among the accessions given in the
+      source data.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JX402993.1
+        seq_region: JX402993.1
+      start: 1
+      end: 6814
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: SLA2
+  protein_accession: ncbi_protein:AGH03253.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 345
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:AGH03254.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1680
+  end: 3873
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: MAT1-1-2
+  protein_accession: ncbi_protein:AGH03255.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4281
+  end: 5489
+  strand: '-'
+  order_in_locus: 2
+- gene_index: 3
+  name: MAT1-1-3
+  protein_accession: ncbi_protein:AGH03256.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 6074
+  end: 6797
+  strand: +
+  order_in_locus: 3
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: genome/PCR-based cloning and sequencing of the MAT1-1 idiomorph
+      across 8 Ophiostomatales species
+    citations:
+    - pmid: '23450093'
+      doi: 10.1534/g3.112.004986
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing (Tsui et al. 2013); coordinates
+      independently reconfirmed by the curator via NCBI efetch
+    citations:
+    - pmid: '23450093'
+      doi: 10.1534/g3.112.004986
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: gene identity/domain analysis (alpha-box in MAT1-1-1); dotplot
+      comparison against the MAT1-2 idiomorph
+    citations:
+    - pmid: '23450093'
+      doi: 10.1534/g3.112.004986
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JX402993.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 23450093|230073|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

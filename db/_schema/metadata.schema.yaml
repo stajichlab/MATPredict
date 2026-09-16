@@ -3,7 +3,7 @@ title: MATPredict locus metadata record
 type: object
 required: [record_id, record_version, taxonomy, organism, mating_type, locus, genes, evidence, validation, curation]
 properties:
-  record_id: {type: string, pattern: "^[0-9]+_[a-z0-9-]+_[A-Za-z0-9]+_[A-Za-z0-9]+$"}
+  record_id: {type: string, pattern: "^[0-9]+_[a-z0-9-]+_[A-Za-z0-9-]+_[A-Za-z0-9-]+$"}
   record_version: {type: integer, minimum: 1}
   taxonomy:
     type: object

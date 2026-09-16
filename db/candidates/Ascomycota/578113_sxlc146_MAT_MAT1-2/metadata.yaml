@@ -1,0 +1,167 @@
+record_id: 578113_sxlc146_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 578113
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Diaporthales;f__Cytosporaceae;g__Cytospora;s__Cytospora_mali
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Cytospora mali
+  strain:
+    name: SXLC146
+    known: true
+    culture_collection_ids:
+    - SXLC146
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: SLA2->MAT1-2-1->APN2->COX13->MAT1-1-2
+    definition_note: 'Source literature (Yin et al. 2017) refers to this species as
+      "Valsa mali" (its historical/anamorph name); NCBI taxonomy currently resolves
+      the same organism as Cytospora mali (taxid 578113) -- both names refer to the
+      same fungus, this record uses NCBI''s current taxonomic name. Unconventional
+      locus structure: APN2 and COX13, normally canonical FLANKING genes bounding
+      the MAT locus across Pezizomycotina, are here captured INSIDE the MAT1-2 idiomorph
+      itself (between MAT1-2-1 and a MAT1-1-2 remnant), likely via intrachromosomal
+      rearrangement per the source paper. Retained role: flanking_conserved for APN2/COX13
+      (same gene identity as the canonical flanking case elsewhere in Pezizomycotina)
+      despite their unusual position here -- the "role" vocabulary describes gene
+      identity/function, not physical position, and order_in_locus below reflects
+      the true unusual order. MAT1-1-2 present here is a co-located remnant from the
+      opposite idiomorph (a recombination byproduct, per the paper), analogous to
+      the truncated MAT1-1-1 seen in the paired Ophiostomatales records (230073_uamh-11059_MAT_MAT1-2)
+      -- a recurring pattern across this session''s Pezizomycotina curation.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KX349090.1
+        seq_region: KX349090.1
+      start: 1
+      end: 20053
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: SLA2
+  protein_accession: ncbi_protein:AQT26489.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 429
+  end: 4064
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AQT26490.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8389
+  end: 9402
+  strand: +
+  order_in_locus: 1
+- gene_index: 2
+  name: APN2
+  protein_accession: ncbi_protein:AQT26491.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 10027
+  end: 12250
+  strand: '-'
+  order_in_locus: 2
+- gene_index: 3
+  name: COX13
+  protein_accession: ncbi_protein:AQT26492.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 12954
+  end: 13846
+  strand: +
+  order_in_locus: 3
+- gene_index: 4
+  name: MAT1-1-2
+  protein_accession: ncbi_protein:AQT26493.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 14568
+  end: 15976
+  strand: '-'
+  order_in_locus: 4
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: genome sequencing and cloning of the MAT1-2 idiomorph region
+    citations:
+    - pmid: '28228472'
+      doi: 10.1534/g3.116.037853
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing (Yin et al. 2017); coordinates
+      independently reconfirmed by the curator via NCBI efetch
+    citations:
+    - pmid: '28228472'
+      doi: 10.1534/g3.116.037853
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: HMG-domain identity of MAT1-2-1; isolate mating-type PCR
+      genotyping
+    citations:
+    - pmid: '28228472'
+      doi: 10.1534/g3.116.037853
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: KX349090.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 28228472|578113|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -17,3 +17,11 @@ loci:
       - {name: matMi, role: core_MAT, present_in_idiomorphs: ["M"]}
       - {name: matPc, role: core_MAT, present_in_idiomorphs: ["P"]}
       - {name: matPi, role: core_MAT, present_in_idiomorphs: ["P"]}
+  - locus_name: "mat1"
+    vocabulary_type: "enum"
+    idiomorph_values: ["M", "P"]
+    genes:
+      - {name: mat1-Mc, role: core_MAT, present_in_idiomorphs: ["M"]}
+      - {name: mat1-Mi, role: core_MAT, present_in_idiomorphs: ["M"]}
+      - {name: mat1-Pc, role: core_MAT, present_in_idiomorphs: ["P"]}
+      - {name: mat1-Pi, role: core_MAT, present_in_idiomorphs: ["P"]}

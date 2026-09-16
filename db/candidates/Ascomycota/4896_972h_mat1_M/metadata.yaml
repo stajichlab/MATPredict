@@ -1,0 +1,128 @@
+record_id: 4896_972h_mat1_M
+record_version: 1
+taxonomy:
+  taxid: 4896
+  lineage: k__Fungi;p__Ascomycota;subphylum__Taphrinomycotina;c__Schizosaccharomycetes;o__Schizosaccharomycetales;f__Schizosaccharomycetaceae;g__Schizosaccharomyces;s__Schizosaccharomyces_pombe
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Schizosaccharomyces pombe
+  strain:
+    name: 972h-
+    known: true
+    culture_collection_ids:
+    - 972 h-
+    differs_from_sequenced: false
+mating_type:
+  locus_name: mat1
+  idiomorphs:
+  - M
+  system: pseudohomothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: mat1-Mi->mat1-Mc
+    definition_note: 'S. pombe determines mating type by which allele (P or M) occupies
+      the single EXPRESSED mat1 locus; this is switched during mitotic growth by gene
+      conversion from one of two nearby SILENT donor cassettes (mat2-P, mat3-M), each
+      ~15kb away on the same chromosome (Kelly et al. 1988). This record captures
+      ONLY the active mat1 locus and its two genes for the standard laboratory reference
+      strain 972h- (RefSeq assembly, chromosome NC_003423.3), which has mat2-P physically
+      deleted -- a fixed, non-switching derivative used as the community reference
+      genome, carrying the mat1-M allele. mat2-P/mat3-M (the silent donor cassettes)
+      are NOT represented in this record; they are a distinct genomic concept (unexpressed
+      template sequences, not an active MAT locus) and are deferred to a follow-up
+      record/schema decision per user direction (2026-09-16: "we should at least capture
+      mat1" as the immediate priority). system is set to "pseudohomothallic" rather
+      than "heterothallic" because this genome, while fixed at mat1-M, represents
+      a species whose wild-type (h90) strains switch mating type via this donor-cassette
+      mechanism -- not a permanently fixed heterothallic species, and not simultaneous/primary
+      homothallism (both genes always present) like the Pneumocystis/Taphrina "PM"
+      locus records. Coordinates independently confirmed against RefSeq''s own GenBank
+      annotation via NCBI efetch.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NC_003423.3
+        seq_region: NC_003423.3
+      start: 2114220
+      end: 2115028
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: mat1-Mi
+  protein_accession: ncbi_protein:NP_001018808.1
+  role: core_MAT
+  present: true
+  locus_tag: SPBC23G7.17C
+  segment_index: 0
+  start: 2114220
+  end: 2114348
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: mat1-Mc
+  protein_accession: ncbi_protein:NP_595867.1
+  role: core_MAT
+  present: true
+  locus_tag: SPBC23G7.09
+  segment_index: 0
+  start: 2114483
+  end: 2115028
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: 'molecular genetics: sequencing and mutational analysis of
+      the mat1/mat2/mat3 region; Mc/Mi shown necessary/sufficient for h- mating type
+      by frameshift/opal mutant complementation'
+    citations:
+    - pmid: '2900761'
+      doi: 10.1002/j.1460-2075.1988.tb02973.x
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing (Kelly et al. 1988); coordinates
+      on the modern reference assembly independently reconfirmed by the curator via
+      NCBI efetch
+    citations:
+    - pmid: '2900761'
+      doi: 10.1002/j.1460-2075.1988.tb02973.x
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'genetic cell-type determination assay: Mc alone confers
+      h- mating type in mutant complementation'
+    citations:
+    - pmid: '2900761'
+      doi: 10.1002/j.1460-2075.1988.tb02973.x
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NC_003423.3
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 2900761|4896|mat1|M
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

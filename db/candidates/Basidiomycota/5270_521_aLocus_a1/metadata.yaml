@@ -22,91 +22,126 @@ locus:
   excluded_from_coordinate_benchmark: false
   core:
     completeness: complete
-    reference_orientation: pra->mfa/rba
-    definition_note: 'Mycosarcoma maydis (= Ustilago maydis, older name still used
-      throughout the primary literature) has two unlinked tetrapolar loci: this record
-      covers only the a locus (pheromone/receptor); the b locus (bE/bW homeodomain
-      pair) is a separate record (5270_521_b_locus_b1). Reference strain 521 has genotype
-      a1 b1 (Bolker, Urban, Kahmann 1992; Gillissen et al. 1992). RefSeq''s own annotation
-      of this genome names the two genes at this locus "Pra1" (product: "a2-pheromone
-      receptor Pra1") and "Rba1" (product: "a1-mating type protein Rba1") -- a naming
-      inconsistency worth flagging: despite the "Pra1" product description literally
-      saying "a2", this gene resides in the a1 genotype reference strain''s genome,
-      and "Rba1" is not the classical "mfa" pheromone-precursor name used in the review
-      literature (Bolker et al. 1992; Spellig et al. 1994) for the a locus''s other
-      core gene. This may reflect legacy/inconsistent gene symbol assignment in RefSeq''s
-      annotation pipeline rather than a real second a2 gene present in an a1 genome;
-      a human reviewer familiar with the current U. maydis gene nomenclature (e.g.
-      MycoCosm/PomBase-style curation) should confirm whether "Rba1" is functionally
-      the mfa1 pheromone precursor before this record is relied upon for anything
-      beyond general locus/coordinate reference. Coordinates and protein accessions
-      were independently verified directly against GenBank via NCBI efetch, not inferred
-      from gene symbols alone.
+    reference_orientation: mfa1->pra1->rba1
+    definition_note: 'REVISED (2026-09-16): this record originally used the modern
+      whole-genome RefSeq assembly (NC_026482.1), which only annotates two genes at
+      this position ("Pra1"/"Rba1") and is missing mfa1 entirely -- confirmed by direct
+      NCBI Gene search (zero mfa1 records for this species) and by inspecting the
+      assembly''s own feature table in this exact region. mfa1''s real product is
+      only 41 amino acids; short pheromone-precursor ORFs like this are a known blind
+      spot for automated whole-genome gene-calling pipelines. The correct, complete
+      source is the original targeted locus deposit, GenBank U37795 (6343 bp, submitted
+      by M. Urban, Institut fur Genetik und Mikrobiologie der Universitat Munchen,
+      1995), which properly annotates all three a1-locus genes: mfa1 (lipopeptide
+      mating factor precursor), pra1 (7-transmembrane pheromone receptor), and rba1
+      (a1-mating-type regulatory protein). All three genes and their coordinates below
+      are read directly from U37795''s own feature table via NCBI efetch.
+
+      A user independently spotted this gap by pointing directly at U37795 and asking
+      whether rba1 was present in the locus this curator had used -- it was not (the
+      modern-assembly-based draft had silently relabeled the "Rba1" gene as "mfa"
+      without verifying the identity, which was incorrect: Rba1 is a real, distinct
+      third gene, not the pheromone precursor). This correction replaces that mislabeled
+      draft entirely.
+
+      rba1''s exact functional role is less certain than mfa1/pra1''s: Urban, Kahmann
+      & Bolker 1996 describe "two additional genes" in the a2 allele context and speculate
+      they may affect mitochondrial inheritance, rather than being direct mating-identity
+      determinants -- rba1 is included here with role flanking_variable (not core_MAT)
+      for this reason, distinct from mfa1/pra1, which the primary 1992 paper directly
+      demonstrates are "necessary and sufficient" for a-locus mating identity via
+      mutant complementation. The modern genome''s "a2-pheromone receptor Pra1" product
+      description (despite this being an a1 strain) is very likely a legacy/copy-paste
+      annotation artifact in RefSeq''s pipeline, not evidence of actual a2 content
+      at this position -- U37795''s own gene naming (mfa1/pra1/rba1, all "1"-suffixed,
+      consistent with the a1 allele) and this strain''s documented a1 genotype both
+      support that reading, but this note records the discrepancy rather than silently
+      resolving it.
 
       '
     segments:
     - segment_index: 0
       sequence_source:
         type: insdc_nucleotide
-        accession: NC_026482.1
-        seq_region: NC_026482.1
-      start: 1025468
-      end: 1028133
+        accession: U37795.1
+        seq_region: U37795.1
+      start: 1
+      end: 6343
       contig_edge_distance: null
       sequence_checksum: null
   extended_flank: []
 genes:
 - gene_index: 0
-  name: pra
-  protein_accession: ncbi_protein:XP_011388683.1
+  name: mfa1
+  protein_accession: ncbi_protein:AAA99765.1
   role: core_MAT
   present: true
-  locus_tag: UMAG_02383
+  locus_tag: null
   segment_index: 0
-  start: 1025468
-  end: 1026778
+  start: 1319
+  end: 1856
   strand: '-'
   order_in_locus: 0
 - gene_index: 1
-  name: mfa
-  protein_accession: ncbi_protein:XP_011388684.1
+  name: pra1
+  protein_accession: ncbi_protein:AAA99766.1
   role: core_MAT
   present: true
-  locus_tag: UMAG_02384
+  locus_tag: null
   segment_index: 0
-  start: 1027491
-  end: 1028133
+  start: 3604
+  end: 4914
   strand: '-'
   order_in_locus: 1
+- gene_index: 2
+  name: rba1
+  protein_accession: ncbi_protein:AAA99767.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5505
+  end: 6272
+  strand: '-'
+  order_in_locus: 2
 evidence:
   locus_existence:
     tier: 1
-    experimental_method: molecular cloning and genetic characterization of the a mating
-      type locus; functional analysis of pheromone/receptor cell signaling components
+    experimental_method: 'Molecular cloning and functional dissection of the a mating
+      type locus: mutant/complementation analysis demonstrating mfa1 (pheromone precursor)
+      and pra1 (pheromone receptor) are necessary and sufficient for a-locus mating
+      identity.
+
+      '
     citations:
-    - pmid: null
+    - pmid: '1310895'
       doi: 10.1016/0092-8674(92)90182-c
   boundaries:
     tier: 1
-    experimental_method: complete locus sequencing (reference genome strain 521);
-      coordinates independently reconfirmed by the curator via NCBI efetch against
-      NC_026482.1
+    experimental_method: 'Complete locus sequencing and sequence comparison between
+      a1 and a2 alleles, including characterization of the rba1 gene and remnant pheromone-gene
+      sequence in a2 (Urban, Kahmann & Bolker 1996). Coordinates independently reconfirmed
+      by the curator via NCBI efetch against U37795.1.
+
+      '
     citations:
-    - pmid: null
+    - pmid: '1310895'
       doi: 10.1016/0092-8674(92)90182-c
+    - pmid: '8602158'
+      doi: 10.1007/BF02174029
   idiomorph_assignment:
     tier: 1
     experimental_method: reference strain 521 documented genotype (a1 b1) in the primary
       literature
     citations:
-    - pmid: null
+    - pmid: '1310895'
       doi: 10.1016/0092-8674(92)90182-c
 validation:
   status: needs_review
   rejection_reason: null
   accession_resolved: true
   accession_resolved_date: null
-  accession_resolved_version: NC_026482.1
+  accession_resolved_version: U37795.1
   sequence_match:
     status: pass
     per_gene:
@@ -118,11 +153,15 @@ validation:
       percent_identity: 100.0
       coverage: 100.0
       status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     notes: ''
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search
-  proposal_dedupe_key: 10.1016/0092-8674(92)90182-c|5270|aLocus|a1
+  proposal_dedupe_key: 1310895|5270|aLocus|a1
   reviewed_by: null
   reviewed_date: null
 model_provenance: null

@@ -53,8 +53,9 @@ loci:
     vocabulary_type: "pattern"
     idiomorph_pattern: "^a[0-9]+$"
     genes:
-      - {name: mfa, role: core_MAT}
-      - {name: pra, role: core_MAT}
+      - {name: mfa1, role: core_MAT}
+      - {name: pra1, role: core_MAT}
+      - {name: rba1, role: flanking_variable}
   - locus_name: "bLocus"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^b[0-9]+$"

@@ -1,0 +1,137 @@
+record_id: 4932_s288c_MATsc_MATalpha
+record_version: 1
+taxonomy:
+  taxid: 4932
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Saccharomycetaceae;g__Saccharomyces;s__Saccharomyces_cerevisiae
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Saccharomyces cerevisiae
+  strain:
+    name: S288C
+    known: true
+    culture_collection_ids:
+    - S288C
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATsc
+  idiomorphs:
+  - MATalpha
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: MATALPHA2->MATALPHA1
+    definition_note: 'Uses a distinct locus_name ("MATsc") from the existing Pezizomycotina
+      "MAT" (MAT1-1/MAT1-2), Taphrinomycotina "PM" (M/P), and Schizosaccharomyces
+      "mat1"/"mat2"/"mat3" entries, since S. cerevisiae''s MATa1/MATalpha1/MATalpha2
+      gene set is not homologous to any of those systems -- only functionally analogous
+      (see user architectural guidance this session: Saccharomycotina/Taphrinomycotina/
+      Pezizomycotina MAT genes are non-homologous across subphyla). S. cerevisiae
+      determines cell type via a single active MAT locus on chromosome III, with two
+      permanently silenced donor cassettes (HMLalpha, HMRa) elsewhere on the same
+      chromosome that supply template sequence during HO-endonuclease-triggered switching
+      (Astell et al. 1981; Kostriken et al. 1983; Haber 2012). "system" is set to
+      "heterothallic" for this specific genome snapshot (S288C is fixed MATalpha,
+      the standard non-switching lab reference build); this does not capture the species''
+      switching capacity in wild isolates, matching how the parallel S. pombe records
+      (4896_972h_mat1_M) handle the same conceptual issue. The S288C reference genome,
+      being MATalpha, has no MATa gene models -- see the paired-locus gap note in
+      the report submitted alongside this batch; a MATa record was not drafted in
+      this pass because no independently-reconfirmed modern coordinate source was
+      found for a MATa-carrying strain''s genome build (the original 1981 MATa sequence
+      exists in the literature/historical GenBank records, e.g. V01312.1, but was
+      not independently re-verified to modern coordinate/protein-accession standards
+      in this session -- flagged as a gap for a follow-up pass rather than filled
+      with unverified data). The HML/HMR silent donor cassettes are likewise deliberately
+      not represented here, following this session''s established pattern of capturing
+      the active locus first and deferring silent/donor loci.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NC_001135.5
+        seq_region: NC_001135.5
+      start: 199547
+      end: 200970
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MATALPHA2
+  protein_accession: ncbi_protein:NP_009868.3
+  role: core_MAT
+  present: true
+  locus_tag: YCR039C
+  segment_index: 0
+  start: 199547
+  end: 200179
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: MATALPHA1
+  protein_accession: ncbi_protein:NP_009869.3
+  role: core_MAT
+  present: true
+  locus_tag: YCR040W
+  segment_index: 0
+  start: 200443
+  end: 200970
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: complete DNA sequencing of the MAT locus and HMLalpha silent
+      cassette
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+  boundaries:
+    tier: 1
+    experimental_method: 'Complete locus sequencing (Astell et al. 1981). Coordinates
+      on the modern S288C reference assembly independently reconfirmed by the curator
+      via NCBI efetch against NC_001135.5.
+
+      '
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: genetic/molecular characterization of MATalpha vs MATa cell
+      identity; HO-endonuclease switching mechanism
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+    - pmid: null
+      doi: 10.1016/0092-8674(83)90219-2
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NC_001135.5
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 7034964|4932|MATsc|MATalpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

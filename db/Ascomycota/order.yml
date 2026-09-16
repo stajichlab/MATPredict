@@ -37,3 +37,18 @@ loci:
     genes:
       - {name: matMc, role: core_MAT, present_in_idiomorphs: ["M"]}
       - {name: matMi, role: core_MAT, present_in_idiomorphs: ["M"]}
+  - locus_name: "MATsc"
+    vocabulary_type: "enum"
+    idiomorph_values: ["MATalpha", "MATa"]
+    genes:
+      - {name: MATALPHA1, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      - {name: MATALPHA2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      - {name: MATA1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      - {name: MATA2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+  - locus_name: "MTL"
+    vocabulary_type: "enum"
+    idiomorph_values: ["A", "alpha"]
+    genes:
+      - {name: MTLA1, role: core_MAT, present_in_idiomorphs: ["A"]}
+      - {name: MTLA2, role: core_MAT, present_in_idiomorphs: ["A"]}
+      - {name: MTLalpha1, role: core_MAT, present_in_idiomorphs: ["alpha"]}

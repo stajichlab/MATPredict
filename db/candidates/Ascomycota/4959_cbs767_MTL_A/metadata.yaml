@@ -1,0 +1,133 @@
+record_id: 4959_cbs767_MTL_A
+record_version: 1
+taxonomy:
+  taxid: 4959
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Debaryomycetaceae;g__Debaryomyces;s__Debaryomyces_hansenii
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Debaryomyces hansenii
+  strain:
+    name: CBS767
+    known: true
+    culture_collection_ids:
+    - CBS767
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - A
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MTLA1->MTLA2
+    definition_note: 'D. hansenii''s reference genome (strain CBS767) carries only
+      the "A" gene configuration (MTLA1, MTLA2) at this locus; no MTLalpha1 gene is
+      present in this strain''s assembly. No dedicated primary MTL-locus cloning/characterization
+      paper for D. hansenii was independently located in this curation pass -- gene
+      identity and coordinates are instead sourced from this species'' inclusion in
+      the 4-species comparative hemiascomycete genome paper (Dujon et al. 2004), cross-checked
+      directly against this assembly''s own NCBI Gene/RefSeq annotation via efetch.
+      Per the literature synthesis this candidate was drafted from, whether D. hansenii
+      is truly homothallic (both A- and alpha-type genes present somewhere in the
+      genome, with expression epigenetically restricted to one type per cell -- the
+      "primary homothallic, contiguous" model proposed for this genus) or effectively
+      heterothallic-by-genome- content (this strain''s genome simply lacks the alpha
+      genes outright) is an OPEN, UNRESOLVED question in the field -- this record''s
+      "system: heterothallic" reflects only what is directly observable in this specific
+      strain''s sequenced genome (A genes present, no alpha genes found), not a settled
+      classification of the species. completeness is "partial" for the same reason:
+      whether this is the complete gene complement for this species'' mating-type
+      biology, or only half of a larger homothallic locus not captured in this genome
+      build, is unresolved.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NC_006047.2
+        seq_region: NC_006047.2
+      start: 1589598
+      end: 1591345
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MTLA1
+  protein_accession: ncbi_protein:XP_460135.2
+  role: core_MAT
+  present: true
+  locus_tag: DEHA2E19118g
+  segment_index: 0
+  start: 1589598
+  end: 1590217
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: MTLA2
+  protein_accession: ncbi_protein:XP_460137.2
+  role: core_MAT
+  present: true
+  locus_tag: DEHA2E19140g
+  segment_index: 0
+  start: 1590509
+  end: 1591345
+  strand: '-'
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: whole-genome sequencing and comparative annotation across
+      4 hemiascomycete species
+    citations:
+    - pmid: '15229592'
+      doi: 10.1038/nature02579
+  boundaries:
+    tier: 1
+    experimental_method: 'Gene identity from genome sequencing/annotation (Dujon et
+      al. 2004); exact coordinates on this specific assembly independently reconfirmed
+      by the curator via NCBI efetch against NC_006047.2. No dedicated MTL-locus functional
+      characterization paper exists for this species (flagged as an open gap by the
+      source literature synthesis) -- boundaries evidence rests on genome annotation,
+      not a targeted locus-mapping study.
+
+      '
+    citations:
+    - pmid: '15229592'
+      doi: 10.1038/nature02579
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: homology-based gene naming (MTLA1/MTLA2, weak similarity
+      to S. cerevisiae a1/C. albicans a2) in genome annotation
+    citations:
+    - pmid: '15229592'
+      doi: 10.1038/nature02579
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NC_006047.2
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 15229592|4959|MTL|A
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

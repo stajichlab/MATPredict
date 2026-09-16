@@ -37,12 +37,17 @@ locus:
       other three contigs were deliberately excluded as likely unrelated paralogous
       loci elsewhere in the genome, not confirmed as part of this specific B43 specificity
       module. This cluster also contains a gene annotated "Pheromone Phb2.2 B44" immediately
-      adjacent to the B43 gene; whether that reflects two linked specificity sub-modules
-      or a naming artifact from the gene family''s evolutionary history was not resolved
-      here and would need the primary literature''s own locus maps to confirm. completeness
-      is "partial" to reflect this real uncertainty about the locus''s internal substructure,
-      not a doubt about the individual gene coordinates (which were verified directly
-      against GenBank).
+      adjacent to the B43 gene. Per user review (J. Stajich, 2026-09-16, domain expert
+      judgment, pending a book-chapter reference to be added later): PR/B loci in
+      basidiomycetes routinely carry duplicated pheromone/receptor gene copies, and
+      finding one-to-many gene copies clustered in adjacent/nearby contig space is
+      sufficient to define a B locus for this database''s purposes -- the co-occurrence
+      of both B43 and B44 pheromone genes in one genome is itself consistent with
+      known B-locus complexity in fungi, not a sign of misassignment. This judgment
+      upgraded boundaries evidence below from tier 2 to tier 1. completeness remains
+      "partial" only because the individual gene roster is not claimed to be the full
+      B-locus gene complement, not because the cluster''s validity as a B locus is
+      in doubt.
 
       '
     segments:
@@ -158,14 +163,14 @@ evidence:
     - pmid: '15879506'
       doi: 10.1534/genetics.105.040774
   boundaries:
-    tier: 2
-    experimental_method: 'Boundaries for this specific record are curator-derived
-      by selecting one contig cluster from a genome-wide pheromone/receptor annotation
-      search, on the basis of one gene''s explicit "B43" label -- not directly confirmed
-      against the primary literature''s own reported B43 locus map. Tier 2 (not tier
-      1) reflects this real, documented uncertainty about whether the full extent
-      and exact composition of this cluster matches the historically characterized
-      B43 locus. See locus.core.definition_note.
+    tier: 1
+    experimental_method: 'Boundaries derived by selecting one contig cluster from
+      a genome-wide pheromone/receptor annotation search, on the basis of one gene''s
+      explicit "B43" label. Upgraded from an initial tier-2 assessment to tier 1 per
+      domain-expert review (J. Stajich, 2026-09-16): PR-locus gene duplication and
+      multi-copy clustering (including the co-present B43/B44 pheromone genes here)
+      is an established, expected feature of basidiomycete B loci, not evidence against
+      this cluster''s validity. See locus.core.definition_note.
 
       '
     citations:
@@ -179,7 +184,7 @@ evidence:
     - pmid: '9539426'
       doi: 10.1093/genetics/148.3.1081
 validation:
-  status: needs_review
+  status: accepted
   rejection_reason: null
   accession_resolved: null
   accession_resolved_date: null

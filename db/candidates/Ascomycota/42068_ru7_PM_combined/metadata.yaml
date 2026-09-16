@@ -1,0 +1,138 @@
+record_id: 42068_ru7_PM_combined
+record_version: 1
+taxonomy:
+  taxid: 42068
+  lineage: k__Fungi;p__Ascomycota;subphylum__Taphrinomycotina;c__Pneumocystidomycetes;o__Pneumocystidales;f__Pneumocystidaceae;g__Pneumocystis;s__Pneumocystis_jirovecii
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Pneumocystis jirovecii
+  strain:
+    name: RU7
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: PM
+  idiomorphs:
+  - M
+  - P
+  system: homothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: matPi->matMc->matMi
+    definition_note: 'Pneumocystis species are obligate primary homothalls: a single
+      fused locus carries both M-class (matMc, matMi) and P-class (matPi; matPc is
+      absent/lost in this genus) genes together in every genome, spanning ~10kb on
+      one contig (Richard et al. 2018). Coordinates for matPi and matMc were independently
+      confirmed against this assembly''s own RefSeq annotation via NCBI efetch (protein
+      accessions below); both GenBank CDS spans matched the literature-reported coordinates
+      within a few bp (likely a gene-vs-CDS boundary difference, not a discrepancy
+      in identity). matMi could NOT be independently confirmed this way: RefSeq does
+      not annotate a gene/CDS feature at the literature-reported position (211185-221394
+      -> re-checked as 221185-221394), consistent with the source paper''s own note
+      that matMi is only ~12-20% identical to homologs and "nearly undetectable by
+      homology" -- it is included here (present: true) on the paper''s authority alone,
+      with no protein_accession, rather than omitted or guessed. completeness is "partial"
+      for this reason, and because matPc (present in most other Ascomycota MAT systems)
+      is absent/lost in this genus per the same paper, not because the locus itself
+      is incompletely characterized.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NW_017264783.1
+        seq_region: NW_017264783.1
+      start: 211243
+      end: 221394
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: matPi
+  protein_accession: ncbi_protein:XP_018229374.1
+  role: core_MAT
+  present: true
+  locus_tag: T551_02159
+  segment_index: 0
+  start: 211243
+  end: 211902
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: matMc
+  protein_accession: ncbi_protein:XP_018229377.1
+  role: core_MAT
+  present: true
+  locus_tag: T551_02162
+  segment_index: 0
+  start: 220324
+  end: 221076
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: matMi
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 221185
+  end: 221394
+  strand: +
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: genome comparative analysis + PCR confirmation across 11
+      patient isolates; functional complementation of matMc/matPi in S. pombe mutants
+    citations:
+    - pmid: '29463658'
+      doi: 10.1128/mBio.02201-17
+    - pmid: '25587012'
+      doi: 10.1128/mBio.02250-14
+  boundaries:
+    tier: 1
+    experimental_method: genome sequencing/annotation of the ~10kb fused locus region;
+      matPi and matMc coordinates independently reconfirmed against RefSeq assembly
+      GCF_001477535.1 by the curator
+    citations:
+    - pmid: '29463658'
+      doi: 10.1128/mBio.02201-17
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: functional complementation (matMc, matPi restore sporulation
+      in S. pombe mutants); concomitant expression confirmed during infection
+    citations:
+    - pmid: '29463658'
+      doi: 10.1128/mBio.02201-17
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NW_017264783.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 29463658|42068|PM|combined
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

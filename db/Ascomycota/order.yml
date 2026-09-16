@@ -9,3 +9,11 @@ loci:
       - {name: APN2, role: flanking_conserved}
       - {name: SLA2, role: flanking_conserved}
       - {name: COX13, role: flanking_conserved}
+  - locus_name: "PM"
+    vocabulary_type: "enum"
+    idiomorph_values: ["M", "P"]
+    genes:
+      - {name: matMc, role: core_MAT, present_in_idiomorphs: ["M"]}
+      - {name: matMi, role: core_MAT, present_in_idiomorphs: ["M"]}
+      - {name: matPc, role: core_MAT, present_in_idiomorphs: ["P"]}
+      - {name: matPi, role: core_MAT, present_in_idiomorphs: ["P"]}

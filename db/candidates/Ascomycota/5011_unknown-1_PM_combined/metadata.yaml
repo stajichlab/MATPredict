@@ -1,0 +1,124 @@
+record_id: 5011_unknown-1_PM_combined
+record_version: 1
+taxonomy:
+  taxid: 5011
+  lineage: k__Fungi;p__Ascomycota;subphylum__Taphrinomycotina;c__Taphrinomycetes;o__Taphrinales;f__Taphrinaceae;g__Taphrina;s__Taphrina_deformans
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Taphrina deformans
+  strain:
+    name: null
+    known: false
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: PM
+  idiomorphs:
+  - M
+  - P
+  system: homothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: not established from coordinate data alone
+    definition_note: "Ciss\xE9 et al. 2013 first described putative MAT cassette candidates\
+      \ in T. deformans; Almeida et al. 2015 resolved the locus to exactly two genes\
+      \ -- matMc (HMG, M-class) and matPi (homeobox, P-class) -- interpreted as a\
+      \ fusion of an M locus with an incomplete P locus (matPc lost), ~40kb apart\
+      \ on one contig of assembly GCA_005281805.1. UNLIKE the paired Pneumocystis\
+      \ records (42068_ru7_PM_combined, 4754_b80_PM_combined), these coordinates could\
+      \ NOT be independently confirmed against this assembly's own GenBank annotation:\
+      \ NCBI efetch on RHGF01000006.1 in the literature-reported coordinate windows\
+      \ returns a \"source\" feature only, no gene/CDS annotation at all -- these\
+      \ genes were identified in the source paper by tblastn homology search, not\
+      \ by this assembly's own gene-calling pipeline, and this curator has no independent\
+      \ way to verify the exact coordinates beyond trusting the paper's reported tblastn\
+      \ hit positions as transcribed into the literature-synthesis table this record\
+      \ was drafted from. Both genes are recorded with protein_accession: null for\
+      \ this reason. boundaries evidence is tier 2 (not tier 1) specifically because\
+      \ of this unconfirmable-coordinate gap -- contrast with locus_existence/idiomorph_assignment,\
+      \ which remain tier 1 since the underlying published, reanalyzed scientific\
+      \ claim (this species has a fused M+P locus with these two genes) is itself\
+      \ solid. excluded_from_coordinate_benchmark is set to true for the same reason:\
+      \ these coordinates should not be scored in any downstream boundary-accuracy\
+      \ benchmark until independently confirmed.\n"
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: RHGF01000006.1
+        seq_region: RHGF01000006.1
+      start: 51694
+      end: 93112
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: matPi
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 51694
+  end: 52236
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: matMc
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 92621
+  end: 93112
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: genome sequencing and comparative reanalysis
+    citations:
+    - pmid: '23631913'
+      doi: 10.1128/mBio.00055-13
+    - pmid: '25587012'
+      doi: 10.1128/mBio.02250-14
+  boundaries:
+    tier: 2
+    experimental_method: 'tblastn homology search reported in the source literature;
+      NOT independently confirmable against this assembly''s own GenBank annotation
+      (no gene/CDS features exist at these coordinates in the current RHGF01000006.1
+      annotation). See locus.core.definition_note.
+
+      '
+    citations:
+    - pmid: '25587012'
+      doi: 10.1128/mBio.02250-14
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: HMG-domain (matMc) and homeobox (matPi) identity consistent
+      with M-class/P-class gene families across Taphrinomycotina
+    citations:
+    - pmid: '25587012'
+      doi: 10.1128/mBio.02250-14
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: RHGF01000006.1
+  sequence_match:
+    status: pass
+    per_gene: []
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 25587012|5011|PM|combined
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

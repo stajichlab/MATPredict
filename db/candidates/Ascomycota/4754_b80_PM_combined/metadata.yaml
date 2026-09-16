@@ -1,0 +1,133 @@
+record_id: 4754_b80_PM_combined
+record_version: 1
+taxonomy:
+  taxid: 4754
+  lineage: k__Fungi;p__Ascomycota;subphylum__Taphrinomycotina;c__Pneumocystidomycetes;o__Pneumocystidales;f__Pneumocystidaceae;g__Pneumocystis;s__Pneumocystis_carinii
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Pneumocystis carinii
+  strain:
+    name: B80
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: PM
+  idiomorphs:
+  - M
+  - P
+  system: homothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: matPi->matMc->matMi
+    definition_note: 'Same fused homothallic PM locus architecture as 42068_ru7_PM_combined
+      (Pneumocystis jirovecii), same source paper (Richard et al. 2018). matPi and
+      matMc coordinates independently confirmed against RefSeq assembly GCF_001477545.1
+      via NCBI efetch; both matched the literature-reported coordinates closely (small
+      boundary differences consistent with gene-vs-CDS span). matMi is not annotated
+      as a discrete RefSeq gene/CDS at the literature-reported position and could
+      not be independently confirmed the same way as the other two genes -- included
+      here (present: true) on the source paper''s authority alone, no protein_accession.
+      completeness is "partial" for the same reasons as the paired jirovecii record
+      (matMi unconfirmable via RefSeq; matPc absent/lost in this genus per the source
+      literature).
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NW_017264725.1
+        seq_region: NW_017264725.1
+      start: 71358
+      end: 81480
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: matPi
+  protein_accession: ncbi_protein:XP_018224792.1
+  role: core_MAT
+  present: true
+  locus_tag: T552_02829
+  segment_index: 0
+  start: 71358
+  end: 72050
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: matMc
+  protein_accession: ncbi_protein:XP_018224795.1
+  role: core_MAT
+  present: true
+  locus_tag: T552_02831
+  segment_index: 0
+  start: 80260
+  end: 80958
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: matMi
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 81265
+  end: 81480
+  strand: +
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: genome comparative analysis; functional complementation of
+      matMc/matPi in S. pombe mutants
+    citations:
+    - pmid: '29463658'
+      doi: 10.1128/mBio.02201-17
+    - pmid: '25587012'
+      doi: 10.1128/mBio.02250-14
+  boundaries:
+    tier: 1
+    experimental_method: genome sequencing/annotation of the ~10kb fused locus region;
+      matPi and matMc coordinates independently reconfirmed against RefSeq assembly
+      GCF_001477545.1 by the curator
+    citations:
+    - pmid: '29463658'
+      doi: 10.1128/mBio.02201-17
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: functional complementation (matMc, matPi restore sporulation
+      in S. pombe mutants)
+    citations:
+    - pmid: '29463658'
+      doi: 10.1128/mBio.02201-17
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NW_017264725.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 29463658|4754|PM|combined
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

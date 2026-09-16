@@ -89,6 +89,27 @@ def test_accepted_record_without_generated_files_gets_null_paths(tmp_path):
     assert row == (None, None, None)
 
 
+def test_locus_idiomorph_gets_one_row_per_idiomorph_value(tmp_path):
+    record = copy.deepcopy(RECORD)
+    record["record_id"] = "4837_nrrl-1555_MAT_combined"
+    record["mating_type"] = {"locus_name": "MAT", "idiomorphs": ["Plus", "Minus"], "system": "homothallic"}
+    record_dir = tmp_path / "Mucoromycota" / "Mucorales" / record["record_id"]
+    record_dir.mkdir(parents=True)
+    (record_dir / "metadata.yaml").write_text(yaml.safe_dump(record))
+
+    out_path = tmp_path / "matpredict.duckdb"
+    build(db_root=tmp_path, out_path=out_path)
+
+    con = duckdb.connect(str(out_path))
+    rows = con.execute(
+        "SELECT idiomorph_value FROM locus_idiomorph WHERE record_id = ? ORDER BY idiomorph_value",
+        [record["record_id"]],
+    ).fetchall()
+    con.close()
+
+    assert rows == [("Minus",), ("Plus",)]
+
+
 def test_candidate_record_gets_null_paths_even_with_files_present(tmp_path):
     record = copy.deepcopy(RECORD)
     record["record_id"] = "4837_nrrl-1555_MAT_Plus_candidate"

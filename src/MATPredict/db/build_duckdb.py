@@ -95,6 +95,12 @@ def build(db_root: Path, out_path: Path) -> None:
             ],
         )
 
+        for idiomorph_value in record["mating_type"]["idiomorphs"]:
+            con.execute(
+                "INSERT INTO locus_idiomorph (record_id, idiomorph_value) VALUES (?, ?)",
+                [record["record_id"], idiomorph_value],
+            )
+
         for segment in segments:
             source = segment["sequence_source"]
             con.execute(

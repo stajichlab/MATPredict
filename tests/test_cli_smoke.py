@@ -7,4 +7,6 @@ def test_help_exits_zero(capsys):
     exit_code = main(["curate-db", "--help"])
     assert exit_code == 0
     captured = capsys.readouterr()
-    assert "curate-db" in captured.out or "usage" in captured.out
+    # Verify action-specific content from curate-db subparser (not just top-level help)
+    # Actions are registered in db/cli.py: propose, validate, accept, reject, build-gff, build-duckdb, release
+    assert "propose" in captured.out or "validate" in captured.out

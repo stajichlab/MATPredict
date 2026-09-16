@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from MATPredict import __author__, __version__, logger
+from MATPredict import __version__, logger
 from MATPredict.db.cli import register_subcommands
 
 
@@ -22,10 +22,15 @@ def main(args: list[str] | None = None) -> int:
     """Tool for building and querying the MAT locus reference database."""
     parser = build_parser()
     argv = args if args is not None else sys.argv[1:]
-    if not argv or "help" in argv or "-h" in argv or "--help" in argv:
+    # Only short-circuit top-level help; let argparse handle subcommand help
+    if not argv or (argv[0] in {"-h", "--help"}):
         parser.print_help()
         return 0
-    parsed = parser.parse_args(argv)
+    try:
+        parsed = parser.parse_args(argv)
+    except SystemExit as err:
+        # argparse raises SystemExit on --help and errors
+        return err.code if isinstance(err.code, int) else 0
     if parsed.verbose:
         logger.setLevel("DEBUG")
     try:

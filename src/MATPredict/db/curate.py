@@ -24,8 +24,14 @@ def _load_order_doc(db_root: Path, phylum: str) -> dict:
 
 def _validate_against_schema_and_order(db_root: Path, phylum: str, record: dict) -> None:
     errors = validate_metadata(record)
+    if errors:
+        # Short-circuit: validate_idiomorphs does raw dict indexing on mating_type's
+        # subfields with no guard. It is only safe to call once validate_metadata has
+        # confirmed mating_type and its subfields are present and well-formed.
+        raise CurationError(f"invalid candidate record: {'; '.join(errors)}")
+
     order_doc = _load_order_doc(db_root, phylum)
-    errors += validate_idiomorphs(record, order_doc)
+    errors = validate_idiomorphs(record, order_doc)
     if errors:
         raise CurationError(f"invalid candidate record: {'; '.join(errors)}")
 
@@ -69,10 +75,17 @@ def accept_candidate(db_root: Path, phylum: str, order_or_family: str, record_id
     _validate_against_schema_and_order(db_root, phylum, record)
 
     record["validation"]["status"] = "accepted"
+    # Write the updated content while still under db/candidates/, before moving. If we
+    # crash before the write, the record is untouched and still needs_review. If we crash
+    # after the write but before the move completes, the record is still recoverable under
+    # db/candidates/ with correct accepted content; rerunning accept_candidate is safe. This
+    # avoids ever leaving a needs_review-content directory under the accepted db/<Phylum>/
+    # tree, which nothing else scans to reconcile.
+    metadata_path.write_text(yaml.safe_dump(record, sort_keys=False))
+
     accepted_dir = db_root / phylum / order_or_family / record_id
     accepted_dir.parent.mkdir(parents=True, exist_ok=True)
     shutil.move(str(candidate_dir), str(accepted_dir))
-    (accepted_dir / "metadata.yaml").write_text(yaml.safe_dump(record, sort_keys=False))
     return accepted_dir
 
 

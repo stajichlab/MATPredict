@@ -88,6 +88,13 @@ def test_propose_rejects_idiomorph_not_in_order_vocabulary(tmp_path):
         propose_candidate(tmp_path, "Mucoromycota", bad)
 
 
+def test_propose_raises_curation_error_not_keyerror_when_mating_type_missing(tmp_path):
+    bad = copy.deepcopy(RECORD)
+    del bad["mating_type"]
+    with pytest.raises(CurationError):
+        propose_candidate(tmp_path, "Mucoromycota", bad)
+
+
 # --- Ruling 2: proposal_dedupe_key duplicate-against-rejected check ---
 
 

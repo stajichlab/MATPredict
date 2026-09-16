@@ -10,3 +10,4 @@ loci:
       - {name: rnhA, role: flanking_conserved}
       - {name: algA, role: flanking_variable}
       - {name: glrA, role: flanking_variable}
+      - {name: btbA, role: flanking_variable, present_in_idiomorphs: ["Plus"]}

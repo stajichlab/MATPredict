@@ -1,0 +1,130 @@
+record_id: 64495_cbs110-17_MAT_Minus
+record_version: 1
+taxonomy:
+  taxid: 64495
+  lineage: k__Fungi;p__Mucoromycota;subphylum__Mucoromycotina;c__Mucoromycetes;o__Mucorales;f__Rhizopodaceae;g__Rhizopus;s__Rhizopus_arrhizus
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Rhizopus arrhizus
+  strain:
+    name: CBS 110.17
+    known: true
+    culture_collection_ids:
+    - CBS 110.17
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Minus
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: tptA->sexM->rnhA
+    definition_note: 'Paired Minus-idiomorph record to 64495_cbs346-36_MAT_Plus, same
+      species (Rhizopus arrhizus, formerly R. oryzae) and source paper (Gryganskyi
+      et al. 2010). No btbA (BTB/POZ) gene is present at this idiomorph -- the insertion
+      reported in the literature is specific to the Plus allele. Locus deposited as
+      GenBank HQ450316.1 (6899 bp). GenBank''s own feature table marks the rnhA CDS''s
+      final exon with a ">6899" partial-boundary indicator (6783->6899), explicitly
+      signaling the gene is truncated at the fragment''s end -- completeness is "partial"
+      for this directly GenBank-flagged reason (not an inference).
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: HQ450316.1
+        seq_region: HQ450316.1
+      start: 1
+      end: 6899
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: tptA
+  protein_accession: ncbi_protein:ADU02300.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 1378
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: sexM
+  protein_accession: ncbi_protein:ADU02301.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2246
+  end: 2812
+  strand: +
+  order_in_locus: 1
+- gene_index: 2
+  name: rnhA
+  protein_accession: ncbi_protein:ADU02302.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2876
+  end: 6899
+  strand: +
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: PCR-based sequencing of the mating locus across 54 isolates
+      of the R. oryzae species complex
+    citations:
+    - pmid: '21151560'
+      doi: 10.1371/journal.pone.0015273
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing, deposited as GenBank HQ450316.1
+    citations:
+    - pmid: '21151560'
+      doi: 10.1371/journal.pone.0015273
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: genetic mating-type determination (mating assay against tester
+      strains) and HMG-domain gene identity (sexM)
+    citations:
+    - pmid: '21151560'
+      doi: 10.1371/journal.pone.0015273
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: HQ450316.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 21151560|64495|MAT|Minus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

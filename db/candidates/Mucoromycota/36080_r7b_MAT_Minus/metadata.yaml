@@ -1,0 +1,128 @@
+record_id: 36080_r7b_MAT_Minus
+record_version: 1
+taxonomy:
+  taxid: 36080
+  lineage: k__Fungi;p__Mucoromycota;subphylum__Mucoromycotina;c__Mucoromycetes;o__Mucorales;f__Mucoraceae;g__Mucor;s__Mucor_circinelloides
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Mucor circinelloides
+  strain:
+    name: R7B
+    known: true
+    culture_collection_ids:
+    - R7B
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Minus
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: tptA->sexM->rnhA
+    definition_note: 'Locus deposited as a single sequenced fragment (GenBank FJ009106.1,
+      8344 bp) by Lee et al. 2008 (Current Biology), the same microsporidia-zygomycete
+      synteny paper as the paired Plus record (36080_nrrl-3631_MAT_Plus). GenBank''s
+      own feature table names the genes tptA/sexM/rnhA directly. The rnhA CDS (ACH92693.1)
+      ends at 7672, short of the 8344 bp fragment end -- completeness is "complete"
+      for the same reasoning as the Plus record.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: FJ009106.1
+        seq_region: FJ009106.1
+      start: 815
+      end: 7672
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: tptA
+  protein_accession: ncbi_protein:ACH92691.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 815
+  end: 1908
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: sexM
+  protein_accession: ncbi_protein:ACH92692.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2650
+  end: 3399
+  strand: +
+  order_in_locus: 1
+- gene_index: 2
+  name: rnhA
+  protein_accession: ncbi_protein:ACH92693.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3539
+  end: 7672
+  strand: +
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: targeted cloning and sequencing of the sex locus for microsporidia-zygomycete
+      synteny comparison
+    citations:
+    - pmid: '18976912'
+      doi: 10.1016/j.cub.2008.09.030
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing, deposited as GenBank FJ009106.1
+    citations:
+    - pmid: '18976912'
+      doi: 10.1016/j.cub.2008.09.030
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: HMG-domain gene identity (sexM) at the sequenced Minus-mating-type
+      strain
+    citations:
+    - pmid: '18976912'
+      doi: 10.1016/j.cub.2008.09.030
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: FJ009106.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 18976912|36080|MAT|Minus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

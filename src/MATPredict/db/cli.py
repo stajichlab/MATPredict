@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import time
 from pathlib import Path
 
 import requests
@@ -22,9 +23,26 @@ def _config(args: argparse.Namespace) -> MatpredictConfig:
     return MatpredictConfig.from_env(repo_root=Path.cwd())
 
 
+def _http_transport(url: str, max_attempts: int = 4, backoff_seconds: float = 2.0) -> str:
+    """GET a URL, retrying on rate-limit/server errors so a transient failure never gets
+    written to CachedFetcher's on-disk cache (only a value this function *returns* is
+    cached, and it only returns after a genuinely successful response)."""
+    last_error: Exception | None = None
+    for attempt in range(max_attempts):
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.text
+        last_error = requests.HTTPError(f"{response.status_code} for {url}: {response.text[:200]}")
+        if response.status_code in (429, 500, 502, 503, 504) and attempt < max_attempts - 1:
+            time.sleep(backoff_seconds * (attempt + 1))
+            continue
+        break
+    raise last_error
+
+
 def _make_clients(config: MatpredictConfig) -> tuple[NcbiClient, UniprotClient]:
     """Build the NCBI/UniProt client pair used by both `validate` and `build-gff`."""
-    fetcher = CachedFetcher(cache_dir=config.cache_dir, transport=lambda url: requests.get(url).text)
+    fetcher = CachedFetcher(cache_dir=config.cache_dir, transport=_http_transport)
     ncbi = NcbiClient(email=config.ncbi_email, api_key=config.ncbi_api_key, fetcher=fetcher)
     uniprot = UniprotClient(fetcher=fetcher)
     return ncbi, uniprot

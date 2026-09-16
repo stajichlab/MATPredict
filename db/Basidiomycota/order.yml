@@ -12,3 +12,16 @@ loci:
     genes:
       - {name: pheromone, role: core_MAT}
       - {name: pheromone_receptor, role: core_MAT}
+  - locus_name: "MAT"
+    vocabulary_type: "enum"
+    idiomorph_values: ["alpha", "a"]
+    genes:
+      - {name: SXI1, role: core_MAT, present_in_idiomorphs: ["alpha"]}
+      - {name: SXI2, role: core_MAT, present_in_idiomorphs: ["a"]}
+      - {name: MFalpha1, role: core_MAT, present_in_idiomorphs: ["alpha"]}
+      - {name: MFalpha2, role: core_MAT, present_in_idiomorphs: ["alpha"]}
+      - {name: MFalpha3, role: core_MAT, present_in_idiomorphs: ["alpha"]}
+      - {name: MFa1, role: core_MAT, present_in_idiomorphs: ["a"]}
+      - {name: MFa2, role: core_MAT, present_in_idiomorphs: ["a"]}
+      - {name: MFa3, role: core_MAT, present_in_idiomorphs: ["a"]}
+      - {name: STE3, role: core_MAT}

@@ -40,6 +40,7 @@ _ESUMMARY_SUPPRESSED = (
 def _fake_requests_get(monkeypatch, response_text: str):
     class _FakeResponse:
         text = response_text
+        status_code = 200
 
     def _get(url):
         return _FakeResponse()
@@ -159,6 +160,7 @@ def test_build_gff_subcommand_writes_all_three_files(tmp_path, monkeypatch):
 
     class _FakeResponse:
         text = _EFETCH_FASTA
+        status_code = 200
 
     monkeypatch.setattr("MATPredict.db.cli.requests.get", lambda url: _FakeResponse())
 

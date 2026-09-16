@@ -1,0 +1,161 @@
+record_id: 4956_da2_MATsc_MATalpha
+record_version: 1
+taxonomy:
+  taxid: 4956
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Saccharomycetaceae;g__Zygosaccharomyces;s__Zygosaccharomyces_rouxii
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Zygosaccharomyces rouxii
+  strain:
+    name: DA2
+    known: true
+    culture_collection_ids:
+    - DA2
+    differs_from_sequenced: true
+mating_type:
+  locus_name: MATsc
+  idiomorphs:
+  - MATalpha
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: cha1->alpha2->alpha1->sla2
+    definition_note: 'Z. rouxii carries the classical 3-locus (MAT/HML/HMR) Saccharomycetaceae
+      cassette architecture, gene-content-compatible with the existing "MATsc" locus_name
+      (same alpha1/alpha2 core-identity genes, sla2 flanking gene) -- reused rather
+      than creating a redundant new locus_name. Watanabe et al. 2013 (PLoS ONE) is
+      a real, targeted experimental study (genetic reconstruction of translocation
+      events, not mere genome annotation), supporting tier 1 for the underlying scientific
+      claims. HOWEVER, a genuine, unresolved ambiguity: this specific accession (DDBJ
+      AB781017.1) is from strain "DA2", which the source paper describes as the EXPERIMENTAL
+      RECONSTRUCTION BACKGROUND strain used to reproduce translocation events under
+      laboratory conditions -- NOT necessarily a natural, undisturbed wild-type genotype
+      (the paper identifies NBRC1130 as the strain retaining the true ancestral, un-rearranged
+      karyotype, but no independently fetchable NBRC1130-specific MAT-locus GenBank/DDBJ
+      accession was located in this curation pass). Consequently it is NOT CONFIRMED
+      whether the gene arrangement in this record (cha1-alpha2-alpha1-sla2) represents
+      Z. rouxii''s natural MAT locus, a natural HML/HMR silent cassette, or a laboratory-reconstructed
+      translocation product. excluded_from_coordinate_benchmark is set to true and
+      differs_from_sequenced is set to true specifically because of this DA2-reconstruction-background
+      uncertainty -- a human reviewer should decide whether to accept this as-is,
+      seek the NBRC1130 sequence specifically, or reject pending clarification. idiomorph_assignment
+      ("MATalpha") reflects the alpha1/alpha2 gene content present in this specific
+      accession, not a confirmed, independently-verified genotype call for the DA2
+      strain as a whole.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AB781017.1
+        seq_region: AB781017.1
+      start: 1
+      end: 3161
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: cha1
+  protein_accession: ncbi_protein:BAM78605.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 71
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: alpha2
+  protein_accession: ncbi_protein:BAM78606.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1169
+  end: 1846
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: alpha1
+  protein_accession: ncbi_protein:BAM78607.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2195
+  end: 2797
+  strand: +
+  order_in_locus: 2
+- gene_index: 3
+  name: sla2
+  protein_accession: ncbi_protein:BAM78608.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2794
+  end: 3161
+  strand: '-'
+  order_in_locus: 3
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: PCR-based sequencing and experimental reconstruction of MAT-like
+      locus translocation events across a natural isolate population
+    citations:
+    - pmid: '23614024'
+      doi: 10.1371/journal.pone.0062121
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing, deposited as GenBank/DDBJ AB781017.1;
+      coordinates independently reconfirmed by the curator via NCBI efetch. See definition_note
+      for the unresolved natural-vs-reconstructed-background caveat.
+    citations:
+    - pmid: '23614024'
+      doi: 10.1371/journal.pone.0062121
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: HMG/alpha-domain gene identity (alpha1/alpha2) in the sequenced
+      accession
+    citations:
+    - pmid: '23614024'
+      doi: 10.1371/journal.pone.0062121
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AB781017.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 23614024|4956|MATsc|MATalpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

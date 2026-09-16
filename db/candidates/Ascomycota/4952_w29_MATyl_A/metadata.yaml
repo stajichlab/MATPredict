@@ -1,0 +1,158 @@
+record_id: 4952_w29_MATyl_A
+record_version: 1
+taxonomy:
+  taxid: 4952
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Dipodascaceae;g__Yarrowia;s__Yarrowia_lipolytica
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Yarrowia lipolytica
+  strain:
+    name: W29
+    known: true
+    culture_collection_ids:
+    - W29
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATyl
+  idiomorphs:
+  - A
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sla2->mata1->mata2->apn2
+    definition_note: 'Y. lipolytica is architecturally distinct from the rest of Saccharomycotina:
+      its MAT genes are NOT homeodomain-based like S. cerevisiae''s MATa1/alpha1/alpha2
+      system. mata2 contains an HMG-box DNA-binding domain instead -- the same domain
+      family used throughout Basidiomycota and in the MAT1-2 idiomorph of Pezizomycotina,
+      making this species a rare Saccharomycotina bridge to that broader HMG-domain
+      MAT pattern (Kurischko et al. 1999; Butler et al. 2004, PMID 14745027, DOI 10.1073/pnas.0304170101,
+      note this species has no HML/HMR-type silent cassettes at all). mata1 (119 aa,
+      no recognizable protein domain, described by its discoverers as "a new class
+      of mating-type gene") and mata2 (291 aa, HMG-box) were functionally dissected
+      by subcloning in the original characterization paper. Given this architectural
+      distinctness, a new locus_name ("MATyl") was added rather than reusing "MATsc".
+      Only the MATA idiomorph is represented here (this GenBank record, AJ617306.1,
+      strain W29); the opposite MATB idiomorph exists (shown functionally complete
+      by cassette-replacement experiments in Butler et al. 2004 and more recently
+      given a full reference sequence by a 2025 haplotype-resolved genome project
+      referenced in the source literature synthesis for this database) but was not
+      independently verified against a fetchable GenBank/DDBJ accession in this pass
+      -- a candidate MATB record is left as a follow-up. The apn2 CDS on this record
+      is annotated as extending beyond the deposited fragment (">8174"), so it is
+      truncated at the sequence boundary; completeness is "partial" for this reason.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AJ617306.1
+        seq_region: AJ617306.1
+      start: 1424
+      end: 8174
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: sla2
+  protein_accession: ncbi_protein:CAE84421.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1424
+  end: 4588
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: mata1
+  protein_accession: ncbi_protein:CAE84422.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4808
+  end: 5656
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: mata2
+  protein_accession: ncbi_protein:CAE84423.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5993
+  end: 6868
+  strand: +
+  order_in_locus: 2
+- gene_index: 3
+  name: apn2
+  protein_accession: ncbi_protein:CAE84424.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 6936
+  end: 8174
+  strand: '-'
+  order_in_locus: 3
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: molecular cloning, subcloning, and functional dissection
+      of sporulation/conjugation-repression activities at the MATA locus
+    citations:
+    - pmid: '10503550'
+      doi: 10.1007/s004380051073
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing, deposited as GenBank AJ617306.1;
+      coordinates independently reconfirmed by the curator via NCBI efetch
+    citations:
+    - pmid: '10503550'
+      doi: 10.1007/s004380051073
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'functional assay: mata1 required for sporulation induction,
+      mata2 represses conjugation; both mating-type specific'
+    citations:
+    - pmid: '10503550'
+      doi: 10.1007/s004380051073
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AJ617306.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10503550|4952|MATyl|A
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

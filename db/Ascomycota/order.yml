@@ -47,6 +47,18 @@ loci:
       - {name: MATALPHA2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
       - {name: MATA1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
       - {name: MATA2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      - {name: alpha1, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      - {name: alpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      - {name: sla2, role: flanking_conserved}
+      - {name: cha1, role: flanking_variable}
+  - locus_name: "MATyl"
+    vocabulary_type: "enum"
+    idiomorph_values: ["A", "B"]
+    genes:
+      - {name: mata1, role: core_MAT, present_in_idiomorphs: ["A"]}
+      - {name: mata2, role: core_MAT, present_in_idiomorphs: ["A"]}
+      - {name: sla2, role: flanking_conserved}
+      - {name: apn2, role: flanking_conserved}
   - locus_name: "MTL"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "alpha"]

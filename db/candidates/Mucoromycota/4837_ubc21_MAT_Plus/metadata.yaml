@@ -1,0 +1,131 @@
+record_id: 4837_ubc21_MAT_Plus
+record_version: 1
+taxonomy:
+  taxid: 4837
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Phycomycetaceae;g__Phycomyces;s__Phycomyces_blakesleeanus
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Phycomyces blakesleeanus
+  strain:
+    name: UBC21
+    known: true
+    culture_collection_ids:
+    - UBC21
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Plus
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: tptA->sexP->rnhA
+    definition_note: 'Locus deposited as a single sequenced fragment (GenBank EU009462.1)
+      by Idnurm et al. 2008. Gene names tptA/sexP/rnhA follow the controlled vocabulary
+      already established in db/Mucoromycota/order.yml; GenBank''s own feature table
+      labels the flanking genes only by product description, not by these short names.
+      sexP has two annotated CDS isoforms (ABX27912.1, full-length 2004-3186; ABX27914.1,
+      a shorter alternatively-spliced form, 2189-2358 + 2437-2989); this record uses
+      the full-length isoform (ABX27912.1) as the representative sexP entry. The RNA
+      helicase CDS (ABX27913.1) begins at 7376 and the record notes the sequence continues
+      beyond position 9971, the end of the deposited fragment -- completeness is set
+      to partial because this gene''s full extent is not contained within this record.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: EU009462.1
+        seq_region: EU009462.1
+      start: 1
+      end: 9971
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: tptA
+  protein_accession: ncbi_protein:ABX27911.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 868
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: sexP
+  protein_accession: ncbi_protein:ABX27912.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2004
+  end: 3186
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: rnhA
+  protein_accession: ncbi_protein:ABX27913.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 7376
+  end: 9971
+  strand: +
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: genetic mapping + bioinformatic identification of the sex-determining
+      region
+    citations:
+    - pmid: '18185588'
+      doi: 10.1038/nature06453
+  boundaries:
+    tier: 1
+    experimental_method: targeted sequencing of the sex locus cassette
+    citations:
+    - pmid: '18185588'
+      doi: 10.1038/nature06453
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: genetic mapping; HMG-domain gene identity (sexP)
+    citations:
+    - pmid: '18185588'
+      doi: 10.1038/nature06453
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: EU009462.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 18185588|4837|MAT|Plus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

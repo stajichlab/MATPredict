@@ -1,0 +1,130 @@
+record_id: 4837_nrrl1555_MAT_Minus
+record_version: 1
+taxonomy:
+  taxid: 4837
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Phycomycetaceae;g__Phycomyces;s__Phycomyces_blakesleeanus
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Phycomyces blakesleeanus
+  strain:
+    name: NRRL1555
+    known: true
+    culture_collection_ids:
+    - NRRL 1555
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Minus
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: tptA->sexM->rnhA
+    definition_note: 'Locus deposited as a single sequenced fragment (GenBank EU009461.1)
+      by Idnurm et al. 2008. Gene names tptA/sexM/rnhA follow the controlled vocabulary
+      already established in db/Mucoromycota/order.yml; GenBank''s own feature table
+      labels the flanking genes only by product description ("putative triose phosphate
+      transporter" / "putative RNA helicase"), not by these short names. The RNA helicase
+      CDS (ABX27910.1) runs via a joined/multi-exon feature to position 7631, the
+      exact end of the deposited fragment -- completeness is set to partial because
+      the 3'' extent of this gene beyond the sequenced fragment boundary is not confirmed
+      by this record alone.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: EU009461.1
+        seq_region: EU009461.1
+      start: 1
+      end: 7631
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: tptA
+  protein_accession: ncbi_protein:ABX27908.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 868
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: sexM
+  protein_accession: ncbi_protein:ABX27909.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4068
+  end: 4703
+  strand: +
+  order_in_locus: 1
+- gene_index: 2
+  name: rnhA
+  protein_accession: ncbi_protein:ABX27910.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5035
+  end: 7631
+  strand: +
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: genetic mapping + bioinformatic identification of the sex-determining
+      region
+    citations:
+    - pmid: '18185588'
+      doi: 10.1038/nature06453
+  boundaries:
+    tier: 1
+    experimental_method: targeted sequencing of the sex locus cassette
+    citations:
+    - pmid: '18185588'
+      doi: 10.1038/nature06453
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: genetic mapping; HMG-domain gene identity (sexM)
+    citations:
+    - pmid: '18185588'
+      doi: 10.1038/nature06453
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: EU009461.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 18185588|4837|MAT|Minus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

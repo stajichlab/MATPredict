@@ -78,7 +78,7 @@ def _write_candidate(tmp_path, phylum: str, record_id: str, validation_status: s
             "coordinate_provenance": "published_explicit",
             "core": {
                 "segments": [
-                    {"segment_index": 0, "sequence_source": {"type": "assembly", "accession": "GCA_000315115.1"}}
+                    {"segment_index": 0, "sequence_source": {"type": "insdc_nucleotide", "accession": "EU009461.1"}}
                 ],
             },
         },

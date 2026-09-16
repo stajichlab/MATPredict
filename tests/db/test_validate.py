@@ -11,14 +11,14 @@ RECORD = {
     "taxonomy": {"taxid": 4837},
     "locus": {
         "coordinate_provenance": "published_explicit",
-        "core": {"segments": [{"segment_index": 0, "sequence_source": {"type": "assembly", "accession": "GCA_000315115.1"}}]},
+        "core": {"segments": [{"segment_index": 0, "sequence_source": {"type": "insdc_nucleotide", "accession": "EU009461.1"}}]},
     },
     "genes": [
         {"gene_index": 0, "name": "sexP", "protein_accession": "ncbi_protein:AAB12345.1", "present": True},
     ],
 }
 
-ESUMMARY_LIVE = '{"result": {"uids": ["1"], "1": {"accessionversion": "GCA_000315115.1", "status": "live"}}}'
+ESUMMARY_LIVE = '{"result": {"uids": ["1"], "1": {"accessionversion": "EU009461.1", "status": "live"}}}'
 EFETCH_FASTA = ">AAB12345.1\nMKTAYIAKQRQISFVKSHFSRQ\n"
 
 
@@ -47,9 +47,33 @@ def test_validate_record_all_pass(tmp_path):
     )
 
     assert result["accession_resolved"] is True
-    assert result["accession_resolved_version"] == "GCA_000315115.1"
+    assert result["accession_resolved_version"] == "EU009461.1"
     assert result["sequence_match"]["status"] in {"pass", "warn"}
     assert result["taxonomy_current"] is True
+
+
+def test_validate_record_skips_accession_check_for_assembly_type(tmp_path):
+    """NcbiClient.resolve_accession only queries NCBI's nuccore database, which cannot
+    resolve an assembly accession (GCA_/GCF_) -- that lives in a different NCBI database
+    this client doesn't implement lookups for yet. Confirm this is skipped, not crashed."""
+    fetcher = CachedFetcher(cache_dir=tmp_path, transport=_fake_transport)
+    ncbi = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
+    uniprot = UniprotClient(fetcher=fetcher)
+
+    record = {
+        "taxonomy": {"taxid": 4837},
+        "locus": {
+            "coordinate_provenance": "curator_derived",
+            "core": {"segments": [{"segment_index": 0, "sequence_source": {"type": "assembly", "accession": "GCA_016772295.1"}}]},
+        },
+        "genes": [{"gene_index": 0, "name": "sexP", "protein_accession": "ncbi_protein:AAB12345.1", "present": True}],
+    }
+
+    result = validate_record(record=record, ncbi=ncbi, uniprot=uniprot, taxonomy_runner=_fake_taxonomy_runner)
+
+    assert result["accession_resolved"] is None
+    assert result["accession_resolved_version"] is None
+    assert result["sequence_match"]["status"] in {"pass", "warn"}  # per-gene checks still run
 
 
 def test_validate_record_skips_coordinate_checks_when_not_available():

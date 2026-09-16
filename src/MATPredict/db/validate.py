@@ -45,8 +45,15 @@ def validate_record(
 
     segments = record["locus"].get("core", {}).get("segments", [])
     if segments:
-        accession = segments[0]["sequence_source"].get("accession")
-        if accession:
+        sequence_source = segments[0]["sequence_source"]
+        accession = sequence_source.get("accession")
+        # NcbiClient.resolve_accession only queries NCBI's nuccore database, which
+        # resolves insdc_nucleotide accessions (e.g. "EU009461.1") but not assembly
+        # accessions (e.g. "GCA_016772295.1", which live in NCBI's separate assembly
+        # database and need a different lookup this client doesn't implement yet).
+        # Attempting nuccore esummary on a GCA_/GCF_ accession returns an empty uids
+        # list, not an error -- silently skip rather than crash or claim a false result.
+        if accession and sequence_source.get("type") == "insdc_nucleotide":
             status = ncbi.resolve_accession(accession)
             result["accession_resolved"] = status.resolved
             result["accession_resolved_version"] = status.resolved_version

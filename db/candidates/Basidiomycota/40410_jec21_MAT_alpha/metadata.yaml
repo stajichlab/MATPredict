@@ -1,0 +1,166 @@
+record_id: 40410_jec21_MAT_alpha
+record_version: 1
+taxonomy:
+  taxid: 40410
+  lineage: k__Fungi;p__Basidiomycota;c__Tremellomycetes;o__Tremellales;f__Cryptococcaceae;g__Cryptococcus;s__Cryptococcus_deneoformans
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Cryptococcus deneoformans
+  strain:
+    name: JEC21
+    known: true
+    culture_collection_ids:
+    - JEC21
+    - B-4500
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - alpha
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: SXI1->MFalpha1/2/3->STE3
+    definition_note: 'This is the bipolar, fused-MAT-type locus described by Lengeler
+      et al. 2002 (PMID 12455690, DOI 10.1128/EC.1.5.704-718.2002, the primary Cryptococcus
+      MAT locus paper) and deposited as GenBank AF542531.2 (133,474 bp, complete MAT
+      alpha locus, strain JEC21). The report used to seed this candidate (a literature
+      synthesis by a separate research agent) describes the full locus as containing
+      >20 genes; only the core identity-determining genes (SXI1, the three MFalpha
+      pheromone precursors, and STE3 receptor) are represented here with verified
+      coordinates from the GenBank feature table -- the additional MAT-linked but
+      non-identity genes (MAPK cascade components, MYO2, RPL22alpha) are NOT included
+      in this record. completeness is "partial" to reflect this reduced gene set,
+      not any doubt about the locus boundary itself (which is the full deposited 133,474
+      bp fragment). This "MAT" locus_name entry required extending db/Basidiomycota/order.yml,
+      which previously only modeled the tetrapolar HD/PR case.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AF542531.2
+        seq_region: AF542531.2
+      start: 1
+      end: 133474
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: SXI1
+  protein_accession: ncbi_protein:AAN75718.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 10692
+  end: 12052
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MFalpha3
+  protein_accession: ncbi_protein:AAL58091.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 113761
+  end: 113877
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: MFalpha2
+  protein_accession: ncbi_protein:AAL58092.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 114490
+  end: 114606
+  strand: +
+  order_in_locus: 2
+- gene_index: 3
+  name: MFalpha1
+  protein_accession: ncbi_protein:AAG25675.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 95802
+  end: 95918
+  strand: '-'
+  order_in_locus: 3
+- gene_index: 4
+  name: STE3
+  protein_accession: ncbi_protein:AAN75724.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 70521
+  end: 71841
+  strand: '-'
+  order_in_locus: 4
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: cloning and sequencing of alpha and a mating-type alleles
+      from divergent varieties
+    citations:
+    - pmid: '12455690'
+      doi: 10.1128/EC.1.5.704-718.2002
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing, deposited as GenBank AF542531.2
+    citations:
+    - pmid: '12455690'
+      doi: 10.1128/EC.1.5.704-718.2002
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: genetic characterization of alpha vs a mating type strains;
+      SXI1/SXI2 identity
+    citations:
+    - pmid: '12455690'
+      doi: 10.1128/EC.1.5.704-718.2002
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AF542531.2
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 12455690|40410|MAT|alpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

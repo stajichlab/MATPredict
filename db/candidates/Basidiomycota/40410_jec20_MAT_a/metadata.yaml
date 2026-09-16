@@ -1,0 +1,164 @@
+record_id: 40410_jec20_MAT_a
+record_version: 1
+taxonomy:
+  taxid: 40410
+  lineage: k__Fungi;p__Basidiomycota;c__Tremellomycetes;o__Tremellales;f__Cryptococcaceae;g__Cryptococcus;s__Cryptococcus_deneoformans
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Cryptococcus deneoformans
+  strain:
+    name: JEC20
+    known: true
+    culture_collection_ids:
+    - JEC20
+    - B-4848
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - a
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: SXI2->MFa1/2/3->STE3
+    definition_note: 'Bipolar, fused-MAT-type locus described by Lengeler et al. 2002
+      (PMID 12455690, DOI 10.1128/EC.1.5.704-718.2002) and deposited as GenBank AF542530.2
+      (148,067 bp, complete MATa locus, strain JEC20). As with the paired MATalpha
+      record (40410_jec21_MAT_alpha), only the core identity-determining genes (SXI2,
+      the three MFa pheromone precursors, and STE3) are represented with verified
+      coordinates; the additional MAT-linked genes reported in the wider literature
+      (MAPK cascade, MYO2a, RPL22a) are not included here. The GenBank feature table''s
+      /gene qualifiers for this record use "SXI2a"-style naming inconsistently (the
+      CDS itself is tagged "SXI2a" while the matching pheromone/receptor genes are
+      tagged "MFa1/2/3"/"STE3" without an "a" suffix) -- names below follow the GenBank
+      record''s own qualifiers exactly, not a normalized convention.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AF542530.2
+        seq_region: AF542530.2
+      start: 1
+      end: 148067
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: SXI2
+  protein_accession: ncbi_protein:AAV98474.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 10466
+  end: 12990
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: MFa2
+  protein_accession: ncbi_protein:AAN75623.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 87889
+  end: 88017
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: MFa3
+  protein_accession: ncbi_protein:AAN75622.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 98365
+  end: 98493
+  strand: '-'
+  order_in_locus: 2
+- gene_index: 3
+  name: MFa1
+  protein_accession: ncbi_protein:AAN75621.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 106876
+  end: 107004
+  strand: +
+  order_in_locus: 3
+- gene_index: 4
+  name: STE3
+  protein_accession: ncbi_protein:AAN75624.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 93853
+  end: 95179
+  strand: +
+  order_in_locus: 4
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: cloning and sequencing of alpha and a mating-type alleles
+      from divergent varieties
+    citations:
+    - pmid: '12455690'
+      doi: 10.1128/EC.1.5.704-718.2002
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing, deposited as GenBank AF542530.2
+    citations:
+    - pmid: '12455690'
+      doi: 10.1128/EC.1.5.704-718.2002
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: genetic characterization of alpha vs a mating type strains;
+      SXI1/SXI2 identity
+    citations:
+    - pmid: '12455690'
+      doi: 10.1128/EC.1.5.704-718.2002
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AF542530.2
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 12455690|40410|MAT|a
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

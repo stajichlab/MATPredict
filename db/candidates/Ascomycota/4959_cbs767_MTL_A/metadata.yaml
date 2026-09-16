@@ -80,29 +80,42 @@ genes:
   order_in_locus: 1
 evidence:
   locus_existence:
-    tier: 1
-    experimental_method: whole-genome sequencing and comparative annotation across
-      4 hemiascomycete species
+    tier: 2
+    experimental_method: 'whole-genome sequencing and comparative annotation across
+      4 hemiascomycete species (Dujon et al. 2004) -- computational/homology-based
+      gene identification, not a targeted, experimentally-validated characterization
+      of this locus. Downgraded from an initial tier-1 assessment per user review
+      (2026-09-16): no dedicated MTL-locus paper exists for this species, so this
+      does not meet the tier-1 bar (published + experimentally validated) despite
+      resting on a real, peer-reviewed genome paper.
+
+      '
     citations:
     - pmid: '15229592'
       doi: 10.1038/nature02579
   boundaries:
-    tier: 1
+    tier: 2
     experimental_method: 'Gene identity from genome sequencing/annotation (Dujon et
       al. 2004); exact coordinates on this specific assembly independently reconfirmed
       by the curator via NCBI efetch against NC_006047.2. No dedicated MTL-locus functional
       characterization paper exists for this species (flagged as an open gap by the
       source literature synthesis) -- boundaries evidence rests on genome annotation,
-      not a targeted locus-mapping study.
+      not a targeted locus-mapping study. Downgraded from an initial tier-1 assessment
+      per user review (2026-09-16) for the same reason as locus_existence above.
 
       '
     citations:
     - pmid: '15229592'
       doi: 10.1038/nature02579
   idiomorph_assignment:
-    tier: 1
-    experimental_method: homology-based gene naming (MTLA1/MTLA2, weak similarity
-      to S. cerevisiae a1/C. albicans a2) in genome annotation
+    tier: 2
+    experimental_method: 'homology-based gene naming (MTLA1/MTLA2, weak similarity
+      to S. cerevisiae a1/C. albicans a2) in genome annotation -- not an experimentally
+      validated idiomorph call. Downgraded from an initial tier-1 assessment per
+      user review (2026-09-16) for the same reason as locus_existence/boundaries
+      above.
+
+      '
     citations:
     - pmid: '15229592'
       doi: 10.1038/nature02579

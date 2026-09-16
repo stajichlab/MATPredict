@@ -21,6 +21,7 @@ def _seed_order_yml(tmp_path):
     dest_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy(_REAL_MUCOROMYCOTA_ORDER_YML, dest_dir / "order.yml")
 
+
 RECORD = {
     "record_id": "4837_nrrl-1555_MAT_Plus",
     "record_version": 1,

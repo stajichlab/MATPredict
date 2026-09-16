@@ -1,0 +1,123 @@
+record_id: 4896_h90_mat2_P
+record_version: 1
+taxonomy:
+  taxid: 4896
+  lineage: k__Fungi;p__Ascomycota;subphylum__Taphrinomycotina;c__Schizosaccharomycetes;o__Schizosaccharomycetales;f__Schizosaccharomycetaceae;g__Schizosaccharomyces;s__Schizosaccharomyces_pombe
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Schizosaccharomyces pombe
+  strain:
+    name: h90
+    known: true
+    culture_collection_ids:
+    - h90
+    differs_from_sequenced: false
+mating_type:
+  locus_name: mat2
+  idiomorphs:
+  - P
+  system: pseudohomothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: H3->H2->matPc->matPi
+    definition_note: 'This is the SILENT P-type donor cassette (mat2-P), NOT the expressed
+      mat1 locus -- captured per user direction (2026-09-16) specifically because
+      the Pc/Pi protein sequences here are needed for future HMM-building work on
+      P-type mating proteins, even though this genomic copy is transcriptionally silenced
+      and never directly expressed. Located ~15kb from mat1 in the switching- competent
+      h90 (wild-type) strain (contig FP565355), whereas the community reference genome
+      (972h-, used in 4896_972h_mat1_M) has this entire region deleted for lab stability.
+      Original characterization: Kelly et al. 1988 (same paper as mat1). H1/H2/H3
+      are shared/cassette-boundary homology-box sequences (not genes) bounding this
+      cassette, flagged here for completeness but not included in genes[] since they
+      encode no protein. excluded_from_coordinate_benchmark is set to true because
+      this locus is never an active MAT locus by definition -- it should never be
+      scored in any downstream MAT-locus boundary-detection benchmark, only used as
+      a reference protein sequence source.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: FP565355
+        seq_region: FP565355
+      start: 3355
+      end: 4369
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: matPc
+  protein_accession: ncbi_protein:CBB12354.1
+  role: core_MAT
+  present: true
+  locus_tag: SPMTR.01
+  segment_index: 0
+  start: 3355
+  end: 3711
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: matPi
+  protein_accession: ncbi_protein:CBB12355.1
+  role: core_MAT
+  present: true
+  locus_tag: SPMTR.02
+  segment_index: 0
+  start: 3890
+  end: 4369
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: 'molecular genetics: sequencing of the mat1/mat2/mat3 region;
+      Pc/Pi genes defined by ORF analysis and mutant complementation'
+    citations:
+    - pmid: '2900761'
+      doi: 10.1002/j.1460-2075.1988.tb02973.x
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing (Kelly et al. 1988); coordinates
+      on this h90 strain contig (ENA FP565355) independently reconfirmed by the curator
+      via NCBI efetch
+    citations:
+    - pmid: '2900761'
+      doi: 10.1002/j.1460-2075.1988.tb02973.x
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: sequence identity to the P-specific cassette region, distinguished
+      from mat3-M by H1/H2/H3 homology-box structure
+    citations:
+    - pmid: '2900761'
+      doi: 10.1002/j.1460-2075.1988.tb02973.x
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: FP565355.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 2900761|4896|mat2|P
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

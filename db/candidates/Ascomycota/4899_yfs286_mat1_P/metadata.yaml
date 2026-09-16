@@ -1,0 +1,119 @@
+record_id: 4899_yfs286_mat1_P
+record_version: 1
+taxonomy:
+  taxid: 4899
+  lineage: k__Fungi;p__Ascomycota;subphylum__Taphrinomycotina;c__Schizosaccharomycetes;o__Schizosaccharomycetales;f__Schizosaccharomycetaceae;g__Schizosaccharomyces;s__Schizosaccharomyces_octosporus
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Schizosaccharomyces octosporus
+  strain:
+    name: yFS286
+    known: true
+    culture_collection_ids:
+    - yFS286
+    differs_from_sequenced: false
+mating_type:
+  locus_name: mat1
+  idiomorphs:
+  - P
+  system: pseudohomothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: mat1-Pc->mat1-Pi
+    definition_note: 'Provides a genuinely active (not silent/donor) bipolar P-allele
+      record, paired conceptually with the S. pombe mat1-M record (4896_972h_mat1_M):
+      S. octosporus shares the same mat1/mat2/mat3 three-component switching architecture
+      as S. pombe (Rhind et al. 2011, comparative fission-yeast genomics), but this
+      particular reference strain''s genome sequence has the P allele active at mat1.
+      Gene identity and coordinates independently confirmed directly against this
+      contig''s own RefSeq annotation (NW_013185619.1) via NCBI efetch. system is
+      "pseudohomothallic" for the same reasoning as the S. pombe mat1 records: this
+      is a switching-capable species snapshot, not simultaneous/primary homothallism.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NW_013185619.1
+        seq_region: NW_013185619.1
+      start: 3770346
+      end: 3771307
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: mat1-Pc
+  protein_accession: ncbi_protein:XP_013017870.1
+  role: core_MAT
+  present: true
+  locus_tag: SOCG_06172
+  segment_index: 0
+  start: 3770346
+  end: 3770699
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: mat1-Pi
+  protein_accession: ncbi_protein:XP_013017871.1
+  role: core_MAT
+  present: true
+  locus_tag: SOCG_06173
+  segment_index: 0
+  start: 3770831
+  end: 3771307
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: comparative genome sequencing and annotation across the fission-yeast
+      clade
+    citations:
+    - pmid: '21511999'
+      doi: 10.1126/science.1203357
+  boundaries:
+    tier: 1
+    experimental_method: RefSeq genome annotation; coordinates independently reconfirmed
+      by the curator via NCBI efetch
+    citations:
+    - pmid: '21511999'
+      doi: 10.1126/science.1203357
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: homology to characterized S. pombe mat1-Pc/Pi (Kelly et al.
+      1988); reference genome carries the P allele at mat1
+    citations:
+    - pmid: '21511999'
+      doi: 10.1126/science.1203357
+    - pmid: '2900761'
+      doi: 10.1002/j.1460-2075.1988.tb02973.x
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NW_013185619.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 21511999|4899|mat1|P
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -50,8 +50,13 @@ class NcbiClient:
         )
 
     def fetch_protein_sequence(self, accession: str) -> str:
-        """Fetch a protein accession's sequence as a plain string (no header, no newlines)."""
+        """Fetch a protein accession's sequence as a plain string (no header, no newlines).
+
+        Uses the "fasta-blast" parser, not "fasta": live NCBI efetch responses can carry
+        leading comment lines (e.g. rate-limit/usage notices), which the strict "fasta"
+        parser rejects outright. "fasta-blast" tolerates '!'/'#'/';'-prefixed comment lines.
+        """
         url = self._url("efetch.fcgi", f"db=protein&id={accession}&rettype=fasta&retmode=text")
         body = self.fetcher.get(url)
-        record = SeqIO.read(StringIO(body), "fasta")
+        record = SeqIO.read(StringIO(body), "fasta-blast")
         return str(record.seq)

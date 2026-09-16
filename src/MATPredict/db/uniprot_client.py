@@ -28,8 +28,13 @@ class UniprotClient:
         return AccessionStatus(accession=accession, resolved=resolved, resolved_version=accession if resolved else None, suppressed=not resolved)
 
     def fetch_protein_sequence(self, accession: str) -> str:
-        """Fetch a UniProt accession's sequence as a plain string."""
+        """Fetch a UniProt accession's sequence as a plain string.
+
+        Uses "fasta-blast", not "fasta" — see MATPredict.db.ncbi_client.NcbiClient
+        for why: some upstream FASTA responses carry leading comment lines that the
+        strict "fasta" parser rejects outright.
+        """
         url = f"{_UNIPROT_BASE}/{accession}.fasta"
         body = self.fetcher.get(url)
-        record = SeqIO.read(StringIO(body), "fasta")
+        record = SeqIO.read(StringIO(body), "fasta-blast")
         return str(record.seq)

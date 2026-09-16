@@ -1,0 +1,126 @@
+record_id: 5346_a43-b43-okayama-7_HD_A43
+record_version: 1
+taxonomy:
+  taxid: 5346
+  lineage: k__Fungi;p__Basidiomycota;c__Agaricomycetes;o__Agaricales;f__Psathyrellaceae;g__Coprinopsis;s__Coprinopsis_cinerea
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Coprinopsis cinerea
+  strain:
+    name: A43 B43 / Okayama-7
+    known: true
+    culture_collection_ids:
+    - Okayama-7
+    differs_from_sequenced: false
+mating_type:
+  locus_name: HD
+  idiomorphs:
+  - A43
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: HD1(a1-1)->HD2(beta)
+    definition_note: 'Coprinopsis cinerea has a tetrapolar system with a multiallelic
+      HD (A) locus and a multiallelic PR (B) locus (Kamada 2002, Pardo et al. 1996).
+      This record covers only the HD locus for the reference strain (allele A43, per
+      the Okayama-7 AmutBmut background). Coordinates and protein accessions were
+      located by matching a literature-derived gene list (from a separate research
+      agent''s synthesis) against the actual GenBank annotation of assembly GCA_016772295.1,
+      contig JAAGWA010000001.1 -- verified directly via NCBI efetch, not carried over
+      from the synthesis unchecked. The two genes (HD1-type "a1-1" and the HD2-type
+      "mating-type protein beta") are immediately adjacent (681-6547 within the fetched
+      window), consistent with the expected paired HD1/HD2 architecture. HD2 has two
+      annotated transcript variants (KAG2022960.1, KAG2022961.1); this record uses
+      the first as the representative entry.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: assembly
+        accession: GCA_016772295.1
+        seq_region: JAAGWA010000001.1
+      start: 1625680
+      end: 1631546
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: HD1
+  protein_accession: ncbi_protein:KAG2022959.1
+  role: core_MAT
+  present: true
+  locus_tag: CC2G_000671
+  segment_index: 0
+  start: 1625680
+  end: 1627651
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: HD2
+  protein_accession: ncbi_protein:KAG2022960.1
+  role: core_MAT
+  present: true
+  locus_tag: CC2G_000672
+  segment_index: 0
+  start: 1628003
+  end: 1631546
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: genetic/molecular characterization of the multiallelic A
+      (HD) locus
+    citations:
+    - pmid: '8878675'
+      doi: 10.1093/genetics/144.1.87
+    - pmid: null
+      doi: 10.1002/bies.10083
+  boundaries:
+    tier: 1
+    experimental_method: 'Genetic/molecular characterization of the HD (A) locus genes
+      (Pardo et al. 1996). Exact coordinates on this specific assembly (GCA_016772295.1)
+      were curator-derived by matching the characterized gene products to the genome''s
+      own annotation, not copied directly from the 1996 paper''s reported sequence
+      -- see locus.coordinate_provenance and locus.core.definition_note.
+
+      '
+    citations:
+    - pmid: '8878675'
+      doi: 10.1093/genetics/144.1.87
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: strain genotype (A43 B43 background, Okayama-7)
+    citations:
+    - pmid: '8878675'
+      doi: 10.1093/genetics/144.1.87
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: null
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 8878675|5346|HD|A43
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

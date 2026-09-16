@@ -1,0 +1,121 @@
+record_id: 5270_521_bLocus_b1
+record_version: 1
+taxonomy:
+  taxid: 5270
+  lineage: k__Fungi;p__Basidiomycota;c__Ustilaginomycetes;o__Ustilaginales;f__Ustilaginaceae;g__Mycosarcoma;s__Mycosarcoma_maydis
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Mycosarcoma maydis
+  strain:
+    name: '521'
+    known: true
+    culture_collection_ids:
+    - '521'
+    differs_from_sequenced: false
+mating_type:
+  locus_name: bLocus
+  idiomorphs:
+  - b1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: bE1->bW1
+    definition_note: 'The b locus (multiallelic, divergently transcribed bE/bW homeodomain
+      pair) is genetically unlinked to the a locus in this species (separate record
+      5270_521_a_locus_a1). Reference strain 521 genotype is documented as a1 b1 (Bolker
+      et al. 1992; Gillissen et al. 1992, which established the bE/bW two-gene model).
+      RefSeq''s own annotation confirms "b mating type locus, bE1 allele" and "b mating
+      type locus, bW1 allele" directly by product description at this position, matching
+      the b1 allele expected for this strain -- no naming ambiguity here (contrast
+      with the a_locus record''s Pra1/Rba1 naming note). Both CDS features are annotated
+      with partial/incomplete boundaries in GenBank (join() locations with ">"-prefixed
+      end coordinates, i.e. extending beyond the fetched window on one side) -- completeness
+      is "partial" for this reason; the coordinates given here reflect only the portion
+      captured in the fetched region, not necessarily the gene''s full extent.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NC_026478.1
+        seq_region: NC_026478.1
+      start: 1690003
+      end: 1693904
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: bE
+  protein_accession: ncbi_protein:XP_011386823.1
+  role: core_MAT
+  present: true
+  locus_tag: UMAG_12052
+  segment_index: 0
+  start: 1690003
+  end: 1691498
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: bW
+  protein_accession: ncbi_protein:XP_011386405.1
+  role: core_MAT
+  present: true
+  locus_tag: UMAG_00578
+  segment_index: 0
+  start: 1691753
+  end: 1693904
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: molecular cloning and sequencing of the b locus; genetic
+      demonstration that bE/bW heterodimers regulate sexual/pathogenic development
+    citations:
+    - pmid: '1739973'
+      doi: 10.1016/0092-8674(92)90141-x
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing (reference genome strain 521);
+      coordinates independently reconfirmed by the curator via NCBI efetch against
+      NC_026478.1
+    citations:
+    - pmid: '1739973'
+      doi: 10.1016/0092-8674(92)90141-x
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: reference strain 521 documented genotype (a1 b1); RefSeq
+      annotation directly labels these genes as the bE1/bW1 allele
+    citations:
+    - pmid: '1739973'
+      doi: 10.1016/0092-8674(92)90141-x
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NC_026478.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 1739973|5270|bLocus|b1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

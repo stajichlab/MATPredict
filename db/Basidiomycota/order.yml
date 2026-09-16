@@ -49,3 +49,15 @@ loci:
     genes:
       - {name: pheromone, role: core_MAT}
       - {name: pheromone_receptor, role: core_MAT}
+  - locus_name: "aLocus"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^a[0-9]+$"
+    genes:
+      - {name: mfa, role: core_MAT}
+      - {name: pra, role: core_MAT}
+  - locus_name: "bLocus"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^b[0-9]+$"
+    genes:
+      - {name: bE, role: core_MAT}
+      - {name: bW, role: core_MAT}

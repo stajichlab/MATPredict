@@ -1,0 +1,128 @@
+record_id: 5270_521_aLocus_a1
+record_version: 1
+taxonomy:
+  taxid: 5270
+  lineage: k__Fungi;p__Basidiomycota;c__Ustilaginomycetes;o__Ustilaginales;f__Ustilaginaceae;g__Mycosarcoma;s__Mycosarcoma_maydis
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Mycosarcoma maydis
+  strain:
+    name: '521'
+    known: true
+    culture_collection_ids:
+    - '521'
+    differs_from_sequenced: false
+mating_type:
+  locus_name: aLocus
+  idiomorphs:
+  - a1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: pra->mfa/rba
+    definition_note: 'Mycosarcoma maydis (= Ustilago maydis, older name still used
+      throughout the primary literature) has two unlinked tetrapolar loci: this record
+      covers only the a locus (pheromone/receptor); the b locus (bE/bW homeodomain
+      pair) is a separate record (5270_521_b_locus_b1). Reference strain 521 has genotype
+      a1 b1 (Bolker, Urban, Kahmann 1992; Gillissen et al. 1992). RefSeq''s own annotation
+      of this genome names the two genes at this locus "Pra1" (product: "a2-pheromone
+      receptor Pra1") and "Rba1" (product: "a1-mating type protein Rba1") -- a naming
+      inconsistency worth flagging: despite the "Pra1" product description literally
+      saying "a2", this gene resides in the a1 genotype reference strain''s genome,
+      and "Rba1" is not the classical "mfa" pheromone-precursor name used in the review
+      literature (Bolker et al. 1992; Spellig et al. 1994) for the a locus''s other
+      core gene. This may reflect legacy/inconsistent gene symbol assignment in RefSeq''s
+      annotation pipeline rather than a real second a2 gene present in an a1 genome;
+      a human reviewer familiar with the current U. maydis gene nomenclature (e.g.
+      MycoCosm/PomBase-style curation) should confirm whether "Rba1" is functionally
+      the mfa1 pheromone precursor before this record is relied upon for anything
+      beyond general locus/coordinate reference. Coordinates and protein accessions
+      were independently verified directly against GenBank via NCBI efetch, not inferred
+      from gene symbols alone.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NC_026482.1
+        seq_region: NC_026482.1
+      start: 1025468
+      end: 1028133
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: pra
+  protein_accession: ncbi_protein:XP_011388683.1
+  role: core_MAT
+  present: true
+  locus_tag: UMAG_02383
+  segment_index: 0
+  start: 1025468
+  end: 1026778
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: mfa
+  protein_accession: ncbi_protein:XP_011388684.1
+  role: core_MAT
+  present: true
+  locus_tag: UMAG_02384
+  segment_index: 0
+  start: 1027491
+  end: 1028133
+  strand: '-'
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: molecular cloning and genetic characterization of the a mating
+      type locus; functional analysis of pheromone/receptor cell signaling components
+    citations:
+    - pmid: null
+      doi: 10.1016/0092-8674(92)90182-c
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing (reference genome strain 521);
+      coordinates independently reconfirmed by the curator via NCBI efetch against
+      NC_026482.1
+    citations:
+    - pmid: null
+      doi: 10.1016/0092-8674(92)90182-c
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: reference strain 521 documented genotype (a1 b1) in the primary
+      literature
+    citations:
+    - pmid: null
+      doi: 10.1016/0092-8674(92)90182-c
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NC_026482.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1016/0092-8674(92)90182-c|5270|aLocus|a1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -1,0 +1,120 @@
+record_id: 192523_h97_HD_A1
+record_version: 1
+taxonomy:
+  taxid: 192523
+  lineage: k__Fungi;p__Basidiomycota;c__Agaricomycetes;o__Agaricales;f__Agaricaceae;g__Agaricus;s__Agaricus_bisporus
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Agaricus bisporus var. bisporus
+  strain:
+    name: H97
+    known: true
+    culture_collection_ids:
+    - H97
+    differs_from_sequenced: false
+mating_type:
+  locus_name: HD
+  idiomorphs:
+  - A1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: HD2->HD1(a1-1)
+    definition_note: 'A. bisporus is bipolar with a single HD locus; the PR (pheromone/
+      receptor) locus has lost its mating-type role in this species (Foulongne-Oriol
+      et al. 2021) -- no paired PR-locus record exists or is expected for this species.
+      The reference genome (var. bisporus strain H97) carries an extra HD2 gene copy
+      per the primary literature; only the single HD1/HD2 pair captured at this specific
+      genomic position (matching the gene identities directly confirmed via NCBI efetch)
+      is represented here -- completeness is "partial" because the reported extra
+      HD2 copy elsewhere in the genome is not included in this record. HD1 is officially
+      annotated "a1-1" in GenBank; idiomorph "A1" here reflects the locus_name "HD"
+      pattern convention (^A[0-9]+$) already established for Coprinopsis cinerea in
+      this database, applied to the "a1-1" allele designation. Flanking genes reported
+      in the literature (mip1, beta-fg) are not included in this record; a follow-up
+      could add them once specifically located and verified.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NW_006267344.1
+        seq_region: NW_006267344.1
+      start: 898235
+      end: 902102
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: HD2
+  protein_accession: ncbi_protein:XP_006454971.1
+  role: core_MAT
+  present: true
+  locus_tag: AGABI2DRAFT_239365
+  segment_index: 0
+  start: 898235
+  end: 899865
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: HD1
+  protein_accession: ncbi_protein:XP_006455003.1
+  role: core_MAT
+  present: true
+  locus_tag: AGABI2DRAFT_113833
+  segment_index: 0
+  start: 900064
+  end: 902102
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: genetic linkage mapping and molecular characterization of
+      the A mating type locus
+    citations:
+    - pmid: '34356095'
+      doi: 10.3390/genes12071079
+  boundaries:
+    tier: 1
+    experimental_method: complete locus sequencing (H97 reference genome); coordinates
+      independently reconfirmed by the curator via NCBI efetch against NW_006267344.1
+    citations:
+    - pmid: '34356095'
+      doi: 10.3390/genes12071079
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: HD1/HD2 homeodomain gene identity at the mapped A locus position
+    citations:
+    - pmid: '34356095'
+      doi: 10.3390/genes12071079
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NW_006267344.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 34356095|192523|HD|A1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

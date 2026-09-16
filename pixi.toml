@@ -1,0 +1,23 @@
+[workspace]
+name = "MATPredict"
+channels = ["conda-forge", "bioconda"]
+platforms = ["linux-64"]
+
+[dependencies]
+python = ">=3.11"
+pip = "*"
+taxonkit = "*"
+
+[pypi-dependencies]
+MATPredict = { path = ".", editable = true }
+
+[feature.test.dependencies]
+pytest = "*"
+
+[environments]
+default = { features = [], solve-group = "default" }
+test = { features = ["test"], solve-group = "default" }
+
+[tasks]
+test = "pytest -v"
+matpredict = "matpredict"

@@ -50,11 +50,24 @@ def test_write_genbank_includes_only_present_genes_and_roundtrips(tmp_path):
     assert "tptA" in content
     assert "sexM" not in content
 
-    records = list(SeqIO.parse(out_path, "genbank"))
+    with open(out_path) as handle:
+        records = list(SeqIO.parse(handle, "genbank"))
     assert len(records) == 1
-    gene_names = set()
+    gene_features = {}
     for rec in records:
         for feature in rec.features:
             if feature.type == "gene":
-                gene_names.add(feature.qualifiers["gene"][0])
-    assert gene_names == {"sexP", "tptA"}
+                gene_features[feature.qualifiers["gene"][0]] = feature
+    assert set(gene_features) == {"sexP", "tptA"}
+
+    # Pin down the actual coordinate conversion so an off-by-one regression doesn't pass
+    # silently. sexP is at absolute 1-based fully-closed [121002, 122400] on a segment
+    # starting at absolute 1-based 120345. The placeholder SeqRecord's sequence spans only
+    # this segment, so feature locations must be rebased relative to the segment start, not
+    # left as absolute coordinates (which would fall outside the record's own sequence bounds
+    # and produce invalid GenBank output).
+    # relative_start_0based = 121002 - 120345 = 657
+    # relative_end_halfopen = 122400 - 120345 + 1 = 2056
+    sexp_location = gene_features["sexP"].location
+    assert int(sexp_location.start) == 657
+    assert int(sexp_location.end) == 2056

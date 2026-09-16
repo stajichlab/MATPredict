@@ -1,0 +1,144 @@
+record_id: 5334_h4-8_Balpha_3
+record_version: 1
+taxonomy:
+  taxid: 5334
+  lineage: k__Fungi;p__Basidiomycota;c__Agaricomycetes;o__Agaricales;f__Schizophyllaceae;g__Schizophyllum;s__Schizophyllum_commune
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Schizophyllum commune
+  strain:
+    name: H4-8
+    known: true
+    culture_collection_ids:
+    - H4-8
+    differs_from_sequenced: false
+mating_type:
+  locus_name: Balpha
+  idiomorphs:
+  - '3'
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: bap3-3->bap3-1->bar3
+    definition_note: 'Balpha1 locus (specificity 3, "bar3"/"bap3-x" gene naming) per
+      Wendland et al. 1995 (original Balpha1 discovery paper). Genes here (2 pheromone
+      precursors + 1 receptor) form a ~7kb cluster on contig NW_026089548.1 of assembly
+      GCF_000143185.2, spatially adjacent to (but distinguishable from) the Bbeta
+      cluster (5334_h4-8_Bbeta_2 -- same contig, ~211-233kb, vs this locus''s ~241-248kb)
+      on the same contig. Two additional receptor-like genes on this same contig (brl1
+      at ~189850-192799 and brl3 at ~271890-273658, flanking the whole Balpha+Bbeta
+      region on both sides) were deliberately excluded from both this record and the
+      Bbeta record: their "receptor-like" naming and generic (non-alpha, non-beta)
+      labeling did not let a specific sublocus assignment be made confidently. The
+      report describes Balpha1 as containing 3 pheromone genes; only 2 (bap3-1, bap3-3)
+      were found in the source data -- completeness is "partial" for this reason.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: assembly
+        accession: GCF_000143185.2
+        seq_region: NW_026089548.1
+      start: 241497
+      end: 248430
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: bap3-3
+  protein_accession: ncbi_protein:XP_003028250.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 241497
+  end: 241688
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: bap3-1
+  protein_accession: ncbi_protein:XP_003028251.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 245410
+  end: 245586
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: bar3
+  protein_accession: ncbi_protein:XP_003027970.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 246348
+  end: 248430
+  strand: +
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: molecular characterization of the Balpha1 locus (receptor
+      + pheromone genes)
+    citations:
+    - pmid: '7489716'
+      doi: 10.1002/j.1460-2075.1995.tb00211.x
+  boundaries:
+    tier: 1
+    experimental_method: 'Locus existence/gene identity established by Wendland et
+      al. 1995. Exact coordinates on this specific assembly (GCF_000143185.2) were
+      curator-derived by matching characterized gene identity to the genome''s own
+      annotation. Per user guidance on basidiomycete PR/B-locus curation (2026-09-16):
+      pheromone/receptor gene clustering with multiple copies is expected B-locus
+      structure, not a sign of misassignment -- consistent with the Balpha/Bbeta spatial
+      separation observed here.
+
+      '
+    citations:
+    - pmid: '7489716'
+      doi: 10.1002/j.1460-2075.1995.tb00211.x
+    - pmid: null
+      doi: 10.1038/nbt.1643
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: reference genome specificity (Balpha-3, per bar3/bap3-x gene
+      naming)
+    citations:
+    - pmid: null
+      doi: 10.1038/nbt.1643
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: null
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1002/j.1460-2075.1995.tb00211.x|5334|Balpha|3
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

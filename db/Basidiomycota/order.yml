@@ -25,3 +25,27 @@ loci:
       - {name: MFa2, role: core_MAT, present_in_idiomorphs: ["a"]}
       - {name: MFa3, role: core_MAT, present_in_idiomorphs: ["a"]}
       - {name: STE3, role: core_MAT}
+  - locus_name: "Aalpha"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^[0-9]+$"
+    genes:
+      - {name: Y, role: core_MAT}
+      - {name: Z, role: core_MAT}
+  - locus_name: "Abeta"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^[0-9]+$"
+    genes:
+      - {name: Y, role: core_MAT}
+      - {name: Z, role: core_MAT}
+  - locus_name: "Balpha"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^[0-9]+$"
+    genes:
+      - {name: pheromone, role: core_MAT}
+      - {name: pheromone_receptor, role: core_MAT}
+  - locus_name: "Bbeta"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^[0-9]+$"
+    genes:
+      - {name: pheromone, role: core_MAT}
+      - {name: pheromone_receptor, role: core_MAT}

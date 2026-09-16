@@ -1,0 +1,222 @@
+record_id: 5334_h4-8_Bbeta_2
+record_version: 1
+taxonomy:
+  taxid: 5334
+  lineage: k__Fungi;p__Basidiomycota;c__Agaricomycetes;o__Agaricales;f__Schizophyllaceae;g__Schizophyllum;s__Schizophyllum_commune
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Schizophyllum commune
+  strain:
+    name: H4-8
+    known: true
+    culture_collection_ids:
+    - H4-8
+    differs_from_sequenced: false
+mating_type:
+  locus_name: Bbeta
+  idiomorphs:
+  - '2'
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: bbp2-2->bbr2->bbp2-1->bbp2->bbp2->bbp2-5->bbp2-8->bbp2-6
+    definition_note: "Bbeta1 locus (specificity 2, \"bbr2\"/\"bbp2-x\" gene naming)\
+      \ per Vaillancourt et al. 1997 (original Bbeta1 discovery paper). Genes here\
+      \ (6 pheromone precursors + 1 receptor, per bbp2-2/bbp2-1/bbp2 x2/bbp2-5/bbp2-8/bbp2-6/bbr2)\
+      \ form a ~17kb cluster on contig NW_026089548.1 of assembly GCF_000143185.2,\
+      \ spatially adjacent to the Balpha cluster (5334_h4-8_Balpha_3, same contig,\
+      \ ~241-248kb, vs this locus's ~216-234kb). Two genes both carried the raw gene_id\
+      \ \"bbp2\" in the source literature table but resolved to two distinct GenBank\
+      \ protein accessions (XP_003028246.1 at 224353-224604, and a different transcript\
+      \ at 227442-227732 annotated \"peptide mating pheromone precursor Bbp2-7\" in\
+      \ GenBank's own record despite the source table's generic \"bbp2\" label) --\
+      \ named \"bbp2_a\"/\"bbp2_b\" here to keep them distinct, following GenBank's\
+      \ own annotation over the literature table's label collision. Two additional\
+      \ receptor-like genes flanking the whole Balpha+Bbeta region (brl1, brl3) were\
+      \ excluded from both this record and the Balpha record for the reasons given\
+      \ in 5334_h4-8_Balpha_3's definition_note. Report describes Bbeta1 as containing\
+      \ \"\u22653 pheromones + 1 receptor\"; 6 pheromones were found here, exceeding\
+      \ that description -- completeness is \"partial\" only because this gene roster\
+      \ is not claimed to be exhaustive, not because the count is doubted.\n"
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: assembly
+        accession: GCF_000143185.2
+        seq_region: NW_026089548.1
+      start: 216536
+      end: 233781
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: bbp2-2
+  protein_accession: ncbi_protein:XP_003027960.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 216536
+  end: 216733
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: bbr2
+  protein_accession: ncbi_protein:XP_003028243.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 218046
+  end: 220353
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: bbp2-1
+  protein_accession: ncbi_protein:XP_003028244.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 220898
+  end: 221788
+  strand: '-'
+  order_in_locus: 2
+- gene_index: 3
+  name: bbp2_a
+  protein_accession: ncbi_protein:XP_003028246.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 224353
+  end: 224604
+  strand: '-'
+  order_in_locus: 3
+- gene_index: 4
+  name: bbp2_b
+  protein_accession: ncbi_protein:XP_003027962.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 227442
+  end: 227732
+  strand: +
+  order_in_locus: 4
+- gene_index: 5
+  name: bbp2-5
+  protein_accession: ncbi_protein:XP_003027964.2
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 230121
+  end: 230399
+  strand: +
+  order_in_locus: 5
+- gene_index: 6
+  name: bbp2-8
+  protein_accession: ncbi_protein:XP_003028248.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 232093
+  end: 232374
+  strand: '-'
+  order_in_locus: 6
+- gene_index: 7
+  name: bbp2-6
+  protein_accession: ncbi_protein:XP_003027965.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 233524
+  end: 233781
+  strand: +
+  order_in_locus: 7
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: molecular characterization of the Bbeta1 locus (receptor
+      + pheromone genes)
+    citations:
+    - pmid: '9178005'
+      doi: 10.1093/genetics/146.2.541
+  boundaries:
+    tier: 1
+    experimental_method: 'Locus existence/gene identity established by Vaillancourt
+      et al. 1997. Exact coordinates on this specific assembly (GCF_000143185.2) were
+      curator-derived by matching characterized gene identity to the genome''s own
+      annotation. Per user guidance on basidiomycete PR/B-locus curation (2026-09-16):
+      pheromone/receptor gene duplication and multi-copy clustering is expected B-locus
+      structure, not a sign of misassignment.
+
+      '
+    citations:
+    - pmid: '9178005'
+      doi: 10.1093/genetics/146.2.541
+    - pmid: null
+      doi: 10.1038/nbt.1643
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: reference genome specificity (Bbeta-2, per bbr2/bbp2-x gene
+      naming)
+    citations:
+    - pmid: null
+      doi: 10.1038/nbt.1643
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: null
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 5
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 6
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 7
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1093/genetics/146.2.541|5334|Bbeta|2
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

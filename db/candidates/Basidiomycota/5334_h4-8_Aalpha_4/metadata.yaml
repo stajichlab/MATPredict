@@ -1,0 +1,128 @@
+record_id: 5334_h4-8_Aalpha_4
+record_version: 1
+taxonomy:
+  taxid: 5334
+  lineage: k__Fungi;p__Basidiomycota;c__Agaricomycetes;o__Agaricales;f__Schizophyllaceae;g__Schizophyllum;s__Schizophyllum_commune
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Schizophyllum commune
+  strain:
+    name: H4-8
+    known: true
+    culture_collection_ids:
+    - H4-8
+    differs_from_sequenced: false
+mating_type:
+  locus_name: Aalpha
+  idiomorphs:
+  - '4'
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: Z4(HD1)->Y4(HD2)
+    definition_note: 'Schizophyllum commune has a four-sublocus tetrapolar system:
+      Aalpha, Abeta, Balpha, Bbeta (Kothe 1996, 1997). This record covers only the
+      Aalpha locus (Y/Z HD-domain gene pair) for the H4-8 reference genome (specificity
+      "4"). A literature-derived gene list (from a separate research agent''s synthesis,
+      citing Marion et al. 1996 for the Aalpha gene X/Y/Z structure) was cross-checked
+      directly against the actual GenBank annotation of assembly GCF_000143185.2,
+      contig NW_026089539.1, via NCBI efetch -- coordinates and protein accessions
+      here are independently verified, not carried over from the synthesis unchecked.
+      A flanking "mitochondrial intermediate peptidase" gene sits immediately adjacent
+      (not included as a MAT gene here) -- the same flanking gene identity was independently
+      observed adjacent to the HD locus in Coprinopsis cinerea (5346_a43-b43-okayama-7_HD_A43),
+      suggesting real conserved synteny across Agaricomycetes worth noting for sub-project
+      2''s synteny work. The Abeta sublocus (also part of this species'' A-locus complex)
+      is not represented in this record or dataset; Balpha and Bbeta are separate
+      records (5334_h4-8_Balpha_3, 5334_h4-8_Bbeta_2).
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: assembly
+        accession: GCF_000143185.2
+        seq_region: NW_026089539.1
+      start: 1821008
+      end: 1827457
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: Z
+  protein_accession: ncbi_protein:XP_003037384.1
+  role: core_MAT
+  present: true
+  locus_tag: SCHCODRAFT_02696654
+  segment_index: 0
+  start: 1821008
+  end: 1824097
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: Y
+  protein_accession: ncbi_protein:XP_003038722.1
+  role: core_MAT
+  present: true
+  locus_tag: SCHCODRAFT_02596714
+  segment_index: 0
+  start: 1824369
+  end: 1827457
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: molecular/genetic characterization of the Aalpha locus (gene
+      X/Y/Z structure)
+    citations:
+    - pmid: null
+      doi: 10.1007/bf02221578
+  boundaries:
+    tier: 1
+    experimental_method: 'Locus existence/gene identity established by Marion et al.
+      1996. Exact coordinates on this specific assembly (GCF_000143185.2) were curator-derived
+      by matching characterized gene identity to the genome''s own annotation, not
+      copied directly from the 1996 paper.
+
+      '
+    citations:
+    - pmid: null
+      doi: 10.1007/bf02221578
+    - pmid: null
+      doi: 10.1038/nbt.1643
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: reference genome specificity (Aalpha-4, per Y4/Z4 gene naming)
+    citations:
+    - pmid: null
+      doi: 10.1038/nbt.1643
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: null
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1007/bf02221578|5334|Aalpha|4
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

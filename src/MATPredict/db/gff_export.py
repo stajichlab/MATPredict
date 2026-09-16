@@ -50,15 +50,20 @@ def write_proteins_fasta(record: dict, sequences: dict[int, str], out_path: Path
 def write_genbank(record: dict, sequences: dict[int, str], out_path: Path) -> None:
     """Write a GenBank record for the core locus, from the same segments/genes data as write_gff3.
 
-    Builds one SeqRecord per segment (using dict.get(segment_index) protein sequences to build
-    CDS feature translations where available), with one SeqFeature per present gene at that
-    segment, and writes it via Bio.SeqIO.write in GenBank format.
+    Builds one Bio.SeqRecord per segment, with one "gene" Bio.SeqFeature per present gene at
+    that segment (matching write_gff3's present-gene exclusion behavior), and writes it via
+    Bio.SeqIO.write in GenBank format.
 
-    LIMITATION: we do not have the actual nucleotide sequence for the segment -- only protein
-    sequences per gene are passed in via `sequences`. The segment's nucleotide sequence is
-    therefore a placeholder of "N" characters at the segment's length. The gene/CDS feature
-    coordinates and qualifiers are accurate; the nucleotide sequence itself is a placeholder
-    until sub-project 2's tooling can fetch the real assembly sequence for the region.
+    `sequences` is accepted for interface symmetry with write_proteins_fasta and to leave room
+    for a future CDS/translation feature, but is not currently used: we only have protein
+    sequences per gene index here, not the segment's real nucleotide sequence, so there is
+    nothing correct to translate a CDS feature against yet.
+
+    LIMITATION: we do not have the actual nucleotide sequence for the segment. The segment's
+    nucleotide sequence is therefore a placeholder of "N" characters at the segment's length.
+    The gene feature coordinates and qualifiers are accurate; the nucleotide sequence itself is
+    a placeholder until sub-project 2's tooling can fetch the real assembly sequence for the
+    region.
     """
     segments = record["locus"]["core"]["segments"]
     genes_by_segment: dict[int, list[dict]] = {}

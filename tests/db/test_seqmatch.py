@@ -22,3 +22,8 @@ def test_single_mismatch_still_passes_at_high_identity():
 def test_unrelated_sequences_fail():
     result = score_match(query="AAAAAAAAAAAAAAAAAAAAAA", reference="MKTAYIAKQRQISFVKSHFSRQ")
     assert result.status == "fail"
+
+
+def test_empty_query_or_reference_fails():
+    assert score_match(query="", reference="MKTAYIAKQRQ").status == "fail"
+    assert score_match(query="MKTAYIAKQRQ", reference="").status == "fail"

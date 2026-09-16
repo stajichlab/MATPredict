@@ -1,0 +1,14 @@
+phylum: Basidiomycota
+loci:
+  - locus_name: "HD"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^A[0-9]+$"
+    genes:
+      - {name: HD1, role: core_MAT}
+      - {name: HD2, role: core_MAT}
+  - locus_name: "PR"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^B[0-9]+$"
+    genes:
+      - {name: pheromone, role: core_MAT}
+      - {name: pheromone_receptor, role: core_MAT}

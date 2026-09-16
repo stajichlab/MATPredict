@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import copy
+from pathlib import Path
 
 import pytest
+import yaml
 
 from MATPredict.db import schema
 
@@ -76,3 +78,11 @@ def test_idiomorph_pattern_locus_accepts_allele_ids():
     record = copy.deepcopy(VALID_RECORD)
     record["mating_type"] = {"locus_name": "HD", "idiomorphs": ["A1"], "system": "heterothallic"}
     assert schema.validate_idiomorphs(record, pattern_order) == []
+
+
+@pytest.mark.parametrize("phylum", ["Ascomycota", "Basidiomycota", "Mucoromycota"])
+def test_real_order_yml_files_validate(phylum):
+    repo_root = Path(__file__).resolve().parents[2]
+    order_path = repo_root / "db" / phylum / "order.yml"
+    doc = yaml.safe_load(order_path.read_text())
+    assert schema.validate_order(doc) == []

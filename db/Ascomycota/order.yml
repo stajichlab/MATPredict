@@ -1,0 +1,11 @@
+phylum: Ascomycota
+loci:
+  - locus_name: "MAT"
+    vocabulary_type: "enum"
+    idiomorph_values: ["MAT1-1", "MAT1-2"]
+    genes:
+      - {name: MAT1-1-1, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: MAT1-2-1, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
+      - {name: APN2, role: flanking_conserved}
+      - {name: SLA2, role: flanking_conserved}
+      - {name: COX13, role: flanking_conserved}

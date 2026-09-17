@@ -61,6 +61,7 @@ from MATPredict.detect.family_registry import (
 )
 from MATPredict.detect.idiomorph import assign_idiomorph
 from MATPredict.detect.polish import (
+    STATUS_DISAGREE,
     STATUS_UNPOLISHED,
     PolishModel,
     PolishOutcome,
@@ -93,6 +94,13 @@ class GeneEvidence:
     coverage: float | None
     reference_record_id: str
     method: str
+    status: str = "polished_agree"  # one of polish.STATUS_* -- default only
+    # for backward-compatible construction in existing tests that predate
+    # this field; real pipeline code below always passes a real, computed
+    # status, never this default.
+    alternate_model: dict | None = None  # the OTHER tool's model
+    # (contig/start/end/strand/exons/identity/method), populated only when
+    # status == polish.STATUS_DISAGREE, else None.
 
 
 @dataclass(frozen=True)
@@ -385,6 +393,23 @@ def _hit_from_model(model: PolishModel) -> SearchHit:
     )
 
 
+def _model_dict(model: PolishModel) -> dict:
+    """A `PolishModel` re-expressed as a plain, YAML/GFF3-attribute-friendly
+    dict -- used only to carry the non-canonical tool's model on a
+    `polished_disagree` `GeneEvidence` so a human reviewer can inspect the
+    disagreement, never for the canonical fields (those stay as
+    `GeneEvidence`'s own top-level attributes)."""
+    return {
+        "contig": model.contig,
+        "start": model.start,
+        "end": model.end,
+        "strand": model.strand,
+        "exons": [{"start": e.start, "end": e.end} for e in model.exons],
+        "identity": model.identity,
+        "method": model.method,
+    }
+
+
 def _gene_evidence(
     member_clusters: list[GeneCluster],
     family_key: FamilyKey,
@@ -424,21 +449,42 @@ def _gene_evidence(
             outcome = outcomes.get(gene_name)
             if outcome is not None and outcome.canonical is not None:
                 model = outcome.canonical
+                # The non-canonical tool's model is surfaced only when the two
+                # tools actually disagreed -- a `polished_agree` pair's second
+                # model is redundant (within tolerance of the canonical one)
+                # and `polished_single` has no second model to show.
+                alternate = None
+                if outcome.status == STATUS_DISAGREE:
+                    other = (
+                        outcome.miniprot_model
+                        if outcome.canonical is outcome.exonerate_model
+                        else outcome.exonerate_model
+                    )
+                    alternate = _model_dict(other) if other is not None else None
                 evidence = GeneEvidence(
                     gene_name=model.gene_name, role=model.role, contig=model.contig,
                     start=model.start, end=model.end, strand=model.strand,
                     identity=model.identity, coverage=None,
                     reference_record_id=model.reference_record_id, method=model.method,
+                    status=outcome.status, alternate_model=alternate,
                 )
             else:
                 hit = raw_by_gene.get(gene_name)
                 if hit is None:
                     continue  # unpolished with nothing localized: no evidence to report
+                # Covers both a gene whose polish outcome was genuinely
+                # STATUS_UNPOLISHED (attempted, neither tool produced a model)
+                # and a gene that never entered the polish stage at all (e.g.
+                # found only via the fast-path diamond hit) -- in both cases
+                # the raw SearchHit stands as this gene's evidence with no
+                # polished model behind it, which is exactly what
+                # `polish.STATUS_UNPOLISHED` denotes.
                 evidence = GeneEvidence(
                     gene_name=hit.gene_name, role=hit.role, contig=hit.contig,
                     start=hit.start, end=hit.end, strand=hit.strand,
                     identity=hit.identity, coverage=hit.coverage,
                     reference_record_id=hit.reference_record_id, method=hit.method,
+                    status=STATUS_UNPOLISHED, alternate_model=None,
                 )
             previous = best.get(gene_name)
             if previous is None or evidence.identity > previous.identity:

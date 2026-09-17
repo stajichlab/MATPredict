@@ -165,6 +165,84 @@ def test_write_detection_report(tmp_path):
     assert evidence["reference_record"] == "5270_521_aLocus_a1"
 
 
+def test_write_detection_gff3_gene_feature_carries_status(tmp_path):
+    out = tmp_path / "status.gff3"
+    write_detection_gff3(OUTCOME, out)
+    text = out.read_text()
+    gene_line = next(line for line in text.splitlines() if "\tgene\t" in line and "Name=pra1" in line)
+    assert "status=polished_agree" in gene_line
+
+
+def test_write_detection_report_round_trips_disagree_status_and_alternate_model(tmp_path):
+    """A polished_disagree gene's canonical coordinates AND its alternate
+    model's data must both round-trip through the YAML report."""
+    disagree_result = DetectionResult(
+        family_key=KEY, contig="c1", start=100, end=6443,
+        confidence="high", idiomorph="undetermined", ambiguous_with=[],
+        genes_found=["pra1"], genes_missing=[], fragmented=False,
+        segments=[LocusSegment("c1", 100, 6443, contig_edge_distance=99)],
+        gene_evidence=[
+            GeneEvidence(
+                "pra1", "core_MAT", "c1", 1000, 2000, "+", 92.5, 87.0,
+                "5270_521_aLocus_a1", "exonerate_refine",
+                status="polished_disagree",
+                alternate_model={
+                    "contig": "c1", "start": 1050, "end": 2050, "strand": "+",
+                    "exons": [{"start": 1050, "end": 2050}],
+                    "identity": 85.0, "method": "miniprot_refine",
+                },
+            ),
+        ],
+        reference_records=["5270_521_aLocus_a1"],
+    )
+    out = tmp_path / "disagree.yaml"
+    write_detection_report(DetectionOutcome(results=[disagree_result]), out)
+    doc = yaml.safe_load(out.read_text())
+    evidence = doc["detected"][0]["gene_evidence"][0]
+    # canonical data round-trips
+    assert evidence["gene"] == "pra1"
+    assert evidence["start"] == 1000
+    assert evidence["end"] == 2000
+    assert evidence["status"] == "polished_disagree"
+    # alternate model's data round-trips too
+    alt = evidence["alternate_model"]
+    assert alt["contig"] == "c1"
+    assert alt["start"] == 1050
+    assert alt["end"] == 2050
+    assert alt["method"] == "miniprot_refine"
+    assert alt["identity"] == 85.0
+    assert alt["exons"] == [{"start": 1050, "end": 2050}]
+
+
+def test_write_detection_gff3_disagree_gene_carries_status_and_alt_attrs(tmp_path):
+    disagree_result = DetectionResult(
+        family_key=KEY, contig="c1", start=100, end=6443,
+        confidence="high", idiomorph="undetermined", ambiguous_with=[],
+        genes_found=["pra1"], genes_missing=[], fragmented=False,
+        segments=[LocusSegment("c1", 100, 6443, contig_edge_distance=99)],
+        gene_evidence=[
+            GeneEvidence(
+                "pra1", "core_MAT", "c1", 1000, 2000, "+", 92.5, 87.0,
+                "5270_521_aLocus_a1", "exonerate_refine",
+                status="polished_disagree",
+                alternate_model={
+                    "contig": "c1", "start": 1050, "end": 2050, "strand": "+",
+                    "exons": [{"start": 1050, "end": 2050}],
+                    "identity": 85.0, "method": "miniprot_refine",
+                },
+            ),
+        ],
+    )
+    out = tmp_path / "disagree.gff3"
+    write_detection_gff3(DetectionOutcome(results=[disagree_result]), out)
+    text = out.read_text()
+    gene_line = next(line for line in text.splitlines() if "\tgene\t" in line and "Name=pra1" in line)
+    assert "status=polished_disagree" in gene_line
+    assert "alt_method=miniprot_refine" in gene_line
+    assert "alt_start=1050" in gene_line
+    assert "alt_end=2050" in gene_line
+
+
 def test_write_detection_report_lists_not_detected_families(tmp_path):
     """Sub-floor families must appear with a reason, never be silently dropped."""
     out = tmp_path / "report.yaml"

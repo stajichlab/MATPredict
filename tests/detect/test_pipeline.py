@@ -199,6 +199,52 @@ def test_polished_agree_and_disagree_produce_identical_tier(tmp_path):
     ]
 
 
+def test_gene_evidence_status_and_alternate_model_reflect_polish_outcome(tmp_path):
+    """`GeneEvidence.status` follows `PolishOutcome.status` per gene: a
+    disagreeing gene reports the non-canonical (miniprot) model as
+    `alternate_model`, an agreeing gene reports no alternate at all, and an
+    unpolished gene (falls back to the raw tblastn hit) is `unpolished` with
+    no alternate."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+    coords = {"mfa1": (100, 200), "pra1": (300, 400)}
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        return [_tblastn(name, "c1", *span) for name, span in coords.items()]
+
+    def fake_exonerate(*, gene_name, **kwargs):
+        if gene_name == "pra1":
+            return None  # pra1 is unpolished
+        return _model(gene_name, "c1", *coords[gene_name])
+
+    def fake_miniprot(*, gene_name, **kwargs):
+        if gene_name == "pra1":
+            return None
+        start, end = coords[gene_name]
+        # mfa1: shift miniprot's model well past tolerance -> disagree
+        return _model(gene_name, "c1", start + 500, end + 500, method="miniprot_refine")
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_localize=fake_localize,
+        polish_with_exonerate=fake_exonerate, polish_with_miniprot=fake_miniprot,
+    )
+    evidence = {e.gene_name: e for e in outcome.results[0].gene_evidence}
+
+    mfa1 = evidence["mfa1"]
+    assert mfa1.status == "polished_disagree"
+    assert mfa1.alternate_model is not None
+    assert mfa1.alternate_model["method"] == "miniprot_refine"
+    assert mfa1.alternate_model["start"] == 600
+    assert mfa1.alternate_model["end"] == 700
+
+    pra1 = evidence["pra1"]
+    assert pra1.status == "unpolished"
+    assert pra1.alternate_model is None
+    assert (pra1.start, pra1.end) == (300, 400)  # raw tblastn hit
+
+
 def test_unpolished_gene_caps_tier_at_medium(tmp_path):
     """A family whose genes are all localized but one gene's polish outcome is
     unpolished (neither tool produced a model) reaches at most Medium -- the

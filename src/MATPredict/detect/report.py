@@ -110,9 +110,16 @@ def write_detection_gff3(outcome: DetectionOutcome, out_path: Path) -> None:
                 f"ID={locus_id}.gene{gene_index};Parent={parent_id};Name={evidence.gene_name}"
                 f";role={evidence.role};present=true;identity={evidence.identity}"
                 f";reference_record={evidence.reference_record_id};method={evidence.method}"
+                f";status={evidence.status}"
             )
             if evidence.coverage is not None:
                 gene_attrs += f";coverage={evidence.coverage}"
+            if evidence.alternate_model is not None:
+                alt = evidence.alternate_model
+                gene_attrs += (
+                    f";alt_method={alt['method']};alt_contig={alt['contig']}"
+                    f";alt_start={alt['start']};alt_end={alt['end']};alt_identity={alt['identity']}"
+                )
             lines.append("\t".join([
                 evidence.contig, "MATPredict", "gene", str(evidence.start), str(evidence.end),
                 ".", evidence.strand or ".", ".", gene_attrs,
@@ -171,6 +178,8 @@ def _result_doc(r: DetectionResult) -> dict:
                 "coverage": e.coverage,
                 "reference_record": e.reference_record_id,
                 "method": e.method,
+                "status": e.status,
+                "alternate_model": e.alternate_model,
             }
             for e in r.gene_evidence
         ],

@@ -29,6 +29,12 @@ def test_flanked_family_medium_tier_when_core_gene_only_found_via_second_pass():
     assert assign_tier(score, FLANKED, cluster, second_pass_used=True, fragmented=False) == "medium"
 
 
+def test_flanked_family_medium_tier_when_no_flanking_gene_found():
+    score = FamilyScore(FLANKED.key, 0.5, ["STE3"], ["flank1"])
+    cluster = GeneCluster("c1", 1, 100, [])
+    assert assign_tier(score, FLANKED, cluster, second_pass_used=False, fragmented=False) == "medium"
+
+
 def test_partial_match_is_medium():
     score = FamilyScore(FLANKLESS.key, 0.5, ["mfa1"], ["pra1"])
     cluster = GeneCluster("c1", 1, 100, [])

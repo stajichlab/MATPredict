@@ -27,6 +27,12 @@ def assign_tier(
         tier = "low" if score.fraction_found == 0 else "medium"
     elif second_pass_used:
         tier = "medium"
+    elif has_flanking_conserved(family):
+        flanking_found = any(
+            g["role"] == "flanking_conserved" and g["name"] in score.genes_found
+            for g in family.genes
+        )
+        tier = "high" if flanking_found else "medium"
     else:
         tier = "high"
 

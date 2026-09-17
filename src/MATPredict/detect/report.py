@@ -36,32 +36,78 @@ def write_detection_gff3(outcome: DetectionOutcome, out_path: Path) -> None:
     "not searchable by this method" (short-ORF case) carry
     `not_searchable=true` so an absence caused by a tool limitation is never
     read as a curated negative.
+
+    A fragmented locus's segments can land on different contigs. GFF3's
+    Parent/child model assumes a child feature's parent is declared on the
+    SAME seqid, so one shared `MAT_locus` feature spanning two contigs would
+    make a second-contig gene's `Parent` point at a feature GFF3 tooling
+    would consider undeclared on that seqid. Rather than the larger
+    redesign of a true spec-correct multi-contig feature model, each segment
+    gets its OWN `MAT_locus` feature (scoped to its own contig, `ID=
+    <locus>.seg<N>` when there is more than one segment), and every gene
+    feature's `Parent` points at whichever segment shares its contig -- so
+    every Parent reference is same-contig and valid. A shared
+    `locus_group=<locus_id>` attribute on each segment's feature keeps the
+    multi-segment grouping visible without a cross-contig Parent claim.
+
+    `##sequence-region` pragmas are collected across the WHOLE outcome
+    first and deduplicated per contig (widened to the min start/max end
+    seen for that contig across all results), so two separate
+    `DetectionResult`s that happen to reference the same contig do not each
+    emit their own, duplicate pragma for it.
     """
-    lines = ["##gff-version 3"]
-    for index, r in enumerate(outcome.results):
+    contig_extent: dict[str, tuple[int, int]] = {}
+    for r in outcome.results:
         segments = r.segments or [None]
         for segment in segments:
             contig = segment.contig if segment else r.contig
             start = segment.start if segment else r.start
             end = segment.end if segment else r.end
-            lines.append(f"##sequence-region {contig} {start} {end}")
+            if contig in contig_extent:
+                prev_start, prev_end = contig_extent[contig]
+                contig_extent[contig] = (min(prev_start, start), max(prev_end, end))
+            else:
+                contig_extent[contig] = (start, end)
 
+    lines = ["##gff-version 3"]
+    for contig, (start, end) in contig_extent.items():
+        lines.append(f"##sequence-region {contig} {start} {end}")
+
+    for index, r in enumerate(outcome.results):
+        segments = r.segments or [None]
+        multi_segment = len(segments) > 1
         locus_id = _locus_id(r, index)
-        attrs = (
-            f"ID={locus_id};family={_family_label(r.family_key)};confidence={r.confidence}"
-            f";idiomorph={r.idiomorph};fragmented={str(r.fragmented).lower()}"
-        )
-        if r.ambiguous_with:
-            attrs += ";ambiguous_with=" + ",".join(_family_label(k) for k in r.ambiguous_with)
-        if r.reference_records:
-            attrs += ";reference_records=" + ",".join(r.reference_records)
-        lines.append("\t".join([
-            r.contig, "MATPredict", "MAT_locus", str(r.start), str(r.end), ".", ".", ".", attrs,
-        ]))
+        # Per-contig id for each segment's own MAT_locus feature, so every
+        # gene's Parent can point at a feature declared on its own contig.
+        segment_ids: dict[str, str] = {}
+
+        for seg_index, segment in enumerate(segments):
+            contig = segment.contig if segment else r.contig
+            start = segment.start if segment else r.start
+            end = segment.end if segment else r.end
+            seg_id = f"{locus_id}.seg{seg_index + 1}" if multi_segment else locus_id
+            segment_ids[contig] = seg_id
+
+            attrs = (
+                f"ID={seg_id};family={_family_label(r.family_key)};confidence={r.confidence}"
+                f";idiomorph={r.idiomorph};fragmented={str(r.fragmented).lower()}"
+            )
+            if multi_segment:
+                attrs += f";locus_group={locus_id}"
+            if r.ambiguous_with:
+                attrs += ";ambiguous_with=" + ",".join(_family_label(k) for k in r.ambiguous_with)
+            if r.reference_records:
+                attrs += ";reference_records=" + ",".join(r.reference_records)
+            lines.append("\t".join([
+                contig, "MATPredict", "MAT_locus", str(start), str(end), ".", ".", ".", attrs,
+            ]))
+
+        primary_id = segment_ids.get(r.contig, locus_id)
 
         for gene_index, evidence in enumerate(r.gene_evidence):
+            parent_id = segment_ids.get(evidence.contig, primary_id)
             gene_attrs = (
-                f"ID={locus_id}.gene{gene_index};Parent={locus_id};Name={evidence.gene_name}"
+                f"ID={locus_id}.gene{gene_index};Parent={parent_id};Name={evidence.gene_name}"
                 f";role={evidence.role};present=true;identity={evidence.identity}"
                 f";reference_record={evidence.reference_record_id};method={evidence.method}"
             )
@@ -76,13 +122,13 @@ def write_detection_gff3(outcome: DetectionOutcome, out_path: Path) -> None:
         for gene_name in r.genes_missing:
             lines.append("\t".join([
                 r.contig, "MATPredict", "gene", str(r.start), str(r.end), ".", ".", ".",
-                f"ID={locus_id}.gene{absent_index};Parent={locus_id};Name={gene_name};present=false",
+                f"ID={locus_id}.gene{absent_index};Parent={primary_id};Name={gene_name};present=false",
             ]))
             absent_index += 1
         for gene_name in r.genes_not_searchable:
             lines.append("\t".join([
                 r.contig, "MATPredict", "gene", str(r.start), str(r.end), ".", ".", ".",
-                f"ID={locus_id}.gene{absent_index};Parent={locus_id};Name={gene_name}"
+                f"ID={locus_id}.gene{absent_index};Parent={primary_id};Name={gene_name}"
                 f";present=false;not_searchable=true",
             ]))
             absent_index += 1

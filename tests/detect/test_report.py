@@ -77,6 +77,76 @@ def test_write_detection_gff3_emits_one_sequence_region_per_segment(tmp_path):
     assert "fragmented=true" in text
 
 
+def test_write_detection_gff3_gene_parent_is_scoped_to_its_own_contig(tmp_path):
+    """Finding B (part 1) regression: a fragmented locus's gene on the second
+    contig must NOT carry a Parent pointing at a MAT_locus feature declared
+    only on the first contig -- that is not valid/clean GFF3 for a
+    multi-contig feature set. Each segment gets its own MAT_locus feature,
+    scoped to its own contig, and each gene's Parent points at the segment
+    feature sharing its contig."""
+    fragmented = DetectionResult(
+        family_key=KEY, contig="c1", start=100, end=400,
+        confidence="medium", idiomorph="undetermined", ambiguous_with=[],
+        genes_found=["mfa1", "pra1"], genes_missing=[], fragmented=True,
+        segments=[LocusSegment("c1", 100, 200, 99), LocusSegment("c2", 300, 400, 299)],
+        gene_evidence=[
+            GeneEvidence("mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, None,
+                         "5270_521_aLocus_a1", "diamond_proteome"),
+            GeneEvidence("pra1", "core_MAT", "c2", 300, 400, "+", 95.0, None,
+                         "5270_521_aLocus_a1", "diamond_proteome"),
+        ],
+    )
+    out = tmp_path / "frag.gff3"
+    write_detection_gff3(DetectionOutcome(results=[fragmented]), out)
+    lines = out.read_text().splitlines()
+
+    feature_lines = [line for line in lines if not line.startswith("#")]
+    locus_lines = [line for line in feature_lines if "\tMAT_locus\t" in line]
+    gene_lines = [line for line in feature_lines if "\tgene\t" in line]
+
+    def _attr(line: str, key: str) -> str:
+        attrs = dict(a.split("=", 1) for a in line.split("\t")[8].split(";"))
+        return attrs[key]
+
+    # one MAT_locus feature per segment, each declared on its own contig
+    assert len(locus_lines) == 2
+    locus_by_contig = {line.split("\t")[0]: line for line in locus_lines}
+    c1_locus_id = _attr(locus_by_contig["c1"], "ID")
+    c2_locus_id = _attr(locus_by_contig["c2"], "ID")
+    assert c1_locus_id != c2_locus_id
+
+    # every gene's Parent is on ITS OWN contig, never the other segment's contig
+    mfa1_line = next(line for line in gene_lines if "Name=mfa1" in line)
+    pra1_line = next(line for line in gene_lines if "Name=pra1" in line)
+    assert mfa1_line.split("\t")[0] == "c1"
+    assert _attr(mfa1_line, "Parent") == c1_locus_id
+    assert pra1_line.split("\t")[0] == "c2"
+    assert _attr(pra1_line, "Parent") == c2_locus_id
+
+
+def test_write_detection_gff3_deduplicates_sequence_region_across_results(tmp_path):
+    """Finding B (part 2) regression: two separate DetectionResults that both
+    reference contig c1 must not each emit their own ##sequence-region c1
+    pragma -- GFF3 tooling expects at most one per seqid."""
+    key_b = FamilyKey("Basidiomycota", "bLocus")
+    result_a = DetectionResult(
+        family_key=KEY, contig="c1", start=100, end=200,
+        confidence="high", idiomorph="undetermined", ambiguous_with=[],
+        genes_found=["mfa1"], genes_missing=[], fragmented=False,
+    )
+    result_b = DetectionResult(
+        family_key=key_b, contig="c1", start=500, end=600,
+        confidence="high", idiomorph="undetermined", ambiguous_with=[],
+        genes_found=["bE"], genes_missing=[], fragmented=False,
+    )
+    out = tmp_path / "dup.gff3"
+    write_detection_gff3(DetectionOutcome(results=[result_a, result_b]), out)
+    text = out.read_text()
+    assert text.count("##sequence-region c1") == 1
+    # the deduplicated pragma widens to cover both results' extents
+    assert "##sequence-region c1 100 600" in text
+
+
 def test_write_detection_report(tmp_path):
     out = tmp_path / "report.yaml"
     write_detection_report(OUTCOME, out)

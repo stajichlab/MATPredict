@@ -8,7 +8,7 @@ from typing import Callable
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.family_registry import Family, FamilyKey, load_all_families, route
 from MATPredict.detect.idiomorph import assign_idiomorph
-from MATPredict.detect.scoring import FamilyScore, is_ambiguous, score_cluster
+from MATPredict.detect.scoring import is_ambiguous, score_cluster
 from MATPredict.detect.search import SearchHit, search_fast_path, search_genomic
 from MATPredict.detect.tiering import assign_tier
 
@@ -71,7 +71,14 @@ def run_pipeline(
     # family's missing genes are checked strictly against that same
     # family's own hits (see _missing_core_genes), so one family's presence
     # never masks or substitutes for another family's absence.
-    second_pass_used_for: set[FamilyKey] = set()
+    #
+    # second_pass_used_for is keyed by (id(cluster), family.key), NOT by
+    # family.key alone. The same family can have multiple independent
+    # spatial clusters in one genome (e.g. gene-duplication / multi-allele
+    # co-occurrence at MAT loci), and whether the relaxed second pass was
+    # needed in one cluster must never leak into the tiering of an unrelated
+    # cluster for the same family.
+    second_pass_used_for: set[tuple[int, FamilyKey]] = set()
     for cluster in clusters:
         for family in _families_with_a_foothold(cluster, families):
             if not _missing_core_genes(cluster, family):
@@ -85,7 +92,7 @@ def run_pipeline(
             # returns hits keyed to a different family_key than requested.
             own_hits = [h for h in relaxed_hits if h.family_key == family.key]
             if own_hits:
-                second_pass_used_for.add(family.key)
+                second_pass_used_for.add((id(cluster), family.key))
                 cluster.hits.extend(own_hits)
 
     results: list[DetectionResult] = []
@@ -101,7 +108,7 @@ def run_pipeline(
             family = families_by_key[score.family_key]
             tier = assign_tier(
                 score, family, cluster,
-                second_pass_used=score.family_key in second_pass_used_for,
+                second_pass_used=(id(cluster), score.family_key) in second_pass_used_for,
                 fragmented=False,
             )
             idiomorph = assign_idiomorph(family, score.genes_found)

@@ -45,16 +45,6 @@ def load_all_families(db_root: Path) -> list[Family]:
     return families
 
 
-def _lineage_contains_taxid(lineage: str, taxid: int) -> bool:
-    # taxonkit's k__/p__/... string doesn't carry per-rank taxids, so an exact
-    # numeric match against the scope list is only possible for the queried
-    # taxid itself; broader ancestor matching needs the full taxid lineage,
-    # not the name-string lineage taxonomy.resolve_lineage returns today.
-    # For v1, scope membership is: the queried taxid is itself in scope, OR
-    # a scope taxid's name appears in the lineage string (best-effort).
-    return False  # overwritten by route() below using the numeric taxid directly
-
-
 def route(
     taxid: int | None,
     families: list[Family],
@@ -70,6 +60,9 @@ def route(
     unchanged (the exhaustive fallback path)."""
     if taxid is None:
         return list(families)
-    lineage_resolver(taxid)  # resolved for future ancestor-aware matching; unused in v1 matching itself
+    try:
+        lineage_resolver(taxid)  # resolved for future ancestor-aware matching; unused in v1 matching itself
+    except Exception:
+        pass  # resolver failure degrades gracefully to exhaustive fallback
     matched = [f for f in families if taxid in f.taxonomic_scope]
     return matched if matched else list(families)

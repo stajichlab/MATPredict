@@ -568,6 +568,36 @@ def test_polish_with_exonerate_returns_none_when_no_model(tmp_path):
     assert model is None
 
 
+def test_polish_with_exonerate_returns_none_when_gene_name_mismatches(tmp_path):
+    """Regression: when a padded window overlaps two adjacent genes, exonerate
+    may return an alignment for the neighboring gene instead of the requested one
+    (e.g., request mfa1 but exonerate finds pra1 in the same window). The guard
+    against this cross-gene misattribution must reject the result."""
+    (tmp_path / "genome.fa").write_text(">c1\n" + "N" * 500 + "\n")
+
+    def mismatched_gene_runner(cmd, **kwargs):
+        # GFF reports pra1 (different gene, same record)
+        gff = (
+            "c1\texonerate\tgene\t1\t400\t.\t+\t.\t"
+            "gene_id 1 ; sequence rec1|gene1|pra1 ; gene_orientation . ; identity 95.00 ; similarity 96.00\n"
+            "c1\texonerate\texon\t1\t150\t.\t+\t.\tinsertions 0 ; deletions 0\n"
+            "c1\texonerate\texon\t200\t400\t.\t+\t.\tinsertions 0 ; deletions 0\n"
+        )
+        class Result:
+            returncode = 0
+            stdout = gff
+            stderr = ""
+        return Result()
+
+    # Request mfa1, but the fake exonerate output carries pra1
+    model = polish_with_exonerate(
+        genome_fasta=tmp_path / "genome.fa", family=FAMILY, gene_name="mfa1",
+        reference_fasta=tmp_path / "reference.faa", record_families={"rec1": FAMILY.key},
+        window=("c1", 1, 500), runner=mismatched_gene_runner,
+    )
+    assert model is None
+
+
 def test_defline_location_is_found_alongside_a_free_text_description(tmp_path):
     """A real proteome defline often carries a description after the location."""
     tsv = (

@@ -39,7 +39,9 @@ def test_pipeline_recovers_real_alocus_record(tmp_path):
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=5270,
         db_root=DB_ROOT, reference_fasta=reference_fasta, search_fast_path=stub_fast_path,
-        search_genomic=lambda *a, **k: [],
+        # every gene is already found by the stubbed fast path, so no polish
+        # rescue is expected -- stubbed out so no real binary can be invoked.
+        polish_with_exonerate=lambda **k: None, polish_with_miniprot=lambda **k: None,
     )
     a_locus_result = next(r for r in outcome.results if r.family_key.locus_name == "aLocus")
     assert a_locus_result.confidence == "high"

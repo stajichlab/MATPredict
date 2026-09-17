@@ -1,7 +1,9 @@
 from __future__ import annotations
 from pathlib import Path
 
+from MATPredict.detect import pipeline as pipeline_module
 from MATPredict.detect.family_registry import Family, FamilyKey
+from MATPredict.detect.polish import ExonSpan, PolishModel
 from MATPredict.detect.search import SearchHit
 from MATPredict.detect.pipeline import run_pipeline
 
@@ -33,6 +35,22 @@ def _write_record(tmp_path, record_id="rec1", locus_name="aLocus", proteins: str
     return record_dir
 
 
+def _no_polish(**kwargs):
+    """A polishing tool that produces no model for any gene in any window."""
+    return None
+
+
+def _model(gene_name, contig, start, end, *, identity=80.0, strand="+",
+           family_key=FAMILY.key, role="core_MAT", record_id="rec1",
+           method="exonerate_refine", exons=None):
+    """A single-exon PolishModel stand-in for a polishing tool's output."""
+    return PolishModel(
+        gene_name=gene_name, family_key=family_key, role=role, contig=contig,
+        start=start, end=end, strand=strand, exons=exons or [ExonSpan(start, end)],
+        identity=identity, reference_record_id=record_id, method=method,
+    )
+
+
 def test_run_pipeline_end_to_end_with_stubbed_search(tmp_path):
     _write_order(tmp_path)
     _write_record(tmp_path)
@@ -41,9 +59,6 @@ def test_run_pipeline_end_to_end_with_stubbed_search(tmp_path):
         return [SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
                 SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
 
-    def fake_genomic(*args, **kwargs):
-        return []
-
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa",
         proteome_fasta=tmp_path / "proteome.faa",
@@ -51,7 +66,6 @@ def test_run_pipeline_end_to_end_with_stubbed_search(tmp_path):
         db_root=tmp_path,
         reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path,
-        search_genomic=fake_genomic,
     )
     assert len(outcome.results) == 1
     result = outcome.results[0]
@@ -62,99 +76,269 @@ def test_run_pipeline_end_to_end_with_stubbed_search(tmp_path):
     assert outcome.families_attempted == [FAMILY.key]
 
 
-def test_run_pipeline_triggers_genomic_second_pass_on_missing_core_gene(tmp_path):
+def _tblastn(gene_name, contig, start, end, identity=70.0, family_key=FAMILY.key):
+    return SearchHit(family_key, gene_name, "core_MAT", contig, start, end, "+",
+                     identity, "rec1", "tblastn_genome")
+
+
+def test_genome_only_path_uses_search_localize_not_search_genomic(tmp_path):
+    """The genome-only path must call the injected search_localize, and must
+    never call search_genomic at all -- search_genomic's old whole-genome and
+    windowed-relaxed roles are fully retired, so the name is not even bound in
+    pipeline.py any more and cannot be reached from it."""
     _write_order(tmp_path)
     _write_record(tmp_path)
-    genomic_calls = []
+    localize_calls = []
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
-        return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
-
-    def fake_genomic(genome_fasta, families, reference_fasta, record_families,
-                     relaxed=False, window=None, runner=None):
-        genomic_calls.append(relaxed)
-        return [SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 60.0, "rec1", "exonerate_genome_relaxed")]
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        localize_calls.append(genome_fasta)
+        return [_tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400)]
 
     outcome = run_pipeline(
-        genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+        search_localize=fake_localize,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
-    assert True in genomic_calls  # relaxed second pass was actually invoked
-    assert outcome.results[0].confidence == "medium"  # second-pass-confirmed core gene caps at medium
-    assert outcome.results[0].genes_missing == []
-
-
-def test_second_pass_fires_for_a_family_with_zero_proteome_hits(tmp_path):
-    """Finding 3 regression. The whole point of the second pass is the
-    mfa1-style blind spot: a supplied proteome annotation that misses a
-    family's genes ENTIRELY. Such a family has no cluster to anchor a
-    windowed search to, so gating the second pass on an existing foothold
-    skipped exactly the case the spec calls unconditional."""
-    _write_order(tmp_path)
-    _write_record(tmp_path)
-    windows_searched = []
-
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
-        return []  # the provided annotation contains nothing for this family at all
-
-    def fake_genomic(genome_fasta, families, reference_fasta, record_families,
-                     relaxed=False, window=None, runner=None):
-        windows_searched.append(window)
-        return [
-            SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 0.0, "rec1", "exonerate_genome_relaxed"),
-            SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 0.0, "rec1", "exonerate_genome_relaxed"),
-        ]
-
-    outcome = run_pipeline(
-        genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
-        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
-    )
-    # a whole-genome (window=None) relaxed search actually ran for the family
-    assert None in windows_searched
-    assert len(outcome.results) == 1
+    assert localize_calls == [tmp_path / "genome.fa"]  # exactly one batched call
+    assert not hasattr(pipeline_module, "search_genomic")
     assert outcome.results[0].genes_found == ["mfa1", "pra1"]
-    # rescued only via the relaxed second pass -> capped at medium, not high
+
+
+def test_fast_path_missing_gene_rescue_skips_localization_and_polishes_directly(tmp_path):
+    """A fast-path cluster missing one core gene goes straight to
+    polish_with_exonerate/polish_with_miniprot against a window padded around
+    the EXISTING cluster's span, without ever calling search_localize."""
+    _write_order(tmp_path)
+    # A 100-aa curated mfa1 -> padding = 100 * 3 * 2.0 + 2000 = 2600 bp per side.
+    _write_record(
+        tmp_path,
+        proteins=">rec1|gene_index=0|name=mfa1|role=core_MAT\n" + "M" * 100 + "\n",
+    )
+    localize_calls = []
+    polish_calls = []
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1",
+                          "diamond_proteome")]
+
+    def fake_localize(*args, **kwargs):
+        localize_calls.append(args)
+        return []
+
+    def fake_exonerate(*, gene_name, window, **kwargs):
+        polish_calls.append(("exonerate", gene_name, window))
+        return _model("mfa1", "c1", 150, 260)
+
+    def fake_miniprot(*, gene_name, window, **kwargs):
+        polish_calls.append(("miniprot", gene_name, window))
+        return _model("mfa1", "c1", 150, 260, method="miniprot_refine")
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path, search_localize=fake_localize,
+        polish_with_exonerate=fake_exonerate, polish_with_miniprot=fake_miniprot,
+    )
+    assert localize_calls == []  # Stage 1 skipped entirely
+    # only the missing gene is polished, by both tools, against the same window
+    assert [c[0] for c in polish_calls] == ["exonerate", "miniprot"]
+    assert {c[1] for c in polish_calls} == {"mfa1"}
+    # window is the existing cluster's span (300-400) padded by 2600 either side
+    assert {c[2] for c in polish_calls} == {("c1", 1, 3000)}
+    result = outcome.results[0]
+    assert result.genes_found == ["mfa1", "pra1"]
+    # a successful polish is not "unpolished", so nothing caps the tier
+    assert result.confidence == "high"
+    evidence = {e.gene_name: e for e in result.gene_evidence}
+    assert (evidence["mfa1"].start, evidence["mfa1"].end) == (150, 260)
+    assert evidence["mfa1"].method == "exonerate_refine"
+
+
+def test_polished_agree_and_disagree_produce_identical_tier(tmp_path):
+    """Two otherwise-identical scenarios -- one where the two polish tools agree
+    on a gene's boundaries and one where they disagree on the SAME gene -- must
+    produce the same confidence tier and the same canonical coordinates.
+    Agreement is reported, never consulted by assign_tier."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+    coords = {"mfa1": (100, 200), "pra1": (300, 400)}
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        return [_tblastn(name, "c1", *span) for name, span in coords.items()]
+
+    def run(miniprot_shift):
+        def fake_exonerate(*, gene_name, **kwargs):
+            return _model(gene_name, "c1", *coords[gene_name])
+
+        def fake_miniprot(*, gene_name, **kwargs):
+            start, end = coords[gene_name]
+            return _model(gene_name, "c1", start + miniprot_shift, end + miniprot_shift,
+                          method="miniprot_refine")
+
+        return run_pipeline(
+            genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+            db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+            search_localize=fake_localize,
+            polish_with_exonerate=fake_exonerate, polish_with_miniprot=fake_miniprot,
+        )
+
+    agree = run(0).results[0]          # both tools within the 10bp tolerance
+    disagree = run(500).results[0]     # miniprot 500bp away -> polished_disagree
+
+    assert agree.confidence == disagree.confidence == "high"
+    assert [(e.gene_name, e.start, e.end) for e in agree.gene_evidence] == [
+        (e.gene_name, e.start, e.end) for e in disagree.gene_evidence
+    ]
+
+
+def test_unpolished_gene_caps_tier_at_medium(tmp_path):
+    """A family whose genes are all localized but one gene's polish outcome is
+    unpolished (neither tool produced a model) reaches at most Medium -- the
+    same effect the retired second_pass_used flag had. The control run, where
+    that same gene does polish, reaches High, so the cap is what makes the
+    difference and not the fixture."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+    coords = {"mfa1": (100, 200), "pra1": (300, 400)}
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        return [_tblastn(name, "c1", *span) for name, span in coords.items()]
+
+    def run(polishable):
+        def polish(*, gene_name, **kwargs):
+            if gene_name not in polishable:
+                return None
+            return _model(gene_name, "c1", *coords[gene_name])
+
+        return run_pipeline(
+            genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+            db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+            search_localize=fake_localize,
+            polish_with_exonerate=polish, polish_with_miniprot=polish,
+        ).results[0]
+
+    assert run({"mfa1", "pra1"}).confidence == "high"
+    capped = run({"pra1"})  # mfa1 localized by tblastn but modelled by neither tool
+    assert capped.confidence == "medium"
+    assert capped.genes_found == ["mfa1", "pra1"]  # still counted as found
+
+
+def test_gene_evidence_for_unpolished_gene_uses_raw_localization_hit(tmp_path):
+    """An unpolished gene's GeneEvidence carries the raw tblastn hit's own
+    coordinates, identity and method -- not a fabricated or missing value --
+    while its polished sibling carries the polished model's."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        return [_tblastn("mfa1", "c1", 100, 200, identity=61.5),
+                _tblastn("pra1", "c1", 300, 400, identity=72.0)]
+
+    def polish(*, gene_name, **kwargs):
+        return None if gene_name == "mfa1" else _model("pra1", "c1", 305, 395, identity=88.0)
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_localize=fake_localize,
+        polish_with_exonerate=polish, polish_with_miniprot=polish,
+    )
+    evidence = {e.gene_name: e for e in outcome.results[0].gene_evidence}
+    assert (evidence["mfa1"].start, evidence["mfa1"].end) == (100, 200)
+    assert evidence["mfa1"].method == "tblastn_genome"
+    assert evidence["mfa1"].identity == 61.5
+    assert (evidence["pra1"].start, evidence["pra1"].end) == (305, 395)
+    assert evidence["pra1"].method == "exonerate_refine"
+
+
+def test_polished_model_attributed_to_another_family_is_rejected(tmp_path):
+    """Defence in depth against this file's historic cross-family attribution
+    bug class: a model that comes back keyed to a DIFFERENT family must never
+    supply this family's coordinates. The gene degrades to unpolished -- its raw
+    tblastn hit stands, and the tier is capped -- rather than being credited."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        return [_tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400)]
+
+    def polish(*, gene_name, **kwargs):
+        if gene_name == "mfa1":
+            # right gene name, wrong family -- must be rejected
+            return _model("mfa1", "c1", 900, 999, family_key=FamilyKey("P", "bLocus"))
+        return _model("pra1", "c1", 300, 400)
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_localize=fake_localize,
+        polish_with_exonerate=polish, polish_with_miniprot=polish,
+    )
+    evidence = {e.gene_name: e for e in outcome.results[0].gene_evidence}
+    assert (evidence["mfa1"].start, evidence["mfa1"].end) == (100, 200)
+    assert evidence["mfa1"].method == "tblastn_genome"
     assert outcome.results[0].confidence == "medium"
 
 
-def test_second_pass_in_one_cluster_does_not_cap_a_different_cluster_of_the_same_family(tmp_path):
-    """Same family, two independent spatial clusters (e.g. gene-duplication /
-    multi-allele co-occurrence). Cluster on contig c1 needs the relaxed
-    genomic second pass to confirm mfa1. Cluster on contig c2 gets both core
-    genes from the fast path alone -- it must reach "high", not be capped at
-    "medium" just because the c1 cluster (same family) needed a second pass."""
+def test_unpolished_in_one_cluster_does_not_cap_a_different_cluster_of_the_same_family(tmp_path):
+    """Same family, two independent spatial clusters (gene duplication /
+    multi-allele co-occurrence is normal at MAT loci). The c1 cluster has one
+    unpolished gene and is capped at medium; the c2 cluster polishes cleanly and
+    must still reach high, never inherit c1's cap."""
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
         return [
-            # c1 cluster: only pra1 found by the fast path -> needs second pass.
-            SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
-            # c2 cluster: both core genes found by the fast path -> no second pass needed.
-            SearchHit(FAMILY.key, "mfa1", "core_MAT", "c2", 100, 200, "+", 95.0, "rec2", "diamond_proteome"),
-            SearchHit(FAMILY.key, "pra1", "core_MAT", "c2", 300, 400, "+", 95.0, "rec2", "diamond_proteome"),
+            _tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400),
+            _tblastn("mfa1", "c2", 100, 200), _tblastn("pra1", "c2", 300, 400),
         ]
 
-    def fake_genomic(genome_fasta, families, reference_fasta, record_families,
-                     relaxed=False, window=None, runner=None):
-        contig = window[0] if window else None
-        if contig == "c1":
-            return [SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 60.0, "rec1",
-                               "exonerate_genome_relaxed")]
+    def polish(*, gene_name, window, **kwargs):
+        if window[0] == "c1" and gene_name == "mfa1":
+            return None  # only this cluster's mfa1 fails to polish
+        return _model(gene_name, window[0], 100 if gene_name == "mfa1" else 300,
+                      200 if gene_name == "mfa1" else 400)
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_localize=fake_localize,
+        polish_with_exonerate=polish, polish_with_miniprot=polish,
+    )
+    by_contig = {r.contig: r for r in outcome.results}
+    assert len(outcome.results) == 2
+    assert by_contig["c1"].confidence == "medium"
+    assert by_contig["c2"].confidence == "high"
+
+
+def test_family_with_zero_fast_path_hits_is_not_rescued_genome_wide(tmp_path):
+    """The unrestricted whole-genome relaxed-exonerate rescue is retired: a
+    family with no fast-path hits at all has no cluster to anchor a polish
+    window to, so it is reported as not detected rather than silently searched
+    genome-wide."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+    polish_calls = []
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
         return []
+
+    def record_polish(**kwargs):
+        polish_calls.append(kwargs)
+        return None
 
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+        search_fast_path=fake_fast_path,
+        polish_with_exonerate=record_polish, polish_with_miniprot=record_polish,
     )
-
-    by_contig = {r.contig: r for r in outcome.results}
-    assert len(outcome.results) == 2
-    assert by_contig["c1"].confidence == "medium"  # this cluster's own second pass caps it
-    assert by_contig["c2"].confidence == "high"  # unrelated cluster, same family, must NOT be capped
+    assert polish_calls == []
+    assert outcome.results == []
+    assert [n.family_key for n in outcome.not_detected] == [FAMILY.key]
+    assert "no reference-protein hits" in outcome.not_detected[0].reason
 
 
 def test_short_orf_gene_reported_as_not_searchable_not_missing(tmp_path):
@@ -170,13 +354,12 @@ def test_short_orf_gene_reported_as_not_searchable_not_missing(tmp_path):
     def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
         return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
 
-    def fake_genomic(*args, **kwargs):
-        return []  # mfa1 genuinely not found even after the relaxed second pass
-
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+        search_fast_path=fake_fast_path,
+        # mfa1 is genuinely not found, even by the polish rescue
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
     assert outcome.results[0].genes_missing == []
     assert outcome.results[0].genes_not_searchable == ["mfa1"]
@@ -216,13 +399,12 @@ def test_short_orf_split_discriminates_three_buckets(tmp_path):
         return [SearchHit(three_gene_family.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1",
                            "diamond_proteome")]
 
-    def fake_genomic(*args, **kwargs):
-        return []  # neither mfa1 nor pra2 is found even after the relaxed second pass
-
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+        search_fast_path=fake_fast_path,
+        # neither mfa1 nor pra2 is found, even by the polish rescue
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
         ambiguity_floor=0.3,  # only 1 of 3 genes is found by design -- lower the floor
         # so this single-family cluster still clears scoring and isn't dropped,
         # without needing a fourth gene just to satisfy an unrelated threshold.
@@ -270,13 +452,11 @@ def test_short_orf_scan_is_scoped_per_family_and_uses_the_longest_curated_protei
             SearchHit(b_key, "bE", "core_MAT", "c9", 100, 200, "+", 95.0, "recB", "diamond_proteome"),
         ]
 
-    def fake_genomic(*args, **kwargs):
-        return []
-
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+        search_fast_path=fake_fast_path,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
     by_family = {r.family_key: r for r in outcome.results}
     # aLocus has a full-length curated cha1 -> genuinely missing, not "unsearchable"
@@ -310,13 +490,11 @@ def test_sub_floor_families_are_reported_as_not_detected_not_dropped(tmp_path):
         # 1 of aLocus's 4 genes -> fraction 0.25, below the 0.5 floor.
         return [SearchHit(a_key, "g1", "core_MAT", "c1", 100, 200, "+", 90.0, "recA", "diamond_proteome")]
 
-    def fake_genomic(*args, **kwargs):
-        return []
-
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+        search_fast_path=fake_fast_path,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
     assert outcome.results == []
     not_detected = {n.family_key: n for n in outcome.not_detected}
@@ -340,13 +518,11 @@ def test_isolated_single_hit_is_low_tier(tmp_path):
     def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
         return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
 
-    def fake_genomic(*args, **kwargs):
-        return []
-
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+        search_fast_path=fake_fast_path,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
     assert outcome.results[0].confidence == "low"
 
@@ -366,13 +542,11 @@ def test_genes_split_across_contigs_are_one_fragmented_multi_segment_call(tmp_pa
             SearchHit(FAMILY.key, "pra1", "core_MAT", "c2", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
         ]
 
-    def fake_genomic(*args, **kwargs):
-        return []
-
     outcome = run_pipeline(
         genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+        search_fast_path=fake_fast_path,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
     assert len(outcome.results) == 1
     result = outcome.results[0]
@@ -404,7 +578,8 @@ def test_same_family_on_two_contigs_each_complete_is_not_fragmented(tmp_path):
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=lambda *a, **k: [],
+        search_fast_path=fake_fast_path,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
     assert len(outcome.results) == 2
     assert all(r.fragmented is False for r in outcome.results)
@@ -450,13 +625,11 @@ def test_fragmented_family_with_a_separate_independent_cluster_reports_both(tmp_
             SearchHit(three_gene_family.key, "pra1", "core_MAT", "c3", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
         ]
 
-    def fake_genomic(*args, **kwargs):
-        return []
-
     outcome = run_pipeline(
         genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+        search_fast_path=fake_fast_path,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
         ambiguity_floor=0.5,
     )
     assert len(outcome.results) == 2
@@ -491,7 +664,8 @@ def test_contig_edge_distance_populated_regardless_of_other_families_fragmentati
     outcome = run_pipeline(
         genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=lambda *a, **k: [],
+        search_fast_path=fake_fast_path,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
     assert len(outcome.results) == 1
     assert outcome.results[0].fragmented is False
@@ -515,7 +689,8 @@ def test_detection_result_carries_per_gene_evidence(tmp_path):
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=lambda *a, **k: [],
+        search_fast_path=fake_fast_path,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
     evidence = {e.gene_name: e for e in outcome.results[0].gene_evidence}
     assert evidence["mfa1"].identity == 91.5
@@ -554,7 +729,8 @@ def test_pipeline_output_feeds_the_report_writers_directly(tmp_path):
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path, search_genomic=lambda *a, **k: [],
+        search_fast_path=fake_fast_path,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
     write_detection_gff3(outcome, tmp_path / "out.gff3")
     write_detection_report(outcome, tmp_path / "out.yaml")

@@ -1,4 +1,25 @@
-"""Orchestrates routing -> search -> clustering -> scoring -> tiering -> idiomorph assignment.
+"""Orchestrates routing -> search -> clustering -> polishing -> scoring -> tiering -> idiomorph assignment.
+
+Search is a two-stage *localize-then-polish* flow (see
+docs/superpowers/specs/2026-09-17-mat-detection-search-localization-design.md):
+
+* **Genome-only path** (no predicted proteome): one batched genome-wide
+  `tblastn` localization (`search_localize`) over every routed family's
+  reference proteins, clustered once by `cluster_hits`. Every gene that
+  `tblastn` localized in a cluster is then polished.
+* **Fast-path rescue** (a proteome was supplied): `search_fast_path` runs as
+  before; a cluster/family that has a foothold but is still missing one of its
+  own `core_MAT` genes skips localization entirely -- a rough location already
+  exists -- and polishes that one gene directly against a window padded around
+  the *existing* cluster's span.
+
+Polishing runs BOTH `exonerate --refine region` and `miniprot` against the same
+padded window and classifies the pair (`polish.classify`) into one of
+`polished_agree` / `polished_disagree` / `polished_single` / `unpolished`.
+Only `unpolished` (neither tool produced a model, but the raw localization hit
+stands) affects confidence tiering, capping the family at Medium -- exactly the
+effect the retired "relaxed exonerate second pass" used to have. Tool agreement
+itself is reported but never consulted by `tiering.assign_tier`.
 
 Fragmented assemblies (spec section 6) are handled to the extent described in
 `_fragmented_family_segments`: a family whose expected `core_MAT` genes are
@@ -25,8 +46,20 @@ from MATPredict.detect.family_registry import (
     route,
 )
 from MATPredict.detect.idiomorph import assign_idiomorph
+from MATPredict.detect.polish import (
+    STATUS_UNPOLISHED,
+    PolishModel,
+    PolishOutcome,
+    classify,
+)
 from MATPredict.detect.scoring import FamilyScore, is_ambiguous, score_cluster
-from MATPredict.detect.search import SearchHit, search_fast_path, search_genomic
+from MATPredict.detect.search import (
+    SearchHit,
+    polish_with_exonerate,
+    polish_with_miniprot,
+    search_fast_path,
+    search_localize,
+)
 from MATPredict.detect.tiering import assign_tier
 
 
@@ -110,28 +143,17 @@ def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
     return core_genes - found_genes
 
 
-def _short_orf_genes(
+def _curated_protein_lengths(
     db_root: Path,
     families: list[Family],
     record_families: dict[str, FamilyKey],
-    floor_aa: int,
-) -> dict[FamilyKey, set[str]]:
-    """Per-family gene names whose BEST curated reference protein is shorter than floor_aa.
+) -> dict[tuple[FamilyKey, str], int]:
+    """`(family_key, gene_name)` -> the LONGEST curated reference protein, in aa.
 
-    Scoped per `(phylum, locus_name)` family and keyed on the MAXIMUM curated
-    length seen for that gene *within that family*, for two reasons:
-
-    * Global scoping is wrong because gene names are reused across families
-      (`sla2` is both `Ascomycota:MATsc`'s flanking gene and `Ascomycota:MATyl`'s),
-      so one family's short entry must not condemn another family's gene.
-    * The minimum (or first-seen) length is wrong because the curated database
-      legitimately contains fragments: `Ascomycota:MATsc` holds a 22-aa `cha1`
-      fragment alongside normal-length curated proteins, and taking the shortest
-      made the pipeline report the perfectly searchable `cha1` gene as "not
-      searchable by this method" -- the exact false claim this feature exists to
-      prevent. Maximum is chosen over median because the question being asked is
-      "is there ANY curated protein long enough to search with?", and a single
-      full-length example is enough to make the gene searchable.
+    Keyed per `(phylum, locus_name)` family, never by bare gene name: gene names
+    are reused across families (`sla2` is both `Ascomycota:MATsc`'s and
+    `Ascomycota:MATyl`'s), so one family's entry must never answer for another's.
+    See `_short_orf_genes` for why the MAXIMUM is the right summary.
 
     Reads db/**/proteins.faa (matching gff_export.write_proteins_fasta's header
     form `>{record_id}|gene_index={n}|name={name}|role={role}`, the same raw
@@ -157,6 +179,36 @@ def _short_orf_genes(
             length = len(seq.strip().replace("\n", ""))
             key = (family_key, name)
             longest[key] = max(longest.get(key, 0), length)
+    return longest
+
+
+def _short_orf_genes(
+    db_root: Path,
+    families: list[Family],
+    record_families: dict[str, FamilyKey],
+    floor_aa: int,
+) -> dict[FamilyKey, set[str]]:
+    """Per-family gene names whose BEST curated reference protein is shorter than floor_aa.
+
+    Scoped per `(phylum, locus_name)` family and keyed on the MAXIMUM curated
+    length seen for that gene *within that family*, for two reasons:
+
+    * Global scoping is wrong because gene names are reused across families
+      (`sla2` is both `Ascomycota:MATsc`'s flanking gene and `Ascomycota:MATyl`'s),
+      so one family's short entry must not condemn another family's gene.
+    * The minimum (or first-seen) length is wrong because the curated database
+      legitimately contains fragments: `Ascomycota:MATsc` holds a 22-aa `cha1`
+      fragment alongside normal-length curated proteins, and taking the shortest
+      made the pipeline report the perfectly searchable `cha1` gene as "not
+      searchable by this method" -- the exact false claim this feature exists to
+      prevent. Maximum is chosen over median because the question being asked is
+      "is there ANY curated protein long enough to search with?", and a single
+      full-length example is enough to make the gene searchable.
+
+    The per-family/per-gene length scan itself lives in
+    `_curated_protein_lengths`, shared with the polish-window padding helper.
+    """
+    longest = _curated_protein_lengths(db_root, families, record_families)
 
     short_by_family: dict[FamilyKey, set[str]] = {}
     for (family_key, name), length in longest.items():
@@ -231,23 +283,145 @@ def _fragmented_family_segments(
     return chosen
 
 
-def _gene_evidence(hits: list[SearchHit], family_key: FamilyKey) -> list[GeneEvidence]:
-    """Best (highest-identity) hit per gene name for one family, as report-ready evidence."""
-    best: dict[str, SearchHit] = {}
-    for hit in hits:
-        if hit.family_key != family_key:
-            continue
-        current = best.get(hit.gene_name)
-        if current is None or hit.identity > current.identity:
-            best[hit.gene_name] = hit
-    return [
-        GeneEvidence(
-            gene_name=h.gene_name, role=h.role, contig=h.contig, start=h.start, end=h.end,
-            strand=h.strand, identity=h.identity, coverage=h.coverage,
-            reference_record_id=h.reference_record_id, method=h.method,
-        )
-        for h in sorted(best.values(), key=lambda h: (h.contig, h.start))
-    ]
+#: Default multiple of a curated reference protein's own nucleotide-equivalent
+#: length (aa * 3) used as polish-window padding on each side of a cluster.
+#: 2.0 is chosen so a gene up to three times its reference's coding length still
+#: fits inside the window: `tblastn` frequently anchors on only a short conserved
+#: domain of a divergent MAT protein (an HMG box or homeodomain), so a window
+#: sized to the HSP alone would truncate the real gene.
+DEFAULT_WINDOW_PROTEIN_LENGTH_MULTIPLE = 2.0
+#: Default additive allowance for intronic sequence the reference protein's
+#: length cannot account for. 2000 bp is generous for fungi, where the great
+#: majority of introns are well under 500 bp; it also serves as the whole padding
+#: when no curated length is known for a gene.
+DEFAULT_WINDOW_MAX_INTRON_BP = 2_000
+
+
+def _window_padding(
+    protein_aa: int | None,
+    protein_length_multiple: float = DEFAULT_WINDOW_PROTEIN_LENGTH_MULTIPLE,
+    max_intron_bp: int = DEFAULT_WINDOW_MAX_INTRON_BP,
+) -> int:
+    """Padding, in bp, to add on each side of a cluster before polishing one gene.
+
+    Derived from that gene's OWN curated reference protein length rather than a
+    single hardcoded constant, per the spec: `protein_aa * 3 *
+    protein_length_multiple + max_intron_bp`. Both knobs are named and
+    overridable (see `run_pipeline`'s `window_*` parameters). `protein_aa` is
+    None when the curated database carries no protein for that
+    `(family, gene)`; the padding then degrades to `max_intron_bp` alone rather
+    than to zero, so an unknown length never produces a window too tight to
+    align in.
+    """
+    return int((protein_aa or 0) * 3 * protein_length_multiple) + max_intron_bp
+
+
+def _padded_window(
+    cluster: GeneCluster, padding: int, contig_lengths: dict[str, int]
+) -> tuple[str, int, int]:
+    """(contig, start, end) 1-based inclusive, clamped to the contig when its
+    length is known (an unreadable genome FASTA leaves `contig_lengths` empty,
+    in which case the un-clamped end is passed through -- `_extract_window`'s
+    slice tolerates an end past the contig)."""
+    start = max(1, cluster.start - padding)
+    end = cluster.end + padding
+    length = contig_lengths.get(cluster.contig)
+    if length:
+        end = min(end, length)
+    return (cluster.contig, start, end)
+
+
+def _own_model(
+    model: PolishModel | None, family_key: FamilyKey, gene_name: str
+) -> PolishModel | None:
+    """A polished model, or None when it is not this family's own named gene.
+
+    Both polishing wrappers already drop a model whose gene name or curated
+    record does not match what was asked for, so this is defence in depth --
+    kept because the retired windowed second pass carried the same filter, and
+    because a model silently attributed to the wrong family is precisely the
+    cross-family bug class this file has shipped before. Dropping it degrades
+    the gene to `unpolished` (its raw localization hit still stands) rather than
+    writing another family's coordinates into this family's evidence.
+    """
+    if model is None:
+        return None
+    if model.family_key != family_key or model.gene_name != gene_name:
+        return None
+    return model
+
+
+def _hit_from_model(model: PolishModel) -> SearchHit:
+    """A polished gene model re-expressed as a SearchHit, so a fast-path rescue's
+    newly found gene can be fed back into its own cluster's hit list and counted
+    by the existing `score_cluster` / fragmentation logic unchanged."""
+    return SearchHit(
+        family_key=model.family_key, gene_name=model.gene_name, role=model.role,
+        contig=model.contig, start=model.start, end=model.end, strand=model.strand,
+        identity=model.identity, reference_record_id=model.reference_record_id,
+        method=model.method, coverage=None,
+    )
+
+
+def _gene_evidence(
+    member_clusters: list[GeneCluster],
+    family_key: FamilyKey,
+    polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome],
+) -> list[GeneEvidence]:
+    """Report-ready per-gene evidence for ONE family across its own clusters.
+
+    Per gene, the canonical `PolishOutcome.canonical` model wins when that gene
+    was polished in that cluster; a `STATUS_UNPOLISHED` gene (canonical is None)
+    and any gene that was never a polish candidate at all -- e.g. a gene the
+    diamond fast path already found -- fall back to that gene's best
+    (highest-identity) raw `SearchHit`. That fallback is the only path by which
+    a `GeneEvidence` is built from a `SearchHit` rather than a `PolishModel`.
+
+    `polish_by` is keyed `(id(cluster), family_key, gene_name)` and is read here
+    ONLY for this family's own genes in these exact clusters, so a polish result
+    from another family, or from an unrelated cluster of this same family, can
+    never be attributed to this call.
+    """
+    best: dict[str, GeneEvidence] = {}
+    for cluster in member_clusters:
+        raw_by_gene: dict[str, SearchHit] = {}
+        for hit in cluster.hits:
+            if hit.family_key != family_key:
+                continue
+            current = raw_by_gene.get(hit.gene_name)
+            if current is None or hit.identity > current.identity:
+                raw_by_gene[hit.gene_name] = hit
+
+        outcomes = {
+            gene_name: outcome
+            for (cluster_id, key, gene_name), outcome in polish_by.items()
+            if cluster_id == id(cluster) and key == family_key
+        }
+
+        for gene_name in set(raw_by_gene) | set(outcomes):
+            outcome = outcomes.get(gene_name)
+            if outcome is not None and outcome.canonical is not None:
+                model = outcome.canonical
+                evidence = GeneEvidence(
+                    gene_name=model.gene_name, role=model.role, contig=model.contig,
+                    start=model.start, end=model.end, strand=model.strand,
+                    identity=model.identity, coverage=None,
+                    reference_record_id=model.reference_record_id, method=model.method,
+                )
+            else:
+                hit = raw_by_gene.get(gene_name)
+                if hit is None:
+                    continue  # unpolished with nothing localized: no evidence to report
+                evidence = GeneEvidence(
+                    gene_name=hit.gene_name, role=hit.role, contig=hit.contig,
+                    start=hit.start, end=hit.end, strand=hit.strand,
+                    identity=hit.identity, coverage=hit.coverage,
+                    reference_record_id=hit.reference_record_id, method=hit.method,
+                )
+            previous = best.get(gene_name)
+            if previous is None or evidence.identity > previous.identity:
+                best[gene_name] = evidence
+    return sorted(best.values(), key=lambda e: (e.contig, e.start))
 
 
 def _segments_for(
@@ -268,88 +442,34 @@ def run_pipeline(
     db_root: Path,
     reference_fasta: Path,
     search_fast_path: Callable = search_fast_path,
-    search_genomic: Callable = search_genomic,
+    search_localize: Callable = search_localize,
+    polish_with_exonerate: Callable = polish_with_exonerate,
+    polish_with_miniprot: Callable = polish_with_miniprot,
     max_gap: int = 25_000,
     ambiguity_floor: float = 0.5,
     short_orf_aa_floor: int = 60,
+    window_protein_length_multiple: float = DEFAULT_WINDOW_PROTEIN_LENGTH_MULTIPLE,
+    window_max_intron_bp: int = DEFAULT_WINDOW_MAX_INTRON_BP,
+    polish_tolerance_bp: int = 10,
 ) -> DetectionOutcome:
     families = route(taxid, load_all_families(db_root))
     record_families = load_record_families(db_root)
+    protein_lengths = _curated_protein_lengths(db_root, families, record_families)
     short_orf_by_family = _short_orf_genes(
         db_root, families, record_families, short_orf_aa_floor
     )
     families_by_key = {f.key: f for f in families}
 
+    # Stage 0/1 -- one search per run. The genome-only path localizes with a
+    # single batched genome-wide tblastn call covering every routed family; the
+    # fast path uses the supplied proteome and does NOT localize at all.
     hits: list[SearchHit] = []
     if proteome_fasta is not None:
         hits.extend(search_fast_path(proteome_fasta, families, reference_fasta, record_families))
     else:
-        hits.extend(search_genomic(genome_fasta, families, reference_fasta, record_families))
-
-    # Unconditional second pass, part 1 -- whole-genome, for families with NO
-    # hits at all. The spec requires the genomic second pass to fire for "any
-    # expected core_MAT gene not found among the proteome hits ... unconditional,
-    # not gated on whether flanking genes were found first". A family whose genes
-    # are ALL missing from a supplied proteome annotation (the mfa1-style blind
-    # spot this pipeline exists for) has no cluster to anchor a window on, so
-    # anchoring the second pass to an existing cluster would skip exactly the
-    # case that matters most. Those families get a relaxed search against the
-    # whole genome instead.
-    #
-    # All zero-hit families are searched in ONE batched exonerate call rather
-    # than one call each: a whole-genome protein2genome run is expensive, and
-    # the exhaustive (no-taxid) path routes every family in the database.
-    families_with_hits = {h.family_key for h in hits}
-    missing_families = [f for f in families if f.key not in families_with_hits]
-    genome_wide_second_pass: set[FamilyKey] = set()
-    if missing_families:
-        missing_keys = {f.key for f in missing_families}
-        rescued = [
-            h
-            for h in search_genomic(
-                genome_fasta, missing_families, reference_fasta, record_families, relaxed=True
-            )
-            if h.family_key in missing_keys
-        ]
-        genome_wide_second_pass = {h.family_key for h in rescued}
-        hits.extend(rescued)
+        hits.extend(search_localize(genome_fasta, families, reference_fasta, record_families))
 
     clusters = cluster_hits(hits, max_gap=max_gap)
-
-    # Unconditional second pass, part 2 -- windowed, for any family that has a
-    # foothold in a cluster but is still missing one of its own core_MAT genes.
-    # Each family's missing genes are checked strictly against that same
-    # family's own hits (see _missing_core_genes), so one family's presence
-    # never masks or substitutes for another family's absence.
-    #
-    # second_pass_used_for is keyed by (id(cluster), family.key), NOT by
-    # family.key alone. The same family can have multiple independent
-    # spatial clusters in one genome (e.g. gene-duplication / multi-allele
-    # co-occurrence at MAT loci), and whether the relaxed second pass was
-    # needed in one cluster must never leak into the tiering of an unrelated
-    # cluster for the same family.
-    second_pass_used_for: set[tuple[int, FamilyKey]] = set()
-    for cluster in clusters:
-        for family in _families_with_a_foothold(cluster, families):
-            if not _missing_core_genes(cluster, family):
-                continue
-            relaxed_hits = search_genomic(
-                genome_fasta, [family], reference_fasta, record_families, relaxed=True,
-                window=(cluster.contig, cluster.start, cluster.end),
-            )
-            # Only accept hits that actually belong to this specific family --
-            # a defensive filter in case a stubbed/real search_genomic ever
-            # returns hits keyed to a different family_key than requested.
-            own_hits = [h for h in relaxed_hits if h.family_key == family.key]
-            if own_hits:
-                second_pass_used_for.add((id(cluster), family.key))
-                cluster.hits.extend(own_hits)
-
-    fragmented_segments: dict[FamilyKey, list[GeneCluster]] = {}
-    for family in families:
-        segments = _fragmented_family_segments(clusters, family)
-        if segments:
-            fragmented_segments[family.key] = segments
 
     # Read contig lengths unconditionally so contig_edge_distance is populated
     # (or left None on an unreadable FASTA) consistently for every segment of
@@ -357,12 +477,91 @@ def run_pipeline(
     # happened to be fragmented. Gating this on `fragmented_segments` used to
     # make two otherwise-identical single-contig runs disagree on
     # contig_edge_distance purely because of an unrelated family elsewhere in
-    # the genome.
+    # the genome. It is read before polishing because the polish window is
+    # clamped to the contig's real end.
     contig_lengths = _contig_lengths(genome_fasta)
 
-    def _second_pass_used(cluster_ids: list[int], family_key: FamilyKey) -> bool:
-        return family_key in genome_wide_second_pass or any(
-            (cid, family_key) in second_pass_used_for for cid in cluster_ids
+    # Stage 2/3 -- polish. `polish_by` is keyed by
+    # (id(cluster), family.key, gene_name), NOT by family.key or gene name
+    # alone. The same family can have several independent spatial clusters in
+    # one genome (gene duplication / multi-allele co-occurrence is normal at MAT
+    # loci) and the same gene name is reused across families, so a result must
+    # be attributable to exactly one cluster, one family and one gene. This is
+    # the same scoping the retired second-pass tracking set used, now carrying a
+    # per-gene outcome instead of a per-family boolean.
+    polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] = {}
+    for cluster in clusters:
+        for family in _families_with_a_foothold(cluster, families):
+            if proteome_fasta is None:
+                # Genome-only path: every gene tblastn localized in THIS cluster
+                # for THIS family needs its approximate HSP coordinates refined.
+                genes_to_polish = sorted(
+                    {h.gene_name for h in cluster.hits if h.family_key == family.key}
+                )
+                rescue = False
+            else:
+                # Fast-path rescue: only this family's own still-missing core
+                # genes, checked strictly against this family's own hits in this
+                # cluster (see _missing_core_genes), so one family's presence
+                # never masks another family's absence.
+                genes_to_polish = sorted(_missing_core_genes(cluster, family))
+                rescue = True
+
+            for gene_name in genes_to_polish:
+                padding = _window_padding(
+                    protein_lengths.get((family.key, gene_name)),
+                    protein_length_multiple=window_protein_length_multiple,
+                    max_intron_bp=window_max_intron_bp,
+                )
+                window = _padded_window(cluster, padding, contig_lengths)
+                # Both tools get the SAME window and the same gene, so their
+                # models are directly comparable.
+                exonerate_model = polish_with_exonerate(
+                    genome_fasta=genome_fasta, family=family, gene_name=gene_name,
+                    reference_fasta=reference_fasta, record_families=record_families,
+                    window=window,
+                )
+                miniprot_model = polish_with_miniprot(
+                    genome_fasta=genome_fasta, family=family, gene_name=gene_name,
+                    reference_fasta=reference_fasta, record_families=record_families,
+                    window=window,
+                )
+                outcome = classify(
+                    _own_model(exonerate_model, family.key, gene_name),
+                    _own_model(miniprot_model, family.key, gene_name),
+                    polish_tolerance_bp,
+                )
+                if rescue:
+                    if outcome.canonical is None:
+                        # A rescue that found nothing is not an "unpolished"
+                        # gene: nothing localized it, so there is no rough hit
+                        # to fall back on and the gene stays genuinely missing.
+                        # Recording it as unpolished would wrongly cap the tier
+                        # of a family whose gene was never evidenced at all.
+                        continue
+                    cluster.hits.append(_hit_from_model(outcome.canonical))
+                polish_by[(id(cluster), family.key, gene_name)] = outcome
+
+    fragmented_segments: dict[FamilyKey, list[GeneCluster]] = {}
+    for family in families:
+        segments = _fragmented_family_segments(clusters, family)
+        if segments:
+            fragmented_segments[family.key] = segments
+
+    def _any_gene_unpolished(cluster_ids: set[int], family_key: FamilyKey) -> bool:
+        """True when ANY of this family's own genes, in these exact clusters,
+        was localized but neither polishing tool could model it.
+
+        Scoped by (cluster, family, gene): a gene left unpolished in one cluster
+        must never cap the tier of an independent cluster of the same family,
+        nor of another family that merely shares a gene name. Agreement
+        (`polished_agree` vs `polished_disagree`) is deliberately NOT consulted
+        -- both are "polished" as far as tiering is concerned.
+        """
+        return any(
+            outcome.status == STATUS_UNPOLISHED
+            for (cluster_id, key, _gene_name), outcome in polish_by.items()
+            if key == family_key and cluster_id in cluster_ids
         )
 
     def _build(
@@ -375,12 +574,13 @@ def run_pipeline(
         ambiguous = is_ambiguous(scores_in_context, floor=ambiguity_floor)
         tier = assign_tier(
             score, family, member_clusters[0],
-            any_gene_unpolished=_second_pass_used([id(c) for c in member_clusters], score.family_key),
+            any_gene_unpolished=_any_gene_unpolished(
+                {id(c) for c in member_clusters}, score.family_key
+            ),
             fragmented=fragmented,
         )
         short_genes = short_orf_by_family.get(score.family_key, set())
-        all_hits = [h for c in member_clusters for h in c.hits]
-        evidence = _gene_evidence(all_hits, score.family_key)
+        evidence = _gene_evidence(member_clusters, score.family_key, polish_by)
         segments = _segments_for(member_clusters, contig_lengths)
         return DetectionResult(
             family_key=score.family_key,
@@ -462,8 +662,7 @@ def run_pipeline(
         if score is None:
             not_detected.append(NotDetectedFamily(
                 family_key=family.key,
-                reason="no reference-protein hits found for this family in this genome, "
-                       "including after the relaxed whole-genome second pass",
+                reason="no reference-protein hits found for this family in this genome",
                 best_fraction_found=0.0,
                 genes_missing=[g["name"] for g in family.genes if g["name"] not in short_genes],
                 genes_not_searchable=sorted(short_genes),

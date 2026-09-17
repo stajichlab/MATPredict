@@ -74,6 +74,7 @@ from typing import Callable
 from Bio import SeqIO
 
 from MATPredict.detect.family_registry import Family, FamilyKey
+from MATPredict.detect.polish import ExonSpan, PolishModel
 
 _DIAMOND_OUTFMT = ["6", "qseqid", "sseqid", "pident", "scovhsp", "qtitle"]
 
@@ -435,3 +436,95 @@ def search_genomic(
                 )
             )
         return hits
+
+
+def polish_with_exonerate(
+    genome_fasta: Path,
+    family: Family,
+    gene_name: str,
+    reference_fasta: Path,
+    record_families: dict[str, FamilyKey],
+    window: tuple[str, int, int],
+    runner: Callable = subprocess.run,
+) -> "PolishModel | None":
+    """Refine one gene's model with `exonerate --refine region` against its window.
+
+    Unlike `search_genomic`, this parses per-exon GFF lines (`\\texon\\t...`),
+    not just the gene-level line, so the returned `PolishModel.exons` reflect
+    real intron/exon structure -- needed for cross-tool exon-boundary
+    agreement comparison (`polish.boundaries_agree`). `--refine region`
+    (verified against the real exonerate 2.4.0 binary) re-optimizes the
+    alignment within the region bounded by the initial model, which is why
+    this is run against an already-localized, padded window rather than the
+    whole genome.
+
+    Real exonerate GFF (verified with a synthetic two-exon gene, both
+    unwindowed and against a sliced window fasta) emits, among other lines
+    (`cds`, `splice5`, `intron`, `splice3`, `similarity`) that this parser
+    ignores: a `gene` line carrying `sequence <query_id>` and
+    `identity <pct>` in its attribute string (identical shape to
+    `search_genomic`'s gene-line parsing), and one `exon` line per exon whose
+    attribute string additionally carries `identity`/`similarity` fields
+    beyond `insertions`/`deletions` -- irrelevant here since only the exon
+    line's start/end columns are used, not its attributes.
+
+    Returns None -- rather than a placeholder model -- when exonerate reports
+    no gene for this window, or when the hit resolves to a different gene,
+    an unattributable record, or a family/role exonerate's `family` does not
+    expect, matching `search_genomic`'s existing drop-rather-than-fabricate
+    convention for attribution failures.
+    """
+    roles_by_family = _roles_by_family([family])
+    contig, win_start, _win_end = window
+
+    with tempfile.TemporaryDirectory() as tmp_dir_name:
+        tmp_dir = Path(tmp_dir_name)
+        target_fasta = _extract_window(genome_fasta, window, tmp_dir)
+        offset = win_start - 1
+
+        cmd = [
+            "exonerate", "--model", "protein2genome",
+            "--query", str(reference_fasta), "--target", str(target_fasta),
+            "--refine", "region", "--showtargetgff", "yes", "--showalignment", "no",
+        ]
+        result = _run_checked(runner, cmd)
+
+        gene_line = None
+        exon_lines = []
+        for line in result.stdout.splitlines():
+            fields = line.split("\t")
+            if len(fields) < 9:
+                continue
+            if fields[2] == "gene" and gene_line is None:
+                gene_line = fields
+            elif fields[2] == "exon":
+                exon_lines.append(fields)
+
+        if gene_line is None:
+            return None
+
+        attrs = gene_line[8].split(" ; ")
+        query_id = next(p.split(" ")[1] for p in attrs if p.startswith("sequence "))
+        record_id, matched_gene = _parse_reference_header(query_id)
+        if matched_gene != gene_name:
+            return None
+        attribution = _attribute(record_id, matched_gene, record_families, roles_by_family)
+        if attribution is None:
+            return None
+        family_key, role = attribution
+        identity = 0.0
+        for part in attrs:
+            if part.startswith("identity "):
+                identity = float(part.split(" ")[1])
+                break
+
+        exons = [
+            ExonSpan(int(e[3]) + offset, int(e[4]) + offset)
+            for e in sorted(exon_lines, key=lambda e: int(e[3]))
+        ]
+        return PolishModel(
+            gene_name=matched_gene, family_key=family_key, role=role, contig=contig,
+            start=int(gene_line[3]) + offset, end=int(gene_line[4]) + offset,
+            strand=gene_line[6], exons=exons, identity=identity,
+            reference_record_id=record_id, method="exonerate_refine",
+        )

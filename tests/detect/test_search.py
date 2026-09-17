@@ -4,11 +4,13 @@ from pathlib import Path
 import pytest
 
 from MATPredict.detect.family_registry import Family, FamilyKey, load_record_families
+from MATPredict.detect.polish import ExonSpan
 from MATPredict.detect.search import (
     METHOD_TBLASTN,
     ProteomeDeflineError,
     SearchHit,
     SearchToolError,
+    polish_with_exonerate,
     search_fast_path,
     search_genomic,
     search_localize,
@@ -505,6 +507,65 @@ def test_search_localize_raises_on_nonzero_returncode(tmp_path):
             runner=failing_runner,
         )
     assert "tblastn" in str(err.value)
+
+
+# --- polish_with_exonerate (exon-aware --refine region polishing) ---
+
+# Verified against the real exonerate 2.4.0 binary (--model protein2genome
+# --refine region --showtargetgff yes) with a synthetic two-exon gene: the
+# gene-line attribute format (sequence/identity) matches search_genomic's
+# existing parsing exactly, and exon lines additionally carry
+# "identity ... ; similarity ..." attrs beyond "insertions"/"deletions" --
+# irrelevant here since only start/end (fields[3]/fields[4]) are parsed from
+# exon lines, not their attribute string.
+EXONERATE_REFINE_GFF = (
+    "c1\texonerate\tgene\t1\t400\t.\t+\t.\t"
+    "gene_id 1 ; sequence rec1|gene0|mfa1 ; gene_orientation . ; identity 95.00 ; similarity 96.00\n"
+    "c1\texonerate\texon\t1\t150\t.\t+\t.\tinsertions 0 ; deletions 0\n"
+    "c1\texonerate\texon\t200\t400\t.\t+\t.\tinsertions 0 ; deletions 0\n"
+)
+
+
+def fake_exonerate_refine_runner(cmd, **kwargs):
+    assert "--refine" in cmd and cmd[cmd.index("--refine") + 1] == "region"
+    class Result:
+        returncode = 0
+        stdout = EXONERATE_REFINE_GFF
+        stderr = ""
+    return Result()
+
+
+def test_polish_with_exonerate_parses_exon_structure(tmp_path):
+    (tmp_path / "genome.fa").write_text(">c1\n" + "N" * 500 + "\n")
+    model = polish_with_exonerate(
+        genome_fasta=tmp_path / "genome.fa",
+        family=FAMILY, gene_name="mfa1",
+        reference_fasta=tmp_path / "reference.faa",
+        record_families={"rec1": FAMILY.key},
+        window=("c1", 1, 500),
+        runner=fake_exonerate_refine_runner,
+    )
+    assert model.exons == [ExonSpan(1, 150), ExonSpan(200, 400)]
+    assert model.identity == 95.0
+    assert model.method == "exonerate_refine"
+
+
+def test_polish_with_exonerate_returns_none_when_no_model(tmp_path):
+    (tmp_path / "genome.fa").write_text(">c1\n" + "N" * 500 + "\n")
+
+    def empty_runner(cmd, **kwargs):
+        class Result:
+            returncode = 0
+            stdout = ""
+            stderr = ""
+        return Result()
+
+    model = polish_with_exonerate(
+        genome_fasta=tmp_path / "genome.fa", family=FAMILY, gene_name="mfa1",
+        reference_fasta=tmp_path / "reference.faa", record_families={"rec1": FAMILY.key},
+        window=("c1", 1, 500), runner=empty_runner,
+    )
+    assert model is None
 
 
 def test_defline_location_is_found_alongside_a_free_text_description(tmp_path):

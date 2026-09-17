@@ -159,7 +159,8 @@ def test_search_fast_path_raises_clear_error_on_non_conforming_defline(tmp_path,
 
 EXONERATE_GFF = (
     "contigB\texonerate\tgene\t500\t900\t.\t-\t.\t"
-    "gene_id 1 ; sequence 5270_521_aLocus_a1|gene1|pra1 ; gene_orientation -\n"
+    "gene_id 1 ; sequence 5270_521_aLocus_a1|gene1|pra1 ; gene_orientation - ; "
+    "identity 95.50 ; similarity 96.00\n"
 )
 
 
@@ -184,12 +185,58 @@ def test_search_genomic_parses_exonerate_output_no_window(tmp_path):
             start=500,
             end=900,
             strand="-",
-            identity=0.0,
+            identity=95.5,
             reference_record_id="5270_521_aLocus_a1",
             method="exonerate_genome",
             coverage=None,
         )
     ]
+
+
+def test_search_genomic_parses_real_identity_from_exonerate_attrs(tmp_path):
+    """Regression: search_genomic previously hardcoded identity=0.0, claiming
+    exonerate's GFF has no identity field. The installed exonerate 2.4.0
+    binary (--model protein2genome --showtargetgff yes) actually emits a
+    real `identity` field in the gene feature's attribute string, in exactly
+    this format -- confirmed against the real binary's output."""
+
+    def real_format_runner(cmd, **kwargs):
+        return _result(
+            "rec1\texonerate\tgene\t10\t400\t.\t+\t.\t"
+            "gene_id 1 ; sequence 5270_521_aLocus_a1|gene0|mfa1 ; "
+            "gene_orientation . ; identity 100.00 ; similarity 100.00\n"
+        )
+
+    hits = search_genomic(
+        genome_fasta=tmp_path / "genome.fasta",
+        families=[FAMILY],
+        reference_fasta=tmp_path / "reference.faa",
+        record_families=RECORD_FAMILIES,
+        runner=real_format_runner,
+    )
+    assert len(hits) == 1
+    assert hits[0].identity == 100.0
+
+
+def test_search_genomic_falls_back_to_zero_identity_when_field_missing(tmp_path):
+    """Older/malformed exonerate output without an `identity` field must not
+    crash -- it should fall back to 0.0 rather than raising."""
+
+    def no_identity_runner(cmd, **kwargs):
+        return _result(
+            "contigB\texonerate\tgene\t500\t900\t.\t-\t.\t"
+            "gene_id 1 ; sequence 5270_521_aLocus_a1|gene1|pra1 ; gene_orientation -\n"
+        )
+
+    hits = search_genomic(
+        genome_fasta=tmp_path / "genome.fasta",
+        families=[FAMILY],
+        reference_fasta=tmp_path / "reference.faa",
+        record_families=RECORD_FAMILIES,
+        runner=no_identity_runner,
+    )
+    assert len(hits) == 1
+    assert hits[0].identity == 0.0
 
 
 def test_search_genomic_relaxed_sets_relaxed_method(tmp_path):
@@ -274,7 +321,8 @@ def test_search_genomic_window_extracts_target_region_and_offsets_coordinates(tm
         # is reported locally as 501-901.
         return _result(
             "contigC\texonerate\tgene\t501\t901\t.\t+\t.\t"
-            "gene_id 1 ; sequence 5270_521_aLocus_a1|gene0|mfa1 ; gene_orientation +\n"
+            "gene_id 1 ; sequence 5270_521_aLocus_a1|gene0|mfa1 ; gene_orientation + ; "
+            "identity 100.00 ; similarity 100.00\n"
         )
 
     hits = search_genomic(
@@ -295,7 +343,7 @@ def test_search_genomic_window_extracts_target_region_and_offsets_coordinates(tm
             start=1500,
             end=1900,
             strand="+",
-            identity=0.0,
+            identity=100.0,
             reference_record_id="5270_521_aLocus_a1",
             method="exonerate_genome",
             coverage=None,

@@ -336,10 +336,18 @@ def search_genomic(
                 continue
             fields = line.split("\t")
             contig, _src, _feat, start, end, _score, strand, _frame, attrs = fields
-            # exonerate GFF attrs carry the query id under "sequence <id>"
+            # exonerate GFF attrs carry the query id under "sequence <id>" and
+            # the real percent identity under "identity <value>", e.g.:
+            #   gene_id 1 ; sequence rec1|gene0|mfa1 ; gene_orientation . ; identity 100.00 ; similarity 100.00
+            attr_parts = attrs.split(" ; ")
             query_id = next(
-                part.split(" ")[1] for part in attrs.split(" ; ") if part.startswith("sequence ")
+                part.split(" ")[1] for part in attr_parts if part.startswith("sequence ")
             )
+            identity = 0.0
+            for part in attr_parts:
+                if part.startswith("identity "):
+                    identity = float(part.split(" ")[1])
+                    break
             record_id, gene_name = _parse_reference_header(query_id)
             attribution = _attribute(record_id, gene_name, record_families, roles_by_family)
             if attribution is None:
@@ -355,7 +363,7 @@ def search_genomic(
                     start=int(start) + offset,
                     end=int(end) + offset,
                     strand=strand,
-                    identity=0.0,
+                    identity=identity,
                     reference_record_id=record_id,
                     method=method,
                     coverage=None,

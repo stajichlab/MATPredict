@@ -17,6 +17,31 @@ def test_build_reference_fasta_concatenates_and_rewrites_headers(tmp_path):
     assert "MKV" in text
 
 
+def test_build_reference_fasta_excludes_candidates(tmp_path):
+    """Finding E regression: db/candidates/ holds not-yet-accepted (needs_review)
+    records, which family_registry.load_record_families and
+    pipeline._short_orf_genes both already exclude as non-authoritative.
+    Including a candidate's proteins here would let it be hit by search, only
+    for search._attribute to silently drop the hit later (its record_id is
+    absent from the accepted-records index) -- wasted search cost with no
+    signal to the user."""
+    accepted_dir = tmp_path / "Basidiomycota" / "Ustilaginaceae" / "accepted_record"
+    accepted_dir.mkdir(parents=True)
+    (accepted_dir / "proteins.faa").write_text(
+        ">accepted_record|gene_index=0|name=mfa1|role=core_MAT\nMKV\n"
+    )
+    candidate_dir = tmp_path / "candidates" / "Ascomycota" / "candidate_record"
+    candidate_dir.mkdir(parents=True)
+    (candidate_dir / "proteins.faa").write_text(
+        ">candidate_record|gene_index=0|name=mfa1|role=core_MAT\nQQQ\n"
+    )
+    out = build_reference_fasta(tmp_path, tmp_path / "combined.faa")
+    text = out.read_text()
+    assert "accepted_record" in text
+    assert "candidate_record" not in text
+    assert "QQQ" not in text
+
+
 def test_build_reference_fasta_logs_malformed_headers(tmp_path, caplog):
     """Test that malformed headers are skipped and a warning is logged."""
     record_dir = tmp_path / "Basidiomycota" / "Ustilaginaceae" / "test_record"

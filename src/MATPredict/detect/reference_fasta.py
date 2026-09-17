@@ -21,6 +21,14 @@ def build_reference_fasta(db_root: Path, out_path: Path) -> Path:
     """
     lines: list[str] = []
     for faa in sorted(db_root.glob("*/*/*/proteins.faa")):
+        # `db/candidates/` holds not-yet-accepted (needs_review) records, which
+        # family_registry.load_record_families and pipeline._short_orf_genes
+        # both already exclude as non-authoritative. Including them here would
+        # let diamond/exonerate hit a candidate's protein, only for
+        # search._attribute to silently drop it later (record_id not found in
+        # the accepted-records index) -- wasted search cost with no signal.
+        if faa.relative_to(db_root).parts[0] == "candidates":
+            continue
         text = faa.read_text()
         for chunk in text.split(">")[1:]:
             header, _, seq = chunk.partition("\n")

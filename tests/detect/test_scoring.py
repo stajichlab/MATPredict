@@ -18,13 +18,38 @@ def _hit(gene_name, family_key):
 
 
 def test_score_cluster_is_fractional_not_summed():
-    # FAM_A: 1/2 genes found. FAM_B: 1/4 genes found. Gene count alone must not win for FAM_B.
-    cluster = GeneCluster("c1", 1, 100, [_hit("g1", FAM_A.key)])
+    # FAM_A has 1/2 of its own genes found (g1, attributed to FAM_A).
+    # FAM_B has 2/4 of its own genes found (g3, g4, attributed to FAM_B).
+    # FAM_B has more genes found in absolute count (2 vs 1) but a lower
+    # fraction (0.5 vs 0.5 -- tie) is not useful here, so instead give FAM_B
+    # only 1 of its 4 genes found: fraction 0.25 < FAM_A's 0.5. This proves
+    # the larger family (more expected genes) does not win on raw hit count;
+    # each family is scored strictly against hits attributed to ITS OWN
+    # family_key, never against another family's hits.
+    cluster = GeneCluster(
+        "c1", 1, 100,
+        [_hit("g1", FAM_A.key), _hit("g3", FAM_B.key)],
+    )
     scores = score_cluster(cluster, [FAM_A, FAM_B])
     by_key = {s.family_key: s for s in scores}
     assert by_key[FAM_A.key].fraction_found == 0.5
     assert by_key[FAM_B.key].fraction_found == 0.25
     assert scores[0].family_key == FAM_A.key  # sorted highest fraction first
+
+
+def test_score_cluster_does_not_credit_other_family_for_shared_gene_name():
+    # FAM_A and FAM_B both declare a gene named "g1". Only FAM_A actually has
+    # a hit for it (correctly attributed via family_key=FAM_A.key). FAM_B
+    # must NOT be credited for "g1" just because the name string matches --
+    # this is the cross-family contamination bug the scoring module exists
+    # to prevent.
+    cluster = GeneCluster("c1", 1, 100, [_hit("g1", FAM_A.key)])
+    scores = score_cluster(cluster, [FAM_A, FAM_B])
+    by_key = {s.family_key: s for s in scores}
+    assert by_key[FAM_A.key].genes_found == ["g1"]
+    # FAM_B has no hits attributed to it at all, so it should not appear
+    # in the scores (score_cluster only returns families with >=1 hit).
+    assert FAM_B.key not in by_key
 
 
 def test_score_cluster_reports_missing_genes():

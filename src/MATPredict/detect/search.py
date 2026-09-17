@@ -269,6 +269,70 @@ def search_fast_path(
         return hits
 
 
+METHOD_TBLASTN = "tblastn_genome"
+
+# qseqid is the reference protein header (parsed via _parse_reference_header);
+# sseqid is the genome's own contig name -- tblastn's query/db roles are the
+# OPPOSITE of diamond's fast path (search_fast_path's query is the predicted
+# proteome; here the query is the curated reference set and the genome is
+# the database), so do not copy search_fast_path's qseqid/sseqid roles.
+# Verified against the real tblastn 2.17.0 + makeblastdb 2.17.0 binaries:
+# `-outfmt "6 qseqid sseqid pident length sstart send sframe"` produces
+# exactly these seven tab-separated columns, and a minus-strand HSP reports
+# sstart > send together with a negative sframe (e.g. "86  51  -1"), while a
+# plus-strand HSP reports sstart < send with a positive sframe.
+_TBLASTN_OUTFMT = "6 qseqid sseqid pident length sstart send sframe"
+
+
+def search_localize(
+    genome_fasta: Path,
+    families: list[Family],
+    reference_fasta: Path,
+    record_families: dict[str, FamilyKey],
+    runner: Callable = subprocess.run,
+) -> list[SearchHit]:
+    """Genome-wide tblastn localization -- one blastdb build and one
+    tblastn call cover every routed family's genes (core_MAT and
+    flanking_conserved), never one call per family. Coordinates are
+    approximate (no splice awareness); Stage 2 polishing refines them.
+
+    `-seg no` disables low-complexity filtering so short, simple
+    pheromone-precursor queries are not suppressed.
+    """
+    roles_by_family = _roles_by_family(families)
+
+    with tempfile.TemporaryDirectory() as tmp_dir_name:
+        db_prefix = Path(tmp_dir_name) / "genome_db"
+        _run_checked(runner, [
+            "makeblastdb", "-in", str(genome_fasta), "-dbtype", "nucl", "-out", str(db_prefix),
+        ])
+        cmd = [
+            "tblastn", "-query", str(reference_fasta), "-db", str(db_prefix),
+            "-seg", "no", "-outfmt", _TBLASTN_OUTFMT,
+        ]
+        result = _run_checked(runner, cmd)
+
+        hits: list[SearchHit] = []
+        for line in result.stdout.splitlines():
+            if not line.strip():
+                continue
+            qseqid, contig, pident, _length, sstart, send, sframe = line.split("\t")
+            record_id, gene_name = _parse_reference_header(qseqid)
+            attribution = _attribute(record_id, gene_name, record_families, roles_by_family)
+            if attribution is None:
+                continue
+            family_key, role = attribution
+            start, end = sorted((int(sstart), int(send)))
+            strand = "+" if int(sframe) > 0 else "-"
+            hits.append(SearchHit(
+                family_key=family_key, gene_name=gene_name, role=role,
+                contig=contig, start=start, end=end, strand=strand,
+                identity=float(pident), reference_record_id=record_id,
+                method=METHOD_TBLASTN, coverage=None,
+            ))
+        return hits
+
+
 def _extract_window(genome_fasta: Path, window: tuple[str, int, int], tmp_dir: Path) -> Path:
     """Slice (contig, start, end) (1-based, inclusive) out of genome_fasta into its own FASTA file.
 

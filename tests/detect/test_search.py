@@ -5,11 +5,13 @@ import pytest
 
 from MATPredict.detect.family_registry import Family, FamilyKey, load_record_families
 from MATPredict.detect.search import (
+    METHOD_TBLASTN,
     ProteomeDeflineError,
     SearchHit,
     SearchToolError,
     search_fast_path,
     search_genomic,
+    search_localize,
 )
 
 FAMILY = Family(
@@ -440,6 +442,69 @@ def test_real_colliding_Z_gene_is_attributed_to_aalpha_not_abeta(tmp_path):
         runner=fake_runner,
     )
     assert [h.family_key for h in hits] == [FamilyKey("Basidiomycota", "Aalpha")]
+
+
+# --- search_localize (tblastn genome-wide localization) ---
+
+# tblastn's query is the curated reference protein set, its database is the
+# genome -- the OPPOSITE role assignment from diamond's fast path (where the
+# predicted proteome is the query). So qseqid carries the reference header
+# (record_id|geneN|gene_name) and sseqid is the genome's own contig name.
+# Verified against the real tblastn 2.17.0 binary: `-outfmt "6 qseqid sseqid
+# pident length sstart send sframe"` produces exactly these tab-separated
+# columns, and a minus-strand HSP reports sstart > send with sframe -1.
+TBLASTN_TSV = (
+    # qseqid                sseqid  pident length sstart send sframe
+    "rec1|gene0|mfa1\tcontigA\t95.0\t40\t400\t100\t-1\n"  # minus strand: sstart > send
+    "rec1|gene1|pra1\tcontigA\t90.0\t300\t3600\t4914\t1\n"  # plus strand
+)
+
+
+def fake_tblastn_runner(cmd, **kwargs):
+    if cmd[0] == "makeblastdb":
+        return _result("")
+    assert "-seg" in cmd and cmd[cmd.index("-seg") + 1] == "no"
+    return _result(TBLASTN_TSV)
+
+
+def test_search_localize_normalizes_minus_strand_and_batches_one_call(tmp_path):
+    calls = []
+
+    def counting_runner(cmd, **kwargs):
+        calls.append(cmd)
+        return fake_tblastn_runner(cmd, **kwargs)
+
+    hits = search_localize(
+        genome_fasta=tmp_path / "genome.fa",
+        families=[FAMILY],
+        reference_fasta=tmp_path / "reference.faa",
+        record_families={"rec1": FAMILY.key},
+        runner=counting_runner,
+    )
+    by_gene = {h.gene_name: h for h in hits}
+    assert by_gene["mfa1"].start == 100 and by_gene["mfa1"].end == 400 and by_gene["mfa1"].strand == "-"
+    assert by_gene["pra1"].start == 3600 and by_gene["pra1"].end == 4914 and by_gene["pra1"].strand == "+"
+    assert all(h.method == METHOD_TBLASTN for h in hits)
+    # exactly one tblastn invocation regardless of how many families/genes
+    tblastn_calls = [c for c in calls if c[0] == "tblastn"]
+    assert len(tblastn_calls) == 1
+
+
+def test_search_localize_raises_on_nonzero_returncode(tmp_path):
+    def failing_runner(cmd, **kwargs):
+        if cmd[0] == "makeblastdb":
+            return _result("")
+        return _result("", returncode=1, stderr="tblastn: bad database")
+
+    with pytest.raises(SearchToolError) as err:
+        search_localize(
+            genome_fasta=tmp_path / "genome.fa",
+            families=[FAMILY],
+            reference_fasta=tmp_path / "reference.faa",
+            record_families={"rec1": FAMILY.key},
+            runner=failing_runner,
+        )
+    assert "tblastn" in str(err.value)
 
 
 def test_defline_location_is_found_alongside_a_free_text_description(tmp_path):

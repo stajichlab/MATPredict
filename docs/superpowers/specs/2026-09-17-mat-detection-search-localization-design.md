@@ -40,6 +40,30 @@ outcomes, and its account of what replaces the deleted
 `second_pass_used`/Medium-tier mechanism were all underspecified or
 internally inconsistent — resolved below with explicit user decisions.
 
+**Revision note (third draft):** implementation surfaced a real gap in
+the second draft's Stage 0 design, fixed below: the fast-path rescue was
+originally scoped to "zero hits anywhere" (a whole-genome rescue) versus
+"a foothold cluster missing one gene" (a narrow, windowed rescue only) —
+but this asymmetry was backwards. A family with *partial* annotation
+coverage (a receptor gene correctly annotated, its pheromone-precursor
+partner missing — this project's own real *M. maydis* mfa1 case) was
+getting *less* search than a family with *no* coverage at all, when it
+should get the same genome-wide search for its specific missing gene.
+**The principle now stated explicitly: a supplied annotation's
+completeness for a family's core genes is never trusted, regardless of
+how many of that family's genes the annotation did get right** — a
+whole-genome annotation missing one real, short, divergent gene while
+correctly calling its neighbor is exactly the failure mode `mfa1`
+demonstrated (a classic hand-curated locus-specific GenBank deposit
+correctly called it; the modern automated whole-genome annotation
+dropped it entirely). Stage 0 and Stage 1 below are revised accordingly:
+the fast path stays cheap only in the case that actually earns it (every
+core gene already found), and any single missing core gene — whether
+the family has zero hits or several — triggers the same genome-wide
+`tblastn` localization for that specific gene, scoped per (family, gene,
+*cluster*) so a real second, independent locus for the same family is
+never masked by a different cluster's evidence for the same gene name.
+
 ## Scope
 
 This spec revises only the **Search** and the
@@ -89,27 +113,60 @@ fields) is unchanged except where explicitly noted below.
 
 ## Pipeline stages (revised)
 
-### Stage 0 — routing between the fast-path rescue and the genome-only path
+### Stage 0 — routing between the fast path and genome-wide localization
 
 This revision applies in two different situations that must be handled
-differently, not identically (a gap in the first draft):
+differently, not identically (a gap in the first draft), and the
+fast-path case has since been narrowed to reflect the third-draft
+principle above (an annotation's completeness for a family's core genes
+is never trusted):
 
 1. **Genome-only path** (no predicted proteome supplied, or the
    exhaustive no-taxid case): no prior search has happened yet, so
    there is no existing cluster to anchor a window to. This goes
    through the full Stage 1 (genome-wide `tblastn` localization) before
    Stage 2 (polish).
-2. **Fast-path per-family rescue** (a proteome was supplied, diamond
-   already found a cluster with a foothold, but one of the family's
-   `core_MAT` genes is still missing from that cluster): a rough
-   location already exists — the existing cluster's contig and span.
-   This case **skips Stage 1 entirely** and goes straight to Stage 2
-   (polish), using a window padded around the *existing* cluster's
-   span rather than running a fresh genome-wide `tblastn` search. The
-   `tblastn` query set for this case is only the specific missing
-   gene's curated proteins (matching the original spec's targeted
-   intent — everything else in the family was already found by other
-   means), not the whole family.
+2. **Fast path, no rescue needed** (a proteome was supplied and diamond
+   found every one of a family's `core_MAT` genes): this is the ONLY
+   case that stays cheap and skips Stage 1 entirely — the fast path's
+   performance benefit is real, but it is earned by the annotation
+   actually being complete for that family, not assumed.
+3. **Fast path, rescue needed** (a proteome was supplied, but diamond
+   left one or more of a family's `core_MAT` genes missing — whether
+   the family has an existing foothold cluster with one gene still
+   missing, or has zero hits for the family at all): both cases now
+   receive the SAME treatment — the specific missing gene(s)' curated
+   proteins are added to the same batched, genome-wide `tblastn`
+   localization call the genome-only path already runs (one call per
+   `run_pipeline` invocation, not one per family or per gene). This
+   replaces the second draft's asymmetric design, where a zero-hit
+   family got genome-wide search but a partial-foothold family only got
+   a narrow window — that asymmetry produced *less* search for *more*
+   annotation coverage, backwards from the intent.
+
+**Cluster-aware rescue eligibility.** Whether a specific gene is
+"missing and needs rescue" is evaluated per `(family, gene, cluster)`,
+not per `(family, gene)` alone. A family can have more than one real,
+independent locus in one genome (tetrapolar species with unlinked loci;
+homothallic/heterothallic switching-cassette species) — if gene X is
+found in cluster A but missing from cluster B, cluster B's copy of gene
+X still needs its own rescue, even though the family as a whole "has"
+gene X somewhere. Scoping eligibility to the specific cluster, not just
+the family, is what makes this catch a real second-locus gap instead of
+treating the family-wide presence of a gene as evidence that every
+cluster of that family has it.
+
+The genome-wide `tblastn` call itself costs nothing extra either way:
+it always queries the family's full expected gene set (`core_MAT` and
+`flanking_conserved`) against the whole genome in one invocation,
+regardless of which specific genes/clusters are eligible for rescue —
+`families`/eligibility only controls which of the resulting hits are
+kept after the fact. Widening eligibility from per-family to
+per-cluster is therefore a question of how strict that post-hoc
+filtering should be (accepting a modest increase in spurious-hit
+surface, mitigated by the existing scoring/clustering/ambiguity-floor
+thresholds a spurious hit must still clear before being promoted to a
+called locus), not a batching or performance tradeoff.
 
 Clustering runs **once** for the genome-only path: `tblastn` hits for
 every routed family (both `core_MAT` and `flanking_conserved` genes,
@@ -117,10 +174,12 @@ preserving the dual-anchor principle) are batched into a single hit
 pool alongside any other search-stage hits, and `cluster_hits`
 (unchanged) runs once over that pool — mirroring the existing
 batched-exonerate-call pattern for the zero-hit case, now applied to
-`tblastn`. The fast-path rescue case does **not** re-run `cluster_hits`
-at all — it directly widens the existing, already-identified cluster's
-window and reports new hits back into that same cluster's hit list, the
-same mechanism the original windowed second pass used.
+`tblastn`. For the fast-path rescue case, a rescued hit that lands
+within an existing cluster's span is folded into that cluster directly
+(without re-running `cluster_hits`, the same mechanism the original
+windowed second pass used); a rescued hit that lands elsewhere becomes
+the seed of its own new cluster, since it may represent a genuine
+second, independent locus for that family.
 
 ### Stage 1 — Localization (genome-only path only)
 
@@ -144,12 +203,14 @@ is needed at this stage since `score_cluster` counts distinct gene
 *names*, not distinct HSPs.
 
 This stage entirely replaces the original spec's unrestricted
-whole-genome `exonerate` fallback. The windowed second pass (the
-original spec's flanking-anchored relaxed search) is superseded by
-Stage 0's fast-path-rescue case, which now polishes directly rather
-than running a separate "relaxed exonerate" mode — see "Boundary
-calling" for what replaces the confidence-tier effect that mechanism
-used to have.
+whole-genome `exonerate` fallback, and now runs for BOTH the
+genome-only path and any fast-path family needing rescue (per Stage 0's
+third-draft revision) rather than only for zero-hit families. The
+original spec's flanking-anchored relaxed search is superseded by
+Stage 2's real polish-with-both-tools step, which now runs uniformly on
+every localized/rescued cluster rather than a separate "relaxed
+exonerate" mode — see "Boundary calling" for what replaces the
+confidence-tier effect that mechanism used to have.
 
 ### Stage 2 — Polishing (both paths)
 
@@ -268,9 +329,14 @@ it later runs an ab initio predictor on the same region.
   genome-only path.
 - The prior windowed-second-pass mechanism's "relaxed exonerate
   parameters" (`--percent`/`--score` threshold changes) are removed —
-  Stage 0's fast-path-rescue case now runs the same real
+  every fast-path rescue case now runs the same real
   polish-with-both-tools step described above, not a relaxed
   single-tool retry.
+- The second draft's asymmetric rescue scope (genome-wide search for a
+  zero-hit family, but only a narrow window for a partial-foothold
+  family) is removed — both now receive the same genome-wide `tblastn`
+  rescue for their specific missing gene(s), scoped per
+  `(family, gene, cluster)` per the third-draft revision above.
 - `second_pass_used` as a tiering input is removed and replaced by the
   `unpolished` status (Stage 3) — same tiering *effect* (caps at
   Medium), different, more precisely-defined trigger.
@@ -304,17 +370,38 @@ it later runs an ab initio predictor on the same region.
   - The best-model-per-gene-per-tool selection logic (multiple curated
     candidate proteins, correct score used, not raw cross-tool
     identity).
-  - The fast-path rescue path (Stage 0 case 2): confirm it skips Stage
-    1 entirely, widens the existing cluster's window rather than
-    re-running `cluster_hits`, and queries only the specific missing
-    gene's curated proteins.
-  - The genome-only path's single-batched-`tblastn`-call behavior
-    (confirm one call covers every routed family's genes, not one call
-    per family) — assert directly on the injected runner's captured
-    invocation that `--target`/equivalent is never the full
-    `genome_fasta` for the *polishing* tools (only the sliced window is
-    ever passed to them), and that exactly one `tblastn` invocation
-    covers all families for the genome-only path.
+  - The fast path's cheap case (Stage 0 case 2): confirm a family with
+    every core gene found by diamond skips Stage 1 entirely and never
+    triggers `tblastn`.
+  - The fast path's rescue case (Stage 0 case 3), both shapes: confirm
+    a zero-hit family AND a partial-foothold family both trigger the
+    same batched genome-wide `tblastn` call for their specific missing
+    gene(s) — not a narrower, windowed-only search for the
+    partial-foothold case.
+  - Cluster-aware rescue eligibility: confirm that when the same family
+    has gene X found in one cluster but missing from a second,
+    independent cluster, the second cluster's copy of gene X still gets
+    rescued — eligibility must be keyed per `(family, gene, cluster)`,
+    not per `(family, gene)` alone (a bug found and fixed during this
+    revision's final review: family-wide presence of a gene was
+    incorrectly treated as covering every cluster of that family).
+  - The genome-only/rescue single-batched-`tblastn`-call behavior
+    (confirm one call covers every routed family's genes needing
+    localization, not one call per family or per gene) — assert
+    directly on the injected runner's captured invocation that
+    `--target`/equivalent is never the full `genome_fasta` for the
+    *polishing* tools (only the sliced window is ever passed to them),
+    and that exactly one `tblastn` invocation covers the whole run.
+  - Multi-gene window handling: both polishing tools must correctly
+    handle a window containing more than one gene's alignment (the
+    normal case for a real MAT locus, not an edge case) — group each
+    tool's output by its own alignment record, filter to the
+    specifically requested gene, and select the best surviving record
+    by the tool's own score column, never by comparing identity across
+    tools (a bug found and fixed during this revision's final review:
+    both wrappers originally kept only the first feature record in the
+    tool's output, so a multi-gene window let one gene's data silently
+    contaminate or crowd out another's).
 - Integration-level test (mirroring
   `tests/detect/test_integration_real_record.py`) confirming the
   genome-only localize-then-polish flow works end-to-end against a real
@@ -346,3 +433,12 @@ it later runs an ab initio predictor on the same region.
   context, not addressed by this revision.
 - Any change to family routing, `score_cluster`'s fractional-attribution
   algorithm, or idiomorph assignment.
+
+**Forward note for sub-project 3 (not a requirement of this spec):**
+the user has indicated sub-project 3 should be able to run a *targeted*
+ab initio predictor (augustus/helixer/braker) restricted to a candidate
+region this stage identifies, rather than genome-wide. This spec's
+Stage 4 output (a candidate region's coordinates plus its per-gene
+evidence) is the natural input for that — no change is needed here to
+support it, but sub-project 3's own design should confirm this output
+shape is sufficient before adding anything new to it.

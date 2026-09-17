@@ -349,6 +349,83 @@ def _extract_window(genome_fasta: Path, window: tuple[str, int, int], tmp_dir: P
     return window_fasta
 
 
+@dataclass
+class _AlignmentRecord:
+    """One tool alignment: its top-level feature line plus that alignment's own
+    exon/CDS lines, kept together so one alignment's exons can never be
+    attached to another alignment's gene (see `_select_requested_gene`)."""
+
+    query_id: str
+    score: float
+    feature: list[str]  # the `gene` (exonerate) / `mRNA` (miniprot) GFF fields
+    parts: list[list[str]]  # that alignment's own `exon` / `CDS` GFF fields
+
+
+def _feature_score(fields: list[str]) -> float:
+    """The GFF score column (field 6) of a feature line, or 0.0 when absent.
+
+    This is the TOOL'S OWN raw alignment score -- exonerate's
+    protein2genome DP score and miniprot's own alignment score (identical to
+    its `AS:i:` PAF tag, verified against the real 2.4.0 / 0.18-r281
+    binaries). It is used ONLY to rank several alignments produced by the
+    SAME tool for the SAME gene against each other, never to compare one
+    tool's result with another's: the spec explicitly forbids selecting
+    across tools, and raw percent identity in particular, because tblastn's
+    `pident`, miniprot's `Identity` and exonerate's `identity` are not on a
+    common scale. A tool that leaves the column as `.` degrades to 0.0,
+    which keeps a single candidate selectable and makes ties fall back to
+    output order.
+    """
+    try:
+        return float(fields[5])
+    except (IndexError, ValueError):
+        return 0.0
+
+
+def _select_requested_gene(
+    records: list[_AlignmentRecord],
+    gene_name: str,
+    record_families: dict[str, FamilyKey],
+    roles_by_family: dict[FamilyKey, dict[str, str]],
+) -> tuple[_AlignmentRecord, str, FamilyKey, str] | None:
+    """Pick the single best alignment for the REQUESTED gene, or None.
+
+    A padded polish window routinely contains more than one gene -- the normal,
+    expected shape of a real MAT locus -- and both polishing tools are handed
+    the whole curated reference set as query, so their output carries an
+    alignment per gene they could place in the window, in the tool's own order
+    (exonerate by score, miniprot by query order). Keeping only the tool's
+    FIRST alignment therefore answered for an arbitrary gene and could confirm
+    at most one gene per window.
+
+    So: every alignment whose query resolves to a gene OTHER than the requested
+    one is discarded here (not merged, not deduplicated), and only when zero
+    alignments survive is None returned. When several survive -- the curated
+    database legitimately holds more than one reference protein for the same
+    gene, each producing its own alignment -- the spec (Stage 2) requires
+    selecting one per gene per tool by a named, tool-appropriate score, which
+    is `_feature_score`'s raw per-tool alignment score. Ties keep the tool's
+    own output order, so selection is deterministic.
+    """
+    best: tuple[_AlignmentRecord, str, FamilyKey, str] | None = None
+    best_score = None
+    for record in records:
+        try:
+            record_id, matched_gene = _parse_reference_header(record.query_id)
+        except ValueError:
+            continue
+        if matched_gene != gene_name:
+            continue
+        attribution = _attribute(record_id, matched_gene, record_families, roles_by_family)
+        if attribution is None:
+            continue
+        family_key, role = attribution
+        if best_score is None or record.score > best_score:
+            best = (record, record_id, family_key, role)
+            best_score = record.score
+    return best
+
+
 def polish_with_exonerate(
     genome_fasta: Path,
     family: Family,
@@ -379,11 +456,22 @@ def polish_with_exonerate(
     fields beyond `insertions`/`deletions` -- irrelevant here since only the
     exon line's start/end columns are used, not its attributes.
 
-    Returns None -- rather than a placeholder model -- when exonerate reports
-    no gene for this window, or when the hit resolves to a different gene,
-    an unattributable record, or a family/role exonerate's `family` does not
-    expect, matching `polish_with_miniprot`'s drop-rather-than-fabricate
-    convention for attribution failures.
+    EVERY alignment in the output is parsed, not just the first. Verified
+    against the real exonerate 2.4.0 binary with the real curated
+    `Basidiomycota:Aalpha` `Z` and `Y` proteins placed in one window:
+    exonerate emits one `gene` line per alignment, best-scoring first, each
+    followed by its OWN `exon` lines, and the `gene_id` attribute restarts at
+    `1` for every alignment -- so `gene_id` is NOT a usable grouping key and
+    grouping is done positionally instead (a `gene` line opens a new record;
+    subsequent `exon` lines belong to it). Collecting every `exon` line into
+    the first `gene` line, as this function used to, wrote gene Z's exon span
+    into gene Y's model.
+
+    Returns None -- rather than a placeholder model -- only when NO alignment
+    in the output is for the requested gene with an attributable record and an
+    expected family/role. An output whose first alignment is for a DIFFERENT
+    gene is no longer a None; the requested gene's own alignment further down
+    the output is used.
     """
     roles_by_family = _roles_by_family([family])
     contig, win_start, _win_end = window
@@ -400,41 +488,42 @@ def polish_with_exonerate(
         ]
         result = _run_checked(runner, cmd)
 
-        gene_line = None
-        exon_lines = []
+        records: list[_AlignmentRecord] = []
         for line in result.stdout.splitlines():
             fields = line.split("\t")
             if len(fields) < 9:
                 continue
-            if fields[2] == "gene" and gene_line is None:
-                gene_line = fields
-            elif fields[2] == "exon":
-                exon_lines.append(fields)
+            if fields[2] == "gene":
+                attrs = fields[8].split(" ; ")
+                query_id = next(
+                    (p.split(" ")[1] for p in attrs if p.startswith("sequence ")), None
+                )
+                if query_id is None:
+                    continue
+                records.append(
+                    _AlignmentRecord(query_id, _feature_score(fields), fields, [])
+                )
+            elif fields[2] == "exon" and records:
+                records[-1].parts.append(fields)
 
-        if gene_line is None:
+        selected = _select_requested_gene(records, gene_name, record_families, roles_by_family)
+        if selected is None:
             return None
+        record, record_id, family_key, role = selected
+        gene_line = record.feature
 
-        attrs = gene_line[8].split(" ; ")
-        query_id = next(p.split(" ")[1] for p in attrs if p.startswith("sequence "))
-        record_id, matched_gene = _parse_reference_header(query_id)
-        if matched_gene != gene_name:
-            return None
-        attribution = _attribute(record_id, matched_gene, record_families, roles_by_family)
-        if attribution is None:
-            return None
-        family_key, role = attribution
         identity = 0.0
-        for part in attrs:
+        for part in gene_line[8].split(" ; "):
             if part.startswith("identity "):
                 identity = float(part.split(" ")[1])
                 break
 
         exons = [
             ExonSpan(int(e[3]) + offset, int(e[4]) + offset)
-            for e in sorted(exon_lines, key=lambda e: int(e[3]))
+            for e in sorted(record.parts, key=lambda e: int(e[3]))
         ]
         return PolishModel(
-            gene_name=matched_gene, family_key=family_key, role=role, contig=contig,
+            gene_name=gene_name, family_key=family_key, role=role, contig=contig,
             start=int(gene_line[3]) + offset, end=int(gene_line[4]) + offset,
             strand=gene_line[6], exons=exons, identity=identity,
             reference_record_id=record_id, method="exonerate_refine",
@@ -478,18 +567,27 @@ def polish_with_miniprot(
       `key=value` pair) and `Identity=<fraction 0-1>` -- NOT a percentage,
       unlike exonerate's `identity <pct>` -- among its `;`-separated
       `key=value` attributes. Each exon is its own `CDS` feature line
-      carrying `Parent=<mRNA ID>` linking it back to its mRNA; only CDS
-      lines whose `Parent` matches the first mRNA's `ID` are treated as
-      that gene's exons, since a padded window can contain more than one
-      predicted gene. A `##PAF` comment line and `stop_codon` feature lines
-      are also emitted and ignored here. A query with no hit in the window
-      produces only the `##gff-version 3` header line, with exit code 0.
+      carrying `Parent=<mRNA ID>` linking it back to its mRNA. A `##PAF`
+      comment line and `stop_codon` feature lines are also emitted and
+      ignored here. A query with no hit in the window produces only the
+      `##gff-version 3` header line, with exit code 0.
 
-    Returns None -- rather than a placeholder model -- when miniprot reports
-    no mRNA for this window, or when the hit resolves to a different gene,
-    an unattributable record, or a family/role miniprot's `family` does not
-    expect, matching `polish_with_exonerate`'s drop-rather-than-fabricate
-    convention for attribution failures.
+    EVERY mRNA in the output is parsed, not just the first. Verified against
+    the real miniprot 0.18-r281 binary with the real curated
+    `Basidiomycota:Aalpha` `Z` and `Y` proteins placed in one window:
+    miniprot emits one `mRNA` record per query that aligns, in QUERY order
+    (`MP000001` for Z, `MP000002` for Y), each with its own `Parent`-linked
+    `CDS` lines. Keeping only the first mRNA, as this function used to, meant
+    miniprot could confirm at most one gene per window and answered for
+    whichever gene happened to come first in the reference FASTA. The
+    `Parent`-scoped CDS grouping was already correct and is kept -- it is now
+    simply applied to every mRNA rather than to one.
+
+    Returns None -- rather than a placeholder model -- only when NO mRNA in
+    the output is for the requested gene with an attributable record and an
+    expected family/role. An output whose first mRNA is for a DIFFERENT gene
+    is no longer a None; the requested gene's own mRNA further down the
+    output is used.
     """
     roles_by_family = _roles_by_family([family])
     contig, win_start, _win_end = window
@@ -502,43 +600,43 @@ def polish_with_miniprot(
         cmd = ["miniprot", "--gff", str(target_fasta), str(reference_fasta)]
         result = _run_checked(runner, cmd)
 
-        mrna_line = None
-        mrna_id = None
-        cds_lines = []
+        records: list[_AlignmentRecord] = []
+        by_mrna_id: dict[str, _AlignmentRecord] = {}
         for line in result.stdout.splitlines():
             if not line or line.startswith("#"):
                 continue
             fields = line.split("\t")
             if len(fields) < 9:
                 continue
-            if fields[2] == "mRNA" and mrna_line is None:
-                mrna_line = fields
-                mrna_id = _gff3_attrs(fields[8]).get("ID")
-            elif fields[2] == "CDS" and mrna_id is not None:
-                if _gff3_attrs(fields[8]).get("Parent") == mrna_id:
-                    cds_lines.append(fields)
+            attrs = _gff3_attrs(fields[8])
+            if fields[2] == "mRNA":
+                query_id = attrs.get("Target", "").split(" ")[0]
+                mrna_id = attrs.get("ID")
+                if not query_id or mrna_id is None:
+                    continue
+                record = _AlignmentRecord(query_id, _feature_score(fields), fields, [])
+                records.append(record)
+                by_mrna_id[mrna_id] = record
+            elif fields[2] == "CDS":
+                parent = by_mrna_id.get(attrs.get("Parent", ""))
+                if parent is not None:
+                    parent.parts.append(fields)
 
-        if mrna_line is None:
+        selected = _select_requested_gene(records, gene_name, record_families, roles_by_family)
+        if selected is None:
             return None
+        record, record_id, family_key, role = selected
+        mrna_line = record.feature
 
         attrs = _gff3_attrs(mrna_line[8])
-        target = attrs.get("Target", "")
-        query_id = target.split(" ")[0]
-        record_id, matched_gene = _parse_reference_header(query_id)
-        if matched_gene != gene_name:
-            return None
-        attribution = _attribute(record_id, matched_gene, record_families, roles_by_family)
-        if attribution is None:
-            return None
-        family_key, role = attribution
         identity = float(attrs["Identity"]) * 100 if "Identity" in attrs else 0.0
 
         exons = [
             ExonSpan(int(c[3]) + offset, int(c[4]) + offset)
-            for c in sorted(cds_lines, key=lambda c: int(c[3]))
+            for c in sorted(record.parts, key=lambda c: int(c[3]))
         ]
         return PolishModel(
-            gene_name=matched_gene, family_key=family_key, role=role, contig=contig,
+            gene_name=gene_name, family_key=family_key, role=role, contig=contig,
             start=int(mrna_line[3]) + offset, end=int(mrna_line[4]) + offset,
             strand=mrna_line[6], exons=exons, identity=identity,
             reference_record_id=record_id, method="miniprot_refine",

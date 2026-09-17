@@ -522,6 +522,173 @@ def test_polish_with_miniprot_returns_none_when_gene_name_mismatches(tmp_path):
     assert model is None
 
 
+# --- Multi-gene windows: the normal shape of a real MAT locus ---
+#
+# Both wrappers are handed the WHOLE reference FASTA (every curated protein of
+# every routed family) as query, and a padded window routinely contains more
+# than one gene. Captured from the real binaries against the real curated
+# Basidiomycota:Aalpha Z and Y proteins placed in one contig:
+#
+#   exonerate 2.4.0 emits one `gene` line per alignment, BEST-SCORING FIRST,
+#   each followed by its own `exon` lines, with `gene_id` restarting at 1 for
+#   every alignment (so gene_id cannot group them -- position does).
+#   miniprot 0.18-r281 emits one `mRNA` per aligning query in QUERY ORDER,
+#   each with its own Parent-linked `CDS` lines.
+#
+# The two fixtures below mirror that, renamed onto this file's FAMILY
+# (mfa1/pra1): the NON-requested gene's alignment comes first in both.
+
+EXONERATE_TWO_GENE_GFF = (
+    # pra1 first (exonerate orders by score), with its own exons
+    "c1\texonerate\tgene\t2001\t2400\t4745\t+\t.\t"
+    "gene_id 1 ; sequence rec1|gene1|pra1 ; gene_orientation . ; identity 88.00\n"
+    "c1\texonerate\texon\t2001\t2100\t.\t+\t.\tinsertions 0 ; deletions 0\n"
+    "c1\texonerate\texon\t2200\t2400\t.\t+\t.\tinsertions 0 ; deletions 0\n"
+    # mfa1 second, with its own, entirely separate exons
+    "c1\texonerate\tgene\t1\t400\t4767\t+\t.\t"
+    "gene_id 1 ; sequence rec1|gene0|mfa1 ; gene_orientation . ; identity 95.00\n"
+    "c1\texonerate\texon\t1\t150\t.\t+\t.\tinsertions 0 ; deletions 0\n"
+    "c1\texonerate\texon\t200\t400\t.\t+\t.\tinsertions 0 ; deletions 0\n"
+)
+
+
+def _stdout_runner(stdout):
+    def runner(cmd, **kwargs):
+        class Result:
+            returncode = 0
+            stderr = ""
+        Result.stdout = stdout
+        return Result()
+
+    return runner
+
+
+def test_polish_with_exonerate_keeps_only_the_requested_genes_exons_in_a_two_gene_window(tmp_path):
+    """A window holding two genes must not mix their exons, and must not answer
+    None for the second gene just because the first one scored higher."""
+    (tmp_path / "genome.fa").write_text(">c1\n" + "N" * 3000 + "\n")
+    runner = _stdout_runner(EXONERATE_TWO_GENE_GFF)
+    common = dict(
+        genome_fasta=tmp_path / "genome.fa", family=FAMILY,
+        reference_fasta=tmp_path / "reference.faa", record_families={"rec1": FAMILY.key},
+        window=("c1", 1, 3000), runner=runner,
+    )
+
+    mfa1 = polish_with_exonerate(gene_name="mfa1", **common)
+    assert mfa1 is not None  # not None just because pra1's alignment came first
+    assert mfa1.gene_name == "mfa1"
+    assert (mfa1.start, mfa1.end) == (1, 400)
+    # pra1's exon spans (2001-2100, 2200-2400) must NOT appear here
+    assert mfa1.exons == [ExonSpan(1, 150), ExonSpan(200, 400)]
+    assert mfa1.identity == 95.0
+
+    pra1 = polish_with_exonerate(gene_name="pra1", **common)
+    assert pra1 is not None
+    assert pra1.gene_name == "pra1"
+    assert (pra1.start, pra1.end) == (2001, 2400)
+    assert pra1.exons == [ExonSpan(2001, 2100), ExonSpan(2200, 2400)]
+    assert pra1.identity == 88.0
+
+
+MINIPROT_TWO_GENE_GFF = (
+    "##gff-version 3\n"
+    "##PAF\trec1|gene1|pra1\t76\t0\t76\t+\tc1\t3000\t2000\t2400\t228\t228\t0\tAS:i:4745\n"
+    # pra1 first (miniprot orders by query), with its own Parent-linked CDS lines
+    "c1\tminiprot\tmRNA\t2001\t2400\t4745\t+\t.\t"
+    "ID=MP000001;Rank=1;Identity=0.8800;Target=rec1|gene1|pra1 1 76\n"
+    "c1\tminiprot\tCDS\t2001\t2100\t144\t+\t0\tParent=MP000001;Rank=1;Target=rec1|gene1|pra1 1 31\n"
+    "c1\tminiprot\tCDS\t2200\t2400\t257\t+\t0\tParent=MP000001;Rank=1;Target=rec1|gene1|pra1 32 76\n"
+    "c1\tminiprot\tstop_codon\t2398\t2400\t0\t+\t0\tParent=MP000001;Rank=1\n"
+    "##PAF\trec1|gene0|mfa1\t76\t0\t76\t+\tc1\t3000\t0\t400\t228\t228\t0\tAS:i:4767\n"
+    # mfa1 second, with its own, entirely separate CDS lines
+    "c1\tminiprot\tmRNA\t1\t400\t4767\t+\t.\t"
+    "ID=MP000002;Rank=1;Identity=0.9500;Target=rec1|gene0|mfa1 1 76\n"
+    "c1\tminiprot\tCDS\t1\t150\t144\t+\t0\tParent=MP000002;Rank=1;Target=rec1|gene0|mfa1 1 31\n"
+    "c1\tminiprot\tCDS\t200\t400\t257\t+\t0\tParent=MP000002;Rank=1;Target=rec1|gene0|mfa1 32 76\n"
+)
+
+
+def test_polish_with_miniprot_keeps_only_the_requested_genes_exons_in_a_two_gene_window(tmp_path):
+    """miniprot answers for every aligning query, in query order. Asking for the
+    second gene must return that gene's own model, not None."""
+    (tmp_path / "genome.fa").write_text(">c1\n" + "N" * 3000 + "\n")
+    runner = _stdout_runner(MINIPROT_TWO_GENE_GFF)
+    common = dict(
+        genome_fasta=tmp_path / "genome.fa", family=FAMILY,
+        reference_fasta=tmp_path / "reference.faa", record_families={"rec1": FAMILY.key},
+        window=("c1", 1, 3000), runner=runner,
+    )
+
+    mfa1 = polish_with_miniprot(gene_name="mfa1", **common)
+    assert mfa1 is not None  # not None just because pra1's mRNA came first
+    assert mfa1.gene_name == "mfa1"
+    assert (mfa1.start, mfa1.end) == (1, 400)
+    assert mfa1.exons == [ExonSpan(1, 150), ExonSpan(200, 400)]
+    assert mfa1.identity == 95.0
+
+    pra1 = polish_with_miniprot(gene_name="pra1", **common)
+    assert pra1 is not None
+    assert pra1.gene_name == "pra1"
+    assert (pra1.start, pra1.end) == (2001, 2400)
+    assert pra1.exons == [ExonSpan(2001, 2100), ExonSpan(2200, 2400)]
+    assert pra1.identity == 88.0
+
+
+# --- Spec Stage 2: select per gene per tool by the TOOL'S OWN score ---
+#
+# The curated database legitimately holds several reference proteins for the
+# same gene (different curated records of the same family), each producing its
+# own alignment in the same window. The spec requires selecting one of them by
+# a named, tool-appropriate score -- explicitly NOT raw percent identity. Both
+# fixtures below make the two criteria disagree: the LOWER-identity alignment
+# carries the HIGHER tool score, so a score-based selection and an
+# identity-based one pick different records.
+
+TWO_RECORD_FAMILIES = {"rec1": FAMILY.key, "rec2": FAMILY.key}
+
+
+def test_polish_with_exonerate_selects_the_best_by_exonerate_score_not_identity(tmp_path):
+    (tmp_path / "genome.fa").write_text(">c1\n" + "N" * 3000 + "\n")
+    gff = (
+        "c1\texonerate\tgene\t1\t400\t1200\t+\t.\t"
+        "gene_id 1 ; sequence rec1|gene0|mfa1 ; gene_orientation . ; identity 99.00\n"
+        "c1\texonerate\texon\t1\t400\t.\t+\t.\tinsertions 0 ; deletions 0\n"
+        "c1\texonerate\tgene\t1000\t2600\t4767\t+\t.\t"
+        "gene_id 1 ; sequence rec2|gene0|mfa1 ; gene_orientation . ; identity 71.00\n"
+        "c1\texonerate\texon\t1000\t2600\t.\t+\t.\tinsertions 0 ; deletions 0\n"
+    )
+    model = polish_with_exonerate(
+        genome_fasta=tmp_path / "genome.fa", family=FAMILY, gene_name="mfa1",
+        reference_fasta=tmp_path / "reference.faa", record_families=TWO_RECORD_FAMILIES,
+        window=("c1", 1, 3000), runner=_stdout_runner(gff),
+    )
+    # rec2 scores 4767 vs rec1's 1200, though rec1 has the higher identity.
+    assert model.reference_record_id == "rec2"
+    assert (model.start, model.end) == (1000, 2600)
+    assert model.exons == [ExonSpan(1000, 2600)]
+
+
+def test_polish_with_miniprot_selects_the_best_by_miniprot_score_not_identity(tmp_path):
+    (tmp_path / "genome.fa").write_text(">c1\n" + "N" * 3000 + "\n")
+    gff = (
+        "##gff-version 3\n"
+        "c1\tminiprot\tmRNA\t1\t400\t1200\t+\t.\t"
+        "ID=MP000001;Rank=1;Identity=0.9900;Target=rec1|gene0|mfa1 1 76\n"
+        "c1\tminiprot\tCDS\t1\t400\t1200\t+\t0\tParent=MP000001;Rank=1\n"
+        "c1\tminiprot\tmRNA\t1000\t2600\t4767\t+\t.\t"
+        "ID=MP000002;Rank=1;Identity=0.7100;Target=rec2|gene0|mfa1 1 76\n"
+        "c1\tminiprot\tCDS\t1000\t2600\t4767\t+\t0\tParent=MP000002;Rank=1\n"
+    )
+    model = polish_with_miniprot(
+        genome_fasta=tmp_path / "genome.fa", family=FAMILY, gene_name="mfa1",
+        reference_fasta=tmp_path / "reference.faa", record_families=TWO_RECORD_FAMILIES,
+        window=("c1", 1, 3000), runner=_stdout_runner(gff),
+    )
+    assert model.reference_record_id == "rec2"
+    assert (model.start, model.end) == (1000, 2600)
+    assert model.exons == [ExonSpan(1000, 2600)]
+
+
 def test_defline_location_is_found_alongside_a_free_text_description(tmp_path):
     """A real proteome defline often carries a description after the location."""
     tsv = (

@@ -1,5 +1,28 @@
 """Cross-tool gene-model comparison for the localize-then-polish search
-revision -- see docs/superpowers/specs/2026-09-17-mat-detection-search-localization-design.md."""
+revision -- see docs/superpowers/specs/2026-09-17-mat-detection-search-localization-design.md.
+
+Five report-facing `GeneEvidence.status` values are defined here:
+
+* `STATUS_AGREE` -- both `exonerate --refine` and `miniprot` produced a
+  model and the two agree (same exon count, boundaries within tolerance).
+* `STATUS_DISAGREE` -- both tools produced a model but they disagree; the
+  non-canonical tool's model is retained on `GeneEvidence.alternate_model`
+  for a human reviewer to inspect.
+* `STATUS_SINGLE` -- only one of the two tools produced a model.
+* `STATUS_UNPOLISHED` -- the gene WAS a polish candidate (localized by
+  `tblastn`, or a rescue target for a family's own missing `core_MAT`
+  gene) and was sent through both polishing tools, but NEITHER tool could
+  produce a usable model. This is a genuinely uncertain result: it caps
+  the family's confidence tier at Medium (`_any_gene_unpolished` in
+  `pipeline.py`, which reads the internal `PolishOutcome.status`, never
+  `GeneEvidence.status`).
+* `STATUS_NOT_POLISH_CANDIDATE` -- the gene was evidenced directly (e.g. a
+  confident fast-path `diamond` hit, or an already-present core gene) and
+  never entered the localize/polish pipeline at all -- no `PolishOutcome`
+  was ever computed for it. This is a solid result with no implied
+  uncertainty, and is reported so a curator does not confuse it with
+  `STATUS_UNPOLISHED`'s genuinely-uncertain meaning.
+"""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -42,6 +65,14 @@ STATUS_AGREE = "polished_agree"
 STATUS_DISAGREE = "polished_disagree"
 STATUS_SINGLE = "polished_single"
 STATUS_UNPOLISHED = "unpolished"
+#: A gene evidenced directly (e.g. a confident fast-path diamond hit, or an
+#: already-present core gene) that never entered the localize/polish
+#: pipeline at all -- no PolishOutcome was ever computed for it. Distinct
+#: from STATUS_UNPOLISHED, which is reserved for a gene that WAS localized
+#: and sent through both polish tools but that neither tool could confirm
+#: (see module docstring). This constant is purely report-facing: tiering's
+#: `_any_gene_unpolished` in pipeline.py never reads it.
+STATUS_NOT_POLISH_CANDIDATE = "not_polish_candidate"
 
 
 @dataclass(frozen=True)

@@ -3,7 +3,12 @@ from pathlib import Path
 
 from MATPredict.detect import pipeline as pipeline_module
 from MATPredict.detect.family_registry import Family, FamilyKey
-from MATPredict.detect.polish import ExonSpan, PolishModel
+from MATPredict.detect.polish import (
+    STATUS_NOT_POLISH_CANDIDATE,
+    STATUS_UNPOLISHED,
+    ExonSpan,
+    PolishModel,
+)
 from MATPredict.detect.search import SearchHit
 from MATPredict.detect.pipeline import run_pipeline
 
@@ -160,6 +165,102 @@ def test_fast_path_missing_gene_rescue_skips_localization_and_polishes_directly(
     evidence = {e.gene_name: e for e in result.gene_evidence}
     assert (evidence["mfa1"].start, evidence["mfa1"].end) == (150, 260)
     assert evidence["mfa1"].method == "exonerate_refine"
+    # pra1 was found directly via the fast-path diamond hit and never
+    # entered the polish stage -- distinct from an attempted-and-failed
+    # STATUS_UNPOLISHED gene.
+    assert evidence["pra1"].status == STATUS_NOT_POLISH_CANDIDATE
+
+
+def test_gene_found_directly_never_polished_gets_not_polish_candidate_status(tmp_path):
+    """A gene found directly via a confident fast-path diamond hit -- never
+    localized by tblastn, never one of its family's own missing core_MAT
+    genes needing rescue -- never enters the localize/polish pipeline at all.
+    Its GeneEvidence.status must be STATUS_NOT_POLISH_CANDIDATE, distinct
+    from STATUS_UNPOLISHED (reserved for a gene that WAS sent through both
+    polish tools but that neither could confirm)."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        return [SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
+                SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path,
+    )
+    result = outcome.results[0]
+    evidence = {e.gene_name: e for e in result.gene_evidence}
+    assert evidence["mfa1"].status == STATUS_NOT_POLISH_CANDIDATE
+    assert evidence["pra1"].status == STATUS_NOT_POLISH_CANDIDATE
+    assert evidence["mfa1"].alternate_model is None
+
+
+def test_localized_gene_neither_tool_confirms_gets_unpolished_status_not_not_polish_candidate(tmp_path):
+    """A gene that WAS localized (tblastn) and sent through both polish tools,
+    but neither `exonerate --refine` nor `miniprot` could produce a usable
+    model, keeps the STATUS_UNPOLISHED label -- it must NOT be reported as
+    STATUS_NOT_POLISH_CANDIDATE, which is reserved for a gene that never
+    entered the polish stage at all."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+    coords = {"mfa1": (100, 200), "pra1": (300, 400)}
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        return [_tblastn(name, "c1", *span) for name, span in coords.items()]
+
+    def fake_exonerate(*, gene_name, **kwargs):
+        if gene_name == "pra1":
+            return None
+        return _model(gene_name, "c1", *coords[gene_name])
+
+    def fake_miniprot(*, gene_name, **kwargs):
+        if gene_name == "pra1":
+            return None
+        return _model(gene_name, "c1", *coords[gene_name], method="miniprot_refine")
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_localize=fake_localize,
+        polish_with_exonerate=fake_exonerate, polish_with_miniprot=fake_miniprot,
+    )
+    evidence = {e.gene_name: e for e in outcome.results[0].gene_evidence}
+    assert evidence["pra1"].status == STATUS_UNPOLISHED
+    assert evidence["pra1"].status != STATUS_NOT_POLISH_CANDIDATE
+
+
+def test_any_gene_unpolished_tiering_unaffected_by_not_polish_candidate_status(tmp_path):
+    """`_any_gene_unpolished` (tiering) reads `PolishOutcome.status` from
+    `polish_by` directly -- a case-1 gene (found directly, never a polish
+    candidate) never has a `polish_by` entry at all, so it structurally
+    cannot cap the tier the way a genuine `STATUS_UNPOLISHED` gene does.
+    A family whose every gene is case 1 (all found directly via the
+    fast-path diamond hit, nothing localized or rescued) reaches High --
+    it is NOT capped to Medium the way `test_unpolished_gene_caps_tier_at_medium`
+    shows a genuine STATUS_UNPOLISHED gene caps it -- proving the new
+    STATUS_NOT_POLISH_CANDIDATE label has zero effect on tiering."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        return [SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
+                SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path,
+    )
+    result = outcome.results[0]
+    evidence = {e.gene_name: e for e in result.gene_evidence}
+    assert evidence["mfa1"].status == STATUS_NOT_POLISH_CANDIDATE
+    assert evidence["pra1"].status == STATUS_NOT_POLISH_CANDIDATE
+    # not capped -- confirms STATUS_NOT_POLISH_CANDIDATE has no tiering effect,
+    # in contrast with test_unpolished_gene_caps_tier_at_medium's genuine
+    # STATUS_UNPOLISHED case, which caps the identical family at Medium.
+    assert result.confidence == "high"
 
 
 def test_polished_agree_and_disagree_produce_identical_tier(tmp_path):

@@ -62,6 +62,7 @@ from MATPredict.detect.family_registry import (
 from MATPredict.detect.idiomorph import assign_idiomorph
 from MATPredict.detect.polish import (
     STATUS_DISAGREE,
+    STATUS_NOT_POLISH_CANDIDATE,
     STATUS_UNPOLISHED,
     PolishModel,
     PolishOutcome,
@@ -423,6 +424,15 @@ def _gene_evidence(
     diamond fast path already found -- fall back to that gene's best
     (highest-identity) raw `SearchHit`. That fallback is the only path by which
     a `GeneEvidence` is built from a `SearchHit` rather than a `PolishModel`.
+    The two situations are reported with DIFFERENT statuses so a curator can
+    tell them apart: `STATUS_UNPOLISHED` when a `PolishOutcome` exists for the
+    gene (it WAS localized and sent through both polish tools, but neither
+    confirmed it -- genuinely uncertain, caps the family's tier), versus
+    `STATUS_NOT_POLISH_CANDIDATE` when no `PolishOutcome` was ever computed for
+    it (it never entered the localize/polish pipeline at all -- solid, no
+    uncertainty implied). This distinction is purely for the human-readable
+    report: `_any_gene_unpolished` (tiering) reads `PolishOutcome.status`
+    directly, never `GeneEvidence.status`, and is completely unaffected by it.
 
     `polish_by` is keyed `(id(cluster), family_key, gene_name)` and is read here
     ONLY for this family's own genes in these exact clusters, so a polish result
@@ -472,19 +482,26 @@ def _gene_evidence(
                 hit = raw_by_gene.get(gene_name)
                 if hit is None:
                     continue  # unpolished with nothing localized: no evidence to report
-                # Covers both a gene whose polish outcome was genuinely
-                # STATUS_UNPOLISHED (attempted, neither tool produced a model)
-                # and a gene that never entered the polish stage at all (e.g.
-                # found only via the fast-path diamond hit) -- in both cases
-                # the raw SearchHit stands as this gene's evidence with no
-                # polished model behind it, which is exactly what
-                # `polish.STATUS_UNPOLISHED` denotes.
+                # `outcome` is None exactly when this gene never entered the
+                # localize/polish pipeline at all (e.g. found only via the
+                # fast-path diamond hit, or an already-present core gene) --
+                # a solid result with no implied uncertainty, tagged
+                # STATUS_NOT_POLISH_CANDIDATE. `outcome is not None` here
+                # means it WAS a polish candidate (localized/rescued and sent
+                # through both tools) but neither tool produced a model
+                # (outcome.canonical is None) -- genuinely uncertain, tagged
+                # STATUS_UNPOLISHED, exactly what caps the family's tier via
+                # `_any_gene_unpolished` (which reads PolishOutcome.status
+                # directly and is unaffected by this GeneEvidence.status
+                # split). In both cases the raw SearchHit stands as this
+                # gene's evidence with no polished model behind it.
+                status = STATUS_UNPOLISHED if outcome is not None else STATUS_NOT_POLISH_CANDIDATE
                 evidence = GeneEvidence(
                     gene_name=hit.gene_name, role=hit.role, contig=hit.contig,
                     start=hit.start, end=hit.end, strand=hit.strand,
                     identity=hit.identity, coverage=hit.coverage,
                     reference_record_id=hit.reference_record_id, method=hit.method,
-                    status=STATUS_UNPOLISHED, alternate_model=None,
+                    status=status, alternate_model=None,
                 )
             previous = best.get(gene_name)
             if previous is None or evidence.identity > previous.identity:

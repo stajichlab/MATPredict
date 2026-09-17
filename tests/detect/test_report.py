@@ -243,6 +243,43 @@ def test_write_detection_gff3_disagree_gene_carries_status_and_alt_attrs(tmp_pat
     assert "alt_end=2050" in gene_line
 
 
+def test_not_polish_candidate_status_round_trips_through_yaml_and_gff3(tmp_path):
+    """A gene found directly (never entered the polish pipeline) carries
+    status=not_polish_candidate, distinct from status=unpolished, and that
+    distinction must round-trip through both the YAML report and the GFF3
+    gene-feature attributes."""
+    result = DetectionResult(
+        family_key=KEY, contig="c1", start=100, end=6443,
+        confidence="high", idiomorph="undetermined", ambiguous_with=[],
+        genes_found=["pra1"], genes_missing=[], fragmented=False,
+        segments=[LocusSegment("c1", 100, 6443, contig_edge_distance=99)],
+        gene_evidence=[
+            GeneEvidence(
+                "pra1", "core_MAT", "c1", 1000, 2000, "+", 92.5, 87.0,
+                "5270_521_aLocus_a1", "diamond_proteome",
+                status="not_polish_candidate",
+            ),
+        ],
+        reference_records=["5270_521_aLocus_a1"],
+    )
+    outcome = DetectionOutcome(results=[result])
+
+    yaml_out = tmp_path / "not_polish_candidate.yaml"
+    write_detection_report(outcome, yaml_out)
+    doc = yaml.safe_load(yaml_out.read_text())
+    evidence = doc["detected"][0]["gene_evidence"][0]
+    assert evidence["status"] == "not_polish_candidate"
+    assert evidence["status"] != "unpolished"
+    assert evidence["alternate_model"] is None
+
+    gff3_out = tmp_path / "not_polish_candidate.gff3"
+    write_detection_gff3(outcome, gff3_out)
+    text = gff3_out.read_text()
+    gene_line = next(line for line in text.splitlines() if "\tgene\t" in line and "Name=pra1" in line)
+    assert "status=not_polish_candidate" in gene_line
+    assert "status=unpolished" not in gene_line
+
+
 def test_write_detection_report_lists_not_detected_families(tmp_path):
     """Sub-floor families must appear with a reason, never be silently dropped."""
     out = tmp_path / "report.yaml"

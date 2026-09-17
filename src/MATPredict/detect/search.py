@@ -37,11 +37,11 @@ coverage against the matched reference protein. The outfmt is therefore:
 
 diamond database: `search_fast_path` runs `diamond makedb` on the reference
 FASTA into a temporary directory and searches against the resulting `.dmnd`.
-`diamond blastp --db` requires diamond's own binary database format -- it
-does not accept a plain FASTA (verified against diamond v2.2.6, which
-raises an error rather than building an index on the fly) -- so `makedb`
-must run first. Building it once up front is also what makes the reference
-set reusable across queries.
+`diamond blastp --db` accepts a plain FASTA and builds an index on the fly
+(verified against diamond v2.2.6), but this code explicitly runs `diamond
+makedb` first for reusability, performance, and determinism across repeated
+searches. Building it once up front makes the reference set efficiently
+reusable across queries.
 
 Window-restriction (genomic fallback): rather than relying on an exonerate
 flag to restrict the search region (exonerate has no first-class "search
@@ -207,10 +207,11 @@ def _run_checked(runner: Callable, cmd: list[str]):
 def build_diamond_db(reference_fasta: Path, db_path: Path, runner: Callable = subprocess.run) -> Path:
     """Run `diamond makedb` on reference_fasta, returning the `.dmnd` path.
 
-    `diamond blastp --db` requires diamond's own binary database format; it
-    does not accept a plain FASTA. diamond appends `.dmnd` to the `--db`
-    prefix it is given, so the prefix passed here is stripped of that suffix
-    and the suffixed path is what gets returned.
+    `diamond blastp --db` accepts a plain FASTA and builds an index on the fly
+    (verified against diamond v2.2.6), but this code explicitly runs `diamond
+    makedb` first for reusability, performance, and determinism. diamond
+    appends `.dmnd` to the `--db` prefix it is given, so the prefix passed
+    here is stripped of that suffix and the suffixed path is what gets returned.
     """
     prefix = db_path.with_suffix("") if db_path.suffix == ".dmnd" else db_path
     _run_checked(runner, ["diamond", "makedb", "--in", str(reference_fasta), "--db", str(prefix)])

@@ -12,6 +12,20 @@ docs/superpowers/specs/2026-09-17-mat-detection-search-localization-design.md):
   own `core_MAT` genes skips localization entirely -- a rough location already
   exists -- and polishes that one gene directly against a window padded around
   the *existing* cluster's span.
+* **Fast-path zero-hit rescue** (a proteome was supplied): a routed family with
+  NO fast-path hit at all has no foothold and therefore no window to polish
+  against, so it gets one batched `search_localize` (`tblastn`) call covering
+  every zero-hit family at once -- never one call per family. This is the blind
+  spot the whole pipeline exists to close: a short pheromone-precursor gene that
+  a supplied genome annotation simply does not contain cannot be found by
+  searching that annotation. The rescued `tblastn` hits are clustered together
+  with the fast-path hits and are polished exactly like any other localized
+  cluster.
+
+Polish eligibility is therefore decided per (cluster, family, gene), never by a
+single global "am I in genome-only mode" flag: a gene is polished when it was
+localized by `tblastn` (whichever path produced that localization) or when it is
+one of its family's own `core_MAT` genes still missing from that cluster.
 
 Polishing runs BOTH `exonerate --refine region` and `miniprot` against the same
 padded window and classifies the pair (`polish.classify`) into one of
@@ -332,21 +346,29 @@ def _padded_window(
 
 
 def _own_model(
-    model: PolishModel | None, family_key: FamilyKey, gene_name: str
+    model: PolishModel | None, family_key: FamilyKey, gene_name: str, contig: str
 ) -> PolishModel | None:
-    """A polished model, or None when it is not this family's own named gene.
+    """A polished model, or None when it is not this family's own named gene on
+    the contig the polish window was opened on.
 
     Both polishing wrappers already drop a model whose gene name or curated
     record does not match what was asked for, so this is defence in depth --
     kept because the retired windowed second pass carried the same filter, and
     because a model silently attributed to the wrong family is precisely the
-    cross-family bug class this file has shipped before. Dropping it degrades
-    the gene to `unpolished` (its raw localization hit still stands) rather than
-    writing another family's coordinates into this family's evidence.
+    cross-family bug class this file has shipped before. The `contig` check
+    closes the same hole in the spatial dimension: a model whose coordinates
+    name a different contig than the window it was asked for cannot belong to
+    this cluster, and accepting it would write coordinates from somewhere else
+    in the genome into this cluster's evidence. Dropping a model degrades the
+    gene to `unpolished` (its raw localization hit still stands) rather than
+    writing another family's or another contig's coordinates into this family's
+    evidence.
     """
     if model is None:
         return None
     if model.family_key != family_key or model.gene_name != gene_name:
+        return None
+    if model.contig != contig:
         return None
     return model
 
@@ -425,13 +447,39 @@ def _gene_evidence(
 
 
 def _segments_for(
-    clusters: list[GeneCluster], contig_lengths: dict[str, int]
+    clusters: list[GeneCluster],
+    contig_lengths: dict[str, int],
+    evidence: list[GeneEvidence],
 ) -> list[LocusSegment]:
+    """One `LocusSegment` per member cluster, each spanning the UNION of that
+    cluster's own frozen span and every gene this same result reports on that
+    cluster's contig.
+
+    A `GeneCluster`'s span is frozen at `cluster_hits` time from the raw
+    localization HSPs, but `_gene_evidence` reports polished/rescued coordinates
+    that can extend past it -- a rescued gene at 150-260 inside a cluster whose
+    frozen span is 300-400. Reporting the frozen span alone produces an invalid
+    GFF3: a child `gene` feature outside its parent `MAT_locus` feature's
+    declared range and outside the `##sequence-region` pragma. The spec requires
+    the reported window to cover the union of all its genes' canonical
+    coordinates rather than be silently truncated.
+
+    Widening is done per contig, not per cluster: when one result reports two
+    clusters on the SAME contig (possible for a fragmented call whose chosen
+    clusters span >=2 contigs but include two on one of them) both are widened
+    by the same contig's genes and can overlap. That is deliberate -- an
+    over-wide reported span still contains every gene it claims, whereas a
+    per-cluster nearest-gene assignment would have to guess which cluster a
+    polished coordinate belongs to.
+    """
     segments = []
     for cluster in sorted(clusters, key=lambda c: (c.contig, c.start)):
+        on_contig = [e for e in evidence if e.contig == cluster.contig]
+        start = min([cluster.start] + [e.start for e in on_contig])
+        end = max([cluster.end] + [e.end for e in on_contig])
         length = contig_lengths.get(cluster.contig)
-        edge = min(cluster.start - 1, length - cluster.end) if length else None
-        segments.append(LocusSegment(cluster.contig, cluster.start, cluster.end, edge))
+        edge = min(start - 1, length - end) if length else None
+        segments.append(LocusSegment(cluster.contig, start, end, edge))
     return segments
 
 
@@ -460,14 +508,47 @@ def run_pipeline(
     )
     families_by_key = {f.key: f for f in families}
 
-    # Stage 0/1 -- one search per run. The genome-only path localizes with a
-    # single batched genome-wide tblastn call covering every routed family; the
-    # fast path uses the supplied proteome and does NOT localize at all.
+    # Stage 0/1 -- at most two searches per run, each batched over many families.
+    # The genome-only path localizes with a single batched genome-wide tblastn
+    # call covering every routed family. The fast path uses the supplied
+    # proteome, then falls back to ONE batched tblastn localization covering
+    # every family the proteome produced no hit for at all: such a family has no
+    # cluster, so there is no window to polish against and it would otherwise be
+    # reported "not detected" without ever being looked for in the genome --
+    # exactly the blind spot (a gene absent from a genome's own annotation) this
+    # pipeline exists to close.
     hits: list[SearchHit] = []
+    # id() of every hit that came from tblastn localization (either path). Used
+    # to decide, per cluster and family, which genes need their approximate HSP
+    # coordinates refined. Keying on identity rather than on the hit's `method`
+    # string means an injected/stubbed search cannot accidentally be classified
+    # by what it happened to name its method. `hits` (and, after clustering,
+    # `cluster.hits`) holds every one of these objects alive for the whole
+    # function, so no id can be recycled.
+    localized_hit_ids: set[int] = set()
     if proteome_fasta is not None:
         hits.extend(search_fast_path(proteome_fasta, families, reference_fasta, record_families))
+        families_with_hits = {h.family_key for h in hits}
+        zero_hit_families = [f for f in families if f.key not in families_with_hits]
+        if zero_hit_families:
+            zero_hit_keys = {f.key for f in zero_hit_families}
+            rescued = [
+                h
+                for h in search_localize(
+                    genome_fasta, zero_hit_families, reference_fasta, record_families
+                )
+                # Defence in depth: only the families this rescue was actually
+                # run for may gain hits from it. A family that already had a
+                # fast-path foothold must never have a second, unrelated
+                # location grafted onto it by a batched call it was not part of.
+                if h.family_key in zero_hit_keys
+            ]
+            localized_hit_ids.update(id(h) for h in rescued)
+            hits.extend(rescued)
     else:
-        hits.extend(search_localize(genome_fasta, families, reference_fasta, record_families))
+        localized = search_localize(genome_fasta, families, reference_fasta, record_families)
+        localized_hit_ids.update(id(h) for h in localized)
+        hits.extend(localized)
 
     clusters = cluster_hits(hits, max_gap=max_gap)
 
@@ -492,22 +573,30 @@ def run_pipeline(
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] = {}
     for cluster in clusters:
         for family in _families_with_a_foothold(cluster, families):
-            if proteome_fasta is None:
-                # Genome-only path: every gene tblastn localized in THIS cluster
-                # for THIS family needs its approximate HSP coordinates refined.
-                genes_to_polish = sorted(
-                    {h.gene_name for h in cluster.hits if h.family_key == family.key}
-                )
-                rescue = False
-            else:
-                # Fast-path rescue: only this family's own still-missing core
-                # genes, checked strictly against this family's own hits in this
-                # cluster (see _missing_core_genes), so one family's presence
-                # never masks another family's absence.
-                genes_to_polish = sorted(_missing_core_genes(cluster, family))
-                rescue = True
+            # Eligibility is decided per (cluster, family), NOT from a single
+            # global "is this a genome-only run" flag. Since the fast path can
+            # now also carry tblastn-localized clusters (the zero-hit rescue
+            # above), a global flag would leave a rescued cluster's genes
+            # unpolished and would stop an unpolished gene there from ever
+            # capping its family's tier.
+            #
+            # Localized genes: this family's own genes that tblastn placed in
+            # THIS cluster, whose approximate HSP coordinates need refining.
+            localized_genes = {
+                h.gene_name
+                for h in cluster.hits
+                if h.family_key == family.key and id(h) in localized_hit_ids
+            }
+            # Rescue genes: this family's own core_MAT genes still missing from
+            # this cluster, checked strictly against this family's own hits in
+            # this cluster (see _missing_core_genes), so one family's presence
+            # never masks another family's absence. Nothing localized these, so
+            # a failed rescue leaves the gene genuinely missing rather than
+            # "unpolished" (see below).
+            rescue_genes = _missing_core_genes(cluster, family) - localized_genes
 
-            for gene_name in genes_to_polish:
+            for gene_name in sorted(localized_genes | rescue_genes):
+                rescue = gene_name not in localized_genes
                 padding = _window_padding(
                     protein_lengths.get((family.key, gene_name)),
                     protein_length_multiple=window_protein_length_multiple,
@@ -527,8 +616,8 @@ def run_pipeline(
                     window=window,
                 )
                 outcome = classify(
-                    _own_model(exonerate_model, family.key, gene_name),
-                    _own_model(miniprot_model, family.key, gene_name),
+                    _own_model(exonerate_model, family.key, gene_name, window[0]),
+                    _own_model(miniprot_model, family.key, gene_name, window[0]),
                     polish_tolerance_bp,
                 )
                 if rescue:
@@ -581,7 +670,10 @@ def run_pipeline(
         )
         short_genes = short_orf_by_family.get(score.family_key, set())
         evidence = _gene_evidence(member_clusters, score.family_key, polish_by)
-        segments = _segments_for(member_clusters, contig_lengths)
+        # Segments are widened to cover this result's own gene evidence, so a
+        # polished or rescued gene can never fall outside the locus segment
+        # that reports it.
+        segments = _segments_for(member_clusters, contig_lengths, evidence)
         return DetectionResult(
             family_key=score.family_key,
             contig=segments[0].contig,

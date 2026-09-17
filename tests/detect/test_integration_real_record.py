@@ -39,6 +39,9 @@ def test_pipeline_recovers_real_alocus_record(tmp_path):
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=5270,
         db_root=DB_ROOT, reference_fasta=reference_fasta, search_fast_path=stub_fast_path,
+        # any OTHER routed family has zero fast-path hits and would trigger the
+        # batched tblastn zero-hit rescue -- stubbed out so no real binary runs.
+        search_localize=lambda *a, **k: [],
         # every gene is already found by the stubbed fast path, so no polish
         # rescue is expected -- stubbed out so no real binary can be invoked.
         polish_with_exonerate=lambda **k: None, polish_with_miniprot=lambda **k: None,

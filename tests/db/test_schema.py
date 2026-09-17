@@ -15,6 +15,7 @@ VALID_ORDER = {
             "locus_name": "MAT",
             "vocabulary_type": "enum",
             "idiomorph_values": ["Plus", "Minus"],
+            "taxonomic_scope": [4761],
             "genes": [
                 {"name": "tptA", "role": "flanking_conserved"},
                 {"name": "sexP", "role": "core_MAT", "present_in_idiomorphs": ["Plus"]},
@@ -73,11 +74,44 @@ def test_idiomorph_pattern_locus_accepts_allele_ids():
     pattern_order = {
         "phylum": "Basidiomycota",
         "loci": [{"locus_name": "HD", "vocabulary_type": "pattern", "idiomorph_pattern": "^A[0-9]+$",
+                   "taxonomic_scope": [4982],
                    "genes": [{"name": "HD1", "role": "core_MAT"}]}],
     }
     record = copy.deepcopy(VALID_RECORD)
     record["mating_type"] = {"locus_name": "HD", "idiomorphs": ["A1"], "system": "heterothallic"}
     assert schema.validate_idiomorphs(record, pattern_order) == []
+
+
+def test_validate_order_requires_taxonomic_scope():
+    doc = {
+        "phylum": "TestPhylum",
+        "loci": [
+            {
+                "locus_name": "MAT",
+                "vocabulary_type": "enum",
+                "idiomorph_values": ["a", "alpha"],
+                "genes": [{"name": "STE3", "role": "core_MAT"}],
+            }
+        ],
+    }
+    errors = schema.validate_order(doc)
+    assert any("taxonomic_scope" in e for e in errors)
+
+
+def test_validate_order_accepts_taxonomic_scope():
+    doc = {
+        "phylum": "TestPhylum",
+        "loci": [
+            {
+                "locus_name": "MAT",
+                "vocabulary_type": "enum",
+                "idiomorph_values": ["a", "alpha"],
+                "taxonomic_scope": [4930],
+                "genes": [{"name": "STE3", "role": "core_MAT"}],
+            }
+        ],
+    }
+    assert schema.validate_order(doc) == []
 
 
 @pytest.mark.parametrize("phylum", ["Ascomycota", "Basidiomycota", "Mucoromycota"])

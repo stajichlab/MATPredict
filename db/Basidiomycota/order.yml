@@ -1,18 +1,21 @@
 phylum: Basidiomycota
 loci:
   - locus_name: "HD"
+    taxonomic_scope: [4891]
     vocabulary_type: "pattern"
     idiomorph_pattern: "^A[0-9]+$"
     genes:
       - {name: HD1, role: core_MAT}
       - {name: HD2, role: core_MAT}
   - locus_name: "PR"
+    taxonomic_scope: [4891]
     vocabulary_type: "pattern"
     idiomorph_pattern: "^B[0-9]+$"
     genes:
       - {name: pheromone, role: core_MAT}
       - {name: pheromone_receptor, role: core_MAT}
   - locus_name: "MAT"
+    taxonomic_scope: [4891]
     vocabulary_type: "enum"
     idiomorph_values: ["alpha", "a"]
     genes:
@@ -26,30 +29,35 @@ loci:
       - {name: MFa3, role: core_MAT, present_in_idiomorphs: ["a"]}
       - {name: STE3, role: core_MAT}
   - locus_name: "Aalpha"
+    taxonomic_scope: [4891]
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     genes:
       - {name: Y, role: core_MAT}
       - {name: Z, role: core_MAT}
   - locus_name: "Abeta"
+    taxonomic_scope: [4891]
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     genes:
       - {name: Y, role: core_MAT}
       - {name: Z, role: core_MAT}
   - locus_name: "Balpha"
+    taxonomic_scope: [4891]
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     genes:
       - {name: pheromone, role: core_MAT}
       - {name: pheromone_receptor, role: core_MAT}
   - locus_name: "Bbeta"
+    taxonomic_scope: [4891]
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     genes:
       - {name: pheromone, role: core_MAT}
       - {name: pheromone_receptor, role: core_MAT}
   - locus_name: "aLocus"
+    taxonomic_scope: [4891]
     vocabulary_type: "pattern"
     idiomorph_pattern: "^a[0-9]+$"
     genes:
@@ -57,6 +65,7 @@ loci:
       - {name: pra1, role: core_MAT}
       - {name: rba1, role: flanking_variable}
   - locus_name: "bLocus"
+    taxonomic_scope: [4891]
     vocabulary_type: "pattern"
     idiomorph_pattern: "^b[0-9]+$"
     genes:

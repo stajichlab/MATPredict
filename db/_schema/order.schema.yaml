@@ -9,12 +9,16 @@ properties:
     minItems: 1
     items:
       type: object
-      required: [locus_name, vocabulary_type, genes]
+      required: [locus_name, vocabulary_type, genes, taxonomic_scope]
       properties:
         locus_name: {type: string}
         vocabulary_type: {enum: [enum, pattern]}
         idiomorph_values: {type: array, items: {type: string}}
         idiomorph_pattern: {type: string}
+        taxonomic_scope:
+          type: array
+          minItems: 1
+          items: {type: integer}
         genes:
           type: array
           items:

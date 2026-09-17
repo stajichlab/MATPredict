@@ -18,6 +18,16 @@ def test_detect_subcommand_registered():
     assert args.genome == "g.fa"
 
 
+def test_detect_missing_required_args_exits_code_1():
+    """Regression test: --genome/--out-dir moved from argparse required=True to
+    app-level check so detect benchmark could share the same parser. This changed
+    the exit code for missing args from argparse's standard 2 to 1 (generic
+    exception handler). Lock in this behavior so future refactors can't silently
+    flip it again without test coverage."""
+    exit_code = main(["detect"])
+    assert exit_code == 1
+
+
 def test_help_exits_zero(capsys):
     exit_code = main(["curate-db", "--help"])
     assert exit_code == 0

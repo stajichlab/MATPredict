@@ -11,6 +11,7 @@ from MATPredict.detect.search import (
     SearchHit,
     SearchToolError,
     polish_with_exonerate,
+    polish_with_miniprot,
     search_fast_path,
     search_genomic,
     search_localize,
@@ -591,6 +592,125 @@ def test_polish_with_exonerate_returns_none_when_gene_name_mismatches(tmp_path):
 
     # Request mfa1, but the fake exonerate output carries pra1
     model = polish_with_exonerate(
+        genome_fasta=tmp_path / "genome.fa", family=FAMILY, gene_name="mfa1",
+        reference_fasta=tmp_path / "reference.faa", record_families={"rec1": FAMILY.key},
+        window=("c1", 1, 500), runner=mismatched_gene_runner,
+    )
+    assert model is None
+
+
+# --- polish_with_miniprot (exon-aware miniprot --gff polishing) ---
+
+# Verified against the real miniprot 0.18-r281 binary, invoked as
+# `miniprot --gff <target.fa> <query.faa>` (target genome FIRST, query
+# protein SECOND -- the opposite argument order from exonerate's
+# --target/--query flags) against a synthetic two-exon gene on a 931bp
+# contig with a real 300bp GT...AG intron. Real captured stdout (miniprot's
+# own progress/version banner goes to stderr, not stdout):
+#
+#   ##gff-version 3
+#   ##PAF	rec1|gene0|mfa1	76	0	76	+	chr1	931	200	728	228	228	0	AS:i:364	ms:i:401	np:i:76	fs:i:0	st:i:0	da:i:0	do:i:0	cg:Z:31M300N45M	cs:Z::31~gt300ag:45
+#   chr1	miniprot	mRNA	201	731	401	+	.	ID=MP000001;Rank=1;Identity=1.0000;Positive=1.0000;Target=rec1|gene0|mfa1 1 76
+#   chr1	miniprot	CDS	201	293	144	+	0	Parent=MP000001;Rank=1;Identity=1.0000;Target=rec1|gene0|mfa1 1 31
+#   chr1	miniprot	CDS	594	731	257	+	0	Parent=MP000001;Rank=1;Identity=1.0000;Target=rec1|gene0|mfa1 32 76
+#   chr1	miniprot	stop_codon	729	731	0	+	0	Parent=MP000001;Rank=1
+#
+# So: a `##PAF` comment line to skip, a GFF3 `mRNA` feature line carrying
+# `ID=`, `Target=<query_id> <qstart> <qend>` (space-separated, not another
+# `key=value` pair) and `Identity=<fraction 0-1>` (NOT a percentage, unlike
+# exonerate's `identity <pct>`) among its `;`-separated attributes, and one
+# `CDS` line per exon carrying `Parent=<mRNA ID>` linking it back. A
+# `stop_codon` line is also emitted and ignored here. A query with no hit in
+# the window produces only the `##gff-version 3` header, no mRNA/CDS lines,
+# with exit code 0 -- confirmed by running miniprot with an unrelated
+# 49-residue protein against the same genome.
+MINIPROT_GFF = (
+    "##gff-version 3\n"
+    "##PAF\trec1|gene0|mfa1\t76\t0\t76\t+\tc1\t500\t0\t400\t228\t228\t0\tAS:i:364\n"
+    "c1\tminiprot\tmRNA\t1\t400\t401\t+\t.\t"
+    "ID=MP000001;Rank=1;Identity=0.9500;Positive=0.9600;Target=rec1|gene0|mfa1 1 76\n"
+    "c1\tminiprot\tCDS\t1\t150\t144\t+\t0\t"
+    "Parent=MP000001;Rank=1;Identity=0.9500;Target=rec1|gene0|mfa1 1 31\n"
+    "c1\tminiprot\tCDS\t200\t400\t257\t+\t0\t"
+    "Parent=MP000001;Rank=1;Identity=0.9500;Target=rec1|gene0|mfa1 32 76\n"
+    "c1\tminiprot\tstop_codon\t398\t400\t0\t+\t0\tParent=MP000001;Rank=1\n"
+)
+
+
+def fake_miniprot_runner(cmd, **kwargs):
+    assert cmd[0] == "miniprot" and "--gff" in cmd
+    # target (window fasta) comes before the query/reference fasta.
+    gff_flag_index = cmd.index("--gff")
+    assert cmd[gff_flag_index + 2].endswith("reference.faa")
+
+    class Result:
+        returncode = 0
+        stdout = MINIPROT_GFF
+        stderr = ""
+    return Result()
+
+
+def test_polish_with_miniprot_parses_exon_structure(tmp_path):
+    (tmp_path / "genome.fa").write_text(">c1\n" + "N" * 500 + "\n")
+    model = polish_with_miniprot(
+        genome_fasta=tmp_path / "genome.fa",
+        family=FAMILY, gene_name="mfa1",
+        reference_fasta=tmp_path / "reference.faa",
+        record_families={"rec1": FAMILY.key},
+        window=("c1", 1, 500),
+        runner=fake_miniprot_runner,
+    )
+    assert model.exons == [ExonSpan(1, 150), ExonSpan(200, 400)]
+    assert model.identity == 95.0
+    assert model.method == "miniprot_refine"
+    assert model.contig == "c1"
+    assert (model.start, model.end, model.strand) == (1, 400, "+")
+
+
+def test_polish_with_miniprot_returns_none_when_no_model(tmp_path):
+    (tmp_path / "genome.fa").write_text(">c1\n" + "N" * 500 + "\n")
+
+    def empty_runner(cmd, **kwargs):
+        class Result:
+            returncode = 0
+            stdout = "##gff-version 3\n"
+            stderr = ""
+        return Result()
+
+    model = polish_with_miniprot(
+        genome_fasta=tmp_path / "genome.fa", family=FAMILY, gene_name="mfa1",
+        reference_fasta=tmp_path / "reference.faa", record_families={"rec1": FAMILY.key},
+        window=("c1", 1, 500), runner=empty_runner,
+    )
+    assert model is None
+
+
+def test_polish_with_miniprot_returns_none_when_gene_name_mismatches(tmp_path):
+    """Regression: when a padded window overlaps two adjacent genes, miniprot
+    may return an alignment for the neighboring gene instead of the requested
+    one (e.g., request mfa1 but miniprot finds pra1 in the same window). The
+    guard against this cross-gene misattribution must reject the result."""
+    (tmp_path / "genome.fa").write_text(">c1\n" + "N" * 500 + "\n")
+
+    def mismatched_gene_runner(cmd, **kwargs):
+        # GFF reports pra1 (different gene, same record)
+        gff = (
+            "##gff-version 3\n"
+            "c1\tminiprot\tmRNA\t1\t400\t401\t+\t.\t"
+            "ID=MP000001;Rank=1;Identity=0.9500;Positive=0.9600;Target=rec1|gene1|pra1 1 76\n"
+            "c1\tminiprot\tCDS\t1\t150\t144\t+\t0\t"
+            "Parent=MP000001;Rank=1;Identity=0.9500;Target=rec1|gene1|pra1 1 31\n"
+            "c1\tminiprot\tCDS\t200\t400\t257\t+\t0\t"
+            "Parent=MP000001;Rank=1;Identity=0.9500;Target=rec1|gene1|pra1 32 76\n"
+        )
+        class Result:
+            returncode = 0
+            stdout = gff
+            stderr = ""
+        return Result()
+
+    # Request mfa1, but the fake miniprot output carries pra1
+    model = polish_with_miniprot(
         genome_fasta=tmp_path / "genome.fa", family=FAMILY, gene_name="mfa1",
         reference_fasta=tmp_path / "reference.faa", record_families={"rec1": FAMILY.key},
         window=("c1", 1, 500), runner=mismatched_gene_runner,

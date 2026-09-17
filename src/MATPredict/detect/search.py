@@ -528,3 +528,107 @@ def polish_with_exonerate(
             strand=gene_line[6], exons=exons, identity=identity,
             reference_record_id=record_id, method="exonerate_refine",
         )
+
+
+def _gff3_attrs(attr_field: str) -> dict[str, str]:
+    """Parse a GFF3 `key=value;key2=value2` attribute column into a dict.
+
+    Unlike exonerate's ` ; `-separated, space-separated-key-value GTF-style
+    attributes, miniprot's `--gff` output is real GFF3: attributes are
+    `;`-separated `key=value` pairs with no surrounding whitespace. `Target`
+    values (e.g. `rec1|gene0|mfa1 1 76`) contain spaces but no further `=`,
+    so splitting each part on the first `=` only is sufficient.
+    """
+    return dict(part.split("=", 1) for part in attr_field.split(";") if "=" in part)
+
+
+def polish_with_miniprot(
+    genome_fasta: Path,
+    family: Family,
+    gene_name: str,
+    reference_fasta: Path,
+    record_families: dict[str, FamilyKey],
+    window: tuple[str, int, int],
+    runner: Callable = subprocess.run,
+) -> "PolishModel | None":
+    """Refine one gene's model with `miniprot --gff` against its window.
+
+    Mirrors `polish_with_exonerate`'s window-slicing/offset-rebasing and
+    attribution pattern, but against miniprot's real GFF3 output (verified
+    against the real miniprot 0.18-r281 binary with a synthetic two-exon
+    gene spanning a 300bp GT...AG intron). Two format differences from
+    exonerate matter here:
+
+    - Argument order: miniprot takes the target genome FIRST and the query
+      protein SECOND (`miniprot --gff <target.fa> <query.faa>`) -- the
+      opposite of exonerate's `--target`/`--query` flags.
+    - Real GFF3 attributes: a `mRNA` feature line carries `ID=`,
+      `Target=<query_id> <qstart> <qend>` (space-separated, not another
+      `key=value` pair) and `Identity=<fraction 0-1>` -- NOT a percentage,
+      unlike exonerate's `identity <pct>` -- among its `;`-separated
+      `key=value` attributes. Each exon is its own `CDS` feature line
+      carrying `Parent=<mRNA ID>` linking it back to its mRNA; only CDS
+      lines whose `Parent` matches the first mRNA's `ID` are treated as
+      that gene's exons, since a padded window can contain more than one
+      predicted gene. A `##PAF` comment line and `stop_codon` feature lines
+      are also emitted and ignored here. A query with no hit in the window
+      produces only the `##gff-version 3` header line, with exit code 0.
+
+    Returns None -- rather than a placeholder model -- when miniprot reports
+    no mRNA for this window, or when the hit resolves to a different gene,
+    an unattributable record, or a family/role miniprot's `family` does not
+    expect, matching `polish_with_exonerate`'s drop-rather-than-fabricate
+    convention for attribution failures.
+    """
+    roles_by_family = _roles_by_family([family])
+    contig, win_start, _win_end = window
+
+    with tempfile.TemporaryDirectory() as tmp_dir_name:
+        tmp_dir = Path(tmp_dir_name)
+        target_fasta = _extract_window(genome_fasta, window, tmp_dir)
+        offset = win_start - 1
+
+        cmd = ["miniprot", "--gff", str(target_fasta), str(reference_fasta)]
+        result = _run_checked(runner, cmd)
+
+        mrna_line = None
+        mrna_id = None
+        cds_lines = []
+        for line in result.stdout.splitlines():
+            if not line or line.startswith("#"):
+                continue
+            fields = line.split("\t")
+            if len(fields) < 9:
+                continue
+            if fields[2] == "mRNA" and mrna_line is None:
+                mrna_line = fields
+                mrna_id = _gff3_attrs(fields[8]).get("ID")
+            elif fields[2] == "CDS" and mrna_id is not None:
+                if _gff3_attrs(fields[8]).get("Parent") == mrna_id:
+                    cds_lines.append(fields)
+
+        if mrna_line is None:
+            return None
+
+        attrs = _gff3_attrs(mrna_line[8])
+        target = attrs.get("Target", "")
+        query_id = target.split(" ")[0]
+        record_id, matched_gene = _parse_reference_header(query_id)
+        if matched_gene != gene_name:
+            return None
+        attribution = _attribute(record_id, matched_gene, record_families, roles_by_family)
+        if attribution is None:
+            return None
+        family_key, role = attribution
+        identity = float(attrs["Identity"]) * 100 if "Identity" in attrs else 0.0
+
+        exons = [
+            ExonSpan(int(c[3]) + offset, int(c[4]) + offset)
+            for c in sorted(cds_lines, key=lambda c: int(c[3]))
+        ]
+        return PolishModel(
+            gene_name=matched_gene, family_key=family_key, role=role, contig=contig,
+            start=int(mrna_line[3]) + offset, end=int(mrna_line[4]) + offset,
+            strand=mrna_line[6], exons=exons, identity=identity,
+            reference_record_id=record_id, method="miniprot_refine",
+        )

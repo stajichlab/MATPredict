@@ -3,6 +3,7 @@ loci:
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["Plus", "Minus"]
+    taxonomic_scope: [4827]
     genes:
       - {name: tptA, role: flanking_conserved}
       - {name: sexP, role: core_MAT, present_in_idiomorphs: ["Plus"]}

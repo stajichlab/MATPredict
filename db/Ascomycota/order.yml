@@ -3,6 +3,7 @@ loci:
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["MAT1-1", "MAT1-2"]
+    taxonomic_scope: [222544]
     genes:
       - {name: MAT1-1-1, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
       - {name: MAT1-1-2, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
@@ -14,6 +15,7 @@ loci:
   - locus_name: "PM"
     vocabulary_type: "enum"
     idiomorph_values: ["M", "P"]
+    taxonomic_scope: [451866]
     genes:
       - {name: matMc, role: core_MAT, present_in_idiomorphs: ["M"]}
       - {name: matMi, role: core_MAT, present_in_idiomorphs: ["M"]}
@@ -22,6 +24,7 @@ loci:
   - locus_name: "mat1"
     vocabulary_type: "enum"
     idiomorph_values: ["M", "P"]
+    taxonomic_scope: [4895]
     genes:
       - {name: mat1-Mc, role: core_MAT, present_in_idiomorphs: ["M"]}
       - {name: mat1-Mi, role: core_MAT, present_in_idiomorphs: ["M"]}
@@ -30,18 +33,21 @@ loci:
   - locus_name: "mat2"
     vocabulary_type: "enum"
     idiomorph_values: ["P"]
+    taxonomic_scope: [4896]
     genes:
       - {name: matPc, role: core_MAT, present_in_idiomorphs: ["P"]}
       - {name: matPi, role: core_MAT, present_in_idiomorphs: ["P"]}
   - locus_name: "mat3"
     vocabulary_type: "enum"
     idiomorph_values: ["M"]
+    taxonomic_scope: [4896]
     genes:
       - {name: matMc, role: core_MAT, present_in_idiomorphs: ["M"]}
       - {name: matMi, role: core_MAT, present_in_idiomorphs: ["M"]}
   - locus_name: "MATsc"
     vocabulary_type: "enum"
     idiomorph_values: ["MATalpha", "MATa"]
+    taxonomic_scope: [4893]
     genes:
       - {name: MATALPHA1, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
       - {name: MATALPHA2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
@@ -54,6 +60,7 @@ loci:
   - locus_name: "MATyl"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "B"]
+    taxonomic_scope: [4952]
     genes:
       - {name: mata1, role: core_MAT, present_in_idiomorphs: ["A"]}
       - {name: mata2, role: core_MAT, present_in_idiomorphs: ["A"]}
@@ -62,6 +69,7 @@ loci:
   - locus_name: "MTL"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "alpha"]
+    taxonomic_scope: [4959]
     genes:
       - {name: MTLA1, role: core_MAT, present_in_idiomorphs: ["A"]}
       - {name: MTLA2, role: core_MAT, present_in_idiomorphs: ["A"]}

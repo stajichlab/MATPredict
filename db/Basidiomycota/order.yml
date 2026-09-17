@@ -3,18 +3,21 @@ loci:
   - locus_name: "HD"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^A[0-9]+$"
+    taxonomic_scope: [2982305]
     genes:
       - {name: HD1, role: core_MAT}
       - {name: HD2, role: core_MAT}
   - locus_name: "PR"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^B[0-9]+$"
+    taxonomic_scope: [5346]
     genes:
       - {name: pheromone, role: core_MAT}
       - {name: pheromone_receptor, role: core_MAT}
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["alpha", "a"]
+    taxonomic_scope: [40410]
     genes:
       - {name: SXI1, role: core_MAT, present_in_idiomorphs: ["alpha"]}
       - {name: SXI2, role: core_MAT, present_in_idiomorphs: ["a"]}
@@ -28,30 +31,35 @@ loci:
   - locus_name: "Aalpha"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
+    taxonomic_scope: [5334]
     genes:
       - {name: Y, role: core_MAT}
       - {name: Z, role: core_MAT}
   - locus_name: "Abeta"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
+    taxonomic_scope: [5334]
     genes:
       - {name: Y, role: core_MAT}
       - {name: Z, role: core_MAT}
   - locus_name: "Balpha"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
+    taxonomic_scope: [5334]
     genes:
       - {name: pheromone, role: core_MAT}
       - {name: pheromone_receptor, role: core_MAT}
   - locus_name: "Bbeta"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
+    taxonomic_scope: [5334]
     genes:
       - {name: pheromone, role: core_MAT}
       - {name: pheromone_receptor, role: core_MAT}
   - locus_name: "aLocus"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^a[0-9]+$"
+    taxonomic_scope: [5270]
     genes:
       - {name: mfa1, role: core_MAT}
       - {name: pra1, role: core_MAT}
@@ -59,6 +67,7 @@ loci:
   - locus_name: "bLocus"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^b[0-9]+$"
+    taxonomic_scope: [5270]
     genes:
       - {name: bE, role: core_MAT}
       - {name: bW, role: core_MAT}

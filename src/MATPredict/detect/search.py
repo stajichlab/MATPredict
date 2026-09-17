@@ -37,11 +37,11 @@ coverage against the matched reference protein. The outfmt is therefore:
 
 diamond database: `search_fast_path` runs `diamond makedb` on the reference
 FASTA into a temporary directory and searches against the resulting `.dmnd`.
-diamond v2.2.6 was observed to also accept a plain FASTA as `--db` (building
-an index on the fly), but that is a convenience of recent versions, not the
-documented contract -- `makedb` is the interface diamond actually specifies
-for `blastp --db`, and building it once up front is also what makes the
-reference set reusable across queries.
+`diamond blastp --db` requires diamond's own binary database format -- it
+does not accept a plain FASTA (verified against diamond v2.2.6, which
+raises an error rather than building an index on the fly) -- so `makedb`
+must run first. Building it once up front is also what makes the reference
+set reusable across queries.
 
 Window-restriction (genomic fallback): rather than relying on an exonerate
 flag to restrict the search region (exonerate has no first-class "search

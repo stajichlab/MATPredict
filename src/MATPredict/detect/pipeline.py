@@ -35,7 +35,10 @@ docs/superpowers/specs/2026-09-17-mat-detection-search-localization-design.md):
 Polish eligibility is therefore decided per (cluster, family, gene), never by a
 single global "am I in genome-only mode" flag: a gene is polished when it was
 localized by `tblastn` (whichever path produced that localization) or when it is
-one of its family's own `core_MAT` genes still missing from that cluster.
+one of its family's own `core_MAT` genes still missing from that cluster -- but
+never when that same cluster already holds a non-localized (annotated) hit for
+that gene, which contains the guard/chaining mismatch described on
+`_RescueScope.accepts` and in the polish loop below.
 
 Polishing runs BOTH `exonerate --refine region` and `miniprot` against the same
 padded window and classifies the pair (`polish.classify`) into one of
@@ -297,6 +300,18 @@ class _RescueScope:
            a polish candidate and letting a failed polish there cap A's tier.
            Proximity is judged with the same `max_gap` `cluster_hits` uses, so
            the test is "would this hit merge into that cluster".
+
+        KNOWN LIMITATION (contained elsewhere, not fixed here): condition 3 is
+        a DIRECT-overlap test against the cluster's span as it stands now,
+        while `cluster_hits` merges by CHAINING. Two rescue hits that each pass
+        this test independently can, together, chain a hit into a cluster it
+        does not directly overlap. Making this test chain-aware would require
+        running it AFTER the definitive clustering pass, which is a larger
+        restructuring. The damaging consequences are instead contained in the
+        polish loop, which refuses to treat a gene the cluster already has an
+        annotated hit for as a polish candidate. The residual is that a
+        chained-in spurious HSP still joins the cluster's hit list and so
+        widens its span and any polish window computed from it.
         """
         if hit.family_key not in self.genes_by_family:
             return False
@@ -853,13 +868,46 @@ def run_pipeline(
             # unpolished and would stop an unpolished gene there from ever
             # capping its family's tier.
             #
+            # Genes this family ALREADY has in THIS cluster from a real,
+            # non-localized hit (a fast-path diamond match against an annotated
+            # gene model). Such a gene needs no refining here: its coordinates
+            # come from an annotated model, not from an approximate HSP.
+            #
+            # Excluding them is the containment for the guard/chaining mismatch
+            # in `_RescueScope.accepts`. `accepts` tests a rescued hit against a
+            # cluster's ORIGINAL span (+-max_gap), but `cluster_hits` merges by
+            # CHAINING: hit1-hit2 and hit2-hit3 each within max_gap puts hit1
+            # and hit3 in one cluster even when they are much further apart. So
+            # a spurious rescue hit for gene X, correctly judged by `accepts` as
+            # NOT sitting on cluster A, can still be chained into cluster A by a
+            # second, separately-accepted rescue hit that bridges the gap -- and
+            # X was only in the family's rescue scope because some OTHER cluster
+            # of the family lacked it. Treating that chained-in HSP as a
+            # localized gene of A made it a polish candidate there; a failed
+            # polish then capped A's tier via `_any_gene_unpolished`, and a
+            # successful one would have overridden A's real annotated
+            # coordinates via `_prefers` (which ranks any polished evidence
+            # above any raw evidence). Dropping such genes makes both effects
+            # impossible for a gene the cluster already genuinely has.
+            #
+            # This never suppresses a real rescue: a gene genuinely missing from
+            # this cluster has no non-localized hit here, so it is not in this
+            # set, and the zero-hit and partial-foothold rescue paths are
+            # untouched (on a genome-only run nothing is non-localized, so the
+            # set is empty). `rescue_genes` below is likewise unaffected, since
+            # a gene present in the cluster is by definition not missing from it.
+            already_annotated_genes = {
+                h.gene_name
+                for h in cluster.hits
+                if h.family_key == family.key and id(h) not in localized_hit_ids
+            }
             # Localized genes: this family's own genes that tblastn placed in
             # THIS cluster, whose approximate HSP coordinates need refining.
             localized_genes = {
                 h.gene_name
                 for h in cluster.hits
                 if h.family_key == family.key and id(h) in localized_hit_ids
-            }
+            } - already_annotated_genes
             # Rescue genes: this family's own core_MAT genes still missing from
             # this cluster, checked strictly against this family's own hits in
             # this cluster (see _missing_core_genes), so one family's presence

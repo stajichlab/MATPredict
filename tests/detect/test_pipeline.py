@@ -711,6 +711,97 @@ def test_second_independent_cluster_gets_its_own_genome_wide_rescue(tmp_path):
     assert {gene for gene, _w in polish_windows} == {"mfa1"}
 
 
+#: A three-gene family, needed to build a rescue CHAIN: one gene supplies the
+#: legitimate gap a rescue hit fills, a second supplies the spurious hit that
+#: chains in behind it, and a third anchors the cluster.
+THREE_GENE_YML = (
+    "phylum: P\nloci:\n  - locus_name: aLocus\n    vocabulary_type: pattern\n"
+    "    idiomorph_pattern: \"^a[0-9]+$\"\n    taxonomic_scope: [1]\n"
+    "    genes:\n      - {name: mfa1, role: core_MAT}\n      - {name: pra1, role: core_MAT}\n"
+    "      - {name: x1, role: core_MAT}\n"
+)
+
+
+def test_chained_in_rescue_hit_cannot_affect_a_gene_the_cluster_already_has(tmp_path):
+    """`_RescueScope.accepts` judges a rescue hit against a cluster's ORIGINAL
+    span, but `cluster_hits` merges by CHAINING -- so a hit `accepts` correctly
+    rules "not on top of cluster A" can still be pulled INTO cluster A by a
+    second, separately-accepted rescue hit that bridges the gap.
+
+    Layout (max_gap = 25_000):
+
+    * cluster A on c1 has mfa1 (100-200) and x1 (300-400) from the annotation,
+      and is missing pra1;
+    * cluster B on c2 has pra1 (300-400) and is missing mfa1 and x1, which is
+      what puts x1 into the family's rescue scope at all even though A has it;
+    * the batched rescue returns a legitimate pra1 for A at c1:20_000 (accepted
+      -- A genuinely lacks pra1) and a spurious x1 at c1:44_000 (also accepted:
+      it is 43_600 bp past A's original end of 400, far outside the +-25_000
+      guard `accepts` applies).
+
+    The definitive clustering then chains 400 -> 20_000 (19_600) -> 44_000
+    (23_900) and the spurious x1 lands inside cluster A. Before the containment
+    fix that made x1 a polish candidate in A; the polish fails (it is spurious)
+    and `_any_gene_unpolished` dropped A from high to medium -- entirely because
+    cluster B had a gap in a DIFFERENT gene.
+
+    After the fix, a gene with a non-localized hit already in that specific
+    cluster is never a polish candidate there, so A keeps its annotated x1
+    coordinates and its high tier.
+    """
+    _write_order(tmp_path, THREE_GENE_YML)
+    _write_record(tmp_path)
+    polish_windows = []
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        return [
+            # cluster A on c1: has mfa1 and x1, missing pra1
+            SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
+            SearchHit(FAMILY.key, "x1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
+            # cluster B on c2: an independent locus with only pra1
+            SearchHit(FAMILY.key, "pra1", "core_MAT", "c2", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
+        ]
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        return [
+            # legitimate: cluster A really is missing pra1
+            _tblastn("pra1", "c1", 20_000, 20_100),
+            # spurious/paralogous x1, outside A's original +-max_gap guard but
+            # chained into A by the pra1 hit above
+            _tblastn("x1", "c1", 44_000, 44_100),
+        ]
+
+    def polish(*, gene_name, window, **kwargs):
+        polish_windows.append((gene_name, window))
+        if gene_name == "pra1" and window[0] == "c1":
+            return _model("pra1", "c1", 20_000, 20_100)
+        return None  # the spurious x1 is modelled by neither tool
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path, search_localize=fake_localize,
+        polish_with_exonerate=polish, polish_with_miniprot=polish,
+    )
+
+    cluster_a = next(r for r in outcome.results if r.contig == "c1")
+    # A's tier is not capped by a failed polish of a gene it already had
+    assert sorted(cluster_a.genes_found) == ["mfa1", "pra1", "x1"]
+    assert cluster_a.confidence == "high"
+    # A's x1 evidence is still its own annotated diamond hit, not the spurious HSP
+    a_x1 = next(e for e in cluster_a.gene_evidence if e.gene_name == "x1")
+    assert (a_x1.contig, a_x1.start, a_x1.end) == ("c1", 300, 400)
+    assert a_x1.method == "diamond_proteome"
+    assert a_x1.status == STATUS_NOT_POLISH_CANDIDATE
+    # the chained-in spurious x1 never became a polish candidate in cluster A;
+    # the only gene polished on c1 is pra1, which A genuinely lacked
+    assert {gene for gene, w in polish_windows if w[0] == "c1"} == {"pra1"}
+    # the legitimate rescue for the gene A really was missing still happened
+    a_pra1 = next(e for e in cluster_a.gene_evidence if e.gene_name == "pra1")
+    assert (a_pra1.start, a_pra1.end) == (20_000, 20_100)
+    assert a_pra1.method == "exonerate_refine"
+
+
 def test_rescue_eligibility_is_scoped_per_family_gene_and_cluster(tmp_path):
     """Unit-level check of the eligibility rule itself, including the zero-hit
     case this change must not regress."""

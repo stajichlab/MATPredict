@@ -7,6 +7,10 @@ platforms = ["linux-64"]
 python = ">=3.11"
 pip = "*"
 taxonkit = "*"
+# Search binaries `matpredict detect` shells out to (see detect/search.py):
+# diamond for the proteome fast path, exonerate for protein-to-genome fallback.
+diamond = "*"
+exonerate = "*"
 
 [pypi-dependencies]
 MATPredict = { path = ".", editable = true }

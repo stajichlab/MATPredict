@@ -24,7 +24,15 @@ def assign_tier(
     core_found = core_genes.issubset(set(score.genes_found))
 
     if not core_found:
-        tier = "low" if score.fraction_found == 0 else "medium"
+        # Spec: Low is "a single gene hit with no other expected genes from the
+        # same family found nearby". Keying Low solely on fraction_found == 0
+        # made the tier unreachable in practice, because score_cluster never
+        # emits a FamilyScore for a family with zero hits -- so a lone isolated
+        # hit was indistinguishable from a substantial partial match. An
+        # isolated single hit in a family that expects more than one gene is
+        # therefore Low; any richer partial match stays Medium.
+        isolated_single_hit = len(score.genes_found) <= 1 and len(family.genes) > 1
+        tier = "low" if score.fraction_found == 0 or isolated_single_hit else "medium"
     elif second_pass_used:
         tier = "medium"
     elif has_flanking_conserved(family):

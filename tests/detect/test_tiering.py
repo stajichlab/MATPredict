@@ -35,10 +35,24 @@ def test_flanked_family_medium_tier_when_no_flanking_gene_found():
     assert assign_tier(score, FLANKED, cluster, second_pass_used=False, fragmented=False) == "medium"
 
 
-def test_partial_match_is_medium():
+def test_isolated_single_hit_is_low():
+    """Spec's Low tier: "a single gene hit with no other expected genes from
+    the same family found nearby". Previously this returned "medium" and Low
+    was reachable only at fraction_found == 0, which score_cluster never
+    emits -- making the tier dead code."""
     score = FamilyScore(FLANKLESS.key, 0.5, ["mfa1"], ["pra1"])
     cluster = GeneCluster("c1", 1, 100, [])
-    assert assign_tier(score, FLANKLESS, cluster, second_pass_used=False, fragmented=False) == "medium"
+    assert assign_tier(score, FLANKLESS, cluster, second_pass_used=False, fragmented=False) == "low"
+
+
+def test_partial_match_with_several_genes_is_medium():
+    """More than one gene found, but not the full core set -> Medium, not Low."""
+    family = Family(FamilyKey("P", "big"), "pattern", None, "^a[0-9]+$",
+                    [{"name": "g1", "role": "core_MAT"}, {"name": "g2", "role": "core_MAT"},
+                     {"name": "g3", "role": "core_MAT"}, {"name": "g4", "role": "core_MAT"}], [1])
+    score = FamilyScore(family.key, 0.5, ["g1", "g2"], ["g3", "g4"])
+    cluster = GeneCluster("c1", 1, 100, [])
+    assert assign_tier(score, family, cluster, second_pass_used=False, fragmented=False) == "medium"
 
 
 def test_fragmented_locus_downgraded_one_tier():

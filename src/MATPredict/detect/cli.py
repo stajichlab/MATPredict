@@ -19,7 +19,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     reference_fasta = build_reference_fasta(config.db_root, out_dir / "_reference.faa")
-    results = run_pipeline(
+    outcome = run_pipeline(
         genome_fasta=Path(args.genome),
         proteome_fasta=Path(args.proteins) if args.proteins else None,
         taxid=args.taxid,
@@ -27,9 +27,17 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         reference_fasta=reference_fasta,
     )
 
-    write_detection_gff3(results, out_dir / "detected_loci.gff3")
-    write_detection_report(results, out_dir / "detection_report.yaml")
-    print(f"detected {len(results)} candidate locus/loci -> {out_dir}")
+    write_detection_gff3(outcome, out_dir / "detected_loci.gff3")
+    write_detection_report(outcome, out_dir / "detection_report.yaml")
+    print(
+        f"detected {len(outcome.results)} candidate locus/loci "
+        f"({len(outcome.families_attempted)} families attempted) -> {out_dir}"
+    )
+    # Sub-floor families are reported, never silently dropped (spec section 3).
+    for entry in outcome.not_detected:
+        print(
+            f"not detected\t{entry.family_key.phylum}:{entry.family_key.locus_name}\t{entry.reason}"
+        )
     return 0
 
 

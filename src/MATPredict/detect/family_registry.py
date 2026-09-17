@@ -45,6 +45,35 @@ def load_all_families(db_root: Path) -> list[Family]:
     return families
 
 
+def load_record_families(db_root: Path) -> dict[str, FamilyKey]:
+    """Map every accepted curated record_id to the one family it belongs to.
+
+    A curated record lives at `db/<Phylum>/<Order-or-Family>/<record_id>/metadata.yaml`
+    and declares exactly one `mating_type.locus_name`, so `(phylum, locus_name)` --
+    i.e. its `FamilyKey` -- is unambiguous per record. This index is what lets
+    `search.py` attribute a hit to the family whose curated protein it actually
+    matched, instead of guessing from the bare gene name (gene names such as
+    `pheromone`, `pheromone_receptor`, `Z`, `Y`, `matPc`, `matMc` and `sla2` are
+    reused by several distinct families in the real database, so a bare-name
+    lookup silently collapses those families into whichever one is written last).
+
+    `db/candidates/...` matches the same glob shape but holds proposed, not
+    accepted, records; it is excluded by name exactly as `benchmark._load_records`
+    does.
+    """
+    index: dict[str, FamilyKey] = {}
+    for meta_path in sorted(db_root.glob("*/*/*/metadata.yaml")):
+        if meta_path.relative_to(db_root).parts[0] == "candidates":
+            continue
+        doc = yaml.safe_load(meta_path.read_text())
+        record_id = doc.get("record_id")
+        locus_name = (doc.get("mating_type") or {}).get("locus_name")
+        if not record_id or not locus_name:
+            continue
+        index[record_id] = FamilyKey(meta_path.parents[2].name, locus_name)
+    return index
+
+
 def route(
     taxid: int | None,
     families: list[Family],

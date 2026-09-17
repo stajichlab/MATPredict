@@ -29,18 +29,38 @@ def test_pipeline_recovers_real_alocus_record(tmp_path):
 
     reference_fasta = build_reference_fasta(DB_ROOT, tmp_path / "reference.faa")
 
-    def stub_fast_path(proteome_fasta, families, reference_fasta, runner=None):
+    def stub_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
         return [
-            SearchHit(f.key, gene["name"], gene["role"], "c1", 1, 100, "+", 100.0, "5270_521_aLocus_a1", "diamond_proteome")
+            SearchHit(f.key, gene["name"], gene["role"], "c1", 1, 100, "+", 100.0,
+                      "5270_521_aLocus_a1", "diamond_proteome", coverage=100.0)
             for f in families for gene in f.genes if f.key.locus_name == "aLocus"
         ]
 
-    results = run_pipeline(
+    outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=5270,
         db_root=DB_ROOT, reference_fasta=reference_fasta, search_fast_path=stub_fast_path,
         search_genomic=lambda *a, **k: [],
     )
-    a_locus_result = next(r for r in results if r.family_key.locus_name == "aLocus")
+    a_locus_result = next(r for r in outcome.results if r.family_key.locus_name == "aLocus")
     assert a_locus_result.confidence == "high"
     assert "mfa1" in a_locus_result.genes_found
     assert "pra1" in a_locus_result.genes_found
+    # per-gene evidence survives to the result (spec section 8)
+    assert {e.gene_name for e in a_locus_result.gene_evidence} >= {"mfa1", "pra1"}
+    assert a_locus_result.reference_records == ["5270_521_aLocus_a1"]
+
+
+@pytest.mark.skipif(not REAL_RECORD.exists(),
+                     reason="requires the real curated record to be present")
+def test_real_db_record_family_index_is_unambiguous():
+    """Every curated record maps to exactly one (phylum, locus_name) family --
+    the property that makes record-keyed hit attribution correct even where
+    gene names collide across families."""
+    from MATPredict.detect.family_registry import load_record_families
+
+    record_families = load_record_families(DB_ROOT)
+    families = {f.key for f in load_all_families(DB_ROOT)}
+    assert record_families["5270_521_aLocus_a1"].locus_name == "aLocus"
+    # every record's family is a real declared family in order.yml
+    unknown = {k for k in record_families.values() if k not in families}
+    assert unknown == set()

@@ -1242,15 +1242,21 @@ def test_fragmented_family_with_a_separate_independent_cluster_reports_both(tmp_
 
 
 def test_gene_evidence_prefers_a_polished_model_over_a_higher_identity_raw_hit(tmp_path):
-    """Finding 4 regression: across a fragmented result's member clusters,
-    `_gene_evidence` must never rank a raw tblastn `pident` against an
-    exonerate/miniprot identity as if they were the same number -- the spec
-    (Stage 2) says those are not comparable across tools. A polished model
-    wins over any raw hit whatever the identity figures say.
+    """Finding 4 regression: `_gene_evidence` must never rank a raw tblastn
+    `pident` against an exonerate/miniprot identity as if they were the same
+    number -- the spec (Stage 2) says those are not comparable across tools. A
+    polished model wins over the raw hit it refines whatever the identity
+    figures say.
 
-    Here mfa1 is polished in c1 with identity 60.0 and also carries a raw
-    tblastn hit in c2 with identity 99.0. Comparing the two raw numbers picks
-    the unrefined c2 hit; the correct answer is the polished c1 model."""
+    c1's mfa1 carries a raw tblastn hit with a high pident (99.0) and is also
+    polished, with a much LOWER identity figure (60.0). Comparing the two
+    numbers picks the unrefined raw hit; the correct answer is the polished
+    model. The contest is settled inside c1, using only c1's own hits.
+
+    c2 independently holds its own raw mfa1. Since Finding 5 that is a separate
+    segment's separate evidence and is reported in its own right, never merged
+    into or compared against c1's -- asserted here so this test pins the
+    per-segment attribution too."""
     _write_order(
         tmp_path,
         "phylum: P\nloci:\n  - locus_name: aLocus\n    vocabulary_type: pattern\n"
@@ -1265,9 +1271,10 @@ def test_gene_evidence_prefers_a_polished_model_over_a_higher_identity_raw_hit(t
 
     def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
         return [
-            SearchHit(key, "mfa1", "core_MAT", "c1", 100, 200, "+", 60.0, "rec1", "tblastn_genome"),
+            # a high raw pident for the gene that c1 also polishes, below
+            SearchHit(key, "mfa1", "core_MAT", "c1", 100, 200, "+", 99.0, "rec1", "tblastn_genome"),
             SearchHit(key, "pra1", "core_MAT", "c1", 300, 400, "+", 70.0, "rec1", "tblastn_genome"),
-            # the SAME gene again on the other contig, with a much higher pident
+            # the SAME gene again on the other contig -- a separate segment's own hit
             SearchHit(key, "mfa1", "core_MAT", "c2", 100, 200, "+", 99.0, "rec1", "tblastn_genome"),
             SearchHit(key, "pra2", "core_MAT", "c2", 500, 600, "+", 70.0, "rec1", "tblastn_genome"),
         ]
@@ -1286,10 +1293,15 @@ def test_gene_evidence_prefers_a_polished_model_over_a_higher_identity_raw_hit(t
     )
     fragmented = [r for r in outcome.results if r.fragmented]
     assert len(fragmented) == 1
-    evidence = {e.gene_name: e for e in fragmented[0].gene_evidence}
-    assert evidence["mfa1"].method == "exonerate_refine"
-    assert (evidence["mfa1"].start, evidence["mfa1"].end) == (120, 190)
-    assert evidence["mfa1"].identity == 60.0
+    evidence = {(e.contig, e.gene_name): e for e in fragmented[0].gene_evidence}
+    c1_mfa1 = evidence[("c1", "mfa1")]
+    assert c1_mfa1.method == "exonerate_refine"
+    assert (c1_mfa1.start, c1_mfa1.end) == (120, 190)
+    assert c1_mfa1.identity == 60.0
+    # c2's own raw mfa1 stands on its own segment, unaffected by c1's model
+    c2_mfa1 = evidence[("c2", "mfa1")]
+    assert c2_mfa1.method == "tblastn_genome"
+    assert (c2_mfa1.start, c2_mfa1.end) == (100, 200)
 
 
 def test_contig_edge_distance_populated_regardless_of_other_families_fragmentation(tmp_path):
@@ -1391,3 +1403,113 @@ def test_pipeline_output_feeds_the_report_writers_directly(tmp_path):
     assert doc["detected"][0]["gene_evidence"][0]["coverage"] == 80.0
     # the family that never cleared the floor is reported, not dropped
     assert [n["family"] for n in doc["not_detected"]] == ["P:bLocus"]
+
+
+def test_fragmented_segments_each_keep_their_own_evidence_for_a_shared_gene_name(tmp_path):
+    """Finding 5 regression: when two segments of ONE fragmented call both
+    genuinely hold a hit for the SAME gene name, neither segment's evidence may
+    be discarded by a cross-cluster "best per gene name" selection.
+
+    The fragmentation cover is a CONTRIBUTION test, not a disjointness test: a
+    cluster is admitted for contributing >=1 not-yet-covered core gene, and
+    nothing rejects it for also sharing a gene name with an already-chosen
+    cluster. Gene duplication / multi-allele co-occurrence is normal at MAT
+    loci, so two pieces of a split locus sharing a gene name is expected.
+
+    Here c1 carries a real annotated diamond mfa1 at 100-200 plus pra1, and c2
+    carries pra2 plus -- via its own legitimate windowed rescue for the core
+    gene it lacks -- a polished mfa1 at 700-800. Both are real evidence for two
+    different genomic copies in two different segments. Collapsing by bare gene
+    name made the polished c2 model outrank c1's annotated hit unconditionally
+    and drop c1's real coordinates from the report entirely, leaving segment c1
+    declared 100-400 with no gene explaining its first 200 bp."""
+    _write_order(
+        tmp_path,
+        "phylum: P\nloci:\n  - locus_name: aLocus\n    vocabulary_type: pattern\n"
+        "    idiomorph_pattern: \"^a[0-9]+$\"\n    taxonomic_scope: [1]\n"
+        "    genes:\n      - {name: mfa1, role: core_MAT}\n      - {name: pra1, role: core_MAT}\n"
+        "      - {name: pra2, role: core_MAT}\n",
+    )
+    _write_record(tmp_path)
+    key = FamilyKey("P", "aLocus")
+    genome = tmp_path / "genome.fa"
+    genome.write_text(">c1\n" + "A" * 5000 + "\n>c2\n" + "A" * 5000 + "\n")
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        return [
+            SearchHit(key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
+            SearchHit(key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
+            SearchHit(key, "pra2", "core_MAT", "c2", 500, 600, "+", 95.0, "rec1", "diamond_proteome"),
+        ]
+
+    def polish(*, gene_name, window, **kwargs):
+        # c2's windowed rescue legitimately models the mfa1 that c2 lacks.
+        if gene_name == "mfa1" and window[0] == "c2":
+            return _model("mfa1", "c2", 700, 800, identity=55.0, family_key=key)
+        return None
+
+    outcome = run_pipeline(
+        genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path, search_localize=_no_localize,
+        polish_with_exonerate=polish, polish_with_miniprot=polish,
+    )
+    fragmented = [r for r in outcome.results if r.fragmented]
+    assert len(fragmented) == 1
+    result = fragmented[0]
+    assert sorted(result.genes_found) == ["mfa1", "pra1", "pra2"]
+
+    by_place = {(e.contig, e.gene_name): e for e in result.gene_evidence}
+    # BOTH segments' mfa1 survive, each attributed to its own segment.
+    assert ("c1", "mfa1") in by_place, "c1's real annotated mfa1 was dropped"
+    assert ("c2", "mfa1") in by_place, "c2's rescued mfa1 was dropped"
+    c1_mfa1 = by_place[("c1", "mfa1")]
+    assert (c1_mfa1.start, c1_mfa1.end) == (100, 200)
+    assert c1_mfa1.method == "diamond_proteome"
+    assert c1_mfa1.status == STATUS_NOT_POLISH_CANDIDATE
+    c2_mfa1 = by_place[("c2", "mfa1")]
+    assert (c2_mfa1.start, c2_mfa1.end) == (700, 800)
+    assert c2_mfa1.method == "exonerate_refine"
+    # the single-copy genes are untouched and still attributed to their own segment
+    assert (by_place[("c1", "pra1")].start, by_place[("c1", "pra1")].end) == (300, 400)
+    assert (by_place[("c2", "pra2")].start, by_place[("c2", "pra2")].end) == (500, 600)
+    assert len(result.gene_evidence) == 4
+
+
+def test_fragmented_segments_keep_both_raw_hits_for_a_shared_gene_name(tmp_path):
+    """Finding 5 regression, variant B: the same collapse with NO polishing at
+    all. Two raw `diamond_proteome` mfa1 hits, one per segment, used to be
+    resolved by the identity tie-break, silently dropping the lower-identity
+    one even though it is the only evidence on its own segment."""
+    _write_order(
+        tmp_path,
+        "phylum: P\nloci:\n  - locus_name: aLocus\n    vocabulary_type: pattern\n"
+        "    idiomorph_pattern: \"^a[0-9]+$\"\n    taxonomic_scope: [1]\n"
+        "    genes:\n      - {name: mfa1, role: core_MAT}\n      - {name: pra1, role: core_MAT}\n"
+        "      - {name: pra2, role: core_MAT}\n",
+    )
+    _write_record(tmp_path)
+    key = FamilyKey("P", "aLocus")
+    genome = tmp_path / "genome.fa"
+    genome.write_text(">c1\n" + "A" * 5000 + "\n>c2\n" + "A" * 5000 + "\n")
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        return [
+            SearchHit(key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
+            SearchHit(key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
+            SearchHit(key, "mfa1", "core_MAT", "c2", 100, 200, "+", 70.0, "rec1", "diamond_proteome"),
+            SearchHit(key, "pra2", "core_MAT", "c2", 500, 600, "+", 95.0, "rec1", "diamond_proteome"),
+        ]
+
+    outcome = run_pipeline(
+        genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path, search_localize=_no_localize,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
+    )
+    fragmented = [r for r in outcome.results if r.fragmented]
+    assert len(fragmented) == 1
+    by_place = {(e.contig, e.gene_name): e for e in fragmented[0].gene_evidence}
+    assert by_place[("c1", "mfa1")].identity == 95.0
+    assert by_place[("c2", "mfa1")].identity == 70.0
+    assert len(fragmented[0].gene_evidence) == 4

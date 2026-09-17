@@ -74,10 +74,8 @@ from MATPredict.detect.family_registry import (
 )
 from MATPredict.detect.idiomorph import assign_idiomorph
 from MATPredict.detect.polish import (
-    STATUS_AGREE,
     STATUS_DISAGREE,
     STATUS_NOT_POLISH_CANDIDATE,
-    STATUS_SINGLE,
     STATUS_UNPOLISHED,
     PolishModel,
     PolishOutcome,
@@ -422,6 +420,16 @@ def _fragmented_family_segments(
          loci and must not be mislabelled as assembly fragmentation);
       3. the union of the chosen clusters DOES contain all of them, with each
          chosen cluster contributing at least one core gene the others lack.
+
+    Condition 3 is a CONTRIBUTION test, not a disjointness test: the greedy
+    cover below admits a cluster for contributing >=1 not-yet-covered core gene
+    and never rejects it for ALSO holding a gene an already-chosen cluster has.
+    Two chosen clusters can therefore each hold a real hit for the same gene
+    name -- which is expected rather than exotic at MAT loci, where gene
+    duplication and multi-allele co-occurrence are normal. That overlap is not
+    an error here (each segment is a distinct genomic location and each hit is
+    real), so `_gene_evidence` reports evidence per `(cluster, gene_name)`
+    rather than collapsing the segments by gene name; see its docstring.
     """
     core_genes = {g["name"] for g in family.genes if g["role"] == "core_MAT"}
     if len(core_genes) < 2:
@@ -557,11 +565,6 @@ def _model_dict(model: PolishModel) -> dict:
     }
 
 
-#: `GeneEvidence.status` values that mean a real polished gene model stands
-#: behind the evidence (a `PolishOutcome.canonical`), as opposed to a raw,
-#: unrefined localization/fast-path hit.
-_POLISHED_STATUSES = frozenset({STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE})
-
 #: Preference order for RAW (unpolished) hits of the same gene, most preferred
 #: first. `diamond_proteome` is a protein-vs-protein match against a real
 #: annotated gene model; `tblastn_genome` is a deliberately approximate,
@@ -576,40 +579,6 @@ def _raw_method_rank(method: str) -> int:
         return _RAW_METHOD_PREFERENCE.index(method)
     except ValueError:
         return len(_RAW_METHOD_PREFERENCE)
-
-
-def _prefers(candidate: GeneEvidence, previous: GeneEvidence | None) -> bool:
-    """True when `candidate` is the better evidence for this gene.
-
-    Identity is NEVER compared across different tools. `identity` can be
-    exonerate's percentage, miniprot's 0-1 fraction scaled to look like a
-    percentage, diamond's `pident` or tblastn's `pident` -- four numbers from
-    four different alignment procedures, which the spec (Stage 2) explicitly
-    says are not directly comparable. The ordering is therefore:
-
-    1. any POLISHED evidence beats any raw/unpolished evidence, whatever the
-       identity numbers say -- a refined, splice-aware, two-tool-checked model
-       is better evidence than a raw HSP by construction;
-    2. among raw candidates, the named `_RAW_METHOD_PREFERENCE` order decides;
-    3. only as a last tie-break, and only between candidates produced by the
-       SAME method, does the higher identity win;
-    4. otherwise the incumbent stands, so selection is deterministic in the
-       order clusters and hits are visited.
-    """
-    if previous is None:
-        return True
-    candidate_polished = candidate.status in _POLISHED_STATUSES
-    previous_polished = previous.status in _POLISHED_STATUSES
-    if candidate_polished != previous_polished:
-        return candidate_polished
-    if not candidate_polished:
-        candidate_rank = _raw_method_rank(candidate.method)
-        previous_rank = _raw_method_rank(previous.method)
-        if candidate_rank != previous_rank:
-            return candidate_rank < previous_rank
-    if candidate.method != previous.method:
-        return False  # never compare identity across tools
-    return candidate.identity > previous.identity
 
 
 def _gene_evidence(
@@ -640,16 +609,41 @@ def _gene_evidence(
     ONLY for this family's own genes in these exact clusters, so a polish result
     from another family, or from an unrelated cluster of this same family, can
     never be attributed to this call.
+
+    Selection is likewise per `(cluster, gene_name)`, NEVER per bare
+    `gene_name`. `member_clusters` holds more than one cluster only for a
+    fragmented multi-segment call, and those clusters are by construction
+    distinct genomic locations. `_fragmented_family_segments`' greedy cover is a
+    CONTRIBUTION test, not a disjointness test (a cluster is admitted for
+    contributing >=1 not-yet-covered core gene; nothing rejects it for also
+    sharing a gene name with an already-chosen cluster), and gene duplication /
+    multi-allele co-occurrence is normal at MAT loci -- so two segments of one
+    fragmented call can each hold a real, correct hit for the same gene name.
+    Collapsing those into one entry by gene name silently discarded one
+    segment's real gene model from the curation-facing report and left that
+    segment's reported span wider than any gene listed for it. Each cluster
+    therefore contributes its own evidence, built from its OWN hits and its OWN
+    `PolishOutcome`s -- exactly as the single-cluster case has always done --
+    and the per-segment dictionaries are concatenated, with no cross-cluster
+    identity or polished-vs-raw comparison at any point. This covers every gene
+    the fragmentation cover assigned to a segment (it is that segment's own hit
+    that is reported) and additionally keeps a gene the cover did not assign to
+    that segment, including non-core genes, which the cover never considers at
+    all. Within ONE cluster the ordering is unchanged: a polished
+    `PolishOutcome.canonical` wins outright over that cluster's raw hits, and
+    two raw hits are ranked by `_RAW_METHOD_PREFERENCE` with identity breaking
+    ties only inside one method, so identity is still never compared across
+    tools.
     """
-    best: dict[str, GeneEvidence] = {}
+    best: dict[tuple[int, str], GeneEvidence] = {}
     for cluster in member_clusters:
         raw_by_gene: dict[str, SearchHit] = {}
         for hit in cluster.hits:
             if hit.family_key != family_key:
                 continue
             current = raw_by_gene.get(hit.gene_name)
-            # Same rule as `_prefers`, applied to raw SearchHits: the named
-            # method preference decides first, and identity only breaks a tie
+            # Ranking among THIS cluster's own raw SearchHits for one gene: the
+            # named method preference decides first, and identity only breaks a tie
             # between two hits from the SAME method. A diamond `pident` and a
             # tblastn `pident` describe different alignments and must not be
             # ranked against each other as if they were one scale.
@@ -718,9 +712,13 @@ def _gene_evidence(
                     reference_record_id=hit.reference_record_id, method=hit.method,
                     status=status, alternate_model=None,
                 )
-            if _prefers(evidence, best.get(gene_name)):
-                best[gene_name] = evidence
-    return sorted(best.values(), key=lambda e: (e.contig, e.start))
+            # Keyed per (cluster, gene): a cluster visits each of its own gene
+            # names exactly once, so this never overwrites and no evidence from
+            # another segment can displace this one.
+            best[(id(cluster), gene_name)] = evidence
+    # `gene_name` is part of the sort key so two entries that happen to share a
+    # contig and a start coordinate still order deterministically.
+    return sorted(best.values(), key=lambda e: (e.contig, e.start, e.end, e.gene_name))
 
 
 def _segments_for(
@@ -886,8 +884,10 @@ def run_pipeline(
             # localized gene of A made it a polish candidate there; a failed
             # polish then capped A's tier via `_any_gene_unpolished`, and a
             # successful one would have overridden A's real annotated
-            # coordinates via `_prefers` (which ranks any polished evidence
-            # above any raw evidence). Dropping such genes makes both effects
+            # coordinates in `_gene_evidence`, which ranks a cluster's polished
+            # model above that same cluster's raw hits for the gene (a
+            # WITHIN-cluster rule; across the segments of a fragmented call
+            # evidence is no longer collapsed at all). Dropping such genes makes both effects
             # impossible for a gene the cluster already genuinely has.
             #
             # This never suppresses a real rescue: a gene genuinely missing from

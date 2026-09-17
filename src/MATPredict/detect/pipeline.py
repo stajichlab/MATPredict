@@ -61,8 +61,10 @@ from MATPredict.detect.family_registry import (
 )
 from MATPredict.detect.idiomorph import assign_idiomorph
 from MATPredict.detect.polish import (
+    STATUS_AGREE,
     STATUS_DISAGREE,
     STATUS_NOT_POLISH_CANDIDATE,
+    STATUS_SINGLE,
     STATUS_UNPOLISHED,
     PolishModel,
     PolishOutcome,
@@ -411,6 +413,61 @@ def _model_dict(model: PolishModel) -> dict:
     }
 
 
+#: `GeneEvidence.status` values that mean a real polished gene model stands
+#: behind the evidence (a `PolishOutcome.canonical`), as opposed to a raw,
+#: unrefined localization/fast-path hit.
+_POLISHED_STATUSES = frozenset({STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE})
+
+#: Preference order for RAW (unpolished) hits of the same gene, most preferred
+#: first. `diamond_proteome` is a protein-vs-protein match against a real
+#: annotated gene model; `tblastn_genome` is a deliberately approximate,
+#: localization-only alignment with no splice awareness. This is a named
+#: method preference, NOT a score comparison: their identity numbers come from
+#: different searches and are not on a common scale.
+_RAW_METHOD_PREFERENCE = ("diamond_proteome", "tblastn_genome")
+
+
+def _raw_method_rank(method: str) -> int:
+    try:
+        return _RAW_METHOD_PREFERENCE.index(method)
+    except ValueError:
+        return len(_RAW_METHOD_PREFERENCE)
+
+
+def _prefers(candidate: GeneEvidence, previous: GeneEvidence | None) -> bool:
+    """True when `candidate` is the better evidence for this gene.
+
+    Identity is NEVER compared across different tools. `identity` can be
+    exonerate's percentage, miniprot's 0-1 fraction scaled to look like a
+    percentage, diamond's `pident` or tblastn's `pident` -- four numbers from
+    four different alignment procedures, which the spec (Stage 2) explicitly
+    says are not directly comparable. The ordering is therefore:
+
+    1. any POLISHED evidence beats any raw/unpolished evidence, whatever the
+       identity numbers say -- a refined, splice-aware, two-tool-checked model
+       is better evidence than a raw HSP by construction;
+    2. among raw candidates, the named `_RAW_METHOD_PREFERENCE` order decides;
+    3. only as a last tie-break, and only between candidates produced by the
+       SAME method, does the higher identity win;
+    4. otherwise the incumbent stands, so selection is deterministic in the
+       order clusters and hits are visited.
+    """
+    if previous is None:
+        return True
+    candidate_polished = candidate.status in _POLISHED_STATUSES
+    previous_polished = previous.status in _POLISHED_STATUSES
+    if candidate_polished != previous_polished:
+        return candidate_polished
+    if not candidate_polished:
+        candidate_rank = _raw_method_rank(candidate.method)
+        previous_rank = _raw_method_rank(previous.method)
+        if candidate_rank != previous_rank:
+            return candidate_rank < previous_rank
+    if candidate.method != previous.method:
+        return False  # never compare identity across tools
+    return candidate.identity > previous.identity
+
+
 def _gene_evidence(
     member_clusters: list[GeneCluster],
     family_key: FamilyKey,
@@ -421,8 +478,9 @@ def _gene_evidence(
     Per gene, the canonical `PolishOutcome.canonical` model wins when that gene
     was polished in that cluster; a `STATUS_UNPOLISHED` gene (canonical is None)
     and any gene that was never a polish candidate at all -- e.g. a gene the
-    diamond fast path already found -- fall back to that gene's best
-    (highest-identity) raw `SearchHit`. That fallback is the only path by which
+    diamond fast path already found -- fall back to that gene's best raw
+    `SearchHit` (chosen by `_RAW_METHOD_PREFERENCE`, with identity breaking
+    ties only within one method). That fallback is the only path by which
     a `GeneEvidence` is built from a `SearchHit` rather than a `PolishModel`.
     The two situations are reported with DIFFERENT statuses so a curator can
     tell them apart: `STATUS_UNPOLISHED` when a `PolishOutcome` exists for the
@@ -446,7 +504,20 @@ def _gene_evidence(
             if hit.family_key != family_key:
                 continue
             current = raw_by_gene.get(hit.gene_name)
-            if current is None or hit.identity > current.identity:
+            # Same rule as `_prefers`, applied to raw SearchHits: the named
+            # method preference decides first, and identity only breaks a tie
+            # between two hits from the SAME method. A diamond `pident` and a
+            # tblastn `pident` describe different alignments and must not be
+            # ranked against each other as if they were one scale.
+            if current is None:
+                raw_by_gene[hit.gene_name] = hit
+                continue
+            hit_rank = _raw_method_rank(hit.method)
+            current_rank = _raw_method_rank(current.method)
+            if hit_rank != current_rank:
+                if hit_rank < current_rank:
+                    raw_by_gene[hit.gene_name] = hit
+            elif hit.method == current.method and hit.identity > current.identity:
                 raw_by_gene[hit.gene_name] = hit
 
         outcomes = {
@@ -503,8 +574,7 @@ def _gene_evidence(
                     reference_record_id=hit.reference_record_id, method=hit.method,
                     status=status, alternate_model=None,
                 )
-            previous = best.get(gene_name)
-            if previous is None or evidence.identity > previous.identity:
+            if _prefers(evidence, best.get(gene_name)):
                 best[gene_name] = evidence
     return sorted(best.values(), key=lambda e: (e.contig, e.start))
 

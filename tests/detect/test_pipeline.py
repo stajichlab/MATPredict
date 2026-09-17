@@ -957,6 +957,57 @@ def test_fragmented_family_with_a_separate_independent_cluster_reports_both(tmp_
     assert sorted(independent.genes_found) == ["mfa1", "pra1"]
 
 
+def test_gene_evidence_prefers_a_polished_model_over_a_higher_identity_raw_hit(tmp_path):
+    """Finding 4 regression: across a fragmented result's member clusters,
+    `_gene_evidence` must never rank a raw tblastn `pident` against an
+    exonerate/miniprot identity as if they were the same number -- the spec
+    (Stage 2) says those are not comparable across tools. A polished model
+    wins over any raw hit whatever the identity figures say.
+
+    Here mfa1 is polished in c1 with identity 60.0 and also carries a raw
+    tblastn hit in c2 with identity 99.0. Comparing the two raw numbers picks
+    the unrefined c2 hit; the correct answer is the polished c1 model."""
+    _write_order(
+        tmp_path,
+        "phylum: P\nloci:\n  - locus_name: aLocus\n    vocabulary_type: pattern\n"
+        "    idiomorph_pattern: \"^a[0-9]+$\"\n    taxonomic_scope: [1]\n"
+        "    genes:\n      - {name: mfa1, role: core_MAT}\n      - {name: pra1, role: core_MAT}\n"
+        "      - {name: pra2, role: core_MAT}\n",
+    )
+    _write_record(tmp_path)
+    key = FamilyKey("P", "aLocus")
+    genome = tmp_path / "genome.fa"
+    genome.write_text(">c1\n" + "A" * 3000 + "\n>c2\n" + "A" * 3000 + "\n")
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        return [
+            SearchHit(key, "mfa1", "core_MAT", "c1", 100, 200, "+", 60.0, "rec1", "tblastn_genome"),
+            SearchHit(key, "pra1", "core_MAT", "c1", 300, 400, "+", 70.0, "rec1", "tblastn_genome"),
+            # the SAME gene again on the other contig, with a much higher pident
+            SearchHit(key, "mfa1", "core_MAT", "c2", 100, 200, "+", 99.0, "rec1", "tblastn_genome"),
+            SearchHit(key, "pra2", "core_MAT", "c2", 500, 600, "+", 70.0, "rec1", "tblastn_genome"),
+        ]
+
+    def polish(*, gene_name, window, **kwargs):
+        # only mfa1 in c1's window is modelled, and with a LOW identity figure
+        if gene_name == "mfa1" and window[0] == "c1":
+            return _model("mfa1", "c1", 120, 190, identity=60.0, family_key=key)
+        return None
+
+    outcome = run_pipeline(
+        genome_fasta=genome, proteome_fasta=None, taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_localize=fake_localize,
+        polish_with_exonerate=polish, polish_with_miniprot=polish,
+    )
+    fragmented = [r for r in outcome.results if r.fragmented]
+    assert len(fragmented) == 1
+    evidence = {e.gene_name: e for e in fragmented[0].gene_evidence}
+    assert evidence["mfa1"].method == "exonerate_refine"
+    assert (evidence["mfa1"].start, evidence["mfa1"].end) == (120, 190)
+    assert evidence["mfa1"].identity == 60.0
+
+
 def test_contig_edge_distance_populated_regardless_of_other_families_fragmentation(tmp_path):
     """Finding D regression: contig_edge_distance must be populated (or left
     None) consistently per-result, never depending on whether some OTHER

@@ -43,24 +43,23 @@ makedb` first for reusability, performance, and determinism across repeated
 searches. Building it once up front makes the reference set efficiently
 reusable across queries.
 
-Window-restriction (genomic fallback): rather than relying on an exonerate
-flag to restrict the search region (exonerate has no first-class "search
-only this coordinate range of this multi-contig file" option), we actually
-slice the requested contig region out of `genome_fasta` into a small
-temporary FASTA file and pass *that* as `--target`. Exonerate's reported
-hit coordinates are then local to the slice (1-based from the slice start),
-so we add the window's start offset back on to recover real genome
-coordinates before returning `SearchHit`s.
+Window-restriction (polishing, `_extract_window`): rather than relying on an
+exonerate/miniprot flag to restrict the search region (neither tool has a
+first-class "search only this coordinate range of this multi-contig file"
+option), `polish_with_exonerate`/`polish_with_miniprot` actually slice the
+requested contig region out of `genome_fasta` into a small temporary FASTA
+file and pass *that* as the search target. The tool's reported hit
+coordinates are then local to the slice (1-based from the slice start), so
+we add the window's start offset back on to recover real genome coordinates
+before returning a `PolishModel`.
 
-Relaxation (genomic second pass): exonerate's `--score` is an absolute
-score threshold (its protein2genome default is 100). Lowering it makes the
-search MORE permissive. `--percent` is the opposite knob -- it discards
-matches scoring below that percentage of the query's maximal score, and its
-default is 0 -- so adding `--percent 50` to the "relaxed" pass (as this
-module previously did) made the second pass *stricter* than the standard
-pass, inverting the spec's intent. The relaxed pass therefore lowers
-`--score` instead, and the standard pass states exonerate's own default
-explicitly so the difference between the two is visible in the command.
+Localize-then-polish: genome-wide localization (`search_localize`, tblastn)
+finds approximate gene positions across the whole genome in one call, then
+each candidate gene's window is refined independently by
+`polish_with_exonerate` or `polish_with_miniprot`. The old genomic search
+(`search_genomic`, spliced exonerate protein2genome with an optional
+"relaxed" lower-score second pass over the whole genome or a flanking
+window) has been removed now that this two-stage approach fully replaces it.
 """
 from __future__ import annotations
 
@@ -77,11 +76,6 @@ from MATPredict.detect.family_registry import Family, FamilyKey
 from MATPredict.detect.polish import ExonSpan, PolishModel
 
 _DIAMOND_OUTFMT = ["6", "qseqid", "sseqid", "pident", "scovhsp", "qtitle"]
-
-#: exonerate protein2genome's own default score threshold.
-STANDARD_EXONERATE_SCORE = 100
-#: Lower (more permissive) threshold used by the relaxed genomic second pass.
-RELAXED_EXONERATE_SCORE = 50
 
 PROTEOME_DEFLINE_FORMAT = "contig:start-end:strand"
 _LOCATION_RE = re.compile(r"^(?P<contig>.+):(?P<start>\d+)-(?P<end>\d+):(?P<strand>[+-])$")
@@ -106,7 +100,7 @@ class SearchHit:
     strand: str  # "+" | "-"
     identity: float
     reference_record_id: str  # which curated record's protein this matched
-    method: str  # "diamond_proteome" | "exonerate_genome" | "exonerate_genome_relaxed"
+    method: str  # "diamond_proteome" | "tblastn_genome" | "exonerate_refine" | "miniprot_refine"
     coverage: float | None = None  # % of the matched reference protein covered; None when unknown
 
 
@@ -355,89 +349,6 @@ def _extract_window(genome_fasta: Path, window: tuple[str, int, int], tmp_dir: P
     return window_fasta
 
 
-def search_genomic(
-    genome_fasta: Path,
-    families: list[Family],
-    reference_fasta: Path,
-    record_families: dict[str, FamilyKey],
-    relaxed: bool = False,
-    window: tuple[str, int, int] | None = None,
-    runner: Callable = subprocess.run,
-) -> list[SearchHit]:
-    """Spliced protein-to-genome search via exonerate --model protein2genome.
-
-    `window` restricts the search to (contig, start, end) (1-based, inclusive)
-    -- used for the flanking-anchored second pass -- by slicing that region
-    out of `genome_fasta` into a temporary FASTA and searching against just
-    that slice; hit coordinates are re-based back onto genome coordinates
-    before being returned. `relaxed=True` lowers exonerate's absolute score
-    threshold (`--score`) for that same second pass, making it genuinely more
-    permissive than the standard pass.
-    """
-    roles_by_family = _roles_by_family(families)
-
-    with tempfile.TemporaryDirectory() as tmp_dir_name:
-        tmp_dir = Path(tmp_dir_name)
-        offset = 0
-        target_fasta = genome_fasta
-        if window is not None:
-            target_fasta = _extract_window(genome_fasta, window, tmp_dir)
-            offset = window[1] - 1  # window start is 1-based; local coords start at 1
-
-        score = RELAXED_EXONERATE_SCORE if relaxed else STANDARD_EXONERATE_SCORE
-        cmd = [
-            "exonerate", "--model", "protein2genome",
-            "--query", str(reference_fasta),
-            "--target", str(target_fasta),
-            "--score", str(score),
-            "--showtargetgff", "yes",
-            "--showalignment", "no",
-        ]
-
-        result = _run_checked(runner, cmd)
-
-        hits: list[SearchHit] = []
-        for line in result.stdout.splitlines():
-            if "\tgene\t" not in line:
-                continue
-            fields = line.split("\t")
-            contig, _src, _feat, start, end, _score, strand, _frame, attrs = fields
-            # exonerate GFF attrs carry the query id under "sequence <id>" and
-            # the real percent identity under "identity <value>", e.g.:
-            #   gene_id 1 ; sequence rec1|gene0|mfa1 ; gene_orientation . ; identity 100.00 ; similarity 100.00
-            attr_parts = attrs.split(" ; ")
-            query_id = next(
-                part.split(" ")[1] for part in attr_parts if part.startswith("sequence ")
-            )
-            identity = 0.0
-            for part in attr_parts:
-                if part.startswith("identity "):
-                    identity = float(part.split(" ")[1])
-                    break
-            record_id, gene_name = _parse_reference_header(query_id)
-            attribution = _attribute(record_id, gene_name, record_families, roles_by_family)
-            if attribution is None:
-                continue
-            family_key, role = attribution
-            method = "exonerate_genome_relaxed" if relaxed else "exonerate_genome"
-            hits.append(
-                SearchHit(
-                    family_key=family_key,
-                    gene_name=gene_name,
-                    role=role,
-                    contig=contig,
-                    start=int(start) + offset,
-                    end=int(end) + offset,
-                    strand=strand,
-                    identity=identity,
-                    reference_record_id=record_id,
-                    method=method,
-                    coverage=None,
-                )
-            )
-        return hits
-
-
 def polish_with_exonerate(
     genome_fasta: Path,
     family: Family,
@@ -449,10 +360,11 @@ def polish_with_exonerate(
 ) -> "PolishModel | None":
     """Refine one gene's model with `exonerate --refine region` against its window.
 
-    Unlike `search_genomic`, this parses per-exon GFF lines (`\\texon\\t...`),
-    not just the gene-level line, so the returned `PolishModel.exons` reflect
-    real intron/exon structure -- needed for cross-tool exon-boundary
-    agreement comparison (`polish.boundaries_agree`). `--refine region`
+    Unlike `search_localize`'s single gene-level tblastn hit, this parses
+    per-exon GFF lines (`\\texon\\t...`), not just the gene-level line, so the
+    returned `PolishModel.exons` reflect real intron/exon structure -- needed
+    for cross-tool exon-boundary agreement comparison
+    (`polish.boundaries_agree`). `--refine region`
     (verified against the real exonerate 2.4.0 binary) re-optimizes the
     alignment within the region bounded by the initial model, which is why
     this is run against an already-localized, padded window rather than the
@@ -462,16 +374,15 @@ def polish_with_exonerate(
     unwindowed and against a sliced window fasta) emits, among other lines
     (`cds`, `splice5`, `intron`, `splice3`, `similarity`) that this parser
     ignores: a `gene` line carrying `sequence <query_id>` and
-    `identity <pct>` in its attribute string (identical shape to
-    `search_genomic`'s gene-line parsing), and one `exon` line per exon whose
-    attribute string additionally carries `identity`/`similarity` fields
-    beyond `insertions`/`deletions` -- irrelevant here since only the exon
-    line's start/end columns are used, not its attributes.
+    `identity <pct>` in its attribute string, and one `exon` line per exon
+    whose attribute string additionally carries `identity`/`similarity`
+    fields beyond `insertions`/`deletions` -- irrelevant here since only the
+    exon line's start/end columns are used, not its attributes.
 
     Returns None -- rather than a placeholder model -- when exonerate reports
     no gene for this window, or when the hit resolves to a different gene,
     an unattributable record, or a family/role exonerate's `family` does not
-    expect, matching `search_genomic`'s existing drop-rather-than-fabricate
+    expect, matching `polish_with_miniprot`'s drop-rather-than-fabricate
     convention for attribution failures.
     """
     roles_by_family = _roles_by_family([family])

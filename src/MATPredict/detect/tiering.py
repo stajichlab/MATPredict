@@ -1,5 +1,8 @@
 """Per-family confidence tiering -- see spec section
-"Boundary calling and confidence tiering" for the rule this encodes."""
+"Boundary calling and confidence tiering" for the rule this encodes. When
+any gene in a family is left unpolished (neither miniprot nor exonerate
+--refine could confirm it), the tier is capped at Medium regardless of
+flanking genes."""
 from __future__ import annotations
 
 from MATPredict.detect.clustering import GeneCluster
@@ -17,7 +20,7 @@ def assign_tier(
     score: FamilyScore,
     family: Family,
     cluster: GeneCluster,
-    second_pass_used: bool,
+    any_gene_unpolished: bool,
     fragmented: bool,
 ) -> str:
     core_genes = {g["name"] for g in family.genes if g["role"] == "core_MAT"}
@@ -33,7 +36,7 @@ def assign_tier(
         # therefore Low; any richer partial match stays Medium.
         isolated_single_hit = len(score.genes_found) <= 1 and len(family.genes) > 1
         tier = "low" if score.fraction_found == 0 or isolated_single_hit else "medium"
-    elif second_pass_used:
+    elif any_gene_unpolished:
         tier = "medium"
     elif has_flanking_conserved(family):
         flanking_found = any(

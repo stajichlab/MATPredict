@@ -20,19 +20,19 @@ def test_has_flanking_conserved():
 def test_flankless_family_high_tier_on_all_core_genes_found():
     score = FamilyScore(FLANKLESS.key, 1.0, ["mfa1", "pra1"], [])
     cluster = GeneCluster("c1", 1, 100, [])
-    assert assign_tier(score, FLANKLESS, cluster, second_pass_used=False, fragmented=False) == "high"
+    assert assign_tier(score, FLANKLESS, cluster, any_gene_unpolished=False, fragmented=False) == "high"
 
 
 def test_flanked_family_medium_tier_when_core_gene_only_found_via_second_pass():
     score = FamilyScore(FLANKED.key, 1.0, ["STE3", "flank1"], [])
     cluster = GeneCluster("c1", 1, 100, [])
-    assert assign_tier(score, FLANKED, cluster, second_pass_used=True, fragmented=False) == "medium"
+    assert assign_tier(score, FLANKED, cluster, any_gene_unpolished=True, fragmented=False) == "medium"
 
 
 def test_flanked_family_medium_tier_when_no_flanking_gene_found():
     score = FamilyScore(FLANKED.key, 0.5, ["STE3"], ["flank1"])
     cluster = GeneCluster("c1", 1, 100, [])
-    assert assign_tier(score, FLANKED, cluster, second_pass_used=False, fragmented=False) == "medium"
+    assert assign_tier(score, FLANKED, cluster, any_gene_unpolished=False, fragmented=False) == "medium"
 
 
 def test_isolated_single_hit_is_low():
@@ -42,7 +42,7 @@ def test_isolated_single_hit_is_low():
     emits -- making the tier dead code."""
     score = FamilyScore(FLANKLESS.key, 0.5, ["mfa1"], ["pra1"])
     cluster = GeneCluster("c1", 1, 100, [])
-    assert assign_tier(score, FLANKLESS, cluster, second_pass_used=False, fragmented=False) == "low"
+    assert assign_tier(score, FLANKLESS, cluster, any_gene_unpolished=False, fragmented=False) == "low"
 
 
 def test_partial_match_with_several_genes_is_medium():
@@ -52,10 +52,10 @@ def test_partial_match_with_several_genes_is_medium():
                      {"name": "g3", "role": "core_MAT"}, {"name": "g4", "role": "core_MAT"}], [1])
     score = FamilyScore(family.key, 0.5, ["g1", "g2"], ["g3", "g4"])
     cluster = GeneCluster("c1", 1, 100, [])
-    assert assign_tier(score, family, cluster, second_pass_used=False, fragmented=False) == "medium"
+    assert assign_tier(score, family, cluster, any_gene_unpolished=False, fragmented=False) == "medium"
 
 
 def test_fragmented_locus_downgraded_one_tier():
     score = FamilyScore(FLANKLESS.key, 1.0, ["mfa1", "pra1"], [])
     cluster = GeneCluster("c1", 1, 100, [])
-    assert assign_tier(score, FLANKLESS, cluster, second_pass_used=False, fragmented=True) == "medium"
+    assert assign_tier(score, FLANKLESS, cluster, any_gene_unpolished=False, fragmented=True) == "medium"

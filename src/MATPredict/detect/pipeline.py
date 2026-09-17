@@ -375,7 +375,7 @@ def run_pipeline(
         ambiguous = is_ambiguous(scores_in_context, floor=ambiguity_floor)
         tier = assign_tier(
             score, family, member_clusters[0],
-            second_pass_used=_second_pass_used([id(c) for c in member_clusters], score.family_key),
+            any_gene_unpolished=_second_pass_used([id(c) for c in member_clusters], score.family_key),
             fragmented=fragmented,
         )
         short_genes = short_orf_by_family.get(score.family_key, set())

@@ -134,3 +134,52 @@ def test_short_orf_gene_reported_as_not_searchable_not_missing(tmp_path):
     )
     assert results[0].genes_missing == []
     assert results[0].genes_not_searchable == ["mfa1"]
+
+
+def test_short_orf_split_discriminates_three_buckets(tmp_path):
+    """Three core genes, three distinct fates: mfa1 is short (41 aa) and
+    genuinely never found -> genes_not_searchable. pra2 is normal-length and
+    genuinely never found -> genes_missing. pra1 is found -> genes_found.
+    A test with only one gene per bucket can't tell "correctly bucketed" from
+    "coincidentally correct because nothing else is missing" -- this proves
+    the split logic actually discriminates across all three cases at once."""
+    three_gene_family = Family(
+        FamilyKey("P", "aLocus"), "pattern", None, "^a[0-9]+$",
+        [{"name": "mfa1", "role": "core_MAT"},
+         {"name": "pra1", "role": "core_MAT"},
+         {"name": "pra2", "role": "core_MAT"}],
+        [1],
+    )
+    (tmp_path / "P").mkdir(parents=True)
+    (tmp_path / "P" / "order.yml").write_text(
+        "phylum: P\nloci:\n  - locus_name: aLocus\n    vocabulary_type: pattern\n"
+        "    idiomorph_pattern: \"^a[0-9]+$\"\n    taxonomic_scope: [1]\n"
+        "    genes:\n      - {name: mfa1, role: core_MAT}\n      - {name: pra1, role: core_MAT}\n"
+        "      - {name: pra2, role: core_MAT}\n"
+    )
+    reference_dir = tmp_path / "P" / "Fam" / "rec1"
+    reference_dir.mkdir(parents=True)
+    (reference_dir / "proteins.faa").write_text(
+        ">rec1|gene_index=0|name=mfa1|role=core_MAT\n" + "M" * 41 + "\n"
+        ">rec1|gene_index=1|name=pra1|role=core_MAT\n" + "M" * 300 + "\n"
+        ">rec1|gene_index=2|name=pra2|role=core_MAT\n" + "M" * 300 + "\n"
+    )
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, runner=None):
+        return [SearchHit(three_gene_family.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1",
+                           "diamond_proteome")]
+
+    def fake_genomic(*args, **kwargs):
+        return []  # neither mfa1 nor pra2 is found even after the relaxed second pass
+
+    results = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+        ambiguity_floor=0.3,  # only 1 of 3 genes is found by design -- lower the floor
+        # so this single-family cluster still clears scoring and isn't dropped,
+        # without needing a fourth gene just to satisfy an unrelated threshold.
+    )
+    assert results[0].genes_found == ["pra1"]
+    assert results[0].genes_missing == ["pra2"]
+    assert results[0].genes_not_searchable == ["mfa1"]

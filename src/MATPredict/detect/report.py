@@ -28,6 +28,7 @@ def write_detection_report(results: list[DetectionResult], out_path: Path) -> No
             "ambiguous_with": [f"{k.phylum}:{k.locus_name}" for k in r.ambiguous_with],
             "genes_found": r.genes_found,
             "genes_missing": r.genes_missing,
+            "genes_not_searchable": r.genes_not_searchable,
             "fragmented": r.fragmented,
         }
         for r in results

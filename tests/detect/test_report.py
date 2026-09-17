@@ -8,7 +8,8 @@ from MATPredict.detect.report import write_detection_gff3, write_detection_repor
 RESULT = DetectionResult(
     family_key=FamilyKey("Basidiomycota", "aLocus"), contig="c1", start=100, end=6443,
     confidence="high", idiomorph="undetermined", ambiguous_with=[],
-    genes_found=["mfa1", "pra1"], genes_missing=[], fragmented=False,
+    genes_found=["pra1"], genes_missing=[], fragmented=False,
+    genes_not_searchable=["mfa1"],
 )
 
 
@@ -27,3 +28,4 @@ def test_write_detection_report(tmp_path):
     assert doc[0]["family"] == "Basidiomycota:aLocus"
     assert doc[0]["confidence"] == "high"
     assert doc[0]["genes_missing"] == []
+    assert doc[0]["genes_not_searchable"] == ["mfa1"]

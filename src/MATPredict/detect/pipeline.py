@@ -7,20 +7,25 @@ docs/superpowers/specs/2026-09-17-mat-detection-search-localization-design.md):
   `tblastn` localization (`search_localize`) over every routed family's
   reference proteins, clustered once by `cluster_hits`. Every gene that
   `tblastn` localized in a cluster is then polished.
-* **Fast-path rescue** (a proteome was supplied): `search_fast_path` runs as
-  before; a cluster/family that has a foothold but is still missing one of its
-  own `core_MAT` genes skips localization entirely -- a rough location already
-  exists -- and polishes that one gene directly against a window padded around
-  the *existing* cluster's span.
-* **Fast-path zero-hit rescue** (a proteome was supplied): a routed family with
-  NO fast-path hit at all has no foothold and therefore no window to polish
-  against, so it gets one batched `search_localize` (`tblastn`) call covering
-  every zero-hit family at once -- never one call per family. This is the blind
-  spot the whole pipeline exists to close: a short pheromone-precursor gene that
-  a supplied genome annotation simply does not contain cannot be found by
-  searching that annotation. The rescued `tblastn` hits are clustered together
-  with the fast-path hits and are polished exactly like any other localized
-  cluster.
+* **Fast-path windowed rescue** (a proteome was supplied): `search_fast_path`
+  runs as before; a cluster/family that has a foothold but is still missing one
+  of its own `core_MAT` genes polishes that one gene directly against a window
+  padded around the *existing* cluster's span -- a rough location already
+  exists.
+* **Fast-path localization rescue** (a proteome was supplied): ONE batched
+  `search_localize` (`tblastn`) call, never one per family, covering both
+  * every routed family with NO fast-path hit at all (no foothold, so no window
+    to polish against), for its whole gene set, and
+  * every family with a PARTIAL foothold, restricted to the specific `core_MAT`
+    genes the proteome did not place (see `_localization_rescue_targets`).
+  This is the blind spot the whole pipeline exists to close: a short
+  pheromone-precursor gene that a supplied genome annotation simply does not
+  contain cannot be found by searching that annotation, and it need not sit
+  inside the narrow window around whatever else of its family WAS annotated.
+  The rescued `tblastn` hits are clustered together with the fast-path hits and
+  are polished exactly like any other localized cluster. Both rescues run: the
+  windowed one refines the neighbourhood already known, the localization one
+  looks genome-wide.
 
 Polish eligibility is therefore decided per (cluster, family, gene), never by a
 single global "am I in genome-only mode" flag: a gene is polished when it was
@@ -248,6 +253,70 @@ def _families_with_a_foothold(cluster: GeneCluster, families: list[Family]) -> l
     missing core gene, keyed strictly by that family's family_key."""
     families_with_hits = {h.family_key for h in cluster.hits}
     return [f for f in families if f.key in families_with_hits]
+
+
+def _localization_rescue_targets(
+    fast_path_hits: list[SearchHit], families: list[Family]
+) -> tuple[list[Family], dict[FamilyKey, set[str] | None]]:
+    """Which families need the batched genome-wide `tblastn` rescue, and for
+    which of their genes.
+
+    Two shapes qualify, and they are served by the SAME batched
+    `search_localize` call (one `makeblastdb` + one `tblastn` per run, never
+    one per family):
+
+    * **Zero fast-path hits** -- no foothold at all, so there is no window to
+      polish against. The whole family's gene set is in scope, recorded as
+      `None` ("no gene restriction").
+    * **Partial foothold** -- the proteome placed some of the family's genes
+      but not all of its `core_MAT` ones. Only those specific missing genes
+      are in scope. Without this, a family with PARTIAL annotation coverage
+      would get LESS search than a family with NONE: the only thing looked at
+      for its missing gene would be a narrow `+-(6*aa + 2000) bp` window
+      around its existing cluster (~+-3kb for a 100-aa reference protein).
+      That is exactly this project's own motivating case -- a pheromone
+      receptor correctly annotated while the short pheromone precursor beside
+      it is absent from the same genome's own annotation -- and the missing
+      gene is not guaranteed to sit inside that narrow window.
+
+    The narrow windowed rescue around the existing cluster still runs as
+    before (see `_missing_core_genes` in the polish loop); this adds a
+    genome-wide look for the same gene, whose hits flow into the ordinary
+    clustering/polish machinery like any other localized hit.
+
+    Gene scope is computed per family from that family's OWN fast-path hits,
+    never pooled across families -- gene names are reused across families, so
+    one family's found gene must never mask another's absence.
+    """
+    found_by_family: dict[FamilyKey, set[str]] = {}
+    for hit in fast_path_hits:
+        found_by_family.setdefault(hit.family_key, set()).add(hit.gene_name)
+
+    rescue_families: list[Family] = []
+    genes_by_family: dict[FamilyKey, set[str] | None] = {}
+    for family in families:
+        found = found_by_family.get(family.key)
+        if found is None:
+            rescue_families.append(family)
+            genes_by_family[family.key] = None  # no foothold: the whole family
+            continue
+        missing_core = {
+            g["name"] for g in family.genes if g["role"] == "core_MAT"
+        } - found
+        if missing_core:
+            rescue_families.append(family)
+            genes_by_family[family.key] = missing_core
+    return rescue_families, genes_by_family
+
+
+def _is_rescue_target(
+    hit: SearchHit, genes_by_family: dict[FamilyKey, set[str] | None]
+) -> bool:
+    """True when a batched-rescue hit is one the rescue was actually run for."""
+    if hit.family_key not in genes_by_family:
+        return False
+    allowed = genes_by_family[hit.family_key]
+    return allowed is None or hit.gene_name in allowed
 
 
 def _contig_lengths(genome_fasta: Path) -> dict[str, int]:
@@ -645,11 +714,12 @@ def run_pipeline(
     # The genome-only path localizes with a single batched genome-wide tblastn
     # call covering every routed family. The fast path uses the supplied
     # proteome, then falls back to ONE batched tblastn localization covering
-    # every family the proteome produced no hit for at all: such a family has no
-    # cluster, so there is no window to polish against and it would otherwise be
-    # reported "not detected" without ever being looked for in the genome --
-    # exactly the blind spot (a gene absent from a genome's own annotation) this
-    # pipeline exists to close.
+    # both every family the proteome produced no hit for at all (no cluster, so
+    # no window to polish against) and every partially-annotated family's own
+    # specific missing core_MAT genes. Without the latter, a family with PARTIAL
+    # annotation coverage would get LESS search than one with none -- see
+    # `_localization_rescue_targets`. Either way this is the blind spot (a gene
+    # absent from a genome's own annotation) this pipeline exists to close.
     hits: list[SearchHit] = []
     # id() of every hit that came from tblastn localization (either path). Used
     # to decide, per cluster and family, which genes need their approximate HSP
@@ -661,20 +731,20 @@ def run_pipeline(
     localized_hit_ids: set[int] = set()
     if proteome_fasta is not None:
         hits.extend(search_fast_path(proteome_fasta, families, reference_fasta, record_families))
-        families_with_hits = {h.family_key for h in hits}
-        zero_hit_families = [f for f in families if f.key not in families_with_hits]
-        if zero_hit_families:
-            zero_hit_keys = {f.key for f in zero_hit_families}
+        rescue_families, rescue_genes_by_family = _localization_rescue_targets(hits, families)
+        if rescue_families:
             rescued = [
                 h
                 for h in search_localize(
-                    genome_fasta, zero_hit_families, reference_fasta, record_families
+                    genome_fasta, rescue_families, reference_fasta, record_families
                 )
                 # Defence in depth: only the families this rescue was actually
-                # run for may gain hits from it. A family that already had a
-                # fast-path foothold must never have a second, unrelated
-                # location grafted onto it by a batched call it was not part of.
-                if h.family_key in zero_hit_keys
+                # run for may gain hits from it, and a partial-foothold family
+                # may only gain hits for the SPECIFIC genes it was missing. A
+                # family that already found a gene must never have a second,
+                # unrelated location for that gene grafted onto it by a batched
+                # call it was only partly part of.
+                if _is_rescue_target(h, rescue_genes_by_family)
             ]
             localized_hit_ids.update(id(h) for h in rescued)
             hits.extend(rescued)

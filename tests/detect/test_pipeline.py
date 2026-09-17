@@ -47,8 +47,9 @@ def _no_polish(**kwargs):
 
 def _no_localize(*args, **kwargs):
     """A localization search that finds nothing -- injected wherever a fixture
-    has a routed family with zero fast-path hits, so the zero-hit rescue cannot
-    reach a real tblastn binary."""
+    has a routed family with zero fast-path hits, or with a partial foothold
+    still missing a core_MAT gene, so neither batched rescue can reach a real
+    tblastn binary."""
     return []
 
 
@@ -117,10 +118,18 @@ def test_genome_only_path_uses_search_localize_not_search_genomic(tmp_path):
     assert outcome.results[0].genes_found == ["mfa1", "pra1"]
 
 
-def test_fast_path_missing_gene_rescue_skips_localization_and_polishes_directly(tmp_path):
-    """A fast-path cluster missing one core gene goes straight to
+def test_fast_path_missing_gene_is_polished_in_the_existing_clusters_window(tmp_path):
+    """A fast-path cluster missing one core gene is polished by
     polish_with_exonerate/polish_with_miniprot against a window padded around
-    the EXISTING cluster's span, without ever calling search_localize."""
+    the EXISTING cluster's span.
+
+    Finding 5 update: this windowed rescue is no longer the ONLY thing done for
+    a partial-foothold family -- the same missing gene is also included in the
+    batched genome-wide localization rescue (asserted here, and exercised
+    further in
+    `test_partial_foothold_familys_missing_gene_is_rescued_genome_wide`).
+    Before that change, a family with PARTIAL annotation coverage got less
+    search than one with none."""
     _write_order(tmp_path)
     # A 100-aa curated mfa1 -> padding = 100 * 3 * 2.0 + 2000 = 2600 bp per side.
     _write_record(
@@ -134,8 +143,8 @@ def test_fast_path_missing_gene_rescue_skips_localization_and_polishes_directly(
         return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1",
                           "diamond_proteome")]
 
-    def fake_localize(*args, **kwargs):
-        localize_calls.append(args)
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        localize_calls.append([f.key for f in families])
         return []
 
     def fake_exonerate(*, gene_name, window, **kwargs):
@@ -152,7 +161,8 @@ def test_fast_path_missing_gene_rescue_skips_localization_and_polishes_directly(
         search_fast_path=fake_fast_path, search_localize=fake_localize,
         polish_with_exonerate=fake_exonerate, polish_with_miniprot=fake_miniprot,
     )
-    assert localize_calls == []  # Stage 1 skipped entirely
+    # exactly ONE batched localization call, for the partial-foothold family
+    assert localize_calls == [[FAMILY.key]]
     # only the missing gene is polished, by both tools, against the same window
     assert [c[0] for c in polish_calls] == ["exonerate", "miniprot"]
     assert {c[1] for c in polish_calls} == {"mfa1"}
@@ -563,6 +573,58 @@ def test_zero_hit_rescue_is_scoped_to_the_families_it_ran_for(tmp_path):
     assert [r.contig for r in by_family[b_key]] == ["c2"]
 
 
+def test_partial_foothold_familys_missing_gene_is_rescued_genome_wide(tmp_path):
+    """Finding 5 regression: a family with a PARTIAL foothold must get the same
+    batched genome-wide tblastn rescue a zero-hit family gets, restricted to the
+    specific core_MAT genes the proteome did not place.
+
+    This is the project's own motivating case: the pheromone receptor is
+    correctly annotated but the short pheromone precursor beside it is absent
+    from the same genome's own annotation -- and is not guaranteed to sit inside
+    the narrow ~+-3kb window around the annotated gene. Before this fix, a
+    partially-annotated family got LESS search than an unannotated one."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+    localize_calls = []
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        # pra1 annotated on c1; mfa1 entirely absent from the annotation
+        return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1",
+                          "diamond_proteome")]
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        localize_calls.append([f.key for f in families])
+        return [
+            # the real mfa1, far outside the narrow window around c1:300-400
+            _tblastn("mfa1", "c1", 90_000, 90_300),
+            # a stray hit for a gene this family already found -- must be dropped
+            # rather than grafting a second, unrelated pra1 location onto it
+            _tblastn("pra1", "c9", 100, 200),
+        ]
+
+    def polish(*, gene_name, window, **kwargs):
+        if gene_name == "mfa1" and window[0] == "c1" and window[1] > 80_000:
+            return _model("mfa1", "c1", 90_000, 90_300)
+        return None
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path, search_localize=fake_localize,
+        polish_with_exonerate=polish, polish_with_miniprot=polish,
+    )
+    # ONE batched call, and the partial-foothold family is in it
+    assert localize_calls == [[FAMILY.key]]
+    # the rescued mfa1 became its own cluster and was polished there
+    by_contig_start = {(r.contig, r.start): r for r in outcome.results}
+    rescued = next(r for r in outcome.results if any(e.gene_name == "mfa1" for e in r.gene_evidence))
+    mfa1 = next(e for e in rescued.gene_evidence if e.gene_name == "mfa1")
+    assert (mfa1.contig, mfa1.start, mfa1.end) == ("c1", 90_000, 90_300)
+    assert mfa1.method == "exonerate_refine"
+    # the stray c9 pra1 hit, for a gene this family already had, was dropped
+    assert "c9" not in {contig for contig, _ in by_contig_start}
+
+
 def test_rescued_cluster_with_an_unpolished_gene_is_capped_at_medium(tmp_path):
     """Polish eligibility is per-cluster, not gated on a global "genome-only"
     flag: a tblastn-rescued cluster on the FAST path is polished like any other
@@ -673,6 +735,7 @@ def test_short_orf_gene_reported_as_not_searchable_not_missing(tmp_path):
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path,
+        search_localize=_no_localize,
         # mfa1 is genuinely not found, even by the polish rescue
         polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
@@ -718,6 +781,7 @@ def test_short_orf_split_discriminates_three_buckets(tmp_path):
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path,
+        search_localize=_no_localize,
         # neither mfa1 nor pra2 is found, even by the polish rescue
         polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
         ambiguity_floor=0.3,  # only 1 of 3 genes is found by design -- lower the floor
@@ -836,7 +900,7 @@ def test_isolated_single_hit_is_low_tier(tmp_path):
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
-        search_fast_path=fake_fast_path,
+        search_fast_path=fake_fast_path, search_localize=_no_localize,
         polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
     assert outcome.results[0].confidence == "low"

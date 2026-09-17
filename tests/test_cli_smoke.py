@@ -10,6 +10,14 @@ from MATPredict.__main__ import main
 from MATPredict.db.validate import validate_record
 
 
+def test_detect_subcommand_registered():
+    from MATPredict.__main__ import build_parser
+    parser = build_parser()
+    args = parser.parse_args(["detect", "--genome", "g.fa", "--out-dir", "/tmp/x"])
+    assert args.command == "detect"
+    assert args.genome == "g.fa"
+
+
 def test_help_exits_zero(capsys):
     exit_code = main(["curate-db", "--help"])
     assert exit_code == 0

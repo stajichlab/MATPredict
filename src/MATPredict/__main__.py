@@ -6,6 +6,7 @@ import sys
 
 from MATPredict import __version__, logger
 from MATPredict.db.cli import register_subcommands
+from MATPredict.detect.cli import register_subcommands as register_detect_subcommands
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -15,6 +16,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose/debug logging")
     subparsers = parser.add_subparsers(dest="command", required=True)
     register_subcommands(subparsers)
+    register_detect_subcommands(subparsers)
     return parser
 
 

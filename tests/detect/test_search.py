@@ -529,9 +529,10 @@ def test_polish_with_miniprot_returns_none_when_gene_name_mismatches(tmp_path):
 # than one gene. Captured from the real binaries against the real curated
 # Basidiomycota:Aalpha Z and Y proteins placed in one contig:
 #
-#   exonerate 2.4.0 emits one `gene` line per alignment, BEST-SCORING FIRST,
-#   each followed by its own `exon` lines, with `gene_id` restarting at 1 for
-#   every alignment (so gene_id cannot group them -- position does).
+#   exonerate 2.4.0 emits one `gene` line per alignment, in its own internal
+#   order (not reliably by score), each followed by its own `exon` lines, with
+#   `gene_id` restarting at 1 for every alignment (so gene_id cannot group
+#   them -- position does).
 #   miniprot 0.18-r281 emits one `mRNA` per aligning query in QUERY ORDER,
 #   each with its own Parent-linked `CDS` lines.
 #
@@ -539,7 +540,7 @@ def test_polish_with_miniprot_returns_none_when_gene_name_mismatches(tmp_path):
 # (mfa1/pra1): the NON-requested gene's alignment comes first in both.
 
 EXONERATE_TWO_GENE_GFF = (
-    # pra1 first (exonerate orders by score), with its own exons
+    # pra1 first, with its own exons -- the requested gene is NOT first
     "c1\texonerate\tgene\t2001\t2400\t4745\t+\t.\t"
     "gene_id 1 ; sequence rec1|gene1|pra1 ; gene_orientation . ; identity 88.00\n"
     "c1\texonerate\texon\t2001\t2100\t.\t+\t.\tinsertions 0 ; deletions 0\n"

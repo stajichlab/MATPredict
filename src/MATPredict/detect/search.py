@@ -459,8 +459,10 @@ def polish_with_exonerate(
     EVERY alignment in the output is parsed, not just the first. Verified
     against the real exonerate 2.4.0 binary with the real curated
     `Basidiomycota:Aalpha` `Z` and `Y` proteins placed in one window:
-    exonerate emits one `gene` line per alignment, best-scoring first, each
-    followed by its OWN `exon` lines, and the `gene_id` attribute restarts at
+    exonerate emits one `gene` line per alignment, in its own internal order
+    (NOT reliably by score -- in that run the lower-scoring Y alignment was
+    emitted before the higher-scoring Z one), each followed by its OWN `exon`
+    lines, and the `gene_id` attribute restarts at
     `1` for every alignment -- so `gene_id` is NOT a usable grouping key and
     grouping is done positionally instead (a `gene` line opens a new record;
     subsequent `exon` lines belong to it). Collecting every `exon` line into

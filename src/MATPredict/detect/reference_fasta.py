@@ -4,6 +4,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from MATPredict import logger
+
 _HEADER_RE = re.compile(
     r"^>(?P<record_id>[^|]+)\|gene_index=(?P<gene_index>\d+)\|name=(?P<name>[^|]+)\|role=(?P<role>.+)$"
 )
@@ -24,6 +26,7 @@ def build_reference_fasta(db_root: Path, out_path: Path) -> Path:
             header, _, seq = chunk.partition("\n")
             m = _HEADER_RE.match(">" + header)
             if not m:
+                logger.warning(f"Skipping malformed header in {faa}: >{header}")
                 continue
             lines.append(f">{m['record_id']}|gene{m['gene_index']}|{m['name']}")
             lines.append(seq.rstrip("\n"))

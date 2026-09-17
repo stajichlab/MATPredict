@@ -17,7 +17,12 @@ docs/superpowers/specs/2026-09-17-mat-detection-search-localization-design.md):
   * every routed family with NO fast-path hit at all (no foothold, so no window
     to polish against), for its whole gene set, and
   * every family with a PARTIAL foothold, restricted to the specific `core_MAT`
-    genes the proteome did not place (see `_localization_rescue_targets`).
+    genes the proteome did not place in some *individual* fast-path cluster of
+    that family (see `_localization_rescue_targets`). Eligibility is keyed per
+    `(family, gene, cluster)`, never per `(family, gene)`: a family can have
+    more than one real, independent locus in one genome (tetrapolar species
+    with unlinked loci; homothallic/heterothallic switching-cassette species),
+    so a gene found in cluster A is no evidence that cluster B has it.
   This is the blind spot the whole pipeline exists to close: a short
   pheromone-precursor gene that a supplied genome annotation simply does not
   contain cannot be found by searching that annotation, and it need not sit
@@ -255,9 +260,60 @@ def _families_with_a_foothold(cluster: GeneCluster, families: list[Family]) -> l
     return [f for f in families if f.key in families_with_hits]
 
 
+@dataclass(frozen=True)
+class _RescueScope:
+    """Which families the one batched genome-wide `tblastn` rescue runs for, and
+    which of the hits it returns may be kept.
+
+    The `tblastn` call itself always queries a family's FULL expected gene set,
+    so this object only decides post-hoc which returned hits are folded back in.
+    """
+
+    #: The families passed to `search_localize` (one batched call for all).
+    families: list[Family]
+    #: family -> genes this rescue may contribute for that family. `None` means
+    #: "no gene restriction": the family had no fast-path cluster at all, so its
+    #: whole expected gene set is in scope.
+    genes_by_family: dict[FamilyKey, set[str] | None]
+    #: family -> [(fast-path cluster, that cluster's own found gene names for
+    #: THIS family)], used to keep a rescue hit from being grafted onto a
+    #: cluster that already has that gene.
+    clusters_by_family: dict[FamilyKey, list[tuple[GeneCluster, set[str]]]]
+
+    def accepts(self, hit: SearchHit, max_gap: int) -> bool:
+        """True when a batched-rescue hit is one this rescue was actually run for.
+
+        Three independent conditions, all defence in depth against the batched
+        call returning more than any one family asked for:
+
+        1. the hit's family must be one the rescue ran for at all;
+        2. its gene must be one that family was missing SOMEWHERE (the whole
+           gene set when the family had no cluster);
+        3. it must not land on/next to a fast-path cluster of that family that
+           ALREADY has that gene. Condition 2 is now per-cluster, so gene X can
+           be in scope purely because cluster B lacks it; without condition 3 a
+           genome-wide hit for X sitting on cluster A -- which already found X
+           -- would be merged into cluster A, making A's already-annotated gene
+           a polish candidate and letting a failed polish there cap A's tier.
+           Proximity is judged with the same `max_gap` `cluster_hits` uses, so
+           the test is "would this hit merge into that cluster".
+        """
+        if hit.family_key not in self.genes_by_family:
+            return False
+        allowed = self.genes_by_family[hit.family_key]
+        if allowed is not None and hit.gene_name not in allowed:
+            return False
+        for cluster, found in self.clusters_by_family.get(hit.family_key, ()):
+            if hit.gene_name not in found or hit.contig != cluster.contig:
+                continue
+            if hit.start <= cluster.end + max_gap and hit.end >= cluster.start - max_gap:
+                return False
+        return True
+
+
 def _localization_rescue_targets(
-    fast_path_hits: list[SearchHit], families: list[Family]
-) -> tuple[list[Family], dict[FamilyKey, set[str] | None]]:
+    fast_path_clusters: list[GeneCluster], families: list[Family]
+) -> _RescueScope:
     """Which families need the batched genome-wide `tblastn` rescue, and for
     which of their genes.
 
@@ -279,6 +335,17 @@ def _localization_rescue_targets(
       it is absent from the same genome's own annotation -- and the missing
       gene is not guaranteed to sit inside that narrow window.
 
+    "Missing" is asked per CLUSTER, not per family: a family's genes are
+    collected per fast-path cluster (`_missing_core_genes`) and the family's
+    rescue gene set is the UNION of what each of its own clusters lacks. A
+    family legitimately has more than one independent locus in one genome
+    (tetrapolar unlinked loci; homothallic/heterothallic switching cassettes),
+    so gene X being present in cluster A says nothing about cluster B, and the
+    family-wide question "is X missing anywhere?" would have answered "no" and
+    denied cluster B the genome-wide look. Which cluster a kept hit ends up in
+    is then decided spatially by `cluster_hits`, not by which cluster made the
+    gene eligible.
+
     The narrow windowed rescue around the existing cluster still runs as
     before (see `_missing_core_genes` in the polish loop); this adds a
     genome-wide look for the same gene, whose hits flow into the ordinary
@@ -288,35 +355,28 @@ def _localization_rescue_targets(
     never pooled across families -- gene names are reused across families, so
     one family's found gene must never mask another's absence.
     """
-    found_by_family: dict[FamilyKey, set[str]] = {}
-    for hit in fast_path_hits:
-        found_by_family.setdefault(hit.family_key, set()).add(hit.gene_name)
+    clusters_by_family: dict[FamilyKey, list[tuple[GeneCluster, set[str]]]] = {}
+    for cluster in fast_path_clusters:
+        for family in families:
+            found = {h.gene_name for h in cluster.hits if h.family_key == family.key}
+            if found:
+                clusters_by_family.setdefault(family.key, []).append((cluster, found))
 
     rescue_families: list[Family] = []
     genes_by_family: dict[FamilyKey, set[str] | None] = {}
     for family in families:
-        found = found_by_family.get(family.key)
-        if found is None:
+        own = clusters_by_family.get(family.key)
+        if not own:
             rescue_families.append(family)
             genes_by_family[family.key] = None  # no foothold: the whole family
             continue
-        missing_core = {
-            g["name"] for g in family.genes if g["role"] == "core_MAT"
-        } - found
+        missing_core: set[str] = set()
+        for cluster, _found in own:
+            missing_core |= _missing_core_genes(cluster, family)
         if missing_core:
             rescue_families.append(family)
             genes_by_family[family.key] = missing_core
-    return rescue_families, genes_by_family
-
-
-def _is_rescue_target(
-    hit: SearchHit, genes_by_family: dict[FamilyKey, set[str] | None]
-) -> bool:
-    """True when a batched-rescue hit is one the rescue was actually run for."""
-    if hit.family_key not in genes_by_family:
-        return False
-    allowed = genes_by_family[hit.family_key]
-    return allowed is None or hit.gene_name in allowed
+    return _RescueScope(rescue_families, genes_by_family, clusters_by_family)
 
 
 def _contig_lengths(genome_fasta: Path) -> dict[str, int]:
@@ -731,20 +791,30 @@ def run_pipeline(
     localized_hit_ids: set[int] = set()
     if proteome_fasta is not None:
         hits.extend(search_fast_path(proteome_fasta, families, reference_fasta, record_families))
-        rescue_families, rescue_genes_by_family = _localization_rescue_targets(hits, families)
-        if rescue_families:
+        # Cluster the fast-path hits FIRST, purely to answer "which genes is
+        # each individual existing locus of this family missing?". This is a
+        # pure in-memory grouping (`cluster_hits`), not another search, and it
+        # is what makes rescue eligibility per (family, gene, cluster) instead
+        # of per (family, gene): a family with an unlinked second locus must
+        # get a genome-wide look for a gene its OTHER locus already has. The
+        # definitive clustering still happens once below, over the fast-path
+        # and rescued hits together, so a rescued hit that lands inside an
+        # existing cluster joins it and one that lands elsewhere seeds a new
+        # cluster -- exactly as before this change.
+        rescue_scope = _localization_rescue_targets(
+            cluster_hits(hits, max_gap=max_gap), families
+        )
+        if rescue_scope.families:
             rescued = [
                 h
                 for h in search_localize(
-                    genome_fasta, rescue_families, reference_fasta, record_families
+                    genome_fasta, rescue_scope.families, reference_fasta, record_families
                 )
                 # Defence in depth: only the families this rescue was actually
-                # run for may gain hits from it, and a partial-foothold family
-                # may only gain hits for the SPECIFIC genes it was missing. A
-                # family that already found a gene must never have a second,
-                # unrelated location for that gene grafted onto it by a batched
-                # call it was only partly part of.
-                if _is_rescue_target(h, rescue_genes_by_family)
+                # run for may gain hits from it, only for the genes some cluster
+                # of theirs was missing, and never on top of a cluster that
+                # already has that gene (see `_RescueScope.accepts`).
+                if rescue_scope.accepts(h, max_gap)
             ]
             localized_hit_ids.update(id(h) for h in rescued)
             hits.extend(rescued)

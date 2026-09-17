@@ -625,6 +625,128 @@ def test_partial_foothold_familys_missing_gene_is_rescued_genome_wide(tmp_path):
     assert "c9" not in {contig for contig, _ in by_contig_start}
 
 
+def test_second_independent_cluster_gets_its_own_genome_wide_rescue(tmp_path):
+    """Cluster-aware rescue eligibility: rescue is keyed per
+    (family, gene, cluster), never per (family, gene).
+
+    A family legitimately has more than one real, independent locus in one
+    genome -- tetrapolar species with unlinked loci, and
+    homothallic/heterothallic switching-cassette species. Here cluster A (c1)
+    has BOTH core genes from the annotation while cluster B (c2) has only
+    pra1. Asking the family-wide question "is mfa1 missing anywhere?" answers
+    "no -- it is in cluster A", which is how cluster B used to be denied the
+    genome-wide look and left with only the narrow ~+-2kb window around its own
+    span. Cluster B's own copy of mfa1 sits at c2:10_000, far outside that
+    window, so only a genome-wide rescue can reach it.
+
+    The second half of the test is the attribution question: the rescue is
+    batched and genome-wide, so it also returns an mfa1 hit sitting on top of
+    cluster A, which already has mfa1. That hit must be dropped, so cluster A
+    keeps its own annotated mfa1 and is neither re-polished nor widened by a
+    rescue that cluster B triggered."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+    localize_calls = []
+    polish_windows = []
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        return [
+            # cluster A on c1: complete, both core genes annotated
+            SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
+            SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
+            # cluster B on c2: an independent second locus, missing mfa1
+            SearchHit(FAMILY.key, "pra1", "core_MAT", "c2", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
+        ]
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        localize_calls.append([f.key for f in families])
+        return [
+            # cluster B's real mfa1: same contig as cluster B, within max_gap of
+            # it so it joins that cluster, but far outside the narrow windowed
+            # rescue around c2:300-400 that is all cluster B used to get.
+            _tblastn("mfa1", "c2", 10_000, 10_200),
+            # a batched-call by-catch hit for mfa1 landing on cluster A, which
+            # already has mfa1 -- must not be grafted onto cluster A
+            _tblastn("mfa1", "c1", 150, 250),
+        ]
+
+    def polish(*, gene_name, window, **kwargs):
+        polish_windows.append((gene_name, window))
+        if gene_name == "mfa1" and window[0] == "c2":
+            return _model("mfa1", "c2", 10_000, 10_200)
+        return None
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path, search_localize=fake_localize,
+        polish_with_exonerate=polish, polish_with_miniprot=polish,
+    )
+    # The genome-wide rescue ran at all -- under family-wide eligibility mfa1
+    # counted as "found" and search_localize would never have been called.
+    assert localize_calls == [[FAMILY.key]]
+
+    by_contig = {}
+    for result in outcome.results:
+        by_contig.setdefault(result.contig, []).append(result)
+
+    # cluster B got mfa1 from the genome-wide rescue, in its own cluster
+    assert len(by_contig["c2"]) == 1
+    cluster_b = by_contig["c2"][0]
+    assert sorted(cluster_b.genes_found) == ["mfa1", "pra1"]
+    b_mfa1 = next(e for e in cluster_b.gene_evidence if e.gene_name == "mfa1")
+    assert (b_mfa1.contig, b_mfa1.start, b_mfa1.end) == ("c2", 10_000, 10_200)
+    assert b_mfa1.method == "exonerate_refine"
+
+    # cluster A is untouched: its mfa1 is still its own annotated one, and the
+    # rescue's c1 by-catch was never folded in or polished.
+    assert len(by_contig["c1"]) == 1
+    cluster_a = by_contig["c1"][0]
+    a_mfa1 = next(e for e in cluster_a.gene_evidence if e.gene_name == "mfa1")
+    assert (a_mfa1.start, a_mfa1.end) == (100, 200)
+    assert a_mfa1.method == "diamond_proteome"
+    assert cluster_a.confidence == "high"
+    assert [w for _gene, w in polish_windows if w[0] == "c1"] == []
+    # every polish window opened was for cluster B's missing gene
+    assert {gene for gene, _w in polish_windows} == {"mfa1"}
+
+
+def test_rescue_eligibility_is_scoped_per_family_gene_and_cluster(tmp_path):
+    """Unit-level check of the eligibility rule itself, including the zero-hit
+    case this change must not regress."""
+    b_family = Family(FamilyKey("P", "bLocus"), "pattern", None, "^b[0-9]+$",
+                      [{"name": "mfa1", "role": "core_MAT"}], [1])
+    complete = SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome")
+    complete2 = SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")
+    partial = SearchHit(FAMILY.key, "pra1", "core_MAT", "c2", 300, 400, "+", 95.0, "rec1", "diamond_proteome")
+
+    from MATPredict.detect.clustering import cluster_hits
+
+    # bLocus has no hits at all -> whole gene set in scope (the original
+    # zero-hit behaviour, unchanged).
+    scope = pipeline_module._localization_rescue_targets(
+        cluster_hits([complete, complete2, partial], max_gap=25_000), [FAMILY, b_family]
+    )
+    assert scope.genes_by_family[b_family.key] is None
+    # aLocus is eligible only for mfa1, and only because cluster B lacks it
+    assert scope.genes_by_family[FAMILY.key] == {"mfa1"}
+    assert [f.key for f in scope.families] == [FAMILY.key, b_family.key]
+
+    # a gene neither cluster is missing is never in scope
+    assert not scope.accepts(_tblastn("pra1", "c9", 100, 200), 25_000)
+    # cluster B's missing gene is in scope anywhere it is not already covered
+    assert scope.accepts(_tblastn("mfa1", "c2", 10_000, 10_200), 25_000)
+    # ...but not on top of cluster A, which already has mfa1
+    assert not scope.accepts(_tblastn("mfa1", "c1", 150, 250), 25_000)
+    # a far-away second mfa1 location on cluster A's contig is still allowed:
+    # it cannot be folded into cluster A, so it is a candidate new locus
+    assert scope.accepts(_tblastn("mfa1", "c1", 500_000, 500_200), 25_000)
+    # the zero-hit family's own gene names are accepted for its own key only
+    assert scope.accepts(_tblastn("mfa1", "c1", 150, 250, family_key=b_family.key), 25_000)
+    # a family the rescue never ran for gains nothing
+    assert not scope.accepts(_tblastn("mfa1", "c1", 150, 250, family_key=FamilyKey("P", "zLocus")), 25_000)
+
+
 def test_rescued_cluster_with_an_unpolished_gene_is_capped_at_medium(tmp_path):
     """Polish eligibility is per-cluster, not gated on a global "genome-only"
     flag: a tblastn-rescued cluster on the FAST path is polished like any other
@@ -925,6 +1047,10 @@ def test_genes_split_across_contigs_are_one_fragmented_multi_segment_call(tmp_pa
         genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path,
+        # Each of the two clusters is missing one of the family's core genes,
+        # so with cluster-aware rescue eligibility both are now genome-wide
+        # rescue targets and the batched localization runs (finding nothing).
+        search_localize=_no_localize,
         polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
     )
     assert len(outcome.results) == 1
@@ -1008,6 +1134,9 @@ def test_fragmented_family_with_a_separate_independent_cluster_reports_both(tmp_
         genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path,
+        # No single cluster here carries all three core genes, so every cluster
+        # is a cluster-aware rescue target and the batched localization runs.
+        search_localize=_no_localize,
         polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
         ambiguity_floor=0.5,
     )

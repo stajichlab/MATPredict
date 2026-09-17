@@ -8,8 +8,12 @@ python = ">=3.11"
 pip = "*"
 taxonkit = "*"
 # Search binaries `matpredict detect` shells out to (see detect/search.py):
-# diamond for the proteome fast path, exonerate for protein-to-genome fallback.
+# diamond for the proteome fast path; tblastn (blast) for genome-wide
+# localization; miniprot and exonerate (--refine region, on a sliced
+# window) for precision polishing within a localized candidate region.
 diamond = "*"
+blast = "*"
+miniprot = "*"
 exonerate = "*"
 
 [pypi-dependencies]

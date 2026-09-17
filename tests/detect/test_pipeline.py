@@ -410,6 +410,94 @@ def test_same_family_on_two_contigs_each_complete_is_not_fragmented(tmp_path):
     assert all(r.fragmented is False for r in outcome.results)
 
 
+def test_fragmented_family_with_a_separate_independent_cluster_reports_both(tmp_path):
+    """Finding C regression: once a family is judged fragmented (genes split
+    across c1/c2, merged into one multi-segment call), a genuine SEPARATE
+    above-floor cluster for that same family on a third contig (e.g. real
+    duplication) must still be reported on its own -- not silently dropped
+    just because it shares a family_key with the fragmented call.
+
+    Three core genes so the merge (c1 has mfa1+pra1, c2 has pra2) covers the
+    whole family without any single cluster being complete on its own -- c3
+    independently has mfa1+pra1 too (2 of 3, above the ambiguity floor), a
+    real second, unrelated cluster that must not be suppressed."""
+    three_gene_family = Family(
+        FamilyKey("P", "aLocus"), "pattern", None, "^a[0-9]+$",
+        [{"name": "mfa1", "role": "core_MAT"},
+         {"name": "pra1", "role": "core_MAT"},
+         {"name": "pra2", "role": "core_MAT"}],
+        [1],
+    )
+    _write_order(
+        tmp_path,
+        "phylum: P\nloci:\n  - locus_name: aLocus\n    vocabulary_type: pattern\n"
+        "    idiomorph_pattern: \"^a[0-9]+$\"\n    taxonomic_scope: [1]\n"
+        "    genes:\n      - {name: mfa1, role: core_MAT}\n      - {name: pra1, role: core_MAT}\n"
+        "      - {name: pra2, role: core_MAT}\n",
+    )
+    _write_record(tmp_path)
+    genome = tmp_path / "genome.fa"
+    genome.write_text(">c1\n" + "A" * 1000 + "\n>c2\n" + "A" * 1000 + "\n>c3\n" + "A" * 1000 + "\n")
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        return [
+            # c1 + c2 together make one fragmented call.
+            SearchHit(three_gene_family.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
+            SearchHit(three_gene_family.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
+            SearchHit(three_gene_family.key, "pra2", "core_MAT", "c2", 500, 600, "+", 95.0, "rec1", "diamond_proteome"),
+            # c3 independently has 2 of 3 core genes -- a real, separate, incomplete-but-above-floor locus.
+            SearchHit(three_gene_family.key, "mfa1", "core_MAT", "c3", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
+            SearchHit(three_gene_family.key, "pra1", "core_MAT", "c3", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
+        ]
+
+    def fake_genomic(*args, **kwargs):
+        return []
+
+    outcome = run_pipeline(
+        genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+        ambiguity_floor=0.5,
+    )
+    assert len(outcome.results) == 2
+    by_fragmented = {r.fragmented: r for r in outcome.results}
+    assert True in by_fragmented and False in by_fragmented
+    fragmented = by_fragmented[True]
+    assert sorted({s.contig for s in fragmented.segments}) == ["c1", "c2"]
+    independent = by_fragmented[False]
+    assert independent.contig == "c3"
+    assert sorted(independent.genes_found) == ["mfa1", "pra1"]
+
+
+def test_contig_edge_distance_populated_regardless_of_other_families_fragmentation(tmp_path):
+    """Finding D regression: contig_edge_distance must be populated (or left
+    None) consistently per-result, never depending on whether some OTHER
+    family in the same run happened to be fragmented. Here NO family is
+    fragmented, but the genome FASTA is readable, so the single-contig
+    result's segment must still get a real contig_edge_distance -- not None,
+    which is what the old "only read the genome when some family is
+    fragmented" gate produced."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+    genome = tmp_path / "genome.fa"
+    genome.write_text(">c1\n" + "A" * 1000 + "\n")
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        return [
+            SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
+            SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
+        ]
+
+    outcome = run_pipeline(
+        genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path, search_genomic=lambda *a, **k: [],
+    )
+    assert len(outcome.results) == 1
+    assert outcome.results[0].fragmented is False
+    assert outcome.results[0].segments[0].contig_edge_distance == 99
+
+
 def test_detection_result_carries_per_gene_evidence(tmp_path):
     """Finding 7: identity, coverage, coordinates, role and the matched
     curated record must survive to the DetectionResult, not be discarded."""

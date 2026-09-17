@@ -351,9 +351,14 @@ def run_pipeline(
         if segments:
             fragmented_segments[family.key] = segments
 
-    # Only parse the genome FASTA when a multi-segment call actually needs
-    # contig_edge_distance -- the ordinary single-contig path never does.
-    contig_lengths = _contig_lengths(genome_fasta) if fragmented_segments else {}
+    # Read contig lengths unconditionally so contig_edge_distance is populated
+    # (or left None on an unreadable FASTA) consistently for every segment of
+    # every result, independent of whether some OTHER family in this same run
+    # happened to be fragmented. Gating this on `fragmented_segments` used to
+    # make two otherwise-identical single-contig runs disagree on
+    # contig_edge_distance purely because of an unrelated family elsewhere in
+    # the genome.
+    contig_lengths = _contig_lengths(genome_fasta)
 
     def _second_pass_used(cluster_ids: list[int], family_key: FamilyKey) -> bool:
         return family_key in genome_wide_second_pass or any(
@@ -408,6 +413,14 @@ def run_pipeline(
     results: list[DetectionResult] = []
     # best (fraction, score, clusters) seen per family, for "not detected" reporting
     best_attempt: dict[FamilyKey, FamilyScore] = {}
+    # Cluster ids actually reported as segments of a fragmented multi-segment
+    # call, keyed per family. Only these specific clusters are suppressed from
+    # the per-cluster loop below -- a family judged fragmented may still have
+    # a separate, independent, above-floor cluster elsewhere in the genome
+    # (e.g. a genuine second locus from gene duplication), and that cluster
+    # must still go through normal per-cluster reporting rather than being
+    # dropped just because it shares a family_key with the fragmented call.
+    fragmented_reported_cluster_ids: dict[FamilyKey, set[int]] = {}
 
     for family_key, member_clusters in fragmented_segments.items():
         merged = GeneCluster(
@@ -424,13 +437,14 @@ def run_pipeline(
         if score.fraction_found < ambiguity_floor and not is_ambiguous(scores, floor=ambiguity_floor):
             continue
         results.append(_build(score, member_clusters, scores, fragmented=True))
+        fragmented_reported_cluster_ids[family_key] = {id(c) for c in member_clusters}
 
     for cluster in clusters:
         scores = score_cluster(cluster, families)
         ambiguous = is_ambiguous(scores, floor=ambiguity_floor)
         for score in scores:
-            if score.family_key in fragmented_segments:
-                continue  # already reported once as a multi-segment call
+            if id(cluster) in fragmented_reported_cluster_ids.get(score.family_key, ()):
+                continue  # this exact cluster was already reported as a segment of the fragmented call
             previous = best_attempt.get(score.family_key)
             if previous is None or score.fraction_found > previous.fraction_found:
                 best_attempt[score.family_key] = score

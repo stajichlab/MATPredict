@@ -105,3 +105,32 @@ def test_second_pass_in_one_cluster_does_not_cap_a_different_cluster_of_the_same
     assert len(results) == 2
     assert by_contig["c1"].confidence == "medium"  # this cluster's own second pass caps it
     assert by_contig["c2"].confidence == "high"  # unrelated cluster, same family, must NOT be capped
+
+
+def test_short_orf_gene_reported_as_not_searchable_not_missing(tmp_path):
+    (tmp_path / "P").mkdir(parents=True)
+    (tmp_path / "P" / "order.yml").write_text(
+        "phylum: P\nloci:\n  - locus_name: aLocus\n    vocabulary_type: pattern\n"
+        "    idiomorph_pattern: \"^a[0-9]+$\"\n    taxonomic_scope: [1]\n"
+        "    genes:\n      - {name: mfa1, role: core_MAT}\n      - {name: pra1, role: core_MAT}\n"
+    )
+    reference_dir = tmp_path / "P" / "Fam" / "rec1"
+    reference_dir.mkdir(parents=True)
+    (reference_dir / "proteins.faa").write_text(
+        ">rec1|gene_index=0|name=mfa1|role=core_MAT\n" + "M" * 41 + "\n"
+        ">rec1|gene_index=1|name=pra1|role=core_MAT\n" + "M" * 300 + "\n"
+    )
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, runner=None):
+        return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
+
+    def fake_genomic(*args, **kwargs):
+        return []  # mfa1 genuinely not found even after the relaxed second pass
+
+    results = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path, search_genomic=fake_genomic,
+    )
+    assert results[0].genes_missing == []
+    assert results[0].genes_not_searchable == ["mfa1"]

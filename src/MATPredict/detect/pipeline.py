@@ -1,7 +1,7 @@
 """Orchestrates routing -> search -> clustering -> scoring -> tiering -> idiomorph assignment."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
 
@@ -25,6 +25,7 @@ class DetectionResult:
     genes_found: list[str]
     genes_missing: list[str]
     fragmented: bool
+    genes_not_searchable: list[str] = field(default_factory=list)
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -34,6 +35,23 @@ def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
     core_genes = {g["name"] for g in family.genes if g["role"] == "core_MAT"}
     found_genes = {h.gene_name for h in cluster.hits if h.family_key == family.key}
     return core_genes - found_genes
+
+
+def _short_orf_genes(db_root: Path, families: list[Family], floor_aa: int) -> set[str]:
+    """Gene names whose curated reference protein length is below floor_aa,
+    scanned once from db/**/proteins.faa (matching gff_export.write_proteins_fasta's
+    header form `>{record_id}|gene_index={n}|name={name}|role={role}`, the same raw
+    per-record files reference_fasta.py concatenates -- not its rewritten output)."""
+    short_genes: set[str] = set()
+    expected = {g["name"] for f in families for g in f.genes}
+    for faa in db_root.glob("*/*/*/proteins.faa"):
+        for chunk in faa.read_text().split(">")[1:]:
+            header, _, seq = chunk.partition("\n")
+            parts = dict(p.split("=", 1) for p in header.split("|")[1:] if "=" in p)
+            name = parts.get("name")
+            if name in expected and len(seq.strip()) < floor_aa:
+                short_genes.add(name)
+    return short_genes
 
 
 def _families_with_a_foothold(cluster: GeneCluster, families: list[Family]) -> list[Family]:
@@ -54,8 +72,10 @@ def run_pipeline(
     search_genomic: Callable = search_genomic,
     max_gap: int = 25_000,
     ambiguity_floor: float = 0.5,
+    short_orf_aa_floor: int = 60,
 ) -> list[DetectionResult]:
     families = route(taxid, load_all_families(db_root))
+    short_orf_genes = _short_orf_genes(db_root, families, short_orf_aa_floor)
 
     hits: list[SearchHit] = []
     if proteome_fasta is not None:
@@ -116,9 +136,12 @@ def run_pipeline(
                 [s.family_key for s in scores if s.family_key != score.family_key and s.fraction_found >= ambiguity_floor]
                 if ambiguous else []
             )
+            genes_not_searchable = [g for g in score.genes_missing if g in short_orf_genes]
+            genes_missing = [g for g in score.genes_missing if g not in short_orf_genes]
             results.append(DetectionResult(
                 family_key=score.family_key, contig=cluster.contig, start=cluster.start, end=cluster.end,
                 confidence=tier, idiomorph=idiomorph, ambiguous_with=ambiguous_with,
-                genes_found=score.genes_found, genes_missing=score.genes_missing, fragmented=False,
+                genes_found=score.genes_found, genes_missing=genes_missing, fragmented=False,
+                genes_not_searchable=genes_not_searchable,
             ))
     return results

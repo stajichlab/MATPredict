@@ -1,7 +1,6 @@
 phylum: Ascomycota
 loci:
   - locus_name: "MAT"
-    taxonomic_scope: [4890]
     vocabulary_type: "enum"
     idiomorph_values: ["MAT1-1", "MAT1-2"]
     genes:
@@ -13,7 +12,6 @@ loci:
       - {name: SLA2, role: flanking_conserved}
       - {name: COX13, role: flanking_conserved}
   - locus_name: "PM"
-    taxonomic_scope: [4890]
     vocabulary_type: "enum"
     idiomorph_values: ["M", "P"]
     genes:
@@ -22,7 +20,6 @@ loci:
       - {name: matPc, role: core_MAT, present_in_idiomorphs: ["P"]}
       - {name: matPi, role: core_MAT, present_in_idiomorphs: ["P"]}
   - locus_name: "mat1"
-    taxonomic_scope: [4890]
     vocabulary_type: "enum"
     idiomorph_values: ["M", "P"]
     genes:
@@ -31,21 +28,18 @@ loci:
       - {name: mat1-Pc, role: core_MAT, present_in_idiomorphs: ["P"]}
       - {name: mat1-Pi, role: core_MAT, present_in_idiomorphs: ["P"]}
   - locus_name: "mat2"
-    taxonomic_scope: [4890]
     vocabulary_type: "enum"
     idiomorph_values: ["P"]
     genes:
       - {name: matPc, role: core_MAT, present_in_idiomorphs: ["P"]}
       - {name: matPi, role: core_MAT, present_in_idiomorphs: ["P"]}
   - locus_name: "mat3"
-    taxonomic_scope: [4890]
     vocabulary_type: "enum"
     idiomorph_values: ["M"]
     genes:
       - {name: matMc, role: core_MAT, present_in_idiomorphs: ["M"]}
       - {name: matMi, role: core_MAT, present_in_idiomorphs: ["M"]}
   - locus_name: "MATsc"
-    taxonomic_scope: [4890]
     vocabulary_type: "enum"
     idiomorph_values: ["MATalpha", "MATa"]
     genes:
@@ -58,7 +52,6 @@ loci:
       - {name: sla2, role: flanking_conserved}
       - {name: cha1, role: flanking_variable}
   - locus_name: "MATyl"
-    taxonomic_scope: [4890]
     vocabulary_type: "enum"
     idiomorph_values: ["A", "B"]
     genes:
@@ -67,7 +60,6 @@ loci:
       - {name: sla2, role: flanking_conserved}
       - {name: apn2, role: flanking_conserved}
   - locus_name: "MTL"
-    taxonomic_scope: [4890]
     vocabulary_type: "enum"
     idiomorph_values: ["A", "alpha"]
     genes:

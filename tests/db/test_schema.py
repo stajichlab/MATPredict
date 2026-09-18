@@ -114,6 +114,28 @@ def test_validate_order_accepts_taxonomic_scope():
     assert schema.validate_order(doc) == []
 
 
+def test_record_valid_without_exon_fields():
+    """Pre-existing gene shape (no exons/codon_start/transl_table) must still validate."""
+    assert schema.validate_metadata(VALID_RECORD) == []
+
+
+def test_record_valid_with_exon_fields():
+    record = copy.deepcopy(VALID_RECORD)
+    record["genes"][0]["exons"] = [{"start": 100, "end": 150}, {"start": 200, "end": 260}]
+    record["genes"][0]["codon_start"] = 1
+    record["genes"][0]["transl_table"] = 1
+    assert schema.validate_metadata(record) == []
+
+
+@pytest.mark.parametrize("bad_codon_start", [0, 4])
+def test_record_rejects_invalid_codon_start(bad_codon_start):
+    record = copy.deepcopy(VALID_RECORD)
+    record["genes"][0]["codon_start"] = bad_codon_start
+    errors = schema.validate_metadata(record)
+    assert errors
+    assert any("codon_start" in e for e in errors)
+
+
 @pytest.mark.parametrize("phylum", ["Ascomycota", "Basidiomycota", "Mucoromycota"])
 def test_real_order_yml_files_validate(phylum):
     repo_root = Path(__file__).resolve().parents[2]

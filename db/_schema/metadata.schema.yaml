@@ -80,6 +80,23 @@ properties:
         end: {type: [integer, "null"]}
         strand: {type: [string, "null"], enum: ["+", "-", null]}
         order_in_locus: {type: [integer, "null"]}
+        # exons: ordered 5'->3' in transcript orientation. For a minus-strand gene this
+        # means descending genomic coordinate order (highest-coordinate exon first),
+        # matching GenBank's own complement(join(...)) component order. Optional; a gene
+        # with no `exons` is treated as a single span (start/end above).
+        exons:
+          type: array
+          items:
+            type: object
+            required: [start, end]
+            properties:
+              start: {type: integer, minimum: 1}
+              end: {type: integer, minimum: 1}
+        # codon_start: 1, 2, or 3 (GenBank convention: the position within the first
+        # listed exon/span where translation begins). Absence means 1.
+        codon_start: {type: integer, enum: [1, 2, 3]}
+        # transl_table: NCBI genetic code table number. Absence means 1 (standard code).
+        transl_table: {type: integer}
   evidence:
     type: object
     required: [locus_existence, boundaries, idiomorph_assignment]

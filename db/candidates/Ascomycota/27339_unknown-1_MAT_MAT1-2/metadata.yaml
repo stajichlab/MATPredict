@@ -129,21 +129,33 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: MH795990.1
   sequence_match:
-    status: pass
+    status: fail
     per_gene:
     - gene_index: 0
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
+      percent_identity: 50.0
+      coverage: 26.8
+      status: fail
     - gene_index: 1
       percent_identity: 100.0
-      coverage: 100.0
+      coverage: 14.68
       status: pass
     - gene_index: 2
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
-    notes: ''
+      percent_identity: 19.05
+      coverage: 80.77
+      status: fail
+    notes: 'Both sla2 (gene_index 0) and apn2 (gene_index 2) fail independent
+      re-translation. MH795990.1''s own feature table (re-fetched via NCBI efetch
+      on 2026-09-18) shows: sla2 CDS is <1..295, /codon_start=2 (single-exon, but
+      a partial-CDS reading frame starting on the second nucleotide of the range);
+      apn2 CDS is complement(5835..>5994), /codon_start=2 (same partial-CDS
+      frame-phase issue). This schema stores only a single start/end/strand span
+      per gene with no codon_start/frame-phase field, so translating the raw
+      recorded span cannot reproduce either protein exactly. The recorded
+      coordinates already match each CDS''s real outer bounds exactly (1..295 and
+      5835..5994); this is a known schema limitation, not a coordinate error.
+      mat1-2-1 (gene_index 1) is multi-exon (join(3329..3486,3531..3778,3837..4516))
+      but its recorded span already passes because the matched region before its
+      first intron is 100% identical.'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

@@ -127,21 +127,34 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: AJ884599.1
   sequence_match:
-    status: pass
+    status: fail
     per_gene:
     - gene_index: 0
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
+      percent_identity: 72.0
+      coverage: 16.45
+      status: fail
     - gene_index: 1
       percent_identity: 100.0
-      coverage: 100.0
+      coverage: 23.14
       status: pass
     - gene_index: 2
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
-    notes: ''
+      percent_identity: 69.23
+      coverage: 16.25
+      status: fail
+    notes: 'Both SLA2 (gene_index 0) and APN2/"DNA lyase" (gene_index 2) fail
+      independent re-translation. AJ884599.1''s own feature table (re-fetched via
+      NCBI efetch on 2026-09-18) shows: SLA2 CDS is join(<1..373,437..523),
+      /codon_start=2 (multi-exon, one 63-bp intron, PLUS a partial-CDS reading frame
+      starting on the second nucleotide of the range); APN2 CDS is
+      complement(5566..>5809), /codon_start=2 (single-exon, but the same
+      partial-CDS frame-phase issue). This schema stores only a single start/end/strand
+      span per gene with no intron model and no codon_start/frame-phase field, so
+      translating the raw recorded span cannot reproduce either protein exactly.
+      The recorded coordinates already match each CDS''s real outer bounds exactly
+      (1..523 and 5566..5809); this is a known schema limitation, not a coordinate
+      error. MAT1-1-1 (gene_index 1) is also multi-exon
+      (complement(join(2171..2985,3040..3277))) but its recorded span already
+      passes because the matched region before its intron is 100% identical.'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

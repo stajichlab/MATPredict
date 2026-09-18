@@ -1,28 +1,28 @@
-record_id: 57749_ym1-1_MAT_MAT1-1
+record_id: 55307_ysh1-8_MATtub_MAT1-2
 record_version: 1
 taxonomy:
-  taxid: 57749
-  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Pezizomycetes;o__Pezizales;f__Tuberaceae;g__Tuber;s__Tuber_himalayense
+  taxid: 55307
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Pezizomycetes;o__Pezizales;f__Tuberaceae;g__Tuber;s__Tuber_indicum
   lineage_resolved_date: '2026-09-17'
 organism:
-  species: Tuber himalayense
+  species: Tuber indicum
   strain:
-    name: YM1-1
+    name: ysh1-8
     known: true
     culture_collection_ids:
-    - YM1-1
+    - ysh1-8
     differs_from_sequenced: true
 mating_type:
   locus_name: MATtub
   idiomorphs:
-  - MAT1-1
+  - MAT1-2
   system: heterothallic
 locus:
   coordinate_provenance: published_explicit
   excluded_from_coordinate_benchmark: true
   core:
     completeness: partial
-    reference_orientation: MAT1-1-1
+    reference_orientation: MAT1-2-1
     definition_note: 'TISSUE SOURCE CAVEAT (applies to all Kinoshita et al. 2018 Tuber
       records in this batch): the GenBank source feature for this accession states
       tissue_type="ascocarp" -- the DNA was extracted from a whole fruiting body,
@@ -34,7 +34,7 @@ locus:
       only one MAT idiomorph from a given ascocarp in Kinoshita et al. 2018 does not
       by itself prove that ascocarp''s contributing genotypes were both that idiomorph;
       it may simply reflect PCR/primer performance on a mixed template (the paper
-      reports amplification success of only 28/47 specimens for MAT1-1-1 and 33/48
+      reports amplification success of only 28/47 specimens for MAT1-1-1 and 33/54
       for MAT1-2-1). The heterothallic system call for this species is not re-derived
       from single-spore segregation in this record; it follows the paper''s own explicit
       classification of the T. indicum species complex and T. melanosporum as heterothallic
@@ -43,39 +43,41 @@ locus:
       ascocarps in the underlying data amplify only one idiomorph, not both.
 
 
-      THIS RECORD. GenBank LC312361, 564 bp, /isolate="YM1-1", /tissue_type="ascocarp",
-      /db_xref taxon:57749, reference Kinoshita et al. 2018 (PMID 29590201). Sequence
-      is a PCR amplicon spanning most of the MAT1-1-1 gene (partial 5''/3'' CDS markers
+      THIS RECORD. GenBank LC312334, 652 bp, /isolate="ysh1-8", /tissue_type="ascocarp",
+      /db_xref taxon:55307, reference Kinoshita et al. 2018 (PMID 29590201). Sequence
+      is a PCR amplicon spanning most of the MAT1-2-1 gene (partial 5''/3'' CDS markers
       on the deposit, primers i3/i11/i12 for MAT1-1-1 or i5/i13 for MAT1-2-1 per the
       paper''s Methods) -- no flanking gene (SLA2/APN2-equivalent or otherwise) is
       present on this short deposit, so completeness is ''partial'' and excluded_from_coordinate_benchmark
-      is true. Gene identity (MAT1-1-1) is the depositor''s own /product annotation,
-      independently re-fetched and confirmed by the curator via NCBI efetch. No MAT1-2-1
-      sequence was recovered from this same ascocarp in the source table (Table 1),
-      i.e. this is one of the ''clean'' single-idiomorph-detected vouchers for this
-      species, though see the tissue-source caveat above on what that does and does
-      not establish.'
+      is true. Gene identity (MAT1-2-1) is the depositor''s own /product annotation,
+      independently re-fetched and confirmed by the curator via NCBI efetch. No MAT1-1-1
+      sequence was recovered from this same ascocarp in the source table -- this is
+      one of only two T. indicum vouchers in the paper''s dataset (with SM1-2) that
+      amplified MAT1-2-1 without also amplifying MAT1-1-1; every other MAT1-1-1-positive
+      T. indicum voucher in the table also amplified MAT1-2-1 from the same ascocarp
+      (see the paired MAT1-1 record 55307_bsh1-11_MAT_MAT1-1 for the more common co-detection
+      pattern in this species).'
     segments:
     - segment_index: 0
       sequence_source:
         type: insdc_nucleotide
-        accession: LC312361.1
-        seq_region: LC312361.1
+        accession: LC312334.1
+        seq_region: LC312334.1
       start: 1
-      end: 564
+      end: 652
       contig_edge_distance: null
       sequence_checksum: null
   extended_flank: []
 genes:
 - gene_index: 0
-  name: MAT1-1-1
-  protein_accession: ncbi_protein:BBB16456.1
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:BBB16429.1
   role: core_MAT
   present: true
   locus_tag: null
   segment_index: 0
   start: 1
-  end: 564
+  end: 652
   strand: +
   order_in_locus: 0
 evidence:
@@ -100,7 +102,7 @@ evidence:
     tier: 1
     experimental_method: Gene-specific PCR primers targeting either the alpha-domain
       (MAT1-1-1) or the HMG-box domain (MAT1-2-1), with the resulting sequence's identity
-      confirmed by the depositors' own /product annotation (MAT1-1-1).
+      confirmed by the depositors' own /product annotation (MAT1-2-1).
     citations:
     - *id001
 validation:
@@ -108,7 +110,7 @@ validation:
   rejection_reason: null
   accession_resolved: true
   accession_resolved_date: null
-  accession_resolved_version: LC312361.1
+  accession_resolved_version: LC312334.1
   sequence_match:
     status: pass
     per_gene:
@@ -120,7 +122,7 @@ validation:
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search
-  proposal_dedupe_key: 29590201|57749|MAT|MAT1-1|YM1-1
+  proposal_dedupe_key: 29590201|55307|MATtub|MAT1-2|ysh1-8
   reviewed_by: null
   reviewed_date: null
 model_provenance: null

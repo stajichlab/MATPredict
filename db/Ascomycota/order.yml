@@ -3,15 +3,37 @@ loci:
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["MAT1-1", "MAT1-2"]
-    taxonomic_scope: [222544]
+    taxonomic_scope: [222544, 5180, 28548, 40559]
     genes:
       - {name: MAT1-1-1, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
       - {name: MAT1-1-2, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
       - {name: MAT1-1-3, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      # MAT1-1-5 and MAT1-2-10 are the two Leotiomycete-characteristic MAT genes. Both are
+      # real, named genes on primary GenBank records for this class (e.g. MAT1-1-5 on
+      # JQ815883/KU726096/KU726097/KF944385; MAT1-2-10 is deposited under its older name
+      # MAT1-2-4 on those same records, renamed per Wilken et al. 2017 Fungal Biol Rev).
+      # Declared here so detect.search._attribute does not silently drop hits to them.
+      - {name: MAT1-1-5, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
       - {name: MAT1-2-1, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
+      - {name: MAT1-2-10, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
       - {name: APN2, role: flanking_conserved}
       - {name: SLA2, role: flanking_conserved}
       - {name: COX13, role: flanking_conserved}
+      # matA-1/matA-2/matA-3/"mt a-1" are Neurospora crassa's own official NCBI Gene
+      # symbols for its MAT1-1-1/MAT1-1-2/MAT1-1-3/MAT1-2-1 equivalents (classic
+      # literature "mat A-1"/"mat A-2"/"mat A-3"/"mat a-1"; Glass et al. 1990;
+      # Ferreira et al. 1996, 1998; Staben and Yanofsky 1990). Declared here as
+      # additional gene names for the same core_MAT roles/idiomorphs so records that
+      # keep Neurospora's native symbols (db/candidates/Ascomycota/5141_74-ors-a_MAT_MAT1-1,
+      # db/candidates/Ascomycota/5141_unknown-1_MAT_MAT1-2) validate against
+      # validate_gene_vocabulary and are not silently dropped by
+      # detect.search._attribute. Mapping documented in each record's own
+      # definition_note: matA-1 = MAT1-1-1, matA-2 = MAT1-1-2, matA-3 = MAT1-1-3,
+      # "mt a-1" = MAT1-2-1.
+      - {name: matA-1, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: matA-2, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: matA-3, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: "mt a-1", role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
   - locus_name: "PM"
     vocabulary_type: "enum"
     idiomorph_values: ["M", "P"]
@@ -74,3 +96,27 @@ loci:
       - {name: MTLA1, role: core_MAT, present_in_idiomorphs: ["A"]}
       - {name: MTLA2, role: core_MAT, present_in_idiomorphs: ["A"]}
       - {name: MTLalpha1, role: core_MAT, present_in_idiomorphs: ["alpha"]}
+  - locus_name: "MATtub"
+    vocabulary_type: "enum"
+    idiomorph_values: ["MAT1-1", "MAT1-2"]
+    # Pezizomycetes (class; NCBI taxid 147549, verified via NCBI Taxonomy esearch/efetch
+    # 2026-09-17) plus the four Tuber species taxids actually curated so far, matching
+    # this file's existing style of mixing one broad rank id with specific species ids
+    # (see the "MAT" locus's 222544 + 5180/28548/40559). A separate locus_name from the
+    # existing Pezizomycotina "MAT" family is required (not an extension of its scope):
+    # Tuber's flanking genes on HM370280.1 (Rsm22-like, unnamed_flanking_ORF) are not
+    # the canonical APN2/SLA2/COX13 set used by "MAT", per
+    # db/candidates/Ascomycota/39416_mel206_MAT_MAT1-1/metadata.yaml's definition_note.
+    taxonomic_scope: [147549, 39416, 57749, 752769, 55307]
+    genes:
+      - {name: MAT1-1-1, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: MAT1-2-1, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
+      # Rsm22-like and unnamed_flanking_ORF are the two flanking CDS the depositors
+      # themselves used as PCR-primer anchors around the Tuber MAT1-1-1 idiomorph on
+      # HM370280.1 (Rubini et al. 2011, PMID 20961294) -- Tuber-specific anchors, not
+      # the canonical Pezizomycotina APN2/SLA2/COX13 set. Declared with no
+      # present_in_idiomorphs restriction since only the MAT1-1 record (Mel206) has
+      # curated them so far; the MAT1-2 side (Mel28 reference genome) is an
+      # acknowledged gap (see that record's definition_note).
+      - {name: Rsm22-like, role: flanking_conserved}
+      - {name: unnamed_flanking_ORF, role: flanking_conserved}

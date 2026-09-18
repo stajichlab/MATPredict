@@ -6,7 +6,7 @@ from urllib.parse import parse_qs, urlparse
 from MATPredict.db.http_cache import CachedFetcher
 from MATPredict.db.ncbi_client import NcbiClient
 from MATPredict.db.uniprot_client import UniprotClient
-from MATPredict.db.validate import validate_record
+from MATPredict.db.validate import _independent_translation, validate_record
 
 # CDS nucleotide span that translates to exactly "MKTAYIAKQRQISFVKSHFSRQ" + a stop codon,
 # embedded in a larger flanking "chromosome" sequence so that fetching the WRONG 1-based
@@ -61,6 +61,29 @@ def _fake_transport(url: str) -> str:
 
 def _fake_taxonomy_runner(cmd, **kwargs):
     return SimpleNamespace(returncode=0, stdout="4837\tk__Fungi;p__Mucoromycota;...;s__Phycomyces_blakesleeanus\n")
+
+
+def _transport_for_ranges(nucleotide_by_range: dict[tuple[str, int, int, str], str]):
+    """Build a fake nuccore-efetch transport keyed by explicit (accession, start, stop,
+    strand) -> sequence entries, following the same fake-transport-function pattern as
+    `_fake_transport` above (a real `NcbiClient` + `CachedFetcher` driven by a fake HTTP
+    transport, not a hand-rolled NcbiClient double) but returning fixed per-range strings
+    instead of slicing a single flanked chromosome -- needed here because each test
+    exercises multiple distinct exon ranges/strands on one fake accession.
+    """
+
+    def transport(url: str) -> str:
+        if "db=nuccore" not in url:
+            raise AssertionError(url)
+        params = parse_qs(urlparse(url).query)
+        accession = params["id"][0]
+        start = int(params["seq_start"][0])
+        stop = int(params["seq_stop"][0])
+        strand = "-" if params.get("strand") == ["2"] else "+"
+        sequence = nucleotide_by_range[(accession, start, stop, strand)]
+        return f">{accession}:{start}-{stop}\n{sequence}\n"
+
+    return transport
 
 
 def test_validate_record_all_pass(tmp_path):
@@ -147,3 +170,97 @@ def test_validate_record_skips_coordinate_checks_when_not_available():
     # used to leave the tautological default sequence_match status of "pass" in place,
     # which is itself a false-pass bug in the same family as the main tautology fix.
     assert result["sequence_match"]["status"] == "not_applicable"
+
+
+def test_independent_translation_assembles_multi_exon_plus_strand(tmp_path):
+    # Two exons, plus strand, codon_start=1. Exon 1: "ATGGCC" (Met-Ala partial),
+    # exon 2 continues the frame: "TTTTAA" (Phe-stop). Assembled: ATGGCCTTTTAA
+    # -> translates to "MAF" (stop dropped).
+    gene = {
+        "gene_index": 0, "segment_index": 0, "strand": "+",
+        "start": 1, "end": 12,  # outer bounds, unused when exons present
+        "exons": [{"start": 1, "end": 6}, {"start": 7, "end": 12}],
+        "protein_accession": "ncbi_protein:FAKE1.1",
+    }
+    record = {"locus": {"core": {"segments": [
+        {"sequence_source": {"type": "insdc_nucleotide", "accession": "FAKE_ACC.1"}}
+    ]}}}
+    fetcher = CachedFetcher(cache_dir=tmp_path, transport=_transport_for_ranges({
+        ("FAKE_ACC.1", 1, 6, "+"): "ATGGCC",
+        ("FAKE_ACC.1", 7, 12, "+"): "TTTTAA",
+    }))
+    ncbi = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
+
+    result = _independent_translation(record, gene, ncbi)
+    assert result == "MAF"
+
+
+def test_independent_translation_applies_codon_start_once_not_per_exon(tmp_path):
+    # Reproduces the real Ceratocystis PV763125 mechanism: exons on the minus strand,
+    # codon_start=2 (skip the first base of the ASSEMBLED sequence, not each exon).
+    # Each exon is fetched with strand="-", so `fetch_nucleotide_sequence` already
+    # returns it reverse-complemented and 5'->3' oriented (no local revcomp here);
+    # exons are listed in transcript order and concatenated as-is. Assembled raw
+    # (pre-offset) = "TATGG" + "CCTTTTAA" = "TATGGCCTTTTAA" (13 nt). With
+    # codon_start=2, translation starts at index 1: "ATGGCCTTTTAA" -> "MAF" (same
+    # result as above, proving the offset is applied once to the whole assembled
+    # string, not to each exon's start).
+    gene = {
+        "gene_index": 0, "segment_index": 0, "strand": "-",
+        "start": 1, "end": 13,
+        "exons": [{"start": 100, "end": 104}, {"start": 90, "end": 97}],
+        "codon_start": 2,
+        "protein_accession": "ncbi_protein:FAKE2.1",
+    }
+    record = {"locus": {"core": {"segments": [
+        {"sequence_source": {"type": "insdc_nucleotide", "accession": "FAKE_ACC.1"}}
+    ]}}}
+    fetcher = CachedFetcher(cache_dir=tmp_path, transport=_transport_for_ranges({
+        ("FAKE_ACC.1", 100, 104, "-"): "TATGG",
+        ("FAKE_ACC.1", 90, 97, "-"): "CCTTTTAA",
+    }))
+    ncbi = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
+
+    result = _independent_translation(record, gene, ncbi)
+    assert result == "MAF"
+
+
+def test_independent_translation_falls_back_to_single_span_when_no_exons(tmp_path):
+    # Existing behavior (Task 1 did not touch this path): a gene with plain
+    # start/end/strand and no `exons` key still works exactly as before.
+    gene = {
+        "gene_index": 0, "segment_index": 0, "strand": "+",
+        "start": 1, "end": 6,
+        "protein_accession": "ncbi_protein:FAKE3.1",
+    }
+    record = {"locus": {"core": {"segments": [
+        {"sequence_source": {"type": "insdc_nucleotide", "accession": "FAKE_ACC.1"}}
+    ]}}}
+    fetcher = CachedFetcher(cache_dir=tmp_path, transport=_transport_for_ranges({
+        ("FAKE_ACC.1", 1, 6, "+"): "ATGGCC",
+    }))
+    ncbi = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
+
+    result = _independent_translation(record, gene, ncbi)
+    assert result == "MA"
+
+
+def test_independent_translation_uses_transl_table_12_for_cug_clade_records(tmp_path):
+    # CTG under table 1 is Leu (L); under table 12 (Alternative Yeast Nuclear Code)
+    # it is Ser (S). This is the exact real-world failure mode the research found
+    # for Candida MTL records.
+    gene = {
+        "gene_index": 0, "segment_index": 0, "strand": "+",
+        "start": 1, "end": 9, "transl_table": 12,
+        "protein_accession": "ncbi_protein:FAKE4.1",
+    }
+    record = {"locus": {"core": {"segments": [
+        {"sequence_source": {"type": "insdc_nucleotide", "accession": "FAKE_ACC.1"}}
+    ]}}}
+    fetcher = CachedFetcher(cache_dir=tmp_path, transport=_transport_for_ranges({
+        ("FAKE_ACC.1", 1, 9, "+"): "ATGCTGTAA",
+    }))
+    ncbi = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
+
+    result = _independent_translation(record, gene, ncbi)
+    assert result == "MS"  # not "ML" -- proves table 12 was actually used

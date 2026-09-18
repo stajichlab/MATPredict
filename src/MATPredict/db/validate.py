@@ -14,32 +14,64 @@ from MATPredict.db.uniprot_client import UniprotClient
 _STATUS_RANK = {"pass": 0, "warn": 1, "fail": 2}
 
 
-def _translate_cds(nucleotide_sequence: str) -> str:
+def _translate_cds(nucleotide_sequence: str, table: int = 1) -> str:
     """Translate a coding sequence to protein, stopping at (and dropping) the first stop
-    codon. Standard genetic code (table 1) is used project-wide; none of the curated MAT
-    loci require an alternative table."""
-    protein = str(Seq(nucleotide_sequence).translate(table=1, to_stop=True))
+    codon, using the given NCBI genetic code table (default 1, standard code; CUG-clade
+    Candida MTL records require table 12, the Alternative Yeast Nuclear Code)."""
+    protein = str(Seq(nucleotide_sequence).translate(table=table, to_stop=True))
     return protein
+
+
+def _assemble_transcript(ncbi: NcbiClient, accession: str, gene: dict) -> str | None:
+    """Fetch and concatenate a gene's exon sequences in transcript order, or fall back
+    to its single start/end span when no `exons` list is recorded.
+
+    `exons` entries must already be listed in transcript order (5'->3'; for a minus-
+    strand gene this is descending genomic coordinate order, matching how GenBank's own
+    complement(join(...)) syntax orders its components) -- this function does not
+    reorder them. Each exon is fetched with the gene's own strand, so
+    `fetch_nucleotide_sequence`'s existing `strand=2` reverse-complement handling
+    applies per exon exactly as it already does for a single span; no additional local
+    reverse-complementation is performed here.
+    """
+    strand = gene.get("strand")
+    exons = gene.get("exons")
+    if exons:
+        parts = []
+        for exon in exons:
+            part = ncbi.fetch_nucleotide_sequence(accession, exon["start"], exon["end"], strand)
+            if not part:
+                return None
+            parts.append(part)
+        return "".join(parts)
+
+    start, end = gene.get("start"), gene.get("end")
+    if start is None or end is None:
+        return None
+    return ncbi.fetch_nucleotide_sequence(accession, start, end, strand)
 
 
 def _independent_translation(record: dict, gene: dict, ncbi: NcbiClient | None) -> str | None:
     """Independently re-derive a gene's protein sequence from the record's own recorded
-    genomic coordinates, by fetching the segment's nucleotide span from NCBI and translating
-    it -- rather than trusting anything already stored in the record about its protein.
+    genomic coordinates (single span, or a real exon/intron structure when `exons` is
+    recorded), by fetching from NCBI and translating -- rather than trusting anything
+    already stored in the record about its protein.
 
-    Returns None (check not applicable) when the record does not carry enough of its own
-    coordinate data to do this: no segment sequence, coordinates not of a fetchable
-    nucleotide-accession type (e.g. assembly-only accessions aren't supported by
-    NcbiClient yet -- see the accession_resolved skip above), or missing start/end/strand
-    on the gene itself.
+    `codon_start` (1/2/3, default 1) is applied EXACTLY ONCE, to the first base of the
+    fully assembled, strand-oriented, spliced sequence -- never per-exon. This was
+    verified against a real multi-exon, minus-strand, 5'-partial GenBank record; GenBank's
+    own /codon_start qualifier is defined relative to "the first base of that feature"
+    (the whole joined CDS feature), not per exon.
+
+    Returns None (check not applicable) under the same conditions as before: no NCBI
+    client, no fetchable segment sequence, or missing coordinate data on the gene.
     """
     if ncbi is None:
         return None
     segment_index = gene.get("segment_index")
-    start = gene.get("start")
-    end = gene.get("end")
-    strand = gene.get("strand")
-    if segment_index is None or start is None or end is None:
+    if segment_index is None:
+        return None
+    if not gene.get("exons") and (gene.get("start") is None or gene.get("end") is None):
         return None
 
     segments = record["locus"].get("core", {}).get("segments", [])
@@ -54,10 +86,21 @@ def _independent_translation(record: dict, gene: dict, ncbi: NcbiClient | None) 
         # verify against without fetchable genomic sequence.
         return None
 
-    nucleotide_sequence = ncbi.fetch_nucleotide_sequence(accession, start, end, strand)
-    if not nucleotide_sequence:
+    transcript = _assemble_transcript(ncbi, accession, gene)
+    if not transcript:
         return None
-    return _translate_cds(nucleotide_sequence)
+
+    codon_start = gene.get("codon_start", 1)
+    offset = codon_start - 1
+    frame_corrected = transcript[offset:]
+    # A 3'-partial CDS's spliced length is often not a multiple of 3; Biopython's
+    # translate() with a trailing 1-2nt remainder needs an explicit trim, since it
+    # raises rather than silently truncating.
+    usable_length = len(frame_corrected) - (len(frame_corrected) % 3)
+    frame_corrected = frame_corrected[:usable_length]
+
+    table = gene.get("transl_table", 1)
+    return _translate_cds(frame_corrected, table=table)
 
 
 def _client_for(accession: str, ncbi: NcbiClient | None, uniprot: UniprotClient | None):

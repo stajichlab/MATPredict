@@ -81,6 +81,13 @@ genes:
   end: 518
   strand: +
   order_in_locus: 0
+  exons:
+  - start: 1
+    end: 374
+  - start: 433
+    end: 518
+  codon_start: 2
+  transl_table: 1
 - gene_index: 1
   name: MAT1-2-1
   protein_accession: ncbi_protein:CAI59774.2
@@ -139,12 +146,12 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: AJ884600.1
   sequence_match:
-    status: fail
+    status: pass
     per_gene:
     - gene_index: 0
-      percent_identity: 30.69
-      coverage: 66.45
-      status: fail
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     - gene_index: 1
       percent_identity: 100.0
       coverage: 49.04
@@ -153,18 +160,7 @@ validation:
       percent_identity: 100.0
       coverage: 100.0
       status: pass
-    notes: 'SLA2 (gene_index 0) fails independent re-translation. AJ884600.1''s own
-      feature table (re-fetched via NCBI efetch on 2026-09-18) shows the real SLA2
-      CDS is join(<1..374,433..518) with /codon_start=2 -- i.e. a multi-exon CDS
-      (one 58-bp intron, 375..432) AND a partial-CDS reading frame that starts on
-      the second nucleotide of the recorded range. This schema stores only a single
-      start/end/strand span per gene, with no intron model and no codon_start/frame-phase
-      field, so translating the raw 1..518 span cannot reproduce CAI59773.1. The
-      recorded coordinates (1..518) already match the CDS''s real outer bounds
-      exactly; this is a known schema limitation, not a coordinate error. MAT1-2-1
-      (gene_index 1) is documented in definition_note as a stop-truncated, also
-      multi-exon CDS (join(3368..3519,3571..3733)) and already passes because the
-      matched prefix before its intron happens to be 100% identical.'
+    notes: ''
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

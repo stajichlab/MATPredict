@@ -95,6 +95,17 @@ genes:
   end: 4712
   strand: +
   order_in_locus: 0
+  exons:
+  - start: 3410
+    end: 3689
+  - start: 3739
+    end: 4286
+  - start: 4351
+    end: 4377
+  - start: 4437
+    end: 4712
+  codon_start: 1
+  transl_table: 1
 - gene_index: 1
   name: MAT1-1-1
   protein_accession: ncbi_protein:AGB05587.1
@@ -106,6 +117,15 @@ genes:
   end: 6224
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 5119
+    end: 5341
+  - start: 5391
+    end: 6158
+  - start: 6208
+    end: 6224
+  codon_start: 1
+  transl_table: 1
 - gene_index: 2
   name: MAT1-2-10
   protein_accession: ncbi_protein:AGB05588.1
@@ -185,16 +205,16 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: JQ815883.1
   sequence_match:
-    status: fail
+    status: pass
     per_gene:
     - gene_index: 0
-      percent_identity: 88.41
-      coverage: 36.7
-      status: fail
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     - gene_index: 1
-      percent_identity: 86.32
-      coverage: 34.93
-      status: fail
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     - gene_index: 2
       percent_identity: 100.0
       coverage: 51.96
@@ -203,20 +223,7 @@ validation:
       percent_identity: 100.0
       coverage: 26.65
       status: pass
-    notes: 'Both MAT1-1-5 (gene_index 0) and MAT1-1-1 (gene_index 1) fail
-      independent re-translation. JQ815883.1''s own feature table (re-fetched via
-      NCBI efetch on 2026-09-18) shows: MAT1-1-5 CDS is
-      join(3410..3689,3739..4286,4351..4377,4437..4712) (4 exons); MAT1-1-1 CDS is
-      join(5119..5341,5391..6158,6208..6224) (3 exons). This schema stores only a
-      single start/end/strand span per gene with no intron model, so translating
-      the raw recorded spans cannot reproduce either protein exactly. The recorded
-      coordinates already match each CDS''s real outer bounds exactly; this is a
-      known schema limitation, not a coordinate error. MAT1-2-10 and MAT1-2-1 are
-      also multi-exon (respectively
-      complement(join(6731..6900,6950..7188,7238..7674)) and
-      join(8175..8455,8506..8876,8931..9463)) but their recorded spans already
-      pass because the matched region before each gene''s first intron is 100%
-      identical.'
+    notes: ''
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

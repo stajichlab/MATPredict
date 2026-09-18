@@ -70,6 +70,19 @@ genes:
   end: 2057
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 1874
+    end: 2057
+  - start: 1793
+    end: 1817
+  - start: 1578
+    end: 1737
+  - start: 1510
+    end: 1517
+  - start: 1362
+    end: 1407
+  codon_start: 1
+  transl_table: 1
 - gene_index: 1
   name: APN2
   protein_accession: ncbi_protein:ABS19620.1
@@ -92,6 +105,21 @@ genes:
   end: 6307
   strand: +
   order_in_locus: 2
+  exons:
+  - start: 5270
+    end: 5330
+  - start: 5383
+    end: 5857
+  - start: 5945
+    end: 6001
+  - start: 6056
+    end: 6109
+  - start: 6162
+    end: 6191
+  - start: 6244
+    end: 6307
+  codon_start: 1
+  transl_table: 1
 - gene_index: 3
   name: MAT1-1-1
   protein_accession: ncbi_protein:ABS19622.1
@@ -103,6 +131,13 @@ genes:
   end: 8127
   strand: +
   order_in_locus: 3
+  exons:
+  - start: 6905
+    end: 7196
+  - start: 7250
+    end: 8127
+  codon_start: 1
+  transl_table: 1
 evidence:
   locus_existence:
     tier: 2
@@ -139,37 +174,25 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: EF512013.1
   sequence_match:
-    status: fail
+    status: pass
     per_gene:
     - gene_index: 0
-      percent_identity: 94.44
-      coverage: 51.43
-      status: warn
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     - gene_index: 1
       percent_identity: 100.0
       coverage: 2.97
       status: pass
     - gene_index: 2
-      percent_identity: 74.55
-      coverage: 22.36
-      status: fail
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     - gene_index: 3
-      percent_identity: 94.53
-      coverage: 32.9
-      status: warn
-    notes: 'Independently re-fetched EF512013.1''s own feature table on 2026-09-17
-      and confirmed all four genes are multi-exon: COX13 (this record''s gene_index
-      0, deposited /gene="MAT1-1-2") is complement(join(1362..1407,1510..1517,1578..1737,...));
-      APN2 (gene_index 1, deposited /gene="MAT1-1-3") is join(2396..2423,2482..2494,2552..2597,2657..2789,...);
-      MAT1-1-4 (gene_index 2) is join(5270..5330,5383..5857,5945..6001,6056..6109,...);
-      MAT1-1-1 (gene_index 3) is join(6905..7196,7250..8127). In every case the
-      recorded start/end already matches the CDS''s real outer bounds exactly; this
-      schema stores only a single span per gene with no intron model, so translating
-      straight through introduces frameshifts/extra residues after each intron.
-      The warn/fail statuses are the expected signature of that unmodeled-intron
-      limitation, not a coordinate error -- confirmed by the fact that the recorded
-      coordinates independently re-derive a prefix of each deposited protein at
-      high identity before diverging at the first intron.'
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

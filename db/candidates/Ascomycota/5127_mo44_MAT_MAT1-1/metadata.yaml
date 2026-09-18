@@ -93,6 +93,15 @@ genes:
   end: 841
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 698
+    end: 841
+  - start: 446
+    end: 638
+  - start: 246
+    end: 397
+  codon_start: 1
+  transl_table: 1
 - gene_index: 1
   name: MAT1-1-2
   protein_accession: ncbi_protein:AAC71054.1
@@ -115,6 +124,13 @@ genes:
   end: 4406
   strand: +
   order_in_locus: 2
+  exons:
+  - start: 3212
+    end: 3482
+  - start: 3529
+    end: 4406
+  codon_start: 1
+  transl_table: 1
 evidence:
   locus_existence:
     tier: 1
@@ -160,34 +176,21 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: AF100925.1
   sequence_match:
-    status: fail
+    status: pass
     per_gene:
     - gene_index: 0
-      percent_identity: 80.77
-      coverage: 48.15
-      status: fail
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     - gene_index: 1
       percent_identity: 100.0
       coverage: 100.0
       status: pass
     - gene_index: 2
-      percent_identity: 87.94
-      coverage: 36.91
-      status: fail
-    notes: 'Gene spans, strands and protein_ids were transcribed verbatim from the
-      AF100925.1 feature table returned by NCBI efetch, so they are self-consistent
-      with the deposited record by construction. 2026-09-18: independent
-      re-translation now performed (validate.py''s sequence_match check was fixed
-      from a tautology after this record was drafted). MAT1-1-3 (gene_index 0)
-      and MAT1-1-1 (gene_index 2) fail: both are multi-exon, exactly as already
-      stated in definition_note -- MAT1-1-3 CDS is
-      complement(join(246..397,446..638,698..841)) (3 exons) and MAT1-1-1 CDS is
-      join(3212..3482,3529..4406) (2 exons). This schema stores only a single
-      start/end/strand span per gene with no intron model, so translating the raw
-      recorded span cannot reproduce either protein exactly. The recorded
-      coordinates (246..841 and 3212..4406) already match each CDS''s real outer
-      bounds exactly; this is a known schema limitation, not a coordinate error.
-      MAT1-1-2 (gene_index 1) is single-exon (1404..2630) and passes exactly.'
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

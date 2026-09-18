@@ -67,6 +67,15 @@ genes:
   end: 1590216
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 1590115
+    end: 1590216
+  - start: 1589675
+    end: 1590064
+  - start: 1589597
+    end: 1589626
+  codon_start: 1
+  transl_table: 12
 - gene_index: 1
   name: MTLA2
   protein_accession: ncbi_protein:XP_460137.2
@@ -78,6 +87,13 @@ genes:
   end: 1591344
   strand: '-'
   order_in_locus: 1
+  exons:
+  - start: 1590991
+    end: 1591344
+  - start: 1590508
+    end: 1590909
+  codon_start: 1
+  transl_table: 12
 evidence:
   locus_existence:
     tier: 2
@@ -125,22 +141,17 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: NC_006047.2
   sequence_match:
-    status: fail
+    status: pass
     per_gene:
     - gene_index: 0
-      percent_identity: 86.44
-      coverage: 34.1
-      status: fail
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     - gene_index: 1
-      percent_identity: 96.95
-      coverage: 52.19
-      status: warn
-    notes: MTLA1 and MTLA2 are multi-exon genes (3 and 2 exons respectively); this
-      project's schema stores only a single start/end span per gene (no intron modeling),
-      so translating the full genomic span (introns included) does not reproduce the
-      deposited protein. Coordinates are GenBank-verified correct (re-derived independently
-      from NC_006047.2's own feature table); the fail/warn status here reflects an
-      unmodeled-intron limitation of the current schema, not a coordinate error.
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

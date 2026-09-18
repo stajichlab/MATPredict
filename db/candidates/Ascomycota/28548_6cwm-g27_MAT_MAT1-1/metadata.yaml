@@ -90,6 +90,17 @@ genes:
   end: 5984
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 4679
+    end: 4961
+  - start: 5011
+    end: 5558
+  - start: 5623
+    end: 5649
+  - start: 5709
+    end: 5984
+  codon_start: 1
+  transl_table: 1
 - gene_index: 2
   name: MAT1-1-1
   protein_accession: ncbi_protein:ANN44267.1
@@ -101,6 +112,15 @@ genes:
   end: 10038
   strand: +
   order_in_locus: 2
+  exons:
+  - start: 8827
+    end: 9100
+  - start: 9150
+    end: 9932
+  - start: 9983
+    end: 10038
+  codon_start: 1
+  transl_table: 1
 - gene_index: 3
   name: SLA2
   protein_accession: ncbi_protein:ANN44268.1
@@ -181,38 +201,25 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: KU726097.1
   sequence_match:
-    status: fail
+    status: pass
     per_gene:
     - gene_index: 0
       percent_identity: 100.0
       coverage: 100.0
       status: pass
     - gene_index: 1
-      percent_identity: 89.93
-      coverage: 36.87
-      status: fail
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     - gene_index: 2
-      percent_identity: 81.17
-      coverage: 41.62
-      status: fail
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     - gene_index: 3
       percent_identity: 100.0
       coverage: 2.26
       status: pass
-    notes: 'Both MAT1-1-5 (gene_index 1) and MAT1-1-1 (gene_index 2) fail
-      independent re-translation. KU726097.1''s own feature table (re-fetched via
-      NCBI efetch on 2026-09-18) shows: MAT1-1-5 CDS is
-      join(4679..4961,5011..5558,5623..5649,5709..5984) (4 exons, identical
-      coordinates to the sister L-allele record 28548_06cwm-g22_MAT_combined, as
-      expected since the two alleles share this gene); MAT1-1-1 CDS is
-      join(8827..9100,9150..9932,9983..10038) (3 exons). This schema stores only
-      a single start/end/strand span per gene with no intron model, so translating
-      the raw recorded spans cannot reproduce either protein exactly. The recorded
-      coordinates already match each CDS''s real outer bounds exactly; this is a
-      known schema limitation, not a coordinate error. SLA2 is also multi-exon
-      (complement(join(11248..11334,11388..13801,13852..13873))) but its recorded
-      span already passes because the matched region before its first intron is
-      100% identical.'
+    notes: ''
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

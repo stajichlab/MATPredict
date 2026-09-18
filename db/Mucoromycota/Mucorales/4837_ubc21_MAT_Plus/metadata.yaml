@@ -27,12 +27,22 @@ locus:
       by Idnurm et al. 2008. Gene names tptA/sexP/rnhA follow the controlled vocabulary
       already established in db/Mucoromycota/order.yml; GenBank''s own feature table
       labels the flanking genes only by product description, not by these short names.
-      sexP has two annotated CDS isoforms (ABX27912.1, full-length 2004-3186; ABX27914.1,
-      a shorter alternatively-spliced form, 2189-2358 + 2437-2989); this record uses
-      the full-length isoform (ABX27912.1) as the representative sexP entry. The RNA
+      sexP has two annotated CDS isoforms (ABX27912.1, full-length, CDS
+      complement(join(2189..2358,2437..3160)); ABX27914.1, a shorter alternatively-spliced
+      form, CDS complement(join(2189..2358,2437..2989))); this record uses the
+      full-length isoform (ABX27912.1) as the representative sexP entry. The RNA
       helicase CDS (ABX27913.1) begins at 7376 and the record notes the sequence continues
       beyond position 9971, the end of the deposited fragment -- completeness is set
       to partial because this gene''s full extent is not contained within this record.
+
+      COORDINATE CORRECTION (2026-09-18): sexP was originally recorded as 2004..3186,
+      which is the gene/mRNA span (complement(join(2004..2358,2437..3186)), including
+      5''/3'' UTR), not the CDS. The real CDS for the full-length isoform ABX27912.1,
+      independently re-fetched via NCBI efetch, is complement(join(2189..2358,2437..3160)).
+      Coordinates below are corrected to the CDS outer bounds, 2189..3160; the gene
+      remains multi-exon (one intron, 2359..2436) which this schema does not model,
+      so an independent re-translation of the corrected span will still not exactly
+      reproduce ABX27912.1 -- see sequence_match.notes.
 
       '
     segments:
@@ -65,8 +75,8 @@ genes:
   present: true
   locus_tag: null
   segment_index: 0
-  start: 2004
-  end: 3186
+  start: 2189
+  end: 3160
   strand: '-'
   order_in_locus: 1
 - gene_index: 2
@@ -107,21 +117,30 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: EU009462.1
   sequence_match:
-    status: pass
+    status: warn
     per_gene:
     - gene_index: 0
       percent_identity: 100.0
       coverage: 100.0
       status: pass
     - gene_index: 1
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
+      percent_identity: 96.5
+      coverage: 86.53
+      status: warn
     - gene_index: 2
       percent_identity: 100.0
-      coverage: 100.0
+      coverage: 3.08
       status: pass
-    notes: ''
+    notes: '2026-09-18 re-validation after correcting sexP''s coordinates from the
+      gene/mRNA span to the real CDS outer bounds (see definition_note): identity
+      rose from 88.89% to 96.5%. The residual warn (not pass) is expected: sexP is
+      multi-exon (one intron, 2359..2436) and this schema stores only a single
+      start/end span with no intron model, so translating straight through the
+      intron still introduces some wrong residues before the reading frame
+      resynchronizes; this is a known schema limitation, not a remaining coordinate
+      error. rnhA''s low coverage (3.08%) is expected because this record''s segment
+      captures only the first exon of that gene before the deposited fragment ends
+      (see completeness: partial note above), not a data problem.'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

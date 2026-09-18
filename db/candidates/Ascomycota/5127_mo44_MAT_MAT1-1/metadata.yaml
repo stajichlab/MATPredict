@@ -160,26 +160,34 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: AF100925.1
   sequence_match:
-    status: pass
+    status: fail
     per_gene:
     - gene_index: 0
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
+      percent_identity: 80.77
+      coverage: 48.15
+      status: fail
     - gene_index: 1
       percent_identity: 100.0
       coverage: 100.0
       status: pass
     - gene_index: 2
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
+      percent_identity: 87.94
+      coverage: 36.91
+      status: fail
     notes: 'Gene spans, strands and protein_ids were transcribed verbatim from the
       AF100925.1 feature table returned by NCBI efetch, so they are self-consistent
-      with the deposited record by construction; no independent re-alignment of predicted
-      translations was performed in this pass.
-
-      '
+      with the deposited record by construction. 2026-09-18: independent
+      re-translation now performed (validate.py''s sequence_match check was fixed
+      from a tautology after this record was drafted). MAT1-1-3 (gene_index 0)
+      and MAT1-1-1 (gene_index 2) fail: both are multi-exon, exactly as already
+      stated in definition_note -- MAT1-1-3 CDS is
+      complement(join(246..397,446..638,698..841)) (3 exons) and MAT1-1-1 CDS is
+      join(3212..3482,3529..4406) (2 exons). This schema stores only a single
+      start/end/strand span per gene with no intron model, so translating the raw
+      recorded span cannot reproduce either protein exactly. The recorded
+      coordinates (246..841 and 3212..4406) already match each CDS''s real outer
+      bounds exactly; this is a known schema limitation, not a coordinate error.
+      MAT1-1-2 (gene_index 1) is single-exon (1404..2630) and passes exactly.'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

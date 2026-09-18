@@ -122,17 +122,30 @@ def plan_batches(
     return batches
 
 
-def _decompress_genome(fasta_path: Path, scratch_dir: Path, tag: str) -> Path:
-    """Decompress `fasta_path` (a `.gz` file) into `scratch_dir`, returning the
-    plain-FASTA path. `tag` (e.g. `"<taxid>_<accession>"`) is prefixed onto the
-    destination filename so two genomes processed in the same batch can never
-    collide on scratch, even if their source basenames happen to match.
+def _decompressed_dest_path(fasta_path: Path, scratch_dir: Path, tag: str) -> Path:
+    """The deterministic scratch destination for `fasta_path`'s decompressed
+    copy. `tag` (e.g. `"<taxid>_<accession>"`) is prefixed onto the destination
+    filename so two genomes processed in the same batch can never collide on
+    scratch, even if their source basenames happen to match. Pure path
+    arithmetic, no I/O -- safe to compute before a `try` block so the same
+    path is known for cleanup even if the decompression that would write it
+    never starts or fails partway through.
     """
     stripped_name = fasta_path.with_suffix("").name  # "foo.fa.gz" -> "foo.fa"
-    dest = scratch_dir / f"{tag}_{stripped_name}"
+    return scratch_dir / f"{tag}_{stripped_name}"
+
+
+def _decompress_genome(fasta_path: Path, dest: Path) -> None:
+    """Decompress `fasta_path` (a `.gz` file) to the plain-FASTA path `dest`.
+
+    If this raises partway through (truncated/corrupt source, `$SCRATCH` full
+    or otherwise unwritable -- both realistic on shared HPCC storage), `dest`
+    may exist as a partial file; the caller cleans it up unconditionally in a
+    `finally` block using the same deterministic path, regardless of how far
+    this function got.
+    """
     with gzip.open(fasta_path, "rb") as src, dest.open("wb") as dst:
         shutil.copyfileobj(src, dst)
-    return dest
 
 
 @dataclass(frozen=True)
@@ -193,8 +206,15 @@ def run_batch(
         genome_out_dir = out_dir / tag
         genome_out_dir.mkdir(parents=True, exist_ok=True)
 
-        decompressed_path = _decompress_genome(genome.fasta_path, scratch_dir, tag)
+        decompressed_path = _decompressed_dest_path(genome.fasta_path, scratch_dir, tag)
         try:
+            # Decompression is inside the try/except, not before it: a
+            # corrupt/truncated .gz source or an I/O error on $SCRATCH (both
+            # realistic on shared HPCC storage) must be treated exactly like a
+            # run_pipeline failure for this genome -- logged, recorded in
+            # `failures`, and NOT allowed to propagate out of run_batch and
+            # abort every remaining genome in the batch.
+            _decompress_genome(genome.fasta_path, decompressed_path)
             outcome = run_pipeline(
                 genome_fasta=decompressed_path,
                 proteome_fasta=None,
@@ -211,4 +231,9 @@ def run_batch(
                     GenomeRunFailure(taxid=genome.taxid, accession=genome.accession, reason=str(exc))
                 )
         finally:
+            # `decompressed_path` is a deterministic path computed before the
+            # decompression attempt, so this cleans up both a fully-written
+            # copy and a partial one left behind by a mid-copy failure; it is
+            # a no-op (missing_ok=True) if decompression never got far enough
+            # to create the file at all.
             decompressed_path.unlink(missing_ok=True)

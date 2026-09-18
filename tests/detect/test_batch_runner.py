@@ -175,6 +175,56 @@ def test_run_batch_continues_after_one_genome_fails(tmp_path, monkeypatch):
     assert list(scratch.iterdir()) == []
 
 
+def test_run_batch_continues_after_one_genome_fails_to_decompress(tmp_path, monkeypatch):
+    """A genuinely corrupt/truncated .gz source must not abort the rest of the
+    batch, and must be recorded via the same `failures` mechanism a
+    run_pipeline failure uses -- not a second, separate reporting path.
+    """
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    monkeypatch.setenv("SCRATCH", str(scratch))
+
+    corrupt = tmp_path / "corrupt.fa.gz"
+    corrupt.write_bytes(b"this is not gzip data at all")
+    good = tmp_path / "good.fa.gz"
+    _write_gz_fasta(good)
+    genomes = [
+        _genome(1, "CORRUPT", corrupt),
+        _genome(2, "GOOD", good),
+    ]
+
+    calls = []
+
+    def fake_run_pipeline(genome_fasta, proteome_fasta, taxid, db_root, reference_fasta):
+        calls.append(taxid)
+        return DetectionOutcome(results=[])
+
+    out_dir = tmp_path / "out"
+    failures: list[GenomeRunFailure] = []
+    run_batch(
+        genomes,
+        tmp_path / "db",
+        tmp_path / "reference.faa",
+        out_dir,
+        run_pipeline=fake_run_pipeline,
+        failures=failures,
+    )
+
+    # run_pipeline was never called for the corrupt genome, but processing
+    # continued and the good genome still ran and produced a report.
+    assert calls == [2]
+    assert (out_dir / "2_GOOD" / "detected_loci.gff3").exists()
+
+    # The decompression failure was recorded the same way a run_pipeline
+    # failure would be -- one GenomeRunFailure in the same `failures` list.
+    assert len(failures) == 1
+    assert failures[0].taxid == 1
+    assert failures[0].accession == "CORRUPT"
+
+    # No partial/leftover decompressed file left behind on scratch.
+    assert list(scratch.iterdir()) == []
+
+
 def test_run_batch_raises_loudly_when_scratch_unset(tmp_path, monkeypatch):
     monkeypatch.delenv("SCRATCH", raising=False)
     genome = _genome(1, "A", tmp_path / "a.fa.gz")

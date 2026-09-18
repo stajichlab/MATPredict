@@ -1,0 +1,152 @@
+record_id: 746128_a1163_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 746128
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Eurotiomycetes;o__Eurotiales;f__Aspergillaceae;g__Aspergillus;s__Aspergillus_fumigatus
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Aspergillus fumigatus
+  strain:
+    name: A1163
+    known: true
+    culture_collection_ids:
+    - A1163
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: COX13->APN2->MAT1-2-1(degenerate remnant)->MAT1-1-1->SLA2
+    definition_note: 'Heterothallic MAT1-1 idiomorph, taken from the A. fumigatus
+      A1163 (CEA10-derived) genome, supercontig DS499596.1. The region is in the opposite
+      orientation to Af293: COX13 -- APN2 -- [MAT idiomorph] -- SLA2. The idiomorph
+      carries the alpha-box gene MAT1-1-1 (AFUB_042900, EDP53120.1, 368 aa, annotated
+      ''mating-type protein MAT alpha 1'' and noted by the submitters as similar to
+      A. nidulans matB-1-1). Immediately adjacent, AFUB_042890 (EDP53119.1) is annotated
+      ''mating-type factor MAT1-2-1-like protein, putative''; the curator aligned
+      it directly and found it is a DEGENERATE 3'' REMNANT of MAT1-2-1: its C-terminal
+      ~100 residues are nearly identical to the Af293 MAT1-2-1 protein XP_754989.2,
+      while the HMG-box-encoding 5'' part is absent/frameshifted. It is recorded here
+      as present core_MAT under the name MAT1-2-1 so the remnant is not lost, following
+      the precedent of the MAT1-1-2 remnant retained in the Cytospora mali MAT1-2
+      record in this database. This remnant is consistent with the HMG-gene fragment
+      reported in the A. fumigatus MAT1-1 locus in the secondary literature, but the
+      curator did not verify the ''360 bp'' figure against a primary source and makes
+      no claim about its exact length here. The alpha-box and HMG positions are offset
+      relative to Af293, as described by Galagan et al. 2005.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: DS499596.1
+        seq_region: DS499596.1
+      start: 2517390
+      end: 2530649
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: COX13
+  protein_accession: ncbi_protein:EDP53117.1
+  role: flanking_conserved
+  present: true
+  locus_tag: AFUB_042870
+  segment_index: 0
+  start: 2517390
+  end: 2518130
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: APN2
+  protein_accession: ncbi_protein:EDP53118.1
+  role: flanking_conserved
+  present: true
+  locus_tag: AFUB_042880
+  segment_index: 0
+  start: 2518491
+  end: 2520679
+  strand: +
+  order_in_locus: 1
+- gene_index: 2
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:EDP53119.1
+  role: core_MAT
+  present: true
+  locus_tag: AFUB_042890
+  segment_index: 0
+  start: 2521591
+  end: 2522628
+  strand: '-'
+  order_in_locus: 2
+- gene_index: 3
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:EDP53120.1
+  role: core_MAT
+  present: true
+  locus_tag: AFUB_042900
+  segment_index: 0
+  start: 2522745
+  end: 2523902
+  strand: +
+  order_in_locus: 3
+- gene_index: 4
+  name: SLA2
+  protein_accession: ncbi_protein:EDP53121.1
+  role: flanking_conserved
+  present: true
+  locus_tag: AFUB_042910
+  segment_index: 0
+  start: 2526379
+  end: 2530649
+  strand: '-'
+  order_in_locus: 4
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: A. fumigatus has a demonstrated heterothallic sexual cycle;
+      isolates of complementary mating types (i.e. a MAT1-1 partner and a MAT1-2 partner)
+      are required for cleistothecium and ascospore formation and give recombinant
+      progeny (O'Gorman et al. 2009; Szewczyk & Krappmann 2010).
+    citations:
+    - pmid: '19043401'
+      doi: 10.1038/nature07528
+    - pmid: '20348388'
+      doi: 10.1128/EC.00375-09
+  boundaries:
+    tier: 2
+    experimental_method: No published base-level idiomorph coordinates were verified
+      for strain A1163. Gene coordinates are curator-derived from the A1163 WGS annotation
+      on DS499596.1, fetched directly via NCBI efetch on 2026-09-17.
+    citations:
+    - pmid: '18404212'
+      doi: null
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: 'No published mating-type assay on strain A1163 itself was
+      located. The MAT1-1 assignment is curator-derived from the primary sequence
+      record: the region carries an intact alpha-box gene and only a degenerate 3''
+      remnant of MAT1-2-1 (verified by direct protein alignment against Af293 XP_754989.2).
+      The MAT1-1/MAT1-2 idiomorph system itself is experimentally established for
+      the species (Paoletti et al. 2005; O''Gorman et al. 2009), but that does not
+      by itself type this strain, so this key is deliberately tier 2.'
+    citations:
+    - pmid: '16005299'
+      doi: 10.1016/j.cub.2005.05.045
+    - pmid: '18404212'
+      doi: null
+validation:
+  status: needs_review
+  rejection_reason: null
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 19043401|746128|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

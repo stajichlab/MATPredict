@@ -1,0 +1,134 @@
+record_id: 115814_voucher-101_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 115814
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Lecanoromycetes;o__Teloschistales;f__Teloschistaceae;g__Dufourea;s__Dufourea_flammea
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Dufourea flammea
+  strain:
+    name: '101'
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: MAT1-2-1 only (no flanking anchors in the deposit)
+    definition_note: 'MAT1-2-1 gene of Dufourea flammea (deposited under the name
+      Xanthoria flammea; NCBI taxid 115814 lists "Xanthoria flammea" as a synonym),
+      specimen voucher 101, GenBank AJ888227.1, from Scherrer et al. 2005. This is
+      the accession that supplies CAI59780.2, the HMG-domain query protein used by
+      Pizarro et al. 2019 for their Lecanoromycetes-wide tBLASTn screen. Coordinates,
+      strand and protein accession were re-read from the GenBank flatfile via NCBI
+      efetch on 2026-09-17.
+
+      IMPORTANT LIMITATION: this deposit is only 1752 bp and contains the MAT1-2-1
+      gene alone. Neither anchoring gene (SLA2, APN2) is present, so the MAT locus
+      boundaries are NOT established for this species. completeness is "partial" and
+      excluded_from_coordinate_benchmark is true for exactly that reason: the recorded
+      segment is simply the extent of the deposited fragment (1..1752), chosen by
+      the curator, and must not be scored as a locus-boundary prediction target. Only
+      the gene-level coordinates (291..1448) are meaningful here.
+
+      The species is recorded as heterothallic because the opposite idiomorph exists
+      in this species as a separate Scherrer et al. deposit (AJ888131.1, "Xanthoria
+      flammea partial MAT1-1-1 gene ... specimen voucher 2", 397 bp), i.e. different
+      individuals carry different idiomorphs. That is inference from two deposits,
+      not a segregation experiment in this species; Scherrer et al. ran their single-ascus
+      segregation assay on X. polycarpa, X. parietina and X. elegans, not on D. flammea.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AJ888227.1
+        seq_region: AJ888227.1
+      start: 1
+      end: 1752
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:CAI59780.2
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 291
+  end: 1448
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: SLA2
+  protein_accession: null
+  role: flanking_conserved
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+- gene_index: 2
+  name: APN2
+  protein_accession: null
+  role: flanking_conserved
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: PCR amplification, cloning and sequencing of the MAT1-2-1
+      gene from a field-collected specimen of D. flammea (Scherrer et al. 2005)
+    citations:
+    - pmid: '16266815'
+      doi: 10.1016/j.fgb.2005.09.002
+  boundaries:
+    tier: 2
+    experimental_method: null
+    citations:
+    - pmid: '16266815'
+      doi: 10.1016/j.fgb.2005.09.002
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: null
+    citations:
+    - pmid: '16266815'
+      doi: 10.1016/j.fgb.2005.09.002
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AJ888227.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 16266815|115814|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

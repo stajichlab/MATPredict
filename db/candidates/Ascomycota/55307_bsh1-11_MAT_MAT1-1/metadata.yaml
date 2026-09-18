@@ -1,0 +1,141 @@
+record_id: 55307_bsh1-11_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 55307
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Pezizomycetes;o__Pezizales;f__Tuberaceae;g__Tuber;s__Tuber_indicum
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Tuber indicum
+  strain:
+    name: BSH1-11
+    known: true
+    culture_collection_ids:
+    - BSH1-11
+    differs_from_sequenced: true
+mating_type:
+  locus_name: MATtub
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: MAT1-1-1
+    definition_note: 'TISSUE SOURCE CAVEAT (applies to all Kinoshita et al. 2018 Tuber
+      records in this batch): the GenBank source feature for this accession states
+      tissue_type="ascocarp" -- the DNA was extracted from a whole fruiting body,
+      not an isolated haploid mycelial culture. Rubini et al. 2011 (PMID 20961294)
+      directly demonstrated for T. melanosporum that ascocarp/gleba tissue is a chimeric
+      mix of two mating-type genotypes (the maternal/ascogonial partner and the fertilizing
+      paternal partner), and that only single-ascospore dissection -- not whole-ascocarp
+      PCR -- gives a clean single-genotype readout. Consequently, amplification of
+      only one MAT idiomorph from a given ascocarp in Kinoshita et al. 2018 does not
+      by itself prove that ascocarp''s contributing genotypes were both that idiomorph;
+      it may simply reflect PCR/primer performance on a mixed template (the paper
+      reports amplification success of only 28/47 specimens for MAT1-1-1 and 33/48
+      for MAT1-2-1). The heterothallic system call for this species is not re-derived
+      from single-spore segregation in this record; it follows the paper''s own explicit
+      classification of the T. indicum species complex and T. melanosporum as heterothallic
+      (citing prior work including Rubini et al. 2011''s single-ascospore genotyping
+      in T. melanosporum), combined with the population-level pattern that many individual
+      ascocarps in the underlying data amplify only one idiomorph, not both.
+
+
+      THIS RECORD. GenBank LC312365, 543 bp, /isolate="BSH1-11", /tissue_type="ascocarp",
+      /db_xref taxon:55307, reference Kinoshita et al. 2018 (PMID 29590201). Sequence
+      is a PCR amplicon spanning most of the MAT1-1-1 gene (partial 5''/3'' CDS markers
+      on the deposit, primers i3/i11/i12 for MAT1-1-1 or i5/i13 for MAT1-2-1 per the
+      paper''s Methods) -- no flanking gene (SLA2/APN2-equivalent or otherwise) is
+      present on this short deposit, so completeness is ''partial'' and excluded_from_coordinate_benchmark
+      is true. Gene identity (MAT1-1-1) is the depositor''s own /product annotation,
+      independently re-fetched and confirmed by the curator via NCBI efetch. IMPORTANT:
+      unlike the other single-idiomorph vouchers in this batch, a MAT1-2-1 sequence
+      (LC312337.1, protein_id BBB16432.1, independently verified by the curator via
+      NCBI efetch, same isolate="BSH1-11") was ALSO recovered from this SAME ascocarp
+      in Table 1 of Kinoshita et al. 2018. This is the norm rather than the exception
+      for T. indicum in this dataset: of the 8 T. indicum vouchers in Table 1, 4 (BSH1-11,
+      BSH1-12, HD6-15, HD6-16) plus 2 more with partial coverage (SM1-1, ysh1-7) yielded
+      BOTH MAT1-1-1 and MAT1-2-1 sequences from the same ascocarp, and only 2 (SM1-2,
+      ysh1-8) yielded MAT1-2-1 alone; no T. indicum voucher in this table yielded
+      MAT1-1-1 alone. Per the tissue-source caveat above (ascocarp = chimeric tissue
+      of two mating partners), this pattern is consistent with heterothallism plus
+      a PCR/tissue-sampling bias toward co-recovering both idiomorphs in this species''
+      ascocarps, NOT with homothallism -- this record is therefore filed as a standalone
+      MAT1-1 idiomorph record (mirroring 55307_ysh1-8_MAT_MAT1-2 for the MAT1-2 side),
+      not as a ''combined'' single-genome homothallic record. The reviewer should
+      weigh whether a companion note referencing LC312337.1 is preferred over filing
+      it as its own record; the curator judged the BSH1-11 MAT1-2-1 sequence redundant
+      with the cleaner 55307_ysh1-8_MAT_MAT1-2 record and did not file it separately,
+      but the accession is fully verified and available if the reviewer wants a distinct
+      record for it.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: LC312365.1
+        seq_region: LC312365.1
+      start: 1
+      end: 543
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:BBB16460.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 543
+  strand: +
+  order_in_locus: 0
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: PCR amplification of genomic DNA from a field-collected ascocarp
+      using gene-specific primers, followed by bidirectional Sanger sequencing (Kinoshita
+      et al. 2018).
+    citations:
+    - &id001
+      pmid: '29590201'
+      doi: 10.1371/journal.pone.0193745
+  boundaries:
+    tier: 2
+    experimental_method: No flanking gene or full idiomorph boundary is captured on
+      this short PCR-amplicon deposit; the recorded segment is the entire deposited
+      accession (a partial gene fragment only), independently reconfirmed by the curator
+      via NCBI efetch.
+    citations:
+    - *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Gene-specific PCR primers targeting either the alpha-domain
+      (MAT1-1-1) or the HMG-box domain (MAT1-2-1), with the resulting sequence's identity
+      confirmed by the depositors' own /product annotation (MAT1-1-1).
+    citations:
+    - *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: LC312365.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 29590201|55307|MAT|MAT1-1|BSH1-11
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

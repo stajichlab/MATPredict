@@ -1,0 +1,108 @@
+record_id: 199306_silveira_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 199306
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Eurotiomycetes;o__Onygenales;f__Onygenaceae;g__Coccidioides;s__Coccidioides_posadasii
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Coccidioides posadasii
+  strain:
+    name: Silveira
+    known: true
+    culture_collection_ids:
+    - Silveira
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-2-1
+    definition_note: 'MAT1-2 idiomorph region of Coccidioides posadasii strain Silveira,
+      from the targeted GenBank deposit EF472258.1 of Fraser et al. 2007 (5,014 bp;
+      curator confirmed the flatfile REFERENCE block cites PMID 17337636). Only the
+      HMG-domain gene is annotated on this deposit, so completeness is ''partial'':
+      the captured APN2/COX13 copies and the other MAT1-2 idiomorph genes that Mandel
+      et al. 2007 report (~9 kb, five genes) are outside or unannotated on this accession.
+      A sister deposit EF472257.1 carries the same gene for C. posadasii strain 1037.
+      The corresponding full MAT1-2 gene complement can be seen in the C. immitis
+      RS record (5501_rs_MAT_MAT1-2) proposed alongside this one. Gene-name convention:
+      in the source GenBank deposits of Mandel et al. 2007 the captured flanking genes
+      are given MAT-style names (cox13 = ''MAT1-1-2'', APN2 = ''MAT1-1-3''). Those
+      names COLLIDE with the unrelated Sordariomycete core genes MAT1-1-2/MAT1-1-3
+      already used in this phylum''s order.yml, so this record uses the gene-identity
+      names COX13 and APN2 with role flanking_conserved, exactly as done for the Cytospora
+      mali record where the same genes are found inside the idiomorph. Note the biology:
+      in Coccidioides APN2 and COX13 are CAPTURED INSIDE the MAT idiomorph rather
+      than merely flanking it, and the MAT1-1 and MAT1-2 copies have diverged strongly
+      from each other (Fraser et al. 2007; Mandel et al. 2007). The role vocabulary
+      describes gene identity, not physical position; order_in_locus reflects the
+      true order. No sexual cycle has ever been observed in Coccidioides, and no functional
+      characterisation of these MAT genes exists, so ALL evidence keys in this record
+      are tier 2.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: EF472258.1
+        seq_region: EF472258.1
+      start: 1
+      end: 5014
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:ABO87599.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 770
+  end: 1899
+  strand: '-'
+  order_in_locus: 0
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: Identified by genome analysis, direct sequencing and bioinformatics
+      (Fraser et al. 2007); cDNA structures for Coccidioides MAT genes determined
+      by Mandel et al. 2007. No mating observed, no functional validation.
+    citations:
+    - pmid: '17337636'
+      doi: 10.1128/EC.00018-07
+    - pmid: '17513566'
+      doi: 10.1128/EC.00117-07
+  boundaries:
+    tier: 2
+    experimental_method: Gene coordinates are the authors' published GenBank CDS annotation
+      on EF472258.1, re-fetched and checked by the curator via NCBI efetch. The full
+      idiomorph boundary is not captured by this accession.
+    citations:
+    - pmid: '17337636'
+      doi: 10.1128/EC.00018-07
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: HMG-domain identity plus diagnostic PCR mating-type typing
+      of isolates (Fraser et al. 2007; Mandel et al. 2007). Not a functional mating
+      assay.
+    citations:
+    - pmid: '17337636'
+      doi: 10.1128/EC.00018-07
+    - pmid: '17513566'
+      doi: 10.1128/EC.00117-07
+validation:
+  status: needs_review
+  rejection_reason: null
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 17337636|199306|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -1,0 +1,199 @@
+record_id: 40559_sas56_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 40559
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Leotiomycetes;o__Helotiales;f__Sclerotiniaceae;g__Botrytis;s__Botrytis_cinerea
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Botrytis cinerea
+  strain:
+    name: SAS56
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-1-5->MAT1-1-1
+    definition_note: 'The MAT1-1 idiomorph of Botrytis cinerea (teleomorph Botryotinia
+      fuckeliana), from the classical mating tester strain SAS56, deposited as GenBank
+      KF944385.1 (6,433 bp). The GenBank source feature carries /note="type: MAT1-1"
+      and /strain="SAS56". Gene identities, CDS coordinates, strands and protein accessions
+      below were read directly off that primary GenBank record by the curator via
+      NCBI efetch. The complementary MAT1-2 idiomorph of the same study is deposited
+      as KF944386.1 (strain SAS405, /note="type: MAT1-2", 4,501 bp) and carries MAT1-2-1
+      (AHX22634.1, HMG-domain) and MAT1-2-4/MAT1-2-10 (AHX22635.1); a companion MAT1-2
+      record can be built from it if the curator wants the pair.
+
+      EVIDENCE CAVEAT -- read before accepting. Unlike the Sclerotinia records curated
+      in the same pass, KF944385.1 has no published primary paper behind it. Its GenBank
+      REFERENCE block lists De Miccolis Angelini, Rotolo, Pollastro and Faretra, "Molecular
+      analysis of the mating type (MAT1) locus in the heterothallic ascomycete Botryotinia
+      fuckeliana (Botrytis cinerea)", JOURNAL "Unpublished", plus a 2013 direct submission.
+      The curator searched PubMed and found no publication matching that title. This
+      record is therefore tier 2 on all three evidence axes: the sequence and its
+      annotation are real and primary, but the supporting literature is either an
+      unpublished direct submission or, for the architecture, published work that
+      is homology- and annotation-based rather than a functional characterisation
+      of this locus.
+
+      Published support cited below is: (i) Wilson et al. 2023 (PLOS ONE 18:e0292619),
+      the Leotiomycete-wide survey that uses B. cinerea as one of its reference species
+      and describes its MAT1-1 idiomorph as carrying MAT1-1-1 and MAT1-1-5 plus a
+      short MAT1-2-1 fragment -- an explicitly BLAST/tBLASTn-plus-manual-annotation
+      study with no functional validation of any MAT locus; and (ii) De Miccolis Angelini
+      et al. 2018 (Phytopathology 108:1315-1325), whose own experiments are on Monilinia
+      but which states that the Monilinia MAT1 idiomorphs are flanked by APN2 and
+      SLA2 and "resemble those of Botrytis cinerea and other heterothallic fungi in
+      the family Sclerotiniaceae", with MAT1-1 containing MAT1-1-1 (alpha-box) and
+      MAT1-1-5 and MAT1-2 containing MAT1-2-1 (HMG-box) and MAT1-2-10. The B. cinerea
+      architecture claim in that paper is comparative, not experimental.
+
+      Heterothallism itself in this species is long-established by classical crossing
+      genetics (Faretra, Antonacci and Pollastro 1988, J Gen Microbiol 134:2543-2550),
+      but the curator did not obtain that 1988 paper and so does not assert here that
+      it designates SAS56 as the MAT1-1 tester; the MAT1-1 assignment below rests
+      on the submitter''s own /note on the GenBank record and on the alpha-box identity
+      of MAT1-1-1. That is why idiomorph_assignment is tier 2 rather than tier 1.
+
+      completeness is "partial": KF944385.1 annotates only the two MAT1-1 genes. APN2
+      and SLA2 are documented to flank this locus in the Sclerotiniaceae (and are
+      annotated on the sister S. trifoliorum records KU726096.1/KU726097.1 curated
+      in the same pass) but neither is a feature on this record, so no flanking coordinates
+      are asserted. The segment below spans only MAT1-1-5 through MAT1-1-1. Wilson
+      et al. 2023 additionally report a short MAT1-2-1 fragment within the B. cinerea
+      MAT1-1 idiomorph; no such feature is annotated on KF944385.1, so it is not listed
+      here.
+
+      Nomenclature: the alpha-box gene is annotated on KF944385.1 as gene "MAT1-1-1",
+      product "mating type protein MAT1-1", note "alpha-domain containing protein"
+      (AHX22632.1, 353 aa); the second gene is annotated as gene "MAT1-1-5", product
+      "putative mating type protein MAT1-1" (AHX22633.1, 376 aa). Both names are used
+      as deposited.
+
+      Correction to a widely repeated secondary description: Butler 2007 ("The Evolution
+      of MAT: The Ascomycetes", in Heitman et al. eds., Sex in Fungi, ASM Press),
+      citing a Broad Institute draft genome, describes the B. cinerea MAT locus as
+      containing "a single alpha-box gene ... between APN2 and SLA2" plus "an additional
+      gene between APN2 and the alpha-box protein ... with no significant similarity
+      to proteins from other fungal species". The primary record shows that the "additional
+      gene" is MAT1-1-5, which is now a named, recognised MAT gene found across the
+      Leotiomycetes and is annotated as such on this very record; it should not be
+      treated as an uncharacterised ORF of unknown identity. Butler''s statement that
+      no MAT1-1-2 ortholog is present at this locus is consistent with the primary
+      record (no MAT1-1-2 is annotated on KF944385.1); MAT1-1-2 is accordingly not
+      listed below at all rather than asserted absent.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KF944385.1
+        seq_region: KF944385.1
+      start: 1594
+      end: 4413
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-5
+  protein_accession: ncbi_protein:AHX22633.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1594
+  end: 2894
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:AHX22632.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3253
+  end: 4413
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: 'Targeted sequencing of the MAT1-1 idiomorph of tester strain
+      SAS56, deposited as GenBank KF944385.1, but the accompanying manuscript is listed
+      on the record as "Unpublished" and no matching publication was found in PubMed
+      by the curator. The published descriptions of this locus available today (Wilson
+      et al. 2023; De Miccolis Angelini et al. 2018) are homology- and annotation-based,
+      not functional characterisations of this locus. Tier 2, not tier 1: real, primary
+      sequence data, but no published experimental validation of the locus itself.
+
+      '
+    citations:
+    - pmid: '37824487'
+      doi: 10.1371/journal.pone.0292619
+    - pmid: '29767553'
+      doi: 10.1094/PHYTO-03-18-0074-R
+  boundaries:
+    tier: 2
+    experimental_method: 'Coordinates are exact CDS spans read by the curator directly
+      from GenBank KF944385.1 via NCBI efetch on 2026-09-17, and both protein accessions
+      (AHX22633.1, AHX22632.1) were confirmed to exist with the expected product names
+      and lengths (376 and 353 aa) via NCBI esummary. Tier 2 because the underlying
+      deposit is an unpublished direct submission and the locus was not bounded by
+      a published flank-to-flank sequencing experiment; only the MAT1-1 gene block,
+      not an APN2-to-SLA2 span, is asserted.
+
+      '
+    citations:
+    - pmid: '37824487'
+      doi: 10.1371/journal.pone.0292619
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: 'MAT1-1 assignment rests on the alpha-box (alpha-domain)
+      identity of MAT1-1-1 annotated on the primary record and on the submitter''s
+      own /note="type: MAT1-1" and /strain="SAS56" qualifiers, corroborated by the
+      homology-based Leotiomycete survey of Wilson et al. 2023. B. cinerea heterothallism
+      is long-established by classical crossing genetics (Faretra et al. 1988), but
+      the curator did not read that paper and does not assert here that it designates
+      SAS56 as the MAT1-1 tester, so no experimental mating-phenotype evidence is
+      claimed for this strain''s idiomorph. Tier 2.
+
+      '
+    citations:
+    - pmid: '37824487'
+      doi: 10.1371/journal.pone.0292619
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: KF944385.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 37824487|40559|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

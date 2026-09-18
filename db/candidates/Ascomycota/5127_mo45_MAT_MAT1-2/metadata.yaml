@@ -1,0 +1,158 @@
+record_id: 5127_mo45_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 5127
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Hypocreales;f__Nectriaceae;g__Fusarium;s__Fusarium_fujikuroi
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Fusarium fujikuroi
+  strain:
+    name: MO45 (A00999)
+    known: true
+    culture_collection_ids:
+    - MO45 (A00999)
+    differs_from_sequenced: true
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: MAT1-2-1(-), single gene
+    definition_note: 'SPECIES/RECORD ROLE. Fusarium fujikuroi (teleomorph Gibberella
+      fujikuroi) is the HETEROTHALLIC counterpart to the homothallic Fusarium graminearum
+      / Gibberella zeae record proposed in the same pass (5518_3639_MAT_combined).
+      Together they capture the contrast drawn by Yun et al. 2000 (PMID 11118131):
+      three genes at MAT1-1 and one at MAT1-2, carried in two different nuclei of
+      two different strains here, versus all four genes at one chromosomal location
+      in a single G. zeae nucleus. NCBI''s current species name for this organism
+      is Fusarium fujikuroi (taxid 5127); the source paper and the deposits'' notes
+      use ''Gibberella fujikuroi'' and give the anamorph as Fusarium moniliforme.
+
+
+      NOMENCLATURE. The gene names recorded here are the standard Turgeon and Yoder
+      forms (MAT1-1-1, MAT1-1-2, MAT1-1-3, MAT1-2-1), which is what Yun et al. 2000
+      uses in the paper itself and what db/Ascomycota/order.yml''s ''MAT'' locus declares.
+      IMPORTANT AND VERIFIED DIRECTLY: the GenBank deposits predate that standard
+      and carry the LEGACY /gene qualifiers MAT-1-3, MAT-1-2, MAT-1-1 (on AF100925.1)
+      and MAT-2 (on AF100926.1) -- i.e. a single hyphenated level, not the three-level
+      form. The curator confirmed these legacy symbols on the feature tables via NCBI
+      efetch and mapped them as MAT-1-1 = MAT1-1-1, MAT-1-2 = MAT1-1-2, MAT-1-3 =
+      MAT1-1-3, MAT-2 = MAT1-2-1. The standard convention is defined by Turgeon and
+      Yoder 2000, ''Proposed nomenclature for mating type genes of filamentous ascomycetes'',
+      Fungal Genet Biol 31:1-5, PMID 11118130, doi 10.1006/fgbi.2000.1227 (verified
+      via PubMed efetch); it appeared in the same issue immediately before Yun et
+      al. 2000. The deposits'' own /note qualifiers independently support the orthology
+      used here by stating similarity to the Neurospora crassa mat A-3 / mat A-2 /
+      mat A-1 / mat a-1 genes respectively -- the same orthology asserted in the paired
+      Neurospora records.
+
+
+      BOUNDARIES ARE NOT PUBLISHED AS COORDINATES. Neither deposit annotates APN2/SLA2/COX13
+      or any other flanking gene, and no idiomorph endpoints are published on these
+      accessions. The core segment recorded below is a curator-defined mechanical
+      span from the first base of the leftmost MAT CDS to the last base of the rightmost
+      MAT CDS. The gene/mRNA features carry partial markers (''<''/''>'') because
+      the UTRs run past the sequenced ends, although the CDS coordinates themselves
+      are exact. completeness is therefore ''partial'', boundaries evidence is tier
+      2, and excluded_from_coordinate_benchmark is true.
+
+
+      THIS RECORD. GenBank AF100926.1, 4003 bp, /strain="MO45 (A00999)", db_xref taxon:5127,
+      reference Yun et al. 2000 (PMID 11118131). One MAT1-2 gene verified on the feature
+      table via NCBI efetch: MAT-2 complement(join(284..495,543..805,862..1058)) protein_id
+      AAC71056.1. Strain MO45 is not the F. fujikuroi reference-genome strain (IMI
+      58289), hence differs_from_sequenced: true.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AF100926.1
+        seq_region: AF100926.1
+      start: 284
+      end: 1058
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AAC71056.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 284
+  end: 1058
+  strand: '-'
+  order_in_locus: 0
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: 'Cloning and complete sequencing of both MAT idiomorphs from
+      genetically defined opposite-mating-type strains of heterothallic Gibberella
+      fujikuroi, with RT-PCR confirmation that the MAT genes are expressed and that
+      every predicted intron is removed (Yun et al. 2000).
+
+      '
+    citations:
+    - pmid: '11118131'
+      doi: 10.1006/fgbi.2000.1226
+  boundaries:
+    tier: 2
+    experimental_method: 'No idiomorph endpoints are published on this accession and
+      no flanking genes are annotated on it. The CDS coordinates are the authors''
+      own GenBank annotation, independently re-fetched and transcribed by the curator;
+      the recorded core segment is a curator-defined first-to-last MAT CDS span. Tier
+      2 for the boundary claim specifically.
+
+      '
+    citations:
+    - pmid: '11118131'
+      doi: 10.1006/fgbi.2000.1226
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'The two idiomorphs were cloned from two separate strains
+      of known, genetically defined opposite mating type (MO44 vs MO45), and their
+      gene content matches the canonical heterothallic Pezizomycotina pattern -- alpha-box
+      MAT1-1-1 plus MAT1-1-2 and HMG-domain MAT1-1-3 in one strain, HMG-domain MAT1-2-1
+      in the other (Yun et al. 2000). Cross-genus orthology is further supported by
+      the deposits'' own similarity notes to the Neurospora crassa mat A-1/mat A-2/mat
+      A-3/mat a-1 genes.
+
+      '
+    citations:
+    - pmid: '11118131'
+      doi: 10.1006/fgbi.2000.1226
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AF100926.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: 'Gene spans, strands and protein_ids were transcribed verbatim from the
+      AF100926.1 feature table returned by NCBI efetch, so they are self-consistent
+      with the deposited record by construction; no independent re-alignment of predicted
+      translations was performed in this pass.
+
+      '
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 11118131|5127|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

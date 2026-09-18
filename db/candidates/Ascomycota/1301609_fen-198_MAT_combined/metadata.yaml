@@ -1,0 +1,172 @@
+record_id: 1301609_fen-198_MAT_combined
+record_version: 1
+taxonomy:
+  taxid: 1301609
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Lecanoromycetes;o__Teloschistales;f__Teloschistaceae;g__Xanthocarpia;s__Xanthocarpia_feracissima
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Xanthocarpia feracissima
+  strain:
+    name: FEN_198
+    known: true
+    culture_collection_ids:
+    - Lendemer 46741 (NY-2794903)
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  - MAT1-2
+  system: homothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: fragmented
+    reference_orientation: '[NODE_352] MAT1-1-1<-APN2 | [NODE_39] hypothetical-protein->MAT1-2-1->SLA2(fused)'
+    definition_note: 'BOTH idiomorph genes present in one genome (alpha-box MAT1-1-1
+      and HMG-box MAT1-2-1), so the architecture recorded here is homothallic, on
+      two separate assembly contigs.
+
+
+      *** COORDINATES ARE NOT INDEPENDENTLY NCBI-VERIFIABLE FOR THIS RECORD. *** Supplementary
+      Table S1 gives this sample''s accession as SAMN19302549, which is a BioSample,
+      not an assembly or nucleotide accession. The curator confirmed SAMN19302549
+      is real (Xanthocarpia feracissima, sample FEN_198, University of Colorado Boulder)
+      but it has SRA reads only (SRR14722176) and NO linked assembly at NCBI. The
+      reported contigs ''NODE_352_length_19404_cov_4.31037'' and ''NODE_39_length_44817_cov_4.00986''
+      are raw SPAdes contig names from the authors'' own unsubmitted assembly and
+      are not retrievable from NCBI. The only Xanthocarpia feracissima assembly at
+      NCBI, GCA_964255735.1 (WGS CAXUYH01, BioSample SAMEA115958149), is a metabat2
+      bin of the SAME reads (SRR14722176) submitted independently by the Spribille
+      Lab in 2024 -- it is a DIFFERENT assembly, so the NODE_39/NODE_352 coordinates
+      cannot be transferred onto it without re-running an alignment. Consequently
+      sequence_source.type is ''none'', no segment coordinates are recorded, gene
+      coordinates are carried as published-only, and excluded_from_coordinate_benchmark
+      is TRUE. Gene coordinates below are transcribed from the paper''s table and
+      were NOT re-derived from any NCBI sequence -- do not treat them as equivalent
+      to the NCBI-verified Xanthoria records.
+
+
+      PAPER-INTERNAL CONTRADICTION: S1''s ''MAT_Scaffolds'' sheet calls this sample
+      heterothallic, but S1''s ''Homothallic'' sheet lists it with both MAT1-1 and
+      MAT1-2 genes, and the paper''s own read-depth test for it (BUSCO 45.6x, alpha-box
+      47.7x, HMG 51.9x; p = 0.56 and 0.67) is non-significant, i.e. consistent with
+      both idiomorphs at single-genome depth. This record follows the observed gene
+      content and the depth test (homothallic) and flags the conflict for the reviewer.
+      S1 also names the sample ''FEN_98'' on the Depth sheet while the BioSample record
+      names it FEN_198.
+
+
+      The contig arrangement is APN2 + MAT1-1-1 on NODE_352 (both minus strand) and
+      MAT1-2-1 + SLA2 on NODE_39, i.e. the two idiomorph genes are NOT adjacent here,
+      unlike the Xanthoria records. S1 additionally reports an unnamed hypothetical
+      protein (41649-42513, minus) between them on NODE_39, and states that the SLA2
+      CDS is fused with an upstream polymerase-zeta prediction and gives NO coordinates
+      for SLA2 -- SLA2 is therefore recorded as present with null coordinates.'
+    segments: []
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: APN2
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: null
+  start: 4035
+  end: 6308
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: MAT1-1-1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: null
+  start: 565
+  end: 3315
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: MAT1-2-1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: null
+  start: 42993
+  end: 44152
+  strand: +
+  order_in_locus: 2
+- gene_index: 3
+  name: SLA2
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: +
+  order_in_locus: 3
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: BLASTx of the assembly against a curated sla2/apn2/MAT1-1/MAT1-2
+      query database (bit score >75), Augustus v3.3 gene prediction with A. nidulans
+      parameters on the hit contigs, and PSI-BLAST confirmation of the predicted proteins
+      (White et al. 2024). This is genome-annotation/homology evidence only -- no
+      mating assay, crossing experiment, transcript evidence, or targeted locus cloning
+      was performed for this species. Tier 2 per this project's strict evidence bar.
+      For THIS record the underlying assembly is not public, so even the genome-annotation
+      evidence cannot be independently re-derived.
+    citations:
+    - pmid: '38686438'
+      doi: 10.1093/gbe/evae094
+  boundaries:
+    tier: 2
+    experimental_method: BLASTx of the assembly against a curated sla2/apn2/MAT1-1/MAT1-2
+      query database (bit score >75), Augustus v3.3 gene prediction with A. nidulans
+      parameters on the hit contigs, and PSI-BLAST confirmation of the predicted proteins
+      (White et al. 2024). This is genome-annotation/homology evidence only -- no
+      mating assay, crossing experiment, transcript evidence, or targeted locus cloning
+      was performed for this species. Tier 2 per this project's strict evidence bar.
+      For THIS record the underlying assembly is not public, so even the genome-annotation
+      evidence cannot be independently re-derived.
+    citations:
+    - pmid: '38686438'
+      doi: 10.1093/gbe/evae094
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: BLASTx of the assembly against a curated sla2/apn2/MAT1-1/MAT1-2
+      query database (bit score >75), Augustus v3.3 gene prediction with A. nidulans
+      parameters on the hit contigs, and PSI-BLAST confirmation of the predicted proteins
+      (White et al. 2024). This is genome-annotation/homology evidence only -- no
+      mating assay, crossing experiment, transcript evidence, or targeted locus cloning
+      was performed for this species. Tier 2 per this project's strict evidence bar.
+      For THIS record the underlying assembly is not public, so even the genome-annotation
+      evidence cannot be independently re-derived.
+    citations:
+    - pmid: '38686438'
+      doi: 10.1093/gbe/evae094
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: false
+  accession_resolved_date: '2026-09-17'
+  accession_resolved_version: null
+  sequence_match:
+    status: not_performed
+    per_gene: []
+    notes: 'No NCBI sequence exists for the reported SPAdes contigs NODE_39 / NODE_352,
+      so no coordinate or codon check could be run. accession_resolved is set False
+      deliberately: SAMN19302549 is a BioSample with SRA reads only and no assembly.'
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 38686438|1301609|MAT|combined
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

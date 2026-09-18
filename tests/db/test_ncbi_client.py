@@ -87,3 +87,97 @@ def test_fetch_nucleotide_sequence_minus_strand_requests_strand2(tmp_path):
     seq = client.fetch_nucleotide_sequence("EU009461.1", 100, 109, "-")
     assert seq == "GTACGTACGT"
     assert "strand=2" in captured_urls[0]
+
+
+# Real GenBank flatfile for PV763125.2 (Ceratocystis fimbriata MAT1-2-1, partial cds),
+# fetched live via efetch during this task's implementation and trimmed to the
+# source/CDS feature lines plus the real ORIGIN sequence block (1172 bp, matches the
+# feature coordinates exactly). This is the genuine multi-exon, minus-strand, 5'-partial,
+# codon_start=2 CDS this project's research identified as the real-world case that
+# curators have previously hand-transcribed incorrectly (twice, this session).
+GENBANK_FIXTURE_TEXT = """LOCUS       PV763125                1172 bp    DNA     linear   PLN 05-AUG-2026
+DEFINITION  Ceratocystis fimbriata isolate Cf089 putative mating type 1-2-1
+            protein (MAT1-2-1) gene, partial cds.
+ACCESSION   PV763125
+VERSION     PV763125.2
+KEYWORDS    .
+SOURCE      Ceratocystis fimbriata
+  ORGANISM  Ceratocystis fimbriata
+            Eukaryota; Fungi; Dikarya; Ascomycota; Pezizomycotina;
+            Sordariomycetes; Hypocreomycetidae; Microascales;
+            Ceratocystidaceae; Ceratocystis.
+FEATURES             Location/Qualifiers
+     source          1..1172
+                     /organism="Ceratocystis fimbriata"
+                     /mol_type="genomic DNA"
+                     /isolate="Cf089"
+                     /db_xref="taxon:5158"
+     gene            complement(<1..>1172)
+                     /gene="MAT1-2-1"
+     CDS             complement(join(156..334,386..684,741..810,877..>1172))
+                     /gene="MAT1-2-1"
+                     /codon_start=2
+                     /product="putative mating type 1-2-1 protein"
+                     /protein_id="YGD29557.1"
+                     /translation="YPLEMNNTSSFGLHTDLNGIFQPDPQANVNMNYIPSLNHFEMNT
+                     IAQSGPTPEMNTVAQFQPGLDMSVVSGSNLGVDSDRVSDINSNANASSAADKIQAVIE
+                     ANLVLSLKPKSKNFLLHSTTLTLGTEVHLVRDLQQPHRFLIGDKMLFNTHQKSAVSIP
+                     GCEDPLWVEVIPRSLIRPAPQVSKKKVEYRVPRPPNAYILYRKDKHRGVKARNPHMDN
+                     NDISIWLGERWRFETSKIRDHYQKTATDYKEMFMLTYPDYQYRPRKANQRKRRAKRAA
+                     VSAH"
+ORIGIN
+        1 aaggcagcaa atccttgtaa atcattcggt agaaaatggt aaatacgaaa ctcattatat
+       61 tccatatgca aataaacttc cctagtcaaa ttggtatgaa tgtcatccat cggccctagc
+      121 gccgctaata agccaggaac tctgcaagta ggtattcaat gtgccgatac cgcagcccgt
+      181 ttggcacggc gctttcgctg gttcgctttc cgggggcgat attgatagtc aggatatgtc
+      241 aacatgaaca tttccttgta atctgtggcc gtcttttggt aatggtcccg aatcttcgag
+      301 gtttcaaatc tccaccgctc gcctagccat attgctagaa ggttgtcagc atttactcgg
+      361 tcgtggcagg ctggggaaag cttacaaata tcattattgt ccatatgagg attcctagcc
+      421 ttaacgccac gatgtttgtc tttgcgatac aaaatgtagg cattcggggg gcgaggaact
+      481 cgatattcaa ccttcttttt cgaaacctgc ggcgccggcc ggatcaggct tcgaggaatg
+      541 acttcgaccc acaacgggtc ttcacatcca ggtatggata cagctgattt ctggtgggta
+      601 ttaaagagca tcttatcacc aatgaggaac ctatgcggct gttgaaggtc ccggacaaga
+      661 tggacctcag taccgagtgt caggcttcag agtgtgttaa ttagttattc tagtatcatg
+      721 ggcaataggt cgagactcac gtcgtgctgt gtagcaggaa attctttgat tttggtttca
+      781 atgataatac caagttagct tcaataacgg ctatattaac tgagtaaaac ataaattgcg
+      841 gaaacaccat atcaaatatt tttcgcaaaa tcgcaccctg gattttgtca gctgcggatg
+      901 aagcattagc gttcgaattg atatcggata ctctatcgga gtccacacca agatttgacc
+      961 cagaaacaac actcatatcg agtccgggct gaaattgggc aacagtgttc atctcaggag
+     1021 tagggccaga ctgagcgata gtgttcattt cgaagtgatt taatgaaggg atgtaattca
+     1081 tattgacatt agcttgaggg tcaggttgga agatgccatt caaatcagtg tgtagaccaa
+     1141 atgaagaggt attattcatc tcaagcggat ag
+//
+"""
+
+
+def test_fetch_cds_structure_parses_multi_exon_partial_minus_strand_codon_start(tmp_path):
+    fetcher = CachedFetcher(
+        cache_dir=tmp_path,
+        transport=_fake_transport({"db=nuccore&id=PV763125.2&rettype=gb": GENBANK_FIXTURE_TEXT}),
+    )
+    client = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
+    result = client.fetch_cds_structure("PV763125.2", protein_id="YGD29557.1")
+    # Empirically verified against Biopython's actual parse of this real record (not
+    # assumed): for a minus-strand complement(join(...)) CDS, Biopython's
+    # SeqFeature.location.parts already iterates in REVERSE of the GenBank text listing
+    # order -- i.e. already descending-genomic-coordinate / transcript (5'->3') order,
+    # matching this project's exon-list convention (see validate.py's
+    # _assemble_transcript and test_validate.py's minus-strand fixtures) directly, with
+    # NO further reversal needed in this function.
+    assert result.exons == [(877, 1172), (741, 810), (386, 684), (156, 334)]
+    assert result.strand == "-"
+    assert result.codon_start == 2
+    assert result.transl_table == 1
+
+
+def test_fetch_cds_structure_raises_when_protein_id_not_found(tmp_path):
+    fetcher = CachedFetcher(
+        cache_dir=tmp_path,
+        transport=_fake_transport({"db=nuccore&id=PV763125.2&rettype=gb": GENBANK_FIXTURE_TEXT}),
+    )
+    client = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
+    try:
+        client.fetch_cds_structure("PV763125.2", protein_id="NOT_A_REAL_PROTEIN.1")
+        assert False, "expected ValueError"
+    except ValueError as exc:
+        assert "NOT_A_REAL_PROTEIN.1" in str(exc)

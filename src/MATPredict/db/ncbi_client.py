@@ -14,6 +14,23 @@ _EUTILS_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 
 
 @dataclass(frozen=True)
+class CdsStructure:
+    """A real, per-exon CDS structure parsed from a GenBank flatfile CDS feature.
+
+    `exons` is in this project's 1-based, fully-closed convention (matching
+    `fetch_nucleotide_sequence`'s coordinate contract), listed in transcript order:
+    ascending genomic coordinate for a plus-strand feature, descending genomic
+    coordinate for a minus-strand feature -- exactly the order `db/validate.py`'s
+    `_assemble_transcript` expects and does not itself reorder.
+    """
+
+    exons: list[tuple[int, int]]
+    strand: str
+    codon_start: int
+    transl_table: int
+
+
+@dataclass(frozen=True)
 class AccessionStatus:
     """Result of resolving an NCBI accession via esummary."""
 
@@ -82,6 +99,53 @@ class NcbiClient:
         body = self.fetcher.get(url)
         record = SeqIO.read(StringIO(body), "fasta-blast")
         return str(record.seq)
+
+    def fetch_cds_structure(self, accession: str, protein_id: str) -> CdsStructure:
+        """Parse a GenBank record's real CDS feature into an exon/codon_start/transl_table
+        structure, for populating a curated gene's `exons`/`codon_start`/`transl_table`
+        schema fields from the actual deposit rather than a hand-transcribed span -- the
+        exact bug class (recording the gene/mRNA span or the outer join() bounds instead
+        of the real per-exon structure) that caused two real coordinate errors found and
+        fixed earlier in this project's curation work.
+
+        `protein_id` disambiguates which CDS feature to use when an accession carries
+        more than one CDS (e.g. a multi-gene MAT locus deposit), matched against each
+        CDS feature's own `protein_id` qualifier.
+
+        Coordinate conversion: Biopython's `SeqFeature.location`/`CompoundLocation` uses
+        a 0-based start, 1-based-inclusive end (Python-slice-like) convention internally;
+        this project uses 1-based, fully-closed. Converting requires adding 1 to each
+        part's start only -- verified directly against a real fixture (PV763125.2, a
+        genuine multi-exon, minus-strand, 5'-partial, codon_start=2 CDS): Biopython's
+        raw `(0, 1172)`-style half-open ints for `877..>1172` came back as
+        `(876, 1172)`, and `876 + 1 == 877` matches the real GenBank-text coordinate.
+
+        Exon order: empirically verified against that same real fixture that for a
+        minus-strand `complement(join(...))` feature, Biopython's
+        `location.parts` already iterates in the REVERSE of the GenBank text listing
+        order -- i.e. already in descending-genomic-coordinate (transcript, 5'->3')
+        order -- matching this project's exon-list convention (see this module's
+        `CdsStructure` docstring and `validate.py`'s `_assemble_transcript`) directly.
+        No reversal is performed here: reversing would produce ascending order, which
+        is wrong for a minus-strand feature under this project's convention.
+        """
+        url = self._url("efetch.fcgi", f"db=nuccore&id={accession}&rettype=gb&retmode=text")
+        body = self.fetcher.get(url)
+        record = SeqIO.read(StringIO(body), "genbank")
+        for feature in record.features:
+            if feature.type != "CDS":
+                continue
+            if feature.qualifiers.get("protein_id", [None])[0] != protein_id:
+                continue
+            location = feature.location
+            exons = [(int(part.start) + 1, int(part.end)) for part in location.parts]
+            strand = "-" if location.strand == -1 else "+"
+            codon_start = int(feature.qualifiers.get("codon_start", ["1"])[0])
+            transl_table = int(feature.qualifiers.get("transl_table", ["1"])[0])
+            return CdsStructure(
+                exons=exons, strand=strand, codon_start=codon_start, transl_table=transl_table
+            )
+        raise ValueError(f"no CDS with protein_id={protein_id!r} found in {accession}")
 
     def fetch_taxonomy_lineage(self, taxid: int) -> list[int]:
         """Fetch a taxid's NCBI Taxonomy ancestor lineage as a list of taxids (root-first).

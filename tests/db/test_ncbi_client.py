@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from MATPredict.db.http_cache import CachedFetcher
-from MATPredict.db.ncbi_client import NcbiClient
+from MATPredict.db.ncbi_client import CdsStructure, NcbiClient, to_schema_exons
 
 ESUMMARY_LIVE = """{"result": {"uids": ["1"], "1": {"accessionversion": "GCA_000315115.1", "status": "live"}}}"""
 ESUMMARY_SUPPRESSED = """{"result": {"uids": ["1"], "1": {"accessionversion": "GCA_999999999.1", "status": "suppressed"}}}"""
@@ -206,3 +206,22 @@ def test_fetch_cds_structure_raises_when_protein_id_not_found(tmp_path):
         assert False, "expected ValueError"
     except ValueError as exc:
         assert "NOT_A_REAL_PROTEIN.1" in str(exc)
+
+
+def test_to_schema_exons_converts_tuple_list_to_dict_list():
+    cds = CdsStructure(
+        exons=[(3395, 3546), (3595, 3827), (3879, 4549)],
+        strand="+",
+        codon_start=1,
+        transl_table=1,
+    )
+    assert to_schema_exons(cds) == [
+        {"start": 3395, "end": 3546},
+        {"start": 3595, "end": 3827},
+        {"start": 3879, "end": 4549},
+    ]
+
+
+def test_to_schema_exons_empty_list():
+    cds = CdsStructure(exons=[], strand="+", codon_start=1, transl_table=1)
+    assert to_schema_exons(cds) == []

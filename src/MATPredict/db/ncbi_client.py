@@ -30,6 +30,20 @@ class CdsStructure:
     transl_table: int
 
 
+def to_schema_exons(cds: CdsStructure) -> list[dict[str, int]]:
+    """Convert a `CdsStructure`'s `exons` tuple list into the record schema's shape.
+
+    `CdsStructure.exons` is `list[tuple[int, int]]` (this module's internal, terse
+    representation), but `db/_schema/metadata.schema.yaml`'s `genes[].exons` requires
+    `list[{start: int, end: int}]` -- a list of dicts. This bridges that gap so a
+    curator backfilling a gene's real exon structure from `fetch_cds_structure` can
+    assign the result straight onto a record's `gene["exons"]` field without
+    hand-rolling the tuple-to-dict conversion each time (previously done ad hoc,
+    uncommitted, once per backfill script during this branch's Task 4).
+    """
+    return [{"start": start, "end": end} for start, end in cds.exons]
+
+
 @dataclass(frozen=True)
 class AccessionStatus:
     """Result of resolving an NCBI accession via esummary."""

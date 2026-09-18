@@ -9,6 +9,9 @@ from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect.pipeline import run_pipeline
 from MATPredict.detect.reference_fasta import build_reference_fasta
 from MATPredict.detect.report import write_detection_gff3, write_detection_report
+from MATPredict.detect.rollout_aggregate import aggregate_reports, write_rollout_summary
+
+_ROLLOUT_REPORT_FILENAME = "detection_report.yaml"
 
 
 def _cmd_detect(args: argparse.Namespace) -> int:
@@ -50,6 +53,37 @@ def _cmd_detect_benchmark(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_detect_rollout_summary(args: argparse.Namespace) -> int:
+    if not args.reports_dir or not args.out:
+        raise ValueError(
+            "--reports-dir and --out are required for `matpredict detect rollout-summary`"
+        )
+    reports_dir = Path(args.reports_dir)
+    if not reports_dir.is_dir():
+        raise ValueError(f"--reports-dir {reports_dir} is not a directory")
+
+    # One expected report path per genome directory Task 3's run_batch
+    # created (`out_dir/<taxid>_<accession>/`) -- built here rather than
+    # inside `aggregate_reports` so a genome whose pipeline failed (leaving
+    # an empty directory, per Task 3's known gap) is still counted as an
+    # attempted genome rather than silently dropped from `total_genomes`.
+    report_paths = sorted(
+        genome_dir / _ROLLOUT_REPORT_FILENAME
+        for genome_dir in reports_dir.iterdir()
+        if genome_dir.is_dir()
+    )
+
+    summary = aggregate_reports(report_paths)
+    write_rollout_summary(summary, Path(args.out))
+    print(
+        f"aggregated {summary.total_genomes} genome(s) "
+        f"({len(summary.genome_errors)} with no report, "
+        f"{len(summary.not_detected)} not-detected entries, "
+        f"{len(summary.anomalies)} anomalies) -> {args.out}"
+    )
+    return 0
+
+
 def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     """Register `detect` and its `benchmark` action onto the top-level parser.
 
@@ -70,3 +104,11 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     action = detect.add_subparsers(dest="detect_action")
     benchmark = action.add_parser("benchmark", help="Run the leave-one-out Sn/Sp benchmark suite")
     benchmark.set_defaults(func=_cmd_detect_benchmark)
+
+    rollout_summary = action.add_parser(
+        "rollout-summary",
+        help="Consolidate a batch's per-genome detection_report.yaml files into one summary",
+    )
+    rollout_summary.add_argument("--reports-dir", required=False)
+    rollout_summary.add_argument("--out", required=False)
+    rollout_summary.set_defaults(func=_cmd_detect_rollout_summary)

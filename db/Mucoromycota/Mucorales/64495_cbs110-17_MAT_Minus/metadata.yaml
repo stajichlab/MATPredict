@@ -106,21 +106,31 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: HQ450316.1
   sequence_match:
-    status: pass
+    status: fail
     per_gene:
     - gene_index: 0
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
+      percent_identity: 87.9
+      coverage: 66.31
+      status: fail
     - gene_index: 1
       percent_identity: 100.0
       coverage: 100.0
       status: pass
     - gene_index: 2
       percent_identity: 100.0
-      coverage: 100.0
+      coverage: 17.15
       status: pass
-    notes: ''
+    notes: 'tptA (gene_index 0) fails independent re-translation. HQ450316.1''s
+      own feature table (re-fetched via NCBI efetch on 2026-09-18) shows the real
+      tptA CDS is join(<1..561,815..1378) -- a 2-exon, 1-intron gene. This schema
+      stores only a single start/end/strand span per gene with no intron model,
+      so translating the raw 1..1378 span cannot reproduce ADU02300.1 exactly.
+      The recorded coordinates already match the CDS''s real outer bounds exactly;
+      this is a known schema limitation, not a coordinate error. sexM is single-exon
+      and passes exactly; rnhA is also multi-exon
+      (join(2876..2962,3086..3547,3607..4215,4447..4641,...)) but its recorded
+      span already passes because the matched region before its first intron is
+      100% identical.'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

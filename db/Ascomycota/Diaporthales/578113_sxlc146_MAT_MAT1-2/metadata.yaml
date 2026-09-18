@@ -135,29 +135,43 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: KX349090.1
   sequence_match:
-    status: pass
+    status: fail
     per_gene:
     - gene_index: 0
       percent_identity: 100.0
-      coverage: 100.0
+      coverage: 2.2
       status: pass
     - gene_index: 1
       percent_identity: 100.0
-      coverage: 100.0
+      coverage: 32.66
       status: pass
     - gene_index: 2
       percent_identity: 100.0
-      coverage: 100.0
+      coverage: 3.88
       status: pass
     - gene_index: 3
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
+      percent_identity: 52.5
+      coverage: 92.31
+      status: fail
     - gene_index: 4
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
-    notes: ''
+      percent_identity: 94.47
+      coverage: 55.5
+      status: warn
+    notes: 'Both COX13 (gene_index 3) and MAT1-1-2 (gene_index 4) fail/warn
+      independent re-translation. KX349090.1''s own feature table (re-fetched via
+      NCBI efetch on 2026-09-18) shows: COX13 CDS is
+      join(12954..13107,13179..13203,13479..13646,13801..13846) (4 exons);
+      MAT1-1-2 CDS is
+      complement(join(14568..14792,14843..14902,14953..15306,15440..15976)) (4
+      exons). This schema stores only a single start/end/strand span per gene
+      with no intron model, so translating the raw recorded spans cannot
+      reproduce either protein exactly. The recorded coordinates already match
+      each CDS''s real outer bounds exactly; this is a known schema limitation,
+      not a coordinate error. SLA2, MAT1-2-1 and APN2 are also multi-exon but
+      their recorded spans already pass because the matched region before each
+      gene''s first intron is 100% identical (their low coverage values are
+      expected for the same reason -- only a short leading exon aligns before the
+      independent translation diverges at the first intron).'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

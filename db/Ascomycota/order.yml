@@ -25,6 +25,18 @@ loci:
       - {name: APN2, role: flanking_conserved}
       - {name: SLA2, role: flanking_conserved}
       - {name: COX13, role: flanking_conserved}
+      # MAT1-2-4 (A. fumigatus Af293, XP_754990.2) is a genuinely distinct gene from
+      # Leotiomycetes' MAT1-2-4, which was renamed MAT1-2-10 above precisely to avoid
+      # this collision (Wilken et al. 2017). This entry is Eurotiomycetes-only; do not
+      # conflate the two literal names sharing this spelling.
+      - {name: MAT1-2-4, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
+      # MAT1-1-4 (Coccidioides posadasii RMSCC1040, ABS19621.1) is a Coccidioides-
+      # specific captured MAT1-1-idiomorph gene (Fraser et al. 2007; Mandel et al. 2007).
+      - {name: MAT1-1-4, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      # CIMG_00407 (C. immitis RS genome, XP_001246636.2) is named by its locus tag
+      # because no published MAT1-2-x number could be verified for it; a captured
+      # Coccidioides MAT1-2-idiomorph gene (Fraser et al. 2007; Mandel et al. 2007).
+      - {name: CIMG_00407, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
       # matA-1/matA-2/matA-3/"mt a-1" are Neurospora crassa's own official NCBI Gene
       # symbols for its MAT1-1-1/MAT1-1-2/MAT1-1-3/MAT1-2-1 equivalents (classic
       # literature "mat A-1"/"mat A-2"/"mat A-3"/"mat a-1"; Glass et al. 1990;

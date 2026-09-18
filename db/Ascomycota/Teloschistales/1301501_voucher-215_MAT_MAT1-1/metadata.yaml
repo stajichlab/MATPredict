@@ -1,0 +1,170 @@
+record_id: 1301501_voucher-215_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 1301501
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Lecanoromycetes;o__Teloschistales;f__Teloschistaceae;g__Polycauliona;s__Polycauliona_polycarpa
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Polycauliona polycarpa
+  strain:
+    name: '215'
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: SLA2->MAT1-1-1(-)->APN2(-)
+    definition_note: 'MAT1-1 idiomorph of the heterothallic lichen-forming fungus
+      Polycauliona polycarpa (published under the name Xanthoria polycarpa; NCBI taxid
+      1301501 lists "Xanthoria polycarpa" as a synonym). Sequence is EMBL/GenBank
+      AJ884599.1, deposited by Scherrer, Zippler and Honegger for their 2005 study,
+      which cloned the X. parietina MAT locus from a genomic lambda phage library
+      and then used the two flanking genes (SLA2 and a DNA lyase = APN2 homologue)
+      as PCR anchors to amplify both idiomorphs of X. polycarpa. Segment span here
+      is the whole deposited fragment (1..5809) and is therefore curator_derived,
+      not a published locus boundary; the deposit itself does explicitly annotate
+      the idiomorph-specific interval as misc_feature 1785..5054 ("MAT1-1 idiomorph"),
+      which is the published boundary statement. All gene coordinates, strands and
+      protein accessions below were re-read by the curator directly from the GenBank
+      flatfile via NCBI efetch on 2026-09-17, not copied from any paper.
+
+      The GenBank gene name for the APN2 anchor is "DNA lyase"; it is recorded here
+      as APN2 (the order.yml flanking_conserved gene name) because APN2 is the DNA
+      lyase that anchors the Pezizomycotina MAT locus, and because Pizarro et al.
+      2019 explicitly treat this same Scherrer et al. protein (CAI59775.1, the X.
+      parietina orthologue) as their APN2 query. SLA2 and APN2 are both partial CDS
+      features at the fragment ends (<1..523 and 5566..>5809); completeness is "complete"
+      in the sense used by Pizarro et al. 2019 -- both anchoring genes are present
+      and flank the idiomorph -- not in the sense that each anchor CDS is full length.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AJ884599.1
+        seq_region: AJ884599.1
+      start: 1
+      end: 5809
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: SLA2
+  protein_accession: ncbi_protein:CAI59770.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 523
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 1
+    end: 373
+  - start: 437
+    end: 523
+  codon_start: 2
+  transl_table: 1
+- gene_index: 1
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:CAI59771.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2171
+  end: 3277
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 3040
+    end: 3277
+  - start: 2171
+    end: 2985
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: APN2
+  protein_accession: ncbi_protein:CAI59772.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5566
+  end: 5809
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 5566
+    end: 5809
+  codon_start: 2
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: genomic lambda phage library screening and cloning of the
+      MAT locus in the congener X. parietina, followed by PCR amplification, cloning
+      and sequencing of both X. polycarpa idiomorphs using the SLA2 and DNA lyase
+      (APN2) flanking genes as anchors (Scherrer et al. 2005)
+    citations:
+    - pmid: '16266815'
+      doi: 10.1016/j.fgb.2005.09.002
+  boundaries:
+    tier: 1
+    experimental_method: complete sequencing of the cloned locus fragment; the deposit
+      annotates the MAT1-1 idiomorph interval explicitly (misc_feature 1785..5054).
+      The segment recorded here is the full deposited fragment and was re-read from
+      GenBank AJ884599.1 by the curator.
+    citations:
+    - pmid: '16266815'
+      doi: 10.1016/j.fgb.2005.09.002
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'alpha-domain (MAT_Alpha1, pfam04769) identity of MAT1-1-1
+      plus an experimental single-ascus segregation assay: eight single-spore isolates
+      derived from one ascus of X. polycarpa each carried either an alpha-box or an
+      HMG fragment, never both, demonstrating heterothallism and mutually exclusive
+      idiomorphs'
+    citations:
+    - pmid: '16266815'
+      doi: 10.1016/j.fgb.2005.09.002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AJ884599.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 16266815|1301501|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

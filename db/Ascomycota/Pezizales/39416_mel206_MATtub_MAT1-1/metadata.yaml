@@ -1,0 +1,191 @@
+record_id: 39416_mel206_MATtub_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 39416
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Pezizomycetes;o__Pezizales;f__Tuberaceae;g__Tuber;s__Tuber_melanosporum
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Tuber melanosporum
+  strain:
+    name: Mel206
+    known: true
+    culture_collection_ids:
+    - Mel206
+    differs_from_sequenced: true
+mating_type:
+  locus_name: MATtub
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: Rsm22-like->MAT1-1-1(-)->unnamed_hypothetical
+    definition_note: 'SPECIES/RECORD ROLE. Isolate Mel206 is the opposite mating type
+      to the T. melanosporum REFERENCE GENOME strain Mel28 (Martin et al. 2010, Nature,
+      the whole-genome sequencing project). Rubini et al. 2011''s own abstract states
+      the sequenced Mel28 genome carries the HMG-domain MAT1-2-1 gene but LACKS the
+      alpha-domain MAT1-1-1 gene, and that MAT1-1-1 was subsequently isolated from
+      a different, MAT1-2-1-negative strain (Mel206, this record) using primers designed
+      from the flanking regions conserved between the two idiomorphs. This is the
+      classic heterothallic pattern (unlinked, mutually exclusive idiomorphs in different
+      individuals), directly analogous to the Ophiostomatales/Fusarium pairs already
+      in this database.
+
+
+      GAP -- NO PAIRED MAT1-2 RECORD PROPOSED. The curator searched NCBI protein/nuccore
+      (esearch, elink from PMID 20961294) for a MAT1-2-1 accession from the Mel28
+      reference genome and found none: only one nucleotide record (this one, HM370280.1)
+      and one protein record (ADU56595.1, the MAT1-1-1 product itself) are directly
+      linked to PMID 20961294 via NCBI''s elink pubmed->nuccore/protein. A keyword
+      search for ''high mobility group''/''HMG-box'' proteins in Tuber melanosporum
+      returns ~20 candidate WGS-annotated proteins (the domain is common to many transcription
+      factors, not MAT-specific), and without the paper''s own locus-tag citation
+      (full text is paywalled at Wiley; only the PubMed abstract was accessible to
+      the curator) there is no reliable way to pick the correct one without risking
+      a fabricated accession. Per this project''s curation rules, no MAT1-2 record
+      is proposed for T. melanosporum in this pass; a human reviewer with full-text/institutional
+      access to Rubini et al. 2011 (or its GenBank Sequence IDs cited in the Methods/Table)
+      could resolve this gap.
+
+
+      FLANKING GENE ARCHITECTURE -- NOVEL FOR THIS DATABASE. HM370280.1 (15143 bp)
+      contains three CDS: (1) 641-2977, protein ADU56594.1, annotated ''hypothetical
+      protein'' with a depositor /note of ''similar to 37S ribosomal protein Rsm22'';
+      (2) the core mat1-1-1 gene (below); (3) 12995-14640, protein ADU56596.1, annotated
+      ''hypothetical protein'' with no similarity noted. Neither gene corresponds
+      to the canonical Pezizomycotina flanking pair (APN2/SLA2/COX13) used elsewhere
+      in this database (e.g. Ophiostomatales, Diaporthales) -- those genes are not
+      present on this deposit. The abstract states the PCR strategy specifically targeted
+      ''conserved regions flanking the mating type (MAT) locus'' to find MAT1-1-1
+      in other strains, i.e. the depositors themselves treat these two genes as the
+      locus-flanking anchors for Tuber, distinct from the canonical Pezizomycotina
+      set. Recorded here as role flanking_conserved on that basis (conserved across
+      Tuber strains/species per the paper''s own PCR-primer-design logic), NOT as
+      evidence of conservation with the APN2/SLA2/COX13 set. This is the first Pezizomycetes
+      record in this database and the first documented departure from the canonical
+      flanking-gene set for any Pezizomycotina class curated so far -- flagged for
+      reviewer awareness since the current db/Ascomycota/order.yml gene vocabulary
+      for the ''MAT'' locus does not include these two gene names (they would need
+      to be added, or left off order.yml''s gene enum and simply recorded here as
+      record-local flanking genes, per reviewer''s judgement).
+
+
+      BOUNDARIES. All three CDS on this accession carry partial (''<''/''>'') location
+      markers at their outer exon/UTR edges -- i.e. this 15143 bp insert is a sequenced
+      genomic clone/PCR-walk fragment whose true upstream/downstream locus edges were
+      NOT independently established beyond the sequenced insert itself (the same situation
+      as the Fusarium fujikuroi MO44/MO45 pair already in this database). completeness
+      is therefore ''partial'', boundaries evidence is tier 2, and excluded_from_coordinate_benchmark
+      is true, mirroring that precedent exactly.
+
+
+      THIS RECORD. GenBank HM370280.1, 15143 bp, /isolate="Mel206", db_xref taxon:39416,
+      reference Rubini et al. 2011 (PMID 20961294). Gene mat1-1-1 (standard name MAT1-1-1)
+      verified on the feature table via NCBI efetch: CDS complement(join(4270..4302,4363..4883,4933..5338)),
+      /note=''Tmelmat1-1-1; contains alpha-box domain'', protein_id ADU56595.1.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: HM370280.1
+        seq_region: HM370280.1
+      start: 1
+      end: 15143
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: Rsm22-like
+  protein_accession: ncbi_protein:ADU56594.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 641
+  end: 2977
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:ADU56595.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4270
+  end: 5338
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: unnamed_flanking_ORF
+  protein_accession: ncbi_protein:ADU56596.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 12995
+  end: 14640
+  strand: +
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Genomic clone isolation and complete sequencing of the MAT1-1-1-containing
+      region from a field strain (Mel206) shown by PCR screening to lack MAT1-2-1,
+      complementing the reference genome (Mel28) which carries MAT1-2-1 but lacks
+      MAT1-1-1; the T. melanosporum species is further shown heterothallic by mating-type-specific
+      genotyping of individual dissected ascospores within asci (Rubini et al. 2011).
+    citations:
+    - &id001
+      pmid: '20961294'
+      doi: 10.1111/j.1469-8137.2010.03492.x
+  boundaries:
+    tier: 2
+    experimental_method: All three CDS on this accession carry partial exon/UTR location
+      markers at the sequenced insert's edges; no idiomorph endpoint beyond the sequenced
+      clone is published. Coordinates are the depositors' own GenBank annotation,
+      independently re-fetched and transcribed by the curator via NCBI efetch.
+    citations:
+    - *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: MAT1-1-1 identity confirmed by alpha-box domain content (depositor
+      /note) and by the mutually exclusive presence/absence pattern against MAT1-2-1
+      (present in the Mel28 reference genome, absent by PCR in Mel206); single-ascospore
+      genotyping in the same paper independently confirms mating-type segregation
+      in this species.
+    citations:
+    - *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: HM370280.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 20961294|39416|MATtub|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

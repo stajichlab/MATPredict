@@ -1,0 +1,164 @@
+record_id: 1301501_voucher-267_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 1301501
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Lecanoromycetes;o__Teloschistales;f__Teloschistaceae;g__Polycauliona;s__Polycauliona_polycarpa
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Polycauliona polycarpa
+  strain:
+    name: '267'
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: SLA2->MAT1-2-1->APN2(-)
+    definition_note: 'MAT1-2 idiomorph of Polycauliona polycarpa (published as Xanthoria
+      polycarpa), the opposite-idiomorph partner of record 1301501_voucher-215_MAT_MAT1-1.
+      Sequence is EMBL/GenBank AJ884598.1 (specimen voucher 267) from Scherrer et
+      al. 2005. This is the accession that supplies CAI59767.1, the SLA2 query protein
+      used by Pizarro et al. 2019 for their genome-wide tBLASTn screen of Lecanoromycetes.
+      Segment span is the whole deposited fragment (1..5698) and is curator_derived;
+      the deposit itself annotates the idiomorph interval explicitly as misc_feature
+      1786..4941 ("MAT1-2 idiomorph"). All gene coordinates, strands and protein accessions
+      were re-read from the GenBank flatfile via NCBI efetch on 2026-09-17.
+
+      The GenBank gene name for the APN2 anchor is "DNA lyase"; recorded here as APN2,
+      the order.yml flanking_conserved name (APN2 is the DNA lyase anchoring the Pezizomycotina
+      MAT locus; Pizarro et al. 2019 use the X. parietina orthologue CAI59775.1 as
+      their APN2 query). SLA2 and APN2 are partial CDSs at the fragment ends; "complete"
+      means both anchoring genes are present and flank the idiomorph, not that each
+      anchor CDS is full length.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AJ884598.1
+        seq_region: AJ884598.1
+      start: 1
+      end: 5698
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: SLA2
+  protein_accession: ncbi_protein:CAI59767.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 523
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 1
+    end: 373
+  - start: 437
+    end: 523
+  codon_start: 2
+  transl_table: 1
+- gene_index: 1
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:CAI59768.2
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3395
+  end: 4549
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 3395
+    end: 3546
+  - start: 3595
+    end: 3827
+  - start: 3879
+    end: 4549
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: APN2
+  protein_accession: ncbi_protein:CAI59769.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5451
+  end: 5698
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 5451
+    end: 5698
+  codon_start: 3
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: PCR amplification, cloning and sequencing of the MAT1-2 idiomorph
+      of X. polycarpa using the SLA2 and DNA lyase (APN2) flanking genes as anchors,
+      after the locus was first cloned from a genomic lambda phage library of X. parietina
+      (Scherrer et al. 2005)
+    citations:
+    - pmid: '16266815'
+      doi: 10.1016/j.fgb.2005.09.002
+  boundaries:
+    tier: 1
+    experimental_method: complete sequencing of the cloned locus fragment; the deposit
+      annotates the MAT1-2 idiomorph interval explicitly (misc_feature 1786..4941).
+      The segment recorded here is the full deposited fragment, re-read from GenBank
+      AJ884598.1 by the curator.
+    citations:
+    - pmid: '16266815'
+      doi: 10.1016/j.fgb.2005.09.002
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'HMG-box identity of MAT1-2-1 plus an experimental single-ascus
+      segregation assay: eight single-spore isolates from one ascus of X. polycarpa
+      each carried either an HMG or an alpha-box fragment, never both'
+    citations:
+    - pmid: '16266815'
+      doi: 10.1016/j.fgb.2005.09.002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AJ884598.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 16266815|1301501|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

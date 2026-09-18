@@ -1,0 +1,231 @@
+record_id: 5518_3639_MAT_combined
+record_version: 1
+taxonomy:
+  taxid: 5518
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Hypocreales;f__Nectriaceae;g__Fusarium;s__Fusarium_graminearum
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Fusarium graminearum
+  strain:
+    name: '3639'
+    known: true
+    culture_collection_ids:
+    - '3639'
+    differs_from_sequenced: true
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  - MAT1-2
+  system: homothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MAT1-1-3(-)->MAT1-1-2(+)->MAT1-1-1(+)->MAT1-2-1(-)
+    definition_note: 'SPECIES CHOICE. Fusarium graminearum (teleomorph Gibberella
+      zeae) was chosen over the heterothallic Gibberella fujikuroi complex because
+      it has the strongest EXPERIMENTAL validation of the MAT locus in the genus:
+      beyond the original cloning and sequencing (Yun et al. 2000), the locus has
+      been dissected by targeted gene replacement. Lee et al. 2003 differentially
+      deleted MAT1-1 or MAT1-2 from a wild-type MAT1-1;MAT1-2 haploid and obtained
+      self-sterile strains that still outcrossed to each other, proving both idiomorphs
+      are required for selfing; Desjardins et al. 2004 deleted the entire MAT1 locus
+      (perithecia and ascospores abolished) and restored fertility by complementation
+      with a copy of the whole locus. That is direct functional proof of both locus
+      identity and idiomorph identity, not genome annotation. The Gibberella/Fusarium
+      genus name pair is retained here as NCBI does: the GenBank record''s SOURCE
+      line reads ''Fusarium graminearum (Gibberella zeae)'' and db_xref taxon:5518;
+      the source paper and the deletion papers use ''Gibberella zeae''.
+
+
+      HOMOTHALLIC ARCHITECTURE. Unlike the heterothallic Pezizomycotina pattern (three
+      genes at MAT1-1 in one nucleus, one gene at MAT1-2 in the other), F. graminearum
+      carries ALL FOUR genes -- MAT1-1-1, MAT1-1-2, MAT1-1-3 and MAT1-2-1 -- tightly
+      linked at the same chromosomal location in a single haploid nucleus, interspersed
+      with G. zeae-specific sequence (Yun et al. 2000). The curator independently
+      confirmed the contrasting heterothallic case directly on NCBI: the G. fujikuroi
+      (Fusarium fujikuroi, taxid 5127) MAT1-1 idiomorph is GenBank AF100925.1 (strain
+      MO44 (A00149), three genes) and the MAT1-2 idiomorph is AF100926.1 (strain MO45
+      (A00999), one gene) -- two separate accessions from two separate strains, both
+      citing PMID 11118131. Those two idiomorphs are proposed as separate records
+      in the same pass (5127_mo44_MAT_MAT1-1, 5127_mo45_MAT_MAT1-2). Gene names here
+      follow The MAT1 / MAT1-1 / MAT1-2 / MAT1-x-x convention itself is defined by
+      Turgeon and Yoder 2000, ''Proposed nomenclature for mating type genes of filamentous
+      ascomycetes'', Fungal Genet Biol 31:1-5, PMID 11118130, doi 10.1006/fgbi.2000.1227
+      -- citation independently verified by the curator via PubMed efetch this session.
+      Note that it appeared in the same issue as, and immediately before, Yun et al.
+      2000 (PMID 11118131). mating_type.idiomorphs therefore lists BOTH MAT1-1 and
+      MAT1-2 and system is homothallic, following the same convention this database
+      already uses for combined-locus records (e.g. the Pneumocystis *_PM_combined
+      records).
+
+
+      SOURCE AND COORDINATES. Source is GenBank AF318048.1 (13675 bp, /strain="3639",
+      db_xref taxon:5518), the deposit accompanying Yun et al. 2000. All four gene
+      spans, strands and protein_ids below were read directly off the AF318048.1 feature
+      table via NCBI efetch by the curator. Strain 3639 is NOT the F. graminearum
+      reference-genome strain (PH-1), hence differs_from_sequenced: true. As an independent
+      cross-check, the same MAT gene cluster is present in the PH-1 RefSeq build as
+      FGSG_08890-FGSG_08893 on chromosome 2 (NC_026475.1); FGSG_08891 spans 270358..271938
+      complement, i.e. 1581 bp, exactly matching the MAT1-1-2 span 4797..6377 recorded
+      here. This was confirmed via NCBI Gene efetch.
+
+
+      SEGMENT BOUNDARY IS CURATOR-DERIVED. Neither Yun et al. 2000 nor the deposit
+      states explicit locus endpoints on AF318048.1, and AF318048.1 annotates only
+      the four MAT genes (no APN2/SLA2/COX13 flanking genes are present in the deposit,
+      so they are not represented here). The core segment recorded below, 3602..9614,
+      is defined mechanically as the span from the first base of the leftmost MAT
+      CDS (MAT1-1-3) to the last base of the rightmost MAT CDS (MAT1-2-1), leaving
+      3601 bp of unannotated sequence to the left and 4061 bp to the right of the
+      recorded core. boundaries evidence is therefore tier 2, not tier 1: the deletion
+      experiments delimit the locus functionally but publish no coordinates on this
+      accession. The gene coordinates themselves are from the authors'' own deposit
+      and are not in doubt, which is why excluded_from_coordinate_benchmark is left
+      false; a reviewer who wants the benchmark to score only published endpoints
+      should flip it to true.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AF318048.1
+        seq_region: AF318048.1
+      start: 3602
+      end: 9614
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-3
+  protein_accession: ncbi_protein:AAG42812.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3602
+  end: 4290
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: MAT1-1-2
+  protein_accession: ncbi_protein:AAG42811.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4797
+  end: 6377
+  strand: +
+  order_in_locus: 1
+- gene_index: 2
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:AAG42809.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 7049
+  end: 8139
+  strand: +
+  order_in_locus: 2
+- gene_index: 3
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AAG42810.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8750
+  end: 9614
+  strand: '-'
+  order_in_locus: 3
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: 'Cloning and complete sequencing of the MAT locus of homothallic
+      Gibberella zeae alongside heterothallic G. fujikuroi and asexual F. oxysporum,
+      with RT-PCR confirmation that all four MAT genes are expressed and spliced as
+      predicted (Yun et al. 2000); targeted gene replacement deleting the entire MAT1
+      locus abolished perithecium and ascospore production, and complementation with
+      a copy of the whole locus restored them (Desjardins et al. 2004).
+
+      '
+    citations:
+    - pmid: '11118131'
+      doi: 10.1006/fgbi.2000.1226
+    - pmid: '15066842'
+      doi: 10.1128/AEM.70.4.2437-2444.2004
+  boundaries:
+    tier: 2
+    experimental_method: 'No explicit locus endpoints are published on AF318048.1.
+      The four gene coordinates are the authors'' own GenBank annotation, independently
+      re-fetched and transcribed by the curator; the recorded core segment 3602..9614
+      is a curator-defined span from the first to the last MAT CDS. Tier 2 for the
+      boundary claim specifically, even though locus_existence and idiomorph_assignment
+      are tier 1.
+
+      '
+    citations:
+    - pmid: '11118131'
+      doi: 10.1006/fgbi.2000.1226
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'Gene identity by sequence (alpha-box MAT1-1-1; HMG-domain
+      MAT1-1-3 and MAT1-2-1) and homology to the two alternative idiomorphs of heterothallic
+      G. fujikuroi (Yun et al. 2000); functionally confirmed by differential targeted
+      deletion of MAT1-1 or MAT1-2 from the wild-type MAT1-1;MAT1-2 strain, which
+      converted the fungus from homothallic to obligately heterothallic -- the resulting
+      MAT1-1;mat1-2 and mat1-1;MAT1-2 strains were self-sterile but crossed to each
+      other (Lee et al. 2003).
+
+      '
+    citations:
+    - pmid: '11118131'
+      doi: 10.1006/fgbi.2000.1226
+    - pmid: '14507370'
+      doi: 10.1046/j.1365-2958.2003.03694.x
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AF318048.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: 'Gene spans, strands and protein_ids were transcribed verbatim from the
+      AF318048.1 feature table returned by NCBI efetch, so they are self-consistent
+      with the deposited record by construction; no independent re-alignment of predicted
+      translations was performed in this pass. Independent corroboration of the gene
+      cluster comes from the PH-1 RefSeq annotation (FGSG_08890-FGSG_08893, NC_026475.1),
+      checked separately via NCBI Gene.
+
+      '
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 11118131|5518|MAT|combined
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

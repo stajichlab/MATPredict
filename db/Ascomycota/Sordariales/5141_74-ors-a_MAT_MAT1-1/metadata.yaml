@@ -1,0 +1,209 @@
+record_id: 5141_74-ors-a_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 5141
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Sordariales;f__Sordariaceae;g__Neurospora;s__Neurospora_crassa
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Neurospora crassa
+  strain:
+    name: 74-ORS-A
+    known: true
+    culture_collection_ids:
+    - 74-ORS-A
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: matA-3(-)->matA-2(+)->matA-1(+)
+    definition_note: 'NOMENCLATURE. This record deliberately keeps Neurospora crassa''s
+      own documented gene symbols rather than forcing the Turgeon/Yoder MAT1-x-x convention
+      onto them. The names used here (matA-1, matA-2, matA-3) are the OFFICIAL NCBI
+      Gene symbols for this species, independently confirmed by the curator via NCBI
+      Gene efetch: matA-1 = GeneID 3880391 = NCU01958; matA-2 = NCU01959; matA-3 =
+      NCU01960. In the classic literature these appear as ''mat A-1'', ''mat A-2'',
+      ''mat A-3'' (Glass et al. 1990; Ferreira et al. 1996, 1998), and the MAT A-3
+      product is also called MT-A3. Their standard-nomenclature equivalents in the
+      Pezizomycotina MAT family vocabulary are matA-1 = MAT1-1-1 (alpha-box), matA-2
+      = MAT1-1-2, matA-3 = MAT1-1-3 (HMG-domain). The MAT1 / MAT1-1 / MAT1-2 / MAT1-x-x
+      convention itself is defined by Turgeon and Yoder 2000, ''Proposed nomenclature
+      for mating type genes of filamentous ascomycetes'', Fungal Genet Biol 31:1-5,
+      PMID 11118130, doi 10.1006/fgbi.2000.1227 -- citation independently verified
+      by the curator via PubMed efetch this session. Note that it appeared in the
+      same issue as, and immediately before, Yun et al. 2000 (PMID 11118131). The
+      exact classic symbol forms differ between the primary papers themselves: Ferreira
+      et al. 1996 writes ''mtA idiomorph''/''mtA-1'' in its title and ''mt A-2''/''mt
+      A-3'' in its abstract, while Ferreira et al. 1998 writes ''mat A-2''/''mat A-3''
+      in its title -- both verified via PubMed efetch. Because these names are NOT
+      in db/Ascomycota/order.yml''s declared gene list for the ''MAT'' locus (which
+      lists MAT1-1-1/MAT1-1-2/MAT1-1-3/MAT1-2-1/APN2/SLA2/COX13), the reviewer must
+      decide at accept time whether to (a) add these Neurospora synonyms to order.yml,
+      or (b) rename the genes here to the MAT1-x-x form. Gene names are NOT validated
+      against order.yml by the current curate-db code, so this record validates either
+      way. The IDIOMORPH value is likewise forced: N. crassa''s own documented idiomorph
+      name is simply ''A'' (mat A), but order.yml''s ''MAT'' locus enum only permits
+      MAT1-1/MAT1-2, so MAT1-1 is recorded here.
+
+
+      SOURCE AND COORDINATES. Source is the classic locus-specific GenBank deposit
+      M33876.1 (5736 bp, strain 74-ORS-A, submitted by N. L. Glass for Glass et al.
+      1990 and updated by A. V. B. Ferreira in 1995 to add matA-2/matA-3), not the
+      modern OR74A whole-genome build -- following this project''s established preference
+      for classic locus-specific deposits. Gene spans and protein_ids below were read
+      directly off M33876.1''s feature table via NCBI efetch by the curator. As an
+      independent cross-check the same three genes and the same relative order and
+      strands are present in the RefSeq OR74A build on chromosome I NC_026501.1 (matA-3
+      1857194..1858469 complement; matA-2 1859093..1860424; matA-1 1860692..1862194),
+      confirmed via NCBI Gene efetch.
+
+
+      SEGMENT BOUNDARY. Glass et al. 1990 report the mat A idiomorph as 5301 bp of
+      sequence with essentially no similarity to mat a, flanked by DNA that is near-identical
+      between the two mating types. The curator independently located that flank boundary
+      inside M33876.1 by running blastn of M33876.1 against M54787.1 (the mat a deposit):
+      the ONLY significant hit is M33876.1 5307..5736 vs M54787.1 1466..1032 (95.4%
+      identity over 436 bp, inverted orientation). The idiomorph-unique region of
+      M33876.1 is therefore 1..5306 (5306 bp), which agrees with the published 5301
+      bp to within ~5 bp. The segment below uses 1..5306. coordinate_provenance is
+      curator_derived because the segment endpoints come from this curator-run alignment,
+      not from published coordinates on this accession.
+
+
+      FLANKING GENES. APN2/SLA2/COX13 are not annotated on M33876.1 and are therefore
+      not represented here; only the three idiomorph-internal genes are recorded.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: M33876.1
+        seq_region: M33876.1
+      start: 1
+      end: 5306
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: matA-3
+  protein_accession: ncbi_protein:AAC37476.1
+  role: core_MAT
+  present: true
+  locus_tag: NCU01960
+  segment_index: 0
+  start: 265
+  end: 1402
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: matA-2
+  protein_accession: ncbi_protein:AAC37477.1
+  role: core_MAT
+  present: true
+  locus_tag: NCU01959
+  segment_index: 0
+  start: 2151
+  end: 3497
+  strand: +
+  order_in_locus: 1
+- gene_index: 2
+  name: matA-1
+  protein_accession: ncbi_protein:AAC37478.1
+  role: core_MAT
+  present: true
+  locus_tag: NCU01958
+  segment_index: 0
+  start: 3924
+  end: 4924
+  strand: +
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: 'Cloning of the A and a mating-type regions and demonstration
+      by transformation that the cloned DNA confers both sexual (mating) and vegetative
+      heterokaryon-incompatibility function (Glass et al. 1988); complete DNA sequencing
+      of the A region and localization of function to a single ORF, with frameshift
+      mutations in that ORF recovered from sterile, heterokaryon-compatible mutants
+      (Glass et al. 1990); transcriptional characterization and mutant analysis identifying
+      matA-2 and matA-3 as additional genes in the same idiomorph (Ferreira et al.
+      1996, 1998).
+
+      '
+    citations:
+    - pmid: '2840740'
+      doi: 10.1126/science.2840740
+    - pmid: '2142303'
+      doi: 10.1073/pnas.87.13.4912
+    - pmid: '8628238'
+      doi: 10.1007/BF02172989
+    - pmid: '9539425'
+      doi: 10.1093/genetics/148.3.1069
+  boundaries:
+    tier: 1
+    experimental_method: 'Complete sequencing of the A mating-type region; the idiomorph
+      is reported explicitly as 5301 bp of non-homologous DNA bounded by flanks that
+      are essentially identical between A and a strains (Glass et al. 1990; Glass
+      et al. 1988). The curator independently mapped that flank junction onto M33876.1
+      by blastn of M33876.1 vs M54787.1 (single HSP, M33876.1 5307..5736), giving
+      an idiomorph-unique span of 1..5306 -- within ~5 bp of the published length.
+
+      '
+    citations:
+    - pmid: '2142303'
+      doi: 10.1073/pnas.87.13.4912
+    - pmid: '2840740'
+      doi: 10.1126/science.2840740
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'Genetic and molecular demonstration that A and a are non-homologous
+      alternative sequences (idiomorphs) at one locus, with one copy per haploid genome
+      and no switching (Glass et al. 1988); matA-1 encodes a 288-aa protein with alpha-box
+      (MAT alpha 1-like) similarity and matA-3 an HMG domain, and mutations in matA-1
+      abolish mat A identity (Glass et al. 1990; Ferreira et al. 1996, 1998).
+
+      '
+    citations:
+    - pmid: '2840740'
+      doi: 10.1126/science.2840740
+    - pmid: '2142303'
+      doi: 10.1073/pnas.87.13.4912
+    - pmid: '9539425'
+      doi: 10.1093/genetics/148.3.1069
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: M33876.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 2142303|5141|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

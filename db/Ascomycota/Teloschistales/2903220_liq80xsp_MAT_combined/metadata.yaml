@@ -1,0 +1,198 @@
+record_id: 2903220_liq80xsp_MAT_combined
+record_version: 1
+taxonomy:
+  taxid: 2903220
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Lecanoromycetes;o__Teloschistales;f__Teloschistaceae;g__Xanthoria;s__Xanthoria_sp_1_TBL-2021
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Xanthoria sp. 1 TBL-2021
+  strain:
+    name: LIQ80XSP
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  - MAT1-2
+  system: homothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: fragmented
+    reference_orientation: APN2->MAT1-2-1->MAT1-1-1 | [scaffold break] | SLA2
+    definition_note: 'Same homothallic both-idiomorphs-present architecture as 2903222_liq146xsp_MAT_combined:
+      alpha-box MAT1-1-1 and HMG-box MAT1-2-1 together in one genome, flanked by APN2
+      and SLA2.
+
+
+      ACCESSION CORRECTION (verified by the curator): Supplementary Table S1 gives
+      this assembly''s MAT scaffolds as ''JALAI010000088.1'' and ''JALAI010000140.1''.
+      Those accessions DO NOT EXIST at NCBI (efetch: ''Failed to understand id'').
+      GCA_023646395.1''s real WGS prefix is JALAIM01, and the correct accessions are
+      JALAIM010000088.1 (53912 bp) and JALAIM010000140.1 (41267 bp); both were fetched
+      and both contain the published spans. S1 dropped a letter from the 6-letter
+      WGS prefix. The corrected accessions are used here.
+
+
+      The locus is FRAGMENTED across two scaffolds: APN2 + MAT1-2-1 + MAT1-1-1 on
+      JALAIM010000088.1, and SLA2 alone on JALAIM010000140.1. MAT1-1-1 ends 815 bp
+      from the end of scaffold 88, so the assembly break falls immediately downstream
+      of the idiomorph pair; the two-scaffold split is an assembly artefact, not evidence
+      of a split locus.
+
+
+      COORDINATE CONVENTION: Supplementary Table S1 reports a ''Length'' column equal
+      to (end - start), i.e. one less than the fully-closed length. The curator resolved
+      the ambiguity empirically by extracting each span from the real NCBI scaffold
+      sequence: under a 1-based fully-closed reading every gene begins with ATG and
+      ends with a stop codon (TAA/TAG/TGA) on the stated strand, while under a 0-based
+      half-open reading they do not. The coordinates below are therefore used as published,
+      1-based fully-closed (this project''s convention); S1''s ''Length'' column is
+      simply off by one.
+
+
+      NOTE ON THE MAT1-1-1 SPAN: the Augustus-predicted MAT1-1-1 genomic span is ~3.9-4.0
+      kb, which is unusually long for an alpha-box mating-type gene (typically ~1.2-1.5
+      kb of genomic sequence). The curator confirmed the span begins with ATG and
+      ends with an in-frame-terminal stop codon on the stated strand, but cannot rule
+      out that Augustus fused MAT1-1-1 with a neighbouring ORF or over-called intron
+      structure. The MAT1-2-1 span (1155 bp) is unremarkable. Treat the MAT1-1-1 boundaries
+      as the paper''s gene prediction, not as a validated CDS.
+
+
+      Homothally is additionally supported by the paper''s own read-depth test (Supplementary
+      Table S1, ''Depth'' sheet): mean read depth over the alpha-box and HMG genes
+      was compared to mean BUSCO-gene depth, and neither differed significantly, which
+      is what is expected if both idiomorphs sit in a single haploid genome rather
+      than in a mixed/contaminated assembly.
+
+
+      CAVEAT: this assembly is registered at NCBI as a MAG (metagenome-assembled genome)
+      from a lichen thallus metagenome, not an axenic culture. Both-idiomorph gene
+      content in a MAG is in principle also compatible with two co-occurring conspecific
+      genomes; the read-depth test above is the paper''s control against that, and
+      it passed, but this record is not equivalent to a homothally call made from
+      a cultured single-spore isolate.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JALAIM010000088.1
+        seq_region: JALAIM010000088.1
+      start: 44505
+      end: 53097
+      contig_edge_distance: 815
+      sequence_checksum: null
+    - segment_index: 1
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JALAIM010000140.1
+        seq_region: JALAIM010000140.1
+      start: 36837
+      end: 40643
+      contig_edge_distance: 624
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: APN2
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 44505
+  end: 46498
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MAT1-2-1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 47471
+  end: 48625
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: MAT1-1-1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 49090
+  end: 53097
+  strand: +
+  order_in_locus: 2
+- gene_index: 3
+  name: SLA2
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 1
+  start: 36837
+  end: 40643
+  strand: +
+  order_in_locus: 3
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: BLASTx of the assembly against a curated sla2/apn2/MAT1-1/MAT1-2
+      query database (bit score >75), Augustus v3.3 gene prediction with A. nidulans
+      parameters on the hit contigs, and PSI-BLAST confirmation of the predicted proteins
+      (White et al. 2024). This is genome-annotation/homology evidence only -- no
+      mating assay, crossing experiment, transcript evidence, or targeted locus cloning
+      was performed for this species. Tier 2 per this project's strict evidence bar.
+    citations:
+    - pmid: '38686438'
+      doi: 10.1093/gbe/evae094
+  boundaries:
+    tier: 2
+    experimental_method: BLASTx of the assembly against a curated sla2/apn2/MAT1-1/MAT1-2
+      query database (bit score >75), Augustus v3.3 gene prediction with A. nidulans
+      parameters on the hit contigs, and PSI-BLAST confirmation of the predicted proteins
+      (White et al. 2024). This is genome-annotation/homology evidence only -- no
+      mating assay, crossing experiment, transcript evidence, or targeted locus cloning
+      was performed for this species. Tier 2 per this project's strict evidence bar.
+    citations:
+    - pmid: '38686438'
+      doi: 10.1093/gbe/evae094
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: BLASTx of the assembly against a curated sla2/apn2/MAT1-1/MAT1-2
+      query database (bit score >75), Augustus v3.3 gene prediction with A. nidulans
+      parameters on the hit contigs, and PSI-BLAST confirmation of the predicted proteins
+      (White et al. 2024). This is genome-annotation/homology evidence only -- no
+      mating assay, crossing experiment, transcript evidence, or targeted locus cloning
+      was performed for this species. Tier 2 per this project's strict evidence bar.
+    citations:
+    - pmid: '38686438'
+      doi: 10.1093/gbe/evae094
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: '2026-09-17'
+  accession_resolved_version: JALAIM010000088.1,JALAIM010000140.1
+  sequence_match:
+    status: pass
+    per_gene: []
+    notes: 'Curator extracted all four published spans from the real (accession-corrected)
+      JALAIM010000088.1 and JALAIM010000140.1 sequences via NCBI efetch: each begins
+      with ATG and ends with a stop codon on the stated strand under 1-based fully-closed
+      coordinates. No protein-level check was possible; the assembly has no NCBI protein
+      annotation.'
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 38686438|2903220|MAT|combined
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

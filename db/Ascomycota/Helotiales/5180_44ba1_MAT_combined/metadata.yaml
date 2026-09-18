@@ -1,0 +1,251 @@
+record_id: 5180_44ba1_MAT_combined
+record_version: 1
+taxonomy:
+  taxid: 5180
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Leotiomycetes;o__Helotiales;f__Sclerotiniaceae;g__Sclerotinia;s__Sclerotinia_sclerotiorum
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Sclerotinia sclerotiorum
+  strain:
+    name: 44Ba1
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  - MAT1-2
+  system: homothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-1-5->MAT1-1-1->MAT1-2-10(reverse)->MAT1-2-1
+    definition_note: 'Homothallic (self-fertile) Leotiomycete MAT locus in which the
+      MAT1-1 and MAT1-2 idiomorphs are fused end-to-end at a single locus, so all
+      four MAT genes are carried by one haploid genome. This record is the Inv- ("non-inverted")
+      MAT allele of Chitrampalam et al. 2013, sequenced from isolate 44Ba1 and deposited
+      as GenBank JQ815883.1 (12,145 bp). Gene identities, CDS coordinates and protein
+      accessions below were read directly off that primary GenBank record by the curator
+      via NCBI efetch, not taken from any review or synthesis.
+
+      Nomenclature: the gene listed here as MAT1-2-10 is deposited on JQ815883.1 under
+      its older name MAT1-2-4 (protein AGB05588.1, product "MAT1-2-4"). MAT1-2-4 was
+      renamed MAT1-2-10 in the Pezizomycotina MAT nomenclature revision of Wilken
+      et al. 2017 (Fungal Biol Rev 31:199-211), and the Leotiomycete-wide survey of
+      Wilson et al. 2023 (PLOS ONE 18:e0292619) uses MAT1-2-10 throughout. The current
+      name is used here; the deposited synonym is recorded in this note so the GenBank
+      feature can still be matched.
+
+      Inversion polymorphism: the same study deposited two further alleles of this
+      locus from sibling isolates, JQ815884.1 (44Ba12) and JQ815885.1 (44Ba18), which
+      carry a 3.6-kb inversion (designated Inv+). In the Inv+ alleles MAT1-2-1 and
+      MAT1-2-10 are inverted and MAT1-1-1 is truncated at its 3'' end, so those records
+      annotate only MAT1-1-5, MAT1-2-1 and MAT1-2-10 (no intact MAT1-1-1). The inversion
+      is bounded by a 250-bp inverted repeat that is itself a partial MAT1-1-1, and
+      it segregates ~1:1 in every meiotic generation regardless of parental orientation.
+      This record deliberately captures the Inv- allele, which is the one with all
+      four MAT genes intact; a companion Inv+ record could be built from JQ815884.1
+      if the curator wants both orientations represented.
+
+      completeness is "partial" because JQ815883.1 annotates only the four MAT genes.
+      The canonical Pezizomycotina flanking anchors APN2 and SLA2 are known to bound
+      this locus in the Sclerotiniaceae (they are annotated on the sister Sclerotinia
+      trifoliorum records KU726096.1/KU726097.1 curated in the same pass), but neither
+      is annotated as a feature on JQ815883.1, so no APN2/SLA2 coordinates are asserted
+      here. The locus segment below therefore spans only the MAT gene block, from
+      the start of MAT1-1-5 to the end of MAT1-2-1, not an APN2-to-SLA2 span.
+
+      Correction to a widely repeated secondary description: Butler 2007 ("The Evolution
+      of MAT: The Ascomycetes", in Heitman et al. eds., Sex in Fungi, ASM Press) describes
+      the S. sclerotiorum MAT locus, citing a Broad Institute draft genome, as containing
+      "an alpha-box gene and an HMG-domain gene between orthologs of APN2 and SLA2"
+      plus "an additional gene ... with no significant similarity to proteins from
+      other fungal species". The primary record shows four MAT genes, not two: that
+      unnamed "additional gene" is MAT1-1-5, now a recognised and named MAT gene across
+      the Leotiomycetes, and there is a fourth gene, MAT1-2-10, as well. Butler''s
+      statement that no MAT1-1-2 ortholog is present at this locus is consistent with
+      the primary record (no MAT1-1-2 is annotated on JQ815883.1); MAT1-1-2 is accordingly
+      not listed below at all rather than being listed as an absent gene, since no
+      primary evidence here speaks to it.
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JQ815883.1
+        seq_region: JQ815883.1
+      start: 3410
+      end: 9463
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-5
+  protein_accession: ncbi_protein:AGB05586.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3410
+  end: 4712
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 3410
+    end: 3689
+  - start: 3739
+    end: 4286
+  - start: 4351
+    end: 4377
+  - start: 4437
+    end: 4712
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:AGB05587.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5119
+  end: 6224
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 5119
+    end: 5341
+  - start: 5391
+    end: 6158
+  - start: 6208
+    end: 6224
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: MAT1-2-10
+  protein_accession: ncbi_protein:AGB05588.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 6731
+  end: 7674
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 7238
+    end: 7674
+  - start: 6950
+    end: 7188
+  - start: 6731
+    end: 6900
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AGB05589.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8175
+  end: 9463
+  strand: +
+  order_in_locus: 3
+  exons:
+  - start: 8175
+    end: 8455
+  - start: 8506
+    end: 8876
+  - start: 8931
+    end: 9463
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: 'Targeted amplification and Sanger sequencing of the complete
+      MAT locus from a 283-isolate survey of Sclerotinia sclerotiorum, deposited as
+      GenBank JQ815883.1; MAT gene expression at this locus confirmed by transcript
+      analysis (MAT1-2-1 transcript variants and MAT1-1-1 alpha1-domain transcripts
+      compared between the Inv- and Inv+ alleles); self-fertility of the isolates
+      demonstrated directly. This is a dedicated, experimentally supported characterisation
+      of this specific locus, not a genome-annotation homology screen, which is why
+      tier 1 is assigned. (Chitrampalam et al. 2013)
+
+      '
+    citations:
+    - pmid: '23457637'
+      doi: 10.1371/journal.pone.0056895
+  boundaries:
+    tier: 1
+    experimental_method: 'Complete locus region cloned and sequenced (Chitrampalam
+      et al. 2013); every CDS coordinate, strand and protein accession recorded below
+      was independently re-read by the curator from the primary GenBank record JQ815883.1
+      via NCBI efetch on 2026-09-17, and the four protein accessions (AGB05586.1,
+      AGB05587.1, AGB05588.1, AGB05589.1) were each confirmed to exist with the expected
+      product names and lengths (376, 335, 281, 394 aa) via NCBI esummary. Note the
+      GenBank gene features carry partial-location markers (<, >) on their mRNA extents;
+      the CDS spans used here are exact.
+
+      '
+    citations:
+    - pmid: '23457637'
+      doi: 10.1371/journal.pone.0056895
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'Both idiomorphs'' core genes are physically present at one
+      fused locus in a single haploid genome (alpha-box MAT1-1-1 plus HMG-box MAT1-2-1),
+      and the isolates carrying this allele were shown to be self-fertile; the 3.6-kb
+      inversion affecting three of the four MAT genes was shown to segregate ~1:1
+      in progeny of both Inv- and Inv+ parents, i.e. the idiomorph content of this
+      locus was tracked experimentally through meiosis rather than inferred from sequence
+      alone. "homothallic" is used for the mating system; note that S. sclerotiorum
+      is more precisely a self-fertile species that additionally switches MAT allele
+      orientation every meiotic generation, which Wilson et al. 2023 classify as a
+      form of mating-type switching (secondary homothallism). The schema''s `system`
+      vocabulary has no "switching" value, so "homothallic" is the closest honest
+      fit and the mechanism is documented in definition_note.
+
+      '
+    citations:
+    - pmid: '23457637'
+      doi: 10.1371/journal.pone.0056895
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JQ815883.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 23457637|5180|MAT|combined
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -40,9 +40,11 @@ locus:
       5''/3'' UTR), not the CDS. The real CDS for the full-length isoform ABX27912.1,
       independently re-fetched via NCBI efetch, is complement(join(2189..2358,2437..3160)).
       Coordinates below are corrected to the CDS outer bounds, 2189..3160; the gene
-      remains multi-exon (one intron, 2359..2436) which this schema does not model,
-      so an independent re-translation of the corrected span will still not exactly
-      reproduce ABX27912.1 -- see sequence_match.notes.
+      is multi-exon (one intron, 2359..2436), and its real per-exon structure is now
+      recorded in this record''s `exons`/`codon_start` fields (backfilled from
+      EU009462.1''s own CDS feature via NCBI efetch), so an independent re-translation
+      of the spliced transcript reproduces ABX27912.1 exactly (100% identity, 100%
+      coverage).
 
       '
     segments:

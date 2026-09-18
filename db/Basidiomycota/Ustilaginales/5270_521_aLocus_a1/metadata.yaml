@@ -72,11 +72,11 @@ locus:
       is complement(join(5505..5671,5862..5901,5995..6272))), whereas the actual CDS
       on U37795.1 is complement(join(5627..5671,5862..5901,5995..6269)) (protein AAA99767.1).
       Corrected to the CDS outer bounds, 5627..6269. rba1 is multi-exon (3 exons/2
-      introns), which this schema does not model as a span, so an independent re-translation
-      of the corrected span does not exactly reproduce AAA99767.1 residue-for-residue;
-      it nonetheless already re-derives a 100%-identity partial match (see sequence_match.notes)
-      because the intron introduces a frameshift/stop before the point of first mismatch,
-      not a mismatch itself. pra1''s previously recorded span (3604..4914) was independently
+      introns); its real per-exon structure is now recorded in this record''s
+      `exons`/`codon_start` fields (backfilled from U37795.1''s own CDS feature via
+      NCBI efetch), so an independent re-translation of the spliced transcript now
+      reproduces AAA99767.1 exactly (100% identity, 100% coverage). pra1''s previously
+      recorded span (3604..4914) was independently
       re-checked against the CDS outer bounds of complement(join(3604..3721,3807..4242,
       4316..4633,4713..4914)) and found to already match exactly; no change was needed
       there.

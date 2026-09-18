@@ -202,6 +202,61 @@ def test_local_library_miss_falls_through_to_ncbi(tmp_path):
     assert genomes[0].accession == ASSEMBLY_ACCESSION
 
 
+def test_local_library_row_matches_but_file_missing_falls_through_to_ncbi(tmp_path):
+    """A manifest row matches the taxid but neither the unmasked nor masked file
+    actually exists at the expected path on disk -- must fall through to NCBI
+    (returning a genome via the real fallback), not raise and not return a
+    bogus AcquiredGenome pointing at a nonexistent file."""
+    library_root = tmp_path / "library"
+    library_root.mkdir()
+    manifest_path = tmp_path / "manifest.csv"
+    asmid = "GCA_004115165.2_Cimm211_ragoo"
+    _write_manifest(manifest_path, [_manifest_row(asmid, 5501, "Coccidioides immitis")])
+    # Deliberately do NOT create GCA_004115165.2_Cimm211_ragoo.fa.gz or
+    # .masked.fasta.gz under library_root.
+
+    runner = _fake_runner(succeed_for={5501})
+    genomes = acquire_genomes(
+        [5501],
+        tmp_path / "ncbi_out",
+        runner=runner,
+        local_library_root=library_root,
+        local_manifest_path=manifest_path,
+    )
+    assert len(genomes) == 1
+    assert genomes[0].taxid == 5501
+    assert genomes[0].accession == ASSEMBLY_ACCESSION
+    assert genomes[0].fasta_path.exists()
+
+
+def test_local_library_missing_asmid_column_falls_through_to_ncbi_not_raise(tmp_path):
+    """A malformed manifest row (missing the ASMID column entirely) must not let
+    a KeyError escape _acquire_local and abort the whole batch -- it should be
+    treated as a local miss and fall through to NCBI for that taxid."""
+    library_root = tmp_path / "library"
+    library_root.mkdir()
+    manifest_path = tmp_path / "manifest.csv"
+    with manifest_path.open("w", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=["NCBI_TAXONID", "SPECIES"])
+        writer.writeheader()
+        writer.writerow({"NCBI_TAXONID": "5501", "SPECIES": "Coccidioides immitis"})
+
+    runner = _fake_runner(succeed_for={5501, 199306})
+    failures: list[AcquisitionFailure] = []
+    genomes = acquire_genomes(
+        [5501, 199306],
+        tmp_path / "ncbi_out",
+        runner=runner,
+        local_library_root=library_root,
+        local_manifest_path=manifest_path,
+        failures=failures,
+    )
+    # Both taxids must still be acquired via NCBI fallback -- the malformed row
+    # for 5501 must not abort acquisition of 199306 (or of 5501 itself).
+    assert {g.taxid for g in genomes} == {5501, 199306}
+    assert failures == []
+
+
 def test_missing_manifest_path_falls_through_to_ncbi_without_raising(tmp_path):
     runner = _fake_runner(succeed_for={5501})
     genomes = acquire_genomes(

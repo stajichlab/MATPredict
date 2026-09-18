@@ -167,18 +167,35 @@ def _acquire_local(
     unmasked file is preferred -- `detect/search.py`'s tblastn/exonerate/miniprot
     calls have no soft-mask-awareness (no masking-related handling found there),
     so the full, unmasked sequence is the safer default for search sensitivity.
+
+    A malformed manifest row (missing an expected column, e.g. `ASMID`) or an
+    I/O error reading the manifest (plausible on shared storage: permissions, a
+    transient NFS hiccup) is treated the same as a local miss -- logged and
+    `None` returned, so the caller falls through to the NCBI path -- rather than
+    letting `KeyError`/`OSError`/`csv.Error` propagate out of this function and
+    abort acquisition for every remaining taxid in the batch. A manifest/library
+    problem does not mean the taxid itself is unacquirable, so falling through
+    to NCBI (rather than immediately recording a hard `AcquisitionFailure`) is
+    the more useful behavior -- NCBI still gets a chance to resolve the taxid.
     """
     if not manifest_path.exists() or not library_root.exists():
         return None
 
-    with manifest_path.open(newline="") as fh:
-        rows = [row for row in csv.DictReader(fh) if row.get("NCBI_TAXONID") == str(taxid)]
-    if not rows:
+    try:
+        with manifest_path.open(newline="") as fh:
+            rows = [row for row in csv.DictReader(fh) if row.get("NCBI_TAXONID") == str(taxid)]
+        if not rows:
+            return None
+        rows.sort(key=lambda row: (not row["ASMID"].startswith("GCF_"), row["ASMID"]))
+        chosen = rows[0]
+        asmid = chosen["ASMID"]
+    except (OSError, KeyError, csv.Error) as exc:
+        logger.warning(
+            "local library manifest %s could not be read/parsed for taxid=%s (%s); "
+            "falling through to NCBI",
+            manifest_path, taxid, exc,
+        )
         return None
-
-    rows.sort(key=lambda row: (not row["ASMID"].startswith("GCF_"), row["ASMID"]))
-    chosen = rows[0]
-    asmid = chosen["ASMID"]
 
     unmasked_path = library_root / f"{asmid}.fa.gz"
     masked_path = library_root / f"{asmid}.masked.fasta.gz"

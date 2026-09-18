@@ -170,6 +170,31 @@ def test_fetch_cds_structure_parses_multi_exon_partial_minus_strand_codon_start(
     assert result.transl_table == 1
 
 
+def test_fetch_cds_structure_region_offsets_coordinates_back_to_absolute(tmp_path):
+    """A whole-genome-assembly-scale master record (e.g. an NW_/NC_ RefSeq CONTIG-join
+    record) returns zero features on a whole-record efetch; `region` requests a
+    sub-range instead, whose response reports coordinates relative to that sub-range's
+    own start. Task 4's real backfill run hit exactly this against NW_006267344.1 and
+    NC_006047.2 -- verify the offset-correction math against this fixture: passing
+    region=(1000, 2171) should return the fixture's real 156..1172-space coordinates
+    shifted up by 999 (region[0] - 1), recovering the true absolute genomic coordinates,
+    while still requesting the windowed efetch (seq_start=1000&seq_stop=2171 in the URL).
+    """
+    captured_urls: list[str] = []
+
+    def transport(url: str) -> str:
+        captured_urls.append(url)
+        return GENBANK_FIXTURE_TEXT
+
+    fetcher = CachedFetcher(cache_dir=tmp_path, transport=transport)
+    client = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
+    result = client.fetch_cds_structure("NW_FAKE.1", protein_id="YGD29557.1", region=(1000, 2171))
+    assert result.exons == [(1876, 2171), (1740, 1809), (1385, 1683), (1155, 1333)]
+    assert result.codon_start == 2
+    assert "seq_start=1000" in captured_urls[0]
+    assert "seq_stop=2171" in captured_urls[0]
+
+
 def test_fetch_cds_structure_raises_when_protein_id_not_found(tmp_path):
     fetcher = CachedFetcher(
         cache_dir=tmp_path,

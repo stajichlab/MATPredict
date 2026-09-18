@@ -100,7 +100,9 @@ class NcbiClient:
         record = SeqIO.read(StringIO(body), "fasta-blast")
         return str(record.seq)
 
-    def fetch_cds_structure(self, accession: str, protein_id: str) -> CdsStructure:
+    def fetch_cds_structure(
+        self, accession: str, protein_id: str, region: tuple[int, int] | None = None
+    ) -> CdsStructure:
         """Parse a GenBank record's real CDS feature into an exon/codon_start/transl_table
         structure, for populating a curated gene's `exons`/`codon_start`/`transl_table`
         schema fields from the actual deposit rather than a hand-transcribed span -- the
@@ -128,8 +130,33 @@ class NcbiClient:
         `CdsStructure` docstring and `validate.py`'s `_assemble_transcript`) directly.
         No reversal is performed here: reversing would produce ascending order, which
         is wrong for a minus-strand feature under this project's convention.
+
+        `region`, an optional `(start, end)` pair in this project's 1-based, fully-closed
+        convention, requests only that subrange via efetch's `seq_start`/`seq_stop`
+        instead of the whole accession. This matters for a whole-genome-assembly-scale
+        nuccore accession (an NW_/NC_ RefSeq scaffold or chromosome that is itself a
+        `CONTIG`-join "master" record pointing at the real underlying INSDC sequence):
+        fetching such an accession's full GenBank flatfile with no range returns only
+        its `source`/`CONTIG` lines and zero gene/CDS features, but NCBI's efetch
+        renders a real, fully-annotated flatfile on demand for any sub-range of it, with
+        coordinates reported relative to that sub-range's own start (i.e. position 1 of
+        the response is `region[0]` of the real accession) -- empirically verified
+        against NW_006267344.1 (the AbH97_2 HD locus scaffold) and NC_006047.2 (the
+        Debaryomyces hansenii CBS767 chromosome E RefSeq record), both "master" records
+        for which whole-record efetch returns no CDS at all but a `region`-scoped efetch
+        around the gene's own recorded span returns the real CDS with correct exon
+        coordinates once the `region[0] - 1` offset below is added back. This method's
+        own return value is unaffected: coordinates are converted back into the
+        accession's real absolute coordinate space before being returned, so a caller
+        never needs to know whether `region` was used.
         """
-        url = self._url("efetch.fcgi", f"db=nuccore&id={accession}&rettype=gb&retmode=text")
+        params = f"db=nuccore&id={accession}&rettype=gb&retmode=text"
+        offset = 0
+        if region is not None:
+            region_start, region_end = region
+            params += f"&seq_start={region_start}&seq_stop={region_end}"
+            offset = region_start - 1
+        url = self._url("efetch.fcgi", params)
         body = self.fetcher.get(url)
         record = SeqIO.read(StringIO(body), "genbank")
         for feature in record.features:
@@ -138,7 +165,7 @@ class NcbiClient:
             if feature.qualifiers.get("protein_id", [None])[0] != protein_id:
                 continue
             location = feature.location
-            exons = [(int(part.start) + 1, int(part.end)) for part in location.parts]
+            exons = [(int(part.start) + 1 + offset, int(part.end) + offset) for part in location.parts]
             strand = "-" if location.strand == -1 else "+"
             codon_start = int(feature.qualifiers.get("codon_start", ["1"])[0])
             transl_table = int(feature.qualifiers.get("transl_table", ["1"])[0])

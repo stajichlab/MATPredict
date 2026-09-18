@@ -52,6 +52,29 @@ def test_fetch_nucleotide_sequence_plus_strand(tmp_path):
     assert seq == "ACGTACGTAC"
 
 
+EFETCH_TAXONOMY_XML = """<?xml version="1.0"?>
+<TaxaSet>
+<Taxon>
+<TaxId>5270</TaxId>
+<ScientificName>Ustilago maydis</ScientificName>
+<LineageEx>
+<Taxon><TaxId>4751</TaxId><ScientificName>Fungi</ScientificName><Rank>kingdom</Rank></Taxon>
+<Taxon><TaxId>5204</TaxId><ScientificName>Basidiomycota</ScientificName><Rank>phylum</Rank></Taxon>
+<Taxon><TaxId>5157</TaxId><ScientificName>Ustilaginomycotina</ScientificName><Rank>subphylum</Rank></Taxon>
+<Taxon><TaxId>5259</TaxId><ScientificName>Ustilaginomycetes</ScientificName><Rank>class</Rank></Taxon>
+</LineageEx>
+</Taxon>
+</TaxaSet>
+"""
+
+
+def test_fetch_taxonomy_lineage_parses_lineage_ex_taxids(tmp_path):
+    fetcher = CachedFetcher(cache_dir=tmp_path, transport=_fake_transport({"db=taxonomy": EFETCH_TAXONOMY_XML}))
+    client = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
+    lineage = client.fetch_taxonomy_lineage(5270)
+    assert lineage == [4751, 5204, 5157, 5259]
+
+
 def test_fetch_nucleotide_sequence_minus_strand_requests_strand2(tmp_path):
     captured_urls = []
 

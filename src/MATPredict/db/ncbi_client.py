@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from io import StringIO
 
@@ -81,3 +82,30 @@ class NcbiClient:
         body = self.fetcher.get(url)
         record = SeqIO.read(StringIO(body), "fasta-blast")
         return str(record.seq)
+
+    def fetch_taxonomy_lineage(self, taxid: int) -> list[int]:
+        """Fetch a taxid's NCBI Taxonomy ancestor lineage as a list of taxids (root-first).
+
+        Uses efetch db=taxonomy, whose XML response carries a `LineageEx` list of
+        `{TaxId, ScientificName, Rank}` elements -- one per ancestor, ordered from the
+        root of the tree down to (but not including) the queried taxid itself. This is
+        the numeric-ancestor-chain data `db.taxonomy.resolve_lineage` (a taxonkit
+        subprocess wrapper returning a rank-name string) does not provide, and it is
+        what `detect.family_registry.route` needs for lineage-aware scope matching --
+        a species/strain taxid's family membership is decided by whether any of its
+        ancestor taxids (e.g. a subphylum or class rank) is directly listed in a
+        family's `taxonomic_scope`.
+
+        Backed by `self.fetcher`'s on-disk cache (keyed by URL, i.e. by taxid), so
+        repeat lookups for the same taxid -- within one process or across separate
+        runs -- cost one HTTP round trip total, not one per call.
+        """
+        url = self._url("efetch.fcgi", f"db=taxonomy&id={taxid}&retmode=xml")
+        body = self.fetcher.get(url)
+        root = ET.fromstring(body)
+        lineage: list[int] = []
+        for taxon in root.findall(".//LineageEx/Taxon"):
+            tax_id_text = taxon.findtext("TaxId")
+            if tax_id_text:
+                lineage.append(int(tax_id_text))
+        return lineage

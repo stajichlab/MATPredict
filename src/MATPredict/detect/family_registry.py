@@ -7,7 +7,7 @@ from typing import Callable
 
 import yaml
 
-from MATPredict.db.taxonomy import TaxonomyResult, resolve_lineage
+from MATPredict.db.taxonomy import default_lineage_taxids
 
 
 @dataclass(frozen=True)
@@ -77,21 +77,35 @@ def load_record_families(db_root: Path) -> dict[str, FamilyKey]:
 def route(
     taxid: int | None,
     families: list[Family],
-    lineage_resolver: Callable[[int], TaxonomyResult] = resolve_lineage,
+    lineage_taxids_resolver: Callable[[int], list[int]] = default_lineage_taxids,
 ) -> list[Family]:
-    """Return families whose taxonomic_scope contains taxid.
+    """Return families whose taxonomic_scope contains taxid, directly or via lineage.
 
-    v1 scope matching is exact-taxid-membership only (a family's
-    taxonomic_scope must directly list the queried taxid, since
-    MATPredict.db.taxonomy.resolve_lineage returns a rank-name string, not a
-    numeric ancestor chain, so ancestor-subtree matching isn't available yet).
-    taxid=None, or a taxid matching no family's scope, returns every family
-    unchanged (the exhaustive fallback path)."""
+    A family matches if EITHER the queried taxid is directly listed in its
+    taxonomic_scope (the original exact-membership check) OR the taxid's NCBI
+    Taxonomy ancestor lineage contains any taxid in its taxonomic_scope. Most
+    families declare a broad scope (e.g. a subphylum/subclass taxid) expecting
+    it to cover every descendant species -- lineage matching is what actually
+    makes that work; before this, only records whose scope also happened to
+    list their exact species/strain taxid routed correctly (an audit found 50
+    of 61 curated records fell through to the exhaustive fallback below).
+
+    The direct-membership check runs first and short-circuits before any
+    lineage lookup (no network/subprocess call) whenever it already finds a
+    match, so this stays free for the common case. `lineage_taxids_resolver`
+    defaults to `MATPredict.db.taxonomy.default_lineage_taxids`, which fetches
+    the ancestor chain via a cached NCBI Taxonomy efetch call; a resolver
+    failure (network error, unknown taxid, etc.) degrades gracefully to the
+    exhaustive fallback -- same as taxid=None or no scope matching at all.
+    """
     if taxid is None:
         return list(families)
+    direct = [f for f in families if taxid in f.taxonomic_scope]
+    if direct:
+        return direct
     try:
-        lineage_resolver(taxid)  # resolved for future ancestor-aware matching; unused in v1 matching itself
+        ancestors = set(lineage_taxids_resolver(taxid))
     except Exception:
-        pass  # resolver failure degrades gracefully to exhaustive fallback
-    matched = [f for f in families if taxid in f.taxonomic_scope]
-    return matched if matched else list(families)
+        ancestors = set()
+    lineage_matched = [f for f in families if ancestors & set(f.taxonomic_scope)]
+    return lineage_matched if lineage_matched else list(families)

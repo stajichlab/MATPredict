@@ -143,3 +143,7 @@ def test_validate_record_skips_coordinate_checks_when_not_available():
     result = validate_record(record=record, ncbi=None, uniprot=None, taxonomy_runner=_fake_taxonomy_runner)
     assert result["accession_resolved"] is None
     assert result["taxonomy_current"] is True
+    # Regression guard: the early-return path for coordinate_provenance="not_available"
+    # used to leave the tautological default sequence_match status of "pass" in place,
+    # which is itself a false-pass bug in the same family as the main tautology fix.
+    assert result["sequence_match"]["status"] == "not_applicable"

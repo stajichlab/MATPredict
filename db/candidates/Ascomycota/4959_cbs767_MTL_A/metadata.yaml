@@ -50,8 +50,8 @@ locus:
         type: insdc_nucleotide
         accession: NC_006047.2
         seq_region: NC_006047.2
-      start: 1589598
-      end: 1591345
+      start: 1589597
+      end: 1591344
       contig_edge_distance: null
       sequence_checksum: null
   extended_flank: []
@@ -63,8 +63,8 @@ genes:
   present: true
   locus_tag: DEHA2E19118g
   segment_index: 0
-  start: 1589598
-  end: 1590217
+  start: 1589597
+  end: 1590216
   strand: '-'
   order_in_locus: 0
 - gene_index: 1
@@ -74,8 +74,8 @@ genes:
   present: true
   locus_tag: DEHA2E19140g
   segment_index: 0
-  start: 1590509
-  end: 1591345
+  start: 1590508
+  end: 1591344
   strand: '-'
   order_in_locus: 1
 evidence:
@@ -111,9 +111,8 @@ evidence:
     tier: 2
     experimental_method: 'homology-based gene naming (MTLA1/MTLA2, weak similarity
       to S. cerevisiae a1/C. albicans a2) in genome annotation -- not an experimentally
-      validated idiomorph call. Downgraded from an initial tier-1 assessment per
-      user review (2026-09-16) for the same reason as locus_existence/boundaries
-      above.
+      validated idiomorph call. Downgraded from an initial tier-1 assessment per user
+      review (2026-09-16) for the same reason as locus_existence/boundaries above.
 
       '
     citations:
@@ -126,17 +125,22 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: NC_006047.2
   sequence_match:
-    status: pass
+    status: fail
     per_gene:
     - gene_index: 0
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
+      percent_identity: 86.44
+      coverage: 34.1
+      status: fail
     - gene_index: 1
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
-    notes: ''
+      percent_identity: 96.95
+      coverage: 52.19
+      status: warn
+    notes: MTLA1 and MTLA2 are multi-exon genes (3 and 2 exons respectively); this
+      project's schema stores only a single start/end span per gene (no intron modeling),
+      so translating the full genomic span (introns included) does not reproduce the
+      deposited protein. Coordinates are GenBank-verified correct (re-derived independently
+      from NC_006047.2's own feature table); the fail/warn status here reflects an
+      unmodeled-intron limitation of the current schema, not a coordinate error.
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

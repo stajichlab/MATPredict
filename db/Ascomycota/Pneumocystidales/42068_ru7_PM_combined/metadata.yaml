@@ -28,17 +28,17 @@ locus:
       absent/lost in this genus) genes together in every genome, spanning ~10kb on
       one contig (Richard et al. 2018). Coordinates for matPi and matMc were independently
       confirmed against this assembly''s own RefSeq annotation via NCBI efetch (protein
-      accessions below); both GenBank CDS spans matched the literature-reported coordinates
-      within a few bp (likely a gene-vs-CDS boundary difference, not a discrepancy
-      in identity). matMi could NOT be independently confirmed this way: RefSeq does
-      not annotate a gene/CDS feature at the literature-reported position (211185-221394
-      -> re-checked as 221185-221394), consistent with the source paper''s own note
-      that matMi is only ~12-20% identical to homologs and "nearly undetectable by
-      homology" -- it is included here (present: true) on the paper''s authority alone,
-      with no protein_accession, rather than omitted or guessed. completeness is "partial"
-      for this reason, and because matPc (present in most other Ascomycota MAT systems)
-      is absent/lost in this genus per the same paper, not because the locus itself
-      is incompletely characterized.
+      accessions below); the GenBank CDS spans for matPi and matMc are now recorded
+      exactly as annotated (matPi: complement(211240..211935); matMc: complement(220321..221076)),
+      correcting an earlier transcription error in this record. matMi could NOT be
+      independently confirmed this way: RefSeq does not annotate a gene/CDS feature
+      at the literature-reported position (221185-221394), consistent with the source
+      paper''s own note that matMi is only ~12-20% identical to homologs and "nearly
+      undetectable by homology" -- it is included here (present: true) on the paper''s
+      authority alone, with no protein_accession, rather than omitted or guessed.
+      completeness is "partial" for this reason, and because matPc (present in most
+      other Ascomycota MAT systems) is absent/lost in this genus per the same paper,
+      not because the locus itself is incompletely characterized.
 
       '
     segments:
@@ -47,7 +47,7 @@ locus:
         type: insdc_nucleotide
         accession: NW_017264783.1
         seq_region: NW_017264783.1
-      start: 211243
+      start: 211240
       end: 221394
       contig_edge_distance: null
       sequence_checksum: null
@@ -60,8 +60,8 @@ genes:
   present: true
   locus_tag: T551_02159
   segment_index: 0
-  start: 211243
-  end: 211902
+  start: 211240
+  end: 211935
   strand: '-'
   order_in_locus: 0
 - gene_index: 1
@@ -71,7 +71,7 @@ genes:
   present: true
   locus_tag: T551_02162
   segment_index: 0
-  start: 220324
+  start: 220321
   end: 221076
   strand: '-'
   order_in_locus: 1

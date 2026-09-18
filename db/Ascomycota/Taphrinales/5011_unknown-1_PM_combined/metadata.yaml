@@ -7,8 +7,8 @@ taxonomy:
 organism:
   species: Taphrina deformans
   strain:
-    name: null
-    known: false
+    name: A2
+    known: true
     culture_collection_ids: []
     differs_from_sequenced: false
 mating_type:
@@ -18,32 +18,45 @@ mating_type:
   - P
   system: homothallic
 locus:
-  coordinate_provenance: curator_derived
+  coordinate_provenance: not_available
   excluded_from_coordinate_benchmark: true
   core:
     completeness: partial
     reference_orientation: not established from coordinate data alone
     definition_note: "Ciss\xE9 et al. 2013 first described putative MAT cassette candidates\
-      \ in T. deformans; Almeida et al. 2015 resolved the locus to exactly two genes\
-      \ -- matMc (HMG, M-class) and matPi (homeobox, P-class) -- interpreted as a\
-      \ fusion of an M locus with an incomplete P locus (matPc lost), ~40kb apart\
-      \ on one contig of assembly GCA_005281805.1. UNLIKE the paired Pneumocystis\
-      \ records (42068_ru7_PM_combined, 4754_b80_PM_combined), these coordinates could\
-      \ NOT be independently confirmed against this assembly's own GenBank annotation:\
-      \ NCBI efetch on RHGF01000006.1 in the literature-reported coordinate windows\
-      \ returns a \"source\" feature only, no gene/CDS annotation at all -- these\
-      \ genes were identified in the source paper by tblastn homology search, not\
-      \ by this assembly's own gene-calling pipeline, and this curator has no independent\
-      \ way to verify the exact coordinates beyond trusting the paper's reported tblastn\
-      \ hit positions as transcribed into the literature-synthesis table this record\
-      \ was drafted from. Both genes are recorded with protein_accession: null for\
-      \ this reason. boundaries evidence is tier 2 (not tier 1) specifically because\
-      \ of this unconfirmable-coordinate gap -- contrast with locus_existence/idiomorph_assignment,\
-      \ which remain tier 1 since the underlying published, reanalyzed scientific\
-      \ claim (this species has a fused M+P locus with these two genes) is itself\
-      \ solid. excluded_from_coordinate_benchmark is set to true for the same reason:\
-      \ these coordinates should not be scored in any downstream boundary-accuracy\
-      \ benchmark until independently confirmed.\n"
+      \ in T. deformans; Almeida et al. 2015 (PMID 25587012, mBio 6(1):e02250-14,\
+      \ \"Comparative genomics suggests primary homothallism of Pneumocystis species\"\
+      ) reports that T. deformans carries a fused M+P locus with matMc (HMG, M-class)\
+      \ and matPi (homeobox, P-class) genes on two contigs of the T. deformans genome\
+      \ assembly (ENA/GenBank accession CAHR00000000, strain PYCC 5710, submitted\
+      \ 2012-2013 by the Faculdade de Ci\xEAncias e Tecnologia, Universidade Nova\
+      \ de Lisboa group -- the group that also produced Ci\xEAss\xE9 et al. 2013),\
+      \ but does NOT report specific scaffold/contig identifiers or exact coordinates\
+      \ for these genes in its main text (verified by reading the full text at PMC4313921).\
+      \ PREVIOUS VERSION OF THIS RECORD BUG: this record previously cited coordinates\
+      \ on assembly GCA_005281805.1 (INSDC prefix RHGF, submitted 13-MAY-2019 by\
+      \ Wang & Liu, Northwest A&F University, an unrelated, unpublished, later genome\
+      \ project) as if Almeida et al. 2015 had reported them -- a chronological impossibility,\
+      \ since that assembly did not exist for 4 years after the paper was published.\
+      \ That was a provenance error, not a verified fact. The GCA_005281805.1/RHGF01000006.1\
+      \ accession IS a real, independently-generated T. deformans genome (confirmed\
+      \ via NCBI efetch: strain A2, BioProject PRJNA299790, BioSample SAMN04217078)\
+      \ -- organism.strain is set from this accession's real /strain=\"A2\" qualifier\
+      \ -- but the specific gene coordinates on it (51694-52236, 92621-93112) have\
+      \ NO verified source: they cannot be attributed to Almeida et al. 2015 (wrong\
+      \ assembly/chronology), and this curator found no gene/CDS annotation at these\
+      \ positions in RHGF01000006.1's own GenBank feature table when re-checked, so\
+      \ they cannot be independently confirmed against the assembly's own annotation\
+      \ either. coordinate_provenance is therefore set to \"not_available\" and validation.status\
+      \ to \"needs_review\" pending a real re-derivation of these coordinates (e.g.\
+      \ a tblastn/exonerate search of the matMc/matPi reference proteins against RHGF01000006.1,\
+      \ or tracking down the actual CAHR00000000 contig positions) in a follow-up\
+      \ curation pass -- no coordinates have been fabricated to fill this gap. locus_existence/idiomorph_assignment\
+      \ remain tier 1 since the underlying published claim (T. deformans has a fused\
+      \ M+P locus with these two gene identities) is itself solid; only the specific\
+      \ numeric coordinates are unverified. excluded_from_coordinate_benchmark remains\
+      \ true for the same reason: these coordinates must not be scored in any downstream\
+      \ boundary-accuracy benchmark until independently re-derived.\n"
     segments:
     - segment_index: 0
       sequence_source:
@@ -89,10 +102,13 @@ evidence:
       doi: 10.1128/mBio.02250-14
   boundaries:
     tier: 2
-    experimental_method: 'tblastn homology search reported in the source literature;
-      NOT independently confirmable against this assembly''s own GenBank annotation
-      (no gene/CDS features exist at these coordinates in the current RHGF01000006.1
-      annotation). See locus.core.definition_note.
+    experimental_method: 'UNVERIFIED. Almeida et al. 2015 reports the gene identities
+      (matMc, matPi) but not their exact coordinates, and does not use the genome
+      assembly (GCA_005281805.1) this record''s coordinates were transcribed against
+      -- a chronological impossibility (see locus.core.definition_note). No gene/CDS
+      feature exists at the recorded coordinates in RHGF01000006.1''s own GenBank
+      annotation either. coordinate_provenance is "not_available" and these numbers
+      should not be trusted until independently re-derived.
 
       '
     citations:
@@ -106,15 +122,17 @@ evidence:
     - pmid: '25587012'
       doi: 10.1128/mBio.02250-14
 validation:
-  status: accepted
+  status: needs_review
   rejection_reason: null
   accession_resolved: true
   accession_resolved_date: null
   accession_resolved_version: RHGF01000006.1
   sequence_match:
-    status: pass
+    status: not_applicable
     per_gene: []
-    notes: ''
+    notes: 'Both genes have protein_accession: null, so no independent per-gene
+      check can run. See locus.core.definition_note and evidence.boundaries: the
+      recorded coordinates themselves are unverified (coordinate_provenance: not_available).'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

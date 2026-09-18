@@ -79,7 +79,7 @@ def validate_record(
         "accession_resolved": None,
         "accession_resolved_date": None,
         "accession_resolved_version": None,
-        "sequence_match": {"status": "pass", "per_gene": [], "notes": ""},
+        "sequence_match": {"status": "not_applicable", "per_gene": [], "notes": ""},
         "taxonomy_current": None,
     }
 

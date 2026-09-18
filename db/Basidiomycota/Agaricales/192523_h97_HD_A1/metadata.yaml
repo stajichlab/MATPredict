@@ -44,8 +44,8 @@ locus:
         type: insdc_nucleotide
         accession: NW_006267344.1
         seq_region: NW_006267344.1
-      start: 898235
-      end: 902102
+      start: 898234
+      end: 902101
       contig_edge_distance: null
       sequence_checksum: null
   extended_flank: []
@@ -57,8 +57,8 @@ genes:
   present: true
   locus_tag: AGABI2DRAFT_239365
   segment_index: 0
-  start: 898235
-  end: 899865
+  start: 898234
+  end: 899864
   strand: '-'
   order_in_locus: 0
 - gene_index: 1
@@ -68,8 +68,8 @@ genes:
   present: true
   locus_tag: AGABI2DRAFT_113833
   segment_index: 0
-  start: 900064
-  end: 902102
+  start: 900063
+  end: 902101
   strand: +
   order_in_locus: 1
 evidence:
@@ -100,17 +100,22 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: NW_006267344.1
   sequence_match:
-    status: pass
+    status: warn
     per_gene:
     - gene_index: 0
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
+      percent_identity: 93.97
+      coverage: 40.53
+      status: warn
     - gene_index: 1
       percent_identity: 100.0
-      coverage: 100.0
+      coverage: 48.17
       status: pass
-    notes: ''
+    notes: HD2 and HD1 are multi-exon genes; this project's schema stores only a single
+      start/end span per gene (no intron modeling), so translating the full genomic
+      span (introns included) does not exactly reproduce the deposited protein. Coordinates
+      are GenBank-verified correct (re-derived independently from NW_006267344.1's
+      own feature table); the partial identity/coverage here reflects an unmodeled-intron
+      limitation of the current schema, not a coordinate error.
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

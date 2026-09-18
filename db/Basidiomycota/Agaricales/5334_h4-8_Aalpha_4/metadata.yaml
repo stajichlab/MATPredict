@@ -46,8 +46,8 @@ locus:
         type: assembly
         accession: GCF_000143185.2
         seq_region: NW_026089539.1
-      start: 1821008
-      end: 1827457
+      start: 1821007
+      end: 1827456
       contig_edge_distance: null
       sequence_checksum: null
   extended_flank: []
@@ -59,8 +59,8 @@ genes:
   present: true
   locus_tag: SCHCODRAFT_02696654
   segment_index: 0
-  start: 1821008
-  end: 1824097
+  start: 1821007
+  end: 1824096
   strand: '-'
   order_in_locus: 0
 - gene_index: 1
@@ -70,8 +70,8 @@ genes:
   present: true
   locus_tag: SCHCODRAFT_02596714
   segment_index: 0
-  start: 1824369
-  end: 1827457
+  start: 1824368
+  end: 1827456
   strand: +
   order_in_locus: 1
 evidence:
@@ -108,16 +108,16 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: null
   sequence_match:
-    status: pass
+    status: not_applicable
     per_gene:
     - gene_index: 0
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
+      percent_identity: null
+      coverage: null
+      status: not_applicable
     - gene_index: 1
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
+      percent_identity: null
+      coverage: null
+      status: not_applicable
     notes: ''
   taxonomy_current: true
 curation:

@@ -22,9 +22,14 @@ this module fixes at the source.
 identifier this module works with (`<taxid>_<accession>`, matching the batch
 runner's per-genome directory name) already carries a taxid, and this repo
 already has an offline lineage mechanism: `MATPredict.db.taxonomy.resolve_lineage`
-shells out to `taxonkit reformat` against a local NCBI taxonomy dump (the same
-mechanism `detect.family_registry.route` uses for lineage-aware
-`taxonomic_scope` matching), so no new taxonomy client is introduced here.
+shells out to `taxonkit reformat` against a local NCBI taxonomy dump, so no
+new taxonomy client is introduced here. This is a separate, pre-existing
+function from `detect.family_registry.route`'s default resolver
+(`MATPredict.db.taxonomy.default_lineage_taxids`, an NCBI-efetch-backed
+ancestor-taxid lookup via `NcbiClient`) -- both live in `db/taxonomy.py`, but
+they are different mechanisms with different failure modes: a `taxonkit`
+outage does not affect family routing, and an NCBI-efetch outage does not
+affect this module's anomaly detection.
 When `taxonkit` is unavailable or a taxid's lineage can't be resolved, that
 genome is simply left out of anomaly detection (its order/class group is
 `None`) rather than raising -- anomaly detection is a best-effort signal on
@@ -160,8 +165,11 @@ def _lineage_group(genome_id: str, lineage_resolver: Callable[[int], str | None]
 
 def _default_lineage_resolver(taxid: int) -> str | None:
     """Default lineage resolver: `MATPredict.db.taxonomy.resolve_lineage`
-    (taxonkit against a local NCBI taxonomy dump -- no network call, and the
-    same mechanism `detect.family_registry.route` already relies on).
+    (taxonkit against a local NCBI taxonomy dump -- no network call). This is
+    a separate, pre-existing function in `db/taxonomy.py` from the one
+    `detect.family_registry.route` uses by default
+    (`default_lineage_taxids`, NCBI-efetch-backed); the two are independent
+    mechanisms, not a shared one.
     """
     result = resolve_lineage(taxid)
     if not result.is_current:

@@ -27,4 +27,15 @@ properties:
             properties:
               name: {type: string}
               role: {enum: [core_MAT, flanking_conserved, flanking_variable]}
+              # gene_class is OPTIONAL and orthogonal to role: role says where a gene
+              # sits structurally in the locus (core vs flanking); gene_class says what
+              # functional class it belongs to, to let a gene keep its literal,
+              # literature/deposit-faithful `name` (e.g. bar3, STE3, pheromone_B43) while
+              # still being grouped with functionally-equivalent genes named differently
+              # in other families (e.g. STE3/bar3/bbr2/pra1 are all pheromone receptors).
+              # Populate it only where the DB's own curated records document the
+              # functional identity (a definition_note, product name, or explicit
+              # citation) -- leave it absent rather than inferring from literature alone.
+              gene_class:
+                enum: [alpha_box, HMG_box, pheromone_receptor, pheromone_precursor, HD1, HD2]
               present_in_idiomorphs: {type: array, items: {type: string}}

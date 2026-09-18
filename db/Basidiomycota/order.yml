@@ -5,8 +5,8 @@ loci:
     idiomorph_pattern: "^A[0-9]+$"
     taxonomic_scope: [192523, 5346]
     genes:
-      - {name: HD1, role: core_MAT}
-      - {name: HD2, role: core_MAT}
+      - {name: HD1, role: core_MAT, gene_class: HD1}
+      - {name: HD2, role: core_MAT, gene_class: HD2}
   - locus_name: "PR"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^B[0-9]+$"
@@ -18,39 +18,56 @@ loci:
     # `pheromone` entry was removed: no curated protein anywhere in db/ carries
     # that name, so it was permanently unsatisfiable and permanently blocked
     # core_found (and therefore the high tier) for this family.
+    # gene_class: pheromone_receptor/pheromone_precursor per this locus's own record
+    # (db/Basidiomycota/Agaricales/5346_a43-b43-okayama-7_PR_B43/metadata.yaml), whose
+    # definition_note documents pheromone_B43/pheromone_B44/fungal_mating_type_pheromone
+    # as the pheromone (precursor) genes and pheromone_receptor as the 7TM receptor.
     genes:
-      - {name: pheromone_receptor, role: core_MAT}
-      - {name: pheromone_B43, role: core_MAT}
-      - {name: pheromone_B44, role: core_MAT}
-      - {name: fungal_mating_type_pheromone, role: core_MAT}
+      - {name: pheromone_receptor, role: core_MAT, gene_class: pheromone_receptor}
+      - {name: pheromone_B43, role: core_MAT, gene_class: pheromone_precursor}
+      - {name: pheromone_B44, role: core_MAT, gene_class: pheromone_precursor}
+      - {name: fungal_mating_type_pheromone, role: core_MAT, gene_class: pheromone_precursor}
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["alpha", "a"]
     taxonomic_scope: [40410]
+    # SXI1/SXI2 are left without a gene_class here: the field's literature-known
+    # correspondence to HD1/HD2 (Lengeler et al. 2002) is not stated in this DB's own
+    # curated record (db/Basidiomycota/Tremellales/40410_jec21_MAT_alpha/metadata.yaml),
+    # so it is left for a human domain reviewer rather than inferred from outside
+    # literature alone. MFalpha1-3/MFa1-3 (pheromone precursors) and STE3 (the receptor)
+    # are classified per that same record's definition_note.
     genes:
       - {name: SXI1, role: core_MAT, present_in_idiomorphs: ["alpha"]}
       - {name: SXI2, role: core_MAT, present_in_idiomorphs: ["a"]}
-      - {name: MFalpha1, role: core_MAT, present_in_idiomorphs: ["alpha"]}
-      - {name: MFalpha2, role: core_MAT, present_in_idiomorphs: ["alpha"]}
-      - {name: MFalpha3, role: core_MAT, present_in_idiomorphs: ["alpha"]}
-      - {name: MFa1, role: core_MAT, present_in_idiomorphs: ["a"]}
-      - {name: MFa2, role: core_MAT, present_in_idiomorphs: ["a"]}
-      - {name: MFa3, role: core_MAT, present_in_idiomorphs: ["a"]}
-      - {name: STE3, role: core_MAT}
+      - {name: MFalpha1, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
+      - {name: MFalpha2, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
+      - {name: MFalpha3, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
+      - {name: MFa1, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"]}
+      - {name: MFa2, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"]}
+      - {name: MFa3, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"]}
+      - {name: STE3, role: core_MAT, gene_class: pheromone_receptor}
   - locus_name: "Aalpha"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     taxonomic_scope: [5334]
+    # gene_class Z=HD1/Y=HD2 per this locus's own curated record
+    # (db/Basidiomycota/Agaricales/5334_h4-8_Aalpha_4/metadata.yaml), whose
+    # reference_orientation explicitly states "Z4(HD1)->Y4(HD2)".
     genes:
-      - {name: Y, role: core_MAT}
-      - {name: Z, role: core_MAT}
+      - {name: Y, role: core_MAT, gene_class: HD2}
+      - {name: Z, role: core_MAT, gene_class: HD1}
   - locus_name: "Abeta"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     taxonomic_scope: [5334]
+    # No Abeta record is curated yet, but it shares the same species (S. commune,
+    # 5334) and the same Y/Z gene-naming convention as Aalpha above, whose curated
+    # record documents Z=HD1/Y=HD2 -- applying the same gene_class here for
+    # consistency, not as an independent finding.
     genes:
-      - {name: Y, role: core_MAT}
-      - {name: Z, role: core_MAT}
+      - {name: Y, role: core_MAT, gene_class: HD2}
+      - {name: Z, role: core_MAT, gene_class: HD1}
   - locus_name: "Balpha"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
@@ -62,11 +79,15 @@ loci:
     # record whose receptor has no allele-specific published name could use it.
     # The bare `pheromone` entry was removed: no curated protein anywhere in
     # db/ carries that name.
+    # gene_class per this locus's own record
+    # (db/Basidiomycota/Agaricales/5334_h4-8_Balpha_3/metadata.yaml), whose
+    # definition_note documents bar3 as the receptor and bap3-1/bap3-3 as the two
+    # pheromone precursors ("2 pheromone precursors + 1 receptor").
     genes:
-      - {name: pheromone_receptor, role: core_MAT}
-      - {name: bar3, role: core_MAT}
-      - {name: bap3-1, role: core_MAT}
-      - {name: bap3-3, role: core_MAT}
+      - {name: pheromone_receptor, role: core_MAT, gene_class: pheromone_receptor}
+      - {name: bar3, role: core_MAT, gene_class: pheromone_receptor}
+      - {name: bap3-1, role: core_MAT, gene_class: pheromone_precursor}
+      - {name: bap3-3, role: core_MAT, gene_class: pheromone_precursor}
   - locus_name: "Bbeta"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
@@ -76,28 +97,43 @@ loci:
     # bbp2_a/bbp2_b are that record's disambiguation of two distinct proteins
     # both labelled "bbp2" in the source table). Same alias/removal reasoning
     # as Balpha above.
+    # gene_class per this locus's own record
+    # (db/Basidiomycota/Agaricales/5334_h4-8_Bbeta_2/metadata.yaml), whose
+    # definition_note documents bbr2 as the receptor and the bbp2-* / bbp2_a / bbp2_b
+    # genes as pheromone precursors ("6 pheromone precursors + 1 receptor").
     genes:
-      - {name: pheromone_receptor, role: core_MAT}
-      - {name: bbr2, role: core_MAT}
-      - {name: bbp2-1, role: core_MAT}
-      - {name: bbp2-2, role: core_MAT}
-      - {name: bbp2-5, role: core_MAT}
-      - {name: bbp2-6, role: core_MAT}
-      - {name: bbp2-8, role: core_MAT}
-      - {name: bbp2_a, role: core_MAT}
-      - {name: bbp2_b, role: core_MAT}
+      - {name: pheromone_receptor, role: core_MAT, gene_class: pheromone_receptor}
+      - {name: bbr2, role: core_MAT, gene_class: pheromone_receptor}
+      - {name: bbp2-1, role: core_MAT, gene_class: pheromone_precursor}
+      - {name: bbp2-2, role: core_MAT, gene_class: pheromone_precursor}
+      - {name: bbp2-5, role: core_MAT, gene_class: pheromone_precursor}
+      - {name: bbp2-6, role: core_MAT, gene_class: pheromone_precursor}
+      - {name: bbp2-8, role: core_MAT, gene_class: pheromone_precursor}
+      - {name: bbp2_a, role: core_MAT, gene_class: pheromone_precursor}
+      - {name: bbp2_b, role: core_MAT, gene_class: pheromone_precursor}
   - locus_name: "aLocus"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^a[0-9]+$"
     taxonomic_scope: [5270]
+    # gene_class per this locus's own record
+    # (db/Basidiomycota/Ustilaginales/5270_521_aLocus_a1/metadata.yaml), whose
+    # definition_note documents mfa1 as the lipopeptide mating-factor precursor and
+    # pra1 as the 7TM pheromone receptor. rba1's functional role is explicitly noted
+    # in that same record as less certain -- left unclassified rather than guessed.
     genes:
-      - {name: mfa1, role: core_MAT}
-      - {name: pra1, role: core_MAT}
+      - {name: mfa1, role: core_MAT, gene_class: pheromone_precursor}
+      - {name: pra1, role: core_MAT, gene_class: pheromone_receptor}
       - {name: rba1, role: flanking_variable}
   - locus_name: "bLocus"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^b[0-9]+$"
     taxonomic_scope: [5270]
+    # bE/bW are a divergently-transcribed homeodomain gene pair (the b locus's own
+    # curated record, db/Basidiomycota/Ustilaginales/5270_521_bLocus_b1/metadata.yaml,
+    # confirms this via RefSeq's own "bE1 allele"/"bW1 allele" product annotation) but
+    # that record does not itself state which of the two corresponds to HD1 vs HD2 --
+    # left unclassified rather than guessed; a human reviewer with the primary
+    # literature (Gillissen et al. 1992; Kamper et al. 1995) should confirm the mapping.
     genes:
       - {name: bE, role: core_MAT}
       - {name: bW, role: core_MAT}

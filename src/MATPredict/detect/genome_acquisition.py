@@ -1,17 +1,30 @@
 """Genome acquisition for the genome-scale detection rollout's pilot target list.
 
-Acquires one representative/reference genome assembly per taxid via the NCBI
-`datasets` command-line tool. `datasets` is not a pixi dependency of this project;
-on UCR HPCC it is provided by the environment module `ncbi_datasets/18.30.1`
-(`module load ncbi_datasets/18.30.1`), which must be loaded in the shell/job that
-calls `acquire_genomes` before this module's `_default_runner` can find `datasets`
-on PATH. `datasets` handles assembly discovery, download, and unzip-ready packaging
-in one tool, so no `NcbiClient` (esummary/FTP) fallback path is implemented here.
+Acquisition tries two sources, in order, per taxid:
+
+1. **Local BFD genome library** (`local_manifest_path` / `local_library_root`):
+   a shared-storage collection of already-downloaded, unannotated fungal genome
+   assemblies this lab already maintains for a different project (BFD). Preferred
+   because it has no network dependency, is already-vetted lab data, and already
+   matches this rollout's "unannotated genome" requirement. Both paths are
+   *parameters with sensible on-HPCC defaults*, not hardcoded requirements: if
+   either path does not exist (e.g. running outside this HPCC environment), the
+   local-library check is skipped entirely and every taxid falls through to (2)
+   -- this is not an error.
+2. **NCBI `datasets` CLI** (fallback): `datasets` is not a pixi dependency of
+   this project; on UCR HPCC it is provided by the environment module
+   `ncbi_datasets/18.30.1` (`module load ncbi_datasets/18.30.1`), which must be
+   loaded in the shell/job that calls `acquire_genomes` before this module's
+   `_default_runner` can find `datasets` on PATH. `datasets` handles assembly
+   discovery, download, and unzip-ready packaging in one tool, so no
+   `NcbiClient` (esummary/FTP) fallback path is implemented here.
 """
 from __future__ import annotations
 
+import csv
 import json
 import logging
+import re
 import subprocess
 import zipfile
 from dataclasses import dataclass
@@ -21,6 +34,18 @@ from typing import Callable
 from MATPredict.db.ncbi_client import NcbiClient
 
 logger = logging.getLogger(__name__)
+
+# Real, already-downloaded, unannotated fungal genome assemblies from a sibling
+# lab project (BFD), read-only from this project's point of view -- never write
+# into this tree. Overridable per-call for environments where it is not mounted.
+DEFAULT_LOCAL_LIBRARY_ROOT = Path(
+    "/bigdata/stajichlab/shared/projects/BFD/Fungi_BFD_runs/input_clean_genomes"
+)
+DEFAULT_LOCAL_MANIFEST_PATH = Path(
+    "/bigdata/stajichlab/shared/projects/BFD/Fungi_BFD/backup_samples.csv"
+)
+
+_ASMID_ACCESSION_RE = re.compile(r"^(GC[AF]_\d+\.\d+)_")
 
 
 @dataclass(frozen=True)
@@ -70,39 +95,109 @@ def acquire_genomes(
     ncbi: NcbiClient | None = None,
     runner: DatasetsRunner = _default_runner,
     failures: list[AcquisitionFailure] | None = None,
+    local_library_root: Path = DEFAULT_LOCAL_LIBRARY_ROOT,
+    local_manifest_path: Path = DEFAULT_LOCAL_MANIFEST_PATH,
 ) -> list[AcquiredGenome]:
-    """Acquire one representative/reference genome assembly per taxid.
+    """Acquire one representative genome assembly per taxid, preferring an
+    already-downloaded local copy over a fresh NCBI download.
 
-    For each taxid, shells out to `datasets download genome taxon <taxid>
-    --reference --include genome`, unzips the resulting package under `out_dir`,
-    and reads the package's `assembly_data_report.jsonl` to recover the resolved
-    accession and organism name, then locates that assembly's `*_genomic.fna`.
+    For each taxid:
+
+    1. Look it up in the local BFD genome library (`local_manifest_path`, a CSV
+       joined on its `NCBI_TAXONID` column; `local_library_root`, the directory
+       holding the actual `<ASMID>.fa.gz` / `<ASMID>.masked.fasta.gz` files). If
+       found, that file's existing path is returned directly -- **no copy or
+       download is performed**, this genome may be multi-GB. If either the
+       manifest or the library root does not exist on this filesystem, the local
+       check is skipped for every taxid (not an error) and NCBI is used instead.
+    2. Otherwise, fall back to `datasets download genome taxon <taxid> --reference
+       --include genome`, unzip the resulting package under `out_dir`, and read
+       the package's `assembly_data_report.jsonl` to recover the resolved
+       accession and organism name, then locate that assembly's `*_genomic.fna`.
 
     `out_dir` is caller-supplied (e.g. a `$SCRATCH`-based path from Task 3's batch
-    orchestrator) and is created if it does not already exist. This function never
-    hardcodes a scratch or shared-storage path itself.
+    orchestrator) and is created if it does not already exist; it is only used by
+    the NCBI fallback path (the local path never writes anywhere). This function
+    never hardcodes a scratch path itself.
 
     `ncbi` is accepted for interface parity with other MATPredict lookup call
     sites and is reserved for a future `NcbiClient`-based (esummary/FTP) fallback
-    path if `datasets` ever becomes unavailable; the `datasets`-CLI path
-    implemented here does not use it.
+    path if `datasets` ever becomes unavailable; neither acquisition path
+    implemented here uses it.
 
-    A taxid that cannot be resolved or downloaded is skipped, not raised: it is
-    recorded in `failures` (if a list is passed) and logged as a warning, so a
+    A taxid that cannot be resolved by either source is skipped, not raised: it
+    is recorded in `failures` (if a list is passed) and logged as a warning, so a
     caller iterating a pilot list still gets every genome that *could* be
     acquired, plus visibility into which ones did not come through.
     """
     out_dir = Path(out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
     genomes: list[AcquiredGenome] = []
     for taxid in taxids:
         try:
-            genomes.append(_acquire_one(taxid, out_dir, runner))
+            genome = _acquire_local(taxid, local_library_root, local_manifest_path)
+            if genome is None:
+                out_dir.mkdir(parents=True, exist_ok=True)
+                genome = _acquire_one(taxid, out_dir, runner)
+            genomes.append(genome)
         except AcquisitionError as exc:
             logger.warning("genome acquisition failed for taxid=%s: %s", taxid, exc)
             if failures is not None:
                 failures.append(AcquisitionFailure(taxid=taxid, reason=str(exc)))
     return genomes
+
+
+def _acquire_local(
+    taxid: int, library_root: Path, manifest_path: Path
+) -> AcquiredGenome | None:
+    """Resolve a taxid against the local BFD genome library. Returns `None` (a
+    local miss, not a failure) when the manifest/library aren't mounted, when no
+    manifest row matches the taxid, or when the matched row's files aren't
+    actually present on disk -- in every `None` case the caller falls through to
+    the NCBI path instead.
+
+    Tie-break when multiple manifest rows match a taxid (common: a single
+    species can have hundreds of local strain assemblies): prefer a row whose
+    `ASMID` starts with `GCF_` (RefSeq/reference-quality) over `GCA_`, then the
+    alphabetically-first `ASMID` as a final, deterministic tiebreak. This is an
+    arbitrary-but-documented and reproducible choice, not "whatever the CSV
+    iteration order gives."
+
+    File preference: when both `<ASMID>.fa.gz` (unmasked) and
+    `<ASMID>.masked.fasta.gz` (soft-masked) exist for the chosen row, the
+    unmasked file is preferred -- `detect/search.py`'s tblastn/exonerate/miniprot
+    calls have no soft-mask-awareness (no masking-related handling found there),
+    so the full, unmasked sequence is the safer default for search sensitivity.
+    """
+    if not manifest_path.exists() or not library_root.exists():
+        return None
+
+    with manifest_path.open(newline="") as fh:
+        rows = [row for row in csv.DictReader(fh) if row.get("NCBI_TAXONID") == str(taxid)]
+    if not rows:
+        return None
+
+    rows.sort(key=lambda row: (not row["ASMID"].startswith("GCF_"), row["ASMID"]))
+    chosen = rows[0]
+    asmid = chosen["ASMID"]
+
+    unmasked_path = library_root / f"{asmid}.fa.gz"
+    masked_path = library_root / f"{asmid}.masked.fasta.gz"
+    if unmasked_path.exists():
+        fasta_path = unmasked_path
+    elif masked_path.exists():
+        fasta_path = masked_path
+    else:
+        logger.warning(
+            "local library manifest lists %s for taxid=%s but no genome file found under %s",
+            asmid, taxid, library_root,
+        )
+        return None
+
+    accession_match = _ASMID_ACCESSION_RE.match(asmid)
+    accession = accession_match.group(1) if accession_match else asmid
+    species = chosen.get("SPECIES") or chosen.get("SPECIES_IN") or asmid
+
+    return AcquiredGenome(taxid=taxid, accession=accession, fasta_path=fasta_path, species=species)
 
 
 def _acquire_one(taxid: int, out_dir: Path, runner: DatasetsRunner) -> AcquiredGenome:

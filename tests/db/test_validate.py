@@ -200,15 +200,33 @@ def test_independent_translation_applies_codon_start_once_not_per_exon(tmp_path)
     # codon_start=2 (skip the first base of the ASSEMBLED sequence, not each exon).
     # Each exon is fetched with strand="-", so `fetch_nucleotide_sequence` already
     # returns it reverse-complemented and 5'->3' oriented (no local revcomp here);
-    # exons are listed in transcript order and concatenated as-is. Assembled raw
-    # (pre-offset) = "TATGG" + "CCTTTTAA" = "TATGGCCTTTTAA" (13 nt). With
-    # codon_start=2, translation starts at index 1: "ATGGCCTTTTAA" -> "MAF" (same
-    # result as above, proving the offset is applied once to the whole assembled
-    # string, not to each exon's start).
+    # exons are listed in transcript order and concatenated as-is.
+    #
+    # Sequences are chosen so the "once" (correct) and "per-exon" (buggy) computations
+    # land on genuinely different amino acids, not just synonymous codons for the same
+    # residue -- an earlier version of this test used sequences where the two
+    # computations happened to both translate to Ala at the divergent codon, so it had
+    # no power to catch a per-exon-offset regression. Hand-verified arithmetic:
+    #
+    # exon1 = "TATG" (4 nt), exon2 = "TTTAAA" (6 nt).
+    # Assembled raw (pre-offset) = "TATG" + "TTTAAA" = "TATGTTTAAA" (10 nt).
+    #
+    # Correct (offset applied ONCE to the assembled string, offset=codon_start-1=1):
+    #   "TATGTTTAAA"[1:] = "ATGTTTAAA" (9 nt, already a multiple of 3)
+    #   codons: ATG GCC... no -- ATG TTT AAA -> M F K -> "MFK"
+    #
+    # Buggy (offset applied PER EXON before concatenating):
+    #   exon1[1:] = "ATG", exon2[1:] = "TTAAA"
+    #   "ATG" + "TTAAA" = "ATGTTAAA" (8 nt) -> trimmed to a multiple of 3 -> "ATGTTA" (6 nt)
+    #   codons: ATG TTA -> M L -> "ML"
+    #
+    # "MFK" (correct) != "ML" (buggy): the second codon is TTT/Phe under the correct
+    # computation vs TTA/Leu under the buggy one -- a real amino-acid change, not a
+    # synonymous-codon coincidence, so this test now actually discriminates the bug.
     gene = {
         "gene_index": 0, "segment_index": 0, "strand": "-",
-        "start": 1, "end": 13,
-        "exons": [{"start": 100, "end": 104}, {"start": 90, "end": 97}],
+        "start": 1, "end": 10,
+        "exons": [{"start": 100, "end": 103}, {"start": 85, "end": 90}],
         "codon_start": 2,
         "protein_accession": "ncbi_protein:FAKE2.1",
     }
@@ -216,13 +234,13 @@ def test_independent_translation_applies_codon_start_once_not_per_exon(tmp_path)
         {"sequence_source": {"type": "insdc_nucleotide", "accession": "FAKE_ACC.1"}}
     ]}}}
     fetcher = CachedFetcher(cache_dir=tmp_path, transport=_transport_for_ranges({
-        ("FAKE_ACC.1", 100, 104, "-"): "TATGG",
-        ("FAKE_ACC.1", 90, 97, "-"): "CCTTTTAA",
+        ("FAKE_ACC.1", 100, 103, "-"): "TATG",
+        ("FAKE_ACC.1", 85, 90, "-"): "TTTAAA",
     }))
     ncbi = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
 
     result = _independent_translation(record, gene, ncbi)
-    assert result == "MAF"
+    assert result == "MFK"
 
 
 def test_independent_translation_falls_back_to_single_span_when_no_exons(tmp_path):

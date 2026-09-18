@@ -29,6 +29,7 @@ kept separate:**
 """
 from __future__ import annotations
 
+import csv
 import gzip
 from dataclasses import dataclass
 from pathlib import Path
@@ -40,6 +41,7 @@ from Bio.Seq import Seq
 from MATPredict.db.ncbi_client import NcbiClient
 from MATPredict.db.seqmatch import score_match
 from MATPredict.detect.family_registry import FamilyKey
+from MATPredict.detect.genome_acquisition import DEFAULT_LOCAL_MANIFEST_PATH
 
 
 @dataclass(frozen=True)
@@ -57,28 +59,40 @@ class GroundTruthMatch:
     curated record's own source organism.
 
     `status` is one of:
-    * `"exact"` -- the rollout genome's own accession is literally one of the
-      curated record's `locus.core.segments[].sequence_source.accession`
-      values (or an unversioned prefix of one). Scored.
+    * `"exact"` -- the rollout genome unambiguously represents the curated
+      record's own source organism, by either of two independent checks:
+      (a) **accession match**: the rollout genome's own accession is
+      literally one of the curated record's own
+      `locus.core.segments[].sequence_source.accession` values (or an
+      unversioned prefix of one); or (b) **strain match**: the rollout
+      genome and the curated record share a taxid, and the rollout genome's
+      own strain (looked up from the local BFD acquisition manifest's
+      `STRAIN` column, keyed by its `ASMID`/accession -- see
+      `_manifest_strain`) case-insensitively equals the curated record's own
+      `organism.strain.name` or one of its `culture_collection_ids`. Either
+      path is scored.
     * `"ambiguous"` -- the rollout genome and the curated record share a
-      taxid (same species) but the rollout genome's accession does not match
-      any of the record's source accessions. **Project judgment call
-      (documented in Task 5's report):** this happens for every real pilot
-      rollout genome checked against this project's curated Coccidioides/
-      Aspergillus records (5501, 199306, 162425, 746128) -- the curated
-      records were deposited as locus-level GenBank records (or from a
-      different whole-genome assembly) years before the rollout's own
-      whole-genome assembly existed, so accessions never coincide even
-      though genus/species-level identity is not in doubt. This module
-      treats that case as `"ambiguous"` and EXCLUDES it from the numeric
-      sensitivity score rather than assume the specific isolate/idiomorph
-      also matches: a same-species genome is not guaranteed to carry the
-      same idiomorph (MAT1-1 vs MAT1-2) or even the same strain as the one a
+      taxid (same species) but NEITHER check above succeeds: the accessions
+      differ AND (the manifest strain is unknown/unmounted, or it does not
+      match the curated record's strain). **Project judgment call
+      (documented in Task 5's report):** this is the real, verified outcome
+      for every one of this project's pilot rollout genomes checked against
+      its curated Coccidioides/Aspergillus records (5501, 199306, 162425,
+      746128) -- the BFD manifest's own `STRAIN` column names a DIFFERENT
+      strain (WA_211, 2566, SP-2605-48, niveus) than every existing curated
+      record for those species (H538.4, RS, RMSCC1040, Silveira, FGSC A4,
+      Af293, A1163), so this is a genuine strain mismatch, not merely an
+      accession-namespace mismatch that a same-strain check would have
+      resolved. This module EXCLUDES an `"ambiguous"` pairing from the
+      numeric sensitivity score rather than assume the specific
+      isolate/idiomorph also matches: a same-species genome is not
+      guaranteed to carry the same idiomorph (MAT1-1 vs MAT1-2) as the one a
       curator specifically confirmed, and this module's job is to report a
       real, trustworthy number or admit it can't, never a plausible-looking
       guess. Callers that want an "ambiguous" pairing surfaced (e.g. for a
-      human to manually confirm strain equivalence) get it from this
-      dataclass, never silently folded into `FamilyBenchmark.sensitivity`.
+      human to manually confirm strain equivalence when the manifest lookup
+      itself is unavailable) get it from this dataclass, never silently
+      folded into `FamilyBenchmark.sensitivity`.
     """
 
     genome_id: str
@@ -207,13 +221,59 @@ def _genome_id_taxid_accession(genome_id: str) -> tuple[int, str] | None:
     return taxid, accession
 
 
-def match_ground_truth(genome_id: str, db_root: Path) -> list[GroundTruthMatch]:
+def _manifest_strain(taxid: int, accession: str, manifest_path: Path) -> str | None:
+    """The rollout genome's own strain name, looked up from the local BFD
+    acquisition manifest (`genome_acquisition.py`'s `DEFAULT_LOCAL_MANIFEST_PATH`,
+    the same CSV `_acquire_local` reads there -- reused here rather than a
+    second manifest reader). Matched on `NCBI_TAXONID == str(taxid)` and an
+    `ASMID` that is either exactly `accession` or starts with `accession +
+    "_"` -- the manifest's real `ASMID` values carry a `<accession>_<assembly
+    name>` suffix (e.g. `GCA_004115165.2_Cimm211_ragoo`), while a rollout
+    genome's own accession (from its `<taxid>_<accession>` directory name)
+    is the bare accession only.
+
+    Returns `None`, never raises, when the manifest isn't mounted (this
+    project runs outside UCR HPCC in CI/tests), can't be parsed, or has no
+    matching row -- exactly the same "best-effort, not fatal" treatment
+    `genome_acquisition._acquire_local` already gives this same file, so a
+    missing/unreadable manifest degrades to accession-only matching rather
+    than raising out of `match_ground_truth`.
+    """
+    try:
+        with manifest_path.open(newline="") as fh:
+            for row in csv.DictReader(fh):
+                if row.get("NCBI_TAXONID") != str(taxid):
+                    continue
+                asmid = row.get("ASMID", "")
+                if asmid == accession or asmid.startswith(accession + "_"):
+                    strain = row.get("STRAIN")
+                    return strain.strip() if strain else None
+    except (OSError, csv.Error, KeyError):
+        return None
+    return None
+
+
+def _strain_matches(rollout_strain: str, doc: dict) -> bool:
+    """Case-insensitive equality between `rollout_strain` and the curated
+    record's own `organism.strain.name` or any of its
+    `organism.strain.culture_collection_ids` entries."""
+    organism_strain = doc.get("organism", {}).get("strain") or {}
+    candidates = [organism_strain.get("name")] + list(
+        organism_strain.get("culture_collection_ids") or []
+    )
+    rollout_norm = rollout_strain.strip().lower()
+    return any(c and c.strip().lower() == rollout_norm for c in candidates)
+
+
+def match_ground_truth(
+    genome_id: str, db_root: Path, manifest_path: Path = DEFAULT_LOCAL_MANIFEST_PATH,
+) -> list[GroundTruthMatch]:
     """Every curated record that shares a taxid with rollout genome
-    `genome_id`, classified `"exact"` (rollout accession literally is one of
-    the record's own source accessions) or `"ambiguous"` (same taxid, no
-    accession in common -- see `GroundTruthMatch`'s docstring for the
-    project's judgment call on why this is excluded from the numeric score
-    rather than assumed equivalent).
+    `genome_id`, classified `"exact"` (accession match OR strain match --
+    see `GroundTruthMatch`'s docstring for the exact rule) or `"ambiguous"`
+    (same taxid, neither check succeeds -- see `GroundTruthMatch`'s
+    docstring for the project's judgment call on why this is excluded from
+    the numeric score rather than assumed equivalent).
 
     A genome with no curated record at all for its taxid returns `[]` --
     there is no ground truth to compare against, ambiguous or otherwise.
@@ -223,6 +283,7 @@ def match_ground_truth(genome_id: str, db_root: Path) -> list[GroundTruthMatch]:
         return []
     taxid, accession = parsed
     accession_unversioned = accession.split(".")[0]
+    rollout_strain = _manifest_strain(taxid, accession, manifest_path)
 
     matches: list[GroundTruthMatch] = []
     for key, record_id, doc, _meta_path in _load_curated_docs(db_root):
@@ -238,6 +299,18 @@ def match_ground_truth(genome_id: str, db_root: Path) -> list[GroundTruthMatch]:
                        f"own source accession(s) {sorted(source_accessions)}",
             ))
             continue
+        if rollout_strain is not None and _strain_matches(rollout_strain, doc):
+            matches.append(GroundTruthMatch(
+                genome_id=genome_id, record_id=record_id, family_key=key,
+                status="exact",
+                reason=(
+                    f"rollout genome strain {rollout_strain!r} (from the BFD acquisition "
+                    f"manifest) matches curated record {record_id}'s own strain, despite a "
+                    f"different source accession ({accession} vs "
+                    f"{sorted(source_accessions)}) -- same-strain, different assembly"
+                ),
+            ))
+            continue
         species = doc.get("organism", {}).get("species", "?")
         strain = doc.get("organism", {}).get("strain", {}).get("name", "?")
         matches.append(GroundTruthMatch(
@@ -246,7 +319,9 @@ def match_ground_truth(genome_id: str, db_root: Path) -> list[GroundTruthMatch]:
             reason=(
                 f"same taxid ({taxid}, {species}) but rollout genome accession "
                 f"{accession} does not match curated record {record_id}'s own source "
-                f"accession(s) {sorted(source_accessions)} (curated strain: {strain}); "
+                f"accession(s) {sorted(source_accessions)}, and rollout strain "
+                f"{rollout_strain!r} does not match curated strain {strain!r} "
+                "(or the manifest strain lookup was unavailable); "
                 "treating as ambiguous rather than assuming the same strain/idiomorph "
                 "-- excluded from the numeric sensitivity score"
             ),
@@ -271,8 +346,36 @@ def _translate_span(nucleotide_sequence: str) -> str:
     return str(Seq(nucleotide_sequence).translate(table=1, to_stop=True))
 
 
+def _splice_transcript(record_seq, exons: list[tuple[int, int]], strand: str | None) -> str:
+    """Concatenate `exons` (1-based, fully-closed genomic spans, stored in
+    ASCENDING GENOMIC COORDINATE order regardless of strand -- see
+    `pipeline.py`'s `GeneEvidence.exons` docstring for why this is NOT
+    already transcript order) into one 5'->3' transcript.
+
+    For a plus-strand gene, ascending genomic order already IS transcript
+    order. For a minus-strand gene, transcript order is DESCENDING genomic
+    order, so the exon list is walked in reverse; each individual exon is
+    still reverse-complemented on its own before being appended, exactly the
+    per-exon-then-reorder discipline `db/validate.py`'s `_assemble_transcript`
+    already documents.
+    """
+    ordered = list(reversed(exons)) if strand == "-" else list(exons)
+    parts = []
+    for start, end in ordered:
+        span = record_seq[start - 1:end]
+        if strand == "-":
+            span = span.reverse_complement()
+        parts.append(str(span))
+    return "".join(parts)
+
+
 def _extract_translated_gene(
-    genome_fasta_path: Path, contig: str, start: int, end: int, strand: str | None,
+    genome_fasta_path: Path,
+    contig: str,
+    start: int,
+    end: int,
+    strand: str | None,
+    exons: list[tuple[int, int]] | None = None,
 ) -> str | None:
     """Re-translate the gene at (contig, start, end, strand) directly from the
     rollout genome's own FASTA. `gene_evidence` entries in a detection report
@@ -282,6 +385,29 @@ def _extract_translated_gene(
     against a curated record's real deposited protein means re-deriving it
     here, exactly once, from the genome FASTA and the reported span.
 
+    When `exons` is a non-empty list (the canonical, polished-model case --
+    real MAT-locus genes in these families are routinely multi-exon: e.g.
+    COX13 has 5 exons, APN2 has 6, in the Onygenales curated records), the
+    real exon structure is spliced via `_splice_transcript` before
+    translation -- translating the raw genomic span instead would read
+    through introns and produce a systematically wrong-low identity/
+    coverage against the curated protein even for a perfectly correct
+    detection. When `exons` is `None`/empty (a raw, unpolished hit with no
+    exon structure available), this falls back to naive single-span
+    translation, which is inherently approximate for a real multi-exon gene
+    reported that way -- an accepted limitation of the raw-hit fallback
+    path, not of this function.
+
+    A trailing 1-2nt remainder (common for a partial/imprecisely-bounded
+    CDS) is trimmed to a multiple of 3 before translation, the same
+    discipline `db/validate.py`'s `_independent_translation` already applies
+    -- Biopython's `translate()` raises rather than silently truncating one.
+    `codon_start` is NOT available on `GeneEvidence` (only the curated
+    record's own metadata carries it, and only for the CURATED protein, not
+    the rollout's detection), so this assumes `codon_start=1` for the
+    rollout side; this is a known, documented simplification, not a defect
+    to be silently worked around here.
+
     Coordinates are this project's 1-based, fully-closed convention (matching
     `gff_export.write_gff3`'s and `NcbiClient.fetch_nucleotide_sequence`'s
     contract). Returns `None` if the contig isn't found in the FASTA.
@@ -290,10 +416,15 @@ def _extract_translated_gene(
         for record in SeqIO.parse(handle, "fasta"):
             if record.id != contig:
                 continue
-            span = record.seq[start - 1:end]
-            if strand == "-":
-                span = span.reverse_complement()
-            return _translate_span(str(span))
+            if exons:
+                transcript = _splice_transcript(record.seq, exons, strand)
+            else:
+                span = record.seq[start - 1:end]
+                if strand == "-":
+                    span = span.reverse_complement()
+                transcript = str(span)
+            usable_length = len(transcript) - (len(transcript) % 3)
+            return _translate_span(transcript[:usable_length])
     return None
 
 
@@ -306,6 +437,7 @@ def score_self_consistency(
     db_root: Path,
     genome_fasta_paths: dict[str, Path],
     ncbi: NcbiClient,
+    manifest_path: Path = DEFAULT_LOCAL_MANIFEST_PATH,
 ) -> tuple[list[FamilyBenchmark], list[GroundTruthMatch]]:
     """Score each rollout genome's detection result against its own curated
     record's ground truth, for genomes that unambiguously match one (see
@@ -315,16 +447,29 @@ def score_self_consistency(
     curated record marks `present: true`, the gene counts as "found" iff the
     rollout's detection re-translated protein for that gene (looked up by
     name in the genome's `gene_evidence`, re-translated from the reported
-    coordinates against `genome_fasta_paths[genome_id]`) scores `"pass"` or
-    `"warn"` (never coordinate/exon comparison) against the curated record's
-    own deposited protein (fetched live via `ncbi.fetch_protein_sequence` from
-    the gene's `protein_accession`). A gene with no matching `gene_evidence`
-    entry at all counts as "not found" (score 0), same as one whose protein
-    fails the match.
+    coordinates -- and real exon structure, when the report carries one --
+    against `genome_fasta_paths[genome_id]`) scores `"pass"` or `"warn"`
+    (never coordinate/exon comparison) against the curated record's own
+    deposited protein (fetched live via `ncbi.fetch_protein_sequence` from
+    the gene's `protein_accession`).
+
+    A gene with no matching `gene_evidence` entry at all (the pipeline
+    genuinely did not report this gene) counts as a real "not found" --
+    that IS the signal self-consistency scoring exists to catch. This is
+    kept strictly separate from a gene this function simply COULD NOT
+    EVALUATE (no genome FASTA supplied for this genome, the contig wasn't
+    found in that FASTA, or the live NCBI protein fetch failed): those genes
+    are excluded from the sensitivity denominator entirely rather than
+    counted as a fabricated "not found" -- attributing an infrastructure gap
+    to the pipeline itself would misrepresent what was actually tested. Each
+    not-evaluable gene is recorded (gene name + reason) in the returned
+    `FamilyBenchmark.note` so it's visible, never silently dropped.
 
     Returns `(scored, ground_truth_matches)`:
     * `scored` -- one `FamilyBenchmark` per unambiguously-matched (genome,
-      record) pair with a REAL `sensitivity` (found / total present genes).
+      record) pair that had at least one EVALUABLE gene, with a REAL
+      `sensitivity` (found / (found + not_found), excluding not-evaluable
+      genes from both the numerator and denominator).
       `n_reference_after_holdout` is repurposed here to mean "number of
       self-consistency reference genomes this score is built from" (always 1
       per entry, since each entry is one genome vs one record) -- this
@@ -335,10 +480,12 @@ def score_self_consistency(
       `"exact"` and `"ambiguous"` alike, so a caller can see what was
       excluded and why, never silently.
 
-    A genome/record pair with zero `present: true` genes never happens for a
-    real curated record (every accepted record has at least one), but if it
-    did, no `FamilyBenchmark` is emitted for it (nothing to divide by) --
-    it would otherwise report a fabricated 0/0 "sensitivity".
+    A genome/record pair with zero EVALUABLE genes (every present gene was
+    either genuinely absent from the report -- which alone does not block
+    scoring, since 0 found out of N is itself a real result -- or, more to
+    the point, one whose genome FASTA/NCBI fetch could not be evaluated at
+    all) never emits a `FamilyBenchmark`: nothing to divide by, and this
+    function reports a real number or nothing, never a fabricated 0/0.
     """
     curated_docs = {doc["record_id"]: doc for _key, _rid, doc, _path in _load_curated_docs(db_root)}
 
@@ -347,7 +494,7 @@ def score_self_consistency(
 
     for report_path in report_paths:
         genome_id = report_path.parent.name
-        matches = match_ground_truth(genome_id, db_root)
+        matches = match_ground_truth(genome_id, db_root, manifest_path)
         all_matches.extend(matches)
         exact_matches = [m for m in matches if m.status == "exact"]
         if not exact_matches:
@@ -381,33 +528,79 @@ def score_self_consistency(
                 continue
 
             found = 0
+            not_found = 0
+            not_evaluable: list[str] = []
+
             for gene in present_genes:
-                evidence = evidence_by_name.get(gene["name"])
-                if evidence is None or fasta_path is None:
+                gene_name = gene["name"]
+                evidence = evidence_by_name.get(gene_name)
+                if evidence is None:
+                    # Genuinely no detection-report evidence for this gene --
+                    # a real miss, not an infrastructure gap.
+                    not_found += 1
                     continue
+                if fasta_path is None:
+                    not_evaluable.append(
+                        f"{gene_name}: no genome FASTA supplied for {genome_id}"
+                    )
+                    continue
+                exons = (
+                    [(e["start"], e["end"]) for e in evidence["exons"]]
+                    if evidence.get("exons")
+                    else None
+                )
                 rollout_protein = _extract_translated_gene(
                     fasta_path, evidence["contig"], evidence["start"], evidence["end"],
-                    evidence.get("strand"),
+                    evidence.get("strand"), exons,
                 )
                 if not rollout_protein:
+                    not_evaluable.append(
+                        f"{gene_name}: contig {evidence['contig']!r} not found in genome "
+                        f"FASTA (or extraction/translation failed)"
+                    )
                     continue
                 protein_accession = gene.get("protein_accession", "")
                 accession = protein_accession.split(":", 1)[-1]
                 if not accession:
+                    not_evaluable.append(
+                        f"{gene_name}: curated record has no protein_accession to compare against"
+                    )
                     continue
-                curated_protein = ncbi.fetch_protein_sequence(accession)
+                try:
+                    curated_protein = ncbi.fetch_protein_sequence(accession)
+                except Exception as exc:  # noqa: BLE001 - any live NCBI/network
+                    # failure here must not abort the rest of this genome's
+                    # genes, this genome's other families, or any other
+                    # genome in the batch -- one flaky efetch call is an
+                    # infrastructure hiccup, not evidence the gene is
+                    # missing, so it is excluded (not_evaluable), never
+                    # counted as a fabricated miss.
+                    not_evaluable.append(
+                        f"{gene_name}: NCBI protein fetch failed for {accession!r}: {exc}"
+                    )
+                    continue
                 if score_match(rollout_protein, curated_protein).status in ("pass", "warn"):
                     found += 1
+                else:
+                    not_found += 1
+
+            evaluable_total = found + not_found
+            if evaluable_total == 0:
+                continue  # nothing evaluable -- would be a fabricated 0/0
+
+            note = (
+                f"self-consistency: rollout genome {genome_id} vs curated record "
+                f"{match.record_id} -- {found}/{evaluable_total} evaluable genes "
+                f"protein-matched (status={match.status})"
+            )
+            if not_evaluable:
+                note += f"; {len(not_evaluable)} gene(s) not evaluable: " + "; ".join(not_evaluable)
 
             scored.append(FamilyBenchmark(
                 family_key=match.family_key,
                 n_reference_after_holdout=1,
-                sensitivity=found / len(present_genes),
-                note=(
-                    f"self-consistency: rollout genome {genome_id} vs curated record "
-                    f"{match.record_id} -- {found}/{len(present_genes)} genes protein-matched "
-                    f"(status={match.status})"
-                ),
+                sensitivity=found / evaluable_total,
+                note=note,
             ))
 
     return scored, all_matches

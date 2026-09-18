@@ -87,6 +87,13 @@ genes:
   end: 3277
   strand: '-'
   order_in_locus: 1
+  exons:
+  - start: 3040
+    end: 3277
+  - start: 2171
+    end: 2985
+  codon_start: 1
+  transl_table: 1
 - gene_index: 2
   name: APN2
   protein_accession: ncbi_protein:CAI59772.1
@@ -147,7 +154,7 @@ validation:
       status: pass
     - gene_index: 1
       percent_identity: 100.0
-      coverage: 23.14
+      coverage: 100.0
       status: pass
     - gene_index: 2
       percent_identity: 100.0

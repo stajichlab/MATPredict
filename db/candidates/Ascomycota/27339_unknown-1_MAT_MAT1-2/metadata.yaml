@@ -97,6 +97,15 @@ genes:
   end: 4516
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 3329
+    end: 3486
+  - start: 3531
+    end: 3778
+  - start: 3837
+    end: 4516
+  codon_start: 1
+  transl_table: 1
 - gene_index: 2
   name: APN2
   protein_accession: ncbi_protein:QBL56262.1
@@ -147,7 +156,7 @@ validation:
       status: pass
     - gene_index: 1
       percent_identity: 100.0
-      coverage: 14.68
+      coverage: 100.0
       status: pass
     - gene_index: 2
       percent_identity: 100.0

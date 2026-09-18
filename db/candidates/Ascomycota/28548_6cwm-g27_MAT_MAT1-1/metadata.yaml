@@ -132,6 +132,15 @@ genes:
   end: 13873
   strand: '-'
   order_in_locus: 3
+  exons:
+  - start: 13852
+    end: 13873
+  - start: 11388
+    end: 13801
+  - start: 11248
+    end: 11334
+  codon_start: 1
+  transl_table: 1
 - gene_index: 4
   name: MAT1-2-1
   protein_accession: null
@@ -217,7 +226,7 @@ validation:
       status: pass
     - gene_index: 3
       percent_identity: 100.0
-      coverage: 2.26
+      coverage: 100.0
       status: pass
     notes: ''
   taxonomy_current: true

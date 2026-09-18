@@ -97,6 +97,21 @@ genes:
   end: 9971
   strand: +
   order_in_locus: 2
+  exons:
+  - start: 7376
+    end: 7434
+  - start: 7531
+    end: 8224
+  - start: 8385
+    end: 8693
+  - start: 8808
+    end: 8835
+  - start: 8948
+    end: 9226
+  - start: 9392
+    end: 9971
+  codon_start: 1
+  transl_table: 1
 evidence:
   locus_existence:
     tier: 1
@@ -136,7 +151,7 @@ validation:
       status: pass
     - gene_index: 2
       percent_identity: 100.0
-      coverage: 3.08
+      coverage: 100.0
       status: pass
     notes: ''
   taxonomy_current: true

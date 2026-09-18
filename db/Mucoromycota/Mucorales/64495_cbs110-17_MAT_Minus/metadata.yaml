@@ -85,6 +85,27 @@ genes:
   end: 6899
   strand: +
   order_in_locus: 2
+  exons:
+  - start: 2876
+    end: 2962
+  - start: 3086
+    end: 3547
+  - start: 3607
+    end: 4215
+  - start: 4447
+    end: 4641
+  - start: 4801
+    end: 5613
+  - start: 5673
+    end: 5801
+  - start: 5868
+    end: 6461
+  - start: 6508
+    end: 6738
+  - start: 6783
+    end: 6899
+  codon_start: 1
+  transl_table: 1
 evidence:
   locus_existence:
     tier: 1
@@ -125,7 +146,7 @@ validation:
       status: pass
     - gene_index: 2
       percent_identity: 100.0
-      coverage: 17.15
+      coverage: 100.0
       status: pass
     notes: ''
   taxonomy_current: true

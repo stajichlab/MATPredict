@@ -63,6 +63,17 @@ genes:
   end: 4064
   strand: +
   order_in_locus: 0
+  exons:
+  - start: 429
+    end: 445
+  - start: 518
+    end: 658
+  - start: 973
+    end: 3865
+  - start: 3978
+    end: 4064
+  codon_start: 1
+  transl_table: 1
 - gene_index: 1
   name: MAT1-2-1
   protein_accession: ncbi_protein:AQT26490.1
@@ -74,6 +85,15 @@ genes:
   end: 9402
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 8389
+    end: 8678
+  - start: 8734
+    end: 9083
+  - start: 9149
+    end: 9402
+  codon_start: 1
+  transl_table: 1
 - gene_index: 2
   name: APN2
   protein_accession: ncbi_protein:AQT26491.1
@@ -85,6 +105,15 @@ genes:
   end: 12250
   strand: '-'
   order_in_locus: 2
+  exons:
+  - start: 12223
+    end: 12250
+  - start: 11766
+    end: 11947
+  - start: 10027
+    end: 11676
+  codon_start: 1
+  transl_table: 1
 - gene_index: 3
   name: COX13
   protein_accession: ncbi_protein:AQT26492.1
@@ -161,15 +190,15 @@ validation:
     per_gene:
     - gene_index: 0
       percent_identity: 100.0
-      coverage: 2.2
+      coverage: 100.0
       status: pass
     - gene_index: 1
       percent_identity: 100.0
-      coverage: 32.66
+      coverage: 100.0
       status: pass
     - gene_index: 2
       percent_identity: 100.0
-      coverage: 3.88
+      coverage: 100.0
       status: pass
     - gene_index: 3
       percent_identity: 100.0

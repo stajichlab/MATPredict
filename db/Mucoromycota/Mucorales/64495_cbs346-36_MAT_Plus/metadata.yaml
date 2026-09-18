@@ -80,6 +80,25 @@ genes:
   end: 6788
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 2213
+    end: 2488
+  - start: 2586
+    end: 2621
+  - start: 2724
+    end: 3251
+  - start: 3608
+    end: 3685
+  - start: 4071
+    end: 5351
+  - start: 5478
+    end: 5828
+  - start: 6329
+    end: 6655
+  - start: 6753
+    end: 6788
+  codon_start: 1
+  transl_table: 1
 - gene_index: 2
   name: sexP
   protein_accession: ncbi_protein:ADU04732.1
@@ -102,6 +121,27 @@ genes:
   end: 13259
   strand: +
   order_in_locus: 3
+  exons:
+  - start: 9173
+    end: 9259
+  - start: 9380
+    end: 9841
+  - start: 9901
+    end: 10509
+  - start: 10741
+    end: 10887
+  - start: 11095
+    end: 11907
+  - start: 11967
+    end: 12095
+  - start: 12162
+    end: 12755
+  - start: 12802
+    end: 13032
+  - start: 13077
+    end: 13259
+  codon_start: 1
+  transl_table: 1
 evidence:
   locus_existence:
     tier: 1
@@ -137,8 +177,8 @@ validation:
       coverage: 100.0
       status: pass
     - gene_index: 1
-      percent_identity: 99.09
-      coverage: 11.34
+      percent_identity: 100.0
+      coverage: 100.0
       status: pass
     - gene_index: 2
       percent_identity: 100.0
@@ -146,7 +186,7 @@ validation:
       status: pass
     - gene_index: 3
       percent_identity: 100.0
-      coverage: 17.05
+      coverage: 100.0
       status: pass
     notes: ''
   taxonomy_current: true

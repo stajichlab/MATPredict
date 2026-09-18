@@ -94,6 +94,21 @@ genes:
   end: 4485
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 2396
+    end: 2423
+  - start: 2482
+    end: 2494
+  - start: 2552
+    end: 2597
+  - start: 2657
+    end: 2789
+  - start: 2837
+    end: 3540
+  - start: 3589
+    end: 4485
+  codon_start: 1
+  transl_table: 1
 - gene_index: 2
   name: MAT1-1-4
   protein_accession: ncbi_protein:ABS19621.1
@@ -182,7 +197,7 @@ validation:
       status: pass
     - gene_index: 1
       percent_identity: 100.0
-      coverage: 2.97
+      coverage: 100.0
       status: pass
     - gene_index: 2
       percent_identity: 100.0

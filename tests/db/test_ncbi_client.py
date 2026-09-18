@@ -40,3 +40,27 @@ def test_fetch_protein_sequence(tmp_path):
     seq = client.fetch_protein_sequence("AAB12345.1")
     assert seq.startswith("MKTAYIAKQRQ")
     assert "\n" not in seq
+
+
+def test_fetch_nucleotide_sequence_plus_strand(tmp_path):
+    fetcher = CachedFetcher(
+        cache_dir=tmp_path,
+        transport=_fake_transport({"db=nuccore": ">EU009461.1:100-109\nACGTACGTAC\n"}),
+    )
+    client = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
+    seq = client.fetch_nucleotide_sequence("EU009461.1", 100, 109, "+")
+    assert seq == "ACGTACGTAC"
+
+
+def test_fetch_nucleotide_sequence_minus_strand_requests_strand2(tmp_path):
+    captured_urls = []
+
+    def transport(url: str) -> str:
+        captured_urls.append(url)
+        return ">EU009461.1:100-109 c\nGTACGTACGT\n"
+
+    fetcher = CachedFetcher(cache_dir=tmp_path, transport=transport)
+    client = NcbiClient(email="jason.stajich@ucr.edu", api_key=None, fetcher=fetcher)
+    seq = client.fetch_nucleotide_sequence("EU009461.1", 100, 109, "-")
+    assert seq == "GTACGTACGT"
+    assert "strand=2" in captured_urls[0]

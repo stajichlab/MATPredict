@@ -49,6 +49,27 @@ class NcbiClient:
             suppressed=status == "suppressed",
         )
 
+    def fetch_nucleotide_sequence(
+        self, accession: str, start: int, end: int, strand: str | None = None
+    ) -> str:
+        """Fetch a 1-based, fully-closed nucleotide subrange from a nuccore accession.
+
+        `start`/`end` follow this project's coordinate convention (1-based, fully-closed,
+        matching `db/gff_export.write_gff3`'s docstring), which is exactly what NCBI
+        efetch's `seq_start`/`seq_stop` params expect -- no offset conversion needed.
+        `strand="-"` requests efetch's `strand=2`, which returns the reverse complement
+        already oriented 5'->3' along the minus strand, so no local revcomp is needed.
+        """
+        strand_param = "&strand=2" if strand == "-" else ""
+        url = self._url(
+            "efetch.fcgi",
+            f"db=nuccore&id={accession}&rettype=fasta&retmode=text"
+            f"&seq_start={start}&seq_stop={end}{strand_param}",
+        )
+        body = self.fetcher.get(url)
+        record = SeqIO.read(StringIO(body), "fasta-blast")
+        return str(record.seq)
+
     def fetch_protein_sequence(self, accession: str) -> str:
         """Fetch a protein accession's sequence as a plain string (no header, no newlines).
 

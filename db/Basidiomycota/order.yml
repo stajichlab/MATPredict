@@ -11,9 +11,18 @@ loci:
     vocabulary_type: "pattern"
     idiomorph_pattern: "^B[0-9]+$"
     taxonomic_scope: [5346]
+    # Gene names must match the names used by this family's curated records
+    # exactly -- detect/search.py:_attribute drops any hit whose curated gene
+    # name is not declared here. The specific names below are the real names in
+    # db/Basidiomycota/Agaricales/5346_a43-b43-okayama-7_PR_B43. A bare
+    # `pheromone` entry was removed: no curated protein anywhere in db/ carries
+    # that name, so it was permanently unsatisfiable and permanently blocked
+    # core_found (and therefore the high tier) for this family.
     genes:
-      - {name: pheromone, role: core_MAT}
       - {name: pheromone_receptor, role: core_MAT}
+      - {name: pheromone_B43, role: core_MAT}
+      - {name: pheromone_B44, role: core_MAT}
+      - {name: fungal_mating_type_pheromone, role: core_MAT}
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["alpha", "a"]
@@ -46,16 +55,37 @@ loci:
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     taxonomic_scope: [5334]
+    # Real names from db/Basidiomycota/Agaricales/5334_h4-8_Balpha_3
+    # (Schizophyllum commune Balpha-3 uses the bar3/bap3-x naming of Wendland
+    # et al. 1995). `pheromone_receptor` is kept as a generic alias -- it is a
+    # real curated name elsewhere in db/ (the PR family) and a future Balpha
+    # record whose receptor has no allele-specific published name could use it.
+    # The bare `pheromone` entry was removed: no curated protein anywhere in
+    # db/ carries that name.
     genes:
-      - {name: pheromone, role: core_MAT}
       - {name: pheromone_receptor, role: core_MAT}
+      - {name: bar3, role: core_MAT}
+      - {name: bap3-1, role: core_MAT}
+      - {name: bap3-3, role: core_MAT}
   - locus_name: "Bbeta"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     taxonomic_scope: [5334]
+    # Real names from db/Basidiomycota/Agaricales/5334_h4-8_Bbeta_2
+    # (S. commune Bbeta-2, bbr2/bbp2-x naming of Vaillancourt et al. 1997;
+    # bbp2_a/bbp2_b are that record's disambiguation of two distinct proteins
+    # both labelled "bbp2" in the source table). Same alias/removal reasoning
+    # as Balpha above.
     genes:
-      - {name: pheromone, role: core_MAT}
       - {name: pheromone_receptor, role: core_MAT}
+      - {name: bbr2, role: core_MAT}
+      - {name: bbp2-1, role: core_MAT}
+      - {name: bbp2-2, role: core_MAT}
+      - {name: bbp2-5, role: core_MAT}
+      - {name: bbp2-6, role: core_MAT}
+      - {name: bbp2-8, role: core_MAT}
+      - {name: bbp2_a, role: core_MAT}
+      - {name: bbp2_b, role: core_MAT}
   - locus_name: "aLocus"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^a[0-9]+$"

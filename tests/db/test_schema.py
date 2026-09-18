@@ -120,3 +120,65 @@ def test_real_order_yml_files_validate(phylum):
     order_path = repo_root / "db" / phylum / "order.yml"
     doc = yaml.safe_load(order_path.read_text())
     assert schema.validate_order(doc) == []
+
+
+# --- gene-vocabulary reconciliation (order.yml `genes` vs curated record `genes`) ---
+
+
+def test_gene_vocabulary_accepts_a_declared_name():
+    assert schema.validate_gene_vocabulary(VALID_RECORD, VALID_ORDER) == []
+
+
+def test_gene_vocabulary_rejects_an_undeclared_name():
+    bad = copy.deepcopy(VALID_RECORD)
+    bad["genes"][0]["name"] = "sexP_variant7"
+    errors = schema.validate_gene_vocabulary(bad, VALID_ORDER)
+    assert len(errors) == 1
+    assert "sexP_variant7" in errors[0]
+
+
+def test_gene_vocabulary_skips_absent_genes():
+    absent = copy.deepcopy(VALID_RECORD)
+    absent["genes"][0]["name"] = "sexP_variant7"
+    absent["genes"][0]["present"] = False
+    assert schema.validate_gene_vocabulary(absent, VALID_ORDER) == []
+
+
+def test_gene_vocabulary_reports_an_unknown_locus():
+    unknown = copy.deepcopy(VALID_RECORD)
+    unknown["mating_type"]["locus_name"] = "NotALocus"
+    assert schema.validate_gene_vocabulary(unknown, VALID_ORDER) == ["no order.yml locus entry named 'NotALocus'"]
+
+
+def _accepted_records():
+    """Every accepted curated record, paired with its phylum's order.yml document.
+
+    `db/candidates/` is excluded the same way `family_registry.load_record_families`
+    excludes it: those are proposed, not accepted, records.
+    """
+    repo_root = Path(__file__).resolve().parents[2]
+    db_root = repo_root / "db"
+    orders: dict[str, dict] = {}
+    for meta_path in sorted(db_root.glob("*/*/*/metadata.yaml")):
+        phylum = meta_path.relative_to(db_root).parts[0]
+        if phylum == "candidates":
+            continue
+        if phylum not in orders:
+            orders[phylum] = yaml.safe_load((db_root / phylum / "order.yml").read_text())
+        yield meta_path, orders[phylum]
+
+
+def test_every_accepted_record_gene_name_is_declared_by_its_family():
+    """Regression guard for the silent-orphaning bug.
+
+    `detect.search._attribute` drops any hit whose curated gene name is not in its
+    family's `order.yml` `genes` list. Before this guard, 15 of 95 accepted curated
+    reference proteins were unreachable that way (Basidiomycota PR, Balpha and Bbeta),
+    which made Balpha and Bbeta undetectable in every genome including their own.
+    """
+    failures = []
+    for meta_path, order_doc in _accepted_records():
+        record = yaml.safe_load(meta_path.read_text())
+        for error in schema.validate_gene_vocabulary(record, order_doc):
+            failures.append(f"{meta_path}: {error}")
+    assert failures == []

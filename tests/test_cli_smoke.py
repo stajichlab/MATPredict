@@ -139,6 +139,38 @@ def test_validate_never_un_rejects_a_rejected_record(tmp_path, monkeypatch):
     assert record["validation"]["status"] == "rejected"
 
 
+def test_validate_forces_needs_review_on_undeclared_gene_name(tmp_path, monkeypatch, capsys):
+    """A curated gene whose name is not in its locus's order.yml `genes` list is
+    silently dropped by detect.search._attribute, so it can never be found in any
+    genome. `validate` must refuse to let it through review unnoticed."""
+    monkeypatch.setenv("MATPREDICT_DB_ROOT", str(tmp_path / "db"))
+    monkeypatch.setenv("MATPREDICT_CACHE_DIR", str(tmp_path / "cache"))
+    metadata_path = _write_candidate(tmp_path, "Mucoromycota", "rec9", validation_status="accepted")
+    record = yaml.safe_load(metadata_path.read_text())
+    record["locus"]["coordinate_provenance"] = "not_available"  # skip the network-dependent checks
+    record["mating_type"] = {"locus_name": "MAT", "idiomorphs": ["Plus"], "system": "heterothallic"}
+    record["genes"] = [{"gene_index": 0, "name": "sexP_undeclared", "role": "core_MAT", "present": True}]
+    metadata_path.write_text(yaml.safe_dump(record, sort_keys=False))
+
+    order_path = tmp_path / "db" / "Mucoromycota" / "order.yml"
+    order_path.parent.mkdir(parents=True)
+    order_path.write_text(yaml.safe_dump({
+        "phylum": "Mucoromycota",
+        "loci": [{
+            "locus_name": "MAT",
+            "vocabulary_type": "enum",
+            "idiomorph_values": ["Plus", "Minus"],
+            "taxonomic_scope": [4827],
+            "genes": [{"name": "sexP", "role": "core_MAT"}],
+        }],
+    }))
+    _patch_taxonomy_runner(monkeypatch)
+
+    assert main(["curate-db", "validate", "--phylum", "Mucoromycota", "--record-id", "rec9"]) == 0
+    assert "sexP_undeclared" in capsys.readouterr().out
+    assert yaml.safe_load(metadata_path.read_text())["validation"]["status"] == "needs_review"
+
+
 # --- Ruling 2: build-gff wires GFF3/GenBank/FASTA export for an accepted record ---
 
 _EFETCH_FASTA = ">AAB12345.1\nMKTAYIAKQRQISFVKSHFSRQ\n"

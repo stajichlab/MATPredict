@@ -15,6 +15,7 @@ from MATPredict.db.build_duckdb import build as build_duckdb
 from MATPredict.db.curate import accept_candidate, propose_candidate, reject_candidate
 from MATPredict.db.http_cache import CachedFetcher
 from MATPredict.db.ncbi_client import NcbiClient
+from MATPredict.db.schema import validate_gene_vocabulary
 from MATPredict.db.uniprot_client import UniprotClient
 from MATPredict.db.validate import _client_for, validate_record
 
@@ -66,12 +67,31 @@ def _cmd_validate(args: argparse.Namespace) -> int:
     result = validate_record(record, ncbi=ncbi, uniprot=uniprot)
     record["validation"].update(result)
 
+    # A curated gene whose name is not declared by its locus in order.yml is silently
+    # dropped by detect.search._attribute, so it can never be found in any genome. Report
+    # it here rather than letting it pass review unnoticed. The errors are not written
+    # into the record (they describe order.yml, not the record's own data).
+    order_path = config.db_root / args.phylum / "order.yml"
+    vocabulary_errors: list[str] = []
+    if not order_path.exists():
+        # Nothing to reconcile against. Say so rather than pass silently: the
+        # database-wide guard in tests/db/test_schema.py is the permanent net.
+        print(f"gene-vocabulary check skipped: no {order_path}")
+    elif not (record.get("mating_type") or {}).get("locus_name"):
+        print("gene-vocabulary check skipped: record declares no mating_type.locus_name")
+    else:
+        order_doc = yaml.safe_load(order_path.read_text())
+        vocabulary_errors = validate_gene_vocabulary(record, order_doc)
+        for error in vocabulary_errors:
+            print(f"gene-vocabulary error: {error}")
+
     # A re-validation that reveals a problem must downgrade the record's status so it gets
     # re-reviewed, unless it was explicitly rejected already (never silently un-reject).
     check_failed = (
         result.get("accession_resolved") is False
         or (result.get("sequence_match") or {}).get("status") == "fail"
         or result.get("taxonomy_current") is False
+        or bool(vocabulary_errors)
     )
     if check_failed and record["validation"].get("status") != "rejected":
         record["validation"]["status"] = "needs_review"

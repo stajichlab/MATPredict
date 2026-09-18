@@ -115,6 +115,25 @@ class GeneEvidence:
     alternate_model: dict | None = None  # the OTHER tool's model
     # (contig/start/end/strand/exons/identity/method), populated only when
     # status == polish.STATUS_DISAGREE, else None.
+    exons: tuple[tuple[int, int], ...] | None = None
+    # The canonical polished model's own real exon structure (1-based,
+    # fully-closed genomic spans), populated only when this evidence came
+    # from a polished `PolishModel` with a non-empty `exons` list. **Order
+    # is ASCENDING GENOMIC COORDINATE, regardless of strand** -- this
+    # matches how `search.py`'s `polish_with_exonerate`/`polish_with_miniprot`
+    # actually build `PolishModel.exons` (`sorted(..., key=lambda e:
+    # int(e[3]))`, i.e. by genomic start, for both strands), which is NOT
+    # the same convention as `db/ncbi_client.py`'s `CdsStructure` (already
+    # in transcript order, descending for minus strand). A caller that
+    # needs a spliced transcript (e.g.
+    # `detect.benchmark._extract_translated_gene`) must reverse this list
+    # itself for a minus-strand gene before concatenating. A raw, unpolished
+    # `SearchHit` genuinely has no exon structure to offer (its
+    # `identity`/`coverage` come from one ungapped or splice-naive
+    # alignment), so this stays `None` for that fallback path -- callers
+    # that need a protein sequence for a `None`-exons gene fall back to
+    # naive single-span translation for that gene, which is inherently
+    # approximate for a real multi-exon gene reported this way.
 
 
 @dataclass(frozen=True)
@@ -686,6 +705,7 @@ def _gene_evidence(
                     identity=model.identity, coverage=None,
                     reference_record_id=model.reference_record_id, method=model.method,
                     status=outcome.status, alternate_model=alternate,
+                    exons=tuple((e.start, e.end) for e in model.exons) if model.exons else None,
                 )
             else:
                 hit = raw_by_gene.get(gene_name)

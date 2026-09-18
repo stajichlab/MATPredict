@@ -61,6 +61,17 @@ genes:
   end: 899864
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 899391
+    end: 899864
+  - start: 899231
+    end: 899344
+  - start: 899014
+    end: 899175
+  - start: 898234
+    end: 898959
+  codon_start: 1
+  transl_table: 1
 - gene_index: 1
   name: HD1
   protein_accession: ncbi_protein:XP_006455003.1
@@ -72,6 +83,17 @@ genes:
   end: 902101
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 900063
+    end: 900949
+  - start: 901001
+    end: 901551
+  - start: 901606
+    end: 902017
+  - start: 902068
+    end: 902101
+  codon_start: 1
+  transl_table: 1
 evidence:
   locus_existence:
     tier: 1
@@ -100,22 +122,17 @@ validation:
   accession_resolved_date: null
   accession_resolved_version: NW_006267344.1
   sequence_match:
-    status: warn
+    status: pass
     per_gene:
     - gene_index: 0
-      percent_identity: 93.97
-      coverage: 40.53
-      status: warn
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     - gene_index: 1
       percent_identity: 100.0
-      coverage: 48.17
+      coverage: 100.0
       status: pass
-    notes: HD2 and HD1 are multi-exon genes; this project's schema stores only a single
-      start/end span per gene (no intron modeling), so translating the full genomic
-      span (introns included) does not exactly reproduce the deposited protein. Coordinates
-      are GenBank-verified correct (re-derived independently from NW_006267344.1's
-      own feature table); the partial identity/coverage here reflects an unmodeled-intron
-      limitation of the current schema, not a coordinate error.
+    notes: ''
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

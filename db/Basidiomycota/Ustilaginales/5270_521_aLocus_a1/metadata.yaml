@@ -61,26 +61,25 @@ locus:
       COORDINATE CORRECTION (2026-09-18): the mfa1 CDS coordinates were originally
       recorded as 1319..1856, which is actually the GENE/mRNA span (including the
       intron and untranslated flanks: mRNA is complement(join(1319..1542,1632..1856))).
-      The real CDS on U37795.1, independently re-fetched via NCBI efetch, is the
-      single-exon complement(1657..1779) (123 bp, 41 aa, protein AAA99765.1,
-      translation "MLSIFAQTTQTSASEPQQSPTAPQGRDNGSPIGYSSCVVA" -- matching the 41-aa
-      product size already stated above). Coordinates below are corrected to
-      1657..1779, which independently re-derives the deposited protein exactly.
+      The real CDS on U37795.1, independently re-fetched via NCBI efetch, is the single-exon
+      complement(1657..1779) (123 bp, 41 aa, protein AAA99765.1, translation "MLSIFAQTTQTSASEPQQSPTAPQGRDNGSPIGYSSCVVA"
+      -- matching the 41-aa product size already stated above). Coordinates below
+      are corrected to 1657..1779, which independently re-derives the deposited protein
+      exactly.
 
       A second instance of the same class of error was found and corrected in the
       same pass: rba1 was recorded as 5505..6272 (also the gene/mRNA span; real mRNA
       is complement(join(5505..5671,5862..5901,5995..6272))), whereas the actual CDS
-      on U37795.1 is complement(join(5627..5671,5862..5901,5995..6269)) (protein
-      AAA99767.1). Corrected to the CDS outer bounds, 5627..6269. rba1 is multi-exon
-      (3 exons/2 introns), which this schema does not model as a span, so an
-      independent re-translation of the corrected span does not exactly reproduce
-      AAA99767.1 residue-for-residue; it nonetheless already re-derives a 100%-identity
-      partial match (see sequence_match.notes) because the intron introduces a
-      frameshift/stop before the point of first mismatch, not a mismatch itself.
-      pra1''s previously recorded span (3604..4914) was independently re-checked
-      against the CDS outer bounds of complement(join(3604..3721,3807..4242,
-      4316..4633,4713..4914)) and found to already match exactly; no change was
-      needed there.
+      on U37795.1 is complement(join(5627..5671,5862..5901,5995..6269)) (protein AAA99767.1).
+      Corrected to the CDS outer bounds, 5627..6269. rba1 is multi-exon (3 exons/2
+      introns), which this schema does not model as a span, so an independent re-translation
+      of the corrected span does not exactly reproduce AAA99767.1 residue-for-residue;
+      it nonetheless already re-derives a 100%-identity partial match (see sequence_match.notes)
+      because the intron introduces a frameshift/stop before the point of first mismatch,
+      not a mismatch itself. pra1''s previously recorded span (3604..4914) was independently
+      re-checked against the CDS outer bounds of complement(join(3604..3721,3807..4242,
+      4316..4633,4713..4914)) and found to already match exactly; no change was needed
+      there.
 
       '
     segments:
@@ -117,6 +116,17 @@ genes:
   end: 4914
   strand: '-'
   order_in_locus: 1
+  exons:
+  - start: 4713
+    end: 4914
+  - start: 4316
+    end: 4633
+  - start: 3807
+    end: 4242
+  - start: 3604
+    end: 3721
+  codon_start: 1
+  transl_table: 1
 - gene_index: 2
   name: rba1
   protein_accession: ncbi_protein:AAA99767.1
@@ -128,6 +138,15 @@ genes:
   end: 6269
   strand: '-'
   order_in_locus: 2
+  exons:
+  - start: 5995
+    end: 6269
+  - start: 5862
+    end: 5901
+  - start: 5627
+    end: 5671
+  codon_start: 1
+  transl_table: 1
 evidence:
   locus_existence:
     tier: 1
@@ -175,20 +194,13 @@ validation:
       status: pass
     - gene_index: 1
       percent_identity: 100.0
-      coverage: 19.33
+      coverage: 100.0
       status: pass
     - gene_index: 2
       percent_identity: 100.0
-      coverage: 77.31
+      coverage: 100.0
       status: pass
-    notes: '2026-09-18 re-validation after the mfa1 and rba1 coordinate corrections
-      (see definition_note): all three genes now independently re-translate at 100%
-      identity against their deposited proteins. pra1 (gene_index 1, 19.33% coverage)
-      and rba1 (gene_index 2, 77.31% coverage) are both multi-exon genes; this schema
-      stores only a single start/end span with no intron model, so their independent
-      re-translations only match the deposited protein up to the first intron-induced
-      frameshift/stop -- the matched region is still 100% identical, which is why
-      both still pass despite partial coverage.'
+    notes: ''
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

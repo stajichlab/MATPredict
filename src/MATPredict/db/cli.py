@@ -117,14 +117,20 @@ def _cmd_reject(args: argparse.Namespace) -> int:
 
 def find_records_missing_proteins_faa(db_root: Path) -> list[tuple[str, str, str]]:
     """(phylum, order_or_family, record_id) for every accepted (non-candidate)
-    record whose proteins.faa does not exist on disk yet."""
+    record whose proteins.faa does not exist on disk yet, OR exists but is
+    empty (zero FASTA entries) -- an empty file is what build_gff_for_record
+    correctly writes for a record whose genes all lack a protein_accession,
+    but it must not be mistaken for "already handled": when that record is
+    eventually curated with real accessions, backfill-gff must pick it up
+    again rather than silently skipping it because a file happens to exist."""
     missing = []
     for meta_path in sorted(db_root.glob("*/*/*/metadata.yaml")):
         parts = meta_path.relative_to(db_root).parts
         if parts[0] == "candidates":
             continue
         record_dir = meta_path.parent
-        if not (record_dir / "proteins.faa").exists():
+        proteins_path = record_dir / "proteins.faa"
+        if not proteins_path.exists() or ">" not in proteins_path.read_text():
             missing.append((parts[0], parts[1], parts[2]))
     return missing
 
@@ -187,7 +193,15 @@ def _cmd_backfill_gff(args: argparse.Namespace) -> int:
     ncbi, uniprot = _make_clients(config)
     succeeded, failed = backfill_missing_proteins_faa(config.db_root, ncbi, uniprot)
     for phylum, order_or_family, record_id in succeeded:
-        print(f"backfilled {phylum}/{order_or_family}/{record_id}")
+        record_dir = config.db_root / phylum / order_or_family / record_id
+        proteins_path = record_dir / "proteins.faa"
+        if ">" not in proteins_path.read_text():
+            print(
+                f"WARNING wrote 0 sequences for {phylum}/{order_or_family}/{record_id} "
+                "(no gene has a protein_accession -- proteins.faa is empty)"
+            )
+        else:
+            print(f"backfilled {phylum}/{order_or_family}/{record_id}")
     for (phylum, order_or_family, record_id), message in failed:
         print(f"FAILED {phylum}/{order_or_family}/{record_id}: {message}")
     print(f"{len(succeeded)} succeeded, {len(failed)} failed")

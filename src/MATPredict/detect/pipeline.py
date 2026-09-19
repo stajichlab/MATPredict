@@ -61,6 +61,7 @@ multi-segment call reports the segments it found, nothing more.
 from __future__ import annotations
 
 import json
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
@@ -91,6 +92,13 @@ from MATPredict.detect.search import (
     search_localize,
 )
 from MATPredict.detect.tiering import assign_tier
+
+logger = logging.getLogger(__name__)
+
+#: out_path strings already warned about by `_write_evidence_diagnostics` in
+#: this process, so a bad path (typo, missing directory) logs one warning per
+#: run instead of spamming one per cluster/family row.
+_DIAGNOSTICS_WRITE_FAILURES_LOGGED: set[str] = set()
 
 
 @dataclass(frozen=True)
@@ -341,8 +349,11 @@ def _write_evidence_diagnostics(
     try:
         with out_path.open("a") as f:
             f.write(json.dumps(row) + "\n")
-    except OSError:
-        pass
+    except OSError as exc:
+        key = str(out_path)
+        if key not in _DIAGNOSTICS_WRITE_FAILURES_LOGGED:
+            _DIAGNOSTICS_WRITE_FAILURES_LOGGED.add(key)
+            logger.warning("could not write evidence diagnostics to %s: %s", out_path, exc)
 
 
 @dataclass(frozen=True)

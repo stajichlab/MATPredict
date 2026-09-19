@@ -88,7 +88,16 @@ def audit_scope(
     record's taxid, and recommend a single replacement scope taxid (the
     deepest common ancestor of every UNCOVERED record's taxid) when it would
     not. Families with zero uncovered records get `recommended_scope_taxid =
-    None` -- there is nothing to fix."""
+    None` -- there is nothing to fix.
+
+    Deliberately does NOT wrap `lineage_taxids_resolver` calls in a
+    try/except the way `family_registry.route()` does. `route()` degrades a
+    resolver failure to a safe fallback (search everything); an audit tool
+    has no such fallback, and swallowing a resolver failure here could
+    recommend a bad scope value into order.yml on the strength of a
+    transient network error rather than a real lineage. Raising loudly is
+    the correct behavior here, not an oversight to be "fixed" into matching
+    route()."""
     results = []
     for family in families:
         taxids = record_taxids.get(family.key, [])

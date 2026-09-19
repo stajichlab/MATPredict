@@ -31,6 +31,16 @@ def test_find_records_missing_proteins_faa_skips_records_that_already_have_one(t
     assert missing == [("Ascomycota", "Eurotiales", "111_a_MAT_MAT1-1")]
 
 
+def test_find_records_missing_proteins_faa_treats_empty_file_as_missing(tmp_path):
+    db_root = tmp_path / "db"
+    record_dir = _write_record(db_root, "Ascomycota", "Teloschistales", "111_a_MAT_MAT1-1")
+    (record_dir / "proteins.faa").write_text("\n")  # empty -- zero FASTA entries
+
+    missing = find_records_missing_proteins_faa(db_root)
+
+    assert missing == [("Ascomycota", "Teloschistales", "111_a_MAT_MAT1-1")]
+
+
 def test_find_records_missing_proteins_faa_excludes_candidates(tmp_path):
     db_root = tmp_path / "db"
     _write_record(db_root, "candidates", "Ascomycota", "999_c_MAT_MAT1-1")

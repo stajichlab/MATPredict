@@ -254,3 +254,131 @@ exist from this run.
   `.superpowers/sdd/2026-09-18-genome-scale-detection-rollout/rollout_summary.yaml`
   (gitignored, not committed)
 - This findings document (committed): `docs/superpowers/plans/2026-09-18-genome-scale-detection-rollout-findings.md`
+
+## 2026-09-19 — Task 5: genome 5501's weak real-family detection, re-investigated
+
+Re-ran `matpredict detect` against genome 5501's real, decompressed FASTA
+(`GCA_004115165.2`, strain `WA_211`, resolved via
+`genome_acquisition.acquire_genomes(taxids=[5501], ...)` against the local
+BFD library) with every fix from this session in place: the
+`taxonomic_scope` routing fix, the `proteins.faa` backfill, and
+`EvidenceFloor`/`--evidence-diagnostics` diagnostics wiring.
+
+**Result vs. the original pilot run:**
+
+| | Original pilot run | This re-run |
+|---|---|---|
+| `families_attempted` | 19 (exhaustive fallback) | **1** (`Ascomycota:MAT` only) |
+| Best cluster's genes found | 1 (`APN2`) | **7** (`MAT1-2-1`, `CIMG_00407`, `APN2`, `SLA2`, `COX13`, plus 2 spurious cross-order hits — see below) |
+| `APN2` matched against | Diaporthales record (wrong order) | **`5501_rs_MAT_MAT1-2`** (this genome's own curated Onygenales record, 86.9% identity, legitimately the top hit) |
+| Final verdict | not detected, Low tier | not detected: `best_fraction_found=0.4375`, below the 0.50 ambiguity floor |
+
+The routing fix alone eliminated the 18 irrelevant families and their noise,
+exactly as intended.
+
+**Root-cause finding, using the raw tblastn evidence directly** (ran
+`search.search_localize` by hand against the same reference FASTA the CLI
+built, bypassing the aggregated report to see every hit's identity and
+matched reference record):
+
+Genome 5501 has a real, clean, high-confidence MAT1-2 idiomorph locus on
+contig `RHJW02000001.1:7,181,499-7,193,752` (~12,253 bp — essentially the
+same length as curated record `5501_rs_MAT_MAT1-2`'s own 12,256 bp locus).
+Every gene the RS curated record declares is present here, in the same
+order (`SLA2->CIMG_00407->MAT1-2-1->APN2->COX13`), at very high identity
+against that exact record: `SLA2` 100%, `CIMG_00407` 95-100%, `MAT1-2-1`
+100%, `COX13` 100%, `APN2` 86.9%. This is about as strong a same-species,
+different-strain (`WA_211` vs `RS`) match as tblastn identity gets — **not**
+evidence of meaningful strain-level divergence, and **not** an assembly
+defect (compact, single-contig, correctly-ordered, right length).
+
+**The `APN2`-attribution question from the brief is resolved, and it was
+never a bug in `_attribute`.** `search.py`'s `_attribute` (lines 117-138)
+only checks that a hit's `record_id` maps to an attempted family and that
+the family declares that gene name — it does not rank across records. The
+actual best-hit selection across candidate reference records for the same
+gene name happens later, in `pipeline.py::_gene_evidence` (~line 742-763),
+which is a real best-raw-identity choice within one search method, with no
+taxonomic-distance preference at all. In the original run this picked a
+Diaporthales record for `APN2` because the curated Onygenales records did
+not yet carry a real, high-identity `APN2` sequence (pre-backfill) and 18
+extra families' worth of noise obscured the picture. In this re-run, with
+the backfill and routing fix both in place, `5501_rs_MAT_MAT1-2`'s own
+`APN2` (86.9%) legitimately beats the Diaporthales record's `578113_sxlc146`
+(78.7%) on raw identity — the *correct* record now wins because it is now
+the *actual* best match, exactly as `_gene_evidence`'s selection logic is
+documented to do. No fix to `_attribute` or `_gene_evidence` is needed for
+this specific symptom.
+
+**Why the family is still reported "not detected" despite this real,
+strong match — this IS a new, real bug, in `scoring.py`, not in the
+routing/attribution/backfill work:**
+
+`score_cluster` (`scoring.py` line ~35) computes
+`expected = [g["name"] for g in family.genes]` — the **entire**
+`Ascomycota:MAT` family gene roster from `db/Ascomycota/order.yml`, which
+lists 16 gene names spanning BOTH idiomorphs (`MAT1-1-*` and `MAT1-2-*`)
+and multiple naming conventions (Coccidioides-specific `CIMG_00407`/
+`MAT1-1-4`, Leotiomycete `MAT1-2-10`, Eurotiomycete-only `MAT1-2-4`,
+Neurospora aliases `matA-1/2/3`/`"mt a-1"`), even though `order.yml` already
+annotates each core gene with its own `present_in_idiomorphs` field.
+`score_cluster` never reads that field — `fraction_found` is always
+`len(genes_found) / 16` regardless of which idiomorph the genome actually
+carries.
+
+A real haploid heterothallic ascomycete genome only ever expresses ONE
+idiomorph's genes. For genome 5501's MAT1-2 locus, the maximum
+biologically-possible `genes_found` set (its curated record's own full gene
+list: `SLA2`, `CIMG_00407`, `MAT1-2-1`, `APN2`, `COX13`) is 5 genes — giving
+`fraction_found = 5/16 = 0.3125`, structurally below the 0.50 ambiguity
+floor **even for a textbook-perfect match**, independent of identity,
+strain, or assembly quality. This run's actual 0.4375 (7/16) only clears
+that structural ceiling because 2 additional, genuinely low-identity
+(23-52.9%) cross-order paralogous hits (`MAT1-1-3`, a Sordariomycete-style
+name via records like `5518_3639_MAT_combined`/`230073_uamh-1363_MAT_MAT1-1`;
+`MAT1-2-4`, the Eurotiomycete-only name via `746128_af293_MAT_MAT1-2`)
+happened to fall inside/adjacent to the same genomic window and got counted
+toward `genes_found` alongside the 5 real ones — noise, not real evidence,
+that coincidentally pushed the score up rather than down.
+
+**Conclusion (per the brief's options):** this is **(b) is closest but not
+quite as originally framed, plus a new distinct finding**:
+
+- The originally-suspected reference-record-selection gap for `APN2` is
+  **not** a bug — it was a legitimate consequence of the pre-backfill,
+  pre-routing state, and is now resolved by this session's other fixes.
+- The real, still-open problem is a **scoring/ambiguity-floor design gap**:
+  `score_cluster`'s `fraction_found` denominator is not idiomorph-aware, so
+  it structurally caps every real single-idiomorph `Ascomycota:MAT` genome's
+  achievable score well below the 0.50 ambiguity floor, regardless of match
+  quality. This is not specific to genome 5501, its strain, or its assembly
+  — any genome matching only one idiomorph's gene set in this family will
+  hit the same ceiling.
+- This is **not** (a) strain-level divergence (identities of 86-100% are
+  about as clean as a same-species cross-strain match gets) and **not** (c)
+  an assembly-quality issue (single contig, correct gene order, correct
+  locus length).
+
+**New triage item for a future plan (not fixed here, per this project's
+practice of separating investigation from fixing):**
+
+- `scoring.py::score_cluster`'s `expected` gene list should be
+  idiomorph-aware — e.g. computed from the best-matching curated record's
+  own gene list, or filtered by `present_in_idiomorphs` against whichever
+  idiomorph the cluster's already-found core gene(s) imply — instead of
+  always using the full family roster across both idiomorphs and every
+  historical naming convention. Until this is fixed, the `Ascomycota:MAT`
+  family's ambiguity floor is effectively uncrossable for any real,
+  correctly-detected single-idiomorph genome, which will keep silently
+  under-reporting confidence (or misreporting "not detected") for
+  Onygenales, Eurotiales, and every other order sharing this one
+  consolidated family definition.
+- Secondary, lower-priority observation from the same run: the default
+  `EvidenceFloor()` (min_hits=1, any identity) admits essentially every
+  cluster with a single low-identity hit to the expensive Stage-2 polish
+  loop — this run took roughly 4 hours wall-clock for one genome, one
+  family, largely from polishing dozens of clusters whose `best_identity`
+  was 25-57% (clearly noise in retrospect). This matches the existing,
+  already-flagged need for a calibrated, non-default `EvidenceFloor` (see
+  item 2 in the original findings above) and is not a new issue, just
+  additional real timing evidence for it.

@@ -167,7 +167,7 @@ def build_gff_for_record(
             sequences[gene["gene_index"]] = derived
 
     gff_export.write_gff3(record, out_path=record_dir / "locus.gff3")
-    gff_export.write_genbank(record, sequences, out_path=record_dir / "locus.gbk")
+    gff_export.write_genbank(record, sequences, out_path=record_dir / "locus.gbk", ncbi=ncbi)
     gff_export.write_proteins_fasta(record, sequences, out_path=record_dir / "proteins.faa")
 
 

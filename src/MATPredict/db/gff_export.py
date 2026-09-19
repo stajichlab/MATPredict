@@ -2,11 +2,15 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqFeature import FeatureLocation, SeqFeature
 from Bio.SeqRecord import SeqRecord
+
+if TYPE_CHECKING:
+    from MATPredict.db.ncbi_client import NcbiClient
 
 
 def write_gff3(record: dict, out_path: Path) -> None:
@@ -47,23 +51,26 @@ def write_proteins_fasta(record: dict, sequences: dict[int, str], out_path: Path
     out_path.write_text("\n".join(lines) + "\n")
 
 
-def write_genbank(record: dict, sequences: dict[int, str], out_path: Path) -> None:
+def write_genbank(
+    record: dict, sequences: dict[int, str], out_path: Path, ncbi: "NcbiClient | None" = None
+) -> None:
     """Write a GenBank record for the core locus, from the same segments/genes data as write_gff3.
 
-    Builds one Bio.SeqRecord per segment, with one "gene" Bio.SeqFeature per present gene at
-    that segment (matching write_gff3's present-gene exclusion behavior), and writes it via
-    Bio.SeqIO.write in GenBank format.
+    Builds one Bio.SeqRecord per segment. When `ncbi` is given, each segment's REAL
+    nucleotide sequence is fetched via NcbiClient.fetch_nucleotide_sequence -- the
+    same mechanism db/validate.py's _independent_translation already uses -- and
+    falls back to an all-"N" placeholder ONLY for that segment, on a fetch failure
+    or an unfetchable sequence_source.type (e.g. an assembly-level GCA_/GCF_
+    accession NcbiClient can't resolve yet), never fabricating a sequence. Passing
+    no `ncbi` (the default) preserves the prior all-placeholder behavior exactly,
+    for any caller/test that doesn't need real sequence.
 
-    `sequences` is accepted for interface symmetry with write_proteins_fasta and to leave room
-    for a future CDS/translation feature, but is not currently used: we only have protein
-    sequences per gene index here, not the segment's real nucleotide sequence, so there is
-    nothing correct to translate a CDS feature against yet.
-
-    LIMITATION: we do not have the actual nucleotide sequence for the segment. The segment's
-    nucleotide sequence is therefore a placeholder of "N" characters at the segment's length.
-    The gene feature coordinates and qualifiers are accurate; the nucleotide sequence itself is
-    a placeholder until sub-project 2's tooling can fetch the real assembly sequence for the
-    region.
+    Each present gene with a sequence available in `sequences` gets a real `CDS`
+    feature (not just `gene`) carrying a `translation` qualifier and `role`/
+    `gene_class`/`present_in_idiomorphs` qualifiers copied from the gene's own
+    schema fields -- the per-gene attributes clinker's `--colour_map`/
+    `--gene_functions` (or pyGenomeViz's `--feature_type2color`) need to color/label
+    by MAT-domain biology directly, without a separate manual mapping step.
     """
     segments = record["locus"]["core"]["segments"]
     genes_by_segment: dict[int, list[dict]] = {}
@@ -77,9 +84,27 @@ def write_genbank(record: dict, sequences: dict[int, str], out_path: Path) -> No
         segment_index = segment["segment_index"]
         segment_length = segment["end"] - segment["start"] + 1
         seq_region = segment["sequence_source"]["seq_region"]
+        source = segment.get("sequence_source", {})
+
+        nucleotide_sequence = None
+        if ncbi is not None and source.get("type") == "insdc_nucleotide" and source.get("accession"):
+            try:
+                fetched = ncbi.fetch_nucleotide_sequence(
+                    source["accession"], segment["start"], segment["end"], None
+                )
+            except Exception:
+                fetched = None
+            # Only trust an actual string sequence -- a caller-supplied test double
+            # (e.g. an unconfigured MagicMock in unrelated tests) returning a non-string,
+            # non-exception value is not a real fetch result, so it falls back to the
+            # placeholder just like a genuine fetch failure would.
+            if isinstance(fetched, str) and fetched:
+                nucleotide_sequence = fetched
+        if not nucleotide_sequence:
+            nucleotide_sequence = "N" * segment_length
 
         seq_record = SeqRecord(
-            Seq("N" * segment_length),
+            Seq(nucleotide_sequence),
             id=f"{record['record_id']}.segment{segment_index}",
             name=seq_region[:16] if seq_region else f"segment{segment_index}",
             description=f"{record['record_id']} core locus segment {segment_index} ({seq_region})",
@@ -89,16 +114,31 @@ def write_genbank(record: dict, sequences: dict[int, str], out_path: Path) -> No
         for gene in genes_by_segment.get(segment_index, []):
             # GFF3/schema coordinates are 1-based fully-closed absolute coordinates.
             # Biopython's FeatureLocation is 0-based half-open, and coordinates here must
-            # be relative to the start of this segment's (placeholder) SeqRecord sequence.
+            # be relative to the start of this segment's SeqRecord sequence.
             # Conversion: relative_start_0based = gene.start - segment.start
             #             relative_end_halfopen = gene.end - segment.start + 1
-            location = FeatureLocation(
-                gene["start"] - segment["start"],
-                gene["end"] - segment["start"] + 1,
-                strand=1 if gene["strand"] == "+" else (-1 if gene["strand"] == "-" else None),
-            )
-            feature = SeqFeature(location, type="gene", qualifiers={"gene": [gene["name"]]})
-            seq_record.features.append(feature)
+            local_start = gene["start"] - segment["start"]
+            local_end = gene["end"] - segment["start"] + 1
+            strand = 1 if gene.get("strand") != "-" else -1
+            location = FeatureLocation(local_start, local_end, strand=strand)
+
+            gene_feature = SeqFeature(location, type="gene", qualifiers={
+                "gene": [gene["name"]], "role": [gene["role"]],
+            })
+            seq_record.features.append(gene_feature)
+
+            translation = sequences.get(gene["gene_index"])
+            if translation:
+                qualifiers = {
+                    "gene": [gene["name"]], "role": [gene["role"]],
+                    "translation": [translation],
+                }
+                if gene.get("gene_class"):
+                    qualifiers["gene_class"] = [gene["gene_class"]]
+                if gene.get("present_in_idiomorphs"):
+                    qualifiers["present_in_idiomorphs"] = [",".join(gene["present_in_idiomorphs"])]
+                cds_feature = SeqFeature(location, type="CDS", qualifiers=qualifiers)
+                seq_record.features.append(cds_feature)
 
         seq_records.append(seq_record)
 

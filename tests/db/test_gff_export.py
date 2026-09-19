@@ -71,3 +71,70 @@ def test_write_genbank_includes_only_present_genes_and_roundtrips(tmp_path):
     sexp_location = gene_features["sexP"].location
     assert int(sexp_location.start) == 657
     assert int(sexp_location.end) == 2056
+
+
+# append to tests/db/test_gff_export.py
+from unittest.mock import MagicMock
+
+
+def test_write_genbank_uses_real_sequence_when_ncbi_client_given(tmp_path):
+    record = {
+        "record_id": "111_a_MAT_combined",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 100, "end": 130,
+             "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC1.1", "seq_region": "ACC1.1"}},
+        ]}},
+        "genes": [
+            {"gene_index": 0, "name": "G1", "role": "core_MAT", "present": True,
+             "segment_index": 0, "start": 100, "end": 130, "strand": "+"},
+        ],
+    }
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = "ATG" * 10 + "TAA"
+
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={0: "M" * 10}, out_path=out_path, ncbi=fake_ncbi)
+
+    fake_ncbi.fetch_nucleotide_sequence.assert_called_once_with("ACC1.1", 100, 130, None)
+    text = out_path.read_text()
+    # Bio.SeqIO's genbank writer always lowercases the ORIGIN sequence block regardless of
+    # input case, so sequence-content checks compare case-insensitively.
+    assert "N" * 31 not in text.upper()  # the old placeholder is gone
+    assert "ATGATGATG" in text.replace("\n", "").replace(" ", "").upper()  # real sequence is present
+    assert "CDS" in text
+    assert "/translation=" in text.replace("\n", "").replace(" ", "")
+
+
+def test_write_genbank_falls_back_to_placeholder_when_fetch_fails(tmp_path):
+    record = {
+        "record_id": "222_b_MAT_combined",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 100, "end": 130,
+             "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC2.1", "seq_region": "ACC2.1"}},
+        ]}},
+        "genes": [],
+    }
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.side_effect = Exception("simulated NCBI outage")
+
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={}, out_path=out_path, ncbi=fake_ncbi)  # must not raise
+
+    text = out_path.read_text().replace("\n", "").replace(" ", "").upper()
+    assert "N" * 31 in text  # placeholder fallback, not a crash
+
+
+def test_write_genbank_preserves_old_placeholder_behavior_when_no_ncbi_client_given(tmp_path):
+    record = {
+        "record_id": "333_c_MAT_combined",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 1, "end": 20,
+             "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC3.1", "seq_region": "ACC3.1"}},
+        ]}},
+        "genes": [],
+    }
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={}, out_path=out_path)  # no ncbi= at all -- default behavior
+
+    text = out_path.read_text().replace("\n", "").replace(" ", "").upper()
+    assert "N" * 20 in text

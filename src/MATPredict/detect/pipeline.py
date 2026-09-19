@@ -60,6 +60,7 @@ multi-segment call reports the segments it found, nothing more.
 """
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
@@ -272,12 +273,76 @@ def _short_orf_genes(
     return short_by_family
 
 
-def _families_with_a_foothold(cluster: GeneCluster, families: list[Family]) -> list[Family]:
-    """Families that already have at least one hit of their own in this
-    cluster -- the windowed second pass only ever re-searches for a family's own
-    missing core gene, keyed strictly by that family's family_key."""
-    families_with_hits = {h.family_key for h in cluster.hits}
-    return [f for f in families if f.key in families_with_hits]
+@dataclass(frozen=True)
+class EvidenceFloor:
+    """Minimum evidence a family must clear in a cluster before it is admitted
+    to the (expensive, per-gene, two-subprocess-per-tool) Stage 2 polish loop.
+
+    Defaults exactly reproduce the pre-existing `_families_with_a_foothold`
+    behavior (any single hit of any role, any identity) -- this gate changes
+    nothing until a caller sets a stricter floor. See run_pipeline's own
+    `evidence_floor`/`evidence_diagnostics_path` parameters and this task's
+    plan notes for why no non-default value is set here yet: this rollout's
+    own real data shows a naive identity or hit-count cutoff is not yet safely
+    separable from real signal, so tuning these is left to a calibration pass
+    once db/Ascomycota/order.yml's taxonomic_scope fix (a separate task) lets
+    most genomes run with correctly-narrowed routing instead of the
+    exhaustive fallback that produced this rollout's noisy example.
+    """
+
+    min_hits: int = 1
+    min_identity: float | None = None
+    require_core_role: bool = False
+
+
+def _families_meeting_evidence_floor(
+    cluster: GeneCluster, families: list[Family], floor: EvidenceFloor
+) -> list[Family]:
+    """Families whose OWN hits in this cluster clear `floor` -- generalizes
+    the retired `_families_with_a_foothold` (which was exactly
+    `_families_meeting_evidence_floor(cluster, families, EvidenceFloor())`)."""
+    admitted = []
+    for family in families:
+        own_hits = [h for h in cluster.hits if h.family_key == family.key]
+        if len(own_hits) < floor.min_hits:
+            continue
+        if floor.require_core_role:
+            # SearchHit.role already carries "core_MAT | flanking_conserved |
+            # flanking_variable" directly (search.py) -- filter on the HIT's
+            # own role, not on whether the gene NAME happens to be one the
+            # family defines as core_MAT, which would not actually test
+            # anything (a hit's gene_name is only ever one the family
+            # declares in the first place).
+            own_hits = [h for h in own_hits if h.role == "core_MAT"]
+            if not own_hits:
+                continue
+        if floor.min_identity is not None and max(h.identity for h in own_hits) < floor.min_identity:
+            continue
+        admitted.append(family)
+    return admitted
+
+
+def _write_evidence_diagnostics(
+    out_path: Path, cluster: GeneCluster, family: Family, admitted: bool
+) -> None:
+    """Append one JSON line describing this (cluster, family) admission
+    decision -- the real calibration dataset `EvidenceFloor`'s docstring
+    refers to. Never raises on a write failure; diagnostics are best-effort
+    and must never abort a real detection run."""
+    own_hits = [h for h in cluster.hits if h.family_key == family.key]
+    row = {
+        "family": f"{family.key.phylum}:{family.key.locus_name}",
+        "contig": cluster.contig, "cluster_start": cluster.start, "cluster_end": cluster.end,
+        "gene_count": len({h.gene_name for h in own_hits}),
+        "roles": sorted({h.role for h in own_hits}),
+        "best_identity": max((h.identity for h in own_hits), default=None),
+        "admitted": admitted,
+    }
+    try:
+        with out_path.open("a") as f:
+            f.write(json.dumps(row) + "\n")
+    except OSError:
+        pass
 
 
 @dataclass(frozen=True)
@@ -794,6 +859,8 @@ def run_pipeline(
     window_protein_length_multiple: float = DEFAULT_WINDOW_PROTEIN_LENGTH_MULTIPLE,
     window_max_intron_bp: int = DEFAULT_WINDOW_MAX_INTRON_BP,
     polish_tolerance_bp: int = 10,
+    evidence_floor: EvidenceFloor = EvidenceFloor(),
+    evidence_diagnostics_path: Path | None = None,
 ) -> DetectionOutcome:
     families = route(taxid, load_all_families(db_root))
     record_families = load_record_families(db_root)
@@ -878,7 +945,20 @@ def run_pipeline(
     # per-gene outcome instead of a per-family boolean.
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] = {}
     for cluster in clusters:
-        for family in _families_with_a_foothold(cluster, families):
+        admitted_families = _families_meeting_evidence_floor(cluster, families, evidence_floor)
+        if evidence_diagnostics_path is not None:
+            # Diagnostics cover every family the OLD unconditional-admit set
+            # would have considered (i.e. every family with >=1 own hit in
+            # this cluster), not just the ones the real `evidence_floor`
+            # actually admits -- so both admitted and would-have-been-rejected
+            # cases are captured for later threshold analysis.
+            admitted_keys = {f.key for f in admitted_families}
+            for family in _families_meeting_evidence_floor(cluster, families, EvidenceFloor()):
+                _write_evidence_diagnostics(
+                    evidence_diagnostics_path, cluster, family,
+                    admitted=family.key in admitted_keys,
+                )
+        for family in admitted_families:
             # Eligibility is decided per (cluster, family), NOT from a single
             # global "is this a genome-only run" flag. Since the fast path can
             # now also carry tblastn-localized clusters (the zero-hit rescue

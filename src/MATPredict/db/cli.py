@@ -10,7 +10,7 @@ import requests
 import yaml
 
 from MATPredict.config import MatpredictConfig
-from MATPredict.db import draw, gff_export, synteny
+from MATPredict.db import gff_export
 from MATPredict.db.build_duckdb import build as build_duckdb
 from MATPredict.db.curate import accept_candidate, propose_candidate, reject_candidate
 from MATPredict.db.http_cache import CachedFetcher
@@ -222,6 +222,13 @@ def _cmd_backfill_gff(args: argparse.Namespace) -> int:
 
 
 def _cmd_draw_locus(args: argparse.Namespace) -> int:
+    # Imported here, not at module scope: `draw` imports `pygenomeviz` at import
+    # time, which is slow and (unlike this module's other, core dependencies) not
+    # declared as a hard dependency in pyproject.toml -- only `draw-locus`/
+    # `draw-synteny` need it, so every other `matpredict` command (including
+    # `detect`) must not pay for loading it.
+    from MATPredict.db import draw
+
     config = _config(args)
     record_dir = config.db_root / args.phylum / args.order_or_family / args.record_id
     gbk_path = record_dir / "locus.gbk"
@@ -232,6 +239,10 @@ def _cmd_draw_locus(args: argparse.Namespace) -> int:
 
 
 def _cmd_draw_synteny(args: argparse.Namespace) -> int:
+    # See _cmd_draw_locus's comment: kept out of module scope for the same reason
+    # (synteny.py itself imports draw.py, which imports pygenomeviz).
+    from MATPredict.db import synteny
+
     config = _config(args)
     out_path = Path(args.out)
     synteny.draw_synteny(args.record_ids, config.db_root, out_path)

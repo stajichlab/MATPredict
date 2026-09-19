@@ -12,6 +12,20 @@ dependencies = [
     "requests>=2.31",
 ]
 
+# `draw-locus`/`draw-synteny` (curate-db's visualization commands) need these, but no
+# other `matpredict` command does -- kept as an optional extra (`pip install
+# MATPredict[viz]`), not a core dependency, so a plain `pip install MATPredict` still
+# works for `detect` and the rest of `curate-db` without conda/pixi-managed
+# `pygenomeviz`/`clinker` binaries. `db/cli.py`'s `_cmd_draw_locus`/`_cmd_draw_synteny`
+# import `MATPredict.db.draw`/`MATPredict.db.synteny` lazily (inside the handler
+# function, not at module scope) for the same reason -- `pygenomeviz` alone accounts
+# for the majority of `matpredict`'s CLI import time when loaded eagerly.
+[project.optional-dependencies]
+viz = [
+    "pygenomeviz>=1.7.0,<2",
+    "clinker>=0.0.32,<0.0.33",
+]
+
 [project.scripts]
 matpredict = "MATPredict.__main__:main"
 

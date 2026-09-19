@@ -91,25 +91,51 @@ def draw_locus(gbk_path: Path, out_path: Path) -> Path:
 
     seq_record = gbk.records[0]
 
-    # One feature per gene, preferring the real CDS feature (which carries the real
-    # exon/intron CompoundLocation when the gene is multi-exon) over the plain `gene`
-    # feature, but falling back to the `gene` feature for a gene with no CDS (no
-    # available protein sequence) so it is still shown rather than silently dropped.
-    feature_by_gene: dict[str, object] = {}
-    for feature in seq_record.features:
+    # One feature per real gene, preferring the real CDS feature (which carries the
+    # real exon/intron CompoundLocation when the gene is multi-exon) over the plain
+    # `gene` feature, but falling back to the `gene` feature for a gene with no CDS
+    # (no available protein sequence) so it is still shown rather than silently
+    # dropped.
+    #
+    # This does NOT key/dedupe by the `gene` qualifier string -- real curated records
+    # have multiple distinct genes sharing one `gene` name on purpose (e.g. B-locus
+    # pheromone-receptor gene duplication/multi-allele co-occurrence is normal MAT
+    # biology, not something to collapse -- see
+    # db/Basidiomycota/Agaricales/5346_a43-b43-okayama-7_PR_B43/locus.gbk's 4 separate
+    # `pheromone_receptor` genes). Instead this walks `seq_record.features` (a plain
+    # list, never deduplicated by any key) and pairs each `gene` feature with its own
+    # sibling `CDS` feature by their fixed, adjacent list position -- the real,
+    # verified shape `gff_export.write_genbank` always emits: a `gene` feature
+    # immediately followed by that SAME gene's `CDS` feature when a translation is
+    # available, and no CDS at all otherwise. No feature is ever matched by name.
+    features_to_draw: list = []
+    features = seq_record.features
+    index = 0
+    total = len(features)
+    while index < total:
+        feature = features[index]
         if feature.type not in ("gene", "CDS"):
+            index += 1
             continue
-        gene_name = feature.qualifiers.get("gene", [None])[0]
-        if gene_name is None:
-            continue
-        if feature.type == "CDS" or gene_name not in feature_by_gene:
-            feature_by_gene[gene_name] = feature
+        if feature.type == "gene":
+            next_feature = features[index + 1] if index + 1 < total else None
+            if next_feature is not None and next_feature.type == "CDS":
+                # This gene's own CDS sibling is next; draw that instead and skip
+                # this gene feature (not a dedupe -- the CDS carries the real
+                # exon/intron structure the gene feature doesn't).
+                index += 1
+                continue
+            features_to_draw.append(feature)
+            index += 1
+        else:  # CDS
+            features_to_draw.append(feature)
+            index += 1
 
     gv = GenomeViz(fig_width=12, fig_track_height=1.5, show_axis=True)
     track = gv.add_feature_track(seq_record.id, len(seq_record.seq))
     segment = track.get_segment()
 
-    for feature in feature_by_gene.values():
+    for feature in features_to_draw:
         role = feature.qualifiers.get("role", [None])[0]
         color = ROLE_COLORS.get(role, _FALLBACK_COLOR)
         # add_exon_features reads its label straight from feature.qualifiers[label_type][0];

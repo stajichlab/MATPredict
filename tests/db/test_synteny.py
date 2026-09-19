@@ -176,3 +176,51 @@ def test_draw_synteny_raises_clinker_error_on_nonzero_returncode(tmp_path):
             [RECORD_A["record_id"], RECORD_B["record_id"]], db_root, tmp_path / "out.html",
             runner=failing_runner,
         )
+
+
+def test_draw_synteny_warns_when_a_resolved_record_has_zero_cds_features(tmp_path, caplog):
+    """A record whose real locus.gbk has zero CDS features (every gene still lacking
+    real protein/exon data) renders as a blank cluster with no homology links --
+    silently. draw_synteny must log a real warning naming the record, not refuse or
+    raise (a partially-informative diagram is still useful)."""
+    db_root = tmp_path / "db"
+    dir_a = _write_record(db_root, RECORD_A)  # has real CDS features (sequences given)
+    # Write RECORD_B with NO sequences at all -> write_genbank emits only `gene`
+    # features, zero `CDS` features, matching the real "APN2/SLA2 still unresolved"
+    # shape this fix targets.
+    record_dir_b = db_root / "Ascomycota" / "Onygenales" / RECORD_B["record_id"]
+    record_dir_b.mkdir(parents=True)
+    write_genbank(RECORD_B, sequences={}, out_path=record_dir_b / "locus.gbk")
+    (record_dir_b / "metadata.yaml").write_text(yaml.safe_dump(RECORD_B, sort_keys=False))
+
+    def fake_runner(cmd, **kwargs):
+        return _Result()
+
+    with caplog.at_level("WARNING"):
+        draw_synteny(
+            [RECORD_A["record_id"], RECORD_B["record_id"]], db_root, tmp_path / "out.html",
+            runner=fake_runner,
+        )
+
+    warnings = [rec.message for rec in caplog.records if rec.levelname == "WARNING"]
+    assert any(RECORD_B["record_id"] in message and "zero CDS" in message for message in warnings)
+    # RECORD_A has real CDS features -- it must not trigger a false warning.
+    assert not any(RECORD_A["record_id"] in message for message in warnings)
+    assert dir_a.exists()  # sanity: RECORD_A's own dir setup is unaffected
+
+
+def test_draw_synteny_does_not_warn_when_all_resolved_records_have_cds_features(tmp_path, caplog):
+    db_root = tmp_path / "db"
+    _write_record(db_root, RECORD_A)
+    _write_record(db_root, RECORD_B)
+
+    def fake_runner(cmd, **kwargs):
+        return _Result()
+
+    with caplog.at_level("WARNING"):
+        draw_synteny(
+            [RECORD_A["record_id"], RECORD_B["record_id"]], db_root, tmp_path / "out.html",
+            runner=fake_runner,
+        )
+
+    assert not [rec for rec in caplog.records if rec.levelname == "WARNING"]

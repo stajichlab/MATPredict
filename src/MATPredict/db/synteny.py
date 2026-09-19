@@ -68,15 +68,19 @@ convention).
 from __future__ import annotations
 
 import csv
+import logging
 import subprocess
 from pathlib import Path
 from typing import Callable
 
 import yaml
+from Bio import SeqIO
 
 from MATPredict.db.draw import ROLE_COLORS
 
 _FALLBACK_COLOR = "#999999"
+
+logger = logging.getLogger(__name__)
 
 
 class SyntenyRecordError(ValueError):
@@ -184,6 +188,26 @@ def draw_synteny(
         gbk_path, metadata_path = _resolve_record(record_id, db_root)
         gbk_paths.append(gbk_path)
         function_rows.extend(_gene_function_rows(metadata_path))
+
+        # A resolved record whose real locus.gbk has zero CDS features (every gene
+        # still lacking real protein/exon data) renders as one entirely blank cluster
+        # with no homology links in clinker's diagram -- still produce the diagram
+        # (a partially-informative one is still useful), but make the gap visible
+        # rather than silent.
+        cds_count = sum(
+            1
+            for seq_record in SeqIO.parse(gbk_path, "genbank")
+            for feature in seq_record.features
+            if feature.type == "CDS"
+        )
+        if cds_count == 0:
+            logger.warning(
+                "record %s (%s) has zero CDS features -- it will render as a blank "
+                "cluster with no homology links in the synteny diagram; run "
+                "`matpredict curate-db build-gff` (or `backfill-gff`) for it to "
+                "appear correctly",
+                record_id, gbk_path,
+            )
 
     roles_seen = sorted({role for _name, role in function_rows})
 

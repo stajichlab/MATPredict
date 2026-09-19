@@ -59,3 +59,38 @@ def test_fragmented_locus_downgraded_one_tier():
     score = FamilyScore(FLANKLESS.key, 1.0, ["mfa1", "pra1"], [])
     cluster = GeneCluster("c1", 1, 100, [])
     assert assign_tier(score, FLANKLESS, cluster, any_gene_unpolished=False, fragmented=True) == "medium"
+
+
+# Family split across 2 idiomorphs, mirroring this session's real regression:
+# a single-idiomorph genome only ever has half the family's core genes, so
+# core_found against the FULL roster (both idiomorphs) could never be
+# satisfied for a real single-idiomorph genome.
+FAM_IDIOMORPHIC = Family(
+    FamilyKey("P", "MAT"), "enum", ["MAT1-1", "MAT1-2"], None,
+    [
+        {"name": "a1", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-1"]},
+        {"name": "a2", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-1"]},
+        {"name": "b1", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-2"]},
+        {"name": "b2", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-2"]},
+    ],
+    [1],
+)
+
+
+def test_single_idiomorph_genome_reaches_high_tier():
+    # Only MAT1-2's genes (b1, b2) are found -- against the full 4-gene
+    # roster core_found would require a1/a2 too and could never be
+    # satisfied. Narrowed to MAT1-2 alone, both core genes are found.
+    score = FamilyScore(FAM_IDIOMORPHIC.key, 0.5, ["b1", "b2"], ["a1", "a2"])
+    cluster = GeneCluster("c1", 1, 100, [])
+    assert assign_tier(score, FAM_IDIOMORPHIC, cluster, any_gene_unpolished=False, fragmented=False) == "high"
+
+
+def test_both_idiomorphs_found_still_requires_full_core_set():
+    # Only one idiomorph's genes found (b1, b2) plus one gene (a1) from the
+    # other -- found idiomorphs are {MAT1-1, MAT1-2}, so no narrowing
+    # happens and core_found still requires all 4 genes (unchanged, full-
+    # roster behavior for the both-idiomorphs-present case).
+    score = FamilyScore(FAM_IDIOMORPHIC.key, 0.75, ["a1", "b1", "b2"], ["a2"])
+    cluster = GeneCluster("c1", 1, 100, [])
+    assert assign_tier(score, FAM_IDIOMORPHIC, cluster, any_gene_unpolished=False, fragmented=False) == "medium"

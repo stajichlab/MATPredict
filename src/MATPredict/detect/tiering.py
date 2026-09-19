@@ -6,7 +6,7 @@ flanking genes."""
 from __future__ import annotations
 
 from MATPredict.detect.clustering import GeneCluster
-from MATPredict.detect.family_registry import Family
+from MATPredict.detect.family_registry import Family, expected_genes_for_idiomorph
 from MATPredict.detect.scoring import FamilyScore
 
 _TIER_DOWNGRADE = {"high": "medium", "medium": "low", "low": "low"}
@@ -23,7 +23,11 @@ def assign_tier(
     any_gene_unpolished: bool,
     fragmented: bool,
 ) -> str:
-    core_genes = {g["name"] for g in family.genes if g["role"] == "core_MAT"}
+    core_genes = {
+        g["name"]
+        for g in expected_genes_for_idiomorph(family, score.genes_found)
+        if g["role"] == "core_MAT"
+    }
     core_found = core_genes.issubset(set(score.genes_found))
 
     if not core_found:

@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from MATPredict.detect.clustering import GeneCluster
-from MATPredict.detect.family_registry import Family, FamilyKey
+from MATPredict.detect.family_registry import Family, FamilyKey, expected_genes_for_idiomorph
 
 
 @dataclass(frozen=True)
@@ -32,7 +32,7 @@ def score_cluster(cluster: GeneCluster, families: list[Family]) -> list[FamilySc
         found = hit_genes_by_family.get(family.key)
         if not found:
             continue
-        expected = [g["name"] for g in family.genes]
+        expected = [g["name"] for g in expected_genes_for_idiomorph(family, found)]
         genes_found = [g for g in expected if g in found]
         genes_missing = [g for g in expected if g not in found]
         scores.append(FamilyScore(

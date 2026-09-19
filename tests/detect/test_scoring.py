@@ -72,3 +72,57 @@ def test_is_ambiguous_false_with_one_clear_winner():
     from MATPredict.detect.scoring import FamilyScore
     scores = [FamilyScore(FAM_A.key, 0.9, ["g1", "g2"], []), FamilyScore(FAM_B.key, 0.1, ["g1"], ["g3", "g4", "g5"])]
     assert is_ambiguous(scores, floor=0.5) is False
+
+
+# Family split across 2 idiomorphs: 2 genes each for MAT1-1/MAT1-2, plus 1
+# idiomorph-agnostic flanking gene. Mirrors this session's real-world
+# regression (a real single-idiomorph genome scored against the full,
+# multi-idiomorph roster was structurally capped below the ambiguity floor).
+FAM_IDIOMORPHIC = Family(
+    FamilyKey("P", "MAT"), "enum", ["MAT1-1", "MAT1-2"], None,
+    [
+        {"name": "a1", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-1"]},
+        {"name": "a2", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-1"]},
+        {"name": "b1", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-2"]},
+        {"name": "b2", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-2"]},
+        {"name": "flank1", "role": "flanking_conserved"},
+    ],
+    [1],
+)
+
+
+def test_score_cluster_narrows_to_single_found_idiomorph():
+    # Only MAT1-2's genes (b1, b2) plus the idiomorph-agnostic flank1 are
+    # found. Against the full 5-gene roster this would be 3/5 = 0.6, but
+    # narrowed to MAT1-2 + agnostic genes (b1, b2, flank1) it is 3/3 = 1.0.
+    cluster = GeneCluster(
+        "c1", 1, 100,
+        [_hit("b1", FAM_IDIOMORPHIC.key), _hit("b2", FAM_IDIOMORPHIC.key), _hit("flank1", FAM_IDIOMORPHIC.key)],
+    )
+    scores = score_cluster(cluster, [FAM_IDIOMORPHIC])
+    assert scores[0].fraction_found == 1.0
+    assert sorted(scores[0].genes_found) == ["b1", "b2", "flank1"]
+    assert scores[0].genes_missing == []
+
+
+def test_score_cluster_keeps_full_roster_when_both_idiomorphs_found():
+    # Genes from BOTH MAT1-1 and MAT1-2 found together -- a real, legitimate
+    # homothallic both-idiomorphs-present locus (e.g. curated record
+    # db/Ascomycota/Eurotiales/162425_fgsc-a4_MAT_combined, A. nidulans).
+    # Must NOT narrow: full 5-gene roster stays in effect.
+    cluster = GeneCluster(
+        "c1", 1, 100,
+        [_hit("a1", FAM_IDIOMORPHIC.key), _hit("b1", FAM_IDIOMORPHIC.key)],
+    )
+    scores = score_cluster(cluster, [FAM_IDIOMORPHIC])
+    assert scores[0].fraction_found == 2 / 5
+    assert sorted(scores[0].genes_missing) == ["a2", "b2", "flank1"]
+
+
+def test_score_cluster_keeps_full_roster_when_no_idiomorph_info_found():
+    # Only the idiomorph-agnostic flanking gene is found -- nothing to
+    # narrow by, so the full roster is used unchanged.
+    cluster = GeneCluster("c1", 1, 100, [_hit("flank1", FAM_IDIOMORPHIC.key)])
+    scores = score_cluster(cluster, [FAM_IDIOMORPHIC])
+    assert scores[0].fraction_found == 1 / 5
+    assert sorted(scores[0].genes_missing) == ["a1", "a2", "b1", "b2"]

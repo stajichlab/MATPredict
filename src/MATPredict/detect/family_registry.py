@@ -45,6 +45,42 @@ def load_all_families(db_root: Path) -> list[Family]:
     return families
 
 
+def expected_genes_for_idiomorph(
+    family: Family, found_gene_names: set[str] | list[str]
+) -> list[dict]:
+    """The subset of `family.genes` actually expected given which idiomorph(s)
+    the FOUND genes imply, so a real single-idiomorph genome is scored against
+    only the genes that idiomorph should have -- not the family's full,
+    multi-idiomorph gene roster.
+
+    A gene with no `present_in_idiomorphs` (e.g. a flanking gene) applies to
+    every idiomorph and is always included. When the found genes' own
+    `present_in_idiomorphs` values name exactly ONE idiomorph, the returned
+    list is narrowed to that idiomorph's genes plus every idiomorph-agnostic
+    gene. When they name TWO OR MORE idiomorphs (a real, legitimate
+    homothallic both-idiomorphs-present locus, already documented elsewhere
+    in this project's curated records) or when none of the found genes carry
+    a `present_in_idiomorphs` value at all (nothing to narrow by), the FULL
+    roster is returned unchanged -- this is deliberately the conservative,
+    already-existing behavior for those two cases, not a regression.
+    """
+    found = set(found_gene_names)
+    found_idiomorphs: set[str] = set()
+    for gene in family.genes:
+        if gene["name"] in found:
+            found_idiomorphs.update(gene.get("present_in_idiomorphs") or [])
+
+    if len(found_idiomorphs) != 1:
+        return family.genes  # ambiguous/both-present/nothing-to-narrow-by: full roster, unchanged behavior
+
+    idiomorph = next(iter(found_idiomorphs))
+    return [
+        gene
+        for gene in family.genes
+        if not gene.get("present_in_idiomorphs") or idiomorph in gene["present_in_idiomorphs"]
+    ]
+
+
 def load_record_families(db_root: Path) -> dict[str, FamilyKey]:
     """Map every accepted curated record_id to the one family it belongs to.
 

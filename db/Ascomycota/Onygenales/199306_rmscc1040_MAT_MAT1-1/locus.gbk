@@ -10,7 +10,8 @@ FEATURES             Location/Qualifiers
      gene            complement(885..1580)
                      /gene="COX13"
                      /role="flanking_conserved"
-     CDS             complement(885..1580)
+     CDS             complement(join(885..930,1033..1040,1101..1260,1316..1340,
+                     1397..1580))
                      /gene="COX13"
                      /role="flanking_conserved"
                      /translation="MFLQRSVIRAAQGGASRLLYSRVPLGLQRRSMASESKLRNLPDIK
@@ -19,7 +20,8 @@ FEATURES             Location/Qualifiers
      gene            1919..4008
                      /gene="APN2"
                      /role="flanking_conserved"
-     CDS             1919..4008
+     CDS             join(1919..1946,2005..2017,2075..2120,2180..2312,
+                     2360..3063,3112..4008)
                      /gene="APN2"
                      /role="flanking_conserved"
                      /translation="MPLRLTTWNVNGIRNPFSYQPWRENKSFERMFDILEGDIIVFQET
@@ -36,7 +38,8 @@ FEATURES             Location/Qualifiers
      gene            4793..5830
                      /gene="MAT1-1-4"
                      /role="core_MAT"
-     CDS             4793..5830
+     CDS             join(4793..4853,4906..5380,5468..5524,5579..5632,
+                     5685..5714,5767..5830)
                      /gene="MAT1-1-4"
                      /role="core_MAT"
                      /translation="MSELAEVHCAWTESDRGQVGGDGIAIRKCSTEFLSALYKAYQKLA
@@ -47,7 +50,7 @@ FEATURES             Location/Qualifiers
      gene            6428..7650
                      /gene="MAT1-1-1"
                      /role="core_MAT"
-     CDS             6428..7650
+     CDS             join(6428..6719,6773..7650)
                      /gene="MAT1-1-1"
                      /role="core_MAT"
                      /translation="MAGTEASAVHRALSNLFTTLSPEQVQKFLTEMHGAGNAPAGVAAV

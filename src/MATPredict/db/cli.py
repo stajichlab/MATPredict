@@ -17,7 +17,7 @@ from MATPredict.db.http_cache import CachedFetcher
 from MATPredict.db.ncbi_client import NcbiClient
 from MATPredict.db.schema import validate_gene_vocabulary
 from MATPredict.db.uniprot_client import UniprotClient
-from MATPredict.db.validate import _client_for, validate_record
+from MATPredict.db.validate import _client_for, _independent_translation, validate_record
 
 
 def _config(args: argparse.Namespace) -> MatpredictConfig:
@@ -139,19 +139,32 @@ def build_gff_for_record(
     db_root: Path, phylum: str, order_or_family: str, record_id: str,
     ncbi: NcbiClient, uniprot: UniprotClient,
 ) -> None:
-    """Fetch every present gene's curated protein sequence and write
-    locus.gff3/locus.gbk/proteins.faa for one accepted record. The single-
-    record CLI command and the batch backfill command both call this so
-    there is exactly one place this logic lives."""
+    """Fetch every present gene's protein sequence and write
+    locus.gff3/locus.gbk/proteins.faa for one accepted record. A gene with a
+    real `protein_accession` is fetched directly; a gene with none but real
+    curated genomic coordinates (an unannotated MAG assembly with no NCBI
+    protein record to cite) has its sequence independently derived via
+    `_independent_translation`, which fetches and translates from the
+    record's own recorded coordinates -- the same function `validate.py`
+    already uses to cross-check a claimed accession's sequence, reused here
+    as the sequence SOURCE rather than a cross-check target. A gene with
+    neither a protein_accession nor derivable coordinates is skipped, same
+    as before. The single-record CLI command and the batch backfill command
+    both call this so there is exactly one place this logic lives."""
     record_dir = db_root / phylum / order_or_family / record_id
     record = yaml.safe_load((record_dir / "metadata.yaml").read_text())
 
     sequences: dict[int, str] = {}
     for gene in record.get("genes", []):
-        if not gene.get("present", True) or not gene.get("protein_accession"):
+        if not gene.get("present", True):
             continue
-        client, bare_accession = _client_for(gene["protein_accession"], ncbi, uniprot)
-        sequences[gene["gene_index"]] = client.fetch_protein_sequence(bare_accession)
+        if gene.get("protein_accession"):
+            client, bare_accession = _client_for(gene["protein_accession"], ncbi, uniprot)
+            sequences[gene["gene_index"]] = client.fetch_protein_sequence(bare_accession)
+            continue
+        derived = _independent_translation(record, gene, ncbi)
+        if derived:
+            sequences[gene["gene_index"]] = derived
 
     gff_export.write_gff3(record, out_path=record_dir / "locus.gff3")
     gff_export.write_genbank(record, sequences, out_path=record_dir / "locus.gbk")

@@ -71,3 +71,59 @@ def test_backfill_missing_proteins_faa_isolates_one_record_failure(tmp_path, mon
     assert len(failed) == 1
     assert failed[0][0] == ("Ascomycota", "Eurotiales", "111_a_MAT_MAT1-1")
     assert "simulated NCBI outage" in failed[0][1]
+
+
+def _write_record_with_coordinates_no_accession(db_root, phylum, order_or_family, record_id):
+    """A gene with real segment coordinates but protein_accession: null -- the
+    Xanthoria MAG case: a real genomic span exists, no NCBI protein record does."""
+    record_dir = db_root / phylum / order_or_family / record_id
+    record_dir.mkdir(parents=True)
+    metadata = {
+        "record_id": record_id,
+        "locus": {"core": {"segments": [
+            {
+                "segment_index": 0,
+                "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC1.1", "seq_region": "ACC1.1"},
+                "start": 100, "end": 108,
+            },
+        ]}},
+        "genes": [
+            {
+                "gene_index": 0, "name": "G1", "role": "core_MAT", "present": True,
+                "protein_accession": None, "segment_index": 0,
+                "start": 100, "end": 108, "strand": "+",
+            },
+        ],
+    }
+    (record_dir / "metadata.yaml").write_text(yaml.safe_dump(metadata))
+    return record_dir
+
+
+def test_build_gff_for_record_derives_sequence_from_coordinates_when_no_accession(tmp_path, monkeypatch):
+    db_root = tmp_path / "db"
+    record_dir = _write_record_with_coordinates_no_accession(
+        db_root, "Ascomycota", "Teloschistales", "111_a_MAT_combined"
+    )
+
+    monkeypatch.setattr(
+        "MATPredict.db.cli._independent_translation",
+        lambda record, gene, ncbi: "MSEQ",
+    )
+
+    build_gff_for_record(db_root, "Ascomycota", "Teloschistales", "111_a_MAT_combined", ncbi=MagicMock(), uniprot=MagicMock())
+
+    faa_text = (record_dir / "proteins.faa").read_text()
+    assert ">111_a_MAT_combined|gene_index=0|name=G1|role=core_MAT" in faa_text
+    assert "MSEQ" in faa_text
+
+
+def test_build_gff_for_record_skips_gene_when_translation_returns_none(tmp_path, monkeypatch):
+    db_root = tmp_path / "db"
+    _write_record_with_coordinates_no_accession(db_root, "Ascomycota", "Teloschistales", "222_b_MAT_combined")
+
+    monkeypatch.setattr("MATPredict.db.cli._independent_translation", lambda record, gene, ncbi: None)
+
+    build_gff_for_record(db_root, "Ascomycota", "Teloschistales", "222_b_MAT_combined", ncbi=MagicMock(), uniprot=MagicMock())
+
+    faa_text = (db_root / "Ascomycota" / "Teloschistales" / "222_b_MAT_combined" / "proteins.faa").read_text()
+    assert faa_text.strip() == ""

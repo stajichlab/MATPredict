@@ -10,7 +10,7 @@ import requests
 import yaml
 
 from MATPredict.config import MatpredictConfig
-from MATPredict.db import draw, gff_export
+from MATPredict.db import draw, gff_export, synteny
 from MATPredict.db.build_duckdb import build as build_duckdb
 from MATPredict.db.curate import accept_candidate, propose_candidate, reject_candidate
 from MATPredict.db.http_cache import CachedFetcher
@@ -231,6 +231,14 @@ def _cmd_draw_locus(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_draw_synteny(args: argparse.Namespace) -> int:
+    config = _config(args)
+    out_path = Path(args.out)
+    synteny.draw_synteny(args.record_ids, config.db_root, out_path)
+    print(f"wrote {out_path}")
+    return 0
+
+
 def _cmd_build_duckdb(args: argparse.Namespace) -> int:
     config = _config(args)
     out_path = Path(args.out) if args.out else config.db_root / "matpredict.duckdb"
@@ -281,6 +289,11 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     draw_locus.add_argument("--record-id", required=True)
     draw_locus.add_argument("--out", required=False, help="Output image path (default: <record_dir>/locus.png)")
     draw_locus.set_defaults(func=_cmd_draw_locus)
+
+    draw_synteny = action.add_parser("draw-synteny")
+    draw_synteny.add_argument("--record-ids", required=True, nargs="+", help="2 or more curated record ids to compare")
+    draw_synteny.add_argument("--out", required=True, help="Output clinker plot HTML path")
+    draw_synteny.set_defaults(func=_cmd_draw_synteny)
 
     build_db = action.add_parser("build-duckdb")
     build_db.add_argument("--out", required=False)

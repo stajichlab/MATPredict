@@ -10,7 +10,7 @@ import requests
 import yaml
 
 from MATPredict.config import MatpredictConfig
-from MATPredict.db import gff_export
+from MATPredict.db import draw, gff_export
 from MATPredict.db.build_duckdb import build as build_duckdb
 from MATPredict.db.curate import accept_candidate, propose_candidate, reject_candidate
 from MATPredict.db.http_cache import CachedFetcher
@@ -221,6 +221,16 @@ def _cmd_backfill_gff(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_draw_locus(args: argparse.Namespace) -> int:
+    config = _config(args)
+    record_dir = config.db_root / args.phylum / args.order_or_family / args.record_id
+    gbk_path = record_dir / "locus.gbk"
+    out_path = Path(args.out) if args.out else record_dir / "locus.png"
+    draw.draw_locus(gbk_path, out_path)
+    print(f"wrote {out_path}")
+    return 0
+
+
 def _cmd_build_duckdb(args: argparse.Namespace) -> int:
     config = _config(args)
     out_path = Path(args.out) if args.out else config.db_root / "matpredict.duckdb"
@@ -264,6 +274,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
 
     backfill_gff = action.add_parser("backfill-gff")
     backfill_gff.set_defaults(func=_cmd_backfill_gff)
+
+    draw_locus = action.add_parser("draw-locus")
+    draw_locus.add_argument("--phylum", required=True)
+    draw_locus.add_argument("--order-or-family", required=True)
+    draw_locus.add_argument("--record-id", required=True)
+    draw_locus.add_argument("--out", required=False, help="Output image path (default: <record_dir>/locus.png)")
+    draw_locus.set_defaults(func=_cmd_draw_locus)
 
     build_db = action.add_parser("build-duckdb")
     build_db.add_argument("--out", required=False)

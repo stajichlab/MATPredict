@@ -274,3 +274,50 @@ def test_build_gff_subcommand_writes_all_three_files(tmp_path, monkeypatch):
     assert "sexP" in gff3_path.read_text()
     assert "sexP" in gbk_path.read_text()
     assert "MKTAYIAKQRQISFVKSHFSRQ" in proteins_path.read_text()
+
+
+# --- Task 4: draw-locus subcommand wires MATPredict.db.draw.draw_locus onto a record's locus.gbk ---
+
+def test_draw_locus_subcommand_registered():
+    from MATPredict.__main__ import build_parser
+    parser = build_parser()
+    args = parser.parse_args([
+        "curate-db", "draw-locus",
+        "--phylum", "Mucoromycota", "--order-or-family", "Mucorales", "--record-id", "rec3",
+        "--out", "/tmp/out.png",
+    ])
+    assert args.action == "draw-locus"
+    assert args.phylum == "Mucoromycota"
+    assert args.record_id == "rec3"
+    assert args.out == "/tmp/out.png"
+
+
+def test_draw_locus_subcommand_writes_a_real_image(tmp_path, monkeypatch):
+    monkeypatch.setenv("MATPREDICT_DB_ROOT", str(tmp_path / "db"))
+    monkeypatch.setenv("MATPREDICT_CACHE_DIR", str(tmp_path / "cache"))
+
+    record = {
+        "record_id": "rec4",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "sequence_source": {"seq_region": "scaffold_4"}, "start": 1, "end": 200},
+        ]}},
+        "genes": [
+            {"gene_index": 0, "name": "sexP", "role": "core_MAT", "present": True,
+             "segment_index": 0, "start": 10, "end": 100, "strand": "+"},
+        ],
+    }
+    record_dir = tmp_path / "db" / "Mucoromycota" / "Mucorales" / "rec4"
+    record_dir.mkdir(parents=True)
+
+    from MATPredict.db.gff_export import write_genbank
+    write_genbank(record, sequences={0: "M" * 20}, out_path=record_dir / "locus.gbk")
+
+    out_path = tmp_path / "rec4_locus.png"
+    exit_code = main([
+        "curate-db", "draw-locus",
+        "--phylum", "Mucoromycota", "--order-or-family", "Mucorales", "--record-id", "rec4",
+        "--out", str(out_path),
+    ])
+    assert exit_code == 0
+    assert out_path.exists()
+    assert out_path.stat().st_size > 0

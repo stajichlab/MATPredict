@@ -3,7 +3,19 @@ loci:
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["MAT1-1", "MAT1-2"]
-    taxonomic_scope: [222544, 5180, 28548, 40559]
+    taxonomic_scope: [716546]  # leotiomyceta -- live-confirmed via NCBI esummary
+    # 2026-09-18; recommended by `matpredict detect audit-scope` as the deepest
+    # common ancestor of the 17/26 curated records this family's own prior
+    # scope ([222544, 5180, 28548, 40559]) did not cover. Confirmed via NCBI
+    # Taxonomy esummary: taxid 716546 = "leotiomyceta", rank clade, ascomycete
+    # fungi -- the well-known Pezizomycotina subclade that covers every order
+    # this family's own curated records span (Helotiales, Onygenales,
+    # Eurotiales, Hypocreales, Sordariales, Teloschistales, Lecanorales) while
+    # EXCLUDING Pezizomycetes/Pezizales, so unlike a broader Pezizomycotina-
+    # level scope this does not overlap Ascomycota:MATtub's own dedicated
+    # Pezizomycetes/Tuber scope below -- no multi-family fallback introduced.
+    # See docs/superpowers/plans/2026-09-18-genome-scale-detection-rollout-findings.md
+    # for the audit that found the prior value stale.
     genes:
       # gene_class alpha_box/HMG_box mark the two conserved MAT-identity domain classes
       # shared across Pezizomycotina (Debuchy & Turgeon 2006; Turgeon & Yoder 2000):

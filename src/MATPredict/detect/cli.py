@@ -7,9 +7,11 @@ from pathlib import Path
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect.pipeline import run_pipeline
+from MATPredict.detect.family_registry import load_all_families
 from MATPredict.detect.reference_fasta import build_reference_fasta
 from MATPredict.detect.report import write_detection_gff3, write_detection_report
 from MATPredict.detect.rollout_aggregate import aggregate_reports, write_rollout_summary
+from MATPredict.detect.scope_audit import audit_scope, record_taxids_by_family
 
 _ROLLOUT_REPORT_FILENAME = "detection_report.yaml"
 
@@ -84,6 +86,27 @@ def _cmd_detect_rollout_summary(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_audit_scope(args: argparse.Namespace) -> int:
+    db_root = Path(args.db_root)
+    families = load_all_families(db_root)
+    record_taxids = record_taxids_by_family(db_root)
+    results = audit_scope(families, record_taxids)
+    any_uncovered = False
+    for result in sorted(results, key=lambda r: (-len(r.uncovered_taxids), r.family_key.phylum, r.family_key.locus_name)):
+        if not result.uncovered_taxids:
+            continue
+        any_uncovered = True
+        pct = 100.0 * len(result.uncovered_taxids) / result.total_records
+        print(
+            f"{result.family_key.phylum}:{result.family_key.locus_name}: "
+            f"{len(result.uncovered_taxids)}/{result.total_records} records ({pct:.0f}%) "
+            f"uncovered by taxonomic_scope -- recommend {result.recommended_scope_taxid}"
+        )
+    if not any_uncovered:
+        print("every family's own curated records are covered by its taxonomic_scope")
+    return 0
+
+
 def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     """Register `detect` and its `benchmark` action onto the top-level parser.
 
@@ -112,3 +135,10 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     rollout_summary.add_argument("--reports-dir", required=False)
     rollout_summary.add_argument("--out", required=False)
     rollout_summary.set_defaults(func=_cmd_detect_rollout_summary)
+
+    audit_scope_parser = action.add_parser(
+        "audit-scope",
+        help="Audit every curated record's taxid against its own family's taxonomic_scope",
+    )
+    audit_scope_parser.add_argument("--db-root", default="db")
+    audit_scope_parser.set_defaults(func=_cmd_audit_scope)

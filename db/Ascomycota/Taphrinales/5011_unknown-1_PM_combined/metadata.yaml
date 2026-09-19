@@ -59,6 +59,7 @@ locus:
       \ boundary-accuracy benchmark until independently re-derived.\n
 
 2026-09-18 follow-up (this curation pass): the recommended tblastn/exonerate re-derivation was actually attempted, using the 4 real Pneumocystis PM-family reference proteins from this same source paper (Almeida et al. 2015): matPi ncbi_protein:XP_018229374.1 (231 aa, from curated record 42068_ru7_PM_combined) and ncbi_protein:XP_018224792.1 (230 aa, from 4754_b80_PM_combined); matMc ncbi_protein:XP_018229377.1 (251 aa, from 42068_ru7_PM_combined) and ncbi_protein:XP_018224795.1 (232 aa, from 4754_b80_PM_combined). The full RHGF01000006.1 scaffold (real NCBI-reported length 550495 bp, confirmed via esummary.fcgi) was fetched and searched with tblastn -query pm_refs.faa -db rhgf6_db -seg no -outfmt '6 qseqid sseqid pident length sstart send evalue bitscore' (BLAST+, this project's own search.py parameters, no other pre-filter). matMc: both references hit the SAME region with a clear best-scoring peak far above background (matMc_ru7 vs 92621-93112, 45.5% identity, e=3.16e-40, bitscore 142; matMc_b80 vs 92630-93121, 44.5% identity, e=2.94e-42, bitscore 147; next-best hits elsewhere on the scaffold were e>=0.09). This hit was independently re-verified by translation (reusing this project's own _independent_translation logic, not just trusting the alignment): the plus-strand span 92606-93298 translates cleanly to a 231 aa protein starting with Met, with no internal stop codon and a natural in-frame stop immediately following (comparable in length to the 232 aa and 251 aa references; global pairwise identity ~33-34% against both, consistent with cross-genus MAT-gene divergence). matMc alone would therefore be a credible, translation-verified re-derivation. matPi: both references also hit the same region (matPi_ru7 vs 51688-52236, 31.0% identity, e=2.36e-21, bitscore 87; matPi_b80 vs 51949-52236, 42.6% identity, e=8.19e-20, bitscore 82.4), a real, statistically clear best hit -- but exonerate protein2genome spliced alignment (run against +/-1kb and +/-2.5kb windows, both references, down to --percent 15) confirmed this hit covers ONLY the C-terminal homeodomain (query residues ~151-220 of the 230-231 aa references) and no additional exon matching the N-terminal ~150 residues could be found anywhere in a 5kb window. Translating the literal tblastn subject span (51688-52236) does not start at Met (first residue is Ser); the nearest in-frame Met downstream (51754) yields only a 166 aa ORF to the next in-frame stop -- well short of the ~230 aa references, and not near either scaffold edge, so it cannot be attributed to assembly truncation either. Per this project's discipline (do not treat a credible-looking alignment as sufficient without independently verifying the translated product), matPi's true gene boundaries could NOT be independently re-derived with confidence from this search -- only a real, homology-confirmed homeodomain-encoding region (~52041-52230) was localized, not a full, Met-initiated CDS. Because matMc and matPi are resolved as a pair for this record rather than forcing through a partial result, NEITHER gene's coordinates, coordinate_provenance, excluded_from_coordinate_benchmark, evidence.boundaries, or validation.status were changed in this pass -- these remain not_available/needs_review exactly as before. This is reported to the human reviewer as a real, honest outcome: matMc's coordinates ARE independently re-derivable and translation-verified whenever a reviewer chooses to apply them; matPi's are not, absent further evidence (e.g. RNA-seq, a different homolog set, or manual synteny/gene-model work).
+ 2026-09-18 ruling: since coordinate_provenance/excluded_from_coordinate_benchmark are locus-level fields describing the record as a whole (correctly left as not_available/true while matPi remains unresolved), but genes[].start/end/strand is a per-gene field with no correctness reason to withhold once a given gene's own coordinates independently pass this project's translation-verification bar, matMc's real, translation-verified coordinates (92606-93298, + strand, 231 aa, Met-initiated, no internal stop) were applied to genes[] for matMc in this record on 2026-09-18. matPi's genes[].start/end were left exactly as they were (51694-52236, still unverified) -- matPi remains unresolved as documented above. locus.core.segments[0].end was extended from 93112 to 93298 to keep the segment span consistent with matMc's new real end coordinate. validation.status was NOT changed (still needs_review; this remains a human accept/reject decision, not self-accepted here).
 "
     segments:
     - segment_index: 0
@@ -67,7 +68,7 @@ locus:
         accession: RHGF01000006.1
         seq_region: RHGF01000006.1
       start: 51694
-      end: 93112
+      end: 93298
       contig_edge_distance: null
       sequence_checksum: null
   extended_flank: []
@@ -90,8 +91,8 @@ genes:
   present: true
   locus_tag: null
   segment_index: 0
-  start: 92621
-  end: 93112
+  start: 92606
+  end: 93298
   strand: +
   order_in_locus: 1
 evidence:
@@ -105,13 +106,20 @@ evidence:
       doi: 10.1128/mBio.02250-14
   boundaries:
     tier: 2
-    experimental_method: 'UNVERIFIED. Almeida et al. 2015 reports the gene identities
-      (matMc, matPi) but not their exact coordinates, and does not use the genome
-      assembly (GCA_005281805.1) this record''s coordinates were transcribed against
-      -- a chronological impossibility (see locus.core.definition_note). No gene/CDS
-      feature exists at the recorded coordinates in RHGF01000006.1''s own GenBank
-      annotation either. coordinate_provenance is "not_available" and these numbers
-      should not be trusted until independently re-derived.
+    experimental_method: 'MIXED as of 2026-09-18: matMc''s coordinates (92606-93298)
+      are now real, tblastn/exonerate-derived and independently translation-verified
+      (231 aa, Met-initiated, no internal stop, natural stop immediately following;
+      full method/parameters in locus.core.definition_note''s 2026-09-18 addition).
+      matPi''s coordinates remain UNVERIFIED: Almeida et al. 2015 reports the gene
+      identity (matPi) but not its exact coordinates, and does not use the genome
+      assembly (GCA_005281805.1) this record''s original coordinates were transcribed
+      against -- a chronological impossibility (see locus.core.definition_note). A
+      real tblastn/exonerate search against the same assembly found only matPi''s
+      C-terminal homeodomain region homologous to reference proteins, not a full,
+      Met-initiated CDS, so matPi''s recorded genes[].start/end (51694-52236) remain
+      unverified and should not be trusted until further independently re-derived.
+      locus.core.coordinate_provenance remains "not_available" at the locus level
+      because matPi is still unresolved.
 
       '
     citations:
@@ -133,9 +141,14 @@ validation:
   sequence_match:
     status: not_applicable
     per_gene: []
-    notes: 'Both genes have protein_accession: null, so no independent per-gene
-      check can run. See locus.core.definition_note and evidence.boundaries: the
-      recorded coordinates themselves are unverified (coordinate_provenance: not_available).'
+    notes: 'Both genes still have protein_accession: null, so no accession-based
+      per-gene check can run. As of 2026-09-18: matMc''s genes[].start/end are now
+      real, tblastn/exonerate-derived and independently translation-verified (see
+      locus.core.definition_note and evidence.boundaries); its derived protein now
+      appears in this record''s proteins.faa. matPi''s recorded coordinates remain
+      unverified (locus.core.coordinate_provenance: not_available at the locus level,
+      pending matPi''s own re-derivation) -- see locus.core.definition_note and
+      evidence.boundaries.'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

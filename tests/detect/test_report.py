@@ -280,6 +280,94 @@ def test_not_polish_candidate_status_round_trips_through_yaml_and_gff3(tmp_path)
     assert "status=unpolished" not in gene_line
 
 
+def _write_genome_fasta(tmp_path, contig_id, prefix_len, orf, suffix_len):
+    """A real synthetic single-contig genome FASTA with a real ORF starting
+    right after `prefix_len` bases (so the ORF's 1-based start is
+    `prefix_len + 1`), for `_extract_translated_gene` to genuinely slice
+    and translate."""
+    sequence = ("A" * prefix_len) + orf + ("A" * suffix_len)
+    path = tmp_path / "genome.fasta"
+    path.write_text(f">{contig_id}\n{sequence}\n")
+    return path
+
+
+# ATG + 10x GCT (Ala) + TAA stop -- translates to "MAAAAAAAAAA" (stop dropped).
+_ORF = "ATG" + "GCT" * 10 + "TAA"
+_ORF_START = 100  # 1-based
+_ORF_END = _ORF_START + len(_ORF) - 1  # 135
+_ORF_PROTEIN = "MAAAAAAAAAA"
+
+
+def test_write_detection_gff3_with_genome_fasta_writes_companion_fasta_and_cds(tmp_path):
+    genome_fasta = _write_genome_fasta(
+        tmp_path, "c1", prefix_len=_ORF_START - 1, orf=_ORF, suffix_len=20,
+    )
+    result = DetectionResult(
+        family_key=KEY, contig="c1", start=_ORF_START, end=_ORF_END,
+        confidence="high", idiomorph="undetermined", ambiguous_with=[],
+        genes_found=["pra1"], genes_missing=[], fragmented=False,
+        segments=[LocusSegment("c1", _ORF_START, _ORF_END, contig_edge_distance=99)],
+        gene_evidence=[
+            GeneEvidence("pra1", "core_MAT", "c1", _ORF_START, _ORF_END, "+", 92.5, 87.0,
+                         "5270_521_aLocus_a1", "diamond_proteome"),
+        ],
+        reference_records=["5270_521_aLocus_a1"],
+    )
+    outcome = DetectionOutcome(results=[result], not_detected=[], families_attempted=[KEY])
+
+    out = tmp_path / "with_seq.gff3"
+    write_detection_gff3(outcome, out, genome_fasta=genome_fasta)
+
+    # (a) companion FASTA written with the real sliced sequence, same contig name.
+    fasta_out = out.with_suffix(".fasta")
+    assert fasta_out.exists()
+    fasta_text = fasta_out.read_text()
+    assert fasta_text.startswith(">c1\n")
+    assert _ORF in fasta_text
+
+    # (b) a CDS feature line with a translation= attribute for the gene.
+    text = out.read_text()
+    cds_line = next(line for line in text.splitlines() if "\tCDS\t" in line)
+    assert f"\t{_ORF_START}\t{_ORF_END}\t" in cds_line
+    assert f"translation={_ORF_PROTEIN}" in cds_line
+    assert "Parent=" in cds_line
+    # the gene feature is still emitted, unaffected by the new CDS feature.
+    gene_line = next(line for line in text.splitlines() if "\tgene\t" in line and "Name=pra1" in line)
+    assert gene_line != cds_line
+
+
+def test_write_detection_gff3_contig_mismatch_falls_back_gracefully(tmp_path):
+    """A genome FASTA that doesn't contain the report's contig must not crash
+    the write -- no companion FASTA, no CDS feature, gene feature still
+    written normally."""
+    genome_fasta = _write_genome_fasta(
+        tmp_path, "other_contig", prefix_len=_ORF_START - 1, orf=_ORF, suffix_len=20,
+    )
+    out = tmp_path / "mismatch.gff3"
+    write_detection_gff3(OUTCOME, out, genome_fasta=genome_fasta)
+
+    text = out.read_text()
+    assert "\tCDS\t" not in text
+    gene_line = next(line for line in text.splitlines() if "\tgene\t" in line and "Name=pra1" in line)
+    assert gene_line  # gene feature still present
+    assert not out.with_suffix(".fasta").exists()
+
+
+def test_write_detection_gff3_without_genome_fasta_is_unchanged(tmp_path):
+    """Omitting `genome_fasta` (the default) must produce byte-identical
+    output to before this parameter existed -- no regression for existing
+    callers."""
+    baseline = tmp_path / "baseline.gff3"
+    write_detection_gff3(OUTCOME, baseline)
+
+    explicit_none = tmp_path / "explicit_none.gff3"
+    write_detection_gff3(OUTCOME, explicit_none, genome_fasta=None)
+
+    assert baseline.read_bytes() == explicit_none.read_bytes()
+    assert not baseline.with_suffix(".fasta").exists()
+    assert not explicit_none.with_suffix(".fasta").exists()
+
+
 def test_write_detection_report_lists_not_detected_families(tmp_path):
     """Sub-floor families must appear with a reason, never be silently dropped."""
     out = tmp_path / "report.yaml"

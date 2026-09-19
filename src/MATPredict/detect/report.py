@@ -11,11 +11,16 @@ gene carrying `Name`, `role` and `present`.
 """
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 import yaml
+from Bio import SeqIO
 
+from MATPredict.detect.benchmark import _extract_translated_gene, _open_fasta_text
 from MATPredict.detect.pipeline import DetectionOutcome, DetectionResult
+
+logger = logging.getLogger(__name__)
 
 
 def _family_label(key) -> str:
@@ -26,8 +31,37 @@ def _locus_id(result: DetectionResult, index: int) -> str:
     return f"{result.family_key.phylum}_{result.family_key.locus_name}_{index}"
 
 
-def write_detection_gff3(outcome: DetectionOutcome, out_path: Path) -> None:
+def write_detection_gff3(
+    outcome: DetectionOutcome, out_path: Path, genome_fasta: Path | None = None,
+) -> None:
     """Write one locus-region feature plus one gene feature per detected gene.
+
+    When `genome_fasta` is given (the rollout genome's own FASTA, already on
+    local disk at detection time -- no network fetch needed), two additions
+    are made, both purely additive so a caller that omits `genome_fasta`
+    (the default) gets byte-identical output to before this parameter
+    existed:
+
+    * A companion FASTA is written at `out_path.with_suffix(".fasta")`,
+      using the SAME contig/seqid names the GFF3 itself uses, so clinker's
+      GFF3+FASTA input convention (same base filename) is satisfied. Each
+      contig referenced anywhere in this outcome gets one FASTA record
+      holding its REAL, full sequence sliced directly out of `genome_fasta`
+      -- never a placeholder -- so the GFF3's own absolute contig
+      coordinates line up against it exactly as written. A contig the GFF3
+      references but `genome_fasta` doesn't contain (e.g. a report/genome
+      contig-name mismatch) is logged and simply omitted from the companion
+      FASTA -- never fabricated.
+    * Each gene feature gains a sibling `CDS` feature (same coordinates,
+      `Parent` pointing at the `gene` feature's own ID) carrying a
+      `translation=` attribute, re-derived via `benchmark.py`'s
+      `_extract_translated_gene` -- reused directly rather than
+      re-implemented here, since it already fetches from a real genome
+      FASTA and splices `GeneEvidence.exons` (when present) via
+      `_splice_transcript` with the minus-strand exon-order handling
+      already tested there. A gene whose sequence can't be extracted (same
+      contig-mismatch case, or any other extraction failure) simply gets no
+      `CDS` feature -- logged, never crashing the rest of the write.
 
     Genes the family expects but which were not found are emitted with
     `present=false` at the locus region's own coordinates (they have no
@@ -120,10 +154,31 @@ def write_detection_gff3(outcome: DetectionOutcome, out_path: Path) -> None:
                     f";alt_method={alt['method']};alt_contig={alt['contig']}"
                     f";alt_start={alt['start']};alt_end={alt['end']};alt_identity={alt['identity']}"
                 )
+            gene_id = f"{locus_id}.gene{gene_index}"
             lines.append("\t".join([
                 evidence.contig, "MATPredict", "gene", str(evidence.start), str(evidence.end),
                 ".", evidence.strand or ".", ".", gene_attrs,
             ]))
+
+            if genome_fasta is not None:
+                exons = list(evidence.exons) if evidence.exons else None
+                protein = _extract_translated_gene(
+                    genome_fasta, evidence.contig, evidence.start, evidence.end,
+                    evidence.strand, exons,
+                )
+                if protein:
+                    cds_attrs = f"ID={locus_id}.cds{gene_index};Parent={gene_id};translation={protein}"
+                    lines.append("\t".join([
+                        evidence.contig, "MATPredict", "CDS", str(evidence.start), str(evidence.end),
+                        ".", evidence.strand or ".", ".", cds_attrs,
+                    ]))
+                else:
+                    logger.warning(
+                        "write_detection_gff3: could not extract/translate gene %r on "
+                        "contig %r from genome FASTA %s (contig not found, or extraction "
+                        "failed) -- omitting its CDS feature",
+                        evidence.gene_name, evidence.contig, genome_fasta,
+                    )
 
         absent_index = len(r.gene_evidence)
         for gene_name in r.genes_missing:
@@ -141,6 +196,39 @@ def write_detection_gff3(outcome: DetectionOutcome, out_path: Path) -> None:
             absent_index += 1
 
     out_path.write_text("\n".join(lines) + "\n")
+
+    if genome_fasta is not None:
+        needed_contigs = set(contig_extent)
+        contig_sequences: dict[str, str] = {}
+        try:
+            with _open_fasta_text(genome_fasta) as handle:
+                for record in SeqIO.parse(handle, "fasta"):
+                    if record.id in needed_contigs:
+                        contig_sequences[record.id] = str(record.seq)
+        except OSError:
+            logger.warning(
+                "write_detection_gff3: could not open genome FASTA %s for the companion "
+                "FASTA -- no companion sequence written", genome_fasta,
+            )
+            contig_sequences = {}
+
+        missing_contigs = needed_contigs - contig_sequences.keys()
+        for contig in sorted(missing_contigs):
+            logger.warning(
+                "write_detection_gff3: contig %r referenced in detection results not "
+                "found in genome FASTA %s -- omitting it from the companion FASTA",
+                contig, genome_fasta,
+            )
+
+        if contig_sequences:
+            fasta_lines = []
+            for contig in contig_extent:
+                seq = contig_sequences.get(contig)
+                if seq is None:
+                    continue
+                fasta_lines.append(f">{contig}")
+                fasta_lines.append(seq)
+            out_path.with_suffix(".fasta").write_text("\n".join(fasta_lines) + "\n")
 
 
 def _result_doc(r: DetectionResult) -> dict:

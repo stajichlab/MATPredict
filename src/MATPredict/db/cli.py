@@ -115,13 +115,30 @@ def _cmd_reject(args: argparse.Namespace) -> int:
     return 0
 
 
-def _cmd_build_gff(args: argparse.Namespace) -> int:
-    config = _config(args)
-    record_dir = config.db_root / args.phylum / args.order_or_family / args.record_id
-    record_path = record_dir / "metadata.yaml"
-    record = yaml.safe_load(record_path.read_text())
+def find_records_missing_proteins_faa(db_root: Path) -> list[tuple[str, str, str]]:
+    """(phylum, order_or_family, record_id) for every accepted (non-candidate)
+    record whose proteins.faa does not exist on disk yet."""
+    missing = []
+    for meta_path in sorted(db_root.glob("*/*/*/metadata.yaml")):
+        parts = meta_path.relative_to(db_root).parts
+        if parts[0] == "candidates":
+            continue
+        record_dir = meta_path.parent
+        if not (record_dir / "proteins.faa").exists():
+            missing.append((parts[0], parts[1], parts[2]))
+    return missing
 
-    ncbi, uniprot = _make_clients(config)
+
+def build_gff_for_record(
+    db_root: Path, phylum: str, order_or_family: str, record_id: str,
+    ncbi: NcbiClient, uniprot: UniprotClient,
+) -> None:
+    """Fetch every present gene's curated protein sequence and write
+    locus.gff3/locus.gbk/proteins.faa for one accepted record. The single-
+    record CLI command and the batch backfill command both call this so
+    there is exactly one place this logic lives."""
+    record_dir = db_root / phylum / order_or_family / record_id
+    record = yaml.safe_load((record_dir / "metadata.yaml").read_text())
 
     sequences: dict[int, str] = {}
     for gene in record.get("genes", []):
@@ -130,15 +147,50 @@ def _cmd_build_gff(args: argparse.Namespace) -> int:
         client, bare_accession = _client_for(gene["protein_accession"], ncbi, uniprot)
         sequences[gene["gene_index"]] = client.fetch_protein_sequence(bare_accession)
 
-    gff3_path = record_dir / "locus.gff3"
-    gbk_path = record_dir / "locus.gbk"
-    proteins_path = record_dir / "proteins.faa"
+    gff_export.write_gff3(record, out_path=record_dir / "locus.gff3")
+    gff_export.write_genbank(record, sequences, out_path=record_dir / "locus.gbk")
+    gff_export.write_proteins_fasta(record, sequences, out_path=record_dir / "proteins.faa")
 
-    gff_export.write_gff3(record, out_path=gff3_path)
-    gff_export.write_genbank(record, sequences, out_path=gbk_path)
-    gff_export.write_proteins_fasta(record, sequences, out_path=proteins_path)
 
-    print(f"wrote {gff3_path}, {gbk_path}, {proteins_path}")
+def backfill_missing_proteins_faa(
+    db_root: Path, ncbi: NcbiClient, uniprot: UniprotClient,
+) -> tuple[list[tuple[str, str, str]], list[tuple[tuple[str, str, str], str]]]:
+    """Run build_gff_for_record for every record find_records_missing_proteins_faa
+    reports, isolating each record's failure so one live-fetch error (a
+    suppressed accession, a transient NCBI outage) never aborts the rest of
+    the batch -- the same discipline this project's genome-acquisition and
+    batch-runner fixes already established."""
+    succeeded: list[tuple[str, str, str]] = []
+    failed: list[tuple[tuple[str, str, str], str]] = []
+    for phylum, order_or_family, record_id in find_records_missing_proteins_faa(db_root):
+        identifier = (phylum, order_or_family, record_id)
+        try:
+            build_gff_for_record(db_root, phylum, order_or_family, record_id, ncbi, uniprot)
+        except Exception as exc:  # noqa: BLE001 -- recorded, never swallowed silently
+            failed.append((identifier, str(exc)))
+            continue
+        succeeded.append(identifier)
+    return succeeded, failed
+
+
+def _cmd_build_gff(args: argparse.Namespace) -> int:
+    config = _config(args)
+    ncbi, uniprot = _make_clients(config)
+    build_gff_for_record(config.db_root, args.phylum, args.order_or_family, args.record_id, ncbi, uniprot)
+    record_dir = config.db_root / args.phylum / args.order_or_family / args.record_id
+    print(f"wrote {record_dir / 'locus.gff3'}, {record_dir / 'locus.gbk'}, {record_dir / 'proteins.faa'}")
+    return 0
+
+
+def _cmd_backfill_gff(args: argparse.Namespace) -> int:
+    config = _config(args)
+    ncbi, uniprot = _make_clients(config)
+    succeeded, failed = backfill_missing_proteins_faa(config.db_root, ncbi, uniprot)
+    for phylum, order_or_family, record_id in succeeded:
+        print(f"backfilled {phylum}/{order_or_family}/{record_id}")
+    for (phylum, order_or_family, record_id), message in failed:
+        print(f"FAILED {phylum}/{order_or_family}/{record_id}: {message}")
+    print(f"{len(succeeded)} succeeded, {len(failed)} failed")
     return 0
 
 
@@ -182,6 +234,9 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     build_gff.add_argument("--order-or-family", required=True)
     build_gff.add_argument("--record-id", required=True)
     build_gff.set_defaults(func=_cmd_build_gff)
+
+    backfill_gff = action.add_parser("backfill-gff")
+    backfill_gff.set_defaults(func=_cmd_backfill_gff)
 
     build_db = action.add_parser("build-duckdb")
     build_db.add_argument("--out", required=False)

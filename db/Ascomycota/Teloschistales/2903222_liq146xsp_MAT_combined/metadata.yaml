@@ -69,7 +69,51 @@ locus:
 
       The species is an undescribed Xanthoria (NCBI ''Xanthoria sp. 2 TBL-2021'',
       taxid 2903222); gene names follow db/Ascomycota/order.yml (S1''s ''MAT1-1''/''MAT1-2''
-      are the alpha-box and HMG genes, i.e. MAT1-1-1 and MAT1-2-1).'
+      are the alpha-box and HMG genes, i.e. MAT1-1-1 and MAT1-2-1).
+
+
+      TASK 2B EXON/INTRON RE-DERIVATION (2026-09-18): APN2, MAT1-1-1, and SLA2 were
+      originally recorded as flat single-genomic-span features with no exons array;
+      naive single-span translation of all three produced severely truncated proteins
+      with premature in-frame stop codons landing exactly on canonical GT-donor splice
+      motifs, indicating real, uncaptured intron structure. Each gene was re-run through
+      this project''s own polish_with_exonerate (exonerate 2.4.0, --model protein2genome
+      --refine region) against its own real NCBI scaffold sequence (fetched via NcbiClient.fetch_nucleotide_sequence,
+      plus strand, full scaffold length), using a +/-3000 bp padded window around the
+      originally-recorded flat span, and the full curated cross-database reference-protein
+      set (build_reference_fasta) as query.
+
+
+      MAT1-1-1 aligned cleanly to the real curated Polycauliona polycarpa MAT1-1-1
+      protein (record 1301501_voucher-215_MAT_MAT1-1, Teloschistales; exonerate identity
+      64.27%) as a 2-exon model at 39475-39712 / 39767-40584 (plus strand); the independently
+      re-translated spliced product (Bio.Seq, table 1) is 352 aa, starts with Met,
+      and has no internal stop codon -- squarely within this database''s observed
+      MAT1-1-1 alpha-box range (335-382 aa across 6 other curated Ascomycota:MAT records
+      checked). This exon model is now recorded (exons/codon_start=1/transl_table=1)
+      in place of the flat span, and it independently confirms the prior note''s suspicion
+      that Augustus fused MAT1-1-1 with a neighbouring ORF: the true gene occupies
+      only the 3'' ~1.1 kb of the originally-recorded ~3.9-4.0 kb span, not the whole
+      predicted region.
+
+
+      APN2 aligned (exonerate identity 60.71%, 4 exons) to a real curated Eurotiales
+      APN2 protein (record 746128_a1163_MAT_MAT1-1), but the independently re-translated
+      product does not start with Met and carries an internal stop codon 30 residues
+      in -- a failed verification, not a usable model -- so APN2''s coordinates are
+      left unchanged (flat span, still naively translated as before) pending better
+      reference coverage.
+
+
+      SLA2 aligned (exonerate identity 81.20%, 11 exons, minus strand) to a real curated
+      Onygenales SLA2 protein (record 5501_rs_MAT_MAT1-2) with no internal stop codon,
+      but the re-translated product (1049 aa) does not start with Met and is missing
+      roughly the first 15-24 residues relative to the 1056 aa reference protein; there
+      is no splice-acceptor (AG) motif immediately upstream of the modeled first exon
+      (in transcript order), so this is not a window-size artefact but a genuine gap
+      in alignable N-terminal sequence at this evolutionary distance. Per this project''s
+      no-fabrication discipline, SLA2''s coordinates are likewise left unchanged this
+      round rather than guessing the missing N-terminal exon boundary.'
     segments:
     - segment_index: 0
       sequence_source:
@@ -111,10 +155,17 @@ genes:
   present: true
   locus_tag: null
   segment_index: 0
-  start: 36694
-  end: 40593
+  start: 39475
+  end: 40584
   strand: +
   order_in_locus: 2
+  exons:
+  - start: 39475
+    end: 39712
+  - start: 39767
+    end: 40584
+  codon_start: 1
+  transl_table: 1
 - gene_index: 3
   name: SLA2
   protein_accession: null
@@ -173,7 +224,22 @@ validation:
       sequence via NCBI efetch: each begins with ATG and ends with a stop codon on
       the stated strand under 1-based fully-closed coordinates. No protein-level percent-identity
       check was possible -- this assembly carries no NCBI protein annotation, so protein_accession
-      is null for every gene.'
+      is null for every gene.
+
+
+      TASK 2B UPDATE (2026-09-18): the flat-span coordinates for APN2, MAT1-1-1 and
+      SLA2 were genuinely multi-exon and naive single-span translation of all three
+      was severely truncated/wrong. MAT1-1-1''s real exon/intron structure was independently
+      re-derived via polish_with_exonerate and re-verified by independent translation
+      (_independent_translation): the spliced product is 352 aa, starts with Met,
+      and has no internal stop -- this gene is now genuinely resolved and its `genes[].exons`
+      reflect real, exonerate-derived, verified coordinates. APN2 and SLA2 were also
+      run through the same exonerate pipeline but FAILED independent-translation verification
+      (APN2: internal stop codon; SLA2: translated product does not start with Met,
+      missing ~15-24 N-terminal residues) -- per this project''s no-fabrication discipline
+      their coordinates are unchanged (still the original flat span) and `proteins.faa`
+      will still carry a naive, known-wrong translation for these two genes until
+      better evidence resolves their true boundaries.'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

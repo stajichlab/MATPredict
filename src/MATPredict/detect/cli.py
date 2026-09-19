@@ -6,7 +6,7 @@ from pathlib import Path
 
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
-from MATPredict.detect.pipeline import run_pipeline
+from MATPredict.detect.pipeline import EvidenceFloor, run_pipeline
 from MATPredict.detect.family_registry import load_all_families
 from MATPredict.detect.reference_fasta import build_reference_fasta
 from MATPredict.detect.report import write_detection_gff3, write_detection_report
@@ -24,12 +24,18 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     reference_fasta = build_reference_fasta(config.db_root, out_dir / "_reference.faa")
+    evidence_floor = EvidenceFloor(
+        min_hits=args.min_hits, min_identity=args.min_identity,
+        require_core_role=args.require_core_role,
+    )
     outcome = run_pipeline(
         genome_fasta=Path(args.genome),
         proteome_fasta=Path(args.proteins) if args.proteins else None,
         taxid=args.taxid,
         db_root=config.db_root,
         reference_fasta=reference_fasta,
+        evidence_floor=evidence_floor,
+        evidence_diagnostics_path=Path(args.evidence_diagnostics) if args.evidence_diagnostics else None,
     )
 
     write_detection_gff3(outcome, out_dir / "detected_loci.gff3")
@@ -122,6 +128,10 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     detect.add_argument("--proteins", required=False)
     detect.add_argument("--taxid", required=False, type=int)
     detect.add_argument("--out-dir", required=False)
+    detect.add_argument("--evidence-diagnostics", required=False)
+    detect.add_argument("--min-hits", type=int, default=1)
+    detect.add_argument("--min-identity", type=float, default=None)
+    detect.add_argument("--require-core-role", action="store_true")
     detect.set_defaults(func=_cmd_detect)
 
     action = detect.add_subparsers(dest="detect_action")

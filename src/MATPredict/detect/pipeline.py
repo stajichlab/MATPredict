@@ -298,6 +298,13 @@ class EvidenceFloor:
     exhaustive fallback that produced this rollout's noisy example.
     """
 
+    #: Minimum number of DISTINCT genes (by `SearchHit.gene_name`), never raw
+    #: hit/HSP objects. `search.py`'s tblastn loop appends one `SearchHit` per
+    #: HSP line with no per-gene deduplication, so one real gene matched by N
+    #: curated reference records (routine as a locus's own curated database
+    #: grows) produces N hits -- counting raw hits here would make this floor's
+    #: effective strictness silently drift with curation density rather than
+    #: with actual evidence. See `_families_meeting_evidence_floor`.
     min_hits: int = 1
     min_identity: float | None = None
     require_core_role: bool = False
@@ -312,7 +319,8 @@ def _families_meeting_evidence_floor(
     admitted = []
     for family in families:
         own_hits = [h for h in cluster.hits if h.family_key == family.key]
-        if len(own_hits) < floor.min_hits:
+        distinct_genes = {h.gene_name for h in own_hits}
+        if len(distinct_genes) < floor.min_hits:
             continue
         if floor.require_core_role:
             # SearchHit.role already carries "core_MAT | flanking_conserved |
@@ -342,6 +350,7 @@ def _write_evidence_diagnostics(
         "family": f"{family.key.phylum}:{family.key.locus_name}",
         "contig": cluster.contig, "cluster_start": cluster.start, "cluster_end": cluster.end,
         "gene_count": len({h.gene_name for h in own_hits}),
+        "hit_count": len(own_hits),
         "roles": sorted({h.role for h in own_hits}),
         "best_identity": max((h.identity for h in own_hits), default=None),
         "admitted": admitted,

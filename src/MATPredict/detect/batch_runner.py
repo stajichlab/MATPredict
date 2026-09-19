@@ -221,6 +221,7 @@ def run_batch(
                 taxid=genome.taxid,
                 db_root=db_root,
                 reference_fasta=reference_fasta,
+                evidence_diagnostics_path=genome_out_dir / "evidence_diagnostics.jsonl",
             )
             write_detection_gff3(outcome, genome_out_dir / "detected_loci.gff3")
             write_detection_report(outcome, genome_out_dir / "detection_report.yaml")

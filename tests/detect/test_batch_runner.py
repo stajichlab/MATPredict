@@ -107,12 +107,16 @@ def test_run_batch_decompresses_calls_pipeline_and_writes_reports(tmp_path, monk
 
     calls = []
 
-    def fake_run_pipeline(genome_fasta, proteome_fasta, taxid, db_root, reference_fasta):
+    def fake_run_pipeline(genome_fasta, proteome_fasta, taxid, db_root, reference_fasta, evidence_diagnostics_path=None):
         # The decompressed fasta must exist and be a real, uncompressed FASTA
         # file inside $SCRATCH at call time.
         assert genome_fasta.exists()
         assert str(genome_fasta).startswith(str(scratch))
         assert genome_fasta.read_text().startswith(">contig1")
+        # Task 4: run_batch wires evidence_diagnostics_path to
+        # genome_out_dir/evidence_diagnostics.jsonl for every genome.
+        assert evidence_diagnostics_path is not None
+        assert evidence_diagnostics_path.name == "evidence_diagnostics.jsonl"
         calls.append((taxid, genome_fasta))
         return DetectionOutcome(results=[])
 
@@ -150,7 +154,7 @@ def test_run_batch_continues_after_one_genome_fails(tmp_path, monkeypatch):
         _genome(2, "GOOD", genome_b),
     ]
 
-    def flaky_run_pipeline(genome_fasta, proteome_fasta, taxid, db_root, reference_fasta):
+    def flaky_run_pipeline(genome_fasta, proteome_fasta, taxid, db_root, reference_fasta, evidence_diagnostics_path=None):
         if taxid == 1:
             raise RuntimeError("boom")
         return DetectionOutcome(results=[])
@@ -195,7 +199,7 @@ def test_run_batch_continues_after_one_genome_fails_to_decompress(tmp_path, monk
 
     calls = []
 
-    def fake_run_pipeline(genome_fasta, proteome_fasta, taxid, db_root, reference_fasta):
+    def fake_run_pipeline(genome_fasta, proteome_fasta, taxid, db_root, reference_fasta, evidence_diagnostics_path=None):
         calls.append(taxid)
         return DetectionOutcome(results=[])
 

@@ -18,6 +18,48 @@ def test_detect_subcommand_registered():
     assert args.genome == "g.fa"
 
 
+def test_detect_evidence_floor_flags_parse_with_defaults():
+    from MATPredict.__main__ import build_parser
+    parser = build_parser()
+    args = parser.parse_args(["detect", "--genome", "g.fa", "--out-dir", "/tmp/x"])
+    assert args.evidence_diagnostics is None
+    assert args.min_hits == 1
+    assert args.min_identity is None
+    assert args.require_core_role is False
+
+
+def test_detect_evidence_floor_flags_parse_when_given():
+    from MATPredict.__main__ import build_parser
+    parser = build_parser()
+    args = parser.parse_args([
+        "detect", "--genome", "g.fa", "--out-dir", "/tmp/x",
+        "--evidence-diagnostics", "/tmp/x/diag.jsonl",
+        "--min-hits", "3", "--min-identity", "45.5", "--require-core-role",
+    ])
+    assert args.evidence_diagnostics == "/tmp/x/diag.jsonl"
+    assert args.min_hits == 3
+    assert args.min_identity == 45.5
+    assert args.require_core_role is True
+
+
+def test_detect_default_evidence_floor_args_reconstruct_the_no_op_default():
+    """When none of the new flags are passed, `_cmd_detect`'s
+    `EvidenceFloor(min_hits=args.min_hits, min_identity=args.min_identity,
+    require_core_role=args.require_core_role)` must equal `EvidenceFloor()`
+    exactly -- i.e. a caller that doesn't pass the new flags gets identical
+    `run_pipeline` behavior to before this change."""
+    from MATPredict.__main__ import build_parser
+    from MATPredict.detect.pipeline import EvidenceFloor
+    parser = build_parser()
+    args = parser.parse_args(["detect", "--genome", "g.fa", "--out-dir", "/tmp/x"])
+    reconstructed = EvidenceFloor(
+        min_hits=args.min_hits, min_identity=args.min_identity,
+        require_core_role=args.require_core_role,
+    )
+    assert reconstructed == EvidenceFloor()
+    assert args.evidence_diagnostics is None
+
+
 def test_detect_missing_required_args_exits_code_1():
     """Regression test: --genome/--out-dir moved from argparse required=True to
     app-level check so detect benchmark could share the same parser. This changed

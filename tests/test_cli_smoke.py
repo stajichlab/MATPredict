@@ -368,7 +368,9 @@ def _stub_detect_cli(monkeypatch, tmp_path, recorded):
         detect_cli, "MatpredictConfig",
         SimpleNamespace(from_env=lambda repo_root: SimpleNamespace(db_root=tmp_path / "db")),
     )
-    monkeypatch.setattr(detect_cli, "build_reference_fasta", lambda db_root, out: out)
+    monkeypatch.setattr(
+        detect_cli, "build_reference_fasta", lambda db_root, out, family_keys=None: out
+    )
     monkeypatch.setattr(detect_cli, "run_pipeline", lambda **kwargs: DetectionOutcome(results=[]))
     monkeypatch.setattr(detect_cli, "write_detection_report", lambda outcome, path: None)
 
@@ -389,7 +391,7 @@ def test_cmd_detect_passes_genome_fasta_when_emit_cds_fasta_is_set(monkeypatch, 
     args = SimpleNamespace(
         genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
         evidence_diagnostics=None, min_hits=1, min_identity=None,
-        require_core_role=False, emit_cds_fasta=True,
+        require_core_role=False, emit_cds_fasta=True, phylum=None,
     )
 
     assert detect_cli._cmd_detect(args) == 0
@@ -404,8 +406,78 @@ def test_cmd_detect_omits_genome_fasta_by_default(monkeypatch, tmp_path):
     args = SimpleNamespace(
         genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
         evidence_diagnostics=None, min_hits=1, min_identity=None,
-        require_core_role=False, emit_cds_fasta=False,
+        require_core_role=False, emit_cds_fasta=False, phylum=None,
     )
 
     assert detect_cli._cmd_detect(args) == 0
     assert recorded == [{}]
+
+
+def test_detect_phylum_choices_come_from_db_root_at_runtime(monkeypatch, tmp_path):
+    """Task 1 item 1: `--phylum`'s choices are discovered from db_root when
+    the parser is built, not hardcoded -- so a db/ holding a phylum this
+    code has never heard of still offers it."""
+    import pytest
+
+    from MATPredict.__main__ import build_parser
+
+    for phylum in ("Ascomycota", "Zoopagomycota"):
+        (tmp_path / phylum).mkdir()
+        (tmp_path / phylum / "order.yml").write_text(f"phylum: {phylum}\nloci: []\n")
+    monkeypatch.setenv("MATPREDICT_DB_ROOT", str(tmp_path))
+
+    parser = build_parser()
+    args = parser.parse_args(
+        ["detect", "--genome", "g.fa", "--out-dir", "/tmp/x", "--phylum", "Zoopagomycota"]
+    )
+    assert args.phylum == "Zoopagomycota"
+    with pytest.raises(SystemExit):
+        parser.parse_args(
+            ["detect", "--genome", "g.fa", "--out-dir", "/tmp/x", "--phylum", "Basidiomycota"]
+        )
+
+
+def test_detect_phylum_defaults_to_none():
+    from MATPredict.__main__ import build_parser
+    parser = build_parser()
+    args = parser.parse_args(["detect", "--genome", "g.fa", "--out-dir", "/tmp/x"])
+    assert args.phylum is None
+
+
+def test_cmd_detect_restricts_the_reference_fasta_to_the_routed_families(monkeypatch, tmp_path):
+    """Task 1 items 1+3 wired together: `--phylum Mucoromycota` must reach
+    `build_reference_fasta` as a family-key restriction, so the tblastn
+    query set holds only that phylum's curated proteins. Without this the
+    routing narrowing is cosmetic -- the search still pays for all 181."""
+    import MATPredict.detect.cli as detect_cli
+    from MATPredict.detect.family_registry import FamilyKey
+    from MATPredict.detect.pipeline import DetectionOutcome
+
+    monkeypatch.setattr(
+        detect_cli, "MatpredictConfig",
+        SimpleNamespace(from_env=lambda repo_root: SimpleNamespace(db_root=Path("db"))),
+    )
+    recorded: dict = {}
+
+    def fake_build(db_root, out, family_keys=None):
+        recorded["family_keys"] = family_keys
+        return out
+
+    def fake_run_pipeline(**kwargs):
+        recorded["routing"] = kwargs["routing"]
+        return DetectionOutcome(results=[])
+
+    monkeypatch.setattr(detect_cli, "build_reference_fasta", fake_build)
+    monkeypatch.setattr(detect_cli, "run_pipeline", fake_run_pipeline)
+    monkeypatch.setattr(detect_cli, "write_detection_gff3", lambda *a, **k: None)
+    monkeypatch.setattr(detect_cli, "write_detection_report", lambda outcome, path: None)
+
+    args = SimpleNamespace(
+        genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
+        evidence_diagnostics=None, min_hits=1, min_identity=None,
+        require_core_role=False, emit_cds_fasta=False, phylum="Mucoromycota",
+    )
+    assert detect_cli._cmd_detect(args) == 0
+
+    assert recorded["family_keys"] == {FamilyKey("Mucoromycota", "MAT")}
+    assert recorded["routing"].routing_mode == "explicit_phylum"

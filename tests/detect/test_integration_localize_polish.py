@@ -97,7 +97,7 @@ def _run(tmp_path, families, family_key, reference_fasta, *, miniprot_shift):
 @pytest.mark.skipif(not REAL_RECORD.exists(),
                      reason="requires the real curated record to be present")
 def test_genome_only_pipeline_reaches_high_confidence_with_polished_agreement(tmp_path):
-    families = route(5270, load_all_families(DB_ROOT))
+    families = route(5270, load_all_families(DB_ROOT)).families
     family_key = _a_locus_family_key(families)
     reference_fasta = build_reference_fasta(DB_ROOT, tmp_path / "reference.faa")
 
@@ -128,7 +128,7 @@ def test_genome_only_pipeline_disagreeing_polish_models_still_reach_same_tier(tm
     model shifted 500bp away (past the 10bp tolerance -> polished_disagree),
     and confirm both reach the SAME confidence tier -- agreement is reported
     but never consulted by tiering."""
-    families = route(5270, load_all_families(DB_ROOT))
+    families = route(5270, load_all_families(DB_ROOT)).families
     family_key = _a_locus_family_key(families)
     reference_fasta = build_reference_fasta(DB_ROOT, Path(str(tmp_path)) / "reference.faa")
 

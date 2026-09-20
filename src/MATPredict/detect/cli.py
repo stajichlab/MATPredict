@@ -7,7 +7,7 @@ from pathlib import Path
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect.pipeline import EvidenceFloor, run_pipeline
-from MATPredict.detect.family_registry import load_all_families
+from MATPredict.detect.family_registry import available_phyla, load_all_families, route
 from MATPredict.detect.reference_fasta import build_reference_fasta
 from MATPredict.detect.report import write_detection_gff3, write_detection_report
 from MATPredict.detect.rollout_aggregate import aggregate_reports, write_rollout_summary
@@ -23,7 +23,18 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    reference_fasta = build_reference_fasta(config.db_root, out_dir / "_reference.faa")
+    # Route FIRST, then build the reference FASTA from the routed families
+    # only. The order matters: the reference FASTA is the tblastn query set, so
+    # building it before routing (as this did) means every run pays to align
+    # every phylum's curated proteins no matter how narrowly it routed. The
+    # same `RoutingDecision` object is handed to `run_pipeline` so it cannot
+    # re-route to a different set than the query set was built for, and so the
+    # taxonomy lookup happens once per run.
+    routing = route(args.taxid, load_all_families(config.db_root), phylum=args.phylum)
+    reference_fasta = build_reference_fasta(
+        config.db_root, out_dir / "_reference.faa",
+        family_keys={f.key for f in routing.families},
+    )
     evidence_floor = EvidenceFloor(
         min_hits=args.min_hits, min_identity=args.min_identity,
         require_core_role=args.require_core_role,
@@ -36,6 +47,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         reference_fasta=reference_fasta,
         evidence_floor=evidence_floor,
         evidence_diagnostics_path=Path(args.evidence_diagnostics) if args.evidence_diagnostics else None,
+        routing=routing,
     )
 
     # `genome_fasta` is passed ONLY when asked for: it is what makes
@@ -47,7 +59,8 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     write_detection_report(outcome, out_dir / "detection_report.yaml")
     print(
         f"detected {len(outcome.results)} candidate locus/loci "
-        f"({len(outcome.families_attempted)} families attempted) -> {out_dir}"
+        f"({len(outcome.families_attempted)} families attempted, "
+        f"routing={routing.routing_mode}) -> {out_dir}"
     )
     # Sub-floor families are reported, never silently dropped (spec section 3).
     for entry in outcome.not_detected:
@@ -118,6 +131,22 @@ def _cmd_audit_scope(args: argparse.Namespace) -> int:
     return 0
 
 
+def _phylum_choices() -> list[str] | None:
+    """The `--phylum` choices, read from the configured database root when the
+    parser is built -- never a hardcoded list, so a phylum added to `db/`
+    becomes selectable with no code change here.
+
+    Returns None (argparse: accept any string) rather than raising if the
+    database root cannot be read. `matpredict --help` and `matpredict --version`
+    must keep working in a directory with no database, and refusing to build
+    the parser at all would break every OTHER subcommand too.
+    """
+    try:
+        return available_phyla(MatpredictConfig.from_env(repo_root=Path.cwd()).db_root) or None
+    except OSError:
+        return None
+
+
 def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     """Register `detect` and its `benchmark` action onto the top-level parser.
 
@@ -137,6 +166,19 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     detect.add_argument("--min-hits", type=int, default=1)
     detect.add_argument("--min-identity", type=float, default=None)
     detect.add_argument("--require-core-role", action="store_true")
+    detect.add_argument(
+        "--phylum",
+        required=False,
+        choices=_phylum_choices(),
+        help=(
+            "Restrict detection to one phylum's curated families outright, skipping "
+            "taxid-based routing entirely. Use when the genome's phylum is known but "
+            "its taxid routes badly -- without it, a taxid no family's taxonomic_scope "
+            "covers falls back to searching every family in every phylum. The choices "
+            "are read from the database root at startup, so they always match what is "
+            "actually curated."
+        ),
+    )
     detect.add_argument(
         "--emit-cds-fasta",
         action="store_true",

@@ -481,3 +481,31 @@ def test_companion_fasta_is_wrapped_at_60_columns(tmp_path):
     assert len(sequence_lines) > 1, "sequence was not wrapped at all"
     # Wrapping must not alter the sequence itself.
     assert _ORF in "".join(sequence_lines)
+
+
+def test_write_detection_report_records_the_routing_decision(tmp_path):
+    """Task 1 item 4 / the plan's global constraint: every routing fallback
+    must be visible in the report, never silent. A reader must be able to
+    tell "these 2 families were searched because the taxid's phylum was
+    Ascomycota" apart from "these 2 were searched because their scope
+    actually matched"."""
+    out = tmp_path / "routed.yaml"
+    outcome = DetectionOutcome(
+        results=[],
+        not_detected=[],
+        families_attempted=[FamilyKey("Ascomycota", "MATsc"), FamilyKey("Ascomycota", "MATyl")],
+        routing_mode="phylum_fallback",
+    )
+    write_detection_report(outcome, out)
+    doc = yaml.safe_load(out.read_text())
+    assert doc["routing_mode"] == "phylum_fallback"
+    assert doc["families_attempted"] == ["Ascomycota:MATsc", "Ascomycota:MATyl"]
+
+
+def test_write_detection_report_routing_mode_defaults_to_null(tmp_path):
+    """An outcome built without routing information (a direct `run_pipeline`
+    call in a test, say) still writes the key, as an explicit null, rather
+    than omitting it and making a consumer guess."""
+    out = tmp_path / "unrouted.yaml"
+    write_detection_report(OUTCOME, out)
+    assert yaml.safe_load(out.read_text())["routing_mode"] is None

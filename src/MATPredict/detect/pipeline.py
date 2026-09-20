@@ -70,6 +70,7 @@ from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.family_registry import (
     Family,
     FamilyKey,
+    RoutingDecision,
     load_all_families,
     load_record_families,
     route,
@@ -196,6 +197,13 @@ class DetectionOutcome:
     results: list[DetectionResult]
     not_detected: list[NotDetectedFamily] = field(default_factory=list)
     families_attempted: list[FamilyKey] = field(default_factory=list)
+    # Which `family_registry.route` rule chose `families_attempted` (see
+    # `RoutingDecision`). Carried all the way into the detection report because
+    # it is what tells a reader whether this run's not-detected entries are
+    # evidence of absence or just the exhaustive fallback searching phyla the
+    # query could not belong to. None when the outcome was built without
+    # routing information (a direct `run_pipeline` call in a test).
+    routing_mode: str | None = None
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -881,8 +889,17 @@ def run_pipeline(
     polish_tolerance_bp: int = 10,
     evidence_floor: EvidenceFloor = EvidenceFloor(),
     evidence_diagnostics_path: Path | None = None,
+    routing: RoutingDecision | None = None,
 ) -> DetectionOutcome:
-    families = route(taxid, load_all_families(db_root))
+    # `routing` lets the caller route ONCE and reuse the decision, which the
+    # CLI must do: it has to know the routed families BEFORE this call, so it
+    # can restrict `build_reference_fasta`'s query set to them. Routing here as
+    # well would repeat the taxonomy lookup and, worse, could disagree with the
+    # reference FASTA the caller already built. When it is omitted the old
+    # self-routing behaviour is unchanged.
+    if routing is None:
+        routing = route(taxid, load_all_families(db_root))
+    families = routing.families
     record_families = load_record_families(db_root)
     protein_lengths = _curated_protein_lengths(db_root, families, record_families)
     short_orf_by_family = _short_orf_genes(
@@ -1217,4 +1234,5 @@ def run_pipeline(
         results=results,
         not_detected=not_detected,
         families_attempted=[f.key for f in families],
+        routing_mode=routing.routing_mode,
     )

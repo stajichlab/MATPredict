@@ -323,7 +323,15 @@ def _result_doc(r: DetectionResult) -> dict:
 
 
 def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
+    # `routing_mode` is written next to `families_attempted` because the two
+    # are only meaningful together: the list says WHICH families were searched,
+    # the mode says why -- and an `exhaustive` run's not-detected entries for
+    # out-of-phylum families are an artefact of the fallback, not a biological
+    # negative. Written unconditionally, as an explicit null when unknown, so a
+    # consumer never has to distinguish "no fallback happened" from "this writer
+    # predates the field". See `family_registry.RoutingDecision` for the values.
     doc = {
+        "routing_mode": outcome.routing_mode,
         "families_attempted": [_family_label(k) for k in outcome.families_attempted],
         "detected": [_result_doc(r) for r in outcome.results],
         "not_detected": [

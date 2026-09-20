@@ -17,7 +17,15 @@ feature's `/codon_start` and `/transl_table`, translate, and compare to that
 same feature's `/translation` qualifier. PASS means the file is internally
 consistent — its coordinates reproduce its own protein.
 
-`excess_codons` = (CDS nt / 3) − protein length. For a gene whose introns are
+The per-gene table's `cds_nt` column is measured **after** the `/codon_start`
+offset has been applied — that is, it is the length of the translated stretch,
+not the span of the feature's exons. For a feature with `/codon_start=1` the two
+are the same; for `/codon_start=2` or `3`, `cds_nt` is 1 or 2 nt shorter than
+the exon span. The `mod3` column is likewise computed on that post-offset
+length.
+
+`excess_codons` = (`cds_nt` / 3) − protein length, using that same post-offset
+`cds_nt`. For a gene whose introns are
 not modelled, this approximates the unmodelled intron burden in codons.
 
 ## Result

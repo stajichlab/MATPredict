@@ -9,18 +9,26 @@ SOURCE      .
 FEATURES             Location/Qualifiers
      gene            1..740
                      /gene="MAT1-2-1"
+                     /role="core_MAT"
+     CDS             join(1..255,312..383,453..512,562..740)
+                     /gene="MAT1-2-1"
+                     /role="core_MAT"
+                     /translation="TIIGTHFSIRNHPIYKLNDGSIFVVLDPATKDGFEFTDQSFVDPQ
+                     LEVSGENRFLRLVSNDQDFAYHGSSLSMIHDKGVKRPANVILFRTDKMKPLKAQYPEMG
+                     NNDISKILGRMWQNSSDEVKDVYKARAHQLAVSHKLINPDYKYSPRRSREIMRRDSGNK
+                     GPSPRIDLHCAGVAKRGKKRIVTHL"
 ORIGIN
-        1 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-       61 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      121 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      181 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      241 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      301 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      361 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      421 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      481 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      541 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      601 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      661 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      721 nnnnnnnnnn nnnnnnnnnn
+        1 ataccattat tgggactcac ttttctatcc gcaatcatcc catttataag cttaacgatg
+       61 gttctatctt tgtcgtcttg gacccggcca ccaaggacgg tttcgagttt accgatcaat
+      121 ctttcgtgga cccccagctt gaggtctccg gagaaaaccg tttcttgcgt ctcgtttcca
+      181 atgaccaaga cttcgcctac catggttcta gtcttagcat gattcatgac aagggcgtta
+      241 agcgccctgc caatgcgtat tgatacaatt ctaccaatgt accagtttcg tgtgctcatc
+      301 cagtcttagg ttcatcttat tcagaacgga caaaatgaag cccctcaagg ctcagtaccc
+      361 ggagatgggc aacaacgata tctgtacgtg gctctcattt cccccttatt tagatctcta
+      421 ttcttggtac catttgccta acgttttaat agccaagatt ctcggtcgca tgtggcagaa
+      481 ttcctcggat gaggtcaaag atgtttataa ggtaaaacat ctcacctgac tgttagttag
+      541 aatcactaac acattaatag gcaagggccc atcagcttgc ggtttcccat aagttgatca
+      601 acccggatta caaatactcc ccgcgccgct ctcgcgaaat catgaggagg gactccggga
+      661 ataaaggtcc ttcgccccgt atcgaccttc actgtgctgg tgttgcgaag cgtggaaaaa
+      721 agaggatcgt tacccacctt
 //

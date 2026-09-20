@@ -9,15 +9,23 @@ SOURCE      .
 FEATURES             Location/Qualifiers
      gene            1..543
                      /gene="MAT1-1-1"
+                     /role="core_MAT"
+     CDS             1..543
+                     /gene="MAT1-1-1"
+                     /role="core_MAT"
+                     /translation="NGDEALARIPPSQHLRALNPYVAQRAWISKYCNGYGLTQAEISNL
+                     TRDVWVAETNKYMWQNIASLYTAARDRGDPGLVLEEFIETELAKHGHPTTPEKLLREAG
+                     FVPKAPIDKEAADKAAARRKARAKPASAVSRFTITRVYVSSNHQLDLTEEEAANILNAF
+                     D"
 ORIGIN
-        1 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-       61 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      121 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      181 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      241 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      301 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      361 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      421 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      481 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      541 nnn
+        1 aatggtgatg aggccttggc ccgcatcccc ccctctcagc accttcgtgc attgaatccc
+       61 tacgttgcgc agagatgtaa gtaaatcaca tccctatttt gcctctattt ctaaccatct
+      121 attagcctgg atttctaagt actgtaacgg ttatgggctc actcaagccg aaatttccaa
+      181 tctcactcgt gatgtctggg tcgctgagac caataagtat atgtggcaaa acattgcctc
+      241 tctttatact gctgctaggg atcgtggtga ccctggtctc gtgctcgaag aatttatcga
+      301 gaccgaattg gcgaaacacg gtcaccctac tacccctgag aagctcttgc gtgaagctgg
+      361 ctttgtcccc aaggccccca tcgacaagga agcggccgat aaggctgctg caagaaggaa
+      421 ggctcgtgcc aagcccgcat ccgcggtgtc cagattcacc atcacccgtg tttacgtttc
+      481 cagcaaccat cagctcgatc tcaccgagga ggaagccgcc aacatcctca atgctttcga
+      541 cat
 //

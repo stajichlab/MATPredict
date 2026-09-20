@@ -9,24 +9,38 @@ SOURCE      .
 FEATURES             Location/Qualifiers
      gene            complement(1..357)
                      /gene="matPc"
+                     /role="core_MAT"
+     CDS             complement(1..357)
+                     /gene="matPc"
+                     /role="core_MAT"
+                     /translation="MDPRLRAPIFLPILTPETLQKKKQIKGNKTTIYKNGFMLFRSRLH
+                     KILNLSGDWAGASAKCSIIWHTLPQNVRLAWSQLAELSHYQDVRRQIAKLERILYSKRL
+                     NGHNNYKLHISRVQ"
      gene            536..1015
                      /gene="matPi"
+                     /role="core_MAT"
+     CDS             536..1015
+                     /gene="matPi"
+                     /role="core_MAT"
+                     /translation="MKRVAVLLKTVMCEFLKCDYNGYDRIISLLRRILTLICTPNLNGL
+                     TIKRVIDSMQSLEYIKQTCNFKLQMCISSMAFKRNNALQNCNHYAWCDDHCSDIGRPMT
+                     TVRGQCSKCTKPHLMRWLLLHYDNPYPSNSEFYDLSAATGLTRTQLRNWFSNRRR"
 ORIGIN
-        1 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-       61 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      121 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      181 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      241 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      301 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      361 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      421 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      481 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      541 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      601 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      661 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      721 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      781 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      841 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      901 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn
-      961 nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnnnnnnn nnnnn
+        1 ttactgaacc ctgcttatat gtagtttata attgttgtgt ccatttaatc tttttgaata
+       61 tagtatgcgc tctaacttgg caatttgtct cctaacgtcc tgataatgac tgagttcagc
+      121 taattgtgac caggcaagtc taacattttg tggtaatgta tgccaaatta ttgagcattt
+      181 ggctgaagca cctgcccaat ctcctgatag attcaaaatt ttgtgtagcc tacttctaaa
+      241 tagcatgaat ccatttttgt agattgtggt tttgtttcct ttaatttgtt tcttcttttg
+      301 taaagtttct ggagtcaaaa ttggcaagaa aataggtgct cttaatcttg gatccatttt
+      361 attattgtgc gtattatggc ttggtgtatt tggaggagtg caactctgct actgctgtgg
+      421 gcgttttata tcactaatgc tttgttccct ctttctttgt tccttatgcg actttatata
+      481 ctctatggtt agtaacacca atacaatttc tgagttttat tttaagcaat tcattatgaa
+      541 acgagtagct gttttattaa agactgtaat gtgtgaattt ctcaaatgtg attacaatgg
+      601 atacgataga atcatttctc ttttgcggcg tattcttact ctaatttgta ctccaaactt
+      661 aaatgggttg actattaaac gagtaattga ttctatgcag tctttggaat acattaaaca
+      721 aacatgtaat ttcaaacttc aaatgtgcat ttccagtatg gcttttaaaa gaaacaatgc
+      781 tttacagaat tgtaatcact atgcttggtg tgatgatcat tgttcagata ttggaagacc
+      841 gatgactacc gtacgcggtc agtgttccaa gtgcactaaa ccccacttga tgcgttggct
+      901 tttgttgcac tatgacaatc catatccctc taactctgag ttttacgacc tgtcagcggc
+      961 tactggatta acgcgtactc aattacgtaa ctggttttct aaccgacgac gttga
 //

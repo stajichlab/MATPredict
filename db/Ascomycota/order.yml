@@ -20,17 +20,42 @@ loci:
       # gene_class alpha_box/HMG_box mark the two conserved MAT-identity domain classes
       # shared across Pezizomycotina (Debuchy & Turgeon 2006; Turgeon & Yoder 2000):
       # MAT1-1-1 is the alpha-box (alpha-domain) protein, MAT1-2-1 the HMG-box protein.
-      # MAT1-1-2/-3, MAT1-1-5 and MAT1-2-10 are idiomorph-specific accessory genes with
-      # no single conserved cross-family domain class documented in this DB's own
-      # records -- left unclassified rather than guessed.
+      # MAT1-1-5 and MAT1-2-10 are idiomorph-specific accessory genes with no single
+      # conserved cross-family domain class documented in this DB's own records --
+      # left unclassified rather than guessed.
+      #
+      # MAT1-1-2 -> matA-2 and MAT1-1-3 -> matA-3 were assigned by the project's
+      # curator, J. Stajich, on 2026-09-19, with citations the curator supplied and
+      # this project verified against PubMed:
+      #   * Klix et al. 2010, Eukaryot Cell 9(6):894-905, doi:10.1128/EC.00019-10
+      #     (PMID 20435701). Sordaria macrospora SmtA-1/-2/-3 = MAT1-1-1/-2/-3. Its
+      #     abstract calls SmtA-2 "the PPF domain protein-encoding gene", which is the
+      #     documented functional identity behind the matA-2 class. It also calls
+      #     SmtA-1 and SmtA-3 "the alpha domain protein-encoding genes"; the curator
+      #     did not adopt alpha_box for MAT1-1-3, judging the call not settled.
+      #   * Doughan & Rollins 2016, Fungal Biol 120(9):1105-17,
+      #     doi:10.1016/j.funbio.2016.06.007 (PMID 27567717), which names MAT1-1-5 and
+      #     MAT1-2-4 as lineage-specific to S. sclerotiorum and close relatives.
+      # The classes are named after the Aspergillus-style matA-N gene names rather than
+      # a domain: the curator judged "PPF_domain" unclear, and SmtA-N too Sordaria-
+      # specific ("Sm") to name a cross-family class. Hyphens are deliberate and match
+      # the literal gene spelling.
+      # matA-2/matA-3 (Eurotiomycetes) carry the SAME classes because this DB's own
+      # records document the equivalence in their definition_notes -- "matA-2 =
+      # MAT1-1-2, matA-3 = MAT1-1-3" -- exactly as matA-1 already shares alpha_box with
+      # MAT1-1-1. Classifying one member of a documented equivalence and not the other
+      # would split the group in every figure that colours by gene_class.
+      # Names remain provisional under the NAMES PROVISIONAL note in order.schema.yaml.
       - {name: MAT1-1-1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: MAT1-1-2, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: MAT1-1-3, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: MAT1-1-2, role: core_MAT, gene_class: matA-2, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: MAT1-1-3, role: core_MAT, gene_class: matA-3, present_in_idiomorphs: ["MAT1-1"]}
       # MAT1-1-5 and MAT1-2-10 are the two Leotiomycete-characteristic MAT genes. Both are
       # real, named genes on primary GenBank records for this class (e.g. MAT1-1-5 on
       # JQ815883/KU726096/KU726097/KF944385; MAT1-2-10 is deposited under its older name
       # MAT1-2-4 on those same records, renamed per Wilken et al. 2017 Fungal Biol Rev).
       # Declared here so detect.search._attribute does not silently drop hits to them.
+      # MAT1-1-5 and MAT1-2-4 are lineage-specific, not universal (curator, 2026-09-19;
+      # Doughan & Rollins 2016, doi:10.1016/j.funbio.2016.06.007).
       - {name: MAT1-1-5, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
       - {name: MAT1-2-1, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["MAT1-2"]}
       - {name: MAT1-2-10, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
@@ -53,6 +78,8 @@ loci:
       # Leotiomycetes' MAT1-2-4, which was renamed MAT1-2-10 above precisely to avoid
       # this collision (Wilken et al. 2017). This entry is Eurotiomycetes-only; do not
       # conflate the two literal names sharing this spelling.
+      # MAT1-2-4 is Sclerotinia/Leotiomycete-specific (curator, 2026-09-19;
+      # doi:10.1016/j.funbio.2016.06.007, PMID 27567717).
       - {name: MAT1-2-4, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
       # MAT1-1-4 (Coccidioides posadasii RMSCC1040, ABS19621.1) is a Coccidioides-
       # specific captured MAT1-1-idiomorph gene (Fraser et al. 2007; Mandel et al. 2007).
@@ -73,8 +100,8 @@ loci:
       # definition_note: matA-1 = MAT1-1-1, matA-2 = MAT1-1-2, matA-3 = MAT1-1-3,
       # "mt a-1" = MAT1-2-1.
       - {name: matA-1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: matA-2, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: matA-3, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: matA-2, role: core_MAT, gene_class: matA-2, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: matA-3, role: core_MAT, gene_class: matA-3, present_in_idiomorphs: ["MAT1-1"]}
       - {name: "mt a-1", role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["MAT1-2"]}
   - locus_name: "PM"
     vocabulary_type: "enum"

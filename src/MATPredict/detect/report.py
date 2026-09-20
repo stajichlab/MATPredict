@@ -16,11 +16,19 @@ from pathlib import Path
 
 import yaml
 from Bio import SeqIO
+from Bio.Seq import Seq
 
-from MATPredict.detect.benchmark import _extract_translated_gene, _open_fasta_text
+from MATPredict.detect.benchmark import (
+    _open_fasta_text,
+    translate_gene_from_contig_sequence,
+)
 from MATPredict.detect.pipeline import DetectionOutcome, DetectionResult
 
 logger = logging.getLogger(__name__)
+
+# Standard FASTA sequence-line width, matching what the rest of this project
+# writes (see `db/gff_export.py`).
+_FASTA_LINE_WIDTH = 60
 
 
 def _family_label(key) -> str:
@@ -48,20 +56,32 @@ def write_detection_gff3(
       contig referenced anywhere in this outcome gets one FASTA record
       holding its REAL, full sequence sliced directly out of `genome_fasta`
       -- never a placeholder -- so the GFF3's own absolute contig
-      coordinates line up against it exactly as written. A contig the GFF3
-      references but `genome_fasta` doesn't contain (e.g. a report/genome
-      contig-name mismatch) is logged and simply omitted from the companion
-      FASTA -- never fabricated.
+      coordinates line up against it exactly as written, wrapped at the
+      standard 60 columns. A contig the GFF3 references but `genome_fasta`
+      doesn't contain (e.g. a report/genome contig-name mismatch) is logged
+      and simply omitted from the companion FASTA -- never fabricated.
     * Each gene feature gains a sibling `CDS` feature (same coordinates,
       `Parent` pointing at the `gene` feature's own ID) carrying a
       `translation=` attribute, re-derived via `benchmark.py`'s
-      `_extract_translated_gene` -- reused directly rather than
-      re-implemented here, since it already fetches from a real genome
-      FASTA and splices `GeneEvidence.exons` (when present) via
-      `_splice_transcript` with the minus-strand exon-order handling
-      already tested there. A gene whose sequence can't be extracted (same
-      contig-mismatch case, or any other extraction failure) simply gets no
-      `CDS` feature -- logged, never crashing the rest of the write.
+      `translate_gene_from_contig_sequence` -- reused directly rather than
+      re-implemented here, since it splices `GeneEvidence.exons` (when
+      present) via `_splice_transcript` with the minus-strand exon-order
+      handling already tested there. A gene whose sequence can't be
+      extracted (same contig-mismatch case, or any other extraction
+      failure) simply gets no `CDS` feature -- logged, never crashing the
+      rest of the write.
+
+    When `genome_fasta` is given it is opened and parsed EXACTLY ONCE, up
+    front, into an in-memory `{contig: Seq}` map covering every contig this
+    outcome references (locus/segment contigs plus every gene-evidence
+    contig); both additions above read from that map. The earlier shape
+    called `benchmark._extract_translated_gene(genome_fasta, ...)` per gene
+    -- each call re-opening and re-parsing the WHOLE genome -- and then
+    parsed the genome once more for the companion FASTA, i.e. N+1 full
+    parses of a tens-of-MB file for one locus. A genome FASTA that cannot be
+    opened at all is logged once and yields neither CDS features nor a
+    companion FASTA, instead of raising out of the gene loop and losing the
+    GFF3 entirely.
 
     Genes the family expects but which were not found are emitted with
     `present=false` at the locus region's own coordinates (they have no
@@ -102,6 +122,40 @@ def write_detection_gff3(
                 contig_extent[contig] = (min(prev_start, start), max(prev_end, end))
             else:
                 contig_extent[contig] = (start, end)
+
+    contig_sequences: dict[str, Seq] = {}
+    if genome_fasta is not None:
+        # Read the genome ONCE, here, before any line is built. Both the CDS
+        # features and the companion FASTA need real contig sequence, and
+        # every one of them comes from this same small set of contigs, so a
+        # single pass serves all of them. The previous shape called
+        # `_extract_translated_gene(genome_fasta, ...)` inside the per-gene
+        # loop -- a full open+parse of the whole genome per gene -- and then
+        # opened it once more for the companion FASTA; on a real fungal
+        # genome that is tens of MB re-read per gene for no benefit.
+        # Gene-evidence contigs are unioned in with the locus-region contigs
+        # because a gene's own contig is not guaranteed to appear in
+        # `contig_extent` (which is built from locus/segment coordinates), and
+        # dropping it here would silently lose that gene's CDS feature.
+        wanted = set(contig_extent)
+        for r in outcome.results:
+            for evidence in r.gene_evidence:
+                wanted.add(evidence.contig)
+        try:
+            with _open_fasta_text(genome_fasta) as handle:
+                for record in SeqIO.parse(handle, "fasta"):
+                    if record.id in wanted:
+                        # The Biopython `Seq` is kept, not `str(record.seq)`:
+                        # minus-strand extraction needs `reverse_complement()`,
+                        # and converting per gene would copy a whole contig
+                        # each time.
+                        contig_sequences[record.id] = record.seq
+        except OSError:
+            logger.warning(
+                "write_detection_gff3: could not open genome FASTA %s -- writing the "
+                "GFF3 without CDS features and without a companion FASTA", genome_fasta,
+            )
+            contig_sequences = {}
 
     lines = ["##gff-version 3"]
     for contig, (start, end) in contig_extent.items():
@@ -162,10 +216,13 @@ def write_detection_gff3(
 
             if genome_fasta is not None:
                 exons = list(evidence.exons) if evidence.exons else None
-                protein = _extract_translated_gene(
-                    genome_fasta, evidence.contig, evidence.start, evidence.end,
-                    evidence.strand, exons,
-                )
+                contig_sequence = contig_sequences.get(evidence.contig)
+                protein = None
+                if contig_sequence is not None:
+                    protein = translate_gene_from_contig_sequence(
+                        contig_sequence, evidence.start, evidence.end,
+                        evidence.strand, exons,
+                    )
                 if protein:
                     cds_attrs = f"ID={locus_id}.cds{gene_index};Parent={gene_id};translation={protein}"
                     lines.append("\t".join([
@@ -199,19 +256,6 @@ def write_detection_gff3(
 
     if genome_fasta is not None:
         needed_contigs = set(contig_extent)
-        contig_sequences: dict[str, str] = {}
-        try:
-            with _open_fasta_text(genome_fasta) as handle:
-                for record in SeqIO.parse(handle, "fasta"):
-                    if record.id in needed_contigs:
-                        contig_sequences[record.id] = str(record.seq)
-        except OSError:
-            logger.warning(
-                "write_detection_gff3: could not open genome FASTA %s for the companion "
-                "FASTA -- no companion sequence written", genome_fasta,
-            )
-            contig_sequences = {}
-
         missing_contigs = needed_contigs - contig_sequences.keys()
         for contig in sorted(missing_contigs):
             logger.warning(
@@ -220,14 +264,17 @@ def write_detection_gff3(
                 contig, genome_fasta,
             )
 
-        if contig_sequences:
+        present = [c for c in contig_extent if c in contig_sequences]
+        if present:
             fasta_lines = []
-            for contig in contig_extent:
-                seq = contig_sequences.get(contig)
-                if seq is None:
-                    continue
+            for contig in present:
                 fasta_lines.append(f">{contig}")
-                fasta_lines.append(seq)
+                sequence = str(contig_sequences[contig])
+                # Standard 60-column FASTA wrapping. A real fungal contig is
+                # megabases long; one unwrapped line makes the file unusable
+                # in a pager and is mishandled by some downstream parsers.
+                for offset in range(0, len(sequence), _FASTA_LINE_WIDTH):
+                    fasta_lines.append(sequence[offset:offset + _FASTA_LINE_WIDTH])
             out_path.with_suffix(".fasta").write_text("\n".join(fasta_lines) + "\n")
 
 

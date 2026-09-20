@@ -416,16 +416,48 @@ def _extract_translated_gene(
         for record in SeqIO.parse(handle, "fasta"):
             if record.id != contig:
                 continue
-            if exons:
-                transcript = _splice_transcript(record.seq, exons, strand)
-            else:
-                span = record.seq[start - 1:end]
-                if strand == "-":
-                    span = span.reverse_complement()
-                transcript = str(span)
-            usable_length = len(transcript) - (len(transcript) % 3)
-            return _translate_span(transcript[:usable_length])
+            return translate_gene_from_contig_sequence(
+                record.seq, start, end, strand, exons,
+            )
     return None
+
+
+def translate_gene_from_contig_sequence(
+    contig_sequence,
+    start: int,
+    end: int,
+    strand: str | None,
+    exons: list[tuple[int, int]] | None = None,
+) -> str:
+    """Splice (when `exons` is given) and translate one gene out of a contig
+    sequence ALREADY held in memory.
+
+    This is the whole body of `_extract_translated_gene` minus the file open
+    and the contig scan, split out so a caller that has already parsed the
+    genome once -- `report.write_detection_gff3`, which must read the same
+    contigs anyway to write its companion FASTA -- can translate every gene
+    without re-opening and re-parsing the entire genome FASTA per gene. It is
+    a pure extraction with no behaviour change: `_extract_translated_gene`
+    now calls it, so both callers share one implementation and the
+    minus-strand exon-ordering rules in `_splice_transcript`, rather than the
+    second caller copying the logic. All the semantics documented on
+    `_extract_translated_gene` (1-based fully-closed coordinates, exon
+    splicing vs naive single-span fallback, trailing 1-2nt trim, assumed
+    `codon_start=1`) apply here unchanged.
+
+    `contig_sequence` must be a Biopython `Seq` (or anything supporting
+    `reverse_complement()` and slicing), not a plain `str`: reverse-
+    complementing a minus-strand gene needs it.
+    """
+    if exons:
+        transcript = _splice_transcript(contig_sequence, exons, strand)
+    else:
+        span = contig_sequence[start - 1:end]
+        if strand == "-":
+            span = span.reverse_complement()
+        transcript = str(span)
+    usable_length = len(transcript) - (len(transcript) % 3)
+    return _translate_span(transcript[:usable_length])
 
 
 def _gene_evidence_by_name(result_doc: dict) -> dict[str, dict]:

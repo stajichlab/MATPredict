@@ -164,6 +164,8 @@ def run_batch(
     out_dir: Path,
     run_pipeline: Callable = _default_run_pipeline,
     failures: list[GenomeRunFailure] | None = None,
+    *,
+    emit_cds_fasta: bool = False,
 ) -> None:
     """Run the detection pipeline for every genome in one batch.
 
@@ -175,6 +177,16 @@ def run_batch(
     (not `.get()`) so a missing/unset `$SCRATCH` fails loudly and immediately,
     per this project's global HPCC rule, rather than silently falling back to a
     hardcoded or relative path.
+
+    `emit_cds_fasta` (keyword-only, default False so every existing caller's
+    output is unchanged) forwards the ALREADY-DECOMPRESSED scratch copy to
+    `write_detection_gff3` as its `genome_fasta`, which makes it additionally
+    emit CDS features with `translation=` attributes and a companion
+    `detected_loci.fasta`. The decompressed copy is reused deliberately: it
+    exists on scratch for the duration of this genome's run anyway, so
+    nothing is re-decompressed or refetched, and the `.gz` source is not what
+    `run_pipeline` itself was given. The companion FASTA holds full contig
+    sequences and is therefore large, which is why this is opt-in.
 
     Each genome's report is written under `out_dir/<taxid>_<accession>/`
     (`detected_loci.gff3`, `detection_report.yaml`); `accession` values seen in
@@ -223,7 +235,15 @@ def run_batch(
                 reference_fasta=reference_fasta,
                 evidence_diagnostics_path=genome_out_dir / "evidence_diagnostics.jsonl",
             )
-            write_detection_gff3(outcome, genome_out_dir / "detected_loci.gff3")
+            # The genome is already decompressed on local scratch for
+            # `run_pipeline`, so the CDS/companion-FASTA path costs one more
+            # read of a file that is already there -- no second decompression
+            # and no refetch. This stays inside the per-genome try/except so a
+            # failure here is handled like any other single-genome failure.
+            gff3_kwargs = {"genome_fasta": decompressed_path} if emit_cds_fasta else {}
+            write_detection_gff3(
+                outcome, genome_out_dir / "detected_loci.gff3", **gff3_kwargs,
+            )
             write_detection_report(outcome, genome_out_dir / "detection_report.yaml")
         except Exception as exc:  # noqa: BLE001 - one bad genome must not sink the batch
             logger.warning("detection failed for %s: %s", tag, exc)

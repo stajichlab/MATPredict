@@ -253,3 +253,63 @@ def test_run_batch_sanitizes_accession_with_dots(tmp_path, monkeypatch):
     run_batch([genome], tmp_path / "db", tmp_path / "reference.faa", out_dir, run_pipeline=fake_run_pipeline)
 
     assert (out_dir / "5334_GCA_004115165.2" / "detected_loci.gff3").exists()
+
+
+def _run_batch_recording_gff3(tmp_path, monkeypatch, **run_batch_kwargs):
+    """Run a one-genome batch with `write_detection_gff3` replaced by a
+    recorder, and return the keyword arguments it received."""
+    import MATPredict.detect.batch_runner as batch_runner
+
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    monkeypatch.setenv("SCRATCH", str(scratch))
+
+    genome_path = tmp_path / "genome.fa.gz"
+    _write_gz_fasta(genome_path)
+    genome = _genome(7, "GCA_000000007.1", genome_path)
+
+    recorded: list[dict] = []
+
+    def fake_write_gff3(outcome, out_path, **kwargs):
+        recorded.append(kwargs)
+
+    monkeypatch.setattr(batch_runner, "write_detection_gff3", fake_write_gff3)
+
+    run_batch(
+        [genome], tmp_path / "db", tmp_path / "reference.faa", tmp_path / "out",
+        run_pipeline=lambda **kwargs: DetectionOutcome(results=[]),
+        **run_batch_kwargs,
+    )
+    return recorded, scratch
+
+
+def test_run_batch_omits_genome_fasta_by_default(tmp_path, monkeypatch):
+    """`emit_cds_fasta` defaults False so every existing rollout caller keeps
+    producing byte-identical output and pays no extra genome parse."""
+    recorded, _ = _run_batch_recording_gff3(tmp_path, monkeypatch)
+    assert recorded == [{}]
+
+
+def test_run_batch_passes_decompressed_genome_when_emit_cds_fasta(tmp_path, monkeypatch):
+    """When asked for CDS output, `run_batch` must reuse the copy it already
+    decompressed into `$SCRATCH` for `run_pipeline` -- re-decompressing or
+    re-fetching the genome to get a second readable copy would double the
+    I/O for no benefit, and the `.gz` source is not what `run_pipeline`
+    itself was handed."""
+    recorded, scratch = _run_batch_recording_gff3(
+        tmp_path, monkeypatch, emit_cds_fasta=True,
+    )
+    assert list(recorded[0]) == ["genome_fasta"]
+    passed = recorded[0]["genome_fasta"]
+    assert str(passed).startswith(str(scratch))
+    assert not str(passed).endswith(".gz")
+
+
+def test_run_batch_emit_cds_fasta_is_keyword_only(tmp_path, monkeypatch):
+    """Positional passing must not be possible: `run_batch`'s existing
+    positional arguments are load-bearing at several call sites, and a new
+    positional flag could silently bind to the wrong one."""
+    import inspect
+    parameter = inspect.signature(run_batch).parameters["emit_cds_fasta"]
+    assert parameter.kind is inspect.Parameter.KEYWORD_ONLY
+    assert parameter.default is False

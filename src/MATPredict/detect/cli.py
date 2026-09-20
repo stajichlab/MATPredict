@@ -38,7 +38,12 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         evidence_diagnostics_path=Path(args.evidence_diagnostics) if args.evidence_diagnostics else None,
     )
 
-    write_detection_gff3(outcome, out_dir / "detected_loci.gff3")
+    # `genome_fasta` is passed ONLY when asked for: it is what makes
+    # `write_detection_gff3` additionally emit CDS features with
+    # `translation=` attributes and a companion FASTA, and the companion
+    # FASTA holds every referenced contig's FULL sequence, which is large.
+    gff3_kwargs = {"genome_fasta": Path(args.genome)} if args.emit_cds_fasta else {}
+    write_detection_gff3(outcome, out_dir / "detected_loci.gff3", **gff3_kwargs)
     write_detection_report(outcome, out_dir / "detection_report.yaml")
     print(
         f"detected {len(outcome.results)} candidate locus/loci "
@@ -132,6 +137,17 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     detect.add_argument("--min-hits", type=int, default=1)
     detect.add_argument("--min-identity", type=float, default=None)
     detect.add_argument("--require-core-role", action="store_true")
+    detect.add_argument(
+        "--emit-cds-fasta",
+        action="store_true",
+        help=(
+            "Also emit real CDS features with translation= attributes in the GFF3, and "
+            "write a companion detected_loci.fasta next to it. The companion FASTA "
+            "contains the FULL sequence of every contig the detection results "
+            "reference, not just the locus spans, so it can be large (a whole "
+            "chromosome-scale contig per referenced contig). Off by default."
+        ),
+    )
     detect.set_defaults(func=_cmd_detect)
 
     action = detect.add_subparsers(dest="detect_action")

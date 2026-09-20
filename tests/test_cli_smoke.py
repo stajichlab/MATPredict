@@ -340,3 +340,72 @@ def test_backfill_gff_stale_gbk_flag_defaults_to_false():
     parser = build_parser()
     args = parser.parse_args(["curate-db", "backfill-gff"])
     assert args.stale_gbk is False
+
+
+def test_detect_emit_cds_fasta_flag_defaults_to_false():
+    from MATPredict.__main__ import build_parser
+    parser = build_parser()
+    args = parser.parse_args(["detect", "--genome", "g.fa", "--out-dir", "/tmp/x"])
+    assert args.emit_cds_fasta is False
+
+
+def test_detect_emit_cds_fasta_flag_parses_when_given():
+    from MATPredict.__main__ import build_parser
+    parser = build_parser()
+    args = parser.parse_args([
+        "detect", "--genome", "g.fa", "--out-dir", "/tmp/x", "--emit-cds-fasta",
+    ])
+    assert args.emit_cds_fasta is True
+
+
+def _stub_detect_cli(monkeypatch, tmp_path, recorded):
+    """Replace `_cmd_detect`'s heavy collaborators so the test observes only
+    what it is about: which arguments reach `write_detection_gff3`."""
+    import MATPredict.detect.cli as detect_cli
+    from MATPredict.detect.pipeline import DetectionOutcome
+
+    monkeypatch.setattr(
+        detect_cli, "MatpredictConfig",
+        SimpleNamespace(from_env=lambda repo_root: SimpleNamespace(db_root=tmp_path / "db")),
+    )
+    monkeypatch.setattr(detect_cli, "build_reference_fasta", lambda db_root, out: out)
+    monkeypatch.setattr(detect_cli, "run_pipeline", lambda **kwargs: DetectionOutcome(results=[]))
+    monkeypatch.setattr(detect_cli, "write_detection_report", lambda outcome, path: None)
+
+    def fake_write_gff3(outcome, out_path, **kwargs):
+        recorded.append(kwargs)
+
+    monkeypatch.setattr(detect_cli, "write_detection_gff3", fake_write_gff3)
+    return detect_cli
+
+
+def test_cmd_detect_passes_genome_fasta_when_emit_cds_fasta_is_set(monkeypatch, tmp_path):
+    """The `--emit-cds-fasta` flag is the only thing that makes
+    `write_detection_gff3`'s CDS/companion-FASTA path reachable from a real
+    run; before it existed no production call site ever passed
+    `genome_fasta`, so that output had never actually been produced."""
+    recorded: list[dict] = []
+    detect_cli = _stub_detect_cli(monkeypatch, tmp_path, recorded)
+    args = SimpleNamespace(
+        genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
+        evidence_diagnostics=None, min_hits=1, min_identity=None,
+        require_core_role=False, emit_cds_fasta=True,
+    )
+
+    assert detect_cli._cmd_detect(args) == 0
+    assert recorded == [{"genome_fasta": Path("g.fa")}]
+
+
+def test_cmd_detect_omits_genome_fasta_by_default(monkeypatch, tmp_path):
+    """Without the flag, the call must be exactly as it was before this
+    change -- no companion FASTA, no CDS features, no extra genome parse."""
+    recorded: list[dict] = []
+    detect_cli = _stub_detect_cli(monkeypatch, tmp_path, recorded)
+    args = SimpleNamespace(
+        genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
+        evidence_diagnostics=None, min_hits=1, min_identity=None,
+        require_core_role=False, emit_cds_fasta=False,
+    )
+
+    assert detect_cli._cmd_detect(args) == 0
+    assert recorded == [{}]

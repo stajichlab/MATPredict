@@ -73,15 +73,25 @@ def score_cluster(
         if family_searchable is None:
             searchable, not_searchable = expected, []
         else:
-            searchable = [g for g in expected if g in family_searchable]
-            not_searchable = [g for g in expected if g not in family_searchable]
+            # A gene that was FOUND is searchable by definition, whatever the
+            # map says. `searchable_genes` is an inference about what the run
+            # could have found and it can be wrong in the permissive
+            # direction: the short-ORF exclusion drops genes whose only
+            # reference protein is too short to localize reliably, yet the
+            # windowed polish rescue finds exactly such genes -- that rescue
+            # is the reason this pipeline exists. Trusting the map over the
+            # evidence would delete a real detection from `genes_found`.
+            searchable = [g for g in expected if g in family_searchable or g in found]
+            not_searchable = [
+                g for g in expected if g not in family_searchable and g not in found
+            ]
         genes_found = [g for g in searchable if g in found]
         genes_missing = [g for g in searchable if g not in found]
         scores.append(FamilyScore(
             family_key=family.key,
             # `searchable` cannot be empty here: this family has at least one
-            # hit (`found` is non-empty), and a gene cannot be hit unless a
-            # reference protein for it was in the searched set.
+            # hit, and every found gene is kept searchable above regardless of
+            # what the map claims.
             fraction_found=len(genes_found) / len(searchable),
             genes_found=genes_found,
             genes_missing=genes_missing,

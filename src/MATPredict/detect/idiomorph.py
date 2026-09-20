@@ -110,6 +110,55 @@ def _overlap_fraction(a: SearchHit, b: SearchHit) -> float:
     return shared / shorter
 
 
+def _mutually_exclusive_pairs(
+    family: Family, hits: list[SearchHit]
+) -> list[tuple[str, str]]:
+    """Unordered pairs of gene names present in `hits` that exclude each other."""
+    names = sorted({h.gene_name for h in hits})
+    return [
+        (a, b)
+        for i, a in enumerate(names)
+        for b in names[i + 1:]
+        if _mutually_exclusive(family, a, b)
+    ]
+
+
+def _overlap_groups(
+    a_hits: list[SearchHit], b_hits: list[SearchHit], min_overlap_fraction: float
+) -> list[tuple[list[SearchHit], list[SearchHit]]]:
+    """Partition two gene names' hits into groups that describe one real gene.
+
+    Two hits belong together when they overlap by at least
+    `min_overlap_fraction`; grouping is transitive, so a chain of overlapping
+    hits forms one group. Groups matter because gene duplication and
+    multi-allele co-occurrence are normal at MAT loci: two independent copies
+    of the same locus must be resolved separately, not pooled into a single
+    comparison that would let a strong hit at one locus decide the call at
+    the other. A group with no member from BOTH names has nothing to resolve
+    and is dropped.
+    """
+    #: Union-find over the combined hit list, keyed by position.
+    combined = a_hits + b_hits
+    parent = list(range(len(combined)))
+
+    def find(i: int) -> int:
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    for i in range(len(combined)):
+        for j in range(i + 1, len(combined)):
+            if _overlap_fraction(combined[i], combined[j]) >= min_overlap_fraction:
+                parent[find(i)] = find(j)
+
+    groups: dict[int, tuple[list[SearchHit], list[SearchHit]]] = {}
+    for index, hit in enumerate(combined):
+        group = groups.setdefault(find(index), ([], []))
+        group[0 if index < len(a_hits) else 1].append(hit)
+    return [(ga, gb) for ga, gb in groups.values() if ga and gb]
+
+
 def resolve_idiomorph_overlaps(
     hits: list[SearchHit],
     family: Family,
@@ -133,24 +182,35 @@ def resolve_idiomorph_overlaps(
     """
     superseded: dict[int, str] = {}
     events: list[IdiomorphResolution] = []
-    for i, a in enumerate(hits):
-        for b in hits[i + 1:]:
-            if not _mutually_exclusive(family, a.gene_name, b.gene_name):
-                continue
-            if a.identity == b.identity:
-                continue
-            fraction = _overlap_fraction(a, b)
-            if fraction < min_overlap_fraction:
-                continue
-            winner, loser = (a, b) if a.identity > b.identity else (b, a)
-            superseded[id(loser)] = winner.gene_name
+    for gene_a, gene_b in _mutually_exclusive_pairs(family, hits):
+        a_hits = [h for h in hits if h.gene_name == gene_a]
+        b_hits = [h for h in hits if h.gene_name == gene_b]
+        for group_a, group_b in _overlap_groups(a_hits, b_hits, min_overlap_fraction):
+            # Best against best, ONE verdict per real gene. A curated family
+            # routinely contributes several reference proteins per gene name
+            # (the Mucoromycota database holds 3 sexP and 3 sexM), so one
+            # locus gene draws a fistful of hits under each name. Comparing
+            # every hit of one name against every hit of the other yields
+            # contradictory verdicts -- on the real Absidia cuneospora locus,
+            # 9 of them, one with sexM beating sexP -- and a margin taken from
+            # the closest accidental pairing rather than from the actual call.
+            best_a = max(group_a, key=lambda h: h.identity)
+            best_b = max(group_b, key=lambda h: h.identity)
+            if best_a.identity == best_b.identity:
+                continue  # nothing to choose between them; leave undetermined
+            winner, loser = (
+                (best_a, best_b) if best_a.identity > best_b.identity else (best_b, best_a)
+            )
+            losing_group = group_b if winner is best_a else group_a
+            for hit in losing_group:
+                superseded[id(hit)] = winner.gene_name
             events.append(IdiomorphResolution(
                 contig=winner.contig,
                 winner=winner.gene_name,
                 loser=loser.gene_name,
                 winner_identity=winner.identity,
                 loser_identity=loser.identity,
-                overlap_fraction=fraction,
+                overlap_fraction=_overlap_fraction(winner, loser),
                 winner_coverage=winner.coverage,
                 loser_coverage=loser.coverage,
             ))

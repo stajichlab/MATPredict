@@ -20,11 +20,41 @@ loci:
     # phylum's loci in that same run. Treat a change here as a change to every
     # multi-phylum run's clustering, not a Mucoromycota-only edit.
     max_cluster_gap_bp: 50000
+    # CURATOR RULING, J. Stajich, 2026-09-20. sexM and sexP share an HMG box,
+    # so one real locus gene is hit by both references -- in all 23
+    # ground-truth genomes, at 92-100% coordinate overlap. The overlapping
+    # pair is resolved to its higher-identity member, which is 23/23 correct,
+    # but the margins split hard by idiomorph: Plus calls separate by
+    # 44.6-64.2 points, Minus calls by only 2.3-13.0. Below this margin the
+    # call is still made and the tier is capped.
+    #
+    # PROVISIONAL, like max_cluster_gap_bp above. Revise from the resolution
+    # events accumulating in the evidence diagnostics, not by intuition.
+    min_idiomorph_margin: 5.0
     genes:
       - {name: tptA, role: flanking_conserved}
       - {name: sexP, role: core_MAT, present_in_idiomorphs: ["Plus"]}
       - {name: sexM, role: core_MAT, present_in_idiomorphs: ["Minus"]}
       - {name: rnhA, role: flanking_conserved}
+      # algA and glrA have NO reference protein in any curated record, so no
+      # genome can currently match them. They are kept because they are real
+      # locus architecture, not because the tool can act on them; scoring
+      # excludes an unsearchable gene from the denominator and reports it as
+      # `genes_not_searchable` rather than as missing.
+      #
+      # NAMING, resolved 2026-09-20: `algA` here matches GenBank OR965930.1,
+      # which is where both genes' only reference proteins exist. The Idnurm
+      # review (doi:10.1128/microbiolspec.funk-0041-2017) calls the same gene
+      # `algL`. They are the same gene, confirmed by domain annotation rather
+      # than by name: WZC35661 (AlgA, 384 aa) carries Alginate_lyase pfam05426,
+      # matching the review's "predicted alginate lyase"; WZC35665 (GlrA,
+      # 465 aa) carries Pyr_redox_2, the family glutathione reductase belongs
+      # to, consistent with N. crassa NCU03339 (gtr-1) and A. nidulans AN0932.
+      # Use `algA`: it is the name attached to deposited sequence.
+      #
+      # Ingesting OR965930.1 (Mucoraceae sp. AI-2023a = Mooraboolomyces
+      # wintlei; Hull, Urquhart & Idnurm 2024, Phytotaxa 644:35-41) would give
+      # both genes references and close this gap.
       - {name: algA, role: flanking_variable}
       - {name: glrA, role: flanking_variable}
       - {name: btbA, role: flanking_variable, present_in_idiomorphs: ["Plus"]}

@@ -109,3 +109,20 @@ def test_searchability_is_applied_after_the_idiomorph_roster_is_narrowed():
     # unsearchable here, it is simply not expected.
     assert "m_only" not in scores[0].genes_missing
     assert "m_only" not in scores[0].genes_not_searchable
+
+
+def test_a_gene_that_was_found_is_never_treated_as_unsearchable():
+    # Searchability is an inference about what the run COULD have found, and
+    # it can be wrong in the permissive direction: the short-ORF exclusion
+    # drops genes whose only reference protein is too short to localize
+    # reliably, yet the windowed polish rescue finds such genes anyway -- that
+    # rescue is the reason this pipeline exists. A found gene is proof that it
+    # was findable, so it must count in both the numerator and the
+    # denominator no matter what the map says. Dropping it would delete a real
+    # detection from `genes_found` and, for a family whose other genes are
+    # absent, collapse the confidence tier to `low`.
+    cluster = GeneCluster("c1", 1, 100, [_hit("g1", FAM.key), _hit("g2", FAM.key)])
+    scores = score_cluster(cluster, [FAM], searchable_genes={FAM.key: set()})
+    assert scores[0].genes_found == ["g1", "g2"]
+    assert scores[0].fraction_found == 1.0
+    assert scores[0].genes_not_searchable == []

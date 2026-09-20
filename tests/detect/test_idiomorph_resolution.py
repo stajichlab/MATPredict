@@ -161,6 +161,48 @@ def test_the_event_records_what_a_recalibration_would_need():
     assert event.loser_coverage is None
 
 
+def test_several_references_per_gene_produce_one_verdict_not_a_pairwise_mess():
+    # The curated Mucoromycota database holds 3 sexP and 3 sexM proteins, so
+    # ONE real locus gene draws several hits of each name. Comparing every
+    # sexP against every sexM produces contradictory verdicts -- on the real
+    # Absidia cuneospora locus, 9 events of which one had sexM beating sexP --
+    # and a spurious margin of 0.825 that wrongly capped the tier, when the
+    # honest comparison of best against best is 47.3 vs 31.325.
+    hits = [
+        _hit("sexP", 16939, 17547, 47.3),
+        _hit("sexP", 16939, 17547, 35.6),
+        _hit("sexP", 16939, 17547, 30.5),
+        _hit("sexM", 17005, 17253, 31.325),
+        _hit("sexM", 17005, 17253, 29.63),
+        _hit("sexM", 17005, 17253, 24.638),
+    ]
+    resolved, events = resolve_idiomorph_overlaps(hits, FAM)
+    assert len(events) == 1
+    assert events[0].winner == "sexP"
+    assert events[0].winner_identity == 47.3
+    assert events[0].loser_identity == 31.325
+    assert abs(events[0].margin - 15.975) < 1e-9
+    # EVERY losing hit is superseded, and no winning hit is.
+    assert all(h.superseded_by == "sexP" for h in resolved if h.gene_name == "sexM")
+    assert all(h.superseded_by is None for h in resolved if h.gene_name == "sexP")
+
+
+def test_two_independent_loci_each_get_their_own_verdict():
+    # Gene duplication is normal at MAT loci, so two non-overlapping groups
+    # must be resolved separately rather than pooled into one comparison.
+    hits = [
+        _hit("sexP", 1000, 1600, 47.3), _hit("sexM", 1050, 1300, 31.3),
+        _hit("sexP", 9000, 9600, 20.0), _hit("sexM", 9050, 9300, 44.0),
+    ]
+    resolved, events = resolve_idiomorph_overlaps(hits, FAM)
+    assert {(e.winner, e.loser) for e in events} == {("sexP", "sexM"), ("sexM", "sexP")}
+    by_start = {(h.gene_name, h.start): h.superseded_by for h in resolved}
+    assert by_start[("sexM", 1050)] == "sexP"   # first locus: sexP wins
+    assert by_start[("sexP", 1000)] is None
+    assert by_start[("sexP", 9000)] == "sexM"   # second locus: sexM wins
+    assert by_start[("sexM", 9050)] is None
+
+
 def test_a_custom_overlap_threshold_is_honoured():
     # 300 bp hits sharing 100 bp = 33% of the shorter. Under the 0.5 default
     # this does not resolve; at 0.3 it does. The threshold is provisional and

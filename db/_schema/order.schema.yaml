@@ -23,7 +23,10 @@ properties:
         # run's gap is the MAXIMUM over the routed loci, because under-splitting
         # is recoverable (the evidence floor and polishing still discriminate
         # within an over-large cluster) while over-splitting silently destroys a
-        # real locus by cutting it in two.
+        # real locus by cutting it in two. Because it is the MAXIMUM over the
+        # routed loci, one phylum's value can widen another phylum's clustering:
+        # in any run that routes to several phyla's loci at once (e.g. the
+        # exhaustive fallback), the largest declared gap wins for all of them.
         max_cluster_gap_bp:
           type: integer
           minimum: 1

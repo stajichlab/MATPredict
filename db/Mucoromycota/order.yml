@@ -10,6 +10,15 @@ loci:
     # a measured one -- the curator asked that it be revised empirically as more
     # Mucoromycota examples accumulate in this database. Nothing here has been
     # measured from the curated Mucoromycota records yet.
+    #
+    # CROSS-PHYLUM CONSEQUENCE -- read before changing this number. One run uses
+    # ONE clustering gap: the MAXIMUM over all loci that run routed to. So this
+    # value is not confined to Mucoromycota. Whenever a run routes to this locus
+    # alongside others -- notably the exhaustive fallback used when a query's
+    # phylum cannot be determined -- raising this number also widens the
+    # clustering gap applied to Ascomycota, Basidiomycota and every other
+    # phylum's loci in that same run. Treat a change here as a change to every
+    # multi-phylum run's clustering, not a Mucoromycota-only edit.
     max_cluster_gap_bp: 50000
     genes:
       - {name: tptA, role: flanking_conserved}

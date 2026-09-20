@@ -31,12 +31,12 @@ loci:
     vocabulary_type: "enum"
     idiomorph_values: ["alpha", "a"]
     taxonomic_scope: [40410]
-    # SXI1/SXI2 gene_class assigned 2026-09-19 by the project's domain expert, who
+    # SXI1/SXI2 gene_class assigned 2026-09-19 by the project's curator, J. Stajich, who
     # stated that SXI1 and SXI2 are homeodomain proteins, citing doi:10.1128/mbio.00059-26
-    # -- a citation supplied by the expert and NOT retrieved or verified here (the
-    # publisher returned HTTP 403). The expert did not specify the HD1-vs-HD2 split; the
+    # -- a citation supplied by the curator and NOT retrieved or verified here (the
+    # publisher returned HTTP 403). The curator did not specify the HD1-vs-HD2 split; the
     # specific mapping SXI1 = HD1, SXI2 = HD2 was proposed from general literature
-    # knowledge and accepted by the expert. It is NOT stated in this DB's own curated
+    # knowledge and accepted by the curator. It is NOT stated in this DB's own curated
     # record (db/Basidiomycota/Tremellales/40410_jec21_MAT_alpha/metadata.yaml), and
     # Lengeler et al. 2002 was NOT consulted when the call was made -- it remains the
     # right place to confirm the split. MFalpha1-3/MFa1-3 (pheromone precursors) and
@@ -135,10 +135,10 @@ loci:
     # bE/bW are a divergently-transcribed homeodomain gene pair (the b locus's own
     # curated record, db/Basidiomycota/Ustilaginales/5270_521_bLocus_b1/metadata.yaml,
     # confirms this via RefSeq's own "bE1 allele"/"bW1 allele" product annotation).
-    # gene_class assigned 2026-09-19 by the project's domain expert, who stated that
-    # bE/bW are HD-class. The expert did not specify the HD1-vs-HD2 split; the specific
+    # gene_class assigned 2026-09-19 by the project's curator, J. Stajich, who stated that
+    # bE/bW are HD-class. The curator did not specify the HD1-vs-HD2 split; the specific
     # mapping bW = HD1, bE = HD2 was proposed from general literature knowledge and
-    # accepted by the expert. It is NOT stated in this DB's own curated record, and the
+    # accepted by the curator. It is NOT stated in this DB's own curated record, and the
     # papers cited here (Gillissen et al. 1992; Kamper et al. 1995) were NOT consulted
     # when the call was made -- they remain the right place to confirm the split.
     genes:

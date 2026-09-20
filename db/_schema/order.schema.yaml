@@ -37,35 +37,41 @@ properties:
               #   1. The DB's own curated records document the functional identity -- a
               #      definition_note, a product name, or an explicit citation on the
               #      record itself. This is the original bar and is still PREFERRED.
-              #   2. An explicit ruling by the project's domain expert. Record the
+              #   2. An explicit ruling by the project's curator (J. Stajich). Record the
               #      provenance in a comment beside the entry, stating WHO decided it,
               #      WHEN, WHAT THEY ACTUALLY SAID, and WHAT WAS AND WAS NOT VERIFIED
               #      (e.g. a citation they supplied that this project could not
               #      retrieve, or a sub-distinction they did not themselves specify).
               #      The Basidiomycota MAT SXI1/SXI2 and bLocus bE/bW comments are the
               #      model for what this requires.
-              #   2b. An IMPLEMENTER PROPOSAL THAT THE DOMAIN EXPERT EXPLICITLY ACCEPTED,
+              #   2b. An IMPLEMENTER PROPOSAL THAT THE CURATOR EXPLICITLY ACCEPTED,
               #      recorded as such. The comment must name BOTH what was proposed and
-              #      what the expert actually said, and must state what was and was not
+              #      what the curator actually said, and must state what was and was not
               #      verified, exactly as source 2 requires. This is NOT "own initiative":
-              #      the distinguishing feature is that the expert saw the proposal and
+              #      the distinguishing feature is that the curator saw the proposal and
               #      ratified it, and the record says so. Both flagship cases are of this
               #      kind. The HD1-vs-HD2 split (SXI1/SXI2, bE/bW, Y/Z) was proposed from
-              #      general literature knowledge and then accepted by the expert; the
+              #      general literature knowledge and then accepted by the curator; the
               #      gene-named apn2_homolog/sla2_homolog pair was one of three namings an
-              #      implementer offered, and the expert chose it. An unratified proposal
+              #      implementer offered, and the curator chose it. An unratified proposal
               #      does not qualify, and neither does one whose ratification is not
               #      written down.
               # Everything else is still prohibited: an IMPLEMENTER MUST NOT infer a
               # gene_class from outside literature on its own initiative. Leave the
-              # field absent instead, and raise the question with the domain expert.
-              # A proposal that the expert has not yet seen and accepted is exactly this
+              # field absent instead, and raise the question with the curator.
+              # A proposal that the curator has not yet seen and accepted is exactly this
               # prohibited case, not source 2b.
-              # Sources 2 and 2b were added on 2026-09-19, when the expert ruled on
+              # Sources 2 and 2b were added on 2026-09-19, when the curator ruled on
               # apn2_homolog/sla2_homolog and the four HD1/HD2 assignments; the original
               # rule was not dead, it was incomplete -- it was written to stop an
-              # implementer inferring a class, which an expert ruling, or an expert
+              # implementer inferring a class, which a curator ruling, or the curator
               # ratifying an implementer's proposal, is not.
+              # NAMES PROVISIONAL: on 2026-09-19 the curator stated "I will review these
+              # to confirm names". The gene_class VALUE NAMES assigned that day --
+              # apn2_homolog, sla2_homolog, and the HD1/HD2 assignments -- are therefore
+              # pending the curator's own confirmation of naming, and the enum may be
+              # renamed on that review. This is about the chosen names only; that these
+              # genes are classified at all is settled.
               #
               # The two `*_homolog` values are named after a CANONICAL GENE rather than
               # a molecular function, unlike every other value here. This is a deliberate

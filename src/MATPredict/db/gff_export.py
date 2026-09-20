@@ -1,6 +1,7 @@
 """Build locus.gff3, locus.gbk, and proteins.faa from an accepted record's metadata."""
 from __future__ import annotations
 
+import warnings
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -172,6 +173,38 @@ def write_genbank(
     schema fields -- the per-gene attributes clinker's `--colour_map`/
     `--gene_functions` (or pyGenomeViz's `--feature_type2color`) need to color/label
     by MAT-domain biology directly, without a separate manual mapping step.
+
+    READING FRAME AND GENETIC CODE. The CDS also carries `/codon_start` and
+    `/transl_table` when the curated gene records them, with exactly GenBank's own
+    semantics: `codon_start` is 1-based and relative to the first base of the CDS
+    LOCATION (so `codon_start=3` means translation starts at the third base of the
+    assembled, strand-oriented, spliced CDS), and `transl_table` names the NCBI
+    genetic-code table. This is the same single-offset, whole-transcript
+    interpretation `db/validate.py`'s `_independent_translation` applies. Without
+    these two qualifiers a consumer that translates the written CDS gets a protein
+    that disagrees with the feature's own `/translation` -- measured in this DB for
+    10 genes with `codon_start != 1` and 2 genes with `transl_table != 1`, across 7
+    records.
+
+    DELIBERATE CHOICE -- both are written ONLY when the gene carries a NON-DEFAULT
+    value, and omitted when absent or equal to 1. GenBank defines the default of
+    both qualifiers as 1, so an omitted qualifier is unambiguous rather than
+    under-specified, and any correct consumer (including Biopython) already applies
+    that default. Omitting them keeps this conditional style identical to the
+    `gene_class`/`present_in_idiomorphs` qualifiers above, and keeps the written
+    file stable for the majority of curated genes, which are `codon_start: 1` /
+    `transl_table: 1`. (NCBI's own flatfiles usually print `/codon_start=1`
+    explicitly; that redundancy buys nothing here and would churn every record's
+    committed `locus.gbk`.)
+
+    SEGMENT LENGTH GUARD. A fetched sequence whose length does not equal the
+    segment's own `end - start + 1` is REJECTED and replaced by the all-"N"
+    placeholder for that segment, with a `UserWarning`. NCBI efetch clamps a
+    `seq_stop` past the end of a contig instead of failing, and a short sequence
+    would have gene/CDS features appended at coordinates past its end -- which
+    Biopython writes out silently. A short fetch is a failed fetch; the sequence is
+    never padded and never fabricated. The all-"N" result is then reported by
+    `cli.placeholder_segments` like any other unfetchable segment.
     """
     segments = record["locus"]["core"]["segments"]
     genes_by_segment: dict[int, list[dict]] = {}
@@ -201,7 +234,19 @@ def write_genbank(
             # non-exception value is not a real fetch result, so it falls back to the
             # placeholder just like a genuine fetch failure would.
             if isinstance(fetched, str) and fetched:
-                nucleotide_sequence = fetched
+                if len(fetched) != segment_length:
+                    # A clamped/truncated fetch is a FAILED fetch, not a usable one:
+                    # writing it would place features past the end of the sequence.
+                    warnings.warn(
+                        f"{record['record_id']} segment {segment_index}: fetched "
+                        f"{len(fetched)} nt for {fetch_accession}:{segment['start']}-"
+                        f"{segment['end']} but the segment is {segment_length} nt; "
+                        "falling back to the all-N placeholder",
+                        UserWarning,
+                        stacklevel=2,
+                    )
+                else:
+                    nucleotide_sequence = fetched
         if not nucleotide_sequence:
             nucleotide_sequence = "N" * segment_length
 
@@ -239,6 +284,12 @@ def write_genbank(
                     qualifiers["gene_class"] = [gene["gene_class"]]
                 if gene.get("present_in_idiomorphs"):
                     qualifiers["present_in_idiomorphs"] = [",".join(gene["present_in_idiomorphs"])]
+                codon_start = gene.get("codon_start")
+                if codon_start is not None and int(codon_start) != 1:
+                    qualifiers["codon_start"] = [str(int(codon_start))]
+                transl_table = gene.get("transl_table")
+                if transl_table is not None and int(transl_table) != 1:
+                    qualifiers["transl_table"] = [str(int(transl_table))]
                 cds_location = _cds_location(gene, segment, strand)
                 cds_feature = SeqFeature(cds_location, type="CDS", qualifiers=qualifiers)
                 seq_record.features.append(cds_feature)

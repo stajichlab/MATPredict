@@ -71,6 +71,7 @@ from MATPredict.detect.family_registry import (
     Family,
     FamilyKey,
     RoutingDecision,
+    derive_max_cluster_gap,
     load_all_families,
     load_record_families,
     route,
@@ -881,7 +882,7 @@ def run_pipeline(
     search_localize: Callable = search_localize,
     polish_with_exonerate: Callable = polish_with_exonerate,
     polish_with_miniprot: Callable = polish_with_miniprot,
-    max_gap: int = 25_000,
+    max_gap: int | None = None,
     ambiguity_floor: float = 0.5,
     short_orf_aa_floor: int = 60,
     window_protein_length_multiple: float = DEFAULT_WINDOW_PROTEIN_LENGTH_MULTIPLE,
@@ -900,6 +901,19 @@ def run_pipeline(
     if routing is None:
         routing = route(taxid, load_all_families(db_root))
     families = routing.families
+    # The clustering gap is per-locus CURATION data (`order.yml`
+    # `max_cluster_gap_bp`), not a code constant: how spread out a MAT locus is
+    # differs by clade, and the curator ruled on 2026-09-20 that 25 kb fits
+    # Ascomycota but is too tight for Mucoromycota. The run's gap is the
+    # MAXIMUM over the routed families because the two errors are not
+    # symmetric: too LARGE a gap under-splits, which is recoverable -- the
+    # evidence floor and polishing still discriminate gene by gene inside an
+    # over-large cluster -- whereas too SMALL a gap over-splits, silently
+    # destroying a real locus by cutting it in two, and nothing downstream can
+    # rejoin the halves. An explicit `max_gap` from the caller still wins; None
+    # means derive.
+    if max_gap is None:
+        max_gap = derive_max_cluster_gap(families)
     record_families = load_record_families(db_root)
     protein_lengths = _curated_protein_lengths(db_root, families, record_families)
     short_orf_by_family = _short_orf_genes(

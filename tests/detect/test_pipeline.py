@@ -1513,3 +1513,70 @@ def test_fragmented_segments_keep_both_raw_hits_for_a_shared_gene_name(tmp_path)
     assert by_place[("c1", "mfa1")].identity == 95.0
     assert by_place[("c2", "mfa1")].identity == 70.0
     assert len(fragmented[0].gene_evidence) == 4
+
+
+# --- per-locus cluster gap derivation ---
+
+
+def _gap_recording_cluster_hits(recorded):
+    """Wrap the real `cluster_hits`, recording the max_gap each call was given."""
+    real = pipeline_module.cluster_hits
+
+    def wrapper(hits, max_gap):
+        recorded.append(max_gap)
+        return real(hits, max_gap=max_gap)
+
+    return wrapper
+
+
+WIDE_GAP_ORDER_YML = (
+    "phylum: P\nloci:\n  - locus_name: aLocus\n    vocabulary_type: pattern\n"
+    "    idiomorph_pattern: \"^a[0-9]+$\"\n    taxonomic_scope: [1]\n"
+    "    max_cluster_gap_bp: 50000\n"
+    "    genes:\n      - {name: mfa1, role: core_MAT}\n      - {name: pra1, role: core_MAT}\n"
+)
+
+
+def _run_recording_gap(tmp_path, monkeypatch, order_text, **kwargs):
+    _write_order(tmp_path, order_text)
+    _write_record(tmp_path)
+    recorded: list[int] = []
+    monkeypatch.setattr(
+        pipeline_module, "cluster_hits", _gap_recording_cluster_hits(recorded)
+    )
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        return [_tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400)]
+
+    run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_localize=fake_localize,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
+        **kwargs,
+    )
+    return recorded
+
+
+def test_run_pipeline_uses_the_default_gap_when_no_locus_declares_one(tmp_path, monkeypatch):
+    assert _run_recording_gap(tmp_path, monkeypatch, ORDER_YML) == [25_000]
+
+
+def test_run_pipeline_derives_the_gap_from_the_routed_locus(tmp_path, monkeypatch):
+    assert _run_recording_gap(tmp_path, monkeypatch, WIDE_GAP_ORDER_YML) == [50_000]
+
+
+def test_run_pipeline_takes_the_maximum_gap_over_routed_families(tmp_path, monkeypatch):
+    """Two routed families, one default and one wide: the WIDER wins, because
+    over-splitting a real locus is unrecoverable and under-splitting is not."""
+    two_loci = WIDE_GAP_ORDER_YML + (
+        "  - locus_name: bLocus\n    vocabulary_type: pattern\n"
+        "    idiomorph_pattern: \"^b[0-9]+$\"\n    taxonomic_scope: [1]\n"
+        "    genes:\n      - {name: mfa1, role: core_MAT}\n"
+    )
+    assert _run_recording_gap(tmp_path, monkeypatch, two_loci) == [50_000]
+
+
+def test_explicit_max_gap_argument_overrides_the_derived_value(tmp_path, monkeypatch):
+    recorded = _run_recording_gap(tmp_path, monkeypatch, WIDE_GAP_ORDER_YML, max_gap=7_000)
+    assert recorded == [7_000]

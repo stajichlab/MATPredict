@@ -11,6 +11,17 @@ from MATPredict import logger
 from MATPredict.db.taxonomy import default_lineage_phylum_name, default_lineage_taxids
 
 
+DEFAULT_MAX_CLUSTER_GAP_BP = 25_000
+"""Cluster gap used by any locus whose `order.yml` entry does not declare one.
+
+25 kb was the single global constant this pipeline used for every phylum. The
+curator ruled on 2026-09-20 that it is right for Ascomycota, so it stays the
+default rather than becoming a value every locus must restate: absence in
+`order.yml` means "the Ascomycota-calibrated 25 kb is fine here". Only a locus
+that is known to need something else carries `max_cluster_gap_bp`.
+"""
+
+
 @dataclass(frozen=True)
 class FamilyKey:
     phylum: str
@@ -25,6 +36,18 @@ class Family:
     idiomorph_pattern: str | None
     genes: list[dict]
     taxonomic_scope: list[int]
+    max_cluster_gap_bp: int = DEFAULT_MAX_CLUSTER_GAP_BP
+    """How far apart two hits of this family may be and still be one locus.
+
+    This is curation data, not a tuning knob, which is why it lives on the
+    family (i.e. on the `order.yml` locus entry) instead of staying the single
+    global constant it used to be. How spread out a MAT locus is, is a property
+    of the clade's locus architecture, and it differs between clades: the
+    curator ruled on 2026-09-20 that 25 kb is right for Ascomycota but too
+    tight for Mucoromycota. Defaulted here so every existing construction --
+    and every locus that does not declare one -- keeps the 25 kb behaviour
+    exactly.
+    """
 
 
 @dataclass(frozen=True)
@@ -106,9 +129,36 @@ def load_all_families(db_root: Path) -> list[Family]:
                     idiomorph_pattern=locus.get("idiomorph_pattern"),
                     genes=locus["genes"],
                     taxonomic_scope=locus["taxonomic_scope"],
+                    max_cluster_gap_bp=locus.get(
+                        "max_cluster_gap_bp", DEFAULT_MAX_CLUSTER_GAP_BP
+                    ),
                 )
             )
     return families
+
+
+def derive_max_cluster_gap(families: list[Family]) -> int:
+    """The clustering gap for a run over `families`: the MAXIMUM of their gaps.
+
+    The maximum, not the minimum or a per-family value, because the two errors
+    are not symmetric. Taking too LARGE a gap under-splits -- two neighbouring
+    loci can be merged into one cluster -- and that is recoverable downstream:
+    the evidence floor and the polish stage still discriminate gene by gene
+    within an over-large cluster, so the real locus is still there to be
+    scored. Taking too SMALL a gap over-splits, cutting one real locus in two,
+    and nothing downstream can put it back: each half is scored as an
+    independent, incomplete candidate and the real locus is silently gone.
+
+    A per-family gap is not possible here without changing `cluster_hits`,
+    which groups hits by CONTIG ONLY and is deliberately family-agnostic
+    (a real locus's hits are attributed to whichever curated family's protein
+    they matched, so one locus's cluster routinely mixes families). One gap
+    per run is therefore the unit of choice, and the maximum is the safe end.
+
+    With no families (nothing routed) there is nothing to derive from, so the
+    default stands.
+    """
+    return max((f.max_cluster_gap_bp for f in families), default=DEFAULT_MAX_CLUSTER_GAP_BP)
 
 
 def expected_genes_for_idiomorph(

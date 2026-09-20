@@ -3,7 +3,14 @@ from pathlib import Path
 
 import pytest
 
-from MATPredict.detect.family_registry import Family, FamilyKey, load_all_families, route
+from MATPredict.detect.family_registry import (
+    DEFAULT_MAX_CLUSTER_GAP_BP,
+    Family,
+    FamilyKey,
+    derive_max_cluster_gap,
+    load_all_families,
+    route,
+)
 
 
 def _family(phylum, name, scope):
@@ -235,3 +242,49 @@ def test_available_phyla_skips_a_malformed_order_yml_and_warns(tmp_path, caplog)
     with caplog.at_level("WARNING"):
         assert available_phyla(tmp_path) == ["Ascomycota"]
     assert "Broken/order.yml" in caplog.text
+
+
+# --- per-locus cluster gap (order.yml `max_cluster_gap_bp`) ---
+
+
+def _order_yml(tmp_path, phylum, extra_locus_lines=""):
+    (tmp_path / phylum).mkdir(exist_ok=True)
+    (tmp_path / phylum / "order.yml").write_text(
+        f"phylum: {phylum}\nloci:\n  - locus_name: MAT\n    vocabulary_type: enum\n"
+        "    idiomorph_values: [a, alpha]\n    taxonomic_scope: [1]\n"
+        f"{extra_locus_lines}"
+        "    genes:\n      - {name: STE3, role: core_MAT}\n"
+    )
+
+
+def test_load_all_families_reads_an_explicit_max_cluster_gap_bp(tmp_path):
+    _order_yml(tmp_path, "Mucoro", "    max_cluster_gap_bp: 50000\n")
+    families = load_all_families(tmp_path)
+    assert [f.max_cluster_gap_bp for f in families] == [50_000]
+
+
+def test_load_all_families_defaults_max_cluster_gap_bp_when_absent(tmp_path):
+    _order_yml(tmp_path, "Asco")
+    families = load_all_families(tmp_path)
+    assert [f.max_cluster_gap_bp for f in families] == [DEFAULT_MAX_CLUSTER_GAP_BP]
+    assert DEFAULT_MAX_CLUSTER_GAP_BP == 25_000
+
+
+def test_derive_max_cluster_gap_takes_the_maximum_over_families():
+    families = [
+        _family("Asco", "MAT", [1]),
+        Family(
+            key=FamilyKey("Mucoro", "MAT"),
+            vocabulary_type="enum",
+            idiomorph_values=None,
+            idiomorph_pattern=None,
+            genes=[],
+            taxonomic_scope=[2],
+            max_cluster_gap_bp=50_000,
+        ),
+    ]
+    assert derive_max_cluster_gap(families) == 50_000
+
+
+def test_derive_max_cluster_gap_of_no_families_is_the_default():
+    assert derive_max_cluster_gap([]) == DEFAULT_MAX_CLUSTER_GAP_BP

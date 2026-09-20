@@ -128,10 +128,15 @@ def _fetch_accession(source: dict) -> str | None:
       for it, and `NcbiClient` cannot resolve it. It was never a usable fetch target,
       which is why these segments previously fell through to the all-"N" placeholder.
       Their `seq_region` however IS a real, individually fetchable contig accession,
-      and is the record the coordinates are relative to. Verified live on 2026-09-19
-      against NCBI efetch: the two `seq_region` values the 5 `assembly` segments in
-      the curated DB carry, `NW_026089539.1` and `JAAGWA010000001.1`, both return
-      real sequence.
+      and is the record the coordinates are relative to. The curated DB holds 5
+      `assembly` segments across 5 records, citing 2 assembly accessions
+      (`GCF_000143185.2`, Schizophyllum commune H4-8; `GCA_016772295.1`,
+      Coprinopsis cinerea A43mut B43mut) and carrying 4 DISTINCT `seq_region`
+      values -- `NW_026089548.1` is shared by two records (`5334_h4-8_Balpha_3`
+      and `5334_h4-8_Bbeta_2`). ALL FOUR were verified live against NCBI efetch on
+      2026-09-19 and each returned real sequence: `NW_026089539.1`,
+      `NW_026089548.1`, `JAAGWA010000001.1`, `JAAGWA010000010.1`. So every one of
+      the 5 segments is covered by a verified accession, not just a sampled pair.
 
     So `seq_region` is the semantically right fetch target in BOTH branches; the
     `insdc_nucleotide` branch keeps using `accession` only because that is its

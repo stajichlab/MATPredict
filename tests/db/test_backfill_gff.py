@@ -251,3 +251,59 @@ def test_backfill_stale_locus_gbk_isolates_one_record_failure(tmp_path, monkeypa
     assert succeeded == [("Ascomycota", "Onygenales", "222_b_MAT_MAT1-2")]
     assert len(failed) == 1
     assert failed[0][0] == ("Ascomycota", "Eurotiales", "111_a_MAT_MAT1-1")
+
+
+# --- placeholder reporting: name the segments that still lack real nucleotide sequence ---
+
+def _write_locus_gbk_via_write_genbank(record_dir, ncbi=None):
+    """Write a locus.gbk through the real gff_export.write_genbank, so the file under
+    test is exactly what the backfill itself produces -- including how it names each
+    segment SeqRecord -- rather than a hand-built stand-in."""
+    from MATPredict.db.gff_export import write_genbank
+
+    record = {
+        "record_id": record_dir.name,
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 1, "end": 30,
+             "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC1.1",
+                                 "seq_region": "ACC1.1"}},
+        ]}},
+        "genes": [],
+    }
+    write_genbank(record, sequences={}, out_path=record_dir / "locus.gbk", ncbi=ncbi)
+    return record_dir / "locus.gbk"
+
+
+def test_placeholder_segments_names_an_all_n_segment(tmp_path):
+    """A segment whose nucleotide fetch could not happen is written as all-N. The
+    sweep must name it, so the operator learns from the run's own output which
+    records still lack real sequence."""
+    from MATPredict.db.cli import placeholder_segments
+
+    db_root = tmp_path / "db"
+    record_dir = _write_record(db_root, "Ascomycota", "Eurotiales", "666_f_MAT_MAT1-1")
+    gbk_path = _write_locus_gbk_via_write_genbank(record_dir)  # no ncbi -- all-N placeholder
+
+    assert placeholder_segments(gbk_path) == ["666_f_MAT_MAT1-1.segment0"]
+
+
+def test_placeholder_segments_returns_empty_for_real_sequence(tmp_path):
+    from MATPredict.db.cli import placeholder_segments
+
+    db_root = tmp_path / "db"
+    record_dir = _write_record(db_root, "Ascomycota", "Eurotiales", "777_g_MAT_MAT1-2")
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = "ACGT" * 7 + "TA"
+    gbk_path = _write_locus_gbk_via_write_genbank(record_dir, ncbi=fake_ncbi)
+
+    assert placeholder_segments(gbk_path) == []
+
+
+def test_placeholder_segments_returns_empty_for_an_unreadable_file(tmp_path):
+    """Reporting must never turn a succeeded record into a failure."""
+    from MATPredict.db.cli import placeholder_segments
+
+    gbk_path = tmp_path / "locus.gbk"
+    gbk_path.write_text("this is not a GenBank file at all\n")
+
+    assert placeholder_segments(gbk_path) == []

@@ -248,12 +248,13 @@ def test_write_genbank_assembly_source_fetches_with_seq_region(tmp_path):
     """An `assembly`-typed segment cites a GCA_/GCF_ accession, which efetch cannot
     subrange-fetch. Its `start`/`end` are relative to `seq_region` (the contig), so
     `seq_region` is what gets fetched. Real values from the curated DB:
-    `5334_h4-8_*` cites `GCF_000143185.1` with seq_region `NW_026089539.1`."""
+    `5334_h4-8_Aalpha_4` cites assembly `GCF_000143185.2` with seq_region
+    `NW_026089539.1`."""
     record = {
         "record_id": "444_d_MAT_combined",
         "locus": {"core": {"segments": [
             {"segment_index": 0, "start": 100, "end": 130,
-             "sequence_source": {"type": "assembly", "accession": "GCF_000143185.1",
+             "sequence_source": {"type": "assembly", "accession": "GCF_000143185.2",
                                  "seq_region": "NW_026089539.1"}},
         ]}},
         "genes": [],

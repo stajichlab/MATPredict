@@ -429,8 +429,13 @@ def test_run_batch_phylum_builds_the_restricted_reference_fasta_once(tmp_path, m
     )
 
     assert len(builds) == 1, "the reference FASTA must be built once per batch"
-    assert references == [reference_path, reference_path]
-    text = reference_path.read_text()
+    # The phylum goes into the destination filename, so a restricted query set
+    # can never overwrite the name an unrestricted one uses, and two array
+    # tasks scoped to different phyla cannot clobber each other's query set.
+    restricted_path = tmp_path / "out" / "_reference.Mucoromycota.faa"
+    assert references == [restricted_path, restricted_path]
+    assert not reference_path.exists()
+    text = restricted_path.read_text()
     assert ">muco_rec|gene0|g1" in text
     assert "asco_rec" not in text
 

@@ -236,8 +236,11 @@ def run_batch(
     DESTINATION for the restricted query set rather than an already-built
     file, because the routed family set is only known here, and letting the
     caller build a second one is how the query set and the routing come to
-    disagree. The build-once design is unchanged -- one build for the batch,
-    not one per genome.
+    disagree. The phylum is inserted into that destination's filename
+    (`_reference.faa` -> `_reference.Mucoromycota.faa`), so the two meanings
+    can never name the same file and concurrent array tasks cannot overwrite
+    each other's query set. The build-once design is unchanged -- one build
+    for the batch, not one per genome.
 
     An explicit `phylum` matching no curated family raises BEFORE the
     per-genome loop starts. It cannot be raised inside the loop: the loop's
@@ -282,7 +285,22 @@ def run_batch(
             )
         # The destination directory is created above, so the restricted
         # query set can be written next to the batch's own output.
-        Path(reference_fasta).parent.mkdir(parents=True, exist_ok=True)
+        #
+        # The phylum is put IN the filename rather than writing to the given
+        # path as-is, so a restricted query set can never land on the name an
+        # unrestricted one uses. Two reasons, both concrete: (a) the two
+        # meanings of `reference_fasta` (an already-built file without
+        # `phylum`, a destination with it) then cannot collide on one file;
+        # (b) the imminent rollout is a SLURM job ARRAY, and if several array
+        # tasks were ever pointed at a shared out_dir, N tasks writing the one
+        # `_reference.faa` that N others are mid-read would corrupt query sets
+        # silently. The driver already gives each batch its own out_dir; this
+        # makes the safety a property of the code instead of of the caller.
+        # Phylum values come from `db/<Phylum>/order.yml` directory names, so
+        # they are plain scientific names with no path separators.
+        given = Path(reference_fasta)
+        reference_fasta = given.with_name(f"{given.stem}.{phylum}{given.suffix}")
+        reference_fasta.parent.mkdir(parents=True, exist_ok=True)
         reference_fasta = build_reference_fasta(
             db_root, reference_fasta, family_keys={f.key for f in routing.families},
         )

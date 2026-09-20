@@ -102,6 +102,18 @@ class SearchHit:
     reference_record_id: str  # which curated record's protein this matched
     method: str  # "diamond_proteome" | "tblastn_genome" | "exonerate_refine" | "miniprot_refine"
     coverage: float | None = None  # % of the matched reference protein covered; None when unknown
+    superseded_by: str | None = None
+    """The gene name that won when this hit lost an idiomorph resolution.
+
+    Set by `idiomorph.resolve_idiomorph_overlaps` when this hit and another
+    hit the SAME locus gene under two mutually exclusive idiomorph gene names
+    (`sexM`/`sexP` share an HMG box, so one real gene draws both). The hit is
+    annotated rather than dropped: it stays in the report as evidence of the
+    ambiguity, and it is the observation a future recalibration of the overlap
+    threshold needs. Every consumer that counts DISTINCT GENES -- the evidence
+    floor, scoring, idiomorph assignment -- must skip a superseded hit, or one
+    gene is counted as two.
+    """
 
 
 def _roles_by_family(families: list[Family]) -> dict[FamilyKey, dict[str, str]]:

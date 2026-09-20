@@ -355,7 +355,16 @@ def _families_meeting_evidence_floor(
     _DIAGNOSTICS_CANDIDATE_FLOOR)`)."""
     admitted = []
     for family in families:
-        own_hits = [h for h in cluster.hits if h.family_key == family.key]
+        # Superseded hits are excluded before anything is counted. Such a hit
+        # and its winner hit the SAME locus gene under two mutually exclusive
+        # idiomorph names, so counting it would let a cluster whose only
+        # evidence is one HMG gene clear a bar that asks for two distinct
+        # genes -- and, with `require_core_role`, let a gene that is not
+        # really there satisfy the core requirement.
+        own_hits = [
+            h for h in cluster.hits
+            if h.family_key == family.key and h.superseded_by is None
+        ]
         distinct_genes = {h.gene_name for h in own_hits}
         if len(distinct_genes) < floor.min_hits:
             continue

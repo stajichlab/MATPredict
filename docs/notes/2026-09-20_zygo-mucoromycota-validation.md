@@ -113,3 +113,87 @@ Finding 1's root cause — especially the 5 genera with no curated representativ
 
 Outputs are in `$SCRATCH/zygo/runs/<organism>/` and are NOT committed (per-genome
 GFF3 + FASTA + report + diagnostics).
+
+---
+
+# Part 2 — discovery sweep across 44 previously-unrepresented genera
+
+The 23 ground-truth genomes cover 7 of the 51 genera in `testset/Zygo/query/`.
+One representative of each of the 44 uncovered genera was run identically
+(`--phylum Mucoromycota`, fast path). 43 completed; 1 failed (below).
+
+## Result: 6 loci found, 37 rejected, 1 crash
+
+**Six genera yielded a locus**, all four genes found, all with strong identity —
+these are the strongest candidates for promotion into the curated DB:
+
+| Genus | Best identity | Confidence |
+|---|---|---|
+| *Ellisomyces* | 88.7% | medium |
+| *Rhizomucor* | 87.9% | high |
+| *Thamnidium* | 85.3% | medium |
+| *Blakeslea* | 75.9% | medium |
+| *Gongronella* | 71.7% | medium |
+| *Choanephora* | 66.1% | medium |
+
+## Finding 4 — all 37 rejections came from ONE gate, and 15 were near misses
+
+Every one of the 37 "no locus" genera was rejected by the **ambiguity floor (0.50)**,
+not by the evidence floor and not for lack of hits.
+
+| best_fraction_found | Count |
+|---|---|
+| 0.429 (3 of 7) — one gene short | **15** |
+| < 0.30 | 22 |
+
+Of the 15 near misses, **12 found `rnhA` + `sexM` + `sexP`** — a core MAT gene plus a
+conserved flanking gene. *Rhizopus acetoinus* is the clearest case: a cluster at
+**92.6% identity, 3 genes, admitted to polishing**, discarded at 0.429. Its locus sits
+at `scaffold_516:467–7397` — 467 bp from the contig edge, so its flanking genes are
+almost certainly on adjacent contigs. That is the fragmented-locus case.
+
+## Finding 5 — root cause: the sexM/sexP double-call inflates the denominator
+
+`scoring.py:35` computes `fraction_found` over `expected_genes_for_idiomorph(family, found)`.
+That function narrows the expected roster to one idiomorph's genes **only when the found
+genes name exactly one idiomorph**; when they name two or more it conservatively returns
+the full roster (`family_registry.py:172-181`, documented deliberate behaviour).
+
+The Mucoromycota declarations are correct — `sexP: ["Plus"]`, `sexM: ["Minus"]`,
+`btbA: ["Plus"]`. But because `sexM` and `sexP` share an HMG domain and both curated
+references hit the same locus gene (measured: 92–100% coordinate overlap in 23/23
+ground-truth genomes), **both are always "found", two idiomorphs are always named, and
+the roster is never narrowed.** Denominator 7 instead of ~5-6.
+
+So a single defect — unresolved overlapping calls of mutually exclusive idiomorph genes —
+produces BOTH `idiomorph=undetermined` in 23/23 AND an inflated denominator that pushes
+fragmented loci under the ambiguity floor.
+
+**Measured fix candidate:** taking the higher-identity of an overlapping `sexM`/`sexP`
+pair gives the correct idiomorph **23/23 (100%)** on the ground-truth set. That single
+change would also narrow the denominator for every genome.
+
+**It does not rescue every near miss.** Recomputed for *Rhizopus acetoinus* resolved to
+Plus: expected becomes `tptA, sexP, rnhA, algA, glrA, btbA` (6), found `sexP, btbA` → 0.33,
+still below 0.50. Genuinely fragmented loci that lost both flanking genes to contig edges
+need the separate relaxed second pass the curator proposed on 2026-09-19 and which was
+never settled (whether it runs always, or only when the strict pass finds nothing).
+
+## Finding 6 — one exonerate segfault costs an entire genome
+
+*Gilbertella persicaria* produced no report:
+`exonerate --model protein2genome ... --refine region ... exited -11` (SIGSEGV) on window
+`scaffold_71:24582-37340`. MATPredict propagated it as fatal, losing every locus already
+found in that genome. `run_batch`'s per-genome try/except would contain this to one genome
+in a rollout, but within a genome nothing degrades gracefully — a single bad polish window
+should downgrade that gene to `unpolished`, not abort the run. Observed rate: 1/44 (2.3%).
+
+## Caveat on "37 found nothing"
+
+Many of these genera are not Mucorales — *Coemansia*, *Kickxella*, *Linderina*,
+*Spiromyces*, *Dimargaris*, *Dispira*, *Tieghemiomyces* (Kickxellomycotina/Zoopagomycota),
+*Conidiobolus*, *Basidiobolus* (Entomophthoromycotina), *Mortierella*, *Modicella*,
+*Umbelopsis*. A Mucorales-type `sexM`/`sexP` locus is not expected there, so those
+rejections may well be correct. One entry, *Alternaria*, is an Ascomycete and appears to be
+a mislabel or contaminant in the source collection. The 15 near misses at 0.429 are the
+ones worth a curator's attention; the 22 below 0.30 are mostly these out-of-clade genera.

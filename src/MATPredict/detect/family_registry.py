@@ -7,6 +7,7 @@ from typing import Callable
 
 import yaml
 
+from MATPredict import logger
 from MATPredict.db.taxonomy import default_lineage_phylum_name, default_lineage_taxids
 
 
@@ -67,10 +68,25 @@ def available_phyla(db_root: Path) -> list[str]:
     Reading the field (not the directory name) guarantees the returned strings
     compare equal to `FamilyKey.phylum`; a directory with no `order.yml`
     (`db/candidates/`, `db/_schema/`) declares no phylum and is not offered.
+
+    An `order.yml` that cannot be read or parsed costs its own phylum a
+    `--phylum` choice and nothing else: it is logged by name and skipped, never
+    raised. This function runs while the top-level argparse parser is being
+    built, so raising here would abort `matpredict --help` and every subcommand
+    that has nothing to do with the broken file -- a curator mid-edit would
+    take down the whole CLI. Commands that genuinely need the file's contents
+    (`load_all_families`) still fail loudly on it.
     """
     names = set()
     for order_file in db_root.glob("*/order.yml"):
-        doc = yaml.safe_load(order_file.read_text())
+        try:
+            doc = yaml.safe_load(order_file.read_text())
+        except (OSError, yaml.YAMLError) as err:
+            logger.warning(
+                "available_phyla: could not read %s (%s) -- that phylum will not be "
+                "offered as a --phylum choice", order_file, err,
+            )
+            continue
         if doc and doc.get("phylum"):
             names.add(doc["phylum"])
     return sorted(names)

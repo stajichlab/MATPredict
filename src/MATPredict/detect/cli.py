@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect.pipeline import EvidenceFloor, run_pipeline
@@ -31,6 +32,18 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     # re-route to a different set than the query set was built for, and so the
     # taxonomy lookup happens once per run.
     routing = route(args.taxid, load_all_families(config.db_root), phylum=args.phylum)
+    # An explicitly requested phylum that matches no curated family is a usage
+    # error, not a valid empty result. Left to run it would build an empty
+    # reference FASTA, search nothing, and exit 0 with an empty
+    # `families_attempted` -- which reads as "looked and found nothing" rather
+    # than "never looked". `--phylum`'s argparse choices normally prevent this,
+    # but they degrade to unconstrained when the database root cannot be read
+    # (see `_phylum_choices`), so the check is enforced here too.
+    if args.phylum and not routing.families:
+        raise ValueError(
+            f"--phylum {args.phylum} matches no curated family in {config.db_root}; "
+            f"available phyla: {', '.join(available_phyla(config.db_root)) or 'none'}"
+        )
     reference_fasta = build_reference_fasta(
         config.db_root, out_dir / "_reference.faa",
         family_keys={f.key for f in routing.families},
@@ -137,13 +150,26 @@ def _phylum_choices() -> list[str] | None:
     becomes selectable with no code change here.
 
     Returns None (argparse: accept any string) rather than raising if the
-    database root cannot be read. `matpredict --help` and `matpredict --version`
-    must keep working in a directory with no database, and refusing to build
-    the parser at all would break every OTHER subcommand too.
+    database root cannot be read at all. `matpredict --help` and `matpredict
+    --version` must keep working in a directory with no database, and refusing
+    to build the parser here would break every OTHER subcommand too -- this
+    runs at parser-build time, before argparse has even seen which subcommand
+    was asked for. `available_phyla` already skips an individual unparseable
+    `order.yml`; this broader guard covers anything else config resolution or
+    the glob can raise, and logs rather than swallowing.
+
+    Returning None does NOT make an unknown `--phylum` harmless: `_cmd_detect`
+    rejects a phylum that matches no curated family regardless of whether
+    argparse was able to constrain the choices.
     """
     try:
         return available_phyla(MatpredictConfig.from_env(repo_root=Path.cwd()).db_root) or None
-    except OSError:
+    except Exception as err:  # noqa: BLE001 - parser construction must never fail here
+        logger.warning(
+            "could not read the phylum list from the database root (%s) -- "
+            "`matpredict detect --phylum` will not validate its argument against "
+            "the curated phyla", err,
+        )
         return None
 
 

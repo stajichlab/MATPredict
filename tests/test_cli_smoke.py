@@ -481,3 +481,51 @@ def test_cmd_detect_restricts_the_reference_fasta_to_the_routed_families(monkeyp
 
     assert recorded["family_keys"] == {FamilyKey("Mucoromycota", "MAT")}
     assert recorded["routing"].routing_mode == "explicit_phylum"
+
+
+def test_build_parser_survives_a_malformed_order_yml(monkeypatch, tmp_path):
+    """A curator mid-edit leaving one `order.yml` unparseable must not take the
+    whole CLI down. `_phylum_choices()` runs while the top-level parser is
+    being built, so anything it raises aborts `matpredict --help` and every
+    subcommand that never touches that file."""
+    from MATPredict.__main__ import build_parser
+
+    (tmp_path / "Broken").mkdir()
+    (tmp_path / "Broken" / "order.yml").write_text("phylum: [unclosed\n  - bad: :\n")
+    monkeypatch.setenv("MATPREDICT_DB_ROOT", str(tmp_path))
+
+    parser = build_parser()
+    args = parser.parse_args(["detect", "--genome", "g.fa", "--out-dir", "/tmp/x"])
+    assert args.phylum is None
+
+
+def test_cmd_detect_fails_loudly_when_phylum_matches_no_curated_family(monkeypatch, tmp_path):
+    """`--phylum` names a scope the operator believes exists. If no curated
+    family is in it, the routed set is empty, the reference FASTA is empty and
+    the run searches nothing -- previously exiting 0 with an empty
+    `families_attempted`, which reads as "looked and found nothing". That is a
+    usage error, so it must fail before any work is done."""
+    import pytest
+
+    import MATPredict.detect.cli as detect_cli
+
+    (tmp_path / "Ascomycota").mkdir()
+    (tmp_path / "Ascomycota" / "order.yml").write_text("phylum: Ascomycota\nloci: []\n")
+    monkeypatch.setattr(
+        detect_cli, "MatpredictConfig",
+        SimpleNamespace(from_env=lambda repo_root: SimpleNamespace(db_root=tmp_path)),
+    )
+
+    def must_not_run(*a, **k):
+        raise AssertionError("no search work may start for an empty routed set")
+
+    monkeypatch.setattr(detect_cli, "build_reference_fasta", must_not_run)
+    monkeypatch.setattr(detect_cli, "run_pipeline", must_not_run)
+
+    args = SimpleNamespace(
+        genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
+        evidence_diagnostics=None, min_hits=1, min_identity=None,
+        require_core_role=False, emit_cds_fasta=False, phylum="Zoopagomycota",
+    )
+    with pytest.raises(ValueError, match="Zoopagomycota"):
+        detect_cli._cmd_detect(args)

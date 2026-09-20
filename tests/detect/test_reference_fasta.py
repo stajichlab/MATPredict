@@ -110,27 +110,44 @@ def test_build_reference_fasta_default_is_unrestricted(tmp_path):
     assert "asco_rec" in text and "muco_rec" in text
 
 
-def test_mucoromycota_restricted_build_queries_19_proteins_not_181(tmp_path):
-    """The real measurement Task 1 item 3 asks for, against the live db/.
+def test_per_phylum_builds_partition_the_unrestricted_build(tmp_path, real_db_root):
+    """The real measurement Task 1 item 3 asks for, stated as a RELATIONSHIP so
+    active curation cannot invalidate it.
 
-    A Mucoromycota-only run must send Mucoromycota's own curated proteins to
-    tblastn -- not the whole cross-phylum reference set. tblastn cost scales
-    with the query set, and the unrestricted set is nearly ten times larger."""
-    from pathlib import Path
+    A per-phylum restricted build must be a strict subset of the unrestricted
+    build, and the per-phylum builds together must partition it exactly -- no
+    protein dropped, none duplicated, none invented. That is the property the
+    tblastn query-set narrowing depends on: a routed run must see all of its
+    own families' proteins and none of anyone else's. The absolute counts are
+    printed for the record rather than asserted, because every accepted record
+    changes them.
+    """
+    from MATPredict.detect.family_registry import load_all_families
 
-    from MATPredict.detect.family_registry import FamilyKey
+    def _headers(path):
+        return [line for line in path.read_text().splitlines() if line.startswith(">")]
 
-    db_root = Path("db")
+    everything = _headers(build_reference_fasta(real_db_root, tmp_path / "all.faa"))
+    families = load_all_families(real_db_root)
+    phyla = sorted({f.key.phylum for f in families})
+    assert len(phyla) > 1, "a partition test needs at least two phyla in db/"
 
-    def _count(path):
-        return path.read_text().count(">")
-
-    everything = _count(build_reference_fasta(db_root, tmp_path / "all.faa"))
-    restricted = _count(
-        build_reference_fasta(
-            db_root, tmp_path / "muco.faa",
-            family_keys={FamilyKey("Mucoromycota", "MAT")},
+    per_phylum = {}
+    for phylum in phyla:
+        keys = {f.key for f in families if f.key.phylum == phylum}
+        per_phylum[phylum] = _headers(
+            build_reference_fasta(real_db_root, tmp_path / f"{phylum}.faa", family_keys=keys)
         )
+        # A strict subset: every restricted protein is in the full set, and the
+        # restriction actually removed something.
+        assert set(per_phylum[phylum]) < set(everything)
+
+    # An exact partition: the parts sum to the whole with no overlap.
+    assert sum(len(v) for v in per_phylum.values()) == len(everything)
+    assert set().union(*per_phylum.values()) == set(everything)
+
+    print(
+        "reference FASTA query-set sizes: "
+        + f"all={len(everything)}, "
+        + ", ".join(f"{k}={len(v)}" for k, v in sorted(per_phylum.items()))
     )
-    assert everything == 181
-    assert restricted == 19

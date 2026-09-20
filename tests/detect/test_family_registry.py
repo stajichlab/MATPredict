@@ -206,7 +206,32 @@ def test_available_phyla_is_read_from_db_root_at_runtime(tmp_path):
     assert available_phyla(tmp_path) == ["Ascomycota", "Zoopagomycota"]
 
 
-def test_available_phyla_on_the_real_db_root():
+def test_available_phyla_agrees_with_the_families_actually_loaded(real_db_root):
+    """A relationship, not a literal list: whatever phyla `db/` holds today,
+    the `--phylum` choices must be exactly the phyla `load_all_families`
+    produces `FamilyKey.phylum` values for. Asserting the three current names
+    would break the moment curation adds a phylum, for a reason that has
+    nothing to do with the routing code this guards."""
     from MATPredict.detect.family_registry import available_phyla
 
-    assert available_phyla(Path("db")) == ["Ascomycota", "Basidiomycota", "Mucoromycota"]
+    phyla = available_phyla(real_db_root)
+    assert phyla == sorted({f.key.phylum for f in load_all_families(real_db_root)})
+    assert phyla, "the live database declares no phyla at all"
+
+
+def test_available_phyla_skips_a_malformed_order_yml_and_warns(tmp_path, caplog):
+    """A curator mid-edit can leave one `order.yml` unparseable. That must cost
+    the CLI that phylum's `--phylum` choice and nothing else: `available_phyla`
+    is called while the top-level argparse parser is being built, so raising
+    here would abort `matpredict --help` and every unrelated subcommand too.
+    The file is named in a warning so the breakage is not silent."""
+    (tmp_path / "Ascomycota").mkdir()
+    (tmp_path / "Ascomycota" / "order.yml").write_text("phylum: Ascomycota\nloci: []\n")
+    (tmp_path / "Broken").mkdir()
+    (tmp_path / "Broken" / "order.yml").write_text("phylum: [unclosed\n  - bad: :\n")
+
+    from MATPredict.detect.family_registry import available_phyla
+
+    with caplog.at_level("WARNING"):
+        assert available_phyla(tmp_path) == ["Ascomycota"]
+    assert "Broken/order.yml" in caplog.text

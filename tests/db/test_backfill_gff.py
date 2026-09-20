@@ -307,3 +307,69 @@ def test_placeholder_segments_returns_empty_for_an_unreadable_file(tmp_path):
     gbk_path.write_text("this is not a GenBank file at all\n")
 
     assert placeholder_segments(gbk_path) == []
+
+
+def _write_record_with_locus_and_order_yml(db_root, phylum, order_or_family, record_id, gene_class):
+    """One record plus the phylum order.yml it joins to, the way the real DB is laid out."""
+    record_dir = db_root / phylum / order_or_family / record_id
+    record_dir.mkdir(parents=True)
+    metadata = {
+        "record_id": record_id,
+        "mating_type": {"locus_name": "MAT"},
+        "locus": {"core": {"segments": [
+            {
+                "segment_index": 0,
+                "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC1.1", "seq_region": "ACC1.1"},
+                "start": 100, "end": 108,
+            },
+        ]}},
+        "genes": [
+            {
+                "gene_index": 0, "name": "APN2", "role": "flanking_conserved", "present": True,
+                "protein_accession": None, "segment_index": 0,
+                "start": 100, "end": 108, "strand": "+",
+            },
+        ],
+    }
+    (record_dir / "metadata.yaml").write_text(yaml.safe_dump(metadata))
+    order_doc = {
+        "phylum": phylum,
+        "loci": [{"locus_name": "MAT", "genes": [
+            {"name": "APN2", "role": "flanking_conserved", "gene_class": gene_class},
+        ]}],
+    }
+    (db_root / phylum / "order.yml").write_text(yaml.safe_dump(order_doc))
+    return record_dir
+
+
+def test_build_gff_for_record_writes_gene_class_from_order_yml(tmp_path, monkeypatch):
+    db_root = tmp_path / "db"
+    record_dir = _write_record_with_locus_and_order_yml(
+        db_root, "Ascomycota", "Teloschistales", "333_c_MAT_MAT1-1", "apn2_homolog"
+    )
+    monkeypatch.setattr("MATPredict.db.cli._independent_translation", lambda record, gene, ncbi: "MSEQ")
+
+    build_gff_for_record(
+        db_root, "Ascomycota", "Teloschistales", "333_c_MAT_MAT1-1",
+        ncbi=MagicMock(), uniprot=MagicMock(),
+    )
+
+    assert '/gene_class="apn2_homolog"' in (record_dir / "locus.gbk").read_text()
+
+
+def test_build_gff_for_record_tolerates_a_missing_order_yml(tmp_path, monkeypatch):
+    # Not hypothetical: a record can be regenerated against a db_root whose phylum
+    # vocabulary is absent (fixtures, partial checkouts). A missing vocabulary means
+    # no /gene_class qualifier, never a crashed regeneration.
+    db_root = tmp_path / "db"
+    record_dir = _write_record_with_coordinates_no_accession(
+        db_root, "Ascomycota", "Teloschistales", "444_d_MAT_combined"
+    )
+    monkeypatch.setattr("MATPredict.db.cli._independent_translation", lambda record, gene, ncbi: "MSEQ")
+
+    build_gff_for_record(
+        db_root, "Ascomycota", "Teloschistales", "444_d_MAT_combined",
+        ncbi=MagicMock(), uniprot=MagicMock(),
+    )
+
+    assert "gene_class" not in (record_dir / "locus.gbk").read_text()

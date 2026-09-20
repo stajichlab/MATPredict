@@ -33,9 +33,57 @@ properties:
               # literature/deposit-faithful `name` (e.g. bar3, STE3, pheromone_B43) while
               # still being grouped with functionally-equivalent genes named differently
               # in other families (e.g. STE3/bar3/bbr2/pra1 are all pheromone receptors).
-              # Populate it only where the DB's own curated records document the
-              # functional identity (a definition_note, product name, or explicit
-              # citation) -- leave it absent rather than inferring from literature alone.
+              # EVIDENCE BAR. Populate gene_class only from one of the sources below:
+              #   1. The DB's own curated records document the functional identity -- a
+              #      definition_note, a product name, or an explicit citation on the
+              #      record itself. This is the original bar and is still PREFERRED.
+              #   2. An explicit ruling by the project's curator (J. Stajich). Record the
+              #      provenance in a comment beside the entry, stating WHO decided it,
+              #      WHEN, WHAT THEY ACTUALLY SAID, and WHAT WAS AND WAS NOT VERIFIED
+              #      (e.g. a citation they supplied that this project could not
+              #      retrieve, or a sub-distinction they did not themselves specify).
+              #      The Basidiomycota MAT SXI1/SXI2 and bLocus bE/bW comments are the
+              #      model for what this requires.
+              #   2b. An IMPLEMENTER PROPOSAL THAT THE CURATOR EXPLICITLY ACCEPTED,
+              #      recorded as such. The comment must name BOTH what was proposed and
+              #      what the curator actually said, and must state what was and was not
+              #      verified, exactly as source 2 requires. This is NOT "own initiative":
+              #      the distinguishing feature is that the curator saw the proposal and
+              #      ratified it, and the record says so. Both flagship cases are of this
+              #      kind. The HD1-vs-HD2 split (SXI1/SXI2, bE/bW, Y/Z) was proposed from
+              #      general literature knowledge and then accepted by the curator; the
+              #      gene-named apn2_homolog/sla2_homolog pair was one of three namings an
+              #      implementer offered, and the curator chose it. An unratified proposal
+              #      does not qualify, and neither does one whose ratification is not
+              #      written down.
+              # Everything else is still prohibited: an IMPLEMENTER MUST NOT infer a
+              # gene_class from outside literature on its own initiative. Leave the
+              # field absent instead, and raise the question with the curator.
+              # A proposal that the curator has not yet seen and accepted is exactly this
+              # prohibited case, not source 2b.
+              # Sources 2 and 2b were added on 2026-09-19, when the curator ruled on
+              # apn2_homolog/sla2_homolog and the four HD1/HD2 assignments; the original
+              # rule was not dead, it was incomplete -- it was written to stop an
+              # implementer inferring a class, which a curator ruling, or the curator
+              # ratifying an implementer's proposal, is not.
+              # NAMES PROVISIONAL: on 2026-09-19 the curator stated "I will review these
+              # to confirm names". The gene_class VALUE NAMES assigned that day --
+              # apn2_homolog, sla2_homolog, and the HD1/HD2 assignments -- are therefore
+              # pending the curator's own confirmation of naming, and the enum may be
+              # renamed on that review. This is about the chosen names only; that these
+              # genes are classified at all is settled.
+              #
+              # The two `*_homolog` values are named after a CANONICAL GENE rather than
+              # a molecular function, unlike every other value here. This is a deliberate
+              # user decision: the conserved genes flanking a MAT locus are grouped by
+              # "this is the APN2 orthologue" / "this is the SLA2 orthologue", which is
+              # how the literature and the curated records themselves refer to them, and
+              # their actual functions (DNA-repair endonuclease, cytoskeletal adaptor) are
+              # not what makes them worth colouring together in a locus figure. Naming by
+              # canonical gene also extends cleanly to the other flanking genes that will
+              # be classified later (COX13, etc.) without inventing a function label for
+              # each one.
               gene_class:
-                enum: [alpha_box, HMG_box, pheromone_receptor, pheromone_precursor, HD1, HD2]
+                enum: [alpha_box, HMG_box, pheromone_receptor, pheromone_precursor, HD1, HD2,
+                       apn2_homolog, sla2_homolog]
               present_in_idiomorphs: {type: array, items: {type: string}}

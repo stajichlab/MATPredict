@@ -205,6 +205,24 @@ def placeholder_segments(gbk_path: Path) -> list[str]:
     return placeholders
 
 
+def _resolve_gene_classes_for_record(db_root: Path, phylum: str, record: dict) -> dict[int, str]:
+    """`gene_index -> gene_class` for one record, joined against its phylum's
+    `db/<phylum>/order.yml` -- the only place in the codebase that reads the
+    vocabulary for this purpose, because `build_gff_for_record` is the single
+    regeneration path and already knows the phylum.
+
+    A MISSING `order.yml` yields an empty mapping instead of raising. A db_root
+    without a phylum vocabulary is a real situation (test fixtures, partial
+    checkouts), and the join is an enrichment: its absence must cost the
+    `/gene_class` qualifier, not the whole regeneration of the record.
+    """
+    order_path = db_root / phylum / "order.yml"
+    if not order_path.exists():
+        return {}
+    order_doc = yaml.safe_load(order_path.read_text()) or {}
+    return gff_export.resolve_gene_classes(record, order_doc)
+
+
 def build_gff_for_record(
     db_root: Path, phylum: str, order_or_family: str, record_id: str,
     ncbi: NcbiClient, uniprot: UniprotClient,
@@ -236,8 +254,13 @@ def build_gff_for_record(
         if derived:
             sequences[gene["gene_index"]] = derived
 
+    gene_classes = _resolve_gene_classes_for_record(db_root, phylum, record)
+
     gff_export.write_gff3(record, out_path=record_dir / "locus.gff3")
-    gff_export.write_genbank(record, sequences, out_path=record_dir / "locus.gbk", ncbi=ncbi)
+    gff_export.write_genbank(
+        record, sequences, out_path=record_dir / "locus.gbk", ncbi=ncbi,
+        gene_classes=gene_classes,
+    )
     gff_export.write_proteins_fasta(record, sequences, out_path=record_dir / "proteins.faa")
 
 

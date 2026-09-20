@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 from pygenomeviz.parser import Genbank
 
-from MATPredict.db.draw import draw_locus
+from MATPredict.db.draw import _gene_label, draw_locus
 from MATPredict.db.gff_export import write_genbank
 
 # A real single-segment record with one multi-exon minus-strand gene (matching the real
@@ -153,3 +153,29 @@ def test_draw_locus_rejects_fragmented_multi_segment_record(tmp_path):
     with pytest.raises(NotImplementedError):
         draw_locus(gbk_path, out_path)
     assert not out_path.exists()
+
+
+def test_gene_label_includes_the_gene_class_qualifier_written_by_write_genbank(tmp_path):
+    """The two halves of the join, end to end at the label: `write_genbank` writes
+    `/gene_class` from its `gene_classes` mapping, and `_gene_label` reads it back off
+    the parsed CDS feature. Before the join existed the qualifier was never written, so
+    every label was gene name alone."""
+    gbk_path = tmp_path / "locus.gbk"
+    write_genbank(
+        SINGLE_SEGMENT_RECORD,
+        sequences={0: "M" * 20},
+        out_path=gbk_path,
+        gene_classes={0: "apn2_homolog"},
+    )
+
+    cds = [
+        feature
+        for feature in Genbank(gbk_path).records[0].features
+        if feature.type == "CDS"
+    ]
+    assert len(cds) == 1
+    # Also pins the direction of the fix: this fixture's gene 0 still carries a stale
+    # record-level "gene_class": "flanking" field, which the record schema does not
+    # define and `write_genbank` no longer reads. The label shows the mapping's value,
+    # not that field's.
+    assert _gene_label(cds[0]) == "APN2like/apn2_homolog"

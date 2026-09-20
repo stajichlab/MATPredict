@@ -151,8 +151,80 @@ def _fetch_accession(source: dict) -> str | None:
     return None
 
 
+def build_gene_class_index(order_doc: dict) -> dict[tuple[str, str], str]:
+    """Index one phylum's `order.yml` as `(locus_name, gene_name) -> gene_class`.
+
+    WHY THIS JOIN EXISTS AT ALL. `gene_class` (the functional, cross-family identity
+    of a gene: STE3/bar3/pra1 are all `pheromone_receptor`) is declared ONCE per
+    locus in the per-phylum vocabulary `db/<phylum>/order.yml`, not on each curated
+    record -- `db/_schema/metadata.schema.yaml` has no such field, so a record's own
+    gene dict can never carry it. Anything that wants to colour or label by gene_class
+    (`draw.py`, `synteny.py`'s clinker colour map) therefore has to join the record
+    back to its phylum's vocabulary; this index is that join's lookup side.
+
+    KEYED ON (locus_name, gene_name), not on gene_name alone: the same literal gene
+    name is legitimately declared under several loci with different meanings, and
+    `validate_gene_vocabulary` already treats a locus's `genes` list as the scope a
+    name is declared in. A record joins on its own `mating_type.locus_name`.
+
+    CASE-SENSITIVE by construction (plain dict keys, no normalisation). The vocabulary
+    deliberately carries both `APN2` (the Pezizomycotina "MAT" locus) and `apn2` (the
+    Yarrowia "MATyl" locus) as separate entries, because gene names here are literal
+    and deposit-faithful. Folding case would merge two distinct declared entries.
+
+    Entries with no `gene_class` are simply absent from the index, so a lookup miss
+    and a declared-but-unclassified gene are the same thing to the caller -- both mean
+    "write no qualifier".
+    """
+    index: dict[tuple[str, str], str] = {}
+    for locus in order_doc.get("loci", []) or []:
+        locus_name = locus.get("locus_name")
+        for gene in locus.get("genes", []) or []:
+            gene_class = gene.get("gene_class")
+            if gene_class:
+                index[(locus_name, gene["name"])] = gene_class
+    return index
+
+
+def resolve_gene_classes(record: dict, order_doc: dict) -> dict[int, str]:
+    """`gene_index -> gene_class` for the record's genes that the phylum vocabulary
+    classifies, ready to pass to `write_genbank(..., gene_classes=...)`.
+
+    KEYED ON `gene_index`, NOT on gene name: a single curated record can carry two
+    genes with the SAME name (the real Basidiomycota B-locus case, where duplicated
+    homeodomain/pheromone genes co-occur in one idiomorph -- expected biology, not a
+    curation error). A name-keyed mapping would still resolve both, but it could not
+    express a per-copy answer, and `write_genbank` already identifies its CDS features
+    by `gene_index`. This also mirrors the shape of the existing `sequences` parameter.
+
+    A gene whose name is not declared by its locus -- or a record whose
+    `mating_type.locus_name` has no entry in this vocabulary at all -- is simply
+    OMITTED from the result rather than raising. Over the 59 accepted records the join
+    resolves every present gene with no misses, but candidate records and
+    newly-curated records may legitimately cite a name the vocabulary does not declare
+    yet, and regeneration must degrade to "no qualifier", never to a crash.
+    Genes marked `present: false` are skipped: they get no feature written either.
+    """
+    locus_name = (record.get("mating_type") or {}).get("locus_name")
+    if locus_name is None:
+        return {}
+    index = build_gene_class_index(order_doc)
+    resolved: dict[int, str] = {}
+    for gene in record.get("genes", []):
+        if not gene.get("present", True):
+            continue
+        gene_class = index.get((locus_name, gene["name"]))
+        if gene_class:
+            resolved[gene["gene_index"]] = gene_class
+    return resolved
+
+
 def write_genbank(
-    record: dict, sequences: dict[int, str], out_path: Path, ncbi: "NcbiClient | None" = None
+    record: dict,
+    sequences: dict[int, str],
+    out_path: Path,
+    ncbi: "NcbiClient | None" = None,
+    gene_classes: dict[int, str] | None = None,
 ) -> None:
     """Write a GenBank record for the core locus, from the same segments/genes data as write_gff3.
 
@@ -169,10 +241,22 @@ def write_genbank(
 
     Each present gene with a sequence available in `sequences` gets a real `CDS`
     feature (not just `gene`) carrying a `translation` qualifier and `role`/
-    `gene_class`/`present_in_idiomorphs` qualifiers copied from the gene's own
-    schema fields -- the per-gene attributes clinker's `--colour_map`/
-    `--gene_functions` (or pyGenomeViz's `--feature_type2color`) need to color/label
-    by MAT-domain biology directly, without a separate manual mapping step.
+    `present_in_idiomorphs` qualifiers copied from the gene's own schema fields --
+    the per-gene attributes clinker's `--colour_map`/`--gene_functions` (or
+    pyGenomeViz's `--feature_type2color`) need to color/label by MAT-domain biology
+    directly, without a separate manual mapping step.
+
+    GENE_CLASS COMES FROM THE CALLER, not from the gene dict. `gene_class` is
+    declared per locus in `db/<phylum>/order.yml`, and the record schema has no such
+    field, so reading `gene["gene_class"]` could only ever return None -- which is why
+    zero of the 181 CDS features in the DB carried the qualifier before this
+    parameter existed. `gene_classes` maps `gene_index -> gene_class`, resolved by
+    `resolve_gene_classes` against the phylum vocabulary; `build_gff_for_record` is
+    the one place that loads `order.yml` and builds it. The mapping is deliberately
+    the same shape as `sequences`, so this function keeps taking plain data and stays
+    testable without touching the filesystem. An index absent from the mapping (or no
+    mapping at all, the default) writes NO `/gene_class` qualifier -- never an empty
+    one -- which keeps every pre-existing caller's output unchanged.
 
     READING FRAME AND GENETIC CODE. The CDS also carries `/codon_start` and
     `/transl_table` when the curated gene records them, with exactly GenBank's own
@@ -280,8 +364,9 @@ def write_genbank(
                     "gene": [gene["name"]], "role": [gene["role"]],
                     "translation": [translation],
                 }
-                if gene.get("gene_class"):
-                    qualifiers["gene_class"] = [gene["gene_class"]]
+                gene_class = (gene_classes or {}).get(gene["gene_index"])
+                if gene_class:
+                    qualifiers["gene_class"] = [gene_class]
                 if gene.get("present_in_idiomorphs"):
                     qualifiers["present_in_idiomorphs"] = [",".join(gene["present_in_idiomorphs"])]
                 codon_start = gene.get("codon_start")

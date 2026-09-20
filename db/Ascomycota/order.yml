@@ -34,8 +34,20 @@ loci:
       - {name: MAT1-1-5, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
       - {name: MAT1-2-1, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["MAT1-2"]}
       - {name: MAT1-2-10, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
-      - {name: APN2, role: flanking_conserved}
-      - {name: SLA2, role: flanking_conserved}
+      # APN2/SLA2 gene_class assigned 2026-09-19 by the project's curator, J. Stajich,
+      # who was asked what gene_class values APN2 and SLA2 should take. He described APN2
+      # as "class II DNA repair apurinic/apyrimidinic endonuclease" or "DNA endonuclease 2",
+      # and SLA2 as "cytoskeleton assembly control protein". Those functional descriptions
+      # are the curator's own words. The curator was then offered three naming options --
+      # function-named (AP_endonuclease/cytoskeleton_assembly), literal-descriptor
+      # (DNA_endonuclease_2/cytoskeleton_assembly_control), and gene-named
+      # (apn2_homolog/sla2_homolog) -- and SELECTED THE GENE-NAMED PAIR, deliberately
+      # trading the schema's "functional identity" framing for extensibility to the other
+      # flanking genes still to be classified (COX13, tptA, rnhA and the rest). NOT
+      # VERIFIED: no external publication was consulted for either value; the functional
+      # descriptions above were not checked against any source.
+      - {name: APN2, role: flanking_conserved, gene_class: apn2_homolog}
+      - {name: SLA2, role: flanking_conserved, gene_class: sla2_homolog}
       - {name: COX13, role: flanking_conserved}
       # MAT1-2-4 (A. fumigatus Af293, XP_754990.2) is a genuinely distinct gene from
       # Leotiomycetes' MAT1-2-4, which was renamed MAT1-2-10 above precisely to avoid
@@ -107,7 +119,13 @@ loci:
       - {name: MATA2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
       - {name: alpha1, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
       - {name: alpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
-      - {name: sla2, role: flanking_conserved}
+      # sla2 here is the same gene as Ascomycota:MAT's SLA2 under this family's own
+      # lowercase name, and takes the same class by the same 2026-09-19 curator ruling
+      # recorded on that entry above (curator described SLA2 as "cytoskeleton assembly
+      # control protein", then chose the gene-named option sla2_homolog from three
+      # offered namings). NOT VERIFIED: no external publication was consulted, and the
+      # curator did not separately rule on this lowercase spelling.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog}
       - {name: cha1, role: flanking_variable}
   - locus_name: "MATyl"
     vocabulary_type: "enum"
@@ -116,8 +134,16 @@ loci:
     genes:
       - {name: mata1, role: core_MAT, present_in_idiomorphs: ["A"]}
       - {name: mata2, role: core_MAT, present_in_idiomorphs: ["A"]}
-      - {name: sla2, role: flanking_conserved}
-      - {name: apn2, role: flanking_conserved}
+      # sla2/apn2 here are the same genes as Ascomycota:MAT's SLA2/APN2 under this
+      # family's own lowercase names, and take the same classes by the same 2026-09-19
+      # curator ruling recorded on those entries above (curator described APN2 as "class
+      # II DNA repair apurinic/apyrimidinic endonuclease" or "DNA endonuclease 2", SLA2 as
+      # "cytoskeleton assembly control protein", then chose the gene-named option
+      # apn2_homolog/sla2_homolog from three offered namings). NOT VERIFIED: no external
+      # publication was consulted, and the curator did not separately rule on these
+      # lowercase spellings.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog}
+      - {name: apn2, role: flanking_conserved, gene_class: apn2_homolog}
   - locus_name: "MTL"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "alpha"]

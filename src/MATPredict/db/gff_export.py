@@ -106,6 +106,45 @@ def _cds_location(gene: dict, segment: dict, strand: int) -> FeatureLocation | C
     return CompoundLocation(parts)
 
 
+def _fetch_accession(source: dict) -> str | None:
+    """The accession to subrange-fetch this segment's nucleotide sequence with, or
+    None when the segment cites nothing fetchable (caller then keeps the all-"N"
+    placeholder for that segment -- never a fabricated sequence).
+
+    WHY the two branches differ, and why both are correct:
+
+    A segment's `start`/`end` are, in every case, coordinates ON `seq_region` -- the
+    contig/scaffold/chromosome record the curator read them off. What differs between
+    the two `sequence_source.type` values is only whether `accession` names that same
+    record or something coarser.
+
+    - `insdc_nucleotide`: `accession` IS the nucleotide record the coordinates refer
+      to (in the curated DB these segments carry `accession` == `seq_region`, e.g.
+      `ACC1.1`/`ACC1.1`). Fetching by `accession` is kept EXACTLY as before, so this
+      branch's behavior is unchanged -- it is the one the 56 `insdc_nucleotide`
+      segments in the DB already rely on.
+    - `assembly`: `accession` is an assembly-level `GCA_`/`GCF_` identifier, which is
+      NOT a nucleotide record at all -- `efetch -db nuccore` cannot return sequence
+      for it, and `NcbiClient` cannot resolve it. It was never a usable fetch target,
+      which is why these segments previously fell through to the all-"N" placeholder.
+      Their `seq_region` however IS a real, individually fetchable contig accession,
+      and is the record the coordinates are relative to. Verified live on 2026-09-19
+      against NCBI efetch: the two `seq_region` values the 5 `assembly` segments in
+      the curated DB carry, `NW_026089539.1` and `JAAGWA010000001.1`, both return
+      real sequence.
+
+    So `seq_region` is the semantically right fetch target in BOTH branches; the
+    `insdc_nucleotide` branch keeps using `accession` only because that is its
+    existing, already-verified behavior and the two values agree there.
+    """
+    source_type = source.get("type")
+    if source_type == "insdc_nucleotide":
+        return source.get("accession") or None
+    if source_type == "assembly":
+        return source.get("seq_region") or None
+    return None
+
+
 def write_genbank(
     record: dict, sequences: dict[int, str], out_path: Path, ncbi: "NcbiClient | None" = None
 ) -> None:
@@ -115,8 +154,10 @@ def write_genbank(
     nucleotide sequence is fetched via NcbiClient.fetch_nucleotide_sequence -- the
     same mechanism db/validate.py's _independent_translation already uses -- and
     falls back to an all-"N" placeholder ONLY for that segment, on a fetch failure
-    or an unfetchable sequence_source.type (e.g. an assembly-level GCA_/GCF_
-    accession NcbiClient can't resolve yet), never fabricating a sequence. Passing
+    or a sequence_source that names nothing fetchable, never fabricating a sequence.
+    Which accession each segment is fetched with (and why an `assembly`-typed
+    segment is fetched by its `seq_region` contig, not its GCA_/GCF_ accession) is
+    documented on `_fetch_accession`. Passing
     no `ncbi` (the default) preserves the prior all-placeholder behavior exactly,
     for any caller/test that doesn't need real sequence.
 
@@ -142,10 +183,11 @@ def write_genbank(
         source = segment.get("sequence_source", {})
 
         nucleotide_sequence = None
-        if ncbi is not None and source.get("type") == "insdc_nucleotide" and source.get("accession"):
+        fetch_accession = _fetch_accession(source)
+        if ncbi is not None and fetch_accession:
             try:
                 fetched = ncbi.fetch_nucleotide_sequence(
-                    source["accession"], segment["start"], segment["end"], None
+                    fetch_accession, segment["start"], segment["end"], None
                 )
             except Exception:
                 fetched = None

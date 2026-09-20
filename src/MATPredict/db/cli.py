@@ -8,6 +8,7 @@ from pathlib import Path
 
 import requests
 import yaml
+from Bio import SeqIO
 
 from MATPredict.config import MatpredictConfig
 from MATPredict.db import gff_export
@@ -135,6 +136,75 @@ def find_records_missing_proteins_faa(db_root: Path) -> list[tuple[str, str, str
     return missing
 
 
+def find_records_with_stale_locus_gbk(db_root: Path) -> list[tuple[str, str, str]]:
+    """(phylum, order_or_family, record_id) for every accepted (non-candidate)
+    record whose locus.gbk predates the write_genbank upgrade that added real
+    nucleotide sequence and real CDS/translation features.
+
+    Staleness test: the record has at least one `present` gene AND its locus.gbk
+    is missing, or parses to zero `CDS` features across all its SeqRecords. The
+    old generator emitted only `gene` features, so a zero-CDS file is exactly the
+    pre-upgrade output; a regenerated file for a record with a present gene whose
+    sequence could be obtained carries at least one `CDS`.
+
+    The `present` gene precondition matters: a record whose genes are all
+    `present: false` would still produce a zero-CDS locus.gbk after a perfectly
+    successful regeneration, so selecting it would make the sweep report it as
+    stale forever with nothing to fix.
+
+    Parsing is done with Bio.SeqIO, not a substring search for "     CDS  ":
+    GenBank feature indentation is column-sensitive and a text match on it would
+    silently mis-classify records if the writer's spacing ever changed. A file
+    Bio.SeqIO cannot parse counts as STALE rather than raising -- an unreadable
+    locus.gbk is not evidence of freshness, and regenerating it is the fix.
+    """
+    stale = []
+    for meta_path in sorted(db_root.glob("*/*/*/metadata.yaml")):
+        parts = meta_path.relative_to(db_root).parts
+        if parts[0] == "candidates":
+            continue
+        record = yaml.safe_load(meta_path.read_text()) or {}
+        if not any(gene.get("present", True) for gene in record.get("genes", [])):
+            continue
+        gbk_path = meta_path.parent / "locus.gbk"
+        if not gbk_path.exists():
+            stale.append((parts[0], parts[1], parts[2]))
+            continue
+        try:
+            cds_count = sum(
+                1
+                for seq_record in SeqIO.parse(gbk_path, "genbank")
+                for feature in seq_record.features
+                if feature.type == "CDS"
+            )
+        except Exception:  # noqa: BLE001 -- an unparseable file is stale, not fatal
+            cds_count = 0
+        if cds_count == 0:
+            stale.append((parts[0], parts[1], parts[2]))
+    return stale
+
+
+def placeholder_segments(gbk_path: Path) -> list[str]:
+    """The ids of every SeqRecord in this locus.gbk whose sequence is entirely "N",
+    i.e. a segment whose real nucleotide sequence could not be fetched and that
+    write_genbank therefore left as its all-"N" placeholder.
+
+    Reported per record after a backfill so the sweep's own output names exactly
+    which records (and which segments within them) still lack real sequence,
+    instead of deferring that to a separate manual audit of the written files.
+    Returns [] rather than raising on an unreadable file: this is a reporting aid
+    and must never turn a succeeded record into a failure."""
+    placeholders = []
+    try:
+        for seq_record in SeqIO.parse(gbk_path, "genbank"):
+            sequence = str(seq_record.seq)
+            if sequence and set(sequence.upper()) == {"N"}:
+                placeholders.append(seq_record.id)
+    except Exception:  # noqa: BLE001 -- a reporting aid must never fail the sweep
+        return []
+    return placeholders
+
+
 def build_gff_for_record(
     db_root: Path, phylum: str, order_or_family: str, record_id: str,
     ncbi: NcbiClient, uniprot: UniprotClient,
@@ -171,17 +241,20 @@ def build_gff_for_record(
     gff_export.write_proteins_fasta(record, sequences, out_path=record_dir / "proteins.faa")
 
 
-def backfill_missing_proteins_faa(
-    db_root: Path, ncbi: NcbiClient, uniprot: UniprotClient,
+def _backfill_records(
+    db_root: Path, records: list[tuple[str, str, str]], ncbi: NcbiClient, uniprot: UniprotClient,
 ) -> tuple[list[tuple[str, str, str]], list[tuple[tuple[str, str, str], str]]]:
-    """Run build_gff_for_record for every record find_records_missing_proteins_faa
-    reports, isolating each record's failure so one live-fetch error (a
-    suppressed accession, a transient NCBI outage) never aborts the rest of
-    the batch -- the same discipline this project's genome-acquisition and
-    batch-runner fixes already established."""
+    """Run build_gff_for_record for each already-selected record, isolating each
+    record's failure so one live-fetch error (a suppressed accession, a transient
+    NCBI outage) never aborts the rest of the batch -- the same discipline this
+    project's genome-acquisition and batch-runner fixes already established.
+
+    Selection is the caller's job. Both backfill selectors (missing proteins.faa
+    and stale locus.gbk) feed this one loop, so the failure-isolation discipline
+    exists in exactly one place and cannot drift between them."""
     succeeded: list[tuple[str, str, str]] = []
     failed: list[tuple[tuple[str, str, str], str]] = []
-    for phylum, order_or_family, record_id in find_records_missing_proteins_faa(db_root):
+    for phylum, order_or_family, record_id in records:
         identifier = (phylum, order_or_family, record_id)
         try:
             build_gff_for_record(db_root, phylum, order_or_family, record_id, ncbi, uniprot)
@@ -190,6 +263,16 @@ def backfill_missing_proteins_faa(
             continue
         succeeded.append(identifier)
     return succeeded, failed
+
+
+def backfill_missing_proteins_faa(
+    db_root: Path, ncbi: NcbiClient, uniprot: UniprotClient,
+) -> tuple[list[tuple[str, str, str]], list[tuple[tuple[str, str, str], str]]]:
+    """Run build_gff_for_record for every record find_records_missing_proteins_faa
+    reports. Kept as its own named function (rather than folded into its two
+    callers) because it is the default `backfill-gff` behavior and is imported
+    by name elsewhere; the loop itself lives in _backfill_records."""
+    return _backfill_records(db_root, find_records_missing_proteins_faa(db_root), ncbi, uniprot)
 
 
 def _cmd_build_gff(args: argparse.Namespace) -> int:
@@ -204,10 +287,19 @@ def _cmd_build_gff(args: argparse.Namespace) -> int:
 def _cmd_backfill_gff(args: argparse.Namespace) -> int:
     config = _config(args)
     ncbi, uniprot = _make_clients(config)
-    succeeded, failed = backfill_missing_proteins_faa(config.db_root, ncbi, uniprot)
+    if args.stale_gbk:
+        records = find_records_with_stale_locus_gbk(config.db_root)
+    else:
+        records = find_records_missing_proteins_faa(config.db_root)
+    succeeded, failed = _backfill_records(config.db_root, records, ncbi, uniprot)
     for phylum, order_or_family, record_id in succeeded:
         record_dir = config.db_root / phylum / order_or_family / record_id
         proteins_path = record_dir / "proteins.faa"
+        for segment_id in placeholder_segments(record_dir / "locus.gbk"):
+            print(
+                f"WARNING {phylum}/{order_or_family}/{record_id} segment {segment_id} "
+                "has no real nucleotide sequence (all-N placeholder)"
+            )
         if ">" not in proteins_path.read_text():
             print(
                 f"WARNING wrote 0 sequences for {phylum}/{order_or_family}/{record_id} "
@@ -292,6 +384,11 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     build_gff.set_defaults(func=_cmd_build_gff)
 
     backfill_gff = action.add_parser("backfill-gff")
+    backfill_gff.add_argument(
+        "--stale-gbk", action="store_true",
+        help="Select records whose locus.gbk has zero CDS features (pre-upgrade output) "
+             "instead of records with a missing/empty proteins.faa",
+    )
     backfill_gff.set_defaults(func=_cmd_backfill_gff)
 
     draw_locus = action.add_parser("draw-locus")

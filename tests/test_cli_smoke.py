@@ -321,3 +321,22 @@ def test_draw_locus_subcommand_writes_a_real_image(tmp_path, monkeypatch):
     assert exit_code == 0
     assert out_path.exists()
     assert out_path.stat().st_size > 0
+
+
+# --- Staleness sweep: backfill-gff --stale-gbk selects pre-upgrade locus.gbk records ---
+
+def test_backfill_gff_stale_gbk_flag_registered():
+    from MATPredict.__main__ import build_parser
+    parser = build_parser()
+    args = parser.parse_args(["curate-db", "backfill-gff", "--stale-gbk"])
+    assert args.action == "backfill-gff"
+    assert args.stale_gbk is True
+
+
+def test_backfill_gff_stale_gbk_flag_defaults_to_false():
+    """Absent the flag, backfill-gff must keep its existing proteins.faa-driven
+    selection exactly as before."""
+    from MATPredict.__main__ import build_parser
+    parser = build_parser()
+    args = parser.parse_args(["curate-db", "backfill-gff"])
+    assert args.stale_gbk is False

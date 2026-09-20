@@ -240,3 +240,71 @@ def test_write_genbank_builds_compound_location_for_real_multi_exon_minus_strand
     assert len(cds_features) == 1
     assert isinstance(cds_features[0].location, CompoundLocation)
     assert len(cds_features[0].location.parts) == 2
+
+
+# --- assembly-typed segments fetch by seq_region (the coordinates' real reference) ---
+
+def test_write_genbank_assembly_source_fetches_with_seq_region(tmp_path):
+    """An `assembly`-typed segment cites a GCA_/GCF_ accession, which efetch cannot
+    subrange-fetch. Its `start`/`end` are relative to `seq_region` (the contig), so
+    `seq_region` is what gets fetched. Real values from the curated DB:
+    `5334_h4-8_*` cites `GCF_000143185.1` with seq_region `NW_026089539.1`."""
+    record = {
+        "record_id": "444_d_MAT_combined",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 100, "end": 130,
+             "sequence_source": {"type": "assembly", "accession": "GCF_000143185.1",
+                                 "seq_region": "NW_026089539.1"}},
+        ]}},
+        "genes": [],
+    }
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = "ACGT" * 7 + "TAA"
+
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={}, out_path=out_path, ncbi=fake_ncbi)
+
+    fake_ncbi.fetch_nucleotide_sequence.assert_called_once_with("NW_026089539.1", 100, 130, None)
+    text = out_path.read_text().replace("\n", "").replace(" ", "").upper()
+    assert "N" * 31 not in text
+    assert "ACGTACGTACGT" in text
+
+
+def test_write_genbank_insdc_nucleotide_source_still_fetches_with_accession(tmp_path):
+    """Regression guard for the widened branch: an `insdc_nucleotide` segment must
+    keep fetching with `accession`, not switch to `seq_region`."""
+    record = {
+        "record_id": "555_e_MAT_combined",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 10, "end": 40,
+             "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC9.1",
+                                 "seq_region": "NOT_THIS_ONE.1"}},
+        ]}},
+        "genes": [],
+    }
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = "GGGG" * 7 + "TAA"
+
+    write_genbank(record, sequences={}, out_path=tmp_path / "locus.gbk", ncbi=fake_ncbi)
+
+    fake_ncbi.fetch_nucleotide_sequence.assert_called_once_with("ACC9.1", 10, 40, None)
+
+
+def test_write_genbank_assembly_source_falls_back_to_placeholder_when_fetch_fails(tmp_path):
+    record = {
+        "record_id": "666_f_MAT_combined",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 100, "end": 130,
+             "sequence_source": {"type": "assembly", "accession": "GCA_000000000.1",
+                                 "seq_region": "JAAGWA010000001.1"}},
+        ]}},
+        "genes": [],
+    }
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.side_effect = Exception("simulated NCBI outage")
+
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={}, out_path=out_path, ncbi=fake_ncbi)  # must not raise
+
+    text = out_path.read_text().replace("\n", "").replace(" ", "").upper()
+    assert "N" * 31 in text

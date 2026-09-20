@@ -72,6 +72,7 @@ from typing import Callable
 
 from Bio import SeqIO
 
+from MATPredict import logger
 from MATPredict.detect.family_registry import Family, FamilyKey
 from MATPredict.detect.polish import ExonSpan, PolishModel
 
@@ -193,15 +194,25 @@ def _parse_proteome_location(qtitle: str, qseqid: str | None = None) -> tuple[st
     )
 
 
-def _run_checked(runner: Callable, cmd: list[str]):
+def _run_checked(runner: Callable, cmd: list[str], tolerate_signal: bool = False):
     """Run cmd and raise SearchToolError if it exits non-zero.
 
     Without this check a missing binary, a malformed database or a crash all
     produce empty stdout, which the parsers below read as "zero hits" -- a
     tool failure and a genuine negative result would be indistinguishable.
+
+    `tolerate_signal` returns None instead of raising when the process was
+    killed by a SIGNAL (returncode < 0, e.g. -11 for SIGSEGV), leaving the
+    caller to decide what to do. Only the polish path sets it, and only for
+    signals: a signal means the tool crashed on this particular input, which
+    a caller can work around, whereas a non-zero EXIT means the tool was
+    asked to do something impossible -- a bad path, a missing binary -- which
+    no caller can work around and which must not be swallowed.
     """
     result = runner(cmd, capture_output=True, text=True)
     returncode = getattr(result, "returncode", 0)
+    if tolerate_signal and returncode < 0:
+        return None
     if returncode != 0:
         stderr = (getattr(result, "stderr", "") or "").strip()
         raise SearchToolError(
@@ -486,6 +497,16 @@ def polish_with_exonerate(
     expected family/role. An output whose first alignment is for a DIFFERENT
     gene is no longer a None; the requested gene's own alignment further down
     the output is used.
+
+    A SIGNAL death (returncode < 0) is retried once without `--refine`, and
+    returns None if that also dies. `exonerate --refine` segfaults on some
+    windows: measured on the real crash from the 44-genus sweep it is
+    deterministic rather than transient, `--refine full` crashes too, and
+    dropping `--refine` succeeds on the same input. Letting that one window
+    abort the run cost an entire genome -- every locus already found in it --
+    for a fault rate of 1 in 44. A NON-ZERO EXIT is left fatal: that is a
+    missing binary or a bad path, and degrading it would convert a systematic
+    misconfiguration into a silent per-gene downgrade in every genome.
     """
     roles_by_family = _roles_by_family([family])
     contig, win_start, _win_end = window
@@ -495,12 +516,33 @@ def polish_with_exonerate(
         target_fasta = _extract_window(genome_fasta, window, tmp_dir)
         offset = win_start - 1
 
-        cmd = [
+        base_cmd = [
             "exonerate", "--model", "protein2genome",
             "--query", str(reference_fasta), "--target", str(target_fasta),
-            "--refine", "region", "--showtargetgff", "yes", "--showalignment", "no",
         ]
-        result = _run_checked(runner, cmd)
+        tail = ["--showtargetgff", "yes", "--showalignment", "no"]
+        result = _run_checked(
+            runner, base_cmd + ["--refine", "region"] + tail, tolerate_signal=True
+        )
+        method = "exonerate_refine"
+        if result is None:
+            # The refine step crashed. Retry without it: a less precise model
+            # is worth far more than no model, and the caller's `classify`
+            # treats a missing exonerate model as `polished_single` on
+            # miniprot alone, so losing this gene entirely is the worst
+            # outcome available here.
+            logger.warning(
+                "exonerate --refine crashed on %s:%d-%d; retrying without --refine",
+                contig, win_start, _win_end,
+            )
+            result = _run_checked(runner, base_cmd + tail, tolerate_signal=True)
+            method = "exonerate_unrefined"
+            if result is None:
+                logger.warning(
+                    "exonerate crashed on %s:%d-%d without --refine as well; "
+                    "leaving this gene to miniprot", contig, win_start, _win_end,
+                )
+                return None
 
         records: list[_AlignmentRecord] = []
         for line in result.stdout.splitlines():
@@ -540,7 +582,7 @@ def polish_with_exonerate(
             gene_name=gene_name, family_key=family_key, role=role, contig=contig,
             start=int(gene_line[3]) + offset, end=int(gene_line[4]) + offset,
             strand=gene_line[6], exons=exons, identity=identity,
-            reference_record_id=record_id, method="exonerate_refine",
+            reference_record_id=record_id, method=method,
         )
 
 
@@ -612,7 +654,21 @@ def polish_with_miniprot(
         offset = win_start - 1
 
         cmd = ["miniprot", "--gff", str(target_fasta), str(reference_fasta)]
-        result = _run_checked(runner, cmd)
+        # A signal death here would abort the whole genome exactly as the
+        # exonerate crash did. There is no `--refine` to drop, so there is
+        # nothing to retry -- but `classify` treats a missing miniprot model
+        # as `polished_single` on exonerate alone, with no tier penalty, so
+        # returning None costs one tool's opinion rather than every locus in
+        # the genome. No miniprot crash has been observed; this closes the
+        # same failure class symmetrically instead of waiting to lose a
+        # genome to it. A non-zero EXIT stays fatal, as for exonerate.
+        result = _run_checked(runner, cmd, tolerate_signal=True)
+        if result is None:
+            logger.warning(
+                "miniprot crashed on %s:%d-%d; leaving this gene to exonerate",
+                contig, win_start, _win_end,
+            )
+            return None
 
         records: list[_AlignmentRecord] = []
         by_mrna_id: dict[str, _AlignmentRecord] = {}

@@ -62,6 +62,7 @@ from __future__ import annotations
 
 import json
 import logging
+import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
@@ -408,23 +409,16 @@ def _families_meeting_evidence_floor(
     return admitted
 
 
-def _write_evidence_diagnostics(
-    out_path: Path, cluster: GeneCluster, family: Family, admitted: bool
-) -> None:
-    """Append one JSON line describing this (cluster, family) admission
-    decision -- the real calibration dataset `EvidenceFloor`'s docstring
-    refers to. Never raises on a write failure; diagnostics are best-effort
-    and must never abort a real detection run."""
-    own_hits = [h for h in cluster.hits if h.family_key == family.key]
-    row = {
-        "family": f"{family.key.phylum}:{family.key.locus_name}",
-        "contig": cluster.contig, "cluster_start": cluster.start, "cluster_end": cluster.end,
-        "gene_count": len({h.gene_name for h in own_hits}),
-        "hit_count": len(own_hits),
-        "roles": sorted({h.role for h in own_hits}),
-        "best_identity": max((h.identity for h in own_hits), default=None),
-        "admitted": admitted,
-    }
+def _append_diagnostics_row(out_path: Path, row: dict) -> None:
+    """Append one JSON line, never raising.
+
+    Diagnostics are best-effort: losing the corpus is bad, losing a detection
+    run because a log path was wrong is worse. The file is opened in APPEND
+    mode and never truncated, which is what a batch writing many genomes to
+    one file needs -- and why every row carries a `run_id`, so an accidental
+    second run into the same file is detectable and de-duplicable instead of
+    silently doubling the corpus.
+    """
     try:
         with out_path.open("a") as f:
             f.write(json.dumps(row) + "\n")
@@ -433,6 +427,75 @@ def _write_evidence_diagnostics(
         if key not in _DIAGNOSTICS_WRITE_FAILURES_LOGGED:
             _DIAGNOSTICS_WRITE_FAILURES_LOGGED.add(key)
             logger.warning("could not write evidence diagnostics to %s: %s", out_path, exc)
+
+
+def _write_evidence_diagnostics(
+    out_path: Path,
+    cluster: GeneCluster,
+    family: Family,
+    admitted: bool,
+    run_id: str,
+    genome_id: str,
+) -> None:
+    """Append one JSON line describing this (cluster, family) admission decision.
+
+    The real calibration dataset `EvidenceFloor`'s docstring refers to. It
+    could not actually serve that purpose before carrying `genome_id`: a row
+    named the family, contig and cluster span but not the organism, so
+    concatenating a batch's rows left no way to compute any per-genome
+    statistic from them.
+    """
+    own_hits = [h for h in cluster.hits if h.family_key == family.key]
+    _append_diagnostics_row(out_path, {
+        "kind": "evidence",
+        "run_id": run_id,
+        "genome_id": genome_id,
+        "family": f"{family.key.phylum}:{family.key.locus_name}",
+        "contig": cluster.contig, "cluster_start": cluster.start, "cluster_end": cluster.end,
+        "gene_count": len({h.gene_name for h in own_hits}),
+        "hit_count": len(own_hits),
+        "roles": sorted({h.role for h in own_hits}),
+        "best_identity": max((h.identity for h in own_hits), default=None),
+        "admitted": admitted,
+    })
+
+
+def _write_idiomorph_diagnostics(
+    out_path: Path,
+    resolution: IdiomorphResolution,
+    family: Family,
+    run_id: str,
+    genome_id: str,
+) -> None:
+    """Append one JSON line per collapsed idiomorph pair.
+
+    These rows are what the provisional overlap threshold
+    (`idiomorph.DEFAULT_MIN_OVERLAP_FRACTION`, 0.5) and the provisional margin
+    (`family_registry.DEFAULT_MIN_IDIOMORPH_MARGIN`, 5.0) are meant to be
+    revised from, so both members' identity AND coverage are recorded, not
+    just the verdict. Coverage in particular is the open question: the
+    artifact being resolved is a shared protein domain, so a cross-hit should
+    cover only part of its reference while the true gene covers all of it,
+    which makes coverage the biologically motivated discriminator and identity
+    a proxy that happened to score 23/23. It cannot be the rule today because
+    it is `None` on the tblastn and exonerate paths -- which is itself
+    something this corpus will show the rate of.
+    """
+    _append_diagnostics_row(out_path, {
+        "kind": "idiomorph_resolution",
+        "run_id": run_id,
+        "genome_id": genome_id,
+        "family": f"{family.key.phylum}:{family.key.locus_name}",
+        "contig": resolution.contig,
+        "winner": resolution.winner,
+        "loser": resolution.loser,
+        "winner_identity": resolution.winner_identity,
+        "loser_identity": resolution.loser_identity,
+        "margin": resolution.margin,
+        "overlap_fraction": resolution.overlap_fraction,
+        "winner_coverage": resolution.winner_coverage,
+        "loser_coverage": resolution.loser_coverage,
+    })
 
 
 @dataclass(frozen=True)
@@ -1049,6 +1112,11 @@ def run_pipeline(
     # they are in the same cluster, and gene names are only mutually
     # exclusive within the family that declares their idiomorphs.
     idiomorph_events_by_cluster: dict[int, list[IdiomorphResolution]] = {}
+    #: (family, event) for every resolution in the run, for the diagnostics
+    #: corpus. Paired at resolution time rather than re-derived afterwards:
+    #: a cluster routinely mixes families, and gene names are not unique
+    #: across them, so recovering the family from the event alone is guesswork.
+    resolutions_with_family: list[tuple[Family, IdiomorphResolution]] = []
     resolved_clusters: list[GeneCluster] = []
     for cluster in clusters:
         cluster_hits_out = list(cluster.hits)
@@ -1065,6 +1133,7 @@ def run_pipeline(
             by_id = dict(zip((id(h) for h in own), resolved_own))
             cluster_hits_out = [by_id.get(id(h), h) for h in cluster_hits_out]
             events.extend(own_events)
+            resolutions_with_family.extend((family, e) for e in own_events)
         new_cluster = GeneCluster(
             cluster.contig, cluster.start, cluster.end, cluster_hits_out
         )
@@ -1072,7 +1141,18 @@ def run_pipeline(
             idiomorph_events_by_cluster[id(new_cluster)] = events
         resolved_clusters.append(new_cluster)
     clusters = resolved_clusters
-    idiomorph_events = [e for v in idiomorph_events_by_cluster.values() for e in v]
+
+    # One id per run, so a second run appending into the same diagnostics file
+    # is detectable rather than silently doubling the corpus, and one per
+    # genome, so a batch's rows can be told apart at all.
+    run_id = uuid.uuid4().hex[:12]
+    genome_id = genome_fasta.stem
+    if evidence_diagnostics_path is not None:
+        for family, event in resolutions_with_family:
+            _write_idiomorph_diagnostics(
+                evidence_diagnostics_path, event, family,
+                run_id=run_id, genome_id=genome_id,
+            )
 
     # What this run could have found, read back from the FASTA it searched
     # with. Composed with the short-ORF exclusion because a gene that cannot
@@ -1120,6 +1200,7 @@ def run_pipeline(
                 _write_evidence_diagnostics(
                     evidence_diagnostics_path, cluster, family,
                     admitted=family.key in admitted_keys,
+                    run_id=run_id, genome_id=genome_id,
                 )
         for family in admitted_families:
             # Eligibility is decided per (cluster, family), NOT from a single

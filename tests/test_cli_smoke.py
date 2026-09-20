@@ -19,12 +19,27 @@ def test_detect_subcommand_registered():
 
 
 def test_detect_evidence_floor_flags_parse_with_defaults():
+    """The CLI's own defaults must track `EvidenceFloor`'s defaults. Hard-coding
+    them here (or in argparse) would let the CLI silently re-impose the old
+    permissive floor on every run that passes no flags."""
     from MATPredict.__main__ import build_parser
+    from MATPredict.detect.pipeline import EvidenceFloor
     parser = build_parser()
     args = parser.parse_args(["detect", "--genome", "g.fa", "--out-dir", "/tmp/x"])
     assert args.evidence_diagnostics is None
-    assert args.min_hits == 1
-    assert args.min_identity is None
+    assert args.min_hits == EvidenceFloor().min_hits == 2
+    assert args.min_identity is EvidenceFloor().min_identity is None
+    assert args.require_core_role is EvidenceFloor().require_core_role is True
+
+
+def test_detect_require_core_role_can_be_turned_off_from_the_cli():
+    """`--require-core-role` is now on by default, so an off switch has to
+    exist for anyone deliberately running a permissive sweep."""
+    from MATPredict.__main__ import build_parser
+    parser = build_parser()
+    args = parser.parse_args([
+        "detect", "--genome", "g.fa", "--out-dir", "/tmp/x", "--no-require-core-role",
+    ])
     assert args.require_core_role is False
 
 
@@ -46,8 +61,8 @@ def test_detect_default_evidence_floor_args_reconstruct_the_no_op_default():
     """When none of the new flags are passed, `_cmd_detect`'s
     `EvidenceFloor(min_hits=args.min_hits, min_identity=args.min_identity,
     require_core_role=args.require_core_role)` must equal `EvidenceFloor()`
-    exactly -- i.e. a caller that doesn't pass the new flags gets identical
-    `run_pipeline` behavior to before this change."""
+    exactly -- i.e. a caller that passes no flags gets exactly the curated
+    default floor, never a CLI-specific one that has drifted from it."""
     from MATPredict.__main__ import build_parser
     from MATPredict.detect.pipeline import EvidenceFloor
     parser = build_parser()

@@ -10,7 +10,7 @@ from MATPredict.detect.polish import (
     PolishModel,
 )
 from MATPredict.detect.search import SearchHit
-from MATPredict.detect.pipeline import run_pipeline
+from MATPredict.detect.pipeline import EvidenceFloor, run_pipeline
 
 FAMILY = Family(FamilyKey("P", "aLocus"), "pattern", None, "^a[0-9]+$",
                 [{"name": "mfa1", "role": "core_MAT"}, {"name": "pra1", "role": "core_MAT"}], [1])
@@ -156,6 +156,10 @@ def test_fast_path_missing_gene_is_polished_in_the_existing_clusters_window(tmp_
         return _model("mfa1", "c1", 150, 260, method="miniprot_refine")
 
     outcome = run_pipeline(
+        # Explicitly permissive: this test is about polish/segment behavior, not
+        # about the admission bar, and its fixtures build single-gene clusters
+        # that the curator-ruled default floor (>=2 genes) deliberately rejects.
+        evidence_floor=EvidenceFloor(min_hits=1, require_core_role=False),
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path, search_localize=fake_localize,
@@ -608,6 +612,10 @@ def test_partial_foothold_familys_missing_gene_is_rescued_genome_wide(tmp_path):
         return None
 
     outcome = run_pipeline(
+        # Explicitly permissive: this test is about polish/segment behavior, not
+        # about the admission bar, and its fixtures build single-gene clusters
+        # that the curator-ruled default floor (>=2 genes) deliberately rejects.
+        evidence_floor=EvidenceFloor(min_hits=1, require_core_role=False),
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path, search_localize=fake_localize,
@@ -917,6 +925,10 @@ def test_segment_span_covers_every_gene_it_reports(tmp_path):
         return _model("mfa1", "c1", 150, 260)  # rescued gene, entirely left of 300
 
     outcome = run_pipeline(
+        # Explicitly permissive: this test is about polish/segment behavior, not
+        # about the admission bar, and its fixtures build single-gene clusters
+        # that the curator-ruled default floor (>=2 genes) deliberately rejects.
+        evidence_floor=EvidenceFloor(min_hits=1, require_core_role=False),
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path, search_localize=_no_localize,
@@ -1449,6 +1461,10 @@ def test_fragmented_segments_each_keep_their_own_evidence_for_a_shared_gene_name
         return None
 
     outcome = run_pipeline(
+        # Explicitly permissive: this test is about polish/segment behavior, not
+        # about the admission bar, and its fixtures build single-gene clusters
+        # that the curator-ruled default floor (>=2 genes) deliberately rejects.
+        evidence_floor=EvidenceFloor(min_hits=1, require_core_role=False),
         genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path, search_localize=_no_localize,

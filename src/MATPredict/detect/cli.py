@@ -189,9 +189,23 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     detect.add_argument("--taxid", required=False, type=int)
     detect.add_argument("--out-dir", required=False)
     detect.add_argument("--evidence-diagnostics", required=False)
-    detect.add_argument("--min-hits", type=int, default=1)
-    detect.add_argument("--min-identity", type=float, default=None)
-    detect.add_argument("--require-core-role", action="store_true")
+    # Defaults are read from `EvidenceFloor` itself, never restated here: a
+    # hard-coded CLI default would silently re-impose the old permissive floor
+    # on every flagless run the moment the two drifted apart.
+    _floor_defaults = EvidenceFloor()
+    detect.add_argument("--min-hits", type=int, default=_floor_defaults.min_hits,
+                        help="Minimum DISTINCT genes a family needs in a cluster "
+                             f"to reach Stage 2 polishing (default: {_floor_defaults.min_hits})")
+    detect.add_argument("--min-identity", type=float, default=_floor_defaults.min_identity,
+                        help="Minimum best-hit percent identity for a family to reach "
+                             "Stage 2 polishing (default: no identity cutoff)")
+    # BooleanOptionalAction, not store_true: the default is now True, so an
+    # explicit `--no-require-core-role` off switch has to exist. The positive
+    # `--require-core-role` spelling keeps working unchanged.
+    detect.add_argument("--require-core-role", action=argparse.BooleanOptionalAction,
+                        default=_floor_defaults.require_core_role,
+                        help="Require at least one core_MAT hit for a family to reach "
+                             f"Stage 2 polishing (default: {_floor_defaults.require_core_role})")
     detect.add_argument(
         "--phylum",
         required=False,

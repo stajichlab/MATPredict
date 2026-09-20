@@ -122,3 +122,40 @@ def test_a_superseded_hit_does_not_make_a_homothallic_candidate():
 
 def test_the_separation_default_is_the_curators_provisional_value():
     assert DEFAULT_MAX_HOMOTHALLIC_SEPARATION_BP == 20_000
+
+
+def test_the_separation_is_measured_between_each_genes_BEST_hit():
+    # A cluster holds many tblastn HSPs of the same region -- 15 or more is
+    # routine. Testing every pairwise combination means some sexP/sexM pair is
+    # almost always within any threshold, so the class stops discriminating:
+    # the 44-genus sweep produced 77 homothallic candidates across 29 genera,
+    # including separations of 43,879 bp under a 20 kb bar, because a stray
+    # HSP pair was close even though each gene's best hit was far apart.
+    #
+    # The separation must be measured between the hits the report actually
+    # shows as that gene's evidence -- the best one per gene -- so the class
+    # and the displayed coordinates cannot disagree.
+    far = DEFAULT_MAX_HOMOTHALLIC_SEPARATION_BP + 20_000
+    cluster = _cluster(
+        # Each gene's BEST hit (proteome path) is far apart...
+        SearchHit(FAM.key, "sexP", "core_MAT", "c1", 1000, 1600, "+", 60.0,
+                  "rec1", "diamond_proteome"),
+        SearchHit(FAM.key, "sexM", "core_MAT", "c1", far, far + 600, "+", 60.0,
+                  "rec1", "diamond_proteome"),
+        # ...but a weak stray HSP of sexM sits right next to sexP.
+        SearchHit(FAM.key, "sexM", "core_MAT", "c1", 2000, 2200, "+", 22.0,
+                  "rec1", "tblastn_genome"),
+    )
+    assert classify_locus(cluster, FAM) == "idiomorph_gene_only"
+
+
+def test_best_hits_close_together_still_call_homothallic():
+    cluster = _cluster(
+        SearchHit(FAM.key, "sexP", "core_MAT", "c1", 1000, 1600, "+", 60.0,
+                  "rec1", "diamond_proteome"),
+        SearchHit(FAM.key, "sexM", "core_MAT", "c1", 4000, 4600, "+", 58.0,
+                  "rec1", "diamond_proteome"),
+        SearchHit(FAM.key, "sexM", "core_MAT", "c1", 90000, 90200, "+", 20.0,
+                  "rec1", "tblastn_genome"),
+    )
+    assert classify_locus(cluster, FAM) == "homothallic_candidate"

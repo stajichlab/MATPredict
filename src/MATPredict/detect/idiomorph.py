@@ -199,8 +199,24 @@ def classify_locus(cluster: GeneCluster, family: Family) -> str:
 
     idiomorph_of = {g["name"]: frozenset(g.get("present_in_idiomorphs") or ())
                     for g in family.genes}
-    restricted = [h for h in live if idiomorph_of.get(h.gene_name)]
-    unrestricted = [h for h in live if not idiomorph_of.get(h.gene_name)]
+
+    # ONE representative hit per gene, the same one the report shows as that
+    # gene's evidence. A cluster routinely holds 15+ tblastn HSPs of the same
+    # region, so comparing every pairwise combination means SOME sexP/sexM pair
+    # falls inside any threshold and the class stops discriminating: the
+    # 44-genus sweep produced 77 homothallic candidates across 29 genera, with
+    # separations up to 43,879 bp under a 20 kb bar, because a stray HSP
+    # happened to sit near the other gene. Worse, the class was then decided by
+    # hits the report never displayed, so the label and the coordinates
+    # disagreed.
+    best_by_gene: dict[str, SearchHit] = {}
+    for hit in live:
+        current = best_by_gene.get(hit.gene_name)
+        if current is None or _rank(hit) > _rank(current):
+            best_by_gene[hit.gene_name] = hit
+
+    restricted = [h for n, h in best_by_gene.items() if idiomorph_of.get(n)]
+    unrestricted = [h for n, h in best_by_gene.items() if not idiomorph_of.get(n)]
 
     # Both idiomorphs present and close enough to be one locus?
     for i, a in enumerate(restricted):

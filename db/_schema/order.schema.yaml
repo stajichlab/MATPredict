@@ -15,6 +15,21 @@ properties:
         vocabulary_type: {enum: [enum, pattern]}
         idiomorph_values: {type: array, items: {type: string}}
         idiomorph_pattern: {type: string}
+        # OPTIONAL. How far apart (bp) two tblastn hits of this locus may be and
+        # still be clustered as one candidate locus. ABSENT MEANS 25000: that was
+        # the single global constant the detector used for every phylum, and the
+        # curator ruled on 2026-09-20 that it is right for Ascomycota, so a locus
+        # only declares this field when it is known to need something else. The
+        # run's gap is the MAXIMUM over the routed loci, because under-splitting
+        # is recoverable (the evidence floor and polishing still discriminate
+        # within an over-large cluster) while over-splitting silently destroys a
+        # real locus by cutting it in two. Because it is the MAXIMUM over the
+        # routed loci, one phylum's value can widen another phylum's clustering:
+        # in any run that routes to several phyla's loci at once (e.g. the
+        # exhaustive fallback), the largest declared gap wins for all of them.
+        max_cluster_gap_bp:
+          type: integer
+          minimum: 1
         taxonomic_scope:
           type: array
           minItems: 1

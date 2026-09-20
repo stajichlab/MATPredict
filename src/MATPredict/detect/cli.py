@@ -4,10 +4,11 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect.pipeline import EvidenceFloor, run_pipeline
-from MATPredict.detect.family_registry import load_all_families
+from MATPredict.detect.family_registry import available_phyla, load_all_families, route
 from MATPredict.detect.reference_fasta import build_reference_fasta
 from MATPredict.detect.report import write_detection_gff3, write_detection_report
 from MATPredict.detect.rollout_aggregate import aggregate_reports, write_rollout_summary
@@ -23,7 +24,30 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    reference_fasta = build_reference_fasta(config.db_root, out_dir / "_reference.faa")
+    # Route FIRST, then build the reference FASTA from the routed families
+    # only. The order matters: the reference FASTA is the tblastn query set, so
+    # building it before routing (as this did) means every run pays to align
+    # every phylum's curated proteins no matter how narrowly it routed. The
+    # same `RoutingDecision` object is handed to `run_pipeline` so it cannot
+    # re-route to a different set than the query set was built for, and so the
+    # taxonomy lookup happens once per run.
+    routing = route(args.taxid, load_all_families(config.db_root), phylum=args.phylum)
+    # An explicitly requested phylum that matches no curated family is a usage
+    # error, not a valid empty result. Left to run it would build an empty
+    # reference FASTA, search nothing, and exit 0 with an empty
+    # `families_attempted` -- which reads as "looked and found nothing" rather
+    # than "never looked". `--phylum`'s argparse choices normally prevent this,
+    # but they degrade to unconstrained when the database root cannot be read
+    # (see `_phylum_choices`), so the check is enforced here too.
+    if args.phylum and not routing.families:
+        raise ValueError(
+            f"--phylum {args.phylum} matches no curated family in {config.db_root}; "
+            f"available phyla: {', '.join(available_phyla(config.db_root)) or 'none'}"
+        )
+    reference_fasta = build_reference_fasta(
+        config.db_root, out_dir / "_reference.faa",
+        family_keys={f.key for f in routing.families},
+    )
     evidence_floor = EvidenceFloor(
         min_hits=args.min_hits, min_identity=args.min_identity,
         require_core_role=args.require_core_role,
@@ -36,13 +60,20 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         reference_fasta=reference_fasta,
         evidence_floor=evidence_floor,
         evidence_diagnostics_path=Path(args.evidence_diagnostics) if args.evidence_diagnostics else None,
+        routing=routing,
     )
 
-    write_detection_gff3(outcome, out_dir / "detected_loci.gff3")
+    # `genome_fasta` is passed ONLY when asked for: it is what makes
+    # `write_detection_gff3` additionally emit CDS features with
+    # `translation=` attributes and a companion FASTA, and the companion
+    # FASTA holds every referenced contig's FULL sequence, which is large.
+    gff3_kwargs = {"genome_fasta": Path(args.genome)} if args.emit_cds_fasta else {}
+    write_detection_gff3(outcome, out_dir / "detected_loci.gff3", **gff3_kwargs)
     write_detection_report(outcome, out_dir / "detection_report.yaml")
     print(
         f"detected {len(outcome.results)} candidate locus/loci "
-        f"({len(outcome.families_attempted)} families attempted) -> {out_dir}"
+        f"({len(outcome.families_attempted)} families attempted, "
+        f"routing={routing.routing_mode}) -> {out_dir}"
     )
     # Sub-floor families are reported, never silently dropped (spec section 3).
     for entry in outcome.not_detected:
@@ -113,6 +144,35 @@ def _cmd_audit_scope(args: argparse.Namespace) -> int:
     return 0
 
 
+def _phylum_choices() -> list[str] | None:
+    """The `--phylum` choices, read from the configured database root when the
+    parser is built -- never a hardcoded list, so a phylum added to `db/`
+    becomes selectable with no code change here.
+
+    Returns None (argparse: accept any string) rather than raising if the
+    database root cannot be read at all. `matpredict --help` and `matpredict
+    --version` must keep working in a directory with no database, and refusing
+    to build the parser here would break every OTHER subcommand too -- this
+    runs at parser-build time, before argparse has even seen which subcommand
+    was asked for. `available_phyla` already skips an individual unparseable
+    `order.yml`; this broader guard covers anything else config resolution or
+    the glob can raise, and logs rather than swallowing.
+
+    Returning None does NOT make an unknown `--phylum` harmless: `_cmd_detect`
+    rejects a phylum that matches no curated family regardless of whether
+    argparse was able to constrain the choices.
+    """
+    try:
+        return available_phyla(MatpredictConfig.from_env(repo_root=Path.cwd()).db_root) or None
+    except Exception as err:  # noqa: BLE001 - parser construction must never fail here
+        logger.warning(
+            "could not read the phylum list from the database root (%s) -- "
+            "`matpredict detect --phylum` will not validate its argument against "
+            "the curated phyla", err,
+        )
+        return None
+
+
 def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     """Register `detect` and its `benchmark` action onto the top-level parser.
 
@@ -129,9 +189,47 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     detect.add_argument("--taxid", required=False, type=int)
     detect.add_argument("--out-dir", required=False)
     detect.add_argument("--evidence-diagnostics", required=False)
-    detect.add_argument("--min-hits", type=int, default=1)
-    detect.add_argument("--min-identity", type=float, default=None)
-    detect.add_argument("--require-core-role", action="store_true")
+    # Defaults are read from `EvidenceFloor` itself, never restated here: a
+    # hard-coded CLI default would silently re-impose the old permissive floor
+    # on every flagless run the moment the two drifted apart.
+    _floor_defaults = EvidenceFloor()
+    detect.add_argument("--min-hits", type=int, default=_floor_defaults.min_hits,
+                        help="Minimum DISTINCT genes a family needs in a cluster "
+                             f"to reach Stage 2 polishing (default: {_floor_defaults.min_hits})")
+    detect.add_argument("--min-identity", type=float, default=_floor_defaults.min_identity,
+                        help="Minimum best-hit percent identity for a family to reach "
+                             "Stage 2 polishing (default: no identity cutoff)")
+    # BooleanOptionalAction, not store_true: the default is now True, so an
+    # explicit `--no-require-core-role` off switch has to exist. The positive
+    # `--require-core-role` spelling keeps working unchanged.
+    detect.add_argument("--require-core-role", action=argparse.BooleanOptionalAction,
+                        default=_floor_defaults.require_core_role,
+                        help="Require at least one core_MAT hit for a family to reach "
+                             f"Stage 2 polishing (default: {_floor_defaults.require_core_role})")
+    detect.add_argument(
+        "--phylum",
+        required=False,
+        choices=_phylum_choices(),
+        help=(
+            "Restrict detection to one phylum's curated families outright, skipping "
+            "taxid-based routing entirely. Use when the genome's phylum is known but "
+            "its taxid routes badly -- without it, a taxid no family's taxonomic_scope "
+            "covers falls back to searching every family in every phylum. The choices "
+            "are read from the database root at startup, so they always match what is "
+            "actually curated."
+        ),
+    )
+    detect.add_argument(
+        "--emit-cds-fasta",
+        action="store_true",
+        help=(
+            "Also emit real CDS features with translation= attributes in the GFF3, and "
+            "write a companion detected_loci.fasta next to it. The companion FASTA "
+            "contains the FULL sequence of every contig the detection results "
+            "reference, not just the locus spans, so it can be large (a whole "
+            "chromosome-scale contig per referenced contig). Off by default."
+        ),
+    )
     detect.set_defaults(func=_cmd_detect)
 
     action = detect.add_subparsers(dest="detect_action")

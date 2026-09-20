@@ -323,7 +323,12 @@ def test_write_detection_gff3_with_genome_fasta_writes_companion_fasta_and_cds(t
     assert fasta_out.exists()
     fasta_text = fasta_out.read_text()
     assert fasta_text.startswith(">c1\n")
-    assert _ORF in fasta_text
+    # The sequence is wrapped at 60 columns, so join the sequence lines back
+    # up before looking for the ORF.
+    sequence = "".join(
+        line for line in fasta_text.splitlines() if not line.startswith(">")
+    )
+    assert _ORF in sequence
 
     # (b) a CDS feature line with a translation= attribute for the gene.
     text = out.read_text()
@@ -377,3 +382,130 @@ def test_write_detection_report_lists_not_detected_families(tmp_path):
     assert doc["not_detected"][0]["family"] == "Basidiomycota:bLocus"
     assert "below the ambiguity floor" in doc["not_detected"][0]["reason"]
     assert doc["not_detected"][0]["best_fraction_found"] == 0.25
+
+
+def test_write_detection_gff3_parses_the_genome_exactly_once(tmp_path, monkeypatch):
+    """The genome FASTA must be opened/parsed ONCE per call, not once per
+    gene plus once more for the companion FASTA.
+
+    Before this test, `write_detection_gff3` called
+    `_extract_translated_gene(genome_fasta, ...)` inside the per-gene loop --
+    and that helper opens and `SeqIO.parse`s the WHOLE genome on every call --
+    then opened the genome a final time to build the companion FASTA. For a
+    real fungal genome (tens of MB) and a locus with several genes that is a
+    full re-parse per gene, entirely avoidable because every gene's sequence
+    comes from the same small set of contigs the companion FASTA already
+    reads. The assertion counts real calls to the module's own FASTA-opening
+    helper rather than measuring elapsed time, so it cannot pass or fail for
+    reasons unrelated to the number of parses.
+    """
+    from Bio import SeqIO
+
+    genome_fasta = _write_genome_fasta(
+        tmp_path, "c1", prefix_len=_ORF_START - 1, orf=_ORF, suffix_len=20,
+    )
+    # `SeqIO.parse` is counted rather than either module's own
+    # `_open_fasta_text`, because a parse could be issued from `report.py` or
+    # from `benchmark.py`'s `_extract_translated_gene` (which binds its own
+    # module-level helper); counting the single function both paths must go
+    # through catches the N+1 wherever it lives.
+    real_parse = SeqIO.parse
+    parses = []
+
+    def counting_parse(handle, fmt, *args, **kwargs):
+        parses.append(fmt)
+        return real_parse(handle, fmt, *args, **kwargs)
+
+    monkeypatch.setattr(SeqIO, "parse", counting_parse)
+
+    # Two genes on the same contig -- the N+1 shape this test exists to catch
+    # only shows up with more than one gene.
+    evidence = [
+        GeneEvidence("pra1", "core_MAT", "c1", _ORF_START, _ORF_END, "+", 92.5, 87.0,
+                     "5270_521_aLocus_a1", "diamond_proteome"),
+        GeneEvidence("rba1", "core_MAT", "c1", _ORF_START, _ORF_END, "+", 90.0, 85.0,
+                     "5270_521_aLocus_a1", "diamond_proteome"),
+    ]
+    result = DetectionResult(
+        family_key=KEY, contig="c1", start=_ORF_START, end=_ORF_END,
+        confidence="high", idiomorph="undetermined", ambiguous_with=[],
+        genes_found=["pra1", "rba1"], genes_missing=[], fragmented=False,
+        segments=[LocusSegment("c1", _ORF_START, _ORF_END, contig_edge_distance=99)],
+        gene_evidence=evidence,
+        reference_records=["5270_521_aLocus_a1"],
+    )
+    outcome = DetectionOutcome(results=[result], not_detected=[], families_attempted=[KEY])
+
+    out = tmp_path / "once.gff3"
+    write_detection_gff3(outcome, out, genome_fasta=genome_fasta)
+
+    assert len(parses) == 1, f"genome parsed {len(parses)} times, expected exactly 1"
+    # ...and the output is still correct: both genes got a real CDS feature.
+    cds_lines = [line for line in out.read_text().splitlines() if "\tCDS\t" in line]
+    assert len(cds_lines) == 2
+    assert all(f"translation={_ORF_PROTEIN}" in line for line in cds_lines)
+
+
+def test_companion_fasta_is_wrapped_at_60_columns(tmp_path):
+    """Sequence lines must be wrapped at the standard 60-column FASTA width.
+
+    A real fungal contig is megabases long; writing it as one line makes the
+    companion FASTA unreadable in a pager and is rejected or mangled by some
+    downstream parsers. 60 is the width the rest of this project emits.
+    """
+    # A contig comfortably longer than 60 bases, so wrapping is observable.
+    genome_fasta = _write_genome_fasta(
+        tmp_path, "c1", prefix_len=_ORF_START - 1, orf=_ORF, suffix_len=200,
+    )
+    result = DetectionResult(
+        family_key=KEY, contig="c1", start=_ORF_START, end=_ORF_END,
+        confidence="high", idiomorph="undetermined", ambiguous_with=[],
+        genes_found=["pra1"], genes_missing=[], fragmented=False,
+        segments=[LocusSegment("c1", _ORF_START, _ORF_END, contig_edge_distance=99)],
+        gene_evidence=[
+            GeneEvidence("pra1", "core_MAT", "c1", _ORF_START, _ORF_END, "+", 92.5, 87.0,
+                         "5270_521_aLocus_a1", "diamond_proteome"),
+        ],
+        reference_records=["5270_521_aLocus_a1"],
+    )
+    outcome = DetectionOutcome(results=[result], not_detected=[], families_attempted=[KEY])
+
+    out = tmp_path / "wrapped.gff3"
+    write_detection_gff3(outcome, out, genome_fasta=genome_fasta)
+
+    lines = out.with_suffix(".fasta").read_text().splitlines()
+    assert lines[0] == ">c1"
+    sequence_lines = [line for line in lines if not line.startswith(">")]
+    assert sequence_lines, "companion FASTA has no sequence lines"
+    assert all(len(line) <= 60 for line in sequence_lines)
+    assert len(sequence_lines) > 1, "sequence was not wrapped at all"
+    # Wrapping must not alter the sequence itself.
+    assert _ORF in "".join(sequence_lines)
+
+
+def test_write_detection_report_records_the_routing_decision(tmp_path):
+    """Task 1 item 4 / the plan's global constraint: every routing fallback
+    must be visible in the report, never silent. A reader must be able to
+    tell "these 2 families were searched because the taxid's phylum was
+    Ascomycota" apart from "these 2 were searched because their scope
+    actually matched"."""
+    out = tmp_path / "routed.yaml"
+    outcome = DetectionOutcome(
+        results=[],
+        not_detected=[],
+        families_attempted=[FamilyKey("Ascomycota", "MATsc"), FamilyKey("Ascomycota", "MATyl")],
+        routing_mode="phylum_fallback",
+    )
+    write_detection_report(outcome, out)
+    doc = yaml.safe_load(out.read_text())
+    assert doc["routing_mode"] == "phylum_fallback"
+    assert doc["families_attempted"] == ["Ascomycota:MATsc", "Ascomycota:MATyl"]
+
+
+def test_write_detection_report_routing_mode_defaults_to_null(tmp_path):
+    """An outcome built without routing information (a direct `run_pipeline`
+    call in a test, say) still writes the key, as an explicit null, rather
+    than omitting it and making a consumer guess."""
+    out = tmp_path / "unrouted.yaml"
+    write_detection_report(OUTCOME, out)
+    assert yaml.safe_load(out.read_text())["routing_mode"] is None

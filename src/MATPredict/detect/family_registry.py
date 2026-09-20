@@ -7,7 +7,19 @@ from typing import Callable
 
 import yaml
 
-from MATPredict.db.taxonomy import default_lineage_taxids
+from MATPredict import logger
+from MATPredict.db.taxonomy import default_lineage_phylum_name, default_lineage_taxids
+
+
+DEFAULT_MAX_CLUSTER_GAP_BP = 25_000
+"""Cluster gap used by any locus whose `order.yml` entry does not declare one.
+
+25 kb was the single global constant this pipeline used for every phylum. The
+curator ruled on 2026-09-20 that it is right for Ascomycota, so it stays the
+default rather than becoming a value every locus must restate: absence in
+`order.yml` means "the Ascomycota-calibrated 25 kb is fine here". Only a locus
+that is known to need something else carries `max_cluster_gap_bp`.
+"""
 
 
 @dataclass(frozen=True)
@@ -24,6 +36,83 @@ class Family:
     idiomorph_pattern: str | None
     genes: list[dict]
     taxonomic_scope: list[int]
+    max_cluster_gap_bp: int = DEFAULT_MAX_CLUSTER_GAP_BP
+    """How far apart two hits of this family may be and still be one locus.
+
+    This is curation data, not a tuning knob, which is why it lives on the
+    family (i.e. on the `order.yml` locus entry) instead of staying the single
+    global constant it used to be. How spread out a MAT locus is, is a property
+    of the clade's locus architecture, and it differs between clades: the
+    curator ruled on 2026-09-20 that 25 kb is right for Ascomycota but too
+    tight for Mucoromycota. Defaulted here so every existing construction --
+    and every locus that does not declare one -- keeps the 25 kb behaviour
+    exactly.
+    """
+
+
+@dataclass(frozen=True)
+class RoutingDecision:
+    """Which families one detection run will search, and WHY they were chosen.
+
+    `routing_mode` is returned rather than left for the caller to re-derive
+    because the "why" changes how much the run's negatives are worth: an
+    `exhaustive` run searched families from phyla the query cannot belong to,
+    so its not-detected entries for those families are meaningless, whereas a
+    `direct` run's are real evidence of absence. `report.write_detection_report`
+    writes it into every detection report for exactly that reason.
+
+    * `direct` -- the query taxid is itself listed in the matched families'
+      `taxonomic_scope`.
+    * `lineage` -- an ancestor of the query taxid is.
+    * `phylum_fallback` -- nothing matched, so the run was narrowed to the
+      query taxon's own phylum.
+    * `exhaustive` -- nothing matched and the phylum could not be used, so
+      every family in every phylum is searched. This is the expensive,
+      low-value path; it is what Task 1 exists to make rare.
+    * `explicit_phylum` -- the operator passed `--phylum`, overriding all
+      taxid-based routing.
+
+    `phylum` is set only for the two phylum-scoped modes, and is None otherwise.
+    """
+
+    families: list[Family]
+    routing_mode: str
+    phylum: str | None = None
+
+
+def available_phyla(db_root: Path) -> list[str]:
+    """The phylum names `db_root` actually contains, sorted, read at call time.
+
+    Discovered from the `phylum:` field of each `db/<Phylum>/order.yml` -- the
+    same files `load_all_families` reads and the same string that ends up in
+    `FamilyKey.phylum` -- rather than from a hardcoded list, so adding a fourth
+    phylum directory to the database makes it selectable with no code change,
+    and so the `--phylum` CLI choices can never drift from what is on disk.
+    Reading the field (not the directory name) guarantees the returned strings
+    compare equal to `FamilyKey.phylum`; a directory with no `order.yml`
+    (`db/candidates/`, `db/_schema/`) declares no phylum and is not offered.
+
+    An `order.yml` that cannot be read or parsed costs its own phylum a
+    `--phylum` choice and nothing else: it is logged by name and skipped, never
+    raised. This function runs while the top-level argparse parser is being
+    built, so raising here would abort `matpredict --help` and every subcommand
+    that has nothing to do with the broken file -- a curator mid-edit would
+    take down the whole CLI. Commands that genuinely need the file's contents
+    (`load_all_families`) still fail loudly on it.
+    """
+    names = set()
+    for order_file in db_root.glob("*/order.yml"):
+        try:
+            doc = yaml.safe_load(order_file.read_text())
+        except (OSError, yaml.YAMLError) as err:
+            logger.warning(
+                "available_phyla: could not read %s (%s) -- that phylum will not be "
+                "offered as a --phylum choice", order_file, err,
+            )
+            continue
+        if doc and doc.get("phylum"):
+            names.add(doc["phylum"])
+    return sorted(names)
 
 
 def load_all_families(db_root: Path) -> list[Family]:
@@ -40,9 +129,36 @@ def load_all_families(db_root: Path) -> list[Family]:
                     idiomorph_pattern=locus.get("idiomorph_pattern"),
                     genes=locus["genes"],
                     taxonomic_scope=locus["taxonomic_scope"],
+                    max_cluster_gap_bp=locus.get(
+                        "max_cluster_gap_bp", DEFAULT_MAX_CLUSTER_GAP_BP
+                    ),
                 )
             )
     return families
+
+
+def derive_max_cluster_gap(families: list[Family]) -> int:
+    """The clustering gap for a run over `families`: the MAXIMUM of their gaps.
+
+    The maximum, not the minimum or a per-family value, because the two errors
+    are not symmetric. Taking too LARGE a gap under-splits -- two neighbouring
+    loci can be merged into one cluster -- and that is recoverable downstream:
+    the evidence floor and the polish stage still discriminate gene by gene
+    within an over-large cluster, so the real locus is still there to be
+    scored. Taking too SMALL a gap over-splits, cutting one real locus in two,
+    and nothing downstream can put it back: each half is scored as an
+    independent, incomplete candidate and the real locus is silently gone.
+
+    A per-family gap is not possible here without changing `cluster_hits`,
+    which groups hits by CONTIG ONLY and is deliberately family-agnostic
+    (a real locus's hits are attributed to whichever curated family's protein
+    they matched, so one locus's cluster routinely mixes families). One gap
+    per run is therefore the unit of choice, and the maximum is the safe end.
+
+    With no families (nothing routed) there is nothing to derive from, so the
+    default stands.
+    """
+    return max((f.max_cluster_gap_bp for f in families), default=DEFAULT_MAX_CLUSTER_GAP_BP)
 
 
 def expected_genes_for_idiomorph(
@@ -114,34 +230,87 @@ def route(
     taxid: int | None,
     families: list[Family],
     lineage_taxids_resolver: Callable[[int], list[int]] = default_lineage_taxids,
-) -> list[Family]:
-    """Return families whose taxonomic_scope contains taxid, directly or via lineage.
+    phylum_name_resolver: Callable[[int], str | None] = default_lineage_phylum_name,
+    phylum: str | None = None,
+) -> RoutingDecision:
+    """Choose the families a detection run will search, and report which rule chose them.
 
-    A family matches if EITHER the queried taxid is directly listed in its
-    taxonomic_scope (the original exact-membership check) OR the taxid's NCBI
-    Taxonomy ancestor lineage contains any taxid in its taxonomic_scope. Most
-    families declare a broad scope (e.g. a subphylum/subclass taxid) expecting
-    it to cover every descendant species -- lineage matching is what actually
-    makes that work; before this, only records whose scope also happened to
-    list their exact species/strain taxid routed correctly (an audit found 50
-    of 61 curated records fell through to the exhaustive fallback below).
+    The rules are tried in this order, each one narrower and cheaper to search
+    than the next:
 
-    The direct-membership check runs first and short-circuits before any
-    lineage lookup (no network/subprocess call) whenever it already finds a
-    match, so this stays free for the common case. `lineage_taxids_resolver`
-    defaults to `MATPredict.db.taxonomy.default_lineage_taxids`, which fetches
-    the ancestor chain via a cached NCBI Taxonomy efetch call; a resolver
-    failure (network error, unknown taxid, etc.) degrades gracefully to the
-    exhaustive fallback -- same as taxid=None or no scope matching at all.
+    1. **`phylum` given** (`matpredict detect --phylum <P>`): an outright
+       operator restriction to that phylum's families. No direct check, no
+       lineage fetch, no fallback -- the operator has stated the answer, and
+       honouring it costs no taxonomy lookup at all.
+    2. **Direct membership**: the queried taxid is itself in a family's
+       `taxonomic_scope`. Short-circuits before any lineage lookup (no
+       network/subprocess call), so this stays free for the common case.
+    3. **Lineage membership**: the taxid's NCBI Taxonomy ancestor lineage
+       contains a taxid in a family's `taxonomic_scope`. Most families declare
+       a broad scope (a subphylum/subclass taxid) expecting it to cover every
+       descendant species; lineage matching is what makes that work. Before it
+       existed, an audit found 50 of 61 curated records fell through to rule 5.
+    4. **Phylum fallback**: nothing above matched, but the query taxon's own
+       phylum is known and the database has families for it. Only that phylum's
+       families are searched. A MAT locus family curated in Basidiomycota
+       cannot be the answer for an Ascomycota genome, so searching it is pure
+       cost: it makes the run slower AND adds cross-phylum candidates for the
+       polish stage to grind through. A live case -- taxid 294748, lineage
+       [131567, 2759, 33154, 4751, 451864, 4890, 716545, 147537, 3239874,
+       2916678, 766764, 5475, 5476] -- intersects NO curated family's scope, so
+       before this rule it routed to all 19 families across all three phyla and
+       one small yeast genome ran past 24 minutes without finishing.
+    5. **Exhaustive**: every family. Reached when there is no taxid at all, or
+       the phylum cannot be determined, or the determined phylum has no curated
+       families (returning that phylum's EMPTY family set instead would silently
+       detect nothing, which is worse than searching too much).
+
+    **How the phylum is determined.** Not from a hardcoded phylum-name-to-taxid
+    table, and not by testing which phylum's families have a scope taxid in the
+    lineage -- the latter is exactly the test rule 3 just failed, so by
+    construction it can never succeed here. Instead `phylum_name_resolver`
+    returns the NAME of the lineage's phylum-rank ancestor, which is compared
+    against `FamilyKey.phylum`; both sides are then NCBI scientific names, and
+    `available_phyla` guarantees the database side is read from disk. The
+    default resolver (`db.taxonomy.default_lineage_phylum_name`) parses the very
+    same cached `efetch db=taxonomy` document the default lineage resolver
+    parses, at the same URL, so this fallback adds NO network call to a run that
+    already fetched the lineage.
+
+    Every resolver failure (network error, unknown taxid) degrades to the next
+    rule rather than raising, so a taxonomy outage makes detection slower, never
+    broken.
     """
+    if phylum is not None:
+        return RoutingDecision(
+            families=[f for f in families if f.key.phylum == phylum],
+            routing_mode="explicit_phylum",
+            phylum=phylum,
+        )
     if taxid is None:
-        return list(families)
+        return RoutingDecision(families=list(families), routing_mode="exhaustive")
+
     direct = [f for f in families if taxid in f.taxonomic_scope]
     if direct:
-        return direct
+        return RoutingDecision(families=direct, routing_mode="direct")
+
     try:
         ancestors = set(lineage_taxids_resolver(taxid))
     except Exception:
         ancestors = set()
     lineage_matched = [f for f in families if ancestors & set(f.taxonomic_scope)]
-    return lineage_matched if lineage_matched else list(families)
+    if lineage_matched:
+        return RoutingDecision(families=lineage_matched, routing_mode="lineage")
+
+    try:
+        query_phylum = phylum_name_resolver(taxid)
+    except Exception:
+        query_phylum = None
+    if query_phylum:
+        in_phylum = [f for f in families if f.key.phylum == query_phylum]
+        if in_phylum:
+            return RoutingDecision(
+                families=in_phylum, routing_mode="phylum_fallback", phylum=query_phylum
+            )
+
+    return RoutingDecision(families=list(families), routing_mode="exhaustive")

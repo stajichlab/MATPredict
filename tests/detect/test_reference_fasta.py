@@ -62,3 +62,92 @@ def test_build_reference_fasta_logs_malformed_headers(tmp_path, caplog):
     # Warning should be logged
     assert "Skipping malformed header" in caplog.text
     assert "malformed_header" in caplog.text
+
+
+def test_build_reference_fasta_restricted_to_family_keys(tmp_path):
+    """Task 1 item 3: the tblastn query set must hold only the ROUTED
+    families' curated proteins. A record contributes only when its own
+    family (resolved from its metadata.yaml's phylum + locus_name, exactly
+    as `family_registry.load_record_families` does) is in `family_keys`."""
+    from MATPredict.detect.family_registry import FamilyKey
+
+    def _record(phylum, order, record_id, locus_name, protein):
+        record_dir = tmp_path / phylum / order / record_id
+        record_dir.mkdir(parents=True)
+        (record_dir / "metadata.yaml").write_text(
+            f"record_id: {record_id}\nmating_type:\n  locus_name: {locus_name}\n"
+        )
+        (record_dir / "proteins.faa").write_text(
+            f">{record_id}|gene_index=0|name=g1|role=core_MAT\n{protein}\n"
+        )
+
+    _record("Ascomycota", "Saccharomycetales", "asco_rec", "MATsc", "AAA")
+    _record("Mucoromycota", "Mucorales", "muco_rec", "MAT", "MMM")
+
+    out = build_reference_fasta(
+        tmp_path, tmp_path / "restricted.faa",
+        family_keys={FamilyKey("Mucoromycota", "MAT")},
+    )
+    text = out.read_text()
+    assert ">muco_rec|gene0|g1" in text
+    assert "asco_rec" not in text
+
+
+def test_build_reference_fasta_default_is_unrestricted(tmp_path):
+    """Omitting `family_keys` must stay byte-identical to the pre-Task-1
+    behaviour: every accepted record contributes, and no metadata.yaml is
+    even consulted."""
+    for phylum, record_id, protein in (
+        ("Ascomycota", "asco_rec", "AAA"), ("Mucoromycota", "muco_rec", "MMM")
+    ):
+        record_dir = tmp_path / phylum / "Order" / record_id
+        record_dir.mkdir(parents=True)
+        (record_dir / "proteins.faa").write_text(
+            f">{record_id}|gene_index=0|name=g1|role=core_MAT\n{protein}\n"
+        )
+
+    text = build_reference_fasta(tmp_path, tmp_path / "all.faa").read_text()
+    assert "asco_rec" in text and "muco_rec" in text
+
+
+def test_per_phylum_builds_partition_the_unrestricted_build(tmp_path, real_db_root):
+    """The real measurement Task 1 item 3 asks for, stated as a RELATIONSHIP so
+    active curation cannot invalidate it.
+
+    A per-phylum restricted build must be a strict subset of the unrestricted
+    build, and the per-phylum builds together must partition it exactly -- no
+    protein dropped, none duplicated, none invented. That is the property the
+    tblastn query-set narrowing depends on: a routed run must see all of its
+    own families' proteins and none of anyone else's. The absolute counts are
+    printed for the record rather than asserted, because every accepted record
+    changes them.
+    """
+    from MATPredict.detect.family_registry import load_all_families
+
+    def _headers(path):
+        return [line for line in path.read_text().splitlines() if line.startswith(">")]
+
+    everything = _headers(build_reference_fasta(real_db_root, tmp_path / "all.faa"))
+    families = load_all_families(real_db_root)
+    phyla = sorted({f.key.phylum for f in families})
+    assert len(phyla) > 1, "a partition test needs at least two phyla in db/"
+
+    per_phylum = {}
+    for phylum in phyla:
+        keys = {f.key for f in families if f.key.phylum == phylum}
+        per_phylum[phylum] = _headers(
+            build_reference_fasta(real_db_root, tmp_path / f"{phylum}.faa", family_keys=keys)
+        )
+        # A strict subset: every restricted protein is in the full set, and the
+        # restriction actually removed something.
+        assert set(per_phylum[phylum]) < set(everything)
+
+    # An exact partition: the parts sum to the whole with no overlap.
+    assert sum(len(v) for v in per_phylum.values()) == len(everything)
+    assert set().union(*per_phylum.values()) == set(everything)
+
+    print(
+        "reference FASTA query-set sizes: "
+        + f"all={len(everything)}, "
+        + ", ".join(f"{k}={len(v)}" for k, v in sorted(per_phylum.items()))
+    )

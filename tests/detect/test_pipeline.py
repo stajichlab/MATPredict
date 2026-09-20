@@ -10,7 +10,7 @@ from MATPredict.detect.polish import (
     PolishModel,
 )
 from MATPredict.detect.search import SearchHit
-from MATPredict.detect.pipeline import run_pipeline
+from MATPredict.detect.pipeline import EvidenceFloor, run_pipeline
 
 FAMILY = Family(FamilyKey("P", "aLocus"), "pattern", None, "^a[0-9]+$",
                 [{"name": "mfa1", "role": "core_MAT"}, {"name": "pra1", "role": "core_MAT"}], [1])
@@ -156,6 +156,10 @@ def test_fast_path_missing_gene_is_polished_in_the_existing_clusters_window(tmp_
         return _model("mfa1", "c1", 150, 260, method="miniprot_refine")
 
     outcome = run_pipeline(
+        # Explicitly permissive: this test is about polish/segment behavior, not
+        # about the admission bar, and its fixtures build single-gene clusters
+        # that the curator-ruled default floor (>=2 genes) deliberately rejects.
+        evidence_floor=EvidenceFloor(min_hits=1, require_core_role=False),
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path, search_localize=fake_localize,
@@ -608,6 +612,10 @@ def test_partial_foothold_familys_missing_gene_is_rescued_genome_wide(tmp_path):
         return None
 
     outcome = run_pipeline(
+        # Explicitly permissive: this test is about polish/segment behavior, not
+        # about the admission bar, and its fixtures build single-gene clusters
+        # that the curator-ruled default floor (>=2 genes) deliberately rejects.
+        evidence_floor=EvidenceFloor(min_hits=1, require_core_role=False),
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path, search_localize=fake_localize,
@@ -917,6 +925,10 @@ def test_segment_span_covers_every_gene_it_reports(tmp_path):
         return _model("mfa1", "c1", 150, 260)  # rescued gene, entirely left of 300
 
     outcome = run_pipeline(
+        # Explicitly permissive: this test is about polish/segment behavior, not
+        # about the admission bar, and its fixtures build single-gene clusters
+        # that the curator-ruled default floor (>=2 genes) deliberately rejects.
+        evidence_floor=EvidenceFloor(min_hits=1, require_core_role=False),
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path, search_localize=_no_localize,
@@ -1449,6 +1461,10 @@ def test_fragmented_segments_each_keep_their_own_evidence_for_a_shared_gene_name
         return None
 
     outcome = run_pipeline(
+        # Explicitly permissive: this test is about polish/segment behavior, not
+        # about the admission bar, and its fixtures build single-gene clusters
+        # that the curator-ruled default floor (>=2 genes) deliberately rejects.
+        evidence_floor=EvidenceFloor(min_hits=1, require_core_role=False),
         genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path, search_localize=_no_localize,
@@ -1513,3 +1529,127 @@ def test_fragmented_segments_keep_both_raw_hits_for_a_shared_gene_name(tmp_path)
     assert by_place[("c1", "mfa1")].identity == 95.0
     assert by_place[("c2", "mfa1")].identity == 70.0
     assert len(fragmented[0].gene_evidence) == 4
+
+
+# --- per-locus cluster gap derivation ---
+
+
+def _gap_recording_cluster_hits(recorded):
+    """Wrap the real `cluster_hits`, recording the max_gap each call was given."""
+    real = pipeline_module.cluster_hits
+
+    def wrapper(hits, max_gap):
+        recorded.append(max_gap)
+        return real(hits, max_gap=max_gap)
+
+    return wrapper
+
+
+WIDE_GAP_ORDER_YML = (
+    "phylum: P\nloci:\n  - locus_name: aLocus\n    vocabulary_type: pattern\n"
+    "    idiomorph_pattern: \"^a[0-9]+$\"\n    taxonomic_scope: [1]\n"
+    "    max_cluster_gap_bp: 50000\n"
+    "    genes:\n      - {name: mfa1, role: core_MAT}\n      - {name: pra1, role: core_MAT}\n"
+)
+
+
+def _run_recording_gap(tmp_path, monkeypatch, order_text, **kwargs):
+    _write_order(tmp_path, order_text)
+    _write_record(tmp_path)
+    recorded: list[int] = []
+    monkeypatch.setattr(
+        pipeline_module, "cluster_hits", _gap_recording_cluster_hits(recorded)
+    )
+
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+        return [_tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400)]
+
+    run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_localize=fake_localize,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
+        **kwargs,
+    )
+    return recorded
+
+
+def test_run_pipeline_uses_the_default_gap_when_no_locus_declares_one(tmp_path, monkeypatch):
+    assert _run_recording_gap(tmp_path, monkeypatch, ORDER_YML) == [25_000]
+
+
+def test_run_pipeline_derives_the_gap_from_the_routed_locus(tmp_path, monkeypatch):
+    assert _run_recording_gap(tmp_path, monkeypatch, WIDE_GAP_ORDER_YML) == [50_000]
+
+
+def test_run_pipeline_takes_the_maximum_gap_over_routed_families(tmp_path, monkeypatch):
+    """Two routed families, one default and one wide: the WIDER wins, because
+    over-splitting a real locus is unrecoverable and under-splitting is not."""
+    two_loci = WIDE_GAP_ORDER_YML + (
+        "  - locus_name: bLocus\n    vocabulary_type: pattern\n"
+        "    idiomorph_pattern: \"^b[0-9]+$\"\n    taxonomic_scope: [1]\n"
+        "    genes:\n      - {name: mfa1, role: core_MAT}\n"
+    )
+    assert _run_recording_gap(tmp_path, monkeypatch, two_loci) == [50_000]
+
+
+def test_explicit_max_gap_argument_overrides_the_derived_value(tmp_path, monkeypatch):
+    recorded = _run_recording_gap(tmp_path, monkeypatch, WIDE_GAP_ORDER_YML, max_gap=7_000)
+    assert recorded == [7_000]
+
+
+def test_evidence_diagnostics_record_rejected_clusters_not_just_admitted_ones(tmp_path):
+    """END-TO-END guard on the diagnostics CALL SITE, not just the constant.
+
+    `run_pipeline` must write a diagnostics row for EVERY (cluster, family)
+    candidate -- every family with >=1 own hit in the cluster -- and mark the
+    ones the real `evidence_floor` turned away with `admitted: false`. The
+    rejected rows ARE the calibration dataset: they are the only record of what
+    the floor is throwing away, and the next real rollout depends on them to
+    replace this change's semi-synthetic measurement.
+
+    This test fails if the diagnostics loop's `_DIAGNOSTICS_CANDIDATE_FLOOR` is
+    ever "simplified" to the run's own `evidence_floor` (an easy "why are there
+    two floors?" cleanup), because the rejected row would then never be
+    written at all.
+
+    Fixture: two clusters on two contigs. c1 has both of the family's genes and
+    clears the default floor; c2 has one gene and is rejected by it.
+    """
+    import json
+
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+    diagnostics_path = tmp_path / "evidence_diagnostics.jsonl"
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        return [
+            SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1",
+                      "diamond_proteome"),
+            SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1",
+                      "diamond_proteome"),
+            # A lone gene on its own contig: 1 distinct gene, so the default
+            # floor (>=2 genes) rejects this cluster.
+            SearchHit(FAMILY.key, "mfa1", "core_MAT", "c2", 100, 200, "+", 31.0, "rec1",
+                      "diamond_proteome"),
+        ]
+
+    run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa",
+        taxid=None, db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path, search_localize=_no_localize,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
+        evidence_diagnostics_path=diagnostics_path,
+    )
+
+    rows = [json.loads(line) for line in diagnostics_path.read_text().splitlines()]
+    by_contig = {row["contig"]: row for row in rows}
+    assert set(by_contig) == {"c1", "c2"}, (
+        f"both candidate clusters must be recorded, got {rows}"
+    )
+    assert by_contig["c1"]["admitted"] is True
+    assert by_contig["c1"]["gene_count"] == 2
+    # The load-bearing assertion: the REJECTED candidate is on disk.
+    assert by_contig["c2"]["admitted"] is False
+    assert by_contig["c2"]["gene_count"] == 1
+    assert by_contig["c2"]["family"] == "P:aLocus"

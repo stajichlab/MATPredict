@@ -24,7 +24,7 @@ REAL_RECORD = DB_ROOT / "Basidiomycota" / "Ustilaginales" / "5270_521_aLocus_a1"
 @pytest.mark.skipif(not REAL_RECORD.exists(),
                      reason="requires the real curated record to be present")
 def test_pipeline_recovers_real_alocus_record(tmp_path):
-    families = route(5270, load_all_families(DB_ROOT))
+    families = route(5270, load_all_families(DB_ROOT)).families
     assert any(f.key.locus_name == "aLocus" for f in families)
 
     reference_fasta = build_reference_fasta(DB_ROOT, tmp_path / "reference.faa")

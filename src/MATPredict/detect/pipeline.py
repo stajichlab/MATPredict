@@ -70,6 +70,8 @@ from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.family_registry import (
     Family,
     FamilyKey,
+    RoutingDecision,
+    derive_max_cluster_gap,
     load_all_families,
     load_record_families,
     route,
@@ -196,6 +198,13 @@ class DetectionOutcome:
     results: list[DetectionResult]
     not_detected: list[NotDetectedFamily] = field(default_factory=list)
     families_attempted: list[FamilyKey] = field(default_factory=list)
+    # Which `family_registry.route` rule chose `families_attempted` (see
+    # `RoutingDecision`). Carried all the way into the detection report because
+    # it is what tells a reader whether this run's not-detected entries are
+    # evidence of absence or just the exhaustive fallback searching phyla the
+    # query could not belong to. None when the outcome was built without
+    # routing information (a direct `run_pipeline` call in a test).
+    routing_mode: str | None = None
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -286,16 +295,31 @@ class EvidenceFloor:
     """Minimum evidence a family must clear in a cluster before it is admitted
     to the (expensive, per-gene, two-subprocess-per-tool) Stage 2 polish loop.
 
-    Defaults exactly reproduce the pre-existing `_families_with_a_foothold`
-    behavior (any single hit of any role, any identity) -- this gate changes
-    nothing until a caller sets a stricter floor. See run_pipeline's own
-    `evidence_floor`/`evidence_diagnostics_path` parameters and this task's
-    plan notes for why no non-default value is set here yet: this rollout's
-    own real data shows a naive identity or hit-count cutoff is not yet safely
-    separable from real signal, so tuning these is left to a calibration pass
-    once db/Ascomycota/order.yml's taxonomic_scope fix (a separate task) lets
-    most genomes run with correctly-narrowed routing instead of the
-    exhaustive fallback that produced this rollout's noisy example.
+    The defaults are the CURATOR'S RULING: a family needs **>=2 distinct genes
+    in the cluster, at least one of them with role `core_MAT`**. A flanking
+    partner is deliberately NOT required. Requiring one would systematically
+    miss fragmented assemblies, where the MAT locus is real but its flank sits
+    on another contig -- exactly the genomes this tool is most needed for. In
+    the curator's words: "polish trigger could be another gene not necessarily
+    flank - at least at start until we have a bigger collection of examples of
+    fragments."
+
+    `min_identity` stays `None` on purpose. The ruling was about gene count and
+    role, not identity, and no identity cutoff has been measured against real
+    divergent MAT proteins. An unmeasured identity floor would silently drop
+    true positives.
+
+    These defaults previously reproduced the retired `_families_with_a_foothold`
+    behavior (any single hit, any role, any identity), with tuning deferred
+    until routing was narrowed. That deferral is RESOLVED: phylum-aware routing
+    now sends a query to its own phylum's families instead of the exhaustive
+    fallback that produced the noisy calibration example, so the floor no longer
+    has to absorb cross-phylum noise on its own.
+
+    Note that a default of `min_hits=1, require_core_role=False` is still what
+    the evidence diagnostics enumerate with (`_DIAGNOSTICS_CANDIDATE_FLOOR`):
+    the diagnostics record every candidate, admitted or not, and remain the
+    dataset for any future tightening (e.g. of `min_identity`).
     """
 
     #: Minimum number of DISTINCT genes (by `SearchHit.gene_name`), never raw
@@ -305,9 +329,21 @@ class EvidenceFloor:
     #: grows) produces N hits -- counting raw hits here would make this floor's
     #: effective strictness silently drift with curation density rather than
     #: with actual evidence. See `_families_meeting_evidence_floor`.
-    min_hits: int = 1
+    min_hits: int = 2
     min_identity: float | None = None
-    require_core_role: bool = False
+    require_core_role: bool = True
+
+
+#: The permissive floor the evidence diagnostics enumerate candidates with:
+#: every family with >=1 own hit in the cluster, of any gene, any role, any
+#: identity. This is the retired `_families_with_a_foothold` behavior, and it
+#: is spelled out here rather than as `EvidenceFloor()` because `EvidenceFloor`'s
+#: own defaults are now the strict curator-ruled floor -- writing `EvidenceFloor()`
+#: for the diagnostics would shrink the calibration dataset to just the rows
+#: that were admitted anyway, which is precisely the information it must not lose.
+_DIAGNOSTICS_CANDIDATE_FLOOR = EvidenceFloor(
+    min_hits=1, min_identity=None, require_core_role=False
+)
 
 
 def _families_meeting_evidence_floor(
@@ -315,7 +351,8 @@ def _families_meeting_evidence_floor(
 ) -> list[Family]:
     """Families whose OWN hits in this cluster clear `floor` -- generalizes
     the retired `_families_with_a_foothold` (which was exactly
-    `_families_meeting_evidence_floor(cluster, families, EvidenceFloor())`)."""
+    `_families_meeting_evidence_floor(cluster, families,
+    _DIAGNOSTICS_CANDIDATE_FLOOR)`)."""
     admitted = []
     for family in families:
         own_hits = [h for h in cluster.hits if h.family_key == family.key]
@@ -873,7 +910,7 @@ def run_pipeline(
     search_localize: Callable = search_localize,
     polish_with_exonerate: Callable = polish_with_exonerate,
     polish_with_miniprot: Callable = polish_with_miniprot,
-    max_gap: int = 25_000,
+    max_gap: int | None = None,
     ambiguity_floor: float = 0.5,
     short_orf_aa_floor: int = 60,
     window_protein_length_multiple: float = DEFAULT_WINDOW_PROTEIN_LENGTH_MULTIPLE,
@@ -881,8 +918,30 @@ def run_pipeline(
     polish_tolerance_bp: int = 10,
     evidence_floor: EvidenceFloor = EvidenceFloor(),
     evidence_diagnostics_path: Path | None = None,
+    routing: RoutingDecision | None = None,
 ) -> DetectionOutcome:
-    families = route(taxid, load_all_families(db_root))
+    # `routing` lets the caller route ONCE and reuse the decision, which the
+    # CLI must do: it has to know the routed families BEFORE this call, so it
+    # can restrict `build_reference_fasta`'s query set to them. Routing here as
+    # well would repeat the taxonomy lookup and, worse, could disagree with the
+    # reference FASTA the caller already built. When it is omitted the old
+    # self-routing behaviour is unchanged.
+    if routing is None:
+        routing = route(taxid, load_all_families(db_root))
+    families = routing.families
+    # The clustering gap is per-locus CURATION data (`order.yml`
+    # `max_cluster_gap_bp`), not a code constant: how spread out a MAT locus is
+    # differs by clade, and the curator ruled on 2026-09-20 that 25 kb fits
+    # Ascomycota but is too tight for Mucoromycota. The run's gap is the
+    # MAXIMUM over the routed families because the two errors are not
+    # symmetric: too LARGE a gap under-splits, which is recoverable -- the
+    # evidence floor and polishing still discriminate gene by gene inside an
+    # over-large cluster -- whereas too SMALL a gap over-splits, silently
+    # destroying a real locus by cutting it in two, and nothing downstream can
+    # rejoin the halves. An explicit `max_gap` from the caller still wins; None
+    # means derive.
+    if max_gap is None:
+        max_gap = derive_max_cluster_gap(families)
     record_families = load_record_families(db_root)
     protein_lengths = _curated_protein_lengths(db_root, families, record_families)
     short_orf_by_family = _short_orf_genes(
@@ -973,7 +1032,9 @@ def run_pipeline(
             # actually admits -- so both admitted and would-have-been-rejected
             # cases are captured for later threshold analysis.
             admitted_keys = {f.key for f in admitted_families}
-            for family in _families_meeting_evidence_floor(cluster, families, EvidenceFloor()):
+            for family in _families_meeting_evidence_floor(
+                cluster, families, _DIAGNOSTICS_CANDIDATE_FLOOR
+            ):
                 _write_evidence_diagnostics(
                     evidence_diagnostics_path, cluster, family,
                     admitted=family.key in admitted_keys,
@@ -1217,4 +1278,5 @@ def run_pipeline(
         results=results,
         not_detected=not_detected,
         families_attempted=[f.key for f in families],
+        routing_mode=routing.routing_mode,
     )

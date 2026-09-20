@@ -84,3 +84,17 @@ def default_lineage_taxids(taxid: int) -> list[int]:
     `NcbiClient` (see `_get_default_ncbi_client`). This is the default
     `lineage_taxids_resolver` for `detect.family_registry.route`."""
     return _get_default_ncbi_client().fetch_taxonomy_lineage(taxid)
+
+
+def default_lineage_phylum_name(taxid: int) -> str | None:
+    """Return the scientific name of `taxid`'s phylum-rank ancestor, or None.
+
+    This is the default `phylum_name_resolver` for
+    `detect.family_registry.route`'s phylum fallback. It reuses the same lazily
+    built default `NcbiClient` -- and therefore the same on-disk, URL-keyed
+    response cache -- as `default_lineage_taxids`, and both read the identical
+    `efetch db=taxonomy&id=<taxid>` document, so asking for the phylum after
+    asking for the lineage of the same taxid is a cache hit, not a second
+    network request.
+    """
+    return _get_default_ncbi_client().fetch_taxonomy_phylum(taxid)

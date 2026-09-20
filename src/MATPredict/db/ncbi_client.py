@@ -214,3 +214,27 @@ class NcbiClient:
             if tax_id_text:
                 lineage.append(int(tax_id_text))
         return lineage
+
+    def fetch_taxonomy_phylum(self, taxid: int) -> str | None:
+        """Fetch the scientific NAME of `taxid`'s phylum-rank ancestor, or None.
+
+        Reads the SAME `efetch db=taxonomy` document `fetch_taxonomy_lineage`
+        reads, at the SAME URL -- `LineageEx` carries `{TaxId, ScientificName,
+        Rank}` per ancestor, so the phylum is already present in the response
+        that a lineage lookup for this taxid has (or will have) fetched.
+        Because `self.fetcher` caches on disk keyed by URL, calling both
+        methods for one taxid costs exactly ONE HTTP round trip, not two; that
+        is what lets `detect.family_registry.route` add a phylum fallback
+        without adding a network call to the routing path.
+
+        Returns None when the document declares no phylum-rank ancestor (an
+        unclassified or above-phylum taxid), which callers must treat as "phylum
+        unknown" rather than as an error.
+        """
+        url = self._url("efetch.fcgi", f"db=taxonomy&id={taxid}&retmode=xml")
+        root = ET.fromstring(self.fetcher.get(url))
+        for taxon in root.findall(".//LineageEx/Taxon"):
+            if (taxon.findtext("Rank") or "").strip().lower() == "phylum":
+                name = (taxon.findtext("ScientificName") or "").strip()
+                return name or None
+        return None

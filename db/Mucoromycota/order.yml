@@ -4,6 +4,22 @@ loci:
     vocabulary_type: "enum"
     idiomorph_values: ["Plus", "Minus"]
     taxonomic_scope: [4827]
+    # CURATOR RULING, J. Stajich, 2026-09-20: the detector's 25000 bp default
+    # clustering gap is "right for Ascomycota" but too tight for Mucoromycota,
+    # which should "start at 50 kb". PROVISIONAL: 50000 is a starting value, not
+    # a measured one -- the curator asked that it be revised empirically as more
+    # Mucoromycota examples accumulate in this database. Nothing here has been
+    # measured from the curated Mucoromycota records yet.
+    #
+    # CROSS-PHYLUM CONSEQUENCE -- read before changing this number. One run uses
+    # ONE clustering gap: the MAXIMUM over all loci that run routed to. So this
+    # value is not confined to Mucoromycota. Whenever a run routes to this locus
+    # alongside others -- notably the exhaustive fallback used when a query's
+    # phylum cannot be determined -- raising this number also widens the
+    # clustering gap applied to Ascomycota, Basidiomycota and every other
+    # phylum's loci in that same run. Treat a change here as a change to every
+    # multi-phylum run's clustering, not a Mucoromycota-only edit.
+    max_cluster_gap_bp: 50000
     genes:
       - {name: tptA, role: flanking_conserved}
       - {name: sexP, role: core_MAT, present_in_idiomorphs: ["Plus"]}

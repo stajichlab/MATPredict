@@ -1,6 +1,7 @@
 """Build locus.gff3, locus.gbk, and proteins.faa from an accepted record's metadata."""
 from __future__ import annotations
 
+import warnings
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -106,6 +107,50 @@ def _cds_location(gene: dict, segment: dict, strand: int) -> FeatureLocation | C
     return CompoundLocation(parts)
 
 
+def _fetch_accession(source: dict) -> str | None:
+    """The accession to subrange-fetch this segment's nucleotide sequence with, or
+    None when the segment cites nothing fetchable (caller then keeps the all-"N"
+    placeholder for that segment -- never a fabricated sequence).
+
+    WHY the two branches differ, and why both are correct:
+
+    A segment's `start`/`end` are, in every case, coordinates ON `seq_region` -- the
+    contig/scaffold/chromosome record the curator read them off. What differs between
+    the two `sequence_source.type` values is only whether `accession` names that same
+    record or something coarser.
+
+    - `insdc_nucleotide`: `accession` IS the nucleotide record the coordinates refer
+      to (in the curated DB these segments carry `accession` == `seq_region`, e.g.
+      `ACC1.1`/`ACC1.1`). Fetching by `accession` is kept EXACTLY as before, so this
+      branch's behavior is unchanged -- it is the one the 56 `insdc_nucleotide`
+      segments in the DB already rely on.
+    - `assembly`: `accession` is an assembly-level `GCA_`/`GCF_` identifier, which is
+      NOT a nucleotide record at all -- `efetch -db nuccore` cannot return sequence
+      for it, and `NcbiClient` cannot resolve it. It was never a usable fetch target,
+      which is why these segments previously fell through to the all-"N" placeholder.
+      Their `seq_region` however IS a real, individually fetchable contig accession,
+      and is the record the coordinates are relative to. The curated DB holds 5
+      `assembly` segments across 5 records, citing 2 assembly accessions
+      (`GCF_000143185.2`, Schizophyllum commune H4-8; `GCA_016772295.1`,
+      Coprinopsis cinerea A43mut B43mut) and carrying 4 DISTINCT `seq_region`
+      values -- `NW_026089548.1` is shared by two records (`5334_h4-8_Balpha_3`
+      and `5334_h4-8_Bbeta_2`). ALL FOUR were verified live against NCBI efetch on
+      2026-09-19 and each returned real sequence: `NW_026089539.1`,
+      `NW_026089548.1`, `JAAGWA010000001.1`, `JAAGWA010000010.1`. So every one of
+      the 5 segments is covered by a verified accession, not just a sampled pair.
+
+    So `seq_region` is the semantically right fetch target in BOTH branches; the
+    `insdc_nucleotide` branch keeps using `accession` only because that is its
+    existing, already-verified behavior and the two values agree there.
+    """
+    source_type = source.get("type")
+    if source_type == "insdc_nucleotide":
+        return source.get("accession") or None
+    if source_type == "assembly":
+        return source.get("seq_region") or None
+    return None
+
+
 def write_genbank(
     record: dict, sequences: dict[int, str], out_path: Path, ncbi: "NcbiClient | None" = None
 ) -> None:
@@ -115,8 +160,10 @@ def write_genbank(
     nucleotide sequence is fetched via NcbiClient.fetch_nucleotide_sequence -- the
     same mechanism db/validate.py's _independent_translation already uses -- and
     falls back to an all-"N" placeholder ONLY for that segment, on a fetch failure
-    or an unfetchable sequence_source.type (e.g. an assembly-level GCA_/GCF_
-    accession NcbiClient can't resolve yet), never fabricating a sequence. Passing
+    or a sequence_source that names nothing fetchable, never fabricating a sequence.
+    Which accession each segment is fetched with (and why an `assembly`-typed
+    segment is fetched by its `seq_region` contig, not its GCA_/GCF_ accession) is
+    documented on `_fetch_accession`. Passing
     no `ncbi` (the default) preserves the prior all-placeholder behavior exactly,
     for any caller/test that doesn't need real sequence.
 
@@ -126,6 +173,38 @@ def write_genbank(
     schema fields -- the per-gene attributes clinker's `--colour_map`/
     `--gene_functions` (or pyGenomeViz's `--feature_type2color`) need to color/label
     by MAT-domain biology directly, without a separate manual mapping step.
+
+    READING FRAME AND GENETIC CODE. The CDS also carries `/codon_start` and
+    `/transl_table` when the curated gene records them, with exactly GenBank's own
+    semantics: `codon_start` is 1-based and relative to the first base of the CDS
+    LOCATION (so `codon_start=3` means translation starts at the third base of the
+    assembled, strand-oriented, spliced CDS), and `transl_table` names the NCBI
+    genetic-code table. This is the same single-offset, whole-transcript
+    interpretation `db/validate.py`'s `_independent_translation` applies. Without
+    these two qualifiers a consumer that translates the written CDS gets a protein
+    that disagrees with the feature's own `/translation` -- measured in this DB for
+    10 genes with `codon_start != 1` and 2 genes with `transl_table != 1`, across 7
+    records.
+
+    DELIBERATE CHOICE -- both are written ONLY when the gene carries a NON-DEFAULT
+    value, and omitted when absent or equal to 1. GenBank defines the default of
+    both qualifiers as 1, so an omitted qualifier is unambiguous rather than
+    under-specified, and any correct consumer (including Biopython) already applies
+    that default. Omitting them keeps this conditional style identical to the
+    `gene_class`/`present_in_idiomorphs` qualifiers above, and keeps the written
+    file stable for the majority of curated genes, which are `codon_start: 1` /
+    `transl_table: 1`. (NCBI's own flatfiles usually print `/codon_start=1`
+    explicitly; that redundancy buys nothing here and would churn every record's
+    committed `locus.gbk`.)
+
+    SEGMENT LENGTH GUARD. A fetched sequence whose length does not equal the
+    segment's own `end - start + 1` is REJECTED and replaced by the all-"N"
+    placeholder for that segment, with a `UserWarning`. NCBI efetch clamps a
+    `seq_stop` past the end of a contig instead of failing, and a short sequence
+    would have gene/CDS features appended at coordinates past its end -- which
+    Biopython writes out silently. A short fetch is a failed fetch; the sequence is
+    never padded and never fabricated. The all-"N" result is then reported by
+    `cli.placeholder_segments` like any other unfetchable segment.
     """
     segments = record["locus"]["core"]["segments"]
     genes_by_segment: dict[int, list[dict]] = {}
@@ -142,10 +221,11 @@ def write_genbank(
         source = segment.get("sequence_source", {})
 
         nucleotide_sequence = None
-        if ncbi is not None and source.get("type") == "insdc_nucleotide" and source.get("accession"):
+        fetch_accession = _fetch_accession(source)
+        if ncbi is not None and fetch_accession:
             try:
                 fetched = ncbi.fetch_nucleotide_sequence(
-                    source["accession"], segment["start"], segment["end"], None
+                    fetch_accession, segment["start"], segment["end"], None
                 )
             except Exception:
                 fetched = None
@@ -154,7 +234,19 @@ def write_genbank(
             # non-exception value is not a real fetch result, so it falls back to the
             # placeholder just like a genuine fetch failure would.
             if isinstance(fetched, str) and fetched:
-                nucleotide_sequence = fetched
+                if len(fetched) != segment_length:
+                    # A clamped/truncated fetch is a FAILED fetch, not a usable one:
+                    # writing it would place features past the end of the sequence.
+                    warnings.warn(
+                        f"{record['record_id']} segment {segment_index}: fetched "
+                        f"{len(fetched)} nt for {fetch_accession}:{segment['start']}-"
+                        f"{segment['end']} but the segment is {segment_length} nt; "
+                        "falling back to the all-N placeholder",
+                        UserWarning,
+                        stacklevel=2,
+                    )
+                else:
+                    nucleotide_sequence = fetched
         if not nucleotide_sequence:
             nucleotide_sequence = "N" * segment_length
 
@@ -192,6 +284,12 @@ def write_genbank(
                     qualifiers["gene_class"] = [gene["gene_class"]]
                 if gene.get("present_in_idiomorphs"):
                     qualifiers["present_in_idiomorphs"] = [",".join(gene["present_in_idiomorphs"])]
+                codon_start = gene.get("codon_start")
+                if codon_start is not None and int(codon_start) != 1:
+                    qualifiers["codon_start"] = [str(int(codon_start))]
+                transl_table = gene.get("transl_table")
+                if transl_table is not None and int(transl_table) != 1:
+                    qualifiers["transl_table"] = [str(int(transl_table))]
                 cds_location = _cds_location(gene, segment, strand)
                 cds_feature = SeqFeature(cds_location, type="CDS", qualifiers=qualifiers)
                 seq_record.features.append(cds_feature)

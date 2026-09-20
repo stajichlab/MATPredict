@@ -80,15 +80,17 @@ from unittest.mock import MagicMock
 
 
 def test_write_genbank_uses_real_sequence_when_ncbi_client_given(tmp_path):
+    # The fetched sequence's length must equal the segment's own span (33 nt here);
+    # write_genbank rejects a length mismatch as a clamped/failed fetch.
     record = {
         "record_id": "111_a_MAT_combined",
         "locus": {"core": {"segments": [
-            {"segment_index": 0, "start": 100, "end": 130,
+            {"segment_index": 0, "start": 100, "end": 132,
              "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC1.1", "seq_region": "ACC1.1"}},
         ]}},
         "genes": [
             {"gene_index": 0, "name": "G1", "role": "core_MAT", "present": True,
-             "segment_index": 0, "start": 100, "end": 130, "strand": "+"},
+             "segment_index": 0, "start": 100, "end": 132, "strand": "+"},
         ],
     }
     fake_ncbi = MagicMock()
@@ -97,11 +99,11 @@ def test_write_genbank_uses_real_sequence_when_ncbi_client_given(tmp_path):
     out_path = tmp_path / "locus.gbk"
     write_genbank(record, sequences={0: "M" * 10}, out_path=out_path, ncbi=fake_ncbi)
 
-    fake_ncbi.fetch_nucleotide_sequence.assert_called_once_with("ACC1.1", 100, 130, None)
+    fake_ncbi.fetch_nucleotide_sequence.assert_called_once_with("ACC1.1", 100, 132, None)
     text = out_path.read_text()
     # Bio.SeqIO's genbank writer always lowercases the ORIGIN sequence block regardless of
     # input case, so sequence-content checks compare case-insensitively.
-    assert "N" * 31 not in text.upper()  # the old placeholder is gone
+    assert "N" * 33 not in text.upper()  # the old placeholder is gone
     assert "ATGATGATG" in text.replace("\n", "").replace(" ", "").upper()  # real sequence is present
     assert "CDS" in text
     assert "/translation=" in text.replace("\n", "").replace(" ", "")
@@ -240,3 +242,246 @@ def test_write_genbank_builds_compound_location_for_real_multi_exon_minus_strand
     assert len(cds_features) == 1
     assert isinstance(cds_features[0].location, CompoundLocation)
     assert len(cds_features[0].location.parts) == 2
+
+
+# --- assembly-typed segments fetch by seq_region (the coordinates' real reference) ---
+
+def test_write_genbank_assembly_source_fetches_with_seq_region(tmp_path):
+    """An `assembly`-typed segment cites a GCA_/GCF_ accession, which efetch cannot
+    subrange-fetch. Its `start`/`end` are relative to `seq_region` (the contig), so
+    `seq_region` is what gets fetched. Real values from the curated DB:
+    `5334_h4-8_Aalpha_4` cites assembly `GCF_000143185.2` with seq_region
+    `NW_026089539.1`."""
+    record = {
+        "record_id": "444_d_MAT_combined",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 100, "end": 130,
+             "sequence_source": {"type": "assembly", "accession": "GCF_000143185.2",
+                                 "seq_region": "NW_026089539.1"}},
+        ]}},
+        "genes": [],
+    }
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = "ACGT" * 7 + "TAA"
+
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={}, out_path=out_path, ncbi=fake_ncbi)
+
+    fake_ncbi.fetch_nucleotide_sequence.assert_called_once_with("NW_026089539.1", 100, 130, None)
+    text = out_path.read_text().replace("\n", "").replace(" ", "").upper()
+    assert "N" * 31 not in text
+    assert "ACGTACGTACGT" in text
+
+
+def test_write_genbank_insdc_nucleotide_source_still_fetches_with_accession(tmp_path):
+    """Regression guard for the widened branch: an `insdc_nucleotide` segment must
+    keep fetching with `accession`, not switch to `seq_region`."""
+    record = {
+        "record_id": "555_e_MAT_combined",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 10, "end": 40,
+             "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC9.1",
+                                 "seq_region": "NOT_THIS_ONE.1"}},
+        ]}},
+        "genes": [],
+    }
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = "GGGG" * 7 + "TAA"
+
+    write_genbank(record, sequences={}, out_path=tmp_path / "locus.gbk", ncbi=fake_ncbi)
+
+    fake_ncbi.fetch_nucleotide_sequence.assert_called_once_with("ACC9.1", 10, 40, None)
+
+
+def test_write_genbank_assembly_source_falls_back_to_placeholder_when_fetch_fails(tmp_path):
+    record = {
+        "record_id": "666_f_MAT_combined",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 100, "end": 130,
+             "sequence_source": {"type": "assembly", "accession": "GCA_000000000.1",
+                                 "seq_region": "JAAGWA010000001.1"}},
+        ]}},
+        "genes": [],
+    }
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.side_effect = Exception("simulated NCBI outage")
+
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={}, out_path=out_path, ncbi=fake_ncbi)  # must not raise
+
+    text = out_path.read_text().replace("\n", "").replace(" ", "").upper()
+    assert "N" * 31 in text
+
+
+# --- reading frame / genetic code qualifiers, and the segment-length guard ---
+import warnings
+
+import pytest
+
+
+def _frame_record(gene_extra: dict, start: int, end: int) -> dict:
+    gene = {
+        "gene_index": 0, "name": "G1", "role": "core_MAT", "present": True,
+        "segment_index": 0, "start": start, "end": end, "strand": "+",
+    }
+    gene.update(gene_extra)
+    return {
+        "record_id": "999_frame_MAT_test",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": start, "end": end,
+             "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC9.1", "seq_region": "ACC9.1"}},
+        ]}},
+        "genes": [gene],
+    }
+
+
+def _only_cds(gbk_path):
+    records = list(SeqIO.parse(gbk_path, "genbank"))
+    cds = [f for rec in records for f in rec.features if f.type == "CDS"]
+    assert len(cds) == 1
+    return records, cds[0]
+
+
+def test_write_genbank_emits_codon_start_when_gene_is_not_in_frame_one(tmp_path):
+    # 2 leading bases, then ATG GCT TAA -> "MA" under codon_start=3.
+    nucleotides = "GG" + "ATGGCTTAA"
+    record = _frame_record({"codon_start": 3}, 1, len(nucleotides))
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = nucleotides
+
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={0: "MA"}, out_path=out_path, ncbi=fake_ncbi)
+
+    _, cds = _only_cds(out_path)
+    assert cds.qualifiers["codon_start"] == ["3"]
+
+
+def test_write_genbank_emits_transl_table_when_gene_uses_an_alternative_code(tmp_path):
+    record = _frame_record({"transl_table": 12}, 1, 9)
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = "ATGCTGTAA"
+
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={0: "MS"}, out_path=out_path, ncbi=fake_ncbi)
+
+    _, cds = _only_cds(out_path)
+    assert cds.qualifiers["transl_table"] == ["12"]
+
+
+def test_write_genbank_omits_codon_start_and_transl_table_at_their_genbank_defaults(tmp_path):
+    # Deliberate: GenBank's default for both qualifiers is 1, so a default-valued gene
+    # writes neither, keeping the conditional style of gene_class/present_in_idiomorphs.
+    record = _frame_record({"codon_start": 1, "transl_table": 1}, 1, 9)
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = "ATGGCTTAA"
+
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={0: "MA"}, out_path=out_path, ncbi=fake_ncbi)
+
+    _, cds = _only_cds(out_path)
+    assert "codon_start" not in cds.qualifiers
+    assert "transl_table" not in cds.qualifiers
+
+
+def _translate_written_cds(seq_record, cds) -> str:
+    """Translate a WRITTEN CDS feature exactly as a consumer of the file would:
+    extract its location from the record's own sequence, honour the written
+    /codon_start (1-based, relative to the first base of the CDS) and
+    /transl_table (defaulting to 1 when absent, as GenBank defines)."""
+    nucleotides = str(cds.extract(seq_record.seq))
+    offset = int(cds.qualifiers.get("codon_start", ["1"])[0]) - 1
+    table = int(cds.qualifiers.get("transl_table", ["1"])[0])
+    framed = nucleotides[offset:]
+    framed = framed[: len(framed) - len(framed) % 3]
+    return str(Seq(framed).translate(table=table)).rstrip("*")
+
+
+@pytest.mark.parametrize(
+    ("gene_extra", "nucleotides", "protein"),
+    [
+        # plain, in-frame, standard code
+        ({}, "ATGGCTTAA", "MA"),
+        # codon_start=3: the first two bases are not part of the reading frame
+        ({"codon_start": 3}, "GGATGGCTTAA", "MA"),
+        # transl_table=12 (alternative yeast nuclear): CTG is Ser, not Leu
+        ({"transl_table": 12}, "ATGCTGTAA", "MS"),
+    ],
+)
+def test_written_cds_round_trips_to_its_own_translation_qualifier(
+    tmp_path, gene_extra, nucleotides, protein
+):
+    """The regression test for the dropped-qualifier bug: translating the CDS as
+    WRITTEN must reproduce the CDS's own /translation qualifier."""
+    record = _frame_record(gene_extra, 1, len(nucleotides))
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = nucleotides
+
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={0: protein}, out_path=out_path, ncbi=fake_ncbi)
+
+    records, cds = _only_cds(out_path)
+    assert _translate_written_cds(records[0], cds) == cds.qualifiers["translation"][0]
+    assert cds.qualifiers["translation"][0] == protein
+
+
+def test_round_trip_helper_fails_when_the_frame_qualifiers_are_ignored(tmp_path):
+    """Proof the round-trip test above can actually fail: translating the same
+    codon_start=3 CDS in frame 1 does NOT give its /translation."""
+    nucleotides = "GGATGGCTTAA"
+    record = _frame_record({"codon_start": 3}, 1, len(nucleotides))
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = nucleotides
+
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(record, sequences={0: "MA"}, out_path=out_path, ncbi=fake_ncbi)
+
+    records, cds = _only_cds(out_path)
+    naive = str(Seq(str(cds.extract(records[0].seq))[:9]).translate()).rstrip("*")
+    assert naive != cds.qualifiers["translation"][0]
+
+
+def test_write_genbank_rejects_a_fetch_whose_length_differs_from_the_segment(tmp_path):
+    """A clamped/truncated efetch must fall back to the all-N placeholder (never pad,
+    never fabricate) and warn, instead of writing features past the sequence end."""
+    record = {
+        "record_id": "333_c_MAT_combined",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 100, "end": 130,
+             "sequence_source": {"type": "assembly", "accession": "GCA_1.1", "seq_region": "CONTIG1.1"}},
+        ]}},
+        "genes": [
+            {"gene_index": 0, "name": "G1", "role": "core_MAT", "present": True,
+             "segment_index": 0, "start": 100, "end": 130, "strand": "+"},
+        ],
+    }
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = "ACGT" * 3  # 12 nt, segment is 31 nt
+
+    out_path = tmp_path / "locus.gbk"
+    with pytest.warns(UserWarning, match="12 nt"):
+        write_genbank(record, sequences={0: "MMMM"}, out_path=out_path, ncbi=fake_ncbi)
+
+    seq_record = next(SeqIO.parse(out_path, "genbank"))
+    assert str(seq_record.seq) == "N" * 31  # placeholder, not the short fetch, not padded
+    assert max(int(f.location.end) for f in seq_record.features) <= len(seq_record.seq)
+
+
+def test_write_genbank_accepts_a_fetch_whose_length_matches_the_segment(tmp_path):
+    record = {
+        "record_id": "444_d_MAT_combined",
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 100, "end": 130,
+             "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC4.1", "seq_region": "ACC4.1"}},
+        ]}},
+        "genes": [],
+    }
+    fake_ncbi = MagicMock()
+    fake_ncbi.fetch_nucleotide_sequence.return_value = "A" * 31
+
+    out_path = tmp_path / "locus.gbk"
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")  # no warning may be raised for a correct length
+        write_genbank(record, sequences={}, out_path=out_path, ncbi=fake_ncbi)
+
+    seq_record = next(SeqIO.parse(out_path, "genbank"))
+    assert str(seq_record.seq).upper() == "A" * 31

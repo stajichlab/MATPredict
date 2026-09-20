@@ -117,6 +117,37 @@ class SearchHit:
     """
 
 
+MIN_HIT_LENGTH_BP = 90
+"""Shortest alignment worth counting as evidence, in genomic bp.
+
+90 bp is 30 codons. Below that an identity figure is noise: measured on
+Syzygites sp. MES_3091 in the 44-genus sweep, a 27 bp sexM "hit" (nine codons)
+at 77.8% identity and a 48/51 bp sexM/sexP pair 32 bp apart were each being
+reported as loci with two genes.
+
+Deliberately well below the 60 aa (180 bp) short-ORF floor this project already
+uses, because the small MAT genes the pipeline exists to rescue -- pheromone
+precursors of ~60-80 aa -- must still pass. The bar is on the ALIGNMENT, not on
+the gene: a real hit to a short gene still covers a meaningful part of it.
+
+This is a LENGTH bar, never an identity bar. Minus-strain identities in this
+project's own ground-truth set run 25.9-43.5%, which is why `min_identity`
+remains None.
+"""
+
+
+def drop_low_quality_hits(
+    hits: list[SearchHit], min_length_bp: int = MIN_HIT_LENGTH_BP
+) -> list[SearchHit]:
+    """Discard alignments too short to carry information.
+
+    Applied before clustering, so a fragment can never contribute a gene name
+    to a cluster, inflate the evidence floor's gene count, or be classified as
+    a locus of its own.
+    """
+    return [h for h in hits if (h.end - h.start + 1) >= min_length_bp]
+
+
 def _roles_by_family(families: list[Family]) -> dict[FamilyKey, dict[str, str]]:
     """family_key -> {gene name: role} for every attempted family.
 

@@ -81,6 +81,7 @@ from MATPredict.detect.idiomorph import (
     DEFAULT_MIN_OVERLAP_FRACTION,
     IdiomorphResolution,
     assign_idiomorph,
+    classify_locus,
     resolve_idiomorph_overlaps,
 )
 from MATPredict.detect.polish import (
@@ -95,6 +96,7 @@ from MATPredict.detect.reference_fasta import searchable_genes_by_family
 from MATPredict.detect.scoring import FamilyScore, is_ambiguous, score_cluster
 from MATPredict.detect.search import (
     SearchHit,
+    drop_low_quality_hits,
     polish_with_exonerate,
     polish_with_miniprot,
     search_fast_path,
@@ -178,6 +180,12 @@ class DetectionResult:
     segments: list[LocusSegment] = field(default_factory=list)
     gene_evidence: list[GeneEvidence] = field(default_factory=list)
     reference_records: list[str] = field(default_factory=list)
+    locus_class: str = "mat_locus"
+    """WHAT was found: `mat_locus`, `homothallic_candidate` or
+    `idiomorph_gene_only`. Orthogonal to `detection_pass`, which says HOW it
+    was admitted. See `idiomorph.classify_locus`; an `idiomorph_gene_only`
+    call is kept deliberately as per-idiomorph HMM training material, not
+    discarded."""
     detection_pass: str = "strict"
     """Which pass admitted this locus: `strict` or `relaxed`.
 
@@ -444,6 +452,8 @@ def _relaxed_results(
     searchable_genes: dict[FamilyKey, set[str]],
     evidence_floor: EvidenceFloor,
     ambiguity_floor: float = 0.5,
+    polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] | None = None,
+    contig_lengths: dict[str, int] | None = None,
 ) -> list[DetectionResult]:
     """Sub-floor clusters admitted on gene COUNT rather than gene fraction.
 
@@ -485,9 +495,19 @@ def _relaxed_results(
             if score.fraction_found >= ambiguity_floor:
                 continue  # the strict pass's own business, not this one's
             family = families_by_key[score.family_key]
+            # Per-gene evidence is NOT optional. A locus reported with only a
+            # list of gene names cannot be checked by anyone: in the 44-genus
+            # sweep, 81 relaxed calls listed sexP and sexM with no coordinates
+            # behind them, which made a genuine homothallic locus -- both
+            # idiomorphs present, as documented for Syzygites -- impossible to
+            # tell from two unrelated spurious HMG hits tens of kb apart.
+            evidence = _gene_evidence([cluster], score.family_key, polish_by or {})
+            segments = _segments_for([cluster], contig_lengths or {}, evidence)
             results.append(DetectionResult(
                 family_key=score.family_key,
-                contig=cluster.contig, start=cluster.start, end=cluster.end,
+                contig=segments[0].contig,
+                start=segments[0].start,
+                end=segments[0].end,
                 # Capped, never high: this call failed the fraction floor. Not
                 # forced to low either -- a core gene plus a conserved flank at
                 # high identity next to a contig break is real evidence, and
@@ -501,6 +521,10 @@ def _relaxed_results(
                 fragmented=False,
                 genes_not_searchable=score.genes_not_searchable,
                 detection_pass="relaxed",
+                locus_class=classify_locus(cluster, family),
+                segments=segments,
+                gene_evidence=evidence,
+                reference_records=sorted({e.reference_record_id for e in evidence}),
             ))
     return results
 
@@ -894,6 +918,29 @@ def _raw_method_rank(method: str) -> int:
         return len(_RAW_METHOD_PREFERENCE)
 
 
+def _live_hits_for_evidence(hits: list[SearchHit]) -> list[SearchHit]:
+    """Drop superseded hits, unless that would leave a gene with no evidence.
+
+    A gene counts as found because of a LIVE hit, so the evidence reported for
+    it must be that hit. Measured on Syzygites sp. MES_3091 scaffold_11: sexP
+    counted as found because of a hit at 148,515, but the report displayed the
+    superseded overlapping hit at 143,389 instead -- the very hit that had been
+    ruled out. The displayed evidence contradicted the scoring that admitted it.
+
+    Per gene, not globally: a gene whose hits are ALL superseded keeps them, so
+    the ambiguity stays visible in the report rather than vanishing. That gene
+    is not in `genes_found` anyway, so this only affects what a reader sees.
+    """
+    by_gene: dict[str, list[SearchHit]] = {}
+    for hit in hits:
+        by_gene.setdefault(hit.gene_name, []).append(hit)
+    kept: list[SearchHit] = []
+    for gene_hits in by_gene.values():
+        live = [h for h in gene_hits if h.superseded_by is None]
+        kept.extend(live or gene_hits)
+    return kept
+
+
 def _gene_evidence(
     member_clusters: list[GeneCluster],
     family_key: FamilyKey,
@@ -951,7 +998,7 @@ def _gene_evidence(
     best: dict[tuple[int, str], GeneEvidence] = {}
     for cluster in member_clusters:
         raw_by_gene: dict[str, SearchHit] = {}
-        for hit in cluster.hits:
+        for hit in _live_hits_for_evidence(cluster.hits):
             if hit.family_key != family_key:
                 continue
             current = raw_by_gene.get(hit.gene_name)
@@ -1176,6 +1223,12 @@ def run_pipeline(
         localized_hit_ids.update(id(h) for h in localized)
         hits.extend(localized)
 
+    # Drop alignments too short to carry information BEFORE clustering, so a
+    # fragment can never contribute a gene name to a cluster or inflate the
+    # evidence floor's gene count. Measured need: a 27 bp "sexM" (nine codons)
+    # and a 48/51 bp sexM/sexP pair were each being reported as loci.
+    hits = drop_low_quality_hits(hits)
+
     clusters = cluster_hits(hits, max_gap=max_gap)
 
     # Resolve overlapping mutually-exclusive idiomorph genes HERE, before
@@ -1373,6 +1426,38 @@ def run_pipeline(
                     cluster.hits.append(_hit_from_model(outcome.canonical))
                 polish_by[(id(cluster), family.key, gene_name)] = outcome
 
+    # Resolve overlapping idiomorph pairs AGAIN, now that polishing has run.
+    # The first pass (before polishing) is what keeps the evidence floor
+    # honest, but polishing MOVES coordinates: exonerate/miniprot replace an
+    # approximate tblastn span with a refined gene model, and a pair that did
+    # not overlap beforehand can overlap afterwards. Measured on Syzygites sp.
+    # MES_3091, three of five reported loci had post-polish sexM/sexP overlaps
+    # of 100%, 32 bp and 47 bp that the pre-polish pass never saw, so each was
+    # reported as two genes and left idiomorph=undetermined.
+    #
+    # Re-running is safe and idempotent: a hit already marked superseded stays
+    # superseded, and a pair that still does not overlap is still left alone.
+    for cluster in clusters:
+        for family in families:
+            own = [h for h in cluster.hits if h.family_key == family.key]
+            if len(own) < 2:
+                continue
+            resolved_own, own_events = resolve_idiomorph_overlaps(
+                own, family, min_overlap_fraction=idiomorph_overlap_fraction
+            )
+            if not own_events:
+                continue
+            by_id = dict(zip((id(h) for h in own), resolved_own))
+            cluster.hits[:] = [by_id.get(id(h), h) for h in cluster.hits]
+            idiomorph_events_by_cluster.setdefault(id(cluster), []).extend(own_events)
+            resolutions_with_family.extend((family, e) for e in own_events)
+            if evidence_diagnostics_path is not None:
+                for event in own_events:
+                    _write_idiomorph_diagnostics(
+                        evidence_diagnostics_path, event, family,
+                        run_id=run_id, genome_id=genome_id,
+                    )
+
     fragmented_segments: dict[FamilyKey, list[GeneCluster]] = {}
     for family in families:
         segments = _fragmented_family_segments(clusters, family)
@@ -1472,6 +1557,7 @@ def run_pipeline(
             reference_records=sorted({e.reference_record_id for e in evidence}),
             idiomorph_margin=idiomorph_margin,
             idiomorph_resolutions=own_resolutions,
+            locus_class=classify_locus(member_clusters[0], family),
         )
 
     results: list[DetectionResult] = []
@@ -1527,6 +1613,8 @@ def run_pipeline(
             searchable_genes=searchable_genes,
             evidence_floor=evidence_floor,
             ambiguity_floor=ambiguity_floor,
+            polish_by=polish_by,
+            contig_lengths=contig_lengths,
         )
         if results:
             logger.info(

@@ -4,6 +4,7 @@ from __future__ import annotations
 import dataclasses
 from dataclasses import dataclass
 
+from MATPredict.detect.clustering import GeneCluster
 from MATPredict.detect.family_registry import Family
 from MATPredict.detect.search import SearchHit
 
@@ -158,6 +159,63 @@ def _rank(hit: SearchHit) -> tuple[int, float]:
     genes, not a flaw in the ranking.
     """
     return (1 if hit.method in _PROTEOME_METHODS else 0, hit.identity)
+
+
+LOCUS_CLASS_MAT = "mat_locus"
+LOCUS_CLASS_HOMOTHALLIC = "homothallic_candidate"
+LOCUS_CLASS_IDIOMORPH_ONLY = "idiomorph_gene_only"
+
+
+def classify_locus(cluster: GeneCluster, family: Family) -> str:
+    """What KIND of thing this cluster is, independent of how it was admitted.
+
+    Curator's ruling, 2026-09-20: a sub-threshold call is not junk to be thrown
+    away, it is something to be filed correctly.
+
+    * `homothallic_candidate` -- both idiomorphs' core genes present, on one
+      contig, within `family.max_homothallic_separation_bp`. This is the real
+      architecture of a homothallic Mucorale: Syzygites megalocarpus encodes
+      both HMG transcription factors, each with its own flank. Flanking genes
+      alongside make the call stronger, never weaker, so they do not change
+      the class.
+    * `idiomorph_gene_only` -- idiomorph-restricted core genes and NOTHING
+      else: no flanking gene at all. Deliberately kept rather than discarded:
+      a lone sexM or sexP is training material for a per-idiomorph HMM, which
+      is a search strategy this project intends to build. It is simply not a
+      locus call, so it gets its own category.
+    * `mat_locus` -- everything else, i.e. a core gene with at least one
+      flanking gene, the ordinary heterothallic case.
+
+    Superseded hits are ignored throughout. A resolved cross-hit is ONE gene
+    seen twice; counting it would label every ordinary heterothallic locus
+    whose sexM/sexP overlap was collapsed as homothallic.
+    """
+    live = [
+        h for h in cluster.hits
+        if h.family_key == family.key and h.superseded_by is None
+    ]
+    if not live:
+        return LOCUS_CLASS_MAT
+
+    idiomorph_of = {g["name"]: frozenset(g.get("present_in_idiomorphs") or ())
+                    for g in family.genes}
+    restricted = [h for h in live if idiomorph_of.get(h.gene_name)]
+    unrestricted = [h for h in live if not idiomorph_of.get(h.gene_name)]
+
+    # Both idiomorphs present and close enough to be one locus?
+    for i, a in enumerate(restricted):
+        for b in restricted[i + 1:]:
+            if idiomorph_of[a.gene_name] & idiomorph_of[b.gene_name]:
+                continue  # same idiomorph; says nothing about homothallism
+            if a.contig != b.contig:
+                continue
+            separation = max(a.start, b.start) - min(a.end, b.end)
+            if separation <= family.max_homothallic_separation_bp:
+                return LOCUS_CLASS_HOMOTHALLIC
+
+    if restricted and not unrestricted:
+        return LOCUS_CLASS_IDIOMORPH_ONLY
+    return LOCUS_CLASS_MAT
 
 
 def _mutually_exclusive_pairs(

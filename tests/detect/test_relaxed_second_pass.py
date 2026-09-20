@@ -74,6 +74,38 @@ def test_the_relaxed_call_is_labelled_and_capped():
     assert results[0].confidence in ("medium", "low")
 
 
+def test_a_relaxed_call_carries_its_gene_evidence():
+    # A locus reported with no per-gene evidence cannot be checked by anyone.
+    # It was exactly this that made 81 relaxed calls in the 44-genus sweep
+    # impossible to judge: genes_found listed sexP and sexM, but there were no
+    # coordinates, identities or references behind them, so a real homothallic
+    # locus (both idiomorphs present, as documented for Syzygites) could not be
+    # told apart from two unrelated spurious HMG hits 50 kb apart.
+    cluster = _core_plus_flank()
+    results = _relaxed_results(
+        [cluster], [RICH], searchable_genes=SEARCHABLE,
+        evidence_floor=EvidenceFloor(),
+    )
+    evidence = results[0].gene_evidence
+    assert {e.gene_name for e in evidence} == {"g1", "g2"}
+    by_name = {e.gene_name: e for e in evidence}
+    assert by_name["g1"].identity == 92.6
+    assert by_name["g1"].contig == "c1"
+    assert by_name["g1"].start == 1 and by_name["g1"].end == 100
+    assert by_name["g2"].start == 400 and by_name["g2"].end == 500
+
+
+def test_a_relaxed_call_carries_segments_and_reference_records():
+    results = _relaxed_results(
+        [_core_plus_flank()], [RICH], searchable_genes=SEARCHABLE,
+        evidence_floor=EvidenceFloor(),
+    )
+    r = results[0]
+    assert r.segments, "a relaxed call must report the span it was found in"
+    assert r.segments[0].contig == "c1"
+    assert r.reference_records == ["rec1"]
+
+
 def test_a_lone_core_gene_is_still_rejected():
     # The bar is a COUNT of distinct genes, so one gene never passes however
     # good it looks. This is what keeps the 22 lone-HMG-gene genera out.

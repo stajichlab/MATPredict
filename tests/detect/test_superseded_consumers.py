@@ -113,3 +113,27 @@ def test_a_superseded_core_hit_does_not_satisfy_the_core_role_requirement():
         cluster, [FAM], EvidenceFloor(min_hits=1, require_core_role=True)
     )
     assert admitted == []
+
+
+def test_gene_evidence_prefers_a_live_hit_over_a_superseded_one():
+    # Reporting a superseded hit as a gene's evidence contradicts the scoring
+    # that admitted it. Measured on Syzygites sp. MES_3091 scaffold_11: sexP
+    # counted as found because of a hit at 148,515, but the report displayed
+    # the superseded overlapping hit at 143,389 instead -- so the evidence
+    # shown was the very hit that had been ruled out.
+    import dataclasses
+
+    from MATPredict.detect.pipeline import _gene_evidence
+
+    live = SearchHit(
+        FAM.key, "sexP", "core_MAT", "c1", 148515, 148805, "+", 20.0,
+        "rec_far", "tblastn_genome",
+    )
+    superseded = dataclasses.replace(
+        _hit("sexP", 143389, 143595, 35.7), superseded_by="sexM"
+    )
+    cluster = GeneCluster("c1", 143151, 148805, [superseded, live])
+    evidence = _gene_evidence([cluster], FAM.key, {})
+    sexp = [e for e in evidence if e.gene_name == "sexP"]
+    assert len(sexp) == 1
+    assert sexp[0].start == 148515, "the live hit must be the reported evidence"

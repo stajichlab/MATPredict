@@ -22,6 +22,25 @@ that is known to need something else carries `max_cluster_gap_bp`.
 """
 
 
+DEFAULT_MAX_HOMOTHALLIC_SEPARATION_BP = 20_000
+"""How close two opposite-idiomorph genes must be to be called one locus.
+
+Both idiomorphs present in one genome is the homothallic architecture, not an
+error: Syzygites megalocarpus encodes both HMG transcription factors, each
+flanked by its own intact gene with the other flank pseudogenised (Idnurm 2011,
+doi:10.1128/EC.05149-11; Schulz et al. 2016). Calling that a mistake would make
+homothallism undetectable.
+
+But two idiomorph genes merely landing in one cluster is not enough. The
+clustering gap for Mucoromycota is 50 kb, so an unrelated pair can be grouped:
+measured on Syzygites sp. MES_3091, a real annotated sexM and a 285 bp tblastn
+sexP fragment 47 kb apart were grouped as one "locus". A real homothallic pair
+spans genes, not tens of kb of nothing.
+
+PROVISIONAL, curator-set 2026-09-20 as a starting value. Revise it from
+observed separations in confirmed homothallic loci, not by intuition.
+"""
+
 DEFAULT_MIN_IDIOMORPH_MARGIN = 5.0
 """Identity points two idiomorphs must be apart before the call is trusted.
 
@@ -64,6 +83,13 @@ class Family:
     tight for Mucoromycota. Defaulted here so every existing construction --
     and every locus that does not declare one -- keeps the 25 kb behaviour
     exactly.
+    """
+    max_homothallic_separation_bp: int = DEFAULT_MAX_HOMOTHALLIC_SEPARATION_BP
+    """How close opposite-idiomorph genes must be to call one homothallic locus.
+
+    Curation data like `max_cluster_gap_bp`: how compact a homothallic MAT
+    region is, is a property of the clade's locus architecture. See
+    `DEFAULT_MAX_HOMOTHALLIC_SEPARATION_BP`.
     """
     min_idiomorph_margin: float = DEFAULT_MIN_IDIOMORPH_MARGIN
     """Identity points two mutually exclusive idiomorph genes must be apart.
@@ -160,6 +186,10 @@ def load_all_families(db_root: Path) -> list[Family]:
                     ),
                     min_idiomorph_margin=locus.get(
                         "min_idiomorph_margin", DEFAULT_MIN_IDIOMORPH_MARGIN
+                    ),
+                    max_homothallic_separation_bp=locus.get(
+                        "max_homothallic_separation_bp",
+                        DEFAULT_MAX_HOMOTHALLIC_SEPARATION_BP,
                     ),
                 )
             )

@@ -290,6 +290,12 @@ def _result_doc(r: DetectionResult) -> dict:
         # ones, so "this was a strict call" is distinguishable from "this
         # output predates the field", and so strict-only consumers can filter.
         "detection_pass": r.detection_pass,
+        # WHAT was found, as opposed to how it was admitted. An
+        # `idiomorph_gene_only` call is a lone sexM or sexP with no flank: not
+        # a locus, but kept on purpose as per-idiomorph HMM training material.
+        # `homothallic_candidate` is both idiomorphs in one locus, the real
+        # architecture of a homothallic Mucorale.
+        "locus_class": r.locus_class,
         # How close the idiomorph call was, and what it collapsed. Reported
         # even when the call is comfortable, so a reader never has to infer
         # from silence whether a resolution happened. `None` means none was

@@ -124,6 +124,42 @@ def _overlap_fraction(a: SearchHit, b: SearchHit) -> float:
     return shared / shorter
 
 
+#: Methods that mean "this gene is in the annotated proteome". `search_fast_path`
+#: matches the proteome with diamond; the polish stage then rewrites a hit's
+#: method to the refiner's, so a gene first found by diamond and later refined
+#: must not lose its proteome standing.
+_PROTEOME_METHODS = frozenset(
+    {"diamond_proteome", "exonerate_refine", "miniprot_refine"}
+)
+
+
+def _rank(hit: SearchHit) -> tuple[int, float]:
+    """How good a claim this hit has to be the real gene: proteome first, then identity.
+
+    WHICH SEARCH FOUND IT outranks identity, because the two searches mean
+    different things. The fast path matches the annotated proteome, so a gene
+    the annotation actually predicted is found there. The localization rescue
+    then runs tblastn genome-wide for core genes MISSING from a cluster, which
+    lands the other idiomorph's reference on that same locus gene precisely
+    BECAUSE that idiomorph's gene is not really present. The proteome hit is
+    the gene; the tblastn hit is the cross-match.
+
+    Identity alone cannot see this, and gets it wrong as soon as a reference
+    closer to the WRONG idiomorph is added: measured on the 23 ground-truth
+    genomes, adding three published references pushed four Cunninghamella
+    Minus genomes to Plus, dropping identity from 23/23 to 19/23, while this
+    rule holds 22/23 on the same data and 16/16 on the smaller reference set.
+
+    When both hits come from the same kind of search the path says nothing and
+    identity decides, which is the honest fallback -- and the single genome
+    this rule still misses (Cunninghamella polymorpha NRRL 1395) is exactly
+    that case, both rescued by tblastn because the annotation predicted
+    neither gene. That is the known annotation-gap problem for small MAT
+    genes, not a flaw in the ranking.
+    """
+    return (1 if hit.method in _PROTEOME_METHODS else 0, hit.identity)
+
+
 def _mutually_exclusive_pairs(
     family: Family, hits: list[SearchHit]
 ) -> list[tuple[str, str]]:
@@ -208,12 +244,12 @@ def resolve_idiomorph_overlaps(
             # contradictory verdicts -- on the real Absidia cuneospora locus,
             # 9 of them, one with sexM beating sexP -- and a margin taken from
             # the closest accidental pairing rather than from the actual call.
-            best_a = max(group_a, key=lambda h: h.identity)
-            best_b = max(group_b, key=lambda h: h.identity)
-            if best_a.identity == best_b.identity:
+            best_a = max(group_a, key=_rank)
+            best_b = max(group_b, key=_rank)
+            if _rank(best_a) == _rank(best_b):
                 continue  # nothing to choose between them; leave undetermined
             winner, loser = (
-                (best_a, best_b) if best_a.identity > best_b.identity else (best_b, best_a)
+                (best_a, best_b) if _rank(best_a) > _rank(best_b) else (best_b, best_a)
             )
             losing_group = group_b if winner is best_a else group_a
             for hit in losing_group:

@@ -1,0 +1,161 @@
+record_id: 86630_cbs357-93_MAT_Minus
+record_version: 1
+taxonomy:
+  taxid: 86630
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Rhizopodaceae;g__Rhizopus;s__Rhizopus_azygosporus
+  lineage_resolved_date: '2026-09-20'
+organism:
+  species: Rhizopus azygosporus
+  strain:
+    name: CBS 357.93
+    known: true
+    culture_collection_ids:
+    - CBS 357.93
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Minus
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sexM->rnhA->glrA
+    definition_note: 'Published MAT locus, 21,268 bp. The SECOND source of a glrA
+      reference protein anywhere in this database -- glrA had exactly one (OR965930.1)
+      before this, which is the thinnest part of the Mucoromycota roster. The deposit
+      carries NO /gene qualifiers at all; sexM, rnhA and glrA are named here from
+      their /product values (''SexM'', ''RnhA'', ''GlrA''). Hypothetical proteins
+      and a phosphatidylinositol-phosphate gene are not curated.
+
+
+      Gryganskyi AP, Golan J, Dolatabadi S, Mondo S, Robb S, Idnurm A et al. (2018)
+      Phylogenetic and Phylogenomic Definition of Rhizopus Species. G3 (Bethesda)
+      8(6):2007-2018.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: MG967659.1
+        seq_region: MG967659.1
+      start: 1
+      end: 21268
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: sexM
+  protein_accession: ncbi_protein:AWD37092.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3611
+  end: 4168
+  strand: +
+  exons:
+  - start: 3611
+    end: 4168
+  codon_start: 1
+  transl_table: 1
+  gene_index: 0
+  order_in_locus: 0
+- name: rnhA
+  protein_accession: ncbi_protein:AWD37093.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4232
+  end: 8413
+  strand: +
+  exons:
+  - start: 4232
+    end: 4296
+  - start: 4370
+    end: 4910
+  - start: 4971
+    end: 5583
+  - start: 5632
+    end: 5742
+  - start: 5790
+    end: 6985
+  - start: 7037
+    end: 7164
+  - start: 7218
+    end: 7821
+  - start: 7870
+    end: 8100
+  - start: 8162
+    end: 8413
+  codon_start: 1
+  transl_table: 1
+  gene_index: 1
+  order_in_locus: 1
+- name: glrA
+  protein_accession: ncbi_protein:AWD37094.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 10675
+  end: 12235
+  strand: '-'
+  exons:
+  - start: 12055
+    end: 12235
+  - start: 11739
+    end: 11999
+  - start: 11162
+    end: 11686
+  - start: 10675
+    end: 11096
+  codon_start: 1
+  transl_table: 1
+  gene_index: 2
+  order_in_locus: 2
+evidence:
+  locus_existence: &id001
+    tier: 1
+    experimental_method: targeted sequencing and annotation of the mating-type locus,
+      deposited as a GenBank record by the describing authors
+    citations: &id002
+    - doi: 10.1534/g3.118.200235
+      pmid: '29674435'
+  boundaries: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of the sexM HMG-domain gene in the deposited locus,
+      as annotated by the describing authors
+    citations: *id002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: MG967659.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 10.1534/g3.118.200235|86630|MAT|Minus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

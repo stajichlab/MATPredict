@@ -46,6 +46,68 @@ def _by_gene(hits):
     return {h.gene_name: h for h in hits}
 
 
+def test_the_proteome_found_gene_wins_even_at_lower_identity():
+    # The discriminator is WHICH SEARCH FOUND IT, not identity. The fast path
+    # matches the annotated proteome with diamond, so a gene the annotation
+    # actually predicted is found there. The localization rescue then runs
+    # tblastn genome-wide for core genes MISSING from the cluster, which lands
+    # the other idiomorph's gene on the same spot precisely BECAUSE it is not
+    # really there. The proteome hit is therefore the real gene.
+    #
+    # Measured: Cunninghamella bertholletiae NRRL 1376, a Minus genome, after
+    # three published references were added. sexP rose to 34.146 (tblastn,
+    # against the new Mooraboolomyces Plus reference) and overtook sexM at
+    # 30.60 (diamond, against the annotated gene), flipping a correct call.
+    # Identity scores 19/23 on that reference set; this rule scores 22/23, and
+    # neither is worse on the smaller set.
+    hits = [
+        SearchHit(FAM.key, "sexP", "core_MAT", "c1", 100, 400, "+", 34.146,
+                  "rec_P", "tblastn_genome"),
+        SearchHit(FAM.key, "sexM", "core_MAT", "c1", 120, 380, "+", 30.60,
+                  "rec_M", "diamond_proteome", coverage=94.8),
+    ]
+    resolved, events = resolve_idiomorph_overlaps(hits, FAM)
+    assert _by_gene(resolved)["sexP"].superseded_by == "sexM"
+    assert events[0].winner == "sexM"
+
+
+def test_identity_decides_when_both_came_from_the_proteome():
+    hits = [_hit("sexP", 100, 400, 47.3), _hit("sexM", 120, 380, 31.33)]
+    resolved, events = resolve_idiomorph_overlaps(hits, FAM)
+    assert _by_gene(resolved)["sexM"].superseded_by == "sexP"
+    assert events[0].winner == "sexP"
+
+
+def test_identity_decides_when_neither_came_from_the_proteome():
+    # Both rescued by tblastn: the annotation predicted neither gene, so the
+    # path carries no information and identity is all that is left. This is
+    # the one ground-truth genome the rule cannot call (Cunninghamella
+    # polymorpha NRRL 1395), and it is also the annotation-gap case this
+    # project already knows about for small MAT genes.
+    hits = [
+        SearchHit(FAM.key, "sexP", "core_MAT", "c1", 100, 400, "+", 34.884,
+                  "rec_P", "tblastn_genome"),
+        SearchHit(FAM.key, "sexM", "core_MAT", "c1", 120, 380, "+", 33.929,
+                  "rec_M", "tblastn_genome"),
+    ]
+    resolved, events = resolve_idiomorph_overlaps(hits, FAM)
+    assert _by_gene(resolved)["sexM"].superseded_by == "sexP"
+
+
+def test_a_polished_hit_still_counts_as_proteome_evidence():
+    # A gene first found by diamond and then refined by exonerate/miniprot
+    # carries the refiner's method, not diamond's. It must not lose its
+    # proteome standing just because it was polished.
+    hits = [
+        SearchHit(FAM.key, "sexP", "core_MAT", "c1", 100, 400, "+", 34.0,
+                  "rec_P", "tblastn_genome"),
+        SearchHit(FAM.key, "sexM", "core_MAT", "c1", 120, 380, "+", 30.0,
+                  "rec_M", "exonerate_refine"),
+    ]
+    resolved, _ = resolve_idiomorph_overlaps(hits, FAM)
+    assert _by_gene(resolved)["sexP"].superseded_by == "sexM"
+
+
 def test_the_default_overlap_bar_is_the_calibrated_value():
     # Raised from the provisional 0.5 to 0.8 on 2026-09-20, from the corpus the
     # 23-genome re-run produced: across the 23 real loci the MINIMUM overlap is

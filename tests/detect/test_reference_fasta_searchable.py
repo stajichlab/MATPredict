@@ -60,11 +60,17 @@ def test_a_missing_reference_file_yields_no_information_and_warns(tmp_path, capl
     assert "absent.faa" in caplog.text
 
 
-def test_the_real_mucoromycota_reference_omits_algA_and_glrA(tmp_path):
-    # The defect this exists to expose, asserted against the live database:
-    # two of the seven genes in the Mucoromycota MAT roster have no reference
-    # protein, so no genome can ever match them.
+def test_every_mucoromycota_roster_gene_now_has_a_reference(tmp_path):
+    # This test previously asserted the DEFECT: algA and glrA were named in
+    # order.yml's roster with no reference protein anywhere in db/, so no
+    # genome could ever match them and they silently inflated every
+    # denominator. Ingesting three published deposits (OR965930.1, PP971768.1,
+    # PP971769.1) closed that gap, and the assertion is inverted to hold it
+    # closed -- adding a gene to the roster without a reference should fail
+    # here rather than quietly become unfindable.
     from pathlib import Path
+
+    import yaml
 
     from MATPredict.detect.family_registry import load_record_families
     from MATPredict.detect.reference_fasta import build_reference_fasta
@@ -73,6 +79,13 @@ def test_the_real_mucoromycota_reference_omits_algA_and_glrA(tmp_path):
     out = tmp_path / "ref.faa"
     build_reference_fasta(db_root, out, family_keys={MAT})
     searchable = searchable_genes_by_family(out, load_record_families(db_root))
-    assert searchable[MAT] == {"tptA", "rnhA", "sexP", "sexM", "btbA"}
-    assert "algA" not in searchable[MAT]
-    assert "glrA" not in searchable[MAT]
+
+    order = yaml.safe_load((db_root / "Mucoromycota" / "order.yml").read_text())
+    roster = {
+        g["name"] for locus in order["loci"] if locus["locus_name"] == "MAT"
+        for g in locus["genes"]
+    }
+    assert roster == {"tptA", "rnhA", "sexP", "sexM", "algA", "glrA", "btbA"}
+    assert searchable[MAT] == roster, (
+        f"roster genes with no reference protein: {sorted(roster - searchable[MAT])}"
+    )

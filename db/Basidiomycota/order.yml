@@ -31,15 +31,16 @@ loci:
     vocabulary_type: "enum"
     idiomorph_values: ["alpha", "a"]
     taxonomic_scope: [40410]
-    # SXI1/SXI2 are left without a gene_class here: the field's literature-known
-    # correspondence to HD1/HD2 (Lengeler et al. 2002) is not stated in this DB's own
+    # SXI1 = HD1, SXI2 = HD2: confirmed by a human domain reviewer (2026-09-19), which
+    # is the review this entry was previously waiting on. The correspondence is the one
+    # in the primary literature (Lengeler et al. 2002); it is not stated in this DB's own
     # curated record (db/Basidiomycota/Tremellales/40410_jec21_MAT_alpha/metadata.yaml),
-    # so it is left for a human domain reviewer rather than inferred from outside
-    # literature alone. MFalpha1-3/MFa1-3 (pheromone precursors) and STE3 (the receptor)
-    # are classified per that same record's definition_note.
+    # so it rests on that reviewer decision rather than on the record's own text.
+    # MFalpha1-3/MFa1-3 (pheromone precursors) and STE3 (the receptor) are classified
+    # per that same record's definition_note.
     genes:
-      - {name: SXI1, role: core_MAT, present_in_idiomorphs: ["alpha"]}
-      - {name: SXI2, role: core_MAT, present_in_idiomorphs: ["a"]}
+      - {name: SXI1, role: core_MAT, gene_class: HD1, present_in_idiomorphs: ["alpha"]}
+      - {name: SXI2, role: core_MAT, gene_class: HD2, present_in_idiomorphs: ["a"]}
       - {name: MFalpha1, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
       - {name: MFalpha2, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
       - {name: MFalpha3, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
@@ -130,10 +131,11 @@ loci:
     taxonomic_scope: [5270]
     # bE/bW are a divergently-transcribed homeodomain gene pair (the b locus's own
     # curated record, db/Basidiomycota/Ustilaginales/5270_521_bLocus_b1/metadata.yaml,
-    # confirms this via RefSeq's own "bE1 allele"/"bW1 allele" product annotation) but
-    # that record does not itself state which of the two corresponds to HD1 vs HD2 --
-    # left unclassified rather than guessed; a human reviewer with the primary
-    # literature (Gillissen et al. 1992; Kamper et al. 1995) should confirm the mapping.
+    # confirms this via RefSeq's own "bE1 allele"/"bW1 allele" product annotation). That
+    # record does not itself state which of the two corresponds to HD1 vs HD2; the
+    # mapping bW = HD1, bE = HD2 was confirmed by a human domain reviewer (2026-09-19)
+    # from the primary literature (Gillissen et al. 1992; Kamper et al. 1995) -- the
+    # review this entry was previously waiting on -- rather than guessed here.
     genes:
-      - {name: bE, role: core_MAT}
-      - {name: bW, role: core_MAT}
+      - {name: bE, role: core_MAT, gene_class: HD2}
+      - {name: bW, role: core_MAT, gene_class: HD1}

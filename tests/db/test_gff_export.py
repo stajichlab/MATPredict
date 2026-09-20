@@ -4,7 +4,14 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqFeature import CompoundLocation
 
-from MATPredict.db.gff_export import _cds_location, write_genbank, write_gff3, write_proteins_fasta
+from MATPredict.db.gff_export import (
+    _cds_location,
+    build_gene_class_index,
+    resolve_gene_classes,
+    write_genbank,
+    write_gff3,
+    write_proteins_fasta,
+)
 
 RECORD = {
     "record_id": "4837_nrrl-1555_MAT_Plus",
@@ -485,3 +492,147 @@ def test_write_genbank_accepts_a_fetch_whose_length_matches_the_segment(tmp_path
 
     seq_record = next(SeqIO.parse(out_path, "genbank"))
     assert str(seq_record.seq).upper() == "A" * 31
+
+
+# ---------------------------------------------------------------------------
+# gene_class join: order.yml vocabulary -> /gene_class CDS qualifier
+# ---------------------------------------------------------------------------
+
+ORDER_DOC = {
+    "phylum": "Testomycota",
+    "loci": [
+        {
+            "locus_name": "MAT",
+            "genes": [
+                {"name": "APN2", "role": "flanking_conserved", "gene_class": "apn2_homolog"},
+                {"name": "COX13", "role": "flanking_conserved"},  # declared, deliberately unclassified
+                {"name": "bW", "role": "core_MAT", "gene_class": "HD1"},
+            ],
+        },
+        {
+            "locus_name": "OTHER",
+            "genes": [{"name": "APN2", "role": "flanking_conserved", "gene_class": "sla2_homolog"}],
+        },
+    ],
+}
+
+
+def _join_record(genes: list[dict], locus_name: str = "MAT") -> dict:
+    return {
+        "record_id": "999_join_MAT_test",
+        "mating_type": {"locus_name": locus_name},
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "start": 1, "end": 60,
+             "sequence_source": {"type": "insdc_nucleotide", "accession": "ACC9.1", "seq_region": "ACC9.1"}},
+        ]}},
+        "genes": genes,
+    }
+
+
+def _gene(gene_index: int, name: str, start: int, end: int) -> dict:
+    return {
+        "gene_index": gene_index, "name": name, "role": "core_MAT", "present": True,
+        "segment_index": 0, "start": start, "end": end, "strand": "+",
+    }
+
+
+def _cds_features(gbk_path):
+    return [f for rec in SeqIO.parse(gbk_path, "genbank") for f in rec.features if f.type == "CDS"]
+
+
+def test_gene_class_index_lookup_is_case_sensitive():
+    # order.yml deliberately declares both `APN2` (Pezizomycotina MAT) and `apn2`
+    # (MATyl) as separate, literal, deposit-faithful names. A case-insensitive
+    # lookup would silently merge two distinct declared entries, so the index must
+    # key on the exact string.
+    index = build_gene_class_index(ORDER_DOC)
+
+    assert index[("MAT", "APN2")] == "apn2_homolog"
+    assert ("MAT", "apn2") not in index
+    # The same literal name under a different locus is a different entry.
+    assert index[("OTHER", "APN2")] == "sla2_homolog"
+
+
+def test_resolve_gene_classes_maps_gene_index_to_class():
+    record = _join_record([_gene(0, "APN2", 1, 9)])
+
+    assert resolve_gene_classes(record, ORDER_DOC) == {0: "apn2_homolog"}
+
+
+def test_write_genbank_emits_gene_class_for_a_resolved_gene(tmp_path):
+    record = _join_record([_gene(0, "APN2", 1, 9)])
+    out_path = tmp_path / "locus.gbk"
+
+    write_genbank(
+        record, sequences={0: "MA"}, out_path=out_path,
+        gene_classes=resolve_gene_classes(record, ORDER_DOC),
+    )
+
+    _, cds = _only_cds(out_path)
+    assert cds.qualifiers["gene_class"] == ["apn2_homolog"]
+
+
+def test_write_genbank_omits_gene_class_for_a_declared_but_unclassified_gene(tmp_path):
+    # COX13 IS declared in order.yml but carries no gene_class (deliberately
+    # unclassified). It must get NO qualifier at all -- never an empty one.
+    record = _join_record([_gene(0, "COX13", 1, 9)])
+    out_path = tmp_path / "locus.gbk"
+
+    write_genbank(
+        record, sequences={0: "MA"}, out_path=out_path,
+        gene_classes=resolve_gene_classes(record, ORDER_DOC),
+    )
+
+    _, cds = _only_cds(out_path)
+    assert "gene_class" not in cds.qualifiers
+    assert "/gene_class" not in out_path.read_text()
+
+
+def test_write_genbank_omits_gene_class_for_a_gene_absent_from_order_yml(tmp_path):
+    # A miss must be silent: candidate records and future records may cite a gene
+    # the vocabulary does not declare yet, and regeneration must not fail on it.
+    record = _join_record([_gene(0, "NOT_DECLARED", 1, 9)])
+    out_path = tmp_path / "locus.gbk"
+
+    gene_classes = resolve_gene_classes(record, ORDER_DOC)
+    assert gene_classes == {}
+
+    write_genbank(record, sequences={0: "MA"}, out_path=out_path, gene_classes=gene_classes)
+
+    _, cds = _only_cds(out_path)
+    assert "gene_class" not in cds.qualifiers
+
+
+def test_resolve_gene_classes_returns_empty_for_an_unknown_locus():
+    record = _join_record([_gene(0, "APN2", 1, 9)], locus_name="NO_SUCH_LOCUS")
+
+    assert resolve_gene_classes(record, ORDER_DOC) == {}
+
+
+def test_write_genbank_emits_gene_class_for_both_copies_of_a_duplicated_gene(tmp_path):
+    # The real Basidiomycota case: a B locus legitimately carries two copies of the
+    # same gene name in ONE record. Keying the mapping on gene_index (not name) is
+    # what makes both copies carry the qualifier.
+    record = _join_record([_gene(0, "bW", 1, 9), _gene(1, "bW", 20, 28)])
+    out_path = tmp_path / "locus.gbk"
+
+    write_genbank(
+        record, sequences={0: "MA", 1: "MA"}, out_path=out_path,
+        gene_classes=resolve_gene_classes(record, ORDER_DOC),
+    )
+
+    cds_features = _cds_features(out_path)
+    assert len(cds_features) == 2
+    assert [f.qualifiers["gene_class"] for f in cds_features] == [["HD1"], ["HD1"]]
+
+
+def test_write_genbank_omits_gene_class_when_no_mapping_is_passed(tmp_path):
+    # The default keeps every pre-existing caller working unchanged. The record
+    # schema has no `gene_class` field, so there is nothing to fall back to.
+    record = _join_record([_gene(0, "APN2", 1, 9)])
+    out_path = tmp_path / "locus.gbk"
+
+    write_genbank(record, sequences={0: "MA"}, out_path=out_path)
+
+    _, cds = _only_cds(out_path)
+    assert "gene_class" not in cds.qualifiers

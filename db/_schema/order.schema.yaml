@@ -36,6 +36,18 @@ properties:
               # Populate it only where the DB's own curated records document the
               # functional identity (a definition_note, product name, or explicit
               # citation) -- leave it absent rather than inferring from literature alone.
+              #
+              # The two `*_homolog` values are named after a CANONICAL GENE rather than
+              # a molecular function, unlike every other value here. This is a deliberate
+              # user decision: the conserved genes flanking a MAT locus are grouped by
+              # "this is the APN2 orthologue" / "this is the SLA2 orthologue", which is
+              # how the literature and the curated records themselves refer to them, and
+              # their actual functions (DNA-repair endonuclease, cytoskeletal adaptor) are
+              # not what makes them worth colouring together in a locus figure. Naming by
+              # canonical gene also extends cleanly to the other flanking genes that will
+              # be classified later (COX13, etc.) without inventing a function label for
+              # each one.
               gene_class:
-                enum: [alpha_box, HMG_box, pheromone_receptor, pheromone_precursor, HD1, HD2]
+                enum: [alpha_box, HMG_box, pheromone_receptor, pheromone_precursor, HD1, HD2,
+                       apn2_homolog, sla2_homolog]
               present_in_idiomorphs: {type: array, items: {type: string}}

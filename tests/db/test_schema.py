@@ -204,3 +204,31 @@ def test_every_accepted_record_gene_name_is_declared_by_its_family():
         for error in schema.validate_gene_vocabulary(record, order_doc):
             failures.append(f"{meta_path}: {error}")
     assert failures == []
+
+
+def test_every_gene_class_used_in_order_yml_is_a_member_of_the_schema_enum():
+    """Permanent net against a typo'd gene_class silently disappearing from figures.
+
+    `write_genbank` joins a record's genes to their phylum's `order.yml` to emit the
+    `/gene_class` CDS qualifier, and `draw.py`/`synteny.py` colour and label by it.
+    A misspelled class does not raise anywhere -- it simply produces a class nothing
+    else shares, so the gene quietly gets its own colour and its own label. The enum
+    is read from `db/_schema/order.schema.yaml` itself rather than restated here, so
+    this test cannot drift from the schema it guards.
+    """
+    allowed = set(
+        schema.load_order_schema()["properties"]["loci"]["items"]["properties"]["genes"]
+        ["items"]["properties"]["gene_class"]["enum"]
+    )
+    repo_root = Path(__file__).resolve().parents[2]
+    offenders = []
+    for order_path in sorted((repo_root / "db").glob("*/order.yml")):
+        doc = yaml.safe_load(order_path.read_text()) or {}
+        for locus in doc.get("loci", []):
+            for gene in locus.get("genes", []):
+                gene_class = gene.get("gene_class")
+                if gene_class is not None and gene_class not in allowed:
+                    offenders.append(
+                        f"{order_path.name}:{locus['locus_name']}:{gene['name']} -> {gene_class}"
+                    )
+    assert offenders == [], f"gene_class values outside the schema enum: {offenders}"

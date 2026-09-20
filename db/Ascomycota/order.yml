@@ -34,8 +34,8 @@ loci:
       - {name: MAT1-1-5, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
       - {name: MAT1-2-1, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["MAT1-2"]}
       - {name: MAT1-2-10, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
-      - {name: APN2, role: flanking_conserved}
-      - {name: SLA2, role: flanking_conserved}
+      - {name: APN2, role: flanking_conserved, gene_class: apn2_homolog}
+      - {name: SLA2, role: flanking_conserved, gene_class: sla2_homolog}
       - {name: COX13, role: flanking_conserved}
       # MAT1-2-4 (A. fumigatus Af293, XP_754990.2) is a genuinely distinct gene from
       # Leotiomycetes' MAT1-2-4, which was renamed MAT1-2-10 above precisely to avoid
@@ -107,7 +107,7 @@ loci:
       - {name: MATA2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
       - {name: alpha1, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
       - {name: alpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
-      - {name: sla2, role: flanking_conserved}
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog}
       - {name: cha1, role: flanking_variable}
   - locus_name: "MATyl"
     vocabulary_type: "enum"
@@ -116,8 +116,8 @@ loci:
     genes:
       - {name: mata1, role: core_MAT, present_in_idiomorphs: ["A"]}
       - {name: mata2, role: core_MAT, present_in_idiomorphs: ["A"]}
-      - {name: sla2, role: flanking_conserved}
-      - {name: apn2, role: flanking_conserved}
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog}
+      - {name: apn2, role: flanking_conserved, gene_class: apn2_homolog}
   - locus_name: "MTL"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "alpha"]

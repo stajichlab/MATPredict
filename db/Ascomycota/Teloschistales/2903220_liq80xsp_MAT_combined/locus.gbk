@@ -17,6 +17,7 @@ FEATURES             Location/Qualifiers
                      /translation="MFDILEADIVVFQETKIQRKDLVDDMVLVPGWDCYWSLPKHKKGE
                      QVMLTHRTKLLLIGVPRLLWSRHIHEAICLRSDPRRRRHHRHTMSAGLYYKLRRRATRP
                      ADRRLSFSCPARGLPC"
+                     /gene_class="apn2_homolog"
      gene            complement(2967..4121)
                      /gene="MAT1-2-1"
                      /role="core_MAT"
@@ -30,6 +31,7 @@ FEATURES             Location/Qualifiers
                      QAKSSNNPTDTATAPAFEKTPTGNVVFTLGDDSIEDDATLMVMLQKHNEDLMAFTTHYD
                      ETAAPVLFHERSEEAQNDASFYGNMLNFDEMFTTEYGPNDLLPFDTAMLATVRAADEPT
                      HEVAFDHKSTQLQNAELARELAQFSTLWTPSLSNQEMPSFGDIF"
+                     /gene_class="HMG_box"
      gene            7475..8584
                      /gene="MAT1-1-1"
                      /role="core_MAT"
@@ -43,6 +45,7 @@ FEATURES             Location/Qualifiers
                      QSLPLTTPDTGLETSSLTLEQNQVSRDIAGLSTPFGPCDMAFEPYDKEMDLVRFMAPNS
                      QRTVTVNLDPSVHTQITPVSPTSNTGLIANPSAINNVTDWDPDFGLPIFTPYERNAFDA
                      FDISEWVHPDAY"
+                     /gene_class="alpha_box"
 ORIGIN
         1 atgttcgaca tccttgaagc agacatcgtc gttttccagg agacgaagat ccagcgaaag
        61 gatcttgtgg atgacatggt acttgtccct ggttgggatt gttattggag tcttccgaaa
@@ -206,6 +209,7 @@ FEATURES             Location/Qualifiers
                      /gene="SLA2"
                      /role="flanking_conserved"
                      /translation="MSR"
+                     /gene_class="sla2_homolog"
 ORIGIN
         1 atgagcaggt gagtctgtgc atcgcactcc tcggatcggc gcaggcagac acagcatcca
        61 ttctaaagtt ctcaagatct gaaaatgatc tgcaggtgaa cattcgcaag gcgacgagta

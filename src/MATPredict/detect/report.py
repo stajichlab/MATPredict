@@ -286,6 +286,10 @@ def _result_doc(r: DetectionResult) -> dict:
         "end": r.end,
         "confidence": r.confidence,
         "idiomorph": r.idiomorph,
+        # `strict` or `relaxed`. Emitted for every locus, not only relaxed
+        # ones, so "this was a strict call" is distinguishable from "this
+        # output predates the field", and so strict-only consumers can filter.
+        "detection_pass": r.detection_pass,
         # How close the idiomorph call was, and what it collapsed. Reported
         # even when the call is comfortable, so a reader never has to infer
         # from silence whether a resolution happened. `None` means none was

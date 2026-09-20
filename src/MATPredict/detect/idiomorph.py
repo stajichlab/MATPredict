@@ -7,21 +7,35 @@ from dataclasses import dataclass
 from MATPredict.detect.family_registry import Family
 from MATPredict.detect.search import SearchHit
 
-DEFAULT_MIN_OVERLAP_FRACTION = 0.5
+DEFAULT_MIN_OVERLAP_FRACTION = 0.8
 """How much two hits must overlap before they are judged to be one gene.
 
-Measured as the shared span over the SHORTER hit's span. PROVISIONAL: the
-curator ruled on 2026-09-20 that 0.5 stands "for now", to be raised once
-enough resolution events accumulate in the evidence diagnostics to say what
-the value should be.
+Measured as the shared span over the SHORTER hit's span.
 
-0.5 was chosen because the two error directions are far apart. Across the 23
-ground-truth Mucoromycota genomes every real sexM/sexP pair overlapped at
-92-100%, so the bar sits well below anything observed and a ragged HSP in a
-divergent taxon still resolves. Two genuinely distinct neighbouring genes, by
-contrast, overlap at or near 0% -- and where they do share bases, which is
-normal at MAT loci, it is a short stretch of an eroded intergenic region, not
-half of the shorter gene.
+CALIBRATED 2026-09-20, raised from a provisional 0.5, against the corpus the
+23-genome ground-truth re-run produced (236 resolution events over 23 genomes,
+23 of those events on the reported loci themselves):
+
+* across the 23 REAL loci the minimum overlap is **0.9242**, median 1.0, so
+  0.8 costs nothing real and leaves 0.12 of headroom for a ragged HSP in a
+  divergent taxon -- the failure mode that matters, since every one of the 23
+  is Mucoromycota;
+* 0.9 was equally free on this data (still 0 of 23 lost) and deliberately NOT
+  taken: it leaves 0.024 of headroom on a sample of 23 genomes from one
+  phylum, which is calibrating to the edge of the sample;
+* raising to 0.8 also stops 4.2% of all events resolving. Those are on
+  spurious clusters, and suppressing them is a mild LOSS, not a gain: an
+  unresolved spurious pair keeps counting one gene as two and so inflates
+  that cluster's evidence-floor gene count. This is the real argument against
+  going higher still.
+
+The two error directions remain far apart either way. Two genuinely distinct
+neighbouring genes overlap at or near 0%, and where they do share bases --
+normal at MAT loci, where intergenic erosion is expected -- it is a short
+stretch, not four fifths of the shorter gene.
+
+Revise from the `idiomorph_resolution` rows in the evidence diagnostics, which
+carry every event's overlap fraction, not by intuition.
 """
 
 

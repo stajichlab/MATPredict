@@ -46,6 +46,28 @@ def _by_gene(hits):
     return {h.gene_name: h for h in hits}
 
 
+def test_the_default_overlap_bar_is_the_calibrated_value():
+    # Raised from the provisional 0.5 to 0.8 on 2026-09-20, from the corpus the
+    # 23-genome re-run produced: across the 23 real loci the MINIMUM overlap is
+    # 0.9242, so 0.8 loses nothing real while leaving 0.12 of headroom for a
+    # ragged HSP in a divergent taxon. 0.9 was available on the same data (still
+    # 0 of 23 lost) and deliberately not taken: it leaves 0.024 of headroom on a
+    # sample of 23 genomes from ONE phylum. Pinned here so a future change is a
+    # deliberate recalibration against new data, not a drift.
+    from MATPredict.detect.idiomorph import DEFAULT_MIN_OVERLAP_FRACTION
+
+    assert DEFAULT_MIN_OVERLAP_FRACTION == 0.8
+
+
+def test_an_overlap_between_the_old_and_new_bar_no_longer_resolves():
+    # 0.70 sat above the retired 0.5 bar and below the calibrated 0.8 one.
+    # 1000 bp hits sharing 700 bp of the shorter.
+    hits = [_hit("sexP", 1000, 1999, 47.3), _hit("sexM", 1300, 2299, 31.3)]
+    resolved, events = resolve_idiomorph_overlaps(hits, FAM)
+    assert all(h.superseded_by is None for h in resolved)
+    assert events == []
+
+
 def test_the_lower_identity_member_of_an_overlapping_pair_is_superseded():
     # The real Absidia cuneospora numbers: sexP 16939-17547 at 47.3%, sexM
     # 17005-17253 at 31.33%, fully contained. Ground truth is Plus.

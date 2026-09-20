@@ -178,6 +178,15 @@ class DetectionResult:
     segments: list[LocusSegment] = field(default_factory=list)
     gene_evidence: list[GeneEvidence] = field(default_factory=list)
     reference_records: list[str] = field(default_factory=list)
+    detection_pass: str = "strict"
+    """Which pass admitted this locus: `strict` or `relaxed`.
+
+    Present on EVERY result, not only relaxed ones, so a reader can tell
+    "this was a strict call" from "this build predates the field". A relaxed
+    call cleared only the evidence floor (>=2 distinct genes, >=1 core_MAT)
+    and not the fraction floor, so its tier is capped and anyone who wants
+    strict-only output can filter on this field.
+    """
     idiomorph_margin: float | None = None
     """Identity points separating the winning idiomorph gene from the loser.
 
@@ -427,6 +436,73 @@ def _append_diagnostics_row(out_path: Path, row: dict) -> None:
         if key not in _DIAGNOSTICS_WRITE_FAILURES_LOGGED:
             _DIAGNOSTICS_WRITE_FAILURES_LOGGED.add(key)
             logger.warning("could not write evidence diagnostics to %s: %s", out_path, exc)
+
+
+def _relaxed_results(
+    clusters: list[GeneCluster],
+    families: list[Family],
+    searchable_genes: dict[FamilyKey, set[str]],
+    evidence_floor: EvidenceFloor,
+    ambiguity_floor: float = 0.5,
+) -> list[DetectionResult]:
+    """Sub-floor clusters admitted on gene COUNT rather than gene fraction.
+
+    The curator's relaxed second pass. A genuinely fragmented locus -- one
+    split by a contig break, so its flanking genes sit on other contigs --
+    can fall below the fraction floor through no fault of its own, while
+    still showing a core gene and a real partner at high identity. The bar is
+    "a core gene plus another gene, not necessarily a flank", which is
+    exactly `EvidenceFloor(min_hits=2, require_core_role=True)`: one
+    curator-ruled bar serving both polish admission and relaxed reporting, so
+    there is a single number to defend rather than a second magic constant.
+
+    Because it is a COUNT and not a fraction, a lone gene never passes however
+    good it looks -- which is what keeps out the 22 sweep genera whose only
+    evidence was a single HMG gene matched by both `sexM` and `sexP`.
+
+    The caller runs this ONLY when the strict pass produced nothing
+    genome-wide, so a genome with any confident call is untouched. Clusters
+    that would clear the fraction floor are skipped anyway, since reporting
+    one here would duplicate a strict result.
+
+    Scope, measured: for Mucoromycota this admits nothing new. With
+    searchable-only denominators (Plus 4, Minus 3) a core gene plus one other
+    already scores 0.50 or 0.667 and clears the strict floor. It earns its
+    place in phyla with richer rosters, where a real core+flank pair scores
+    2/8 = 0.25 and is rejected today.
+    """
+    results: list[DetectionResult] = []
+    families_by_key = {f.key: f for f in families}
+    for cluster in clusters:
+        admitted = _families_meeting_evidence_floor(cluster, families, evidence_floor)
+        if not admitted:
+            continue
+        scores = score_cluster(cluster, families, searchable_genes=searchable_genes)
+        admitted_keys = {f.key for f in admitted}
+        for score in scores:
+            if score.family_key not in admitted_keys:
+                continue
+            if score.fraction_found >= ambiguity_floor:
+                continue  # the strict pass's own business, not this one's
+            family = families_by_key[score.family_key]
+            results.append(DetectionResult(
+                family_key=score.family_key,
+                contig=cluster.contig, start=cluster.start, end=cluster.end,
+                # Capped, never high: this call failed the fraction floor. Not
+                # forced to low either -- a core gene plus a conserved flank at
+                # high identity next to a contig break is real evidence, and
+                # flattening it to low would conflate weak evidence with a
+                # fragmented assembly.
+                confidence="medium",
+                idiomorph=assign_idiomorph(family, score.genes_found),
+                ambiguous_with=[],
+                genes_found=score.genes_found,
+                genes_missing=score.genes_missing,
+                fragmented=False,
+                genes_not_searchable=score.genes_not_searchable,
+                detection_pass="relaxed",
+            ))
+    return results
 
 
 def _write_evidence_diagnostics(
@@ -1010,6 +1086,7 @@ def run_pipeline(
     ambiguity_floor: float = 0.5,
     short_orf_aa_floor: int = 60,
     idiomorph_overlap_fraction: float = DEFAULT_MIN_OVERLAP_FRACTION,
+    relaxed_second_pass: bool = True,
     window_protein_length_multiple: float = DEFAULT_WINDOW_PROTEIN_LENGTH_MULTIPLE,
     window_max_intron_bp: int = DEFAULT_WINDOW_MAX_INTRON_BP,
     polish_tolerance_bp: int = 10,
@@ -1438,6 +1515,25 @@ def run_pipeline(
             if score.fraction_found < ambiguity_floor and not ambiguous:
                 continue
             results.append(_build(score, [cluster], scores, fragmented=False))
+
+    # The relaxed second pass, and ONLY when the strict pass found nothing
+    # anywhere in this genome. Gating on the whole genome rather than per
+    # family is the curator's ruling and the conservative reading: a genome
+    # with any confident call is left exactly as it was, so the relaxed bar
+    # can never dilute a run that already worked.
+    if not results and relaxed_second_pass:
+        results = _relaxed_results(
+            clusters, families,
+            searchable_genes=searchable_genes,
+            evidence_floor=evidence_floor,
+            ambiguity_floor=ambiguity_floor,
+        )
+        if results:
+            logger.info(
+                "strict pass found no locus; %d admitted by the relaxed pass "
+                "(>=2 distinct genes incl. a core gene), capped at medium",
+                len(results),
+            )
 
     reported = {r.family_key for r in results}
     not_detected: list[NotDetectedFamily] = []

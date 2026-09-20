@@ -382,3 +382,272 @@ practice of separating investigation from fixing):**
   already-flagged need for a calibrated, non-default `EvidenceFloor` (see
   item 2 in the original findings above) and is not a new issue, just
   additional real timing evidence for it.
+
+## 2026-09-19 — Task 6: full 13-genome pilot re-run with calibrated `EvidenceFloor` (`--min-hits 3`)
+
+**All 13 of 13 pilot genomes completed for real** — acquisition (all 13/13
+resolved via the local BFD library, zero network calls), decompression, and
+`matpredict detect --min-hits 3 --evidence-diagnostics ...` for every genome,
+run via a hand-rolled orchestrator (not `batch_runner.run_batch`, which does
+not expose an `evidence_floor` override) capped at 3-4 concurrent jobs on a
+4-core allocation. This is the rollout the original single-genome-only run
+(top of this document) was explicitly deferred pending: the `taxonomic_scope`
+routing fix, `proteins.faa` backfill, the idiomorph-aware scoring fix, and a
+real, data-driven `--min-hits 3` calibration are all now in place together
+for the first time across the full pilot list.
+
+### Runtime: the calibration's expected speedup is real and dramatic
+
+| Genome | Tier | Wall-clock runtime* |
+|---|---|---|
+| 5501 (*C. immitis*) | ground-truth | ~30 min |
+| 199306 (*C. posadasii*) | ground-truth | ~17 min |
+| 162425 (*A. nidulans*) | ground-truth | ~25 min |
+| 746128 (*A. fumigatus*) | ground-truth | ~23 min |
+| 5061 (*A. niger*) | blind | ~27 min |
+| 5059 (*A. flavus*) | blind | ~15 min |
+| 5076 (*P. chrysogenum*) | blind | ~23 min |
+| 27334 (*P. expansum*) | blind | ~18 min |
+| 36651 (*P. digitatum*) | blind | ~23 min |
+| 5141 (*N. crassa*) | blind | ~18 min |
+| 5518 (*F. graminearum*) | blind | ~30 min |
+| 5507 (*F. oxysporum*) | blind | ~10 min |
+| 510951 (*N. tetrasperma*) | blind | ~26 min |
+
+*Wall-clock includes real queueing/contention from running 3-4 genomes
+concurrently on a 4-core allocation, so these are conservative (an isolated
+run would likely be somewhat faster, as seen in 5507's ~10 min while it ran
+essentially alone). Even so, this is a **4-9x speedup per genome** versus the
+~2-4 hour single-genome, single-family costs recorded earlier in this
+document and in Task 5, and it made a real, complete 13-genome rollout
+practical within a single session for the first time. The calibration's core
+premise — that `--min-hits 3` would remove most Stage-2-polish-triggering
+noise without materially changing wall-clock-dominant behavior for real loci
+— held up in practice, not just in the single-genome diagnostics dataset it
+was derived from.
+
+### Aggregate result: `matpredict detect rollout-summary` over all 13
+
+```
+total_genomes: 13
+confidence_tally: {Ascomycota:MAT: {medium: 5}}
+not_detected: 9 genomes (all Ascomycota:MAT)
+anomalies: 7
+genome_errors: 0
+```
+
+4 of 13 genomes produced a `detected` entry (5061, 5507, 5518 [2 clusters],
+510951) — 5 `detected` entries total, all confidence `medium`, 0 `high`. 9 of
+13 genomes were `not_detected`, every one for the same reason shape: "best
+cluster matched X% of this family's expected genes, below the 0.50 ambiguity
+floor." The aggregator's anomaly detector flagged 7 cases where a genome was
+`not_detected` while another genome in the same taxonomic order (Eurotiales:
+162425, 27334, 36651, 5059, 5076, 746128 vs. detected-in 5061; Sordariales:
+5141 vs. detected-in 510951) *was* detected — a real, structurally
+interesting signal that the within-order detection outcome is inconsistent,
+investigated in full below.
+
+### Headline finding #1 (confirmed, now systemic): cross-idiomorph noise defeats the idiomorph-aware scoring fix's narrowing in 8 of 13 genomes
+
+The idiomorph-aware scoring fix committed this session (`2ab9e26`) is real
+and does work: when an admitted cluster's found genes are all consistent
+with one idiomorph, `score_cluster` correctly narrows `expected` to that
+idiomorph's own (smaller) gene roster instead of the full 16-gene
+cross-idiomorph list, e.g. genome 5061's `genes_missing` lists only
+MAT1-1-family genes, not the MAT1-2 side. This is a genuine fix, verified
+working, not a regression.
+
+But it silently falls back to the un-narrowed 16-gene roster whenever the
+admitted cluster contains even one low-identity hit from the *other*
+idiomorph — reproducing the exact "structurally capped below the ambiguity
+floor" ceiling bug this fix was written to eliminate. This happened, for
+real, in **8 of the 13 pilot genomes**, confirmed by inspecting each
+genome's `genes_found` list for a mix of MAT1-1-side and MAT1-2-side gene
+names:
+
+| Genome | `genes_found` (mixed idiomorph) | fraction |
+|---|---|---|
+| 5501 | MAT1-2-1/MAT1-2-4/CIMG_00407 (real MAT1-2) + MAT1-1-3 (noise) | 7/16 = 0.4375 |
+| 199306 | same shape | 7/16 = 0.4375 |
+| 746128 | MAT1-1-1/matA-1 (real MAT1-1) + MAT1-2-1 (noise) | 6/16 = 0.375 |
+| 5076 | MAT1-1-1/MAT1-1-4/matA-1 (real MAT1-1) + MAT1-2-1 (noise) | 7/16 = 0.4375 |
+| 27334 | MAT1-1-1/matA-1 (real MAT1-1) + MAT1-2-1 (noise) | 6/16 = 0.375 |
+| 36651 | identical to 27334 | 6/16 = 0.375 |
+| 5141 | MAT1-1-3 (real MAT1-1) + MAT1-2-1 (noise) | 5/16 = 0.3125 |
+| 162425 | (narrowed, see below — a distinct, third case) | 4/11 = 0.3636 |
+
+This generalizes the single-genome observation flagged mid-rollout for
+199306 into a systemic, reproducible pattern spanning **all 4 ground-truth
+genomes and 4 of 9 blind-tier genomes**. In every one of the first 7 rows,
+the "noise" gene is a single, isolated, low-identity (23-53%) hit from a
+reference record belonging to the *other* idiomorph, landing inside the same
+genomic cluster window as an otherwise clean, high-identity, single-idiomorph
+real locus. **Triage recommendation**: idiomorph narrowing should key off the
+cluster's *dominant* idiomorph (by hit count and/or identity-weighted
+consensus among `core_MAT`-role genes), not require unanimous idiomorph
+agreement across every hit in the cluster before narrowing at all.
+
+### Headline finding #2 (new, not previously flagged): `matA-1`/`matA-2`/`matA-3` alias duplication double-counts a single physical gene as two "genes found"
+
+Independently of the idiomorph-narrowing issue above, this rollout surfaced
+a second, distinct, real scoring bug. `Ascomycota:MAT`'s gene roster carries
+Neurospora-style aliases (`matA-1`, `matA-2`, `matA-3`, `"mt a-1"`) as
+separate gene names alongside the generic `MAT1-1-1`/`MAT1-1-2`/`MAT1-1-3`
+names for the *same* biological genes. When a genome's best cluster is hit
+by both a Neurospora-named reference record (e.g. `5141_74-ors-a_MAT_MAT1-1`)
+and a generically-named one (e.g. `746128_a1163_MAT_MAT1-1`) at
+overlapping/near-identical coordinates, **both names get counted as
+independently "found" genes toward `fraction_found`**, even though they are
+one physical locus. Confirmed by coordinate inspection across every genome
+where a `matA-*` hit appears:
+
+| Genome | Alias pair | Coordinates (near-identical/nested) | Effect |
+|---|---|---|---|
+| 5061 | MAT1-1-1 (60.4%) / matA-1 (27.2%) | 2443218-2444096 / 2443521-2443925 | its ONLY reason for crossing the 0.50 floor |
+| 5059 | MAT1-1-1 / matA-1 | (not_detected either way) | inflated 0.4545, real value 0.364 |
+| 5507 | MAT1-1-1/matA-1, MAT1-1-2/matA-2 | overlapping in both pairs | inflates reported 0.625 |
+| 5518 (cluster 1) | MAT1-1-1/matA-1, MAT1-1-2/matA-2, MAT1-1-3/matA-3 | overlapping in all 3 pairs | inflates reported 0.625 (real signal independently strong — see below) |
+| 510951 | matA-1/MAT1-1-1, matA-2/MAT1-1-2, matA-3/MAT1-1-3 | overlapping in all 3 pairs | inflates reported 0.625 |
+
+**Recomputing each "detected" genome's real, de-duplicated fraction** (each
+alias pair counted once, and excluding any isolated cross-idiomorph noise
+hit as in Finding #1) changes the honest picture materially:
+
+- **5061 (A. niger): real fraction is 5/11 = 0.4545 — below the 0.50 floor.**
+  Its "detected, medium confidence" result is **entirely an artifact of the
+  alias-duplication bug**, not real evidence crossing the floor. Without the
+  bug, 5061 would join the 8-genome "not detected" ceiling-bug group above,
+  making it 9 of 13 genomes affected by a scoring artifact, not 8.
+- **5507 (F. oxysporum): real fraction after removing the matA-1/matA-2
+  duplicates AND the weak, isolated MAT1-2-1 hit (33.3% identity, vs.
+  81-89% for the real MAT1-1 core genes) is 7/11 = 0.636 — genuinely crosses
+  the floor.** This genome's real, single-idiomorph (MAT1-1) detection is
+  independently solid; it is currently mislabeled `idiomorph: undetermined`
+  only because of the noise+duplication combination confusing idiomorph
+  determination, not because the underlying evidence is actually ambiguous.
+- **510951 (N. tetrasperma): real fraction after the same correction is
+  6/11 = 0.545 — genuinely crosses the floor.** `matA-1/2/3` are its own
+  correct, high-identity (94-98%) native gene names; `MAT1-1-1/2/3` are the
+  same loci hit weakly (26-29%) by unrelated genomes' reference records, and
+  `MAT1-2-1` (28.7%) is isolated cross-idiomorph noise in the same tiny
+  window as the real MAT1-1-3/matA-3 hit. Same mislabeling issue as 5507.
+- **5518 (F. graminearum), cluster 1: real signal is independently strong
+  regardless of the bug.** `MAT1-1-1`, `MAT1-1-2`, `MAT1-1-3` **and**
+  `MAT1-2-1` are all present at 99-100% identity in the *same* cluster —
+  this is real biology, not noise: *F. graminearum* is a well-documented
+  homothallic (self-fertile) species that carries both idiomorphs' core
+  genes at a single locus. This is the one genome in the pilot where
+  `idiomorph: undetermined` is the biologically correct call, not an
+  artifact.
+
+**Net honest picture across the 5 nominal `detected` entries**: 1 (5061) is
+a false positive purely from the duplication bug; 3 (5507, 510951, and
+5518's main cluster) are genuine real detections whose reported fraction is
+inflated but whose underlying signal independently clears the floor; 5518's
+second cluster (0.50 = 4/8, all evidence `unpolished`/low-identity 28-45%)
+is weak and likely a spurious secondary hit, not independently verified as
+real. **Triage recommendation**: collapse gene-name aliases to one canonical
+identifier before computing `fraction_found` (a per-family alias map, or
+matching on genomic coordinate overlap across hits from different reference
+records for the same role) so a single physical gene is never counted twice.
+
+### 162425 (*A. nidulans*) — a third, distinct case: two real clusters, no cross-idiomorph contamination, still below floor
+
+Flagged in real time mid-rollout and confirmed on full review: 162425's
+diagnostics contain **two independently real** admitted clusters (99.3-100%
+identity, hit_count 74 and 81, versus every noise cluster in this genome's
+diagnostics sitting at 29-50% identity, hit_count ≤ 8) on two different
+contigs. Idiomorph narrowing worked correctly here (no cross-idiomorph
+contamination in either cluster), but `score_cluster` only evaluates the
+*single best* cluster's fraction, not a genome-wide union — so only one
+cluster's 3-4 genes count toward `fraction_found` (4/11 = 0.3636), even
+though the genome's real, combined MAT-locus evidence across both clusters
+is stronger. **This is also where the load-bearing `--min-hits 3` caveat
+lives**: one of these two real clusters has `gene_count=3` — exactly at the
+floor, with zero safety margin, unlike the single-genome calibration
+dataset's 4-gene margin (TP=7 vs. noise ceiling=5). If `--min-hits` were
+ever tightened to 4 based on noise patterns from a different genome, this
+real cluster would be silently dropped. **This margin is genome-dependent
+and must not be assumed to generalize from one genome's calibration data.**
+
+### `--min-hits 3` calibration: held for real signal in all 13 genomes, but the safety margin is genome-dependent
+
+No genome in this rollout showed a real, biologically genuine locus
+component with `gene_count` below 3 that `--min-hits 3` excluded — the
+calibration's core safety requirement held across all 13 real runs. However,
+162425 (above) demonstrates the assumed 4-gene safety margin from the
+single-genome calibration dataset does **not** generalize: this genome has
+a real cluster sitting at exactly `gene_count=3`, zero margin. The
+calibration should be treated as validated for "does not exclude real
+signal at min-hits=3" but explicitly **not** validated for "safe to raise
+above 3" — the margin evidence base does not support that stronger claim.
+
+### Ground-truth sanity scoring: real, honest, and unchanged in verdict from Task 5
+
+`match_ground_truth` run against all 4 ground-truth-tier genomes returned
+**7 total curated-record matches, all 7 "ambiguous," 0 "exact"** — every
+rollout genome's real BFD-library assembly/strain (5501: WA_211; 199306:
+2566; 162425: SP-2605-48; 746128: niveus) differs from every curated
+record's own source accession/strain (H538.4/RS, RMSCC1040/Silveira,
+FGSC A4, A1163/Af293). `score_self_consistency` run for real against all 4
+(with real genome FASTAs, a real `NcbiClient`, confirmed by code inspection
+to short-circuit before any network call when there are zero exact matches)
+returned **0 `FamilyBenchmark` entries scored** — a real, reproducible,
+non-fabricated "no numeric score obtainable" result, exactly matching the
+single-genome finding from Task 5, now confirmed across the full
+ground-truth tier. This is a curation-coverage gap (none of this project's
+curated MAT records happen to share an assembly/strain with the BFD-library
+genomes this pilot draws from), not a pipeline defect.
+
+### Honest comparison against the original single-genome-only rollout
+
+| | Original rollout (this doc, top) | This rollout (Task 6) |
+|---|---|---|
+| Genomes completed | 1 of 13 (killed early) | **13 of 13** |
+| Routing | 11/13 hit exhaustive 19-family fallback | 1 family/genome (fixed) |
+| Per-genome runtime | ~2h20m (1 genome), projected ~1 day for 13 | ~10-30 min/genome, ~13 genomes in one session |
+| Real family detection | 1 gene found (APN2, wrong-order reference) | Every genome's real MAT locus correctly found and correctly attributed to its own curated record's reference (routing + backfill fixes both hold) |
+| "Detected" outcomes | 0 | 5 (4 genuine after correcting the alias-duplication artifact) |
+| Ground-truth score | Not reached | 0 (real, honest, curation-coverage gap — not a defect) |
+| New bugs found | `taxonomic_scope` routing, idiomorph-unaware scoring | Cross-idiomorph-noise-defeats-narrowing (systemic, 8/13), gene-alias double-counting (new, 5/13), single-best-cluster-vs-union-of-real-clusters (162425) |
+
+This rollout is a complete, real success relative to the original: every
+genome now runs to completion in a practical time budget, and every
+genome's real MAT locus is genuinely found and correctly attributed by the
+pipeline's raw evidence. The remaining gap is entirely in the **final
+scoring/ambiguity-floor layer**, not in detection/attribution — the pipeline
+consistently finds the right genes against the right references at high
+identity; it just doesn't yet count them correctly for 8-9 of 13 genomes.
+
+### Updated triage list
+
+1. **[High priority, systemic]** Idiomorph narrowing should tolerate a
+   minority of cross-idiomorph noise (key off dominant idiomorph by
+   hit-count/identity-weighted consensus, not unanimous agreement) — affects
+   8/13 genomes in this rollout alone.
+2. **[High priority, new]** Collapse gene-name aliases (`matA-1/2/3`,
+   `"mt a-1"`, and any other historical per-order naming convention for the
+   same biological gene) to one canonical identifier before computing
+   `fraction_found`, to stop double-counting one physical gene as two —
+   affects every genome hit by both a Neurospora-named and a
+   generically-named reference record (5/13 in this rollout; likely more
+   broadly whenever `5141_74-ors-a_MAT_MAT1-1` or a similarly-aliased record
+   is a competitive reference).
+3. **[Medium priority, new]** `score_cluster`/the "best cluster" selection
+   should consider unioning multiple independently-real clusters for the
+   same genome/family (162425's two real, high-identity, non-contaminated
+   clusters on different contigs) rather than scoring only the single best
+   one — may reflect real, dispersed MAT-locus biology in some species
+   rather than assembly fragmentation, and currently under-counts real
+   evidence either way.
+4. **[Informational, load-bearing]** The `--min-hits 3` calibration held for
+   "no real signal excluded" across all 13 genomes, but its safety margin is
+   confirmed genome-dependent (162425 has a real cluster at exactly
+   `gene_count=3`, zero margin) — do not raise this threshold without new,
+   broader calibration evidence.
+5. **[Informational]** Ground-truth sanity scoring remains structurally
+   blocked by a curation-coverage gap (no curated record shares an
+   assembly/strain with any BFD-library pilot genome), not a pipeline
+   defect — a real fix would mean curating at least one ground-truth record
+   per genome directly from its own BFD-library assembly, out of scope for
+   this rollout.

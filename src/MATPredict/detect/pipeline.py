@@ -62,6 +62,7 @@ from __future__ import annotations
 
 import json
 import logging
+import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
@@ -76,7 +77,13 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect.idiomorph import assign_idiomorph
+from MATPredict.detect.idiomorph import (
+    DEFAULT_MIN_OVERLAP_FRACTION,
+    IdiomorphResolution,
+    assign_idiomorph,
+    classify_locus,
+    resolve_idiomorph_overlaps,
+)
 from MATPredict.detect.polish import (
     STATUS_DISAGREE,
     STATUS_NOT_POLISH_CANDIDATE,
@@ -85,9 +92,11 @@ from MATPredict.detect.polish import (
     PolishOutcome,
     classify,
 )
+from MATPredict.detect.reference_fasta import searchable_genes_by_family
 from MATPredict.detect.scoring import FamilyScore, is_ambiguous, score_cluster
 from MATPredict.detect.search import (
     SearchHit,
+    drop_low_quality_hits,
     polish_with_exonerate,
     polish_with_miniprot,
     search_fast_path,
@@ -171,6 +180,39 @@ class DetectionResult:
     segments: list[LocusSegment] = field(default_factory=list)
     gene_evidence: list[GeneEvidence] = field(default_factory=list)
     reference_records: list[str] = field(default_factory=list)
+    locus_class: str = "mat_locus"
+    """WHAT was found: `mat_locus`, `homothallic_candidate` or
+    `idiomorph_gene_only`. Orthogonal to `detection_pass`, which says HOW it
+    was admitted. See `idiomorph.classify_locus`; an `idiomorph_gene_only`
+    call is kept deliberately as per-idiomorph HMM training material, not
+    discarded."""
+    detection_pass: str = "strict"
+    """Which pass admitted this locus: `strict` or `relaxed`.
+
+    Present on EVERY result, not only relaxed ones, so a reader can tell
+    "this was a strict call" from "this build predates the field". A relaxed
+    call cleared only the evidence floor (>=2 distinct genes, >=1 core_MAT)
+    and not the fraction floor, so its tier is capped and anyone who wants
+    strict-only output can filter on this field.
+    """
+    idiomorph_margin: float | None = None
+    """Identity points separating the winning idiomorph gene from the loser.
+
+    `None` when no idiomorph resolution was needed for this locus, which is
+    the ordinary case for a family whose genes are not mutually exclusive.
+    When several resolutions contributed, this is the NARROWEST of them --
+    the call is only as trustworthy as its weakest step. Below the locus's
+    `min_idiomorph_margin` the confidence tier is capped; the number is
+    reported either way so a close call is never mistaken for a clean one.
+    """
+    idiomorph_resolutions: list[IdiomorphResolution] = field(default_factory=list)
+    """Every overlapping idiomorph pair collapsed for this locus.
+
+    Kept in full because a novel or hybrid locus is exactly what a low margin
+    might indicate, and the curator asked that the ambiguity be reported
+    rather than silently resolved away. Also the observations a future
+    recalibration of the overlap threshold needs.
+    """
 
 
 @dataclass(frozen=True)
@@ -355,7 +397,16 @@ def _families_meeting_evidence_floor(
     _DIAGNOSTICS_CANDIDATE_FLOOR)`)."""
     admitted = []
     for family in families:
-        own_hits = [h for h in cluster.hits if h.family_key == family.key]
+        # Superseded hits are excluded before anything is counted. Such a hit
+        # and its winner hit the SAME locus gene under two mutually exclusive
+        # idiomorph names, so counting it would let a cluster whose only
+        # evidence is one HMG gene clear a bar that asks for two distinct
+        # genes -- and, with `require_core_role`, let a gene that is not
+        # really there satisfy the core requirement.
+        own_hits = [
+            h for h in cluster.hits
+            if h.family_key == family.key and h.superseded_by is None
+        ]
         distinct_genes = {h.gene_name for h in own_hits}
         if len(distinct_genes) < floor.min_hits:
             continue
@@ -375,23 +426,16 @@ def _families_meeting_evidence_floor(
     return admitted
 
 
-def _write_evidence_diagnostics(
-    out_path: Path, cluster: GeneCluster, family: Family, admitted: bool
-) -> None:
-    """Append one JSON line describing this (cluster, family) admission
-    decision -- the real calibration dataset `EvidenceFloor`'s docstring
-    refers to. Never raises on a write failure; diagnostics are best-effort
-    and must never abort a real detection run."""
-    own_hits = [h for h in cluster.hits if h.family_key == family.key]
-    row = {
-        "family": f"{family.key.phylum}:{family.key.locus_name}",
-        "contig": cluster.contig, "cluster_start": cluster.start, "cluster_end": cluster.end,
-        "gene_count": len({h.gene_name for h in own_hits}),
-        "hit_count": len(own_hits),
-        "roles": sorted({h.role for h in own_hits}),
-        "best_identity": max((h.identity for h in own_hits), default=None),
-        "admitted": admitted,
-    }
+def _append_diagnostics_row(out_path: Path, row: dict) -> None:
+    """Append one JSON line, never raising.
+
+    Diagnostics are best-effort: losing the corpus is bad, losing a detection
+    run because a log path was wrong is worse. The file is opened in APPEND
+    mode and never truncated, which is what a batch writing many genomes to
+    one file needs -- and why every row carries a `run_id`, so an accidental
+    second run into the same file is detectable and de-duplicable instead of
+    silently doubling the corpus.
+    """
     try:
         with out_path.open("a") as f:
             f.write(json.dumps(row) + "\n")
@@ -400,6 +444,158 @@ def _write_evidence_diagnostics(
         if key not in _DIAGNOSTICS_WRITE_FAILURES_LOGGED:
             _DIAGNOSTICS_WRITE_FAILURES_LOGGED.add(key)
             logger.warning("could not write evidence diagnostics to %s: %s", out_path, exc)
+
+
+def _relaxed_results(
+    clusters: list[GeneCluster],
+    families: list[Family],
+    searchable_genes: dict[FamilyKey, set[str]],
+    evidence_floor: EvidenceFloor,
+    ambiguity_floor: float = 0.5,
+    polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] | None = None,
+    contig_lengths: dict[str, int] | None = None,
+) -> list[DetectionResult]:
+    """Sub-floor clusters admitted on gene COUNT rather than gene fraction.
+
+    The curator's relaxed second pass. A genuinely fragmented locus -- one
+    split by a contig break, so its flanking genes sit on other contigs --
+    can fall below the fraction floor through no fault of its own, while
+    still showing a core gene and a real partner at high identity. The bar is
+    "a core gene plus another gene, not necessarily a flank", which is
+    exactly `EvidenceFloor(min_hits=2, require_core_role=True)`: one
+    curator-ruled bar serving both polish admission and relaxed reporting, so
+    there is a single number to defend rather than a second magic constant.
+
+    Because it is a COUNT and not a fraction, a lone gene never passes however
+    good it looks -- which is what keeps out the 22 sweep genera whose only
+    evidence was a single HMG gene matched by both `sexM` and `sexP`.
+
+    The caller runs this ONLY when the strict pass produced nothing
+    genome-wide, so a genome with any confident call is untouched. Clusters
+    that would clear the fraction floor are skipped anyway, since reporting
+    one here would duplicate a strict result.
+
+    Scope, measured: for Mucoromycota this admits nothing new. With
+    searchable-only denominators (Plus 4, Minus 3) a core gene plus one other
+    already scores 0.50 or 0.667 and clears the strict floor. It earns its
+    place in phyla with richer rosters, where a real core+flank pair scores
+    2/8 = 0.25 and is rejected today.
+    """
+    results: list[DetectionResult] = []
+    families_by_key = {f.key: f for f in families}
+    for cluster in clusters:
+        admitted = _families_meeting_evidence_floor(cluster, families, evidence_floor)
+        if not admitted:
+            continue
+        scores = score_cluster(cluster, families, searchable_genes=searchable_genes)
+        admitted_keys = {f.key for f in admitted}
+        for score in scores:
+            if score.family_key not in admitted_keys:
+                continue
+            if score.fraction_found >= ambiguity_floor:
+                continue  # the strict pass's own business, not this one's
+            family = families_by_key[score.family_key]
+            # Per-gene evidence is NOT optional. A locus reported with only a
+            # list of gene names cannot be checked by anyone: in the 44-genus
+            # sweep, 81 relaxed calls listed sexP and sexM with no coordinates
+            # behind them, which made a genuine homothallic locus -- both
+            # idiomorphs present, as documented for Syzygites -- impossible to
+            # tell from two unrelated spurious HMG hits tens of kb apart.
+            evidence = _gene_evidence([cluster], score.family_key, polish_by or {})
+            segments = _segments_for([cluster], contig_lengths or {}, evidence)
+            results.append(DetectionResult(
+                family_key=score.family_key,
+                contig=segments[0].contig,
+                start=segments[0].start,
+                end=segments[0].end,
+                # Capped, never high: this call failed the fraction floor. Not
+                # forced to low either -- a core gene plus a conserved flank at
+                # high identity next to a contig break is real evidence, and
+                # flattening it to low would conflate weak evidence with a
+                # fragmented assembly.
+                confidence="medium",
+                idiomorph=assign_idiomorph(family, score.genes_found),
+                ambiguous_with=[],
+                genes_found=score.genes_found,
+                genes_missing=score.genes_missing,
+                fragmented=False,
+                genes_not_searchable=score.genes_not_searchable,
+                detection_pass="relaxed",
+                locus_class=classify_locus(cluster, family),
+                segments=segments,
+                gene_evidence=evidence,
+                reference_records=sorted({e.reference_record_id for e in evidence}),
+            ))
+    return results
+
+
+def _write_evidence_diagnostics(
+    out_path: Path,
+    cluster: GeneCluster,
+    family: Family,
+    admitted: bool,
+    run_id: str,
+    genome_id: str,
+) -> None:
+    """Append one JSON line describing this (cluster, family) admission decision.
+
+    The real calibration dataset `EvidenceFloor`'s docstring refers to. It
+    could not actually serve that purpose before carrying `genome_id`: a row
+    named the family, contig and cluster span but not the organism, so
+    concatenating a batch's rows left no way to compute any per-genome
+    statistic from them.
+    """
+    own_hits = [h for h in cluster.hits if h.family_key == family.key]
+    _append_diagnostics_row(out_path, {
+        "kind": "evidence",
+        "run_id": run_id,
+        "genome_id": genome_id,
+        "family": f"{family.key.phylum}:{family.key.locus_name}",
+        "contig": cluster.contig, "cluster_start": cluster.start, "cluster_end": cluster.end,
+        "gene_count": len({h.gene_name for h in own_hits}),
+        "hit_count": len(own_hits),
+        "roles": sorted({h.role for h in own_hits}),
+        "best_identity": max((h.identity for h in own_hits), default=None),
+        "admitted": admitted,
+    })
+
+
+def _write_idiomorph_diagnostics(
+    out_path: Path,
+    resolution: IdiomorphResolution,
+    family: Family,
+    run_id: str,
+    genome_id: str,
+) -> None:
+    """Append one JSON line per collapsed idiomorph pair.
+
+    These rows are what the provisional overlap threshold
+    (`idiomorph.DEFAULT_MIN_OVERLAP_FRACTION`, 0.5) and the provisional margin
+    (`family_registry.DEFAULT_MIN_IDIOMORPH_MARGIN`, 5.0) are meant to be
+    revised from, so both members' identity AND coverage are recorded, not
+    just the verdict. Coverage in particular is the open question: the
+    artifact being resolved is a shared protein domain, so a cross-hit should
+    cover only part of its reference while the true gene covers all of it,
+    which makes coverage the biologically motivated discriminator and identity
+    a proxy that happened to score 23/23. It cannot be the rule today because
+    it is `None` on the tblastn and exonerate paths -- which is itself
+    something this corpus will show the rate of.
+    """
+    _append_diagnostics_row(out_path, {
+        "kind": "idiomorph_resolution",
+        "run_id": run_id,
+        "genome_id": genome_id,
+        "family": f"{family.key.phylum}:{family.key.locus_name}",
+        "contig": resolution.contig,
+        "winner": resolution.winner,
+        "loser": resolution.loser,
+        "winner_identity": resolution.winner_identity,
+        "loser_identity": resolution.loser_identity,
+        "margin": resolution.margin,
+        "overlap_fraction": resolution.overlap_fraction,
+        "winner_coverage": resolution.winner_coverage,
+        "loser_coverage": resolution.loser_coverage,
+    })
 
 
 @dataclass(frozen=True)
@@ -722,6 +918,29 @@ def _raw_method_rank(method: str) -> int:
         return len(_RAW_METHOD_PREFERENCE)
 
 
+def _live_hits_for_evidence(hits: list[SearchHit]) -> list[SearchHit]:
+    """Drop superseded hits, unless that would leave a gene with no evidence.
+
+    A gene counts as found because of a LIVE hit, so the evidence reported for
+    it must be that hit. Measured on Syzygites sp. MES_3091 scaffold_11: sexP
+    counted as found because of a hit at 148,515, but the report displayed the
+    superseded overlapping hit at 143,389 instead -- the very hit that had been
+    ruled out. The displayed evidence contradicted the scoring that admitted it.
+
+    Per gene, not globally: a gene whose hits are ALL superseded keeps them, so
+    the ambiguity stays visible in the report rather than vanishing. That gene
+    is not in `genes_found` anyway, so this only affects what a reader sees.
+    """
+    by_gene: dict[str, list[SearchHit]] = {}
+    for hit in hits:
+        by_gene.setdefault(hit.gene_name, []).append(hit)
+    kept: list[SearchHit] = []
+    for gene_hits in by_gene.values():
+        live = [h for h in gene_hits if h.superseded_by is None]
+        kept.extend(live or gene_hits)
+    return kept
+
+
 def _gene_evidence(
     member_clusters: list[GeneCluster],
     family_key: FamilyKey,
@@ -779,7 +998,7 @@ def _gene_evidence(
     best: dict[tuple[int, str], GeneEvidence] = {}
     for cluster in member_clusters:
         raw_by_gene: dict[str, SearchHit] = {}
-        for hit in cluster.hits:
+        for hit in _live_hits_for_evidence(cluster.hits):
             if hit.family_key != family_key:
                 continue
             current = raw_by_gene.get(hit.gene_name)
@@ -913,6 +1132,8 @@ def run_pipeline(
     max_gap: int | None = None,
     ambiguity_floor: float = 0.5,
     short_orf_aa_floor: int = 60,
+    idiomorph_overlap_fraction: float = DEFAULT_MIN_OVERLAP_FRACTION,
+    relaxed_second_pass: bool = True,
     window_protein_length_multiple: float = DEFAULT_WINDOW_PROTEIN_LENGTH_MULTIPLE,
     window_max_intron_bp: int = DEFAULT_WINDOW_MAX_INTRON_BP,
     polish_tolerance_bp: int = 10,
@@ -1002,7 +1223,78 @@ def run_pipeline(
         localized_hit_ids.update(id(h) for h in localized)
         hits.extend(localized)
 
+    # Drop alignments too short to carry information BEFORE clustering, so a
+    # fragment can never contribute a gene name to a cluster or inflate the
+    # evidence floor's gene count. Measured need: a 27 bp "sexM" (nine codons)
+    # and a 48/51 bp sexM/sexP pair were each being reported as loci.
+    hits = drop_low_quality_hits(hits)
+
     clusters = cluster_hits(hits, max_gap=max_gap)
+
+    # Resolve overlapping mutually-exclusive idiomorph genes HERE, before
+    # anything counts distinct genes. sexM and sexP share an HMG box, so one
+    # real locus gene draws both references; left unresolved it inflates the
+    # evidence floor's gene count, stops `expected_genes_for_idiomorph`
+    # narrowing the roster, and leaves the idiomorph uncallable. Deferring
+    # this to scoring would fix the last two and leave the first.
+    #
+    # Per cluster and per family: two hits only describe the same gene if
+    # they are in the same cluster, and gene names are only mutually
+    # exclusive within the family that declares their idiomorphs.
+    idiomorph_events_by_cluster: dict[int, list[IdiomorphResolution]] = {}
+    #: (family, event) for every resolution in the run, for the diagnostics
+    #: corpus. Paired at resolution time rather than re-derived afterwards:
+    #: a cluster routinely mixes families, and gene names are not unique
+    #: across them, so recovering the family from the event alone is guesswork.
+    resolutions_with_family: list[tuple[Family, IdiomorphResolution]] = []
+    resolved_clusters: list[GeneCluster] = []
+    for cluster in clusters:
+        cluster_hits_out = list(cluster.hits)
+        events: list[IdiomorphResolution] = []
+        for family in families:
+            own = [h for h in cluster_hits_out if h.family_key == family.key]
+            if len(own) < 2:
+                continue
+            resolved_own, own_events = resolve_idiomorph_overlaps(
+                own, family, min_overlap_fraction=idiomorph_overlap_fraction
+            )
+            if not own_events:
+                continue
+            by_id = dict(zip((id(h) for h in own), resolved_own))
+            cluster_hits_out = [by_id.get(id(h), h) for h in cluster_hits_out]
+            events.extend(own_events)
+            resolutions_with_family.extend((family, e) for e in own_events)
+        new_cluster = GeneCluster(
+            cluster.contig, cluster.start, cluster.end, cluster_hits_out
+        )
+        if events:
+            idiomorph_events_by_cluster[id(new_cluster)] = events
+        resolved_clusters.append(new_cluster)
+    clusters = resolved_clusters
+
+    # One id per run, so a second run appending into the same diagnostics file
+    # is detectable rather than silently doubling the corpus, and one per
+    # genome, so a batch's rows can be told apart at all.
+    run_id = uuid.uuid4().hex[:12]
+    genome_id = genome_fasta.stem
+    if evidence_diagnostics_path is not None:
+        for family, event in resolutions_with_family:
+            _write_idiomorph_diagnostics(
+                evidence_diagnostics_path, event, family,
+                run_id=run_id, genome_id=genome_id,
+            )
+
+    # What this run could have found, read back from the FASTA it searched
+    # with. Composed with the short-ORF exclusion because a gene that cannot
+    # be found is a gene that cannot be found, whichever reason applies: both
+    # must leave the denominator, or `fraction_found`'s ceiling tracks gaps in
+    # the curated database instead of the biology.
+    searchable_genes = {
+        key: genes - short_orf_by_family.get(key, set())
+        for key, genes in searchable_genes_by_family(
+            reference_fasta, record_families
+        ).items()
+    }
 
     # Read contig lengths unconditionally so contig_edge_distance is populated
     # (or left None on an unreadable FASTA) consistently for every segment of
@@ -1038,6 +1330,7 @@ def run_pipeline(
                 _write_evidence_diagnostics(
                     evidence_diagnostics_path, cluster, family,
                     admitted=family.key in admitted_keys,
+                    run_id=run_id, genome_id=genome_id,
                 )
         for family in admitted_families:
             # Eligibility is decided per (cluster, family), NOT from a single
@@ -1133,6 +1426,38 @@ def run_pipeline(
                     cluster.hits.append(_hit_from_model(outcome.canonical))
                 polish_by[(id(cluster), family.key, gene_name)] = outcome
 
+    # Resolve overlapping idiomorph pairs AGAIN, now that polishing has run.
+    # The first pass (before polishing) is what keeps the evidence floor
+    # honest, but polishing MOVES coordinates: exonerate/miniprot replace an
+    # approximate tblastn span with a refined gene model, and a pair that did
+    # not overlap beforehand can overlap afterwards. Measured on Syzygites sp.
+    # MES_3091, three of five reported loci had post-polish sexM/sexP overlaps
+    # of 100%, 32 bp and 47 bp that the pre-polish pass never saw, so each was
+    # reported as two genes and left idiomorph=undetermined.
+    #
+    # Re-running is safe and idempotent: a hit already marked superseded stays
+    # superseded, and a pair that still does not overlap is still left alone.
+    for cluster in clusters:
+        for family in families:
+            own = [h for h in cluster.hits if h.family_key == family.key]
+            if len(own) < 2:
+                continue
+            resolved_own, own_events = resolve_idiomorph_overlaps(
+                own, family, min_overlap_fraction=idiomorph_overlap_fraction
+            )
+            if not own_events:
+                continue
+            by_id = dict(zip((id(h) for h in own), resolved_own))
+            cluster.hits[:] = [by_id.get(id(h), h) for h in cluster.hits]
+            idiomorph_events_by_cluster.setdefault(id(cluster), []).extend(own_events)
+            resolutions_with_family.extend((family, e) for e in own_events)
+            if evidence_diagnostics_path is not None:
+                for event in own_events:
+                    _write_idiomorph_diagnostics(
+                        evidence_diagnostics_path, event, family,
+                        run_id=run_id, genome_id=genome_id,
+                    )
+
     fragmented_segments: dict[FamilyKey, list[GeneCluster]] = {}
     for family in families:
         segments = _fragmented_family_segments(clusters, family)
@@ -1170,6 +1495,26 @@ def run_pipeline(
             ),
             fragmented=fragmented,
         )
+        # The idiomorph calls behind this result, and the narrowest of them.
+        # A thin margin does NOT withhold the call -- refusing would cost real
+        # detections, and the rule is 23/23 correct on the ground-truth set
+        # even at a 2.34-point separation. It caps the tier instead, so a
+        # close call is visible at a glance rather than only to whoever opens
+        # the diagnostics.
+        own_resolutions = [
+            event
+            for cluster in member_clusters
+            for event in idiomorph_events_by_cluster.get(id(cluster), ())
+        ]
+        idiomorph_margin = (
+            min(e.margin for e in own_resolutions) if own_resolutions else None
+        )
+        if (
+            idiomorph_margin is not None
+            and idiomorph_margin < family.min_idiomorph_margin
+            and tier == "high"
+        ):
+            tier = "medium"
         short_genes = short_orf_by_family.get(score.family_key, set())
         evidence = _gene_evidence(member_clusters, score.family_key, polish_by)
         # Segments are widened to cover this result's own gene evidence, so a
@@ -1198,10 +1543,21 @@ def run_pipeline(
             genes_found=score.genes_found,
             genes_missing=[g for g in score.genes_missing if g not in short_genes],
             fragmented=fragmented,
-            genes_not_searchable=[g for g in score.genes_missing if g in short_genes],
+            # Two reasons a gene could not be searched for, reported as one
+            # list because they mean the same thing to a reader: scoring
+            # already excluded the genes with no reference protein at all,
+            # and `short_genes` names those whose only reference is too short
+            # to localize reliably.
+            genes_not_searchable=sorted(
+                set(score.genes_not_searchable)
+                | {g for g in score.genes_missing if g in short_genes}
+            ),
             segments=segments,
             gene_evidence=evidence,
             reference_records=sorted({e.reference_record_id for e in evidence}),
+            idiomorph_margin=idiomorph_margin,
+            idiomorph_resolutions=own_resolutions,
+            locus_class=classify_locus(member_clusters[0], family),
         )
 
     results: list[DetectionResult] = []
@@ -1223,7 +1579,7 @@ def run_pipeline(
             member_clusters[0].end,
             [h for c in member_clusters for h in c.hits],
         )
-        scores = score_cluster(merged, families)
+        scores = score_cluster(merged, families, searchable_genes=searchable_genes)
         score = next((s for s in scores if s.family_key == family_key), None)
         if score is None:
             continue
@@ -1234,7 +1590,7 @@ def run_pipeline(
         fragmented_reported_cluster_ids[family_key] = {id(c) for c in member_clusters}
 
     for cluster in clusters:
-        scores = score_cluster(cluster, families)
+        scores = score_cluster(cluster, families, searchable_genes=searchable_genes)
         ambiguous = is_ambiguous(scores, floor=ambiguity_floor)
         for score in scores:
             if id(cluster) in fragmented_reported_cluster_ids.get(score.family_key, ()):
@@ -1245,6 +1601,27 @@ def run_pipeline(
             if score.fraction_found < ambiguity_floor and not ambiguous:
                 continue
             results.append(_build(score, [cluster], scores, fragmented=False))
+
+    # The relaxed second pass, and ONLY when the strict pass found nothing
+    # anywhere in this genome. Gating on the whole genome rather than per
+    # family is the curator's ruling and the conservative reading: a genome
+    # with any confident call is left exactly as it was, so the relaxed bar
+    # can never dilute a run that already worked.
+    if not results and relaxed_second_pass:
+        results = _relaxed_results(
+            clusters, families,
+            searchable_genes=searchable_genes,
+            evidence_floor=evidence_floor,
+            ambiguity_floor=ambiguity_floor,
+            polish_by=polish_by,
+            contig_lengths=contig_lengths,
+        )
+        if results:
+            logger.info(
+                "strict pass found no locus; %d admitted by the relaxed pass "
+                "(>=2 distinct genes incl. a core gene), capped at medium",
+                len(results),
+            )
 
     reported = {r.family_key for r in results}
     not_detected: list[NotDetectedFamily] = []

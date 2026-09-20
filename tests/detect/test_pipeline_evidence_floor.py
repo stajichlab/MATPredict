@@ -215,8 +215,12 @@ def test_evidence_diagnostics_written_when_path_given(tmp_path):
     ])
     out_path = tmp_path / "diagnostics.jsonl"
 
-    _write_evidence_diagnostics(out_path, cluster, family, admitted=True)
-    _write_evidence_diagnostics(out_path, cluster, family, admitted=False)
+    _write_evidence_diagnostics(
+        out_path, cluster, family, admitted=True, run_id="r1", genome_id="g1"
+    )
+    _write_evidence_diagnostics(
+        out_path, cluster, family, admitted=False, run_id="r1", genome_id="g1"
+    )
 
     import json
     lines = out_path.read_text().splitlines()
@@ -239,7 +243,9 @@ def test_evidence_diagnostics_hit_count_tracks_raw_hsps_separately_from_gene_cou
     ])
     out_path = tmp_path / "diagnostics.jsonl"
 
-    _write_evidence_diagnostics(out_path, cluster, family, admitted=True)
+    _write_evidence_diagnostics(
+        out_path, cluster, family, admitted=True, run_id="r1", genome_id="g1"
+    )
 
     import json
     row = json.loads(out_path.read_text().splitlines()[0])

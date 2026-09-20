@@ -1,0 +1,138 @@
+record_id: 101119_atcc11807_MAT_Minus
+record_version: 1
+taxonomy:
+  taxid: 101119
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Mucoraceae;g__Syzygites;s__Syzygites_megalocarpus
+  lineage_resolved_date: '2026-09-20'
+organism:
+  species: Syzygites megalocarpus
+  strain:
+    name: ATCC 11807
+    known: true
+    culture_collection_ids:
+    - ATCC 11807
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Minus
+  system: homothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sexM->rnhA
+    definition_note: 'Published MAT region of a HOMOTHALLIC Mucorale, 20,845 bp. Carries
+      the sexM HMG gene with an intact rnhA flank; the glrA here is annotated as a
+      PSEUDOGENE with no translation and is therefore not curated. Its Plus counterpart
+      in the same strain is record 101119_atcc11807_MAT_Plus (JN112240.1), where the
+      situation is mirrored: intact glrA, pseudogenised rnhA.
+
+
+      This is the first homothallic reference in this database. It exists to make
+      the homothallic architecture -- both idiomorphs present in one genome -- detectable
+      at all, which it previously was not for lack of any reference. mrsB, arbA and
+      mcmV are present in the deposit but are not in db/Mucoromycota/order.yml''s
+      controlled vocabulary, so they are not curated.
+
+
+      Idnurm A (2011) Sex determination in the first-described sexual fungus. Eukaryotic
+      Cell 10(11):1485-1491.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JN112239.1
+        seq_region: JN112239.1
+      start: 1
+      end: 20845
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: sexM
+  protein_accession: ncbi_protein:AET35419.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 11518
+  end: 12081
+  strand: +
+  exons:
+  - start: 11518
+    end: 12081
+  codon_start: 1
+  transl_table: 1
+  gene_index: 0
+  order_in_locus: 0
+- name: rnhA
+  protein_accession: ncbi_protein:AET35417.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 12125
+  end: 16163
+  strand: +
+  exons:
+  - start: 12125
+    end: 12183
+  - start: 12256
+    end: 12748
+  - start: 12798
+    end: 13407
+  - start: 13456
+    end: 14759
+  - start: 14804
+    end: 14931
+  - start: 14976
+    end: 15579
+  - start: 15632
+    end: 15862
+  - start: 15912
+    end: 16163
+  codon_start: 1
+  transl_table: 1
+  gene_index: 1
+  order_in_locus: 1
+evidence:
+  locus_existence: &id001
+    tier: 1
+    experimental_method: targeted sequencing and annotation of both mating-type regions
+      of a homothallic strain, deposited as GenBank records by the describing author
+    citations: &id002
+    - doi: 10.1128/EC.05149-11
+      pmid: '21908600'
+  boundaries: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of the sexM HMG-domain gene in this deposited region
+      of a homothallic strain that carries both
+    citations: *id002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JN112239.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 21908600|101119|MAT|Minus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

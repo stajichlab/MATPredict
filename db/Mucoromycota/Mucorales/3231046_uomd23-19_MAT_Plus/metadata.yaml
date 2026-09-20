@@ -1,0 +1,123 @@
+record_id: 3231046_uomd23-19_MAT_Plus
+record_version: 1
+taxonomy:
+  taxid: 3231046
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Cunninghamellaceae;g__Absidia;s__Absidia_urquhartii
+  lineage_resolved_date: '2026-09-20'
+organism:
+  species: Absidia urquhartii
+  strain:
+    name: UoMD23-19
+    known: true
+    culture_collection_ids:
+    - UoMD23-19
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Plus
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: algA->sexP
+    definition_note: 'Published MAT locus deposited as a single 12,990 bp fragment
+      (GenBank PP971769.1) by Idnurm (2025), the Plus counterpart of PP971768.1 in
+      the same species. Three unnamed hypothetical-protein CDS features are NOT curated
+      here because they have no controlled-vocabulary gene name.
+
+
+      Idnurm A (2025) Absidia urquhartii (Mucoromycota) is a new species. Phytotaxa
+      687(1):1-8.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: PP971769.1
+        seq_region: PP971769.1
+      start: 1
+      end: 12990
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: algA
+  protein_accession: ncbi_protein:XPA22264.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1344
+  end: 2872
+  strand: '-'
+  exons:
+  - start: 2646
+    end: 2872
+  - start: 2547
+    end: 2562
+  - start: 2433
+    end: 2481
+  - start: 2112
+    end: 2352
+  - start: 1344
+    end: 2034
+  codon_start: 1
+  transl_table: 1
+  gene_index: 0
+  order_in_locus: 0
+- name: sexP
+  protein_accession: ncbi_protein:XPA22266.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 6436
+  end: 7362
+  strand: +
+  exons:
+  - start: 6436
+    end: 7362
+  codon_start: 1
+  transl_table: 1
+  gene_index: 1
+  order_in_locus: 1
+evidence:
+  locus_existence: &id001
+    tier: 1
+    experimental_method: targeted sequencing and annotation of the mating-type locus,
+      deposited as a complete-CDS GenBank record by the describing authors
+    citations: &id002
+    - doi: 10.11646/phytotaxa.687.1.1
+  boundaries: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of the sexP HMG-domain gene in the deposited locus,
+      as annotated by the describing authors
+    citations: *id002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: PP971769.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 10.11646/phytotaxa.687.1.1|3231046|MAT|Plus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

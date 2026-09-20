@@ -1,0 +1,97 @@
+record_id: 4850_vkm-f-921_MAT_Minus
+record_version: 1
+taxonomy:
+  taxid: 4850
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Choanephoraceae;g__Blakeslea;s__Blakeslea_trispora
+  lineage_resolved_date: '2026-09-20'
+organism:
+  species: Blakeslea trispora
+  strain:
+    name: VKM F-921
+    known: true
+    culture_collection_ids:
+    - VKM F-921
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Minus
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sexM
+    definition_note: 'Published MAT locus fragment, 1,383 bp. ONLY sexM (208 aa, complete)
+      is curated: the deposit''s tptA (38 aa) and rnhA (82 aa) CDS features are edge
+      fragments of the sequenced region, and a 38 aa reference protein is worse than
+      none -- it would either be excluded by the short-ORF floor or generate spurious
+      short matches. Adds a Choanephoraceae Minus reference, a family otherwise unrepresented.
+
+
+      Camino LP, Idnurm A, Cerda-Olmedo E (2015) Diversity, ecology, and evolution
+      in Phycomyces. Fungal Biology 119(11):1007-1021.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: HG939558.1
+        seq_region: HG939558.1
+      start: 1
+      end: 1383
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: sexM
+  protein_accession: ncbi_protein:CDN67533.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 381
+  end: 1007
+  strand: +
+  exons:
+  - start: 381
+    end: 1007
+  codon_start: 1
+  transl_table: 1
+  gene_index: 0
+  order_in_locus: 0
+evidence:
+  locus_existence: &id001
+    tier: 1
+    experimental_method: targeted sequencing and annotation of the mating-type locus,
+      deposited as a GenBank record by the describing authors
+    citations: &id002
+    - doi: 10.1016/j.funbio.2015.07.005
+      pmid: '26466876'
+  boundaries: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of the sexM HMG-domain gene in the deposited locus,
+      as annotated by the describing authors
+    citations: *id002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: HG939558.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 10.1016/j.funbio.2015.07.005|4850|MAT|Minus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

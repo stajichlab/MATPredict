@@ -109,25 +109,27 @@ def test_a_polished_hit_still_counts_as_proteome_evidence():
 
 
 def test_the_default_overlap_bar_is_the_calibrated_value():
-    # Raised from the provisional 0.5 to 0.8 on 2026-09-20, from the corpus the
-    # 23-genome re-run produced: across the 23 real loci the MINIMUM overlap is
-    # 0.9242, so 0.8 loses nothing real while leaving 0.12 of headroom for a
-    # ragged HSP in a divergent taxon. 0.9 was available on the same data (still
-    # 0 of 23 lost) and deliberately not taken: it leaves 0.024 of headroom on a
-    # sample of 23 genomes from ONE phylum. Pinned here so a future change is a
-    # deliberate recalibration against new data, not a drift.
+    # Briefly raised to 0.8 on the 23-genome corpus, then RETURNED to 0.5 when
+    # the 44-genus sweep showed what the higher bar costs: a partial overlap of
+    # ONE HMG region escapes collapse, so one gene is reported as two. Twelve of
+    # 75 homothallic candidates had separations of zero or less -- overlapping,
+    # and still reported as a pair. The 23 real loci overlap at 0.9242 or more,
+    # so 0.5 loses nothing there either. Pinned so a future change is a
+    # deliberate recalibration, not a drift.
     from MATPredict.detect.idiomorph import DEFAULT_MIN_OVERLAP_FRACTION
 
-    assert DEFAULT_MIN_OVERLAP_FRACTION == 0.8
+    assert DEFAULT_MIN_OVERLAP_FRACTION == 0.5
 
 
-def test_an_overlap_between_the_old_and_new_bar_no_longer_resolves():
-    # 0.70 sat above the retired 0.5 bar and below the calibrated 0.8 one.
-    # 1000 bp hits sharing 700 bp of the shorter.
+def test_a_partial_overlap_of_one_hmg_region_is_collapsed():
+    # 1000 bp hits sharing 700 bp of the shorter = 0.70. This is the case the
+    # 0.8 bar let through: two references aligning to overlapping but not
+    # congruent spans of ONE gene, reported as two genes and mislabelled a
+    # homothallic pair. At 0.5 it collapses.
     hits = [_hit("sexP", 1000, 1999, 47.3), _hit("sexM", 1300, 2299, 31.3)]
     resolved, events = resolve_idiomorph_overlaps(hits, FAM)
-    assert all(h.superseded_by is None for h in resolved)
-    assert events == []
+    assert _by_gene(resolved)["sexM"].superseded_by == "sexP"
+    assert len(events) == 1
 
 
 def test_the_lower_identity_member_of_an_overlapping_pair_is_superseded():

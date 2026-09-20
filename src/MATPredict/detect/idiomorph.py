@@ -8,32 +8,31 @@ from MATPredict.detect.clustering import GeneCluster
 from MATPredict.detect.family_registry import Family
 from MATPredict.detect.search import SearchHit
 
-DEFAULT_MIN_OVERLAP_FRACTION = 0.8
+DEFAULT_MIN_OVERLAP_FRACTION = 0.5
 """How much two hits must overlap before they are judged to be one gene.
 
 Measured as the shared span over the SHORTER hit's span.
 
-CALIBRATED 2026-09-20, raised from a provisional 0.5, against the corpus the
-23-genome ground-truth re-run produced (236 resolution events over 23 genomes,
-23 of those events on the reported loci themselves):
+CALIBRATED 2026-09-20 against two corpora, and deliberately RETURNED to 0.5
+after a brief excursion to 0.8.
 
-* across the 23 REAL loci the minimum overlap is **0.9242**, median 1.0, so
-  0.8 costs nothing real and leaves 0.12 of headroom for a ragged HSP in a
-  divergent taxon -- the failure mode that matters, since every one of the 23
-  is Mucoromycota;
-* 0.9 was equally free on this data (still 0 of 23 lost) and deliberately NOT
-  taken: it leaves 0.024 of headroom on a sample of 23 genomes from one
-  phylum, which is calibrating to the edge of the sample;
-* raising to 0.8 also stops 4.2% of all events resolving. Those are on
-  spurious clusters, and suppressing them is a mild LOSS, not a gain: an
-  unresolved spurious pair keeps counting one gene as two and so inflates
-  that cluster's evidence-floor gene count. This is the real argument against
-  going higher still.
+The 23-genome ground-truth corpus (236 resolution events, 23 of them on the
+reported loci) said 0.8 was free: across the 23 REAL loci the minimum overlap
+is 0.9242, median 1.0, so nothing real was lost. It also said raising the bar
+stops 4.2% of all events resolving, on spurious clusters.
 
-The two error directions remain far apart either way. Two genuinely distinct
-neighbouring genes overlap at or near 0%, and where they do share bases --
-normal at MAT loci, where intergenic erosion is expected -- it is a short
-stretch, not four fifths of the shorter gene.
+The 44-genus sweep showed what that 4.2% costs. A partial overlap of ONE HMG
+region -- two references aligning to overlapping but not congruent spans --
+falls under 0.8 and escapes collapse, so one gene is reported as two. Of 75
+homothallic candidates, 12 had separations of zero or less: they OVERLAPPED
+and were still reported as a pair. 0.5 collapses them.
+
+So the direction of the error matters more than the headroom. Missing a
+collapse reports one gene as two, inflates the evidence floor, and mislabels a
+locus; collapsing too eagerly would merge two genuinely distinct neighbours,
+which at 0.5 still requires them to share half of the shorter alignment --
+far more than the short stretch that intergenic erosion produces at a MAT
+locus.
 
 Revise from the `idiomorph_resolution` rows in the evidence diagnostics, which
 carry every event's overlap fraction, not by intuition.
@@ -224,6 +223,18 @@ def classify_locus(cluster: GeneCluster, family: Family) -> str:
             if idiomorph_of[a.gene_name] & idiomorph_of[b.gene_name]:
                 continue  # same idiomorph; says nothing about homothallism
             if a.contig != b.contig:
+                continue
+            # BOTH genes must be real annotated models. A homothallic locus has
+            # two genes, and sexM/sexP are 187-290 aa -- well within what genome
+            # annotation catches, unlike the tiny pheromone precursors this
+            # pipeline rescues by tblastn. Two hits that appear ONLY in a
+            # genome-wide tblastn search are two partial alignments of one HMG
+            # region, not two genes: of 75 candidates in the 44-genus sweep, 54
+            # had NEITHER gene in the proteome and the median separation was
+            # 349 bp. Those fall through to `idiomorph_gene_only`, so they are
+            # filed rather than discarded and stay available as HMM training
+            # material.
+            if a.method not in _PROTEOME_METHODS or b.method not in _PROTEOME_METHODS:
                 continue
             separation = max(a.start, b.start) - min(a.end, b.end)
             if separation <= family.max_homothallic_separation_bp:

@@ -159,3 +159,55 @@ def test_best_hits_close_together_still_call_homothallic():
                   "rec1", "tblastn_genome"),
     )
     assert classify_locus(cluster, FAM) == "homothallic_candidate"
+
+
+def test_a_pair_with_neither_gene_in_the_proteome_is_not_homothallic():
+    # A homothallic locus has two REAL genes. sexM/sexP are 187-290 aa, well
+    # within what genome annotation catches -- unlike the tiny pheromone
+    # precursors this pipeline rescues by tblastn -- so two hits that appear
+    # ONLY in a genome-wide tblastn search are not two genes.
+    #
+    # Measured: of 75 homothallic candidates in the 44-genus sweep, 54 had
+    # NEITHER gene in the proteome and the median separation was 349 bp. Those
+    # are two partial alignments of one HMG region, not a homothallic pair.
+    # They become idiomorph_gene_only, so nothing is discarded -- they remain
+    # available as per-idiomorph HMM training material.
+    cluster = _cluster(
+        SearchHit(FAM.key, "sexP", "core_MAT", "c1", 1000, 1600, "+", 30.0,
+                  "rec1", "tblastn_genome"),
+        SearchHit(FAM.key, "sexM", "core_MAT", "c1", 2000, 2600, "+", 31.0,
+                  "rec1", "tblastn_genome"),
+    )
+    assert classify_locus(cluster, FAM) == "idiomorph_gene_only"
+
+
+def test_one_gene_in_the_proteome_is_not_enough():
+    cluster = _cluster(
+        SearchHit(FAM.key, "sexP", "core_MAT", "c1", 1000, 1600, "+", 40.0,
+                  "rec1", "diamond_proteome"),
+        SearchHit(FAM.key, "sexM", "core_MAT", "c1", 2000, 2600, "+", 31.0,
+                  "rec1", "tblastn_genome"),
+    )
+    assert classify_locus(cluster, FAM) == "idiomorph_gene_only"
+
+
+def test_both_genes_in_the_proteome_and_close_is_homothallic():
+    # The Protomycocladus faisalabadensis shape: two annotated genes 2.5 kb
+    # apart, both proteome-supported.
+    cluster = _cluster(
+        SearchHit(FAM.key, "sexP", "core_MAT", "c1", 52012, 58292, "+", 41.3,
+                  "rec1", "diamond_proteome", coverage=59.3),
+        SearchHit(FAM.key, "sexM", "core_MAT", "c1", 49110, 49441, "+", 46.4,
+                  "rec1", "diamond_proteome", coverage=32.2),
+    )
+    assert classify_locus(cluster, FAM) == "homothallic_candidate"
+
+
+def test_a_polished_gene_counts_as_proteome_supported():
+    cluster = _cluster(
+        SearchHit(FAM.key, "sexP", "core_MAT", "c1", 1000, 1600, "+", 40.0,
+                  "rec1", "exonerate_refine"),
+        SearchHit(FAM.key, "sexM", "core_MAT", "c1", 4000, 4600, "+", 38.0,
+                  "rec1", "miniprot_refine"),
+    )
+    assert classify_locus(cluster, FAM) == "homothallic_candidate"

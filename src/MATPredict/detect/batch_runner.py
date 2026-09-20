@@ -26,6 +26,16 @@ as an already-built `Path` (built once by the caller, e.g. one
 `build_reference_fasta` call before batches are dispatched) and calls
 `run_pipeline` in-process for each genome in the batch.
 
+**Scope (Task 4)**: that build-once design originally forced the batch path to
+be unrestricted -- one reference FASTA had to serve genomes with different
+taxids, so it held every phylum's curated proteins, and a Mucoromycota-only
+rollout still aligned all 181 of them per genome instead of the 19 that can
+match. `run_batch`'s `phylum` parameter resolves that without giving up
+build-once: when the whole batch is one phylum, the routing decision is the
+same for every genome, so it is made once and the restricted query set is
+built once from it. With no `phylum` the batch stays mixed-phylum and
+self-routing, exactly as before.
+
 **Gzipped genomes**: every `AcquiredGenome.fasta_path` from the local-BFD-library
 acquisition path (Task 1) points directly at a read-only `.fa.gz` /
 `.masked.fasta.gz` file on shared storage -- no copy was made. `run_pipeline`
@@ -49,8 +59,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
+from MATPredict.detect.family_registry import available_phyla, load_all_families, route
 from MATPredict.detect.genome_acquisition import AcquiredGenome
+from MATPredict.detect.pipeline import EvidenceFloor
 from MATPredict.detect.pipeline import run_pipeline as _default_run_pipeline
+from MATPredict.detect.reference_fasta import build_reference_fasta
 from MATPredict.detect.report import write_detection_gff3, write_detection_report
 
 logger = logging.getLogger(__name__)
@@ -166,6 +179,8 @@ def run_batch(
     failures: list[GenomeRunFailure] | None = None,
     *,
     emit_cds_fasta: bool = False,
+    phylum: str | None = None,
+    evidence_floor: EvidenceFloor | None = None,
 ) -> None:
     """Run the detection pipeline for every genome in one batch.
 
@@ -201,6 +216,45 @@ def run_batch(
     failure is logged, recorded in `failures` (if a list is passed), and the
     loop continues to the next genome, since one bad genome in a multi-genome
     SLURM job should not lose every other genome's already-computed result.
+
+    **`phylum` (keyword-only, default None) gives the batch an explicit
+    scope.** Without it this function self-routes per genome inside
+    `run_pipeline` and searches whatever the caller's unrestricted reference
+    FASTA holds -- which is why, before this parameter existed, a
+    Mucoromycota-only rollout still aligned all 181 curated proteins against
+    every one of its genomes even though only 19 of them belong to a
+    Mucoromycota family (measured against the live `db/`; see
+    `build_reference_fasta`'s docstring and
+    `tests/detect/test_reference_fasta.py::test_per_phylum_builds_partition_the_unrestricted_build`).
+    When `phylum` IS given, this function routes ONCE with
+    `family_registry.route(..., phylum=...)` -- the same helper and the same
+    `explicit_phylum` rule `cli._cmd_detect` uses, never a reimplementation --
+    and hands that one `RoutingDecision` to every genome's `run_pipeline`
+    call, so no genome's taxid can re-route it somewhere else. It also builds
+    the tblastn query set ONCE for exactly those families, writing it to the
+    `reference_fasta` path it was given: under `phylum`, that argument is the
+    DESTINATION for the restricted query set rather than an already-built
+    file, because the routed family set is only known here, and letting the
+    caller build a second one is how the query set and the routing come to
+    disagree. The build-once design is unchanged -- one build for the batch,
+    not one per genome.
+
+    An explicit `phylum` matching no curated family raises BEFORE the
+    per-genome loop starts. It cannot be raised inside the loop: the loop's
+    try/except exists so one bad genome never sinks the batch, and it would
+    swallow this error once per genome, letting an 813-genome job run to
+    completion having searched nothing and exit as if it had looked. This is
+    the same policy `cli._cmd_detect` applies to `--phylum`.
+
+    **`evidence_floor` (keyword-only, default None)** is forwarded to
+    `run_pipeline` so a rollout can tighten or loosen the admission bar
+    (before this parameter existed, batches silently inherited whatever
+    `run_pipeline`'s defaults happened to be, with no opt-out and no way to
+    run a comparison). `None` means "use `run_pipeline`'s own default" and is
+    implemented by NOT passing the keyword at all, never by constructing an
+    `EvidenceFloor()` here: a second copy of the default in this module could
+    silently drift from the real one, which is exactly the bug the CLI's
+    argparse defaults hit.
     """
     if "SCRATCH" not in os.environ:
         raise RuntimeError(
@@ -212,6 +266,38 @@ def run_batch(
 
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    routing = None
+    if phylum is not None:
+        # Routed once for the whole batch, with the same helper the
+        # single-genome CLI path uses. `route`'s `explicit_phylum` rule
+        # ignores the taxid entirely, so this one decision is correct for
+        # every genome in the batch regardless of how each genome's own taxid
+        # would have routed.
+        routing = route(phylum=phylum, taxid=None, families=load_all_families(db_root))
+        if not routing.families:
+            raise ValueError(
+                f"phylum {phylum} matches no curated family in {db_root}; "
+                f"available phyla: {', '.join(available_phyla(db_root)) or 'none'}"
+            )
+        # The destination directory is created above, so the restricted
+        # query set can be written next to the batch's own output.
+        Path(reference_fasta).parent.mkdir(parents=True, exist_ok=True)
+        reference_fasta = build_reference_fasta(
+            db_root, reference_fasta, family_keys={f.key for f in routing.families},
+        )
+
+    # Both are passed ONLY when set, never as an explicit `None`/default
+    # value. `run_pipeline` treats `routing=None` as "self-route", which is
+    # the unchanged mixed-phylum behaviour, and its `evidence_floor` default
+    # is the single source of truth for the admission bar -- restating either
+    # here would create a second default in this module that can silently
+    # drift from the real one.
+    scope_kwargs: dict = {}
+    if routing is not None:
+        scope_kwargs["routing"] = routing
+    if evidence_floor is not None:
+        scope_kwargs["evidence_floor"] = evidence_floor
 
     for genome in genomes:
         tag = f"{genome.taxid}_{genome.accession}"
@@ -234,6 +320,7 @@ def run_batch(
                 db_root=db_root,
                 reference_fasta=reference_fasta,
                 evidence_diagnostics_path=genome_out_dir / "evidence_diagnostics.jsonl",
+                **scope_kwargs,
             )
             # The genome is already decompressed on local scratch for
             # `run_pipeline`, so the CDS/companion-FASTA path costs one more

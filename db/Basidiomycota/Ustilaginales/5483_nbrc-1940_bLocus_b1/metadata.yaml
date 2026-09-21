@@ -1,0 +1,124 @@
+record_id: 5483_nbrc-1940_bLocus_b1
+record_version: 1
+taxonomy:
+  taxid: 5483
+  lineage: k__Fungi;p__Basidiomycota;sc__Ustilaginomycotina;c__Ustilaginomycetes;o__Ustilaginales;f__Ustilaginaceae;g__Pseudozyma;s__Pseudozyma_tsukubaensis
+  lineage_resolved_date: '2026-09-20'
+organism:
+  species: Pseudozyma tsukubaensis
+  strain:
+    name: NBRC 1940
+    known: true
+    culture_collection_ids:
+    - NBRC 1940
+    differs_from_sequenced: false
+mating_type:
+  locus_name: bLocus
+  idiomorphs:
+  - b1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: bW->bE
+    definition_note: 'Published MAT b locus, 3,958 bp, 2 complete gene(s). Steins
+      et al. 2023 (BMC Genomics 24:321) systematically deposited b-locus (bW/bE) and,
+      for a subset, a-locus (STE3 receptor + numbered mating-factor precursor genes)
+      sequences across many Ustilaginaceae genera -- "further out in the subphylum"
+      than the genus Ustilago this session already curated from the same paper.
+
+
+      Steins L, Guerreiro MA, Duhamel M, Liu F, Wang QM, Boekhout T, Begerow D (2023)
+      Comparative genomics of smut fungi suggest the ability of meiosis and mating
+      in asexual species of the genus Pseudozyma (Ustilaginales). BMC Genomics 24(1):321.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: BK062520.1
+        seq_region: BK062520.1
+      start: 1
+      end: 3958
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: bW
+  protein_accession: ncbi_protein:DBA11486.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 2224
+  strand: '-'
+  exons:
+  - start: 1604
+    end: 2224
+  - start: 1
+    end: 1323
+  codon_start: 1
+  transl_table: 1
+  gene_class: HD1
+  gene_index: 0
+  order_in_locus: 0
+- name: bE
+  protein_accession: ncbi_protein:DBA11485.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2442
+  end: 3958
+  strand: +
+  exons:
+  - start: 2442
+    end: 3609
+  - start: 3702
+    end: 3958
+  codon_start: 1
+  transl_table: 1
+  gene_class: HD2
+  gene_index: 1
+  order_in_locus: 1
+evidence:
+  locus_existence: &id001
+    tier: 1
+    experimental_method: targeted sequencing and annotation of the mating-type locus,
+      deposited as a GenBank record by the describing authors
+    citations: &id002
+    - doi: 10.1186/s12864-023-09387-1
+      pmid: '37312063'
+  boundaries: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of the bLocus genes in this deposited locus, as
+      annotated by the describing authors
+    citations: *id002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: BK062520.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 10.1186/s12864-023-09387-1|5483|bLocus|b1|BK062520.1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

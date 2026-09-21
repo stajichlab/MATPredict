@@ -143,18 +143,61 @@ loci:
   - locus_name: "aLocus"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^a[0-9]+$"
-    # NOT widened 2026-09-20, unlike this file's other families -- Ustilaginales
-    # (this genus's order) has NO family rank in NCBI's taxonomy (genera sit
-    # directly under the order, verified via efetch 2026-09-20) and holds 43
-    # genera, so "one rank broader than genus" here would jump straight to a
-    # 43-genus order with no evidence any of the other 42 share this locus
-    # architecture. Curator's ruling: stay at genus rather than take that jump.
-    taxonomic_scope: [5270]  # Mycosarcoma (genus; formerly Ustilago maydis)
+    # Scope note revised 2026-09-20. The original comment here said
+    # "Ustilaginales has NO family rank in NCBI's taxonomy" -- that was an
+    # overstatement, corrected after curating real Ustilago records into this
+    # family: Ustilaginaceae (5268) IS a real, populated family under
+    # Ustilaginales, and Ustilago itself belongs to it. What is actually true
+    # is narrower -- Mycosarcoma maydis's OWN placement in NCBI's tree is
+    # "Ustilaginales incertae sedis" (unranked, unplaced), sitting OUTSIDE
+    # Ustilaginaceae, not that the order lacks a family concept (verified via
+    # efetch 2026-09-20). Widened to Ustilaginaceae now that a second real
+    # genus (Ustilago hordei, U. tritici) is curated here, which is what
+    # justifies the family-level radius the curator's ruling asked for
+    # elsewhere in this file -- Mycosarcoma's own taxid stays listed
+    # separately since lineage matching cannot reach it through
+    # Ustilaginaceae (it sits outside that family).
+    # Further widened 2026-09-20 after curating real records "further out in
+    # the subphylum" (Steins et al. 2023, 17 species across the family, plus
+    # Malassezia sympodialis, Gioti et al. 2013). 15 of the 17 Steins species
+    # already fall in Ustilaginaceae (5268); two do not and get their OWN
+    # species taxid added directly (not their family/order -- that would be
+    # widening beyond what the curated evidence supports): Kalmanozyma
+    # brasiliensis (1392244) sits in "Ustilaginales incertae sedis", the same
+    # unplaced node as Mycosarcoma; Testicularia cyperi (1882483) is in
+    # Anthracoideaceae, a genuinely different family.
+    #
+    # Malassezia sympodialis (76777) is the biggest jump in this list --
+    # Malasseziaceae, order Malasseziales, a DIFFERENT ORDER within the same
+    # subphylum Ustilaginomycotina, not merely a different genus/family.
+    # Added as its own species taxid only (direct membership), not its
+    # family: routing an uncurated Malasseziales relative to this same
+    # aLocus/bLocus family on the strength of one species is a bigger
+    # inference than the Ustilaginaceae case and deliberately left for a
+    # separate decision.
+    taxonomic_scope: [5268, 5270, 1392244, 1882483, 76777]  # Ustilaginaceae; Mycosarcoma; Kalmanozyma; Testicularia (Anthracoideaceae); Malassezia (Malasseziales, different order)
     # gene_class per this locus's own record
     # (db/Basidiomycota/Ustilaginales/5270_521_aLocus_a1/metadata.yaml), whose
     # definition_note documents mfa1 as the lipopeptide mating-factor precursor and
     # pra1 as the 7TM pheromone receptor. rba1's functional role is explicitly noted
     # in that same record as less certain -- left unclassified rather than guessed.
+    # Ustilago hordei's U07939.1 (Bakkeren & Kronstad 1994) deposits its own
+    # pheromone receptor under the gene name Uhpra1, NOT pra1. Considered
+    # adding it as its own roster entry (the pattern already used for
+    # bar3/bbr2 in Balpha/Bbeta) and REJECTED, 2026-09-20: unlike bar3/bbr2,
+    # this family's `pattern` vocabulary_type never narrows its core roster
+    # (expected_genes_for_idiomorph only narrows enum families), so a second,
+    # always-required core_MAT gene name for the SAME functional slot makes
+    # the real, already-curated Mycosarcoma maydis record (mfa1+pra1 only)
+    # permanently unable to satisfy assign_tier's core_found check -- caught
+    # by the integration test suite, not by inspection. Verified these are
+    # the same gene by sequence, not by title text alone: AAA99766.1 (pra1,
+    # M. maydis) and AAA19965.1 (Uhpra1, U. hordei) are 357/359 aa, 66.0%
+    # identity over 97.2% coverage of the shorter -- a clear ortholog pair
+    # for a fast-evolving pheromone-receptor GPCR, the same standard already
+    # used to establish algA==algL in db/Mucoromycota/order.yml. Curated
+    # under the canonical name pra1 instead; U07939.1's real deposited name
+    # is documented in that record's own definition_note.
     genes:
       - {name: mfa1, role: core_MAT, gene_class: pheromone_precursor}
       - {name: pra1, role: core_MAT, gene_class: pheromone_receptor}
@@ -162,8 +205,28 @@ loci:
   - locus_name: "bLocus"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^b[0-9]+$"
-    # NOT widened 2026-09-20 -- same reasoning as aLocus above.
-    taxonomic_scope: [5270]  # Mycosarcoma (genus; formerly Ustilago maydis)
+    # Widened 2026-09-20 -- see aLocus's scope comment above for the full
+    # correction and reasoning (Ustilaginaceae is real and populated; only
+    # Mycosarcoma's own placement is incertae sedis, outside it).
+    # Further widened 2026-09-20 after curating real records "further out in
+    # the subphylum" (Steins et al. 2023, 17 species across the family, plus
+    # Malassezia sympodialis, Gioti et al. 2013). 15 of the 17 Steins species
+    # already fall in Ustilaginaceae (5268); two do not and get their OWN
+    # species taxid added directly (not their family/order -- that would be
+    # widening beyond what the curated evidence supports): Kalmanozyma
+    # brasiliensis (1392244) sits in "Ustilaginales incertae sedis", the same
+    # unplaced node as Mycosarcoma; Testicularia cyperi (1882483) is in
+    # Anthracoideaceae, a genuinely different family.
+    #
+    # Malassezia sympodialis (76777) is the biggest jump in this list --
+    # Malasseziaceae, order Malasseziales, a DIFFERENT ORDER within the same
+    # subphylum Ustilaginomycotina, not merely a different genus/family.
+    # Added as its own species taxid only (direct membership), not its
+    # family: routing an uncurated Malasseziales relative to this same
+    # aLocus/bLocus family on the strength of one species is a bigger
+    # inference than the Ustilaginaceae case and deliberately left for a
+    # separate decision.
+    taxonomic_scope: [5268, 5270, 1392244, 1882483, 76777]  # Ustilaginaceae; Mycosarcoma; Kalmanozyma; Testicularia (Anthracoideaceae); Malassezia (Malasseziales, different order)
     # bE/bW are a divergently-transcribed homeodomain gene pair (the b locus's own
     # curated record, db/Basidiomycota/Ustilaginales/5270_521_bLocus_b1/metadata.yaml,
     # confirms this via RefSeq's own "bE1 allele"/"bW1 allele" product annotation).

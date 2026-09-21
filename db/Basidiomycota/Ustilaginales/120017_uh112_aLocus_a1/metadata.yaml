@@ -1,0 +1,121 @@
+record_id: 120017_uh112_aLocus_a1
+record_version: 1
+taxonomy:
+  taxid: 120017
+  lineage: k__Fungi;p__Basidiomycota;sc__Ustilaginomycotina;c__Ustilaginomycetes;o__Ustilaginales;f__Ustilaginaceae;g__Ustilago;s__Ustilago_hordei
+  lineage_resolved_date: '2026-09-20'
+organism:
+  species: Ustilago hordei
+  strain:
+    name: Uh112
+    known: true
+    culture_collection_ids:
+    - Uh112
+    differs_from_sequenced: false
+mating_type:
+  locus_name: aLocus
+  idiomorphs:
+  - a1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: pra1
+    definition_note: 'Published MAT a locus, 1,581 bp, complete pheromone receptor
+      (359 aa). The classic bipolar-vs-tetrapolar smut linkage paper.
+
+
+      NAMING: the deposit''s own /gene qualifier is Uhpra1, NOT pra1. Curated under
+      pra1, this family''s canonical name for the role, rather than as a separate
+      roster entry (the pattern used for bar3/bbr2 in Balpha/Bbeta) -- REJECTED for
+      aLocus 2026-09-20: this family''s pattern vocabulary_type never narrows its
+      core roster, so a second always-required core_MAT gene name for the same functional
+      slot would make the already-curated Mycosarcoma maydis record (mfa1+pra1 only)
+      permanently fail assign_tier''s core_found check. Confirmed pra1/Uhpra1 are
+      the same gene by sequence: AAA99766.1 (pra1) vs AAA19965.1 (Uhpra1) are 357/359
+      aa, 66.0% identity over 97.2% coverage of the shorter -- the same standard used
+      to establish algA==algL in db/Mucoromycota/order.yml.
+
+
+      IDIOMORPH LABEL: ''a1'' is a schema-conforming PLACEHOLDER (vocabulary_type
+      pattern/^a[0-9]+$; assign_idiomorph always returns undetermined for pattern
+      families regardless of this label). The deposit''s OWN source feature states
+      /mating_type="MAT-1" -- that real designation does not match this locus''s ^a[0-9]+$
+      pattern and could not be used directly; recorded here so it is not lost.
+
+
+      Bakkeren G, Kronstad JW (1994) Linkage of mating-type loci distinguishes bipolar
+      from tetrapolar mating in basidiomycetous smut fungi. Proc Natl Acad Sci USA
+      91(15):7085-7089.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: U07939.1
+        seq_region: U07939.1
+      start: 1
+      end: 1581
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: pra1
+  protein_accession: ncbi_protein:AAA19965.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 225
+  end: 1530
+  strand: +
+  exons:
+  - start: 225
+    end: 426
+  - start: 506
+    end: 823
+  - start: 894
+    end: 1329
+  - start: 1407
+    end: 1530
+  codon_start: 1
+  transl_table: 1
+  gene_class: pheromone_receptor
+  gene_index: 0
+  order_in_locus: 0
+evidence:
+  locus_existence: &id001
+    tier: 1
+    experimental_method: targeted sequencing and annotation of the mating-type locus,
+      deposited as a GenBank record by the describing authors
+    citations: &id002
+    - doi: 10.1073/pnas.91.15.7085
+      pmid: '7913746'
+  boundaries: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of the aLocus allele genes in this deposited locus,
+      as annotated by the describing authors
+    citations: *id002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: U07939.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 10.1073/pnas.91.15.7085|120017|aLocus|a1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

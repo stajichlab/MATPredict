@@ -1,0 +1,69 @@
+LOCUS       OP433889.1              2156 bp    DNA              UNK 01-JAN-1980
+DEFINITION  349360_cbs-131475_aLocus_a1 core locus segment 0 (OP433889.1).
+ACCESSION   349360_cbs-131475_aLocus_a1.segment0
+VERSION     349360_cbs-131475_aLocus_a1.segment0
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     gene            complement(1..126)
+                     /gene="mfa1"
+                     /role="core_MAT"
+     CDS             complement(1..126)
+                     /gene="mfa1"
+                     /role="core_MAT"
+                     /translation="MDKIALFAPVSVGAVSTEQAPVDQESRDKQGLPWAGGCTVA"
+                     /gene_class="pheromone_precursor"
+     gene            complement(912..2156)
+                     /gene="pra1"
+                     /role="core_MAT"
+     CDS             complement(join(912..1047,1142..1556,1625..2156))
+                     /gene="pra1"
+                     /role="core_MAT"
+                     /translation="MFSNTENAIFGIVSILSAMLSLLPMPIHLRANNTGIILMIGWCFI
+                     GLFNKGVNALAFNGNLEVSSMIGCDISGVIERTWQFGLCCSSFLVLQRLEHIASLRAAH
+                     TTAMDRRRRLFTDIAVGLGVPLLQVPLFFVVQPYRMDVIENVGCNPPIYNSIAALFLYY
+                     LWRLLISFLCAVYAVLILRWFFLRRRQFAAALSSHGSGLSQRKYFRLFFLAVCEATLIF
+                     IGQSFLSIRNLQLTGLLSYKSWSYVHEGFNTVNIVPMNDTSFTSQQESEMEILRYLALT
+                     PGIAIFAFFGFSEDAKKLYFSCLKALLSPFAALRTRRTHELPDDMDSTRTKVDTSVHLK
+                     TMMQPDADVVVIVQKDTVAS"
+                     /gene_class="pheromone_receptor"
+ORIGIN
+        1 tcaagcaact gtgcagccac cagcccaagg gagaccctgt ttgtctcgtg actcctggtc
+       61 gacaggggct tgctcggttg aaacagcacc gacgctgacg ggggcgaaaa gggcaatttt
+      121 gtccatgttt gaggggtaag cgtagcgtgg agatgcctgg ggagtaaaaa gtgccttgag
+      181 aggagtagtt tgatgtcgac aaaaagggga gatggccttt tagggctgta tatatgcgat
+      241 ttgaaaccgg cagagactgt gagggaaaca gcactgaacc ctctgcgcac ggcactgtat
+      301 acaaggccct tgtgcgcaat gctaggccag aactgcgagt cgtccgcctc ttccttgcgc
+      361 ggagccctta acttagcaac tcttgttccc atgattagat ttgagcttcc caccttccat
+      421 gctcctttgt ccctgtcggt gcagaagaaa gattcccaag ctgcacgtac ggtactacca
+      481 ggttttcacg ttgtttctct acgcgtcgaa agtctcacgg ttcgcacaaa gggacaggtt
+      541 gaagaatttt tcgtgacaag cagtaccccc agttaccctc tcagtttgcc aaaggaagat
+      601 ctttcaacgt gaacagcaca acagagcagc ccccttcaag cattgggctt ctttgtatcg
+      661 ttccaatgat ctgcaaactc cattcgcttc catggcacga aaacagtgtc gcaaacaaat
+      721 cagattgctg gcgaataggc cagctcgcta gagctagtat gtcactcgct aatctggaca
+      781 tgaaagaggt accttgtgca ctcatgggta tactaattta tgtgcaggct gtcttctatc
+      841 ctgtgagacc ttcgcatttc atactgatgg tacccgatcc aagctagcac tcgtggcgtg
+      901 aaaatatggg actaagaagc tacagtgtct ttttgcacga tgaccacaac atctgcgtca
+      961 ggttgcatca ttgtcttgag atgaacagaa gtgtccactt tcgtccgcgt agagtccata
+     1021 tcatctggca gctcgtgggt tctgcgtctg taagttccca tgctgtcaaa caatttagcg
+     1081 aaccacgtaa agtaaggtta gctgtagagt cgtgatcttt ctcgcgacat gtggtgctta
+     1141 cgttcgaagt gcagcgaagg ggctcaacag tgccttaagg cagctaaaat ataacttctt
+     1201 tgcatcttcg gagaacccaa agaaggcaaa aattgcgatg ccaggagtaa gcgctaggta
+     1261 acggagtatc tccatttccg actcctgttg tgaggtgaat gaggtatcat tcatcggaac
+     1321 gatattgacc gtgttgaacc cttcatgaac gtagctccaa cttttgtacg aaagaaggcc
+     1381 tgtgagttgg aggttgcgga tcgaaaggaa agactgtccg atgaagataa gagtcgcttc
+     1441 gcaaactgct aaaaagaaca gtcggaagta ttttcgctgt gataatccgg aaccgtgtga
+     1501 tgaaagggca gcggcaaact gacgcctccg caagaagaac cacctcaaaa tcagaactgt
+     1561 atttcgcaga ccgacgtaag atcagtctat aaaccacgga tgcatcccaa acagtagcac
+     1621 ttacctgcat agacagcgca gaggaagctt ataagcagcc gccagaggta gtaaagaaac
+     1681 agtgctgcta tggagttata aattggagga ttgcagccaa cattttcaat gacgtccatt
+     1741 ctgtaaggtt gcacaacgaa gaacaagggg acctgcagca agggtacgcc caatccaaca
+     1801 gcaatgtcgg taaacaatct gcgacgacgg tccatagctg tcgtatgtgc tgctcgcaaa
+     1861 gatgcgatgt gttcgagtct ctgaaggacc aagaaagagc tgcagcataa gccgaactgc
+     1921 caagtacgtt cgatgacacc acttatatcg cagccaatca tcgacgatac ttccagattc
+     1981 ccgttgaatg ctaatgcgtt gacacctttg ttaaataggc cgatgaagca ccatcctatc
+     2041 atgagtatga ttccagtatt gttggcacga aggtggatcg gcataggtaa caacgaaagc
+     2101 attgcagaga ggatgctgac tatgccaaag atagcatttt ctgtgttact gaacat
+//

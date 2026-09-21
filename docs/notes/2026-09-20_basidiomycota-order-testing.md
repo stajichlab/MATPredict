@@ -639,6 +639,83 @@ way to tell the 2 real ones from the 63 duplicates at scale.
 
 ---
 
+## 5A. Proteome vs genome-only
+
+The brief asked this to be measured, not assumed. Annotated proteomes were
+built for the two Agaricales reference genomes (§6) and the same detection was
+re-run with `--proteins`.
+
+**Method caveat, stated because it is a real one.** The genome-only runs in
+§3/§3A were produced BEFORE the §4.1 tier fix; the proteome runs below were
+produced after it. Entry counts, intervals, gene recovery and coordinates are
+unaffected by that fix — it changes only the tier of a call whose roster was
+relaxed by an unsearchable gene. Tier comparisons across the two columns are
+therefore not clean, and are not drawn. (An earlier proteome run was started
+before the fix and killed mid-flight when I noticed; it wrote no
+`detection_report.yaml`, so no mixed-code result reached disk.)
+
+### *C. cinerea* Okayama-7
+
+| | genome-only | proteome + genome |
+|---|---|---|
+| detected entries | 65 | **31** |
+| distinct intervals | 45 | **18** |
+| intervals claimed by >1 family | 8 | 6 |
+| `high` entries | 3 | 3 |
+| wall time | 11 min 13 s | **3 min 38 s** |
+| HD span | `1625683-1631394` | **`1625680-1631397`** |
+| PR span | `1806650-1826460` | `1806647-1826463` |
+
+Curated HD is `1625680-1631546`: the proteome run reproduces the curated
+**start coordinate exactly**, because it is reading the same annotation the
+record was curated from. Both loci are found at `high` either way.
+
+**The headline is that genome-only did not cost the detection.** Both
+tetrapolar loci were found without a proteome, at high confidence, on the
+right contigs. What the proteome buys is roughly half the noise, sharper
+boundaries, and a 3x speedup — not recall, at least on this genome.
+
+### *S. commune* H4-8
+
+| | genome-only | proteome + genome |
+|---|---|---|
+| detected entries | 96 | **61** |
+| distinct intervals | 77 | 48 |
+| intervals claimed by >1 family | 10 | 7 |
+| `high` entries | 3 | 6 |
+| wall time | 21 min 21 s | **8 min 18 s** |
+| Aalpha span | `1821010-1827453` | **`1821007-1827456`** |
+
+The Aalpha span is now **exactly** the curated `NW_026089539.1:1821007-1827456`.
+
+All three curated loci come out `high`: Aalpha, Balpha (3/3) and Bbeta (8/8).
+
+### The §4.1 fix, isolated
+
+The Balpha/Bbeta promotion is attributable to the fix and not to the proteome,
+because the tier inputs are byte-identical across the two runs:
+
+| run | locus | found | missing | not_searchable | tier |
+|---|---|---|---|---|---|
+| genome-only, pre-fix | Balpha | 3 | `[]` | `pheromone_receptor` | medium |
+| genome-only, pre-fix | Bbeta | 8 | `[]` | `pheromone_receptor` | medium |
+| proteome, post-fix | Balpha | 3 | `[]` | `pheromone_receptor` | **high** |
+| proteome, post-fix | Bbeta | 8 | `[]` | `pheromone_receptor` | **high** |
+
+Same gene counts, same empty `genes_missing`, same unsearchable alias. The
+only variable that can move the tier is the fix.
+
+This is a narrower degradation than the Mucoromycota experience suggested.
+Two mechanisms in the brief's warning do still apply and are simply not
+exercised here: `classify_locus`'s `homothallic_candidate` branch requires
+both genes proteome-supported and so is unreachable genome-only, and the
+`idiomorph._rank` proteome-over-identity tiebreak degenerates to identity —
+but both live only in the one `enum` family (§1.4), which is Tremellales, and
+no Tremellales proteome was built. **The proteome question for Basidiomycota
+is therefore still open where it matters most.**
+
+---
+
 ## 6. Runs in this note
 
 Outputs under `$SCRATCH/basidio/`, summaries only in the repo.
@@ -660,3 +737,93 @@ present in the matching `.fna`. Note for the annotation-gap question: the
 curated HD window and 14 inside the curated PR window, several of them
 195-210 bp, i.e. pheromone-precursor sized. Basidiomycota does not obviously
 repeat the Mucoromycota annotation gap, at least here.
+
+
+---
+
+## 7. Recommendations, in priority order
+
+Ordered by measured impact. Nothing here is implemented except item 4.
+
+**1. Widen the Basidiomycota `taxonomic_scope` values to real clade taxids.**
+Highest impact by a wide margin, and it is curation data, so it needs the
+curator's ruling per clade rather than a guess here. Measured effect of
+correct routing on one genome (§3.2a): entries 65 -> 14, multi-family
+intervals 8 -> 0, wall time 11 min -> 47 s, and the report reduces to exactly
+the correct tetrapolar pair. Today all nine families scope to a single species
+taxid, so all but a handful of the 3,174 Basidiomycota genomes in BFD fall to
+`phylum_fallback` and get the nine-family treatment. Suggested starting points
+for the curator to accept or reject: HD/PR to an Agaricales or Agaricomycetes
+taxid, `MAT` to Tremellales, `aLocus`/`bLocus` to Ustilaginales, the four
+*S. commune* sublocus families to Schizophyllaceae.
+
+**2. Cap `fragmented` locus merging so one locus cannot span two contigs.**
+This is the whole of the Tremellales failure (§3A). In both *C. deneoformans*
+strains the true MAT genes matched at 100% identity and were correctly
+polished, and in both the reporting turned that into a `low`-confidence,
+`idiomorph: undetermined` entry whose top-level `contig/start/end` names a
+chromosome holding almost none of its own evidence. Same contig only, or a
+maximum span, would convert 0/2 into 2/2 with resolved idiomorphs.
+Independently: when an entry is fragmented, the top-level `contig/start/end`
+should not silently report segment 0 as if it were the locus.
+
+**3. Fix `benchmark.match_ground_truth` so the reference genomes are
+reachable** (§2). Compare the record's source accession BEFORE the taxid gate;
+an assembly-accession match is conclusive on its own. Raises exact-matched
+Basidiomycota records from 3/10 to 8/10 with no new false pairings, and until
+it is done the self-consistency harness cannot see either tetrapolar reference
+genome. Everything in §3A had to be scored by a throwaway script instead.
+
+**4. DONE — `assign_tier` must ignore `genes_not_searchable`** (§4.1).
+Fixed in this branch, TDD, 463 -> 466 tests. Verified on the true calls: the
+*S. commune* Balpha (3/3) and Bbeta (8/8) loci go medium -> high on identical
+evidence (§5A).
+
+**5. Curate one `Abeta` record** (§1.2). It is the only family in the phylum
+with no reference protein, and because it shares the gene names `Y`/`Z` with
+Aalpha for the same species, a real Abeta locus is not merely missed, it is
+reported as Aalpha. *S. commune* NW_026089539.1 already shows a second
+high-confidence HD-class interval that cannot currently be attributed either
+way.
+
+**6. Set `max_cluster_gap_bp` per Basidiomycota locus.** No Basidiomycota
+locus declares one, so all nine use the 25 kb Ascomycota default. Measured too
+wide for the *S. commune* B locus, whose two subloci sit 7,716 bp apart and
+are chained into one 83.5 kb cluster with ~25 kb of overhang at each end
+(§3A). Curation data, like item 1.
+
+**7. Collapse the report per interval.** Lower priority than it looked before
+item 1 was measured, because correct routing removes most of the duplication.
+Still needed for any genuinely phylum-wide run: one locus object per genomic
+interval with a best-scoring family and the rest demoted to `also_matched`.
+`ambiguous_with` is already the right raw material. A genome-level statement
+that two unlinked loci of complementary gene_class were found would make the
+tetrapolar architecture legible rather than inferable.
+
+**8. Do not launch an order-wide sweep until 1-3 are done.** At the measured
+6.6 min mean (13x spread, n=6) Agaricales alone is of order 85 core-hours, and
+today it would produce ~65-96 entries per genome with no way to separate the
+real loci from the duplicates at scale. After item 1 the same sweep is roughly
+an order of magnitude cheaper and its output is directly readable.
+
+## 8. What was NOT established
+
+* **Anything about Basidiomycota beyond 3 orders and 5 species.** Boletales
+  (510 genomes), Polyporales (190), Sporidiobolales (250), Trichosporonales
+  (126), Pucciniales (126) and Cantharellales (97) have no curated record and
+  were not run. Nothing here predicts their behaviour.
+* **Whether the second HD-class interval in *S. commune* is Abeta.** Needs a
+  curated record, not more inference.
+* **The proteome question where it matters.** The two mechanisms the brief
+  warned about — the `homothallic_candidate` proteome gate and the
+  `idiomorph._rank` proteome-over-identity tiebreak — live only in the
+  Tremellales `MAT` family, and no Tremellales proteome was built. The
+  Agaricales measurement in §5A does not speak to either.
+* **Precision.** Every number here is recall against curated truth. The
+  false-positive rate is unquantified: there is no curated statement that a
+  given *C. cinerea* interval is NOT a MAT locus, so the 63 non-truth entries
+  in that run are uncharacterised rather than known-wrong.
+* **Idiomorph-calling accuracy**, in any meaningful sense. 8 of 9 families
+  return `undetermined` by design, and the one `enum` family produced
+  `undetermined` on both genomes where the truth is known (§3A), for the
+  structural reason in item 2.

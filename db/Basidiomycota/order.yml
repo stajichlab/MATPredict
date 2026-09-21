@@ -3,14 +3,26 @@ loci:
   - locus_name: "HD"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^A[0-9]+$"
-    taxonomic_scope: [192523, 5346]
+    # Widened 2026-09-20 from the two curated species (Agaricus bisporus var.
+    # bisporus 192523; Coprinopsis cinerea 5346) to their FAMILIES, one rank
+    # broader, per the curator's ruling -- Basidiomycota order testing found
+    # 65/65 detection entries falling to the exhaustive phylum_fallback
+    # rule because no curated family's scope covered a close relative
+    # (--taxid vs --phylum on C. cinerea itself: 14 entries/47s vs
+    # 65 entries/11m13s). HD's own roster spans two DIFFERENT families within
+    # Agaricales (Psathyrellaceae via Coprinopsis, Agaricaceae via Agaricus),
+    # so both are listed.
+    taxonomic_scope: [184208, 5339]  # Psathyrellaceae; Agaricaceae
     genes:
       - {name: HD1, role: core_MAT, gene_class: HD1}
       - {name: HD2, role: core_MAT, gene_class: HD2}
   - locus_name: "PR"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^B[0-9]+$"
-    taxonomic_scope: [5346]
+    # Widened 2026-09-20 from the single curated species (Coprinopsis cinerea
+    # 5346) to its family, one rank broader -- see HD's scope comment above
+    # for the measured phylum_fallback cost this addresses.
+    taxonomic_scope: [184208]  # Psathyrellaceae
     # Gene names must match the names used by this family's curated records
     # exactly -- detect/search.py:_attribute drops any hit whose curated gene
     # name is not declared here. The specific names below are the real names in
@@ -30,7 +42,13 @@ loci:
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["alpha", "a"]
-    taxonomic_scope: [40410]
+    # Widened 2026-09-20 from the single curated species (Cryptococcus
+    # deneoformans 40410) to its family, one rank broader -- see HD's scope
+    # comment (db/Basidiomycota/order.yml, HD locus) for the measured
+    # phylum_fallback cost this addresses. Cryptococcaceae has 4 genera
+    # (Cryptococcus plus 3 others, verified via NCBI esearch 2026-09-20), not
+    # 1 -- this is a real widening, not a same-genus relabel.
+    taxonomic_scope: [1884633]  # Cryptococcaceae
     # SXI1/SXI2 gene_class assigned 2026-09-19 by the project's curator, J. Stajich, who
     # stated that SXI1 and SXI2 are homeodomain proteins, citing doi:10.1128/mbio.00059-26
     # -- a citation supplied by the curator and NOT retrieved or verified here (the
@@ -54,7 +72,11 @@ loci:
   - locus_name: "Aalpha"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
-    taxonomic_scope: [5334]
+    # Widened 2026-09-20 from the single curated species (Schizophyllum
+    # commune 5334) to its family, one rank broader -- see HD's scope comment
+    # (db/Basidiomycota/order.yml, HD locus) for the measured phylum_fallback
+    # cost this addresses.
+    taxonomic_scope: [5332]  # Schizophyllaceae
     # gene_class Z=HD1/Y=HD2 per this locus's own curated record
     # (db/Basidiomycota/Agaricales/5334_h4-8_Aalpha_4/metadata.yaml), whose
     # reference_orientation explicitly states "Z4(HD1)->Y4(HD2)".
@@ -64,7 +86,8 @@ loci:
   - locus_name: "Abeta"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
-    taxonomic_scope: [5334]
+    # Widened 2026-09-20, same rationale as Aalpha above.
+    taxonomic_scope: [5332]  # Schizophyllaceae
     # No Abeta record is curated yet, but it shares the same species (S. commune,
     # 5334) and the same Y/Z gene-naming convention as Aalpha above, whose curated
     # record documents Z=HD1/Y=HD2 -- applying the same gene_class here for
@@ -75,7 +98,8 @@ loci:
   - locus_name: "Balpha"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
-    taxonomic_scope: [5334]
+    # Widened 2026-09-20, same rationale as Aalpha above.
+    taxonomic_scope: [5332]  # Schizophyllaceae
     # Real names from db/Basidiomycota/Agaricales/5334_h4-8_Balpha_3
     # (Schizophyllum commune Balpha-3 uses the bar3/bap3-x naming of Wendland
     # et al. 1995). `pheromone_receptor` is kept as a generic alias -- it is a
@@ -95,7 +119,8 @@ loci:
   - locus_name: "Bbeta"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
-    taxonomic_scope: [5334]
+    # Widened 2026-09-20, same rationale as Aalpha above.
+    taxonomic_scope: [5332]  # Schizophyllaceae
     # Real names from db/Basidiomycota/Agaricales/5334_h4-8_Bbeta_2
     # (S. commune Bbeta-2, bbr2/bbp2-x naming of Vaillancourt et al. 1997;
     # bbp2_a/bbp2_b are that record's disambiguation of two distinct proteins
@@ -118,7 +143,13 @@ loci:
   - locus_name: "aLocus"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^a[0-9]+$"
-    taxonomic_scope: [5270]
+    # NOT widened 2026-09-20, unlike this file's other families -- Ustilaginales
+    # (this genus's order) has NO family rank in NCBI's taxonomy (genera sit
+    # directly under the order, verified via efetch 2026-09-20) and holds 43
+    # genera, so "one rank broader than genus" here would jump straight to a
+    # 43-genus order with no evidence any of the other 42 share this locus
+    # architecture. Curator's ruling: stay at genus rather than take that jump.
+    taxonomic_scope: [5270]  # Mycosarcoma (genus; formerly Ustilago maydis)
     # gene_class per this locus's own record
     # (db/Basidiomycota/Ustilaginales/5270_521_aLocus_a1/metadata.yaml), whose
     # definition_note documents mfa1 as the lipopeptide mating-factor precursor and
@@ -131,7 +162,8 @@ loci:
   - locus_name: "bLocus"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^b[0-9]+$"
-    taxonomic_scope: [5270]
+    # NOT widened 2026-09-20 -- same reasoning as aLocus above.
+    taxonomic_scope: [5270]  # Mycosarcoma (genus; formerly Ustilago maydis)
     # bE/bW are a divergently-transcribed homeodomain gene pair (the b locus's own
     # curated record, db/Basidiomycota/Ustilaginales/5270_521_bLocus_b1/metadata.yaml,
     # confirms this via RefSeq's own "bE1 allele"/"bW1 allele" product annotation).

@@ -273,6 +273,42 @@ def test_match_ground_truth_strain_mismatch_stays_ambiguous(tmp_path):
     assert matches[0].status == "ambiguous"
 
 
+def test_match_ground_truth_accession_match_scores_exact_despite_taxid_mismatch(tmp_path):
+    """BFD carries strain-level taxids for some rollout genomes (e.g.
+    Agaricus bisporus var. bisporus = 192523) that differ from a curated
+    record's species-level taxid (e.g. A. bisporus = 5346), even though the
+    rollout genome's own accession is literally the curated record's own
+    source accession. The taxid gate used to run BEFORE the accession check,
+    so this genome -- unambiguous ground truth by accession -- was silently
+    skipped entirely (matched against zero records), the real defect found
+    scoring the Basidiomycota order-testing rollout (3/10 curated records
+    reachable; 2 recovered once this is fixed). Accession identity is
+    unconditional evidence regardless of which taxid either side declares."""
+    _write_curated_db(tmp_path, taxid=5346, source_accession="GCF_000143185.2")
+
+    matches = match_ground_truth(
+        "192523_GCF_000143185.2", tmp_path, manifest_path=_missing_manifest(tmp_path),
+    )
+
+    assert len(matches) == 1
+    assert matches[0].status == "exact"
+    assert matches[0].record_id == _CURATED_RECORD_ID
+    assert "accession" in matches[0].reason.lower()
+
+
+def test_match_ground_truth_taxid_mismatch_with_no_accession_match_returns_nothing(tmp_path):
+    """The flip side: a taxid mismatch with no accession evidence either must
+    still return no match -- the fix must not turn into 'ignore taxid
+    entirely' and start reporting unrelated species as ground truth."""
+    _write_curated_db(tmp_path, taxid=5346, source_accession="GCF_000143185.2")
+
+    matches = match_ground_truth(
+        "999999_UNRELATEDACC.1", tmp_path, manifest_path=_missing_manifest(tmp_path),
+    )
+
+    assert matches == []
+
+
 # --- Fix-round: not-evaluable genes excluded, never fabricated as misses ---
 
 _TWO_GENES = [

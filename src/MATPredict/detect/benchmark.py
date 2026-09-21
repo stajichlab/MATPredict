@@ -268,15 +268,27 @@ def _strain_matches(rollout_strain: str, doc: dict) -> bool:
 def match_ground_truth(
     genome_id: str, db_root: Path, manifest_path: Path = DEFAULT_LOCAL_MANIFEST_PATH,
 ) -> list[GroundTruthMatch]:
-    """Every curated record that shares a taxid with rollout genome
-    `genome_id`, classified `"exact"` (accession match OR strain match --
-    see `GroundTruthMatch`'s docstring for the exact rule) or `"ambiguous"`
-    (same taxid, neither check succeeds -- see `GroundTruthMatch`'s
-    docstring for the project's judgment call on why this is excluded from
-    the numeric score rather than assumed equivalent).
+    """Every curated record connected to rollout genome `genome_id`, either
+    by ACCESSION (unconditional -- checked against every curated record
+    regardless of taxid) or by sharing a taxid, classified `"exact"`
+    (accession match OR strain match -- see `GroundTruthMatch`'s docstring
+    for the exact rule) or `"ambiguous"` (same taxid, neither check
+    succeeds -- see `GroundTruthMatch`'s docstring for the project's
+    judgment call on why this is excluded from the numeric score rather
+    than assumed equivalent).
 
-    A genome with no curated record at all for its taxid returns `[]` --
-    there is no ground truth to compare against, ambiguous or otherwise.
+    Accession is checked first and does NOT require taxid agreement: the
+    BFD acquisition manifest routinely assigns a strain- or variety-level
+    taxid (e.g. 192523, Agaricus bisporus var. bisporus) to the exact same
+    assembly a curated record cites under its species-level taxid (5346,
+    Agaricus bisporus), and the accession is unambiguous ground truth
+    either way -- it is literally the same sequence. Only once accession
+    evidence is absent does taxid agreement gate the strain-match and
+    ambiguous paths.
+
+    A genome with no accession match AND no curated record for its taxid
+    returns `[]` -- there is no ground truth to compare against, ambiguous
+    or otherwise.
     """
     parsed = _genome_id_taxid_accession(genome_id)
     if parsed is None:
@@ -287,10 +299,21 @@ def match_ground_truth(
 
     matches: list[GroundTruthMatch] = []
     for key, record_id, doc, _meta_path in _load_curated_docs(db_root):
-        if doc.get("taxonomy", {}).get("taxid") != taxid:
-            continue
         source_accessions = _record_source_accessions(doc)
         source_unversioned = {a.split(".")[0] for a in source_accessions}
+        # Accession match is checked FIRST and UNCONDITIONALLY -- before, and
+        # independent of, the taxid gate below. A rollout genome's own
+        # accession being literally one of the curated record's own source
+        # accessions is unambiguous evidence (it is the same physical
+        # sequence) regardless of what taxid either side declares. The BFD
+        # acquisition manifest routinely carries a STRAIN- or
+        # VARIETY-level taxid (e.g. 192523, Agaricus bisporus var. bisporus)
+        # that differs from a curated record's SPECIES-level taxid (5346,
+        # Agaricus bisporus) for the exact same assembly, so gating on taxid
+        # equality first discarded real, accession-verified ground truth
+        # before it was ever checked. Found scoring the Basidiomycota
+        # order-testing rollout: only 3 of 10 curated records were reachable
+        # under the old taxid-first gate; 2 more are accession-reachable.
         if accession in source_accessions or accession_unversioned in source_unversioned:
             matches.append(GroundTruthMatch(
                 genome_id=genome_id, record_id=record_id, family_key=key,
@@ -298,6 +321,10 @@ def match_ground_truth(
                 reason=f"rollout genome accession {accession} matches record {record_id}'s "
                        f"own source accession(s) {sorted(source_accessions)}",
             ))
+            continue
+        if doc.get("taxonomy", {}).get("taxid") != taxid:
+            # No accession evidence, and the taxid disagrees too: nothing
+            # connects this rollout genome to this curated record at all.
             continue
         if rollout_strain is not None and _strain_matches(rollout_strain, doc):
             matches.append(GroundTruthMatch(

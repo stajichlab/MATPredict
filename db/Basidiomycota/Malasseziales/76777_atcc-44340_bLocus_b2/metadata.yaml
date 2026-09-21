@@ -1,0 +1,130 @@
+record_id: 76777_atcc-44340_bLocus_b2
+record_version: 1
+taxonomy:
+  taxid: 76777
+  lineage: k__Fungi;p__Basidiomycota;sc__Ustilaginomycotina;c__Malasseziomycetes;o__Malasseziales;f__Malasseziaceae;g__Malassezia;s__Malassezia_sympodialis
+  lineage_resolved_date: '2026-09-20'
+organism:
+  species: Malassezia sympodialis
+  strain:
+    name: ATCC 44340
+    known: true
+    culture_collection_ids:
+    - ATCC 44340
+    differs_from_sequenced: false
+mating_type:
+  locus_name: bLocus
+  idiomorphs:
+  - b2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: bW->bE
+    definition_note: 'Published MAT b locus (JX964801.1), 2 complete gene(s). The
+      furthest-out example curated this session: Malasseziales (skin-commensal yeasts),
+      a DIFFERENT ORDER from Ustilaginales within the same subphylum Ustilaginomycotina,
+      not merely a different genus.
+
+
+      NAMING: this deposit''s own name(s) (bW2->bW, bE2->bE) do not match bLocus''s
+      canonical roster names. Folded to the canonical name -- see this file''s module
+      docstring for the sequence verification against the curated Mycosarcoma maydis
+      reference.
+
+
+      Gioti A, Nystedt B, Li W, Xu J, Andersson A, Averette AF, Munch K, Wang X, Kappauf
+      C, Kingsbury JM, Kraak B, Walker LA, Johansson HJ, Holm T, Lehtio J, Stajich
+      JE, Mieczkowski P, Kahmann R, Kennell JC, Cardenas ME, Lundeberg J, Saunders
+      CW, Boekhout T, Dawson TL, Munro CA, de Groot PW, Butler G, Heitman J, Scheynius
+      A (2013) Genomic insights into the atopic eczema-associated skin commensal yeast
+      Malassezia sympodialis. mBio 4(1):e00572-12.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JX964801.1
+        seq_region: JX964801.1
+      start: 1
+      end: 3836
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: bW
+  protein_accession: ncbi_protein:AGC24183.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 702
+  end: 2348
+  strand: '-'
+  exons:
+  - start: 1708
+    end: 2348
+  - start: 702
+    end: 1668
+  codon_start: 1
+  transl_table: 1
+  gene_class: HD1
+  gene_index: 0
+  order_in_locus: 0
+- name: bE
+  protein_accession: ncbi_protein:AGC24184.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2852
+  end: 3721
+  strand: +
+  exons:
+  - start: 2852
+    end: 3721
+  codon_start: 1
+  transl_table: 1
+  gene_class: HD2
+  gene_index: 1
+  order_in_locus: 1
+evidence:
+  locus_existence: &id001
+    tier: 1
+    experimental_method: genome sequencing and annotation of the mating-type locus,
+      deposited as a GenBank record by the describing authors
+    citations: &id002
+    - doi: 10.1128/mBio.00572-12
+      pmid: '23341551'
+  boundaries: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of the bLocus genes in this deposited locus, as
+      annotated by the describing authors
+    citations: *id002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JX964801.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 10.1128/mBio.00572-12|76777|bLocus|b2
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

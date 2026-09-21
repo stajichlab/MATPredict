@@ -320,3 +320,57 @@ them is either internal consistency (locus counts, spans, class contracts) or
 disagreement between two modes. Where the two modes contradict each other,
 this note does not claim which is right. The only genomes with an external
 answer are the 23, and on those both modes are 23/23.
+
+---
+
+## Addendum — the 11 `flanking_gene_only` candidates, catalogued
+
+Curator ruling 2026-09-20: keep the name `flanking_gene_only`; these are
+biologically interesting and should be catalogued; we need the region SIZE and
+what OTHER genes sit inside it; `idiomorph_gene_only` and `flanking_gene_only`
+both stay as classes, for later synteny / dotplot / clinker comparison to
+separate real evolution from assembly artefacts.
+
+| species | region | span | MAT genes hit | NCBI proteome |
+|---|---|---|---|---|
+| *Rhizomucor pusillus* | `FWWN02000524.1:48009-116058` | 68,049 | rnhA\|algA\|btbA | no |
+| *Umbelopsis ramanniana* | `CDSBDH010000019.1:45571-94613` | 49,042 | rnhA\|algA\|btbA | yes (24 genes inside) |
+| *Actinomucor elegans* JCM 22485 | `BCHK01000001.1:185393-231177` | 45,784 | tptA\|rnhA\|btbA | no |
+| *Actinomucor elegans* ASM2602732 | `JAMSLZ010000005.1:1106792-1152570` | 45,778 | tptA\|rnhA\|btbA | no |
+| *Umbelopsis vinacea* | `CDSBDG010000020.1:593788-633492` | 39,704 | rnhA\|glrA\|btbA | yes (13 genes inside) |
+| *Radiomyces spectabilis* | `NW_026251926.1:1569571-1599194` | 29,623 | tptA\|glrA\|btbA | yes (9 genes inside) |
+| *Umbelopsis* sp. AD052 | `JAIXMS010000011.1:566926-594549` | 27,623 | tptA\|rnhA\|algA\|btbA | yes (15 genes inside) |
+| *Cokeromyces recurvatus* B5483 | `JNEH01002377.1:14730-35757` | 21,027 | tptA\|algA\|btbA | no |
+| *Cokeromyces recurvatus* | `NW_026251440.1:50778-71656` | 20,878 | tptA\|algA\|btbA | yes (11 genes inside) |
+| *Bifiguratus adelaidae* | `MVBO01000034.1:16948-29301` | 12,353 | tptA\|glrA\|btbA | yes (3 genes inside) |
+| *Umbelopsis ramanniana* AG | `NW_026252103.1:214691-218060` | 3,369 | rnhA\|algA\|btbA | yes (3 genes inside) |
+
+All 11 are `strict`/`medium`, best identities 23.2–56.2%. **7 of 11 already
+have an NCBI proteome** built in this work, so their gene content is available
+now; the other 4 would need a targeted Augustus run.
+
+**Two observations worth following up.**
+
+1. **`btbA` is in 11 of 11.** Across all 687 loci `btbA` appears in only 133
+   (19.4%), so its presence in every flanking-only candidate is not chance.
+   [INFERRED] `btbA` is the flanking gene most able to anchor a cluster on its
+   own. Note the opposite-sign fact: loci containing `btbA` have a *higher*
+   median best identity (97.6%) than those without (40.5%), so `btbA` is not
+   simply a promiscuous low-quality hit — it is doing both jobs.
+
+2. **Two of them reproduce across independent assemblies.**
+   *Actinomucor elegans* appears twice from unrelated assemblies with the same
+   gene set and spans agreeing to **6 bp** (45,784 / 45,778).
+   *Cokeromyces recurvatus* likewise, spans 21,027 / 20,878 with the same
+   `tptA|algA|btbA`. A shared assembly artefact would not reproduce this way.
+   These two species are the best starting points for the synteny comparison.
+
+**Empty-cluster branch: measured, never reached.** Of 687 reported loci, zero
+had empty `gene_evidence` and zero were fragmented/multi-segment. The
+`if not live` guard is defensive only, so routing it to `flanking_gene_only`
+changed no observed output.
+
+**Still open:** the spans run 3.4 kb to 68 kb against ground-truth loci of
+6.8–13.1 kb, so some of these regions are probably over-wide clusters rather
+than eroded loci. Deciding the span bound (Finding 6) before curating these
+would change which of the 11 survive.

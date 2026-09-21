@@ -181,11 +181,20 @@ class DetectionResult:
     gene_evidence: list[GeneEvidence] = field(default_factory=list)
     reference_records: list[str] = field(default_factory=list)
     locus_class: str = "mat_locus"
-    """WHAT was found: `mat_locus`, `homothallic_candidate` or
-    `idiomorph_gene_only`. Orthogonal to `detection_pass`, which says HOW it
-    was admitted. See `idiomorph.classify_locus`; an `idiomorph_gene_only`
-    call is kept deliberately as per-idiomorph HMM training material, not
-    discarded."""
+    """WHAT was found: `mat_locus`, `homothallic_candidate`,
+    `idiomorph_gene_only` or `flanking_gene_only`. Orthogonal to
+    `detection_pass`, which says HOW it was admitted. See
+    `idiomorph.classify_locus`; `idiomorph_gene_only` and `flanking_gene_only`
+    are kept deliberately as leads, not discarded."""
+    span_exceeds_plausible_bound: bool = False
+    """Is this call wider than its family's `max_plausible_locus_span_bp`?
+
+    A flag, never a filter -- the curator ruled on 2026-09-20 that wide loci
+    are real and must still be reported. Present on EVERY result, so a reader
+    can tell "not flagged" from "this build predates the field". See
+    `span_exceeds_plausible_bound` (the function) and
+    `family_registry.DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP`.
+    """
     detection_pass: str = "strict"
     """Which pass admitted this locus: `strict` or `relaxed`.
 
@@ -522,6 +531,9 @@ def _relaxed_results(
                 genes_not_searchable=score.genes_not_searchable,
                 detection_pass="relaxed",
                 locus_class=classify_locus(cluster, family),
+                span_exceeds_plausible_bound=span_exceeds_plausible_bound(
+                    segments[0].start, segments[0].end, family
+                ),
                 segments=segments,
                 gene_evidence=evidence,
                 reference_records=sorted({e.reference_record_id for e in evidence}),
@@ -742,6 +754,22 @@ def _contig_lengths(genome_fasta: Path) -> dict[str, int]:
         return {record.id: len(record.seq) for record in SeqIO.parse(str(genome_fasta), "fasta")}
     except Exception:
         return {}
+
+
+def span_exceeds_plausible_bound(start: int, end: int, family: Family) -> bool:
+    """Is this locus wider than the family says a locus of its kind gets?
+
+    A FLAG, not a filter, and public on purpose so a caller can ask the
+    question without re-deriving the arithmetic. The curator ruled on
+    2026-09-20 that wide loci are real and must still be found, so nothing in
+    this pipeline may drop a call on this basis -- see
+    `DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP` for the measurements and for why the
+    bound is 200 kb rather than the 120 kb first discussed.
+
+    The comparison is strict (`>`): a locus exactly at the bound is within
+    what the curator called acceptable.
+    """
+    return (end - start) > family.max_plausible_locus_span_bp
 
 
 def _fragmented_family_segments(
@@ -1558,6 +1586,13 @@ def run_pipeline(
             idiomorph_margin=idiomorph_margin,
             idiomorph_resolutions=own_resolutions,
             locus_class=classify_locus(member_clusters[0], family),
+            # Measured across the whole call, including every segment of a
+            # fragmented one -- the span a reader sees in the report is the
+            # thing being judged.
+            span_exceeds_plausible_bound=span_exceeds_plausible_bound(
+                min(s.start for s in segments), max(s.end for s in segments),
+                family,
+            ),
         )
 
     results: list[DetectionResult] = []

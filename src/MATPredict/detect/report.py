@@ -296,6 +296,11 @@ def _result_doc(r: DetectionResult) -> dict:
         # `homothallic_candidate` is both idiomorphs in one locus, the real
         # architecture of a homothallic Mucorale.
         "locus_class": r.locus_class,
+        # Wider than this family's curated plausible span. A FLAG, never a
+        # filter: the curator ruled 2026-09-20 that large MAT loci are real
+        # and must still be reported. Emitted for every locus so "not
+        # flagged" is distinguishable from "output predates the field".
+        "span_exceeds_plausible_bound": r.span_exceeds_plausible_bound,
         # How close the idiomorph call was, and what it collapsed. Reported
         # even when the call is comfortable, so a reader never has to infer
         # from silence whether a resolution happened. `None` means none was

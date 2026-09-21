@@ -211,3 +211,117 @@ def test_a_polished_gene_counts_as_proteome_supported():
                   "rec1", "miniprot_refine"),
     )
     assert classify_locus(cluster, FAM) == "homothallic_candidate"
+
+
+def test_flanking_genes_with_no_core_gene_are_not_a_mat_locus():
+    """A cluster of flanking genes alone must not be called `mat_locus`.
+
+    `classify_locus`'s own contract says `mat_locus` is "a core gene with at
+    least one flanking gene". Its final `return LOCUS_CLASS_MAT` is a
+    catch-all, so a cluster holding ONLY unrestricted flanking genes -- no
+    sexP, no sexM -- falls through to it and is reported as a confirmed MAT
+    locus carrying no MAT gene.
+
+    Measured on the 283-genome BFD Mucoromycota sweep (2026-09-20): 11 of 534
+    `mat_locus` calls had zero core_MAT gene, and ALL 11 were admitted by the
+    STRICT pass, so nothing downstream flags them. Example:
+    Umbelopsis ramanniana AG, NW_026252103.1:214691-218060, genes
+    rnhA|algA|btbA.
+
+    This is the exact mirror of `idiomorph_gene_only` (core genes, no flank),
+    and per the curator's 2026-09-20 ruling it is filed rather than discarded.
+    """
+    cluster = _cluster(
+        _hit("rnhA", 1000, 2000, role="flanking_conserved"),
+        _hit("glrA", 4000, 5000, role="flanking_variable"),
+        _hit("tptA", 7000, 8000, role="flanking_conserved"),
+    )
+    assert classify_locus(cluster, FAM) == "flanking_gene_only"
+
+
+def test_an_empty_cluster_is_not_a_mat_locus():
+    """`if not live: return LOCUS_CLASS_MAT` labels a cluster with no live hit
+    for this family as a confirmed locus. Nothing found is not a locus.
+
+    Measured: never reached on the 283-genome sweep (0 of 687 loci had empty
+    gene_evidence). Defensive only."""
+    cluster = GeneCluster("c1", 1000, 2000, [])
+    assert classify_locus(cluster, FAM) == "flanking_gene_only"
+
+
+# The REAL Mucoromycota family, which the FAM fixture above does not model:
+# btbA is a FLANKING gene that nonetheless carries
+# present_in_idiomorphs: ["Plus"] (db/Mucoromycota/order.yml). classify_locus
+# split its genes on idiomorph restriction rather than on ROLE, so btbA was
+# treated as though it were a core idiomorph gene. All three tests below are
+# regressions measured on real sweep output.
+FAM_BTB = Family(
+    FamilyKey("Mucoromycota", "MAT"), "enum", ["Plus", "Minus"], None,
+    [
+        {"name": "tptA", "role": "flanking_conserved"},
+        {"name": "sexP", "role": "core_MAT", "present_in_idiomorphs": ["Plus"]},
+        {"name": "sexM", "role": "core_MAT", "present_in_idiomorphs": ["Minus"]},
+        {"name": "rnhA", "role": "flanking_conserved"},
+        {"name": "algA", "role": "flanking_variable"},
+        {"name": "glrA", "role": "flanking_variable"},
+        {"name": "btbA", "role": "flanking_variable",
+         "present_in_idiomorphs": ["Plus"]},
+    ],
+    [4827],
+)
+
+_BTB_ROLES = {g["name"]: g["role"] for g in FAM_BTB.genes}
+
+
+def _btb_hit(gene, start, end, method="tblastn_genome", contig="c1"):
+    return SearchHit(
+        FAM_BTB.key, gene, _BTB_ROLES[gene], contig, start, end, "+", 35.0,
+        "rec1", method,
+    )
+
+
+def test_flanking_genes_including_btba_are_not_a_mat_locus():
+    """All 11 flanking-only candidates on the BFD sweep contained btbA.
+
+    Splitting on `present_in_idiomorphs` put btbA in `restricted`, so a
+    "no core gene" test written against that split could never fire for the
+    very clusters that motivated it. The test must be ROLE-based.
+    Real gene set: Umbelopsis ramanniana AG, NW_026252103.1:214691-218060.
+    """
+    cluster = _cluster(
+        _btb_hit("rnhA", 1000, 2000),
+        _btb_hit("algA", 4000, 5000),
+        _btb_hit("btbA", 7000, 8000),
+    )
+    assert classify_locus(cluster, FAM_BTB) == "flanking_gene_only"
+
+
+def test_btba_plus_one_core_gene_is_not_homothallic():
+    """btbA is Plus-restricted but is a FLANKING gene, so pairing it with a
+    Minus core gene must not satisfy "both idiomorphs present".
+
+    Measured on the 145-genome annotated BFD run: 17 of 18
+    `homothallic_candidate` calls had only ONE core gene (sexM) and were
+    carried by btbA. Example: GCA_011763815.1, JAANIU010000625.1:2001-15277,
+    genes sexM|rnhA|glrA|btbA, every hit `diamond_proteome`, so the
+    proteome-support gate did not stop it.
+    """
+    cluster = _cluster(
+        _btb_hit("sexM", 2001, 3000, method="diamond_proteome"),
+        _btb_hit("rnhA", 5000, 6000, method="diamond_proteome"),
+        _btb_hit("glrA", 8000, 9000, method="diamond_proteome"),
+        _btb_hit("btbA", 12000, 15277, method="diamond_proteome"),
+    )
+    assert classify_locus(cluster, FAM_BTB) == "mat_locus"
+
+
+def test_two_real_core_genes_are_still_homothallic_with_btba_in_the_family():
+    """The genuine case must survive the fix: Radiomyces spectabilis,
+    NW_026251940.1:262111-274785, sexP + sexM both from the proteome. This is
+    the 1 of 18 annotated homothallic calls that rests on two core genes."""
+    cluster = _cluster(
+        _btb_hit("sexP", 262111, 263000, method="diamond_proteome"),
+        _btb_hit("sexM", 264000, 265000, method="diamond_proteome"),
+        _btb_hit("rnhA", 270000, 274785, method="diamond_proteome"),
+    )
+    assert classify_locus(cluster, FAM_BTB) == "homothallic_candidate"

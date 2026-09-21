@@ -163,6 +163,16 @@ def _rank(hit: SearchHit) -> tuple[int, float]:
 LOCUS_CLASS_MAT = "mat_locus"
 LOCUS_CLASS_HOMOTHALLIC = "homothallic_candidate"
 LOCUS_CLASS_IDIOMORPH_ONLY = "idiomorph_gene_only"
+# The exact mirror of `idiomorph_gene_only`: flanking genes and no core MAT
+# gene at all. Added 2026-09-20 after the 283-genome BFD Mucoromycota sweep
+# found 11 of 534 `mat_locus` calls carrying ZERO core_MAT gene, all 11 of
+# them admitted by the strict pass (e.g. Umbelopsis ramanniana AG,
+# NW_026252103.1:214691-218060, genes rnhA|algA|btbA). Filed rather than
+# discarded, per the curator's 2026-09-20 ruling -- the SLA2/APN2-style
+# flanking neighbourhood is exactly where a missed core gene would sit, so
+# these are leads, not junk. NAME IS PROVISIONAL: the curator has not ruled
+# on this class's vocabulary.
+LOCUS_CLASS_FLANKING_ONLY = "flanking_gene_only"
 
 
 def classify_locus(cluster: GeneCluster, family: Family) -> str:
@@ -182,8 +192,10 @@ def classify_locus(cluster: GeneCluster, family: Family) -> str:
       a lone sexM or sexP is training material for a per-idiomorph HMM, which
       is a search strategy this project intends to build. It is simply not a
       locus call, so it gets its own category.
-    * `mat_locus` -- everything else, i.e. a core gene with at least one
-      flanking gene, the ordinary heterothallic case.
+    * `flanking_gene_only` -- the exact mirror: flanking genes and NO core
+      MAT gene. Not a locus call either, and kept for the same reason.
+    * `mat_locus` -- a core gene with at least one flanking gene, the
+      ordinary heterothallic case.
 
     Superseded hits are ignored throughout. A resolved cross-hit is ONE gene
     seen twice; counting it would label every ordinary heterothallic locus
@@ -194,7 +206,10 @@ def classify_locus(cluster: GeneCluster, family: Family) -> str:
         if h.family_key == family.key and h.superseded_by is None
     ]
     if not live:
-        return LOCUS_CLASS_MAT
+        # Nothing found for this family is not a confirmed MAT locus. The old
+        # `return LOCUS_CLASS_MAT` here was a catch-all that promoted an empty
+        # cluster to the strongest class this function can emit.
+        return LOCUS_CLASS_FLANKING_ONLY
 
     idiomorph_of = {g["name"]: frozenset(g.get("present_in_idiomorphs") or ())
                     for g in family.genes}
@@ -214,12 +229,25 @@ def classify_locus(cluster: GeneCluster, family: Family) -> str:
         if current is None or _rank(hit) > _rank(current):
             best_by_gene[hit.gene_name] = hit
 
-    restricted = [h for n, h in best_by_gene.items() if idiomorph_of.get(n)]
-    unrestricted = [h for n, h in best_by_gene.items() if not idiomorph_of.get(n)]
+    # ROLE, not idiomorph restriction, decides what is a core MAT gene.
+    # These are two different properties and conflating them was a real bug:
+    # `btbA` is `flanking_variable` in db/Mucoromycota/order.yml yet carries
+    # `present_in_idiomorphs: ["Plus"]`, so splitting on restriction filed a
+    # flanking gene as though it were a second idiomorph's core gene. Measured
+    # consequences on the BFD runs: 17 of 18 `homothallic_candidate` calls in
+    # the 145-genome annotated run rested on btbA(Plus) paired with a lone
+    # sexM, not on two core genes; and all 11 core-gene-free `mat_locus` calls
+    # contained btbA, so a "no core gene" test written against `restricted`
+    # could never fire for them.
+    role_of = {g["name"]: g.get("role") for g in family.genes}
+    core = [h for n, h in best_by_gene.items() if role_of.get(n) == "core_MAT"]
+    flanking = [h for n, h in best_by_gene.items() if role_of.get(n) != "core_MAT"]
 
-    # Both idiomorphs present and close enough to be one locus?
-    for i, a in enumerate(restricted):
-        for b in restricted[i + 1:]:
+    # Both idiomorphs present and close enough to be one locus? Only CORE
+    # genes can answer this -- a flanking gene restricted to one idiomorph
+    # says where it sits, not that its idiomorph's HMG gene is present.
+    for i, a in enumerate(core):
+        for b in core[i + 1:]:
             if idiomorph_of[a.gene_name] & idiomorph_of[b.gene_name]:
                 continue  # same idiomorph; says nothing about homothallism
             if a.contig != b.contig:
@@ -240,8 +268,14 @@ def classify_locus(cluster: GeneCluster, family: Family) -> str:
             if separation <= family.max_homothallic_separation_bp:
                 return LOCUS_CLASS_HOMOTHALLIC
 
-    if restricted and not unrestricted:
+    if core and not flanking:
         return LOCUS_CLASS_IDIOMORPH_ONLY
+    if flanking and not core:
+        # Flanking genes, no core MAT gene. `mat_locus` used to be the
+        # catch-all return, so this case was reported as a confirmed locus
+        # with no MAT gene in it -- 11 of 534 `mat_locus` calls on the
+        # 283-genome BFD sweep, all admitted by the strict pass.
+        return LOCUS_CLASS_FLANKING_ONLY
     return LOCUS_CLASS_MAT
 
 

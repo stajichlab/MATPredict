@@ -57,4 +57,25 @@ loci:
       # both genes references and close this gap.
       - {name: algA, role: flanking_variable}
       - {name: glrA, role: flanking_variable}
-      - {name: btbA, role: flanking_variable, present_in_idiomorphs: ["Plus"]}
+      # CURATOR RULING, J. Stajich, 2026-09-20: "btbA shouldn't count in the
+      # denominator but we should know when it is present." So it stays
+      # Plus-restricted and stays searched, but `optional: true` takes it out
+      # of `fraction_found` on both sides of the division.
+      #
+      # Measured on the 283-genome BFD Mucoromycota sweep: btbA is present in
+      # 0 of 207 Minus loci and 57 of 220 Plus loci (26%; 39 of 134 = 29%
+      # among strict mat_locus calls). Perfectly specific to Plus, weakly
+      # sensitive -- presence argues Plus, absence argues nothing.
+      #
+      # Before this, Plus was scored against 6 expected genes and Minus
+      # against 5, so a COMPLETE Plus locus lacking btbA scored 5/6 = 0.833
+      # and could not reach 1.0 while its Minus equivalent could. That is the
+      # Plus fraction_found reported in the detect-scoring-idiomorph handoff.
+      #
+      # Position, from 64495_cbs346-36_MAT_Plus (Phycomyces blakesleeanus
+      # CBS 346-36), the ONLY curated record carrying btbA:
+      #     tptA(+) -> btbA(+) -> sexP(+) -> rnhA(+)
+      # i.e. algA - tptA - [btbA] - sexP/sexM - rnhA - glrA. One reference
+      # protein is also why 26% is a floor on its detectability rather than a
+      # property of the gene; revisit if more btbA-bearing records are added.
+      - {name: btbA, role: flanking_variable, present_in_idiomorphs: ["Plus"], optional: true}

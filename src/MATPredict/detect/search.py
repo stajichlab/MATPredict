@@ -382,6 +382,60 @@ def search_localize(
         return hits
 
 
+#: Genome FASTA offset indexes, keyed by path, with the (size, mtime_ns) the
+#: index was built from. Bounded, because a batch run walks many genomes and an
+#: unbounded cache would hold an open file handle for every one of them.
+_GENOME_INDEX_CACHE: dict[Path, tuple[tuple[int, int], object]] = {}
+_GENOME_INDEX_CACHE_MAX = 2
+
+
+def clear_genome_index_cache() -> None:
+    """Drop every cached genome index, closing each handle. For tests, and for
+    any caller that wants to release handles deterministically."""
+    while _GENOME_INDEX_CACHE:
+        _, (_, index) = _GENOME_INDEX_CACHE.popitem()
+        index.close()
+
+
+def _genome_index(genome_fasta: Path):
+    """A `SeqIO.index` over `genome_fasta`, reused across calls.
+
+    `_extract_window` runs twice per gene polished -- exonerate and miniprot
+    are deliberately given the SAME window so their models are comparable --
+    and again for every further gene and every further admitted family in a
+    cluster. Re-indexing the whole genome each time was pure overhead:
+    measured at 565 ms per call on a synthetic 46 MB, 300-contig assembly, so
+    a cluster with 10 genes admitted to 3 families burned roughly 34 s
+    re-reading one file before any aligner started.
+
+    Keyed on (size, mtime_ns) rather than path alone so a genome replaced on
+    disk is never served from a stale index -- the batch runner decompresses
+    into scratch and can reuse a path. The cache is bounded and evicts by
+    closing, because each entry holds an open file handle.
+
+    Not thread-safe, and deliberately so: `SeqIO.index` objects are not either,
+    and nothing in this package runs polishing concurrently within a process
+    (batch concurrency is separate processes).
+    """
+    stamp_source = genome_fasta.stat()
+    stamp = (stamp_source.st_size, stamp_source.st_mtime_ns)
+    cached = _GENOME_INDEX_CACHE.get(genome_fasta)
+    if cached is not None:
+        if cached[0] == stamp:
+            return cached[1]
+        # Same path, different bytes: drop the stale index before rebuilding.
+        del _GENOME_INDEX_CACHE[genome_fasta]
+        cached[1].close()
+    while len(_GENOME_INDEX_CACHE) >= _GENOME_INDEX_CACHE_MAX:
+        # Oldest first: dicts preserve insertion order, so this is FIFO.
+        oldest = next(iter(_GENOME_INDEX_CACHE))
+        _, evicted = _GENOME_INDEX_CACHE.pop(oldest)
+        evicted.close()
+    index = SeqIO.index(str(genome_fasta), "fasta")
+    _GENOME_INDEX_CACHE[genome_fasta] = (stamp, index)
+    return index
+
+
 def _extract_window(genome_fasta: Path, window: tuple[str, int, int], tmp_dir: Path) -> Path:
     """Slice (contig, start, end) (1-based, inclusive) out of genome_fasta into its own FASTA file.
 
@@ -390,11 +444,7 @@ def _extract_window(genome_fasta: Path, window: tuple[str, int, int], tmp_dir: P
     re-basing back onto genome coordinates afterward.
     """
     contig, start, end = window
-    index = SeqIO.index(str(genome_fasta), "fasta")
-    try:
-        record = index[contig]
-    finally:
-        index.close()
+    record = _genome_index(genome_fasta)[contig]
     sliced = record[start - 1 : end]
     sliced.id = contig
     sliced.description = ""

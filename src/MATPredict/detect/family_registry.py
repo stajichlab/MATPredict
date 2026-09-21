@@ -320,6 +320,42 @@ def expected_genes_for_idiomorph(
     ]
 
 
+#: `load_record_families` results, keyed by db_root, with the directory stamp
+#: they were built from. `run_pipeline` calls that function once per genome and
+#: it parses every curated metadata.yaml: 465 ms against the live 101-record
+#: database, versus 2.5 ms to stat the same files. Over a 3,174-genome rollout
+#: the repeated parse is roughly 27 minutes.
+_RECORD_FAMILIES_CACHE: dict[Path, tuple[tuple[int, int, int], dict[str, "FamilyKey"]]] = {}
+
+
+def clear_record_families_cache() -> None:
+    """Drop the cached record->family indexes. For tests, and for any caller
+    that edits `db/` in-process and wants the next read to be honest."""
+    _RECORD_FAMILIES_CACHE.clear()
+
+
+def _db_stamp(db_root: Path) -> tuple[int, int, int]:
+    """A cheap fingerprint of every curated metadata.yaml under `db_root`.
+
+    (file count, newest mtime_ns, summed size). Stat-only, so it costs ~2.5 ms
+    against the live database where the real parse costs ~465 ms. All three
+    components are needed: the count alone misses an edit, the mtime alone
+    misses a file swapped in with an older timestamp, and the size catches a
+    same-mtime rewrite of different length. This is a cache-invalidation
+    heuristic, not a content hash -- `clear_record_families_cache()` is the
+    escape hatch for a caller that needs certainty.
+    """
+    count = 0
+    newest = 0
+    total = 0
+    for path in db_root.glob("*/*/*/metadata.yaml"):
+        stat = path.stat()
+        count += 1
+        newest = max(newest, stat.st_mtime_ns)
+        total += stat.st_size
+    return (count, newest, total)
+
+
 def load_record_families(db_root: Path) -> dict[str, FamilyKey]:
     """Map every accepted curated record_id to the one family it belongs to.
 
@@ -336,6 +372,11 @@ def load_record_families(db_root: Path) -> dict[str, FamilyKey]:
     accepted, records; it is excluded by name exactly as `benchmark._load_records`
     does.
     """
+    stamp = _db_stamp(db_root)
+    cached = _RECORD_FAMILIES_CACHE.get(db_root)
+    if cached is not None and cached[0] == stamp:
+        return dict(cached[1])
+
     index: dict[str, FamilyKey] = {}
     for meta_path in sorted(db_root.glob("*/*/*/metadata.yaml")):
         if meta_path.relative_to(db_root).parts[0] == "candidates":
@@ -346,6 +387,7 @@ def load_record_families(db_root: Path) -> dict[str, FamilyKey]:
         if not record_id or not locus_name:
             continue
         index[record_id] = FamilyKey(meta_path.parents[2].name, locus_name)
+    _RECORD_FAMILIES_CACHE[db_root] = (stamp, dict(index))
     return index
 
 

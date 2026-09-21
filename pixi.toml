@@ -15,6 +15,23 @@ diamond = "*"
 blast = "*"
 miniprot = "*"
 exonerate = "*"
+# Ab initio gene prediction over a SLICED locus window, for assemblies with no
+# annotation. Curator ruling, J. Stajich, 2026-09-20: 146 of the 283 BFD
+# Mucoromycota have an NCBI annotation, so the other 137 need their own gene
+# models before a `flanking_gene_only` region can be read for what else sits
+# inside it.
+#
+# Augustus rather than Helixer, and the reason is packaging, not accuracy.
+# `helixerlite` (PyPI 25.5.27, nextgenusfs) is the better annotator but cannot
+# join this environment: it requires tensorflow>=2.6.2, tensorflow-addons
+# (that project is archived/EOL) and keras<3.0.0, and publishes wheels for
+# cp39/cp310/cp311 only, while this workspace is on Python >=3.11 and resolves
+# to 3.14. It is also not in bioconda, and no Helixer image exists in
+# /bigdata/stajichlab/shared/singularity. Adopting it would mean a second
+# environment or a container runtime, neither of which this standalone tool
+# currently needs. Augustus is in bioconda and installs like every other
+# binary `detect` already shells out to.
+augustus = "*"
 clinker-py = ">=0.0.32,<0.0.33"
 pygenomeviz = ">=1.7.0,<2"
 

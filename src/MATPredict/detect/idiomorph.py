@@ -229,12 +229,25 @@ def classify_locus(cluster: GeneCluster, family: Family) -> str:
         if current is None or _rank(hit) > _rank(current):
             best_by_gene[hit.gene_name] = hit
 
-    restricted = [h for n, h in best_by_gene.items() if idiomorph_of.get(n)]
-    unrestricted = [h for n, h in best_by_gene.items() if not idiomorph_of.get(n)]
+    # ROLE, not idiomorph restriction, decides what is a core MAT gene.
+    # These are two different properties and conflating them was a real bug:
+    # `btbA` is `flanking_variable` in db/Mucoromycota/order.yml yet carries
+    # `present_in_idiomorphs: ["Plus"]`, so splitting on restriction filed a
+    # flanking gene as though it were a second idiomorph's core gene. Measured
+    # consequences on the BFD runs: 17 of 18 `homothallic_candidate` calls in
+    # the 145-genome annotated run rested on btbA(Plus) paired with a lone
+    # sexM, not on two core genes; and all 11 core-gene-free `mat_locus` calls
+    # contained btbA, so a "no core gene" test written against `restricted`
+    # could never fire for them.
+    role_of = {g["name"]: g.get("role") for g in family.genes}
+    core = [h for n, h in best_by_gene.items() if role_of.get(n) == "core_MAT"]
+    flanking = [h for n, h in best_by_gene.items() if role_of.get(n) != "core_MAT"]
 
-    # Both idiomorphs present and close enough to be one locus?
-    for i, a in enumerate(restricted):
-        for b in restricted[i + 1:]:
+    # Both idiomorphs present and close enough to be one locus? Only CORE
+    # genes can answer this -- a flanking gene restricted to one idiomorph
+    # says where it sits, not that its idiomorph's HMG gene is present.
+    for i, a in enumerate(core):
+        for b in core[i + 1:]:
             if idiomorph_of[a.gene_name] & idiomorph_of[b.gene_name]:
                 continue  # same idiomorph; says nothing about homothallism
             if a.contig != b.contig:
@@ -255,9 +268,9 @@ def classify_locus(cluster: GeneCluster, family: Family) -> str:
             if separation <= family.max_homothallic_separation_bp:
                 return LOCUS_CLASS_HOMOTHALLIC
 
-    if restricted and not unrestricted:
+    if core and not flanking:
         return LOCUS_CLASS_IDIOMORPH_ONLY
-    if unrestricted and not restricted:
+    if flanking and not core:
         # Flanking genes, no core MAT gene. `mat_locus` used to be the
         # catch-all return, so this case was reported as a confirmed locus
         # with no MAT gene in it -- 11 of 534 `mat_locus` calls on the

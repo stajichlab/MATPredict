@@ -374,3 +374,125 @@ changed no observed output.
 6.8–13.1 kb, so some of these regions are probably over-wide clusters rather
 than eroded loci. Deciding the span bound (Finding 6) before curating these
 would change which of the 11 survive.
+
+---
+
+## Addendum 2 — the btbA conflation, and a correction to Finding 4
+
+### Correction: the first fix did not work
+
+The fix committed in `2f21259` **did not reclassify any of the 11 cases it was
+written for**, and the commit message overstated it. Verified by calling
+`classify_locus` with the real `db/Mucoromycota/order.yml` family against the
+six real gene sets: 6 of 6 still returned `mat_locus`.
+
+Cause: `classify_locus` split its genes on `present_in_idiomorphs`
+(idiomorph restriction), not on `role`. **`btbA` is `flanking_variable` yet
+carries `present_in_idiomorphs: ["Plus"]`**, so it landed in `restricted`
+beside sexP/sexM. The new `if unrestricted and not restricted` branch
+therefore could never fire for a cluster containing `btbA` — and all 11
+candidates contain `btbA`. The test that passed used a fixture family with no
+`btbA` in it, so it never exercised the real shape.
+
+### The same conflation caused a second, larger bug
+
+The homothallic loop iterated `restricted` and paired genes whose idiomorph
+sets are disjoint. `btbA`(Plus) paired with a lone `sexM`(Minus) satisfies
+that, so a flanking gene could stand in for a second core gene.
+
+Measured on the 145-genome annotated BFD run: **17 of 18
+`homothallic_candidate` calls have only ONE core gene** (sexM) and rest on
+`btbA`. Every hit was `diamond_proteome`, so the both-genes-proteome-supported
+gate did not stop them. Example: `GCA_011763815.1`,
+`JAANIU010000625.1:2001-15277`, genes `sexM|rnhA|glrA|btbA`.
+
+Only **1 of 18** is a genuine two-core-gene call: *Radiomyces spectabilis*,
+`NW_026251940.1:262111-274785`, sexP + sexM both from the proteome.
+
+The genome-only sweep produced 0 homothallic calls, so this is invisible
+without a proteome — which is why the 283-genome sweep alone did not find it.
+
+### Fix
+
+`classify_locus` now splits on `role == "core_MAT"`, not on idiomorph
+restriction. Both the homothallic test and the flanking-only test are
+role-based. Three regression tests added against a fixture that models the
+REAL family including `btbA`. Re-verified: 6 of 6 real gene sets now return
+`flanking_gene_only`, and the *Radiomyces* two-core-gene case still returns
+`homothallic_candidate`. **474 tests passing.**
+
+### Where btbA sits, and whether it is required
+
+Gene order, read from the curated records. `btbA` appears in exactly **one**
+of the 15: `64495_cbs346-36_MAT_Plus` (*Phycomyces blakesleeanus* CBS 346-36):
+
+```
+tptA(+) -> btbA(+) -> sexP(+) -> rnhA(+)
+```
+
+Against the consensus Plus architecture from the other records
+(`algA -> tptA -> sexP -> rnhA -> glrA`), `btbA` sits **between tptA and the
+core gene**, i.e. inboard of tptA, immediately outboard of sexP:
+
+```
+algA — tptA — [btbA] — sexP/sexM — rnhA — glrA
+```
+
+Is it required? **No.** Measured across the 687 sweep loci:
+
+| | n | btbA present |
+|---|---|---|
+| Plus, all loci | 220 | 57 (**26%**) |
+| Minus, all loci | 207 | **0 (0%)** |
+| Plus, strict `mat_locus` | 134 | 39 (29%) |
+| Minus, strict `mat_locus` | 127 | **0 (0%)** |
+
+So `btbA` is **perfectly specific but weakly sensitive**: it is never seen in
+a Minus call, and seen in barely a quarter of Plus calls. Presence argues
+Plus; absence argues nothing. Caveat: `btbA` has only ONE reference protein
+in the whole curated set, so the 26% is a floor, not a property of the gene.
+
+**Consequence that needs a ruling.** `expected_genes_for_idiomorph` includes
+every gene whose `present_in_idiomorphs` matches, so a Plus locus is scored
+against **6** expected genes and a Minus locus against **5**. Since 74% of
+Plus loci lack `btbA`, most Plus calls carry a `fraction_found` penalty that
+no Minus call can incur. [INFERRED] this is an asymmetric bias against Plus
+detection, and it is suggestive that the handoff's measured Plus
+`fraction_found` is exactly 0.833 = 5/6.
+
+The data supports keeping `present_in_idiomorphs: ["Plus"]` on `btbA` (0/207
+in Minus). What it does not support is `btbA` counting as an EXPECTED gene
+for Plus. That distinction — idiomorph-specific but optional — does not exist
+in the schema today. **Not changed; needs a curator ruling.**
+
+---
+
+## Addendum 3 — span flag and Augustus (both curator-ruled, both implemented)
+
+**Span: flagged at 200 kb, never dropped.** Curator ruling 2026-09-20 —
+large loci are real and consistent with unpublished findings by a former
+graduate student. Implemented as `max_plausible_locus_span_bp` on the family
+(curation data, like `max_cluster_gap_bp`), a public
+`pipeline.span_exceeds_plausible_bound()` predicate, and a
+`span_exceeds_plausible_bound` field emitted on **every** locus in the report
+so "not flagged" is distinguishable from "output predates the field".
+
+Measured consequence: **0 of 687 loci exceed 200 kb** (widest observed
+154,355 bp). This is a guard-rail against a runaway cluster, not a filter on
+present output. The 120 kb first discussed would have flagged 3, one of them a
+*Blakeslea trispora* call with six genes at 87.2% identity sitting 473 bp over
+the line.
+
+**Augustus added to `pixi.toml`** (bioconda, resolves to 3.5.0, verified in
+the environment). For ab initio prediction over a sliced locus window on the
+137 of 283 BFD Mucoromycota with no NCBI annotation.
+
+Augustus rather than Helixer, for packaging reasons and not accuracy.
+`helixerlite` (PyPI 25.5.27, nextgenusfs) is the better annotator but cannot
+join this environment: it requires `tensorflow>=2.6.2`, `tensorflow-addons`
+(archived/EOL) and `keras<3.0.0`, and ships wheels for cp39/cp310/cp311 only
+while this workspace resolves to Python 3.14. It is not in bioconda, and no
+Helixer image exists in `/bigdata/stajichlab/shared/singularity`. Adopting it
+would require a second environment or a container runtime that this
+standalone tool does not otherwise need. Augustus installs like every other
+binary `detect` already shells out to.

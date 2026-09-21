@@ -41,6 +41,29 @@ PROVISIONAL, curator-set 2026-09-20 as a starting value. Revise it from
 observed separations in confirmed homothallic loci, not by intuition.
 """
 
+DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP = 200_000
+"""The widest a locus of this family is expected to be, in bp.
+
+A FLAG, never a filter. Curator ruling, J. Stajich, 2026-09-20: large MAT
+loci are real and must still be found -- consistent with unpublished findings
+by a former graduate student -- so a wide call is reported and marked, not
+dropped.
+
+Measured basis, 283-genome BFD Mucoromycota sweep (687 loci): median span
+13,565 bp, p90 57,085, p99 105,222, max 154,355. Ground-truth loci in
+`testset/Zygo` span 6,795-13,089 bp. At 200 kb this flag fires on NOTHING
+already observed; it is a guard-rail against a runaway cluster rather than a
+filter on present output.
+
+Why not the 120 kb first considered: it would have flagged 3 of 687, one of
+them a Blakeslea trispora call with six genes at 87.2% identity sitting
+473 bp over the line. Blakeslea is itself a curated reference, so that
+identity is partly same-species, but a six-gene call is not what a bound of
+this kind should be catching.
+
+PROVISIONAL. Revise from observed spans in confirmed loci, not by intuition.
+"""
+
 DEFAULT_MIN_IDIOMORPH_MARGIN = 5.0
 """Identity points two idiomorphs must be apart before the call is trusted.
 
@@ -90,6 +113,13 @@ class Family:
     Curation data like `max_cluster_gap_bp`: how compact a homothallic MAT
     region is, is a property of the clade's locus architecture. See
     `DEFAULT_MAX_HOMOTHALLIC_SEPARATION_BP`.
+    """
+    max_plausible_locus_span_bp: int = DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP
+    """The widest a locus of this family is expected to be, in bp.
+
+    Curation data like `max_cluster_gap_bp`, and a FLAG rather than a filter:
+    a call wider than this is still reported, marked so a reader can see it.
+    See `DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP` for the measured basis.
     """
     min_idiomorph_margin: float = DEFAULT_MIN_IDIOMORPH_MARGIN
     """Identity points two mutually exclusive idiomorph genes must be apart.
@@ -190,6 +220,10 @@ def load_all_families(db_root: Path) -> list[Family]:
                     max_homothallic_separation_bp=locus.get(
                         "max_homothallic_separation_bp",
                         DEFAULT_MAX_HOMOTHALLIC_SEPARATION_BP,
+                    ),
+                    max_plausible_locus_span_bp=locus.get(
+                        "max_plausible_locus_span_bp",
+                        DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP,
                     ),
                 )
             )

@@ -1,0 +1,163 @@
+record_id: 29922_cbs109-16_MAT_Minus
+record_version: 1
+taxonomy:
+  taxid: 29922
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Mucoraceae;g__Mucor;s__Mucor_mucedo
+  lineage_resolved_date: '2026-09-20'
+organism:
+  species: Mucor mucedo
+  strain:
+    name: CBS 109.16
+    known: true
+    culture_collection_ids:
+    - CBS 109.16
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Minus
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: algA->sexM->rnhA
+    definition_note: 'Published MAT locus, 10,568 bp. Curated for the Minus idiomorph
+      and for algA: this deposit''s unnamed ''putative alginate lyase'' (AFA26122.1)
+      is the gene the algL/algA literature is about -- 384 aa, 62.8% identity to WZC35661.1
+      (AlgA of OR965930.1), which is what establishes that algA and algL are one gene
+      rather than two. The deposit carries no /gene qualifier for it, so the name
+      here is assigned by product plus that orthology, not read off the record. A
+      partial serine-rich adhesion protein CDS is not curated (no vocabulary name,
+      and incomplete). No tptA is annotated in this record.
+
+
+      Wetzel J, Burmester A, Kolbe M, Wostemeyer J (2012) The mating-related loci
+      sexM and sexP of the zygomycetous fungus Mucor mucedo and their transcriptional
+      regulation by trisporoid pheromones. Microbiology 158(Pt 4):1016-1023.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JN587498.1
+        seq_region: JN587498.1
+      start: 1
+      end: 10568
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: algA
+  protein_accession: ncbi_protein:AFA26122.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2839
+  end: 4213
+  strand: '-'
+  exons:
+  - start: 3996
+    end: 4213
+  - start: 3928
+    end: 3940
+  - start: 3822
+    end: 3870
+  - start: 3524
+    end: 3767
+  - start: 2839
+    end: 3469
+  codon_start: 1
+  transl_table: 1
+  gene_index: 0
+  order_in_locus: 0
+- name: sexM
+  protein_accession: ncbi_protein:AFA26123.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5528
+  end: 6172
+  strand: +
+  exons:
+  - start: 5528
+    end: 6172
+  codon_start: 1
+  transl_table: 1
+  gene_index: 1
+  order_in_locus: 1
+- name: rnhA
+  protein_accession: ncbi_protein:AFA26124.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 6285
+  end: 10411
+  strand: +
+  exons:
+  - start: 6285
+    end: 6306
+  - start: 6387
+    end: 7000
+  - start: 7056
+    end: 7776
+  - start: 7835
+    end: 8976
+  - start: 9033
+    end: 9160
+  - start: 9211
+    end: 9814
+  - start: 9868
+    end: 10098
+  - start: 10163
+    end: 10411
+  codon_start: 1
+  transl_table: 1
+  gene_index: 2
+  order_in_locus: 2
+evidence:
+  locus_existence: &id001
+    tier: 1
+    experimental_method: targeted sequencing and annotation of the mating-type locus,
+      deposited as a GenBank record by the describing authors
+    citations: &id002
+    - doi: 10.1099/mic.0.054106-0
+      pmid: '22262094'
+  boundaries: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of the sexM HMG-domain gene in the deposited locus,
+      as annotated by the describing authors
+    citations: *id002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JN587498.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 10.1099/mic.0.054106-0|29922|MAT|Minus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -1,0 +1,147 @@
+record_id: 35722_atcc11077_MAT_Minus
+record_version: 1
+taxonomy:
+  taxid: 35722
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Parasitellaceae;g__Parasitella;s__Parasitella_parasitica
+  lineage_resolved_date: '2026-09-20'
+organism:
+  species: Parasitella parasitica
+  strain:
+    name: ATCC 11077
+    known: true
+    culture_collection_ids:
+    - ATCC 11077
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Minus
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sexM->rnhA
+    definition_note: 'Published MAT locus, 8,605 bp, curated for sexM and rnhA (both
+      complete CDS). Adds a Parasitellaceae Minus reference; the genus was otherwise
+      unrepresented.
+
+
+      NOTED DIVERGENCE. Schulz et al. 2016 report that the predicted HMG domains of
+      SexM in the two P. parasitica isolates NRRL 2501 and ATCC 11077 ''range phylogenetically
+      in a wider distance to other species'', and that these two strains are ''genetically
+      different to a surprising degree'' despite likely sharing a collection site.
+      That divergence is the REASON to curate this record rather than a caution against
+      it: the Minus reference set is the thin side of this database, and a divergent
+      sexM extends the range of sequences a query genome can match. It does mean this
+      protein should not be treated as typical of the genus.
+
+
+      CITATION HAS NO PERSISTENT IDENTIFIER. Schulz et al. 2016 is absent from Crossref,
+      PubMed and PMC, and the PDF carries no DOI, ISSN or URN. doi and pmid are therefore
+      null rather than invented. The paper was read directly (curator-supplied PDF,
+      2026-09-20); its Table 1 is what attributes this accession to these genes.
+
+
+      Schulz E, Wetzel J, Burmester A, Ellenberger S, Siegmund L, Wostemeyer J (2016)
+      Sex loci of homothallic and heterothallic Mucorales. Endocytobiosis and Cell
+      Research 27(4):39-57. Journal archive: zs.thulb.uni-jena.de/content/main/journals/ecb/info.xml'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KY081664.1
+        seq_region: KY081664.1
+      start: 1
+      end: 8605
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: sexM
+  protein_accession: ncbi_protein:ASX98562.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3711
+  end: 4313
+  strand: +
+  exons:
+  - start: 3711
+    end: 4313
+  codon_start: 1
+  transl_table: 1
+  gene_index: 0
+  order_in_locus: 0
+- name: rnhA
+  protein_accession: ncbi_protein:ASX98563.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4379
+  end: 8604
+  strand: +
+  exons:
+  - start: 4379
+    end: 4425
+  - start: 4486
+    end: 5134
+  - start: 5189
+    end: 5909
+  - start: 5982
+    end: 7162
+  - start: 7201
+    end: 7337
+  - start: 7396
+    end: 7999
+  - start: 8064
+    end: 8294
+  - start: 8359
+    end: 8604
+  codon_start: 1
+  transl_table: 1
+  gene_index: 1
+  order_in_locus: 1
+evidence:
+  locus_existence: &id001
+    tier: 1
+    experimental_method: targeted sequencing and annotation of the mating-type locus,
+      deposited as a GenBank record and reported in the describing publication's Table
+      1
+    citations: &id002
+    - doi: null
+      pmid: null
+  boundaries: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of the sexM HMG-domain gene in the deposited locus,
+      annotated by the depositor and tabulated in Schulz et al. 2016 Table 1
+    citations: *id002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: KY081664.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: schulz2016-ecb-27-4-39|35722|MAT|Minus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

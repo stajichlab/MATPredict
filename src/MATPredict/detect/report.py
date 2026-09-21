@@ -286,6 +286,38 @@ def _result_doc(r: DetectionResult) -> dict:
         "end": r.end,
         "confidence": r.confidence,
         "idiomorph": r.idiomorph,
+        # `strict` or `relaxed`. Emitted for every locus, not only relaxed
+        # ones, so "this was a strict call" is distinguishable from "this
+        # output predates the field", and so strict-only consumers can filter.
+        "detection_pass": r.detection_pass,
+        # WHAT was found, as opposed to how it was admitted. An
+        # `idiomorph_gene_only` call is a lone sexM or sexP with no flank: not
+        # a locus, but kept on purpose as per-idiomorph HMM training material.
+        # `homothallic_candidate` is both idiomorphs in one locus, the real
+        # architecture of a homothallic Mucorale.
+        "locus_class": r.locus_class,
+        # How close the idiomorph call was, and what it collapsed. Reported
+        # even when the call is comfortable, so a reader never has to infer
+        # from silence whether a resolution happened. `None` means none was
+        # needed. Every member of every resolved pair is listed with both
+        # identities and coverages: a narrow margin may mark a hybrid or a
+        # novel locus rather than a mistake, and these are also the
+        # observations the provisional overlap threshold will be recalibrated
+        # against.
+        "idiomorph_margin": r.idiomorph_margin,
+        "idiomorph_resolutions": [
+            {
+                "contig": res.contig,
+                "winner": res.winner,
+                "loser": res.loser,
+                "winner_identity": res.winner_identity,
+                "loser_identity": res.loser_identity,
+                "overlap_fraction": res.overlap_fraction,
+                "winner_coverage": res.winner_coverage,
+                "loser_coverage": res.loser_coverage,
+            }
+            for res in r.idiomorph_resolutions
+        ],
         "ambiguous_with": [_family_label(k) for k in r.ambiguous_with],
         "genes_found": r.genes_found,
         "genes_missing": r.genes_missing,

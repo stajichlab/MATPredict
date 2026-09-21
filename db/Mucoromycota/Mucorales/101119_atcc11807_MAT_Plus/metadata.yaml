@@ -1,0 +1,131 @@
+record_id: 101119_atcc11807_MAT_Plus
+record_version: 1
+taxonomy:
+  taxid: 101119
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Mucoraceae;g__Syzygites;s__Syzygites_megalocarpus
+  lineage_resolved_date: '2026-09-20'
+organism:
+  species: Syzygites megalocarpus
+  strain:
+    name: ATCC 11807
+    known: true
+    culture_collection_ids:
+    - ATCC 11807
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Plus
+  system: homothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sexP->glrA
+    definition_note: 'Published MAT region of a HOMOTHALLIC Mucorale, 25,552 bp. Carries
+      the sexP HMG gene with an intact glrA flank -- the THIRD glrA reference protein
+      in this database, which is its thinnest gene. The rnhA here is annotated as
+      a PSEUDOGENE with no translation and is not curated. Its Minus counterpart in
+      the same strain is record 101119_atcc11807_MAT_Minus (JN112239.1).
+
+
+      sspA, alyA and romA are present in the deposit but are not in the controlled
+      vocabulary. NOTE for anyone extending that vocabulary: alyA here is annotated
+      an ALPHA-ARRESTIN, NOT an alginate lyase -- it is not algA/algL, and a prefix
+      match on aly* would be a false positive.
+
+
+      Idnurm A (2011) Sex determination in the first-described sexual fungus. Eukaryotic
+      Cell 10(11):1485-1491.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JN112240.1
+        seq_region: JN112240.1
+      start: 1
+      end: 25552
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: sexP
+  protein_accession: ncbi_protein:AET35422.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 13025
+  end: 13879
+  strand: +
+  exons:
+  - start: 13025
+    end: 13879
+  codon_start: 1
+  transl_table: 1
+  gene_index: 0
+  order_in_locus: 0
+- name: glrA
+  protein_accession: ncbi_protein:AET35423.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 16568
+  end: 18154
+  strand: '-'
+  exons:
+  - start: 17974
+    end: 18154
+  - start: 17667
+    end: 17927
+  - start: 17094
+    end: 17618
+  - start: 16631
+    end: 17037
+  - start: 16568
+    end: 16582
+  codon_start: 1
+  transl_table: 1
+  gene_index: 1
+  order_in_locus: 1
+evidence:
+  locus_existence: &id001
+    tier: 1
+    experimental_method: targeted sequencing and annotation of both mating-type regions
+      of a homothallic strain, deposited as GenBank records by the describing author
+    citations: &id002
+    - doi: 10.1128/EC.05149-11
+      pmid: '21908600'
+  boundaries: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of the sexP HMG-domain gene in this deposited region
+      of a homothallic strain that carries both
+    citations: *id002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JN112240.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 21908600|101119|MAT|Plus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -75,3 +75,44 @@ def build_reference_fasta(
             lines.append(seq.rstrip("\n"))
     out_path.write_text("\n".join(lines) + "\n")
     return out_path
+
+
+def searchable_genes_by_family(
+    reference_fasta: Path, record_families: dict[str, FamilyKey]
+) -> dict[FamilyKey, set[str]]:
+    """Per family, the gene names this reference FASTA actually holds a protein for.
+
+    Read back from the WRITTEN file rather than recomputed from `db_root`, so
+    the scoring denominator and the query set cannot disagree -- the same
+    guarantee `build_reference_fasta` makes for hit attribution by filtering
+    on the header's own `record_id`. It matters because phylum routing
+    narrows this file: a gene can have a reference somewhere in `db/` and
+    still be unsearchable in a given run, and the run must be scored on what
+    it could have found, not on what exists elsewhere.
+
+    A record with no resolvable family is skipped; `search._attribute` would
+    drop its hits too, so it cannot make any gene findable.
+
+    A missing file yields `{}`, which scoring reads as "no information" and so
+    keeps the whole roster in the denominator -- the behaviour that predates
+    this function. It warns rather than raising: a caller that stubs out the
+    search legitimately never writes this file, but in a real run it is always
+    written before the search, so its absence means something else has already
+    gone wrong and the run should say so without dying on the scoring step.
+    """
+    if not reference_fasta.exists():
+        logger.warning(
+            "No reference FASTA at %s: scoring every expected gene as searchable. "
+            "A real run always writes this file before searching.", reference_fasta,
+        )
+        return {}
+    searchable: dict[FamilyKey, set[str]] = {}
+    for line in reference_fasta.read_text().splitlines():
+        if not line.startswith(">"):
+            continue
+        record_id, _, gene_name = line[1:].split("|")
+        family_key = record_families.get(record_id)
+        if family_key is None:
+            continue
+        searchable.setdefault(family_key, set()).add(gene_name)
+    return searchable

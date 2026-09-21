@@ -1,0 +1,214 @@
+record_id: 3108396_ai-2023a_MAT_Plus
+record_version: 1
+taxonomy:
+  taxid: 3108396
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Mucoraceae;g__Mucoraceae;s__Mucoraceae_sp._AI-2023a
+  lineage_resolved_date: '2026-09-20'
+organism:
+  species: Mucoraceae sp. AI-2023a
+  strain:
+    name: AI-2023a
+    known: true
+    culture_collection_ids:
+    - AI-2023a
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Plus
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: algA->tptA->sexP->rnhA->glrA
+    definition_note: 'Published MAT locus deposited as a single 16,643 bp fragment
+      (GenBank OR965930.1) by Hull, Urquhart & Idnurm (2024), describing Mooraboolomyces
+      wintlei; the deposit''s organism name is the provisional ''Mucoraceae sp. AI-2023a''.
+      Gene names algA/tptA/sexP/rnhA/glrA are the deposit''s own /gene qualifiers
+      and match db/Mucoromycota/order.yml''s controlled vocabulary exactly.
+
+
+      This is the ONLY source of reference proteins for algA and glrA, which were
+      named in order.yml''s roster with no curated protein behind them, so no genome
+      could match them. NAMING: the Idnurm review (doi:10.1128/microbiolspec.funk-0041-2017)
+      calls algA ''algL''. They are the same gene, confirmed by domain annotation
+      rather than by name -- WZC35661 (AlgA, 384 aa) carries Alginate_lyase pfam05426,
+      matching the review''s ''predicted alginate lyase''; WZC35665 (GlrA, 465 aa)
+      carries Pyr_redox_2, the family glutathione reductase belongs to. The deposit''s
+      spelling is used here because it is the one attached to sequence.
+
+
+      Hull CP, Urquhart AS, Idnurm A (2024) Mooraboolomyces wintlei gen. & sp. nov.
+      from Victoria, Australia. Phytotaxa 644(1):35-41.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: OR965930.1
+        seq_region: OR965930.1
+      start: 1
+      end: 16643
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: algA
+  protein_accession: ncbi_protein:WZC35661.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 984
+  end: 2430
+  strand: '-'
+  exons:
+  - start: 2213
+    end: 2430
+  - start: 2139
+    end: 2151
+  - start: 2025
+    end: 2082
+  - start: 1691
+    end: 1934
+  - start: 984
+    end: 1605
+  codon_start: 1
+  transl_table: 1
+  gene_index: 0
+  order_in_locus: 0
+- name: tptA
+  protein_accession: ncbi_protein:WZC35662.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4734
+  end: 6201
+  strand: '-'
+  exons:
+  - start: 5497
+    end: 6201
+  - start: 4734
+    end: 5429
+  codon_start: 1
+  transl_table: 1
+  gene_index: 1
+  order_in_locus: 1
+- name: sexP
+  protein_accession: ncbi_protein:WZC35663.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8845
+  end: 9759
+  strand: +
+  exons:
+  - start: 8845
+    end: 9759
+  codon_start: 1
+  transl_table: 1
+  gene_index: 2
+  order_in_locus: 2
+- name: rnhA
+  protein_accession: ncbi_protein:WZC35664.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 9891
+  end: 14072
+  strand: +
+  exons:
+  - start: 9891
+    end: 9949
+  - start: 10020
+    end: 10665
+  - start: 10719
+    end: 11328
+  - start: 11396
+    end: 11506
+  - start: 11573
+    end: 13455
+  - start: 13516
+    end: 13746
+  - start: 13818
+    end: 14072
+  codon_start: 1
+  transl_table: 1
+  gene_index: 3
+  order_in_locus: 3
+- name: glrA
+  protein_accession: ncbi_protein:WZC35665.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 14435
+  end: 16043
+  strand: '-'
+  exons:
+  - start: 15599
+    end: 16043
+  - start: 14993
+    end: 15523
+  - start: 14517
+    end: 14923
+  - start: 14435
+    end: 14449
+  codon_start: 1
+  transl_table: 1
+  gene_index: 4
+  order_in_locus: 4
+evidence:
+  locus_existence: &id001
+    tier: 1
+    experimental_method: targeted sequencing and annotation of the mating-type locus,
+      deposited as a complete-CDS GenBank record by the describing authors
+    citations: &id002
+    - doi: 10.11646/phytotaxa.644.1.5
+  boundaries: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of the sexP HMG-domain gene in the deposited locus,
+      as annotated by the describing authors
+    citations: *id002
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: OR965930.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 10.11646/phytotaxa.644.1.5|3108396|MAT|Plus
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

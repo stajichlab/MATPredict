@@ -1131,10 +1131,54 @@ def test_isolated_single_hit_is_low_tier(tmp_path):
     assert outcome.results[0].confidence == "low"
 
 
-def test_genes_split_across_contigs_are_one_fragmented_multi_segment_call(tmp_path):
+def test_genes_split_across_contigs_are_reported_separately_by_default(tmp_path):
+    """Curator's ruling, 2026-09-20: cross-contig fragment merging is OFF by
+    default. `_fragmented_family_segments`' merge can name a locus by
+    whichever contig its coordinates default to -- Basidiomycota order
+    testing found a real Cryptococcus deneoformans MAT locus (both genes
+    matching at 100% identity) reported cross-contig as `fragmented`, low
+    confidence, `idiomorph: undetermined`, with its top-level contig/start/end
+    naming a chromosome that held almost none of the call's own evidence.
+
+    The identical two-contig fixture from the merge test (mfa1 on c1, pra1 on
+    c2, no flank) now reports as TWO independent single-contig calls instead
+    of one merged multi-segment one -- each partial, each fragmented=False,
+    each on its own real contig with its own real coordinates. Nothing is
+    silently lost: a genuinely fragmented locus is still visible, just as two
+    honest partial calls rather than one call that might misname itself."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+    genome = tmp_path / "genome.fa"
+    genome.write_text(">c1\n" + "A" * 1000 + "\n>c2\n" + "A" * 1000 + "\n")
+
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+        return [
+            SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
+            SearchHit(FAMILY.key, "pra1", "core_MAT", "c2", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
+        ]
+
+    outcome = run_pipeline(
+        genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_fast_path=fake_fast_path,
+        search_localize=_no_localize,
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
+    )
+    assert len(outcome.results) == 2
+    assert all(r.fragmented is False for r in outcome.results)
+    by_contig = {r.contig: r for r in outcome.results}
+    assert by_contig["c1"].genes_found == ["mfa1"]
+    assert by_contig["c1"].start == 100 and by_contig["c1"].end == 200
+    assert by_contig["c2"].genes_found == ["pra1"]
+    assert by_contig["c2"].start == 300 and by_contig["c2"].end == 400
+
+
+def test_cross_contig_merge_is_still_available_when_explicitly_enabled(tmp_path):
     """Finding 5: a family whose core genes land on different contigs, with no
     single cluster carrying them all, is one multi-segment locus with
-    fragmented=True and a one-tier confidence downgrade."""
+    fragmented=True and a one-tier confidence downgrade -- but ONLY when the
+    caller opts in with allow_cross_contig_fragments=True. The merge machinery
+    itself is unchanged and still correct; only the default flipped."""
     _write_order(tmp_path)
     _write_record(tmp_path)
     genome = tmp_path / "genome.fa"
@@ -1155,6 +1199,7 @@ def test_genes_split_across_contigs_are_one_fragmented_multi_segment_call(tmp_pa
         # rescue targets and the batched localization runs (finding nothing).
         search_localize=_no_localize,
         polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
+        allow_cross_contig_fragments=True,
     )
     assert len(outcome.results) == 1
     result = outcome.results[0]
@@ -1242,6 +1287,7 @@ def test_fragmented_family_with_a_separate_independent_cluster_reports_both(tmp_
         search_localize=_no_localize,
         polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
         ambiguity_floor=0.5,
+        allow_cross_contig_fragments=True,
     )
     assert len(outcome.results) == 2
     by_fragmented = {r.fragmented: r for r in outcome.results}
@@ -1302,6 +1348,7 @@ def test_gene_evidence_prefers_a_polished_model_over_a_higher_identity_raw_hit(t
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_localize=fake_localize,
         polish_with_exonerate=polish, polish_with_miniprot=polish,
+        allow_cross_contig_fragments=True,
     )
     fragmented = [r for r in outcome.results if r.fragmented]
     assert len(fragmented) == 1
@@ -1469,6 +1516,7 @@ def test_fragmented_segments_each_keep_their_own_evidence_for_a_shared_gene_name
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path, search_localize=_no_localize,
         polish_with_exonerate=polish, polish_with_miniprot=polish,
+        allow_cross_contig_fragments=True,
     )
     fragmented = [r for r in outcome.results if r.fragmented]
     assert len(fragmented) == 1
@@ -1522,6 +1570,7 @@ def test_fragmented_segments_keep_both_raw_hits_for_a_shared_gene_name(tmp_path)
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path, search_localize=_no_localize,
         polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
+        allow_cross_contig_fragments=True,
     )
     fragmented = [r for r in outcome.results if r.fragmented]
     assert len(fragmented) == 1

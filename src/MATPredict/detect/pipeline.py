@@ -48,15 +48,27 @@ stands) affects confidence tiering, capping the family at Medium -- exactly the
 effect the retired "relaxed exonerate second pass" used to have. Tool agreement
 itself is reported but never consulted by `tiering.assign_tier`.
 
-Fragmented assemblies (spec section 6) are handled to the extent described in
-`_fragmented_family_segments`: a family whose expected `core_MAT` genes are
-split across clusters on *different contigs*, with no single cluster carrying
-them all, is reported once as a multi-segment call with `fragmented=True`
-(which downgrades its confidence tier by one, per `tiering.assign_tier`).
-`contig_edge_distance` is populated per segment when the genome FASTA can be
-read; it is left as None otherwise. What is deliberately NOT attempted here is
-reconstructing locus order or the intervening sequence across segments -- a
-multi-segment call reports the segments it found, nothing more.
+Fragmented assemblies (spec section 6) are handled, OPT-IN only, to the extent
+described in `_fragmented_family_segments`: a family whose expected `core_MAT`
+genes are split across clusters on *different contigs*, with no single cluster
+carrying them all, can be reported as one multi-segment call with
+`fragmented=True` (which downgrades its confidence tier by one, per
+`tiering.assign_tier`) -- but only when the caller passes
+`allow_cross_contig_fragments=True`. `contig_edge_distance` is populated per
+segment when the genome FASTA can be read; it is left as None otherwise. What
+is deliberately NOT attempted here is reconstructing locus order or the
+intervening sequence across segments -- a multi-segment call reports the
+segments it found, nothing more.
+
+The DEFAULT is `allow_cross_contig_fragments=False`: cross-contig merging is
+OFF. Curator's ruling, 2026-09-20, after Basidiomycota order testing found a
+real Cryptococcus deneoformans MAT locus (both genes at 100% identity)
+reported as one merged call whose top-level contig/start/end named a
+chromosome holding almost none of its own evidence, giving
+`idiomorph:undetermined` and `confidence: low` for a strain whose mating type
+was not in doubt. With the merge disabled, each contig's own partial evidence
+is still reported -- by the ordinary per-cluster loop, not this function --
+as separate, honest, correctly-coordinated calls.
 """
 from __future__ import annotations
 
@@ -1140,6 +1152,7 @@ def run_pipeline(
     evidence_floor: EvidenceFloor = EvidenceFloor(),
     evidence_diagnostics_path: Path | None = None,
     routing: RoutingDecision | None = None,
+    allow_cross_contig_fragments: bool = False,
 ) -> DetectionOutcome:
     # `routing` lets the caller route ONCE and reuse the decision, which the
     # CLI must do: it has to know the routed families BEFORE this call, so it
@@ -1458,11 +1471,25 @@ def run_pipeline(
                         run_id=run_id, genome_id=genome_id,
                     )
 
+    # Cross-contig fragment merging is OFF by default. Curator's ruling,
+    # 2026-09-20, after Basidiomycota order testing found a real Cryptococcus
+    # deneoformans MAT locus -- both genes matching at 100% identity --
+    # reported as one merged `fragmented` call whose top-level contig/start/end
+    # named a chromosome holding almost none of its own evidence (a 3-segment
+    # merge over 2 chromosomes, one span 849 kb), giving idiomorph:undetermined
+    # and confidence: low for a strain whose mating type was not in doubt.
+    #
+    # Disabled, a genuinely fragmented locus is not lost: each contig's own
+    # partial evidence is still reported by the normal per-cluster loop below,
+    # just as separate, honest, correctly-coordinated calls rather than one
+    # call that can misname itself. The merge machinery itself is unchanged
+    # and still exercised by its own tests; only the default flipped.
     fragmented_segments: dict[FamilyKey, list[GeneCluster]] = {}
-    for family in families:
-        segments = _fragmented_family_segments(clusters, family)
-        if segments:
-            fragmented_segments[family.key] = segments
+    if allow_cross_contig_fragments:
+        for family in families:
+            segments = _fragmented_family_segments(clusters, family)
+            if segments:
+                fragmented_segments[family.key] = segments
 
     def _any_gene_unpolished(cluster_ids: set[int], family_key: FamilyKey) -> bool:
         """True when ANY of this family's own genes, in these exact clusters,

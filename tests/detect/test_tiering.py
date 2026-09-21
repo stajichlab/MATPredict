@@ -94,3 +94,74 @@ def test_both_idiomorphs_found_still_requires_full_core_set():
     score = FamilyScore(FAM_IDIOMORPHIC.key, 0.75, ["a1", "b1", "b2"], ["a2"])
     cluster = GeneCluster("c1", 1, 100, [])
     assert assign_tier(score, FAM_IDIOMORPHIC, cluster, any_gene_unpolished=False, fragmented=False) == "medium"
+
+
+# --- Unsearchable core genes must not block `core_found` -------------------
+# `scoring.score_cluster` already drops genes with no reference protein from
+# the `fraction_found` denominator and reports them as `genes_not_searchable`.
+# `assign_tier` never read that field, so a gene nothing could ever find was
+# still counted as a core requirement the genome had failed to meet.
+#
+# Measured on Schizophyllum commune H4-8 (GCF_000143185.2), genome-only,
+# 2026-09-20: the Bbeta locus was recovered COMPLETELY -- all 8 curated genes
+# found, `genes_missing=[]`, `fraction_found=1.0` -- and was still capped at
+# `medium`, because the roster's `pheromone_receptor` alias has no reference
+# protein anywhere in db/ and stayed in `core_genes`. Balpha (3/3 found) was
+# demoted the same way. Those were the two most complete calls in the run.
+
+BBETA_LIKE = Family(
+    FamilyKey("Basidiomycota", "Bbeta"), "pattern", None, "^[0-9]+$",
+    [{"name": "pheromone_receptor", "role": "core_MAT"},  # no reference protein
+     {"name": "bbr2", "role": "core_MAT"},
+     {"name": "bbp2-1", "role": "core_MAT"},
+     {"name": "bbp2-2", "role": "core_MAT"}], [5334])
+
+
+def test_unsearchable_core_gene_does_not_block_high_tier():
+    """Every SEARCHABLE core gene found, nothing missing -> High.
+
+    The one unmet core gene has no reference protein, so its absence is not
+    evidence of anything about this genome."""
+    score = FamilyScore(
+        BBETA_LIKE.key, 1.0,
+        genes_found=["bbr2", "bbp2-1", "bbp2-2"],
+        genes_missing=[],
+        genes_not_searchable=["pheromone_receptor"],
+    )
+    cluster = GeneCluster("c1", 1, 100, [])
+    assert assign_tier(
+        score, BBETA_LIKE, cluster, any_gene_unpolished=False, fragmented=False
+    ) == "high"
+
+
+def test_unsearchable_genes_do_not_promote_a_lone_hit_to_high():
+    """The complement of the above, and the reason the fix is not merely
+    `core_genes -= not_searchable`: if every other core gene is unsearchable,
+    ONE found gene would otherwise satisfy `core_found` and -- because no
+    Basidiomycota family declares a `flanking_conserved` gene -- go straight
+    to High. An isolated single hit stays Low."""
+    score = FamilyScore(
+        BBETA_LIKE.key, 1.0,
+        genes_found=["bbr2"],
+        genes_missing=[],
+        genes_not_searchable=["pheromone_receptor", "bbp2-1", "bbp2-2"],
+    )
+    cluster = GeneCluster("c1", 1, 100, [])
+    assert assign_tier(
+        score, BBETA_LIKE, cluster, any_gene_unpolished=False, fragmented=False
+    ) == "low"
+
+
+def test_searchable_core_gene_still_missing_is_not_high():
+    """Guard against over-relaxing: a genuinely missing SEARCHABLE core gene
+    must still keep the call below High."""
+    score = FamilyScore(
+        BBETA_LIKE.key, 0.67,
+        genes_found=["bbr2", "bbp2-1"],
+        genes_missing=["bbp2-2"],
+        genes_not_searchable=["pheromone_receptor"],
+    )
+    cluster = GeneCluster("c1", 1, 100, [])
+    assert assign_tier(
+        score, BBETA_LIKE, cluster, any_gene_unpolished=False, fragmented=False
+    ) == "medium"

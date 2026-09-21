@@ -211,3 +211,36 @@ def test_a_polished_gene_counts_as_proteome_supported():
                   "rec1", "miniprot_refine"),
     )
     assert classify_locus(cluster, FAM) == "homothallic_candidate"
+
+
+def test_flanking_genes_with_no_core_gene_are_not_a_mat_locus():
+    """A cluster of flanking genes alone must not be called `mat_locus`.
+
+    `classify_locus`'s own contract says `mat_locus` is "a core gene with at
+    least one flanking gene". Its final `return LOCUS_CLASS_MAT` is a
+    catch-all, so a cluster holding ONLY unrestricted flanking genes -- no
+    sexP, no sexM -- falls through to it and is reported as a confirmed MAT
+    locus carrying no MAT gene.
+
+    Measured on the 283-genome BFD Mucoromycota sweep (2026-09-20): 11 of 534
+    `mat_locus` calls had zero core_MAT gene, and ALL 11 were admitted by the
+    STRICT pass, so nothing downstream flags them. Example:
+    Umbelopsis ramanniana AG, NW_026252103.1:214691-218060, genes
+    rnhA|algA|btbA.
+
+    This is the exact mirror of `idiomorph_gene_only` (core genes, no flank),
+    and per the curator's 2026-09-20 ruling it is filed rather than discarded.
+    """
+    cluster = _cluster(
+        _hit("rnhA", 1000, 2000, role="flanking_conserved"),
+        _hit("glrA", 4000, 5000, role="flanking_variable"),
+        _hit("tptA", 7000, 8000, role="flanking_conserved"),
+    )
+    assert classify_locus(cluster, FAM) == "flanking_gene_only"
+
+
+def test_an_empty_cluster_is_not_a_mat_locus():
+    """`if not live: return LOCUS_CLASS_MAT` labels a cluster with no live hit
+    for this family as a confirmed locus. Nothing found is not a locus."""
+    cluster = GeneCluster("c1", 1000, 2000, [])
+    assert classify_locus(cluster, FAM) == "flanking_gene_only"

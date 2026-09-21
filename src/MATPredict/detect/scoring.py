@@ -23,6 +23,20 @@ class FamilyScore:
     would be meaningless: the ceiling on `fraction_found` would then track
     gaps in the curated database rather than the biology being scored.
     """
+    genes_optional_found: list[str] = field(default_factory=list)
+    """Optional genes that WERE found. Informative, never scored.
+
+    An `optional: true` gene is outside `fraction_found` entirely -- out of
+    the denominator AND out of the numerator -- because the biology does not
+    require it. It is still searched and still reported, in `genes_found` and
+    named again here, because its presence carries information even though
+    its absence carries none. Curator ruling, J. Stajich, 2026-09-20:
+    "btbA shouldn't count in the denominator but we should know when it is
+    present."
+
+    This is why `fraction_found` is NOT derivable from `genes_found` and
+    `genes_missing` alone: subtract this list from `genes_found` first.
+    """
 
 
 def score_cluster(
@@ -66,7 +80,17 @@ def score_cluster(
         found = hit_genes_by_family.get(family.key)
         if not found:
             continue
-        expected = [g["name"] for g in expected_genes_for_idiomorph(family, found)]
+        expected_genes = expected_genes_for_idiomorph(family, found)
+        # An `optional: true` gene leaves the score entirely -- numerator and
+        # denominator both -- and is reported separately instead. Measured
+        # reason (283-genome BFD sweep): btbA is Plus-restricted, so it sat in
+        # every Plus locus's expected roster, yet only 26% of Plus loci have
+        # it. Plus was scored out of 6 and Minus out of 5, so a complete Plus
+        # locus with no btbA scored 5/6 = 0.833 and could never reach 1.0
+        # while the equivalent Minus locus did. That is a database artefact
+        # about one gene's single reference protein, not biology.
+        optional = {g["name"] for g in expected_genes if g.get("optional")}
+        expected = [g["name"] for g in expected_genes if g["name"] not in optional]
         family_searchable = (
             None if searchable_genes is None else searchable_genes.get(family.key)
         )
@@ -85,17 +109,31 @@ def score_cluster(
             not_searchable = [
                 g for g in expected if g not in family_searchable and g not in found
             ]
-        genes_found = [g for g in searchable if g in found]
+        scored_found = [g for g in searchable if g in found]
         genes_missing = [g for g in searchable if g not in found]
+        # Optional genes are appended to `genes_found` so a reader sees what
+        # was actually there, but they are NOT in `scored_found`, which is
+        # the numerator. Order is preserved from the family roster so the
+        # report reads in locus order.
+        optional_found = [
+            g["name"] for g in expected_genes
+            if g["name"] in optional and g["name"] in found
+        ]
+        if not searchable:
+            # Every expected gene was optional or unsearchable, and the only
+            # hits are optional ones. There is no required gene to score, and
+            # 0/0 is not a score -- an optional gene must never be able to
+            # manufacture a fraction. Report it and score zero.
+            fraction = 0.0
+        else:
+            fraction = len(scored_found) / len(searchable)
         scores.append(FamilyScore(
             family_key=family.key,
-            # `searchable` cannot be empty here: this family has at least one
-            # hit, and every found gene is kept searchable above regardless of
-            # what the map claims.
-            fraction_found=len(genes_found) / len(searchable),
-            genes_found=genes_found,
+            fraction_found=fraction,
+            genes_found=scored_found + optional_found,
             genes_missing=genes_missing,
             genes_not_searchable=not_searchable,
+            genes_optional_found=optional_found,
         ))
     scores.sort(key=lambda s: s.fraction_found, reverse=True)
     return scores

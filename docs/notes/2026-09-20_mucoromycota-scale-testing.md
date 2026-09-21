@@ -496,3 +496,79 @@ Helixer image exists in `/bigdata/stajichlab/shared/singularity`. Adopting it
 would require a second environment or a container runtime that this
 standalone tool does not otherwise need. Augustus installs like every other
 binary `detect` already shells out to.
+
+---
+
+## Addendum 4 — btbA out of the denominator (curator-ruled, implemented, with a caveat)
+
+Curator ruling, J. Stajich, 2026-09-20: *"btbA shouldn't count in the
+denominator but we should know when it is present."*
+
+Implemented as a general `optional: true` flag on a gene in `order.yml`,
+alongside the existing `genes_not_searchable` idea. The two differ in reason:
+unsearchable means "the run could not have found it", optional means "the
+biology does not require it". An optional gene is:
+
+* **out of `fraction_found` entirely** — numerator and denominator both, so
+  it can neither penalise a locus by its absence nor manufacture a score by
+  its presence;
+* **still searched, and still reported** in `genes_found`, and named again in
+  the new `FamilyScore.genes_optional_found` so the arithmetic stays
+  auditable (`fraction_found` is no longer derivable from `genes_found` and
+  `genes_missing` alone — subtract the optional list first);
+* **never listed in `genes_missing`** when absent.
+
+`btbA` is the only gene marked optional. 481 tests passing (474 -> 481).
+
+### Verification on the 23 ground-truth genomes
+
+Re-ran all 23 annotated with the change. **Confirmed, and it confirms the
+inference in Addendum 2:**
+
+| | before | after |
+|---|---|---|
+| `btbA` in `genes_missing` | **16/23** (exactly the 16 Plus genomes) | **0/23** |
+| idiomorph correct | 23/23 | **23/23** |
+| locus on truth scaffold | 23/23 | **23/23** |
+| confidence | 18 high / 5 medium | 18 high / 5 medium |
+| `locus_class` | 23 `mat_locus` | 23 `mat_locus` |
+| **total loci reported** | **23** | **31** |
+
+The measured 5/6 = 0.8333 for a complete Plus locus lacking `btbA` is no
+longer inferred — it is what the old code returned in the failing test.
+
+### The caveat: +8 spurious loci, on a boundary the handoff already named
+
+Eight of the 23 genomes gained a second locus. All eight are **the same
+element**: `sexP|sexM|glrA`, span ~6,480 bp, max identity 69.0 and min
+31.148 — identical numbers across eight *Mucor*/*Actinomucor* genomes, so
+this is one conserved HMG-paralog region, not eight findings. None is on the
+truth scaffold. All are `mat_locus`, `strict`, `medium`,
+`idiomorph=undetermined`.
+
+The arithmetic is exactly the case the `detect-scoring-idiomorph` handoff
+flagged. Finding both sexP and sexM means `expected_genes_for_idiomorph`
+returns the FULL roster:
+
+* before: 3 found of 7 expected = **0.429**, below the 0.5 floor, rejected;
+* after: 3 found of 6 expected = **0.500**, and the floor test is `<`, not
+  `<=`, so it survives.
+
+The handoff's own words: *"3/6 = 0.500 — the rejection boundary, surviving
+only because the floor test is `<` and not `<=`."* Removing `btbA` from the
+denominator pushed this class of cluster onto that boundary.
+
+**This is a precision cost, not an error in the ruling.** The ruling is right
+— `btbA`'s absence should not penalise a Plus locus, and 16 of 23 genomes
+were being penalised. But it needs a companion decision:
+
+1. change the fraction floor from `<` to `<=`, which removes exactly these
+   0.500 cases; or
+2. raise the floor above 0.5; or
+3. accept the extra calls, since they are `undetermined` and a consumer can
+   filter on that.
+
+**Not changed — this is a curator decision about the floor, not about
+`btbA`.** Option 1 is the narrowest and matches what the handoff implies was
+intended, but I have not measured what else a `<=` test would reject, and it
+should not be changed without that measurement.

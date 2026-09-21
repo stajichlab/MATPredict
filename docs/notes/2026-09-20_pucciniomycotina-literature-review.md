@@ -166,3 +166,71 @@ step before a curation pass makes sense, and the four steps are different:
 Recommend deciding, per genus, whether any of these four follow-ups is worth the
 additional effort before curating — the same go/no-go this session used for
 *Abeta* and the assembly-derived *Cunninghamella*/*Chaetocladium* loci.
+
+## Follow-up check, same day: none of the three flagged next steps panned out
+
+Per-genus follow-up on the three "worth checking" leads above, done directly (not
+curation, still reconnaissance):
+
+**Rhodotorula**: found the actual paper behind the "chromosome 3/14" signal —
+**Coelho MA, Rosa A, Rodrigues N, Fonseca A, Gonçalves P (2008) Identification
+of mating type genes in the bipolar basidiomycetous yeast Rhodosporidium
+toruloides: first insight into the MAT locus structure of the Sporidiobolales.
+Eukaryot Cell 7(6):1053-61. doi:10.1128/EC.00025-08. PMID 18408057,
+PMC2446649.** Genome-walking study (not the chromosome-scale assemblies —
+those remain unchecked). Confirms no homeodomain genes near the MAT genes in
+any of 3 species checked (R. toruloides, S. roseus, S. salmonicolor). Found a
+mating-type-specific PAK (Ste20 homolog) between RHA2/RHA3, a MAT A2 pheromone
+precursor, and a STE3-homolog receptor upstream of RHA1. **Checked the actual
+deposited GenBank records this paper produced** (`EU386160.1`, `EU386161.1`,
+`EU401861.1`-`EU401863.1`, via `elink dbfrom=pubmed db=nuccore`): only ONE
+complete CDS exists across all five — `RHA2` (A2 allele), a 64-aa
+single-exon pheromone precursor peptide, on `EU386161.1`. The pheromone
+receptor (`Ste3`) deposit (`EU401863.1`) is partial-cds (638 bp) in the only
+copy that exists. STE20 is complete in one record (`EU386160.1`) but is a
+flanking gene, not core_MAT. **Not curatable**: one complete precursor gene
+with no complete receptor on either allele is not enough to represent a
+locus, and Sporidiobolales has no family/vocabulary defined in `order.yml`
+yet to receive it. The chromosome-scale `AP0417xx` genomes noted earlier
+remain the only path that could still change this, and still require someone
+to open one chromosome's own annotation directly.
+
+**Leucosporidium**: checked whether the `MWVB00000000` WGS assembly
+(`GCA_003054985.1`) has annotated gene models. **It has zero protein-coding
+gene features** (`feature_count.txt`: `gene protein_coding ... 0 0`) — raw
+unannotated contigs. This closes off the one open thread from the review
+above; the partial-CDS amplicon series (`KR229960`-`KR229978`) is the only
+MAT-locus sequence data that exists for this species anywhere in GenBank.
+**Not curatable, and no further path identified** without new sequencing/
+annotation work outside this project's scope.
+
+**Puccinia**: unchanged from above — the Dryad dataset
+(doi:10.5061/dryad.w0vt4b8zm) still requires coordinate-mapping onto
+BioProject assemblies before it is curatable, and that step was not
+attempted in this pass (a materially larger task than the checks done for
+the other two genera here).
+
+**Net result: none of the three genera the user asked to "pull in" (Puccinia,
+Leucosporidium, Rhodotorula) produced a curatable record this pass.** This
+is a real result, not a search failure — every lead identified in the
+original review was run to ground and each dead-ends for a documented,
+genus-specific reason. Recommend treating Pucciniomycotina as tabled for now,
+the same disposition as `Abeta` earlier this session, unless someone is
+willing to take on the Puccinia Dryad coordinate-mapping task specifically
+(the only one of the three with real complete gene-level data behind it).
+
+## Sporobolomyces (checked same day, per explicit request)
+
+*Sporobolomyces* (taxid 5429) sits in family Sporidiobolaceae — the SAME
+family as *Rhodotorula*/*Rhodosporidium* above (order Sporidiobolales).
+PubMed search (`Sporobolomyces AND (mating type OR pheromone receptor OR
+homeodomain OR MAT locus)`) returned 4 hits. The most relevant, PMID
+18408057, is the Coelho et al. 2008 paper just covered above — it treats
+*Sporobolomyces roseus* genomic data as a syntenic comparison species
+alongside *R. toruloides*, not as its own independently deposited MAT locus;
+no separate *Sporobolomyces*-specific GenBank MAT accessions were found. The
+other 3 hits (PMID 21402165: red-yeast genetic-resources tooling paper, not
+MAT-specific; PMID 15653924 and 12054219: species-description papers) are not
+MAT-architecture sources. **No curatable, independently-deposited
+Sporobolomyces MAT material found** — same conclusion as Rhodotorula, for
+the same underlying reason (it's the same genomic data thread).

@@ -1202,8 +1202,15 @@ def run_pipeline(
     # destroying a real locus by cutting it in two, and nothing downstream can
     # rejoin the halves. An explicit `max_gap` from the caller still wins; None
     # means derive.
+    #
+    # The routing mode qualifies the maximum: on `phylum_fallback` and
+    # `exhaustive` the default stands instead, because a failed route gives no
+    # basis for inheriting the widest locus's gap. See
+    # `derive_max_cluster_gap`'s docstring for the measured reason (the 120 kb
+    # Tremellales MAT locus would otherwise cluster every unrouted
+    # Basidiomycota genome at 120 kb).
     if max_gap is None:
-        max_gap = derive_max_cluster_gap(families)
+        max_gap = derive_max_cluster_gap(families, routing_mode=routing.routing_mode)
     record_families = load_record_families(db_root)
     protein_lengths = _curated_protein_lengths(db_root, families, record_families)
     short_orf_by_family = _short_orf_genes(

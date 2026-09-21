@@ -230,8 +230,11 @@ def load_all_families(db_root: Path) -> list[Family]:
     return families
 
 
-def derive_max_cluster_gap(families: list[Family]) -> int:
-    """The clustering gap for a run over `families`: the MAXIMUM of their gaps.
+def derive_max_cluster_gap(
+    families: list[Family], routing_mode: str | None = None
+) -> int:
+    """The clustering gap for a run over `families`: the MAXIMUM of their gaps,
+    EXCEPT on a failed route, where the default stands instead.
 
     The maximum, not the minimum or a per-family value, because the two errors
     are not symmetric. Taking too LARGE a gap under-splits -- two neighbouring
@@ -250,7 +253,34 @@ def derive_max_cluster_gap(families: list[Family]) -> int:
 
     With no families (nothing routed) there is nothing to derive from, so the
     default stands.
+
+    `routing_mode` qualifies all of the above, added 2026-09-21. The "maximum
+    is the safe end" argument holds only among families that could plausibly
+    BE this genome's locus -- which is exactly what a matched route
+    establishes and a failed one does not. On `phylum_fallback` and
+    `exhaustive` the run searches every family in the phylum precisely
+    BECAUSE nothing matched, so inheriting the widest outlier's gap is not a
+    conservative choice, it is an arbitrary one.
+
+    This became load-bearing when the curator set the Tremellales `MAT` gap
+    to 120 kb (the Cryptococcus MAT locus really does span ~104 kb with a
+    74.9 kb internal gene gap, measured from AF542531.2/AF542530.2). Without
+    this qualifier that one locus would cluster EVERY unrouted Basidiomycota
+    genome at 120 kb -- roughly 1,299 BFD genomes even after order-level
+    scoping, since Boletales, Polyporales, Sporidiobolales, Trichosporonales,
+    Pucciniales and Cantharellales have no curated record between them.
+
+    `explicit_phylum` is deliberately NOT capped: `--phylum` is an operator
+    assertion about the query, not a failed lookup, and the validated
+    Mucoromycota workflow runs `--phylum Mucoromycota` and depends on that
+    locus's curated 50 kb gap. Capping it would silently halve that and break
+    the 23/23 ground-truth result.
+
+    Omitting `routing_mode` keeps the old behaviour exactly, so callers that
+    do not know the mode are unaffected.
     """
+    if routing_mode in ("phylum_fallback", "exhaustive"):
+        return DEFAULT_MAX_CLUSTER_GAP_BP
     return max((f.max_cluster_gap_bp for f in families), default=DEFAULT_MAX_CLUSTER_GAP_BP)
 
 

@@ -1,0 +1,119 @@
+record_id: 28985_nrrl-y-1140_MATsc_HMLalpha
+record_version: 1
+taxonomy:
+  taxid: 28985
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Saccharomycetaceae;g__Kluyveromyces;s__Kluyveromyces_lactis
+  lineage_resolved_date: '2026-09-21'
+organism:
+  species: Kluyveromyces lactis
+  strain:
+    name: NRRL Y-1140
+    known: true
+    culture_collection_ids:
+    - NRRL Y-1140
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATsc
+  idiomorphs:
+  - MATalpha
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: MATALPHA1->MATALPHA2
+    definition_note: 'The alpha idiomorph of Kluyveromyces lactis, taken from the SILENT HML donor cassette,
+      because the reference strain is MATa at MAT and therefore carries no alpha allele there. Same precedent
+      as 4932_s288c_MATsc_HMRa in reverse: HML sequence is what gene conversion copies into MAT when a
+      cell switches to alpha, so the HML-encoded alpha1/alpha2 proteins ARE the MATalpha proteins. Confirmed
+      as HML by blastn of the deposited cryptic cassette AF195066.1 (HMLalpha) against the genome: 99.928%
+      over 9,671 bp at NC_006039.1:20,393-30,060, subtelomeric on the left arm and abutting CHA1 (KLLA0_C00440g)
+      -- the same CHA1-HML adjacency S. cerevisiae shows. NOT curated here: alpha3 (XP_452212.1, 26,146-28,839),
+      a domesticated transposase inside this cassette required for K. lactis switching (Barsoum et al.
+      2010 Genes Dev 24:33-44, PMID 20008928). It is a real gene with a real accession and would be genuinely
+      idiomorph-informative in this genus, but it has no roster slot in MATsc and needs a curator ruling
+      first. Citations: Astrom et al. 2000 (PMID 10978277); Butler et al. 2004 (PMID 14745027).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NC_006039.1
+        seq_region: NC_006039.1
+      start: 24124
+      end: 25803
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MATALPHA1
+  protein_accession: ncbi_protein:XP_452210.1
+  role: core_MAT
+  present: true
+  locus_tag: KLLA0_C00352g
+  segment_index: 0
+  start: 24124
+  end: 24909
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: MATALPHA2
+  protein_accession: ncbi_protein:XP_452211.1
+  role: core_MAT
+  present: true
+  locus_tag: KLLA0_C00374g
+  segment_index: 0
+  start: 25132
+  end: 25803
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: complete DNA sequencing of the MAT locus and HMLalpha silent cassette
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+  boundaries:
+    tier: 1
+    experimental_method: 'Complete locus sequencing (Astell et al. 1981). Coordinates on the modern S288C
+      reference assembly independently reconfirmed by the curator via NCBI efetch against NC_001135.5.
+
+      '
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: genetic/molecular characterization of MATalpha vs MATa cell identity; HO-endonuclease
+      switching mechanism
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+    - pmid: null
+      doi: 10.1016/0092-8674(83)90219-2
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NC_001135.5
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 7034964|4932|MATsc|MATalpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

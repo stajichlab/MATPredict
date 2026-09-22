@@ -1,0 +1,129 @@
+record_id: 28985_nrrl-y-1140_MATsc_MATa
+record_version: 1
+taxonomy:
+  taxid: 28985
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Saccharomycetaceae;g__Kluyveromyces;s__Kluyveromyces_lactis
+  lineage_resolved_date: '2026-09-21'
+organism:
+  species: Kluyveromyces lactis
+  strain:
+    name: NRRL Y-1140
+    known: true
+    culture_collection_ids:
+    - NRRL Y-1140
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATsc
+  idiomorphs:
+  - MATa
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: sla2->MATA1->MATA2
+    definition_note: 'The ACTIVE MAT locus of Kluyveromyces lactis NRRL Y-1140 (= CBS 2359), on chromosome
+      C. Idiomorph established by SEQUENCE, not by annotation naming: RefSeq leaves these two CDSs unnamed,
+      so the deposited cryptic-cassette sequence AF195067.1 (HMRa) was blastn''d against the genome --
+      it matches chromosome B at 99.855% (HMR) and the MAT position on chromosome C at 100.000% over 3,004
+      bp, so the MAT position carries Ya. sla2 is genuinely adjacent here, unlike in Saccharomyces where
+      SLA2 is not even on the MAT chromosome; that is why sla2 is a bonus flank (`optional`) in this family
+      rather than excluded. Curated 2026-09-21 to close the measured allele-calling gap: Kluyveromyces
+      resolved only 47-64% of confident loci with S. cerevisiae/Zygosaccharomyces references, and on held-out
+      K. marxianus the only MATA2 hit landed on the SILENT alpha cassette. Citations: Butler et al. 2004
+      PNAS 101:1632-1637 (PMID 14745027); Astrom et al. 2000 Genetics 156:81-91 (PMID 10978277).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NC_006039.1
+        seq_region: NC_006039.1
+      start: 277789
+      end: 282183
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: sla2
+  protein_accession: ncbi_protein:XP_452336.1
+  role: flanking_conserved
+  present: true
+  locus_tag: KLLA0_C03113g
+  segment_index: 0
+  start: 277789
+  end: 279804
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MATA1
+  protein_accession: ncbi_protein:XP_452337.1
+  role: core_MAT
+  present: true
+  locus_tag: KLLA0_C03135g
+  segment_index: 0
+  start: 279869
+  end: 280555
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: MATA2
+  protein_accession: ncbi_protein:XP_452338.1
+  role: core_MAT
+  present: true
+  locus_tag: KLLA0_C03157g
+  segment_index: 0
+  start: 281410
+  end: 282183
+  strand: +
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: complete DNA sequencing of the MAT locus and HMLalpha silent cassette
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+  boundaries:
+    tier: 1
+    experimental_method: 'Complete locus sequencing (Astell et al. 1981). Coordinates on the modern S288C
+      reference assembly independently reconfirmed by the curator via NCBI efetch against NC_001135.5.
+
+      '
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: genetic/molecular characterization of MATalpha vs MATa cell identity; HO-endonuclease
+      switching mechanism
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+    - pmid: null
+      doi: 10.1016/0092-8674(83)90219-2
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NC_001135.5
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 7034964|4932|MATsc|MATalpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

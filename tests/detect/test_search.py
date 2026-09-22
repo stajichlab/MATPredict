@@ -35,7 +35,7 @@ RECORD_FAMILIES = {"5270_521_aLocus_a1": FAMILY.key}
 # protein. --outfmt is therefore:
 #   6 qseqid sseqid pident scovhsp qtitle
 # Verified against diamond v2.2.6: qtitle is the WHOLE defline, query id included.
-DIAMOND_TSV = "query1\t5270_521_aLocus_a1|gene0|mfa1\t95.0\t88.0\tquery1 contigA:100-400:+\n"
+DIAMOND_TSV = "query1\t5270_521_aLocus_a1|gene0|mfa1\t95.0\t88.0\t1e-50\t180.5\tquery1 contigA:100-400:+\n"
 
 
 def _result(stdout: str, returncode: int = 0, stderr: str = ""):
@@ -73,6 +73,8 @@ def test_search_fast_path_parses_diamond_output(tmp_path):
             end=400,
             strand="+",
             identity=95.0,
+            bitscore=180.5,
+            evalue=1e-50,
             reference_record_id="5270_521_aLocus_a1",
             method="diamond_proteome",
             coverage=88.0,
@@ -102,7 +104,7 @@ def test_search_fast_path_builds_a_diamond_database_first(tmp_path):
 
 
 def test_search_fast_path_ignores_hits_for_unknown_genes(tmp_path):
-    tsv = "query1\t5270_521_aLocus_a1|gene9|unknown_gene\t80.0\t50.0\tquery1 contigA:1-2:+\n"
+    tsv = "query1\t5270_521_aLocus_a1|gene9|unknown_gene\t80.0\t50.0\t1e-10\t60.1\tquery1 contigA:1-2:+\n"
 
     def fake_runner(cmd, **kwargs):
         return _result("" if "makedb" in cmd else tsv)
@@ -144,7 +146,7 @@ def test_search_fast_path_raises_on_nonzero_returncode(tmp_path):
     ],
 )
 def test_search_fast_path_raises_clear_error_on_non_conforming_defline(tmp_path, defline):
-    tsv = f"query1\t5270_521_aLocus_a1|gene0|mfa1\t95.0\t88.0\t{defline}\n"
+    tsv = f"query1\t5270_521_aLocus_a1|gene0|mfa1\t95.0\t88.0\t1e-50\t180.5\t{defline}\n"
 
     def fake_runner(cmd, **kwargs):
         return _result("" if "makedb" in cmd else tsv)
@@ -201,7 +203,7 @@ def test_real_colliding_gene_names_are_attributed_to_the_right_family(tmp_path):
         assert "pheromone_receptor" in {g["name"] for g in family.genes}
 
     tsv = "".join(
-        f"q{i}\t{record_id}|gene1|pheromone_receptor\t90.0\t80.0\tq{i} c1:{i * 1000}-{i * 1000 + 500}:+\n"
+        f"q{i}\t{record_id}|gene1|pheromone_receptor\t90.0\t80.0\t1e-30\t120.0\tq{i} c1:{i * 1000}-{i * 1000 + 500}:+\n"
         for i, record_id in enumerate([pr_record, balpha_record, bbeta_record], start=1)
     )
 
@@ -236,7 +238,7 @@ def test_real_colliding_Z_gene_is_attributed_to_aalpha_not_abeta(tmp_path):
         _real_family(families, FamilyKey("Basidiomycota", "Aalpha")),
         _real_family(families, FamilyKey("Basidiomycota", "Abeta")),
     ]
-    tsv = f"q1\t{aalpha_record}|gene0|Z\t99.0\t95.0\tq1 c1:1-500:+\n"
+    tsv = f"q1\t{aalpha_record}|gene0|Z\t99.0\t95.0\t1e-60\t200.0\tq1 c1:1-500:+\n"
 
     def fake_runner(cmd, **kwargs):
         return _result("" if "makedb" in cmd else tsv)
@@ -262,8 +264,8 @@ def test_real_colliding_Z_gene_is_attributed_to_aalpha_not_abeta(tmp_path):
 # columns, and a minus-strand HSP reports sstart > send with sframe -1.
 TBLASTN_TSV = (
     # qseqid                sseqid  pident length sstart send sframe
-    "rec1|gene0|mfa1\tcontigA\t95.0\t40\t400\t100\t-1\n"  # minus strand: sstart > send
-    "rec1|gene1|pra1\tcontigA\t90.0\t300\t3600\t4914\t1\n"  # plus strand
+    "rec1|gene0|mfa1\tcontigA\t95.0\t40\t42\t95\t1e-20\t90.5\t400\t100\t-1\n"  # minus strand: sstart > send
+    "rec1|gene1|pra1\tcontigA\t90.0\t300\t357\t84\t1e-90\t310.0\t3600\t4914\t1\n"  # plus strand
 )
 
 
@@ -693,7 +695,7 @@ def test_polish_with_miniprot_selects_the_best_by_miniprot_score_not_identity(tm
 def test_defline_location_is_found_alongside_a_free_text_description(tmp_path):
     """A real proteome defline often carries a description after the location."""
     tsv = (
-        "query1\t5270_521_aLocus_a1|gene0|mfa1\t95.0\t88.0\t"
+        "query1\t5270_521_aLocus_a1|gene0|mfa1\t95.0\t88.0\t1e-50\t180.5\t"
         "query1 contigA:100-400:+ pheromone precursor mfa1\n"
     )
 

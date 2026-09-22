@@ -101,11 +101,21 @@ loci:
       # ~95 bp pheromone ORF was reported as 3 distinct genes, giving 3/5 = 0.60
       # against the 0.50 ambiguity floor and admitting 927 spurious loci.
       #
-      # MFalpha3 is NOT collapsed: it differs from MFalpha1 by one residue
-      # (97.4% identity), so it is a distinguishable gene. The rule is identical
-      # sequence, not similar sequence.
-      - {name: MFalpha, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"], aliases: [MFalpha1, MFalpha2]}
-      - {name: MFalpha3, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
+      # MFalpha3 is folded in too, per the curator's ruling of 2026-09-21,
+      # even though it is NOT byte-identical -- it differs from MFalpha1 by one
+      # residue (97.4% identity over 100% coverage). The group, not the
+      # individual paralog, is the unit of biological interest here, and the
+      # curator intends a consensus or per-group HMM as the eventual search
+      # strategy for these precursors.
+      #
+      # This does NOT reduce sensitivity. Collapsing is a change of NAME, not
+      # of query set: `build_reference_fasta` deduplicates on
+      # (record_id, canonical name, SEQUENCE), so MFalpha3's distinct sequence
+      # is still emitted and still searched -- it simply reports as MFalpha.
+      # Two reference sequences under one gene name is the ordinary case
+      # (the same gene curated from two strains) and is what keeps one genomic
+      # ORF from being counted three times.
+      - {name: MFalpha, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"], aliases: [MFalpha1, MFalpha2, MFalpha3]}
       # MFa1, MFa2 and MFa3 are three byte-identical 42 aa proteins in
       # 40410_jec20_MAT_a. Same reasoning as MFalpha above.
       - {name: MFa, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"], aliases: [MFa1, MFa2, MFa3]}

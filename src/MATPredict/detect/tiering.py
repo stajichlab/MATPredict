@@ -33,6 +33,34 @@ def has_flanking_conserved(family: Family) -> bool:
     return any(g["role"] == "flanking_conserved" for g in family.genes)
 
 
+def _searchable_flanking_conserved(family: Family, score: FamilyScore) -> bool:
+    """Does this family have a `flanking_conserved` gene the run could actually
+    have found?
+
+    The flanking branch below caps a call at Medium when a declared flank is
+    absent. That is only evidence of absence if the run looked for it. A flank
+    with no reference protein, or one the curator has taken off the search list
+    (`exclude_from_search`), lands in `genes_not_searchable` and must not cap
+    anything -- the same reasoning `assign_tier` already applies to the core
+    requirement, and the same bug shape as counting `genes_not_searchable`
+    against a locus.
+
+    Load-bearing for Saccharomyces. The curator ruled on 2026-09-21 that this
+    clade has no usable flanking GENE: S. cerevisiae's three cassettes
+    (HML/MAT/HMR) are told apart by flanking DNA -- the X/Y/Z homology boxes --
+    not by neighbours, and the two flanks MATsc previously declared were
+    measured wrong on the S288C reference (SLA2 is not on chromosome III at
+    all; CHA1 abuts HML, not MAT). Both are now excluded from search, and
+    without this a perfect two-gene MATsc call would be capped at Medium for
+    missing a flank nothing ever searched for.
+    """
+    unsearchable = set(score.genes_not_searchable)
+    return any(
+        g["role"] == "flanking_conserved" and g["name"] not in unsearchable
+        for g in family.genes
+    )
+
+
 def assign_tier(
     score: FamilyScore,
     family: Family,
@@ -100,7 +128,7 @@ def assign_tier(
         tier = "low"
     elif any_gene_unpolished:
         tier = "medium"
-    elif has_flanking_conserved(family):
+    elif _searchable_flanking_conserved(family, score):
         flanking_found = any(
             g["role"] == "flanking_conserved" and g["name"] in score.genes_found
             for g in family.genes

@@ -140,20 +140,44 @@ loci:
     idiomorph_values: ["MATalpha", "MATa"]
     taxonomic_scope: [4893]
     genes:
-      - {name: MATALPHA1, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
-      - {name: MATALPHA2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      # Curator's ruling, 2026-09-21: in Saccharomyces "only find the key 2
+      # genes (and recognize there are silent and active copies, I would just
+      # like a report of all these loci and allele)".
+      #
+      # WHY NOT FLANKING GENES HERE. S. cerevisiae carries THREE cassettes on
+      # chromosome III with the same gene content -- HML (12,386-13,809), MAT
+      # (199,546-200,969) and HMR (293,179-294,321) -- and WHICH ONE sits at
+      # the MAT position is the mating type. Gene content cannot answer that,
+      # and a real run on S288C reports all three. The discriminator here is
+      # the flanking DNA (the X/Y/Z homology boxes used by HO-triggered gene
+      # conversion), not flanking GENES. So this family does not try to pick
+      # the active cassette: it reports each one with its allele.
+      #
+      # alpha1/alpha2 came from the Zygosaccharomyces rouxii record and are the
+      # SAME TWO GENES under another species' naming. Measured on S288C:
+      # MATALPHA1 (100%) and alpha1 (65.2%) hit ONE ORF; MATALPHA2 (100%) and
+      # alpha2 (52.3%) hit the other. Four names on two genes inflated
+      # fraction_found exactly as MFa1/2/3 did in Tremellales. Aliased, so one
+      # ORF counts once and both reference sequences are still searched.
+      - {name: MATALPHA1, role: core_MAT, present_in_idiomorphs: ["MATalpha"], aliases: [alpha1]}
+      - {name: MATALPHA2, role: core_MAT, present_in_idiomorphs: ["MATalpha"], aliases: [alpha2]}
       - {name: MATA1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
       - {name: MATA2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
-      - {name: alpha1, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
-      - {name: alpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
       # sla2 here is the same gene as Ascomycota:MAT's SLA2 under this family's own
       # lowercase name, and takes the same class by the same 2026-09-19 curator ruling
       # recorded on that entry above (curator described SLA2 as "cytoskeleton assembly
       # control protein", then chose the gene-named option sla2_homolog from three
       # offered namings). NOT VERIFIED: no external publication was consulted, and the
       # curator did not separately rule on this lowercase spelling.
-      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog}
-      - {name: cha1, role: flanking_variable}
+      # Both flanks are WRONG for Saccharomyces and are off the search list.
+      # Measured on the S288C reference (chromosome III NC_001135.5, 150
+      # annotated genes): SLA2 is not on chromosome III AT ALL, and CHA1
+      # (15,798-16,880) abuts HML, not MAT -- anchoring on it would select the
+      # silent donor cassette. Both came from the Z. rouxii record, where the
+      # architecture may differ; they stay declared so that record's own gene
+      # names remain attributable, and a later pass can re-scope them.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, exclude_from_search: true}
+      - {name: cha1, role: flanking_variable, exclude_from_search: true}
   - locus_name: "MATyl"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "B"]

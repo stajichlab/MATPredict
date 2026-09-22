@@ -1,26 +1,38 @@
 #!/usr/bin/bash -l
-#SBATCH --job-name=matpredict-tremellales
+#SBATCH --job-name=matpredict-panel
 #SBATCH --partition=short
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32gb
 #SBATCH --time=2:00:00
-#SBATCH --output=logs/tremellales_%A.log
+#SBATCH --output=logs/panel_%A.log
 #
-# Run `matpredict detect` over every Tremellales genome in the BFD library.
+# Run `matpredict detect` over every BFD genome in one clade.
+#
+# The clade is chosen by any column of samples.csv, so the same script covers a
+# genus, a family, an order or a class:
 #
 #   cd /bigdata/stajichlab/jstajich/projects/MATPredict
-#   sbatch scripts/run_tremellales_panel.slurm
+#   sbatch scripts/run_clade_panel.slurm                      # Tremellales (default)
+#   sbatch --export=ALL,RANK=GENUS,CLADE=Saccharomyces        scripts/run_clade_panel.slurm
+#   sbatch --export=ALL,RANK=GENUS,CLADE=Zygosaccharomyces    scripts/run_clade_panel.slurm
+#   sbatch --export=ALL,RANK=CLASS,CLADE=Saccharomycetes,PARTITION=stajichlab \
+#          --partition=stajichlab --time=12:00:00             scripts/run_clade_panel.slurm
+#
+# NOTE on "the whole Saccharomycotina subphylum": samples.csv has a SUBPHYLUM
+# column but it is EMPTY in all 23,683 rows. Saccharomycotina is split across
+# CLASS values there -- Saccharomycetes (2,648) and Pichiomycetes (2,967) --
+# so select by CLASS, or run it twice. Note also that `MATsc` is scoped to
+# taxid 4893 = Saccharomycetaceae, so genomes outside that family fall to
+# phylum_fallback and are searched against every Ascomycota family.
 #
 # Submit from the repo root: SLURM opens logs/tremellales_%A.log relative to
 # the submission directory and does so BEFORE this script runs, so the job
 # fails immediately if logs/ is missing. It is committed with a .gitkeep.
 #
 # Override anything on the command line, e.g. a different clade or output dir:
-#   sbatch --export=ALL,ORDER=Agaricales,OUT_DIR=$PWD/results/agaricales \
-#          scripts/run_tremellales_panel.slurm
-#
+
 # Measured budget: ~20 s/genome on a chromosome-level assembly after the
 # 2026-09-21 roster trim (STE20 off the search list took a run from 535 s to
 # 19 s). 343 Tremellales genomes at 8-way parallelism is roughly 15-45 min,
@@ -35,8 +47,9 @@ set -uo pipefail
 REPO="${REPO:-/bigdata/stajichlab/jstajich/projects/MATPredict}"
 SAMPLES="${SAMPLES:-/bigdata/stajichlab/shared/projects/BFD/Fungi_BFD/samples.csv}"
 LIBRARY="${LIBRARY:-/bigdata/stajichlab/shared/projects/BFD/Fungi_BFD_runs/input_clean_genomes}"
-ORDER="${ORDER:-Tremellales}"
-OUT_DIR="${OUT_DIR:-$REPO/results/$(date +%Y-%m-%d)_${ORDER,,}_panel}"
+RANK="${RANK:-ORDER}"          # any column of samples.csv: GENUS, FAMILY, ORDER, CLASS...
+CLADE="${CLADE:-${ORDER:-Tremellales}}"
+OUT_DIR="${OUT_DIR:-$REPO/results/$(date +%Y-%m-%d)_${CLADE,,}_panel}"
 THREADS="${SLURM_CPUS_PER_TASK:-4}"
 
 PY="$REPO/.pixi/envs/default/bin/python"
@@ -46,23 +59,26 @@ export PYTHONPATH="$REPO/src"
 # $SCRATCH is node-local NVMe, pre-created per job, and NOT shared between
 # nodes. Genomes are decompressed here and deleted straight after use; only the
 # small YAML reports are copied back to shared storage.
-WORK="${SCRATCH:?SCRATCH is not set -- run this under SLURM}/matpredict_${ORDER}_${SLURM_JOB_ID:-local}"
+WORK="${SCRATCH:?SCRATCH is not set -- run this under SLURM}/matpredict_${CLADE//[^A-Za-z0-9]/_}_${SLURM_JOB_ID:-local}"
 
 mkdir -p "$WORK/fasta" "$OUT_DIR/runs" "$REPO/logs"
 
 echo "repo=$REPO"
-echo "order=$ORDER  samples=$SAMPLES"
+echo "clade=$RANK=$CLADE  samples=$SAMPLES"
 echo "scratch=$WORK"
 echo "out=$OUT_DIR  threads=$THREADS"
 
 # ---------------------------------------------------------------- sample list
 # One "ASMID<TAB>TAXID" line per genome that exists on disk.
-"$PY" - "$SAMPLES" "$LIBRARY" "$ORDER" > "$WORK/panel.tsv" <<'PYEOF'
+"$PY" - "$SAMPLES" "$LIBRARY" "$RANK" "$CLADE" > "$WORK/panel.tsv" <<'PYEOF'
 import csv, os, sys
-samples, library, order = sys.argv[1], sys.argv[2], sys.argv[3]
+samples, library, rank, clade = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 n = kept = 0
-for r in csv.DictReader(open(samples)):
-    if (r.get("ORDER") or "") != order:
+reader = csv.DictReader(open(samples))
+if rank not in (reader.fieldnames or []):
+    sys.exit(f"no column {rank!r} in {samples}; have: {reader.fieldnames}")
+for r in reader:
+    if (r.get(rank) or "") != clade:
         continue
     n += 1
     asmid, taxid = r["ASMID"], (r.get("NCBI_TAXONID") or "").strip()
@@ -71,12 +87,12 @@ for r in csv.DictReader(open(samples)):
     if os.path.exists(os.path.join(library, asmid + ".fa.gz")):
         print(f"{asmid}\t{taxid}")
         kept += 1
-print(f"{order}: {n} rows, {kept} with a genome file", file=sys.stderr)
+print(f"{rank}={clade}: {n} rows, {kept} with a genome file", file=sys.stderr)
 PYEOF
 
 TOTAL=$(wc -l < "$WORK/panel.tsv")
 if [[ "$TOTAL" -eq 0 ]]; then
-    echo "no genomes matched ORDER=$ORDER -- check the spelling against samples.csv" >&2
+    echo "no genomes matched $RANK=$CLADE -- check the spelling against samples.csv" >&2
     exit 1
 fi
 echo "genomes to run: $TOTAL"

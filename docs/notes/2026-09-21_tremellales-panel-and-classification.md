@@ -311,3 +311,71 @@ FIGURE H -- ONE ORF wearing three gene names defeats the evidence floor
   #            0     95  MFa1,MFa2,MFa3                                40.6% t
 
 ```
+
+---
+
+# Addendum — the dedup, measured (2026-09-21)
+
+The pheromone-gene collapse (`MFa` <- MFa1/2/3, `MFalpha` <- MFalpha1/2/3)
+re-run over the same 334 genomes. `results/2026-09-21_tremellales334/`
+holds both: `reports.tar.zst` (before) and `reports_after_dedup.tar.zst`.
+
+## Correction to section 5 of this note
+
+Section 5 above says `EvidenceFloor.min_hits` is what admits these calls.
+**That is wrong.** `EvidenceFloor` gates the Stage-2 polish loop
+(`pipeline.py:1378`, `:1394`). What gates REPORTING is
+`score.fraction_found < ambiguity_floor` (`pipeline.py:1682`, `:1696`).
+Tightening `EvidenceFloor` would have changed polish cost and not one call
+count. The mechanism described in section 5 is otherwise correct: one ORF
+wearing three names inflated `fraction_found` to 3/5 = 0.60 against the 0.50
+floor.
+
+## Measured effect
+
+| | before | after |
+|---|---|---|
+| loci reported | 3,801 | **2,726** (-1,075, -28.3%) |
+| high | 134 | **134** |
+| medium | 1,384 | **435** |
+| low | 2,283 | 2,157 |
+| single-interval calls | 3,210 | 2,157 |
+| genomes with >=1 high call | 131 | **131** |
+
+**All 134 high calls are byte-identical before and after** — same genome, same
+coordinates, 0 lost, 0 gained.
+
+The review that proposed this projected ~927 calls removed and said the 2,283
+lone-SXI1/SXI2 low calls would be untouched. Both were close but not exact:
+1,075 were removed, and 126 low calls went too. That projection was derived
+from report fields rather than a run, and said so.
+
+## The classes are now cleanly stratified by interval count
+
+| conf | n | single-interval | median intervals | median span | median best identity |
+|---|---|---|---|---|---|
+| high | 134 | **0** | 4 | 44,536 bp | 94.7% |
+| medium | 435 | **0** | 2 | 42,506 bp | 40.5% |
+| low | 2,157 | **2,157** | 1 | 152 bp | 32.7% |
+
+Every remaining medium call is multi-interval with a median span of 42 kb —
+these look like genuine partial loci, not noise. Every low call is a single
+~150 bp HSP. Before the dedup, medium was a mixture of the two.
+
+A consequence worth noting for the open interval-gate question: a
+`distinct_intervals >= 2` rule would now remove exactly the low tier and
+nothing else, which is far more predictable than it would have been before.
+
+Top remaining medium gene sets: `[SXI1,SXI2]` 121, `[STE3,SXI2]` 82,
+`[MFalpha,STE3]` 65, `[STE3,SXI1]` 41, `[MFa,STE3]` 38. The 121 `[SXI1,SXI2]`
+pairs are both idiomorphs' HD genes in one call and deserve their own look.
+
+## Still not established
+
+* **No ground truth for 332 of the 334.** The stratification above is
+  population structure, not accuracy. Nothing here shows the 435 mediums are
+  real partial loci rather than consistent noise.
+* **Nothing about Kwoniella architecture.** Still 0 high calls outside
+  *Cryptococcus*; the dedup does not change reference coverage.
+* **`mat_locus` is still unreachable** for this family (section 6), so every
+  one of these 2,726 calls is still `idiomorph_gene_only`.

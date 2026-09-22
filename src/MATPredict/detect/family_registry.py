@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import hashlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
 
@@ -97,6 +97,16 @@ class Family:
     genes: list[dict]
     taxonomic_scope: list[int]
     max_cluster_gap_bp: int = DEFAULT_MAX_CLUSTER_GAP_BP
+    #: Curated gene name -> the roster's canonical name for it. Built from each
+    #: gene entry's optional `aliases:` list, plus every canonical name mapping
+    #: to itself, so a caller can look any name up without a special case.
+    #:
+    #: Exists because a curated record deposits the gene name its PUBLICATION
+    #: used, and several of those can be one gene. In 40410_jec20_MAT_a,
+    #: MFa1/MFa2/MFa3 are three byte-identical 42 aa proteins; no ranking rule
+    #: can separate them, so they are one roster gene with three aliases. The
+    #: records keep their deposited names; only the roster collapses.
+    gene_aliases: dict[str, str] = field(default_factory=dict)
     """How far apart two hits of this family may be and still be one locus.
 
     This is curation data, not a tuning knob, which is why it lives on the
@@ -198,6 +208,24 @@ def available_phyla(db_root: Path) -> list[str]:
     return sorted(names)
 
 
+def _gene_alias_map(genes: list) -> dict[str, str]:
+    """{curated gene name -> canonical roster name}, including each canonical
+    name mapping to itself so callers need no special case.
+
+    Tolerates a gene entry that is not a mapping (some order.yml fixtures
+    declare a bare name); such an entry contributes nothing.
+    """
+    mapping: dict[str, str] = {}
+    for gene in genes or []:
+        if not isinstance(gene, dict) or "name" not in gene:
+            continue
+        canonical = gene["name"]
+        mapping[canonical] = canonical
+        for alias in gene.get("aliases") or []:
+            mapping[alias] = canonical
+    return mapping
+
+
 def load_all_families(db_root: Path) -> list[Family]:
     """Read every db/<Phylum>/order.yml and flatten it into Family records."""
     families: list[Family] = []
@@ -215,6 +243,11 @@ def load_all_families(db_root: Path) -> list[Family]:
                     max_cluster_gap_bp=locus.get(
                         "max_cluster_gap_bp", DEFAULT_MAX_CLUSTER_GAP_BP
                     ),
+                    # Built eagerly, so it must tolerate whatever `genes` holds:
+                    # this loader passes the list through unnormalised and some
+                    # callers declare a gene as a bare name rather than a
+                    # mapping. A non-mapping entry simply has no aliases.
+                    gene_aliases=_gene_alias_map(locus.get("genes", [])),
                     min_idiomorph_margin=locus.get(
                         "min_idiomorph_margin", DEFAULT_MIN_IDIOMORPH_MARGIN
                     ),

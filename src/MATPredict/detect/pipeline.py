@@ -299,6 +299,11 @@ def _curated_protein_lengths(
     per-record files reference_fasta.py concatenates -- not its rewritten output).
     """
     expected_by_family = {f.key: {g["name"] for g in f.genes} for f in families}
+    # Curated records carry the gene name their publication deposited; the
+    # roster may have collapsed several of those onto one canonical name (see
+    # `Family.gene_aliases`). Resolve through it so a collapsed gene's length
+    # is found rather than silently skipped by the `expected_by_family` test.
+    aliases_by_family = {f.key: f.gene_aliases for f in families}
     longest: dict[tuple[FamilyKey, str], int] = {}
 
     for faa in db_root.glob("*/*/*/proteins.faa"):
@@ -312,7 +317,9 @@ def _curated_protein_lengths(
             if family_key is None or family_key not in expected_by_family:
                 continue
             parts = dict(p.split("=", 1) for p in head_fields[1:] if "=" in p)
-            name = parts.get("name")
+            name = aliases_by_family.get(family_key, {}).get(
+                parts.get("name"), parts.get("name")
+            )
             if name not in expected_by_family[family_key]:
                 continue
             length = len(seq.strip().replace("\n", ""))

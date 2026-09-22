@@ -63,7 +63,18 @@ def validate_gene_vocabulary(record: dict, order_doc: dict) -> list[str]:
     if locus_entry is None:
         return [f"no order.yml locus entry named '{locus_name}'"]
 
-    declared = {g["name"] for g in locus_entry.get("genes", [])}
+    # Aliases count as declared. A roster gene may collapse several curated
+    # names onto one canonical name (`Family.gene_aliases`) when their proteins
+    # are byte-identical and no homology score could ever separate them --
+    # MFa1/MFa2/MFa3 -> MFa. The curated record keeps the gene name its
+    # publication deposited, and `reference_fasta.build_reference_fasta`
+    # rewrites it to the canonical name on the way into the search, so the hit
+    # IS attributable and this check must not call it orphaned.
+    declared = {
+        name
+        for gene in locus_entry.get("genes", [])
+        for name in [gene["name"], *(gene.get("aliases") or [])]
+    }
     errors: list[str] = []
     for gene in record.get("genes", []):
         if not gene.get("present", True):

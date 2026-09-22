@@ -90,12 +90,25 @@ loci:
     genes:
       - {name: SXI1, role: core_MAT, gene_class: HD1, present_in_idiomorphs: ["alpha"]}
       - {name: SXI2, role: core_MAT, gene_class: HD2, present_in_idiomorphs: ["a"]}
-      - {name: MFalpha1, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
-      - {name: MFalpha2, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
+      # MFalpha1 and MFalpha2 are BYTE-IDENTICAL 38 aa proteins in
+      # 40410_jec21_MAT_alpha, so no ranking rule can ever choose between them
+      # -- identity, coverage, e-value and bitscore are all exactly tied.
+      # Collapsed to one canonical name per the curator's ruling of 2026-09-21;
+      # `aliases` records what was folded in, and the curated records keep
+      # their own deposited gene names untouched.
+      #
+      # Measured consequence of NOT doing this: on 334 Tremellales genomes, one
+      # ~95 bp pheromone ORF was reported as 3 distinct genes, giving 3/5 = 0.60
+      # against the 0.50 ambiguity floor and admitting 927 spurious loci.
+      #
+      # MFalpha3 is NOT collapsed: it differs from MFalpha1 by one residue
+      # (97.4% identity), so it is a distinguishable gene. The rule is identical
+      # sequence, not similar sequence.
+      - {name: MFalpha, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"], aliases: [MFalpha1, MFalpha2]}
       - {name: MFalpha3, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
-      - {name: MFa1, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"]}
-      - {name: MFa2, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"]}
-      - {name: MFa3, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"]}
+      # MFa1, MFa2 and MFa3 are three byte-identical 42 aa proteins in
+      # 40410_jec20_MAT_a. Same reasoning as MFalpha above.
+      - {name: MFa, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"], aliases: [MFa1, MFa2, MFa3]}
       - {name: STE3, role: core_MAT, gene_class: pheromone_receptor}
   - locus_name: "Aalpha"
     vocabulary_type: "pattern"

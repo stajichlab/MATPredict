@@ -5,7 +5,11 @@ import re
 from pathlib import Path
 
 from MATPredict import logger
-from MATPredict.detect.family_registry import FamilyKey, load_record_families
+from MATPredict.detect.family_registry import (
+    FamilyKey,
+    load_all_families,
+    load_record_families,
+)
 
 _HEADER_RE = re.compile(
     r"^>(?P<record_id>[^|]+)\|gene_index=(?P<gene_index>\d+)\|name=(?P<name>[^|]+)\|role=(?P<role>.+)$"
@@ -44,8 +48,21 @@ def build_reference_fasta(
     batch/rollout callers, which build one shared reference FASTA for many
     genomes with different taxids, depend on that unrestricted form.
     """
-    record_families = load_record_families(db_root) if family_keys is not None else {}
+    # Always needed now: the alias map is keyed per family, so a protein's
+    # canonical name cannot be resolved without knowing which family its record
+    # belongs to -- even on the unrestricted path.
+    record_families = load_record_families(db_root)
+    aliases_by_family = {
+        f.key: f.gene_aliases for f in load_all_families(db_root)
+    }
     lines: list[str] = []
+    #: (record_id, canonical name, sequence) already emitted. Two curated
+    #: proteins that are byte-identical AND resolve to one canonical gene are
+    #: one query, not two: MFa1/MFa2/MFa3 are three identical 42 aa entries, and
+    #: emitting all three made a single ~95 bp genomic ORF count as three genes.
+    #: Identity of SEQUENCE is the test -- MFalpha3, one residue different, is a
+    #: distinguishable gene and is emitted separately.
+    emitted: set[tuple[str, str, str]] = set()
     for faa in sorted(db_root.glob("*/*/*/proteins.faa")):
         # `db/candidates/` holds not-yet-accepted (needs_review) records, which
         # family_registry.load_record_families and pipeline._short_orf_genes
@@ -71,8 +88,15 @@ def build_reference_fasta(
             # unattributable, or vice versa.
             if family_keys is not None and record_families.get(m["record_id"]) not in family_keys:
                 continue
-            lines.append(f">{m['record_id']}|gene{m['gene_index']}|{m['name']}")
-            lines.append(seq.rstrip("\n"))
+            sequence = seq.rstrip("\n")
+            family_key = record_families.get(m["record_id"])
+            canonical = aliases_by_family.get(family_key, {}).get(m["name"], m["name"])
+            key = (m["record_id"], canonical, sequence.replace("\n", ""))
+            if key in emitted:
+                continue
+            emitted.add(key)
+            lines.append(f">{m['record_id']}|gene{m['gene_index']}|{canonical}")
+            lines.append(sequence)
     out_path.write_text("\n".join(lines) + "\n")
     return out_path
 
@@ -116,3 +140,50 @@ def searchable_genes_by_family(
             continue
         searchable.setdefault(family_key, set()).add(gene_name)
     return searchable
+
+
+def redundant_gene_name_groups(db_root: Path) -> list[dict]:
+    """Curated proteins that are byte-identical but resolve to DIFFERENT
+    canonical gene names -- i.e. redundancy the roster has not collapsed.
+
+    The general form of the 2026-09-21 ruling. Two identical sequences under
+    two gene names cannot be told apart by any homology score: identity,
+    coverage, e-value and bitscore are all exactly tied by construction. Left
+    in place they inflate `fraction_found`, because one genomic hit is counted
+    once per name. Measured before the fix: 927 of 1,384 medium-confidence
+    calls across 334 Tremellales genomes were a single ~95 bp ORF reported as
+    three MFa or three MFalpha genes.
+
+    Returns one entry per offending group, so a test or a curation check can
+    fail with the names in hand. An empty list means every identical-sequence
+    group in the database already shares one canonical name.
+
+    Compares within a record, not across records: the same gene curated from
+    two strains is legitimately two references for one gene name, and that is
+    the ordinary case this must not flag.
+    """
+    import hashlib
+    from collections import defaultdict
+
+    record_families = load_record_families(db_root)
+    aliases_by_family = {f.key: f.gene_aliases for f in load_all_families(db_root)}
+    by_seq: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for faa in sorted(db_root.glob("*/*/*/proteins.faa")):
+        if faa.relative_to(db_root).parts[0] == "candidates":
+            continue
+        for chunk in faa.read_text().split(">")[1:]:
+            header, _, seq = chunk.partition("\n")
+            m = _HEADER_RE.match(">" + header)
+            if not m:
+                continue
+            family_key = record_families.get(m["record_id"])
+            canonical = aliases_by_family.get(family_key, {}).get(m["name"], m["name"])
+            digest = hashlib.blake2b(
+                seq.strip().replace("\n", "").encode(), digest_size=8
+            ).hexdigest()
+            by_seq[(m["record_id"], digest)].add(canonical)
+    return [
+        {"record_id": record_id, "sequence_hash": digest, "canonical_names": sorted(names)}
+        for (record_id, digest), names in sorted(by_seq.items())
+        if len(names) > 1
+    ]

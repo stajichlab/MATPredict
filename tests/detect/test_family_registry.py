@@ -288,3 +288,77 @@ def test_derive_max_cluster_gap_takes_the_maximum_over_families():
 
 def test_derive_max_cluster_gap_of_no_families_is_the_default():
     assert derive_max_cluster_gap([]) == DEFAULT_MAX_CLUSTER_GAP_BP
+
+
+def _wide_and_narrow() -> list[Family]:
+    """One very wide locus (Tremellales MAT, 120 kb) beside a narrow one.
+
+    This is the real Basidiomycota shape after the 2026-09-21 curation: the
+    Cryptococcus MAT locus genuinely spans ~104 kb with a 74.9 kb internal
+    gene gap, while an Ustilago b locus spans under 5.4 kb.
+    """
+    return [
+        Family(
+            key=FamilyKey("Basidio", "MAT"),
+            vocabulary_type="enum",
+            idiomorph_values=None,
+            idiomorph_pattern=None,
+            genes=[],
+            taxonomic_scope=[1],
+            max_cluster_gap_bp=120_000,
+        ),
+        Family(
+            key=FamilyKey("Basidio", "bLocus"),
+            vocabulary_type="pattern",
+            idiomorph_values=None,
+            idiomorph_pattern=None,
+            genes=[],
+            taxonomic_scope=[2],
+            max_cluster_gap_bp=5_000,
+        ),
+    ]
+
+
+def test_derive_max_cluster_gap_does_not_inherit_the_widest_locus_on_a_failed_route():
+    """A fallback route has no basis for inheriting the widest locus's gap.
+
+    The MAXIMUM is the safe end only among families that could plausibly BE
+    the locus. `phylum_fallback` and `exhaustive` mean routing FAILED, so
+    every family in the phylum is searched and the widest outlier is not
+    evidence about this genome -- it just clusters the whole phylum at
+    120 kb. Measured exposure: after order-level scoping, roughly 1,299 BFD
+    Basidiomycota genomes still fall to `phylum_fallback` (Boletales,
+    Polyporales, Sporidiobolales, Trichosporonales, Pucciniales,
+    Cantharellales, none of which has a curated record).
+    """
+    families = _wide_and_narrow()
+    assert derive_max_cluster_gap(families, routing_mode="phylum_fallback") == (
+        DEFAULT_MAX_CLUSTER_GAP_BP
+    )
+    assert derive_max_cluster_gap(families, routing_mode="exhaustive") == (
+        DEFAULT_MAX_CLUSTER_GAP_BP
+    )
+
+
+def test_derive_max_cluster_gap_keeps_the_maximum_on_a_real_route():
+    """A matched route DID identify the families, so the maximum still holds."""
+    families = _wide_and_narrow()
+    for mode in ("direct", "lineage"):
+        assert derive_max_cluster_gap(families, routing_mode=mode) == 120_000
+
+
+def test_derive_max_cluster_gap_keeps_the_maximum_for_an_explicit_phylum():
+    """`--phylum` is an operator assertion, not a failed route.
+
+    This is load-bearing for the validated Mucoromycota workflow, which runs
+    `--phylum Mucoromycota` and depends on that locus's curated 50 kb gap.
+    Capping `explicit_phylum` at the 25 kb default would silently halve it
+    and break the 23/23 ground-truth result.
+    """
+    families = _wide_and_narrow()
+    assert derive_max_cluster_gap(families, routing_mode="explicit_phylum") == 120_000
+
+
+def test_derive_max_cluster_gap_without_a_routing_mode_is_unchanged():
+    """Callers that never pass a mode keep the old behaviour exactly."""
+    assert derive_max_cluster_gap(_wide_and_narrow()) == 120_000

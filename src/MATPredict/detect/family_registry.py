@@ -1,6 +1,7 @@
 """Load order.yml families and route them to a taxid via taxonomic_scope."""
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -230,8 +231,11 @@ def load_all_families(db_root: Path) -> list[Family]:
     return families
 
 
-def derive_max_cluster_gap(families: list[Family]) -> int:
-    """The clustering gap for a run over `families`: the MAXIMUM of their gaps.
+def derive_max_cluster_gap(
+    families: list[Family], routing_mode: str | None = None
+) -> int:
+    """The clustering gap for a run over `families`: the MAXIMUM of their gaps,
+    EXCEPT on a failed route, where the default stands instead.
 
     The maximum, not the minimum or a per-family value, because the two errors
     are not symmetric. Taking too LARGE a gap under-splits -- two neighbouring
@@ -250,7 +254,34 @@ def derive_max_cluster_gap(families: list[Family]) -> int:
 
     With no families (nothing routed) there is nothing to derive from, so the
     default stands.
+
+    `routing_mode` qualifies all of the above, added 2026-09-21. The "maximum
+    is the safe end" argument holds only among families that could plausibly
+    BE this genome's locus -- which is exactly what a matched route
+    establishes and a failed one does not. On `phylum_fallback` and
+    `exhaustive` the run searches every family in the phylum precisely
+    BECAUSE nothing matched, so inheriting the widest outlier's gap is not a
+    conservative choice, it is an arbitrary one.
+
+    This became load-bearing when the curator set the Tremellales `MAT` gap
+    to 120 kb (the Cryptococcus MAT locus really does span ~104 kb with a
+    74.9 kb internal gene gap, measured from AF542531.2/AF542530.2). Without
+    this qualifier that one locus would cluster EVERY unrouted Basidiomycota
+    genome at 120 kb -- roughly 1,299 BFD genomes even after order-level
+    scoping, since Boletales, Polyporales, Sporidiobolales, Trichosporonales,
+    Pucciniales and Cantharellales have no curated record between them.
+
+    `explicit_phylum` is deliberately NOT capped: `--phylum` is an operator
+    assertion about the query, not a failed lookup, and the validated
+    Mucoromycota workflow runs `--phylum Mucoromycota` and depends on that
+    locus's curated 50 kb gap. Capping it would silently halve that and break
+    the 23/23 ground-truth result.
+
+    Omitting `routing_mode` keeps the old behaviour exactly, so callers that
+    do not know the mode are unaffected.
     """
+    if routing_mode in ("phylum_fallback", "exhaustive"):
+        return DEFAULT_MAX_CLUSTER_GAP_BP
     return max((f.max_cluster_gap_bp for f in families), default=DEFAULT_MAX_CLUSTER_GAP_BP)
 
 
@@ -290,6 +321,45 @@ def expected_genes_for_idiomorph(
     ]
 
 
+#: `load_record_families` results, keyed by db_root, with the directory stamp
+#: they were built from. `run_pipeline` calls that function once per genome and
+#: it parses every curated metadata.yaml: 465 ms against the live 101-record
+#: database, versus 2.5 ms to stat the same files. Over a 3,174-genome rollout
+#: the repeated parse is roughly 27 minutes. Invalidated by content hash.
+_RECORD_FAMILIES_CACHE: dict[Path, tuple[str, dict[str, "FamilyKey"]]] = {}
+
+
+def clear_record_families_cache() -> None:
+    """Drop the cached record->family indexes. For tests, and for any caller
+    that edits `db/` in-process and wants the next read to be honest."""
+    _RECORD_FAMILIES_CACHE.clear()
+
+
+def _db_stamp(db_root: Path) -> str:
+    """A content hash of every curated metadata.yaml under `db_root`.
+
+    A real hash, not a (size, mtime) heuristic. The heuristic was tried first
+    and is unsafe: `st_mtime_ns` granularity is filesystem-dependent, and on
+    this cluster's `/scratch` five rapid rewrites of one file produced only
+    TWO distinct mtimes. A curator changing a `locus_name` from `HD` to `PR`
+    -- same byte length, so same file size and same file count -- would then
+    be served a stale index, and every hit in the run would be attributed to
+    the wrong family. The repo's own test suite caught exactly that case.
+
+    Hashing is cheap enough that the heuristic bought nothing: 5.4 ms to hash
+    all 101 curated records against 466 ms to parse them, an 86x margin. The
+    path is hashed alongside the bytes so a rename, or a record moved between
+    phyla, invalidates too.
+    """
+    digest = hashlib.blake2b(digest_size=16)
+    for path in sorted(db_root.glob("*/*/*/metadata.yaml")):
+        digest.update(str(path.relative_to(db_root)).encode())
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
 def load_record_families(db_root: Path) -> dict[str, FamilyKey]:
     """Map every accepted curated record_id to the one family it belongs to.
 
@@ -306,6 +376,11 @@ def load_record_families(db_root: Path) -> dict[str, FamilyKey]:
     accepted, records; it is excluded by name exactly as `benchmark._load_records`
     does.
     """
+    stamp = _db_stamp(db_root)
+    cached = _RECORD_FAMILIES_CACHE.get(db_root)
+    if cached is not None and cached[0] == stamp:
+        return dict(cached[1])
+
     index: dict[str, FamilyKey] = {}
     for meta_path in sorted(db_root.glob("*/*/*/metadata.yaml")):
         if meta_path.relative_to(db_root).parts[0] == "candidates":
@@ -316,6 +391,7 @@ def load_record_families(db_root: Path) -> dict[str, FamilyKey]:
         if not record_id or not locus_name:
             continue
         index[record_id] = FamilyKey(meta_path.parents[2].name, locus_name)
+    _RECORD_FAMILIES_CACHE[db_root] = (stamp, dict(index))
     return index
 
 

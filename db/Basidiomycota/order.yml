@@ -12,7 +12,14 @@ loci:
     # 65 entries/11m13s). HD's own roster spans two DIFFERENT families within
     # Agaricales (Psathyrellaceae via Coprinopsis, Agaricaceae via Agaricus),
     # so both are listed.
-    taxonomic_scope: [184208, 5339]  # Psathyrellaceae; Agaricaceae
+    # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
+    # reasonable for most"), replacing the family-rank values set 2026-09-20.
+    # Rank verified against NCBI Taxonomy, not assumed.
+    taxonomic_scope: [5338]  # Agaricales (order)
+    # Curator's ruling 2026-09-21: 25 kb is a reasonable upper bound for
+    # Agaricales. Measured largest intra-locus gene gap in the two curated HD
+    # records: 352 bp (n=2), so 25 kb is generous and costs nothing here.
+    max_cluster_gap_bp: 25000
     genes:
       - {name: HD1, role: core_MAT, gene_class: HD1}
       - {name: HD2, role: core_MAT, gene_class: HD2}
@@ -22,7 +29,13 @@ loci:
     # Widened 2026-09-20 from the single curated species (Coprinopsis cinerea
     # 5346) to its family, one rank broader -- see HD's scope comment above
     # for the measured phylum_fallback cost this addresses.
-    taxonomic_scope: [184208]  # Psathyrellaceae
+    # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
+    # reasonable for most"), replacing the family-rank values set 2026-09-20.
+    # Rank verified against NCBI Taxonomy, not assumed.
+    taxonomic_scope: [5338]  # Agaricales (order)
+    # 25 kb per the curator's Agaricales upper bound. Measured largest
+    # intra-locus gene gap in the one curated PR record: 3,186 bp (n=1).
+    max_cluster_gap_bp: 25000
     # Gene names must match the names used by this family's curated records
     # exactly -- detect/search.py:_attribute drops any hit whose curated gene
     # name is not declared here. The specific names below are the real names in
@@ -48,7 +61,22 @@ loci:
     # phylum_fallback cost this addresses. Cryptococcaceae has 4 genera
     # (Cryptococcus plus 3 others, verified via NCBI esearch 2026-09-20), not
     # 1 -- this is a real widening, not a same-genus relabel.
-    taxonomic_scope: [1884633]  # Cryptococcaceae
+    # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
+    # reasonable for most"), replacing the family-rank values set 2026-09-20.
+    # Rank verified against NCBI Taxonomy, not assumed.
+    taxonomic_scope: [5234]  # Tremellales (order)
+    # 120 kb, curator's ruling 2026-09-21. This locus is the outlier in the
+    # whole database and the value is NOT padding: measured directly from the
+    # two curated Cryptococcus deneoformans records, the locus spans 103,914 bp
+    # (AF542531.2, alpha) and 96,538 bp (AF542530.2, a), with internal gene
+    # gaps of 58,469 bp and 74,899 bp respectively -- SXI1 sits at 10.7 kb and
+    # STE3 at 70.5 kb on AF542531.2. Under the previous 25 kb default this
+    # locus could not be clustered at all, which is the most likely cause of
+    # the Tremellales failure recorded in
+    # docs/notes/2026-09-20_basidiomycota-order-testing.md (genes recovered at
+    # 100% identity, locus call low-confidence and idiomorph undetermined).
+    # NOT YET RE-RUN with this value -- that measurement is still owed.
+    max_cluster_gap_bp: 120000
     # SXI1/SXI2 gene_class assigned 2026-09-19 by the project's curator, J. Stajich, who
     # stated that SXI1 and SXI2 are homeodomain proteins, citing doi:10.1128/mbio.00059-26
     # -- a citation supplied by the curator and NOT retrieved or verified here (the
@@ -76,7 +104,13 @@ loci:
     # commune 5334) to its family, one rank broader -- see HD's scope comment
     # (db/Basidiomycota/order.yml, HD locus) for the measured phylum_fallback
     # cost this addresses.
-    taxonomic_scope: [5332]  # Schizophyllaceae
+    # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
+    # reasonable for most"), replacing the family-rank values set 2026-09-20.
+    # Rank verified against NCBI Taxonomy, not assumed.
+    taxonomic_scope: [5338]  # Agaricales (order)
+    # 25 kb per the curator's Agaricales upper bound. Measured largest
+    # intra-locus gene gap in the one curated Aalpha record: 272 bp (n=1).
+    max_cluster_gap_bp: 25000
     # gene_class Z=HD1/Y=HD2 per this locus's own curated record
     # (db/Basidiomycota/Agaricales/5334_h4-8_Aalpha_4/metadata.yaml), whose
     # reference_orientation explicitly states "Z4(HD1)->Y4(HD2)".
@@ -87,7 +121,13 @@ loci:
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20, same rationale as Aalpha above.
-    taxonomic_scope: [5332]  # Schizophyllaceae
+    # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
+    # reasonable for most"), replacing the family-rank values set 2026-09-20.
+    # Rank verified against NCBI Taxonomy, not assumed.
+    taxonomic_scope: [5338]  # Agaricales (order)
+    # 25 kb, same as Aalpha. No Abeta record is curated yet, so this is
+    # inherited from its sibling locus, not measured.
+    max_cluster_gap_bp: 25000
     # No Abeta record is curated yet, but it shares the same species (S. commune,
     # 5334) and the same Y/Z gene-naming convention as Aalpha above, whose curated
     # record documents Z=HD1/Y=HD2 -- applying the same gene_class here for
@@ -99,7 +139,25 @@ loci:
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20, same rationale as Aalpha above.
-    taxonomic_scope: [5332]  # Schizophyllaceae
+    # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
+    # reasonable for most"), replacing the family-rank values set 2026-09-20.
+    # Rank verified against NCBI Taxonomy, not assumed.
+    taxonomic_scope: [5338]  # Agaricales (order)
+    # 5 kb, NOT the 25 kb Agaricales upper bound -- curator's ruling
+    # 2026-09-21 after the measurement below. Balpha and Bbeta sit 7,716 bp
+    # apart in S. commune H4-8, so at 25 kb they chain into a single cluster;
+    # the order-testing note measured that merged cluster at 83.5 kb, of which
+    # the two subloci are only ~31.9 kb -- the rest is spurious hits absorbed
+    # within 25 kb of each end. 5 kb clears the largest observed intra-Balpha
+    # gene gap (3,722 bp) and stays under the 7,716 bp spacing.
+    #
+    # CAVEAT, and it is load-bearing: this value is INERT today. Clustering
+    # uses ONE gap per run -- the maximum over the routed families
+    # (`family_registry.derive_max_cluster_gap`) -- and any Agaricales genome
+    # routes Balpha alongside HD/PR/Aalpha/Abeta at 25 kb, so 25 kb is what
+    # actually gets used. Recorded here as curation intent; it takes effect
+    # only once clustering becomes per-family. Derived from n=1 species.
+    max_cluster_gap_bp: 5000
     # Real names from db/Basidiomycota/Agaricales/5334_h4-8_Balpha_3
     # (Schizophyllum commune Balpha-3 uses the bar3/bap3-x naming of Wendland
     # et al. 1995). `pheromone_receptor` is kept as a generic alias -- it is a
@@ -120,7 +178,13 @@ loci:
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20, same rationale as Aalpha above.
-    taxonomic_scope: [5332]  # Schizophyllaceae
+    # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
+    # reasonable for most"), replacing the family-rank values set 2026-09-20.
+    # Rank verified against NCBI Taxonomy, not assumed.
+    taxonomic_scope: [5338]  # Agaricales (order)
+    # 5 kb, same ruling and the same inertness caveat as Balpha above.
+    # Measured largest intra-Bbeta gene gap: 2,838 bp (n=1).
+    max_cluster_gap_bp: 5000
     # Real names from db/Basidiomycota/Agaricales/5334_h4-8_Bbeta_2
     # (S. commune Bbeta-2, bbr2/bbp2-x naming of Vaillancourt et al. 1997;
     # bbp2_a/bbp2_b are that record's disambiguation of two distinct proteins
@@ -175,7 +239,15 @@ loci:
     # aLocus/bLocus family on the strength of one species is a bigger
     # inference than the Ustilaginaceae case and deliberately left for a
     # separate decision.
-    taxonomic_scope: [5268, 5270, 1392244, 1882483, 76777]  # Ustilaginaceae; Mycosarcoma; Kalmanozyma; Testicularia (Anthracoideaceae); Malassezia (Malasseziales, different order)
+    # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
+    # reasonable for most"), replacing the family-rank values set 2026-09-20.
+    # Rank verified against NCBI Taxonomy, not assumed.
+    taxonomic_scope: [5267, 162474]  # Ustilaginales (order); Malasseziales (order)
+    # 5 kb, curator's ruling 2026-09-21 ("smaller for Malasseziales and
+    # Ustilaginales"). Measured largest intra-locus gene gap across the
+    # curated aLocus records: 3,480 bp (n=8, Ustilaginales) and 472 bp (n=1,
+    # Malasseziales); largest span 5,349 bp.
+    max_cluster_gap_bp: 5000
     # gene_class per this locus's own record
     # (db/Basidiomycota/Ustilaginales/5270_521_aLocus_a1/metadata.yaml), whose
     # definition_note documents mfa1 as the lipopeptide mating-factor precursor and
@@ -226,7 +298,14 @@ loci:
     # aLocus/bLocus family on the strength of one species is a bigger
     # inference than the Ustilaginaceae case and deliberately left for a
     # separate decision.
-    taxonomic_scope: [5268, 5270, 1392244, 1882483, 76777]  # Ustilaginaceae; Mycosarcoma; Kalmanozyma; Testicularia (Anthracoideaceae); Malassezia (Malasseziales, different order)
+    # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
+    # reasonable for most"), replacing the family-rank values set 2026-09-20.
+    # Rank verified against NCBI Taxonomy, not assumed.
+    taxonomic_scope: [5267, 162474]  # Ustilaginales (order); Malasseziales (order)
+    # 5 kb, same ruling as aLocus. Measured largest intra-locus gene gap
+    # across the curated bLocus records: 635 bp (n=19, Ustilaginales) and
+    # 504 bp (n=3, Malasseziales); largest span 5,330 bp.
+    max_cluster_gap_bp: 5000
     # bE/bW are a divergently-transcribed homeodomain gene pair (the b locus's own
     # curated record, db/Basidiomycota/Ustilaginales/5270_521_bLocus_b1/metadata.yaml,
     # confirms this via RefSeq's own "bE1 allele"/"bW1 allele" product annotation).

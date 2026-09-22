@@ -90,6 +90,9 @@ from MATPredict.detect.family_registry import (
     route,
 )
 from MATPredict.detect.idiomorph import (
+    LOCUS_CLASS_PARTIAL,
+    apply_partial_locus,
+    is_partial_strength,
     DEFAULT_MIN_OVERLAP_FRACTION,
     IdiomorphResolution,
     assign_idiomorph,
@@ -114,7 +117,7 @@ from MATPredict.detect.search import (
     search_fast_path,
     search_localize,
 )
-from MATPredict.detect.tiering import assign_tier
+from MATPredict.detect.tiering import assign_tier, cap_at_medium
 
 logger = logging.getLogger(__name__)
 
@@ -542,7 +545,15 @@ def _relaxed_results(
                 fragmented=False,
                 genes_not_searchable=score.genes_not_searchable,
                 detection_pass="relaxed",
-                locus_class=classify_locus(cluster, family),
+                # A relaxed call never claims `mat_locus` -- curator's ruling,
+                # 2026-09-21. `detection_pass` above still records the route,
+                # so the two populations stay distinguishable.
+                locus_class=apply_partial_locus(
+                    classify_locus(cluster, family),
+                    fraction_found=score.fraction_found,
+                    ambiguity_floor=ambiguity_floor,
+                    relaxed=True,
+                ),
                 span_exceeds_plausible_bound=span_exceeds_plausible_bound(
                     segments[0].start, segments[0].end, family
                 ),
@@ -1202,8 +1213,15 @@ def run_pipeline(
     # destroying a real locus by cutting it in two, and nothing downstream can
     # rejoin the halves. An explicit `max_gap` from the caller still wins; None
     # means derive.
+    #
+    # The routing mode qualifies the maximum: on `phylum_fallback` and
+    # `exhaustive` the default stands instead, because a failed route gives no
+    # basis for inheriting the widest locus's gap. See
+    # `derive_max_cluster_gap`'s docstring for the measured reason (the 120 kb
+    # Tremellales MAT locus would otherwise cluster every unrouted
+    # Basidiomycota genome at 120 kb).
     if max_gap is None:
-        max_gap = derive_max_cluster_gap(families)
+        max_gap = derive_max_cluster_gap(families, routing_mode=routing.routing_mode)
     record_families = load_record_families(db_root)
     protein_lengths = _curated_protein_lengths(db_root, families, record_families)
     short_orf_by_family = _short_orf_genes(
@@ -1576,6 +1594,17 @@ def run_pipeline(
         # polished or rescued gene can never fall outside the locus segment
         # that reports it.
         segments = _segments_for(member_clusters, contig_lengths, evidence)
+        # Classified BEFORE the result is built, because the class decides the
+        # confidence cap: a `partial_locus` may never be `high`.
+        partial_strength = is_partial_strength(
+            score.fraction_found, ambiguity_floor, relaxed=False
+        )
+        locus_class = apply_partial_locus(
+            classify_locus(member_clusters[0], family),
+            fraction_found=score.fraction_found,
+            ambiguity_floor=ambiguity_floor,
+            relaxed=False,
+        )
         return DetectionResult(
             family_key=score.family_key,
             contig=segments[0].contig,
@@ -1584,7 +1613,11 @@ def run_pipeline(
             # single (contig, start, end); the top-level coordinates name the
             # first segment and `segments` carries the rest.
             end=segments[0].end,
-            confidence=tier,
+            # Capped on STRENGTH, not on the resulting class: a
+            # `homothallic_candidate` that only tied the floor keeps its class
+            # (it is a statement about which genes are present) but must not
+            # keep `high` (that is a statement about how sure we are).
+            confidence=cap_at_medium(tier) if partial_strength else tier,
             idiomorph=assign_idiomorph(family, score.genes_found),
             ambiguous_with=(
                 [
@@ -1612,7 +1645,7 @@ def run_pipeline(
             reference_records=sorted({e.reference_record_id for e in evidence}),
             idiomorph_margin=idiomorph_margin,
             idiomorph_resolutions=own_resolutions,
-            locus_class=classify_locus(member_clusters[0], family),
+            locus_class=locus_class,
             # Measured across the whole call, including every segment of a
             # fragmented one -- the span a reader sees in the report is the
             # thing being judged.

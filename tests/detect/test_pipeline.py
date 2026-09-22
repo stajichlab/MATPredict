@@ -1614,7 +1614,8 @@ def _run_recording_gap(tmp_path, monkeypatch, order_text, **kwargs):
         return [_tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400)]
 
     run_pipeline(
-        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None,
+        taxid=kwargs.pop("taxid", None),
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_localize=fake_localize,
         polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
@@ -1628,7 +1629,23 @@ def test_run_pipeline_uses_the_default_gap_when_no_locus_declares_one(tmp_path, 
 
 
 def test_run_pipeline_derives_the_gap_from_the_routed_locus(tmp_path, monkeypatch):
-    assert _run_recording_gap(tmp_path, monkeypatch, WIDE_GAP_ORDER_YML) == [50_000]
+    """taxid=1 is in this order.yml's `taxonomic_scope`, so the route is
+    `direct` and the locus's own curated gap is used."""
+    assert _run_recording_gap(
+        tmp_path, monkeypatch, WIDE_GAP_ORDER_YML, taxid=1
+    ) == [50_000]
+
+
+def test_run_pipeline_falls_back_to_the_default_gap_when_routing_failed(tmp_path, monkeypatch):
+    """No taxid means `exhaustive`: the locus's wide gap is NOT inherited.
+
+    Changed 2026-09-21 alongside the 120 kb Tremellales MAT gap. A run that
+    could not route has no basis for clustering at the widest curated locus's
+    distance -- see `family_registry.derive_max_cluster_gap`.
+    """
+    assert _run_recording_gap(tmp_path, monkeypatch, WIDE_GAP_ORDER_YML) == [
+        25_000
+    ]
 
 
 def test_run_pipeline_takes_the_maximum_gap_over_routed_families(tmp_path, monkeypatch):
@@ -1639,7 +1656,7 @@ def test_run_pipeline_takes_the_maximum_gap_over_routed_families(tmp_path, monke
         "    idiomorph_pattern: \"^b[0-9]+$\"\n    taxonomic_scope: [1]\n"
         "    genes:\n      - {name: mfa1, role: core_MAT}\n"
     )
-    assert _run_recording_gap(tmp_path, monkeypatch, two_loci) == [50_000]
+    assert _run_recording_gap(tmp_path, monkeypatch, two_loci, taxid=1) == [50_000]
 
 
 def test_explicit_max_gap_argument_overrides_the_derived_value(tmp_path, monkeypatch):

@@ -12,6 +12,23 @@ from MATPredict.detect.scoring import FamilyScore
 _TIER_DOWNGRADE = {"high": "medium", "medium": "low", "low": "low"}
 
 
+def cap_at_medium(tier: str) -> str:
+    """Lower `tier` to `medium` if it is higher, never raise it.
+
+    Distinct from `_TIER_DOWNGRADE`, which moves every tier down one step --
+    that would send `medium` to `low`, and `low` means something specific here
+    ("an isolated single hit"). A `partial_locus` carrying three genes and a
+    conserved flank is genuinely more than an isolated hit, so it must not be
+    collapsed into the same bucket.
+
+    Used for `partial_locus`, per the curator's ruling of 2026-09-21: `high` is
+    the report's assertion that something IS a MAT locus, and a call that
+    cleared the admission floor only by tying it, or that came from the relaxed
+    pass, must not make that assertion.
+    """
+    return "medium" if tier == "high" else tier
+
+
 def has_flanking_conserved(family: Family) -> bool:
     return any(g["role"] == "flanking_conserved" for g in family.genes)
 

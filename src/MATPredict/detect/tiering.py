@@ -45,6 +45,16 @@ def _searchable_flanking_conserved(family: Family, score: FamilyScore) -> bool:
     requirement, and the same bug shape as counting `genes_not_searchable`
     against a locus.
 
+    An `optional` flank is excused for a different reason: it is a BONUS, not
+    a requirement. Curator's ruling, 2026-09-21 -- "perhaps sla2 is a bonus
+    flank to search for but not to penalize if not present". `sla2` is the
+    case that needs it: it is genuinely adjacent to MAT in Kluyveromyces
+    lactis and Lachancea thermotolerans (sla2 -> MATA1 -> MATA2), and is not
+    on chromosome III at all in Saccharomyces -- and one `MATsc` family spans
+    both. Marked optional it is searched everywhere, corroborates a call to
+    High where the architecture has it, and costs nothing where it does not.
+    Finding it still promotes the tier; only its ABSENCE stops mattering.
+
     Load-bearing for Saccharomyces. The curator ruled on 2026-09-21 that this
     clade has no usable flanking GENE: S. cerevisiae's three cassettes
     (HML/MAT/HMR) are told apart by flanking DNA -- the X/Y/Z homology boxes --
@@ -56,7 +66,9 @@ def _searchable_flanking_conserved(family: Family, score: FamilyScore) -> bool:
     """
     unsearchable = set(score.genes_not_searchable)
     return any(
-        g["role"] == "flanking_conserved" and g["name"] not in unsearchable
+        g["role"] == "flanking_conserved"
+        and g["name"] not in unsearchable
+        and not g.get("optional")
         for g in family.genes
     )
 

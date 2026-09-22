@@ -99,6 +99,7 @@ from MATPredict.detect.idiomorph import (
     IdiomorphResolution,
     assign_idiomorph,
     classify_locus,
+    evidenced_idiomorphs,
     resolve_idiomorph_overlaps,
 )
 from MATPredict.detect.polish import (
@@ -593,6 +594,85 @@ def _relaxed_results(
                 reference_records=sorted({e.reference_record_id for e in evidence}),
             ))
     return results
+
+
+def _rescue_genes_in_idiomorph_scope(
+    cluster: GeneCluster, family: Family, rescue_genes: set[str]
+) -> tuple[set[str], set[str]]:
+    """Split `rescue_genes` into (keep, skip) by the idiomorph this cluster
+    already evidences. Returns `(rescue_genes, set())` whenever it cannot
+    narrow safely.
+
+    Rescue polish is the dominant cost in a genome-only run: for every
+    (cluster, admitted family) the loop windows-polishes EVERY core_MAT gene
+    still missing, with both exonerate and miniprot, at ~0.9 s a pair. On a
+    two-idiomorph roster roughly half of those genes belong to the idiomorph
+    this cluster is not. A MAT1-1 cluster cannot also hold MAT1-2-1, so
+    polishing for it is guaranteed-futile work.
+
+    Narrowing happens ONLY when the cluster's live, informative hits evidence
+    exactly ONE idiomorph. Zero (nothing informative yet, or flanking-only
+    evidence -- the localize-by-flanks case this project relies on) and two or
+    more (a real homothallic both-idiomorphs locus, normal in curated records)
+    both fall through unchanged. Genes carrying no `present_in_idiomorphs` are
+    idiomorph-agnostic and are never skipped.
+
+    NOT loss-free in principle, and the exposure is specific: the cluster's
+    evidenced idiomorph could itself be wrong. The known way that happens is
+    the shared-HMG cross-match (MAT1-1-3 vs MAT1-2-1, opposite idiomorphs,
+    E 2.5e-17 to each other), where a single mis-attributed hit would then
+    suppress the rescue that could have corrected it. Superseded hits are
+    already excluded, which removes the cases the overlap resolver has
+    caught; a cross-match that never overlapped is not covered. Skips are
+    therefore recorded to the evidence-diagnostics stream so the real rate,
+    and any call that changes because of them, can be measured rather than
+    assumed.
+    """
+    evidenced = evidenced_idiomorphs(family, _own_live_hits(cluster, family.key))
+    if len(evidenced) != 1:
+        return rescue_genes, set()
+    idiomorph = next(iter(evidenced))
+    keep, skip = set(), set()
+    for gene in family.genes:
+        if gene["name"] not in rescue_genes:
+            continue
+        declared = gene.get("present_in_idiomorphs") or ()
+        if declared and idiomorph not in declared:
+            skip.add(gene["name"])
+        else:
+            keep.add(gene["name"])
+    # A rescue gene the roster does not define cannot happen (`_missing_core_genes`
+    # reads the roster), but keep the set total rather than silently shrinking.
+    keep |= rescue_genes - keep - skip
+    return keep, skip
+
+
+def _write_polish_scope_diagnostics(
+    out_path: Path,
+    cluster: GeneCluster,
+    family: Family,
+    idiomorph: str,
+    skipped: set[str],
+    attempted: int,
+    run_id: str,
+    genome_id: str,
+) -> None:
+    """One JSON line per (cluster, family) whose rescue set was narrowed.
+
+    `attempted` is the number of polish pairs actually run for this
+    (cluster, family) after narrowing, so saved/attempted is computable per
+    genome without re-deriving it from wall-clock time.
+    """
+    _append_diagnostics_row(out_path, {
+        "kind": "polish_scope",
+        "run_id": run_id,
+        "genome_id": genome_id,
+        "family": f"{family.key.phylum}:{family.key.locus_name}",
+        "contig": cluster.contig, "cluster_start": cluster.start, "cluster_end": cluster.end,
+        "evidenced_idiomorph": idiomorph,
+        "rescues_skipped": sorted(skipped),
+        "polish_pairs_attempted": attempted,
+    })
 
 
 def _write_evidence_diagnostics(
@@ -1500,6 +1580,24 @@ def run_pipeline(
             # a failed rescue leaves the gene genuinely missing rather than
             # "unpolished" (see below).
             rescue_genes = _missing_core_genes(cluster, family) - localized_genes
+            # Cut 1 of the polish-cost work: a rescue for a gene belonging to
+            # the idiomorph this cluster is NOT cannot succeed, so do not pay
+            # 0.9 s to find that out. Narrows only on unambiguous evidence;
+            # see `_rescue_genes_in_idiomorph_scope` for the exposure.
+            rescue_genes, skipped_rescues = _rescue_genes_in_idiomorph_scope(
+                cluster, family, rescue_genes
+            )
+
+            if skipped_rescues and evidence_diagnostics_path is not None:
+                _write_polish_scope_diagnostics(
+                    evidence_diagnostics_path, cluster, family,
+                    idiomorph=next(iter(
+                        evidenced_idiomorphs(family, _own_live_hits(cluster, family.key))
+                    )),
+                    skipped=skipped_rescues,
+                    attempted=len(localized_genes | rescue_genes),
+                    run_id=run_id, genome_id=genome_id,
+                )
 
             for gene_name in sorted(localized_genes | rescue_genes):
                 rescue = gene_name not in localized_genes

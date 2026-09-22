@@ -192,6 +192,33 @@ def assign_idiomorph(
     return "undetermined"
 
 
+def evidenced_idiomorphs(family: Family, hits: list[SearchHit]) -> set[str]:
+    """Which idiomorphs `hits` actually speak for, ignoring hits that cannot.
+
+    A hit votes only when its gene is idiomorph-informative, declares a
+    `present_in_idiomorphs`, and has not been superseded by the winner of a
+    resolved cross-match. Flanking and other idiomorph-agnostic genes name no
+    idiomorph and so vote for none.
+
+    This is the PRESENCE question ("what is evidenced here at all"), deliberately
+    unweighted -- unlike `idiomorph_candidates`, which RANKS by bitscore to pick
+    a winner. The rescue-scope caller wants the conservative union: two
+    idiomorphs evidenced means do not narrow, even if one of them is far
+    stronger.
+    """
+    informative = {
+        g["name"]: frozenset(g.get("present_in_idiomorphs") or ())
+        for g in family.genes
+        if _informative(g) and g.get("present_in_idiomorphs")
+    }
+    seen: set[str] = set()
+    for hit in hits:
+        if hit.superseded_by is not None:
+            continue
+        seen.update(informative.get(hit.gene_name, ()))
+    return seen
+
+
 def _idiomorphs_of(family: Family, gene_name: str) -> frozenset[str]:
     for gene in family.genes:
         if gene["name"] == gene_name:

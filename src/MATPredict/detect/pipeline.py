@@ -92,6 +92,7 @@ from MATPredict.detect.family_registry import (
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_PARTIAL,
     apply_partial_locus,
+    idiomorph_candidates,
     is_partial_strength,
     DEFAULT_MIN_OVERLAP_FRACTION,
     IdiomorphResolution,
@@ -219,6 +220,11 @@ class DetectionResult:
     and not the fraction floor, so its tier is capped and anyone who wants
     strict-only output can filter on this field.
     """
+    #: Every idiomorph this cluster has evidence for, best score first. Emitted
+    #: alongside the scalar `idiomorph` so an exact tie, or a narrow win, is
+    #: visible rather than collapsed. Curator's ruling 2026-09-21: on a tie
+    #: "report both instead of worrying about getting it right".
+    idiomorph_candidates: list[dict] = field(default_factory=list)
     idiomorph_margin: float | None = None
     """Identity points separating the winning idiomorph gene from the loser.
 
@@ -419,6 +425,19 @@ _DIAGNOSTICS_CANDIDATE_FLOOR = EvidenceFloor(
 )
 
 
+def _own_live_hits(cluster, family_key):
+    """This family's non-superseded hits in `cluster`.
+
+    Used for the idiomorph vote, which ranks evidence rather than testing
+    presence. A superseded hit is the losing half of a resolved cross-match and
+    must not vote for its own idiomorph.
+    """
+    return [
+        h for h in cluster.hits
+        if h.family_key == family_key and h.superseded_by is None
+    ]
+
+
 def _families_meeting_evidence_floor(
     cluster: GeneCluster, families: list[Family], floor: EvidenceFloor
 ) -> list[Family]:
@@ -545,7 +564,10 @@ def _relaxed_results(
                 # flattening it to low would conflate weak evidence with a
                 # fragmented assembly.
                 confidence="medium",
-                idiomorph=assign_idiomorph(family, score.genes_found),
+                idiomorph=assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key)),
+                idiomorph_candidates=idiomorph_candidates(
+                    family, score.genes_found, _own_live_hits(cluster, family.key)
+                ),
                 ambiguous_with=[],
                 genes_found=score.genes_found,
                 genes_missing=score.genes_missing,
@@ -1625,7 +1647,14 @@ def run_pipeline(
             # (it is a statement about which genes are present) but must not
             # keep `high` (that is a statement about how sure we are).
             confidence=cap_at_medium(tier) if partial_strength else tier,
-            idiomorph=assign_idiomorph(family, score.genes_found),
+            idiomorph=assign_idiomorph(
+                family, score.genes_found,
+                [h for c in member_clusters for h in _own_live_hits(c, family.key)],
+            ),
+            idiomorph_candidates=idiomorph_candidates(
+                family, score.genes_found,
+                [h for c in member_clusters for h in _own_live_hits(c, family.key)],
+            ),
             ambiguous_with=(
                 [
                     s.family_key

@@ -72,13 +72,94 @@ class IdiomorphResolution:
         return self.winner_identity - self.loser_identity
 
 
-def assign_idiomorph(family: Family, genes_found: list[str]) -> str:
+def _informative(gene: dict) -> bool:
+    """Does this gene's presence say anything about WHICH idiomorph?
+
+    `idiomorph_informative: false` marks a gene that still marks the locus but
+    must not vote. Curator's ruling, 2026-09-21: "sure that is fine that
+    idiomorphic noninformative is that status, just knowing where the cassettes
+    are is sufficient".
+
+    The case that forced it: S. cerevisiae `a2` and `alpha2` are homologous
+    over the X region shared by all three chromosome-III cassettes, so `MATA2`
+    hits at 100% identity and 100% coverage at every one of them, and
+    `MATALPHA2` -- the longer protein -- outscores it at every one of them,
+    INCLUDING HMR, which is actually `a`. Any rule that lets that pair vote
+    calls HMR alpha. With the pair silenced, `MATA1` vs `MATALPHA1` decides,
+    and that is right at all three.
+    """
+    return gene.get("idiomorph_informative", True)
+
+
+def idiomorph_candidates(
+    family: Family,
+    genes_found: list[str],
+    hits: list[SearchHit] | None = None,
+) -> list[dict]:
+    """Each idiomorph this cluster has evidence for, with its best score,
+    strongest first.
+
+    Reported alongside the scalar call so a tie, or a narrow win, is visible
+    rather than collapsed into "undetermined". Curator's ruling, 2026-09-21:
+    handle an exact tie "by reporting both instead of worrying about getting it
+    right".
+
+    The score is the best `bitscore` among that idiomorph's informative,
+    non-superseded hits, falling back to `identity` when no bitscore was
+    recorded -- a polished model carries no BLAST statistics of its own.
+    Bitscore rather than identity because identity is blind here: every one of
+    the S288C cassette hits is at or near 100%.
+    """
+    if family.vocabulary_type != "enum" or not hits:
+        return []
+    informative = {
+        g["name"]: frozenset(g.get("present_in_idiomorphs") or ())
+        for g in family.genes
+        if _informative(g) and g.get("present_in_idiomorphs")
+    }
+    best: dict[str, float] = {}
+    for hit in hits:
+        if hit.superseded_by is not None:
+            continue
+        for idiomorph in informative.get(hit.gene_name, ()):
+            score = hit.bitscore if hit.bitscore is not None else hit.identity
+            if score is None:
+                continue
+            best[idiomorph] = max(best.get(idiomorph, float("-inf")), float(score))
+    return [
+        {"idiomorph": name, "score": score}
+        for name, score in sorted(best.items(), key=lambda kv: (-kv[1], kv[0]))
+    ]
+
+
+def assign_idiomorph(
+    family: Family,
+    genes_found: list[str],
+    hits: list[SearchHit] | None = None,
+) -> str:
+    """Which idiomorph this cluster carries, or `undetermined`.
+
+    With `hits`, the call is made on the STRONGEST EVIDENCE: the idiomorph
+    whose best informative hit scores highest wins, and an exact tie is left
+    `undetermined` with both reported by `idiomorph_candidates`.
+
+    Without `hits` the old presence/absence rule stands, so callers that have
+    only gene names are unaffected. That rule could not work for a cassette
+    system: in S. cerevisiae every cassette carries genes indicated for BOTH
+    idiomorphs, so it returned `undetermined` for all three.
+    """
     if family.vocabulary_type != "enum":
         return "undetermined"  # pattern (multiallelic) families: allele number isn't callable by homology alone
 
+    ranked = idiomorph_candidates(family, genes_found, hits)
+    if ranked:
+        if len(ranked) == 1 or ranked[0]["score"] > ranked[1]["score"]:
+            return ranked[0]["idiomorph"]
+        return "undetermined"  # exact tie: both are reported, neither is picked
+
     indicated: set[str] = set()
     for gene in family.genes:
-        if gene["name"] in genes_found:
+        if gene["name"] in genes_found and _informative(gene):
             indicated.update(gene.get("present_in_idiomorphs", []))
 
     if len(indicated) == 1:

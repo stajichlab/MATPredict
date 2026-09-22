@@ -160,9 +160,20 @@ loci:
       # fraction_found exactly as MFa1/2/3 did in Tremellales. Aliased, so one
       # ORF counts once and both reference sequences are still searched.
       - {name: MATALPHA1, role: core_MAT, present_in_idiomorphs: ["MATalpha"], aliases: [alpha1]}
-      - {name: MATALPHA2, role: core_MAT, present_in_idiomorphs: ["MATalpha"], aliases: [alpha2]}
+      # MATALPHA2/MATA2 mark the cassette but do NOT vote on which allele it
+      # carries. a2 and alpha2 are homologous over the X region shared by all
+      # three chromosome-III cassettes, so MATA2 hits at 100% identity and
+      # 100% coverage at every one of them, and MATALPHA2 -- the longer
+      # protein -- outscores it at every one, INCLUDING HMR, which is a.
+      # Measured bitscores on S288C (HML / MAT / HMR):
+      #   MATA2      246 / 246 / 246      MATALPHA2  422 / 422 / 374
+      # Letting that pair vote calls HMR alpha. Silenced, MATA1 (236) beats
+      # MATALPHA1 (82, a 38 aa 22%-coverage fragment) at HMR and the call is
+      # right at all three. Curator's ruling 2026-09-21: "just knowing where
+      # the cassettes are is sufficient".
+      - {name: MATALPHA2, role: core_MAT, present_in_idiomorphs: ["MATalpha"], aliases: [alpha2], idiomorph_informative: false}
       - {name: MATA1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
-      - {name: MATA2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      - {name: MATA2, role: core_MAT, present_in_idiomorphs: ["MATa"], idiomorph_informative: false}
       # sla2 here is the same gene as Ascomycota:MAT's SLA2 under this family's own
       # lowercase name, and takes the same class by the same 2026-09-19 curator ruling
       # recorded on that entry above (curator described SLA2 as "cytoskeleton assembly

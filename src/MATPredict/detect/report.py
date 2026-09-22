@@ -287,6 +287,10 @@ def _result_doc(r: DetectionResult) -> dict:
         "end": r.end,
         "confidence": r.confidence,
         "idiomorph": r.idiomorph,
+        # Every idiomorph with evidence here, best score first. On an exact tie
+        # `idiomorph` stays "undetermined" and BOTH appear here, per the
+        # curator's 2026-09-21 ruling -- a tie is reported, not guessed at.
+        "idiomorph_candidates": r.idiomorph_candidates,
         # `strict` or `relaxed`. Emitted for every locus, not only relaxed
         # ones, so "this was a strict call" is distinguishable from "this
         # output predates the field", and so strict-only consumers can filter.

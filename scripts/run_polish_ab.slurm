@@ -98,7 +98,12 @@ run_pair() {
     b="$OUT_DIR/runs/$asmid/base"; c="$OUT_DIR/runs/$asmid/cut1"
     same_report=$(cmp -s "$b/detection_report.yaml" "$c/detection_report.yaml" && echo yes || echo no)
     same_gff=$(cmp -s "$b/detected_loci.gff3" "$c/detected_loci.gff3" && echo yes || echo no)
-    narrowed=$(grep -c '"kind": "polish_scope"' "$c/evidence_diagnostics.jsonl" 2>/dev/null || echo 0)
+    # NOT `grep -c ... || echo 0`: grep exits 1 when the count is 0, having
+    # ALREADY printed "0", so the fallback appends a second "0" and the row
+    # gains a stray line. That split 2 of 60 rows on the first run and crashed
+    # the summary with an IndexError. `|| true` keeps the single printed count.
+    narrowed=$(grep -c '"kind": "polish_scope"' "$c/evidence_diagnostics.jsonl" 2>/dev/null || true)
+    narrowed=${narrowed:-0}
     skipped=$("$PY" - "$c/evidence_diagnostics.jsonl" <<'PYEOF'
 import json, sys
 n = 0
@@ -131,7 +136,8 @@ echo "wrote $SUM"
 
 "$PY" - "$SUM" <<'PYEOF'
 import statistics, sys
-rows = [l.rstrip("\n").split("\t") for l in open(sys.argv[1])][1:]
+rows = [f for f in (l.rstrip("\n").split("\t") for l in open(sys.argv[1]))
+        if len(f) == 8 and f[0] != "asmid"]
 ok = [r for r in rows if r[2] != "NA" and r[3] != "NA"]
 if not ok:
     sys.exit("no completed pairs")

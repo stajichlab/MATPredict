@@ -93,6 +93,7 @@ from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_PARTIAL,
     apply_partial_locus,
     idiomorph_candidates,
+    idiomorph_margin_from_vote,
     is_partial_strength,
     DEFAULT_MIN_OVERLAP_FRACTION,
     IdiomorphResolution,
@@ -1630,9 +1631,25 @@ def run_pipeline(
             for cluster in member_clusters
             for event in idiomorph_events_by_cluster.get(id(cluster), ())
         ]
-        idiomorph_margin = (
-            min(e.margin for e in own_resolutions) if own_resolutions else None
+        # The margin of the call that was ACTUALLY MADE. Since the idiomorph is
+        # decided by the bitscore vote rather than by overlap resolution, the
+        # margin must come from the same ranking -- reporting the resolution's
+        # identity margin here described a different mechanism and a different
+        # quantity. Measured on Actinomucor sp. NRRL A-23671: this field read
+        # 1.077 (identity) while the decision turned on a bitscore gap of 4.6.
+        # Curator's ruling 2026-09-21: report the margin.
+        #
+        # Falls back to the resolution margin when the vote produced no ranking
+        # (no idiomorph-restricted gene found), so nothing that used to be
+        # reported is lost. Each resolution's own margin is unchanged and still
+        # carried per event in `idiomorph_resolutions`.
+        own_vote = idiomorph_candidates(
+            family, score.genes_found,
+            [h for c in member_clusters for h in _own_live_hits(c, family.key)],
         )
+        idiomorph_margin = idiomorph_margin_from_vote(own_vote)
+        if idiomorph_margin is None and own_resolutions:
+            idiomorph_margin = min(e.margin for e in own_resolutions)
         if (
             idiomorph_margin is not None
             and idiomorph_margin < family.min_idiomorph_margin
@@ -1673,10 +1690,7 @@ def run_pipeline(
                 family, score.genes_found,
                 [h for c in member_clusters for h in _own_live_hits(c, family.key)],
             ),
-            idiomorph_candidates=idiomorph_candidates(
-                family, score.genes_found,
-                [h for c in member_clusters for h in _own_live_hits(c, family.key)],
-            ),
+            idiomorph_candidates=own_vote,
             ambiguous_with=(
                 [
                     s.family_key

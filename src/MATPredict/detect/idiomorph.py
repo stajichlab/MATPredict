@@ -132,6 +132,31 @@ def idiomorph_candidates(
     ]
 
 
+def idiomorph_margin_from_vote(ranked: list[dict]) -> float | None:
+    """How far the winning idiomorph beat the runner-up, or None.
+
+    Curator's ruling, 2026-09-21: when a call resolves, "report the margin".
+
+    This must come from the ranking that ACTUALLY made the call. Before this,
+    `DetectionResult.idiomorph_margin` carried the sexM/sexP OVERLAP
+    RESOLUTION's identity margin, which since the vote landed is a different
+    mechanism measuring a different thing. Measured on Actinomucor sp. NRRL
+    A-23671: margin read 1.077 (identity) while the decision turned on a
+    bitscore gap of 4.6 (Plus 35.8 vs Minus 31.2). A reader filtering on a thin
+    margin would have filtered the wrong quantity.
+
+    None for a single candidate -- there is nothing to be narrow against, and
+    0.0 would read as a tie. 0.0 IS returned for a real tie, which is exactly
+    the case the curator asked to be reported rather than broken.
+
+    The resolution's own margin is unchanged and still carried per event in
+    `idiomorph_resolutions`, where it describes what it actually measures.
+    """
+    if len(ranked) < 2:
+        return None
+    return round(float(ranked[0]["score"]) - float(ranked[1]["score"]), 6)
+
+
 def assign_idiomorph(
     family: Family,
     genes_found: list[str],

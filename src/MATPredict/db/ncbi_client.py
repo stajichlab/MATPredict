@@ -215,6 +215,30 @@ class NcbiClient:
                 lineage.append(int(tax_id_text))
         return lineage
 
+    def fetch_taxonomy_genetic_code(self, taxid: int) -> int | None:
+        """Fetch the NCBI translation-table number for `taxid`, or None.
+
+        Reads the SAME `efetch db=taxonomy` document as `fetch_taxonomy_lineage`
+        and `fetch_taxonomy_phylum`, at the SAME URL -- `<GeneticCode><GCId>` is
+        already in the response a routing lookup for this taxid has or will
+        have fetched, so this adds no HTTP round trip.
+
+        Returns None when the document declares no genetic code, which callers
+        must treat as "unknown" and fall back to table 1 rather than guessing.
+        The distinction matters: table 12 (Alternative Yeast Nuclear, the
+        CUG-Ser1 clade) reads CTG as serine, and translating such a genome with
+        table 1 is systematically wrong across the whole clade.
+        """
+        url = self._url("efetch.fcgi", f"db=taxonomy&id={taxid}&retmode=xml")
+        root = ET.fromstring(self.fetcher.get(url))
+        raw = root.findtext(".//Taxon/GeneticCode/GCId")
+        if raw is None:
+            return None
+        try:
+            return int(raw.strip())
+        except ValueError:
+            return None
+
     def fetch_taxonomy_phylum(self, taxid: int) -> str | None:
         """Fetch the scientific NAME of `taxid`'s phylum-rank ancestor, or None.
 

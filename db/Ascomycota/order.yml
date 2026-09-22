@@ -223,7 +223,30 @@ loci:
   - locus_name: "MTL"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "alpha"]
-    taxonomic_scope: [4959]
+    # Widened 2026-09-21 from 4959 -- which is Debaryomyces hansenii, a single
+    # SPECIES -- to Serinales, the CUG-Ser1 / CTG clade. Verified live: 2916678
+    # is rank ORDER, and the lineages of BOTH Candida albicans (5476) and
+    # D. hansenii (4959) contain it, so this is a strict superset and the
+    # existing 4959_cbs767_MTL_A record stays covered.
+    #
+    # Before this, 136 C. albicans genomes in the local library reached `MTL`
+    # by no route at all: not Saccharomycetaceae (4893), not D. hansenii, so
+    # they fell to phylum_fallback and were searched against all nine
+    # Ascomycota families. Serinales routes 2,368 genomes here.
+    #
+    # Curator's ruling on clade coverage: add RECORDS inside this one family
+    # rather than splitting it. `route()` returns EVERY family whose scope
+    # intersects the lineage, so a second Metschnikowiaceae family would make
+    # those 1,312 genomes match both and be reported twice; two families would
+    # need disjoint scopes and a duplicate roster. Metschnikowiaceae (987
+    # Candidozyma, 173 Metschnikowia, 102 Clavispora) gets its own research
+    # pass before any split is considered -- note NCBI has no MTLa1-named
+    # C. auris protein and Clavispora uses `MAT alpha 1` naming, so no
+    # ready-made reference exists there.
+    #
+    # Disjoint from 4893 (Saccharomycetaceae) and 4952 (Yarrowia), so this
+    # introduces no new multi-family ambiguity.
+    taxonomic_scope: [2916678]  # Serinales (order) -- the CUG-Ser1 / CTG clade
     genes:
       - {name: MTLA1, role: core_MAT, present_in_idiomorphs: ["A"]}
       - {name: MTLA2, role: core_MAT, present_in_idiomorphs: ["A"]}

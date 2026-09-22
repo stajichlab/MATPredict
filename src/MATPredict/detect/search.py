@@ -358,12 +358,26 @@ _TBLASTN_OUTFMT = (
 #: single HSP with it and sum only across HSPs already grouped into one gene.
 
 
+def _gencode_args(genetic_code: int | None, flag: str) -> list[str]:
+    """`[flag, str(code)]`, or `[]` for the standard code / unknown.
+
+    Table 1 is every tool's own default, so passing it explicitly would churn
+    command lines with no behavioural change -- and `None` means the taxonomy
+    lookup could not answer, where the correct response is to fall back to the
+    default rather than guess a table.
+    """
+    if genetic_code is None or int(genetic_code) == 1:
+        return []
+    return [flag, str(int(genetic_code))]
+
+
 def search_localize(
     genome_fasta: Path,
     families: list[Family],
     reference_fasta: Path,
     record_families: dict[str, FamilyKey],
     runner: Callable = subprocess.run,
+    genetic_code: int | None = None,
 ) -> list[SearchHit]:
     """Genome-wide tblastn localization -- one blastdb build and one
     tblastn call cover every routed family's genes (core_MAT and
@@ -383,7 +397,7 @@ def search_localize(
         cmd = [
             "tblastn", "-query", str(reference_fasta), "-db", str(db_prefix),
             "-seg", "no", "-outfmt", _TBLASTN_OUTFMT,
-        ]
+        ] + _gencode_args(genetic_code, "-db_gencode")
         result = _run_checked(runner, cmd)
 
         hits: list[SearchHit] = []
@@ -569,6 +583,7 @@ def polish_with_exonerate(
     record_families: dict[str, FamilyKey],
     window: tuple[str, int, int],
     runner: Callable = subprocess.run,
+    genetic_code: int | None = None,
 ) -> "PolishModel | None":
     """Refine one gene's model with `exonerate --refine region` against its window.
 
@@ -631,7 +646,7 @@ def polish_with_exonerate(
         base_cmd = [
             "exonerate", "--model", "protein2genome",
             "--query", str(reference_fasta), "--target", str(target_fasta),
-        ]
+        ] + _gencode_args(genetic_code, "--geneticcode")
         tail = ["--showtargetgff", "yes", "--showalignment", "no"]
         result = _run_checked(
             runner, base_cmd + ["--refine", "region"] + tail, tolerate_signal=True
@@ -718,6 +733,7 @@ def polish_with_miniprot(
     record_families: dict[str, FamilyKey],
     window: tuple[str, int, int],
     runner: Callable = subprocess.run,
+    genetic_code: int | None = None,
 ) -> "PolishModel | None":
     """Refine one gene's model with `miniprot --gff` against its window.
 
@@ -765,7 +781,8 @@ def polish_with_miniprot(
         target_fasta = _extract_window(genome_fasta, window, tmp_dir)
         offset = win_start - 1
 
-        cmd = ["miniprot", "--gff", str(target_fasta), str(reference_fasta)]
+        cmd = (["miniprot"] + _gencode_args(genetic_code, "-T")
+               + ["--gff", str(target_fasta), str(reference_fasta)])
         # A signal death here would abort the whole genome exactly as the
         # exonerate crash did. There is no `--refine` to drop, so there is
         # nothing to retry -- but `classify` treats a missing miniprot model

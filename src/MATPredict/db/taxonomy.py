@@ -98,3 +98,13 @@ def default_lineage_phylum_name(taxid: int) -> str | None:
     network request.
     """
     return _get_default_ncbi_client().fetch_taxonomy_phylum(taxid)
+
+
+def default_genetic_code(taxid: int) -> int | None:
+    """The NCBI translation table for `taxid`, or None when unknown.
+
+    Same lazily-built client and the same on-disk URL-keyed cache as
+    `default_lineage_taxids`, reading the identical efetch document, so a run
+    that already routed by taxid pays nothing extra for this.
+    """
+    return _get_default_ncbi_client().fetch_taxonomy_genetic_code(taxid)

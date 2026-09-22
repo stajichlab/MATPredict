@@ -108,6 +108,7 @@ from MATPredict.detect.polish import (
     PolishOutcome,
     classify,
 )
+from MATPredict.db.taxonomy import default_genetic_code
 from MATPredict.detect.reference_fasta import searchable_genes_by_family
 from MATPredict.detect.scoring import FamilyScore, is_ambiguous, score_cluster
 from MATPredict.detect.search import (
@@ -1221,6 +1222,13 @@ def run_pipeline(
     evidence_diagnostics_path: Path | None = None,
     routing: RoutingDecision | None = None,
     allow_cross_contig_fragments: bool = False,
+    #: NCBI translation table for THIS genome. None means "derive from the
+    #: taxid"; an explicit value wins, exactly as `--phylum` overrides taxid
+    #: routing. Falls back to 1 when the taxonomy lookup cannot answer -- never
+    #: guessed. The CUG-Ser1 clade (Serinales) is table 12 and reads CTG as
+    #: serine; translating those genomes with table 1 is systematically wrong.
+    genetic_code: int | None = None,
+    genetic_code_resolver: Callable[[int], int | None] = default_genetic_code,
 ) -> DetectionOutcome:
     # `routing` lets the caller route ONCE and reuse the decision, which the
     # CLI must do: it has to know the routed families BEFORE this call, so it
@@ -1251,6 +1259,16 @@ def run_pipeline(
     # Basidiomycota genome at 120 kb).
     if max_gap is None:
         max_gap = derive_max_cluster_gap(families, routing_mode=routing.routing_mode)
+    # Derived from the taxid when not supplied, out of the SAME cached efetch
+    # document the router just read, so this costs no extra network call. A
+    # failed lookup degrades to the standard table rather than raising.
+    if genetic_code is None and taxid is not None:
+        try:
+            genetic_code = genetic_code_resolver(taxid)
+        except Exception:
+            genetic_code = None
+    if genetic_code is None:
+        genetic_code = 1
     record_families = load_record_families(db_root)
     protein_lengths = _curated_protein_lengths(db_root, families, record_families)
     short_orf_by_family = _short_orf_genes(
@@ -1296,7 +1314,8 @@ def run_pipeline(
             rescued = [
                 h
                 for h in search_localize(
-                    genome_fasta, rescue_scope.families, reference_fasta, record_families
+                    genome_fasta, rescue_scope.families, reference_fasta,
+                    record_families, genetic_code=genetic_code,
                 )
                 # Defence in depth: only the families this rescue was actually
                 # run for may gain hits from it, only for the genes some cluster
@@ -1307,7 +1326,10 @@ def run_pipeline(
             localized_hit_ids.update(id(h) for h in rescued)
             hits.extend(rescued)
     else:
-        localized = search_localize(genome_fasta, families, reference_fasta, record_families)
+        localized = search_localize(
+            genome_fasta, families, reference_fasta, record_families,
+            genetic_code=genetic_code,
+        )
         localized_hit_ids.update(id(h) for h in localized)
         hits.extend(localized)
 
@@ -1491,12 +1513,12 @@ def run_pipeline(
                 exonerate_model = polish_with_exonerate(
                     genome_fasta=genome_fasta, family=family, gene_name=gene_name,
                     reference_fasta=reference_fasta, record_families=record_families,
-                    window=window,
+                    window=window, genetic_code=genetic_code,
                 )
                 miniprot_model = polish_with_miniprot(
                     genome_fasta=genome_fasta, family=family, gene_name=gene_name,
                     reference_fasta=reference_fasta, record_families=record_families,
-                    window=window,
+                    window=window, genetic_code=genetic_code,
                 )
                 outcome = classify(
                     _own_model(exonerate_model, family.key, gene_name, window[0]),

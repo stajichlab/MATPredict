@@ -46,9 +46,49 @@ loci:
       # MAT1-1-1. Classifying one member of a documented equivalence and not the other
       # would split the group in every figure that colours by gene_class.
       # Names remain provisional under the NAMES PROVISIONAL note in order.schema.yaml.
-      - {name: MAT1-1-1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: MAT1-1-2, role: core_MAT, gene_class: matA-2, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: MAT1-1-3, role: core_MAT, gene_class: matA-3, present_in_idiomorphs: ["MAT1-1"]}
+      # THE REQUIRED CORE IS TWO GENES: the alpha box (MAT1-1-1) and the HMG
+      # box (MAT1-2-1). Everything else below is `optional`.
+      #
+      # Measured 2026-09-22 on 30 Pezizomycotina genomes (Aspergillus,
+      # Penicillium, Neurospora, Sclerotinia, Botrytis, Fusarium): ZERO of 212
+      # calls reached `high`, every one capped at medium. Cause:
+      # `assign_tier` requires EVERY expected core gene of the called
+      # idiomorph, and the MAT1-1 roster listed five -- MAT1-1-1 through
+      # MAT1-1-5 -- that NO curated record carries together. Aspergillus
+      # MAT1-1 has one of them, Botrytis two, Fusarium three. `core_found`
+      # was unsatisfiable for the largest clade in the database (13,136
+      # genomes), so the high tier was unreachable by construction.
+      #
+      # Same ruling shape the curator applied to btbA (Mucoromycota), to
+      # STE20/RPO41/SXI1/SXI2 (Cryptococcus) and to the Saccharomyces
+      # cassettes: keep the accessory genes searched and reported, out of
+      # fraction_found and out of the core requirement.
+      #
+      # ALIASES: matA-1/matA-2/matA-3/mt a-1 are the NEUROSPORA names for
+      # genes already on this roster -- the gene_class values assigned by the
+      # curator already pair them (alpha_box, matA-2, matA-3, HMG_box). Listing
+      # both spellings as separate roster entries inflated the expected roster
+      # and let one locus gene count twice, exactly as MFa1/2/3 did in
+      # Tremellales. Confirmed by blastp best-hit, each Neurospora protein
+      # against every other MAT protein in db/:
+      #   matA-1 -> MAT1-1-1  31.9%  E 2.8e-18   (top 3 hits all MAT1-1-1)
+      #   mt a-1 -> MAT1-2-1  47.1%  E 7.7e-24   (top 2 hits all MAT1-2-1)
+      #   matA-2 -> MAT1-1-2  33.3%  E 4.1e-06
+      #   matA-3 -> MAT1-1-3  38.2%  E 5.8e-10   MARGINAL: MAT1-2-1 is second
+      #                                          at E 1.7e-09, under one order
+      #                                          of magnitude away, because
+      #                                          MAT1-1-3 and MAT1-2-1 are both
+      #                                          HMG-box proteins and
+      #                                          cross-match (E 2.5e-17).
+      #                                          They are idiomorph-specific
+      #                                          paralogs -- the sexM/sexP
+      #                                          shape -- and must NOT be
+      #                                          merged with each other.
+      # CIMG_00407 is NOT aliased: its best hit to any other MAT protein is
+      # E 5.7, i.e. nothing. It stays a distinct Coccidioides gene.
+      - {name: MAT1-1-1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MAT1-1"], aliases: [matA-1]}
+      - {name: MAT1-1-2, role: core_MAT, gene_class: matA-2, present_in_idiomorphs: ["MAT1-1"], aliases: [matA-2], optional: true}
+      - {name: MAT1-1-3, role: core_MAT, gene_class: matA-3, present_in_idiomorphs: ["MAT1-1"], aliases: [matA-3], optional: true}
       # MAT1-1-5 and MAT1-2-10 are the two Leotiomycete-characteristic MAT genes. Both are
       # real, named genes on primary GenBank records for this class (e.g. MAT1-1-5 on
       # JQ815883/KU726096/KU726097/KF944385; MAT1-2-10 is deposited under its older name
@@ -56,9 +96,9 @@ loci:
       # Declared here so detect.search._attribute does not silently drop hits to them.
       # MAT1-1-5 and MAT1-2-4 are lineage-specific, not universal (curator, 2026-09-19;
       # Doughan & Rollins 2016, doi:10.1016/j.funbio.2016.06.007).
-      - {name: MAT1-1-5, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: MAT1-2-1, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["MAT1-2"]}
-      - {name: MAT1-2-10, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
+      - {name: MAT1-1-5, role: core_MAT, present_in_idiomorphs: ["MAT1-1"], optional: true}
+      - {name: MAT1-2-1, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["MAT1-2"], aliases: ["mt a-1"]}
+      - {name: MAT1-2-10, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
       # APN2/SLA2 gene_class assigned 2026-09-19 by the project's curator, J. Stajich,
       # who was asked what gene_class values APN2 and SLA2 should take. He described APN2
       # as "class II DNA repair apurinic/apyrimidinic endonuclease" or "DNA endonuclease 2",
@@ -80,14 +120,14 @@ loci:
       # conflate the two literal names sharing this spelling.
       # MAT1-2-4 is Sclerotinia/Leotiomycete-specific (curator, 2026-09-19;
       # doi:10.1016/j.funbio.2016.06.007, PMID 27567717).
-      - {name: MAT1-2-4, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
+      - {name: MAT1-2-4, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
       # MAT1-1-4 (Coccidioides posadasii RMSCC1040, ABS19621.1) is a Coccidioides-
       # specific captured MAT1-1-idiomorph gene (Fraser et al. 2007; Mandel et al. 2007).
-      - {name: MAT1-1-4, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: MAT1-1-4, role: core_MAT, present_in_idiomorphs: ["MAT1-1"], optional: true}
       # CIMG_00407 (C. immitis RS genome, XP_001246636.2) is named by its locus tag
       # because no published MAT1-2-x number could be verified for it; a captured
       # Coccidioides MAT1-2-idiomorph gene (Fraser et al. 2007; Mandel et al. 2007).
-      - {name: CIMG_00407, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
+      - {name: CIMG_00407, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
       # matA-1/matA-2/matA-3/"mt a-1" are Neurospora crassa's own official NCBI Gene
       # symbols for its MAT1-1-1/MAT1-1-2/MAT1-1-3/MAT1-2-1 equivalents (classic
       # literature "mat A-1"/"mat A-2"/"mat A-3"/"mat a-1"; Glass et al. 1990;
@@ -99,10 +139,6 @@ loci:
       # detect.search._attribute. Mapping documented in each record's own
       # definition_note: matA-1 = MAT1-1-1, matA-2 = MAT1-1-2, matA-3 = MAT1-1-3,
       # "mt a-1" = MAT1-2-1.
-      - {name: matA-1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: matA-2, role: core_MAT, gene_class: matA-2, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: matA-3, role: core_MAT, gene_class: matA-3, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: "mt a-1", role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["MAT1-2"]}
   - locus_name: "PM"
     vocabulary_type: "enum"
     idiomorph_values: ["M", "P"]

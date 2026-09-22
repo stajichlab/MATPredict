@@ -41,6 +41,11 @@
 #
 # NOTE: this script never uses ${BASH_SOURCE[0]} -- it resolves to the wrong
 # path inside a SLURM work directory. REPO is an absolute path, overridable.
+#
+# ALSO: do not edit the working tree while this is running. It executes
+# `$REPO/src` directly, so a half-saved file becomes a SyntaxError in every
+# concurrently-running genome. That cost 277 of 2,283 genomes on 2026-09-21.
+# Use a git worktree for edits, or wait for the job.
 
 set -uo pipefail
 
@@ -111,11 +116,18 @@ run_one() {
     fi
 
     mkdir -p "$out"
-    if ! timeout 3600 "$PY" -m MATPredict detect \
-            --genome "$fna" --taxid "$taxid" --out-dir "$out" \
-            --evidence-diagnostics "$out/evidence_diagnostics.jsonl" \
-            > "$out/stdout.log" 2> "$out/stderr.log"; then
-        echo "FAIL $asmid detect rc=$?" >&2
+    # NOT `if ! ...; then echo rc=$?`: inside that block `$?` is the status of
+    # the negated test, which is always 0, so every failure reported rc=0 and
+    # the real exit code was lost. Capture it from the command itself.
+    timeout 3600 "$PY" -m MATPredict detect \
+        --genome "$fna" --taxid "$taxid" --out-dir "$out" \
+        --evidence-diagnostics "$out/evidence_diagnostics.jsonl" \
+        > "$out/stdout.log" 2> "$out/stderr.log"
+    rc=$?
+    if [[ $rc -ne 0 ]]; then
+        # The last stderr line is usually the whole story (a SyntaxError, a
+        # missing tool, an OOM); printing it here saves opening 277 files.
+        echo "FAIL $asmid detect rc=$rc: $(tail -1 "$out/stderr.log" 2>/dev/null)" >&2
     fi
     # Node-local scratch is not unlimited and these are ~20-200 MB each.
     rm -f "$fna"

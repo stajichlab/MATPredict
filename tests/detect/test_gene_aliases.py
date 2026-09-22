@@ -39,7 +39,11 @@ def test_the_roster_declares_the_collapsed_names():
     genes = {g["name"] for g in _fam("Basidiomycota", "MAT").genes}
     assert "MFa" in genes and "MFalpha" in genes
     assert not {"MFa1", "MFa2", "MFa3", "MFalpha1", "MFalpha2", "MFalpha3"} & genes
-    assert genes == {"SXI1", "SXI2", "MFalpha", "MFa", "STE3"}
+    # The roster also carries the recombination-trapped genes and the four
+    # boundary genes added by the 2026-09-21 Cryptococcus recuration; this test
+    # is about the pheromone collapse, so it asserts those names are gone
+    # rather than pinning the whole roster.
+    assert {"SXI1", "SXI2", "MFalpha", "MFa", "STE3"} <= genes
 
 
 def test_aliases_map_back_to_the_canonical_name():

@@ -52,10 +52,23 @@ def assign_tier(
     # Medium, because the Bbeta roster's `pheromone_receptor` alias has no
     # reference protein anywhere in `db/`. Balpha (3/3 found) was demoted the
     # same way. Those were the two most complete calls in that run.
+    # An `optional: true` gene is excused from the core requirement for the
+    # same reason `genes_not_searchable` is, one clause below: requiring it
+    # states that the genome failed to show something that was never required.
+    # `scoring.score_cluster` already drops optional genes from
+    # `fraction_found`; before 2026-09-21 this function did not, so marking a
+    # gene optional removed it from the score while still letting its absence
+    # cap the tier.
+    #
+    # Load-bearing for the Cryptococcus recuration: the curator ruled the
+    # recombination-trapped genes (STE20, RPO41, RPL39) and the homeodomain
+    # genes (SXI1, SXI2) in as optional, because they are expected in
+    # Cryptococcus but not established as universal across Tremellales. The
+    # required core is the pheromone precursors and the receptor.
     expected_core = {
         g["name"]
         for g in expected_genes_for_idiomorph(family, score.genes_found)
-        if g["role"] == "core_MAT"
+        if g["role"] == "core_MAT" and not g.get("optional")
     }
     core_genes = expected_core - set(score.genes_not_searchable)
     core_requirement_relaxed = core_genes != expected_core

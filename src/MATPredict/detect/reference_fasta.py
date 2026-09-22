@@ -52,8 +52,18 @@ def build_reference_fasta(
     # canonical name cannot be resolved without knowing which family its record
     # belongs to -- even on the unrestricted path.
     record_families = load_record_families(db_root)
-    aliases_by_family = {
-        f.key: f.gene_aliases for f in load_all_families(db_root)
+    _families = load_all_families(db_root)
+    aliases_by_family = {f.key: f.gene_aliases for f in _families}
+    #: Per family, the canonical gene names the curator has taken OFF the search
+    #: list (`exclude_from_search: true` in order.yml). The record keeps the
+    #: protein -- this only stops it being used as a query. A gene excluded here
+    #: never reaches the reference FASTA, so `searchable_genes_by_family` reads
+    #: it back as unsearchable and it leaves the denominator and the core
+    #: requirement by the existing route, with no new special case.
+    excluded_by_family = {
+        f.key: {g["name"] for g in f.genes
+                if isinstance(g, dict) and g.get("exclude_from_search")}
+        for f in _families
     }
     lines: list[str] = []
     #: (record_id, canonical name, sequence) already emitted. Two curated
@@ -91,6 +101,8 @@ def build_reference_fasta(
             sequence = seq.rstrip("\n")
             family_key = record_families.get(m["record_id"])
             canonical = aliases_by_family.get(family_key, {}).get(m["name"], m["name"])
+            if canonical in excluded_by_family.get(family_key, ()):
+                continue
             key = (m["record_id"], canonical, sequence.replace("\n", ""))
             if key in emitted:
                 continue

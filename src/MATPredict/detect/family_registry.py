@@ -1,6 +1,7 @@
 """Load order.yml families and route them to a taxid via taxonomic_scope."""
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -324,8 +325,8 @@ def expected_genes_for_idiomorph(
 #: they were built from. `run_pipeline` calls that function once per genome and
 #: it parses every curated metadata.yaml: 465 ms against the live 101-record
 #: database, versus 2.5 ms to stat the same files. Over a 3,174-genome rollout
-#: the repeated parse is roughly 27 minutes.
-_RECORD_FAMILIES_CACHE: dict[Path, tuple[tuple[int, int, int], dict[str, "FamilyKey"]]] = {}
+#: the repeated parse is roughly 27 minutes. Invalidated by content hash.
+_RECORD_FAMILIES_CACHE: dict[Path, tuple[str, dict[str, "FamilyKey"]]] = {}
 
 
 def clear_record_families_cache() -> None:
@@ -334,26 +335,29 @@ def clear_record_families_cache() -> None:
     _RECORD_FAMILIES_CACHE.clear()
 
 
-def _db_stamp(db_root: Path) -> tuple[int, int, int]:
-    """A cheap fingerprint of every curated metadata.yaml under `db_root`.
+def _db_stamp(db_root: Path) -> str:
+    """A content hash of every curated metadata.yaml under `db_root`.
 
-    (file count, newest mtime_ns, summed size). Stat-only, so it costs ~2.5 ms
-    against the live database where the real parse costs ~465 ms. All three
-    components are needed: the count alone misses an edit, the mtime alone
-    misses a file swapped in with an older timestamp, and the size catches a
-    same-mtime rewrite of different length. This is a cache-invalidation
-    heuristic, not a content hash -- `clear_record_families_cache()` is the
-    escape hatch for a caller that needs certainty.
+    A real hash, not a (size, mtime) heuristic. The heuristic was tried first
+    and is unsafe: `st_mtime_ns` granularity is filesystem-dependent, and on
+    this cluster's `/scratch` five rapid rewrites of one file produced only
+    TWO distinct mtimes. A curator changing a `locus_name` from `HD` to `PR`
+    -- same byte length, so same file size and same file count -- would then
+    be served a stale index, and every hit in the run would be attributed to
+    the wrong family. The repo's own test suite caught exactly that case.
+
+    Hashing is cheap enough that the heuristic bought nothing: 5.4 ms to hash
+    all 101 curated records against 466 ms to parse them, an 86x margin. The
+    path is hashed alongside the bytes so a rename, or a record moved between
+    phyla, invalidates too.
     """
-    count = 0
-    newest = 0
-    total = 0
-    for path in db_root.glob("*/*/*/metadata.yaml"):
-        stat = path.stat()
-        count += 1
-        newest = max(newest, stat.st_mtime_ns)
-        total += stat.st_size
-    return (count, newest, total)
+    digest = hashlib.blake2b(digest_size=16)
+    for path in sorted(db_root.glob("*/*/*/metadata.yaml")):
+        digest.update(str(path.relative_to(db_root)).encode())
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
 
 
 def load_record_families(db_root: Path) -> dict[str, FamilyKey]:

@@ -95,6 +95,13 @@ class RolloutSummary:
 
     total_genomes: int
     confidence_tally: dict[str, dict[str, int]] = field(default_factory=dict)
+    #: Per family, how many calls of each `locus_class`. Beside the confidence
+    #: tally rather than folded into it: they answer different questions --
+    #: confidence is how sure the call is, class is WHAT KIND of thing was
+    #: found. Added 2026-09-21 with `partial_locus`, which counts as a
+    #: detection for recall but must never be merged into a headline locus
+    #: count without being visible.
+    locus_class_tally: dict[str, dict[str, int]] = field(default_factory=dict)
     not_detected: list[NotDetectedEntry] = field(default_factory=list)
     anomalies: list[Anomaly] = field(default_factory=list)
     genome_errors: list[GenomeReportError] = field(default_factory=list)
@@ -104,6 +111,7 @@ class RolloutSummary:
         return {
             "total_genomes": self.total_genomes,
             "confidence_tally": self.confidence_tally,
+            "locus_class_tally": self.locus_class_tally,
             "not_detected": [
                 {"genome": n.genome, "family": n.family, "reason": n.reason}
                 for n in self.not_detected
@@ -195,6 +203,7 @@ def aggregate_reports(
     show for it.
     """
     confidence_tally: dict[str, dict[str, int]] = {}
+    locus_class_tally: dict[str, dict[str, int]] = {}
     not_detected: list[NotDetectedEntry] = []
     genome_errors: list[GenomeReportError] = []
 
@@ -228,6 +237,13 @@ def aggregate_reports(
             genomes_by_family.setdefault(family, set()).add(genome_id)
             confidence_tally.setdefault(family, {}).setdefault(confidence, 0)
             confidence_tally[family][confidence] += 1
+            # Guarded, not defaulted: a report written before `locus_class`
+            # existed must still count toward confidence rather than being
+            # silently filed under an invented class name.
+            locus_class = result.get("locus_class")
+            if locus_class is not None:
+                locus_class_tally.setdefault(family, {}).setdefault(locus_class, 0)
+                locus_class_tally[family][locus_class] += 1
 
         for entry in doc.get("not_detected") or []:
             family = entry.get("family")
@@ -249,6 +265,7 @@ def aggregate_reports(
     return RolloutSummary(
         total_genomes=len(report_paths),
         confidence_tally=confidence_tally,
+        locus_class_tally=locus_class_tally,
         not_detected=not_detected,
         anomalies=anomalies,
         genome_errors=genome_errors,

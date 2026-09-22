@@ -174,6 +174,80 @@ LOCUS_CLASS_IDIOMORPH_ONLY = "idiomorph_gene_only"
 # on this class's vocabulary.
 LOCUS_CLASS_FLANKING_ONLY = "flanking_gene_only"
 
+#: A call that cleared the admission bar only by TYING it, and every call the
+#: relaxed pass produces. Curator's ruling, 2026-09-21. PROVISIONAL -- the bar
+#: is to be revisited once there are real examples to look at.
+LOCUS_CLASS_PARTIAL = "partial_locus"
+
+
+def apply_partial_locus(
+    locus_class: str,
+    fraction_found: float,
+    ambiguity_floor: float,
+    relaxed: bool,
+) -> str:
+    """Demote a `mat_locus` to `partial_locus` when it only tied the floor, or
+    when it came from the relaxed pass.
+
+    Two rules, one class, both curator-ruled on 2026-09-21.
+
+    **Tying the floor.** The admission test is `fraction_found < floor`, i.e.
+    strictly less-than, so a call landing EXACTLY on the floor survives. That
+    is deliberate and stays. But it should not then be reported as a confirmed
+    locus. Keying the class on the floor itself rather than on a new
+    completeness constant is the point: no number is invented here, and if the
+    floor moves the class follows it.
+
+    Which families this can touch is narrow and was measured: of 19 curated
+    families, only 5 can be `mat_locus` at exactly 0.500 -- Ascomycota MAT
+    (8/16), MATsc (4/8), MATtub (2/4), MATyl (2/4) and Mucoromycota MAT (3/6).
+    Every other family that can reach 0.500 has an all-`core_MAT` roster, so a
+    half-find has no flanking gene and classifies as `idiomorph_gene_only`
+    instead. No Basidiomycota family is affected at all.
+
+    **The relaxed pass.** Every relaxed call is demoted regardless of fraction.
+    Measured on 283 BFD Mucoromycota genomes: the relaxed pass produced 352
+    loci at median identity 38.1% and median span 5,538 bp, against the strict
+    pass's 77.6% and 16,067 bp -- a different population, not a weaker tail of
+    the same one. 50 genomes averaged seven loci each; Rhizomucor miehei CAU432
+    reported 13 loci, 9 of them `mat_locus`, with mutually contradictory
+    idiomorph calls (3 Plus / 4 Minus / 6 undetermined). Reporting those as
+    confirmed loci is worse than reporting nothing, because a consumer cannot
+    tell which to believe. `detection_pass` still records which route a call
+    took, so demoting the class loses nothing.
+
+    The curator declined to cap the NUMBER of relaxed calls per genome: that
+    needs a constant nobody has evidence for, and the volume is acceptable once
+    the calls stop claiming to be loci.
+
+    **Only `mat_locus` is displaced.** `idiomorph_gene_only`,
+    `flanking_gene_only` and `homothallic_candidate` describe WHICH GENES are
+    present; this rule describes how strong the call is. They are different
+    axes, and overwriting a composition class with a strength class would throw
+    away the more specific fact.
+    """
+    if not is_partial_strength(fraction_found, ambiguity_floor, relaxed):
+        return locus_class
+    if locus_class != LOCUS_CLASS_MAT:
+        return locus_class
+    return LOCUS_CLASS_PARTIAL
+
+
+def is_partial_strength(
+    fraction_found: float, ambiguity_floor: float, relaxed: bool
+) -> bool:
+    """Did this call clear the bar only barely -- by tying the floor, or via
+    the relaxed pass?
+
+    Separate from `apply_partial_locus` because the two consequences apply to
+    DIFFERENT sets. The class change touches only `mat_locus`, since the other
+    classes describe which genes are present and must not be overwritten. The
+    confidence cap touches EVERY class, because `high` makes the same strong
+    claim whatever the class is: a `homothallic_candidate` resting on exactly
+    half its roster should no more be `high` than a `mat_locus` would be.
+    """
+    return relaxed or fraction_found == ambiguity_floor
+
 
 def classify_locus(cluster: GeneCluster, family: Family) -> str:
     """What KIND of thing this cluster is, independent of how it was admitted.

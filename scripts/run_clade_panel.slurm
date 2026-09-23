@@ -59,7 +59,22 @@ THREADS="${SLURM_CPUS_PER_TASK:-4}"
 
 PY="$REPO/.pixi/envs/default/bin/python"
 export PATH="$REPO/.pixi/envs/default/bin:$PATH"   # exonerate, miniprot, tblastn
-export PYTHONPATH="$REPO/src"
+# SRC lets a run execute a WORKTREE's source while still using $REPO's pixi
+# environment and results directory -- how a change is panel-tested without
+# touching the live tree (the 2026-09-21 lesson).
+SRC="${SRC:-$REPO/src}"
+# FAIL LOUDLY when SRC is not visible from the compute node. A $PYTHONPATH
+# pointing at a missing directory does NOT error: python silently falls back to
+# the INSTALLED MATPredict, so the job runs to completion against the WRONG
+# code and its output looks entirely normal. That cost two launches on
+# 2026-09-23, when a worktree on /scratch -- which is NODE-LOCAL -- existed
+# only on the submitting node. A worktree for a SLURM run belongs on /bigdata.
+if [[ ! -f "$SRC/MATPredict/__init__.py" ]]; then
+    echo "SRC=$SRC is not a MATPredict source tree on this node ($(hostname))" >&2
+    echo "  /scratch is node-local; put a worktree for a SLURM run on /bigdata" >&2
+    exit 1
+fi
+export PYTHONPATH="$SRC"
 
 # $SCRATCH is node-local NVMe, pre-created per job, and NOT shared between
 # nodes. Genomes are decompressed here and deleted straight after use; only the
@@ -69,6 +84,7 @@ WORK="${SCRATCH:?SCRATCH is not set -- run this under SLURM}/matpredict_${CLADE/
 mkdir -p "$WORK/fasta" "$OUT_DIR/runs" "$REPO/logs"
 
 echo "repo=$REPO"
+echo "src=$SRC"
 echo "clade=$RANK=$CLADE  samples=$SAMPLES"
 echo "scratch=$WORK"
 echo "out=$OUT_DIR  threads=$THREADS"

@@ -90,6 +90,7 @@ from MATPredict.detect.family_registry import (
     route,
 )
 from MATPredict.detect.idiomorph import (
+    LOCUS_CLASS_MAT,
     LOCUS_CLASS_PARTIAL,
     apply_partial_locus,
     idiomorph_candidates,
@@ -103,7 +104,9 @@ from MATPredict.detect.idiomorph import (
     resolve_idiomorph_overlaps,
 )
 from MATPredict.detect.polish import (
+    STATUS_AGREE,
     STATUS_DISAGREE,
+    STATUS_SINGLE,
     STATUS_NOT_POLISH_CANDIDATE,
     STATUS_UNPOLISHED,
     PolishModel,
@@ -238,6 +241,30 @@ class DetectionResult:
     `min_idiomorph_margin` the confidence tier is capped; the number is
     reported either way so a close call is never mistaken for a clean one.
     """
+    polished_genes: int = 0
+    """How many of this locus's genes produced a real polished gene model.
+
+    A gene counted here was modelled by `exonerate --refine` or `miniprot`
+    (`polished_agree`, `polished_disagree` or `polished_single`). A raw tblastn
+    HSP that no tool could turn into a gene (`unpolished`) does NOT count, and
+    neither does a gene evidenced directly from an annotation
+    (`not_polish_candidate`) -- the question this answers is "did a gene model
+    survive here", and an annotated gene was never asked.
+
+    This is the sharpest single discriminator measured on the 2026-09-22
+    Pezizomycotina panels (46,647 lineage-routed loci):
+
+        polished genes    loci        high   mean identity
+                     0  39,838 (85%)     0           32.8%
+                     1   1,161 ( 2%)     0             --
+                    2+   5,648 (12%)  2,957           61.9%
+
+    EVERY high-confidence call has two or more; not one of the 41,000 loci
+    below that bar is high-confidence, and their mean identity sits in the
+    twilight zone where alignment stops implying homology. They are not a
+    weaker tail of the real signal, they are scattered HMG-box and alpha-box
+    paralogs -- 150-350 bp HSPs at 8-28% query coverage.
+    """
     idiomorph_resolutions: list[IdiomorphResolution] = field(default_factory=list)
     """Every overlapping idiomorph pair collapsed for this locus.
 
@@ -273,6 +300,15 @@ class DetectionOutcome:
     results: list[DetectionResult]
     not_detected: list[NotDetectedFamily] = field(default_factory=list)
     families_attempted: list[FamilyKey] = field(default_factory=list)
+    suppressed_unpolished: int = 0
+    """How many built loci were withheld for having fewer than
+    MIN_POLISHED_GENES polished genes.
+
+    Reported as a number so the suppression is visible rather than silent: a
+    genome that drops from 7 loci to 1 says so. The per-candidate detail is
+    already on disk in the evidence-diagnostics stream, so nothing withheld
+    here is lost.
+    """
     # Which `family_registry.route` rule chose `families_attempted` (see
     # `RoutingDecision`). Carried all the way into the detection report because
     # it is what tells a reader whether this run's not-detected entries are
@@ -415,6 +451,15 @@ class EvidenceFloor:
     min_identity: float | None = None
     require_core_role: bool = True
 
+
+#: How many polished gene models a cluster must carry to be REPORTED as a locus.
+#: Curator's ruling, 2026-09-22, having been shown that loci with exactly one
+#: polished gene produce zero high-confidence calls: "yes require more than 1".
+#: Measured cost of the bar on the 2026-09-22 Pezizomycotina panels: 46,647
+#: reported loci fall to 5,648 (12.1%) and ALL 2,957 high-confidence calls
+#: survive. At >=1 the figure would be 6,809 and the same 2,957 -- so the
+#: stricter bar removes a further 1,161 loci for nothing.
+MIN_POLISHED_GENES = 2
 
 #: The permissive floor the evidence diagnostics enumerate candidates with:
 #: every family with >=1 own hit in the cluster, of any gene, any role, any
@@ -1303,6 +1348,12 @@ def run_pipeline(
     evidence_diagnostics_path: Path | None = None,
     routing: RoutingDecision | None = None,
     allow_cross_contig_fragments: bool = False,
+    #: How many of a locus's genes must rest on a real gene model for it to be
+    #: reported. See `MIN_POLISHED_GENES` for the measurement behind the
+    #: default and `_modelled_gene_count` for what counts. 0 disables the bar,
+    #: which is what the tests written before it use to keep asserting the
+    #: behaviour they were written for.
+    min_polished_genes: int = MIN_POLISHED_GENES,
     #: NCBI translation table for THIS genome. None means "derive from the
     #: taxid"; an explicit value wins, exactly as `--phylum` overrides taxid
     #: routing. Falls back to 1 when the taxonomy lookup cannot answer -- never
@@ -1703,6 +1754,54 @@ def run_pipeline(
             if key == family_key and cluster_id in cluster_ids
         )
 
+    def _modelled_gene_count(
+        member_clusters: list[GeneCluster], family_key: FamilyKey
+    ) -> int:
+        """How many DISTINCT genes of this family, in these exact clusters, rest
+        on a real gene model rather than on a bare alignment.
+
+        A gene counts when either:
+
+        * a polishing tool modelled it (`polished_agree`, `polished_disagree`
+          or `polished_single`), or
+        * it came from the annotated fast path, i.e. it has a
+          `diamond_proteome` hit here -- a gene model somebody already called,
+          which was never put to the tools precisely BECAUSE it needs no
+          refining.
+
+        Counting the fast path is not a loosening, it is the whole reason this
+        is not called `polished_gene_count`. Gating on polish alone would score
+        every gene of a fully annotated genome as unmodelled and withhold its
+        real MAT locus -- the annotated ZygoLife and BFD-proteome workflows
+        would report nothing at all. The measurement behind the bar came from
+        genome-only runs, where no diamond hit exists and the two definitions
+        coincide, so it does not speak to that case either way.
+
+        What never counts is `STATUS_UNPOLISHED`: a localized HSP that BOTH
+        tools were given a window for and neither could turn into a gene. That
+        is the population the bar exists to remove.
+
+        Counted per distinct gene NAME, not per hit: a cluster routinely holds
+        many HSPs of one gene, and three fragments of one alpha-box must not
+        add up to the bar on their own. Scoped by (cluster, family) exactly as
+        `_any_gene_unpolished` is, and for the same reasons.
+        """
+        cluster_ids = {id(c) for c in member_clusters}
+        modelled = {
+            gene_name
+            for (cluster_id, key, gene_name), outcome in polish_by.items()
+            if key == family_key and cluster_id in cluster_ids
+            and outcome.status in (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE)
+        }
+        modelled |= {
+            h.gene_name
+            for c in member_clusters
+            for h in c.hits
+            if h.family_key == family_key and h.superseded_by is None
+            and h.method == "diamond_proteome"
+        }
+        return len(modelled)
+
     def _build(
         score: FamilyScore,
         member_clusters: list[GeneCluster],
@@ -1771,7 +1870,28 @@ def run_pipeline(
             ambiguity_floor=ambiguity_floor,
             relaxed=False,
         )
+        polished_genes = _modelled_gene_count(member_clusters, score.family_key)
+        if polished_genes == 0:
+            # Curator's rulings, 2026-09-22. (1) "without polishing it is low":
+            # a locus whose every gene is a raw tblastn HSP that no tool could
+            # model is not a medium-confidence call. Measured: 39,838 such loci
+            # across the Pezizomycotina panels, mean identity 32.8%, and not
+            # one of them is high-confidence today -- so nothing is demoted
+            # from high by this.
+            tier = "low"
+            # (2) "same as 1, must have polished": `mat_locus` is the strongest
+            # claim this pipeline makes, and 3,388 loci were making it on
+            # entirely unpolished evidence. Demote to `partial_locus`, which is
+            # already the strength class `apply_partial_locus` uses, rather
+            # than inventing another. The composition classes
+            # (`idiomorph_gene_only`, `flanking_gene_only`,
+            # `homothallic_candidate`) are statements about WHICH genes are
+            # present and are left alone, exactly as the floor-tie rule leaves
+            # them.
+            if locus_class == LOCUS_CLASS_MAT:
+                locus_class = LOCUS_CLASS_PARTIAL
         return DetectionResult(
+            polished_genes=polished_genes,
             family_key=score.family_key,
             contig=segments[0].contig,
             start=segments[0].start,
@@ -1888,13 +2008,55 @@ def run_pipeline(
                 len(results),
             )
 
+    # Curator's ruling (3), 2026-09-22: "yes require more than 1". A cluster
+    # must carry at least MIN_POLISHED_GENES polished gene models to be
+    # REPORTED. Applied here, after the relaxed pass, so the relaxed trigger
+    # ("only when the strict pass found nothing") still sees the unfiltered
+    # strict result and its behaviour is unchanged -- and so the bar applies
+    # to relaxed calls too, which is the point of having it.
+    #
+    # Nothing is destroyed: the per-candidate rows are already on disk in the
+    # evidence-diagnostics stream, a family whose only calls were withheld
+    # still gets a `not_detected` entry naming the reason, and the count is
+    # carried on the outcome.
+    suppressed = [r for r in results if r.polished_genes < min_polished_genes]
+    results = [r for r in results if r.polished_genes >= min_polished_genes]
+    if suppressed:
+        logger.info(
+            "withheld %d locus/loci carrying fewer than %d modelled genes",
+            len(suppressed), min_polished_genes,
+        )
+
     reported = {r.family_key for r in results}
+    #: family -> the best withheld call for it, so `not_detected` can say that
+    #: something WAS built and why it did not survive, rather than falling
+    #: through to the generic below-the-floor wording.
+    suppressed_best: dict[FamilyKey, DetectionResult] = {}
+    for r in suppressed:
+        best = suppressed_best.get(r.family_key)
+        if best is None or r.polished_genes > best.polished_genes:
+            suppressed_best[r.family_key] = r
     not_detected: list[NotDetectedFamily] = []
     for family in families:
         if family.key in reported:
             continue
         short_genes = short_orf_by_family.get(family.key, set())
         score = best_attempt.get(family.key)
+        withheld = suppressed_best.get(family.key)
+        if withheld is not None:
+            not_detected.append(NotDetectedFamily(
+                family_key=family.key,
+                reason=(
+                    f"best cluster carried {withheld.polished_genes} modelled "
+                    f"gene(s), below the {min_polished_genes} required to report a "
+                    f"locus; its genes were localized but never modelled"
+                ),
+                best_fraction_found=score.fraction_found if score else 0.0,
+                genes_found=list(withheld.genes_found),
+                genes_missing=[g for g in withheld.genes_missing if g not in short_genes],
+                genes_not_searchable=sorted(short_genes),
+            ))
+            continue
         if score is None:
             not_detected.append(NotDetectedFamily(
                 family_key=family.key,
@@ -1921,4 +2083,5 @@ def run_pipeline(
         not_detected=not_detected,
         families_attempted=[f.key for f in families],
         routing_mode=routing.routing_mode,
+        suppressed_unpolished=len(suppressed),
     )

@@ -1,0 +1,626 @@
+provenance:
+  source: NCBI Gene esummary genomicinfo, via E-utilities
+  harvested_date: '2026-09-23'
+  coordinate_convention: 1-based inclusive, start <= end, strand explicit
+  note: Independent of the curated records' own coordinates, which are positions within locus-specific
+    GenBank deposits. Measures placement on an assembly, NOT held-out recall -- the curated reference
+    is often the same species or strain.
+records:
+- record_id: 162425_fgsc-a4_MAT_combined
+  order: Eurotiales
+  species: Aspergillus nidulans
+  strain: FGSC A4
+  idiomorphs:
+  - MAT1-1
+  - MAT1-2
+  genes:
+  - record_gene_name: SLA2
+    role: flanking_conserved
+    locus_tag: ANIA_02756
+    placements:
+    - gene_id: '2874385'
+      ncbi_gene_name: ANIA_02756
+      sequence_accession: NC_066262.1
+      start: 2851912
+      end: 2855641
+      strand: +
+      exon_count: 7
+  - record_gene_name: MAT1-1-1
+    role: core_MAT
+    locus_tag: ANIA_02755
+    placements:
+    - gene_id: '2874476'
+      ncbi_gene_name: MAT1
+      sequence_accession: NC_066262.1
+      start: 2856505
+      end: 2858542
+      strand: '-'
+      exon_count: 3
+  - record_gene_name: COX13
+    role: flanking_conserved
+    locus_tag: ANIA_10585
+    placements:
+    - gene_id: '2872534'
+      ncbi_gene_name: ANIA_10585
+      sequence_accession: NC_066259.1
+      start: 1138006
+      end: 1138942
+      strand: '-'
+      exon_count: 4
+  - record_gene_name: APN2
+    role: flanking_conserved
+    locus_tag: ANIA_04736
+    placements:
+    - gene_id: '2872530'
+      ncbi_gene_name: ANIA_04736
+      sequence_accession: NC_066259.1
+      start: 1139240
+      end: 1141359
+      strand: +
+      exon_count: 6
+  - record_gene_name: MAT1-2-1
+    role: core_MAT
+    locus_tag: ANIA_04734
+    placements:
+    - gene_id: '2872531'
+      ncbi_gene_name: MAT2
+      sequence_accession: NC_066259.1
+      start: 1145577
+      end: 1147427
+      strand: '-'
+      exon_count: 4
+  unresolved: []
+- record_id: 746128_a1163_MAT_MAT1-1
+  order: Eurotiales
+  species: Aspergillus fumigatus
+  strain: A1163
+  idiomorphs:
+  - MAT1-1
+  genes:
+  - record_gene_name: COX13
+    role: flanking_conserved
+    locus_tag: AFUB_042870
+    placements:
+    - sequence_accession: DS499596.1
+      start: 2517390
+      end: 2518130
+      strand: '-'
+      via: protein /coded_by
+      gene_id: null
+  - record_gene_name: APN2
+    role: flanking_conserved
+    locus_tag: AFUB_042880
+    placements:
+    - sequence_accession: DS499596.1
+      start: 2518491
+      end: 2520679
+      strand: +
+      via: protein /coded_by
+      gene_id: null
+  - record_gene_name: MAT1-2-1
+    role: core_MAT
+    locus_tag: AFUB_042890
+    placements:
+    - sequence_accession: DS499596.1
+      start: 2521591
+      end: 2522628
+      strand: '-'
+      via: protein /coded_by
+      gene_id: null
+  - record_gene_name: MAT1-1-1
+    role: core_MAT
+    locus_tag: AFUB_042900
+    placements:
+    - sequence_accession: DS499596.1
+      start: 2522745
+      end: 2523902
+      strand: +
+      via: protein /coded_by
+      gene_id: null
+  - record_gene_name: SLA2
+    role: flanking_conserved
+    locus_tag: AFUB_042910
+    placements:
+    - sequence_accession: DS499596.1
+      start: 2526379
+      end: 2530649
+      strand: '-'
+      via: protein /coded_by
+      gene_id: null
+  unresolved: []
+- record_id: 746128_af293_MAT_MAT1-2
+  order: Eurotiales
+  species: Aspergillus fumigatus
+  strain: Af293
+  idiomorphs:
+  - MAT1-2
+  genes:
+  - record_gene_name: SLA2
+    role: flanking_conserved
+    locus_tag: AFUA_3G06140
+    placements:
+    - gene_id: '3512261'
+      ncbi_gene_name: AFUA_3G06140
+      sequence_accession: NC_007196.1
+      start: 1516449
+      end: 1520994
+      strand: +
+      exon_count: 12
+  - record_gene_name: MAT1-2-4
+    role: core_MAT
+    locus_tag: AFUA_3G06160
+    placements:
+    - gene_id: '3512260'
+      ncbi_gene_name: MAT1-2-4
+      sequence_accession: NC_007196.1
+      start: 1523105
+      end: 1524006
+      strand: '-'
+      exon_count: 4
+  - record_gene_name: MAT1-2-1
+    role: core_MAT
+    locus_tag: AFUA_3G06170
+    placements:
+    - gene_id: '3512023'
+      ncbi_gene_name: MAT1-2
+      sequence_accession: NC_007196.1
+      start: 1524532
+      end: 1525609
+      strand: +
+      exon_count: 3
+  - record_gene_name: APN2
+    role: flanking_conserved
+    locus_tag: AFUA_3G06180
+    placements:
+    - gene_id: '3512022'
+      ncbi_gene_name: AFUA_3G06180
+      sequence_accession: NC_007196.1
+      start: 1526148
+      end: 1528852
+      strand: '-'
+      exon_count: 5
+  - record_gene_name: COX13
+    role: flanking_conserved
+    locus_tag: AFUA_3G06190
+    placements:
+    - gene_id: '3512021'
+      ncbi_gene_name: AFUA_3G06190
+      sequence_accession: NC_007196.1
+      start: 1528982
+      end: 1530023
+      strand: +
+      exon_count: 5
+  unresolved: []
+- record_id: 5501_rs_MAT_MAT1-2
+  order: Onygenales
+  species: Coccidioides immitis
+  strain: RS
+  idiomorphs:
+  - MAT1-2
+  genes:
+  - record_gene_name: SLA2
+    role: flanking_conserved
+    locus_tag: CIMG_00409
+    placements:
+    - sequence_accession: NW_004504310.1
+      start: 7370753
+      end: 7375220
+      strand: +
+      via: nuccore feature table
+      gene_id: '4566039'
+  - record_gene_name: CIMG_00407
+    role: core_MAT
+    locus_tag: CIMG_00407
+    placements:
+    - sequence_accession: NW_004504310.1
+      start: 7376659
+      end: 7377555
+      strand: '-'
+      via: nuccore feature table
+      gene_id: '4566037'
+  - record_gene_name: MAT1-2-1
+    role: core_MAT
+    locus_tag: CIMG_00406
+    placements:
+    - sequence_accession: NW_004504310.1
+      start: 7377854
+      end: 7379544
+      strand: +
+      via: nuccore feature table
+      gene_id: '4566036'
+  - record_gene_name: APN2
+    role: flanking_conserved
+    locus_tag: CIMG_00405
+    placements:
+    - sequence_accession: NW_004504310.1
+      start: 7379688
+      end: 7382013
+      strand: '-'
+      via: nuccore feature table
+      gene_id: '4566035'
+  - record_gene_name: COX13
+    role: flanking_conserved
+    locus_tag: CIMG_00404
+    placements:
+    - sequence_accession: NW_004504310.1
+      start: 7382483
+      end: 7383483
+      strand: +
+      via: nuccore feature table
+      gene_id: '4566034'
+  unresolved: []
+- record_id: 42068_ru7_PM_combined
+  order: Pneumocystidales
+  species: Pneumocystis jirovecii
+  strain: RU7
+  idiomorphs:
+  - M
+  - P
+  genes:
+  - record_gene_name: matPi
+    role: core_MAT
+    locus_tag: T551_02159
+    placements:
+    - sequence_accession: NW_017264783.1
+      start: 211240
+      end: 211935
+      strand: '-'
+      via: nuccore feature table
+      gene_id: '28940677'
+  - record_gene_name: matMc
+    role: core_MAT
+    locus_tag: T551_02162
+    placements:
+    - sequence_accession: NW_017264783.1
+      start: 220321
+      end: 221076
+      strand: '-'
+      via: nuccore feature table
+      gene_id: '28940680'
+  unresolved: []
+- record_id: 4754_b80_PM_combined
+  order: Pneumocystidales
+  species: Pneumocystis carinii
+  strain: B80
+  idiomorphs:
+  - M
+  - P
+  genes:
+  - record_gene_name: matPi
+    role: core_MAT
+    locus_tag: T552_02829
+    placements:
+    - sequence_accession: NW_017264725.1
+      start: 71312
+      end: 72094
+      strand: '-'
+      via: nuccore feature table
+      gene_id: '28937561'
+  - record_gene_name: matMc
+    role: core_MAT
+    locus_tag: T552_02831
+    placements:
+    - sequence_accession: NW_017264725.1
+      start: 80213
+      end: 81003
+      strand: '-'
+      via: nuccore feature table
+      gene_id: '28937562'
+  unresolved: []
+- record_id: 28985_nrrl-y-1140_MATsc_HMLalpha
+  order: Saccharomycetales
+  species: Kluyveromyces lactis
+  strain: NRRL Y-1140
+  idiomorphs:
+  - MATalpha
+  genes:
+  - record_gene_name: MATALPHA1
+    role: core_MAT
+    locus_tag: KLLA0_C00352g
+    placements:
+    - gene_id: '2892594'
+      ncbi_gene_name: HMLALPHA1
+      sequence_accession: NC_006039.1
+      start: 24124
+      end: 24909
+      strand: '-'
+      exon_count: 1
+  - record_gene_name: MATALPHA2
+    role: core_MAT
+    locus_tag: KLLA0_C00374g
+    placements:
+    - gene_id: '2892167'
+      ncbi_gene_name: HMLALPHA2
+      sequence_accession: NC_006039.1
+      start: 25132
+      end: 25803
+      strand: +
+      exon_count: 1
+  unresolved: []
+- record_id: 28985_nrrl-y-1140_MATsc_MATa
+  order: Saccharomycetales
+  species: Kluyveromyces lactis
+  strain: NRRL Y-1140
+  idiomorphs:
+  - MATa
+  genes:
+  - record_gene_name: sla2
+    role: flanking_conserved
+    locus_tag: KLLA0_C03113g
+    placements:
+    - gene_id: '2892170'
+      ncbi_gene_name: SLA2
+      sequence_accession: NC_006039.1
+      start: 277789
+      end: 279804
+      strand: +
+      exon_count: 1
+  - record_gene_name: MATA1
+    role: core_MAT
+    locus_tag: KLLA0_C03135g
+    placements:
+    - gene_id: '2892130'
+      ncbi_gene_name: KLLA0_C03135g
+      sequence_accession: NC_006039.1
+      start: 279869
+      end: 280555
+      strand: '-'
+      exon_count: 1
+  - record_gene_name: MATA2
+    role: core_MAT
+    locus_tag: KLLA0_C03157g
+    placements:
+    - gene_id: '2892068'
+      ncbi_gene_name: KLLA0_C03157g
+      sequence_accession: NC_006039.1
+      start: 281410
+      end: 282183
+      strand: +
+      exon_count: 1
+  unresolved: []
+- record_id: 381046_cbs-6340_MATsc_HMLalpha
+  order: Saccharomycetales
+  species: Lachancea thermotolerans
+  strain: CBS 6340
+  idiomorphs:
+  - MATalpha
+  genes:
+  - record_gene_name: MATALPHA1
+    role: core_MAT
+    locus_tag: KLTH0F00374g
+    placements:
+    - gene_id: '8292415'
+      ncbi_gene_name: KLTH0F00374g
+      sequence_accession: NC_013082.1
+      start: 30927
+      end: 31676
+      strand: '-'
+      exon_count: 1
+  - record_gene_name: MATALPHA2
+    role: core_MAT
+    locus_tag: KLTH0F00396g
+    placements:
+    - gene_id: '8292416'
+      ncbi_gene_name: HMLALPHA2
+      sequence_accession: NC_013082.1
+      start: 31990
+      end: 32612
+      strand: +
+      exon_count: 2
+  unresolved: []
+- record_id: 4932_s288c_MATsc_HMRa
+  order: Saccharomycetales
+  species: Saccharomyces cerevisiae
+  strain: S288C
+  idiomorphs:
+  - MATa
+  genes:
+  - record_gene_name: MATA2
+    role: core_MAT
+    locus_tag: YCR096C
+    placements:
+    - gene_id: '850458'
+      ncbi_gene_name: HMRA2
+      sequence_accession: NC_001135.5
+      start: 293179
+      end: 293538
+      strand: '-'
+      exon_count: 1
+  - record_gene_name: MATA1
+    role: core_MAT
+    locus_tag: YCR097W
+    placements:
+    - gene_id: '850459'
+      ncbi_gene_name: HMRA1
+      sequence_accession: NC_001135.5
+      start: 293835
+      end: 294321
+      strand: +
+      exon_count: 3
+  unresolved: []
+- record_id: 4932_s288c_MATsc_MATalpha
+  order: Saccharomycetales
+  species: Saccharomyces cerevisiae
+  strain: S288C
+  idiomorphs:
+  - MATalpha
+  genes:
+  - record_gene_name: MATALPHA2
+    role: core_MAT
+    locus_tag: YCR039C
+    placements:
+    - gene_id: '850406'
+      ncbi_gene_name: MATALPHA2
+      sequence_accession: NC_001135.5
+      start: 199546
+      end: 200178
+      strand: '-'
+      exon_count: 1
+  - record_gene_name: MATALPHA1
+    role: core_MAT
+    locus_tag: YCR040W
+    placements:
+    - gene_id: '850407'
+      ncbi_gene_name: MATALPHA1
+      sequence_accession: NC_001135.5
+      start: 200442
+      end: 200969
+      strand: +
+      exon_count: 1
+  unresolved: []
+- record_id: 4959_cbs767_MTL_A
+  order: Saccharomycetales
+  species: Debaryomyces hansenii
+  strain: CBS767
+  idiomorphs:
+  - A
+  genes:
+  - record_gene_name: MTLA1
+    role: core_MAT
+    locus_tag: DEHA2E19118g
+    placements:
+    - gene_id: '2902997'
+      ncbi_gene_name: MTLA1
+      sequence_accession: NC_006047.2
+      start: 1589597
+      end: 1590216
+      strand: '-'
+      exon_count: 3
+  - record_gene_name: MTLA2
+    role: core_MAT
+    locus_tag: DEHA2E19140g
+    placements:
+    - gene_id: '2902739'
+      ncbi_gene_name: MTLA2
+      sequence_accession: NC_006047.2
+      start: 1590508
+      end: 1591344
+      strand: '-'
+      exon_count: 2
+  unresolved: []
+- record_id: 4896_972h_mat1_M
+  order: Schizosaccharomycetales
+  species: Schizosaccharomyces pombe
+  strain: 972h-
+  idiomorphs:
+  - M
+  genes:
+  - record_gene_name: mat1-Mi
+    role: core_MAT
+    locus_tag: SPBC23G7.17C
+    placements:
+    - sequence_accession: NC_003423.3
+      start: 2114219
+      end: 2114347
+      strand: '-'
+      via: nuccore feature table
+      gene_id: '3361261'
+  - record_gene_name: mat1-Mc
+    role: core_MAT
+    locus_tag: SPBC23G7.09
+    placements:
+    - gene_id: '9839813'
+      ncbi_gene_name: matmc_2
+      sequence_accession: NC_003423.3
+      start: 2114482
+      end: 2115027
+      strand: +
+      exon_count: 1
+  unresolved: []
+- record_id: 4896_h90_mat2_P
+  order: Schizosaccharomycetales
+  species: Schizosaccharomyces pombe
+  strain: h90
+  idiomorphs:
+  - P
+  genes:
+  - record_gene_name: matPc
+    role: core_MAT
+    locus_tag: SPMTR.01
+    placements:
+    - sequence_accession: FP565355.1
+      start: 3354
+      end: 3710
+      strand: '-'
+      via: protein /coded_by
+      gene_id: null
+  - record_gene_name: matPi
+    role: core_MAT
+    locus_tag: SPMTR.02
+    placements:
+    - sequence_accession: FP565355.1
+      start: 3889
+      end: 4368
+      strand: +
+      via: protein /coded_by
+      gene_id: null
+  unresolved: []
+- record_id: 4899_yfs286_mat1_P
+  order: Schizosaccharomycetales
+  species: Schizosaccharomyces octosporus
+  strain: yFS286
+  idiomorphs:
+  - P
+  genes:
+  - record_gene_name: mat1-Pc
+    role: core_MAT
+    locus_tag: SOCG_06172
+    placements:
+    - sequence_accession: NW_013185619.1
+      start: 3770345
+      end: 3770698
+      strand: '-'
+      via: nuccore feature table
+      gene_id: '25033946'
+  - record_gene_name: mat1-Pi
+    role: core_MAT
+    locus_tag: SOCG_06173
+    placements:
+    - sequence_accession: NW_013185619.1
+      start: 3770830
+      end: 3771306
+      strand: +
+      via: nuccore feature table
+      gene_id: '25033947'
+  unresolved: []
+- record_id: 5141_74-ors-a_MAT_MAT1-1
+  order: Sordariales
+  species: Neurospora crassa
+  strain: 74-ORS-A
+  idiomorphs:
+  - MAT1-1
+  genes:
+  - record_gene_name: matA-3
+    role: core_MAT
+    locus_tag: NCU01960
+    placements:
+    - gene_id: '3880489'
+      ncbi_gene_name: matA-3
+      sequence_accession: NC_026501.1
+      start: 1857194
+      end: 1858469
+      strand: '-'
+      exon_count: 4
+  - record_gene_name: matA-2
+    role: core_MAT
+    locus_tag: NCU01959
+    placements:
+    - gene_id: '3880488'
+      ncbi_gene_name: matA-2
+      sequence_accession: NC_026501.1
+      start: 1859093
+      end: 1860424
+      strand: +
+      exon_count: 5
+  - record_gene_name: matA-1
+    role: core_MAT
+    locus_tag: NCU01958
+    placements:
+    - gene_id: '3880391'
+      ncbi_gene_name: matA-1
+      sequence_accession: NC_026501.1
+      start: 1860692
+      end: 1862194
+      strand: +
+      exon_count: 3
+  unresolved: []

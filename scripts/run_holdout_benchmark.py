@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from collections import Counter
@@ -78,10 +79,20 @@ def main() -> int:
             results.append({"record_id": rid, "species": t["species"], "status": "no_assembly"})
             print(f"{rid[:33]:35}SKIP no assembly", file=sys.stderr)
             continue
+        # Decompressed ONCE and shared between the per-radius jobs, which all
+        # walk this record list in lockstep and so reach each new genome at the
+        # same moment. `zcat > path` truncates before it writes, so a naive
+        # shared write lets one job blank the file while another's detect is
+        # mid-read -- silently scoring against a partial genome. Write to a
+        # per-process temp and os.replace, which is atomic within a filesystem:
+        # a reader sees either the old complete file or the new one, never a
+        # half-written one.
         fna = args.work / f"{a['bfd_asmid']}.fna"
         if not fna.exists():
-            subprocess.run(f"zcat {args.library}/{a['bfd_asmid']}.fa.gz > {fna}",
+            tmp = args.work / f".{a['bfd_asmid']}.{os.getpid()}.tmp"
+            subprocess.run(f"zcat {args.library}/{a['bfd_asmid']}.fa.gz > {tmp}",
                            shell=True, check=True)
+            os.replace(tmp, fna)
         for radius in args.radii:
             drop = records_to_withhold(db, rid, Radius(radius))
             out = args.work / "runs" / rid / radius

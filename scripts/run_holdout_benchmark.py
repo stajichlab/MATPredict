@@ -99,8 +99,16 @@ def main() -> int:
             rep = out / "detection_report.yaml"
             if not rep.exists():
                 out.mkdir(parents=True, exist_ok=True)
+                # --taxid is NOT optional here. Without it routing falls back
+                # to `exhaustive` and every run searches all 19 families: on
+                # Aspergillus nidulans that took 27 minutes and suppressed 387
+                # loci, against ~2 minutes when routed. It is also the wrong
+                # experiment -- exhaustive is not the configuration anyone
+                # runs, so recall measured that way would not describe real use.
                 cmd = [py, "-m", "MATPredict", "detect", "--genome", str(fna),
                        "--out-dir", str(out), "--exclude-records", ",".join(sorted(drop))]
+                if a.get("taxid"):
+                    cmd += ["--taxid", str(a["taxid"])]
                 env = {"PYTHONPATH": str(wt / "src"),
                        "PATH": "/bigdata/stajichlab/jstajich/projects/MATPredict/.pixi/envs/default/bin:/usr/bin:/bin"}
                 r = subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=7200)
@@ -123,7 +131,9 @@ def main() -> int:
                 "status": "hit" if hit else "miss",
                 "confidence": (hit or {}).get("confidence"),
                 "idiomorph": (hit or {}).get("idiomorph"),
-                "families_attempted": doc.get("families_attempted") or [],
+                "families_attempted": len(doc.get("families_attempted") or []),
+                "routing_mode": doc.get("routing_mode"),
+                "suppressed_unpolished": doc.get("suppressed_unpolished"),
             })
             print(f"{rid[:28]:30}{radius:8}withheld={len(drop):3} loci={len(det):3} "
                   f"{'HIT ' + str((hit or {}).get('confidence')) if hit else 'MISS'}", file=sys.stderr)

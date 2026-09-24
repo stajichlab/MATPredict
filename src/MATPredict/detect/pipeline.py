@@ -331,6 +331,7 @@ def _curated_protein_lengths(
     db_root: Path,
     families: list[Family],
     record_families: dict[str, FamilyKey],
+    exclude_record_ids: frozenset[str] = frozenset(),
 ) -> dict[tuple[FamilyKey, str], int]:
     """`(family_key, gene_name)` -> the LONGEST curated reference protein, in aa.
 
@@ -358,6 +359,13 @@ def _curated_protein_lengths(
             header, _, seq = chunk.partition("\n")
             head_fields = header.split("|")
             record_id = head_fields[0]
+            # A withheld record must not reach ANY db-derived quantity, not
+            # just the query set. Its protein length sets the polish window's
+            # padding and its length decides the short-ORF/unsearchable split,
+            # so leaving it in would let a held-out answer shape the run that
+            # is supposed to be blind to it.
+            if record_id in exclude_record_ids:
+                continue
             family_key = record_families.get(record_id)
             if family_key is None or family_key not in expected_by_family:
                 continue
@@ -378,6 +386,7 @@ def _short_orf_genes(
     families: list[Family],
     record_families: dict[str, FamilyKey],
     floor_aa: int,
+    exclude_record_ids: frozenset[str] = frozenset(),
 ) -> dict[FamilyKey, set[str]]:
     """Per-family gene names whose BEST curated reference protein is shorter than floor_aa.
 
@@ -399,7 +408,8 @@ def _short_orf_genes(
     The per-family/per-gene length scan itself lives in
     `_curated_protein_lengths`, shared with the polish-window padding helper.
     """
-    longest = _curated_protein_lengths(db_root, families, record_families)
+    longest = _curated_protein_lengths(
+        db_root, families, record_families, exclude_record_ids)
 
     short_by_family: dict[FamilyKey, set[str]] = {}
     for (family_key, name), length in longest.items():
@@ -1354,6 +1364,14 @@ def run_pipeline(
     #: which is what the tests written before it use to keep asserting the
     #: behaviour they were written for.
     min_polished_genes: int = MIN_POLISHED_GENES,
+    #: Curated records withheld from THIS run, for leave-one-out recall. The
+    #: caller must build `reference_fasta` with the same set (see
+    #: `reference_fasta.build_reference_fasta`); this parameter additionally
+    #: keeps them out of every db-derived quantity -- polish-window padding and
+    #: the short-ORF/unsearchable split -- so a held-out answer cannot shape a
+    #: run that is meant to be blind to it. `detect.holdout` chooses the set,
+    #: and its RADIUS is what makes the resulting number meaningful.
+    exclude_record_ids: frozenset[str] = frozenset(),
     #: NCBI translation table for THIS genome. None means "derive from the
     #: taxid"; an explicit value wins, exactly as `--phylum` overrides taxid
     #: routing. Falls back to 1 when the taxonomy lookup cannot answer -- never
@@ -1402,9 +1420,10 @@ def run_pipeline(
     if genetic_code is None:
         genetic_code = 1
     record_families = load_record_families(db_root)
-    protein_lengths = _curated_protein_lengths(db_root, families, record_families)
+    protein_lengths = _curated_protein_lengths(
+        db_root, families, record_families, exclude_record_ids)
     short_orf_by_family = _short_orf_genes(
-        db_root, families, record_families, short_orf_aa_floor
+        db_root, families, record_families, short_orf_aa_floor, exclude_record_ids
     )
     families_by_key = {f.key: f for f in families}
 

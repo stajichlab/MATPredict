@@ -17,7 +17,10 @@ _HEADER_RE = re.compile(
 
 
 def build_reference_fasta(
-    db_root: Path, out_path: Path, family_keys: set[FamilyKey] | None = None
+    db_root: Path,
+    out_path: Path,
+    family_keys: set[FamilyKey] | None = None,
+    exclude_record_ids: frozenset[str] | set[str] | None = None,
 ) -> Path:
     """Rewrite every db/**/proteins.faa header to `record_id|geneN|name` and concatenate.
 
@@ -42,6 +45,15 @@ def build_reference_fasta(
     with, so the query set and the hit attribution cannot disagree. A record
     with no resolvable family is excluded when a restriction is in force: it
     could not be attributed to a routed family anyway.
+
+    `exclude_record_ids` withholds those records from the QUERY SET -- the
+    mechanism a leave-one-out recall benchmark needs, and the capability whose
+    absence made `benchmark.py` report `sensitivity=None` for every family. A
+    withheld record keeps its proteins on disk; it simply stops being something
+    the pipeline can search with, so a genome it came from becomes a genuine
+    held-out test rather than a self-consistency check. See `detect.holdout`
+    for how a set is chosen, and note that the RADIUS decides what the
+    resulting number means.
 
     Omitting `family_keys` (the default) keeps the pre-existing behaviour
     byte-for-byte, including not reading any `metadata.yaml` at all -- the
@@ -73,6 +85,8 @@ def build_reference_fasta(
     #: Identity of SEQUENCE is the test -- MFalpha3, one residue different, is a
     #: distinguishable gene and is emitted separately.
     emitted: set[tuple[str, str, str]] = set()
+    withheld = frozenset(exclude_record_ids or ())
+    seen_withheld: set[str] = set()
     for faa in sorted(db_root.glob("*/*/*/proteins.faa")):
         # `db/candidates/` holds not-yet-accepted (needs_review) records, which
         # family_registry.load_record_families and pipeline._short_orf_genes
@@ -96,6 +110,13 @@ def build_reference_fasta(
             # keeps this filter identical to the key `search._attribute` looks a
             # hit up by, so a protein can never be admitted here and then be
             # unattributable, or vice versa.
+            # Withheld for a leave-one-out run. Filtered on the header's own
+            # `record_id` for the same reason `family_keys` is, one line below:
+            # that is the key attribution uses, so a withheld record cannot
+            # slip back in under a directory name that differs from it.
+            if m["record_id"] in withheld:
+                seen_withheld.add(m["record_id"])
+                continue
             if family_keys is not None and record_families.get(m["record_id"]) not in family_keys:
                 continue
             sequence = seq.rstrip("\n")
@@ -109,6 +130,16 @@ def build_reference_fasta(
             emitted.add(key)
             lines.append(f">{m['record_id']}|gene{m['gene_index']}|{canonical}")
             lines.append(sequence)
+    # A holdout that silently withheld nothing would report a self-consistency
+    # score as recall -- the precise confusion this capability exists to
+    # prevent -- so say so loudly rather than let it pass unnoticed.
+    missing = withheld - seen_withheld
+    if missing:
+        logger.warning(
+            "holdout named %d record(s) with no protein in %s: %s",
+            len(missing), db_root, ", ".join(sorted(missing)))
+    if withheld:
+        logger.info("withheld %d curated record(s) from the query set", len(seen_withheld))
     out_path.write_text("\n".join(lines) + "\n")
     return out_path
 

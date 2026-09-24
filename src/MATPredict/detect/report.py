@@ -392,6 +392,12 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
     # predates the field". See `family_registry.RoutingDecision` for the values.
     doc = {
         "routing_mode": outcome.routing_mode,
+        # Non-null means a taxonomy lookup failed and routing was WIDENED
+        # because of it: this report searched more families than its taxid
+        # warrants and should be re-run once the lookup succeeds.
+        "routing_error": outcome.routing_error,
+        "genetic_code": outcome.genetic_code,
+        "genetic_code_error": outcome.genetic_code_error,
         # Loci that were built and then withheld for carrying fewer than
         # `pipeline.MIN_POLISHED_GENES` polished gene models. Written
         # unconditionally, including as 0, so a genome that reports one locus

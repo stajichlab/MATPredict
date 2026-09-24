@@ -123,6 +123,31 @@ print(f"{rank}={clade}: {n} rows, {kept} with a genome file", file=sys.stderr)
 PYEOF
 fi
 
+# ----------------------------------------------------------- taxonomy warm-up
+# Resolve every distinct taxid ONCE, serially, before fanning out. The routing,
+# phylum-fallback and genetic-code lookups all read one cached efetch document
+# per taxid, so afterwards the parallel runs are cache hits. Without this, 128
+# concurrent processes shared NCBI's keyless 3 req/s; failed lookups silently
+# widened routing (one taxid routed three different ways in one pilot, several
+# genomes ran `exhaustive` at ~30 min each). The cache dir is pinned so every
+# job shares it regardless of where it was submitted from.
+export MATPREDICT_CACHE_DIR="${MATPREDICT_CACHE_DIR:-$REPO/.matpredict_cache}"
+cut -f2 "$WORK/panel.tsv" | sort -u | "$PY" -c '
+import sys, time
+from MATPredict.db.taxonomy import (default_genetic_code, default_lineage_phylum_name,
+                                    default_lineage_taxids)
+bad = 0
+for line in sys.stdin:
+    t = int(line)
+    try:
+        default_lineage_taxids(t); default_lineage_phylum_name(t); default_genetic_code(t)
+    except Exception as exc:
+        bad += 1
+        print(f"taxonomy warm-up: taxid {t} failed: {exc}", file=sys.stderr)
+    time.sleep(0.35)
+print(f"taxonomy warm-up done, {bad} failed", file=sys.stderr)
+'
+
 TOTAL=$(wc -l < "$WORK/panel.tsv")
 if [[ "$TOTAL" -eq 0 ]]; then
     echo "no genomes matched $RANK=$CLADE -- check the spelling against samples.csv" >&2

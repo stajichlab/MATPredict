@@ -320,6 +320,13 @@ class DetectionOutcome:
     # query could not belong to. None when the outcome was built without
     # routing information (a direct `run_pipeline` call in a test).
     routing_mode: str | None = None
+    #: A taxonomy lookup that failed and so widened the routing; None when
+    #: every lookup succeeded. See `RoutingDecision.routing_error`.
+    routing_error: str | None = None
+    #: The translation table this run used, and why it fell back to table 1
+    #: when the lookup failed (None when it did not fail).
+    genetic_code: int | None = None
+    genetic_code_error: str | None = None
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -1416,11 +1423,15 @@ def run_pipeline(
     # Derived from the taxid when not supplied, out of the SAME cached efetch
     # document the router just read, so this costs no extra network call. A
     # failed lookup degrades to the standard table rather than raising.
+    genetic_code_error = None
     if genetic_code is None and taxid is not None:
         try:
             genetic_code = genetic_code_resolver(taxid)
-        except Exception:
+        except Exception as exc:
             genetic_code = None
+            # Recorded, not just absorbed: a CTG-clade yeast (table 12)
+            # translated with table 1 is a different search.
+            genetic_code_error = f"{type(exc).__name__}: {str(exc)[:160]}; used table 1"
     if genetic_code is None:
         genetic_code = 1
     record_families = load_record_families(db_root)
@@ -2131,6 +2142,9 @@ def run_pipeline(
         not_detected=not_detected,
         families_attempted=[f.key for f in families],
         routing_mode=routing.routing_mode,
+        routing_error=routing.routing_error,
+        genetic_code=genetic_code,
+        genetic_code_error=genetic_code_error,
         suppressed_unpolished=len(suppressed),
         suppressed_loci=suppressed,
     )

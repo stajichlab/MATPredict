@@ -366,3 +366,23 @@ def test_derive_max_cluster_gap_keeps_the_maximum_for_an_explicit_phylum():
 def test_derive_max_cluster_gap_without_a_routing_mode_is_unchanged():
     """Callers that never pass a mode keep the old behaviour exactly."""
     assert derive_max_cluster_gap(_wide_and_narrow()) == 120_000
+
+
+def test_a_resolver_failure_is_recorded_not_silent():
+    """Degrading is by design; doing it invisibly is not. Same taxid, same
+    code, three different routings in one pilot -- and no report said why."""
+    families = _three_phyla()
+
+    def boom(_taxid):
+        raise RuntimeError("429 Too Many Requests")
+
+    result = route(999999, families, lineage_taxids_resolver=boom, phylum_name_resolver=boom)
+    assert result.routing_mode == "exhaustive"
+    assert result.routing_error and "429" in result.routing_error
+
+
+def test_a_clean_route_has_no_routing_error():
+    families = _three_phyla()
+    result = route(999999, families, lineage_taxids_resolver=lambda _t: [4751],
+                   phylum_name_resolver=lambda _t: "Ascomycota")
+    assert result.routing_error is None

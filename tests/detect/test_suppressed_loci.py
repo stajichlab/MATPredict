@@ -65,3 +65,30 @@ def test_a_family_with_no_reference_proteins_says_so(tmp_path):
     )
     [reason] = [n.reason for n in outcome.not_detected if n.family_key == FAMILY.key]
     assert "no reference protein" in reason
+
+
+def test_a_failed_genetic_code_lookup_is_recorded(tmp_path, monkeypatch):
+    """Serinales translate CTG as serine (table 12). A failed lookup falls back
+    to table 1; that must be visible, since it changes every translation."""
+    _write_order(tmp_path)
+    _write_record(tmp_path)
+
+    def boom(_taxid):
+        raise RuntimeError("429 Too Many Requests")
+
+    from MATPredict.detect import pipeline
+    from MATPredict.detect.family_registry import RoutingDecision
+    monkeypatch.setattr(pipeline, "route", lambda taxid, fams: RoutingDecision(fams, "lineage"))
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=5476,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_localize=lambda *a, **k: [],
+        polish_with_exonerate=_no_polish, polish_with_miniprot=_no_polish,
+        genetic_code_resolver=boom,
+    )
+    assert outcome.genetic_code == 1
+    assert "429" in outcome.genetic_code_error
+    path = tmp_path / "r.yaml"
+    write_detection_report(outcome, path)
+    doc = yaml.safe_load(path.read_text())
+    assert doc["genetic_code"] == 1 and "429" in doc["genetic_code_error"]

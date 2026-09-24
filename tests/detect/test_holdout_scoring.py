@@ -79,3 +79,15 @@ def test_a_combined_record_accepts_either_idiomorph():
                       suppressed=[], withheld=frozenset({"rec_a"}),
                       record_families=FAMILIES, record_idiomorphs=idio)
     assert s.status == "hit"
+
+
+def test_a_withheld_locus_with_the_wrong_idiomorph_is_kept_apart():
+    """S. octosporus mat1-P: the bar withheld a cluster at the right place, but
+    labelled M. That is not the same as withholding a correct call."""
+    s = _score(suppressed=[_locus(idiomorph="MAT1-2")])
+    assert s.status == "suppressed_wrong_idiomorph"
+
+
+def test_the_right_withheld_locus_wins_over_a_wrong_one():
+    s = _score(suppressed=[_locus(idiomorph="MAT1-2"), _locus()])
+    assert s.status == "suppressed"

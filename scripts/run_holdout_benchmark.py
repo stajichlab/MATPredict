@@ -183,7 +183,7 @@ def main() -> int:
         if denom:
             print(f"  {radius:8} found {found}/{denom}  right idiomorph {c['hit']}  "
                   f"wrong {c['wrong_idiomorph']}  undetermined {c['hit_undetermined']}  "
-                  f"bar-withheld {c['suppressed']}  {dict(c)}", file=sys.stderr)
+                  f"bar-withheld {c['suppressed']} (+{c['suppressed_wrong_idiomorph']} wrong)  {dict(c)}", file=sys.stderr)
     return 0
 
 

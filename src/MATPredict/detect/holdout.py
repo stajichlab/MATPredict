@@ -165,7 +165,10 @@ class HoldoutScore:
     * `hit_undetermined` -- it overlaps, idiomorph undetermined
     * `wrong_idiomorph` -- it overlaps, idiomorph wrong
     * `suppressed` -- nothing reported there, but a locus the modelled-gene
-      bar WITHHELD overlaps it: a bar loss, not a search failure
+      bar WITHHELD overlaps it with a correct idiomorph: a bar loss, not a
+      search failure. Often thin: one unmodelled HSP at the right place.
+    * `suppressed_wrong_idiomorph` -- as above, but the withheld locus names
+      the wrong idiomorph
     * `no_reference_family` -- the holdout left no record of the family
     * `no_reference_idiomorph` -- records remain, none for this idiomorph;
       idiomorphs are non-homologous, so the target was unfindable
@@ -221,7 +224,10 @@ def score_holdout(
         return HoldoutScore("wrong_idiomorph", found[0])
     held = _overlapping(suppressed, spans)
     if held:
-        return HoldoutScore("suppressed", held[0])
+        right = next((loc for loc in held if loc.get("idiomorph") in expected), None)
+        if right is not None or not expected:
+            return HoldoutScore("suppressed", right or held[0])
+        return HoldoutScore("suppressed_wrong_idiomorph", held[0])
     family = record_families.get(record_id)
     remaining = [r for r, f in record_families.items() if f == family and r not in withheld]
     if not remaining:

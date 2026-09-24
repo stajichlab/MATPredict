@@ -34,6 +34,8 @@ from pathlib import Path
 
 import yaml
 
+from MATPredict.detect.family_registry import FamilyKey
+
 logger = logging.getLogger(__name__)
 
 
@@ -135,3 +137,95 @@ def records_to_withhold(
         else:
             drop |= {t.record_id for t in taxa if t.rank(prefix) == value}
     return frozenset(drop)
+
+
+def load_record_idiomorphs(db_root: Path) -> dict[str, set[str]]:
+    """record_id -> the idiomorph(s) its `mating_type.idiomorphs` declares.
+
+    A `combined` (homothallic) record declares both, and either is a correct
+    call on its locus.
+    """
+    out: dict[str, set[str]] = {}
+    for t in load_record_taxa(db_root):
+        try:
+            doc = yaml.safe_load(t.path.read_text()) or {}
+        except Exception:
+            continue
+        out[t.record_id] = set((doc.get("mating_type") or {}).get("idiomorphs") or [])
+    return out
+
+
+@dataclass(frozen=True)
+class HoldoutScore:
+    """How one held-out record fared at one radius.
+
+    `status` is one of:
+
+    * `hit` -- a reported locus overlaps the truth span with a correct idiomorph
+    * `hit_undetermined` -- it overlaps, idiomorph undetermined
+    * `wrong_idiomorph` -- it overlaps, idiomorph wrong
+    * `suppressed` -- nothing reported there, but a locus the modelled-gene
+      bar WITHHELD overlaps it: a bar loss, not a search failure
+    * `no_reference_family` -- the holdout left no record of the family
+    * `no_reference_idiomorph` -- records remain, none for this idiomorph;
+      idiomorphs are non-homologous, so the target was unfindable
+    * `miss` -- a usable reference remained and nothing was found
+
+    The two `no_reference` kinds are assigned only to a record nothing was
+    found for: a locus found anyway (say by its flanks) is scored as found.
+    """
+
+    status: str
+    locus: dict | None = None
+
+
+#: Statuses that count as FOUND the locus, for recall. `wrong_idiomorph` is
+#: found but wrong; it is reported separately, never folded into recall.
+FOUND = frozenset({"hit", "hit_undetermined", "wrong_idiomorph"})
+#: Statuses excluded from the recall denominator.
+NO_REFERENCE = frozenset({"no_reference_family", "no_reference_idiomorph"})
+
+
+def _overlapping(loci: list[dict], spans: dict[str, list[int]]) -> list[dict]:
+    out = []
+    for locus in loci:
+        span = spans.get(locus.get("contig"))
+        if span and not (locus["end"] < span[0] or locus["start"] > span[1]):
+            out.append(locus)
+    return out
+
+
+def score_holdout(
+    *,
+    record_id: str,
+    spans: dict[str, list[int]],
+    detected: list[dict],
+    suppressed: list[dict],
+    withheld: frozenset[str],
+    record_families: dict[str, FamilyKey],
+    record_idiomorphs: dict[str, set[str]],
+) -> HoldoutScore:
+    """Score one record's run. `detected`/`suppressed` are report entries
+    (`contig`, `start`, `end`, `idiomorph`, ...); `spans` maps a contig to the
+    record's true [start, end] on it."""
+    expected = record_idiomorphs.get(record_id, set())
+    found = _overlapping(detected, spans)
+    if found:
+        for status, test in (
+            ("hit", lambda loc: loc.get("idiomorph") in expected),
+            ("hit_undetermined", lambda loc: loc.get("idiomorph") in (None, "undetermined")),
+        ):
+            match = next((loc for loc in found if test(loc)), None)
+            if match is not None:
+                return HoldoutScore(status, match)
+        return HoldoutScore("wrong_idiomorph", found[0])
+    held = _overlapping(suppressed, spans)
+    if held:
+        return HoldoutScore("suppressed", held[0])
+    family = record_families.get(record_id)
+    remaining = [r for r, f in record_families.items() if f == family and r not in withheld]
+    if not remaining:
+        return HoldoutScore("no_reference_family")
+    if expected and not any(record_idiomorphs.get(r, set()) & expected for r in remaining):
+        return HoldoutScore("no_reference_idiomorph")
+    return HoldoutScore("miss")

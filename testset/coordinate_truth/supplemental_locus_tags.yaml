@@ -11,7 +11,10 @@
 #
 #  1. miniprot of the record's own curated protein against the reference
 #     assembly (spliced protein-to-genome; blat is not used -- it is tuned for
-#     near-identical DNA, and these genes have introns).
+#     the genes have introns and the alignment must cross them. NOT because
+#     blat cannot do proteins -- it does protein-protein (-t=prot -q=prot) and
+#     translated-DNA (-t=dnax -q=prot) perfectly well; the reason is
+#     splice-awareness, which blat's protein modes do not provide).
 #  2. the gene annotated at that position in NCBI's own feature table for the
 #     assembly, read via efetch rettype=ft.
 #

@@ -114,3 +114,19 @@ plausible report.
 
 None of these is a code change. The pipeline's measured failure mode at this
 sample size is reference coverage, not detection logic.
+
+## Correction, 2026-09-24
+
+The tables above were scored on reports written BEFORE the routing fix
+(7b870f9) they describe: the runner reused any report on disk. It also counted
+any overlapping locus as a hit without checking the idiomorph, and the two
+`no_reference` columns were assigned by hand. All three are fixed
+(`holdout.score_holdout`, `source_commit` stamps), and the benchmark was re-run.
+See `notes/2026-09-24_gap-lineage-pilots-and-holdout-rerun.md`.
+
+What changes: there is **no genuine miss at any radius**. *S. pombe* mat1-M is
+found (idiomorph M) and withheld by the modelled-gene bar, not structurally
+unfindable. *K. lactis* MATa and S288C HMRa -- the "only two genuine misses" --
+are bar losses on thin evidence. S288C HMRa at record radius is found with the
+WRONG idiomorph (MATalpha). The Pezizomycotina order-radius result, 7/7 with
+correct idiomorphs, stands.

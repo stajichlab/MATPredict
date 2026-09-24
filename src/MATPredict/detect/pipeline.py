@@ -309,6 +309,10 @@ class DetectionOutcome:
     already on disk in the evidence-diagnostics stream, so nothing withheld
     here is lost.
     """
+    suppressed_loci: list[DetectionResult] = field(default_factory=list)
+    """The withheld loci themselves, so a bar loss can be audited against a
+    known locus. Without their coordinates a withheld call at the right place
+    looks exactly like no call at all."""
     # Which `family_registry.route` rule chose `families_attempted` (see
     # `RoutingDecision`). Carried all the way into the detection report because
     # it is what tells a reader whether this run's not-detected entries are
@@ -1724,6 +1728,10 @@ def run_pipeline(
             resolved_own, own_events = resolve_idiomorph_overlaps(
                 own, family, min_overlap_fraction=idiomorph_overlap_fraction
             )
+            # A pair the first pass already resolved comes back unchanged.
+            # Recording it again reported every such event twice.
+            already = idiomorph_events_by_cluster.get(id(cluster), [])
+            own_events = [e for e in own_events if e not in already]
             if not own_events:
                 continue
             by_id = dict(zip((id(h) for h in own), resolved_own))
@@ -1800,25 +1808,29 @@ def run_pipeline(
         tools were given a window for and neither could turn into a gene. That
         is the population the bar exists to remove.
 
+        Nor does a gene whose every hit here is superseded. A RESCUED model is
+        recorded as modelled before the post-polish idiomorph pass runs, and
+        that pass can then find it is the losing half of a sexM/sexP-style
+        pair -- the same physical gene as the winner. Counting it let one gene
+        clear a bar of two (25 of 3,101 Saccharomyces loci were over-counted).
+
         Counted per distinct gene NAME, not per hit: a cluster routinely holds
         many HSPs of one gene, and three fragments of one alpha-box must not
         add up to the bar on their own. Scoped by (cluster, family) exactly as
         `_any_gene_unpolished` is, and for the same reasons.
         """
         cluster_ids = {id(c) for c in member_clusters}
+        live = [
+            h for c in member_clusters for h in c.hits
+            if h.family_key == family_key and h.superseded_by is None
+        ]
         modelled = {
             gene_name
             for (cluster_id, key, gene_name), outcome in polish_by.items()
             if key == family_key and cluster_id in cluster_ids
             and outcome.status in (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE)
-        }
-        modelled |= {
-            h.gene_name
-            for c in member_clusters
-            for h in c.hits
-            if h.family_key == family_key and h.superseded_by is None
-            and h.method == "diamond_proteome"
-        }
+        } & {h.gene_name for h in live}
+        modelled |= {h.gene_name for h in live if h.method == "diamond_proteome"}
         return len(modelled)
 
     def _build(
@@ -2063,12 +2075,16 @@ def run_pipeline(
         score = best_attempt.get(family.key)
         withheld = suppressed_best.get(family.key)
         if withheld is not None:
+            modelled = (
+                "none of its genes could be modelled" if withheld.polished_genes == 0
+                else f"only {withheld.polished_genes} of its genes could be modelled"
+            )
             not_detected.append(NotDetectedFamily(
                 family_key=family.key,
                 reason=(
                     f"best cluster carried {withheld.polished_genes} modelled "
                     f"gene(s), below the {min_polished_genes} required to report a "
-                    f"locus; its genes were localized but never modelled"
+                    f"locus; {modelled}"
                 ),
                 best_fraction_found=score.fraction_found if score else 0.0,
                 genes_found=list(withheld.genes_found),
@@ -2076,7 +2092,20 @@ def run_pipeline(
                 genes_not_searchable=sorted(short_genes),
             ))
             continue
-        if score is None:
+        if score is None and reference_fasta.exists() and not searchable_genes.get(family.key):
+            # Nothing to search with: every record of the family was withheld
+            # (a holdout) or none is curated. "No hits" would blame the genome.
+            # A MISSING file is "no information" (see searchable_genes_by_family),
+            # not an empty set, so it keeps the generic wording below.
+            not_detected.append(NotDetectedFamily(
+                family_key=family.key,
+                reason="no reference protein for this family is in the search set "
+                       "(none curated, or all withheld)",
+                best_fraction_found=0.0,
+                genes_missing=[g["name"] for g in family.genes if g["name"] not in short_genes],
+                genes_not_searchable=sorted(short_genes),
+            ))
+        elif score is None:
             not_detected.append(NotDetectedFamily(
                 family_key=family.key,
                 reason="no reference-protein hits found for this family in this genome",
@@ -2103,4 +2132,5 @@ def run_pipeline(
         families_attempted=[f.key for f in families],
         routing_mode=routing.routing_mode,
         suppressed_unpolished=len(suppressed),
+        suppressed_loci=suppressed,
     )

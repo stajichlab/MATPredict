@@ -398,6 +398,21 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
         # says whether six others were withheld or never existed. The
         # per-candidate detail is in the evidence-diagnostics stream.
         "suppressed_unpolished": outcome.suppressed_unpolished,
+        # The withheld loci themselves, compactly: enough to place each one
+        # against a known locus (a holdout truth span, a curated record) and to
+        # see what the bar cost, without the full evidence of a reported call.
+        "suppressed_loci": [
+            {
+                "family": _family_label(r.family_key),
+                "contig": r.contig,
+                "start": r.start,
+                "end": r.end,
+                "idiomorph": r.idiomorph,
+                "polished_genes": r.polished_genes,
+                "genes_found": list(r.genes_found),
+            }
+            for r in outcome.suppressed_loci
+        ],
         "families_attempted": [_family_label(k) for k in outcome.families_attempted],
         "detected": [_result_doc(r) for r in outcome.results],
         "not_detected": [

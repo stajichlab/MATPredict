@@ -37,9 +37,21 @@
 set -uo pipefail
 
 REPO="${REPO:-/bigdata/stajichlab/jstajich/projects/MATPredict}"
-BASE_SRC="${BASE_SRC:-/scratch/jstajich/28984668/wt-baseline/src}"
-CUT1_SRC="${CUT1_SRC:-/scratch/jstajich/28984668/wt-polish/src}"
-SAMPLE="${SAMPLE:-/scratch/jstajich/28984668/ab_sample.tsv}"
+# No defaults for the two source trees or the sample: all three must be named,
+# and must be on /bigdata. /scratch is NODE-LOCAL, and a PYTHONPATH that points
+# at a directory missing on the compute node does not error -- python falls
+# back to the INSTALLED MATPredict and the job runs the wrong code to a
+# normal-looking finish.
+BASE_SRC="${BASE_SRC:?set BASE_SRC to the baseline worktree src/ (on /bigdata)}"
+CUT1_SRC="${CUT1_SRC:?set CUT1_SRC to the change worktree src/ (on /bigdata)}"
+SAMPLE="${SAMPLE:?set SAMPLE to the ASMID<TAB>TAXID list (on /bigdata)}"
+for src in "$BASE_SRC" "$CUT1_SRC"; do
+    if [[ ! -f "$src/MATPredict/__init__.py" ]]; then
+        echo "$src is not a MATPredict source tree on this node ($(hostname))" >&2
+        exit 1
+    fi
+done
+[[ -s "$SAMPLE" ]] || { echo "SAMPLE=$SAMPLE is missing or empty on $(hostname)" >&2; exit 1; }
 LIBRARY="${LIBRARY:-/bigdata/stajichlab/shared/projects/BFD/Fungi_BFD_runs/input_clean_genomes}"
 OUT_DIR="${OUT_DIR:-$REPO/results/$(date +%Y-%m-%d)_polish_ab}"
 THREADS="${SLURM_CPUS_PER_TASK:-4}"

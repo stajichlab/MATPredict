@@ -91,6 +91,17 @@ echo "out=$OUT_DIR  threads=$THREADS"
 
 # ---------------------------------------------------------------- sample list
 # One "ASMID<TAB>TAXID" line per genome that exists on disk.
+#
+# SAMPLE_LIST, when set, is used INSTEAD of the RANK/CLADE selection: a
+# prepared "ASMID<TAB>TAXID" file (on /bigdata), e.g. a stratified pilot pick.
+# Name the run with CLADE anyway, since it names the scratch dir and OUT_DIR.
+if [[ -n "${SAMPLE_LIST:-}" ]]; then
+    [[ -s "$SAMPLE_LIST" ]] || { echo "SAMPLE_LIST=$SAMPLE_LIST missing or empty on $(hostname)" >&2; exit 1; }
+    while IFS=$'\t' read -r asmid taxid; do
+        [[ -n "$taxid" && -e "$LIBRARY/$asmid.fa.gz" ]] && printf '%s\t%s\n' "$asmid" "$taxid"
+    done < "$SAMPLE_LIST" > "$WORK/panel.tsv"
+    echo "SAMPLE_LIST=$SAMPLE_LIST: $(wc -l < "$SAMPLE_LIST") rows, $(wc -l < "$WORK/panel.tsv") with a genome file and taxid" >&2
+else
 "$PY" - "$SAMPLES" "$LIBRARY" "$RANK" "$CLADE" > "$WORK/panel.tsv" <<'PYEOF'
 import csv, os, sys
 samples, library, rank, clade = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
@@ -110,6 +121,7 @@ for r in reader:
         kept += 1
 print(f"{rank}={clade}: {n} rows, {kept} with a genome file", file=sys.stderr)
 PYEOF
+fi
 
 TOTAL=$(wc -l < "$WORK/panel.tsv")
 if [[ "$TOTAL" -eq 0 ]]; then
@@ -135,11 +147,15 @@ run_one() {
     # NOT `if ! ...; then echo rc=$?`: inside that block `$?` is the status of
     # the negated test, which is always 0, so every failure reported rc=0 and
     # the real exit code was lost. Capture it from the command itself.
+    # Wall time per genome, written beside the report. Without it runtime had
+    # to be reconstructed from file mtimes, which a non-empty stderr breaks.
+    t0=$(date +%s)
     timeout 3600 "$PY" -m MATPredict detect \
         --genome "$fna" --taxid "$taxid" --out-dir "$out" \
         --evidence-diagnostics "$out/evidence_diagnostics.jsonl" \
         > "$out/stdout.log" 2> "$out/stderr.log"
     rc=$?
+    echo "$(( $(date +%s) - t0 ))" > "$out/wall_seconds"
     if [[ $rc -ne 0 ]]; then
         # The last stderr line is usually the whole story (a SyntaxError, a
         # missing tool, an OOM); printing it here saves opening 277 files.

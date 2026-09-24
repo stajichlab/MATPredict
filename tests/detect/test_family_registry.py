@@ -8,6 +8,7 @@ from MATPredict.detect.family_registry import (
     Family,
     FamilyKey,
     derive_max_cluster_gap,
+    _gene_alias_map,
     load_all_families,
     route,
 )
@@ -21,6 +22,9 @@ def _family(phylum, name, scope):
         idiomorph_pattern=None,
         genes=[{"name": "STE3", "role": "core_MAT"}],
         taxonomic_scope=scope,
+        # Built with the loader's own helper rather than restated, so this
+        # fixture cannot drift from what load_all_families actually produces.
+        gene_aliases=_gene_alias_map([{"name": "STE3", "role": "core_MAT"}]),
     )
 
 

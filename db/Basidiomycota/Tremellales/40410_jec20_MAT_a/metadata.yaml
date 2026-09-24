@@ -24,17 +24,15 @@ locus:
   core:
     completeness: partial
     reference_orientation: SXI2->MFa1/2/3->STE3
-    definition_note: 'Bipolar, fused-MAT-type locus described by Lengeler et al. 2002
-      (PMID 12455690, DOI 10.1128/EC.1.5.704-718.2002) and deposited as GenBank AF542530.2
-      (148,067 bp, complete MATa locus, strain JEC20). As with the paired MATalpha
-      record (40410_jec21_MAT_alpha), only the core identity-determining genes (SXI2,
-      the three MFa pheromone precursors, and STE3) are represented with verified
-      coordinates; the additional MAT-linked genes reported in the wider literature
-      (MAPK cascade, MYO2a, RPL22a) are not included here. The GenBank feature table''s
-      /gene qualifiers for this record use "SXI2a"-style naming inconsistently (the
-      CDS itself is tagged "SXI2a" while the matching pheromone/receptor genes are
-      tagged "MFa1/2/3"/"STE3" without an "a" suffix) -- names below follow the GenBank
-      record''s own qualifiers exactly, not a normalized convention.
+    definition_note: 'Bipolar, fused-MAT-type locus described by Lengeler et al. 2002 (PMID 12455690,
+      DOI 10.1128/EC.1.5.704-718.2002) and deposited as GenBank AF542530.2 (148,067 bp, complete MATa
+      locus, strain JEC20). As with the paired MATalpha record (40410_jec21_MAT_alpha), only the core
+      identity-determining genes (SXI2, the three MFa pheromone precursors, and STE3) are represented
+      with verified coordinates; the additional MAT-linked genes reported in the wider literature (MAPK
+      cascade, MYO2a, RPL22a) are not included here. The GenBank feature table''s /gene qualifiers for
+      this record use "SXI2a"-style naming inconsistently (the CDS itself is tagged "SXI2a" while the
+      matching pheromone/receptor genes are tagged "MFa1/2/3"/"STE3" without an "a" suffix) -- names below
+      follow the GenBank record''s own qualifiers exactly, not a normalized convention.
 
       '
     segments:
@@ -59,7 +57,7 @@ genes:
   start: 10466
   end: 12990
   strand: '-'
-  order_in_locus: 0
+  order_in_locus: 2
 - gene_index: 1
   name: MFa2
   protein_accession: ncbi_protein:AAN75623.1
@@ -70,7 +68,7 @@ genes:
   start: 87889
   end: 88017
   strand: '-'
-  order_in_locus: 1
+  order_in_locus: 5
 - gene_index: 2
   name: MFa3
   protein_accession: ncbi_protein:AAN75622.1
@@ -81,7 +79,7 @@ genes:
   start: 98365
   end: 98493
   strand: '-'
-  order_in_locus: 2
+  order_in_locus: 7
 - gene_index: 3
   name: MFa1
   protein_accession: ncbi_protein:AAN75621.1
@@ -92,7 +90,7 @@ genes:
   start: 106876
   end: 107004
   strand: +
-  order_in_locus: 3
+  order_in_locus: 8
 - gene_index: 4
   name: STE3
   protein_accession: ncbi_protein:AAN75624.1
@@ -103,12 +101,88 @@ genes:
   start: 93853
   end: 95179
   strand: +
+  order_in_locus: 6
+- gene_index: 5
+  name: UAP1
+  protein_accession: ncbi_protein:AAN75606.2
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3700
+  end: 5883
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 6
+  name: FAO1
+  protein_accession: ncbi_protein:AAN75604.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8560
+  end: 9921
+  strand: +
+  order_in_locus: 1
+- gene_index: 7
+  name: RPO41
+  protein_accession: ncbi_protein:AAN75608.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 22185
+  end: 26193
+  strand: '-'
+  order_in_locus: 3
+- gene_index: 8
+  name: RPL39
+  protein_accession: ncbi_protein:AAV98475.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 31113
+  end: 31587
+  strand: '-'
   order_in_locus: 4
+- gene_index: 9
+  name: STE20
+  protein_accession: ncbi_protein:AAN75615.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 112926
+  end: 115296
+  strand: +
+  order_in_locus: 9
+- gene_index: 10
+  name: NOG2
+  protein_accession: ncbi_protein:AAV98479.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 140257
+  end: 143165
+  strand: +
+  order_in_locus: 10
+- gene_index: 11
+  name: PAN6
+  protein_accession: ncbi_protein:AAV98480.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 143516
+  end: 145183
+  strand: +
+  order_in_locus: 11
 evidence:
   locus_existence:
     tier: 1
-    experimental_method: cloning and sequencing of alpha and a mating-type alleles
-      from divergent varieties
+    experimental_method: cloning and sequencing of alpha and a mating-type alleles from divergent varieties
     citations:
     - pmid: '12455690'
       doi: 10.1128/EC.1.5.704-718.2002
@@ -120,8 +194,7 @@ evidence:
       doi: 10.1128/EC.1.5.704-718.2002
   idiomorph_assignment:
     tier: 1
-    experimental_method: genetic characterization of alpha vs a mating type strains;
-      SXI1/SXI2 identity
+    experimental_method: genetic characterization of alpha vs a mating type strains; SXI1/SXI2 identity
     citations:
     - pmid: '12455690'
       doi: 10.1128/EC.1.5.704-718.2002

@@ -23,6 +23,7 @@ from MATPredict.detect.benchmark import (
     translate_gene_from_contig_sequence,
 )
 from MATPredict.detect.pipeline import DetectionOutcome, DetectionResult
+from MATPredict.detect.scoring import count_distinct_intervals
 
 logger = logging.getLogger(__name__)
 
@@ -286,6 +287,10 @@ def _result_doc(r: DetectionResult) -> dict:
         "end": r.end,
         "confidence": r.confidence,
         "idiomorph": r.idiomorph,
+        # Every idiomorph with evidence here, best score first. On an exact tie
+        # `idiomorph` stays "undetermined" and BOTH appear here, per the
+        # curator's 2026-09-21 ruling -- a tie is reported, not guessed at.
+        "idiomorph_candidates": r.idiomorph_candidates,
         # `strict` or `relaxed`. Emitted for every locus, not only relaxed
         # ones, so "this was a strict call" is distinguishable from "this
         # output predates the field", and so strict-only consumers can filter.
@@ -296,6 +301,17 @@ def _result_doc(r: DetectionResult) -> dict:
         # `homothallic_candidate` is both idiomorphs in one locus, the real
         # architecture of a homothallic Mucorale.
         "locus_class": r.locus_class,
+        # How many separate places on the genome this call's evidence actually
+        # occupies, grouping hits that overlap by >=50% of the shorter one.
+        # A FIELD, not a gate -- emitted so a threshold can be set from data
+        # rather than guessed. Measured on 334 Tremellales genomes: all 2,157
+        # low-confidence calls occupy exactly one interval (median span 152 bp)
+        # while every high and medium call occupies two or more. Gene count
+        # cannot make that distinction, because several roster names can land
+        # on one ORF.
+        "distinct_intervals": count_distinct_intervals(
+            [e for e in r.gene_evidence] if r.gene_evidence else []
+        ),
         # Wider than this family's curated plausible span. A FLAG, never a
         # filter: the curator ruled 2026-09-20 that large MAT loci are real
         # and must still be reported. Emitted for every locus so "not

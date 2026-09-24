@@ -68,7 +68,7 @@ def _run(tmp_path, families, family_key, reference_fasta, *, miniprot_shift):
     polish tools confirm them -- shifted by `miniprot_shift` bp to control
     whether the pair agrees (0) or disagrees (past the 10bp tolerance)."""
 
-    def fake_localize(genome_fasta, localize_families, ref_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, localize_families, ref_fasta, record_families, runner=None, **kwargs):
         return [_tblastn_hit(family_key, name, *span) for name, span in GENE_COORDS.items()]
 
     def fake_exonerate(*, gene_name, **kwargs):

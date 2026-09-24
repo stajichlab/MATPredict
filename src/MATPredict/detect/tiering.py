@@ -33,6 +33,46 @@ def has_flanking_conserved(family: Family) -> bool:
     return any(g["role"] == "flanking_conserved" for g in family.genes)
 
 
+def _searchable_flanking_conserved(family: Family, score: FamilyScore) -> bool:
+    """Does this family have a `flanking_conserved` gene the run could actually
+    have found?
+
+    The flanking branch below caps a call at Medium when a declared flank is
+    absent. That is only evidence of absence if the run looked for it. A flank
+    with no reference protein, or one the curator has taken off the search list
+    (`exclude_from_search`), lands in `genes_not_searchable` and must not cap
+    anything -- the same reasoning `assign_tier` already applies to the core
+    requirement, and the same bug shape as counting `genes_not_searchable`
+    against a locus.
+
+    An `optional` flank is excused for a different reason: it is a BONUS, not
+    a requirement. Curator's ruling, 2026-09-21 -- "perhaps sla2 is a bonus
+    flank to search for but not to penalize if not present". `sla2` is the
+    case that needs it: it is genuinely adjacent to MAT in Kluyveromyces
+    lactis and Lachancea thermotolerans (sla2 -> MATA1 -> MATA2), and is not
+    on chromosome III at all in Saccharomyces -- and one `MATsc` family spans
+    both. Marked optional it is searched everywhere, corroborates a call to
+    High where the architecture has it, and costs nothing where it does not.
+    Finding it still promotes the tier; only its ABSENCE stops mattering.
+
+    Load-bearing for Saccharomyces. The curator ruled on 2026-09-21 that this
+    clade has no usable flanking GENE: S. cerevisiae's three cassettes
+    (HML/MAT/HMR) are told apart by flanking DNA -- the X/Y/Z homology boxes --
+    not by neighbours, and the two flanks MATsc previously declared were
+    measured wrong on the S288C reference (SLA2 is not on chromosome III at
+    all; CHA1 abuts HML, not MAT). Both are now excluded from search, and
+    without this a perfect two-gene MATsc call would be capped at Medium for
+    missing a flank nothing ever searched for.
+    """
+    unsearchable = set(score.genes_not_searchable)
+    return any(
+        g["role"] == "flanking_conserved"
+        and g["name"] not in unsearchable
+        and not g.get("optional")
+        for g in family.genes
+    )
+
+
 def assign_tier(
     score: FamilyScore,
     family: Family,
@@ -52,10 +92,23 @@ def assign_tier(
     # Medium, because the Bbeta roster's `pheromone_receptor` alias has no
     # reference protein anywhere in `db/`. Balpha (3/3 found) was demoted the
     # same way. Those were the two most complete calls in that run.
+    # An `optional: true` gene is excused from the core requirement for the
+    # same reason `genes_not_searchable` is, one clause below: requiring it
+    # states that the genome failed to show something that was never required.
+    # `scoring.score_cluster` already drops optional genes from
+    # `fraction_found`; before 2026-09-21 this function did not, so marking a
+    # gene optional removed it from the score while still letting its absence
+    # cap the tier.
+    #
+    # Load-bearing for the Cryptococcus recuration: the curator ruled the
+    # recombination-trapped genes (STE20, RPO41, RPL39) and the homeodomain
+    # genes (SXI1, SXI2) in as optional, because they are expected in
+    # Cryptococcus but not established as universal across Tremellales. The
+    # required core is the pheromone precursors and the receptor.
     expected_core = {
         g["name"]
         for g in expected_genes_for_idiomorph(family, score.genes_found)
-        if g["role"] == "core_MAT"
+        if g["role"] == "core_MAT" and not g.get("optional")
     }
     core_genes = expected_core - set(score.genes_not_searchable)
     core_requirement_relaxed = core_genes != expected_core
@@ -87,7 +140,7 @@ def assign_tier(
         tier = "low"
     elif any_gene_unpolished:
         tier = "medium"
-    elif has_flanking_conserved(family):
+    elif _searchable_flanking_conserved(family, score):
         flanking_found = any(
             g["role"] == "flanking_conserved" and g["name"] in score.genes_found
             for g in family.genes

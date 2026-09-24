@@ -1,0 +1,124 @@
+record_id: 381046_cbs-6340_MATsc_HMLalpha
+record_version: 1
+taxonomy:
+  taxid: 381046
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Saccharomycetaceae;g__Lachancea;s__Lachancea_thermotolerans
+  lineage_resolved_date: '2026-09-21'
+organism:
+  species: Lachancea thermotolerans
+  strain:
+    name: CBS 6340
+    known: true
+    culture_collection_ids:
+    - CBS 6340
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATsc
+  idiomorphs:
+  - MATalpha
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: MATALPHA1->MATALPHA2
+    definition_note: 'The alpha idiomorph of Lachancea thermotolerans CBS 6340, from the SILENT HML cassette
+      on chromosome F -- the reference strain is MATa at MAT. Cassette architecture established by blastn
+      self-comparison of chromosome F: the MAT-position X box matches HML''s at 99.660%, the Ya region
+      matches the silent a cassette at 99.931%, and the Z box at 100%. CHA1 (KLTH0F00440g) abuts this
+      cassette, the same CHA1-HML adjacency seen in S. cerevisiae and K. lactis. CAVEAT, recorded deliberately:
+      MATALPHA2 is only 108 aa across two exons (intron 32,052-32,347, GT..AG confirmed directly in the
+      genomic sequence), against 210 aa in S. cerevisiae and 223 aa in K. lactis. The longest alternative
+      continuous plus-strand ORF in the Yalpha region is 63 aa, so there is no simple unspliced alternative,
+      but the model may still be N-terminally truncated -- treat it as the weak gene of this record. Measured
+      on held-out Lachancea fermentati it did NOT improve on the existing references (32.0 bits at E=0.016,
+      worse than S. cerevisiae MATALPHA2''s 42.7), whereas MATALPHA1 improved from 73.9 to 100 bits. The
+      Lachancea a-allele is deliberately NOT curated: no MATa1 with both a protein accession and an intact
+      homeodomain exists in NCBI (the MAT-position ORF at NC_013082.1:282,329-282,664 is unannotated;
+      the accessioned XP_002554220.1 from the silent cassette lacks the homeodomain because a1''s 3''
+      end runs out of the Y box into a non-homologous X box). Curator''s ruling, 2026-09-21: defer it.
+      Citation: Souciet et al. 2009 Genome Res 19:1696-1709 (PMID 19525356).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NC_013082.1
+        seq_region: NC_013082.1
+      start: 30927
+      end: 32612
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MATALPHA1
+  protein_accession: ncbi_protein:XP_002554225.1
+  role: core_MAT
+  present: true
+  locus_tag: KLTH0F00374g
+  segment_index: 0
+  start: 30927
+  end: 31676
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: MATALPHA2
+  protein_accession: ncbi_protein:XP_002554226.1
+  role: core_MAT
+  present: true
+  locus_tag: KLTH0F00396g
+  segment_index: 0
+  start: 31990
+  end: 32612
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: complete DNA sequencing of the MAT locus and HMLalpha silent cassette
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+  boundaries:
+    tier: 1
+    experimental_method: 'Complete locus sequencing (Astell et al. 1981). Coordinates on the modern S288C
+      reference assembly independently reconfirmed by the curator via NCBI efetch against NC_001135.5.
+
+      '
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: genetic/molecular characterization of MATalpha vs MATa cell identity; HO-endonuclease
+      switching mechanism
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+    - pmid: null
+      doi: 10.1016/0092-8674(83)90219-2
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NC_001135.5
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 7034964|4932|MATsc|MATalpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -53,6 +53,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         require_core_role=args.require_core_role,
     )
     outcome = run_pipeline(
+        genetic_code=_resolve_genetic_code(args),
         genome_fasta=Path(args.genome),
         proteome_fasta=Path(args.proteins) if args.proteins else None,
         taxid=args.taxid,
@@ -173,6 +174,45 @@ def _phylum_choices() -> list[str] | None:
         return None
 
 
+def _resolve_genetic_code(args) -> int | None:
+    """The translation table for this run, or None to let the pipeline derive it.
+
+    Precedence, matching how `--phylum` overrides taxid routing: an explicit
+    `--genetic-code` wins; then `--genetic-code-map` keyed on the genome
+    FASTA's basename; then None, which the pipeline resolves from the taxid and
+    finally falls back to table 1. Never guessed.
+
+    The map exists because the code is a per-GENOME property, not a per-run
+    one: the local BFD sample sheet carries 22,528 genomes at table 1 and
+    1,154 at table 12, and a batch spanning both cannot be described by a
+    single flag.
+    """
+    explicit = getattr(args, "genetic_code", None)
+    if explicit is not None:
+        return int(explicit)
+    path = getattr(args, "genetic_code_map", None)
+    if not path:
+        return None
+    wanted = Path(args.genome).name
+    for suffix in (".gz", ".fna", ".fa", ".fasta"):
+        if wanted.endswith(suffix):
+            wanted = wanted[: -len(suffix)]
+    for line in Path(path).read_text().splitlines():
+        parts = [c.strip() for c in line.replace(",", "\t").split("\t") if c.strip()]
+        if len(parts) < 2:
+            continue
+        key = parts[0]
+        for suffix in (".gz", ".fna", ".fa", ".fasta"):
+            if key.endswith(suffix):
+                key = key[: -len(suffix)]
+        if key == wanted:
+            try:
+                return int(parts[1])
+            except ValueError:
+                return None  # a header row, or a malformed value: derive instead
+    return None
+
+
 def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     """Register `detect` and its `benchmark` action onto the top-level parser.
 
@@ -218,6 +258,22 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
             "are read from the database root at startup, so they always match what is "
             "actually curated."
         ),
+    )
+    detect.add_argument(
+        "--genetic-code", type=int, default=None,
+        help="NCBI translation table for this genome (e.g. 12 for the CUG-Ser1 "
+             "clade). Omit to derive it from --taxid, which reads the same "
+             "cached taxonomy document routing already fetches; falls back to "
+             "1 when that lookup cannot answer. An explicit value always wins.",
+    )
+    detect.add_argument(
+        "--genetic-code-map", default=None,
+        help="TSV/CSV file mapping a genome id to its translation table, for "
+             "batch runs where each genome differs. Two columns, id and code, "
+             "with an optional header; the id is matched against the genome "
+             "FASTA's basename with extensions stripped. Used only when "
+             "--genetic-code is not given. The BFD sample sheet's "
+             "ASMID/TRANSL_TABLE columns are exactly this shape.",
     )
     detect.add_argument(
         "--emit-cds-fasta",

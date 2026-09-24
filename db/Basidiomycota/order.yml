@@ -88,14 +88,93 @@ loci:
     # right place to confirm the split. MFalpha1-3/MFa1-3 (pheromone precursors) and
     # STE3 (the receptor) are classified per that same record's definition_note.
     genes:
-      - {name: SXI1, role: core_MAT, gene_class: HD1, present_in_idiomorphs: ["alpha"]}
-      - {name: SXI2, role: core_MAT, gene_class: HD2, present_in_idiomorphs: ["a"]}
-      - {name: MFalpha1, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
-      - {name: MFalpha2, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
-      - {name: MFalpha3, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"]}
-      - {name: MFa1, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"]}
-      - {name: MFa2, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"]}
-      - {name: MFa3, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"]}
+      # Recurated 2026-09-21 from the full Lengeler et al. 2002 deposits
+      # (AF542531.2, 133,474 bp; AF542530.2, 148,067 bp), which annotate their
+      # own boundaries: "MAT 5'" = 1-10,000, and the MATa locus proper =
+      # 10,001-133,183. The previous curation took 5 genes per record and was
+      # marked `completeness: partial`.
+      #
+      # ROLE ASSIGNMENT, measured. Genes outside the annotated boundary are
+      # 99.1-100% identical between the two idiomorphs (UAP1 99.8, FAO1 99.1,
+      # NOG2 100.0, PAN6 100.0); genes inside it are divergent (STE12 30.6,
+      # STE3 34.0, STE11 43.0, MYO2 61.0, STE20 72.0). That is the
+      # recombination-suppressed block, and it is the same conserved-flank /
+      # variable-core architecture as SLA2->[MAT]<-APN2 in Mucoromycota.
+      #
+      # CAUTION on using divergence to place a gene: it measures selective
+      # constraint as well as recombination suppression. RPL39 sits INSIDE the
+      # block (108,406, well within 10,001-115,657) yet is 100% identical
+      # between idiomorphs, because it is a ribosomal protein under purifying
+      # selection. The deposit's own boundary annotation is authoritative;
+      # divergence is a lower bound on the block, not its definition.
+      #
+      # OPTIONAL, per the curator's ruling of 2026-09-21: the trapped genes
+      # and the homeodomain genes "can be trapped genes we likely expect but
+      # it isn't clear how universal once we move outside of Cryptococcus".
+      # The required core is the pheromone precursors and the receptor -- "the
+      # main findings were the MFa/MFalpha and neighbors". An optional gene is
+      # still searched and still reported, it is simply out of fraction_found
+      # and out of the core requirement.
+      - {name: SXI1, role: core_MAT, gene_class: HD1, present_in_idiomorphs: ["alpha"], optional: true}
+      - {name: SXI2, role: core_MAT, gene_class: HD2, present_in_idiomorphs: ["a"], optional: true}
+      # Recombination-trapped, present in both idiomorphs as divergent alleles.
+      # One roster entry each, not an a/alpha pair: presence does not
+      # discriminate the idiomorph (both have them), sequence does, and the
+      # existing search-path/identity rule already handles that. Splitting them
+      # per idiomorph would manufacture the sexM/sexP cross-match problem.
+      # STE20 produced 187 of 272 genome-wide tblastn HSPs on JEC21, across
+      # ALL 14 contigs at 31.7% median identity, and every one fed the polish
+      # stage: one run went 8 s -> 535 s. It is a p21-activated kinase, a large
+      # ubiquitous family. Off the search list; the records keep the protein.
+      - {name: STE20, role: core_MAT, optional: true, exclude_from_search: true}
+      # RPO41 is well behaved as a query (14 HSPs, one contig, 98.7% median
+      # identity) -- excluded for the OTHER reason: it is not established as
+      # universal outside Cryptococcus. Curator's ruling, 2026-09-21.
+      - {name: RPO41, role: core_MAT, optional: true, exclude_from_search: true}
+      - {name: RPL39, role: core_MAT, optional: true}
+      # Boundary genes, outside the block, conserved between idiomorphs.
+      # These are what make `classify_locus` able to return `mat_locus` for
+      # this family at all -- before this the roster was entirely core_MAT, so
+      # the flanking requirement was unsatisfiable and a complete Cryptococcus
+      # MAT locus was filed as `idiomorph_gene_only`.
+      - {name: FAO1, role: flanking_conserved}
+      # One flank per side is kept (FAO1 left, PAN6 right), per the curator's
+      # ruling. UAP1 is a clean query (8 HSPs, one contig) and is kept curated
+      # so it can be restored by deleting one flag.
+      - {name: UAP1, role: flanking_conserved, exclude_from_search: true}
+      # NOG2 is the noisier of the two right-hand flanks (22 HSPs, 2 contigs,
+      # 54.6% median) -- PAN6 is kept instead.
+      - {name: NOG2, role: flanking_conserved, exclude_from_search: true}
+      - {name: PAN6, role: flanking_conserved}
+      # MFalpha1 and MFalpha2 are BYTE-IDENTICAL 38 aa proteins in
+      # 40410_jec21_MAT_alpha, so no ranking rule can ever choose between them
+      # -- identity, coverage, e-value and bitscore are all exactly tied.
+      # Collapsed to one canonical name per the curator's ruling of 2026-09-21;
+      # `aliases` records what was folded in, and the curated records keep
+      # their own deposited gene names untouched.
+      #
+      # Measured consequence of NOT doing this: on 334 Tremellales genomes, one
+      # ~95 bp pheromone ORF was reported as 3 distinct genes, giving 3/5 = 0.60
+      # against the 0.50 ambiguity floor and admitting 927 spurious loci.
+      #
+      # MFalpha3 is folded in too, per the curator's ruling of 2026-09-21,
+      # even though it is NOT byte-identical -- it differs from MFalpha1 by one
+      # residue (97.4% identity over 100% coverage). The group, not the
+      # individual paralog, is the unit of biological interest here, and the
+      # curator intends a consensus or per-group HMM as the eventual search
+      # strategy for these precursors.
+      #
+      # This does NOT reduce sensitivity. Collapsing is a change of NAME, not
+      # of query set: `build_reference_fasta` deduplicates on
+      # (record_id, canonical name, SEQUENCE), so MFalpha3's distinct sequence
+      # is still emitted and still searched -- it simply reports as MFalpha.
+      # Two reference sequences under one gene name is the ordinary case
+      # (the same gene curated from two strains) and is what keeps one genomic
+      # ORF from being counted three times.
+      - {name: MFalpha, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["alpha"], aliases: [MFalpha1, MFalpha2, MFalpha3]}
+      # MFa1, MFa2 and MFa3 are three byte-identical 42 aa proteins in
+      # 40410_jec20_MAT_a. Same reasoning as MFalpha above.
+      - {name: MFa, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"], aliases: [MFa1, MFa2, MFa3]}
       - {name: STE3, role: core_MAT, gene_class: pheromone_receptor}
   - locus_name: "Aalpha"
     vocabulary_type: "pattern"

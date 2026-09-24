@@ -1,0 +1,124 @@
+record_id: 4932_s288c_MATsc_HMRa
+record_version: 1
+taxonomy:
+  taxid: 4932
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Saccharomycetaceae;g__Saccharomyces;s__Saccharomyces_cerevisiae
+  lineage_resolved_date: '2026-09-16'
+organism:
+  species: Saccharomyces cerevisiae
+  strain:
+    name: S288C
+    known: true
+    culture_collection_ids:
+    - S288C
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATsc
+  idiomorphs:
+  - MATa
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: MATA2->MATA1
+    definition_note: 'The MATa (Ya) allele of Saccharomyces cerevisiae, taken from the SILENT HMR donor
+      cassette of the S288C reference genome (NC_001135.5:293179-294321), because S288C is MATalpha and
+      therefore carries no a-allele at the MAT position itself -- SGD''s own MATA locus entry (S000124955)
+      states ''note that the systematic sequence in SGD contains MATalpha sequences''. The sibling record
+      4932_s288c_MATsc_MATalpha deferred a MATa record on exactly this ground, for want of ''an independently-reconfirmed
+      modern coordinate source''; HMR supplies one, with RefSeq protein accessions and exact coordinates
+      on the current assembly. This is biologically sound rather than a workaround: HML/MAT/HMR are the
+      cassette system, and the HMR sequence is what gene conversion copies INTO the MAT position when
+      a cell switches to a, so the HMR-encoded a1/a2 proteins are the MATa proteins (Astell et al. 1981;
+      Haber 2012). Curated under the canonical roster names MATA1/MATA2; the deposit''s own gene names
+      are HMRA1 (YCR097W, NP_010021.1) and HMRA2 (YCR096C, NP_010020.1). Same convention as pra1/Uhpra1
+      in db/Basidiomycota/order.yml. CONSEQUENCE FOR DETECTION, and the reason this record exists: without
+      an a-allele reference, every cassette in every Saccharomyces genome matched only alpha references,
+      so a run on S288C reported all three cassettes -- HML, MAT and HMR -- as ''MATalpha'', including
+      HMR, which is actually a. Curator''s ruling 2026-09-21: in Saccharomyces do not attempt to pick
+      the active locus by flanking genes; report every cassette and its allele.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NC_001135.5
+        seq_region: NC_001135.5
+      start: 293179
+      end: 294321
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MATA2
+  protein_accession: ncbi_protein:NP_010020.1
+  role: core_MAT
+  present: true
+  locus_tag: YCR096C
+  segment_index: 0
+  start: 293179
+  end: 293538
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: MATA1
+  protein_accession: ncbi_protein:NP_010021.1
+  role: core_MAT
+  present: true
+  locus_tag: YCR097W
+  segment_index: 0
+  start: 293835
+  end: 294321
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: complete DNA sequencing of the MAT locus and HMLalpha silent cassette
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+  boundaries:
+    tier: 1
+    experimental_method: 'Complete locus sequencing (Astell et al. 1981). Coordinates on the modern S288C
+      reference assembly independently reconfirmed by the curator via NCBI efetch against NC_001135.5.
+
+      '
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: genetic/molecular characterization of MATalpha vs MATa cell identity; HO-endonuclease
+      switching mechanism
+    citations:
+    - pmid: '7034964'
+      doi: 10.1016/0092-8674(81)90356-1
+    - pmid: null
+      doi: 10.1016/0092-8674(83)90219-2
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NC_001135.5
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 7034964|4932|MATsc|MATalpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

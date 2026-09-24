@@ -76,7 +76,7 @@ from MATPredict import logger
 from MATPredict.detect.family_registry import Family, FamilyKey
 from MATPredict.detect.polish import ExonSpan, PolishModel
 
-_DIAMOND_OUTFMT = ["6", "qseqid", "sseqid", "pident", "scovhsp", "qtitle"]
+_DIAMOND_OUTFMT = ["6", "qseqid", "sseqid", "pident", "scovhsp", "evalue", "bitscore", "qtitle"]
 
 PROTEOME_DEFLINE_FORMAT = "contig:start-end:strand"
 _LOCATION_RE = re.compile(r"^(?P<contig>.+):(?P<start>\d+)-(?P<end>\d+):(?P<strand>[+-])$")
@@ -103,6 +103,22 @@ class SearchHit:
     reference_record_id: str  # which curated record's protein this matched
     method: str  # "diamond_proteome" | "tblastn_genome" | "exonerate_refine" | "miniprot_refine"
     coverage: float | None = None  # % of the matched reference protein covered; None when unknown
+    #: BLAST statistics for this HSP, retained for calibration. All optional:
+    #: a polished model (`polish.py`) constructs a SearchHit with no alignment
+    #: statistics of its own, and the diamond path has no notion of a reference
+    #: length distinct from its query.
+    #:
+    #: NOTHING RANKS ON THESE YET. `_rank` still orders by (proteome method,
+    #: identity). A BLAST-score-ratio replacement (bitscore / self-bitscore,
+    #: Rasko et al. 2005) is the obvious candidate -- it is length-normalised,
+    #: bounded 0-1 and collapses under a short alignment where percent identity
+    #: does not -- but the idiomorph call depends on this ordering and the
+    #: margins are as small as 0.59 points, so it must be checked against the
+    #: 23/23 Mucoromycota ground truth before it replaces anything.
+    bitscore: float | None = None
+    evalue: float | None = None
+    align_length_aa: int | None = None  # HSP length in aligned residues
+    reference_length_aa: int | None = None  # full length of the curated query protein
     superseded_by: str | None = None
     """The gene name that won when this hit lost an idiomorph resolution.
 
@@ -293,7 +309,7 @@ def search_fast_path(
         for line in result.stdout.splitlines():
             if not line.strip():
                 continue
-            qseqid, sseqid, pident, scovhsp, qtitle = line.split("\t")
+            qseqid, sseqid, pident, scovhsp, evalue, bitscore, qtitle = line.split("\t")
             record_id, gene_name = _parse_reference_header(sseqid)
             attribution = _attribute(record_id, gene_name, record_families, roles_by_family)
             if attribution is None:
@@ -313,6 +329,7 @@ def search_fast_path(
                     reference_record_id=record_id,
                     method="diamond_proteome",
                     coverage=float(scovhsp),
+                    bitscore=float(bitscore), evalue=float(evalue),
                 )
             )
         return hits
@@ -330,7 +347,28 @@ METHOD_TBLASTN = "tblastn_genome"
 # exactly these seven tab-separated columns, and a minus-strand HSP reports
 # sstart > send together with a negative sframe (e.g. "86  51  -1"), while a
 # plus-strand HSP reports sstart < send with a positive sframe.
-_TBLASTN_OUTFMT = "6 qseqid sseqid pident length sstart send sframe"
+_TBLASTN_OUTFMT = (
+    "6 qseqid sseqid pident length qlen qcovhsp evalue bitscore sstart send sframe"
+)
+#: `qcovhsp` is the percent of the QUERY covered by this HSP, and on this path
+#: the query is the curated reference protein -- so it is the same quantity
+#: diamond's `scovhsp` gives on the fast path, where the roles are reversed.
+#: It is per-HSP, not per-subject: a multi-exon gene split across HSPs reports
+#: low coverage on each one even when the gene is fully covered, so judge a
+#: single HSP with it and sum only across HSPs already grouped into one gene.
+
+
+def _gencode_args(genetic_code: int | None, flag: str) -> list[str]:
+    """`[flag, str(code)]`, or `[]` for the standard code / unknown.
+
+    Table 1 is every tool's own default, so passing it explicitly would churn
+    command lines with no behavioural change -- and `None` means the taxonomy
+    lookup could not answer, where the correct response is to fall back to the
+    default rather than guess a table.
+    """
+    if genetic_code is None or int(genetic_code) == 1:
+        return []
+    return [flag, str(int(genetic_code))]
 
 
 def search_localize(
@@ -339,6 +377,7 @@ def search_localize(
     reference_fasta: Path,
     record_families: dict[str, FamilyKey],
     runner: Callable = subprocess.run,
+    genetic_code: int | None = None,
 ) -> list[SearchHit]:
     """Genome-wide tblastn localization -- one blastdb build and one
     tblastn call cover every routed family's genes (core_MAT and
@@ -358,14 +397,15 @@ def search_localize(
         cmd = [
             "tblastn", "-query", str(reference_fasta), "-db", str(db_prefix),
             "-seg", "no", "-outfmt", _TBLASTN_OUTFMT,
-        ]
+        ] + _gencode_args(genetic_code, "-db_gencode")
         result = _run_checked(runner, cmd)
 
         hits: list[SearchHit] = []
         for line in result.stdout.splitlines():
             if not line.strip():
                 continue
-            qseqid, contig, pident, _length, sstart, send, sframe = line.split("\t")
+            (qseqid, contig, pident, length, qlen, qcovhsp, evalue, bitscore,
+             sstart, send, sframe) = line.split("\t")
             record_id, gene_name = _parse_reference_header(qseqid)
             attribution = _attribute(record_id, gene_name, record_families, roles_by_family)
             if attribution is None:
@@ -377,7 +417,12 @@ def search_localize(
                 family_key=family_key, gene_name=gene_name, role=role,
                 contig=contig, start=start, end=end, strand=strand,
                 identity=float(pident), reference_record_id=record_id,
-                method=METHOD_TBLASTN, coverage=None,
+                method=METHOD_TBLASTN,
+                # Was hardcoded None. It is not that tblastn cannot report
+                # coverage -- it was never asked for. See `_TBLASTN_OUTFMT`.
+                coverage=float(qcovhsp),
+                bitscore=float(bitscore), evalue=float(evalue),
+                align_length_aa=int(length), reference_length_aa=int(qlen),
             ))
         return hits
 
@@ -538,6 +583,7 @@ def polish_with_exonerate(
     record_families: dict[str, FamilyKey],
     window: tuple[str, int, int],
     runner: Callable = subprocess.run,
+    genetic_code: int | None = None,
 ) -> "PolishModel | None":
     """Refine one gene's model with `exonerate --refine region` against its window.
 
@@ -600,7 +646,7 @@ def polish_with_exonerate(
         base_cmd = [
             "exonerate", "--model", "protein2genome",
             "--query", str(reference_fasta), "--target", str(target_fasta),
-        ]
+        ] + _gencode_args(genetic_code, "--geneticcode")
         tail = ["--showtargetgff", "yes", "--showalignment", "no"]
         result = _run_checked(
             runner, base_cmd + ["--refine", "region"] + tail, tolerate_signal=True
@@ -687,6 +733,7 @@ def polish_with_miniprot(
     record_families: dict[str, FamilyKey],
     window: tuple[str, int, int],
     runner: Callable = subprocess.run,
+    genetic_code: int | None = None,
 ) -> "PolishModel | None":
     """Refine one gene's model with `miniprot --gff` against its window.
 
@@ -734,7 +781,8 @@ def polish_with_miniprot(
         target_fasta = _extract_window(genome_fasta, window, tmp_dir)
         offset = win_start - 1
 
-        cmd = ["miniprot", "--gff", str(target_fasta), str(reference_fasta)]
+        cmd = (["miniprot"] + _gencode_args(genetic_code, "-T")
+               + ["--gff", str(target_fasta), str(reference_fasta)])
         # A signal death here would abort the whole genome exactly as the
         # exonerate crash did. There is no `--refine` to drop, so there is
         # nothing to retry -- but `classify` treats a missing miniprot model

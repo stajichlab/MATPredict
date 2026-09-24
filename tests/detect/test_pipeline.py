@@ -68,7 +68,7 @@ def test_run_pipeline_end_to_end_with_stubbed_search(tmp_path):
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
                 SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
 
@@ -103,7 +103,7 @@ def test_genome_only_path_uses_search_localize_not_search_genomic(tmp_path):
     _write_record(tmp_path)
     localize_calls = []
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         localize_calls.append(genome_fasta)
         return [_tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400)]
 
@@ -139,11 +139,11 @@ def test_fast_path_missing_gene_is_polished_in_the_existing_clusters_window(tmp_
     localize_calls = []
     polish_calls = []
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1",
                           "diamond_proteome")]
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         localize_calls.append([f.key for f in families])
         return []
 
@@ -195,7 +195,7 @@ def test_gene_found_directly_never_polished_gets_not_polish_candidate_status(tmp
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
                 SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
 
@@ -221,7 +221,7 @@ def test_localized_gene_neither_tool_confirms_gets_unpolished_status_not_not_pol
     _write_record(tmp_path)
     coords = {"mfa1": (100, 200), "pra1": (300, 400)}
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [_tblastn(name, "c1", *span) for name, span in coords.items()]
 
     def fake_exonerate(*, gene_name, **kwargs):
@@ -258,7 +258,7 @@ def test_any_gene_unpolished_tiering_unaffected_by_not_polish_candidate_status(t
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
                 SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
 
@@ -286,7 +286,7 @@ def test_polished_agree_and_disagree_produce_identical_tier(tmp_path):
     _write_record(tmp_path)
     coords = {"mfa1": (100, 200), "pra1": (300, 400)}
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [_tblastn(name, "c1", *span) for name, span in coords.items()]
 
     def run(miniprot_shift):
@@ -324,7 +324,7 @@ def test_gene_evidence_status_and_alternate_model_reflect_polish_outcome(tmp_pat
     _write_record(tmp_path)
     coords = {"mfa1": (100, 200), "pra1": (300, 400)}
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [_tblastn(name, "c1", *span) for name, span in coords.items()]
 
     def fake_exonerate(*, gene_name, **kwargs):
@@ -370,7 +370,7 @@ def test_unpolished_gene_caps_tier_at_medium(tmp_path):
     _write_record(tmp_path)
     coords = {"mfa1": (100, 200), "pra1": (300, 400)}
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [_tblastn(name, "c1", *span) for name, span in coords.items()]
 
     def run(polishable):
@@ -399,7 +399,7 @@ def test_gene_evidence_for_unpolished_gene_uses_raw_localization_hit(tmp_path):
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [_tblastn("mfa1", "c1", 100, 200, identity=61.5),
                 _tblastn("pra1", "c1", 300, 400, identity=72.0)]
 
@@ -428,7 +428,7 @@ def test_polished_model_attributed_to_another_family_is_rejected(tmp_path):
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [_tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400)]
 
     def polish(*, gene_name, **kwargs):
@@ -457,7 +457,7 @@ def test_unpolished_in_one_cluster_does_not_cap_a_different_cluster_of_the_same_
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             _tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400),
             _tblastn("mfa1", "c2", 100, 200), _tblastn("pra1", "c2", 300, 400),
@@ -494,10 +494,10 @@ def test_family_with_zero_fast_path_hits_is_rescued_via_localization(tmp_path):
     polish_calls = []
     coords = {"mfa1": (100, 200), "pra1": (300, 400)}
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return []
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         localize_calls.append((genome_fasta, [f.key for f in families]))
         return [_tblastn(name, "c1", *span) for name, span in coords.items()]
 
@@ -543,14 +543,14 @@ def test_zero_hit_rescue_is_scoped_to_the_families_it_ran_for(tmp_path):
     b_key = FamilyKey("P", "bLocus")
     localize_calls = []
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         # aLocus has a foothold; bLocus has nothing at all.
         return [
             SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
             SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
         ]
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         localize_calls.append([f.key for f in families])
         return [
             SearchHit(b_key, "bE", "core_MAT", "c2", 100, 200, "+", 70.0, "recB", "tblastn_genome"),
@@ -591,12 +591,12 @@ def test_partial_foothold_familys_missing_gene_is_rescued_genome_wide(tmp_path):
     _write_record(tmp_path)
     localize_calls = []
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         # pra1 annotated on c1; mfa1 entirely absent from the annotation
         return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1",
                           "diamond_proteome")]
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         localize_calls.append([f.key for f in families])
         return [
             # the real mfa1, far outside the narrow window around c1:300-400
@@ -657,7 +657,7 @@ def test_second_independent_cluster_gets_its_own_genome_wide_rescue(tmp_path):
     localize_calls = []
     polish_windows = []
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             # cluster A on c1: complete, both core genes annotated
             SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
@@ -666,7 +666,7 @@ def test_second_independent_cluster_gets_its_own_genome_wide_rescue(tmp_path):
             SearchHit(FAMILY.key, "pra1", "core_MAT", "c2", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
         ]
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         localize_calls.append([f.key for f in families])
         return [
             # cluster B's real mfa1: same contig as cluster B, within max_gap of
@@ -761,7 +761,7 @@ def test_chained_in_rescue_hit_cannot_affect_a_gene_the_cluster_already_has(tmp_
     _write_record(tmp_path)
     polish_windows = []
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             # cluster A on c1: has mfa1 and x1, missing pra1
             SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
@@ -770,7 +770,7 @@ def test_chained_in_rescue_hit_cannot_affect_a_gene_the_cluster_already_has(tmp_
             SearchHit(FAMILY.key, "pra1", "core_MAT", "c2", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
         ]
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             # legitimate: cluster A really is missing pra1
             _tblastn("pra1", "c1", 20_000, 20_100),
@@ -855,10 +855,10 @@ def test_rescued_cluster_with_an_unpolished_gene_is_capped_at_medium(tmp_path):
     _write_record(tmp_path)
     coords = {"mfa1": (100, 200), "pra1": (300, 400)}
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return []
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [_tblastn(name, "c1", *span) for name, span in coords.items()]
 
     def run(polishable):
@@ -888,7 +888,7 @@ def test_polished_model_on_another_contig_is_rejected(tmp_path):
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [_tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400)]
 
     def polish(*, gene_name, **kwargs):
@@ -916,7 +916,7 @@ def test_segment_span_covers_every_gene_it_reports(tmp_path):
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         # only pra1 is annotated; the cluster span is frozen at 300-400
         return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1",
                           "diamond_proteome")]
@@ -953,7 +953,7 @@ def test_short_orf_gene_reported_as_not_searchable_not_missing(tmp_path):
         ),
     )
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
 
     outcome = run_pipeline(
@@ -998,7 +998,7 @@ def test_short_orf_split_discriminates_three_buckets(tmp_path):
         ),
     )
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [SearchHit(three_gene_family.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1",
                            "diamond_proteome")]
 
@@ -1050,7 +1050,7 @@ def test_short_orf_scan_is_scoped_per_family_and_uses_the_longest_curated_protei
 
     a_key, b_key = FamilyKey("P", "aLocus"), FamilyKey("P", "bLocus")
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             SearchHit(a_key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "recFull", "diamond_proteome"),
             SearchHit(b_key, "bE", "core_MAT", "c9", 100, 200, "+", 95.0, "recB", "diamond_proteome"),
@@ -1090,7 +1090,7 @@ def test_sub_floor_families_are_reported_as_not_detected_not_dropped(tmp_path):
     _write_record(tmp_path, "recB", "bLocus")
     a_key, b_key = FamilyKey("P", "aLocus"), FamilyKey("P", "bLocus")
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         # 1 of aLocus's 4 genes -> fraction 0.25, below the 0.5 floor.
         return [SearchHit(a_key, "g1", "core_MAT", "c1", 100, 200, "+", 90.0, "recA", "diamond_proteome")]
 
@@ -1119,7 +1119,7 @@ def test_isolated_single_hit_is_low_tier(tmp_path):
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
 
     outcome = run_pipeline(
@@ -1151,7 +1151,7 @@ def test_genes_split_across_contigs_are_reported_separately_by_default(tmp_path)
     genome = tmp_path / "genome.fa"
     genome.write_text(">c1\n" + "A" * 1000 + "\n>c2\n" + "A" * 1000 + "\n")
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
             SearchHit(FAMILY.key, "pra1", "core_MAT", "c2", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
@@ -1184,7 +1184,7 @@ def test_cross_contig_merge_is_still_available_when_explicitly_enabled(tmp_path)
     genome = tmp_path / "genome.fa"
     genome.write_text(">c1\n" + "A" * 1000 + "\n>c2\n" + "A" * 1000 + "\n")
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
             SearchHit(FAMILY.key, "pra1", "core_MAT", "c2", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
@@ -1220,7 +1220,7 @@ def test_same_family_on_two_contigs_each_complete_is_not_fragmented(tmp_path):
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
             SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
@@ -1267,7 +1267,7 @@ def test_fragmented_family_with_a_separate_independent_cluster_reports_both(tmp_
     genome = tmp_path / "genome.fa"
     genome.write_text(">c1\n" + "A" * 1000 + "\n>c2\n" + "A" * 1000 + "\n>c3\n" + "A" * 1000 + "\n")
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             # c1 + c2 together make one fragmented call.
             SearchHit(three_gene_family.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
@@ -1327,7 +1327,7 @@ def test_gene_evidence_prefers_a_polished_model_over_a_higher_identity_raw_hit(t
     genome = tmp_path / "genome.fa"
     genome.write_text(">c1\n" + "A" * 3000 + "\n>c2\n" + "A" * 3000 + "\n")
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             # a high raw pident for the gene that c1 also polishes, below
             SearchHit(key, "mfa1", "core_MAT", "c1", 100, 200, "+", 99.0, "rec1", "tblastn_genome"),
@@ -1376,7 +1376,7 @@ def test_contig_edge_distance_populated_regardless_of_other_families_fragmentati
     genome = tmp_path / "genome.fa"
     genome.write_text(">c1\n" + "A" * 1000 + "\n")
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
             SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
@@ -1399,7 +1399,7 @@ def test_detection_result_carries_per_gene_evidence(tmp_path):
     _write_order(tmp_path)
     _write_record(tmp_path)
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 91.5, "rec1",
                       "diamond_proteome", coverage=77.5),
@@ -1439,7 +1439,7 @@ def test_pipeline_output_feeds_the_report_writers_directly(tmp_path):
     )
     _write_record(tmp_path)
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1",
                       "diamond_proteome", coverage=80.0),
@@ -1494,7 +1494,7 @@ def test_fragmented_segments_each_keep_their_own_evidence_for_a_shared_gene_name
     genome = tmp_path / "genome.fa"
     genome.write_text(">c1\n" + "A" * 5000 + "\n>c2\n" + "A" * 5000 + "\n")
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             SearchHit(key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
             SearchHit(key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
@@ -1557,7 +1557,7 @@ def test_fragmented_segments_keep_both_raw_hits_for_a_shared_gene_name(tmp_path)
     genome = tmp_path / "genome.fa"
     genome.write_text(">c1\n" + "A" * 5000 + "\n>c2\n" + "A" * 5000 + "\n")
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             SearchHit(key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1", "diamond_proteome"),
             SearchHit(key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome"),
@@ -1610,7 +1610,7 @@ def _run_recording_gap(tmp_path, monkeypatch, order_text, **kwargs):
         pipeline_module, "cluster_hits", _gap_recording_cluster_hits(recorded)
     )
 
-    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_localize(genome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [_tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400)]
 
     run_pipeline(
@@ -1688,7 +1688,7 @@ def test_evidence_diagnostics_record_rejected_clusters_not_just_admitted_ones(tm
     _write_record(tmp_path)
     diagnostics_path = tmp_path / "evidence_diagnostics.jsonl"
 
-    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None):
+    def fake_fast_path(proteome_fasta, families, reference_fasta, record_families, runner=None, **kwargs):
         return [
             SearchHit(FAMILY.key, "mfa1", "core_MAT", "c1", 100, 200, "+", 95.0, "rec1",
                       "diamond_proteome"),

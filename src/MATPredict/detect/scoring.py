@@ -142,3 +142,55 @@ def score_cluster(
 def is_ambiguous(scores: list[FamilyScore], floor: float = 0.5) -> bool:
     """True when 2 or more distinct families clear the floor fraction."""
     return sum(1 for s in scores if s.fraction_found >= floor) >= 2
+
+
+def count_distinct_intervals(hits, min_overlap_fraction: float = 0.5) -> int:
+    """How many separate places on the genome these hits actually occupy.
+
+    Hits are grouped transitively when they overlap by at least
+    `min_overlap_fraction` of the SHORTER hit -- the same test
+    `idiomorph._overlap_groups` uses, so one cluster is never measured two
+    different ways. Different contigs never group.
+
+    **Why this exists.** Gene COUNT stopped discriminating once it emerged
+    that several roster entries could name one ORF: on 334 Tremellales
+    genomes, 927 medium-confidence calls were a single ~95 bp interval
+    reported as three genes. Interval count is not fooled by that. Measured on
+    the same panel after the reference dedup: every one of the 2,157 low calls
+    occupies exactly ONE interval, while all 134 high and all 435 medium calls
+    occupy two or more.
+
+    **Safe for tandem duplication**, which is real at Basidiomycota MAT loci:
+    tandem copies sit ADJACENT rather than overlapping, so they group
+    separately and are counted separately. That is the property name-collapsing
+    does not have, and the reason both changes were needed.
+
+    Superseded hits are excluded. A resolved idiomorph cross-match is one gene
+    seen twice under two names; the loser stays in the report as evidence and
+    must not inflate the count.
+
+    Reported as a field, not used as a gate. See the report writer.
+    """
+    live = [h for h in hits if getattr(h, "superseded_by", None) is None]
+    if not live:
+        return 0
+    parent = list(range(len(live)))
+
+    def find(i: int) -> int:
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    for i in range(len(live)):
+        for j in range(i + 1, len(live)):
+            a, b = live[i], live[j]
+            if a.contig != b.contig:
+                continue
+            shared = min(a.end, b.end) - max(a.start, b.start) + 1
+            if shared <= 0:
+                continue
+            shorter = min(a.end - a.start + 1, b.end - b.start + 1)
+            if shared / shorter >= min_overlap_fraction:
+                parent[find(i)] = find(j)
+    return len({find(i) for i in range(len(live))})

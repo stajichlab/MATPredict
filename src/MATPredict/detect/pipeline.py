@@ -92,6 +92,8 @@ from MATPredict.detect.family_registry import (
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_PARTIAL,
     apply_partial_locus,
+    idiomorph_candidates,
+    idiomorph_margin_from_vote,
     is_partial_strength,
     DEFAULT_MIN_OVERLAP_FRACTION,
     IdiomorphResolution,
@@ -107,6 +109,7 @@ from MATPredict.detect.polish import (
     PolishOutcome,
     classify,
 )
+from MATPredict.db.taxonomy import default_genetic_code
 from MATPredict.detect.reference_fasta import searchable_genes_by_family
 from MATPredict.detect.scoring import FamilyScore, is_ambiguous, score_cluster
 from MATPredict.detect.search import (
@@ -219,6 +222,11 @@ class DetectionResult:
     and not the fraction floor, so its tier is capped and anyone who wants
     strict-only output can filter on this field.
     """
+    #: Every idiomorph this cluster has evidence for, best score first. Emitted
+    #: alongside the scalar `idiomorph` so an exact tie, or a narrow win, is
+    #: visible rather than collapsed. Curator's ruling 2026-09-21: on a tie
+    #: "report both instead of worrying about getting it right".
+    idiomorph_candidates: list[dict] = field(default_factory=list)
     idiomorph_margin: float | None = None
     """Identity points separating the winning idiomorph gene from the loser.
 
@@ -299,6 +307,11 @@ def _curated_protein_lengths(
     per-record files reference_fasta.py concatenates -- not its rewritten output).
     """
     expected_by_family = {f.key: {g["name"] for g in f.genes} for f in families}
+    # Curated records carry the gene name their publication deposited; the
+    # roster may have collapsed several of those onto one canonical name (see
+    # `Family.gene_aliases`). Resolve through it so a collapsed gene's length
+    # is found rather than silently skipped by the `expected_by_family` test.
+    aliases_by_family = {f.key: f.gene_aliases for f in families}
     longest: dict[tuple[FamilyKey, str], int] = {}
 
     for faa in db_root.glob("*/*/*/proteins.faa"):
@@ -312,7 +325,9 @@ def _curated_protein_lengths(
             if family_key is None or family_key not in expected_by_family:
                 continue
             parts = dict(p.split("=", 1) for p in head_fields[1:] if "=" in p)
-            name = parts.get("name")
+            name = aliases_by_family.get(family_key, {}).get(
+                parts.get("name"), parts.get("name")
+            )
             if name not in expected_by_family[family_key]:
                 continue
             length = len(seq.strip().replace("\n", ""))
@@ -410,6 +425,19 @@ class EvidenceFloor:
 _DIAGNOSTICS_CANDIDATE_FLOOR = EvidenceFloor(
     min_hits=1, min_identity=None, require_core_role=False
 )
+
+
+def _own_live_hits(cluster, family_key):
+    """This family's non-superseded hits in `cluster`.
+
+    Used for the idiomorph vote, which ranks evidence rather than testing
+    presence. A superseded hit is the losing half of a resolved cross-match and
+    must not vote for its own idiomorph.
+    """
+    return [
+        h for h in cluster.hits
+        if h.family_key == family_key and h.superseded_by is None
+    ]
 
 
 def _families_meeting_evidence_floor(
@@ -538,7 +566,10 @@ def _relaxed_results(
                 # flattening it to low would conflate weak evidence with a
                 # fragmented assembly.
                 confidence="medium",
-                idiomorph=assign_idiomorph(family, score.genes_found),
+                idiomorph=assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key)),
+                idiomorph_candidates=idiomorph_candidates(
+                    family, score.genes_found, _own_live_hits(cluster, family.key)
+                ),
                 ambiguous_with=[],
                 genes_found=score.genes_found,
                 genes_missing=score.genes_missing,
@@ -1192,6 +1223,13 @@ def run_pipeline(
     evidence_diagnostics_path: Path | None = None,
     routing: RoutingDecision | None = None,
     allow_cross_contig_fragments: bool = False,
+    #: NCBI translation table for THIS genome. None means "derive from the
+    #: taxid"; an explicit value wins, exactly as `--phylum` overrides taxid
+    #: routing. Falls back to 1 when the taxonomy lookup cannot answer -- never
+    #: guessed. The CUG-Ser1 clade (Serinales) is table 12 and reads CTG as
+    #: serine; translating those genomes with table 1 is systematically wrong.
+    genetic_code: int | None = None,
+    genetic_code_resolver: Callable[[int], int | None] = default_genetic_code,
 ) -> DetectionOutcome:
     # `routing` lets the caller route ONCE and reuse the decision, which the
     # CLI must do: it has to know the routed families BEFORE this call, so it
@@ -1222,6 +1260,16 @@ def run_pipeline(
     # Basidiomycota genome at 120 kb).
     if max_gap is None:
         max_gap = derive_max_cluster_gap(families, routing_mode=routing.routing_mode)
+    # Derived from the taxid when not supplied, out of the SAME cached efetch
+    # document the router just read, so this costs no extra network call. A
+    # failed lookup degrades to the standard table rather than raising.
+    if genetic_code is None and taxid is not None:
+        try:
+            genetic_code = genetic_code_resolver(taxid)
+        except Exception:
+            genetic_code = None
+    if genetic_code is None:
+        genetic_code = 1
     record_families = load_record_families(db_root)
     protein_lengths = _curated_protein_lengths(db_root, families, record_families)
     short_orf_by_family = _short_orf_genes(
@@ -1267,7 +1315,8 @@ def run_pipeline(
             rescued = [
                 h
                 for h in search_localize(
-                    genome_fasta, rescue_scope.families, reference_fasta, record_families
+                    genome_fasta, rescue_scope.families, reference_fasta,
+                    record_families, genetic_code=genetic_code,
                 )
                 # Defence in depth: only the families this rescue was actually
                 # run for may gain hits from it, only for the genes some cluster
@@ -1278,7 +1327,10 @@ def run_pipeline(
             localized_hit_ids.update(id(h) for h in rescued)
             hits.extend(rescued)
     else:
-        localized = search_localize(genome_fasta, families, reference_fasta, record_families)
+        localized = search_localize(
+            genome_fasta, families, reference_fasta, record_families,
+            genetic_code=genetic_code,
+        )
         localized_hit_ids.update(id(h) for h in localized)
         hits.extend(localized)
 
@@ -1462,12 +1514,12 @@ def run_pipeline(
                 exonerate_model = polish_with_exonerate(
                     genome_fasta=genome_fasta, family=family, gene_name=gene_name,
                     reference_fasta=reference_fasta, record_families=record_families,
-                    window=window,
+                    window=window, genetic_code=genetic_code,
                 )
                 miniprot_model = polish_with_miniprot(
                     genome_fasta=genome_fasta, family=family, gene_name=gene_name,
                     reference_fasta=reference_fasta, record_families=record_families,
-                    window=window,
+                    window=window, genetic_code=genetic_code,
                 )
                 outcome = classify(
                     _own_model(exonerate_model, family.key, gene_name, window[0]),
@@ -1579,9 +1631,25 @@ def run_pipeline(
             for cluster in member_clusters
             for event in idiomorph_events_by_cluster.get(id(cluster), ())
         ]
-        idiomorph_margin = (
-            min(e.margin for e in own_resolutions) if own_resolutions else None
+        # The margin of the call that was ACTUALLY MADE. Since the idiomorph is
+        # decided by the bitscore vote rather than by overlap resolution, the
+        # margin must come from the same ranking -- reporting the resolution's
+        # identity margin here described a different mechanism and a different
+        # quantity. Measured on Actinomucor sp. NRRL A-23671: this field read
+        # 1.077 (identity) while the decision turned on a bitscore gap of 4.6.
+        # Curator's ruling 2026-09-21: report the margin.
+        #
+        # Falls back to the resolution margin when the vote produced no ranking
+        # (no idiomorph-restricted gene found), so nothing that used to be
+        # reported is lost. Each resolution's own margin is unchanged and still
+        # carried per event in `idiomorph_resolutions`.
+        own_vote = idiomorph_candidates(
+            family, score.genes_found,
+            [h for c in member_clusters for h in _own_live_hits(c, family.key)],
         )
+        idiomorph_margin = idiomorph_margin_from_vote(own_vote)
+        if idiomorph_margin is None and own_resolutions:
+            idiomorph_margin = min(e.margin for e in own_resolutions)
         if (
             idiomorph_margin is not None
             and idiomorph_margin < family.min_idiomorph_margin
@@ -1618,7 +1686,11 @@ def run_pipeline(
             # (it is a statement about which genes are present) but must not
             # keep `high` (that is a statement about how sure we are).
             confidence=cap_at_medium(tier) if partial_strength else tier,
-            idiomorph=assign_idiomorph(family, score.genes_found),
+            idiomorph=assign_idiomorph(
+                family, score.genes_found,
+                [h for c in member_clusters for h in _own_live_hits(c, family.key)],
+            ),
+            idiomorph_candidates=own_vote,
             ambiguous_with=(
                 [
                     s.family_key

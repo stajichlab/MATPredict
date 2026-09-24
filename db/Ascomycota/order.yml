@@ -46,9 +46,49 @@ loci:
       # MAT1-1-1. Classifying one member of a documented equivalence and not the other
       # would split the group in every figure that colours by gene_class.
       # Names remain provisional under the NAMES PROVISIONAL note in order.schema.yaml.
-      - {name: MAT1-1-1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: MAT1-1-2, role: core_MAT, gene_class: matA-2, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: MAT1-1-3, role: core_MAT, gene_class: matA-3, present_in_idiomorphs: ["MAT1-1"]}
+      # THE REQUIRED CORE IS TWO GENES: the alpha box (MAT1-1-1) and the HMG
+      # box (MAT1-2-1). Everything else below is `optional`.
+      #
+      # Measured 2026-09-22 on 30 Pezizomycotina genomes (Aspergillus,
+      # Penicillium, Neurospora, Sclerotinia, Botrytis, Fusarium): ZERO of 212
+      # calls reached `high`, every one capped at medium. Cause:
+      # `assign_tier` requires EVERY expected core gene of the called
+      # idiomorph, and the MAT1-1 roster listed five -- MAT1-1-1 through
+      # MAT1-1-5 -- that NO curated record carries together. Aspergillus
+      # MAT1-1 has one of them, Botrytis two, Fusarium three. `core_found`
+      # was unsatisfiable for the largest clade in the database (13,136
+      # genomes), so the high tier was unreachable by construction.
+      #
+      # Same ruling shape the curator applied to btbA (Mucoromycota), to
+      # STE20/RPO41/SXI1/SXI2 (Cryptococcus) and to the Saccharomyces
+      # cassettes: keep the accessory genes searched and reported, out of
+      # fraction_found and out of the core requirement.
+      #
+      # ALIASES: matA-1/matA-2/matA-3/mt a-1 are the NEUROSPORA names for
+      # genes already on this roster -- the gene_class values assigned by the
+      # curator already pair them (alpha_box, matA-2, matA-3, HMG_box). Listing
+      # both spellings as separate roster entries inflated the expected roster
+      # and let one locus gene count twice, exactly as MFa1/2/3 did in
+      # Tremellales. Confirmed by blastp best-hit, each Neurospora protein
+      # against every other MAT protein in db/:
+      #   matA-1 -> MAT1-1-1  31.9%  E 2.8e-18   (top 3 hits all MAT1-1-1)
+      #   mt a-1 -> MAT1-2-1  47.1%  E 7.7e-24   (top 2 hits all MAT1-2-1)
+      #   matA-2 -> MAT1-1-2  33.3%  E 4.1e-06
+      #   matA-3 -> MAT1-1-3  38.2%  E 5.8e-10   MARGINAL: MAT1-2-1 is second
+      #                                          at E 1.7e-09, under one order
+      #                                          of magnitude away, because
+      #                                          MAT1-1-3 and MAT1-2-1 are both
+      #                                          HMG-box proteins and
+      #                                          cross-match (E 2.5e-17).
+      #                                          They are idiomorph-specific
+      #                                          paralogs -- the sexM/sexP
+      #                                          shape -- and must NOT be
+      #                                          merged with each other.
+      # CIMG_00407 is NOT aliased: its best hit to any other MAT protein is
+      # E 5.7, i.e. nothing. It stays a distinct Coccidioides gene.
+      - {name: MAT1-1-1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MAT1-1"], aliases: [matA-1]}
+      - {name: MAT1-1-2, role: core_MAT, gene_class: matA-2, present_in_idiomorphs: ["MAT1-1"], aliases: [matA-2], optional: true}
+      - {name: MAT1-1-3, role: core_MAT, gene_class: matA-3, present_in_idiomorphs: ["MAT1-1"], aliases: [matA-3], optional: true}
       # MAT1-1-5 and MAT1-2-10 are the two Leotiomycete-characteristic MAT genes. Both are
       # real, named genes on primary GenBank records for this class (e.g. MAT1-1-5 on
       # JQ815883/KU726096/KU726097/KF944385; MAT1-2-10 is deposited under its older name
@@ -56,9 +96,9 @@ loci:
       # Declared here so detect.search._attribute does not silently drop hits to them.
       # MAT1-1-5 and MAT1-2-4 are lineage-specific, not universal (curator, 2026-09-19;
       # Doughan & Rollins 2016, doi:10.1016/j.funbio.2016.06.007).
-      - {name: MAT1-1-5, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: MAT1-2-1, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["MAT1-2"]}
-      - {name: MAT1-2-10, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
+      - {name: MAT1-1-5, role: core_MAT, present_in_idiomorphs: ["MAT1-1"], optional: true}
+      - {name: MAT1-2-1, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["MAT1-2"], aliases: ["mt a-1"]}
+      - {name: MAT1-2-10, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
       # APN2/SLA2 gene_class assigned 2026-09-19 by the project's curator, J. Stajich,
       # who was asked what gene_class values APN2 and SLA2 should take. He described APN2
       # as "class II DNA repair apurinic/apyrimidinic endonuclease" or "DNA endonuclease 2",
@@ -80,14 +120,14 @@ loci:
       # conflate the two literal names sharing this spelling.
       # MAT1-2-4 is Sclerotinia/Leotiomycete-specific (curator, 2026-09-19;
       # doi:10.1016/j.funbio.2016.06.007, PMID 27567717).
-      - {name: MAT1-2-4, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
+      - {name: MAT1-2-4, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
       # MAT1-1-4 (Coccidioides posadasii RMSCC1040, ABS19621.1) is a Coccidioides-
       # specific captured MAT1-1-idiomorph gene (Fraser et al. 2007; Mandel et al. 2007).
-      - {name: MAT1-1-4, role: core_MAT, present_in_idiomorphs: ["MAT1-1"]}
+      - {name: MAT1-1-4, role: core_MAT, present_in_idiomorphs: ["MAT1-1"], optional: true}
       # CIMG_00407 (C. immitis RS genome, XP_001246636.2) is named by its locus tag
       # because no published MAT1-2-x number could be verified for it; a captured
       # Coccidioides MAT1-2-idiomorph gene (Fraser et al. 2007; Mandel et al. 2007).
-      - {name: CIMG_00407, role: core_MAT, present_in_idiomorphs: ["MAT1-2"]}
+      - {name: CIMG_00407, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
       # matA-1/matA-2/matA-3/"mt a-1" are Neurospora crassa's own official NCBI Gene
       # symbols for its MAT1-1-1/MAT1-1-2/MAT1-1-3/MAT1-2-1 equivalents (classic
       # literature "mat A-1"/"mat A-2"/"mat A-3"/"mat a-1"; Glass et al. 1990;
@@ -99,10 +139,6 @@ loci:
       # detect.search._attribute. Mapping documented in each record's own
       # definition_note: matA-1 = MAT1-1-1, matA-2 = MAT1-1-2, matA-3 = MAT1-1-3,
       # "mt a-1" = MAT1-2-1.
-      - {name: matA-1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: matA-2, role: core_MAT, gene_class: matA-2, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: matA-3, role: core_MAT, gene_class: matA-3, present_in_idiomorphs: ["MAT1-1"]}
-      - {name: "mt a-1", role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["MAT1-2"]}
   - locus_name: "PM"
     vocabulary_type: "enum"
     idiomorph_values: ["M", "P"]
@@ -140,20 +176,69 @@ loci:
     idiomorph_values: ["MATalpha", "MATa"]
     taxonomic_scope: [4893]
     genes:
-      - {name: MATALPHA1, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
-      - {name: MATALPHA2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      # Curator's ruling, 2026-09-21: in Saccharomyces "only find the key 2
+      # genes (and recognize there are silent and active copies, I would just
+      # like a report of all these loci and allele)".
+      #
+      # WHY NOT FLANKING GENES HERE. S. cerevisiae carries THREE cassettes on
+      # chromosome III with the same gene content -- HML (12,386-13,809), MAT
+      # (199,546-200,969) and HMR (293,179-294,321) -- and WHICH ONE sits at
+      # the MAT position is the mating type. Gene content cannot answer that,
+      # and a real run on S288C reports all three. The discriminator here is
+      # the flanking DNA (the X/Y/Z homology boxes used by HO-triggered gene
+      # conversion), not flanking GENES. So this family does not try to pick
+      # the active cassette: it reports each one with its allele.
+      #
+      # alpha1/alpha2 came from the Zygosaccharomyces rouxii record and are the
+      # SAME TWO GENES under another species' naming. Measured on S288C:
+      # MATALPHA1 (100%) and alpha1 (65.2%) hit ONE ORF; MATALPHA2 (100%) and
+      # alpha2 (52.3%) hit the other. Four names on two genes inflated
+      # fraction_found exactly as MFa1/2/3 did in Tremellales. Aliased, so one
+      # ORF counts once and both reference sequences are still searched.
+      - {name: MATALPHA1, role: core_MAT, present_in_idiomorphs: ["MATalpha"], aliases: [alpha1]}
+      # MATALPHA2/MATA2 mark the cassette but do NOT vote on which allele it
+      # carries. a2 and alpha2 are homologous over the X region shared by all
+      # three chromosome-III cassettes, so MATA2 hits at 100% identity and
+      # 100% coverage at every one of them, and MATALPHA2 -- the longer
+      # protein -- outscores it at every one, INCLUDING HMR, which is a.
+      # Measured bitscores on S288C (HML / MAT / HMR):
+      #   MATA2      246 / 246 / 246      MATALPHA2  422 / 422 / 374
+      # Letting that pair vote calls HMR alpha. Silenced, MATA1 (236) beats
+      # MATALPHA1 (82, a 38 aa 22%-coverage fragment) at HMR and the call is
+      # right at all three. Curator's ruling 2026-09-21: "just knowing where
+      # the cassettes are is sufficient".
+      - {name: MATALPHA2, role: core_MAT, present_in_idiomorphs: ["MATalpha"], aliases: [alpha2], idiomorph_informative: false}
       - {name: MATA1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
-      - {name: MATA2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
-      - {name: alpha1, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
-      - {name: alpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      - {name: MATA2, role: core_MAT, present_in_idiomorphs: ["MATa"], idiomorph_informative: false}
       # sla2 here is the same gene as Ascomycota:MAT's SLA2 under this family's own
       # lowercase name, and takes the same class by the same 2026-09-19 curator ruling
       # recorded on that entry above (curator described SLA2 as "cytoskeleton assembly
       # control protein", then chose the gene-named option sla2_homolog from three
       # offered namings). NOT VERIFIED: no external publication was consulted, and the
       # curator did not separately rule on this lowercase spelling.
-      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog}
-      - {name: cha1, role: flanking_variable}
+      # sla2 is a BONUS FLANK: searched everywhere, corroborating where the
+      # architecture has it, costing nothing where it does not. Curator's
+      # ruling 2026-09-21, after the two measurements that show one flag
+      # cannot describe this family:
+      #   * Saccharomyces -- SLA2 is not on chromosome III AT ALL (checked on
+      #     the S288C reference, 150 annotated chrIII genes), so it is not a
+      #     MAT flank there;
+      #   * Kluyveromyces lactis (NC_006039.1) and Lachancea thermotolerans
+      #     (NC_013082.1) -- sla2 IS immediately adjacent, sla2 -> MATA1 ->
+      #     MATA2, so it is a real anchor there.
+      # `MATsc` spans all of Saccharomycetaceae, so both are true at once.
+      # `optional` gives exactly the asymmetry wanted: finding it still
+      # promotes the call to High, its absence no longer demotes anything, and
+      # it stays out of fraction_found. Previously `exclude_from_search`, which
+      # silenced it for the whole family and discarded the genera where it
+      # works.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      # cha1 stays OFF the search list -- it is not merely absent in
+      # Saccharomyces, it is actively misleading: CHA1 (15,798-16,880) abuts
+      # HML, not MAT, so anchoring on it selects the silent donor cassette.
+      # Kept declared so the Z. rouxii record's own gene name stays
+      # attributable.
+      - {name: cha1, role: flanking_variable, exclude_from_search: true}
   - locus_name: "MATyl"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "B"]
@@ -174,7 +259,30 @@ loci:
   - locus_name: "MTL"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "alpha"]
-    taxonomic_scope: [4959]
+    # Widened 2026-09-21 from 4959 -- which is Debaryomyces hansenii, a single
+    # SPECIES -- to Serinales, the CUG-Ser1 / CTG clade. Verified live: 2916678
+    # is rank ORDER, and the lineages of BOTH Candida albicans (5476) and
+    # D. hansenii (4959) contain it, so this is a strict superset and the
+    # existing 4959_cbs767_MTL_A record stays covered.
+    #
+    # Before this, 136 C. albicans genomes in the local library reached `MTL`
+    # by no route at all: not Saccharomycetaceae (4893), not D. hansenii, so
+    # they fell to phylum_fallback and were searched against all nine
+    # Ascomycota families. Serinales routes 2,368 genomes here.
+    #
+    # Curator's ruling on clade coverage: add RECORDS inside this one family
+    # rather than splitting it. `route()` returns EVERY family whose scope
+    # intersects the lineage, so a second Metschnikowiaceae family would make
+    # those 1,312 genomes match both and be reported twice; two families would
+    # need disjoint scopes and a duplicate roster. Metschnikowiaceae (987
+    # Candidozyma, 173 Metschnikowia, 102 Clavispora) gets its own research
+    # pass before any split is considered -- note NCBI has no MTLa1-named
+    # C. auris protein and Clavispora uses `MAT alpha 1` naming, so no
+    # ready-made reference exists there.
+    #
+    # Disjoint from 4893 (Saccharomycetaceae) and 4952 (Yarrowia), so this
+    # introduces no new multi-family ambiguity.
+    taxonomic_scope: [2916678]  # Serinales (order) -- the CUG-Ser1 / CTG clade
     genes:
       - {name: MTLA1, role: core_MAT, present_in_idiomorphs: ["A"]}
       - {name: MTLA2, role: core_MAT, present_in_idiomorphs: ["A"]}

@@ -24,19 +24,17 @@ locus:
   core:
     completeness: partial
     reference_orientation: SXI1->MFalpha1/2/3->STE3
-    definition_note: 'This is the bipolar, fused-MAT-type locus described by Lengeler
-      et al. 2002 (PMID 12455690, DOI 10.1128/EC.1.5.704-718.2002, the primary Cryptococcus
-      MAT locus paper) and deposited as GenBank AF542531.2 (133,474 bp, complete MAT
-      alpha locus, strain JEC21). The report used to seed this candidate (a literature
-      synthesis by a separate research agent) describes the full locus as containing
-      >20 genes; only the core identity-determining genes (SXI1, the three MFalpha
-      pheromone precursors, and STE3 receptor) are represented here with verified
-      coordinates from the GenBank feature table -- the additional MAT-linked but
-      non-identity genes (MAPK cascade components, MYO2, RPL22alpha) are NOT included
-      in this record. completeness is "partial" to reflect this reduced gene set,
-      not any doubt about the locus boundary itself (which is the full deposited 133,474
-      bp fragment). This "MAT" locus_name entry required extending db/Basidiomycota/order.yml,
-      which previously only modeled the tetrapolar HD/PR case.
+    definition_note: 'This is the bipolar, fused-MAT-type locus described by Lengeler et al. 2002 (PMID
+      12455690, DOI 10.1128/EC.1.5.704-718.2002, the primary Cryptococcus MAT locus paper) and deposited
+      as GenBank AF542531.2 (133,474 bp, complete MAT alpha locus, strain JEC21). The report used to seed
+      this candidate (a literature synthesis by a separate research agent) describes the full locus as
+      containing >20 genes; only the core identity-determining genes (SXI1, the three MFalpha pheromone
+      precursors, and STE3 receptor) are represented here with verified coordinates from the GenBank feature
+      table -- the additional MAT-linked but non-identity genes (MAPK cascade components, MYO2, RPL22alpha)
+      are NOT included in this record. completeness is "partial" to reflect this reduced gene set, not
+      any doubt about the locus boundary itself (which is the full deposited 133,474 bp fragment). This
+      "MAT" locus_name entry required extending db/Basidiomycota/order.yml, which previously only modeled
+      the tetrapolar HD/PR case.
 
       '
     segments:
@@ -61,7 +59,7 @@ genes:
   start: 10692
   end: 12052
   strand: +
-  order_in_locus: 0
+  order_in_locus: 2
 - gene_index: 1
   name: MFalpha3
   protein_accession: ncbi_protein:AAL58091.1
@@ -72,7 +70,7 @@ genes:
   start: 113761
   end: 113877
   strand: '-'
-  order_in_locus: 1
+  order_in_locus: 8
 - gene_index: 2
   name: MFalpha2
   protein_accession: ncbi_protein:AAL58092.1
@@ -83,7 +81,7 @@ genes:
   start: 114490
   end: 114606
   strand: +
-  order_in_locus: 2
+  order_in_locus: 9
 - gene_index: 3
   name: MFalpha1
   protein_accession: ncbi_protein:AAG25675.1
@@ -94,7 +92,7 @@ genes:
   start: 95802
   end: 95918
   strand: '-'
-  order_in_locus: 3
+  order_in_locus: 6
 - gene_index: 4
   name: STE3
   protein_accession: ncbi_protein:AAN75724.1
@@ -106,11 +104,87 @@ genes:
   end: 71841
   strand: '-'
   order_in_locus: 4
+- gene_index: 5
+  name: UAP1
+  protein_accession: ncbi_protein:AAN75728.2
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3696
+  end: 5879
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 6
+  name: FAO1
+  protein_accession: ncbi_protein:AAN75712.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8562
+  end: 9923
+  strand: +
+  order_in_locus: 1
+- gene_index: 7
+  name: RPO41
+  protein_accession: ncbi_protein:AAN75721.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 60566
+  end: 64572
+  strand: +
+  order_in_locus: 3
+- gene_index: 8
+  name: STE20
+  protein_accession: ncbi_protein:AAG48305.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 75536
+  end: 77952
+  strand: +
+  order_in_locus: 5
+- gene_index: 9
+  name: RPL39
+  protein_accession: ncbi_protein:AAN75719.2
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 108406
+  end: 108904
+  strand: '-'
+  order_in_locus: 7
+- gene_index: 10
+  name: NOG2
+  protein_accession: ncbi_protein:AAV98483.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 125664
+  end: 128572
+  strand: +
+  order_in_locus: 10
+- gene_index: 11
+  name: PAN6
+  protein_accession: ncbi_protein:AAV98488.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 128923
+  end: 130590
+  strand: +
+  order_in_locus: 11
 evidence:
   locus_existence:
     tier: 1
-    experimental_method: cloning and sequencing of alpha and a mating-type alleles
-      from divergent varieties
+    experimental_method: cloning and sequencing of alpha and a mating-type alleles from divergent varieties
     citations:
     - pmid: '12455690'
       doi: 10.1128/EC.1.5.704-718.2002
@@ -122,8 +196,7 @@ evidence:
       doi: 10.1128/EC.1.5.704-718.2002
   idiomorph_assignment:
     tier: 1
-    experimental_method: genetic characterization of alpha vs a mating type strains;
-      SXI1/SXI2 identity
+    experimental_method: genetic characterization of alpha vs a mating type strains; SXI1/SXI2 identity
     citations:
     - pmid: '12455690'
       doi: 10.1128/EC.1.5.704-718.2002

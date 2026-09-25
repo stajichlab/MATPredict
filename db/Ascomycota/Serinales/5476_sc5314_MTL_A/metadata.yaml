@@ -1,0 +1,131 @@
+record_id: 5476_sc5314_MTL_A
+record_version: 1
+taxonomy:
+  taxid: 5476
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Debaryomycetaceae;g__Candida;s__Candida_albicans
+  lineage_resolved_date: '2026-09-25'
+organism:
+  species: Candida albicans
+  strain:
+    name: SC5314
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - A
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MTLA2->MTLA1
+    definition_note: 'Candida albicans SC5314 MTLa idiomorph, the first fungal mating-type-like
+      locus described in an ''asexual'' yeast (Hull & Johnson 1999). Curated: MTLa2
+      (AAT08437.1, 2 exons) and MTLa1 (AAD51404.1, 3 exons). The idiomorph-specific
+      PAP/OBP/PIK alleles on the deposit are not MTL roster genes and are not curated.
+      SC5314 is an a/alpha diploid; this is its a haplotype.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AF167162.1
+        seq_region: AF167162.1
+      start: 8944
+      end: 10670
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MTLA2
+  protein_accession: ncbi_protein:AAT08437.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8944
+  end: 9604
+  strand: +
+  order_in_locus: 0
+  transl_table: 12
+  exons:
+  - start: 8944
+    end: 9213
+  - start: 9269
+    end: 9604
+- gene_index: 1
+  name: MTLA1
+  protein_accession: ncbi_protein:AAD51404.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 9709
+  end: 10670
+  strand: +
+  order_in_locus: 1
+  transl_table: 12
+  exons:
+  - start: 9709
+    end: 9900
+  - start: 9975
+    end: 10346
+  - start: 10602
+    end: 10670
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Cloning and sequencing of the MTLa idiomorph, deposited as
+      AF167162.1. "Candida albicans, the most prevalent fungal pathogen in humans,
+      is thought to lack a sexual cycle. A set of C. albicans genes has been identified
+      that corresponds to the master sexual cycle regulators a1, alpha1, and alpha2
+      of the Saccharomyces cerevisiae mating-type (MAT) locus. The C. albicans genes
+      are arranged in a way that suggests that these genes are part of a mating type-like
+      locus that is similar to the mating-type loci of other fungi. In addition to
+      the transcriptional regulators a1, alpha1, and alpha2, the C. albicans mating
+      type-like locus contains several genes not seen in other fungal MAT loci, including
+      those encoding proteins similar to poly(A) polymerases, oxysterol binding proteins,
+      and phosphatidylinositol kinases...." (Hull & Johnson 1999, Science 285:1271,
+      abstract)
+    citations: &id001
+    - pmid: '10455055'
+      doi: 10.1126/science.285.5431.1271
+  boundaries:
+    tier: 1
+    experimental_method: The record segment spans the curated MTL genes on the deposit
+      AF167162.1; the idiomorph's own boundaries (it also carries the idiomorph-specific
+      PAP/OBP/PIK alleles) are the paper's.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Idiomorph by gene content of the deposited idiomorph (AF167162.1),
+      as reported in Hull & Johnson 1999, Science 285:1271.
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AF167162.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10455055|5476|MTL|A
+  reviewed_by: 'J. Stajich (ruling 2026-09-25: start Serinales curation)'
+  reviewed_date: '2026-09-25'
+  notes: All CDS use NCBI translation table 12 (CUG -> Ser), set per gene.
+model_provenance: null

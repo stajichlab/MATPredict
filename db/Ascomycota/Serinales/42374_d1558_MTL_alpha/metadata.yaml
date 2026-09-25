@@ -1,0 +1,107 @@
+record_id: 42374_d1558_MTL_alpha
+record_version: 1
+taxonomy:
+  taxid: 42374
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Debaryomycetaceae;g__Candida;s__Candida_dubliniensis
+  lineage_resolved_date: '2026-09-25'
+organism:
+  species: Candida dubliniensis
+  strain:
+    name: d1558
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - alpha
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MTLalpha1
+    definition_note: 'Candida dubliniensis d1558 MTLalpha idiomorph, ''highly similar
+      to that of C. albicans'' (Pujol et al. 2004). Curated: MTLalpha1 (AAU13777.1).
+      MTLalpha2 is on this deposit but is NOT curated: it has no slot in the MTL roster
+      (it is absent from Clavispora and C. auris; adding it as an optional gene is
+      a curator ruling). The alpha2 CDS is AAU13776.1. The PAPalpha CDS is 3''-partial
+      on this deposit. The idiomorph-specific PAP/OBP/PIK alleles on the deposit are
+      not MTL roster genes and are not curated. '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AY622606.1
+        seq_region: AY622606.1
+      start: 6894
+      end: 7475
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MTLalpha1
+  protein_accession: ncbi_protein:AAU13777.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 6894
+  end: 7475
+  strand: +
+  order_in_locus: 0
+  transl_table: 12
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Cloning and sequencing of the MTLalpha idiomorph, deposited
+      as AY622606.1. "Because Candida dubliniensis is closely related to Candida albicans,
+      we tested whether it underwent white-opaque switching and mating and whether
+      white-opaque switching depended on MTL homozygosity and mating depended on switching,
+      as they do in C. albicans. We also tested whether C. dubliniensis could mate
+      with C. albicans. Sequencing revealed that the MTLalpha locus of C. dubliniensis
+      was highly similar to that of C. albicans. Hybridization with the MTLa1, MTLa2,
+      MTLalpha1, and MTLalpha2 open reading frames of C. albicans further revealed
+      that, as in C. albicans, natural strains of C. dubliniensis exist as a/alpha,
+      a/a, and alpha/alpha, but the proportion of MTL homozygotes is 33%, 10 times
+      the frequency of natural C. albicans strains. C. dubliniensis underwent white-opaque
+      switching, and, as in C. albicans, the switching was dependent on MTL homozygosis.
+      C. dubliniensis a/a and alpha/..." (Pujol et al. 2004, Eukaryot Cell 3:1015,
+      abstract)
+    citations: &id001
+    - pmid: '15302834'
+      doi: 10.1128/EC.3.4.1015-1027.2004
+  boundaries:
+    tier: 1
+    experimental_method: The record segment spans the curated MTL genes on the deposit
+      AY622606.1; the idiomorph's own boundaries (it also carries the idiomorph-specific
+      PAP/OBP/PIK alleles) are the paper's.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Idiomorph by gene content of the deposited idiomorph (AY622606.1),
+      as reported in Pujol et al. 2004, Eukaryot Cell 3:1015.
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AY622606.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 15302834|42374|MTL|alpha
+  reviewed_by: 'J. Stajich (ruling 2026-09-25: start Serinales curation)'
+  reviewed_date: '2026-09-25'
+  notes: All CDS use NCBI translation table 12 (CUG -> Ser), set per gene.
+model_provenance: null

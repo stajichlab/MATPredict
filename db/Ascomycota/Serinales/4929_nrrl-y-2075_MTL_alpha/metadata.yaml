@@ -1,0 +1,103 @@
+record_id: 4929_nrrl-y-2075_MTL_alpha
+record_version: 1
+taxonomy:
+  taxid: 4929
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Debaryomycetaceae;g__Meyerozyma;s__Meyerozyma_guilliermondii
+  lineage_resolved_date: '2026-09-25'
+organism:
+  species: Meyerozyma guilliermondii
+  strain:
+    name: NRRL Y-2075
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - alpha
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MTLalpha1
+    definition_note: 'Meyerozyma (Pichia/Candida) guilliermondii NRRL Y-2075 MTLalpha
+      idiomorph (Reedy et al. 2009). Curated: MTLalpha1 (ACS29273.1). The idiomorph-specific
+      PAP/OBP/PIK alleles on the deposit are not MTL roster genes and are not curated. '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: FJ524851.1
+        seq_region: FJ524851.1
+      start: 6889
+      end: 7521
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MTLalpha1
+  protein_accession: ncbi_protein:ACS29273.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 6889
+  end: 7521
+  strand: +
+  order_in_locus: 0
+  transl_table: 12
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Cloning and sequencing of the MTLalpha idiomorph, deposited
+      as FJ524851.1. "Candida species are microbial pathogens originally thought to
+      be asexual, but several are now recognized as sexual or parasexual. Candida
+      albicans, the most common fungus infecting humans, is an obligate diploid with
+      a parasexual cycle involving mating, recombination, and genome reduction but
+      no recognized meiosis. Others (C. lusitaniae, C. guilliermondii) are haploid,
+      and their mating produces spores, suggestive of complete meiotic sexual cycles.
+      However, comparative genomic analysis reveals that these species lack key meiotic
+      components, including the recombinase Dmc1 and cofactors (Mei5/Sae3), synaptonemal-complex
+      proteins (Zip1-Zip4/Hop1), and the crossover interference pathway (Msh4/5).
+      Here we elucidate the structure and functions of the mating-type (MAT) locus
+      and establish that C. lusitaniae undergoes meiosis during its sexual cycle.
+      The MAT-encoded a2 (high-mobility group) and a..." (Reedy et al. 2009, Curr
+      Biol 19:891, abstract)
+    citations: &id001
+    - pmid: '19446455'
+      doi: 10.1016/j.cub.2009.04.058
+  boundaries:
+    tier: 1
+    experimental_method: The record segment spans the curated MTL genes on the deposit
+      FJ524851.1; the idiomorph's own boundaries (it also carries the idiomorph-specific
+      PAP/OBP/PIK alleles) are the paper's.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Idiomorph by gene content of the deposited idiomorph (FJ524851.1),
+      as reported in Reedy et al. 2009, Curr Biol 19:891.
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: FJ524851.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 19446455|4929|MTL|alpha
+  reviewed_by: 'J. Stajich (ruling 2026-09-25: start Serinales curation)'
+  reviewed_date: '2026-09-25'
+  notes: All CDS use NCBI translation table 12 (CUG -> Ser), set per gene.
+model_provenance: null

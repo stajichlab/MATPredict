@@ -1,0 +1,105 @@
+record_id: 5476_sc5314_MTL_alpha
+record_version: 1
+taxonomy:
+  taxid: 5476
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Debaryomycetaceae;g__Candida;s__Candida_albicans
+  lineage_resolved_date: '2026-09-25'
+organism:
+  species: Candida albicans
+  strain:
+    name: SC5314
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - alpha
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MTLalpha1
+    definition_note: 'Candida albicans SC5314 MTLalpha idiomorph (the alpha haplotype
+      of the a/alpha diploid). Curated: MTLalpha1 (AAD51411.1; the GenBank product
+      is ''unknown'', the /gene is MTLalpha1). MTLalpha2 is on this deposit but is
+      NOT curated: it has no slot in the MTL roster (it is absent from Clavispora
+      and C. auris; adding it as an optional gene is a curator ruling). The alpha2
+      CDS here is AAD51408.1 (product ''unknown'', no /gene name). The idiomorph-specific
+      PAP/OBP/PIK alleles on the deposit are not MTL roster genes and are not curated. '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AF167163.1
+        seq_region: AF167163.1
+      start: 7938
+      end: 8519
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MTLalpha1
+  protein_accession: ncbi_protein:AAD51411.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 7938
+  end: 8519
+  strand: +
+  order_in_locus: 0
+  transl_table: 12
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Cloning and sequencing of the MTLalpha idiomorph, deposited
+      as AF167163.1. "Candida albicans, the most prevalent fungal pathogen in humans,
+      is thought to lack a sexual cycle. A set of C. albicans genes has been identified
+      that corresponds to the master sexual cycle regulators a1, alpha1, and alpha2
+      of the Saccharomyces cerevisiae mating-type (MAT) locus. The C. albicans genes
+      are arranged in a way that suggests that these genes are part of a mating type-like
+      locus that is similar to the mating-type loci of other fungi. In addition to
+      the transcriptional regulators a1, alpha1, and alpha2, the C. albicans mating
+      type-like locus contains several genes not seen in other fungal MAT loci, including
+      those encoding proteins similar to poly(A) polymerases, oxysterol binding proteins,
+      and phosphatidylinositol kinases...." (Hull & Johnson 1999, Science 285:1271,
+      abstract)
+    citations: &id001
+    - pmid: '10455055'
+      doi: 10.1126/science.285.5431.1271
+  boundaries:
+    tier: 1
+    experimental_method: The record segment spans the curated MTL genes on the deposit
+      AF167163.1; the idiomorph's own boundaries (it also carries the idiomorph-specific
+      PAP/OBP/PIK alleles) are the paper's.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Idiomorph by gene content of the deposited idiomorph (AF167163.1),
+      as reported in Hull & Johnson 1999, Science 285:1271.
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AF167163.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10455055|5476|MTL|alpha
+  reviewed_by: 'J. Stajich (ruling 2026-09-25: start Serinales curation)'
+  reviewed_date: '2026-09-25'
+  notes: All CDS use NCBI translation table 12 (CUG -> Ser), set per gene.
+model_provenance: null

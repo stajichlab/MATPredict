@@ -338,13 +338,59 @@ def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
     return core_genes - found_genes
 
 
+#: A polished model must cover at least this fraction of the reference protein
+#: it was built from to count toward a `homothallic_candidate` of two unrelated
+#: genes. Measured 2026-09-25: at 0.5 the rule fires on 0 of 113 would-be loci
+#: in heterothallic-rich panels and keeps both Hydnotrya loci; at 0.6 it also
+#: loses those. PROVISIONAL, like the other curator-tunable thresholds.
+HOMOTHALLIC_MIN_MODEL_COVERAGE = 0.5
+
+
+def full_length_models(
+    polish_by: dict,
+    cluster_ids: set[int],
+    family_key: FamilyKey,
+    record_lengths: dict[tuple[str, str], int],
+    cross_matched: set[str],
+    min_coverage: float = HOMOTHALLIC_MIN_MODEL_COVERAGE,
+) -> frozenset[str]:
+    """Genes of this family, in these clusters, that are full-length models.
+
+    A gene qualifies when a polishing tool modelled it (agree, disagree or
+    single), the canonical model covers >= `min_coverage` of the reference
+    protein it was built from (`record_lengths[(record_id, gene)]`, in aa),
+    and the gene took no part in an idiomorph cross-match resolution here
+    (`cross_matched`: every winner and loser). Used only by the relaxed
+    homothallic rule: a truncated remnant, or an HMG gene that beat another
+    HMG gene at one position, is not evidence of a second idiomorph.
+    """
+    out = set()
+    for (cluster_id, key, gene_name), outcome in polish_by.items():
+        if key != family_key or cluster_id not in cluster_ids or gene_name in cross_matched:
+            continue
+        if outcome.status not in (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE):
+            continue
+        model = outcome.canonical
+        reference = record_lengths.get((model.reference_record_id, gene_name))
+        if not reference:
+            continue
+        aa = sum(e.end - e.start + 1 for e in model.exons) // 3
+        if aa >= min_coverage * reference:
+            out.add(gene_name)
+    return frozenset(out)
+
+
 def _curated_protein_lengths(
     db_root: Path,
     families: list[Family],
     record_families: dict[str, FamilyKey],
     exclude_record_ids: frozenset[str] = frozenset(),
+    by_record: dict[tuple[str, str], int] | None = None,
 ) -> dict[tuple[FamilyKey, str], int]:
     """`(family_key, gene_name)` -> the LONGEST curated reference protein, in aa.
+
+    When `by_record` is given it is also filled with `(record_id, gene_name)`
+    -> that record's protein length, for `full_length_models`.
 
     Keyed per `(phylum, locus_name)` family, never by bare gene name: gene names
     are reused across families (`sla2` is both `Ascomycota:MATsc`'s and
@@ -389,6 +435,8 @@ def _curated_protein_lengths(
             length = len(seq.strip().replace("\n", ""))
             key = (family_key, name)
             longest[key] = max(longest.get(key, 0), length)
+            if by_record is not None:
+                by_record[(record_id, name)] = max(by_record.get((record_id, name), 0), length)
     return longest
 
 
@@ -1435,8 +1483,10 @@ def run_pipeline(
     if genetic_code is None:
         genetic_code = 1
     record_families = load_record_families(db_root)
+    record_protein_lengths: dict[tuple[str, str], int] = {}
     protein_lengths = _curated_protein_lengths(
-        db_root, families, record_families, exclude_record_ids)
+        db_root, families, record_families, exclude_record_ids,
+        by_record=record_protein_lengths)
     short_orf_by_family = _short_orf_genes(
         db_root, families, record_families, short_orf_aa_floor, exclude_record_ids
     )
@@ -1795,6 +1845,11 @@ def run_pipeline(
     def _modelled_gene_count(
         member_clusters: list[GeneCluster], family_key: FamilyKey
     ) -> int:
+        return len(_modelled_gene_names(member_clusters, family_key))
+
+    def _modelled_gene_names(
+        member_clusters: list[GeneCluster], family_key: FamilyKey
+    ) -> frozenset[str]:
         """How many DISTINCT genes of this family, in these exact clusters, rest
         on a real gene model rather than on a bare alignment.
 
@@ -1842,7 +1897,7 @@ def run_pipeline(
             and outcome.status in (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE)
         } & {h.gene_name for h in live}
         modelled |= {h.gene_name for h in live if h.method == "diamond_proteome"}
-        return len(modelled)
+        return frozenset(modelled)
 
     def _build(
         score: FamilyScore,
@@ -1907,7 +1962,13 @@ def run_pipeline(
             score.fraction_found, ambiguity_floor, relaxed=False
         )
         locus_class = apply_partial_locus(
-            classify_locus(member_clusters[0], family),
+            classify_locus(member_clusters[0], family, full_length_models=full_length_models(
+                polish_by, {id(c) for c in member_clusters}, score.family_key,
+                record_protein_lengths,
+                {g for c in member_clusters
+                 for e in idiomorph_events_by_cluster.get(id(c), ())
+                 for g in (e.winner, e.loser)},
+            )),
             fraction_found=score.fraction_found,
             ambiguity_floor=ambiguity_floor,
             relaxed=False,

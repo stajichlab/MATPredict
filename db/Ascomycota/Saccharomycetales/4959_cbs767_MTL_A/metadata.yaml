@@ -1,5 +1,5 @@
 record_id: 4959_cbs767_MTL_A
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 4959
   lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Debaryomycetaceae;g__Debaryomyces;s__Debaryomyces_hansenii
@@ -16,13 +16,14 @@ mating_type:
   locus_name: MTL
   idiomorphs:
   - A
-  system: heterothallic
+  - alpha
+  system: homothallic
 locus:
   coordinate_provenance: curator_derived
   excluded_from_coordinate_benchmark: false
   core:
-    completeness: partial
-    reference_orientation: MTLA1->MTLA2
+    completeness: complete
+    reference_orientation: MTLalpha1->MTLA1->MTLA2
     definition_note: 'D. hansenii''s reference genome (strain CBS767) carries only
       the "A" gene configuration (MTLA1, MTLA2) at this locus; no MTLalpha1 gene is
       present in this strain''s assembly. No dedicated primary MTL-locus cloning/characterization
@@ -43,19 +44,48 @@ locus:
       biology, or only half of a larger homothallic locus not captured in this genome
       build, is unresolved.
 
-      '
+
+      CORRECTION, record_version 2, 2026-09-25 (curator ruling, J. Stajich). The statement
+      above that no MTLalpha1 gene is present is WRONG for this assembly. XP_460134.1
+      (DEHA2E19096g, annotated only as ''DEHA2E19096p'') at NC_006047.2:1,587,954-1,588,592
+      (-) is MTLalpha1, ~1.5 kb from MTLA1, by four independent lines measured 2026-09-24
+      (results/2026-09-24_dhansenii_alpha1/EVIDENCE.md): (1) it carries the MATalpha1
+      HMG box (Pfam PF04769; NCBI Region 103->157) and is the ONLY PF04769 protein
+      in the D. hansenii proteome; (2) reciprocal best hit with C. albicans MTLalpha1
+      (AAD51411.1, from AF167163.1): E=2.8e-25, next hit E=0.55; (3) it groups with
+      the CTG-clade MTLalpha1 proteins in an IQ-TREE gene tree (UFBoot 93 within a
+      CTG group of 82); (4) it sits inside the MTL locus. CBS767 therefore carries
+      a1, a2 and alpha1 at one locus, the contiguous ''primary homothallic'' arrangement
+      Krassowski et al. 2019 (PMID 31353182) describe for this genus. MTLalpha2 is
+      absent, as in the rest of the clade. system is set to ''homothallic'' as a HOMOTHALLIC
+      CANDIDATE from gene content: whether CBS767 self-mates, and whether alpha1 is
+      functional, is not shown by this evidence. The curator flagged this as a first
+      case for using MATPredict to screen for homothallic candidates. record_id keeps
+      its _A suffix because the coordinate-truth set and the holdout benchmark reference
+      it.'
     segments:
     - segment_index: 0
       sequence_source:
         type: insdc_nucleotide
         accession: NC_006047.2
         seq_region: NC_006047.2
-      start: 1589597
+      start: 1587954
       end: 1591344
       contig_edge_distance: null
       sequence_checksum: null
   extended_flank: []
 genes:
+- gene_index: 2
+  name: MTLalpha1
+  protein_accession: ncbi_protein:XP_460134.1
+  role: core_MAT
+  present: true
+  locus_tag: DEHA2E19096g
+  segment_index: 0
+  start: 1587954
+  end: 1588592
+  strand: '-'
+  order_in_locus: 0
 - gene_index: 0
   name: MTLA1
   protein_accession: ncbi_protein:XP_460135.2
@@ -66,7 +96,7 @@ genes:
   start: 1589597
   end: 1590216
   strand: '-'
-  order_in_locus: 0
+  order_in_locus: 1
   exons:
   - start: 1590115
     end: 1590216
@@ -86,7 +116,7 @@ genes:
   start: 1590508
   end: 1591344
   strand: '-'
-  order_in_locus: 1
+  order_in_locus: 2
   exons:
   - start: 1590991
     end: 1591344
@@ -134,6 +164,15 @@ evidence:
     citations:
     - pmid: '15229592'
       doi: 10.1038/nature02579
+  idiomorph_assignment_alpha:
+    tier: 2
+    experimental_method: 'Computational (tier 2), admitted under the curator''s 2026-09-24
+      ruling: MATalpha1 domain (PF04769, unique in the proteome), reciprocal best
+      hit to C. albicans MTLalpha1, gene-tree placement among CTG-clade MTLalpha1
+      proteins, and position inside the MTL locus. Evidence and scripts: results/2026-09-24_dhansenii_alpha1/.'
+    citations:
+    - pmid: '31353182'
+      doi: 10.1016/j.cub.2019.06.056
 validation:
   status: accepted
   rejection_reason: null
@@ -143,6 +182,10 @@ validation:
   sequence_match:
     status: pass
     per_gene:
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     - gene_index: 0
       percent_identity: 100.0
       coverage: 100.0
@@ -156,6 +199,7 @@ validation:
 curation:
   proposed_by: claude-literature-search
   proposal_dedupe_key: 15229592|4959|MTL|A
-  reviewed_by: null
-  reviewed_date: null
+  reviewed_by: 'J. Stajich (ruling 2026-09-25: XP_460134.1 is MTLalpha1; homothallic
+    candidate)'
+  reviewed_date: '2026-09-25'
 model_provenance: null

@@ -135,7 +135,11 @@ def main() -> int:
                        "--out-dir", str(out), "--exclude-records", ",".join(sorted(drop))]
                 if a.get("taxid"):
                     cmd += ["--taxid", str(a["taxid"])]
-                env = {"PYTHONPATH": str(wt / "src"), "PATH": f"{env_bin}:/usr/bin:/bin"}
+                # The database must be the worktree's, like the code: detect
+                # otherwise reads <cwd>/db, the main checkout when submitted
+                # from there -- and withholding is computed from `db` above.
+                env = {"PYTHONPATH": str(wt / "src"), "PATH": f"{env_bin}:/usr/bin:/bin",
+                       "MATPREDICT_DB_ROOT": str(db)}
                 rep.unlink(missing_ok=True)
                 r = subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=7200)
                 if r.returncode != 0:

@@ -75,6 +75,17 @@ if [[ ! -f "$SRC/MATPredict/__init__.py" ]]; then
     exit 1
 fi
 export PYTHONPATH="$SRC"
+# The curated database must come from the SAME tree as the code. `detect`
+# reads $MATPREDICT_DB_ROOT, else <working dir>/db -- and a SLURM job's working
+# dir is wherever it was submitted from, usually the main checkout. That made a
+# 2026-09-25 re-run search the main checkout's OLD database while running the
+# worktree's code, so two newly curated records never reached the search and
+# the run reported no change. Pinned next to SRC unless set explicitly.
+export MATPREDICT_DB_ROOT="${MATPREDICT_DB_ROOT:-$(dirname "$SRC")/db}"
+if [[ ! -f "$MATPREDICT_DB_ROOT/Ascomycota/order.yml" ]]; then
+    echo "MATPREDICT_DB_ROOT=$MATPREDICT_DB_ROOT is not a curated database on $(hostname)" >&2
+    exit 1
+fi
 
 # $SCRATCH is node-local NVMe, pre-created per job, and NOT shared between
 # nodes. Genomes are decompressed here and deleted straight after use; only the
@@ -85,6 +96,7 @@ mkdir -p "$WORK/fasta" "$OUT_DIR/runs" "$REPO/logs"
 
 echo "repo=$REPO"
 echo "src=$SRC"
+echo "db=$MATPREDICT_DB_ROOT"
 echo "clade=$RANK=$CLADE  samples=$SAMPLES"
 echo "scratch=$WORK"
 echo "out=$OUT_DIR  threads=$THREADS"

@@ -85,3 +85,38 @@ Proposed (curator decision, not implemented): accept polished models in the
 homothallic rule when the two genes' `gene_class` or domain differ, keep the
 proteome-only guard for same-domain pairs such as sexM/sexP, and require the
 two models not to overlap.
+
+## Addendum: the homothallic rule, the Serinales curation and C. auris
+
+**Homothallic rule** (`338ee18`). Simulated on existing reports first: a
+domain-only relaxation would have labelled 113 loci homothallic in
+heterothallic-rich panels (MAT1-1-3 cross-matching MAT1-2-1; truncated MAT1-1-1
+remnants in MAT1-2 idiomorphs). With the full-length (>= 50% of the model's own
+reference) and no-cross-match conditions: 0. Confirmed by re-running 10 of the
+flagged genomes (Ophiostoma, Leptographium, two Diaporthe, two Cladonia,
+Endocarpon, Knoxdaviesia, Aureobasidium, Lizonia): all are plain `mat_locus`.
+Candidates labelled `homothallic_candidate`: both Hydnotrya, Debaryomyces
+coudertii, Schwanniomyces etchellsii, D. hansenii Wch and CBS767. The two
+Priceomyces fall below the coverage floor. `results/2026-09-25_homothallic_check/`.
+
+**Serinales** (`0ae6f76` five tier-1 records; `8dec9e1` three tier-2 C. auris
+records). The 75 Serinales pilot genomes, `results/2026-09-25_serinales_8dec9e1/`:
+
+| genus | before | after |
+|---|---:|---:|
+| Candidozyma (C. auris) | 0/22 | 16/22 |
+| Candida | 1/11 | 10/11 |
+| Debaryomyces | 1/3 | 3/3 (2 homothallic candidates) |
+| all Serinales | 2/75 | **36/75** |
+
+Every C. auris call is idiomorph `A`. Two open problems:
+
+1. C. auris's alpha idiomorph has ONE core gene (MTLalpha1; alpha2 is absent in
+   the clade) and the MTL roster has no flanking genes, so an alpha genome can
+   never reach the two-modelled-gene bar. The idiomorph-specific PAP/OBP/PIK
+   alleles are the obvious flanks; adding them is a curator ruling.
+2. Six C. auris genomes stay uncalled with only 0-modelled withheld loci, even
+   with a same-species alpha1 reference. Not yet explained.
+
+Annotation errors found along the way are recorded in
+`ANNOTATION_ERRORS_FIXED_REPORT.md` at the repository root.

@@ -37,7 +37,9 @@ ZygoLife carries Pfam annotations for **812 genomes**
 | PF00505 | HMG_box | 989 | 24 | 35 |
 | PF00046 | Homeodomain | 923 | 27 | 48 |
 | PF04769 | MATalpha_HMGbox | 0 | 0 | 0 |
-| PF08800 | MATA_HMG | 0 | 0 | 0 |
+| PF08800 | ~~MATA_HMG~~ BT4734-like_N (see note) | 0 | 0 | 0 |
+
+CORRECTION, 2026-09-25: PF08800 is "BT4734-like_N" (InterPro's own NAME line), not a MATa HMG domain. The row was mislabelled, so its zero says nothing about MATa HMG-box genes. The count itself was never re-measured. Logged in `ANNOTATION_ERRORS_FIXED_REPORT.md`.
 
 So ~24 non-MAT HMG-box proteins per genome are available to build from, and
 none of them are annotated as MAT-specific. Decoys would add one query set to

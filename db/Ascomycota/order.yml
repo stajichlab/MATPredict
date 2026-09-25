@@ -314,3 +314,18 @@ loci:
       # acknowledged gap (see that record's definition_note).
       - {name: Rsm22-like, role: flanking_conserved}
       - {name: unnamed_flanking_ORF, role: flanking_conserved}
+      # CURATOR RULING, J. Stajich, 2026-09-25: add SLA2 and APN2. Their only
+      # MATtub references are the Morchella importuna records (KY782629.1 /
+      # KY782630.1, Chai et al. 2017). `optional`: a missing flank stays out of
+      # fraction_found, so a Tuber cluster -- whose depositors used other
+      # anchors, and where APN2 was not found in any of 7 annotated proteomes --
+      # is never penalised, while a found and modelled SLA2 counts toward the
+      # modelled-gene bar. Measured before adding them
+      # (results/2026-09-24_flank_homology): SLA2 is single-copy and a
+      # reciprocal best hit to A. fumigatus in 53/53 annotated Pezizales
+      # proteomes, within 20 kb of MAT in 33/34 where they share a contig
+      # (median 6.1 kb); APN2 in 46/53, within 20 kb in 26/34 (median 16.6 kb).
+      # The synteny test (docs/notes/2026-09-24_bar-synteny-test.md) found an
+      # adjacent withheld core locus in 69 of 81 no-call Pezizales genomes.
+      - {name: SLA2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      - {name: APN2, role: flanking_conserved, gene_class: apn2_homolog, optional: true}

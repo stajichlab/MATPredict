@@ -1,0 +1,165 @@
+record_id: 1174673_ypl6-3_MATtub_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 1174673
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Pezizomycetes;o__Pezizales;f__Morchellaceae;g__Morchella;s__Morchella_importuna
+  lineage_resolved_date: '2026-09-25'
+organism:
+  species: Morchella importuna
+  strain:
+    name: YPL6-3
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATtub
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MAT1-1-1->APN2
+    definition_note: 'Morchella importuna YPL6-3 MAT1-1 idiomorph with flanks, from
+      the locus deposit KY782630.1 (63,555 bp). Curated genes: MAT1-1-1 and APN2 (two
+      adjacent CDS, AVI60822.1 and AVI60823.1, kept under one gene name). SLA2 is
+      NOT on this deposit: it begins at MBA1 (358-1470), on the other side of MAT
+      from APN2. The paper''s two extra MAT1-1 ORFs (GME3123, GME3124; ''novel mating
+      genes found only in morels'') are not in the MATtub roster and are not curated.
+      APN2 lies ~19 kb from MAT1-1-1.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KY782630.1
+        seq_region: KY782630.1
+      start: 2866
+      end: 26175
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:AVI60816.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2866
+  end: 4559
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 4103
+    end: 4559
+  - start: 3013
+    end: 4044
+  - start: 2866
+    end: 2951
+- gene_index: 1
+  name: APN2
+  protein_accession: ncbi_protein:AVI60822.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 23768
+  end: 24878
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 23768
+    end: 23795
+  - start: 23858
+    end: 23870
+  - start: 23922
+    end: 23964
+  - start: 24034
+    end: 24166
+  - start: 24235
+    end: 24878
+- gene_index: 2
+  name: APN2
+  protein_accession: ncbi_protein:AVI60823.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 25161
+  end: 26175
+  strand: +
+  order_in_locus: 2
+  exons:
+  - start: 25161
+    end: 25250
+  - start: 25303
+    end: 26175
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Genome sequencing of two ascospore isolates of opposite mating
+      type; idiomorphs identified and deposited with flanking genes. "In this study,
+      the genomes of two ascospore isolates of M. importuna with opposite mating-type
+      were sequenced and two idiomorphs, MAT1-1 and MAT1-2, were identified. The MAT1-2
+      idiomorph was 6.7 kb in length containing a single MAT1-2-1 gene, and the MAT1-1
+      idiomorph was 10.5 kb containing a MAT1-1-1 gene and two other open reading
+      frames (ORFs), GME3123 and GME3124. ... Single-ascospore populations of M. importuna,
+      M. sextelata and Mel-20 were analysed, and the result indicated that the ratios
+      of MAT1-1- and MAT1-2-harbouring idiomorphs were not significantly different
+      from a 1:1 ratio. The results suggest that these three black morels are heterothallic."
+      (Chai et al. 2017, abstract)
+    citations:
+    - pmid: null
+      doi: 10.1007/s11557-017-1309-x
+  boundaries:
+    tier: 1
+    experimental_method: Boundaries of the deposited region are the GenBank record's
+      own; the record segment spans the curated genes on it. The paper's idiomorph
+      (MAT1-2 6.7 kb / MAT1-1 10.5 kb) lies inside.
+    citations:
+    - pmid: null
+      doi: 10.1007/s11557-017-1309-x
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Idiomorph by MAT gene content (MAT1-1-1 vs MAT1-2-1) of opposite-mating-type
+      ascospore isolates; 1:1 segregation in single-ascospore populations.
+    citations:
+    - pmid: null
+      doi: 10.1007/s11557-017-1309-x
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: KY782630.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1007/s11557-017-1309-x|1174673|MATtub|MAT1-1
+  reviewed_by: J. Stajich (ruling 2026-09-25)
+  reviewed_date: '2026-09-25'
+  notes: 'CURATOR OVERRIDE, J. Stajich, 2026-09-25: the source has no PMID (not indexed
+    in PubMed). It is peer-reviewed (Mycological Progress 16:743-752) and its DOI
+    resolves, so it meets the PMID-or-DOI rule as written; the curator ruled it acceptable
+    should the rule be read as PMID-required. Added to give MATtub its only SLA2/APN2
+    references and a Morchellaceae MAT reference (pilot 2026-09-24: Pezizales outside
+    Tuberaceae called 15/160).'
+model_provenance: null

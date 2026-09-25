@@ -1,0 +1,126 @@
+record_id: 498019_b11205_MTL_A
+record_version: 1
+taxonomy:
+  taxid: 498019
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Metschnikowiaceae;g__Candidozyma;s__Candidozyma_auris
+  lineage_resolved_date: '2026-09-25'
+organism:
+  species: Candidozyma auris
+  strain:
+    name: B11205
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - A
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: MTLA1
+    definition_note: Candidozyma auris B11205 (clade I) MTLa1, complete-genome assembly
+      GCA_016772135.1, where it is annotated only as 'hypothetical protein CJI82_03095'
+      (WZC25182.1, 166 aa, 3 exons). Adjacent to PIK1 (WZC25183.1) - OBP1 (WZC25184.1)
+      - PAP1 (WZC25185.1). The full-length a1, curated alongside the truncated B11243
+      model. completeness is partial because MTLa2 is not annotated in this assembly
+      (the ~780 bp between a1 and PIK1 is where it would sit; not modelled here).
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: CP060341.1
+        seq_region: CP060341.1
+      start: 195873
+      end: 196494
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MTLA1
+  protein_accession: ncbi_protein:WZC25182.1
+  role: core_MAT
+  present: true
+  locus_tag: CJI82_03095
+  segment_index: 0
+  start: 195873
+  end: 196494
+  strand: '-'
+  order_in_locus: 0
+  transl_table: 12
+  exons:
+  - start: 196363
+    end: 196494
+  - start: 196012
+    end: 196314
+  - start: 195873
+    end: 195938
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: 'TIER 2 (genome-derived, admitted under the curator''s 2026-09-24
+      ruling). The protein is the depositors'' own gene model in the Munoz et al.
+      2018 C. auris genome annotation, not a locus-specific study. Validated 2026-09-25
+      (results/2026-09-25_cauris_mtl/): Homeodomain (Pfam PF00046, i-E=4.8e-19, residues
+      99-154); reciprocal best hit to the curated C. albicans MTLa1 (E=2e-11), then
+      C. lusitaniae MTLa1 (E=8e-6); and gene order: it sits in the PAP1-OBP1-PIK1
+      block, each flank a blastp-verified ortholog of the C. lusitaniae FJ524850.1
+      gene. Munoz et al. 2018: ''the genes flanking the MTL locus ... PIK1, OBP1 and
+      PAP1 were adjacent in all sequenced genomes of the emerging MDR clade''.'
+    citations: &id001
+    - pmid: '30559369'
+      doi: 10.1038/s41467-018-07779-6
+  boundaries:
+    tier: 2
+    experimental_method: 'Record segment spans the curated MTL genes, from the assembly''s
+      own GFF. TIER 2 (genome-derived, admitted under the curator''s 2026-09-24 ruling).
+      The protein is the depositors'' own gene model in the Munoz et al. 2018 C. auris
+      genome annotation, not a locus-specific study. Validated 2026-09-25 (results/2026-09-25_cauris_mtl/):
+      Homeodomain (Pfam PF00046, i-E=4.8e-19, residues 99-154); reciprocal best hit
+      to the curated C. albicans MTLa1 (E=2e-11), then C. lusitaniae MTLa1 (E=8e-6);
+      and gene order: it sits in the PAP1-OBP1-PIK1 block, each flank a blastp-verified
+      ortholog of the C. lusitaniae FJ524850.1 gene. Munoz et al. 2018: ''the genes
+      flanking the MTL locus ... PIK1, OBP1 and PAP1 were adjacent in all sequenced
+      genomes of the emerging MDR clade''.'
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: 'MTLa by gene content. TIER 2 (genome-derived, admitted under
+      the curator''s 2026-09-24 ruling). The protein is the depositors'' own gene
+      model in the Munoz et al. 2018 C. auris genome annotation, not a locus-specific
+      study. Validated 2026-09-25 (results/2026-09-25_cauris_mtl/): Homeodomain (Pfam
+      PF00046, i-E=4.8e-19, residues 99-154); reciprocal best hit to the curated C.
+      albicans MTLa1 (E=2e-11), then C. lusitaniae MTLa1 (E=8e-6); and gene order:
+      it sits in the PAP1-OBP1-PIK1 block, each flank a blastp-verified ortholog of
+      the C. lusitaniae FJ524850.1 gene. Munoz et al. 2018: ''the genes flanking the
+      MTL locus ... PIK1, OBP1 and PAP1 were adjacent in all sequenced genomes of
+      the emerging MDR clade''.'
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: CP060341.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 30559369|498019|MTL|A|B11205
+  reviewed_by: 'J. Stajich (ruling 2026-09-25: model C. auris from its relatives)'
+  reviewed_date: '2026-09-25'
+  notes: 'Curated because the pilot called 0 of 17 C. auris genomes: the MTLa1+MTLa2
+    cluster is found at ~47% identity to the nearest curated reference, but exonerate
+    and miniprot cannot model genes that divergent (verified on B8441 with relaxed
+    thresholds). All CDS use translation table 12.'
+model_provenance: null

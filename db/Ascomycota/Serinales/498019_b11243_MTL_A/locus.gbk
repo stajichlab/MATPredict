@@ -1,0 +1,51 @@
+LOCUS       PYGM01000086.1          1200 bp    DNA              UNK 01-JAN-1980
+DEFINITION  498019_b11243_MTL_A core locus segment 0 (PYGM01000086.1).
+ACCESSION   498019_b11243_MTL_A.segment0
+VERSION     498019_b11243_MTL_A.segment0
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     gene            1..617
+                     /gene="MTLA2"
+                     /role="core_MAT"
+     CDS             join(1..243,402..617)
+                     /gene="MTLA2"
+                     /role="core_MAT"
+                     /translation="MIYSTTSRLPAKSKGPLSKRTRCGHFPYSELKFLHTSTEATDKSK
+                     RYRPRNQFMMARQHLTSTFKDGRCARVKSIRASQVCSYYCYLAGLAAAYYETSSAQNST
+                     ASFQCNTARLHHVNSAFKVVKFRVQLKQRVPRKEKSFFGLQVEDVVPS"
+                     /gene_class="HMG_box"
+                     /transl_table=12
+     gene            901..1200
+                     /gene="MTLA1"
+                     /role="core_MAT"
+     CDS             901..1200
+                     /gene="MTLA1"
+                     /role="core_MAT"
+                     /translation="MFHKAIEQVYLWKKVTKNFENEESSLTLTSLCEATSVTKNENASC
+                     KRRRSHLTMGIKEYLEQVFKKKPHPTRSEYEVIAKSCNLSSRQVRVWVCENCLI"
+                     /transl_table=12
+ORIGIN
+        1 atgatatact caactacctc tagattaccc gcgaagagta aagggcctct atcaaaaagg
+       61 actcgttgtg ggcattttcc ctactctgag ttgaagtttc ttcatacaag tacagaagca
+      121 acggataagt ctaaacgcta tagaccgcga aatcaattta tgatggctag acagcacctt
+      181 acatcgactt tcaaagacgg tagatgcgca agagtgaaat caatcagggc ttcacaagta
+      241 tgttgaaaac tttcgttgga aagaccggct tctttggcta tgtttcatcc catccccaat
+      301 aagaaataat tatataactt ttcgcacctt gctaagccga tctacacaac ttgtccaatt
+      361 actaactcca gatttggcac acggggaata atatttttag gctgtactac tgttatcttg
+      421 caggtttagc agcggcctac tacgaaacac tgtccgcaca aaattcaact gcactgtttc
+      481 aatgcaatac agctcgattg catcatgtga actcagcctt caaggttgtc aaatttcggg
+      541 tgcagttgaa acagcgggtt ccaaggaaag aaaaatcttt ctttggctta caggtggaag
+      601 atgtggtacc ttcctgagca tgcagatctt gcgtaagggt tagtatagtc tataaaaagc
+      661 cgggtacagc cctaacacag aagtattatg accatggatc aaaaaccttc gaactttaac
+      721 gagctttttc agactgttct gactcttgaa cggcttacgc tgttttcgaa gaaaaagtgg
+      781 aagatccctc tagcacagga caactatgtt gatagcatga aaagagtgag tatataatgt
+      841 gatgaaaata aaagaacttt ctaacacact aagcttactg aagaagcagg atttggaaaa
+      901 ctgtttcaca aagccatcga gcaggtttac ttatggaaaa aagtgacaaa aaatttcgag
+      961 aatgaagaat cttccttgac tttaacttcc ctttgcgaag ccacctctgt tacaaaaaat
+     1021 gaaaatgcct cttgcaagcg ccggaggctg catttgacga tgggaatcaa ggaatattta
+     1081 gagcaagtat ttaagaaaaa acctcatcca actcgctcgg agtacgaggt cattgcgaaa
+     1141 tcctgcaatc tctcatcaag acaggtccgt gtatgggtat gtgaaaactg tctcatttag
+//

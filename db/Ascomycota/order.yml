@@ -285,10 +285,14 @@ loci:
     taxonomic_scope: [2916678]  # Serinales (order) -- the CUG-Ser1 / CTG clade
     genes:
       # gene_class added 2026-09-25 so the homothallic rule can tell unrelated
-      # genes apart: MTLa2 is the HMG-box gene (the MAT1-2-1 counterpart) and
-      # MTLalpha1 the alpha-box gene (the MAT1-1-1 counterpart), the same two
-      # classes the Pezizomycotina `MAT` family uses. MTLa1 is a homeodomain
-      # protein; no curated class exists for it yet, so it has none.
+      # genes apart: MTLalpha1 is the alpha-box gene (the MAT1-1-1 counterpart;
+      # Pfam PF04769 hits every curated MTLalpha1) and MTLa2 the HMG-domain
+      # regulator (the MAT1-2-1 counterpart), the same two classes the
+      # Pezizomycotina `MAT` family uses. CAVEAT, measured: Pfam HMG_box
+      # (PF00505) does NOT hit the curated C. albicans or C. lusitaniae MTLa2,
+      # so MTLa2's class rests on the literature, not on a Pfam hit. MTLa1 is
+      # a homeodomain protein (PF00046); no curated class exists for it yet,
+      # so it has none.
       - {name: MTLA1, role: core_MAT, present_in_idiomorphs: ["A"]}
       - {name: MTLA2, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["A"]}
       - {name: MTLalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["alpha"]}

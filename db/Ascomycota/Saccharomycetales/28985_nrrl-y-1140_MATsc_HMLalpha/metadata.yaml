@@ -1,5 +1,5 @@
 record_id: 28985_nrrl-y-1140_MATsc_HMLalpha
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 28985
   lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Saccharomycetaceae;g__Kluyveromyces;s__Kluyveromyces_lactis
@@ -23,17 +23,20 @@ locus:
   core:
     completeness: complete
     reference_orientation: MATALPHA1->MATALPHA2
-    definition_note: 'The alpha idiomorph of Kluyveromyces lactis, taken from the SILENT HML donor cassette,
-      because the reference strain is MATa at MAT and therefore carries no alpha allele there. Same precedent
-      as 4932_s288c_MATsc_HMRa in reverse: HML sequence is what gene conversion copies into MAT when a
-      cell switches to alpha, so the HML-encoded alpha1/alpha2 proteins ARE the MATalpha proteins. Confirmed
-      as HML by blastn of the deposited cryptic cassette AF195066.1 (HMLalpha) against the genome: 99.928%
-      over 9,671 bp at NC_006039.1:20,393-30,060, subtelomeric on the left arm and abutting CHA1 (KLLA0_C00440g)
-      -- the same CHA1-HML adjacency S. cerevisiae shows. NOT curated here: alpha3 (XP_452212.1, 26,146-28,839),
-      a domesticated transposase inside this cassette required for K. lactis switching (Barsoum et al.
-      2010 Genes Dev 24:33-44, PMID 20008928). It is a real gene with a real accession and would be genuinely
-      idiomorph-informative in this genus, but it has no roster slot in MATsc and needs a curator ruling
-      first. Citations: Astrom et al. 2000 (PMID 10978277); Butler et al. 2004 (PMID 14745027).'
+    definition_note: 'The alpha idiomorph of Kluyveromyces lactis, taken from the
+      SILENT HML donor cassette, because the reference strain is MATa at MAT and therefore
+      carries no alpha allele there. Same precedent as 4932_s288c_MATsc_HMRa in reverse:
+      HML sequence is what gene conversion copies into MAT when a cell switches to
+      alpha, so the HML-encoded alpha1/alpha2 proteins ARE the MATalpha proteins.
+      Confirmed as HML by blastn of the deposited cryptic cassette AF195066.1 (HMLalpha)
+      against the genome: 99.928% over 9,671 bp at NC_006039.1:20,393-30,060, subtelomeric
+      on the left arm and abutting CHA1 (KLLA0_C00440g) -- the same CHA1-HML adjacency
+      S. cerevisiae shows. NOT curated here: alpha3 (XP_452212.1, 26,146-28,839),
+      a domesticated transposase inside this cassette required for K. lactis switching
+      (Barsoum et al. 2010 Genes Dev 24:33-44, PMID 20008928). It is a real gene with
+      a real accession and would be genuinely idiomorph-informative in this genus,
+      but it has no roster slot in MATsc and needs a curator ruling first. Citations:
+      Astrom et al. 2000 (PMID 10978277); Butler et al. 2004 (PMID 14745027).'
     segments:
     - segment_index: 0
       sequence_source:
@@ -70,28 +73,50 @@ genes:
 evidence:
   locus_existence:
     tier: 1
-    experimental_method: complete DNA sequencing of the MAT locus and HMLalpha silent cassette
+    experimental_method: Sequenced K. lactis cryptic alpha cassette (Astrom et al.
+      2000, deposit AF195066.1); K. lactis MAT/HML organisation (Butler et al. 2004);
+      alpha3 in this cassette and its role in switching (Barsoum et al. 2010). The
+      X/Y/Z cassette structure used to delimit this locus is the one defined by complete
+      sequencing of the S. cerevisiae MAT, HML and HMR loci (Astell et al. 1981, PMID
+      7034964); it is cited as the structural basis, not as evidence about this species.
     citations:
-    - pmid: '7034964'
+    - &id001
+      pmid: '10978277'
+      doi: 10.1093/genetics/156.1.81
+    - &id002
+      pmid: '14745027'
+      doi: 10.1073/pnas.0304170101
+    - &id003
+      pmid: '20008928'
+      doi: 10.1101/gad.557310
+    - &id004
+      pmid: '7034964'
       doi: 10.1016/0092-8674(81)90356-1
   boundaries:
     tier: 1
-    experimental_method: 'Complete locus sequencing (Astell et al. 1981). Coordinates on the modern S288C
-      reference assembly independently reconfirmed by the curator via NCBI efetch against NC_001135.5.
-
-      '
+    experimental_method: 'Placed on the K. lactis NRRL Y-1140 reference assembly by
+      the curator: blastn of AF195066.1 (HMLalpha) matches NC_006039.1:20,393-30,060
+      at 99.928% over 9,671 bp (see definition_note). The X/Y/Z cassette structure
+      used to delimit this locus is the one defined by complete sequencing of the
+      S. cerevisiae MAT, HML and HMR loci (Astell et al. 1981, PMID 7034964); it is
+      cited as the structural basis, not as evidence about this species.'
     citations:
-    - pmid: '7034964'
-      doi: 10.1016/0092-8674(81)90356-1
+    - *id001
+    - *id002
+    - *id003
+    - *id004
   idiomorph_assignment:
     tier: 1
-    experimental_method: genetic/molecular characterization of MATalpha vs MATa cell identity; HO-endonuclease
-      switching mechanism
+    experimental_method: alpha by sequence identity to the deposited HMLalpha cassette
+      (Astrom et al. 2000). The X/Y/Z cassette structure used to delimit this locus
+      is the one defined by complete sequencing of the S. cerevisiae MAT, HML and
+      HMR loci (Astell et al. 1981, PMID 7034964); it is cited as the structural basis,
+      not as evidence about this species.
     citations:
-    - pmid: '7034964'
-      doi: 10.1016/0092-8674(81)90356-1
-    - pmid: null
-      doi: 10.1016/0092-8674(83)90219-2
+    - *id001
+    - *id002
+    - *id003
+    - *id004
 validation:
   status: accepted
   rejection_reason: null
@@ -116,4 +141,10 @@ curation:
   proposal_dedupe_key: 7034964|4932|MATsc|MATalpha
   reviewed_by: null
   reviewed_date: null
+  notes: 'CITATIONS CORRECTED, 2026-09-25 (curator request): the evidence block had
+    been copied verbatim from the S. cerevisiae S288C record -- Astell et al. 1981
+    alone, plus Kostriken et al. 1983 (the S. cerevisiae HO endonuclease, doi:10.1016/0092-8674(83)90219-2),
+    and a boundaries sentence about S288C coordinates on NC_001135.5. Astell 1981
+    is kept as the structural basis; the species'' own papers are added; Kostriken
+    1983 is removed because it does not concern this species.'
 model_provenance: null

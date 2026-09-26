@@ -1,0 +1,154 @@
+record_id: 2822231_sb25_HD_A1
+record_version: 1
+taxonomy:
+  taxid: 2822231
+  lineage: k__Fungi;p__Basidiomycota;subphylum__Agaricomycotina;c__Agaricomycetes;o__Polyporales;f__Phanerochaetaceae;g__Phanerodontia;s__Phanerodontia_chrysosporium
+  lineage_resolved_date: '2026-09-26'
+organism:
+  species: Phanerodontia chrysosporium
+  strain:
+    name: SB25
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: HD
+  idiomorphs:
+  - A1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MIP1->[HD2(A2)<-|->HD1(A1)]
+    definition_note: 'Phanerochaete chrysosporium strain SB25 HD mating-type locus,
+      from the locus deposit HQ188438.1 (10,066 bp; James TY, Lee M, van Diepen LTA
+      2011, Eukaryot Cell 10:249-261). P. chrysosporium is bipolar with the HD genes
+      as the single MAT locus; the pheromone receptor genes are unlinked and not mating-type
+      determinants in this species. Gene order: MIP (5'' partial, codon_start 3, ADN97170.1)
+      - "A2 mating-type protein" HD2 (ADN97171.1, minus) - "A1 mating-type protein"
+      HD1 (ADN97172.1, plus) - hypothetical protein HP2 (partial, ADN97173.1, not
+      curated: not a roster gene). The gene names A1/A2 in the deposit denote the
+      HD1/HD2 genes, NOT alleles. The idiomorph label "A1" is a PLACEHOLDER (the allele
+      of SB25 is not numbered); curator decision pending on a label convention. NCBI
+      taxid 2822231 is the current name for this species (lineage resolved 2026-09-26).
+      No Phanerochaete genome is in the BFD library, so this record cannot be scored
+      against its own assembly.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: HQ188438.1
+        seq_region: HQ188438.1
+      start: 1
+      end: 4804
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MIP1
+  protein_accession: ncbi_protein:ADN97170.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 380
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 1
+    end: 380
+  codon_start: 3
+  transl_table: 1
+- gene_index: 1
+  name: HD2
+  protein_accession: ncbi_protein:ADN97171.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 771
+  end: 2454
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 1948
+    end: 2454
+  - start: 1783
+    end: 1896
+  - start: 1542
+    end: 1733
+  - start: 771
+    end: 1487
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: HD1
+  protein_accession: ncbi_protein:ADN97172.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2754
+  end: 4804
+  strand: +
+  order_in_locus: 2
+  exons:
+  - start: 2754
+    end: 3847
+  - start: 3898
+    end: 4154
+  - start: 4215
+    end: 4804
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: inheritance and segregation of the HD genes in crosses, heterozygosity
+      in wild strains; the HD genes form the single MAT locus (James et al. 2011)
+    citations: &id001
+    - pmid: '21131435'
+      doi: 10.1128/EC.00212-10
+  boundaries:
+    tier: 1
+    experimental_method: targeted sequencing; the deposit spans MIP (5' partial) through
+      the two HD genes and a partial hypothetical protein
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: HD1/HD2 gene identity at the MAT locus; allele not numbered
+      in the deposit (see definition_note)
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: HQ188438.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 21131435|2822231|HD|SB25
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

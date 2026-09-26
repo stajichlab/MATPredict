@@ -1,0 +1,154 @@
+record_id: 90004_unknown_HD_A1
+record_version: 1
+taxonomy:
+  taxid: 90004
+  lineage: k__Fungi;p__Basidiomycota;subphylum__Agaricomycotina;c__Agaricomycetes;o__Boletales;f__Rhizopogonaceae;g__Rhizopogon;s__Rhizopogon_roseolus
+  lineage_resolved_date: '2026-09-26'
+organism:
+  species: Rhizopogon roseolus
+  strain:
+    name: unknown
+    known: false
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: HD
+  idiomorphs:
+  - A1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MIP1->[HD1(hox1)<-|->HD2(hox2)]
+    definition_note: 'Rhizopogon roseolus HD (A) mating-type locus, allele RrA1, from
+      the locus deposit AB646132.2 (5,786 bp; Wan J, Li Y, Shimomura N, Yamaguchi
+      T, Aimi T 2013, Mycol Prog 12:353-365, doi:10.1007/s11557-012-0840-z; no PMID).
+      Gene order: mip (5'' partial, codon_start 3, BAL45601.2) - RrA1-hox1 HD1 (BAL45602.2,
+      minus strand) - RrA1-hox2 HD2 (BAL45603.2, plus strand). The strain is not stated
+      on the deposit. The idiomorph label A1 is the depositors'' own allele name (RrA1).
+      This is the first Boletales MAT reference in the database. The paper has no
+      PMID; recorded by DOI only, as for the Morchella records.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AB646132.2
+        seq_region: AB646132.2
+      start: 1
+      end: 5265
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MIP1
+  protein_accession: ncbi_protein:BAL45601.2
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 805
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 1
+    end: 120
+  - start: 180
+    end: 805
+  codon_start: 3
+  transl_table: 1
+- gene_index: 1
+  name: HD1
+  protein_accession: ncbi_protein:BAL45602.2
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1133
+  end: 3229
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 2163
+    end: 3229
+  - start: 1717
+    end: 2111
+  - start: 1188
+    end: 1662
+  - start: 1133
+    end: 1136
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: HD2
+  protein_accession: ncbi_protein:BAL45603.2
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3406
+  end: 5265
+  strand: +
+  order_in_locus: 2
+  exons:
+  - start: 3406
+    end: 3867
+  - start: 3927
+    end: 4040
+  - start: 4092
+    end: 4295
+  - start: 4348
+    end: 5265
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: targeted cloning and sequencing of the A (HD) mating-type
+      locus; allele polymorphism among strains used for strain identification (Wan
+      et al. 2013)
+    citations: &id001
+    - pmid: null
+      doi: 10.1007/s11557-012-0840-z
+  boundaries:
+    tier: 1
+    experimental_method: targeted sequencing; the deposit spans MIP (5' partial) through
+      the two HD genes
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: allele RrA1, as named by the depositors (gene names RrA1-hox1,
+      RrA1-hox2)
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AB646132.2
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1007/s11557-012-0840-z|90004|HD|A1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

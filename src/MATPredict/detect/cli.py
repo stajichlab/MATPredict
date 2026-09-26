@@ -72,6 +72,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         evidence_diagnostics_path=Path(args.evidence_diagnostics) if args.evidence_diagnostics else None,
         routing=routing,
         exclude_record_ids=exclude_record_ids,
+        max_polished_clusters_per_family=getattr(args, "max_polished_clusters_per_family", None),
     )
 
     # `genome_fasta` is passed ONLY when asked for: it is what makes
@@ -291,6 +292,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "FASTA's basename with extensions stripped. Used only when "
              "--genetic-code is not given. The BFD sample sheet's "
              "ASMID/TRANSL_TABLE columns are exactly this shape.",
+    )
+    detect.add_argument(
+        "--max-polished-clusters-per-family", type=int, default=None,
+        help="Polish at most N admitted clusters per family, ranked before "
+             "polishing by distinct genes, then best identity, then hit count. "
+             "Default: no cap. EXPERIMENTAL (2026-09-26): projected to halve "
+             "runtime in slow panels at N=6; measure before relying on it.",
     )
     detect.add_argument(
         "--emit-cds-fasta",

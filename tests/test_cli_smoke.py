@@ -544,3 +544,9 @@ def test_cmd_detect_fails_loudly_when_phylum_matches_no_curated_family(monkeypat
     )
     with pytest.raises(ValueError, match="Zoopagomycota"):
         detect_cli._cmd_detect(args)
+
+
+def test_detect_accepts_the_polish_cluster_cap():
+    from MATPredict.__main__ import build_parser
+    args = build_parser().parse_args(["detect", "--genome", "g.fa", "--max-polished-clusters-per-family", "6"])
+    assert args.max_polished_clusters_per_family == 6

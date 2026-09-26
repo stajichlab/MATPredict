@@ -542,6 +542,14 @@ _DIAGNOSTICS_CANDIDATE_FLOOR = EvidenceFloor(
 )
 
 
+def _polish_rank(cluster: GeneCluster, family_key: FamilyKey) -> tuple:
+    """Sort key ranking a family's admitted clusters BEFORE polishing: more
+    distinct live genes first, then higher best identity, then more hits.
+    Used by the per-family polish cap."""
+    own = _own_live_hits(cluster, family_key)
+    return (-len({h.gene_name for h in own}), -max((h.identity for h in own), default=0.0), -len(own))
+
+
 def _own_live_hits(cluster, family_key):
     """This family's non-superseded hits in `cluster`.
 
@@ -796,8 +804,12 @@ def _write_evidence_diagnostics(
     admitted: bool,
     run_id: str,
     genome_id: str,
+    polish_capped: bool = False,
 ) -> None:
     """Append one JSON line describing this (cluster, family) admission decision.
+
+    `polish_capped` marks an admitted cluster that the per-family polish cap
+    (`max_polished_clusters_per_family`) left unpolished.
 
     The real calibration dataset `EvidenceFloor`'s docstring refers to. It
     could not actually serve that purpose before carrying `genome_id`: a row
@@ -817,6 +829,7 @@ def _write_evidence_diagnostics(
         "roles": sorted({h.role for h in own_hits}),
         "best_identity": max((h.identity for h in own_hits), default=None),
         "admitted": admitted,
+        "polish_capped": polish_capped,
     })
 
 
@@ -1423,6 +1436,11 @@ def run_pipeline(
     #: which is what the tests written before it use to keep asserting the
     #: behaviour they were written for.
     min_polished_genes: int = MIN_POLISHED_GENES,
+    #: Polish at most this many admitted clusters PER FAMILY, the best-ranked
+    #: by what is known before polishing (see `_polish_rank`); the rest are
+    #: left unpolished and so cannot clear the modelled-gene bar. None = no cap.
+    #: Curator's request 2026-09-26: implement and measure; off by default.
+    max_polished_clusters_per_family: int | None = None,
     #: Curated records withheld from THIS run, for leave-one-out recall. The
     #: caller must build `reference_fasta` with the same set (see
     #: `reference_fasta.build_reference_fasta`); this parameter additionally
@@ -1643,15 +1661,34 @@ def run_pipeline(
     # the same scoping the retired second-pass tracking set used, now carrying a
     # per-gene outcome instead of a per-family boolean.
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] = {}
+    # Per-family polish cap: decide up front which (cluster, family) pairs
+    # may be polished, ranking each family's admitted clusters before any
+    # polishing. Everything else stays admitted (diagnostics say so) but is
+    # not polished.
+    polish_allowed: set[tuple[int, FamilyKey]] | None = None
+    if max_polished_clusters_per_family is not None:
+        by_family: dict[FamilyKey, list[GeneCluster]] = {}
+        for cluster in clusters:
+            for family in _families_meeting_evidence_floor(cluster, families, evidence_floor):
+                by_family.setdefault(family.key, []).append(cluster)
+        polish_allowed = {
+            (id(c), key)
+            for key, members in by_family.items()
+            for c in sorted(members, key=lambda c: _polish_rank(c, key))[:max_polished_clusters_per_family]
+        }
     for cluster in clusters:
         admitted_families = _families_meeting_evidence_floor(cluster, families, evidence_floor)
+        capped_keys = set()
+        if polish_allowed is not None:
+            capped_keys = {f.key for f in admitted_families if (id(cluster), f.key) not in polish_allowed}
+            admitted_families = [f for f in admitted_families if f.key not in capped_keys]
         if evidence_diagnostics_path is not None:
             # Diagnostics cover every family the OLD unconditional-admit set
             # would have considered (i.e. every family with >=1 own hit in
             # this cluster), not just the ones the real `evidence_floor`
             # actually admits -- so both admitted and would-have-been-rejected
             # cases are captured for later threshold analysis.
-            admitted_keys = {f.key for f in admitted_families}
+            admitted_keys = {f.key for f in admitted_families} | capped_keys
             for family in _families_meeting_evidence_floor(
                 cluster, families, _DIAGNOSTICS_CANDIDATE_FLOOR
             ):
@@ -1659,6 +1696,7 @@ def run_pipeline(
                     evidence_diagnostics_path, cluster, family,
                     admitted=family.key in admitted_keys,
                     run_id=run_id, genome_id=genome_id,
+                    polish_capped=family.key in capped_keys,
                 )
         for family in admitted_families:
             # Eligibility is decided per (cluster, family), NOT from a single

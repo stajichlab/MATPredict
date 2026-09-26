@@ -1,5 +1,5 @@
 record_id: 192523_h97_HD_A1
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 192523
   lineage: k__Fungi;p__Basidiomycota;c__Agaricomycetes;o__Agaricales;f__Agaricaceae;g__Agaricus;s__Agaricus_bisporus
@@ -22,7 +22,7 @@ locus:
   excluded_from_coordinate_benchmark: false
   core:
     completeness: partial
-    reference_orientation: HD2->HD1(a1-1)
+    reference_orientation: beta_fg->HD2<-|->HD1(a1-1)->MIP1
     definition_note: 'A. bisporus is bipolar with a single HD locus; the PR (pheromone/
       receptor) locus has lost its mating-type role in this species (Foulongne-Oriol
       et al. 2021) -- no paired PR-locus record exists or is expected for this species.
@@ -33,9 +33,19 @@ locus:
       HD2 copy elsewhere in the genome is not included in this record. HD1 is officially
       annotated "a1-1" in GenBank; idiomorph "A1" here reflects the locus_name "HD"
       pattern convention (^A[0-9]+$) already established for Coprinopsis cinerea in
-      this database, applied to the "a1-1" allele designation. Flanking genes reported
-      in the literature (mip1, beta-fg) are not included in this record; a follow-up
-      could add them once specifically located and verified.
+      this database, applied to the "a1-1" allele designation.
+
+
+      record_version 2 (2026-09-26): the two published HD-locus flanks were added,
+      located on the same RefSeq scaffold NW_006267344.1 (Foulongne-Oriol et al. 2021
+      report mip and beta-fg flanking the HD genes). beta_fg = XP_006454074.1 (AGABI2DRAFT_132803,
+      annotated ''beta-fg''), 8.3 kb upstream of HD2. MIP1 = XP_006454076.1 (AGABI2DRAFT_213738,
+      annotated ''hypothetical protein''), 397 bp past HD1; identified as MIP by homology:
+      38.9% identity over 717 of 757 aa to S. cerevisiae OCT1 (P35999, mitochondrial
+      intermediate peptidase, E=1e-160) and 64% to the Suillus pictus MIP fragment
+      AAO61535.1 (blastp, 2026-09-26). A ''beta-fg-like protein'' (XP_006454075.1)
+      and an unannotated gene (XP_006454970.1) lie between beta_fg and HD2 and are
+      not curated. The segment now spans 888,865-904,939.
 
       '
     segments:
@@ -44,8 +54,8 @@ locus:
         type: insdc_nucleotide
         accession: NW_006267344.1
         seq_region: NW_006267344.1
-      start: 898234
-      end: 902101
+      start: 888865
+      end: 904939
       contig_edge_distance: null
       sequence_checksum: null
   extended_flank: []
@@ -60,7 +70,7 @@ genes:
   start: 898234
   end: 899864
   strand: '-'
-  order_in_locus: 0
+  order_in_locus: 1
   exons:
   - start: 899391
     end: 899864
@@ -82,7 +92,7 @@ genes:
   start: 900063
   end: 902101
   strand: +
-  order_in_locus: 1
+  order_in_locus: 2
   exons:
   - start: 900063
     end: 900949
@@ -92,6 +102,56 @@ genes:
     end: 902017
   - start: 902068
     end: 902101
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: beta_fg
+  protein_accession: ncbi_protein:XP_006454074.1
+  role: flanking_conserved
+  present: true
+  locus_tag: AGABI2DRAFT_132803
+  segment_index: 0
+  start: 888865
+  end: 889896
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 888865
+    end: 888867
+  - start: 888929
+    end: 888983
+  - start: 889070
+    end: 889156
+  - start: 889215
+    end: 889309
+  - start: 889370
+    end: 889489
+  - start: 889544
+    end: 889822
+  - start: 889873
+    end: 889896
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: MIP1
+  protein_accession: ncbi_protein:XP_006454076.1
+  role: flanking_conserved
+  present: true
+  locus_tag: AGABI2DRAFT_213738
+  segment_index: 0
+  start: 902499
+  end: 904939
+  strand: '-'
+  order_in_locus: 3
+  exons:
+  - start: 904475
+    end: 904939
+  - start: 903901
+    end: 904417
+  - start: 903185
+    end: 903844
+  - start: 902499
+    end: 903130
   codon_start: 1
   transl_table: 1
 evidence:
@@ -129,6 +189,14 @@ validation:
       coverage: 100.0
       status: pass
     - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
       percent_identity: 100.0
       coverage: 100.0
       status: pass

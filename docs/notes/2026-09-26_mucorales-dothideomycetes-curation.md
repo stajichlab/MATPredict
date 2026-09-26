@@ -103,3 +103,18 @@ of these HMG genes in the sexM/sexP clade.
 - Lichtheimiaceae and Syncephalastraceae: wait for the sexM/sexP tree. Propose
   a tier-2 record only if one of their HMG genes groups with sexM or sexP at
   UFBoot >= 95.
+
+## Round 2: Leptosphaeria, Parastagonospora, Pseudocercospora, Fulvia (commit `52cd292`)
+
+Eight records, pending sign-off. Full write-up and tables:
+`results/2026-09-26_dothideo_curation2/NOTE.md` (main checkout).
+
+- 100-genome pilot, same code (d18ec5a vs 52cd292): 89 -> 87 genomes called.
+- 2 corrections (P. nodorum MAT1-1 -> MAT1-2, confirmed by direct tblastn).
+- 2 losses caused by the per-family polish cap: the new references admit more
+  clusters, and the genes-first cap of 6 skips true loci at 95.6% and 81.8%
+  identity. This is a cap-ranking defect, not a record defect.
+- 2 new, unverified double calls (Cercospora kikuchii, Nothopassalora
+  personata); 1 flip at a tiny margin in homothallic Aureobasidium.
+- None of the 9 round-1 misses is fixed: 1 is a 0.1 Mb MAG bin, 1 is a
+  fragmented assembly, the rest are reference divergence or cap effects.

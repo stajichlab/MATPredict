@@ -79,6 +79,13 @@ curated or corrected. Newest entries at the end of each section.
 | B3.7 | Mortierellomycota NCBI proteins, e.g. GJJ68563.1 "mating-type protein A1", OAQ36521.1 "mating type protein 2, partial" | Names assigned by similarity pipelines, not characterized MAT genes. | A | OPEN: do not use as references |
 | B3.8 | *C. auris* B11221 `GCA_002775015.1`: PIK1 `PIS55912.1`, OBP1 `PIS55913.1` | Both annotated only as "hypothetical protein", although they are the reciprocal-best orthologs of the *C. lusitaniae* PIK1/OBP1 and sit in the PAP1-alpha1-PIK1-OBP1 block (the neighbouring PAP is named "Poly(A) polymerase PAPalpha"). | V `results/2026-09-25_cauris_mtl/` | WORKED AROUND (named in `498019_b11221_MTL_alpha` v2, `2c6c3a7`); OPEN (upstream) |
 
+### B4. Assemblies that collapse a heterozygous MTL locus
+
+| # | assemblies | error | ev. | status |
+|---|---|---|---|---|
+| B4.1 | *C. albicans* A48, A67, A92, A123, A203, CHN1 (GCA_0004474x5.1 Broad series) and ATCC 36802 (GCA_029931725.1) | Assembly carries only the MTLalpha idiomorph; WGS reads cover BOTH idiomorphs at ~half the single-copy depth (a 0.36-0.53, alpha 0.42-0.61). The a haplotype was collapsed out. | V `results/2026-09-26_calbicans_mtl_reads/` | OPEN (upstream); detection is correct about the assembly -- genotype needs reads |
+| B4.2 | *C. albicans* P37037 (GCA_000773825.1) | Assembly carries only MTLa; reads show a/alpha (0.52 / 0.57). | V | OPEN (upstream) |
+
 ## C. Errors in deposit metadata or literature statements
 
 | # | record / source | error | ev. | status |
@@ -120,3 +127,4 @@ Recorded so a detector rule or a curator does not "fix" them.
   (`docs/notes/2026-09-24_mat-reference-gap-literature*.md`) and project
   memory.
 * **2026-09-25** B3.3a, B3.8 added; A5 fixed (MTLalpha2 optional; PAP1/OBP1/PIK1 optional flanks added to the MTL roster and all eight Serinales records).
+* **2026-09-26** B4.1-B4.2 added (C. albicans assemblies collapsing heterozygous MTL; read-depth test).

@@ -105,6 +105,10 @@ class RolloutSummary:
     not_detected: list[NotDetectedEntry] = field(default_factory=list)
     anomalies: list[Anomaly] = field(default_factory=list)
     genome_errors: list[GenomeReportError] = field(default_factory=list)
+    #: Genomes whose report says `routing_mode: not_searched` (curator's ruling
+    #: 2026-09-26): no family was searched, so they are neither failures nor
+    #: not-detected, and they are left out of anomaly detection.
+    not_searched: list[str] = field(default_factory=list)
 
     def to_doc(self) -> dict:
         """Plain-dict form for YAML serialization (`write_rollout_summary`)."""
@@ -128,6 +132,7 @@ class RolloutSummary:
             "genome_errors": [
                 {"genome": g.genome, "reason": g.reason} for g in self.genome_errors
             ],
+            "not_searched": list(self.not_searched),
         }
 
 
@@ -206,6 +211,7 @@ def aggregate_reports(
     locus_class_tally: dict[str, dict[str, int]] = {}
     not_detected: list[NotDetectedEntry] = []
     genome_errors: list[GenomeReportError] = []
+    not_searched: list[str] = []
 
     # genome -> set of families it detected; family -> set of genomes that
     # detected it. Built while reading, used afterward for anomaly detection.
@@ -225,6 +231,12 @@ def aggregate_reports(
             genome_errors.append(
                 GenomeReportError(genome=genome_id, reason="report file is empty")
             )
+            continue
+        if doc.get("routing_mode") == "not_searched":
+            # Never searched: not a failure, not a negative, and it must not
+            # enter `detected_by_genome`, or every relative's call would flag
+            # it as an anomaly for "missing" a family it never looked for.
+            not_searched.append(genome_id)
             continue
 
         detected_families: set[str] = set()
@@ -269,6 +281,7 @@ def aggregate_reports(
         not_detected=not_detected,
         anomalies=anomalies,
         genome_errors=genome_errors,
+        not_searched=not_searched,
     )
 
 

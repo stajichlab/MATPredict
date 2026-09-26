@@ -301,6 +301,9 @@ def _result_doc(r: DetectionResult) -> dict:
         # `homothallic_candidate` is both idiomorphs in one locus, the real
         # architecture of a homothallic Mucorale.
         "locus_class": r.locus_class,
+        # True on a flank-carried call kept inside the flank span: its
+        # idiomorph rests on core hits no tool could model.
+        "idiomorph_unmodelled": r.idiomorph_unmodelled,
         # How many of this locus's genes a polishing tool could actually model.
         # The sharpest discriminator measured to date: across 46,647
         # lineage-routed Pezizomycotina loci, every high-confidence call had
@@ -396,6 +399,9 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
         # because of it: this report searched more families than its taxid
         # warrants and should be re-run once the lookup succeeds.
         "routing_error": outcome.routing_error,
+        # Set only on a `not_searched` route (curator's ruling 2026-09-26):
+        # why no family was searched, and how to search anyway.
+        "not_searched_reason": outcome.not_searched_reason,
         "genetic_code": outcome.genetic_code,
         "genetic_code_error": outcome.genetic_code_error,
         # Loci that were built and then withheld for carrying fewer than
@@ -404,6 +410,9 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
         # says whether six others were withheld or never existed. The
         # per-candidate detail is in the evidence-diagnostics stream.
         "suppressed_unpolished": outcome.suppressed_unpolished,
+        # Flank-carried calls withheld because a core hit lay outside the
+        # flank span (`flank_carried`). Also listed in `suppressed_loci`.
+        "suppressed_flank_carried": outcome.suppressed_flank_carried,
         # The withheld loci themselves, compactly: enough to place each one
         # against a known locus (a holdout truth span, a curated record) and to
         # see what the bar cost, without the full evidence of a reported call.
@@ -416,6 +425,7 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
                 "idiomorph": r.idiomorph,
                 "polished_genes": r.polished_genes,
                 "genes_found": list(r.genes_found),
+                "withheld_reason": r.withheld_reason,
             }
             for r in outcome.suppressed_loci
         ],

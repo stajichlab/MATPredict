@@ -2,17 +2,22 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
-from MATPredict.detect.pipeline import EvidenceFloor, run_pipeline
+from MATPredict.detect.pipeline import (
+    DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DetectionOutcome, EvidenceFloor,
+    not_searched_reason, run_pipeline,
+)
 from MATPredict.detect.family_registry import available_phyla, load_all_families, route
 from MATPredict.detect.reference_fasta import build_reference_fasta
 from MATPredict.detect.report import write_detection_gff3, write_detection_report
 from MATPredict.detect.rollout_aggregate import aggregate_reports, write_rollout_summary
 from MATPredict.detect.scope_audit import audit_scope, record_taxids_by_family
+from MATPredict.detect.suppress import default_suppress_paths, filter_rows, load_suppress_list
 
 _ROLLOUT_REPORT_FILENAME = "detection_report.yaml"
 
@@ -31,7 +36,8 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     # same `RoutingDecision` object is handed to `run_pipeline` so it cannot
     # re-route to a different set than the query set was built for, and so the
     # taxonomy lookup happens once per run.
-    routing = route(args.taxid, load_all_families(config.db_root), phylum=args.phylum)
+    routing = route(args.taxid, load_all_families(config.db_root), phylum=args.phylum,
+                    exhaustive=getattr(args, "exhaustive", False))
     # An explicitly requested phylum that matches no curated family is a usage
     # error, not a valid empty result. Left to run it would build an empty
     # reference FASTA, search nothing, and exit 0 with an empty
@@ -49,6 +55,20 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     # reference FASTA and the pipeline can never disagree about what is hidden,
     # which would silently turn a recall measurement back into a
     # self-consistency one.
+    if routing.routing_mode == "not_searched":
+        # Curator's ruling 2026-09-26: no curated family covers this genome,
+        # so nothing is searched and no query set is built. The same outputs
+        # are still written, so a panel's per-genome directory is uniform and
+        # the report says WHY it holds no call.
+        outcome = DetectionOutcome(
+            results=[], routing_mode=routing.routing_mode,
+            routing_error=routing.routing_error,
+            not_searched_reason=not_searched_reason(routing),
+        )
+        write_detection_gff3(outcome, out_dir / "detected_loci.gff3")
+        write_detection_report(outcome, out_dir / "detection_report.yaml")
+        print(f"not searched -> {out_dir}: {outcome.not_searched_reason}")
+        return 0
     exclude_record_ids = frozenset(
         r.strip() for r in (args.exclude_records or "").split(",") if r.strip()
     )
@@ -72,7 +92,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         evidence_diagnostics_path=Path(args.evidence_diagnostics) if args.evidence_diagnostics else None,
         routing=routing,
         exclude_record_ids=exclude_record_ids,
-        max_polished_clusters_per_family=getattr(args, "max_polished_clusters_per_family", None),
+        max_polished_clusters_per_family=_polish_cap_from_args(args),
     )
 
     # `genome_fasta` is passed ONLY when asked for: it is what makes
@@ -92,6 +112,35 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         print(
             f"not detected\t{entry.family_key.phylum}:{entry.family_key.locus_name}\t{entry.reason}"
         )
+    return 0
+
+
+def _polish_cap_from_args(args) -> int | None:
+    """The per-family polish cap for this run: the flag's value, 0 meaning no
+    cap. An args object without the attribute (a test double) gets the
+    pipeline's default, never an implicit "off"."""
+    cap = getattr(args, "max_polished_clusters_per_family",
+                  DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY)
+    return None if cap is None or cap <= 0 else cap
+
+
+def _cmd_suppress_filter(args: argparse.Namespace) -> int:
+    """Filter a panel list (`ASMID<TAB>...` per line) against the suppress
+    lists: kept rows to stdout, the skipped count (and each skipped ASMID) to
+    stderr. The runners pipe their panel list through this before fanning out."""
+    paths = [] if args.no_default_lists else default_suppress_paths(
+        MatpredictConfig.from_env(repo_root=Path.cwd()).db_root)
+    paths += [Path(p) for p in args.suppress or []]
+    suppressed = load_suppress_list(paths)
+    source = Path(args.list).read_text() if args.list else sys.stdin.read()
+    rows = [r for r in source.splitlines() if r.strip()]
+    kept, skipped = filter_rows(rows, suppressed)
+    for row in kept:
+        print(row)
+    for row in skipped:
+        print(f"suppressed: {row.split(chr(9))[0]}", file=sys.stderr)
+    print(f"skipped {len(skipped)} suppressed genome(s) of {len(rows)} "
+          f"(lists: {', '.join(str(p) for p in paths) or 'none'})", file=sys.stderr)
     return 0
 
 
@@ -294,11 +343,21 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "ASMID/TRANSL_TABLE columns are exactly this shape.",
     )
     detect.add_argument(
-        "--max-polished-clusters-per-family", type=int, default=None,
+        "--max-polished-clusters-per-family", type=int,
+        default=DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY,
         help="Polish at most N admitted clusters per family, ranked before "
              "polishing by distinct genes, then best identity, then hit count. "
-             "Default: no cap. EXPERIMENTAL (2026-09-26): projected to halve "
-             "runtime in slow panels at N=6; measure before relying on it.",
+             f"Default: {DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY} (curator's ruling "
+             "2026-09-26; measured -45%% compute, 4 of 613 calls lost). 0 = no cap.",
+    )
+    detect.add_argument(
+        "--exhaustive", action="store_true",
+        help="Search every family in every phylum when no curated family covers "
+             "the genome (no taxid, an unresolvable lineage, or an uncurated "
+             "phylum). Default: such a genome is NOT searched and its report says "
+             "so (curator's ruling 2026-09-26; the chytrid control ran ~31 min "
+             "per genome under exhaustive and called nothing). Never widens a "
+             "route that matched.",
     )
     detect.add_argument(
         "--emit-cds-fasta",
@@ -324,6 +383,20 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     rollout_summary.add_argument("--reports-dir", required=False)
     rollout_summary.add_argument("--out", required=False)
     rollout_summary.set_defaults(func=_cmd_detect_rollout_summary)
+
+    suppress_parser = action.add_parser(
+        "suppress-filter",
+        help="Drop suppressed genomes from a panel list (ASMID<TAB>... per line)",
+    )
+    suppress_parser.add_argument("--list", default=None,
+                                 help="panel list to filter; default: stdin")
+    suppress_parser.add_argument(
+        "--suppress", action="append", default=[],
+        help="an extra suppress list (repeatable), added to the defaults: the "
+             "BFD list and <db root>/suppress.txt")
+    suppress_parser.add_argument("--no-default-lists", action="store_true",
+                                 help="use only the --suppress lists given")
+    suppress_parser.set_defaults(func=_cmd_suppress_filter)
 
     audit_scope_parser = action.add_parser(
         "audit-scope",

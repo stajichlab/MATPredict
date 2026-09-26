@@ -4,7 +4,10 @@ Curator's request, 2026-09-26: implement and measure. The study over existing
 runs (docs/notes/2026-09-26_mtl-flanks-runtime-and-cluster-limit.md) found that
 in the slow panels 2-4% of admitted clusters become calls and wall time is
 near-linear in their gene load; a per-family top-6 cap was PROJECTED to halve
-median wall time at 0-1 lost calls per panel. Off by default until measured.
+median wall time at 0-1 lost calls per panel. Measured on 561 genomes the same
+day (docs/notes/2026-09-26_polish-cap-measured-and-serinales-scan.md): cap 6 cut
+compute 135.3 -> 74.6 h and lost 4 of 613 calls. Curator's ruling 2026-09-26:
+cap 6 is the default; None turns it off.
 
 Rank = what is known before polishing: distinct live genes, then best identity,
 then hit count. Per family, because a phylum-fallback genome is searched
@@ -55,9 +58,28 @@ def _run(tmp_path, **kw):
     return outcome, {c for c, _ in polished}
 
 
-def test_the_cap_is_off_by_default(tmp_path):
+def test_the_cap_defaults_to_six(tmp_path):
+    from MATPredict.detect.pipeline import DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY
+    assert DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY == 6
     _, contigs = _run(tmp_path)
+    assert contigs == {"c1", "c2", "c3"}    # 3 clusters, under the default cap
+
+
+def test_none_turns_the_cap_off(tmp_path):
+    _, contigs = _run(tmp_path, max_polished_clusters_per_family=None)
     assert contigs == {"c1", "c2", "c3"}
+
+
+def test_the_cli_defaults_to_six_and_zero_turns_it_off():
+    import argparse
+    from MATPredict.detect.cli import _polish_cap_from_args, register_subcommands
+    parser = argparse.ArgumentParser()
+    register_subcommands(parser.add_subparsers(dest="command"))
+    default = parser.parse_args(["detect", "--genome", "g", "--out-dir", "o"])
+    assert _polish_cap_from_args(default) == 6
+    off = parser.parse_args(["detect", "--genome", "g", "--out-dir", "o",
+                             "--max-polished-clusters-per-family", "0"])
+    assert _polish_cap_from_args(off) is None
 
 
 def test_a_cap_polishes_only_the_top_ranked_clusters(tmp_path):

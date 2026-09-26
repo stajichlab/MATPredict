@@ -75,11 +75,14 @@ from __future__ import annotations
 import json
 import logging
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Callable
 
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
+from MATPredict.detect.flank_carried import (
+    FLANK_SPAN_PADDING_BP, WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
+)
 from MATPredict.detect.family_registry import (
     Family,
     FamilyKey,
@@ -273,6 +276,15 @@ class DetectionResult:
     rather than silently resolved away. Also the observations a future
     recalibration of the overlap threshold needs.
     """
+    idiomorph_unmodelled: bool = False
+    """True when the call is flank-carried: no core_MAT gene was modelled, so
+    its idiomorph rests on unmodelled hits. Such a call is kept only when the
+    core hits lie inside the flank span, and is then capped at `low` and
+    classed `partial_locus`. See `flank_carried`."""
+    withheld_reason: str | None = None
+    """Why a withheld locus (`DetectionOutcome.suppressed_loci`) was withheld:
+    `MODELLED_GENE_BAR` or `flank_carried.WITHHELD_FLANK_CARRIED`. None on a
+    reported call."""
 
 
 @dataclass(frozen=True)
@@ -327,6 +339,12 @@ class DetectionOutcome:
     #: when the lookup failed (None when it did not fail).
     genetic_code: int | None = None
     genetic_code_error: str | None = None
+    #: Why the genome was not searched, on a `not_searched` route; else None.
+    not_searched_reason: str | None = None
+    #: How many flank-carried calls were withheld because a core hit lay
+    #: outside the flank span (see `flank_carried`). They are in
+    #: `suppressed_loci` too, with their `withheld_reason`.
+    suppressed_flank_carried: int = 0
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -529,6 +547,17 @@ class EvidenceFloor:
 #: survive. At >=1 the figure would be 6,809 and the same 2,957 -- so the
 #: stricter bar removes a further 1,161 loci for nothing.
 MIN_POLISHED_GENES = 2
+
+#: `DetectionResult.withheld_reason` for a locus withheld by the bar above.
+MODELLED_GENE_BAR = "modelled_gene_bar"
+
+#: Polish at most this many admitted clusters per family per genome. Curator's
+#: ruling 2026-09-26, after a real run over 561 genomes (docs/notes/2026-09-26_
+#: polish-cap-measured-and-serinales-scan.md): cap 6 cut compute 135.3 -> 74.6
+#: h, removed all 6 timeouts, and lost 4 of 613 calls, all phylum-fallback
+#: Saccharomycopsis. Ranked genes-first (`_polish_rank`); the identity-first
+#: rank was tested out of sample and lost 2 Mucoromycota Minus calls.
+DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY = 6
 
 #: The permissive floor the evidence diagnostics enumerate candidates with:
 #: every family with >=1 own hit in the cluster, of any gene, any role, any
@@ -1439,8 +1468,8 @@ def run_pipeline(
     #: Polish at most this many admitted clusters PER FAMILY, the best-ranked
     #: by what is known before polishing (see `_polish_rank`); the rest are
     #: left unpolished and so cannot clear the modelled-gene bar. None = no cap.
-    #: Curator's request 2026-09-26: implement and measure; off by default.
-    max_polished_clusters_per_family: int | None = None,
+    #: See `DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY` for the measured default.
+    max_polished_clusters_per_family: int | None = DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY,
     #: Curated records withheld from THIS run, for leave-one-out recall. The
     #: caller must build `reference_fasta` with the same set (see
     #: `reference_fasta.build_reference_fasta`); this parameter additionally
@@ -1463,8 +1492,21 @@ def run_pipeline(
     # well would repeat the taxonomy lookup and, worse, could disagree with the
     # reference FASTA the caller already built. When it is omitted the old
     # self-routing behaviour is unchanged.
+    #
+    # Self-routing with no taxid searches every family (`exhaustive=True`):
+    # that is the direct library call, the shape the unit tests use. Every
+    # production entry point -- the CLI and `batch_runner` -- routes with a
+    # real taxid, where the curator's `not_searched` default applies.
     if routing is None:
-        routing = route(taxid, load_all_families(db_root))
+        routing = route(taxid, load_all_families(db_root), exhaustive=taxid is None)
+    if routing.routing_mode == "not_searched":
+        # No search, no polish, no taxonomy lookup: the report says why, so it
+        # can never read as "searched and found nothing".
+        return DetectionOutcome(
+            results=[], routing_mode=routing.routing_mode,
+            routing_error=routing.routing_error,
+            not_searched_reason=not_searched_reason(routing),
+        )
     families = routing.families
     # The clustering gap is per-locus CURATION data (`order.yml`
     # `max_cluster_gap_bp`), not a code constant: how spread out a MAT locus is
@@ -2170,13 +2212,27 @@ def run_pipeline(
     # evidence-diagnostics stream, a family whose only calls were withheld
     # still gets a `not_detected` entry naming the reason, and the count is
     # carried on the outcome.
-    suppressed = [r for r in results if r.polished_genes < min_polished_genes]
+    suppressed = [
+        replace(r, withheld_reason=MODELLED_GENE_BAR)
+        for r in results if r.polished_genes < min_polished_genes
+    ]
     results = [r for r in results if r.polished_genes >= min_polished_genes]
     if suppressed:
         logger.info(
             "withheld %d locus/loci carrying fewer than %d modelled genes",
             len(suppressed), min_polished_genes,
         )
+    suppressed_by_bar = len(suppressed)
+    # Curator's ruling 2026-09-26: a call with no modelled core gene is kept
+    # at `low` only when its core hits sit inside the flank span; otherwise it
+    # is withheld like a bar failure. See `flank_carried`.
+    results, flank_withheld = apply_flank_carried_rule(results)
+    if flank_withheld:
+        logger.info(
+            "withheld %d flank-carried locus/loci whose core hits lie outside "
+            "the flank span", len(flank_withheld),
+        )
+    suppressed += flank_withheld
 
     reported = {r.family_key for r in results}
     #: family -> the best withheld call for it, so `not_detected` can say that
@@ -2194,6 +2250,20 @@ def run_pipeline(
         short_genes = short_orf_by_family.get(family.key, set())
         score = best_attempt.get(family.key)
         withheld = suppressed_best.get(family.key)
+        if withheld is not None and withheld.withheld_reason == WITHHELD_FLANK_CARRIED:
+            not_detected.append(NotDetectedFamily(
+                family_key=family.key,
+                reason=(
+                    "best cluster was flank-carried -- no core gene could be "
+                    "modelled -- and a core hit lies outside the flank span "
+                    f"(+-{FLANK_SPAN_PADDING_BP} bp)"
+                ),
+                best_fraction_found=score.fraction_found if score else 0.0,
+                genes_found=list(withheld.genes_found),
+                genes_missing=[g for g in withheld.genes_missing if g not in short_genes],
+                genes_not_searchable=sorted(short_genes),
+            ))
+            continue
         if withheld is not None:
             modelled = (
                 "none of its genes could be modelled" if withheld.polished_genes == 0
@@ -2254,6 +2324,20 @@ def run_pipeline(
         routing_error=routing.routing_error,
         genetic_code=genetic_code,
         genetic_code_error=genetic_code_error,
-        suppressed_unpolished=len(suppressed),
+        suppressed_unpolished=suppressed_by_bar,
         suppressed_loci=suppressed,
+        suppressed_flank_carried=len(flank_withheld),
     )
+
+
+def not_searched_reason(routing: RoutingDecision) -> str:
+    """One sentence for a `not_searched` report: why, and how to search anyway."""
+    override = "use --exhaustive, or --phylum, to search it anyway"
+    if routing.phylum:
+        return (f"phylum {routing.phylum} has no curated MAT locus family; "
+                f"not searched ({override})")
+    if routing.routing_error:
+        return (f"taxonomy lookup failed ({routing.routing_error}); not searched -- "
+                f"re-run once the lookup succeeds, or {override}")
+    return f"no taxid, or no phylum could be resolved; not searched ({override})"
+

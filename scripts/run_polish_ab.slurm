@@ -67,6 +67,15 @@ echo "base=$BASE_SRC"
 echo "cut1=$CUT1_SRC"
 echo "sample=$SAMPLE  out=$OUT_DIR  threads=$THREADS  scratch=$WORK"
 
+# Curator's ruling 2026-09-26: suppressed genomes (the BFD list plus the
+# tree's db/suppress.txt) are never run. Filtered with the CUT1 arm's code,
+# which must carry `detect suppress-filter`; SUPPRESS_SRC overrides it.
+SUPPRESS_SRC="${SUPPRESS_SRC:-$CUT1_SRC}"
+PYTHONPATH="$SUPPRESS_SRC" MATPREDICT_DB_ROOT="$(dirname "$SUPPRESS_SRC")/db" \
+    "$PY" -m MATPredict detect suppress-filter --list "$SAMPLE" > "$WORK/sample.tsv" \
+    || { echo "suppress-filter failed with SUPPRESS_SRC=$SUPPRESS_SRC" >&2; exit 1; }
+SAMPLE="$WORK/sample.tsv"
+
 TOTAL=$(wc -l < "$SAMPLE")
 echo "genomes to run: $TOTAL"
 

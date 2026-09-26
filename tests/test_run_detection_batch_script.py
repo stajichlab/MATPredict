@@ -276,3 +276,15 @@ def test_slurm_wrapper_still_rejects_missing_positionals(tmp_path):
     assert completed.returncode == 1
     assert "usage:" in completed.stderr
     assert argv == []
+
+
+def test_script_drops_suppressed_genomes_before_the_batch(tmp_path, monkeypatch, capsys):
+    """Curator's ruling 2026-09-26: a genome on a suppress list is never run.
+    The batch JSON carries the bare accession; the BFD list carries the ASMID."""
+    suppress = tmp_path / "suppress.txt"
+    suppress.write_text("ASMID,REASON\nGCA_000000001.1_Bad,broken upload\n")
+    monkeypatch.setenv("MATPREDICT_BFD_SUPPRESS", str(suppress))
+    module = _load_script()
+    recorded, _ = _run(module, tmp_path, monkeypatch, [])
+    assert recorded["genomes"] == []
+    assert "skipped 1 suppressed" in capsys.readouterr().err

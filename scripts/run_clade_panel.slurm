@@ -136,6 +136,16 @@ print(f"{rank}={clade}: {n} rows, {kept} with a genome file", file=sys.stderr)
 PYEOF
 fi
 
+# ------------------------------------------------------------ suppress lists
+# Curator's ruling 2026-09-26: genomes on the BFD suppress list
+# (Fungi_BFD/data/curation/suppress.txt) or on $MATPREDICT_DB_ROOT/suppress.txt
+# are never run -- e.g. the PRJEB104476 "genomes" that are single Sanger
+# amplicons. The count skipped is logged; SUPPRESS_ARGS passes extra
+# `--suppress FILE` lists through.
+"$PY" -m MATPredict detect suppress-filter --list "$WORK/panel.tsv" ${SUPPRESS_ARGS:-} \
+    > "$WORK/panel.kept.tsv" || { echo "suppress-filter failed" >&2; exit 1; }
+mv "$WORK/panel.kept.tsv" "$WORK/panel.tsv"
+
 # ----------------------------------------------------------- taxonomy warm-up
 # Resolve every distinct taxid ONCE, serially, before fanning out. The routing,
 # phylum-fallback and genetic-code lookups all read one cached efetch document

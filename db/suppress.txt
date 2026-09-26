@@ -1,0 +1,5 @@
+# MATPredict-only genome suppress list, merged with the shared BFD list
+# (/bigdata/stajichlab/shared/projects/BFD/Fungi_BFD/data/curation/suppress.txt).
+# Use it for genomes wrong for MAT detection but fine for BFD. One ASMID per
+# line, optionally ",REASON". Read by `matpredict detect suppress-filter` and
+# every runner under scripts/. See src/MATPredict/detect/suppress.py.

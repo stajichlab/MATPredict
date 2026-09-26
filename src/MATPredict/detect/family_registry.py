@@ -159,13 +159,18 @@ class RoutingDecision:
     * `lineage` -- an ancestor of the query taxid is.
     * `phylum_fallback` -- nothing matched, so the run was narrowed to the
       query taxon's own phylum.
-    * `exhaustive` -- nothing matched and the phylum could not be used, so
-      every family in every phylum is searched. This is the expensive,
-      low-value path; it is what Task 1 exists to make rare.
+    * `not_searched` -- nothing matched and the phylum could not be used (no
+      taxid, an unresolvable lineage, or a phylum with no curated family).
+      No family is searched; the default since the curator's 2026-09-26
+      ruling. `phylum` names the uncurated phylum when it was resolved.
+    * `exhaustive` -- as `not_searched`, but the operator asked for every
+      family in every phylum to be searched (`--exhaustive`). The expensive,
+      low-value path.
     * `explicit_phylum` -- the operator passed `--phylum`, overriding all
       taxid-based routing.
 
-    `phylum` is set only for the two phylum-scoped modes, and is None otherwise.
+    `phylum` is set for the two phylum-scoped modes and, when resolved, for
+    `not_searched`; None otherwise.
     """
 
     families: list[Family]
@@ -438,6 +443,7 @@ def route(
     lineage_taxids_resolver: Callable[[int], list[int]] = default_lineage_taxids,
     phylum_name_resolver: Callable[[int], str | None] = default_lineage_phylum_name,
     phylum: str | None = None,
+    exhaustive: bool = False,
 ) -> RoutingDecision:
     """Choose the families a detection run will search, and report which rule chose them.
 
@@ -466,10 +472,15 @@ def route(
        2916678, 766764, 5475, 5476] -- intersects NO curated family's scope, so
        before this rule it routed to all 19 families across all three phyla and
        one small yeast genome ran past 24 minutes without finishing.
-    5. **Exhaustive**: every family. Reached when there is no taxid at all, or
-       the phylum cannot be determined, or the determined phylum has no curated
-       families (returning that phylum's EMPTY family set instead would silently
-       detect nothing, which is worse than searching too much).
+    5. **Not searched** (the default) or **exhaustive** (on request). Reached
+       when there is no taxid at all, or the phylum cannot be determined, or the
+       determined phylum has no curated families. Curator's ruling 2026-09-26:
+       the default is `not_searched` -- no family, and a mode that says so, so
+       the report can never read as "searched and found nothing". The chytrid
+       negative control is why: under `exhaustive` it spent a median 1,866 s
+       per genome, 6 of 25 genomes hit the 60-minute timeout, and it called
+       nothing. `exhaustive=True` (`matpredict detect --exhaustive`) restores
+       the old search of every family; it never widens a route that matched.
 
     **How the phylum is determined.** Not from a hardcoded phylum-name-to-taxid
     table, and not by testing which phylum's families have a scope taxid in the
@@ -484,8 +495,10 @@ def route(
     already fetched the lineage.
 
     Every resolver failure (network error, unknown taxid) degrades to the next
-    rule rather than raising, so a taxonomy outage makes detection slower, never
-    broken.
+    rule rather than raising, and is recorded in `routing_error`. With the
+    `not_searched` default an outage therefore skips a genome visibly -- its
+    report carries the error, so it can be re-run -- rather than searching it
+    against every family.
     """
     if phylum is not None:
         return RoutingDecision(
@@ -494,7 +507,7 @@ def route(
             phylum=phylum,
         )
     if taxid is None:
-        return RoutingDecision(families=list(families), routing_mode="exhaustive")
+        return _unrouted(families, exhaustive)
 
     # Exact-taxid and lineage matches are UNIONED, not cascaded. Returning at
     # the first tier that matched anything let a SPECIES-scoped family shadow a
@@ -547,5 +560,19 @@ def route(
                 routing_error="; ".join(errors) or None,
             )
 
-    return RoutingDecision(families=list(families), routing_mode="exhaustive",
-                           routing_error="; ".join(errors) or None)
+    return _unrouted(families, exhaustive, phylum=query_phylum,
+                     routing_error="; ".join(errors) or None)
+
+
+def _unrouted(
+    families: list[Family], exhaustive: bool, phylum: str | None = None,
+    routing_error: str | None = None,
+) -> RoutingDecision:
+    """The decision when no rule matched: nothing, unless a search of every
+    family was asked for. `phylum` is kept on a `not_searched` decision so the
+    report can name the uncurated phylum that caused it."""
+    if exhaustive:
+        return RoutingDecision(families=list(families), routing_mode="exhaustive",
+                               routing_error=routing_error)
+    return RoutingDecision(families=[], routing_mode="not_searched", phylum=phylum,
+                           routing_error=routing_error)

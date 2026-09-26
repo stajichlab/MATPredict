@@ -407,6 +407,9 @@ def test_cmd_detect_passes_genome_fasta_when_emit_cds_fasta_is_set(monkeypatch, 
         genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
         evidence_diagnostics=None, min_hits=1, min_identity=None,
         require_core_role=False, exclude_records="", emit_cds_fasta=True, phylum=None,
+        # No taxid and an empty db route to `not_searched` by default, which
+        # writes no CDS; these tests are about a searched run.
+        exhaustive=True,
     )
 
     assert detect_cli._cmd_detect(args) == 0
@@ -422,6 +425,9 @@ def test_cmd_detect_omits_genome_fasta_by_default(monkeypatch, tmp_path):
         genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
         evidence_diagnostics=None, min_hits=1, min_identity=None,
         require_core_role=False, exclude_records="", emit_cds_fasta=False, phylum=None,
+        # No taxid and an empty db route to `not_searched` by default, which
+        # writes no CDS; these tests are about a searched run.
+        exhaustive=True,
     )
 
     assert detect_cli._cmd_detect(args) == 0

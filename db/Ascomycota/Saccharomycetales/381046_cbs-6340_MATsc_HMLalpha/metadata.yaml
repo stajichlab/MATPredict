@@ -1,5 +1,5 @@
 record_id: 381046_cbs-6340_MATsc_HMLalpha
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 381046
   lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Saccharomycetaceae;g__Lachancea;s__Lachancea_thermotolerans
@@ -23,22 +23,26 @@ locus:
   core:
     completeness: complete
     reference_orientation: MATALPHA1->MATALPHA2
-    definition_note: 'The alpha idiomorph of Lachancea thermotolerans CBS 6340, from the SILENT HML cassette
-      on chromosome F -- the reference strain is MATa at MAT. Cassette architecture established by blastn
-      self-comparison of chromosome F: the MAT-position X box matches HML''s at 99.660%, the Ya region
-      matches the silent a cassette at 99.931%, and the Z box at 100%. CHA1 (KLTH0F00440g) abuts this
-      cassette, the same CHA1-HML adjacency seen in S. cerevisiae and K. lactis. CAVEAT, recorded deliberately:
-      MATALPHA2 is only 108 aa across two exons (intron 32,052-32,347, GT..AG confirmed directly in the
-      genomic sequence), against 210 aa in S. cerevisiae and 223 aa in K. lactis. The longest alternative
-      continuous plus-strand ORF in the Yalpha region is 63 aa, so there is no simple unspliced alternative,
-      but the model may still be N-terminally truncated -- treat it as the weak gene of this record. Measured
-      on held-out Lachancea fermentati it did NOT improve on the existing references (32.0 bits at E=0.016,
-      worse than S. cerevisiae MATALPHA2''s 42.7), whereas MATALPHA1 improved from 73.9 to 100 bits. The
-      Lachancea a-allele is deliberately NOT curated: no MATa1 with both a protein accession and an intact
-      homeodomain exists in NCBI (the MAT-position ORF at NC_013082.1:282,329-282,664 is unannotated;
-      the accessioned XP_002554220.1 from the silent cassette lacks the homeodomain because a1''s 3''
-      end runs out of the Y box into a non-homologous X box). Curator''s ruling, 2026-09-21: defer it.
-      Citation: Souciet et al. 2009 Genome Res 19:1696-1709 (PMID 19525356).'
+    definition_note: 'The alpha idiomorph of Lachancea thermotolerans CBS 6340, from
+      the SILENT HML cassette on chromosome F -- the reference strain is MATa at MAT.
+      Cassette architecture established by blastn self-comparison of chromosome F:
+      the MAT-position X box matches HML''s at 99.660%, the Ya region matches the
+      silent a cassette at 99.931%, and the Z box at 100%. CHA1 (KLTH0F00440g) abuts
+      this cassette, the same CHA1-HML adjacency seen in S. cerevisiae and K. lactis.
+      CAVEAT, recorded deliberately: MATALPHA2 is only 108 aa across two exons (intron
+      32,052-32,347, GT..AG confirmed directly in the genomic sequence), against 210
+      aa in S. cerevisiae and 223 aa in K. lactis. The longest alternative continuous
+      plus-strand ORF in the Yalpha region is 63 aa, so there is no simple unspliced
+      alternative, but the model may still be N-terminally truncated -- treat it as
+      the weak gene of this record. Measured on held-out Lachancea fermentati it did
+      NOT improve on the existing references (32.0 bits at E=0.016, worse than S.
+      cerevisiae MATALPHA2''s 42.7), whereas MATALPHA1 improved from 73.9 to 100 bits.
+      The Lachancea a-allele is deliberately NOT curated: no MATa1 with both a protein
+      accession and an intact homeodomain exists in NCBI (the MAT-position ORF at
+      NC_013082.1:282,329-282,664 is unannotated; the accessioned XP_002554220.1 from
+      the silent cassette lacks the homeodomain because a1''s 3'' end runs out of
+      the Y box into a non-homologous X box). Curator''s ruling, 2026-09-21: defer
+      it. Citation: Souciet et al. 2009 Genome Res 19:1696-1709 (PMID 19525356).'
     segments:
     - segment_index: 0
       sequence_source:
@@ -74,29 +78,43 @@ genes:
   order_in_locus: 1
 evidence:
   locus_existence:
-    tier: 1
-    experimental_method: complete DNA sequencing of the MAT locus and HMLalpha silent cassette
+    tier: 2
+    experimental_method: Genome sequence and annotation of L. thermotolerans CBS 6340
+      (Genolevures Consortium / Souciet et al. 2009). No locus-specific experimental
+      study of the Lachancea MAT cassettes was found. The X/Y/Z cassette structure
+      used to delimit this locus is the one defined by complete sequencing of the
+      S. cerevisiae MAT, HML and HMR loci (Astell et al. 1981, PMID 7034964); it is
+      cited as the structural basis, not as evidence about this species.
     citations:
-    - pmid: '7034964'
+    - &id001
+      pmid: '19525356'
+      doi: 10.1101/gr.091546.109
+    - &id002
+      pmid: '7034964'
       doi: 10.1016/0092-8674(81)90356-1
   boundaries:
-    tier: 1
-    experimental_method: 'Complete locus sequencing (Astell et al. 1981). Coordinates on the modern S288C
-      reference assembly independently reconfirmed by the curator via NCBI efetch against NC_001135.5.
-
-      '
+    tier: 2
+    experimental_method: Cassette architecture established by the curator by blastn
+      self-comparison of chromosome F (X box 99.660%, Ya 99.931%, Z 100%; see definition_note).
+      The X/Y/Z cassette structure used to delimit this locus is the one defined by
+      complete sequencing of the S. cerevisiae MAT, HML and HMR loci (Astell et al.
+      1981, PMID 7034964); it is cited as the structural basis, not as evidence about
+      this species.
     citations:
-    - pmid: '7034964'
-      doi: 10.1016/0092-8674(81)90356-1
+    - *id001
+    - *id002
   idiomorph_assignment:
-    tier: 1
-    experimental_method: genetic/molecular characterization of MATalpha vs MATa cell identity; HO-endonuclease
-      switching mechanism
+    tier: 2
+    experimental_method: 'TIER 2 (computational, admissible under the curator''s 2026-09-24
+      ruling): alpha by homology of the HML cassette''s alpha1/alpha2 genes and the
+      X/Y/Z comparison above; there is no experimental idiomorph assignment for this
+      strain. The X/Y/Z cassette structure used to delimit this locus is the one defined
+      by complete sequencing of the S. cerevisiae MAT, HML and HMR loci (Astell et
+      al. 1981, PMID 7034964); it is cited as the structural basis, not as evidence
+      about this species.'
     citations:
-    - pmid: '7034964'
-      doi: 10.1016/0092-8674(81)90356-1
-    - pmid: null
-      doi: 10.1016/0092-8674(83)90219-2
+    - *id001
+    - *id002
 validation:
   status: accepted
   rejection_reason: null
@@ -121,4 +139,10 @@ curation:
   proposal_dedupe_key: 7034964|4932|MATsc|MATalpha
   reviewed_by: null
   reviewed_date: null
+  notes: 'CITATIONS CORRECTED, 2026-09-25 (curator request): the evidence block had
+    been copied verbatim from the S. cerevisiae S288C record -- Astell et al. 1981
+    alone, plus Kostriken et al. 1983 (the S. cerevisiae HO endonuclease, doi:10.1016/0092-8674(83)90219-2),
+    and a boundaries sentence about S288C coordinates on NC_001135.5. Astell 1981
+    is kept as the structural basis; the species'' own papers are added; Kostriken
+    1983 is removed because it does not concern this species.'
 model_provenance: null

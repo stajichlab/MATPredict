@@ -284,9 +284,44 @@ loci:
     # introduces no new multi-family ambiguity.
     taxonomic_scope: [2916678]  # Serinales (order) -- the CUG-Ser1 / CTG clade
     genes:
+      # gene_class added 2026-09-25 so the homothallic rule can tell unrelated
+      # genes apart: MTLalpha1 is the alpha-box gene (the MAT1-1-1 counterpart;
+      # Pfam PF04769 hits every curated MTLalpha1) and MTLa2 the HMG-domain
+      # regulator (the MAT1-2-1 counterpart), the same two classes the
+      # Pezizomycotina `MAT` family uses. CAVEAT, measured: Pfam HMG_box
+      # (PF00505) does NOT hit the curated C. albicans or C. lusitaniae MTLa2,
+      # so MTLa2's class rests on the literature, not on a Pfam hit. MTLa1 is
+      # a homeodomain protein (PF00046); no curated class exists for it yet,
+      # so it has none.
       - {name: MTLA1, role: core_MAT, present_in_idiomorphs: ["A"]}
-      - {name: MTLA2, role: core_MAT, present_in_idiomorphs: ["A"]}
-      - {name: MTLalpha1, role: core_MAT, present_in_idiomorphs: ["alpha"]}
+      - {name: MTLA2, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["A"]}
+      - {name: MTLalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["alpha"]}
+      # CURATOR RULING, J. Stajich, 2026-09-25: MTLalpha2 as OPTIONAL. It is
+      # present in C. albicans, C. dubliniensis and C. tropicalis but
+      # biologically absent in Metschnikowiaceae (C. auris, Clavispora; Munoz
+      # et al. 2018), so as a required gene it would sit in every
+      # Metschnikowiaceae genome's denominator unfindable. Optional keeps it out
+      # of fraction_found while a found, modelled alpha2 still counts toward the
+      # modelled-gene bar. PROVISIONAL: to be tested on a broad genome scan.
+      - {name: MTLalpha2, role: core_MAT, present_in_idiomorphs: ["alpha"], optional: true, aliases: [alpha2]}
+      # CURATOR RULING, J. Stajich, 2026-09-25: the PAP1-OBP1-PIK1 block as
+      # OPTIONAL flanks. In the CTG clade these three genes sit inside or beside
+      # the MTL idiomorph in C. albicans, C. lusitaniae and all C. auris clades
+      # (Hull & Johnson 1999; Munoz et al. 2018), as idiomorph-specific alleles
+      # (PAPa/PAPalpha, ...), so they are `flanking_variable` with no idiomorph
+      # restriction -- each idiomorph carries its own copy. Added because
+      # C. auris's alpha idiomorph has ONE core gene (MTLalpha1) and the roster
+      # had no flank, so an alpha genome could never reach two modelled genes.
+      # NOT near MTL in D. hansenii (~700 kb away), hence optional. RISK to
+      # measure: OBP1 and PIK1 have genome paralogs (C. auris OBP paralog 28%,
+      # PIK paralog 42% identity), which could pair with a background MTL
+      # fragment. PROVISIONAL, pending the Serinales-wide scan.
+      # `polish: miniprot` (curator ruling 2026-09-26): exonerate on these long
+      # proteins was ~90% of runtime; miniprot alone gave identical genotypes
+      # on 60/60 ablation genomes (results/2026-09-26_flank_ablation/).
+      - {name: PAP1, role: flanking_variable, optional: true, polish: miniprot, aliases: [PAPa, PAPalpha, PAP]}
+      - {name: OBP1, role: flanking_variable, optional: true, polish: miniprot, aliases: [OBPa, OBPalpha, OBP, OPB]}
+      - {name: PIK1, role: flanking_variable, optional: true, polish: miniprot, aliases: [PIKa, PIKalpha, PIK]}
   - locus_name: "MATtub"
     vocabulary_type: "enum"
     idiomorph_values: ["MAT1-1", "MAT1-2"]
@@ -314,3 +349,18 @@ loci:
       # acknowledged gap (see that record's definition_note).
       - {name: Rsm22-like, role: flanking_conserved}
       - {name: unnamed_flanking_ORF, role: flanking_conserved}
+      # CURATOR RULING, J. Stajich, 2026-09-25: add SLA2 and APN2. Their only
+      # MATtub references are the Morchella importuna records (KY782629.1 /
+      # KY782630.1, Chai et al. 2017). `optional`: a missing flank stays out of
+      # fraction_found, so a Tuber cluster -- whose depositors used other
+      # anchors, and where APN2 was not found in any of 7 annotated proteomes --
+      # is never penalised, while a found and modelled SLA2 counts toward the
+      # modelled-gene bar. Measured before adding them
+      # (results/2026-09-24_flank_homology): SLA2 is single-copy and a
+      # reciprocal best hit to A. fumigatus in 53/53 annotated Pezizales
+      # proteomes, within 20 kb of MAT in 33/34 where they share a contig
+      # (median 6.1 kb); APN2 in 46/53, within 20 kb in 26/34 (median 16.6 kb).
+      # The synteny test (docs/notes/2026-09-24_bar-synteny-test.md) found an
+      # adjacent withheld core locus in 69 of 81 no-call Pezizales genomes.
+      - {name: SLA2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      - {name: APN2, role: flanking_conserved, gene_class: apn2_homolog, optional: true}

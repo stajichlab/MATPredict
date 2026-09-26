@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -21,8 +22,15 @@ class CachedFetcher:
     def get(self, url: str) -> str:
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         path = self._cache_path(url)
-        if path.exists():
+        # An empty file is a miss. Before writes were atomic, a reader racing
+        # a writer could see a truncated file and return '' as the answer.
+        if path.exists() and path.stat().st_size > 0:
             return path.read_text()
         body = self.transport(url)
-        path.write_text(body)
+        # Write to a unique temporary name, then rename into place: a rename
+        # is atomic within a filesystem, so a concurrent reader (many detect
+        # processes share one cache) sees nothing or the whole response.
+        tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+        tmp.write_text(body)
+        os.replace(tmp, path)
         return body

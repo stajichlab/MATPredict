@@ -1,0 +1,216 @@
+record_id: 1174673_ypl6-1_MATtub_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 1174673
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Pezizomycetes;o__Pezizales;f__Morchellaceae;g__Morchella;s__Morchella_importuna
+  lineage_resolved_date: '2026-09-25'
+organism:
+  species: Morchella importuna
+  strain:
+    name: YPL6-1
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATtub
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: APN2->MAT1-2-1->SLA2
+    definition_note: 'Morchella importuna YPL6-1 MAT1-2 idiomorph with flanks, from
+      the locus deposit KY782629.1 (75,706 bp, 25 CDS). Curated genes: APN2 (annotated
+      by the depositors as TWO adjacent CDS, AVI60802.1 and AVI60803.1, both kept
+      under the one gene name), MAT1-2-1, and SLA2 (annotated ''Endocytosis protein
+      end4'', the S. pombe name for SLA2). Not curated, as they are not MATtub roster
+      genes: COX13 (AVI60804.1), MBA1 (AVI60810.1), SDH and others. Gene order on
+      the deposit: APN2 - COX13 - ... - MAT1-2-1 - MBA1 - SLA2; SLA2 is 5.7 kb and
+      APN2 14.8 kb from MAT1-2-1.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KY782629.1
+        seq_region: KY782629.1
+      start: 37210
+      end: 65545
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: APN2
+  protein_accession: ncbi_protein:AVI60802.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 37210
+  end: 38224
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 38135
+    end: 38224
+  - start: 37210
+    end: 38082
+- gene_index: 1
+  name: APN2
+  protein_accession: ncbi_protein:AVI60803.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 38507
+  end: 39617
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 39590
+    end: 39617
+  - start: 39515
+    end: 39527
+  - start: 39421
+    end: 39463
+  - start: 39219
+    end: 39351
+  - start: 38507
+    end: 39150
+- gene_index: 2
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AVI60809.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 54427
+  end: 55623
+  strand: +
+  order_in_locus: 2
+  exons:
+  - start: 54427
+    end: 54917
+  - start: 54977
+    end: 55050
+  - start: 55144
+    end: 55202
+  - start: 55261
+    end: 55623
+- gene_index: 3
+  name: SLA2
+  protein_accession: ncbi_protein:AVI60811.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 61361
+  end: 65545
+  strand: +
+  order_in_locus: 3
+  exons:
+  - start: 61361
+    end: 61418
+  - start: 61608
+    end: 61625
+  - start: 61689
+    end: 61764
+  - start: 61834
+    end: 62132
+  - start: 62185
+    end: 62242
+  - start: 62295
+    end: 62479
+  - start: 62531
+    end: 62667
+  - start: 62717
+    end: 63239
+  - start: 63289
+    end: 63530
+  - start: 63587
+    end: 63886
+  - start: 63943
+    end: 64027
+  - start: 64081
+    end: 64717
+  - start: 64796
+    end: 64874
+  - start: 64926
+    end: 65092
+  - start: 65144
+    end: 65393
+  - start: 65453
+    end: 65545
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Genome sequencing of two ascospore isolates of opposite mating
+      type; idiomorphs identified and deposited with flanking genes. "In this study,
+      the genomes of two ascospore isolates of M. importuna with opposite mating-type
+      were sequenced and two idiomorphs, MAT1-1 and MAT1-2, were identified. The MAT1-2
+      idiomorph was 6.7 kb in length containing a single MAT1-2-1 gene, and the MAT1-1
+      idiomorph was 10.5 kb containing a MAT1-1-1 gene and two other open reading
+      frames (ORFs), GME3123 and GME3124. ... Single-ascospore populations of M. importuna,
+      M. sextelata and Mel-20 were analysed, and the result indicated that the ratios
+      of MAT1-1- and MAT1-2-harbouring idiomorphs were not significantly different
+      from a 1:1 ratio. The results suggest that these three black morels are heterothallic."
+      (Chai et al. 2017, abstract)
+    citations:
+    - pmid: null
+      doi: 10.1007/s11557-017-1309-x
+  boundaries:
+    tier: 1
+    experimental_method: Boundaries of the deposited region are the GenBank record's
+      own; the record segment spans the curated genes on it. The paper's idiomorph
+      (MAT1-2 6.7 kb / MAT1-1 10.5 kb) lies inside.
+    citations:
+    - pmid: null
+      doi: 10.1007/s11557-017-1309-x
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Idiomorph by MAT gene content (MAT1-1-1 vs MAT1-2-1) of opposite-mating-type
+      ascospore isolates; 1:1 segregation in single-ascospore populations.
+    citations:
+    - pmid: null
+      doi: 10.1007/s11557-017-1309-x
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: KY782629.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1007/s11557-017-1309-x|1174673|MATtub|MAT1-2
+  reviewed_by: J. Stajich (ruling 2026-09-25)
+  reviewed_date: '2026-09-25'
+  notes: 'CURATOR OVERRIDE, J. Stajich, 2026-09-25: the source has no PMID (not indexed
+    in PubMed). It is peer-reviewed (Mycological Progress 16:743-752) and its DOI
+    resolves, so it meets the PMID-or-DOI rule as written; the curator ruled it acceptable
+    should the rule be read as PMID-required. Added to give MATtub its only SLA2/APN2
+    references and a Morchellaceae MAT reference (pilot 2026-09-24: Pezizales outside
+    Tuberaceae called 15/160).'
+model_provenance: null

@@ -384,7 +384,7 @@ def _stub_detect_cli(monkeypatch, tmp_path, recorded):
         SimpleNamespace(from_env=lambda repo_root: SimpleNamespace(db_root=tmp_path / "db")),
     )
     monkeypatch.setattr(
-        detect_cli, "build_reference_fasta", lambda db_root, out, family_keys=None: out
+        detect_cli, "build_reference_fasta", lambda db_root, out, family_keys=None, **kwargs: out
     )
     monkeypatch.setattr(detect_cli, "run_pipeline", lambda **kwargs: DetectionOutcome(results=[]))
     monkeypatch.setattr(detect_cli, "write_detection_report", lambda outcome, path: None)
@@ -406,7 +406,7 @@ def test_cmd_detect_passes_genome_fasta_when_emit_cds_fasta_is_set(monkeypatch, 
     args = SimpleNamespace(
         genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
         evidence_diagnostics=None, min_hits=1, min_identity=None,
-        require_core_role=False, emit_cds_fasta=True, phylum=None,
+        require_core_role=False, exclude_records="", emit_cds_fasta=True, phylum=None,
     )
 
     assert detect_cli._cmd_detect(args) == 0
@@ -421,7 +421,7 @@ def test_cmd_detect_omits_genome_fasta_by_default(monkeypatch, tmp_path):
     args = SimpleNamespace(
         genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
         evidence_diagnostics=None, min_hits=1, min_identity=None,
-        require_core_role=False, emit_cds_fasta=False, phylum=None,
+        require_core_role=False, exclude_records="", emit_cds_fasta=False, phylum=None,
     )
 
     assert detect_cli._cmd_detect(args) == 0
@@ -474,7 +474,7 @@ def test_cmd_detect_restricts_the_reference_fasta_to_the_routed_families(monkeyp
     )
     recorded: dict = {}
 
-    def fake_build(db_root, out, family_keys=None):
+    def fake_build(db_root, out, family_keys=None, **kwargs):
         recorded["family_keys"] = family_keys
         return out
 
@@ -490,7 +490,7 @@ def test_cmd_detect_restricts_the_reference_fasta_to_the_routed_families(monkeyp
     args = SimpleNamespace(
         genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
         evidence_diagnostics=None, min_hits=1, min_identity=None,
-        require_core_role=False, emit_cds_fasta=False, phylum="Mucoromycota",
+        require_core_role=False, exclude_records="", emit_cds_fasta=False, phylum="Mucoromycota",
     )
     assert detect_cli._cmd_detect(args) == 0
 
@@ -540,7 +540,7 @@ def test_cmd_detect_fails_loudly_when_phylum_matches_no_curated_family(monkeypat
     args = SimpleNamespace(
         genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),
         evidence_diagnostics=None, min_hits=1, min_identity=None,
-        require_core_role=False, emit_cds_fasta=False, phylum="Zoopagomycota",
+        require_core_role=False, exclude_records="", emit_cds_fasta=False, phylum="Zoopagomycota",
     )
     with pytest.raises(ValueError, match="Zoopagomycota"):
         detect_cli._cmd_detect(args)

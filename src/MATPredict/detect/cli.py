@@ -44,9 +44,18 @@ def _cmd_detect(args: argparse.Namespace) -> int:
             f"--phylum {args.phylum} matches no curated family in {config.db_root}; "
             f"available phyla: {', '.join(available_phyla(config.db_root)) or 'none'}"
         )
+    # Withheld records leave BOTH the query set and every db-derived quantity;
+    # see `detect.holdout`. Passed to the two calls from one parsed set so the
+    # reference FASTA and the pipeline can never disagree about what is hidden,
+    # which would silently turn a recall measurement back into a
+    # self-consistency one.
+    exclude_record_ids = frozenset(
+        r.strip() for r in (args.exclude_records or "").split(",") if r.strip()
+    )
     reference_fasta = build_reference_fasta(
         config.db_root, out_dir / "_reference.faa",
         family_keys={f.key for f in routing.families},
+        exclude_record_ids=exclude_record_ids,
     )
     evidence_floor = EvidenceFloor(
         min_hits=args.min_hits, min_identity=args.min_identity,
@@ -62,6 +71,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         evidence_floor=evidence_floor,
         evidence_diagnostics_path=Path(args.evidence_diagnostics) if args.evidence_diagnostics else None,
         routing=routing,
+        exclude_record_ids=exclude_record_ids,
     )
 
     # `genome_fasta` is passed ONLY when asked for: it is what makes
@@ -226,6 +236,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     detect = subparsers.add_parser("detect", help="Detect MAT loci in a genome")
     detect.add_argument("--genome", required=False)
     detect.add_argument("--proteins", required=False)
+    detect.add_argument(
+        "--exclude-records", default="",
+        help=("comma-separated curated record_ids to withhold from this run, for "
+              "leave-one-out recall. They leave the query set AND every db-derived "
+              "quantity, so the genome a withheld record came from becomes a genuine "
+              "held-out test rather than a self-consistency check. See "
+              "MATPredict.detect.holdout for choosing a set by taxonomic radius."))
     detect.add_argument("--taxid", required=False, type=int)
     detect.add_argument("--out-dir", required=False)
     detect.add_argument("--evidence-diagnostics", required=False)

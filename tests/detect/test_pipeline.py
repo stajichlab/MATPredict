@@ -108,6 +108,7 @@ def test_genome_only_path_uses_search_localize_not_search_genomic(tmp_path):
         return [_tblastn("mfa1", "c1", 100, 200), _tblastn("pra1", "c1", 300, 400)]
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_localize=fake_localize,
@@ -235,6 +236,7 @@ def test_localized_gene_neither_tool_confirms_gets_unpolished_status_not_not_pol
         return _model(gene_name, "c1", *coords[gene_name], method="miniprot_refine")
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_localize=fake_localize,
@@ -340,6 +342,7 @@ def test_gene_evidence_status_and_alternate_model_reflect_polish_outcome(tmp_pat
         return _model(gene_name, "c1", start + 500, end + 500, method="miniprot_refine")
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_localize=fake_localize,
@@ -380,6 +383,7 @@ def test_unpolished_gene_caps_tier_at_medium(tmp_path):
             return _model(gene_name, "c1", *coords[gene_name])
 
         return run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
             genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
             db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
             search_localize=fake_localize,
@@ -407,6 +411,7 @@ def test_gene_evidence_for_unpolished_gene_uses_raw_localization_hit(tmp_path):
         return None if gene_name == "mfa1" else _model("pra1", "c1", 305, 395, identity=88.0)
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_localize=fake_localize,
@@ -438,6 +443,7 @@ def test_polished_model_attributed_to_another_family_is_rejected(tmp_path):
         return _model("pra1", "c1", 300, 400)
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_localize=fake_localize,
@@ -470,6 +476,7 @@ def test_unpolished_in_one_cluster_does_not_cap_a_different_cluster_of_the_same_
                       200 if gene_name == "mfa1" else 400)
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_localize=fake_localize,
@@ -612,6 +619,7 @@ def test_partial_foothold_familys_missing_gene_is_rescued_genome_wide(tmp_path):
         return None
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         # Explicitly permissive: this test is about polish/segment behavior, not
         # about the admission bar, and its fixtures build single-gene clusters
         # that the curator-ruled default floor (>=2 genes) deliberately rejects.
@@ -868,6 +876,7 @@ def test_rescued_cluster_with_an_unpolished_gene_is_capped_at_medium(tmp_path):
             return _model(gene_name, "c1", *coords[gene_name])
 
         return run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
             genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa",
             taxid=None, db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
             search_fast_path=fake_fast_path, search_localize=fake_localize,
@@ -897,6 +906,7 @@ def test_polished_model_on_another_contig_is_rejected(tmp_path):
         return _model("pra1", "c1", 300, 400)
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_localize=fake_localize,
@@ -957,6 +967,7 @@ def test_short_orf_gene_reported_as_not_searchable_not_missing(tmp_path):
         return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path,
@@ -1003,6 +1014,7 @@ def test_short_orf_split_discriminates_three_buckets(tmp_path):
                            "diamond_proteome")]
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path,
@@ -1057,6 +1069,7 @@ def test_short_orf_scan_is_scoped_per_family_and_uses_the_longest_curated_protei
         ]
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path,
@@ -1123,6 +1136,7 @@ def test_isolated_single_hit_is_low_tier(tmp_path):
         return [SearchHit(FAMILY.key, "pra1", "core_MAT", "c1", 300, 400, "+", 95.0, "rec1", "diamond_proteome")]
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path, search_localize=_no_localize,
@@ -1158,6 +1172,7 @@ def test_genes_split_across_contigs_are_reported_separately_by_default(tmp_path)
         ]
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=genome, proteome_fasta=tmp_path / "proteome.faa", taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_fast_path=fake_fast_path,
@@ -1344,6 +1359,7 @@ def test_gene_evidence_prefers_a_polished_model_over_a_higher_identity_raw_hit(t
         return None
 
     outcome = run_pipeline(
+        min_polished_genes=0,  # predates the modelled-gene bar; still asserts its own behaviour
         genome_fasta=genome, proteome_fasta=None, taxid=None,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
         search_localize=fake_localize,

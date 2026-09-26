@@ -1,5 +1,5 @@
 record_id: 28985_nrrl-y-1140_MATsc_MATa
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 28985
   lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Saccharomycetaceae;g__Kluyveromyces;s__Kluyveromyces_lactis
@@ -23,16 +23,19 @@ locus:
   core:
     completeness: complete
     reference_orientation: sla2->MATA1->MATA2
-    definition_note: 'The ACTIVE MAT locus of Kluyveromyces lactis NRRL Y-1140 (= CBS 2359), on chromosome
-      C. Idiomorph established by SEQUENCE, not by annotation naming: RefSeq leaves these two CDSs unnamed,
-      so the deposited cryptic-cassette sequence AF195067.1 (HMRa) was blastn''d against the genome --
-      it matches chromosome B at 99.855% (HMR) and the MAT position on chromosome C at 100.000% over 3,004
-      bp, so the MAT position carries Ya. sla2 is genuinely adjacent here, unlike in Saccharomyces where
-      SLA2 is not even on the MAT chromosome; that is why sla2 is a bonus flank (`optional`) in this family
-      rather than excluded. Curated 2026-09-21 to close the measured allele-calling gap: Kluyveromyces
-      resolved only 47-64% of confident loci with S. cerevisiae/Zygosaccharomyces references, and on held-out
-      K. marxianus the only MATA2 hit landed on the SILENT alpha cassette. Citations: Butler et al. 2004
-      PNAS 101:1632-1637 (PMID 14745027); Astrom et al. 2000 Genetics 156:81-91 (PMID 10978277).'
+    definition_note: 'The ACTIVE MAT locus of Kluyveromyces lactis NRRL Y-1140 (=
+      CBS 2359), on chromosome C. Idiomorph established by SEQUENCE, not by annotation
+      naming: RefSeq leaves these two CDSs unnamed, so the deposited cryptic-cassette
+      sequence AF195067.1 (HMRa) was blastn''d against the genome -- it matches chromosome
+      B at 99.855% (HMR) and the MAT position on chromosome C at 100.000% over 3,004
+      bp, so the MAT position carries Ya. sla2 is genuinely adjacent here, unlike
+      in Saccharomyces where SLA2 is not even on the MAT chromosome; that is why sla2
+      is a bonus flank (`optional`) in this family rather than excluded. Curated 2026-09-21
+      to close the measured allele-calling gap: Kluyveromyces resolved only 47-64%
+      of confident loci with S. cerevisiae/Zygosaccharomyces references, and on held-out
+      K. marxianus the only MATA2 hit landed on the SILENT alpha cassette. Citations:
+      Butler et al. 2004 PNAS 101:1632-1637 (PMID 14745027); Astrom et al. 2000 Genetics
+      156:81-91 (PMID 10978277).'
     segments:
     - segment_index: 0
       sequence_source:
@@ -80,28 +83,46 @@ genes:
 evidence:
   locus_existence:
     tier: 1
-    experimental_method: complete DNA sequencing of the MAT locus and HMLalpha silent cassette
+    experimental_method: Sequenced K. lactis mating-type cassettes (Astrom et al.
+      2000, deposits AF195066.1 HMLalpha and AF195067.1 HMRa) and comparative analysis
+      of the K. lactis MAT locus (Butler et al. 2004). The X/Y/Z cassette structure
+      used to delimit this locus is the one defined by complete sequencing of the
+      S. cerevisiae MAT, HML and HMR loci (Astell et al. 1981, PMID 7034964); it is
+      cited as the structural basis, not as evidence about this species.
     citations:
-    - pmid: '7034964'
+    - &id001
+      pmid: '10978277'
+      doi: 10.1093/genetics/156.1.81
+    - &id002
+      pmid: '14745027'
+      doi: 10.1073/pnas.0304170101
+    - &id003
+      pmid: '7034964'
       doi: 10.1016/0092-8674(81)90356-1
   boundaries:
     tier: 1
-    experimental_method: 'Complete locus sequencing (Astell et al. 1981). Coordinates on the modern S288C
-      reference assembly independently reconfirmed by the curator via NCBI efetch against NC_001135.5.
-
-      '
+    experimental_method: 'Placed on the K. lactis NRRL Y-1140 reference assembly by
+      the curator: blastn of the deposited HMRa cassette AF195067.1 matches the MAT
+      position on chromosome C at 100.000% over 3,004 bp (see definition_note). The
+      X/Y/Z cassette structure used to delimit this locus is the one defined by complete
+      sequencing of the S. cerevisiae MAT, HML and HMR loci (Astell et al. 1981, PMID
+      7034964); it is cited as the structural basis, not as evidence about this species.'
     citations:
-    - pmid: '7034964'
-      doi: 10.1016/0092-8674(81)90356-1
+    - *id001
+    - *id002
+    - *id003
   idiomorph_assignment:
     tier: 1
-    experimental_method: genetic/molecular characterization of MATalpha vs MATa cell identity; HO-endonuclease
-      switching mechanism
+    experimental_method: 'MATa by sequence: the MAT position carries the Ya region
+      of the deposited HMRa cassette (Astrom et al. 2000); MAT locus organisation
+      in K. lactis per Butler et al. 2004. The X/Y/Z cassette structure used to delimit
+      this locus is the one defined by complete sequencing of the S. cerevisiae MAT,
+      HML and HMR loci (Astell et al. 1981, PMID 7034964); it is cited as the structural
+      basis, not as evidence about this species.'
     citations:
-    - pmid: '7034964'
-      doi: 10.1016/0092-8674(81)90356-1
-    - pmid: null
-      doi: 10.1016/0092-8674(83)90219-2
+    - *id001
+    - *id002
+    - *id003
 validation:
   status: accepted
   rejection_reason: null
@@ -126,4 +147,10 @@ curation:
   proposal_dedupe_key: 7034964|4932|MATsc|MATalpha
   reviewed_by: null
   reviewed_date: null
+  notes: 'CITATIONS CORRECTED, 2026-09-25 (curator request): the evidence block had
+    been copied verbatim from the S. cerevisiae S288C record -- Astell et al. 1981
+    alone, plus Kostriken et al. 1983 (the S. cerevisiae HO endonuclease, doi:10.1016/0092-8674(83)90219-2),
+    and a boundaries sentence about S288C coordinates on NC_001135.5. Astell 1981
+    is kept as the structural basis; the species'' own papers are added; Kostriken
+    1983 is removed because it does not concern this species.'
 model_provenance: null

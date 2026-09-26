@@ -1,0 +1,96 @@
+# Locus tags a curated record does NOT carry, established here so the harvester
+# can place its genes on an assembly.
+#
+# WHY THIS FILE EXISTS RATHER THAN AN EDIT TO THE RECORDS. A curated record is
+# a reviewed artifact with an `accepted` validation status; adding a field to
+# one is a curation act. These tags are derived evidence about a DIFFERENT
+# assembly than the record's own source deposit, so they belong beside the
+# benchmark, not inside the reference.
+#
+# HOW EACH TAG WAS ESTABLISHED. Two independent methods, required to agree:
+#
+#  1. miniprot of the record's own curated protein against the reference
+#     assembly (spliced protein-to-genome; blat is not used -- it is tuned for
+#     the genes have introns and the alignment must cross them. NOT because
+#     blat cannot do proteins -- it does protein-protein (-t=prot -q=prot) and
+#     translated-DNA (-t=dnax -q=prot) perfectly well; the reason is
+#     splice-awareness, which blat's protein modes do not provide).
+#  2. the gene annotated at that position in NCBI's own feature table for the
+#     assembly, read via efetch rettype=ft.
+#
+# NCBI Gene has NO gene NAMED MAT1-1-1 for either species (esearch count 0):
+# the genes are annotated, but only as "hypothetical protein" / "predicted
+# protein". That is this project's annotation-gap pattern -- present, unnamed
+# -- and is why a name search finds nothing and a positional one finds them.
+#
+# COORDINATES BELOW ARE NCBI'S GENE BOUNDARIES, not miniprot's. miniprot's
+# model comes from another strain's protein, so where the two disagree the
+# assembly's own annotation is the better statement of where the gene is.
+# Agreement is recorded per gene so the disagreements stay visible.
+
+records:
+  40559_sas56_MAT_MAT1-1:
+    species: Botrytis cinerea
+    reference_strain: B05.10
+    assembly: GCF_000143535.2_ASM14353v4
+    sequence_accession: NC_037310.1
+    genes:
+      MAT1-1-5:
+        locus_tag: BCIN_01g02140
+        start: 813342
+        end: 814869
+        strand: '+'
+        miniprot_identity: 1.0000
+        miniprot_span: 813478..814778
+        agreement: contained          # miniprot CDS sits inside the annotated gene
+      MAT1-1-1:
+        locus_tag: BCIN_01g02150
+        start: 814948
+        end: 816426
+        strand: '+'
+        miniprot_identity: 1.0000
+        miniprot_span: 815137..816297
+        agreement: contained
+
+  5180_44ba1_MAT_combined:
+    species: Sclerotinia sclerotiorum
+    reference_strain: '1980'
+    assembly: GCF_000146945.2_ASM14694v2
+    sequence_accession: NW_001820831.1
+    genes:
+      MAT1-1-5:
+        locus_tag: SS1G_04003
+        start: 38292
+        end: 39594
+        strand: '+'
+        miniprot_identity: 1.0000
+        miniprot_span: 38292..39594
+        agreement: exact
+      MAT1-1-1:
+        locus_tag: SS1G_04004
+        start: 40281
+        end: 41106
+        strand: '+'
+        miniprot_identity: 0.9821
+        miniprot_span: 40001..41054
+        # The one disagreement in the set: miniprot starts 280 bp earlier and
+        # ends 52 bp earlier. Kept visible rather than smoothed over -- it is a
+        # 5' gene-model difference between strain 44Ba1's protein and the 1980
+        # annotation, and a coordinate benchmark should not pretend it is absent.
+        agreement: overlapping_5prime_differs
+      MAT1-2-10:
+        locus_tag: SS1G_04005
+        start: 41613
+        end: 42556
+        strand: '-'
+        miniprot_identity: 0.9893
+        miniprot_span: 41613..42556
+        agreement: exact
+      MAT1-2-1:
+        locus_tag: SS1G_04006
+        start: 43046
+        end: 44334
+        strand: '+'
+        miniprot_identity: 0.9515
+        miniprot_span: 43046..44334
+        agreement: exact

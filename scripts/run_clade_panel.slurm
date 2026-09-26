@@ -59,7 +59,33 @@ THREADS="${SLURM_CPUS_PER_TASK:-4}"
 
 PY="$REPO/.pixi/envs/default/bin/python"
 export PATH="$REPO/.pixi/envs/default/bin:$PATH"   # exonerate, miniprot, tblastn
-export PYTHONPATH="$REPO/src"
+# SRC lets a run execute a WORKTREE's source while still using $REPO's pixi
+# environment and results directory -- how a change is panel-tested without
+# touching the live tree (the 2026-09-21 lesson).
+SRC="${SRC:-$REPO/src}"
+# FAIL LOUDLY when SRC is not visible from the compute node. A $PYTHONPATH
+# pointing at a missing directory does NOT error: python silently falls back to
+# the INSTALLED MATPredict, so the job runs to completion against the WRONG
+# code and its output looks entirely normal. That cost two launches on
+# 2026-09-23, when a worktree on /scratch -- which is NODE-LOCAL -- existed
+# only on the submitting node. A worktree for a SLURM run belongs on /bigdata.
+if [[ ! -f "$SRC/MATPredict/__init__.py" ]]; then
+    echo "SRC=$SRC is not a MATPredict source tree on this node ($(hostname))" >&2
+    echo "  /scratch is node-local; put a worktree for a SLURM run on /bigdata" >&2
+    exit 1
+fi
+export PYTHONPATH="$SRC"
+# The curated database must come from the SAME tree as the code. `detect`
+# reads $MATPREDICT_DB_ROOT, else <working dir>/db -- and a SLURM job's working
+# dir is wherever it was submitted from, usually the main checkout. That made a
+# 2026-09-25 re-run search the main checkout's OLD database while running the
+# worktree's code, so two newly curated records never reached the search and
+# the run reported no change. Pinned next to SRC unless set explicitly.
+export MATPREDICT_DB_ROOT="${MATPREDICT_DB_ROOT:-$(dirname "$SRC")/db}"
+if [[ ! -f "$MATPREDICT_DB_ROOT/Ascomycota/order.yml" ]]; then
+    echo "MATPREDICT_DB_ROOT=$MATPREDICT_DB_ROOT is not a curated database on $(hostname)" >&2
+    exit 1
+fi
 
 # $SCRATCH is node-local NVMe, pre-created per job, and NOT shared between
 # nodes. Genomes are decompressed here and deleted straight after use; only the
@@ -69,12 +95,25 @@ WORK="${SCRATCH:?SCRATCH is not set -- run this under SLURM}/matpredict_${CLADE/
 mkdir -p "$WORK/fasta" "$OUT_DIR/runs" "$REPO/logs"
 
 echo "repo=$REPO"
+echo "src=$SRC"
+echo "db=$MATPREDICT_DB_ROOT"
 echo "clade=$RANK=$CLADE  samples=$SAMPLES"
 echo "scratch=$WORK"
 echo "out=$OUT_DIR  threads=$THREADS"
 
 # ---------------------------------------------------------------- sample list
 # One "ASMID<TAB>TAXID" line per genome that exists on disk.
+#
+# SAMPLE_LIST, when set, is used INSTEAD of the RANK/CLADE selection: a
+# prepared "ASMID<TAB>TAXID" file (on /bigdata), e.g. a stratified pilot pick.
+# Name the run with CLADE anyway, since it names the scratch dir and OUT_DIR.
+if [[ -n "${SAMPLE_LIST:-}" ]]; then
+    [[ -s "$SAMPLE_LIST" ]] || { echo "SAMPLE_LIST=$SAMPLE_LIST missing or empty on $(hostname)" >&2; exit 1; }
+    while IFS=$'\t' read -r asmid taxid; do
+        [[ -n "$taxid" && -e "$LIBRARY/$asmid.fa.gz" ]] && printf '%s\t%s\n' "$asmid" "$taxid"
+    done < "$SAMPLE_LIST" > "$WORK/panel.tsv"
+    echo "SAMPLE_LIST=$SAMPLE_LIST: $(wc -l < "$SAMPLE_LIST") rows, $(wc -l < "$WORK/panel.tsv") with a genome file and taxid" >&2
+else
 "$PY" - "$SAMPLES" "$LIBRARY" "$RANK" "$CLADE" > "$WORK/panel.tsv" <<'PYEOF'
 import csv, os, sys
 samples, library, rank, clade = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
@@ -94,6 +133,32 @@ for r in reader:
         kept += 1
 print(f"{rank}={clade}: {n} rows, {kept} with a genome file", file=sys.stderr)
 PYEOF
+fi
+
+# ----------------------------------------------------------- taxonomy warm-up
+# Resolve every distinct taxid ONCE, serially, before fanning out. The routing,
+# phylum-fallback and genetic-code lookups all read one cached efetch document
+# per taxid, so afterwards the parallel runs are cache hits. Without this, 128
+# concurrent processes shared NCBI's keyless 3 req/s; failed lookups silently
+# widened routing (one taxid routed three different ways in one pilot, several
+# genomes ran `exhaustive` at ~30 min each). The cache dir is pinned so every
+# job shares it regardless of where it was submitted from.
+export MATPREDICT_CACHE_DIR="${MATPREDICT_CACHE_DIR:-$REPO/.matpredict_cache}"
+cut -f2 "$WORK/panel.tsv" | sort -u | "$PY" -c '
+import sys, time
+from MATPredict.db.taxonomy import (default_genetic_code, default_lineage_phylum_name,
+                                    default_lineage_taxids)
+bad = 0
+for line in sys.stdin:
+    t = int(line)
+    try:
+        default_lineage_taxids(t); default_lineage_phylum_name(t); default_genetic_code(t)
+    except Exception as exc:
+        bad += 1
+        print(f"taxonomy warm-up: taxid {t} failed: {exc}", file=sys.stderr)
+    time.sleep(0.35)
+print(f"taxonomy warm-up done, {bad} failed", file=sys.stderr)
+'
 
 TOTAL=$(wc -l < "$WORK/panel.tsv")
 if [[ "$TOTAL" -eq 0 ]]; then
@@ -119,11 +184,15 @@ run_one() {
     # NOT `if ! ...; then echo rc=$?`: inside that block `$?` is the status of
     # the negated test, which is always 0, so every failure reported rc=0 and
     # the real exit code was lost. Capture it from the command itself.
+    # Wall time per genome, written beside the report. Without it runtime had
+    # to be reconstructed from file mtimes, which a non-empty stderr breaks.
+    t0=$(date +%s)
     timeout 3600 "$PY" -m MATPredict detect \
         --genome "$fna" --taxid "$taxid" --out-dir "$out" \
         --evidence-diagnostics "$out/evidence_diagnostics.jsonl" \
         > "$out/stdout.log" 2> "$out/stderr.log"
     rc=$?
+    echo "$(( $(date +%s) - t0 ))" > "$out/wall_seconds"
     if [[ $rc -ne 0 ]]; then
         # The last stderr line is usually the whole story (a SyntaxError, a
         # missing tool, an OOM); printing it here saves opening 277 files.

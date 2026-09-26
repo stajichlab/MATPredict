@@ -301,6 +301,13 @@ def _result_doc(r: DetectionResult) -> dict:
         # `homothallic_candidate` is both idiomorphs in one locus, the real
         # architecture of a homothallic Mucorale.
         "locus_class": r.locus_class,
+        # How many of this locus's genes a polishing tool could actually model.
+        # The sharpest discriminator measured to date: across 46,647
+        # lineage-routed Pezizomycotina loci, every high-confidence call had
+        # two or more and no call below that bar was high-confidence. Emitted
+        # on every locus so a reader can see the evidence the bar is applied
+        # to, not just its verdict.
+        "polished_genes": r.polished_genes,
         # How many separate places on the genome this call's evidence actually
         # occupies, grouping hits that overlap by >=50% of the shorter one.
         # A FIELD, not a gate -- emitted so a threshold can be set from data
@@ -385,6 +392,33 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
     # predates the field". See `family_registry.RoutingDecision` for the values.
     doc = {
         "routing_mode": outcome.routing_mode,
+        # Non-null means a taxonomy lookup failed and routing was WIDENED
+        # because of it: this report searched more families than its taxid
+        # warrants and should be re-run once the lookup succeeds.
+        "routing_error": outcome.routing_error,
+        "genetic_code": outcome.genetic_code,
+        "genetic_code_error": outcome.genetic_code_error,
+        # Loci that were built and then withheld for carrying fewer than
+        # `pipeline.MIN_POLISHED_GENES` polished gene models. Written
+        # unconditionally, including as 0, so a genome that reports one locus
+        # says whether six others were withheld or never existed. The
+        # per-candidate detail is in the evidence-diagnostics stream.
+        "suppressed_unpolished": outcome.suppressed_unpolished,
+        # The withheld loci themselves, compactly: enough to place each one
+        # against a known locus (a holdout truth span, a curated record) and to
+        # see what the bar cost, without the full evidence of a reported call.
+        "suppressed_loci": [
+            {
+                "family": _family_label(r.family_key),
+                "contig": r.contig,
+                "start": r.start,
+                "end": r.end,
+                "idiomorph": r.idiomorph,
+                "polished_genes": r.polished_genes,
+                "genes_found": list(r.genes_found),
+            }
+            for r in outcome.suppressed_loci
+        ],
         "families_attempted": [_family_label(k) for k in outcome.families_attempted],
         "detected": [_result_doc(r) for r in outcome.results],
         "not_detected": [

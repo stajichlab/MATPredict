@@ -1,0 +1,174 @@
+record_id: 498019_b11221_MTL_alpha
+record_version: 2
+taxonomy:
+  taxid: 498019
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Metschnikowiaceae;g__Candidozyma;s__Candidozyma_auris
+  lineage_resolved_date: '2026-09-25'
+organism:
+  species: Candidozyma auris
+  strain:
+    name: B11221
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - alpha
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: PAP1->MTLalpha1->PIK1->OBP1
+    definition_note: 'Candidozyma auris B11221 (clade III) MTLalpha, GenBank assembly
+      GCA_002775015.1, annotated ''mating type MTLalpha1'' (TQB77621.1, 172 aa; RefSeq
+      copy XP_047603489.1). Order PAP1 - MTLalpha1 - PIK1 - OBP1. MTLalpha2 is biologically
+      absent in this clade (Munoz et al. 2018: ''as in C. lusitaniae, the MTL alpha
+      locus is missing the alpha2 gene'').
+
+
+      record_version bump, 2026-09-25 (curator ruling): PAP1 (PIS55911.1), PIK1 (PIS55912.1),
+      OBP1 (PIS55913.1) added from the same PGLS01000002.1 -- the PAP1-OBP1-PIK1 block
+      (optional `flanking_variable` roster genes). Added so a one-core-gene alpha
+      idiomorph can reach the two-modelled-gene bar; see the MTL roster comment in
+      order.yml.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: PGLS01000002.1
+        seq_region: PGLS01000002.1
+      start: 189357
+      end: 195813
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 1
+  name: PAP1
+  protein_accession: ncbi_protein:PIS55911.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 189357
+  end: 191045
+  strand: +
+  order_in_locus: 0
+  transl_table: 12
+- gene_index: 0
+  name: MTLalpha1
+  protein_accession: ncbi_protein:TQB77621.1
+  role: core_MAT
+  present: true
+  locus_tag: CJI97_005719
+  segment_index: 0
+  start: 191042
+  end: 191560
+  strand: '-'
+  order_in_locus: 1
+  transl_table: 12
+- gene_index: 2
+  name: PIK1
+  protein_accession: ncbi_protein:PIS55912.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 191653
+  end: 194448
+  strand: '-'
+  order_in_locus: 2
+  transl_table: 12
+- gene_index: 3
+  name: OBP1
+  protein_accession: ncbi_protein:PIS55913.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 194620
+  end: 195813
+  strand: '-'
+  order_in_locus: 3
+  transl_table: 12
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: 'TIER 2 (genome-derived, admitted under the curator''s 2026-09-24
+      ruling). The protein is the depositors'' own gene model in the Munoz et al.
+      2018 C. auris genome annotation, not a locus-specific study. Validated 2026-09-25
+      (results/2026-09-25_cauris_mtl/): MATalpha1 HMG box (Pfam PF04769, i-E=1.1e-16);
+      reciprocal best hit to the curated C. lusitaniae MTLalpha1 in its proteome (XP_002614908.1,
+      E=1.4e-28) and M. guilliermondii MTLalpha1 (E=8e-18); and gene order: it sits
+      in the PAP1-OBP1-PIK1 block, each flank a blastp-verified ortholog of the C.
+      lusitaniae FJ524850.1 gene. Munoz et al. 2018: ''the genes flanking the MTL
+      locus ... PIK1, OBP1 and PAP1 were adjacent in all sequenced genomes of the
+      emerging MDR clade''.'
+    citations: &id001
+    - pmid: '30559369'
+      doi: 10.1038/s41467-018-07779-6
+  boundaries:
+    tier: 2
+    experimental_method: 'Record segment spans the curated MTL genes, from the assembly''s
+      own GFF. TIER 2 (genome-derived, admitted under the curator''s 2026-09-24 ruling).
+      The protein is the depositors'' own gene model in the Munoz et al. 2018 C. auris
+      genome annotation, not a locus-specific study. Validated 2026-09-25 (results/2026-09-25_cauris_mtl/):
+      MATalpha1 HMG box (Pfam PF04769, i-E=1.1e-16); reciprocal best hit to the curated
+      C. lusitaniae MTLalpha1 in its proteome (XP_002614908.1, E=1.4e-28) and M. guilliermondii
+      MTLalpha1 (E=8e-18); and gene order: it sits in the PAP1-OBP1-PIK1 block, each
+      flank a blastp-verified ortholog of the C. lusitaniae FJ524850.1 gene. Munoz
+      et al. 2018: ''the genes flanking the MTL locus ... PIK1, OBP1 and PAP1 were
+      adjacent in all sequenced genomes of the emerging MDR clade''.'
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: 'MTLalpha by gene content. TIER 2 (genome-derived, admitted
+      under the curator''s 2026-09-24 ruling). The protein is the depositors'' own
+      gene model in the Munoz et al. 2018 C. auris genome annotation, not a locus-specific
+      study. Validated 2026-09-25 (results/2026-09-25_cauris_mtl/): MATalpha1 HMG
+      box (Pfam PF04769, i-E=1.1e-16); reciprocal best hit to the curated C. lusitaniae
+      MTLalpha1 in its proteome (XP_002614908.1, E=1.4e-28) and M. guilliermondii
+      MTLalpha1 (E=8e-18); and gene order: it sits in the PAP1-OBP1-PIK1 block, each
+      flank a blastp-verified ortholog of the C. lusitaniae FJ524850.1 gene. Munoz
+      et al. 2018: ''the genes flanking the MTL locus ... PIK1, OBP1 and PAP1 were
+      adjacent in all sequenced genomes of the emerging MDR clade''.'
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: PGLS01000002.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 30559369|498019|MTL|alpha|B11221
+  reviewed_by: 'J. Stajich (ruling 2026-09-25: model C. auris from its relatives)'
+  reviewed_date: '2026-09-25'
+  notes: 'Curated because the pilot called 0 of 17 C. auris genomes: the MTLa1+MTLa2
+    cluster is found at ~47% identity to the nearest curated reference, but exonerate
+    and miniprot cannot model genes that divergent (verified on B8441 with relaxed
+    thresholds). All CDS use translation table 12.'
+model_provenance: null

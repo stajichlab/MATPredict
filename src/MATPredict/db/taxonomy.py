@@ -32,22 +32,37 @@ def resolve_lineage(taxid: int, runner: Callable = subprocess.run) -> TaxonomyRe
     return TaxonomyResult(taxid=taxid, lineage=lineage, is_current=is_current)
 
 
-def _default_transport(url: str, max_attempts: int = 4, backoff_seconds: float = 2.0) -> str:
-    """GET a URL, retrying on rate-limit/server errors -- mirrors `db.cli._http_transport`
-    but is defined locally to avoid a `taxonomy -> cli -> validate -> taxonomy` import
-    cycle (`db.validate` already imports this module)."""
+def _default_transport(url: str, max_attempts: int = 8, backoff_seconds: float = 2.0) -> str:
+    """GET a URL, retrying on rate-limit/server/connection errors -- mirrors
+    `db.cli._http_transport` but is defined locally to avoid a
+    `taxonomy -> cli -> validate -> taxonomy` import cycle (`db.validate`
+    already imports this module).
+
+    Backoff is exponential with jitter, capped at 60 s: about 4 minutes in
+    all. The earlier 4 attempts over ~12 s gave up inside a burst of 429s when
+    128 detect processes shared NCBI's keyless 3 req/s, and every give-up
+    silently widened that run's routing. Jitter keeps the processes from
+    retrying in lockstep.
+    """
+    import random
+
     import requests
 
     last_error: Exception | None = None
     for attempt in range(max_attempts):
-        response = requests.get(url)
-        if response.status_code == 200:
-            return response.text
-        last_error = requests.HTTPError(f"{response.status_code} for {url}: {response.text[:200]}")
-        if response.status_code in (429, 500, 502, 503, 504) and attempt < max_attempts - 1:
-            time.sleep(backoff_seconds * (attempt + 1))
-            continue
-        break
+        try:
+            response = requests.get(url, timeout=60)
+        except (requests.ConnectionError, requests.Timeout) as exc:
+            last_error = exc
+        else:
+            if response.status_code == 200:
+                return response.text
+            last_error = requests.HTTPError(
+                f"{response.status_code} for {url}: {response.text[:200]}")
+            if response.status_code not in (429, 500, 502, 503, 504):
+                break
+        if attempt < max_attempts - 1:
+            time.sleep(min(60.0, backoff_seconds * 2 ** attempt) * random.uniform(0.5, 1.5))
     raise last_error
 
 

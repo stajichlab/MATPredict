@@ -192,6 +192,33 @@ def assign_idiomorph(
     return "undetermined"
 
 
+def evidenced_idiomorphs(family: Family, hits: list[SearchHit]) -> set[str]:
+    """Which idiomorphs `hits` actually speak for, ignoring hits that cannot.
+
+    A hit votes only when its gene is idiomorph-informative, declares a
+    `present_in_idiomorphs`, and has not been superseded by the winner of a
+    resolved cross-match. Flanking and other idiomorph-agnostic genes name no
+    idiomorph and so vote for none.
+
+    This is the PRESENCE question ("what is evidenced here at all"), deliberately
+    unweighted -- unlike `idiomorph_candidates`, which RANKS by bitscore to pick
+    a winner. The rescue-scope caller wants the conservative union: two
+    idiomorphs evidenced means do not narrow, even if one of them is far
+    stronger.
+    """
+    informative = {
+        g["name"]: frozenset(g.get("present_in_idiomorphs") or ())
+        for g in family.genes
+        if _informative(g) and g.get("present_in_idiomorphs")
+    }
+    seen: set[str] = set()
+    for hit in hits:
+        if hit.superseded_by is not None:
+            continue
+        seen.update(informative.get(hit.gene_name, ()))
+    return seen
+
+
 def _idiomorphs_of(family: Family, gene_name: str) -> frozenset[str]:
     for gene in family.genes:
         if gene["name"] == gene_name:
@@ -355,7 +382,9 @@ def is_partial_strength(
     return relaxed or fraction_found == ambiguity_floor
 
 
-def classify_locus(cluster: GeneCluster, family: Family) -> str:
+def classify_locus(
+    cluster: GeneCluster, family: Family, full_length_models: frozenset[str] = frozenset()
+) -> str:
     """What KIND of thing this cluster is, independent of how it was admitted.
 
     Curator's ruling, 2026-09-20: a sub-threshold call is not junk to be thrown
@@ -380,6 +409,14 @@ def classify_locus(cluster: GeneCluster, family: Family) -> str:
     Superseded hits are ignored throughout. A resolved cross-hit is ONE gene
     seen twice; counting it would label every ordinary heterothallic locus
     whose sexM/sexP overlap was collapsed as homothallic.
+
+    `full_length_models` names this family's genes in this cluster that a
+    polishing tool modelled over >= half their reference protein, and that
+    took no part in an idiomorph cross-match resolution (see
+    `pipeline.full_length_models`). A localized gene keeps its tblastn hit in
+    `cluster.hits` while its model lives in the polish results, so without
+    this a genome-only run could never meet the "both genes are real models"
+    test below.
     """
     live = [
         h for h in cluster.hits
@@ -393,6 +430,7 @@ def classify_locus(cluster: GeneCluster, family: Family) -> str:
 
     idiomorph_of = {g["name"]: frozenset(g.get("present_in_idiomorphs") or ())
                     for g in family.genes}
+    gene_class_of = {g["name"]: g.get("gene_class") for g in family.genes}
 
     # ONE representative hit per gene, the same one the report shows as that
     # gene's evidence. A cluster routinely holds 15+ tblastn HSPs of the same
@@ -442,10 +480,27 @@ def classify_locus(cluster: GeneCluster, family: Family) -> str:
             # 349 bp. Those fall through to `idiomorph_gene_only`, so they are
             # filed rather than discarded and stay available as HMM training
             # material.
-            if a.method not in _PROTEOME_METHODS or b.method not in _PROTEOME_METHODS:
-                continue
             separation = max(a.start, b.start) - min(a.end, b.end)
-            if separation <= family.max_homothallic_separation_bp:
+            if separation > family.max_homothallic_separation_bp:
+                continue
+            if a.method in _PROTEOME_METHODS and b.method in _PROTEOME_METHODS:
+                return LOCUS_CLASS_HOMOTHALLIC
+            # Curator's ruling, 2026-09-25: the guard above exists for SAME-
+            # domain pairs (sexM/sexP are both HMG box), where two tblastn
+            # alignments of one region looked like two genes. Two UNRELATED
+            # proteins -- MAT1-1-1 (alpha box) and MAT1-2-1 (HMG box), or
+            # MTLalpha1 and MTLa2 -- cannot be one region seen twice. They
+            # count when both are FULL-LENGTH models free of any cross-match,
+            # both carry a curated gene_class, the classes differ, and the
+            # hits do not overlap. Without the full-length / no-cross-match
+            # conditions a first version would have labelled 113 loci in
+            # heterothallic-rich panels (MAT1-1-3 hitting MAT1-2-1; truncated
+            # MAT1-1-1 remnants in MAT1-2 idiomorphs); with them, 0 -- while
+            # both Hydnotrya loci and the CTG-clade a+alpha loci are kept.
+            class_a, class_b = gene_class_of.get(a.gene_name), gene_class_of.get(b.gene_name)
+            if (class_a and class_b and class_a != class_b and separation > 0
+                    and a.gene_name in full_length_models
+                    and b.gene_name in full_length_models):
                 return LOCUS_CLASS_HOMOTHALLIC
 
     if core and not flanking:

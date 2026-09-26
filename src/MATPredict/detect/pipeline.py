@@ -90,6 +90,7 @@ from MATPredict.detect.family_registry import (
     route,
 )
 from MATPredict.detect.idiomorph import (
+    LOCUS_CLASS_MAT,
     LOCUS_CLASS_PARTIAL,
     apply_partial_locus,
     idiomorph_candidates,
@@ -99,10 +100,13 @@ from MATPredict.detect.idiomorph import (
     IdiomorphResolution,
     assign_idiomorph,
     classify_locus,
+    evidenced_idiomorphs,
     resolve_idiomorph_overlaps,
 )
 from MATPredict.detect.polish import (
+    STATUS_AGREE,
     STATUS_DISAGREE,
+    STATUS_SINGLE,
     STATUS_NOT_POLISH_CANDIDATE,
     STATUS_UNPOLISHED,
     PolishModel,
@@ -237,6 +241,30 @@ class DetectionResult:
     `min_idiomorph_margin` the confidence tier is capped; the number is
     reported either way so a close call is never mistaken for a clean one.
     """
+    polished_genes: int = 0
+    """How many of this locus's genes produced a real polished gene model.
+
+    A gene counted here was modelled by `exonerate --refine` or `miniprot`
+    (`polished_agree`, `polished_disagree` or `polished_single`). A raw tblastn
+    HSP that no tool could turn into a gene (`unpolished`) does NOT count, and
+    neither does a gene evidenced directly from an annotation
+    (`not_polish_candidate`) -- the question this answers is "did a gene model
+    survive here", and an annotated gene was never asked.
+
+    This is the sharpest single discriminator measured on the 2026-09-22
+    Pezizomycotina panels (46,647 lineage-routed loci):
+
+        polished genes    loci        high   mean identity
+                     0  39,838 (85%)     0           32.8%
+                     1   1,161 ( 2%)     0             --
+                    2+   5,648 (12%)  2,957           61.9%
+
+    EVERY high-confidence call has two or more; not one of the 41,000 loci
+    below that bar is high-confidence, and their mean identity sits in the
+    twilight zone where alignment stops implying homology. They are not a
+    weaker tail of the real signal, they are scattered HMG-box and alpha-box
+    paralogs -- 150-350 bp HSPs at 8-28% query coverage.
+    """
     idiomorph_resolutions: list[IdiomorphResolution] = field(default_factory=list)
     """Every overlapping idiomorph pair collapsed for this locus.
 
@@ -272,6 +300,19 @@ class DetectionOutcome:
     results: list[DetectionResult]
     not_detected: list[NotDetectedFamily] = field(default_factory=list)
     families_attempted: list[FamilyKey] = field(default_factory=list)
+    suppressed_unpolished: int = 0
+    """How many built loci were withheld for having fewer than
+    MIN_POLISHED_GENES polished genes.
+
+    Reported as a number so the suppression is visible rather than silent: a
+    genome that drops from 7 loci to 1 says so. The per-candidate detail is
+    already on disk in the evidence-diagnostics stream, so nothing withheld
+    here is lost.
+    """
+    suppressed_loci: list[DetectionResult] = field(default_factory=list)
+    """The withheld loci themselves, so a bar loss can be audited against a
+    known locus. Without their coordinates a withheld call at the right place
+    looks exactly like no call at all."""
     # Which `family_registry.route` rule chose `families_attempted` (see
     # `RoutingDecision`). Carried all the way into the detection report because
     # it is what tells a reader whether this run's not-detected entries are
@@ -279,6 +320,13 @@ class DetectionOutcome:
     # query could not belong to. None when the outcome was built without
     # routing information (a direct `run_pipeline` call in a test).
     routing_mode: str | None = None
+    #: A taxonomy lookup that failed and so widened the routing; None when
+    #: every lookup succeeded. See `RoutingDecision.routing_error`.
+    routing_error: str | None = None
+    #: The translation table this run used, and why it fell back to table 1
+    #: when the lookup failed (None when it did not fail).
+    genetic_code: int | None = None
+    genetic_code_error: str | None = None
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -290,12 +338,59 @@ def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
     return core_genes - found_genes
 
 
+#: A polished model must cover at least this fraction of the reference protein
+#: it was built from to count toward a `homothallic_candidate` of two unrelated
+#: genes. Measured 2026-09-25: at 0.5 the rule fires on 0 of 113 would-be loci
+#: in heterothallic-rich panels and keeps both Hydnotrya loci; at 0.6 it also
+#: loses those. PROVISIONAL, like the other curator-tunable thresholds.
+HOMOTHALLIC_MIN_MODEL_COVERAGE = 0.5
+
+
+def full_length_models(
+    polish_by: dict,
+    cluster_ids: set[int],
+    family_key: FamilyKey,
+    record_lengths: dict[tuple[str, str], int],
+    cross_matched: set[str],
+    min_coverage: float = HOMOTHALLIC_MIN_MODEL_COVERAGE,
+) -> frozenset[str]:
+    """Genes of this family, in these clusters, that are full-length models.
+
+    A gene qualifies when a polishing tool modelled it (agree, disagree or
+    single), the canonical model covers >= `min_coverage` of the reference
+    protein it was built from (`record_lengths[(record_id, gene)]`, in aa),
+    and the gene took no part in an idiomorph cross-match resolution here
+    (`cross_matched`: every winner and loser). Used only by the relaxed
+    homothallic rule: a truncated remnant, or an HMG gene that beat another
+    HMG gene at one position, is not evidence of a second idiomorph.
+    """
+    out = set()
+    for (cluster_id, key, gene_name), outcome in polish_by.items():
+        if key != family_key or cluster_id not in cluster_ids or gene_name in cross_matched:
+            continue
+        if outcome.status not in (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE):
+            continue
+        model = outcome.canonical
+        reference = record_lengths.get((model.reference_record_id, gene_name))
+        if not reference:
+            continue
+        aa = sum(e.end - e.start + 1 for e in model.exons) // 3
+        if aa >= min_coverage * reference:
+            out.add(gene_name)
+    return frozenset(out)
+
+
 def _curated_protein_lengths(
     db_root: Path,
     families: list[Family],
     record_families: dict[str, FamilyKey],
+    exclude_record_ids: frozenset[str] = frozenset(),
+    by_record: dict[tuple[str, str], int] | None = None,
 ) -> dict[tuple[FamilyKey, str], int]:
     """`(family_key, gene_name)` -> the LONGEST curated reference protein, in aa.
+
+    When `by_record` is given it is also filled with `(record_id, gene_name)`
+    -> that record's protein length, for `full_length_models`.
 
     Keyed per `(phylum, locus_name)` family, never by bare gene name: gene names
     are reused across families (`sla2` is both `Ascomycota:MATsc`'s and
@@ -321,6 +416,13 @@ def _curated_protein_lengths(
             header, _, seq = chunk.partition("\n")
             head_fields = header.split("|")
             record_id = head_fields[0]
+            # A withheld record must not reach ANY db-derived quantity, not
+            # just the query set. Its protein length sets the polish window's
+            # padding and its length decides the short-ORF/unsearchable split,
+            # so leaving it in would let a held-out answer shape the run that
+            # is supposed to be blind to it.
+            if record_id in exclude_record_ids:
+                continue
             family_key = record_families.get(record_id)
             if family_key is None or family_key not in expected_by_family:
                 continue
@@ -333,6 +435,8 @@ def _curated_protein_lengths(
             length = len(seq.strip().replace("\n", ""))
             key = (family_key, name)
             longest[key] = max(longest.get(key, 0), length)
+            if by_record is not None:
+                by_record[(record_id, name)] = max(by_record.get((record_id, name), 0), length)
     return longest
 
 
@@ -341,6 +445,7 @@ def _short_orf_genes(
     families: list[Family],
     record_families: dict[str, FamilyKey],
     floor_aa: int,
+    exclude_record_ids: frozenset[str] = frozenset(),
 ) -> dict[FamilyKey, set[str]]:
     """Per-family gene names whose BEST curated reference protein is shorter than floor_aa.
 
@@ -362,7 +467,8 @@ def _short_orf_genes(
     The per-family/per-gene length scan itself lives in
     `_curated_protein_lengths`, shared with the polish-window padding helper.
     """
-    longest = _curated_protein_lengths(db_root, families, record_families)
+    longest = _curated_protein_lengths(
+        db_root, families, record_families, exclude_record_ids)
 
     short_by_family: dict[FamilyKey, set[str]] = {}
     for (family_key, name), length in longest.items():
@@ -414,6 +520,15 @@ class EvidenceFloor:
     min_identity: float | None = None
     require_core_role: bool = True
 
+
+#: How many polished gene models a cluster must carry to be REPORTED as a locus.
+#: Curator's ruling, 2026-09-22, having been shown that loci with exactly one
+#: polished gene produce zero high-confidence calls: "yes require more than 1".
+#: Measured cost of the bar on the 2026-09-22 Pezizomycotina panels: 46,647
+#: reported loci fall to 5,648 (12.1%) and ALL 2,957 high-confidence calls
+#: survive. At >=1 the figure would be 6,809 and the same 2,957 -- so the
+#: stricter bar removes a further 1,161 loci for nothing.
+MIN_POLISHED_GENES = 2
 
 #: The permissive floor the evidence diagnostics enumerate candidates with:
 #: every family with >=1 own hit in the cluster, of any gene, any role, any
@@ -593,6 +708,85 @@ def _relaxed_results(
                 reference_records=sorted({e.reference_record_id for e in evidence}),
             ))
     return results
+
+
+def _rescue_genes_in_idiomorph_scope(
+    cluster: GeneCluster, family: Family, rescue_genes: set[str]
+) -> tuple[set[str], set[str]]:
+    """Split `rescue_genes` into (keep, skip) by the idiomorph this cluster
+    already evidences. Returns `(rescue_genes, set())` whenever it cannot
+    narrow safely.
+
+    Rescue polish is the dominant cost in a genome-only run: for every
+    (cluster, admitted family) the loop windows-polishes EVERY core_MAT gene
+    still missing, with both exonerate and miniprot, at ~0.9 s a pair. On a
+    two-idiomorph roster roughly half of those genes belong to the idiomorph
+    this cluster is not. A MAT1-1 cluster cannot also hold MAT1-2-1, so
+    polishing for it is guaranteed-futile work.
+
+    Narrowing happens ONLY when the cluster's live, informative hits evidence
+    exactly ONE idiomorph. Zero (nothing informative yet, or flanking-only
+    evidence -- the localize-by-flanks case this project relies on) and two or
+    more (a real homothallic both-idiomorphs locus, normal in curated records)
+    both fall through unchanged. Genes carrying no `present_in_idiomorphs` are
+    idiomorph-agnostic and are never skipped.
+
+    NOT loss-free in principle, and the exposure is specific: the cluster's
+    evidenced idiomorph could itself be wrong. The known way that happens is
+    the shared-HMG cross-match (MAT1-1-3 vs MAT1-2-1, opposite idiomorphs,
+    E 2.5e-17 to each other), where a single mis-attributed hit would then
+    suppress the rescue that could have corrected it. Superseded hits are
+    already excluded, which removes the cases the overlap resolver has
+    caught; a cross-match that never overlapped is not covered. Skips are
+    therefore recorded to the evidence-diagnostics stream so the real rate,
+    and any call that changes because of them, can be measured rather than
+    assumed.
+    """
+    evidenced = evidenced_idiomorphs(family, _own_live_hits(cluster, family.key))
+    if len(evidenced) != 1:
+        return rescue_genes, set()
+    idiomorph = next(iter(evidenced))
+    keep, skip = set(), set()
+    for gene in family.genes:
+        if gene["name"] not in rescue_genes:
+            continue
+        declared = gene.get("present_in_idiomorphs") or ()
+        if declared and idiomorph not in declared:
+            skip.add(gene["name"])
+        else:
+            keep.add(gene["name"])
+    # A rescue gene the roster does not define cannot happen (`_missing_core_genes`
+    # reads the roster), but keep the set total rather than silently shrinking.
+    keep |= rescue_genes - keep - skip
+    return keep, skip
+
+
+def _write_polish_scope_diagnostics(
+    out_path: Path,
+    cluster: GeneCluster,
+    family: Family,
+    idiomorph: str,
+    skipped: set[str],
+    attempted: int,
+    run_id: str,
+    genome_id: str,
+) -> None:
+    """One JSON line per (cluster, family) whose rescue set was narrowed.
+
+    `attempted` is the number of polish pairs actually run for this
+    (cluster, family) after narrowing, so saved/attempted is computable per
+    genome without re-deriving it from wall-clock time.
+    """
+    _append_diagnostics_row(out_path, {
+        "kind": "polish_scope",
+        "run_id": run_id,
+        "genome_id": genome_id,
+        "family": f"{family.key.phylum}:{family.key.locus_name}",
+        "contig": cluster.contig, "cluster_start": cluster.start, "cluster_end": cluster.end,
+        "evidenced_idiomorph": idiomorph,
+        "rescues_skipped": sorted(skipped),
+        "polish_pairs_attempted": attempted,
+    })
 
 
 def _write_evidence_diagnostics(
@@ -1223,6 +1417,20 @@ def run_pipeline(
     evidence_diagnostics_path: Path | None = None,
     routing: RoutingDecision | None = None,
     allow_cross_contig_fragments: bool = False,
+    #: How many of a locus's genes must rest on a real gene model for it to be
+    #: reported. See `MIN_POLISHED_GENES` for the measurement behind the
+    #: default and `_modelled_gene_count` for what counts. 0 disables the bar,
+    #: which is what the tests written before it use to keep asserting the
+    #: behaviour they were written for.
+    min_polished_genes: int = MIN_POLISHED_GENES,
+    #: Curated records withheld from THIS run, for leave-one-out recall. The
+    #: caller must build `reference_fasta` with the same set (see
+    #: `reference_fasta.build_reference_fasta`); this parameter additionally
+    #: keeps them out of every db-derived quantity -- polish-window padding and
+    #: the short-ORF/unsearchable split -- so a held-out answer cannot shape a
+    #: run that is meant to be blind to it. `detect.holdout` chooses the set,
+    #: and its RADIUS is what makes the resulting number meaningful.
+    exclude_record_ids: frozenset[str] = frozenset(),
     #: NCBI translation table for THIS genome. None means "derive from the
     #: taxid"; an explicit value wins, exactly as `--phylum` overrides taxid
     #: routing. Falls back to 1 when the taxonomy lookup cannot answer -- never
@@ -1263,17 +1471,26 @@ def run_pipeline(
     # Derived from the taxid when not supplied, out of the SAME cached efetch
     # document the router just read, so this costs no extra network call. A
     # failed lookup degrades to the standard table rather than raising.
+    genetic_code_error = None
     if genetic_code is None and taxid is not None:
         try:
             genetic_code = genetic_code_resolver(taxid)
-        except Exception:
+        except Exception as exc:
             genetic_code = None
+            # Recorded, not just absorbed: a CTG-clade yeast (table 12)
+            # translated with table 1 is a different search.
+            genetic_code_error = f"{type(exc).__name__}: {str(exc)[:160]}; used table 1"
     if genetic_code is None:
         genetic_code = 1
     record_families = load_record_families(db_root)
-    protein_lengths = _curated_protein_lengths(db_root, families, record_families)
+    #: (family, gene) -> the roster's `polish` setting; absent means both tools.
+    polish_mode = {(f.key, g["name"]): g.get("polish") for f in families for g in f.genes}
+    record_protein_lengths: dict[tuple[str, str], int] = {}
+    protein_lengths = _curated_protein_lengths(
+        db_root, families, record_families, exclude_record_ids,
+        by_record=record_protein_lengths)
     short_orf_by_family = _short_orf_genes(
-        db_root, families, record_families, short_orf_aa_floor
+        db_root, families, record_families, short_orf_aa_floor, exclude_record_ids
     )
     families_by_key = {f.key: f for f in families}
 
@@ -1500,6 +1717,24 @@ def run_pipeline(
             # a failed rescue leaves the gene genuinely missing rather than
             # "unpolished" (see below).
             rescue_genes = _missing_core_genes(cluster, family) - localized_genes
+            # Cut 1 of the polish-cost work: a rescue for a gene belonging to
+            # the idiomorph this cluster is NOT cannot succeed, so do not pay
+            # 0.9 s to find that out. Narrows only on unambiguous evidence;
+            # see `_rescue_genes_in_idiomorph_scope` for the exposure.
+            rescue_genes, skipped_rescues = _rescue_genes_in_idiomorph_scope(
+                cluster, family, rescue_genes
+            )
+
+            if skipped_rescues and evidence_diagnostics_path is not None:
+                _write_polish_scope_diagnostics(
+                    evidence_diagnostics_path, cluster, family,
+                    idiomorph=next(iter(
+                        evidenced_idiomorphs(family, _own_live_hits(cluster, family.key))
+                    )),
+                    skipped=skipped_rescues,
+                    attempted=len(localized_genes | rescue_genes),
+                    run_id=run_id, genome_id=genome_id,
+                )
 
             for gene_name in sorted(localized_genes | rescue_genes):
                 rescue = gene_name not in localized_genes
@@ -1511,11 +1746,19 @@ def run_pipeline(
                 window = _padded_window(cluster, padding, contig_lengths)
                 # Both tools get the SAME window and the same gene, so their
                 # models are directly comparable.
-                exonerate_model = polish_with_exonerate(
-                    genome_fasta=genome_fasta, family=family, gene_name=gene_name,
-                    reference_fasta=reference_fasta, record_families=record_families,
-                    window=window, genetic_code=genetic_code,
-                )
+                # A roster gene marked `polish: miniprot` skips exonerate:
+                # curator's ruling, 2026-09-26, for the long PAP1/OBP1/PIK1
+                # flanks, where exonerate was ~90% of runtime and a 60-genome
+                # ablation gave identical genotypes on miniprot alone.
+                # `classify` then records a `polished_single` model.
+                if polish_mode.get((family.key, gene_name)) == "miniprot":
+                    exonerate_model = None
+                else:
+                    exonerate_model = polish_with_exonerate(
+                        genome_fasta=genome_fasta, family=family, gene_name=gene_name,
+                        reference_fasta=reference_fasta, record_families=record_families,
+                        window=window, genetic_code=genetic_code,
+                    )
                 miniprot_model = polish_with_miniprot(
                     genome_fasta=genome_fasta, family=family, gene_name=gene_name,
                     reference_fasta=reference_fasta, record_families=record_families,
@@ -1556,6 +1799,10 @@ def run_pipeline(
             resolved_own, own_events = resolve_idiomorph_overlaps(
                 own, family, min_overlap_fraction=idiomorph_overlap_fraction
             )
+            # A pair the first pass already resolved comes back unchanged.
+            # Recording it again reported every such event twice.
+            already = idiomorph_events_by_cluster.get(id(cluster), [])
+            own_events = [e for e in own_events if e not in already]
             if not own_events:
                 continue
             by_id = dict(zip((id(h) for h in own), resolved_own))
@@ -1604,6 +1851,63 @@ def run_pipeline(
             for (cluster_id, key, _gene_name), outcome in polish_by.items()
             if key == family_key and cluster_id in cluster_ids
         )
+
+    def _modelled_gene_count(
+        member_clusters: list[GeneCluster], family_key: FamilyKey
+    ) -> int:
+        return len(_modelled_gene_names(member_clusters, family_key))
+
+    def _modelled_gene_names(
+        member_clusters: list[GeneCluster], family_key: FamilyKey
+    ) -> frozenset[str]:
+        """How many DISTINCT genes of this family, in these exact clusters, rest
+        on a real gene model rather than on a bare alignment.
+
+        A gene counts when either:
+
+        * a polishing tool modelled it (`polished_agree`, `polished_disagree`
+          or `polished_single`), or
+        * it came from the annotated fast path, i.e. it has a
+          `diamond_proteome` hit here -- a gene model somebody already called,
+          which was never put to the tools precisely BECAUSE it needs no
+          refining.
+
+        Counting the fast path is not a loosening, it is the whole reason this
+        is not called `polished_gene_count`. Gating on polish alone would score
+        every gene of a fully annotated genome as unmodelled and withhold its
+        real MAT locus -- the annotated ZygoLife and BFD-proteome workflows
+        would report nothing at all. The measurement behind the bar came from
+        genome-only runs, where no diamond hit exists and the two definitions
+        coincide, so it does not speak to that case either way.
+
+        What never counts is `STATUS_UNPOLISHED`: a localized HSP that BOTH
+        tools were given a window for and neither could turn into a gene. That
+        is the population the bar exists to remove.
+
+        Nor does a gene whose every hit here is superseded. A RESCUED model is
+        recorded as modelled before the post-polish idiomorph pass runs, and
+        that pass can then find it is the losing half of a sexM/sexP-style
+        pair -- the same physical gene as the winner. Counting it let one gene
+        clear a bar of two (25 of 3,101 Saccharomyces loci were over-counted).
+
+        Counted per distinct gene NAME, not per hit: a cluster routinely holds
+        many HSPs of one gene, and three fragments of one alpha-box must not
+        add up to the bar on their own. Scoped by (cluster, family) exactly as
+        `_any_gene_unpolished` is, and for the same reasons.
+        """
+        cluster_ids = {id(c) for c in member_clusters}
+        live = [
+            h for c in member_clusters for h in c.hits
+            if h.family_key == family_key and h.superseded_by is None
+        ]
+        modelled = {
+            gene_name
+            for (cluster_id, key, gene_name), outcome in polish_by.items()
+            if key == family_key and cluster_id in cluster_ids
+            and outcome.status in (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE)
+        } & {h.gene_name for h in live}
+        modelled |= {h.gene_name for h in live if h.method == "diamond_proteome"}
+        return frozenset(modelled)
 
     def _build(
         score: FamilyScore,
@@ -1668,12 +1972,39 @@ def run_pipeline(
             score.fraction_found, ambiguity_floor, relaxed=False
         )
         locus_class = apply_partial_locus(
-            classify_locus(member_clusters[0], family),
+            classify_locus(member_clusters[0], family, full_length_models=full_length_models(
+                polish_by, {id(c) for c in member_clusters}, score.family_key,
+                record_protein_lengths,
+                {g for c in member_clusters
+                 for e in idiomorph_events_by_cluster.get(id(c), ())
+                 for g in (e.winner, e.loser)},
+            )),
             fraction_found=score.fraction_found,
             ambiguity_floor=ambiguity_floor,
             relaxed=False,
         )
+        polished_genes = _modelled_gene_count(member_clusters, score.family_key)
+        if polished_genes == 0:
+            # Curator's rulings, 2026-09-22. (1) "without polishing it is low":
+            # a locus whose every gene is a raw tblastn HSP that no tool could
+            # model is not a medium-confidence call. Measured: 39,838 such loci
+            # across the Pezizomycotina panels, mean identity 32.8%, and not
+            # one of them is high-confidence today -- so nothing is demoted
+            # from high by this.
+            tier = "low"
+            # (2) "same as 1, must have polished": `mat_locus` is the strongest
+            # claim this pipeline makes, and 3,388 loci were making it on
+            # entirely unpolished evidence. Demote to `partial_locus`, which is
+            # already the strength class `apply_partial_locus` uses, rather
+            # than inventing another. The composition classes
+            # (`idiomorph_gene_only`, `flanking_gene_only`,
+            # `homothallic_candidate`) are statements about WHICH genes are
+            # present and are left alone, exactly as the floor-tie rule leaves
+            # them.
+            if locus_class == LOCUS_CLASS_MAT:
+                locus_class = LOCUS_CLASS_PARTIAL
         return DetectionResult(
+            polished_genes=polished_genes,
             family_key=score.family_key,
             contig=segments[0].contig,
             start=segments[0].start,
@@ -1790,14 +2121,73 @@ def run_pipeline(
                 len(results),
             )
 
+    # Curator's ruling (3), 2026-09-22: "yes require more than 1". A cluster
+    # must carry at least MIN_POLISHED_GENES polished gene models to be
+    # REPORTED. Applied here, after the relaxed pass, so the relaxed trigger
+    # ("only when the strict pass found nothing") still sees the unfiltered
+    # strict result and its behaviour is unchanged -- and so the bar applies
+    # to relaxed calls too, which is the point of having it.
+    #
+    # Nothing is destroyed: the per-candidate rows are already on disk in the
+    # evidence-diagnostics stream, a family whose only calls were withheld
+    # still gets a `not_detected` entry naming the reason, and the count is
+    # carried on the outcome.
+    suppressed = [r for r in results if r.polished_genes < min_polished_genes]
+    results = [r for r in results if r.polished_genes >= min_polished_genes]
+    if suppressed:
+        logger.info(
+            "withheld %d locus/loci carrying fewer than %d modelled genes",
+            len(suppressed), min_polished_genes,
+        )
+
     reported = {r.family_key for r in results}
+    #: family -> the best withheld call for it, so `not_detected` can say that
+    #: something WAS built and why it did not survive, rather than falling
+    #: through to the generic below-the-floor wording.
+    suppressed_best: dict[FamilyKey, DetectionResult] = {}
+    for r in suppressed:
+        best = suppressed_best.get(r.family_key)
+        if best is None or r.polished_genes > best.polished_genes:
+            suppressed_best[r.family_key] = r
     not_detected: list[NotDetectedFamily] = []
     for family in families:
         if family.key in reported:
             continue
         short_genes = short_orf_by_family.get(family.key, set())
         score = best_attempt.get(family.key)
-        if score is None:
+        withheld = suppressed_best.get(family.key)
+        if withheld is not None:
+            modelled = (
+                "none of its genes could be modelled" if withheld.polished_genes == 0
+                else f"only {withheld.polished_genes} of its genes could be modelled"
+            )
+            not_detected.append(NotDetectedFamily(
+                family_key=family.key,
+                reason=(
+                    f"best cluster carried {withheld.polished_genes} modelled "
+                    f"gene(s), below the {min_polished_genes} required to report a "
+                    f"locus; {modelled}"
+                ),
+                best_fraction_found=score.fraction_found if score else 0.0,
+                genes_found=list(withheld.genes_found),
+                genes_missing=[g for g in withheld.genes_missing if g not in short_genes],
+                genes_not_searchable=sorted(short_genes),
+            ))
+            continue
+        if score is None and reference_fasta.exists() and not searchable_genes.get(family.key):
+            # Nothing to search with: every record of the family was withheld
+            # (a holdout) or none is curated. "No hits" would blame the genome.
+            # A MISSING file is "no information" (see searchable_genes_by_family),
+            # not an empty set, so it keeps the generic wording below.
+            not_detected.append(NotDetectedFamily(
+                family_key=family.key,
+                reason="no reference protein for this family is in the search set "
+                       "(none curated, or all withheld)",
+                best_fraction_found=0.0,
+                genes_missing=[g["name"] for g in family.genes if g["name"] not in short_genes],
+                genes_not_searchable=sorted(short_genes),
+            ))
+        elif score is None:
             not_detected.append(NotDetectedFamily(
                 family_key=family.key,
                 reason="no reference-protein hits found for this family in this genome",
@@ -1823,4 +2213,9 @@ def run_pipeline(
         not_detected=not_detected,
         families_attempted=[f.key for f in families],
         routing_mode=routing.routing_mode,
+        routing_error=routing.routing_error,
+        genetic_code=genetic_code,
+        genetic_code_error=genetic_code_error,
+        suppressed_unpolished=len(suppressed),
+        suppressed_loci=suppressed,
     )

@@ -171,6 +171,10 @@ class RoutingDecision:
     families: list[Family]
     routing_mode: str
     phylum: str | None = None
+    #: Why a resolver failed, when one did. Degrading is by design, but doing
+    #: it invisibly let one taxid route three different ways in one pilot
+    #: with no report saying why. None when every lookup succeeded.
+    routing_error: str | None = None
 
 
 def available_phyla(db_root: Path) -> list[str]:
@@ -492,27 +496,56 @@ def route(
     if taxid is None:
         return RoutingDecision(families=list(families), routing_mode="exhaustive")
 
+    # Exact-taxid and lineage matches are UNIONED, not cascaded. Returning at
+    # the first tier that matched anything let a SPECIES-scoped family shadow a
+    # GENUS-scoped one for the same organism, and silently drop the latter.
+    #
+    # Measured on Schizosaccharomyces pombe (4896), which is how this was
+    # found: `mat2` and `mat3` are scoped [4896] and matched exactly, so the
+    # function returned those two and never reached the lineage tier -- where
+    # `mat1`, scoped [4895] (the genus Schizosaccharomyces, 4896's parent),
+    # would have matched. `mat1` is the ACTIVE mating-type locus; mat2 and
+    # mat3 are the silent cassettes. Detection therefore looked like it worked
+    # on S. pombe while never searching for the locus that actually determines
+    # mating type. The leave-one-out benchmark caught it as an unexplained miss
+    # with a reference still present.
+    #
+    # A genus-level scope is not weaker evidence than a species-level one; it
+    # is a curator's statement about a different breadth. Nothing justifies one
+    # suppressing the other. `routing_mode` still reports `direct` when an
+    # exact match contributed, so the stronger signal stays visible.
+    errors: list[str] = []
     direct = [f for f in families if taxid in f.taxonomic_scope]
-    if direct:
-        return RoutingDecision(families=direct, routing_mode="direct")
-
     try:
         ancestors = set(lineage_taxids_resolver(taxid))
-    except Exception:
+    except Exception as exc:
         ancestors = set()
+        errors.append(f"lineage lookup failed: {type(exc).__name__}: {str(exc)[:160]}")
     lineage_matched = [f for f in families if ancestors & set(f.taxonomic_scope)]
-    if lineage_matched:
-        return RoutingDecision(families=lineage_matched, routing_mode="lineage")
+    if direct or lineage_matched:
+        seen: set = set()
+        merged = []
+        for f in direct + lineage_matched:
+            if f.key not in seen:
+                seen.add(f.key)
+                merged.append(f)
+        return RoutingDecision(
+            families=merged, routing_mode="direct" if direct else "lineage",
+            routing_error="; ".join(errors) or None,
+        )
 
     try:
         query_phylum = phylum_name_resolver(taxid)
-    except Exception:
+    except Exception as exc:
         query_phylum = None
+        errors.append(f"phylum lookup failed: {type(exc).__name__}: {str(exc)[:160]}")
     if query_phylum:
         in_phylum = [f for f in families if f.key.phylum == query_phylum]
         if in_phylum:
             return RoutingDecision(
-                families=in_phylum, routing_mode="phylum_fallback", phylum=query_phylum
+                families=in_phylum, routing_mode="phylum_fallback", phylum=query_phylum,
+                routing_error="; ".join(errors) or None,
             )
 
-    return RoutingDecision(families=list(families), routing_mode="exhaustive")
+    return RoutingDecision(families=list(families), routing_mode="exhaustive",
+                           routing_error="; ".join(errors) or None)

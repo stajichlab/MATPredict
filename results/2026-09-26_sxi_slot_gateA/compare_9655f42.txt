@@ -100,3 +100,8 @@ SAME GENOTYPE, CALLS DIFFER (26):
    GCA_031841935.1_ASM3184193v1 [('alpha', 'medium', 'partial_locus')] [('alpha', 'medium', 'partial_locus'), ('alpha', 'medium', 'partial_locus')]
    GCA_031841945.1_ASM3184194v1 [('alpha', 'medium', 'partial_locus')] [('alpha', 'medium', 'partial_locus'), ('alpha', 'medium', 'partial_locus')]
    GCA_031841985.1_ASM3184198v1 [('alpha', 'medium', 'partial_locus')] [('alpha', 'medium', 'partial_locus'), ('alpha', 'medium', 'partial_locus')]
+
+Curator note (2026-09-26): the two alpha -> a+alpha changes are expected.
+CBS 132 is a known AD hybrid. PH4021C (GCA_025531435.1; 28.0 Mb assembly vs
+~19 Mb haploid) is, per the curator, also an AD hybrid. Both a+alpha calls
+are real, not artefacts. Neither genome is a homothallism candidate.

@@ -1,4 +1,6 @@
 ##gff-version 3
-##sequence-region NW_006267344.1 898234 902101
+##sequence-region NW_006267344.1 888865 904939
 NW_006267344.1	MATPredict	gene	898234	899864	.	-	.	ID=192523_h97_HD_A1.gene0;Name=HD2;role=core_MAT
 NW_006267344.1	MATPredict	gene	900063	902101	.	+	.	ID=192523_h97_HD_A1.gene1;Name=HD1;role=core_MAT
+NW_006267344.1	MATPredict	gene	888865	889896	.	+	.	ID=192523_h97_HD_A1.gene2;Name=beta_fg;role=flanking_conserved
+NW_006267344.1	MATPredict	gene	902499	904939	.	-	.	ID=192523_h97_HD_A1.gene3;Name=MIP1;role=flanking_conserved

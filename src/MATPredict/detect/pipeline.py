@@ -117,7 +117,9 @@ from MATPredict.detect.polish import (
     PolishOutcome,
     classify,
 )
-from MATPredict.db.taxonomy import default_genetic_code, default_lineage_taxids
+from MATPredict.db.taxonomy import (
+    default_genetic_code, default_lineage_phylum_name, default_lineage_taxids,
+)
 from MATPredict.detect.reference_fasta import searchable_genes_by_family
 from MATPredict.detect.scoring import FamilyScore, is_ambiguous, score_cluster
 from MATPredict.detect.search import (
@@ -129,6 +131,7 @@ from MATPredict.detect.search import (
     search_localize,
 )
 from MATPredict.detect.tiering import assign_tier, cap_at_medium
+from MATPredict.detect.verification import OVERRIDE_ROUTES, label_verification
 from MATPredict.detect.zygosity import genome_zygosity, load_zygosity_rules
 
 logger = logging.getLogger(__name__)
@@ -289,6 +292,11 @@ class DetectionResult:
     its idiomorph rests on unmodelled hits. Such a call is kept only when the
     core hits lie inside the flank span, and is then capped at `low` and
     classed `partial_locus`. See `flank_carried`."""
+    verification: dict | None = None
+    """`{status: unverified, reason, family_phylum, genome_phylum, evidence}`
+    when the family was searched outside the genome's phylum by an override
+    route; None otherwise. Curator's ruling 2026-09-26. Never changes the
+    call's confidence. See `verification`."""
     withheld_reason: str | None = None
     """Why a withheld locus (`DetectionOutcome.suppressed_loci`) was withheld:
     `MODELLED_GENE_BAR` or `flank_carried.WITHHELD_FLANK_CARRIED`. None on a
@@ -1508,6 +1516,10 @@ def run_pipeline(
     #: when a genome has a single-idiomorph call and its own taxid is not a
     #: listed taxon; the router's cached efetch document answers it.
     zygosity_lineage_resolver: Callable[[int], list[int]] = default_lineage_taxids,
+    #: The genome's phylum name, for the unverified label (`verification`).
+    #: Called only on an override route (`--phylum`, `--exhaustive`) with a
+    #: taxid and at least one call; the router's cached efetch answers it.
+    phylum_name_resolver: Callable[[int], str | None] = default_lineage_phylum_name,
 ) -> DetectionOutcome:
     # `routing` lets the caller route ONCE and reuse the decision, which the
     # CLI must do: it has to know the routed families BEFORE this call, so it
@@ -2352,6 +2364,18 @@ def run_pipeline(
     assembly_gaps = find_gaps_at_locus(
         {key: hits for key, hits in unreported_hits.items() if hits}, genome_fasta,
     )
+
+    # Curator's ruling 2026-09-26: a call made by searching a family outside
+    # the genome's phylum (an override route) is unverified. A failed lookup
+    # is an unknown phylum, never an error that loses the calls.
+    if results and routing.routing_mode in OVERRIDE_ROUTES:
+        genome_phylum = None
+        if taxid is not None:
+            try:
+                genome_phylum = phylum_name_resolver(taxid)
+            except Exception as exc:  # noqa: BLE001 - logged, treated as an unknown phylum
+                logger.warning("phylum lookup for the unverified label failed: %s", exc)
+        results = label_verification(results, routing.routing_mode, genome_phylum)
 
     # Curator's ruling 2026-09-26: in a taxon whose assemblies collapse MTL
     # heterozygosity, a single-idiomorph genome is of unknown zygosity.

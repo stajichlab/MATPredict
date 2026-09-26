@@ -304,6 +304,9 @@ def _result_doc(r: DetectionResult) -> dict:
         # True on a flank-carried call kept inside the flank span: its
         # idiomorph rests on core hits no tool could model.
         "idiomorph_unmodelled": r.idiomorph_unmodelled,
+        # Set when the family was searched outside the genome's phylum by an
+        # override route (curator's ruling 2026-09-26; see `verification`).
+        "verification": r.verification,
         # How many of this locus's genes a polishing tool could actually model.
         # The sharpest discriminator measured to date: across 46,647
         # lineage-routed Pezizomycotina loci, every high-confidence call had

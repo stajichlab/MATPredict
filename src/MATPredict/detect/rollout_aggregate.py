@@ -117,6 +117,11 @@ class RolloutSummary:
     #: ruling 2026-09-26): a single-idiomorph call in a taxon whose assemblies
     #: collapse MTL heterozygosity. Their genotype is not a zygosity count.
     zygosity_unknown: list[str] = field(default_factory=list)
+    #: genome -> how many of its calls carry `verification: {status:
+    #: unverified}` (curator's ruling 2026-09-26): a family searched outside
+    #: the genome's phylum by an override route. Counted apart so they never
+    #: read as confirmed detections.
+    unverified_calls: dict[str, int] = field(default_factory=dict)
 
     def to_doc(self) -> dict:
         """Plain-dict form for YAML serialization (`write_rollout_summary`)."""
@@ -143,6 +148,7 @@ class RolloutSummary:
             "not_searched": list(self.not_searched),
             "assembly_gap_at_locus": list(self.assembly_gap_at_locus),
             "zygosity_unknown": list(self.zygosity_unknown),
+            "unverified_calls": dict(self.unverified_calls),
         }
 
 
@@ -224,6 +230,7 @@ def aggregate_reports(
     not_searched: list[str] = []
     assembly_gap_at_locus: list[str] = []
     zygosity_unknown: list[str] = []
+    unverified_calls: dict[str, int] = {}
 
     # genome -> set of families it detected; family -> set of genomes that
     # detected it. Built while reading, used afterward for anomaly detection.
@@ -264,6 +271,8 @@ def aggregate_reports(
                 continue
             detected_families.add(family)
             genomes_by_family.setdefault(family, set()).add(genome_id)
+            if (result.get("verification") or {}).get("status") == "unverified":
+                unverified_calls[genome_id] = unverified_calls.get(genome_id, 0) + 1
             confidence_tally.setdefault(family, {}).setdefault(confidence, 0)
             confidence_tally[family][confidence] += 1
             # Guarded, not defaulted: a report written before `locus_class`
@@ -301,6 +310,7 @@ def aggregate_reports(
         not_searched=not_searched,
         assembly_gap_at_locus=assembly_gap_at_locus,
         zygosity_unknown=zygosity_unknown,
+        unverified_calls=unverified_calls,
     )
 
 

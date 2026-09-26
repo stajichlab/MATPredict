@@ -1,0 +1,213 @@
+record_id: 984962_um274_HD_A1
+record_version: 1
+taxonomy:
+  taxid: 984962
+  lineage: k__Fungi;p__Basidiomycota;subphylum__Agaricomycotina;c__Agaricomycetes;o__Russulales;f__Bondarzewiaceae;g__Heterobasidion;s__Heterobasidion_irregulare
+  lineage_resolved_date: '2026-09-26'
+organism:
+  species: Heterobasidion irregulare
+  strain:
+    name: UM274
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: HD
+  idiomorphs:
+  - A1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MIP1->[HD1(a1)<-|->HD2(a2)]-[HD1(b1)<-|->HD2(b2)]->beta-fg
+    definition_note: 'Heterobasidion irregulare UM274 HD (A) mating-type locus, from
+      the locus deposit KF280353.1 (11,009 bp; van Diepen et al. 2013, Mol Biol Evol
+      30:2286). Gene order on the deposit: MIP (5'' partial, AGS09183.1) - a1 HD1
+      (AGS09184.1) - a2 HD2 (AGS09185.1) - b1 HD1 (AGS09186.1) - b2 HD2 (AGS09187.1)
+      - beta-flanking protein (partial, AGS09188.1). Two divergently transcribed HD1/HD2
+      pairs (a and b subloci), as in Coprinopsis. The beta-fg fragment is 28 aa and
+      is NOT curated: too short to be a useful search query. MIP is curated as a flanking
+      gene: AGS09183.1 matches the full-length A. bisporus MIP ortholog XP_006454076.1
+      at 71.5% over its 221 aa (blastp, 2026-09-26). IDIOMORPH LABEL: the source does
+      not number this allele. "A1" follows the convention already used for Agaricus
+      bisporus in this database (derived from the "a1" HD1 gene name) and is a PLACEHOLDER,
+      not a published allele designation. Curator decision pending on a label convention
+      for unnamed multiallelic HD alleles.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KF280353.1
+        seq_region: KF280353.1
+      start: 1
+      end: 10333
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MIP1
+  protein_accession: ncbi_protein:AGS09183.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 722
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 1
+    end: 37
+  - start: 94
+    end: 722
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: HD1
+  protein_accession: ncbi_protein:AGS09184.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1288
+  end: 3412
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 3078
+    end: 3412
+  - start: 2319
+    end: 3008
+  - start: 1796
+    end: 2268
+  - start: 1288
+    end: 1739
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: HD2
+  protein_accession: ncbi_protein:AGS09185.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3603
+  end: 5440
+  strand: +
+  order_in_locus: 2
+  exons:
+  - start: 3603
+    end: 4133
+  - start: 4183
+    end: 4287
+  - start: 4346
+    end: 4396
+  - start: 4451
+    end: 5440
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: HD1
+  protein_accession: ncbi_protein:AGS09186.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 6030
+  end: 8168
+  strand: '-'
+  order_in_locus: 3
+  exons:
+  - start: 7851
+    end: 8168
+  - start: 7150
+    end: 7799
+  - start: 6616
+    end: 7094
+  - start: 6122
+    end: 6557
+  - start: 6030
+    end: 6045
+  codon_start: 1
+  transl_table: 1
+- gene_index: 4
+  name: HD2
+  protein_accession: ncbi_protein:AGS09187.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8404
+  end: 10333
+  strand: +
+  order_in_locus: 4
+  exons:
+  - start: 8404
+    end: 8853
+  - start: 8927
+    end: 8995
+  - start: 9046
+    end: 9126
+  - start: 9176
+    end: 10333
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: targeted sequencing of the HD mating-type locus across Heterobasidion
+      strains; balancing-selection and trans-specific polymorphism signature at the
+      HD genes (van Diepen et al. 2013)
+    citations: &id001
+    - pmid: '23864721'
+      doi: 10.1093/molbev/mst126
+  boundaries:
+    tier: 1
+    experimental_method: targeted sequencing; the deposit spans MIP (5' partial) through
+      beta-fg (partial), the published flanks of the HD locus
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: HD1/HD2 homeodomain gene identity at the sequenced HD locus;
+      allele not named in the source (see definition_note)
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: KF280353.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 23864721|984962|HD|UM274
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

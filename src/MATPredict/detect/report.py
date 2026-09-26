@@ -429,6 +429,21 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
             }
             for r in outcome.suppressed_loci
         ],
+        # A flank-anchored N block where an uncalled family's locus should be
+        # (curator's ruling 2026-09-26; see `assembly_gap`): the assembly never
+        # resolved the locus, so the not-detected entry is not evidence of
+        # absence. Written unconditionally, as [] when there is none.
+        "assembly_gap_at_locus": [
+            {
+                "family": _family_label(g.family_key),
+                "contig": g.contig,
+                "start": g.start,
+                "end": g.end,
+                "n_bases": g.n_bases,
+                "anchors": list(g.anchors),
+            }
+            for g in outcome.assembly_gaps_at_locus
+        ],
         "families_attempted": [_family_label(k) for k in outcome.families_attempted],
         "detected": [_result_doc(r) for r in outcome.results],
         "not_detected": [

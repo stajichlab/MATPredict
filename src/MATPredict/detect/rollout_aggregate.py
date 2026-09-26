@@ -109,6 +109,10 @@ class RolloutSummary:
     #: 2026-09-26): no family was searched, so they are neither failures nor
     #: not-detected, and they are left out of anomaly detection.
     not_searched: list[str] = field(default_factory=list)
+    #: Genomes whose report names an `assembly_gap_at_locus` (curator's ruling
+    #: 2026-09-26): an uncalled family's flank-anchored position is an N
+    #: block, so the miss is an assembly gap, not evidence of absence.
+    assembly_gap_at_locus: list[str] = field(default_factory=list)
 
     def to_doc(self) -> dict:
         """Plain-dict form for YAML serialization (`write_rollout_summary`)."""
@@ -133,6 +137,7 @@ class RolloutSummary:
                 {"genome": g.genome, "reason": g.reason} for g in self.genome_errors
             ],
             "not_searched": list(self.not_searched),
+            "assembly_gap_at_locus": list(self.assembly_gap_at_locus),
         }
 
 
@@ -212,6 +217,7 @@ def aggregate_reports(
     not_detected: list[NotDetectedEntry] = []
     genome_errors: list[GenomeReportError] = []
     not_searched: list[str] = []
+    assembly_gap_at_locus: list[str] = []
 
     # genome -> set of families it detected; family -> set of genomes that
     # detected it. Built while reading, used afterward for anomaly detection.
@@ -238,6 +244,9 @@ def aggregate_reports(
             # it as an anomaly for "missing" a family it never looked for.
             not_searched.append(genome_id)
             continue
+
+        if doc.get("assembly_gap_at_locus"):
+            assembly_gap_at_locus.append(genome_id)
 
         detected_families: set[str] = set()
         for result in doc.get("detected") or []:
@@ -282,6 +291,7 @@ def aggregate_reports(
         anomalies=anomalies,
         genome_errors=genome_errors,
         not_searched=not_searched,
+        assembly_gap_at_locus=assembly_gap_at_locus,
     )
 
 

@@ -79,6 +79,7 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Callable
 
+from MATPredict.detect.assembly_gap import AssemblyGapAtLocus, find_gaps_at_locus
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.flank_carried import (
     FLANK_SPAN_PADDING_BP, WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
@@ -345,6 +346,9 @@ class DetectionOutcome:
     #: outside the flank span (see `flank_carried`). They are in
     #: `suppressed_loci` too, with their `withheld_reason`.
     suppressed_flank_carried: int = 0
+    #: N blocks at a flank-anchored position of a family with no call
+    #: (curator's ruling 2026-09-26; see `assembly_gap`). A report, not a call.
+    assembly_gaps_at_locus: list[AssemblyGapAtLocus] = field(default_factory=list)
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -2316,6 +2320,17 @@ def run_pipeline(
                 genes_not_searchable=[g for g in score.genes_missing if g in short_genes],
             ))
 
+    # Curator's ruling 2026-09-26: a family with no call whose flank anchors an
+    # N block is reported as an assembly gap at the locus, not left to read as
+    # absence. Only uncalled families are checked, so no call is ever altered.
+    unreported_hits = {
+        family.key: [h for c in clusters for h in c.hits if h.family_key == family.key]
+        for family in families if family.key not in reported
+    }
+    assembly_gaps = find_gaps_at_locus(
+        {key: hits for key, hits in unreported_hits.items() if hits}, genome_fasta,
+    )
+
     return DetectionOutcome(
         results=results,
         not_detected=not_detected,
@@ -2327,6 +2342,7 @@ def run_pipeline(
         suppressed_unpolished=suppressed_by_bar,
         suppressed_loci=suppressed,
         suppressed_flank_carried=len(flank_withheld),
+        assembly_gaps_at_locus=assembly_gaps,
     )
 
 

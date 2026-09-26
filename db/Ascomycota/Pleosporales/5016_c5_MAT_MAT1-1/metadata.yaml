@@ -1,0 +1,113 @@
+record_id: 5016_c5_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 5016
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Dothideomycetes;o__Pleosporales;f__Pleosporaceae;g__Bipolaris;s__Bipolaris_maydis
+  lineage_resolved_date: '2026-09-26'
+organism:
+  species: Bipolaris maydis
+  strain:
+    name: C5
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: GAP1->ORF1->MAT1-1-1->BGL1
+    definition_note: 'Cochliobolus heterostrophus (= Bipolaris maydis, NCBI taxid
+      5016) strain C5 MAT-1 locus, deposit AF029913.1 (12,572 bp). The paper calls
+      the gene MAT-1; it is the alpha-box MAT1-1-1 ("similarity to the Neurospora
+      crassa MATA ... and Saccharomyces cerevisiae MAT alpha 1 proteins"). Curated:
+      MAT1-1-1 (AAB82945.1). Not curated, as they are not roster genes: GAP1 (AAB82943.1),
+      an unknown ORF (AAB82944.1) and BGL1 (AAB82946.1), the Pleosporales flanks.
+      The deposit has no APN2 or SLA2. Idiomorph 1,297 bp per the paper.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AF029913.1
+        seq_region: AF029913.1
+      start: 5147
+      end: 6350
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:AAB82945.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5147
+  end: 6350
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 5147
+    end: 5363
+  - start: 5416
+    end: 6350
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: MAT-1 cloned by complementing a MAT-2 strain; MAT identity
+      proven by RFLP and conventional genetic mapping. "MAT-1 was cloned by complementing
+      a MAT-2 strain using a cosmid library from a MAT-1 strain and screening for
+      a homothallic transformant. ... MAT identity was proven by restriction fragment
+      length polymorphism and conventional genetic mapping. ... MAT-2 was cloned by
+      probing a cosmid library from a MAT-2 strain with a fragment of insert DNA from
+      a MAT-1 cosmid. A 1.5 kb subclone of either MAT-containing cosmid was sufficient
+      to confer mating function in transformants." (Turgeon et al. 1993, abstract)
+    citations:
+    - &id001
+      pmid: '8479433'
+      doi: 10.1007/BF00279556
+  boundaries:
+    tier: 1
+    experimental_method: Boundaries are the GenBank deposit's own; the record segment
+      spans the curated genes on it. The published idiomorph lies inside.
+    citations:
+    - *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Idiomorph from MAT gene content (alpha-box MAT1-1-1 vs HMG-box
+      MAT1-2-1) of isolates of known, opposite mating type, confirmed genetically
+      (see locus_existence).
+    citations:
+    - *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AF029913.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1007/BF00279556|5016|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-09-26 from docs/notes/2026-09-24_mat-reference-gap-literature.md
+    (Tier 2: Dothideomycetes). First Dothideomycetes references; the 2026-09-24 pilot
+    called 90/100 Dothideomycetes genomes with no record of the class. PENDING CURATOR
+    SIGN-OFF: accepted on the unmerged branch curation-mucor-dothideo only so detect
+    can be measured with it (2026-09-26). The curator requested this curation; the
+    review happens at merge.'
+model_provenance: null

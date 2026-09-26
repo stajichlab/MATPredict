@@ -94,6 +94,9 @@ curated or corrected. Newest entries at the end of each section.
 | C2 | *Lobaria pulmonaria* `JX520967.1` / `JX520966.1`; *Microbotryum* `JQ423666.1`, `JQ423663.1`, `JQ423661.1`; `KX832965.1`; `ON315861.1` | Flagged UNVERIFIED in GenBank; several carry no CDS. | A | Not usable as references |
 | C3 | *P. tritici-repentis* `AM884596`-`AM884619` | Titled "mat1-1 gene and partial mat1-2 gene" -- unusual for a heterothallic MAT1-1 deposit. | A | OPEN: check before use |
 | C4 | *Morchella* literature | The Morchella locus deposits are from Chai et al. 2017 (Mycol Prog 16:743, doi:10.1007/s11557-017-1309-x), not Du et al. as first recalled. | A, V (Crossref) | FIXED in our record |
+| C5 | *Zymoseptoria tritici* `AF440398.1` (MAT1-2) and `AF440399.1` (MAT1-1) | Neither record carries a strain or isolate qualifier. The paper (Waalwijk et al. 2002, PMID 11929216) gives MAT1-2 from IPO94269 and MAT1-1 from IPO323. | V (GenBank source features; PubMed abstract) | WORKED AROUND (strains taken from the paper, stated in each definition_note); OPEN (upstream) |
+| C6 | *Z. tritici* `AF440399.1` | The DNA lyase (APN2) CDS AAL30837.1 is 5'-partial (`<1`). | V (GenBank feature location) | WORKED AROUND (APN2 curated from the complete copy on `AF440398.1` only) |
+| C7 | *Bipolaris maydis* `AF029913.1` / `AF027687.1` | MAT genes named MAT-1 / MAT-2 (pre-1998 nomenclature), products "DNA binding protein with alpha box domain" / "HMG DNA binding protein". Not an error, but a name trap: they are MAT1-1-1 / MAT1-2-1. | V | WORKED AROUND (roster names used; mapping stated in definition_note) |
 
 ## D. Assignment traps: real biology that looks like an annotation error
 
@@ -131,3 +134,4 @@ Recorded so a detector rule or a curator does not "fix" them.
 * **2026-09-25** B3.3a, B3.8 added; A5 fixed (MTLalpha2 optional; PAP1/OBP1/PIK1 optional flanks added to the MTL roster and all eight Serinales records).
 * **2026-09-26** B4.1-B4.2 added (C. albicans assemblies collapsing heterozygous MTL; read-depth test).
 * **2026-09-26** D9-D10 added from the Serinales-wide scan on the flank roster (`882aa01`).
+* **2026-09-26** C5-C7 added while curating the first Dothideomycetes records (branch `curation-mucor-dothideo`).

@@ -97,6 +97,7 @@ mkdir -p "$WORK/fasta" "$OUT_DIR/runs" "$REPO/logs"
 echo "repo=$REPO"
 echo "src=$SRC"
 echo "db=$MATPREDICT_DB_ROOT"
+echo "detect_args=${DETECT_ARGS:-}"
 echo "clade=$RANK=$CLADE  samples=$SAMPLES"
 echo "scratch=$WORK"
 echo "out=$OUT_DIR  threads=$THREADS"
@@ -190,6 +191,7 @@ run_one() {
     timeout 3600 "$PY" -m MATPredict detect \
         --genome "$fna" --taxid "$taxid" --out-dir "$out" \
         --evidence-diagnostics "$out/evidence_diagnostics.jsonl" \
+        ${DETECT_ARGS:-} \
         > "$out/stdout.log" 2> "$out/stderr.log"
     rc=$?
     echo "$(( $(date +%s) - t0 ))" > "$out/wall_seconds"
@@ -202,7 +204,7 @@ run_one() {
     rm -f "$fna"
 }
 export -f run_one
-export REPO LIBRARY OUT_DIR WORK PY
+export REPO LIBRARY OUT_DIR WORK PY DETECT_ARGS
 
 # xargs, not a job array: the per-genome cost is ~20 s, far below the point
 # where a separate SLURM job per unit would pay for its own scheduling.

@@ -91,3 +91,15 @@ of the HMG-box genes matches sexM/sexP outside the HMG box. The standard
 tptA-sex-rnhA roster does not fit these genomes. Do not choose flank genes for
 a Lichtheimiaceae or Syncephalastraceae record until the gene tree places one
 of these HMG genes in the sexM/sexP clade.
+
+## Curator rulings (2026-09-26)
+
+- The four records above are signed off.
+- *Diplodia sapinea* (KF551229.1 / KF551228.1, PMID 24220137): considered and
+  skipped. The evidence is indirect (gene content plus a 1:1 mating-type ratio;
+  no sexual state observed), and Botryosphaeriales is already called 8/8.
+- Curate *Leptosphaeria*, *Parastagonospora*, *Pseudocercospora* and *Fulvia*
+  next, to the same evidence bar, with a before/after test.
+- Lichtheimiaceae and Syncephalastraceae: wait for the sexM/sexP tree. Propose
+  a tier-2 record only if one of their HMG genes groups with sexM or sexP at
+  UFBoot >= 95.

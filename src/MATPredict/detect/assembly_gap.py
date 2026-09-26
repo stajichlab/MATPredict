@@ -16,9 +16,25 @@ The rule, applied only to families with no reported call:
   hold five runs split by 16-56 bp islands, the England genomes three runs
   split by 21 and 143 bp.
 * The block is AT THE LOCUS when a hit of one of the family's flanking genes
-  (any `flanking_*` role) lies inside it or within `ANCHOR_WINDOW_BP` of
-  either end. Core hits do not anchor: the ruling anchors on flanks, and a
-  lone short core fragment is the commonest background hit.
+  (any `flanking_*` role) at `ANCHOR_MIN_IDENTITY` or more lies inside it or
+  within `ANCHOR_WINDOW_BP` of either end. Core hits do not anchor: the
+  ruling anchors on flanks, and a lone short core fragment is the commonest
+  background hit.
+
+Measured on the 16 C. auris genomes of results/2026-09-26_gap_validation
+(10 reference-consensus, 1 de novo break, 5 called controls). Without the
+identity floor all 10 gap genomes were flagged, but 8 of them only at
+117-353 bp N blocks beside flank PARALOG hits at 22.9-35.7% -- the wrong
+place. The only anchors at the real MTL gap were islands of sequence inside
+it, hitting PIK1 at 91.5% and PAP1 at 100%. With the floor, 2 genomes are
+flagged, both at the true gap, and nothing else.
+
+Limit, stated plainly: the C. auris MTL flanks in the roster (PAP1, OBP1,
+PIK1) lie INSIDE the idiomorph, so when the whole idiomorph is N there is
+usually nothing left to anchor on. A conserved gene outside the idiomorph,
+curated as a flank, is what would let the other 8 be reported. In a
+lineage whose true flank orthologs hit below the floor, no gap is reported:
+the rule misses rather than misplaces.
 
 It reports; it never calls. A gap report carries no idiomorph and changes no
 confidence, class or not-detected reason.
@@ -46,6 +62,11 @@ GAP_MERGE_BP = 500
 #: How far outside a block a flank hit may lie and still anchor it. A gene
 #: that borders an idiomorph sits within a few kb of its edge.
 ANCHOR_WINDOW_BP = 5_000
+
+#: Minimum percent identity of an anchoring flank hit. Separates same-locus
+#: flank hits (91.5-100% measured; the other idiomorph's flank allele hits at
+#: 51-68%) from genome-wide flank paralogs (22.9-35.7% measured).
+ANCHOR_MIN_IDENTITY = 50.0
 
 _N_RUN = re.compile(r"[Nn]+")
 
@@ -102,7 +123,7 @@ def _contig_sequences(genome_fasta: Path, wanted: set[str]) -> dict[str, str]:
 
 def find_gaps_at_locus(
     hits_by_family: dict[FamilyKey, list], genome_fasta: Path,
-    window_bp: int = ANCHOR_WINDOW_BP,
+    window_bp: int = ANCHOR_WINDOW_BP, min_identity: float = ANCHOR_MIN_IDENTITY,
 ) -> list[AssemblyGapAtLocus]:
     """Every flank-anchored N block for the families in `hits_by_family`.
 
@@ -110,7 +131,8 @@ def find_gaps_at_locus(
     hits. The genome is read once, and only the contigs a flank hit names.
     """
     flanks = {
-        key: [h for h in hits if h.role.startswith("flanking")]
+        key: [h for h in hits
+              if h.role.startswith("flanking") and h.identity >= min_identity]
         for key, hits in hits_by_family.items()
     }
     wanted = {h.contig for hits in flanks.values() for h in hits}

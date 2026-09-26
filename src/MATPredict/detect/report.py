@@ -379,6 +379,7 @@ def _result_doc(r: DetectionResult) -> dict:
                 "status": e.status,
                 "alternate_model": e.alternate_model,
                 "exons": [{"start": s, "end": end} for s, end in e.exons] if e.exons else None,
+                "evalue": e.evalue,
             }
             for e in r.gene_evidence
         ],

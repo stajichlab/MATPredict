@@ -30,6 +30,14 @@ properties:
         max_cluster_gap_bp:
           type: integer
           minimum: 1
+        # OPTIONAL. How far (bp) from its flank span a flank-carried call's
+        # strongest core hit may lie and still be kept (detect.flank_carried).
+        # ABSENT MEANS 3000, the curator's first ruling. Curator's ruling
+        # 2026-09-26: 3000 where the flanks sit inside the idiomorph (Serinales
+        # MTL), 20000 where they sit outside it (SLA2/APN2/COX13, tptA/rnhA).
+        flank_carried_window_bp:
+          type: integer
+          minimum: 0
         taxonomic_scope:
           type: array
           minItems: 1

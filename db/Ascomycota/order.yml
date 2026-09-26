@@ -4,6 +4,10 @@ loci:
     vocabulary_type: "enum"
     idiomorph_values: ["MAT1-1", "MAT1-2"]
     taxonomic_scope: [716546]  # leotiomyceta -- live-confirmed via NCBI esummary
+    # Flank-carried window (curator's ruling 2026-09-26; results/
+    # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
+    # idiomorph, and real loci were found up to 9.9 kb from the flank span.
+    flank_carried_window_bp: 20000
     # 2026-09-18; recommended by `matpredict detect audit-scope` as the deepest
     # common ancestor of the 17/26 curated records this family's own prior
     # scope ([222544, 5180, 28548, 40559]) did not cover. Confirmed via NCBI
@@ -175,6 +179,11 @@ loci:
     vocabulary_type: "enum"
     idiomorph_values: ["MATalpha", "MATa"]
     taxonomic_scope: [4893]
+    # Flank-carried window (curator's ruling 2026-09-26): sla2/cha1 sit OUTSIDE
+    # the idiomorph, like SLA2/APN2/COX13. Set by analogy with the audited
+    # SLA2/APN2 families (results/2026-09-26_flank_rule_ascomycota/NOTE.md);
+    # the audit's changed calls contained no MATsc call.
+    flank_carried_window_bp: 20000
     genes:
       # Curator's ruling, 2026-09-21: in Saccharomyces "only find the key 2
       # genes (and recognize there are silent and active copies, I would just
@@ -243,6 +252,10 @@ loci:
     vocabulary_type: "enum"
     idiomorph_values: ["A", "B"]
     taxonomic_scope: [4952]
+    # Flank-carried window (curator's ruling 2026-09-26; results/
+    # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
+    # idiomorph, and real loci were found up to 9.9 kb from the flank span.
+    flank_carried_window_bp: 20000
     genes:
       - {name: mata1, role: core_MAT, present_in_idiomorphs: ["A"]}
       - {name: mata2, role: core_MAT, present_in_idiomorphs: ["A"]}
@@ -283,6 +296,9 @@ loci:
     # Disjoint from 4893 (Saccharomycetaceae) and 4952 (Yarrowia), so this
     # introduces no new multi-family ambiguity.
     taxonomic_scope: [2916678]  # Serinales (order) -- the CUG-Ser1 / CTG clade
+    # Flank-carried window (curator's ruling 2026-09-26): PAP1/OBP1/PIK1 sit
+    # INSIDE the idiomorph, so a core hit must lie within 3 kb of them.
+    flank_carried_window_bp: 3000
     genes:
       # gene_class added 2026-09-25 so the homothallic rule can tell unrelated
       # genes apart: MTLalpha1 is the alpha-box gene (the MAT1-1-1 counterpart;
@@ -334,6 +350,10 @@ loci:
     # the canonical APN2/SLA2/COX13 set used by "MAT", per
     # db/candidates/Ascomycota/39416_mel206_MAT_MAT1-1/metadata.yaml's definition_note.
     taxonomic_scope: [147549, 39416, 57749, 752769, 55307]
+    # Flank-carried window (curator's ruling 2026-09-26; results/
+    # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
+    # idiomorph, and real loci were found up to 9.9 kb from the flank span.
+    flank_carried_window_bp: 20000
     genes:
       # Same alpha_box/HMG_box identity-domain classes as the Pezizomycotina "MAT"
       # locus above -- Tuber uses the identical MAT1-1-1/MAT1-2-1 gene names for the

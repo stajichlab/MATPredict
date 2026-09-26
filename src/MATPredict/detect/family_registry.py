@@ -82,6 +82,14 @@ the evidence diagnostics, not by intuition.
 """
 
 
+DEFAULT_FLANK_CARRIED_WINDOW_BP = 3_000
+"""The flank-carried window for a family that declares none: the +-3 kb of the
+curator's first ruling (2026-09-26). The narrow end is the safe default -- a
+family whose flanks sit outside its idiomorph says so in `order.yml`
+(`flank_carried_window_bp`). See `flank_carried`.
+"""
+
+
 @dataclass(frozen=True)
 class FamilyKey:
     phylum: str
@@ -131,6 +139,15 @@ class Family:
     Curation data like `max_cluster_gap_bp`, and a FLAG rather than a filter:
     a call wider than this is still reported, marked so a reader can see it.
     See `DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP` for the measured basis.
+    """
+    flank_carried_window_bp: int = DEFAULT_FLANK_CARRIED_WINDOW_BP
+    """How far from its flank span a flank-carried call's strongest core hit
+    may lie and the call still be kept (`flank_carried`).
+
+    Curation data: it depends on WHERE the curated flanks sit. The Serinales
+    PAP1/OBP1/PIK1 sit inside the idiomorph (3 kb); SLA2/APN2/COX13 and the
+    Mucorales tptA/rnhA sit outside it, and the Ascomycota audit found real
+    loci up to 9.9 kb off (20 kb). Absent means the 3 kb of the first ruling.
     """
     min_idiomorph_margin: float = DEFAULT_MIN_IDIOMORPH_MARGIN
     """Identity points two mutually exclusive idiomorph genes must be apart.
@@ -267,6 +284,9 @@ def load_all_families(db_root: Path) -> list[Family]:
                     max_plausible_locus_span_bp=locus.get(
                         "max_plausible_locus_span_bp",
                         DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP,
+                    ),
+                    flank_carried_window_bp=locus.get(
+                        "flank_carried_window_bp", DEFAULT_FLANK_CARRIED_WINDOW_BP,
                     ),
                 )
             )

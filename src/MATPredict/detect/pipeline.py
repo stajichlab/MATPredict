@@ -82,7 +82,7 @@ from typing import Callable
 from MATPredict.detect.assembly_gap import AssemblyGapAtLocus, find_gaps_at_locus
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.flank_carried import (
-    FLANK_SPAN_PADDING_BP, WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
+    FLANK_CARRIED_MAX_EVALUE, WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
 )
 from MATPredict.detect.family_registry import (
     Family,
@@ -181,6 +181,12 @@ class GeneEvidence:
     # that need a protein sequence for a `None`-exons gene fall back to
     # naive single-span translation for that gene, which is inherently
     # approximate for a real multi-exon gene reported this way.
+    evalue: float | None = None
+    # The BEST (lowest) search e-value among this cluster's own hits of this
+    # gene -- not only the hit shown above, which is chosen by method and
+    # identity. None when no hit carried one. Read by the flank-carried rule
+    # (`flank_carried`), which judges a call on its strongest core hit; the
+    # Ascomycota audit measured it the same way.
 
 
 @dataclass(frozen=True)
@@ -1324,9 +1330,12 @@ def _gene_evidence(
     best: dict[tuple[int, str], GeneEvidence] = {}
     for cluster in member_clusters:
         raw_by_gene: dict[str, SearchHit] = {}
+        best_evalue: dict[str, float] = {}
         for hit in _live_hits_for_evidence(cluster.hits):
             if hit.family_key != family_key:
                 continue
+            if hit.evalue is not None and hit.evalue < best_evalue.get(hit.gene_name, float("inf")):
+                best_evalue[hit.gene_name] = hit.evalue
             current = raw_by_gene.get(hit.gene_name)
             # Ranking among THIS cluster's own raw SearchHits for one gene: the
             # named method preference decides first, and identity only breaks a tie
@@ -1373,6 +1382,7 @@ def _gene_evidence(
                     reference_record_id=model.reference_record_id, method=model.method,
                     status=outcome.status, alternate_model=alternate,
                     exons=tuple((e.start, e.end) for e in model.exons) if model.exons else None,
+                    evalue=best_evalue.get(gene_name),
                 )
             else:
                 hit = raw_by_gene.get(gene_name)
@@ -1398,6 +1408,7 @@ def _gene_evidence(
                     identity=hit.identity, coverage=hit.coverage,
                     reference_record_id=hit.reference_record_id, method=hit.method,
                     status=status, alternate_model=None,
+                    evalue=best_evalue.get(gene_name),
                 )
             # Keyed per (cluster, gene): a cluster visits each of its own gene
             # names exactly once, so this never overwrites and no evidence from
@@ -2238,7 +2249,9 @@ def run_pipeline(
     # Curator's ruling 2026-09-26: a call with no modelled core gene is kept
     # at `low` only when its core hits sit inside the flank span; otherwise it
     # is withheld like a bar failure. See `flank_carried`.
-    results, flank_withheld = apply_flank_carried_rule(results)
+    results, flank_withheld = apply_flank_carried_rule(
+        results, {f.key: f.flank_carried_window_bp for f in families},
+    )
     if flank_withheld:
         logger.info(
             "withheld %d flank-carried locus/loci whose core hits lie outside "
@@ -2267,8 +2280,9 @@ def run_pipeline(
                 family_key=family.key,
                 reason=(
                     "best cluster was flank-carried -- no core gene could be "
-                    "modelled -- and a core hit lies outside the flank span "
-                    f"(+-{FLANK_SPAN_PADDING_BP} bp)"
+                    "modelled -- and its strongest core hit is weaker than "
+                    f"E={FLANK_CARRIED_MAX_EVALUE:g} or lies outside the flank "
+                    f"span (+-{family.flank_carried_window_bp} bp)"
                 ),
                 best_fraction_found=score.fraction_found if score else 0.0,
                 genes_found=list(withheld.genes_found),

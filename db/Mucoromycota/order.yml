@@ -4,6 +4,10 @@ loci:
     vocabulary_type: "enum"
     idiomorph_values: ["Plus", "Minus"]
     taxonomic_scope: [4827]
+    # Flank-carried window (curator's ruling 2026-09-26; results/
+    # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
+    # idiomorph, and real loci were found up to 9.9 kb from the flank span.
+    flank_carried_window_bp: 20000
     # CURATOR RULING, J. Stajich, 2026-09-20: the detector's 25000 bp default
     # clustering gap is "right for Ascomycota" but too tight for Mucoromycota,
     # which should "start at 50 kb". PROVISIONAL: 50000 is a starting value, not

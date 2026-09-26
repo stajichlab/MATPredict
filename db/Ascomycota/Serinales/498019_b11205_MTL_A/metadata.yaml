@@ -1,5 +1,5 @@
 record_id: 498019_b11205_MTL_A
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 498019
   lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Metschnikowiaceae;g__Candidozyma;s__Candidozyma_auris
@@ -21,13 +21,20 @@ locus:
   excluded_from_coordinate_benchmark: true
   core:
     completeness: partial
-    reference_orientation: MTLA1
-    definition_note: Candidozyma auris B11205 (clade I) MTLa1, complete-genome assembly
-      GCA_016772135.1, where it is annotated only as 'hypothetical protein CJI82_03095'
+    reference_orientation: MTLA1->PIK1->OBP1->PAP1
+    definition_note: 'Candidozyma auris B11205 (clade I) MTLa1, complete-genome assembly
+      GCA_016772135.1, where it is annotated only as ''hypothetical protein CJI82_03095''
       (WZC25182.1, 166 aa, 3 exons). Adjacent to PIK1 (WZC25183.1) - OBP1 (WZC25184.1)
       - PAP1 (WZC25185.1). The full-length a1, curated alongside the truncated B11243
       model. completeness is partial because MTLa2 is not annotated in this assembly
       (the ~780 bp between a1 and PIK1 is where it would sit; not modelled here).
+
+
+      record_version bump, 2026-09-25 (curator ruling): PIK1 (WZC25183.1), OBP1 (WZC25184.1),
+      PAP1 (WZC25185.1) added from the same CP060341.1 -- the PAP1-OBP1-PIK1 block
+      (optional `flanking_variable` roster genes). Added so a one-core-gene alpha
+      idiomorph can reach the two-modelled-gene bar; see the MTL roster comment in
+      order.yml.'
     segments:
     - segment_index: 0
       sequence_source:
@@ -35,7 +42,7 @@ locus:
         accession: CP060341.1
         seq_region: CP060341.1
       start: 195873
-      end: 196494
+      end: 203714
       contig_edge_distance: null
   extended_flank: []
 genes:
@@ -58,6 +65,42 @@ genes:
     end: 196314
   - start: 195873
     end: 195938
+- gene_index: 1
+  name: PIK1
+  protein_accession: ncbi_protein:WZC25183.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 197273
+  end: 199900
+  strand: '-'
+  order_in_locus: 1
+  transl_table: 12
+- gene_index: 2
+  name: OBP1
+  protein_accession: ncbi_protein:WZC25184.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 200564
+  end: 201853
+  strand: '-'
+  order_in_locus: 2
+  transl_table: 12
+- gene_index: 3
+  name: PAP1
+  protein_accession: ncbi_protein:WZC25185.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 202080
+  end: 203714
+  strand: +
+  order_in_locus: 3
+  transl_table: 12
 evidence:
   locus_existence:
     tier: 2
@@ -109,6 +152,18 @@ validation:
     status: pass
     per_gene:
     - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
       percent_identity: 100.0
       coverage: 100.0
       status: pass

@@ -1,3 +1,7 @@
 ##gff-version 3
-##sequence-region AY622606.1 6894 7475
+##sequence-region AY622606.1 895 8593
+AY622606.1	MATPredict	gene	895	1517	.	-	.	ID=42374_d1558_MTL_alpha.gene1;Name=MTLalpha2;role=core_MAT
+AY622606.1	MATPredict	gene	2225	3514	.	+	.	ID=42374_d1558_MTL_alpha.gene2;Name=OBP1;role=flanking_variable
+AY622606.1	MATPredict	gene	3752	6685	.	+	.	ID=42374_d1558_MTL_alpha.gene3;Name=PIK1;role=flanking_variable
 AY622606.1	MATPredict	gene	6894	7475	.	+	.	ID=42374_d1558_MTL_alpha.gene0;Name=MTLalpha1;role=core_MAT
+AY622606.1	MATPredict	gene	7510	8593	.	-	.	ID=42374_d1558_MTL_alpha.gene4;Name=PAP1;role=flanking_variable

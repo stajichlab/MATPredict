@@ -1,3 +1,7 @@
 ##gff-version 3
-##sequence-region AF167163.1 7938 8519
+##sequence-region AF167163.1 1934 10230
+AF167163.1	MATPredict	gene	1934	2553	.	-	.	ID=5476_sc5314_MTL_alpha.gene1;Name=MTLalpha2;role=core_MAT
+AF167163.1	MATPredict	gene	3260	4549	.	+	.	ID=5476_sc5314_MTL_alpha.gene2;Name=OBP1;role=flanking_variable
+AF167163.1	MATPredict	gene	4793	7726	.	+	.	ID=5476_sc5314_MTL_alpha.gene3;Name=PIK1;role=flanking_variable
 AF167163.1	MATPredict	gene	7938	8519	.	+	.	ID=5476_sc5314_MTL_alpha.gene0;Name=MTLalpha1;role=core_MAT
+AF167163.1	MATPredict	gene	8554	10230	.	-	.	ID=5476_sc5314_MTL_alpha.gene4;Name=PAP1;role=flanking_variable

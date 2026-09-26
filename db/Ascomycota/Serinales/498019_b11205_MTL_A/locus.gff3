@@ -1,3 +1,6 @@
 ##gff-version 3
-##sequence-region CP060341.1 195873 196494
+##sequence-region CP060341.1 195873 203714
 CP060341.1	MATPredict	gene	195873	196494	.	-	.	ID=498019_b11205_MTL_A.gene0;Name=MTLA1;role=core_MAT
+CP060341.1	MATPredict	gene	197273	199900	.	-	.	ID=498019_b11205_MTL_A.gene1;Name=PIK1;role=flanking_variable
+CP060341.1	MATPredict	gene	200564	201853	.	-	.	ID=498019_b11205_MTL_A.gene2;Name=OBP1;role=flanking_variable
+CP060341.1	MATPredict	gene	202080	203714	.	+	.	ID=498019_b11205_MTL_A.gene3;Name=PAP1;role=flanking_variable

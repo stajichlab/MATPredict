@@ -140,6 +140,15 @@ class Family:
     a call wider than this is still reported, marked so a reader can see it.
     See `DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP` for the measured basis.
     """
+    homothallic_screen: bool = True
+    """May this family's calls be labelled `homothallic_candidate`?
+
+    Curation data. Curator's ruling 2026-09-26: Basidiomycota
+    (Agaricomycotina especially) "aren't really homothallic in the same way",
+    so the label does not apply there -- the anchor pilot found it firing on
+    HD1+HD2 and bE+bW partner pairs in 8 of 30 genomes. Set at phylum level
+    in `order.yml`; a locus may override it. Absent means True.
+    """
     flank_carried_window_bp: int = DEFAULT_FLANK_CARRIED_WINDOW_BP
     """How far from its flank span a flank-carried call's strongest core hit
     may lie and the call still be kept (`flank_carried`).
@@ -287,6 +296,9 @@ def load_all_families(db_root: Path) -> list[Family]:
                     ),
                     flank_carried_window_bp=locus.get(
                         "flank_carried_window_bp", DEFAULT_FLANK_CARRIED_WINDOW_BP,
+                    ),
+                    homothallic_screen=locus.get(
+                        "homothallic_screen", doc.get("homothallic_screen", True),
                     ),
                 )
             )

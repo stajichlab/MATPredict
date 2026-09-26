@@ -1,4 +1,11 @@
 phylum: Basidiomycota
+# Curator's ruling 2026-09-26: no `homothallic_candidate` label in this phylum.
+# "The basidiomycetes agaricomycotina aren't really homothallic in the same
+# way so it doesn't really apply to try give that label." The anchor pilot
+# (docs/notes/2026-09-26_basidiomycota-anchors.md, branch basidio-anchors)
+# measured the rule firing on HD1+HD2 and bE+bW partner pairs in 8 of 30
+# genomes. A locus entry may set `homothallic_screen: true` to override.
+homothallic_screen: false
 loci:
   - locus_name: "HD"
     vocabulary_type: "pattern"

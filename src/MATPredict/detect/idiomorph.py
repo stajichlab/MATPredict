@@ -464,8 +464,18 @@ def classify_locus(
     # Both idiomorphs present and close enough to be one locus? Only CORE
     # genes can answer this -- a flanking gene restricted to one idiomorph
     # says where it sits, not that its idiomorph's HMG gene is present.
-    for i, a in enumerate(core):
-        for b in core[i + 1:]:
+    #
+    # A family with `homothallic_screen: false` never gets the label. Curator's
+    # ruling 2026-09-26, for Basidiomycota: the anchor pilot found it firing on
+    # HD1+HD2 and bE+bW partner pairs in 8 of 30 genomes.
+    pairs_to_test = core if family.homothallic_screen else []
+    for i, a in enumerate(pairs_to_test):
+        for b in pairs_to_test[i + 1:]:
+            if not idiomorph_of[a.gene_name] or not idiomorph_of[b.gene_name]:
+                # A core gene with no `present_in_idiomorphs` is in EVERY
+                # idiomorph (HD1/HD2, bE/bW, a pheromone receptor): partner
+                # subunits of one locus, not evidence of a second idiomorph.
+                continue
             if idiomorph_of[a.gene_name] & idiomorph_of[b.gene_name]:
                 continue  # same idiomorph; says nothing about homothallism
             if a.contig != b.contig:

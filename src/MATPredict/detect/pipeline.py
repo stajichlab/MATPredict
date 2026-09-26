@@ -1483,6 +1483,8 @@ def run_pipeline(
     if genetic_code is None:
         genetic_code = 1
     record_families = load_record_families(db_root)
+    #: (family, gene) -> the roster's `polish` setting; absent means both tools.
+    polish_mode = {(f.key, g["name"]): g.get("polish") for f in families for g in f.genes}
     record_protein_lengths: dict[tuple[str, str], int] = {}
     protein_lengths = _curated_protein_lengths(
         db_root, families, record_families, exclude_record_ids,
@@ -1744,11 +1746,19 @@ def run_pipeline(
                 window = _padded_window(cluster, padding, contig_lengths)
                 # Both tools get the SAME window and the same gene, so their
                 # models are directly comparable.
-                exonerate_model = polish_with_exonerate(
-                    genome_fasta=genome_fasta, family=family, gene_name=gene_name,
-                    reference_fasta=reference_fasta, record_families=record_families,
-                    window=window, genetic_code=genetic_code,
-                )
+                # A roster gene marked `polish: miniprot` skips exonerate:
+                # curator's ruling, 2026-09-26, for the long PAP1/OBP1/PIK1
+                # flanks, where exonerate was ~90% of runtime and a 60-genome
+                # ablation gave identical genotypes on miniprot alone.
+                # `classify` then records a `polished_single` model.
+                if polish_mode.get((family.key, gene_name)) == "miniprot":
+                    exonerate_model = None
+                else:
+                    exonerate_model = polish_with_exonerate(
+                        genome_fasta=genome_fasta, family=family, gene_name=gene_name,
+                        reference_fasta=reference_fasta, record_families=record_families,
+                        window=window, genetic_code=genetic_code,
+                    )
                 miniprot_model = polish_with_miniprot(
                     genome_fasta=genome_fasta, family=family, gene_name=gene_name,
                     reference_fasta=reference_fasta, record_families=record_families,

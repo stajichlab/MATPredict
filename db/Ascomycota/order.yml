@@ -316,9 +316,12 @@ loci:
       # measure: OBP1 and PIK1 have genome paralogs (C. auris OBP paralog 28%,
       # PIK paralog 42% identity), which could pair with a background MTL
       # fragment. PROVISIONAL, pending the Serinales-wide scan.
-      - {name: PAP1, role: flanking_variable, optional: true, aliases: [PAPa, PAPalpha, PAP]}
-      - {name: OBP1, role: flanking_variable, optional: true, aliases: [OBPa, OBPalpha, OBP, OPB]}
-      - {name: PIK1, role: flanking_variable, optional: true, aliases: [PIKa, PIKalpha, PIK]}
+      # `polish: miniprot` (curator ruling 2026-09-26): exonerate on these long
+      # proteins was ~90% of runtime; miniprot alone gave identical genotypes
+      # on 60/60 ablation genomes (results/2026-09-26_flank_ablation/).
+      - {name: PAP1, role: flanking_variable, optional: true, polish: miniprot, aliases: [PAPa, PAPalpha, PAP]}
+      - {name: OBP1, role: flanking_variable, optional: true, polish: miniprot, aliases: [OBPa, OBPalpha, OBP, OPB]}
+      - {name: PIK1, role: flanking_variable, optional: true, polish: miniprot, aliases: [PIKa, PIKalpha, PIK]}
   - locus_name: "MATtub"
     vocabulary_type: "enum"
     idiomorph_values: ["MAT1-1", "MAT1-2"]

@@ -102,3 +102,8 @@ properties:
                 enum: [alpha_box, HMG_box, pheromone_receptor, pheromone_precursor, HD1, HD2,
                        apn2_homolog, sla2_homolog, matA-2, matA-3]
               present_in_idiomorphs: {type: array, items: {type: string}}
+              # polish: which tools model this gene. Absent = both exonerate and
+              # miniprot. `miniprot` skips exonerate -- for long, conserved genes
+              # where exonerate dominates runtime (curator ruling 2026-09-26,
+              # PAP1/OBP1/PIK1 in MTL).
+              polish: {enum: [miniprot]}

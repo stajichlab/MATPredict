@@ -121,3 +121,8 @@ properties:
               # where exonerate dominates runtime (curator ruling 2026-09-26,
               # PAP1/OBP1/PIK1 in MTL).
               polish: {enum: [miniprot]}
+              # slot: groups OPTIONAL idiomorph-alternative genes into one bonus
+              # scoring unit (detect.scoring.score_cluster). Found -> +1 to the
+              # numerator and denominator of fraction_found; absent -> no effect.
+              # Curator-approved 2026-09-26 for Cryptococcus SXI1/SXI2.
+              slot: {type: string}

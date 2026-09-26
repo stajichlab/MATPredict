@@ -40,6 +40,8 @@ no chytrid family is curated, so every genome falls to `exhaustive` routing
 * **Rhizopus is Plus-biased, and it is not a Minus under-call.** R. arrhizus:
   42 called Plus, 1 Minus; the withheld R. arrhizus loci are also labelled Plus
   (12 of 13). Whether the skew is sampling or biology is not established here.
+  Curator view (2026-09-26): most likely sampling bias in the sequenced strains,
+  and it may also reflect a real skew among strains. No action for now.
   Open: 12 R. arrhizus genomes stay uncalled at ~40% identity although R.
   arrhizus records exist -- assembly fragmentation or divergent references,
   not checked.

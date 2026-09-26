@@ -39,7 +39,7 @@ curated or corrected. Newest entries at the end of each section.
 | A2 | `28985_nrrl-y-1140_MATsc_MATa` (*K. lactis*) | Evidence block copied from the *S. cerevisiae* S288C record: cited only Astell 1981 plus Kostriken 1983 (the *S. cerevisiae* HO endonuclease; *K. lactis* switches through alpha3), and a boundaries sentence about S288C coordinates on NC_001135.5. | V | FIXED `25f47ba`: Astell 1981 kept as structural basis; Astrom 2000 (PMID 10978277), Butler 2004 (PMID 14745027) added |
 | A3 | `28985_nrrl-y-1140_MATsc_HMLalpha` (*K. lactis*) | Same copied block. | V | FIXED `25f47ba`, plus Barsoum 2010 (PMID 20008928) |
 | A4 | `381046_cbs-6340_MATsc_HMLalpha` (*L. thermotolerans*) | Same copied block, and it claimed tier 1 although the idiomorph and boundaries come from genome sequence only. | V | FIXED `25f47ba`: Souciet 2009 (PMID 19525356); evidence now tier 2 |
-| A5 | `order.yml`, `MTL` roster | `MTLalpha2` has no roster slot, so every hit to it is silently dropped. It exists in *C. albicans*, *C. dubliniensis* and *C. tropicalis* but is biologically absent in Metschnikowiaceae (Munoz et al. 2018), so adding it naively depresses scores there. | M, V (deposits AF167163.1, AY622606.1) | OPEN (ruling): add as `optional`, or add a per-clade restriction |
+| A5 | `order.yml`, `MTL` roster | `MTLalpha2` had no roster slot, so every hit to it was silently dropped. It exists in *C. albicans*, *C. dubliniensis* and *C. tropicalis* but is biologically absent in Metschnikowiaceae (Munoz et al. 2018), so adding it as required would depress scores there. | M, V (deposits AF167163.1, AY622606.1) | FIXED `2c6c3a7`: added as `optional` (curator ruling 2026-09-25); provisional pending the Serinales-wide scan |
 | A6 | `order.yml`, `MTL` gene_class | We set `MTLA2: HMG_box` on 2026-09-25 from the literature. Measured afterwards: Pfam HMG_box (PF00505) does not hit the curated *C. albicans* or *C. lusitaniae* MTLa2 proteins. The class rests on the literature, not a domain hit. | V `results/2026-09-25_cauris_mtl/` | FIXED (documented) `8dec9e1` |
 
 ## B. Errors in deposited gene models and annotations
@@ -72,10 +72,12 @@ curated or corrected. Newest entries at the end of each section.
 | B3.1 | *D. hansenii* CBS767 `XP_460134.1` | MTLalpha1 annotated only as "DEHA2E19096p"; a name search misses it (this is what caused A1). | V | OPEN (upstream) |
 | B3.2 | *C. albicans* SC5314 `AF167163.1` | Every CDS has product "unknown"; the alpha2 CDS (AAD51408.1) also has no /gene name. | V | WORKED AROUND (named in our record) |
 | B3.3 | *C. dubliniensis* `AY622606.1` | OBP product spelled "OPB alpha"; PAPalpha CDS 3'-partial; no /gene qualifiers. | V | WORKED AROUND |
+| B3.3a | *C. dubliniensis* `AY622606.1` PAPalpha `AAU13916.1` | 5'-partial on the minus strand with `codon_start=2`; a record that omits codon_start translates it at 2% coverage. | V | FIXED in our record (`codon_start: 2`, `2c6c3a7`) |
 | B3.4 | *C. auris* B11205 `WZC25182.1`, and FDK38_003635 `QRG39207.1` | Full-length MTLa1 (166 aa, homeodomain E=4.8e-19, next to PIK1) annotated only as "hypothetical protein". | V | WORKED AROUND (curated `498019_b11205_MTL_A`); OPEN (upstream) |
 | B3.5 | *K. lactis* NRRL Y-1140 RefSeq | The MAT-position MATa CDSs are unnamed; idiomorph was established by blastn of the AF195067.1 cassette. | M (record note) | WORKED AROUND |
 | B3.6 | *M. importuna* `KY782629.1` | SLA2 annotated as "Endocytosis protein end4" (the *S. pombe* name). | V | WORKED AROUND (named SLA2) |
 | B3.7 | Mortierellomycota NCBI proteins, e.g. GJJ68563.1 "mating-type protein A1", OAQ36521.1 "mating type protein 2, partial" | Names assigned by similarity pipelines, not characterized MAT genes. | A | OPEN: do not use as references |
+| B3.8 | *C. auris* B11221 `GCA_002775015.1`: PIK1 `PIS55912.1`, OBP1 `PIS55913.1` | Both annotated only as "hypothetical protein", although they are the reciprocal-best orthologs of the *C. lusitaniae* PIK1/OBP1 and sit in the PAP1-alpha1-PIK1-OBP1 block (the neighbouring PAP is named "Poly(A) polymerase PAPalpha"). | V `results/2026-09-25_cauris_mtl/` | WORKED AROUND (named in `498019_b11221_MTL_alpha` v2, `2c6c3a7`); OPEN (upstream) |
 
 ## C. Errors in deposit metadata or literature statements
 
@@ -117,3 +119,4 @@ Recorded so a detector rule or a curator does not "fix" them.
   compiled from the 2026-09-24/25 sessions, the two literature rounds
   (`docs/notes/2026-09-24_mat-reference-gap-literature*.md`) and project
   memory.
+* **2026-09-25** B3.3a, B3.8 added; A5 fixed (MTLalpha2 optional; PAP1/OBP1/PIK1 optional flanks added to the MTL roster and all eight Serinales records).

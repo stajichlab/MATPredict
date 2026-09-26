@@ -117,7 +117,7 @@ from MATPredict.detect.polish import (
     PolishOutcome,
     classify,
 )
-from MATPredict.db.taxonomy import default_genetic_code
+from MATPredict.db.taxonomy import default_genetic_code, default_lineage_taxids
 from MATPredict.detect.reference_fasta import searchable_genes_by_family
 from MATPredict.detect.scoring import FamilyScore, is_ambiguous, score_cluster
 from MATPredict.detect.search import (
@@ -129,6 +129,7 @@ from MATPredict.detect.search import (
     search_localize,
 )
 from MATPredict.detect.tiering import assign_tier, cap_at_medium
+from MATPredict.detect.zygosity import genome_zygosity, load_zygosity_rules
 
 logger = logging.getLogger(__name__)
 
@@ -349,6 +350,9 @@ class DetectionOutcome:
     #: N blocks at a flank-anchored position of a family with no call
     #: (curator's ruling 2026-09-26; see `assembly_gap`). A report, not a call.
     assembly_gaps_at_locus: list[AssemblyGapAtLocus] = field(default_factory=list)
+    #: Genome-level zygosity statement, or None when no rule applies
+    #: (curator's ruling 2026-09-26; see `zygosity`). Never alters a call.
+    zygosity: dict | None = None
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -1489,6 +1493,10 @@ def run_pipeline(
     #: serine; translating those genomes with table 1 is systematically wrong.
     genetic_code: int | None = None,
     genetic_code_resolver: Callable[[int], int | None] = default_genetic_code,
+    #: Ancestor-taxid lookup for the zygosity rule (`zygosity`). Called only
+    #: when a genome has a single-idiomorph call and its own taxid is not a
+    #: listed taxon; the router's cached efetch document answers it.
+    zygosity_lineage_resolver: Callable[[int], list[int]] = default_lineage_taxids,
 ) -> DetectionOutcome:
     # `routing` lets the caller route ONCE and reuse the decision, which the
     # CLI must do: it has to know the routed families BEFORE this call, so it
@@ -2331,6 +2339,12 @@ def run_pipeline(
         {key: hits for key, hits in unreported_hits.items() if hits}, genome_fasta,
     )
 
+    # Curator's ruling 2026-09-26: in a taxon whose assemblies collapse MTL
+    # heterozygosity, a single-idiomorph genome is of unknown zygosity.
+    zygosity = genome_zygosity(
+        results, taxid, load_zygosity_rules(db_root), zygosity_lineage_resolver,
+    )
+
     return DetectionOutcome(
         results=results,
         not_detected=not_detected,
@@ -2343,6 +2357,7 @@ def run_pipeline(
         suppressed_loci=suppressed,
         suppressed_flank_carried=len(flank_withheld),
         assembly_gaps_at_locus=assembly_gaps,
+        zygosity=zygosity,
     )
 
 

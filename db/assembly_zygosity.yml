@@ -1,0 +1,15 @@
+# Taxa whose genome assemblies are known to collapse heterozygous MTL
+# haplotypes into one idiomorph. For a genome in one of these taxa (the taxid
+# itself or any ancestor), a detection report whose calls name exactly one
+# idiomorph says `zygosity: {status: unknown, ...}`. Idiomorph calls are not
+# changed. Read by src/MATPredict/detect/zygosity.py.
+#
+# Add a taxon only with measured evidence (reads vs assembly), and cite it.
+assemblies_collapse_heterozygosity:
+  - taxid: 5476
+    name: Candida albicans
+    reason: >-
+      assemblies collapse heterozygous MTL haplotypes (8 of 11 read-based
+      a/alpha isolates assembled one idiomorph; 16 hand-picked isolates, not a
+      species-wide rate)
+    evidence: results/2026-09-26_calbicans_mtl_reads/NOTE.md

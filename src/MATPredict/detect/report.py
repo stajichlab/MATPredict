@@ -444,6 +444,10 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
             }
             for g in outcome.assembly_gaps_at_locus
         ],
+        # Genome-level zygosity (curator's ruling 2026-09-26; see `zygosity`):
+        # `unknown` when this taxon's assemblies collapse MTL heterozygosity
+        # and the calls name one idiomorph. Null when no rule applies.
+        "zygosity": outcome.zygosity,
         "families_attempted": [_family_label(k) for k in outcome.families_attempted],
         "detected": [_result_doc(r) for r in outcome.results],
         "not_detected": [

@@ -113,6 +113,10 @@ class RolloutSummary:
     #: 2026-09-26): an uncalled family's flank-anchored position is an N
     #: block, so the miss is an assembly gap, not evidence of absence.
     assembly_gap_at_locus: list[str] = field(default_factory=list)
+    #: Genomes whose report says `zygosity: {status: unknown}` (curator's
+    #: ruling 2026-09-26): a single-idiomorph call in a taxon whose assemblies
+    #: collapse MTL heterozygosity. Their genotype is not a zygosity count.
+    zygosity_unknown: list[str] = field(default_factory=list)
 
     def to_doc(self) -> dict:
         """Plain-dict form for YAML serialization (`write_rollout_summary`)."""
@@ -138,6 +142,7 @@ class RolloutSummary:
             ],
             "not_searched": list(self.not_searched),
             "assembly_gap_at_locus": list(self.assembly_gap_at_locus),
+            "zygosity_unknown": list(self.zygosity_unknown),
         }
 
 
@@ -218,6 +223,7 @@ def aggregate_reports(
     genome_errors: list[GenomeReportError] = []
     not_searched: list[str] = []
     assembly_gap_at_locus: list[str] = []
+    zygosity_unknown: list[str] = []
 
     # genome -> set of families it detected; family -> set of genomes that
     # detected it. Built while reading, used afterward for anomaly detection.
@@ -247,6 +253,8 @@ def aggregate_reports(
 
         if doc.get("assembly_gap_at_locus"):
             assembly_gap_at_locus.append(genome_id)
+        if (doc.get("zygosity") or {}).get("status") == "unknown":
+            zygosity_unknown.append(genome_id)
 
         detected_families: set[str] = set()
         for result in doc.get("detected") or []:
@@ -292,6 +300,7 @@ def aggregate_reports(
         genome_errors=genome_errors,
         not_searched=not_searched,
         assembly_gap_at_locus=assembly_gap_at_locus,
+        zygosity_unknown=zygosity_unknown,
     )
 
 

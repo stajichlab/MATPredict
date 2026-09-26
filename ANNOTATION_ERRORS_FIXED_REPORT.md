@@ -110,6 +110,8 @@ Recorded so a detector rule or a curator does not "fix" them.
 | D6 | *L. elongisporus*, *C. sojae* | No MAT genes at all. | A | A no-call is correct. |
 | D7 | *Hanseniaspora* | MAT genes are present (Krassowski et al. 2019); the claim of MAT loss is not supported. | A, V (synteny: 15/18 no-call genomes carry a core MAT hit next to SLA2) | A no-call is a miss. |
 | D8 | *Heterobasidion*, *Microbotryum* | a2 / HD pseudogenes in some strains or species. | A | A disrupted HD is not a detection failure. |
+| D9 | *Debaryomyces* | The PAP1-OBP1-PIK1 block is NOT at the MTL locus. In CBS767 (NC_006047.2) the block is at 0.88 Mb; the a1/a2/alpha1 locus is at 1.59 Mb. A 29% MTLA2 fragment sits 8 kb from the block. | V (Serinales-wide scan `882aa01`, `results/2026-09-26_serinales_all_882aa01/flank_carried_audit.txt`) | A second, spurious "A" `partial_locus` call in 46 of 77 *D. hansenii* genomes; it turns `homothallic` into `a+homothallic`. Removed by the proposed flank-carried rule (core hit outside the flank span: withhold). |
+| D10 | *Lodderomyces beijingensis* (GCF_963989305.1) | MTLa1+MTLa2-like blocks at near-identical identity (51-53%) on 7 of the chromosomes; 4 start at the same coordinate (151,666). Whether this is biology or an assembly artefact is not established. | V (same scan) | 8 "A high" calls in one genome. Genotype unaffected; a copy-number flag may be needed. |
 
 ## E. Errors in this project's own documents
 
@@ -128,3 +130,4 @@ Recorded so a detector rule or a curator does not "fix" them.
   memory.
 * **2026-09-25** B3.3a, B3.8 added; A5 fixed (MTLalpha2 optional; PAP1/OBP1/PIK1 optional flanks added to the MTL roster and all eight Serinales records).
 * **2026-09-26** B4.1-B4.2 added (C. albicans assemblies collapsing heterozygous MTL; read-depth test).
+* **2026-09-26** D9-D10 added from the Serinales-wide scan on the flank roster (`882aa01`).

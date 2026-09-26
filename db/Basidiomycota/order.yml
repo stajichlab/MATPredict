@@ -22,7 +22,12 @@ loci:
     # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
     # reasonable for most"), replacing the family-rank values set 2026-09-20.
     # Rank verified against NCBI Taxonomy, not assumed.
-    taxonomic_scope: [5338]  # Agaricales (order)
+    # Widened 2026-09-26 to Russulales, Boletales and Polyporales, which now
+    # carry curated HD records (Heterobasidion KF280353.1, Rhizopogon
+    # AB646132.2, Phanerochaete HQ188438.1). Taxids verified against NCBI
+    # Taxonomy (rank order): Russulales 452342, Boletales 68889,
+    # Polyporales 5303.
+    taxonomic_scope: [5338, 452342, 68889, 5303]  # Agaricales, Russulales, Boletales, Polyporales
     # Curator's ruling 2026-09-21: 25 kb is a reasonable upper bound for
     # Agaricales. Measured largest intra-locus gene gap in the two curated HD
     # records: 352 bp (n=2), so 25 kb is generous and costs nothing here.
@@ -30,6 +35,26 @@ loci:
     genes:
       - {name: HD1, role: core_MAT, gene_class: HD1}
       - {name: HD2, role: core_MAT, gene_class: HD2}
+      # Agaricomycete HD-locus anchors, added 2026-09-26 on the curator's
+      # request to define Basidiomycota anchors before the phylum launch.
+      # Literature: MIP (mitochondrial intermediate peptidase) 5' and beta-fg
+      # 3' of the HD genes "for nearly all characterized Agaricomycetes"
+      # (Mujic et al. 2017, G3 7:1775, PMID 28450370); MIP "consistently
+      # syntenic" with MAT-HD in Polyporales and other Agaricomycetes (James
+      # et al. 2013, Mycologia 105:1374, PMID 23928418). Known exceptions:
+      # Lentinula edodes, MIP not closely linked (PMID 24295887); Sparassis,
+      # beta-fg absent (PMID 33213780).
+      # Measured on a 30-genome pilot (results/2026-09-26_basidio_anchors/):
+      # an HD hit lies within 20 kb of the genome's top MIP1 hit in 12/18
+      # Agaricomycotina genomes, 0/4 Ustilaginomycotina, 0/7
+      # Pucciniomycotina, 0/1 Wallemiomycotina. The anchors are
+      # Agaricomycete-specific; this family's scope is Agaricomycete orders
+      # only, so that is where they are searched.
+      # OPTIONAL (a bonus flank, as sla2 in MATsc): finding one promotes the
+      # call, its absence (Lentinula, Sparassis, assembly breaks) costs
+      # nothing.
+      - {name: MIP1, role: flanking_conserved, optional: true}
+      - {name: beta_fg, role: flanking_conserved, optional: true}
   - locus_name: "PR"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^B[0-9]+$"

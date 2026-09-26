@@ -1,0 +1,67 @@
+total_genomes: 16
+confidence_tally:
+  Ascomycota:MTL:
+    high: 5
+locus_class_tally:
+  Ascomycota:MTL:
+    mat_locus: 5
+not_detected:
+- genome: GCA_027563725.1_ASM2756372v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_027563775.1_ASM2756377v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_041026465.1_ASM4102646v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_041026485.1_ASM4102648v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_041026505.1_ASM4102650v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_041026525.1_ASM4102652v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_041026545.1_ASM4102654v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_041026565.1_ASM4102656v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_041026585.1_ASM4102658v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_041026605.1_ASM4102660v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_902703435.1_CA1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+anomalies: []
+genome_errors: []
+not_searched: []
+assembly_gap_at_locus:
+- GCA_027563725.1_ASM2756372v1
+- GCA_027563775.1_ASM2756377v1
+- GCA_041026465.1_ASM4102646v1
+- GCA_041026485.1_ASM4102648v1
+- GCA_041026505.1_ASM4102650v1
+- GCA_041026525.1_ASM4102652v1
+- GCA_041026545.1_ASM4102654v1
+- GCA_041026565.1_ASM4102656v1
+- GCA_041026585.1_ASM4102658v1
+- GCA_041026605.1_ASM4102660v1
+- GCA_902703435.1_CA1

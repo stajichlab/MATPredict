@@ -115,22 +115,46 @@ def score_cluster(
         # was actually there, but they are NOT in `scored_found`, which is
         # the numerator. Order is preserved from the family roster so the
         # report reads in locus order.
+        # A `slot` groups optional, idiomorph-alternative genes (SXI1 alpha /
+        # SXI2 a) into ONE bonus unit: when any member is found the unit adds
+        # 1 to numerator AND denominator; when none is, it stays out of the
+        # score like any optional gene. So it can raise a score, never lower
+        # one -- the curator ruled on 2026-09-21 that SXI1/SXI2 are not
+        # established outside Cryptococcus, so their absence must cost nothing.
+        # Measured need (results/2026-09-26_cryptococcus_zero/NOTE.md): four
+        # MATalpha C. neoformans assemblies split the locus over 5-6 contigs;
+        # the true piece (SXI1 + FAO1) scored 1/3 and fell below the 0.5 floor.
+        #
+        # A slot scores only when EXACTLY ONE member is found. The members
+        # are alternatives, so two of them in one cluster is what a
+        # homeodomain paralog hitting both references looks like, not
+        # evidence of either idiomorph. Measured on 243 Cryptococcus genomes
+        # (results/2026-09-26_sxi_slot_gateA/): 12 new calls held both, and 3
+        # of them turned a single-idiomorph genome into a+alpha.
+        members_found: dict[str, list[str]] = {}
+        for g in expected_genes:
+            if g.get("slot") and g["name"] in optional and g["name"] in found:
+                members_found.setdefault(g["slot"], []).append(g["name"])
+        slots_hit = {slot for slot, names in members_found.items() if len(names) == 1}
+        slot_found = [n for slot in slots_hit for n in members_found[slot]]
         optional_found = [
             g["name"] for g in expected_genes
             if g["name"] in optional and g["name"] in found
+            and g["name"] not in slot_found
         ]
         if not searchable:
             # Every expected gene was optional or unsearchable, and the only
             # hits are optional ones. There is no required gene to score, and
             # 0/0 is not a score -- an optional gene must never be able to
-            # manufacture a fraction. Report it and score zero.
+            # manufacture a fraction. Report it and score zero. A slot is
+            # optional too, so it cannot manufacture one either.
             fraction = 0.0
         else:
-            fraction = len(scored_found) / len(searchable)
+            fraction = (len(scored_found) + len(slots_hit)) / (len(searchable) + len(slots_hit))
         scores.append(FamilyScore(
             family_key=family.key,
             fraction_found=fraction,
-            genes_found=scored_found + optional_found,
+            genes_found=scored_found + slot_found + optional_found,
             genes_missing=genes_missing,
             genes_not_searchable=not_searchable,
             genes_optional_found=optional_found,

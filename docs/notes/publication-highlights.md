@@ -46,3 +46,26 @@ limits. Nothing here is a claim until the evidence is re-checked for the paper.
   (median 18 -> 106 s per genome).
 - Evidence: results/2026-09-27_rhodotorula_curation/ (main checkout);
   docs/notes/2026-09-27_rhodotorula-curation.md.
+
+## Mating pheromone receptors identified by position, from genome DNA alone (2026-09-27)
+
+- Agaricomycete genomes carry 3-7 STE3-like receptor copies; a PF02076 tree
+  does not separate mating from non-mating copies there
+  (results/2026-09-27_receptor_explore/).
+- Rule: a short ORF (20-130 codons, in-frame Met) ending in a strict CAAX
+  motif C[VI][IV][AVMG] within 10 kb of an STE3 locus. Found from genome DNA
+  with a six-frame scan; no annotation used.
+- Known answers (6 genomes, 9 mating receptors, 25 other STE3 copies): strict
+  CAAX flags 6/9 mating receptors and 0/25 others; chance rate 2.5% of
+  random same-size windows. Every Agaricomycete mating receptor is found
+  (Coprinopsis 3/3, Schizophyllum 2/2). With homology to curated pheromones:
+  4/9 and 0/25, chance ~0.1%.
+- Uncurated orders (52 genomes): strict CAAX flags 75 STE3 loci vs 13.6
+  expected by chance (5.5x); with homology 36 vs 0.3. Polyporales 13/15 and
+  Russulales 8/12 genomes flagged; flagged copies sit nearer the curated
+  mating receptors in the tree (median distance 1.12-1.19 vs 2.20).
+- Limits: misses Cryptococcus (pheromone 45 kb away) and Rhodotorula
+  (CTIA/CTVA endings need a lineage-specific motif); fails in rusts (1/16);
+  the textbook CAAX alphabet is useless (42% chance rate); ground truth is
+  small (9 receptors).
+- Evidence: results/2026-09-27_pheromone_positional/ (main checkout).

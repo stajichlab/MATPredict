@@ -8,7 +8,7 @@
 #   sbatch --export=ALL,SRC=$PWD/.claude/worktrees/run-<sha>/src,OUT=$PWD/results/<date>_zygo23 \
 #       .claude/worktrees/run-<sha>/scripts/run_zygo_regression.slurm
 set -euo pipefail
-: "${SRC:?set SRC to a frozen worktree's src}" "${OUT:?set OUT}" "${SCRATCH:?no SCRATCH}"
+: "${SRC:?set SRC to the src of a frozen worktree}" "${OUT:?set OUT}" "${SCRATCH:?no SCRATCH}"
 E=/bigdata/stajichlab/jstajich/projects/MATPredict/.pixi/envs/default
 export PATH="$E/bin:$PATH"
 [[ -f "$SRC/MATPredict/__init__.py" ]] || { echo "SRC missing: $SRC" >&2; exit 1; }

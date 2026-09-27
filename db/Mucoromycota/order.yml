@@ -82,4 +82,14 @@ loci:
       # i.e. algA - tptA - [btbA] - sexP/sexM - rnhA - glrA. One reference
       # protein is also why 26% is a floor on its detectability rather than a
       # property of the gene; revisit if more btbA-bearing records are added.
-      - {name: btbA, role: flanking_variable, present_in_idiomorphs: ["Plus"], optional: true}
+      #
+      # CURATOR RULING, J. Stajich, 2026-09-26: btbA is `idiomorph_informative:
+      # false`. It still marks the locus (and stays optional), but it no longer
+      # votes on Plus vs Minus. Why: the "0 of 207 Minus loci" count above was
+      # circular -- btbA's own vote made those loci Plus. In the 294-genome
+      # early-diverging scan, 33 Rhizopus calls carried sexM (~96% identity,
+      # 99% coverage) and no sexP, yet were labelled Plus; btbA was present in
+      # all 33, and as a long protein its bitscore (e.g. 871 in GCA_000696915.1)
+      # outvoted sexM (378). See
+      # docs/notes/2026-09-26_early-diverging-scan-and-chytrid-control.md.
+      - {name: btbA, role: flanking_variable, present_in_idiomorphs: ["Plus"], optional: true, idiomorph_informative: false}

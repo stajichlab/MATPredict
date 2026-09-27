@@ -53,3 +53,23 @@ def test_a_sexM_only_rhizopus_locus_is_called_minus_despite_btbA():
 def test_btbA_alone_evidences_no_idiomorph():
     fam = _family()
     assert evidenced_idiomorphs(fam, [_h(fam, "btbA", "flanking_variable", 871, 98.3)]) == set()
+
+
+def test_btbA_belongs_to_both_idiomorphs():
+    """Curator ruling, J. Stajich, 2026-09-27: btbA carries no idiomorph
+    restriction. It sits at 66-99% identity in 29 Rhizopus Minus loci
+    (results/2026-09-27_tier_rule_replay) and in all 33 relabelled Rhizopus
+    Minus calls, so "Plus-only" was wrong."""
+    btbA = next(g for g in _family().genes if g["name"] == "btbA")
+    assert not btbA.get("present_in_idiomorphs")
+    assert btbA.get("optional") is True
+    assert btbA.get("idiomorph_informative") is False
+
+
+def test_btbA_with_sexM_narrows_the_expected_core_to_minus():
+    """With btbA Plus-only, a sexM + btbA locus named both idiomorphs, so the
+    expected core fell back to the full roster and sexP counted as missing."""
+    from MATPredict.detect.family_registry import expected_genes_for_idiomorph
+    names = {g["name"] for g in expected_genes_for_idiomorph(_family(), {"sexM", "btbA", "tptA"})}
+    assert "sexM" in names and "btbA" in names
+    assert "sexP" not in names

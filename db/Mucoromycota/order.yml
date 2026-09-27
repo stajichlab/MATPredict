@@ -119,4 +119,15 @@ loci:
       # all 33, and as a long protein its bitscore (e.g. 871 in GCA_000696915.1)
       # outvoted sexM (378). See
       # docs/notes/2026-09-26_early-diverging-scan-and-chytrid-control.md.
-      - {name: btbA, role: flanking_variable, present_in_idiomorphs: ["Plus"], optional: true, idiomorph_informative: false}
+      #
+      # CURATOR RULING, J. Stajich, 2026-09-27: btbA carries NO idiomorph
+      # restriction -- it belongs to both. The Plus-only label came from the
+      # one curated record above and is now contradicted by the data: btbA
+      # sits at 66-99% identity in 29 Rhizopus Minus loci
+      # (results/2026-09-27_tier_rule_replay) and in all 33 relabelled
+      # Rhizopus Minus calls. This resolves the "revisit if more btbA-bearing
+      # records are added" note above. It stays optional and non-voting. The
+      # Plus-only label had also made a sexM + btbA locus name both
+      # idiomorphs, so its expected core fell back to the full roster and
+      # sexP counted as missing.
+      - {name: btbA, role: flanking_variable, optional: true, idiomorph_informative: false}

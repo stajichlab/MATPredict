@@ -1,0 +1,249 @@
+record_id: 671144_cbs-633-66_wallMAT_v1
+record_version: 1
+taxonomy:
+  taxid: 671144
+  lineage: k__Fungi;p__Basidiomycota;sc__Wallemiomycotina;c__Wallemiomycetes;o__Wallemiales;f__Wallemiaceae;g__Wallemia;s__Wallemia_mellicola_CBS_633.66
+  lineage_resolved_date: '2026-09-27'
+organism:
+  species: Wallemia mellicola CBS 633.66
+  strain:
+    name: CBS 633.66
+    known: true
+    culture_collection_ids:
+    - CBS 633.66
+    differs_from_sequenced: false
+mating_type:
+  locus_name: wallMAT
+  idiomorphs:
+  - v1
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: BAP31->|STE3<-|CAF1<-|HMG<-|SXI1->
+    definition_note: 'PUTATIVE. Wallemia mellicola CBS 633.66 (published as W. sebi)
+      putative mating-type locus on WALSEscaffold_2 (JH668224.1), 17,113-42,263. Padamsee
+      et al. 2012 found mating-type gene homologs in this genome; Sun et al. 2019
+      (W. mellicola, 25 strains) and Gostincar et al. 2019 (W. ichthyophaga, 21 strains)
+      describe a putative MAT locus in two versions (one inverted), each in about
+      half the strains, with BAP31, a homeodomain gene SXI1, an HMG-box gene, the
+      pheromone receptor STE3 and CAF1. In CBS 633.66: BAP31 = EIM23475.1 (WALSEDRAFT_59214),
+      STE3 = EIM23479.1 (WALSEDRAFT_59221, ''STE3-domain-containing protein'', Pfam
+      STE3 E=1.4e-87), CAF1 = EIM23480.1 (WALSEDRAFT_14687), HMG = EIM23483.1 (WALSEDRAFT_62153,
+      ''hypothetical protein'', Pfam HMG_box E=1.9e-6). Gene assignment in this genome
+      is by this project: blastp orthology to the W. ichthyophaga EXF-994 locus genes
+      on NW_008806275.1 (BAP31 87.5%, CAF1 96.4%, HMG 51.2%). SXI1 is NOT annotated
+      in the CBS 633.66 assembly: its exons are a miniprot model of W. ichthyophaga
+      XP_009266116.1 (the homeodomain gene on the same contig as that locus) on JH668224.1
+      (48.7% identity over all 263 aa, GT-AG intron), extended in frame to the first
+      stop codon (278 aa). Idiomorph ''v1'' is a placeholder for the version carried
+      by this reference strain. The pheromone-processing gene STE14 (EIM23477.1) and
+      NDUFA6 (EIM23478.1) lie between BAP31 and STE3 and are not curated. TIER 2:
+      genome-derived.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JH668224.1
+        seq_region: JH668224.1
+      start: 17113
+      end: 42263
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: BAP31
+  protein_accession: ncbi_protein:EIM23475.1
+  role: flanking_conserved
+  present: true
+  locus_tag: WALSEDRAFT_59214
+  segment_index: 0
+  start: 17113
+  end: 18142
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 17113
+    end: 17118
+  - start: 17170
+    end: 17186
+  - start: 17236
+    end: 17256
+  - start: 17303
+    end: 17461
+  - start: 17512
+    end: 17601
+  - start: 17652
+    end: 17683
+  - start: 17734
+    end: 17755
+  - start: 17815
+    end: 17884
+  - start: 17934
+    end: 18000
+  - start: 18048
+    end: 18142
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: STE3
+  protein_accession: ncbi_protein:EIM23479.1
+  role: core_MAT
+  present: true
+  locus_tag: WALSEDRAFT_59221
+  segment_index: 0
+  start: 21336
+  end: 22572
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 22371
+    end: 22572
+  - start: 22008
+    end: 22325
+  - start: 21544
+    end: 21961
+  - start: 21336
+    end: 21498
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: CAF1
+  protein_accession: ncbi_protein:EIM23480.1
+  role: flanking_conserved
+  present: true
+  locus_tag: WALSEDRAFT_14687
+  segment_index: 0
+  start: 23330
+  end: 24258
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 24163
+    end: 24258
+  - start: 23928
+    end: 24118
+  - start: 23720
+    end: 23881
+  - start: 23498
+    end: 23675
+  - start: 23330
+    end: 23449
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: HMG
+  protein_accession: ncbi_protein:EIM23483.1
+  role: core_MAT
+  present: true
+  locus_tag: WALSEDRAFT_62153
+  segment_index: 0
+  start: 25382
+  end: 26300
+  strand: '-'
+  order_in_locus: 3
+  exons:
+  - start: 26243
+    end: 26300
+  - start: 26090
+    end: 26197
+  - start: 25870
+    end: 26042
+  - start: 25481
+    end: 25825
+  - start: 25382
+    end: 25438
+  codon_start: 1
+  transl_table: 1
+- gene_index: 4
+  name: SXI1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 41384
+  end: 42263
+  strand: +
+  order_in_locus: 4
+  exons:
+  - start: 41384
+    end: 41863
+  - start: 41907
+    end: 42263
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    citations: &id001
+    - doi: 10.1016/j.fgb.2012.01.007
+      pmid: '22326418'
+    - doi: 10.3390/genes10060427
+      pmid: '31167502'
+    - doi: 10.3389/fmicb.2019.02019
+      pmid: '31551960'
+    experimental_method: PUTATIVE MAT LOCUS, TIER 2 (genome-derived). No MAT gene
+      of Wallemia has a locus-specific GenBank deposit, and no mating or meiosis has
+      been observed in the genus. Locus described as putative by Padamsee et al. 2012
+      (CBS 633.66 genome) and, from population genomes, by Sun et al. 2019 and Gostincar
+      et al. 2019; STE3 was found by manual search in the latter.
+  boundaries:
+    tier: 2
+    citations: *id001
+    experimental_method: PUTATIVE MAT LOCUS, TIER 2 (genome-derived). No MAT gene
+      of Wallemia has a locus-specific GenBank deposit, and no mating or meiosis has
+      been observed in the genus. Record segment spans BAP31 to SXI1 on JH668224.1.
+      Four genes from the assembly's own CDS features; SXI1 from this project's miniprot
+      model (no annotated protein).
+  idiomorph_assignment:
+    tier: 2
+    citations: *id001
+    experimental_method: 'PUTATIVE MAT LOCUS, TIER 2 (genome-derived). No MAT gene
+      of Wallemia has a locus-specific GenBank deposit, and no mating or meiosis has
+      been observed in the genus. ''v1'' is a placeholder for the locus version of
+      the reference strain; which version is which mating type is not known. mating_type.system
+      ''heterothallic'' is itself putative: it rests on two locus versions each carried
+      by about half the sequenced strains.'
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JH668224.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: 'Genes 0-3 (BAP31, STE3, CAF1, HMG) match their accessions at 100%. Gene 4
+      (SXI1) has no protein_accession: it is unannotated in the assembly, so no accession-based
+      check can run. Its protein in proteins.faa is translated from the recorded exons on
+      JH668224.1 (278 aa, ATG start, GT-AG intron, TAA stop ending at 42,263, no internal stop).'
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.3389/fmicb.2019.02019|671144|wallMAT|v1
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-09-27 on curator ruling (''make it a tier 2 record putative'').
+    PENDING CURATOR SIGN-OFF: accepted on the unmerged branch curation-puccinio only
+    so detect can be measured with it.'
+model_provenance: null

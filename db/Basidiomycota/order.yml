@@ -498,3 +498,32 @@ loci:
       # modelled gene for the 2-gene bar, but its absence must not block a
       # call where the receptor is modelled with another gene.
       - {name: RibL6, role: flanking_conserved, optional: true}
+  - locus_name: "wallMAT"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^v[0-9]+$"
+    # Wallemiales PUTATIVE MAT locus, added 2026-09-27 on the curator's ruling
+    # ("make it a tier 2 record putative"). Described as putative by Padamsee
+    # et al. 2012 (PMID 22326418), Sun et al. 2019 (PMID 31167502, W.
+    # mellicola) and Gostincar et al. 2019 (PMID 31551960, W. ichthyophaga):
+    # BAP31, a homeodomain gene SXI1, an HMG-box gene, the pheromone receptor
+    # STE3 and CAF1, in two versions (one inverted; SXI1 absent and the HMG
+    # gene truncated in the inverted version per Gostincar 2019). The one
+    # record is tier 2, genome-derived. Pattern vocabulary with a 'v1'
+    # placeholder: which version is which mating type is not known, so the
+    # idiomorph is not called.
+    # Rank verified against NCBI Taxonomy (431958 = order Wallemiales).
+    taxonomic_scope: [431958]  # Wallemiales (order)
+    # 20 kb. Largest intra-locus gene gap in the one record: HMG end 26,300
+    # to SXI1 start 41,384 = 15,084 bp (n=1).
+    max_cluster_gap_bp: 20000
+    # gene_class: STE3 = pheromone_receptor from the deposit's own product name
+    # ("STE3-domain-containing protein"); HMG = HMG_box from the record's
+    # definition_note (Pfam HMG_box hit; the papers' "HMG DNA binding motif").
+    # SXI1 has NO gene_class: whether it is HD1 or HD2 is not documented by the
+    # record and has not been ruled on by the curator.
+    genes:
+      - {name: SXI1, role: core_MAT}
+      - {name: HMG, role: core_MAT, gene_class: HMG_box}
+      - {name: STE3, role: core_MAT, gene_class: pheromone_receptor}
+      - {name: BAP31, role: flanking_conserved}
+      - {name: CAF1, role: flanking_conserved}

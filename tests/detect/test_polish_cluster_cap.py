@@ -9,7 +9,8 @@ day (docs/notes/2026-09-26_polish-cap-measured-and-serinales-scan.md): cap 6 cut
 compute 135.3 -> 74.6 h and lost 4 of 613 calls. Curator's ruling 2026-09-26:
 cap 6 is the default; None turns it off.
 
-Rank = what is known before polishing: distinct live genes, then best identity,
+Rank = what is known before polishing: distinct genes (superseded cross-hits
+included, curator 2026-09-26), then best identity,
 then hit count. Per family, because a phylum-fallback genome is searched
 against many families at once and one genome-wide top-N starves the rest.
 """
@@ -99,3 +100,40 @@ def test_diagnostics_mark_the_capped_clusters(tmp_path):
     assert ev["c1"]["admitted"] and not ev["c1"]["polish_capped"]
     assert ev["c2"]["admitted"] and ev["c2"]["polish_capped"]
     assert ev["c3"]["polish_capped"]
+
+
+def _hit(gene, identity, superseded_by=None):
+    from MATPredict.detect.search import SearchHit
+    return SearchHit(
+        family_key="P:aLocus", gene_name=gene, role="core_MAT", contig="c", start=1, end=100,
+        strand="+", identity=identity, reference_record_id="r", method="tblastn_genome",
+        superseded_by=superseded_by,
+    )
+
+
+def test_the_rank_counts_a_superseded_cross_hit_as_a_gene():
+    """Curator's ruling 2026-09-26: rank on ALL distinct genes, superseded
+    cross-hits included. A real MAT locus usually draws a cross-hit from the
+    other idiomorph's reference, which the first resolution supersedes; ranking
+    on live genes alone put Zymoseptoria brevis's true locus (MAT1-1-1 95.6%,
+    superseded MAT1-2-1 44.1%, SLA2) below six 3-gene noise clusters at 33-43%
+    identity, and it was never polished (results/2026-09-26_polish_cap/
+    MIXED_RANK_NOTE.md)."""
+    from MATPredict.detect.clustering import GeneCluster
+    from MATPredict.detect.pipeline import _polish_rank
+    true_locus = GeneCluster("c", 1, 100, [
+        _hit("MAT1-1-1", 95.6), _hit("MAT1-2-1", 44.1, superseded_by="MAT1-1-1"), _hit("SLA2", 70.0)])
+    noise = GeneCluster("c", 1, 100, [_hit("a", 42.9), _hit("b", 40.0), _hit("c", 33.0)])
+    assert sorted([noise, true_locus], key=lambda c: _polish_rank(c, "P:aLocus"))[0] is true_locus
+
+
+def test_the_rank_matches_the_replay_that_was_measured():
+    """The adopted rank is exactly the one the replay measured: distinct genes,
+    best identity and hit count over ALL of the family's hits in the cluster,
+    as the evidence-diagnostics row records them (`gene_count`,
+    `best_identity`, `hit_count`). 7 calls lost across the panels against 14
+    for the live rank."""
+    from MATPredict.detect.clustering import GeneCluster
+    from MATPredict.detect.pipeline import _polish_rank
+    c = GeneCluster("c", 1, 100, [_hit("x", 30.0), _hit("y", 90.0, superseded_by="x")])
+    assert _polish_rank(c, "P:aLocus") == (-2, -90.0, -2)

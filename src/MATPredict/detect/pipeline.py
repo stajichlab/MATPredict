@@ -578,8 +578,10 @@ MODELLED_GENE_BAR = "modelled_gene_bar"
 #: ruling 2026-09-26, after a real run over 561 genomes (docs/notes/2026-09-26_
 #: polish-cap-measured-and-serinales-scan.md): cap 6 cut compute 135.3 -> 74.6
 #: h, removed all 6 timeouts, and lost 4 of 613 calls, all phylum-fallback
-#: Saccharomycopsis. Ranked genes-first (`_polish_rank`); the identity-first
-#: rank was tested out of sample and lost 2 Mucoromycota Minus calls.
+#: Saccharomycopsis. Ranked genes-first over all distinct genes, superseded
+#: cross-hits included (`_polish_rank`, curator's ruling 2026-09-26); the
+#: identity-first rank was tested out of sample and lost 2 Mucoromycota Minus
+#: calls, and the mixed rank lost calls either single rank kept.
 DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY = 6
 
 #: The permissive floor the evidence diagnostics enumerate candidates with:
@@ -596,9 +598,22 @@ _DIAGNOSTICS_CANDIDATE_FLOOR = EvidenceFloor(
 
 def _polish_rank(cluster: GeneCluster, family_key: FamilyKey) -> tuple:
     """Sort key ranking a family's admitted clusters BEFORE polishing: more
-    distinct live genes first, then higher best identity, then more hits.
-    Used by the per-family polish cap."""
-    own = _own_live_hits(cluster, family_key)
+    distinct genes first, then higher best identity, then more hits. Used by
+    the per-family polish cap.
+
+    Counts ALL of the family's hits, superseded cross-hits included. Curator's
+    ruling 2026-09-26 (results/2026-09-26_polish_cap/MIXED_RANK_NOTE.md): a
+    real MAT locus usually draws a cross-hit from the other idiomorph's
+    reference, which the first resolution supersedes, so ranking on LIVE genes
+    alone demoted true loci -- Zymoseptoria brevis's MAT1-1-1 at 95.6% ranked
+    below six 3-gene noise clusters at 33-43% and was never polished. Measured
+    by replay: 7 calls lost across the cap panels against 14 for the live rank;
+    the one call it loses that the live rank kept (GCA_029290875.1) is an
+    unpolished 29% MAT1-1-3 fragment beside SLA2/APN2 in a phylum-fallback
+    yeast. These keys are exactly the evidence-diagnostics row's `gene_count`,
+    `best_identity` and `hit_count`, so a replay over existing runs reproduces
+    the rank."""
+    own = [h for h in cluster.hits if h.family_key == family_key]
     return (-len({h.gene_name for h in own}), -max((h.identity for h in own), default=0.0), -len(own))
 
 

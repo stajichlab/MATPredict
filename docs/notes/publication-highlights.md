@@ -28,3 +28,21 @@ limits. Nothing here is a claim until the evidence is re-checked for the paper.
 - Evidence: results/2026-09-27_puccinio_followup/, results/2026-09-27_wallemia_allele2/;
   records db/Basidiomycota/Wallemiales/671144_cbs-633-66_wallMAT_v1/ and
   1708542_exf-10342_wallMAT_v2/.
+
+## Rhodotorula P/R and HD loci recovered genome-wide; agreement with an independent study (2026-09-27)
+
+- Tier-2 records from the group's preprint (Liu et al., bioRxiv
+  10.1101/2025.09.11.675505): 6 P/R (A1 and A2 across three clades, family
+  redPR) and 5 HD (new family redHD), all on public contigs.
+- 221 genomes (216 BFD Rhodotorula + 15 Sporidiobolales test genomes): HD
+  0 -> 217 genomes called; P/R 215 -> 216. HD and P/R never share a contig,
+  consistent with physically separate (tetrapolar) loci.
+- P/R allele agrees with the study's independent strain assignments for 61 of
+  62 held-out strains (66/67 including record strains); the miss is a
+  reported hybrid (RIT389). A second reported hybrid is called A1+A2 with two
+  HD loci.
+- Limits: the comparison set is unpublished (preprint); only strains with
+  public BFD assemblies were scored; the HD search costs 5.9x runtime
+  (median 18 -> 106 s per genome).
+- Evidence: results/2026-09-27_rhodotorula_curation/ (main checkout);
+  docs/notes/2026-09-27_rhodotorula-curation.md.

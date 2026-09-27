@@ -74,9 +74,15 @@ loci:
     # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
     # reasonable for most"), replacing the family-rank values set 2026-09-20.
     # Rank verified against NCBI Taxonomy, not assumed.
-    taxonomic_scope: [5338]  # Agaricales (order)
+    # Widened 2026-09-27 to Polyporales (5303) and Russulales (452342), receptor
+    # queue step (c): tier-2 B-locus records for Heterobasidion irregulare,
+    # Trametes versicolor and Grifola frondosa. The family keeps one receptor
+    # name and generic precursor names, so all orders share the roster. Before
+    # this, those orders were HD-only (results/2026-09-26_basidiomycota_full).
+    taxonomic_scope: [5338, 5303, 452342]  # Agaricales, Polyporales, Russulales (orders)
     # 25 kb per the curator's Agaricales upper bound. Measured largest
     # intra-locus gene gap in the one curated PR record: 3,186 bp (n=1).
+    # The 2026-09-27 records' largest gap is 9,913 bp (Grifola frondosa).
     max_cluster_gap_bp: 25000
     # Gene names must match the names used by this family's curated records
     # exactly -- detect/search.py:_attribute drops any hit whose curated gene

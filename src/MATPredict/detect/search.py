@@ -710,6 +710,7 @@ def polish_with_exonerate(
             start=int(gene_line[3]) + offset, end=int(gene_line[4]) + offset,
             strand=gene_line[6], exons=exons, identity=identity,
             reference_record_id=record_id, method=method,
+            score=record.score if gene_line[5] not in ("", ".") else None,
         )
 
 
@@ -839,4 +840,5 @@ def polish_with_miniprot(
             start=int(mrna_line[3]) + offset, end=int(mrna_line[4]) + offset,
             strand=mrna_line[6], exons=exons, identity=identity,
             reference_record_id=record_id, method="miniprot_refine",
+            score=record.score if mrna_line[5] not in ("", ".") else None,
         )

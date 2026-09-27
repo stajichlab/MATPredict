@@ -49,6 +49,12 @@ class PolishModel:
     identity: float
     reference_record_id: str
     method: str
+    #: The tool's OWN raw alignment score for this model (miniprot's `AS`,
+    #: exonerate's DP score -- the GFF score column). Comparable only between
+    #: two models from the SAME tool, never across tools. None when the
+    #: tool reported none. Used to decide a sexM/sexP-style pair on two
+    #: models (`resolve_idiomorph_by_models`).
+    score: float | None = None
 
 
 def boundaries_agree(a: PolishModel, b: PolishModel, tolerance_bp: int = 10) -> bool:

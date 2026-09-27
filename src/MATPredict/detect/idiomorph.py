@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from MATPredict.detect.clustering import GeneCluster
 from MATPredict.detect.family_registry import Family
+from MATPredict.detect.polish import PolishModel
 from MATPredict.detect.search import SearchHit
 
 DEFAULT_MIN_OVERLAP_FRACTION = 0.5
@@ -62,6 +63,13 @@ class IdiomorphResolution:
     overlap_fraction: float
     winner_coverage: float | None = None
     loser_coverage: float | None = None
+    #: What decided the pair. `first_pass_identity`: the pre-polish rule
+    #: (`_rank`: proteome first, then raw identity). `model_score_miniprot` /
+    #: `model_score_exonerate`: both genes were modelled in the same window
+    #: and the tool's own alignment scores decided (`resolve_idiomorph_by_models`).
+    basis: str = "first_pass_identity"
+    winner_model_score: float | None = None
+    loser_model_score: float | None = None
 
     @property
     def margin(self) -> float:
@@ -633,3 +641,87 @@ def resolve_idiomorph_overlaps(
         for h in hits
     ]
     return resolved, events
+
+
+#: Which tool's scores decide a model-based resolution, in order of preference.
+#: miniprot first: it is always run (a roster gene may skip exonerate), and it
+#: is the tool the 2026-09-26 HMG-box tree extraction used, where its scores
+#: pointed the 13 thin-margin Minus calls at sexP.
+_MODEL_SCORE_TOOLS = (("miniprot", "model_score_miniprot"), ("exonerate", "model_score_exonerate"))
+
+
+def _model_span_overlap(a: PolishModel, b: PolishModel) -> float:
+    if a.contig != b.contig:
+        return 0.0
+    shared = min(a.end, b.end) - max(a.start, b.start) + 1
+    if shared <= 0:
+        return 0.0
+    return shared / min(a.end - a.start + 1, b.end - b.start + 1)
+
+
+def resolve_idiomorph_by_models(
+    hits: list[SearchHit],
+    family: Family,
+    models: dict[str, dict[str, PolishModel | None]],
+    min_overlap_fraction: float = DEFAULT_MIN_OVERLAP_FRACTION,
+) -> tuple[list[SearchHit], list[IdiomorphResolution]]:
+    """Re-decide each overlapping mutually exclusive pair on its two MODELS.
+
+    Curator's ruling, 2026-09-26: sexM and sexP "are hard to tell apart", so
+    both are modelled and the models decide. `models[gene][tool]` is that
+    gene's polished model from `tool` ("miniprot" / "exonerate") in this
+    cluster, or None.
+
+    The statistic is the tool's OWN alignment score (`PolishModel.score`) of
+    the two genes' models in the same window: miniprot's when both genes have
+    a miniprot model with a score, else exonerate's when both have an
+    exonerate model with a score from the same exonerate mode. One tool's
+    score is never compared with the other's. Higher score wins. The pair is
+    only re-decided when the two models describe one gene (span overlap on
+    the shorter model >= `min_overlap_fraction`).
+
+    Returns the hits with the loser's overlapping hits superseded by the
+    winner and the winner's hits live again, plus one event per re-decided
+    pair. A pair with no usable score pair, or an exact tie, is left exactly
+    as the first pass left it and produces no event.
+    """
+    events: list[IdiomorphResolution] = []
+    superseded: dict[int, str | None] = {}
+    for gene_a, gene_b in _mutually_exclusive_pairs(family, hits):
+        chosen = None
+        for tool, basis in _MODEL_SCORE_TOOLS:
+            ma = (models.get(gene_a) or {}).get(tool)
+            mb = (models.get(gene_b) or {}).get(tool)
+            if ma is None or mb is None or ma.score is None or mb.score is None:
+                continue
+            if tool == "exonerate" and ma.method != mb.method:
+                continue  # refined and unrefined DP scores are not one scale
+            chosen = (ma, mb, basis)
+            break
+        if chosen is None:
+            continue
+        ma, mb, basis = chosen
+        overlap = _model_span_overlap(ma, mb)
+        if overlap < min_overlap_fraction or ma.score == mb.score:
+            continue
+        win, lose = (ma, mb) if ma.score > mb.score else (mb, ma)
+        for h in hits:
+            if h.gene_name == lose.gene_name and _span_overlaps(h, lose):
+                superseded[id(h)] = win.gene_name
+            elif h.gene_name == win.gene_name and h.superseded_by == lose.gene_name:
+                superseded[id(h)] = None
+        events.append(IdiomorphResolution(
+            contig=win.contig, winner=win.gene_name, loser=lose.gene_name,
+            winner_identity=win.identity, loser_identity=lose.identity,
+            overlap_fraction=overlap, basis=basis,
+            winner_model_score=win.score, loser_model_score=lose.score,
+        ))
+    resolved = [
+        dataclasses.replace(h, superseded_by=superseded[id(h)]) if id(h) in superseded else h
+        for h in hits
+    ]
+    return resolved, events
+
+
+def _span_overlaps(hit: SearchHit, model: PolishModel) -> bool:
+    return hit.contig == model.contig and min(hit.end, model.end) >= max(hit.start, model.start)

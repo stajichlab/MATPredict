@@ -105,6 +105,7 @@ from MATPredict.detect.idiomorph import (
     assign_idiomorph,
     classify_locus,
     evidenced_idiomorphs,
+    resolve_idiomorph_by_models,
     resolve_idiomorph_overlaps,
 )
 from MATPredict.detect.polish import (
@@ -919,6 +920,9 @@ def _write_idiomorph_diagnostics(
         "overlap_fraction": resolution.overlap_fraction,
         "winner_coverage": resolution.winner_coverage,
         "loser_coverage": resolution.loser_coverage,
+        "basis": resolution.basis,
+        "winner_model_score": resolution.winner_model_score,
+        "loser_model_score": resolution.loser_model_score,
     })
 
 
@@ -1684,6 +1688,11 @@ def run_pipeline(
             if not own_events:
                 continue
             by_id = dict(zip((id(h) for h in own), resolved_own))
+            # A superseded hit is a NEW object (dataclasses.replace); keep its
+            # "came from tblastn localization" standing, which is keyed by id.
+            localized_hit_ids.update(
+                id(new) for old_id, new in by_id.items() if old_id in localized_hit_ids
+            )
             cluster_hits_out = [by_id.get(id(h), h) for h in cluster_hits_out]
             events.extend(own_events)
             resolutions_with_family.extend((family, e) for e in own_events)
@@ -1820,10 +1829,16 @@ def run_pipeline(
             }
             # Localized genes: this family's own genes that tblastn placed in
             # THIS cluster, whose approximate HSP coordinates need refining.
+            #
+            # The losing half of a resolved idiomorph pair (superseded) is
+            # polished only where the family sets `model_idiomorph_alternatives`
+            # (curator's ruling 2026-09-26, Mucoromycota sexM/sexP): there both
+            # genes get a model and the models decide the pair, below.
             localized_genes = {
                 h.gene_name
                 for h in cluster.hits
                 if h.family_key == family.key and id(h) in localized_hit_ids
+                and (h.superseded_by is None or family.model_idiomorph_alternatives)
             } - already_annotated_genes
             # Rescue genes: this family's own core_MAT genes still missing from
             # this cluster, checked strictly against this family's own hits in
@@ -1931,6 +1946,43 @@ def run_pipeline(
                         run_id=run_id, genome_id=genome_id,
                     )
 
+    # Decide each sexM/sexP-style pair on its two MODELS, for the families that
+    # ask for it. Runs after the post-polish pass so the tblastn-identity rule
+    # cannot overwrite the model verdict. The first-pass event for the same
+    # pair is replaced, so each real gene still carries ONE verdict.
+    for cluster in clusters:
+        for family in families:
+            if not family.model_idiomorph_alternatives:
+                continue
+            own = [h for h in cluster.hits if h.family_key == family.key]
+            if len(own) < 2:
+                continue
+            models = {
+                gene: {"miniprot": outcome.miniprot_model, "exonerate": outcome.exonerate_model}
+                for (cluster_id, key, gene), outcome in polish_by.items()
+                if cluster_id == id(cluster) and key == family.key
+            }
+            resolved_own, own_events = resolve_idiomorph_by_models(
+                own, family, models, min_overlap_fraction=idiomorph_overlap_fraction
+            )
+            if not own_events:
+                continue
+            by_id = dict(zip((id(h) for h in own), resolved_own))
+            cluster.hits[:] = [by_id.get(id(h), h) for h in cluster.hits]
+            decided = {frozenset((e.winner, e.loser)) for e in own_events}
+            kept = [
+                e for e in idiomorph_events_by_cluster.get(id(cluster), [])
+                if frozenset((e.winner, e.loser)) not in decided
+            ]
+            idiomorph_events_by_cluster[id(cluster)] = kept + own_events
+            resolutions_with_family.extend((family, e) for e in own_events)
+            if evidence_diagnostics_path is not None:
+                for event in own_events:
+                    _write_idiomorph_diagnostics(
+                        evidence_diagnostics_path, event, family,
+                        run_id=run_id, genome_id=genome_id,
+                    )
+
     # Cross-contig fragment merging is OFF by default. Curator's ruling,
     # 2026-09-20, after Basidiomycota order testing found a real Cryptococcus
     # deneoformans MAT locus -- both genes matching at 100% identity --
@@ -1961,10 +2013,20 @@ def run_pipeline(
         (`polished_agree` vs `polished_disagree`) is deliberately NOT consulted
         -- both are "polished" as far as tiering is concerned.
         """
+        # Where both halves of an idiomorph pair are modelled on purpose
+        # (`model_idiomorph_alternatives`), the losing half is not this locus's
+        # gene: its failure to model says nothing about the call.
+        live_genes = None
+        if families_by_key[family_key].model_idiomorph_alternatives:
+            live_genes = {
+                h.gene_name for c in clusters if id(c) in cluster_ids for h in c.hits
+                if h.family_key == family_key and h.superseded_by is None
+            }
         return any(
             outcome.status == STATUS_UNPOLISHED
-            for (cluster_id, key, _gene_name), outcome in polish_by.items()
+            for (cluster_id, key, gene_name), outcome in polish_by.items()
             if key == family_key and cluster_id in cluster_ids
+            and (live_genes is None or gene_name in live_genes)
         )
 
     def _modelled_gene_count(

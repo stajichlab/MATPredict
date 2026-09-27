@@ -158,6 +158,16 @@ class Family:
     Mucorales tptA/rnhA sit outside it, and the Ascomycota audit found real
     loci up to 9.9 kb off (20 kb). Absent means the 3 kb of the first ruling.
     """
+    model_idiomorph_alternatives: bool = False
+    """Polish BOTH genes of an overlapping mutually exclusive pair, and decide
+    the pair on the two models (`idiomorph.resolve_idiomorph_by_models`).
+
+    Curation data. Curator's ruling 2026-09-26, for Mucoromycota sexM/sexP,
+    which "are hard to tell apart": the first-pass raw-identity verdict left
+    the losing gene unmodelled, and 13 Minus calls rested on margins of
+    0.1-2 identity points. Off by default: no other family has been shown to
+    need it, and it costs one extra polish per resolved pair.
+    """
     min_idiomorph_margin: float = DEFAULT_MIN_IDIOMORPH_MARGIN
     """Identity points two mutually exclusive idiomorph genes must be apart.
 
@@ -299,6 +309,9 @@ def load_all_families(db_root: Path) -> list[Family]:
                     ),
                     homothallic_screen=locus.get(
                         "homothallic_screen", doc.get("homothallic_screen", True),
+                    ),
+                    model_idiomorph_alternatives=locus.get(
+                        "model_idiomorph_alternatives", False,
                     ),
                 )
             )

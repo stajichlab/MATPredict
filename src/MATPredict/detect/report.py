@@ -349,6 +349,9 @@ def _result_doc(r: DetectionResult) -> dict:
                 "overlap_fraction": res.overlap_fraction,
                 "winner_coverage": res.winner_coverage,
                 "loser_coverage": res.loser_coverage,
+                "basis": res.basis,
+                "winner_model_score": res.winner_model_score,
+                "loser_model_score": res.loser_model_score,
             }
             for res in r.idiomorph_resolutions
         ],

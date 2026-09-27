@@ -14,10 +14,10 @@ mucilaginosa RIT389 gets no P/R call (one HD call).
   "Known answers" section.
 - CCT 0783 (R. toruloides): GCA_016808315.1 -- called A1+A2 with two HD loci.
 - RIT389 (R. mucilaginosa): GCA_002250355.1 -- no P/R call.
-  (Accessions from BFD samples.csv, verified 2026-09-27. The hybrid status of
-  both strains comes from the unpublished manuscript; cite the preprint
-  DOI 10.1101/2025.09.11.675505 once it states this, and confirm before
-  publication.)
+  (Accessions from BFD samples.csv, verified 2026-09-27. Both strains are
+  putative hybrids per the curator's group's study, preprint
+  DOI 10.1101/2025.09.11.675505; the curator, an author, approved naming
+  them on 2026-09-27.)
 
 ## Method that found it
 Entry 002.

@@ -476,13 +476,21 @@ loci:
     # idiomorph carrying its own, highly divergent STE3 receptor (Coelho et
     # al. 2008 PMID 18408057; Coelho et al. 2010 PMID 20700437; Coelho et al.
     # 2011 PMID 21880139). HD genes are NOT near the P/R genes in
-    # R. toruloides, S. roseus or S. salmonicolor (Coelho 2008) and only
-    # partial HD deposits exist, so no HD family is defined here.
+    # R. toruloides, S. roseus or S. salmonicolor (Coelho 2008); the HD locus
+    # is its own family, redHD (below), added 2026-09-27.
+    # Rhodotorula records added 2026-09-27 (tier 2, genome-derived) from the
+    # curator's group's preprint (Liu et al., bioRxiv 10.1101/2025.09.11.675505,
+    # not yet peer-reviewed): STE3 plus the allele-specific STE20 of the P/R
+    # region (STE20 kept in the records, not searched), on public assemblies
+    # of R. toruloides, R. glutinis, R. mucilaginosa, R. sphaerocarpa and
+    # Rhodotorula sp. (clade I).
     # Rank verified against NCBI Taxonomy (231213 = order Sporidiobolales).
     taxonomic_scope: [231213]  # Sporidiobolales (order)
     # 20 kb. RibL6 sits 416 bp (A2, JN246612.1) to 9 bp (A1, JN246653.1)
     # from STE3 in the curated deposits; the MAT region itself is larger than
     # these amplicons (Coelho 2008), so the gap is not set to the deposit span.
+    # Not raised for the Rhodotorula STE20 (4.9-26.0 kb from STE3), because
+    # STE20 is not searched.
     max_cluster_gap_bp: 20000
     genes:
       - {name: STE3a1, role: core_MAT, gene_class: pheromone_receptor, present_in_idiomorphs: ["A1"]}
@@ -494,6 +502,34 @@ loci:
       # modelled gene for the 2-gene bar, but its absence must not block a
       # call where the receptor is modelled with another gene.
       - {name: RibL6, role: flanking_conserved, optional: true}
+      # STE20 (PAK kinase) sits in the P/R region of both alleles in the
+      # Rhodotorula records (A1 and A2 copies differ), 4.9-26.0 kb from STE3.
+      # Declared so the records' curated name validates, but OFF the search
+      # list, as in the Tremellales MAT family (2026-09-21: STE20 gave 187 of
+      # 272 genome-wide HSPs on Cryptococcus JEC21 and one run went 8 s ->
+      # 535 s; a large ubiquitous kinase family). If it is ever searched, it
+      # must NOT vote on the idiomorph (the btbA lesson, 2026-09-26).
+      - {name: STE20, role: flanking_variable, optional: true, idiomorph_informative: false, exclude_from_search: true}
+  - locus_name: "redHD"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^B[0-9]+$"
+    # Sporidiobolales HD MAT locus, added 2026-09-27 on the curator's request
+    # (Rhodotorula MAT "including HD loci"); fills the queued Sporidiobolales
+    # HD gap (the rust HD records found 0/15 Sporidiobolales). A divergently
+    # transcribed HD1/HD2 pair, physically separate from the P/R locus
+    # (tetrapolar) per the curator's group's preprint (Liu et al., bioRxiv
+    # 10.1101/2025.09.11.675505, not yet peer-reviewed). Records are TIER 2
+    # (genome-derived): no locus-specific HD deposit exists.
+    # Pattern vocabulary: HD is multiallelic; the allele labels (B41, B39, ...)
+    # are the preprint's catalogue names and are not callable by homology.
+    # Rank verified against NCBI Taxonomy (231213 = order Sporidiobolales).
+    taxonomic_scope: [231213]  # Sporidiobolales (order)
+    # 10 kb. HD1-HD2 intergenic distance in the records: 358-463 bp; largest
+    # record span 3,134 bp (R. glutinis CBS 20).
+    max_cluster_gap_bp: 10000
+    genes:
+      - {name: HD1, role: core_MAT, gene_class: HD1}
+      - {name: HD2, role: core_MAT, gene_class: HD2}
   - locus_name: "wallMAT"
     vocabulary_type: "enum"
     idiomorph_values: ["v1", "v2"]

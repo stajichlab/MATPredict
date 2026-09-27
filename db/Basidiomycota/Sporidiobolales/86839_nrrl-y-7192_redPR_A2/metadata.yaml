@@ -1,0 +1,150 @@
+record_id: 86839_nrrl-y-7192_redPR_A2
+record_version: 1
+taxonomy:
+  taxid: 86839
+  lineage: k__Fungi;p__Basidiomycota;sc__Pucciniomycotina;c__Microbotryomycetes;o__Sporidiobolales;f__Sporidiobolaceae;g__Rhodotorula;s__Rhodotorula_sphaerocarpa
+  lineage_resolved_date: '2026-09-27'
+organism:
+  species: Rhodotorula sphaerocarpa
+  strain:
+    name: NRRL Y-7192
+    known: true
+    culture_collection_ids:
+    - NRRL Y-7192
+    differs_from_sequenced: false
+mating_type:
+  locus_name: redPR
+  idiomorphs:
+  - A2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: STE20->STE3a2
+    definition_note: 'R. sphaerocarpa NRRL Y-7192 (manuscript clade A), P/R MAT locus allele A2: STE20
+      (759 aa) is the group''s funannotate/miniprot model (OM440_MP00003); STE3a2 (345 aa) is the group''s
+      funannotate/miniprot model (OM440_MP00007). Assignment A2 = the manuscript''s P/R allele for this
+      strain, and its STE3 groups with the curated Sporidiobolales STE3a2 receptors (Coelho et al. 2011).
+      Pheromone precursor (RHA) genes in the locus are not curated: they are too short for the current
+      search (queued with the receptor work).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JBRFVS010000013.1
+        seq_region: JBRFVS010000013.1
+      start: 383282
+      end: 396137
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: STE20
+  protein_accession: null
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 383282
+  end: 385808
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 385455
+    end: 385808
+  - start: 383978
+    end: 385396
+  - start: 383814
+    end: 383913
+  - start: 383412
+    end: 383746
+  - start: 383282
+    end: 383353
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: STE3a2
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 394665
+  end: 396137
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 395994
+    end: 396137
+  - start: 395840
+    end: 395908
+  - start: 395426
+    end: 395735
+  - start: 395155
+    end: 395372
+  - start: 394870
+    end: 395097
+  - start: 394665
+    end: 394733
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: TIER 2 (genome-derived, preprint). Locus located and genes re-annotated by the
+      curator's group (Liu, Tsai, Coelho, ... Stajich) with Leucosporidium scottii CBS 5931 MAT genes
+      as reference, manual re-annotation and miniprot for short or hypervariable genes; reported in a
+      bioRxiv preprint that is NOT yet peer-reviewed. No locus-specific GenBank deposit exists. The public
+      assembly GCA_060419215.1 carries the sequence; the gene coordinates are the group's models, verified
+      here to translate on the public contig.
+    citations:
+    - &id001
+      doi: 10.1101/2025.09.11.675505
+      pmid: null
+    - doi: 10.5281/zenodo.18230104
+      pmid: null
+  boundaries:
+    tier: 2
+    experimental_method: record segment spans the curated gene models on JBRFVS010000013.1
+    citations:
+    - *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: A2 by the manuscript's allele assignment (STE3.A2 receptor clade) and by blastp
+      of the receptor to the curated Coelho 2011 STE3a2 records; genome-derived, not by crosses
+    citations:
+    - *id001
+    - doi: 10.1186/1471-2148-11-249
+      pmid: '21880139'
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: '2026-09-27'
+  accession_resolved_version: JBRFVS010000013.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: 'No protein accession: sequences are translations of the recorded coordinates on the public
+      contig (checked: no internal stop).'
+  taxonomy_current: true
+curation:
+  proposed_by: claude-curation-from-group-preprint
+  proposal_dedupe_key: 10.1101/2025.09.11.675505|86839|redPR|A2|nrrl-y-7192
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-09-27 on curator request (Rhodotorula MAT from the group''s preprint, incl. HD).
+    PENDING CURATOR SIGN-OFF: accepted on the unmerged branch curation-puccinio only so detect can be
+    measured with it.'
+model_provenance: null

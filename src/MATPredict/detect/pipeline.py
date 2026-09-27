@@ -2319,9 +2319,29 @@ def run_pipeline(
                 identities[e.gene_name] = max(e.identity, identities.get(e.gene_name) or 0.0)
             else:
                 identities.setdefault(e.gene_name, None)
+        # The class is decided BEFORE the tier too: a `homothallic_candidate`
+        # may not have either allele ignored (curator's ruling 2026-09-27).
+        # Classified BEFORE the result is built, because the class decides the
+        # confidence cap: a `partial_locus` may never be `high`.
+        partial_strength = is_partial_strength(
+            score.fraction_found, ambiguity_floor, relaxed=False
+        )
+        locus_class = apply_partial_locus(
+            classify_locus(member_clusters[0], family, full_length_models=full_length_models(
+                polish_by, {id(c) for c in member_clusters}, score.family_key,
+                record_protein_lengths,
+                {g for c in member_clusters
+                 for e in idiomorph_events_by_cluster.get(id(c), ())
+                 for g in (e.winner, e.loser)},
+            )),
+            fraction_found=score.fraction_found,
+            ambiguity_floor=ambiguity_floor,
+            relaxed=False,
+        )
         tier_ignored = allele_absent_genes_to_ignore(
             family, called_idiomorph, identities,
             _modelled_gene_names(member_clusters, score.family_key, polish_by, model_losers),
+            locus_class=locus_class,
         )
         tier = assign_tier(
             score, family, member_clusters[0],
@@ -2383,23 +2403,6 @@ def run_pipeline(
         # polished or rescued gene can never fall outside the locus segment
         # that reports it.
         segments = _segments_for(member_clusters, contig_lengths, evidence)
-        # Classified BEFORE the result is built, because the class decides the
-        # confidence cap: a `partial_locus` may never be `high`.
-        partial_strength = is_partial_strength(
-            score.fraction_found, ambiguity_floor, relaxed=False
-        )
-        locus_class = apply_partial_locus(
-            classify_locus(member_clusters[0], family, full_length_models=full_length_models(
-                polish_by, {id(c) for c in member_clusters}, score.family_key,
-                record_protein_lengths,
-                {g for c in member_clusters
-                 for e in idiomorph_events_by_cluster.get(id(c), ())
-                 for g in (e.winner, e.loser)},
-            )),
-            fraction_found=score.fraction_found,
-            ambiguity_floor=ambiguity_floor,
-            relaxed=False,
-        )
         polished_genes = _modelled_gene_count(member_clusters, score.family_key)
         if polished_genes == 0:
             # Curator's rulings, 2026-09-22. (1) "without polishing it is low":

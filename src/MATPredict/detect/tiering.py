@@ -30,6 +30,7 @@ def allele_absent_genes_to_ignore(
     idiomorph: str | None,
     identities: dict[str, float | None],
     modelled: set[str] | frozenset[str],
+    locus_class: str | None = None,
 ) -> frozenset[str]:
     """Genes the tier should not count against a call of `idiomorph`.
 
@@ -50,6 +51,12 @@ def allele_absent_genes_to_ignore(
     belongs to every allele and is never ignored.
     """
     if not idiomorph or idiomorph == "undetermined":
+        return frozenset()
+    # Curator's ruling 2026-09-27: a `homothallic_candidate` rests on BOTH
+    # alleles by definition, so neither may be dropped from its tier. Case
+    # that forced it: Serinales GCA_030462985.1 was raised to high by
+    # ignoring its MTLA2 (38.75%) (results/2026-09-27_tier_rule_implemented).
+    if locus_class == "homothallic_candidate":
         return frozenset()
     pin = {g["name"]: set(g.get("present_in_idiomorphs") or ()) for g in family.genes}
     if not any(idiomorph in allowed for allowed in pin.values()):

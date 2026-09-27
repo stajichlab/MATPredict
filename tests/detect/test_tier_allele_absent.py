@@ -139,3 +139,18 @@ def test_ignore_genes_defaults_to_current_behaviour():
     score = FamilyScore(WALL.key, 1.0, ["STE3v2", "BAP31"], [])
     cluster = GeneCluster("c1", 1, 100, [])
     assert assign_tier(score, WALL, cluster, any_gene_unpolished=False, fragmented=False) == "high"
+
+
+def test_homothallic_candidate_ignores_nothing():
+    # Curator's ruling 2026-09-27: a homothallic call rests on BOTH alleles by
+    # definition, so neither may be dropped from the tier. Case that forced it:
+    # Serinales GCA_030462985.1, homothallic_candidate, raised to high by
+    # ignoring its MTLA2 (38.75%).
+    args = (WALL, "v2", {"STE3v2": 88.0, "HMG": 36.0}, {"STE3v2"})
+    assert allele_absent_genes_to_ignore(*args) == frozenset({"HMG"})
+    assert allele_absent_genes_to_ignore(
+        *args, locus_class="homothallic_candidate",
+    ) == frozenset()
+    assert allele_absent_genes_to_ignore(
+        *args, locus_class="mat_locus",
+    ) == frozenset({"HMG"})

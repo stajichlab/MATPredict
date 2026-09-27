@@ -221,3 +221,15 @@ def test_a_verdict_changes_only_hits_at_the_scored_gene(tmp_path):
     (r,) = _run(tmp_path, stray=True).results
     assert r.idiomorph == "Plus"
     assert "sexM" in r.genes_found, "the stray sexM hit away from the scored gene must stay live"
+
+
+def test_a_model_off_frame_by_one_base_is_still_translated(tmp_path):
+    """A polished model whose exon starts one base before the codon boundary
+    must still yield the real protein (found on three Mucor circinelloides
+    sexM models that scored ~0 against both HMMs)."""
+    from Bio.Seq import Seq
+    from MATPredict.detect.pipeline import _translate_model
+    cds = "".join(CODON[a] for a in SEXP)
+    (tmp_path / "g.fa").write_text(f">c1\nG{cds}TAA\n")
+    m = _model("sexP", "c1", 1, len(cds) + 1, family_key=KEY)   # starts one base early
+    assert _translate_model(tmp_path / "g.fa", m, 1, {}) == SEXP

@@ -633,8 +633,20 @@ def _translate_model(genome_fasta: Path, model, genetic_code: int, cache: dict) 
         span = seq[start - 1:end]
         parts.append(str(span.reverse_complement() if model.strand == "-" else span))
     cds = "".join(parts)
-    cds = cds[: len(cds) - len(cds) % 3]
-    return str(Seq(cds).translate(table=genetic_code, to_stop=True))
+    # Frame-robust: a polished model's first exon does not always start on a
+    # codon boundary (never assume frame 1 -- see the genetic-code memory), so
+    # translate all three frames and keep the longest stop-free stretch.
+    # Measured on the first 293-genome run: three Mucor circinelloides sexM
+    # models (60.8% identity, 761 bp single exon) translated from base 1 gave
+    # proteins that scored 0.0-0.3 bits against both HMMs.
+    best = ""
+    for frame in range(3):
+        sub = cds[frame:]
+        sub = sub[: len(sub) - len(sub) % 3]
+        for piece in str(Seq(sub).translate(table=genetic_code)).split("*"):
+            if len(piece) > len(best):
+                best = piece
+    return best
 
 
 def _polish_rank(cluster: GeneCluster, family_key: FamilyKey) -> tuple:

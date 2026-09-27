@@ -109,3 +109,15 @@ phylum-fallback). After = `run-293640d`. Same code; only the DB differs.
   (species radius), though not the same strain as far as the metadata show.
 - Idiomorph calls in Sporidiobolales are not checked against known mating
   types of the sequenced strains.
+
+## Curator rulings (2026-09-27)
+
+- All 11 records signed off (7 Sporidiobolales tier 1, 4 Pucciniales tier 2).
+- Sporidiobolales stay receptor-only (`redPR`) for now; Sporidiobolales HD is
+  queued. Next test: extend `rustHD` scope to Sporidiobolales and see whether
+  the rust bE/bW genes find their HD locus.
+- *Wallemia*: build a tier-2 record from the W. mellicola CBS 633.66
+  annotation, labelled putative; report gene adjacency and mating-type mix
+  across the 51 genomes.
+- Rust receptors (STE3.2/STE3.3) and their pheromone precursors go into the
+  queued receptor work; the tiny precursors need a dedicated plan.

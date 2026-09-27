@@ -23,9 +23,18 @@ loci:
     # HMG-box tree; the Zygo 23 loci are held out. Build: 85/85 correct
     # leave-one-genus-out, worst correct margin 22.5 bits; held-out Zygo
     # 23/23, smallest margin 47.5 bits (results/2026-09-26_hmm_classifier).
-    # min_margin = half the worst leave-one-genus-out margin: below it the
-    # call is `undetermined` with both scores reported.
-    idiomorph_classifier: {type: hmm, dir: classifiers/MAT, min_margin: 11.2}
+    # Below min_margin the call is `undetermined` with both scores reported.
+    # CURATOR RULING, J. Stajich, 2026-09-27: min_margin = 25 bits (the
+    # build's recommendation, half the worst leave-one-genus-out margin, was
+    # 11.2). Reason: the FastTree HMG-box tree of the classifier scan
+    # (results/2026-09-27_sexMP_fasttree) split the label changes at this
+    # value. The three changes with margin >= 30 bits (Mucor irregularis x2,
+    # 30.1; Umbelopsis ramanniana, 51.0) sit in the matching clade; the four
+    # at <= 24.2 bits (M. ardhlaengiktus 24.2, Syncephalastrum racemosum
+    # NRRL 2496 12.0, S. monosporum x2 10.3) sit outside both clades. Every
+    # held-out Zygo protein cleared 34 bits, so no measured correct call is
+    # lost.
+    idiomorph_classifier: {type: hmm, dir: classifiers/MAT, min_margin: 25}
     # CURATOR RULING, J. Stajich, 2026-09-20: the detector's 25000 bp default
     # clustering gap is "right for Ascomycota" but too tight for Mucoromycota,
     # which should "start at 50 kb". PROVISIONAL: 50000 is a starting value, not

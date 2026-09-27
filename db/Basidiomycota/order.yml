@@ -458,11 +458,7 @@ loci:
     # 2024, PMID 38498573) and a dikaryotic rust assembly carries two alleles,
     # so allele identity is not callable by homology.
     # Rank verified against NCBI Taxonomy (5258 = order Pucciniales).
-    # TRIAL 2026-09-27 (curator ruling, option c): scope extended to
-    # Sporidiobolales (231213) to test whether the rust bE/bW genes find the
-    # Sporidiobolales HD locus. Sporidiobolales keep redPR; routing unions
-    # lineage matches, so both families run there.
-    taxonomic_scope: [5258, 231213]  # Pucciniales (order); Sporidiobolales (order)
+    taxonomic_scope: [5258]  # Pucciniales (order)
     # 10 kb. Measured bE-bW intergenic distance in the four curated records:
     # 538-640 bp; largest record span 3,956 bp (Pst). Pucciniales genomes
     # are large and repeat-rich, so the gap is kept tight.

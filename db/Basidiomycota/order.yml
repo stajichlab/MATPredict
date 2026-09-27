@@ -440,3 +440,57 @@ loci:
     genes:
       - {name: bE, role: core_MAT, gene_class: HD2}
       - {name: bW, role: core_MAT, gene_class: HD1}
+  - locus_name: "rustHD"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^b[0-9]+$"
+    # Pucciniales (rust) b/HD locus, added 2026-09-26 on the curator's ruling to
+    # curate Pucciniales ("curate Sporidiobolales and Pucciniales now"). A
+    # SEPARATE family from the Ustilaginales/Malasseziales bLocus: the rust
+    # HD pair is homologous, but the smut records score it at ~30% identity
+    # and the full Basidiomycota run called 1/129 Pucciniales genomes
+    # (results/2026-09-26_basidiomycota_full/ANALYSIS.md).
+    # Records are TIER 2 (genome-derived): no locus-specific GenBank deposit
+    # exists for any rust HD gene. The genes are the depositors' own models,
+    # identified as the b mating-type genes by Cuomo et al. 2017 (G3 7:361,
+    # PMID 27913634, Table S11) for Pgt, Pt and Pst; Melampsora by
+    # blastp orthology to the Pgt pair (see its record).
+    # Pattern vocabulary: HD is multiallelic in all rusts studied (Luo et al.
+    # 2024, PMID 38498573) and a dikaryotic rust assembly carries two alleles,
+    # so allele identity is not callable by homology.
+    # Rank verified against NCBI Taxonomy (5258 = order Pucciniales).
+    taxonomic_scope: [5258]  # Pucciniales (order)
+    # 10 kb. Measured bE-bW intergenic distance in the four curated records:
+    # 538-640 bp; largest record span 3,956 bp (Pst). Pucciniales genomes
+    # are large and repeat-rich, so the gap is kept tight.
+    max_cluster_gap_bp: 10000
+    # Same names and HD-class mapping as bLocus (bE = HD2, bW = HD1), which is
+    # also the naming of Cuomo et al. 2017 Table S11 ("bE1-HD2", "bW1-HD1").
+    genes:
+      - {name: bE, role: core_MAT, gene_class: HD2}
+      - {name: bW, role: core_MAT, gene_class: HD1}
+  - locus_name: "redPR"
+    vocabulary_type: "enum"
+    idiomorph_values: ["A1", "A2"]
+    # Sporidiobolales ("red yeast") pheromone/receptor MAT locus, added
+    # 2026-09-26 on the curator's ruling. Biallelic MAT A1 / A2, each
+    # idiomorph carrying its own, highly divergent STE3 receptor (Coelho et
+    # al. 2008 PMID 18408057; Coelho et al. 2010 PMID 20700437; Coelho et al.
+    # 2011 PMID 21880139). HD genes are NOT near the P/R genes in
+    # R. toruloides, S. roseus or S. salmonicolor (Coelho 2008) and only
+    # partial HD deposits exist, so no HD family is defined here.
+    # Rank verified against NCBI Taxonomy (231213 = order Sporidiobolales).
+    taxonomic_scope: [231213]  # Sporidiobolales (order)
+    # 20 kb. RibL6 sits 416 bp (A2, JN246612.1) to 9 bp (A1, JN246653.1)
+    # from STE3 in the curated deposits; the MAT region itself is larger than
+    # these amplicons (Coelho 2008), so the gap is not set to the deposit span.
+    max_cluster_gap_bp: 20000
+    genes:
+      - {name: STE3a1, role: core_MAT, gene_class: pheromone_receptor, present_in_idiomorphs: ["A1"]}
+      - {name: STE3a2, role: core_MAT, gene_class: pheromone_receptor, present_in_idiomorphs: ["A2"]}
+      # Ribosomal protein L6 flanks the STE3 gene of BOTH idiomorphs in the
+      # Coelho 2011 deposits (A2: upstream, same strand; A1: downstream,
+      # opposite strand). It is the only complete flank CDS deposited
+      # (JN246612.1, S. longiusculus). Optional: it is needed as the second
+      # modelled gene for the 2-gene bar, but its absence must not block a
+      # call where the receptor is modelled with another gene.
+      - {name: RibL6, role: flanking_conserved, optional: true}

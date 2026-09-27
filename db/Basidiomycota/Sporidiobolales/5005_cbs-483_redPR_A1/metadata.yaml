@@ -1,0 +1,107 @@
+record_id: 5005_cbs-483_redPR_A1
+record_version: 1
+taxonomy:
+  taxid: 5005
+  lineage: k__Fungi;p__Basidiomycota;sc__Pucciniomycotina;c__Microbotryomycetes;o__Sporidiobolales;f__Sporidiobolaceae;g__Sporobolomyces;s__Sporobolomyces_salmonicolor
+  lineage_resolved_date: '2026-09-26'
+organism:
+  species: Sporobolomyces salmonicolor
+  strain:
+    name: CBS 483
+    known: true
+    culture_collection_ids:
+    - CBS 483
+    differs_from_sequenced: false
+mating_type:
+  locus_name: redPR
+  idiomorphs:
+  - A1
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: STE3a1
+    definition_note: 'Sporobolomyces (= Sporidiobolus) salmonicolor CBS 483, STE3-A1
+      allele of the mating pheromone receptor, complete CDS (372 aa) on a 1,290 bp
+      deposit that spans only the CDS. completeness partial: the deposit carries no
+      flank. The deposit''s own /gene is STE3; curated as STE3a1, this family''s name
+      for the A1-specific receptor (the depositors label it "STE3-A1 allele"). Coelho
+      MA, Sampaio JP, Goncalves P (2010) A deviation from the bipolar-tetrapolar mating
+      paradigm in an early diverged basidiomycete. PLoS Genet 6(8):e1001052.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: GU474642.1
+        seq_region: GU474642.1
+      start: 1
+      end: 1290
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: STE3a1
+  protein_accession: ncbi_protein:ADM24772.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 1290
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 1
+    end: 198
+  - start: 254
+    end: 575
+  - start: 629
+    end: 1073
+  - start: 1137
+    end: 1290
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: targeted PCR/genome-walking sequencing of the mating-type
+      receptor allele by the describing authors, deposited as a GenBank record
+    citations: &id001
+    - doi: 10.1371/journal.pgen.1001052
+      pmid: '20700437'
+  boundaries:
+    tier: 1
+    experimental_method: record segment spans the deposited CDS
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: A1 by the depositors' own allele designation (STE3-A1), supported
+      by the paper's mating-type assignments of the strains
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: GU474642.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1371/journal.pgen.1001052|5005|redPR|A1
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-09-26 on curator request (Sporidiobolales, Pucciniales). PENDING
+    CURATOR SIGN-OFF: accepted on the unmerged branch curation-puccinio only so detect
+    can be measured with it.'
+model_provenance: null

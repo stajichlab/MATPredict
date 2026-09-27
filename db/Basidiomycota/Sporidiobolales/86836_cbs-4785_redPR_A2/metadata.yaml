@@ -1,0 +1,106 @@
+record_id: 86836_cbs-4785_redPR_A2
+record_version: 1
+taxonomy:
+  taxid: 86836
+  lineage: k__Fungi;p__Basidiomycota;sc__Pucciniomycotina;c__Microbotryomycetes;o__Sporidiobolales;f__Sporidiobolaceae;g__Rhodotorula;s__Rhodotorula_kratochvilovae
+  lineage_resolved_date: '2026-09-26'
+organism:
+  species: Rhodotorula kratochvilovae
+  strain:
+    name: CBS 4785
+    known: true
+    culture_collection_ids:
+    - CBS 4785
+    differs_from_sequenced: false
+mating_type:
+  locus_name: redPR
+  idiomorphs:
+  - A2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: STE3a2
+    definition_note: Rhodotorula kratochvilovae CBS 4785, mating pheromone receptor
+      a2 (STE3), complete CDS (359 aa). A partial RibL6 CDS on the deposit is not
+      curated. Coelho et al. 2011, BMC Evol Biol 11:249.
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JN246585.1
+        seq_region: JN246585.1
+      start: 298
+      end: 1681
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: STE3a2
+  protein_accession: ncbi_protein:AER30201.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 298
+  end: 1681
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 298
+    end: 441
+  - start: 493
+    end: 561
+  - start: 637
+    end: 946
+  - start: 1005
+    end: 1222
+  - start: 1276
+    end: 1466
+  - start: 1534
+    end: 1681
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: targeted PCR sequencing of the mating-type receptor allele
+      by the describing authors, deposited as a GenBank record
+    citations: &id001
+    - doi: 10.1186/1471-2148-11-249
+      pmid: '21880139'
+  boundaries:
+    tier: 1
+    experimental_method: record segment spans the deposited CDS
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: A2 by the depositors' own designation (receptor a2)
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JN246585.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1186/1471-2148-11-249|86836|redPR|A2
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-09-26 on curator request (Sporidiobolales, Pucciniales). PENDING
+    CURATOR SIGN-OFF: accepted on the unmerged branch curation-puccinio only so detect
+    can be measured with it.'
+model_provenance: null

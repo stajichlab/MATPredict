@@ -86,6 +86,14 @@ curated or corrected. Newest entries at the end of each section.
 | B4.1 | *C. albicans* A48, A67, A92, A123, A203, CHN1 (GCA_0004474x5.1 Broad series) and ATCC 36802 (GCA_029931725.1) | Assembly carries only the MTLalpha idiomorph; WGS reads cover BOTH idiomorphs at ~half the single-copy depth (a 0.36-0.53, alpha 0.42-0.61). The a haplotype was collapsed out. | V `results/2026-09-26_calbicans_mtl_reads/` | OPEN (upstream); detection is correct about the assembly -- genotype needs reads |
 | B4.2 | *C. albicans* P37037 (GCA_000773825.1) | Assembly carries only MTLa; reads show a/alpha (0.52 / 0.57). | V | OPEN (upstream) |
 
+### B5. Pucciniomycotina gene models and names (curation-puccinio, 2026-09-26)
+
+| # | assembly / record | error | ev. | status |
+|---|---|---|---|---|
+| B5.1 | *P. graminis* f. sp. *tritici* CRL 75-36-700-3, `DS178274.1`: bW1 PGTG_05144 `EFP79919.2` | GenBank model is 579 aa; Cuomo et al. 2017 Table S11 gives bW1-HD1 as 618 aa from an RNA-seq-corrected model. The deposited model is likely truncated. | A (paper vs deposit) | WORKED AROUND (579-aa model curated as deposited in `418459_crl-75-36-700-3_rustHD_b1`); OPEN (upstream) |
+| B5.2 | *M. larici-populina* 98AG31, `GL883124.1`: `EGG03504.1` (MELLADRAFT_90168) and `EGG03439.1` (MELLADRAFT_124184) | RefSeq names the EGG03504.1 transcript "MlpbE1" (TALE-type homeodomain). By blastp it is the ortholog of Pgt bW1 PGTG_05144 (30% over 248 aa, E=2e-31); EGG03439.1 ("putative b mating type locus") is the ortholog of Pgt bE1 PGTG_05143 (36% over 218 aa, E=9e-26). The bE label sits on the bW ortholog. | V (blastp, `results/2026-09-26_puccinio_curation/`) | WORKED AROUND (curated as bW / bE by orthology in `747676_98ag31_rustHD_b1`); OPEN (upstream) |
+| B5.3 | *P. triticina* 1-1 BBBD Race 1: bE1 PTTG_10928 `OAV84638.1`, bW1 PTTG_09683 `OAV84627.1` | Genome models are partial (53 aa and 137 aa) against 374 aa and 623 aa in Cuomo et al. 2017 Table S11. | A | Not usable as references; the Pt b2 pair (PTTG_03697/PTTG_27730, complete) was curated instead |
+
 ## C. Errors in deposit metadata or literature statements
 
 | # | record / source | error | ev. | status |
@@ -94,6 +102,7 @@ curated or corrected. Newest entries at the end of each section.
 | C2 | *Lobaria pulmonaria* `JX520967.1` / `JX520966.1`; *Microbotryum* `JQ423666.1`, `JQ423663.1`, `JQ423661.1`; `KX832965.1`; `ON315861.1` | Flagged UNVERIFIED in GenBank; several carry no CDS. | A | Not usable as references |
 | C3 | *P. tritici-repentis* `AM884596`-`AM884619` | Titled "mat1-1 gene and partial mat1-2 gene" -- unusual for a heterothallic MAT1-1 deposit. | A | OPEN: check before use |
 | C4 | *Morchella* literature | The Morchella locus deposits are from Chai et al. 2017 (Mycol Prog 16:743, doi:10.1007/s11557-017-1309-x), not Du et al. as first recalled. | A, V (Crossref) | FIXED in our record |
+| C11 | *Sporobolomyces pararoseus* CBS 491 `JN246670.1` | Title says "ribosomal protein L6-like (RibL6) gene, complete sequence", but the record carries no RibL6 CDS feature. Numbered C11 to avoid a clash with C5-C10 on branch `curation-mucor-dothideo`. | A | WORKED AROUND (RibL6 not curated from this record) |
 
 ## D. Assignment traps: real biology that looks like an annotation error
 
@@ -131,3 +140,4 @@ Recorded so a detector rule or a curator does not "fix" them.
 * **2026-09-25** B3.3a, B3.8 added; A5 fixed (MTLalpha2 optional; PAP1/OBP1/PIK1 optional flanks added to the MTL roster and all eight Serinales records).
 * **2026-09-26** B4.1-B4.2 added (C. albicans assemblies collapsing heterozygous MTL; read-depth test).
 * **2026-09-26** D9-D10 added from the Serinales-wide scan on the flank roster (`882aa01`).
+* **2026-09-26** B5.1-B5.3 and C11 added while curating Pucciniales (rustHD) and Sporidiobolales (redPR) records (branch `curation-puccinio`).

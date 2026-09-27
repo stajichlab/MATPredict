@@ -121,3 +121,19 @@ phylum-fallback). After = `run-293640d`. Same code; only the DB differs.
   across the 51 genomes.
 - Rust receptors (STE3.2/STE3.3) and their pheromone precursors go into the
   queued receptor work; the tiny precursors need a dedicated plan.
+
+## Follow-up results (2026-09-27)
+
+Full note: `results/2026-09-27_puccinio_followup/NOTE.md` (main checkout).
+
+- **rustHD on Sporidiobolales: reverted.** 0/15 rustHD calls; 10/15 genomes
+  have a co-located bE+bW cluster at 42-57% identity but nothing models, so all
+  were withheld. redPR calls unchanged (22/22); runtime 2.5x. Trial `8a49b00`,
+  revert `a6770ca`. Sporidiobolales HD stays queued.
+- **Wallemia: putative tier-2 record `671144_cbs-633-66_wallMAT_v1`** (family
+  `wallMAT`, `6590929`). BAP31, STE3, CAF1, HMG from JH668224.1 CDS features;
+  SXI1 unannotated in the assembly, curated from a miniprot model (278 aa).
+  Detect: 51/51 Wallemiales called (0 before); 33 high (v1 type), 18 medium
+  (other version, divergent STE3). Check 1: SXI1/HMG/STE3 co-located in 33/33 v1
+  genomes. Check 2: W. mellicola 14 v1 : 13 other; W. ichthyophaga 18 : 4, the 4
+  being exactly the paper's inverted strains. Pending curator sign-off.

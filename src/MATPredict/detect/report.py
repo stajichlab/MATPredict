@@ -344,6 +344,10 @@ def _result_doc(r: DetectionResult) -> dict:
         # it decided `idiomorph`; `undetermined` means its margin fell below
         # the family's `min_margin`.
         "idiomorph_classifier": r.idiomorph_classifier,
+        # Other-allele cross-hits the confidence tier did not count (curator's
+        # ruling 2026-09-27). Written only when non-empty.
+        **({"confidence_ignored_genes": list(r.confidence_ignored_genes)}
+           if getattr(r, "confidence_ignored_genes", None) else {}),
         "idiomorph_resolutions": [
             {
                 "contig": res.contig,

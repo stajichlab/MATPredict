@@ -132,7 +132,7 @@ from MATPredict.detect.search import (
     search_fast_path,
     search_localize,
 )
-from MATPredict.detect.tiering import assign_tier, cap_at_medium
+from MATPredict.detect.tiering import allele_absent_genes_to_ignore, assign_tier, cap_at_medium
 from MATPredict.detect.verification import OVERRIDE_ROUTES, label_verification
 from MATPredict.detect.classifier import (
     UNDETERMINED as CLASSIFIER_UNDETERMINED,
@@ -307,6 +307,11 @@ class DetectionResult:
     proteins (`classifier.ClassifierVerdict.as_report`), or None when the
     family has no classifier or nothing was modelled. When set, it decided
     `idiomorph`. Curator's ruling 2026-09-26."""
+    confidence_ignored_genes: list[str] = field(default_factory=list)
+    """Genes of the OTHER allele that the confidence tier did not count
+    against this call: weak (< 50%) cross-hits at least 10 points below the
+    called allele's best modelled core gene (curator's ruling 2026-09-27;
+    `tiering.allele_absent_genes_to_ignore`). Empty when none applied."""
     verification: dict | None = None
     """`{status: unverified, reason, family_phylum, genome_phylum, evidence}`
     when the family was searched outside the genome's phylum by an override
@@ -2249,7 +2254,10 @@ def run_pipeline(
             if segments:
                 fragmented_segments[family.key] = segments
 
-    def _any_gene_unpolished(cluster_ids: set[int], family_key: FamilyKey) -> bool:
+    def _any_gene_unpolished(
+        cluster_ids: set[int], family_key: FamilyKey,
+        exclude: frozenset[str] = frozenset(),
+    ) -> bool:
         """True when ANY of this family's own genes, in these exact clusters,
         was localized but neither polishing tool could model it.
 
@@ -2273,6 +2281,10 @@ def run_pipeline(
             for (cluster_id, key, gene_name), outcome in polish_by.items()
             if key == family_key and cluster_id in cluster_ids
             and (live_genes is None or gene_name in live_genes)
+            # A weak, clearly separated cross-hit to the other allele's gene
+            # (`tiering.allele_absent_genes_to_ignore`) is not this call's
+            # gene either.
+            and gene_name not in exclude
         )
 
     def _modelled_gene_count(
@@ -2288,12 +2300,36 @@ def run_pipeline(
     ) -> DetectionResult:
         family = families_by_key[score.family_key]
         ambiguous = is_ambiguous(scores_in_context, floor=ambiguity_floor)
+        # The call's idiomorph and per-gene evidence are needed BEFORE the
+        # tier (curator's ruling 2026-09-27): a weak, clearly separated
+        # cross-hit to the other allele's gene must not cap the confidence.
+        # Neither depends on the tier, so computing them first changes
+        # nothing else.
+        verdict = combine_verdicts([
+            classifier_verdicts.get((id(c), score.family_key)) for c in member_clusters
+        ])
+        called_idiomorph = verdict.idiomorph if verdict is not None else assign_idiomorph(
+            family, score.genes_found,
+            [h for c in member_clusters for h in _own_live_hits(c, family.key)],
+        )
+        evidence = _gene_evidence(member_clusters, score.family_key, polish_by)
+        identities: dict[str, float | None] = {}
+        for e in evidence:
+            if e.identity is not None:
+                identities[e.gene_name] = max(e.identity, identities.get(e.gene_name) or 0.0)
+            else:
+                identities.setdefault(e.gene_name, None)
+        tier_ignored = allele_absent_genes_to_ignore(
+            family, called_idiomorph, identities,
+            _modelled_gene_names(member_clusters, score.family_key, polish_by, model_losers),
+        )
         tier = assign_tier(
             score, family, member_clusters[0],
             any_gene_unpolished=_any_gene_unpolished(
-                {id(c) for c in member_clusters}, score.family_key
+                {id(c) for c in member_clusters}, score.family_key, exclude=tier_ignored,
             ),
             fragmented=fragmented,
+            ignore_genes=tier_ignored,
         )
         # The idiomorph calls behind this result, and the narrowest of them.
         # A thin margin does NOT withhold the call -- refusing would cost real
@@ -2330,9 +2366,6 @@ def run_pipeline(
         # margin (curator's ruling 2026-09-26). Its own `min_margin` already
         # turns a close call into `undetermined`, so the identity-point
         # `min_idiomorph_margin` tier cap -- a different unit -- does not apply.
-        verdict = combine_verdicts([
-            classifier_verdicts.get((id(c), score.family_key)) for c in member_clusters
-        ])
         if verdict is not None:
             own_vote = [
                 {"idiomorph": k, "score": round(v, 1), "basis": "hmm_classifier"}
@@ -2346,7 +2379,6 @@ def run_pipeline(
         ):
             tier = "medium"
         short_genes = short_orf_by_family.get(score.family_key, set())
-        evidence = _gene_evidence(member_clusters, score.family_key, polish_by)
         # Segments are widened to cover this result's own gene evidence, so a
         # polished or rescued gene can never fall outside the locus segment
         # that reports it.
@@ -2402,11 +2434,9 @@ def run_pipeline(
             # (it is a statement about which genes are present) but must not
             # keep `high` (that is a statement about how sure we are).
             confidence=cap_at_medium(tier) if partial_strength else tier,
-            idiomorph=verdict.idiomorph if verdict is not None else assign_idiomorph(
-                family, score.genes_found,
-                [h for c in member_clusters for h in _own_live_hits(c, family.key)],
-            ),
+            idiomorph=called_idiomorph,
             idiomorph_candidates=own_vote,
+            confidence_ignored_genes=sorted(tier_ignored),
             idiomorph_classifier=verdict.as_report() if verdict is not None else None,
             ambiguous_with=(
                 [

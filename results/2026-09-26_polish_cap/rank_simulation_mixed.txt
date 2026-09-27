@@ -1,0 +1,52 @@
+== 2026-09-26_polish_cap/off/runs: 561 genomes
+  genes-first     N= 6: calls lost   4/613  gene-load kept 47%
+  identity-first  N= 6: calls lost   0/613  gene-load kept 43%
+  mixed           N= 6: calls lost   2/613  gene-load kept 46%
+  mixed-4+2       N= 6: calls lost   2/613  gene-load kept 46%
+  N=6: mixed loses 2; of those, kept by a single rank: 2
+    lost[genes-first] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000033.1', 56, 'A', 'high')
+    lost[genes-first] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000035.1', 43, 'A', 'high')
+    lost[genes-first] ('GCA_029290875.1_ASM2929087v1', 'Ascomycota:MAT', 'DAGWRA010000013.1', 221013, 'MAT1-1', 'medium')
+    lost[genes-first] ('GCA_030564765.1_ASM3056476v1', 'Ascomycota:MAT', 'JAKTZD010000070.1', 77930, 'MAT1-1', 'medium')
+    lost[mixed] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000033.1', 56, 'A', 'high')
+    lost[mixed] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000035.1', 43, 'A', 'high')
+    lost[mixed-4+2] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000033.1', 56, 'A', 'high')
+    lost[mixed-4+2] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000035.1', 43, 'A', 'high')
+== 2026-09-26_early_diverging/Mucoromycota/runs: 293 genomes
+  genes-first     N= 6: calls lost   0/242  gene-load kept 70%
+  identity-first  N= 6: calls lost   2/242  gene-load kept 67%
+  mixed           N= 6: calls lost   0/242  gene-load kept 70%
+  mixed-4+2       N= 6: calls lost   0/242  gene-load kept 70%
+  N=6: mixed loses 0; of those, kept by a single rank: 0
+    lost[identity-first] ('GCA_025766325.1_Benpoi1', 'Mucoromycota:MAT', 'JAMKHW010000002.1', 2105487, 'Minus', 'medium')
+    lost[identity-first] ('GCA_060309335.1_CBS210.80v1', 'Mucoromycota:MAT', 'JBLNHJ010000029.1', 208257, 'Minus', 'medium')
+== 2026-09-26_early_diverging/Mortierellomycota/runs: 100 genomes
+  genes-first     N= 6: calls lost   0/6  gene-load kept 78%
+  identity-first  N= 6: calls lost   0/6  gene-load kept 77%
+  mixed           N= 6: calls lost   0/6  gene-load kept 78%
+  mixed-4+2       N= 6: calls lost   0/6  gene-load kept 78%
+  N=6: mixed loses 0; of those, kept by a single rank: 0
+== 2026-09-26_early_diverging/Kickxellomycota/runs: 190 genomes
+  genes-first     N= 6: calls lost   0/7  gene-load kept 62%
+  identity-first  N= 6: calls lost   0/7  gene-load kept 59%
+  mixed           N= 6: calls lost   0/7  gene-load kept 62%
+  mixed-4+2       N= 6: calls lost   0/7  gene-load kept 62%
+  N=6: mixed loses 0; of those, kept by a single rank: 0
+== 2026-09-26_serinales_all_882aa01/runs: 2368 genomes
+  genes-first     N= 6: calls lost   3/2647  gene-load kept 60%
+  identity-first  N= 6: calls lost   3/2647  gene-load kept 54%
+  mixed           N= 6: calls lost   3/2647  gene-load kept 60%
+  mixed-4+2       N= 6: calls lost   3/2647  gene-load kept 60%
+  N=6: mixed loses 3; of those, kept by a single rank: 0
+    lost[genes-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 151666, 'A', 'high')
+    lost[genes-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 2701897, 'A', 'high')
+    lost[genes-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089971.1', 2159245, 'A', 'high')
+    lost[identity-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 151666, 'A', 'high')
+    lost[identity-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 2701897, 'A', 'high')
+    lost[identity-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089971.1', 2159245, 'A', 'high')
+    lost[mixed] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 151666, 'A', 'high')
+    lost[mixed] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 2701897, 'A', 'high')
+    lost[mixed] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089971.1', 2159245, 'A', 'high')
+    lost[mixed-4+2] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 151666, 'A', 'high')
+    lost[mixed-4+2] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 2701897, 'A', 'high')
+    lost[mixed-4+2] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089971.1', 2159245, 'A', 'high')

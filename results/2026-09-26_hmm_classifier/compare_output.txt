@@ -1,0 +1,40 @@
+genomes compared: 293
+overall: {'unchanged': 238, 'Plus->Minus': 4, 'Minus->undetermined': 2, 'Minus->Plus': 1}
+new-code calls by basis: {'classifier': 232, 'fallback (no modelled core protein)': 13}
+classifier verdicts: {'Minus': 105, 'Plus': 125, 'undetermined': 2}
+decisive margins: n=230 min=11.7 median=169.7
+
+per family (only families with a change):
+  Mucoraceae                   {'unchanged': 75, 'Plus->Minus': 3}
+  Syncephalastraceae           {'unchanged': 1, 'Minus->undetermined': 2, 'Plus->Minus': 1}
+  Umbelopsidaceae              {'unchanged': 7, 'Minus->Plus': 1}
+
+every change:
+  Plus->Minus            Mucor irregularis B50 (GCA_000587855.1_B50) KK076501.1:473260 clf=Minus Plus=50.6 Minus=80.7 margin=30.1 genes tptA,sexP,sexM,rnhA,algA,glrA -> tptA,sexM,rnhA,algA,glrA
+  Minus->undetermined    Syncephalastrum monosporum B8922 (GCA_000697355.1_SynMonB8922-1.0) JNEN01000850.1:14545 clf=undetermined Plus=54.9 Minus=65.2 margin=10.3 genes sexM,rnhA,glrA -> sexM,rnhA,glrA
+  Plus->Minus            Mucor irregularis B7584 (GCA_000697435.1_RhiVarB7584-1.0) JNES01000944.1:209980 clf=Minus Plus=50.6 Minus=80.7 margin=30.1 genes tptA,sexP,sexM,rnhA,algA,glrA -> tptA,sexM,rnhA,algA,glrA
+  Plus->Minus            Syncephalastrum racemosum NRRL 2496 (GCA_002105135.1_Synrac1) MCGN01000001.1:771475 clf=Minus Plus=52.4 Minus=64.4 margin=12.0 genes sexP,rnhA,glrA -> sexM,rnhA,glrA
+  Minus->undetermined    Syncephalastrum monosporum PYS2302 (GCA_023630305.1_ASM2363030v1) JAMAMS010000117.1:52196 clf=undetermined Plus=54.9 Minus=65.2 margin=10.3 genes sexM,rnhA,glrA -> sexM,rnhA,glrA
+  Plus->Minus            Mucor ardhlaengiktus CBS 210.80 (GCA_060309335.1_CBS210.80v1) JBLNHJ010000029.1:208257 clf=Minus Plus=53.0 Minus=77.2 margin=24.2 genes tptA,sexP,rnhA -> tptA,sexM,rnhA
+  Minus->Plus            Umbelopsis ramanniana AG (GCF_025399195.1_Umbra1) NW_026252087.1:139483 clf=Plus Plus=81.6 Minus=30.6 margin=51.0 genes tptA,sexM,algA,glrA -> tptA,sexP,algA,glrA
+
+undetermined:
+  Syncephalastrum monosporum B8922 (GCA_000697355.1_SynMonB8922-1.0) JNEN01000850.1:14545 Plus=54.9 Minus=65.2 margin=10.3 genes sexM,rnhA,glrA
+  Syncephalastrum monosporum PYS2302 (GCA_023630305.1_ASM2363030v1) JAMAMS010000117.1:52196 Plus=54.9 Minus=65.2 margin=10.3 genes sexM,rnhA,glrA
+
+Umbelopsis and Lichtheimiaceae/Syncephalastraceae calls:
+  Umbelopsidaceae    Umbelopsis isabellina NBRC 7884 Plus         high   clf=Plus Plus=81.7 Minus=33.7 margin=48.0
+  Syncephalastraceae Syncephalastrum racemosum B6101 Plus         medium clf=Plus Plus=161.9 Minus=36.5 margin=125.4
+  Syncephalastraceae Syncephalastrum monosporum B8922 undetermined medium clf=undetermined Plus=54.9 Minus=65.2 margin=10.3
+  Umbelopsidaceae    Umbelopsis isabellina B7317 Plus         low    clf=none Plus= Minus= margin=
+  Syncephalastraceae Syncephalastrum racemosum NRRL 2496 Minus        medium clf=Minus Plus=52.4 Minus=64.4 margin=12.0
+  Umbelopsidaceae    Umbelopsis isabellina WA0000067209 Plus         low    clf=none Plus= Minus= margin=
+  Umbelopsidaceae    Umbelopsis sp. PMI_123 PMI_123 Plus         high   clf=Plus Plus=86.2 Minus=25.3 margin=60.9
+  Lichtheimiaceae    Rhizomucor pusillus JY54 Plus         medium clf=none Plus= Minus= margin=
+  Syncephalastraceae Syncephalastrum monosporum PYS2302 undetermined medium clf=undetermined Plus=54.9 Minus=65.2 margin=10.3
+  Lichtheimiaceae    Phascolomyces articulosus RSA 2281 Plus         medium clf=Plus Plus=35.7 Minus=17.6 margin=18.1
+  Umbelopsidaceae    Umbelopsis isabellina MPG-14A Plus         low    clf=none Plus= Minus= margin=
+  Umbelopsidaceae    Umbelopsis sp. M5902 M5902 Minus        low    clf=none Plus= Minus= margin=
+  Lichtheimiaceae    Rhizomucor pusillus  Minus        medium clf=none Plus= Minus= margin=
+  Umbelopsidaceae    Umbelopsis ramanniana  Plus         high   clf=Plus Plus=87.9 Minus=31.8 margin=56.1
+  Umbelopsidaceae    Umbelopsis ramanniana AG Plus         high   clf=Plus Plus=81.6 Minus=30.6 margin=51.0

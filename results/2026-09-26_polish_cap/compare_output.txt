@@ -1,0 +1,13 @@
+panel                         n calls off  cap6  lost gained genomes chg median s off   cap6 total h off   cap6
+dipodascomycetes_etc         94        84    84     0      0           0         1771    842        44.6   21.7
+dothideomycetes             100        91    91     0      0           0          620    283        18.5    8.6
+orbiliomycetes               67        29    29     0      0           0          790    548        15.8   10.6
+pezizomycotina_uncurated    100        88    88     0      0           0          587    413        15.9   10.8
+saccharomyces_sample        100       210   210     0      0           0           22     25         0.6    0.7
+saccharomycetes_other       100       111   107     4      0           3         1380    766        39.8   22.3
+TOTAL                       561       613   609     4      0           3          687    419       135.3   74.6
+
+genomes whose calls differ (lost | gained):
+   ('saccharomycetes_other', 'GCA_010994365.1_ASM1099436v1', [('JNFU01000035.1', 43, 'A', 'high'), ('JNFU01000033.1', 56, 'A', 'high')], [])
+   ('saccharomycetes_other', 'GCA_029290875.1_ASM2929087v1', [('DAGWRA010000013.1', 221013, 'MAT1-1', 'medium')], [])
+   ('saccharomycetes_other', 'GCA_030564765.1_ASM3056476v1', [('JAKTZD010000070.1', 77930, 'MAT1-1', 'medium')], [])

@@ -1,0 +1,41 @@
+== Training-set diversity (full-length; pairwise identity over co-aligned columns: min/median/max)
+  sexM labelled          n=  16 unique=  16 identity (17.1, 29.5, 100.0)
+  sexP labelled          n=  22 unique=  18 identity (24.9, 31.8, 100.0)
+  sexP clade augment     n= 121 unique=  67 identity (15.3, 30.2, 100.0)
+  disputed sets: minus_in_sexP_clade=13, rhizopus_sexM_only_Plus=33, lichth_syncephal_sexP_clade=3
+
+== Leave-one-genus-out on 38 labelled proteins (12 genera)
+  arm        correct/38  sexM ok  sexP ok  ties  margin(correct side) median [min..max]
+  full_bal    38/38      16/16    22/22     0    121.0 [36.6..321.6]
+  dom_bal     38/38      16/16    22/22     0    60.5 [14.8..94.8]
+  full_aug    38/38      16/16    22/22     0    124.9 [33.4..282.0]
+  dom_aug     38/38      16/16    22/22     0    57.5 [16.2..75.5]
+  blast       38/38      16/16    22/22     0    124.8 [5.1..520.3]
+
+== Disputed sets (models built on ALL labelled proteins; aug excludes disputed proteins)
+  full_bal: sexM HMM from 16 seqs, sexP HMM from 22 seqs
+  dom_bal: sexM HMM from 16 seqs, sexP HMM from 22 seqs
+  full_aug: sexM HMM from 16 seqs, sexP HMM from 143 seqs
+  dom_aug: sexM HMM from 16 seqs, sexP HMM from 143 seqs
+  minus_in_sexP_clade (n=13):
+    full_bal  sexP  13  sexM   0  tie  0   margin median 174.0 [13.0..191.8]
+    dom_bal   sexP  13  sexM   0  tie  0   margin median 55.1 [14.2..65.8]
+    full_aug  sexP  13  sexM   0  tie  0   margin median 221.5 [48.3..238.6]
+    dom_aug   sexP  13  sexM   0  tie  0   margin median 52.2 [39.4..63.1]
+    blast     sexP  13  sexM   0  tie  0   margin median 89.9 [9.6..142.1]
+  rhizopus_sexM_only_Plus (n=33):
+    full_bal  sexP   0  sexM  33  tie  0   margin median -145.2 [-150.4..-116.8]
+    dom_bal   sexP   0  sexM  33  tie  0   margin median -71.1 [-71.1..-53.4]
+    full_aug  sexP   0  sexM  33  tie  0   margin median -132.7 [-138.9..-101.1]
+    dom_aug   sexP   0  sexM  33  tie  0   margin median -65.9 [-65.9..-52.0]
+    blast     sexP   0  sexM  33  tie  0   margin median -315.5 [-331.5..-107.7]
+  lichth_syncephal_sexP_clade (n=3):
+    full_bal  sexP   2  sexM   1  tie  0   margin median 83.1 [-8.9..100.8]
+    dom_bal   sexP   2  sexM   1  tie  0   margin median 23.5 [-5.7..32.4]
+    full_aug  sexP   2  sexM   1  tie  0   margin median 104.3 [-4.8..124.6]
+    dom_aug   sexP   2  sexM   1  tie  0   margin median 36.2 [-2.0..40.1]
+    blast     sexP   3  sexM   0  tie  0   margin median 52.4 [0.8..78.2]
+
+== Agreement with tree placement (BFD candidates in sexM or sexP clade; not accuracy)
+  full_bal: tree sexM -> hmm sexM: 51, tree sexP -> hmm sexP: 124
+  dom_bal: tree sexM -> hmm sexM: 51, tree sexP -> hmm sexP: 124

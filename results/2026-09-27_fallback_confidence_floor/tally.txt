@@ -1,0 +1,54 @@
+routing modes by run (calls):
+  basidio_capoff       {'phylum_fallback': 2}
+  basidio_full         {'lineage': 3612, 'phylum_fallback': 346}
+  dothideo_52cd292     {'lineage': 90}
+  dothideo_d18ec5a     {'lineage': 90}
+  dothideo_dca6ccc     {'lineage': 92}
+  dothideo_f81dad1     {'lineage': 91}
+  early_diverging      {'explicit_phylum': 13, 'lineage': 227, 'phylum_fallback': 15}
+  pilots_0924          {'phylum_fallback': 199, 'direct': 165, 'lineage': 229}
+  polishcap_cap6       {'phylum_fallback': 215, 'lineage': 389, 'direct': 7}
+  serinales_882aa01    {'lineage': 2647}
+
+=== phylum_fallback ===
+  basidio_capoff       high   n=   2 | any <30:1 <35:1 <40:1 none:0 | modelled <30:1 <35:1 <40:1 none:0
+  basidio_capoff       medium n=   0 | any <30:0 <35:0 <40:0 none:0 | modelled <30:0 <35:0 <40:0 none:0
+  basidio_full         high   n= 268 | any <30:6 <35:37 <40:100 none:0 | modelled <30:6 <35:37 <40:100 none:0
+  basidio_full         medium n=  77 | any <30:12 <35:20 <40:31 none:0 | modelled <30:12 <35:20 <40:31 none:0
+  early_diverging      high   n=   2 | any <30:0 <35:1 <40:1 none:0 | modelled <30:0 <35:1 <40:1 none:0
+  early_diverging      medium n=  13 | any <30:1 <35:4 <40:9 none:0 | modelled <30:1 <35:4 <40:9 none:0
+  pilots_0924          high   n=  24 | any <30:0 <35:0 <40:2 none:0 | modelled <30:0 <35:4 <40:7 none:0
+  pilots_0924          medium n= 175 | any <30:13 <35:35 <40:67 none:0 | modelled <30:13 <35:38 <40:71 none:0
+  polishcap_cap6       high   n=  24 | any <30:0 <35:0 <40:3 none:0 | modelled <30:0 <35:4 <40:7 none:0
+  polishcap_cap6       medium n= 191 | any <30:22 <35:47 <40:90 none:0 | modelled <30:22 <35:50 <40:95 none:0
+
+=== explicit_phylum ===
+  early_diverging      high   n=   0 | any <30:0 <35:0 <40:0 none:0 | modelled <30:0 <35:0 <40:0 none:0
+  early_diverging      medium n=  13 | any <30:1 <35:2 <40:11 none:0 | modelled <30:6 <35:7 <40:11 none:0
+
+=== phylum_fallback HIGH calls that would drop to medium, by run/family/order (best_core_any) ===
+  run                family                   order                  <30 <35 <40 high_total
+  basidio_full       Basidiomycota:HD         Hymenochaetales          0  12  30   58
+  basidio_full       Basidiomycota:bLocus     Tilletiales              0   4  22   65
+  basidio_full       Basidiomycota:HD         Sporidiobolales          0   4  14   14
+  basidio_full       Basidiomycota:HD         Corticiales              0   3   9   13
+  basidio_full       Basidiomycota:bLocus     Sporidiobolales          5   5   5   11
+  basidio_full       Basidiomycota:bLocus     Microstromatales         0   1   4   11
+  basidio_full       Basidiomycota:HD         Thelephorales            0   0   3    8
+  basidio_full       Basidiomycota:MAT        Urocystidales            0   2   3    3
+  basidio_full       Basidiomycota:bLocus     Leucosporidiales         0   1   2    6
+  basidio_full       Basidiomycota:HD         Atheliales               0   0   1    5
+  basidio_full       Basidiomycota:bLocus                              0   0   1    6
+  basidio_full       Basidiomycota:bLocus     Trichosporonales         0   1   1    1
+  basidio_full       Basidiomycota:bLocus     Entylomatales            0   0   1    1
+  basidio_full       Basidiomycota:bLocus     Exobasidiales            0   1   1    5
+  basidio_full       Basidiomycota:bLocus     Cyphobasidiales          0   1   1    1
+  basidio_full       Basidiomycota:HD         Kriegeriales             1   1   1    1
+  basidio_full       Basidiomycota:bLocus     Agaricostilbales         0   1   1    1
+  basidio_capoff     Basidiomycota:bLocus     Microbotryales           1   1   1    1
+  pilots_0924        Ascomycota:MAT           Orbiliales               0   0   1    1
+  pilots_0924        Ascomycota:MATsc         Saccharomycodales        0   0   1    2
+  polishcap_cap6     Ascomycota:MATsc         Saccharomycodales        0   0   1    2
+  polishcap_cap6     Ascomycota:MTL                                    0   0   1    1
+  polishcap_cap6     Ascomycota:MAT           Orbiliales               0   0   1    1
+  early_diverging    Mucoromycota:MAT         Umbelopsidales           0   1   1    2

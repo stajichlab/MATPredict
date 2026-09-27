@@ -1,0 +1,14 @@
+group	core genes imply	label	calls
+Kickxellomycota	Minus	Minus	1
+Kickxellomycota	both/none	Minus	6
+Mortierellomycota	Minus	Minus	4
+Mortierellomycota	Plus	Plus	1
+Mortierellomycota	both/none	Minus	1
+Mucoromycota	Minus	Minus	83
+Mucoromycota	Minus	Plus	33
+Mucoromycota	Plus	Plus	86
+Mucoromycota	both/none	Minus	4
+Mucoromycota	both/none	Plus	36
+
+sexM-only calls labelled Plus, by species: [('Rhizopus arrhizus', 19), ('Rhizopus delemar', 9), ('Rhizopus stolonifer', 3), ('Rhizopus microsporus', 2)]
+R. arrhizus calls (label, has sexM, has sexP): [(('Plus', True, False), 19), (('Plus', True, True), 14), (('Plus', False, True), 9), (('Minus', True, False), 1)]

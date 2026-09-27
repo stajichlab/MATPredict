@@ -129,3 +129,20 @@ Eight records, pending sign-off. Full write-up and tables:
 - Push this branch only after the polish-cap rank and relaxed-pass fixes, and
   a re-run of the pilot shows whether the *Cercospora kikuchii* and
   *Nothopassalora personata* double calls remain.
+
+## Re-check on the final code (2026-09-27)
+
+Rebased onto polish-scope-cuts (tier rule, homothallic guard, btbA, cap rank,
+classifier). 100-genome pilot: 90/99 called (round 2: 87/100); 3 new calls
+(Zymoseptoria brevis, GCA_019670975.1, Bauco1).
+
+- *Nothopassalora personata*: the round-2 double call is gone. The MAT1-2
+  call was a 940 bp span over COX13 (artefact).
+- *Cercospora kikuchii* GCA_009193115.1: the double call remains on real
+  evidence. VTAY01000105.1 carries MAT1-1 (MAT1-1-1 64.0% modelled, COX13
+  72.6%); VTAY01000089.1 carries MAT1-2 (MAT1-2-1 70.8% modelled, plus
+  MAT1-1-1 51.2% modelled). **Homothallism candidate** (curator ruling
+  2026-09-27), alongside D. hansenii CBS767. Not resolved: homothallic
+  arrangement, mixed assembly, or paralog. Check with reads or literature.
+
+Curator approved pushing this branch on 2026-09-27.

@@ -1,0 +1,274 @@
+total_genomes: 293
+confidence_tally:
+  Mucoromycota:MAT:
+    high: 136
+    medium: 104
+    low: 5
+locus_class_tally:
+  Mucoromycota:MAT:
+    mat_locus: 215
+    partial_locus: 29
+    idiomorph_gene_only: 1
+not_detected:
+- genome: GCA_000611695.1_RhzM_1.0
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000697175.1_LicCor008-049-1.0
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000697395.1_LicCorB5792-1.0
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000697475.1_LicCorB2541-1.0
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000723665.1_454Minimus
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000738555.1_LicRamB5399-1.0
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000787465.1_ASM78746v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000945115.1_Lramosa_hybrid_454_Illumina
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_002261195.1_ASM226119v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003951145.1_OSU_Jimlac_1.0
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003990745.1_Jimfl_GMNB39_1
+  family: Mucoromycota:MAT
+  reason: best cluster matched 0.20 of this family's expected genes, below the ambiguity
+    floor of 0.50
+- genome: GCA_003990765.1_Jimfl_AD_1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003990785.1_Endsp1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_008728235.1_ASM872823v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_011764055.1_ASM1176405v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_011764145.1_ASM1176414v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_011764265.1_ASM1176426v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_011800985.2_ASM1180098v2
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_011801385.2_ASM1180138v2
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_011801495.1_ASM1180149v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_011801505.2_ASM1180150v2
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_011801645.2_ASM1180164v2
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_011801705.2_ASM1180170v2
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_011801725.2_ASM1180172v2
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_011952145.2_ASM1195214v2
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_011952175.2_ASM1195217v2
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_013461545.1_ASM1346154v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_016758895.1_ASM1675889v1
+  family: Mucoromycota:MAT
+  reason: best cluster was flank-carried -- no core gene could be modelled -- and
+    its strongest core hit is weaker than E=1e-05 or lies outside the flank span (+-20000
+    bp)
+- genome: GCA_016758965.1_ASM1675896v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_019677255.1_ASM1967725v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_023629895.1_ASM2362989v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_023629915.1_ASM2362991v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_023629935.1_ASM2362993v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_023630315.1_ASM2363031v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_023630325.1_ASM2363032v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_025093555.1_Cirumb1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_025094145.1_Spifus1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_025094155.1_Lichy1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_025266875.1_Fenlin1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_025677805.1_Umbsp_AD052_1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_025677835.1_Spoumb1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_025716815.1_Dicele1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_029582045.1_ASM2958204v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_034509365.1_RMly36_1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_037041495.1_ASM3704149v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_037042035.1_ASM3704203v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_037042095.1_ASM3704209v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_037042155.1_ASM3704215v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_039881115.1_ASM3988111v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_040807125.1_ASM4080712v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_040807145.1_ASM4080714v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_048164995.1_ASM4816499v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_050656855.1_ASM5065685v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_053572175.1_ASM5357217v1
+  family: Mucoromycota:MAT
+  reason: best cluster was flank-carried -- no core gene could be modelled -- and
+    its strongest core hit is weaker than E=1e-05 or lies outside the flank span (+-20000
+    bp)
+- genome: GCA_054906655.1_Umbelopsis_nana_v._1.0
+  family: Mucoromycota:MAT
+  reason: best cluster was flank-carried -- no core gene could be modelled -- and
+    its strongest core hit is weaker than E=1e-05 or lies outside the flank span (+-20000
+    bp)
+- genome: GCA_059714295.1_ASM5971429v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_964291815.1_UMBE_WA70503
+  family: Mucoromycota:MAT
+  reason: best cluster was flank-carried -- no core gene could be modelled -- and
+    its strongest core hit is weaker than E=1e-05 or lies outside the flank span (+-20000
+    bp)
+- genome: GCA_977110975.1_gzUmbVina2
+  family: Mucoromycota:MAT
+  reason: best cluster was flank-carried -- no core gene could be modelled -- and
+    its strongest core hit is weaker than E=1e-05 or lies outside the flank span (+-20000
+    bp)
+- genome: GCA_982397305.1_T17-F
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCF_025766255.1_Zycmex1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCF_029851405.1_ASM2985140v1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_041956525.1_Rhipu1
+  family: Mucoromycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+anomalies: []
+genome_errors: []
+not_searched: []
+assembly_gap_at_locus:
+- GCA_000611695.1_RhzM_1.0
+- GCA_013461545.1_ASM1346154v1
+- GCF_041956525.1_Rhipu1
+zygosity_unknown: []
+unverified_calls: {}

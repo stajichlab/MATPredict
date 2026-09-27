@@ -1,0 +1,71 @@
+== 2026-09-26_polish_cap/mixed_rank_dothideo/runs: 4 genomes
+  genes-first     N= 6: calls lost   3/3  gene-load kept 17%
+  identity-first  N= 6: calls lost   0/3  gene-load kept 11%
+  mixed           N= 6: calls lost   0/3  gene-load kept 17%
+  mixed-4+2       N= 6: calls lost   0/3  gene-load kept 15%
+  N=6: mixed loses 0; of those, kept by a single rank: 0
+    lost[genes-first] ('GCA_000966595.1_ASM96659v1', 'Ascomycota:MAT', 'LAFY01004296.1', 2759, 'MAT1-1', 'medium')
+    lost[genes-first] ('GCA_019670975.1_ASM1967097v1', 'Ascomycota:MAT', 'JAGUCJ010000016.1', 312525, 'MAT1-2', 'high')
+    lost[genes-first] ('GCF_000338955.1_Bauco1', 'Ascomycota:MAT', 'NW_006911260.1', 879955, 'MAT1-2', 'medium')
+== 2026-09-26_polish_cap/off/runs: 561 genomes
+  genes-first     N= 6: calls lost   5/613  gene-load kept 47%
+  identity-first  N= 6: calls lost   0/613  gene-load kept 43%
+  mixed           N= 6: calls lost   3/613  gene-load kept 47%
+  mixed-4+2       N= 6: calls lost   3/613  gene-load kept 46%
+  N=6: mixed loses 3; of those, kept by a single rank: 3
+    lost[genes-first] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000033.1', 56, 'A', 'high')
+    lost[genes-first] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000035.1', 43, 'A', 'high')
+    lost[genes-first] ('GCA_018467035.1_ASM1846703v1', 'Ascomycota:MAT', 'JACSZZ010000003.1', 2633988, 'MAT1-2', 'high')
+    lost[genes-first] ('GCA_022641835.1_ASM2264183v1', 'Ascomycota:MTL', 'CP048715.1', 588654, 'A', 'medium')
+    lost[genes-first] ('GCA_030564765.1_ASM3056476v1', 'Ascomycota:MAT', 'JAKTZD010000070.1', 77930, 'MAT1-1', 'medium')
+    lost[mixed] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000033.1', 56, 'A', 'high')
+    lost[mixed] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000035.1', 43, 'A', 'high')
+    lost[mixed] ('GCA_022641835.1_ASM2264183v1', 'Ascomycota:MTL', 'CP048715.1', 588654, 'A', 'medium')
+    lost[mixed-4+2] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000033.1', 56, 'A', 'high')
+    lost[mixed-4+2] ('GCA_010994365.1_ASM1099436v1', 'Ascomycota:MTL', 'JNFU01000035.1', 43, 'A', 'high')
+    lost[mixed-4+2] ('GCA_022641835.1_ASM2264183v1', 'Ascomycota:MTL', 'CP048715.1', 588654, 'A', 'medium')
+== 2026-09-26_early_diverging/Mucoromycota/runs: 293 genomes
+  genes-first     N= 6: calls lost   0/242  gene-load kept 76%
+  identity-first  N= 6: calls lost   2/242  gene-load kept 67%
+  mixed           N= 6: calls lost   0/242  gene-load kept 76%
+  mixed-4+2       N= 6: calls lost   0/242  gene-load kept 75%
+  N=6: mixed loses 0; of those, kept by a single rank: 0
+    lost[identity-first] ('GCA_025766325.1_Benpoi1', 'Mucoromycota:MAT', 'JAMKHW010000002.1', 2105487, 'Minus', 'medium')
+    lost[identity-first] ('GCA_060309335.1_CBS210.80v1', 'Mucoromycota:MAT', 'JBLNHJ010000029.1', 208257, 'Minus', 'medium')
+== 2026-09-26_early_diverging/Mortierellomycota/runs: 100 genomes
+  genes-first     N= 6: calls lost   0/6  gene-load kept 82%
+  identity-first  N= 6: calls lost   0/6  gene-load kept 74%
+  mixed           N= 6: calls lost   0/6  gene-load kept 80%
+  mixed-4+2       N= 6: calls lost   0/6  gene-load kept 79%
+  N=6: mixed loses 0; of those, kept by a single rank: 0
+== 2026-09-26_early_diverging/Kickxellomycota/runs: 190 genomes
+  genes-first     N= 6: calls lost   1/7  gene-load kept 67%
+  identity-first  N= 6: calls lost   0/7  gene-load kept 55%
+  mixed           N= 6: calls lost   1/7  gene-load kept 66%
+  mixed-4+2       N= 6: calls lost   1/7  gene-load kept 65%
+  N=6: mixed loses 1; of those, kept by a single rank: 1
+    lost[genes-first] ('GCA_027578955.1_UCR_CoemRSA1250_1.0', 'Mucoromycota:MAT', 'JANBTS010000044.1', 53347, 'Minus', 'medium')
+    lost[mixed] ('GCA_027578955.1_UCR_CoemRSA1250_1.0', 'Mucoromycota:MAT', 'JANBTS010000044.1', 53347, 'Minus', 'medium')
+    lost[mixed-4+2] ('GCA_027578955.1_UCR_CoemRSA1250_1.0', 'Mucoromycota:MAT', 'JANBTS010000044.1', 53347, 'Minus', 'medium')
+== 2026-09-26_serinales_all_882aa01/runs: 2368 genomes
+  genes-first     N= 6: calls lost   5/2647  gene-load kept 61%
+  identity-first  N= 6: calls lost   3/2647  gene-load kept 53%
+  mixed           N= 6: calls lost   5/2647  gene-load kept 61%
+  mixed-4+2       N= 6: calls lost   3/2647  gene-load kept 60%
+  N=6: mixed loses 5; of those, kept by a single rank: 2
+    lost[genes-first] ('GCA_001599155.1_JCM_1821_assembly_v001', 'Ascomycota:MTL', 'BCGE01000003.1', 32955, 'A', 'high')
+    lost[genes-first] ('GCA_030579855.1_ASM3057985v1', 'Ascomycota:MTL', 'JAKTRS010000011.1', 360038, 'A', 'high')
+    lost[genes-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 151666, 'A', 'high')
+    lost[genes-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 2701897, 'A', 'high')
+    lost[genes-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089971.1', 2159245, 'A', 'high')
+    lost[identity-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 151666, 'A', 'high')
+    lost[identity-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 2701897, 'A', 'high')
+    lost[identity-first] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089971.1', 2159245, 'A', 'high')
+    lost[mixed] ('GCA_001599155.1_JCM_1821_assembly_v001', 'Ascomycota:MTL', 'BCGE01000003.1', 32955, 'A', 'high')
+    lost[mixed] ('GCA_030579855.1_ASM3057985v1', 'Ascomycota:MTL', 'JAKTRS010000011.1', 360038, 'A', 'high')
+    lost[mixed] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 151666, 'A', 'high')
+    lost[mixed] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 2701897, 'A', 'high')
+    lost[mixed] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089971.1', 2159245, 'A', 'high')
+    lost[mixed-4+2] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 151666, 'A', 'high')
+    lost[mixed-4+2] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089970.1', 2701897, 'A', 'high')
+    lost[mixed-4+2] ('GCF_963989305.1_lodBeiA1', 'Ascomycota:MTL', 'NC_089971.1', 2159245, 'A', 'high')

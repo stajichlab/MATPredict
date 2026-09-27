@@ -233,3 +233,45 @@ def test_a_model_off_frame_by_one_base_is_still_translated(tmp_path):
     (tmp_path / "g.fa").write_text(f">c1\nG{cds}TAA\n")
     m = _model("sexP", "c1", 1, len(cds) + 1, family_key=KEY)   # starts one base early
     assert _translate_model(tmp_path / "g.fa", m, 1, {}) == SEXP
+
+
+def test_each_gene_position_is_classified_on_its_own_protein(tmp_path):
+    """Two separate HMG genes in one locus, one encoding the sexM protein and
+    one the sexP protein. The pooled locus verdict must not overwrite the
+    position whose own protein says otherwise (found on Radiomyces
+    spectabilis and Rhizomucor pusillus: applying the pooled verdict to both
+    genes removed one name and dropped the call below the fraction floor)."""
+    _setup(tmp_path)
+    m_cds = "".join(CODON[a] for a in SEXM) + "TAA"
+    p_cds = "".join(CODON[a] for a in SEXP) + "TAA"
+    a0, b0 = 1000, 1000 + len(m_cds) + 500
+    genome = ("A" * (a0 - 1) + m_cds + "A" * 500 + p_cds).ljust(9000, "A")
+    (tmp_path / "genome.fa").write_text(f">c1\n{genome}\n")
+    spans = {"sexM": (a0, a0 + len(m_cds) - 4), "sexP": (b0, b0 + len(p_cds) - 4),
+             "tptA": (7000, 7500), "rnhA": (8000, 8500)}
+    roles = {"sexP": "core_MAT", "sexM": "core_MAT", "tptA": "flanking_conserved",
+             "rnhA": "flanking_conserved"}
+
+    def hit(gene, span, identity):
+        return SearchHit(KEY, gene, roles[gene], "c1", *span, "+", identity, "rec1",
+                         "tblastn_genome", bitscore=identity)
+
+    def localize(*a, **k):
+        # At each HMG gene both names hit; the right one wins the first pass.
+        return [hit("sexM", spans["sexM"], 60.0), hit("sexP", spans["sexM"], 30.0),
+                hit("sexP", spans["sexP"], 60.0), hit("sexM", spans["sexP"], 30.0),
+                hit("tptA", spans["tptA"], 90.0), hit("rnhA", spans["rnhA"], 90.0)]
+
+    def model(gene_name, method):
+        return _model(gene_name, "c1", *spans[gene_name], identity=60.0, family_key=KEY,
+                      role=roles[gene_name], method=method)
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_localize=localize,
+        polish_with_exonerate=lambda *, gene_name, **kw: model(gene_name, "exonerate_refine"),
+        polish_with_miniprot=lambda *, gene_name, **kw: model(gene_name, "miniprot_refine"),
+    )
+    (r,) = outcome.results
+    assert {"sexM", "sexP"} <= set(r.genes_found)

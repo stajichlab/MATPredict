@@ -2141,7 +2141,8 @@ def run_pipeline(
                 continue
             clf = load_classifier(family.idiomorph_classifier, family)
             gene_idiomorph = classifier_genes(family)
-            proteins, scored, spans = [], [], []
+            # One entry per scored model: (gene, span, protein).
+            scored_models = []
             for (cluster_id, key, gene), outcome in polish_by.items():
                 if cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph:
                     continue
@@ -2152,56 +2153,68 @@ def run_pipeline(
                         genome_fasta, model, genetic_code or 1, contig_seq_cache
                     )
                     if protein:
-                        proteins.append(protein)
-                        scored.append(gene)
-                        spans.append((model.contig, model.start, model.end))
-            verdict = classify_idiomorph(clf, proteins, scored)
+                        scored_models.append((gene, (model.contig, model.start, model.end), protein))
+            # The LOCUS verdict pools every scored protein (best score per
+            # idiomorph) and names `idiomorph`.
+            verdict = classify_idiomorph(
+                clf, [p for _, _, p in scored_models], [g for g, _, _ in scored_models]
+            )
             if verdict is None:
                 continue
             classifier_verdicts[(id(cluster), family.key)] = verdict
-            if verdict.idiomorph == CLASSIFIER_UNDETERMINED:
-                continue
-            winner = next(g for g, i in gene_idiomorph.items() if i == verdict.idiomorph)
+            # Hits change PER GENE POSITION, on that position's own proteins,
+            # and only at that position (as in `resolve_idiomorph_by_models`).
+            # Measured on the 293-genome runs: flipping every loser hit in the
+            # cluster dropped 11 real calls below the fraction floor, and
+            # applying the pooled verdict to a second, separate HMG gene
+            # dropped 2 more. A position whose own verdict is undetermined, or
+            # whose winner has no hit there to make live, is left as it is.
             own = [h for h in cluster.hits if h.family_key == family.key]
-            if not any(h.gene_name == winner for h in own):
-                continue  # nothing of the winner's to make live; the verdict still names the idiomorph
-            losers = {g for g in gene_idiomorph if g != winner and any(h.gene_name == g for h in own)}
-            if not losers:
-                continue
-            # Only hits AT the gene the classifier scored change, as in
-            # `resolve_idiomorph_by_models`: a separate weak hit elsewhere in the
-            # cluster is another gene, and superseding it would change the
-            # locus's gene content, not just its idiomorph. Measured on the
-            # first 293-genome run: flipping every loser hit dropped 11 real
-            # calls below the fraction floor.
-            def at_scored_gene(h):
-                return any(h.contig == c and min(h.end, e) >= max(h.start, b) for c, b, e in spans)
-
-            flipped = {}
-            for h in own:
-                if not at_scored_gene(h):
+            groups: list[list] = []
+            for entry in scored_models:
+                c, b, e = entry[1]
+                for grp in groups:
+                    if any(c == c2 and min(e, e2) >= max(b, b2) for _, (c2, b2, e2), _ in grp):
+                        grp.append(entry)
+                        break
+                else:
+                    groups.append([entry])
+            flipped, events = {}, []
+            for grp in groups:
+                pos = classify_idiomorph(clf, [p for _, _, p in grp], [g for g, _, _ in grp])
+                if pos is None or pos.idiomorph == CLASSIFIER_UNDETERMINED:
                     continue
-                if h.gene_name in losers and h.superseded_by is None:
-                    flipped[id(h)] = dataclasses.replace(h, superseded_by=winner)
-                elif h.gene_name == winner and h.superseded_by in losers:
-                    flipped[id(h)] = dataclasses.replace(h, superseded_by=None)
+                winner = next(g for g, i in gene_idiomorph.items() if i == pos.idiomorph)
+                spans = [sp for _, sp, _ in grp]
+
+                def here(h, spans=spans):
+                    return any(h.contig == c and min(h.end, e) >= max(h.start, b) for c, b, e in spans)
+
+                at = [h for h in own if here(h)]
+                if not any(h.gene_name == winner for h in at):
+                    continue
+                grp_losers = set()
+                for h in at:
+                    if h.gene_name != winner and h.gene_name in gene_idiomorph and h.superseded_by is None:
+                        flipped[id(h)] = dataclasses.replace(h, superseded_by=winner)
+                        grp_losers.add(h.gene_name)
+                    elif h.gene_name == winner and h.superseded_by in gene_idiomorph:
+                        flipped[id(h)] = dataclasses.replace(h, superseded_by=None)
+                        grp_losers.add(h.superseded_by)
+                for loser in sorted(grp_losers):
+                    events.append(IdiomorphResolution(
+                        contig=cluster.contig, winner=winner, loser=loser,
+                        winner_identity=max((h.identity for h in at if h.gene_name == winner), default=0.0),
+                        loser_identity=max((h.identity for h in at if h.gene_name == loser), default=0.0),
+                        overlap_fraction=1.0, basis="hmm_classifier",
+                        winner_model_score=pos.scores[gene_idiomorph[winner]],
+                        loser_model_score=pos.scores[gene_idiomorph[loser]],
+                    ))
+                    model_losers.discard((id(cluster), family.key, winner))
+                    model_losers.add((id(cluster), family.key, loser))
             if not flipped:
-                continue  # the pair already agrees with the verdict
+                continue  # every position already agrees with its own verdict
             cluster.hits[:] = [flipped.get(id(h), h) for h in cluster.hits]
-            losers = {h.gene_name for h in flipped.values() if h.superseded_by == winner} or losers
-            model_losers.discard((id(cluster), family.key, winner))
-            model_losers.update((id(cluster), family.key, g) for g in losers)
-            events = []
-            for loser in sorted(losers):
-                w_id = max((h.identity for h in own if h.gene_name == winner), default=0.0)
-                l_id = max((h.identity for h in own if h.gene_name == loser), default=0.0)
-                events.append(IdiomorphResolution(
-                    contig=cluster.contig, winner=winner, loser=loser,
-                    winner_identity=w_id, loser_identity=l_id, overlap_fraction=1.0,
-                    basis="hmm_classifier",
-                    winner_model_score=verdict.scores[gene_idiomorph[winner]],
-                    loser_model_score=verdict.scores[gene_idiomorph[loser]],
-                ))
             decided = {frozenset((e.winner, e.loser)) for e in events}
             kept = [
                 e for e in idiomorph_events_by_cluster.get(id(cluster), [])

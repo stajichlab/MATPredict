@@ -37,14 +37,27 @@ no chytrid family is curated, so every genome falls to `exhaustive` routing
   Rhizomucor 5, Zychaea, Circinella, Thermomucor): the locus is found with its
   flanks but nothing models at ~42% identity -- the Pezizales pattern. No
   Lichtheimiaceae record exists.
-* **Rhizopus is Plus-biased, and it is not a Minus under-call.** R. arrhizus:
-  42 called Plus, 1 Minus; the withheld R. arrhizus loci are also labelled Plus
-  (12 of 13). Whether the skew is sampling or biology is not established here.
-  Curator view (2026-09-26): most likely sampling bias in the sequenced strains,
-  and it may also reflect a real skew among strains. No action for now.
-  Open: 12 R. arrhizus genomes stay uncalled at ~40% identity although R.
-  arrhizus records exist -- assembly fragmentation or divergent references,
-  not checked.
+* **Rhizopus "Plus bias" is largely a LABELLING ERROR, not biology or sampling.**
+  (Revised 2026-09-26; the earlier text here called the skew real and the
+  curator's first view was "likely sampling bias". Both are withdrawn.)
+  33 Mucoromycota calls carry sexM (about 96% identity, 99% coverage) and no
+  sexP, yet are labelled Plus. All 33 are Rhizopus: R. arrhizus 19,
+  R. delemar 9, R. stolonifer 3, R. microsporus 2. 19 of the 43 R. arrhizus
+  Plus calls are of this kind.
+  **Where the label comes from:** `idiomorph_candidates`
+  (`src/MATPredict/detect/idiomorph.py`) scores each idiomorph by the best
+  bitscore of any gene with `present_in_idiomorphs` that is not marked
+  `idiomorph_informative: false`. In `db/Mucoromycota/order.yml` the flank
+  gene btbA is `present_in_idiomorphs: ["Plus"]`, because the only curated
+  record that carries btbA (CBS 346-36) is a Plus strain. btbA is present in
+  all 33 of these calls. It is a long protein, so at ~98% identity its
+  bitscore (e.g. 871) beats the sexM bitscore (e.g. 378). A flank gene outvotes
+  the core MAT gene. Example: GCA_000696915.1, Plus 871 vs Minus 378, while
+  the per-contig sexM/sexP resolution names sexM the winner (95.7% vs 32.1%).
+  btbA is in 74 Plus calls and 1 Minus call overall.
+  The Plus/Minus ratio in Rhizopus cannot be read until this is fixed and the
+  scan re-scored. Open: 12 R. arrhizus genomes stay uncalled at ~40% identity
+  -- assembly fragmentation or divergent references, not checked.
 
 ## Mortierellomycota (6/100) and Kickxellomycota (7/190): leads, not results
 

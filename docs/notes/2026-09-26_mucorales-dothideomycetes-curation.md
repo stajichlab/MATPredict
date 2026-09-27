@@ -118,3 +118,14 @@ Eight records, pending sign-off. Full write-up and tables:
   personata); 1 flip at a tiny margin in homothallic Aureobasidium.
 - None of the 9 round-1 misses is fixed: 1 is a 0.1 Mb MAG bin, 1 is a
   fragmented assembly, the rest are reference divergence or cap effects.
+
+## Curator rulings on round 2 (2026-09-26)
+
+- Signed off: *Parastagonospora nodorum*, *Leptosphaeria maculans*
+  (recorded under *Plenodomus lingam*, taxid 5022) and *Pseudocercospora
+  fijiensis*.
+- *Fulvia fulva*: skipped, for consistency with *Diplodia* (presumed asexual,
+  no cross). Its two records were removed.
+- Push this branch only after the polish-cap rank and relaxed-pass fixes, and
+  a re-run of the pilot shows whether the *Cercospora kikuchii* and
+  *Nothopassalora personata* double calls remain.

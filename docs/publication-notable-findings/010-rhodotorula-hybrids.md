@@ -11,8 +11,13 @@ mucilaginosa RIT389 gets no P/R call (one HD call).
 
 ## Evidence
 - `docs/notes/2026-09-27_rhodotorula-curation.md` (curation-puccinio),
-  "Known answers" section. Accessions for the two strains: unverified in the
-  note (strain names only).
+  "Known answers" section.
+- CCT 0783 (R. toruloides): GCA_016808315.1 -- called A1+A2 with two HD loci.
+- RIT389 (R. mucilaginosa): GCA_002250355.1 -- no P/R call.
+  (Accessions from BFD samples.csv, verified 2026-09-27. The hybrid status of
+  both strains comes from the unpublished manuscript; cite the preprint
+  DOI 10.1101/2025.09.11.675505 once it states this, and confirm before
+  publication.)
 
 ## Method that found it
 Entry 002.

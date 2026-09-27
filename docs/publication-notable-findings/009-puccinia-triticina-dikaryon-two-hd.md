@@ -14,7 +14,7 @@ is called with two HD loci, as a dikaryon carrying two nuclei should be.
   two HD loci"; four Phakopsora pachyrhizi genomes with two loci each (bE 49%,
   bW 31-33%; distant hits, gene order not checked).
 - Records `rustHD` (tier 2, Cuomo et al. 2017, PMID 27913634).
-- 19NSW04 accession: unverified in the note (strain name only).
+- 19NSW04 assembly: GCA_029633885.1 (BFD samples.csv, strain 19NSW04; verified 2026-09-27).
 
 ## Method that found it
 Detection with the rustHD family (curation-puccinio `293640d`).

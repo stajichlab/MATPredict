@@ -677,6 +677,7 @@ def _modelled_gene_names(
     member_clusters: list[GeneCluster],
     family_key: FamilyKey,
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome],
+    model_losers: frozenset[tuple[int, FamilyKey, str]] | set = frozenset(),
 ) -> frozenset[str]:
     """How many DISTINCT genes of this family, in these exact clusters, rest
     on a real gene model rather than on a bare alignment.
@@ -718,11 +719,18 @@ def _modelled_gene_names(
         h for c in member_clusters for h in c.hits
         if h.family_key == family_key and h.superseded_by is None
     ]
+    # `model_losers`: a gene whose model LOST a model-based idiomorph decision
+    # (`model_idiomorph_alternatives`) is the same physical gene as the winner.
+    # Its name can stay live through a separate weak hit elsewhere in the
+    # cluster, so the live-name test alone would count that losing model --
+    # found in Umbelopsis vinacea GCA_016758895.1, where it let one gene clear
+    # a bar of two.
     modelled = {
         gene_name
         for (cluster_id, key, gene_name), outcome in polish_by.items()
         if key == family_key and cluster_id in cluster_ids
         and outcome.status in (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE)
+        and (cluster_id, key, gene_name) not in model_losers
     } & {h.gene_name for h in live}
     modelled |= {h.gene_name for h in live if h.method == "diamond_proteome"}
     return frozenset(modelled)
@@ -737,6 +745,7 @@ def _relaxed_results(
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] | None = None,
     contig_lengths: dict[str, int] | None = None,
     on_relaxed_call: Callable[[DetectionResult, GeneCluster, FamilyScore], None] | None = None,
+    model_losers: frozenset[tuple[int, FamilyKey, str]] | set = frozenset(),
 ) -> list[DetectionResult]:
     """Sub-floor clusters admitted on gene COUNT rather than gene fraction.
 
@@ -826,7 +835,7 @@ def _relaxed_results(
                 # set, so it stayed 0 and the modelled-gene bar -- applied after
                 # this pass -- withheld every relaxed call.
                 polished_genes=len(
-                    _modelled_gene_names([cluster], score.family_key, polish_by or {})
+                    _modelled_gene_names([cluster], score.family_key, polish_by or {}, model_losers)
                 ),
             ))
             if on_relaxed_call is not None:
@@ -2010,6 +2019,8 @@ def run_pipeline(
                         run_id=run_id, genome_id=genome_id,
                     )
 
+    #: (cluster, family, gene) whose polished model LOST a model-based decision.
+    model_losers: set[tuple[int, FamilyKey, str]] = set()
     # Decide each sexM/sexP-style pair on its two MODELS, for the families that
     # ask for it. Runs after the post-polish pass so the tblastn-identity rule
     # cannot overwrite the model verdict. The first-pass event for the same
@@ -2031,6 +2042,7 @@ def run_pipeline(
             )
             if not own_events:
                 continue
+            model_losers.update((id(cluster), family.key, e.loser) for e in own_events)
             by_id = dict(zip((id(h) for h in own), resolved_own))
             cluster.hits[:] = [by_id.get(id(h), h) for h in cluster.hits]
             decided = {frozenset((e.winner, e.loser)) for e in own_events}
@@ -2096,7 +2108,7 @@ def run_pipeline(
     def _modelled_gene_count(
         member_clusters: list[GeneCluster], family_key: FamilyKey
     ) -> int:
-        return len(_modelled_gene_names(member_clusters, family_key, polish_by))
+        return len(_modelled_gene_names(member_clusters, family_key, polish_by, model_losers))
 
     def _build(
         score: FamilyScore,
@@ -2328,6 +2340,7 @@ def run_pipeline(
             polish_by=polish_by,
             contig_lengths=contig_lengths,
             on_relaxed_call=_record_relaxed,
+            model_losers=model_losers,
         )
         if results:
             logger.info(

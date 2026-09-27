@@ -152,3 +152,36 @@ def test_the_setting_is_read_from_the_curated_mucoromycota_roster():
     assert fams[("Mucoromycota", "MAT")].model_idiomorph_alternatives is True
     assert not any(f.model_idiomorph_alternatives for k, f in fams.items()
                    if k != ("Mucoromycota", "MAT"))
+
+
+def test_a_losing_model_never_counts_even_when_its_gene_has_another_live_hit(tmp_path):
+    """Found in the 2026-09-26 validation run (Umbelopsis vinacea
+    GCA_016758895.1): sexP lost the model decision at the HMG gene, but a
+    separate weak sexP hit elsewhere in the cluster kept the NAME live, so the
+    losing sexP model was counted as a modelled gene. One physical gene then
+    cleared a bar of two. Here only sexM and nothing else is modelled, so the
+    call must be withheld."""
+    _setup(tmp_path, True)
+
+    def localize(*a, **k):
+        return [_tblastn("sexM", 1000, 1600, 36.1, 60.0),
+                _tblastn("sexP", 1000, 1600, 34.0, 55.0),
+                _tblastn("sexP", 2400, 2500, 30.0, 30.0),     # another HMG, sexP-labelled
+                _tblastn("tptA", 3000, 4000, 90.0, 400.0, role="flanking_conserved")]
+
+    def model(gene_name, method):
+        if gene_name not in ("sexM", "sexP"):
+            return None                                        # flank not modelled
+        m = _model(gene_name, "c1", *SPANS[gene_name], identity=35.0, family_key=KEY,
+                   role="core_MAT", method=method)
+        return dataclasses.replace(m, score={"sexM": 300.0, "sexP": 150.0}[gene_name])
+
+    outcome = run_pipeline(
+        genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None,
+        db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
+        search_localize=localize,
+        polish_with_exonerate=lambda *, gene_name, **kw: model(gene_name, "exonerate_refine"),
+        polish_with_miniprot=lambda *, gene_name, **kw: model(gene_name, "miniprot_refine"),
+    )
+    assert outcome.results == []
+    assert outcome.suppressed_unpolished == 1

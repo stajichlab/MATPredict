@@ -673,6 +673,61 @@ def _append_diagnostics_row(out_path: Path, row: dict) -> None:
             logger.warning("could not write evidence diagnostics to %s: %s", out_path, exc)
 
 
+def _modelled_gene_names(
+    member_clusters: list[GeneCluster],
+    family_key: FamilyKey,
+    polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome],
+) -> frozenset[str]:
+    """How many DISTINCT genes of this family, in these exact clusters, rest
+    on a real gene model rather than on a bare alignment.
+
+    A gene counts when either:
+
+    * a polishing tool modelled it (`polished_agree`, `polished_disagree`
+      or `polished_single`), or
+    * it came from the annotated fast path, i.e. it has a
+      `diamond_proteome` hit here -- a gene model somebody already called,
+      which was never put to the tools precisely BECAUSE it needs no
+      refining.
+
+    Counting the fast path is not a loosening, it is the whole reason this
+    is not called `polished_gene_count`. Gating on polish alone would score
+    every gene of a fully annotated genome as unmodelled and withhold its
+    real MAT locus -- the annotated ZygoLife and BFD-proteome workflows
+    would report nothing at all. The measurement behind the bar came from
+    genome-only runs, where no diamond hit exists and the two definitions
+    coincide, so it does not speak to that case either way.
+
+    What never counts is `STATUS_UNPOLISHED`: a localized HSP that BOTH
+    tools were given a window for and neither could turn into a gene. That
+    is the population the bar exists to remove.
+
+    Nor does a gene whose every hit here is superseded. A RESCUED model is
+    recorded as modelled before the post-polish idiomorph pass runs, and
+    that pass can then find it is the losing half of a sexM/sexP-style
+    pair -- the same physical gene as the winner. Counting it let one gene
+    clear a bar of two (25 of 3,101 Saccharomyces loci were over-counted).
+
+    Counted per distinct gene NAME, not per hit: a cluster routinely holds
+    many HSPs of one gene, and three fragments of one alpha-box must not
+    add up to the bar on their own. Scoped by (cluster, family) exactly as
+    `_any_gene_unpolished` is, and for the same reasons.
+    """
+    cluster_ids = {id(c) for c in member_clusters}
+    live = [
+        h for c in member_clusters for h in c.hits
+        if h.family_key == family_key and h.superseded_by is None
+    ]
+    modelled = {
+        gene_name
+        for (cluster_id, key, gene_name), outcome in polish_by.items()
+        if key == family_key and cluster_id in cluster_ids
+        and outcome.status in (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE)
+    } & {h.gene_name for h in live}
+    modelled |= {h.gene_name for h in live if h.method == "diamond_proteome"}
+    return frozenset(modelled)
+
+
 def _relaxed_results(
     clusters: list[GeneCluster],
     families: list[Family],
@@ -681,6 +736,7 @@ def _relaxed_results(
     ambiguity_floor: float = 0.5,
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] | None = None,
     contig_lengths: dict[str, int] | None = None,
+    on_relaxed_call: Callable[[DetectionResult, GeneCluster, FamilyScore], None] | None = None,
 ) -> list[DetectionResult]:
     """Sub-floor clusters admitted on gene COUNT rather than gene fraction.
 
@@ -766,7 +822,15 @@ def _relaxed_results(
                 segments=segments,
                 gene_evidence=evidence,
                 reference_records=sorted({e.reference_record_id for e in evidence}),
+                # Same rule as the strict path. Before 2026-09-26 this was never
+                # set, so it stayed 0 and the modelled-gene bar -- applied after
+                # this pass -- withheld every relaxed call.
+                polished_genes=len(
+                    _modelled_gene_names([cluster], score.family_key, polish_by or {})
+                ),
             ))
+            if on_relaxed_call is not None:
+                on_relaxed_call(results[-1], cluster, score)
     return results
 
 
@@ -2032,59 +2096,7 @@ def run_pipeline(
     def _modelled_gene_count(
         member_clusters: list[GeneCluster], family_key: FamilyKey
     ) -> int:
-        return len(_modelled_gene_names(member_clusters, family_key))
-
-    def _modelled_gene_names(
-        member_clusters: list[GeneCluster], family_key: FamilyKey
-    ) -> frozenset[str]:
-        """How many DISTINCT genes of this family, in these exact clusters, rest
-        on a real gene model rather than on a bare alignment.
-
-        A gene counts when either:
-
-        * a polishing tool modelled it (`polished_agree`, `polished_disagree`
-          or `polished_single`), or
-        * it came from the annotated fast path, i.e. it has a
-          `diamond_proteome` hit here -- a gene model somebody already called,
-          which was never put to the tools precisely BECAUSE it needs no
-          refining.
-
-        Counting the fast path is not a loosening, it is the whole reason this
-        is not called `polished_gene_count`. Gating on polish alone would score
-        every gene of a fully annotated genome as unmodelled and withhold its
-        real MAT locus -- the annotated ZygoLife and BFD-proteome workflows
-        would report nothing at all. The measurement behind the bar came from
-        genome-only runs, where no diamond hit exists and the two definitions
-        coincide, so it does not speak to that case either way.
-
-        What never counts is `STATUS_UNPOLISHED`: a localized HSP that BOTH
-        tools were given a window for and neither could turn into a gene. That
-        is the population the bar exists to remove.
-
-        Nor does a gene whose every hit here is superseded. A RESCUED model is
-        recorded as modelled before the post-polish idiomorph pass runs, and
-        that pass can then find it is the losing half of a sexM/sexP-style
-        pair -- the same physical gene as the winner. Counting it let one gene
-        clear a bar of two (25 of 3,101 Saccharomyces loci were over-counted).
-
-        Counted per distinct gene NAME, not per hit: a cluster routinely holds
-        many HSPs of one gene, and three fragments of one alpha-box must not
-        add up to the bar on their own. Scoped by (cluster, family) exactly as
-        `_any_gene_unpolished` is, and for the same reasons.
-        """
-        cluster_ids = {id(c) for c in member_clusters}
-        live = [
-            h for c in member_clusters for h in c.hits
-            if h.family_key == family_key and h.superseded_by is None
-        ]
-        modelled = {
-            gene_name
-            for (cluster_id, key, gene_name), outcome in polish_by.items()
-            if key == family_key and cluster_id in cluster_ids
-            and outcome.status in (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE)
-        } & {h.gene_name for h in live}
-        modelled |= {h.gene_name for h in live if h.method == "diamond_proteome"}
-        return frozenset(modelled)
+        return len(_modelled_gene_names(member_clusters, family_key, polish_by))
 
     def _build(
         score: FamilyScore,
@@ -2283,6 +2295,31 @@ def run_pipeline(
     # with any confident call is left exactly as it was, so the relaxed bar
     # can never dilute a run that already worked.
     if not results and relaxed_second_pass:
+        def _record_relaxed(result, cluster, score):
+            # Exploration data (curator, 2026-09-26: "explore the implications"
+            # of the fixed `medium`): the tier the strict path's rule WOULD give
+            # this call, beside the confidence actually reported.
+            if evidence_diagnostics_path is None:
+                return
+            family = families_by_key[score.family_key]
+            _append_diagnostics_row(evidence_diagnostics_path, {
+                "kind": "relaxed_call",
+                "run_id": run_id,
+                "genome_id": genome_id,
+                "family": f"{family.key.phylum}:{family.key.locus_name}",
+                "contig": result.contig, "start": result.start, "end": result.end,
+                "idiomorph": result.idiomorph,
+                "fraction_found": score.fraction_found,
+                "genes_found": list(score.genes_found),
+                "polished_genes": result.polished_genes,
+                "confidence_reported": result.confidence,
+                "tier_uncapped": assign_tier(
+                    score, family, cluster,
+                    any_gene_unpolished=_any_gene_unpolished({id(cluster)}, score.family_key),
+                    fragmented=False,
+                ),
+            })
+
         results = _relaxed_results(
             clusters, families,
             searchable_genes=searchable_genes,
@@ -2290,6 +2327,7 @@ def run_pipeline(
             ambiguity_floor=ambiguity_floor,
             polish_by=polish_by,
             contig_lengths=contig_lengths,
+            on_relaxed_call=_record_relaxed,
         )
         if results:
             logger.info(

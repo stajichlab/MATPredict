@@ -14,7 +14,17 @@ limits. Nothing here is a claim until the evidence is re-checked for the paper.
 - SXI1, HMG and STE3 are adjacent in 33/33 genomes carrying the reference
   allele. Allele split: W. mellicola 14 vs 13; W. ichthyophaga 18 vs 4, where
   the 4 are exactly the published inverted strains.
+- Update 2026-09-27: a second tier-2 putative record (W. canadensis
+  EXF-10342, the other version: receptor STE3v2, no SXI1, only an HMG-box
+  fragment) lets detect NAME both versions. All 51 genomes are called with a
+  version: v1 33 (all high), v2 18 (all medium). Per species: W. mellicola
+  14 v1 / 13 v2; W. ichthyophaga 18 / 4 (the 4 = the published inverted
+  strains); W. hederae 1 / 0; W. canadensis 0 / 1. No genome carries both.
+  The v2 receptor model hits the v2 genomes at 76.5-100% identity, and the
+  version vote separates them widely (v2 178-234 vs v1 26-74 bits).
 - Limits: no mating or meiosis has been observed in Wallemia; a near 1:1
-  allele split fits heterothallism but does not prove it.
-- Evidence: results/2026-09-27_puccinio_followup/, record
-  db/Basidiomycota/Wallemiales/671144_cbs-633-66_wallMAT_v1/.
+  version split fits heterothallism but does not prove it. v1/v2 are
+  placeholders; which is which mating type is unknown.
+- Evidence: results/2026-09-27_puccinio_followup/, results/2026-09-27_wallemia_allele2/;
+  records db/Basidiomycota/Wallemiales/671144_cbs-633-66_wallMAT_v1/ and
+  1708542_exf-10342_wallMAT_v2/.

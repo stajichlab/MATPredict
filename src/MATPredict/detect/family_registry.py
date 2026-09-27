@@ -168,6 +168,15 @@ class Family:
     0.1-2 identity points. Off by default: no other family has been shown to
     need it, and it costs one extra polish per resolved pair.
     """
+    idiomorph_classifier: dict | None = None
+    """Profile-HMM idiomorph classifier for this family (`detect.classifier`),
+    or None. Keys: `type` ("hmm"), `dir` (resolved to an absolute path by the
+    loader, from `db/<Phylum>/<dir>`), `min_margin` (bits).
+
+    Curation data. Curator's ruling 2026-09-26: decide the idiomorph on the
+    MODELLED proteins with one HMM per idiomorph; the bitscore/model-pair
+    decision stays the fallback. Built only by scripts/build_idiomorph_hmms.py.
+    """
     min_idiomorph_margin: float = DEFAULT_MIN_IDIOMORPH_MARGIN
     """Identity points two mutually exclusive idiomorph genes must be apart.
 
@@ -271,6 +280,13 @@ def _gene_alias_map(genes: list) -> dict[str, str]:
     return mapping
 
 
+def _resolve_classifier(spec: dict | None, phylum_dir: Path) -> dict | None:
+    """A roster's `idiomorph_classifier` block with `dir` made absolute."""
+    if not spec:
+        return None
+    return {**spec, "dir": str((phylum_dir / spec["dir"]).resolve())}
+
+
 def load_all_families(db_root: Path) -> list[Family]:
     """Read every db/<Phylum>/order.yml and flatten it into Family records."""
     families: list[Family] = []
@@ -312,6 +328,9 @@ def load_all_families(db_root: Path) -> list[Family]:
                     ),
                     model_idiomorph_alternatives=locus.get(
                         "model_idiomorph_alternatives", False,
+                    ),
+                    idiomorph_classifier=_resolve_classifier(
+                        locus.get("idiomorph_classifier"), order_file.parent,
                     ),
                 )
             )

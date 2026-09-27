@@ -48,6 +48,17 @@ properties:
         # pair and decide it on the two models (curator's ruling 2026-09-26,
         # Mucoromycota sexM/sexP). Absent means false.
         model_idiomorph_alternatives: {type: boolean}
+        # OPTIONAL. Profile-HMM idiomorph classifier over the modelled core
+        # proteins (curator's ruling 2026-09-26). `dir` is relative to the
+        # phylum directory; files are built by scripts/build_idiomorph_hmms.py.
+        idiomorph_classifier:
+          type: object
+          required: [type, dir, min_margin]
+          additionalProperties: false
+          properties:
+            type: {enum: [hmm]}
+            dir: {type: string}
+            min_margin: {type: number, minimum: 0}
         taxonomic_scope:
           type: array
           minItems: 1

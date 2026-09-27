@@ -34,6 +34,11 @@ exonerate = "*"
 augustus = "*"
 clinker-py = ">=0.0.32,<0.0.33"
 pygenomeviz = ">=1.7.0,<2"
+# Profile-HMM idiomorph classifier on modelled proteins (detect/classifier.py;
+# curator's ruling 2026-09-26). mafft is used only OFFLINE, by
+# scripts/build_idiomorph_hmms.py, to align the training set.
+pyhmmer = ">=0.12.3,<0.13"
+mafft = ">=7.526,<8"
 
 [pypi-dependencies]
 MATPredict = { path = ".", editable = true }

@@ -14,6 +14,18 @@ loci:
     # 2026-09-26 HMG-box tree rested on first-pass margins of 0.1-2 identity
     # points, with sexP never modelled (results/2026-09-26_sexMP_phylogeny).
     model_idiomorph_alternatives: true
+    # CURATOR RULING, J. Stajich, 2026-09-26: decide the idiomorph on the
+    # MODELLED proteins with a profile-HMM classifier ("a cleaner way to make
+    # these assignments"). Files in classifiers/MAT/ are built ONLY by
+    # scripts/build_idiomorph_hmms.py (manifest.yaml records training IDs,
+    # versions and checksums). Training = curator option (a): curated
+    # sexM/sexP records + UFBoot-99 sexP-clade members of the 2026-09-26
+    # HMG-box tree; the Zygo 23 loci are held out. Build: 85/85 correct
+    # leave-one-genus-out, worst correct margin 22.5 bits; held-out Zygo
+    # 23/23, smallest margin 47.5 bits (results/2026-09-26_hmm_classifier).
+    # min_margin = half the worst leave-one-genus-out margin: below it the
+    # call is `undetermined` with both scores reported.
+    idiomorph_classifier: {type: hmm, dir: classifiers/MAT, min_margin: 11.2}
     # CURATOR RULING, J. Stajich, 2026-09-20: the detector's 25000 bp default
     # clustering gap is "right for Ascomycota" but too tight for Mucoromycota,
     # which should "start at 50 kb". PROVISIONAL: 50000 is a starting value, not

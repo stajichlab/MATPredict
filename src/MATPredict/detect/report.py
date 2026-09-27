@@ -339,6 +339,11 @@ def _result_doc(r: DetectionResult) -> dict:
         # observations the provisional overlap threshold will be recalibrated
         # against.
         "idiomorph_margin": r.idiomorph_margin,
+        # The profile-HMM classifier's scores on the modelled core proteins,
+        # when the family has one (curator's ruling 2026-09-26). When present
+        # it decided `idiomorph`; `undetermined` means its margin fell below
+        # the family's `min_margin`.
+        "idiomorph_classifier": r.idiomorph_classifier,
         "idiomorph_resolutions": [
             {
                 "contig": res.contig,

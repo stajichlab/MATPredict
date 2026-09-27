@@ -72,6 +72,7 @@ as separate, honest, correctly-coordinated calls.
 """
 from __future__ import annotations
 
+import dataclasses
 import json
 import logging
 import uuid
@@ -133,6 +134,14 @@ from MATPredict.detect.search import (
 )
 from MATPredict.detect.tiering import assign_tier, cap_at_medium
 from MATPredict.detect.verification import OVERRIDE_ROUTES, label_verification
+from MATPredict.detect.classifier import (
+    UNDETERMINED as CLASSIFIER_UNDETERMINED,
+    ClassifierVerdict,
+    classifier_genes,
+    classify as classify_idiomorph,
+    combine_verdicts,
+    load_classifier,
+)
 from MATPredict.detect.zygosity import genome_zygosity, load_zygosity_rules
 
 logger = logging.getLogger(__name__)
@@ -293,6 +302,11 @@ class DetectionResult:
     its idiomorph rests on unmodelled hits. Such a call is kept only when the
     core hits lie inside the flank span, and is then capped at `low` and
     classed `partial_locus`. See `flank_carried`."""
+    idiomorph_classifier: dict | None = None
+    """The profile-HMM classifier's verdict on this locus's modelled core
+    proteins (`classifier.ClassifierVerdict.as_report`), or None when the
+    family has no classifier or nothing was modelled. When set, it decided
+    `idiomorph`. Curator's ruling 2026-09-26."""
     verification: dict | None = None
     """`{status: unverified, reason, family_phylum, genome_phylum, evidence}`
     when the family was searched outside the genome's phylum by an override
@@ -594,6 +608,33 @@ DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY = 6
 _DIAGNOSTICS_CANDIDATE_FLOOR = EvidenceFloor(
     min_hits=1, min_identity=None, require_core_role=False
 )
+
+
+def _translate_model(genome_fasta: Path, model, genetic_code: int, cache: dict) -> str:
+    """The protein a polished model encodes, spliced from its exons and
+    translated with the genome's genetic code, stopping at the first stop.
+    Contig sequences are read once per run into `cache`."""
+    from Bio import SeqIO
+    from Bio.Seq import Seq
+
+    if model.contig not in cache:
+        wanted = model.contig
+        with open(genome_fasta) as handle:
+            for record in SeqIO.parse(handle, "fasta"):
+                cache.setdefault(record.id, record.seq)
+        cache.setdefault(wanted, None)
+    seq = cache.get(model.contig)
+    if seq is None:
+        return ""
+    exons = sorted((e.start, e.end) for e in model.exons) or [(model.start, model.end)]
+    ordered = list(reversed(exons)) if model.strand == "-" else exons
+    parts = []
+    for start, end in ordered:
+        span = seq[start - 1:end]
+        parts.append(str(span.reverse_complement() if model.strand == "-" else span))
+    cds = "".join(parts)
+    cds = cds[: len(cds) - len(cds) % 3]
+    return str(Seq(cds).translate(table=genetic_code, to_stop=True))
 
 
 def _polish_rank(cluster: GeneCluster, family_key: FamilyKey) -> tuple:
@@ -2074,6 +2115,80 @@ def run_pipeline(
                         run_id=run_id, genome_id=genome_id,
                     )
 
+    # Decide the idiomorph on the MODELLED proteins with the family's profile-HMM
+    # classifier, where the roster names one (curator's ruling 2026-09-26;
+    # `detect.classifier`). Runs after the model-pair decision so it has the
+    # final models of both halves of a pair. A decisive verdict also makes the
+    # pair's live/superseded state agree with it; an `undetermined` verdict
+    # changes no hit and is reported as such.
+    classifier_verdicts: dict[tuple[int, FamilyKey], ClassifierVerdict] = {}
+    contig_seq_cache: dict[str, object] = {}
+    for cluster in clusters:
+        for family in families:
+            if not family.idiomorph_classifier:
+                continue
+            clf = load_classifier(family.idiomorph_classifier, family)
+            gene_idiomorph = classifier_genes(family)
+            proteins, scored = [], []
+            for (cluster_id, key, gene), outcome in polish_by.items():
+                if cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph:
+                    continue
+                for model in (outcome.miniprot_model, outcome.exonerate_model):
+                    if model is None:
+                        continue
+                    protein = _translate_model(
+                        genome_fasta, model, genetic_code or 1, contig_seq_cache
+                    )
+                    if protein:
+                        proteins.append(protein)
+                        scored.append(gene)
+            verdict = classify_idiomorph(clf, proteins, scored)
+            if verdict is None:
+                continue
+            classifier_verdicts[(id(cluster), family.key)] = verdict
+            if verdict.idiomorph == CLASSIFIER_UNDETERMINED:
+                continue
+            winner = next(g for g, i in gene_idiomorph.items() if i == verdict.idiomorph)
+            own = [h for h in cluster.hits if h.family_key == family.key]
+            if not any(h.gene_name == winner for h in own):
+                continue  # nothing of the winner's to make live; the verdict still names the idiomorph
+            losers = {g for g in gene_idiomorph if g != winner and any(h.gene_name == g for h in own)}
+            if not losers:
+                continue
+            flipped = {}
+            for h in own:
+                if h.gene_name in losers and h.superseded_by is None:
+                    flipped[id(h)] = dataclasses.replace(h, superseded_by=winner)
+                elif h.gene_name == winner and h.superseded_by in losers:
+                    flipped[id(h)] = dataclasses.replace(h, superseded_by=None)
+            cluster.hits[:] = [flipped.get(id(h), h) for h in cluster.hits]
+            model_losers.discard((id(cluster), family.key, winner))
+            model_losers.update((id(cluster), family.key, g) for g in losers)
+            events = []
+            for loser in sorted(losers):
+                w_id = max((h.identity for h in own if h.gene_name == winner), default=0.0)
+                l_id = max((h.identity for h in own if h.gene_name == loser), default=0.0)
+                events.append(IdiomorphResolution(
+                    contig=cluster.contig, winner=winner, loser=loser,
+                    winner_identity=w_id, loser_identity=l_id, overlap_fraction=1.0,
+                    basis="hmm_classifier",
+                    winner_model_score=verdict.scores[gene_idiomorph[winner]],
+                    loser_model_score=verdict.scores[gene_idiomorph[loser]],
+                ))
+            decided = {frozenset((e.winner, e.loser)) for e in events}
+            kept = [
+                e for e in idiomorph_events_by_cluster.get(id(cluster), [])
+                if frozenset((e.winner, e.loser)) not in decided
+            ]
+            idiomorph_events_by_cluster[id(cluster)] = kept + events
+            resolutions_with_family.extend((family, e) for e in events)
+            if evidence_diagnostics_path is not None:
+                for event in events:
+                    _write_idiomorph_diagnostics(
+                        evidence_diagnostics_path, event, family,
+                        run_id=run_id, genome_id=genome_id,
+                    )
+
     # Cross-contig fragment merging is OFF by default. Curator's ruling,
     # 2026-09-20, after Basidiomycota order testing found a real Cryptococcus
     # deneoformans MAT locus -- both genes matching at 100% identity --
@@ -2170,7 +2285,21 @@ def run_pipeline(
         idiomorph_margin = idiomorph_margin_from_vote(own_vote)
         if idiomorph_margin is None and own_resolutions:
             idiomorph_margin = min(e.margin for e in own_resolutions)
-        if (
+        # Where the family has a profile-HMM classifier and a protein was
+        # modelled, the classifier decides and its bit-score margin is THE
+        # margin (curator's ruling 2026-09-26). Its own `min_margin` already
+        # turns a close call into `undetermined`, so the identity-point
+        # `min_idiomorph_margin` tier cap -- a different unit -- does not apply.
+        verdict = combine_verdicts([
+            classifier_verdicts.get((id(c), score.family_key)) for c in member_clusters
+        ])
+        if verdict is not None:
+            own_vote = [
+                {"idiomorph": k, "score": round(v, 1), "basis": "hmm_classifier"}
+                for k, v in sorted(verdict.scores.items(), key=lambda kv: (-kv[1], kv[0]))
+            ]
+            idiomorph_margin = round(verdict.margin, 6)
+        elif (
             idiomorph_margin is not None
             and idiomorph_margin < family.min_idiomorph_margin
             and tier == "high"
@@ -2233,11 +2362,12 @@ def run_pipeline(
             # (it is a statement about which genes are present) but must not
             # keep `high` (that is a statement about how sure we are).
             confidence=cap_at_medium(tier) if partial_strength else tier,
-            idiomorph=assign_idiomorph(
+            idiomorph=verdict.idiomorph if verdict is not None else assign_idiomorph(
                 family, score.genes_found,
                 [h for c in member_clusters for h in _own_live_hits(c, family.key)],
             ),
             idiomorph_candidates=own_vote,
+            idiomorph_classifier=verdict.as_report() if verdict is not None else None,
             ambiguous_with=(
                 [
                     s.family_key

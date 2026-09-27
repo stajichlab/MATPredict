@@ -88,7 +88,7 @@ def _setup(tmp_path, *, min_margin=10.0, classifier=True, write_hmms=True):
     return 1000, 999 + len(cds) - 3
 
 
-def _run(tmp_path, **kw):
+def _run(tmp_path, stray=False, **kw):
     start, end = _setup(tmp_path, **kw)
     spans = {"sexP": (start, end), "sexM": (start, end), "tptA": (3000, 4000),
              "rnhA": (5000, 6000)}
@@ -101,8 +101,12 @@ def _run(tmp_path, **kw):
                          "tblastn_genome", bitscore=bits)
 
     def localize(*a, **k):
-        return [hit("sexM", 36.1, 60.0), hit("sexP", 34.0, 55.0),
+        hits = [hit("sexM", 36.1, 60.0), hit("sexP", 34.0, 55.0),
                 hit("tptA", 90.0, 400.0), hit("rnhA", 90.0, 400.0)]
+        if stray:  # a separate weak sexM-like hit, away from the scored HMG gene
+            hits.append(SearchHit(KEY, "sexM", "core_MAT", "c1", 6500, 6600, "+", 43.0, "rec1",
+                                  "tblastn_genome", bitscore=30.0))
+        return hits
 
     def model(gene_name, method):
         m = _model(gene_name, "c1", *spans[gene_name], identity=35.0, family_key=KEY,
@@ -207,3 +211,13 @@ def test_identity_spread_reports_unique_count_and_min_median_max(tmp_path):
     uniq, spread = identity_spread(aln)
     assert uniq == 2
     assert spread[0] == 80.0 and spread[2] == 100.0
+
+
+def test_a_verdict_changes_only_hits_at_the_scored_gene(tmp_path):
+    """Found on the first 293-genome run: superseding EVERY loser hit in the
+    cluster also removed separate weak hits elsewhere, dropped 11 real calls
+    below the fraction floor, and they vanished from the report. Only hits
+    overlapping the scored models may change."""
+    (r,) = _run(tmp_path, stray=True).results
+    assert r.idiomorph == "Plus"
+    assert "sexM" in r.genes_found, "the stray sexM hit away from the scored gene must stay live"

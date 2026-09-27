@@ -2129,7 +2129,7 @@ def run_pipeline(
                 continue
             clf = load_classifier(family.idiomorph_classifier, family)
             gene_idiomorph = classifier_genes(family)
-            proteins, scored = [], []
+            proteins, scored, spans = [], [], []
             for (cluster_id, key, gene), outcome in polish_by.items():
                 if cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph:
                     continue
@@ -2142,6 +2142,7 @@ def run_pipeline(
                     if protein:
                         proteins.append(protein)
                         scored.append(gene)
+                        spans.append((model.contig, model.start, model.end))
             verdict = classify_idiomorph(clf, proteins, scored)
             if verdict is None:
                 continue
@@ -2155,13 +2156,27 @@ def run_pipeline(
             losers = {g for g in gene_idiomorph if g != winner and any(h.gene_name == g for h in own)}
             if not losers:
                 continue
+            # Only hits AT the gene the classifier scored change, as in
+            # `resolve_idiomorph_by_models`: a separate weak hit elsewhere in the
+            # cluster is another gene, and superseding it would change the
+            # locus's gene content, not just its idiomorph. Measured on the
+            # first 293-genome run: flipping every loser hit dropped 11 real
+            # calls below the fraction floor.
+            def at_scored_gene(h):
+                return any(h.contig == c and min(h.end, e) >= max(h.start, b) for c, b, e in spans)
+
             flipped = {}
             for h in own:
+                if not at_scored_gene(h):
+                    continue
                 if h.gene_name in losers and h.superseded_by is None:
                     flipped[id(h)] = dataclasses.replace(h, superseded_by=winner)
                 elif h.gene_name == winner and h.superseded_by in losers:
                     flipped[id(h)] = dataclasses.replace(h, superseded_by=None)
+            if not flipped:
+                continue  # the pair already agrees with the verdict
             cluster.hits[:] = [flipped.get(id(h), h) for h in cluster.hits]
+            losers = {h.gene_name for h in flipped.values() if h.superseded_by == winner} or losers
             model_losers.discard((id(cluster), family.key, winner))
             model_losers.update((id(cluster), family.key, g) for g in losers)
             events = []

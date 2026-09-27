@@ -1,0 +1,43 @@
+
+== basidio_ad1f865: calls 3958, reproduced 3958/3958 (100.0%)
+   Basidiomycota:Balpha         medium    7  A->high    0  B->high    0  B'->high    0  other A/B 0/0
+   Basidiomycota:Bbeta          medium   55  A->high    0  B->high    0  B'->high    0  other A/B 0/0
+   Basidiomycota:HD             medium  648  A->high    0  B->high    0  B'->high    0  other A/B 0/0
+   Basidiomycota:MAT            medium  209  A->high    3  B->high    3  B'->high    3  other A/B 0/0
+   Basidiomycota:PR             medium    1  A->high    0  B->high    0  B'->high    0  other A/B 0/0
+   Basidiomycota:aLocus         medium   22  A->high    0  B->high    0  B'->high    0  other A/B 0/0
+
+== cap6_f7b9773: calls 611, reproduced 611/611 (100.0%)
+   Ascomycota:MAT               medium  156  A->high   14  B->high   25  B'->high   24  other A/B 0/0
+   Ascomycota:MATsc             medium  177  A->high    2  B->high   78  B'->high    7  other A/B 0/29
+   Ascomycota:MATtub            medium   22  A->high    0  B->high    0  B'->high    0  other A/B 0/0
+   Ascomycota:MATyl             medium   18  A->high    0  B->high    0  B'->high    0  other A/B 0/0
+   Ascomycota:MTL               medium   25  A->high    4  B->high    6  B'->high    4  other A/B 0/0
+   Ascomycota:PM                medium    1  A->high    0  B->high    0  B'->high    0  other A/B 0/1
+
+== dothideo_52cd292: calls 90, reproduced 90/90 (100.0%)
+   Ascomycota:MAT               medium   46  A->high    9  B->high   17  B'->high   17  other A/B 0/0
+
+== dothideo_d18ec5a: calls 90, reproduced 90/90 (100.0%)
+   Ascomycota:MAT               medium   43  A->high    4  B->high   12  B'->high   12  other A/B 0/0
+
+== early_634dda4: calls 255, reproduced 255/255 (100.0%)
+   Mucoromycota:MAT             medium  117  A->high    0  B->high    1  B'->high    1  other A/B 0/0
+
+== mucoro_1a00b0a: calls 245, reproduced 241/245 (98.4%)
+   mismatch ('medium', 'high', 'flank_ok') 4
+   Mucoromycota:MAT             medium   85  A->high    0  B->high   29  B'->high    0  other A/B 0/0
+
+== serinales_882aa01: calls 2647, reproduced 2647/2647 (100.0%)
+   Ascomycota:MTL               medium  625  A->high   16  B->high   94  B'->high   82  other A/B 0/0
+
+== wallemia_3d8a755: calls 51, reproduced 51/51 (100.0%)
+   Basidiomycota:wallMAT        medium   18  A->high    0  B->high   18  B'->high   17  other A/B 0/0
+
+risers total A 52  B 283  B' 167
+risers with an ignored gene >60% identity: 108
+strong-ignored risers by run/family (A_rises, Bp_rises):
+    ('cap6_f7b9773', 'Ascomycota:MATsc', False, False) 71
+    ('mucoro_1a00b0a', 'Mucoromycota:MAT', False, False) 29
+    ('serinales_882aa01', 'Ascomycota:MTL', False, False) 7
+    ('wallemia_3d8a755', 'Basidiomycota:wallMAT', False, False) 1

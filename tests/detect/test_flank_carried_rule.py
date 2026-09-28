@@ -4,21 +4,26 @@ Curator's ruling 2026-09-26 (docs/notes/2026-09-26_cauris-flank-carried-and-
 calbicans-zygosity.md; measured in docs/notes/2026-09-26_polish-cap-measured-
 and-serinales-scan.md), revised the same day after the Ascomycota audit
 (results/2026-09-26_flank_rule_ascomycota/NOTE.md). The rule judges the
-STRONGEST core hit (lowest e-value):
+STRONGEST core hit (highest bitscore):
 
-1. E <= 1e-5 and within the family's `flank_carried_window_bp` of the flank
+1. bitscore >= 39 bits and within the family's `flank_carried_window_bp` of the flank
    span: keep, cap at `low`, class `partial_locus`, flag
    `idiomorph_unmodelled: true`;
 2. otherwise: withhold, like any bar failure.
 
 Generic over the family's own flanking genes (role `flanking_*`), not
 hardcoded to PAP1/OBP1/PIK1.
+
+Floor changed 2026-09-27 from E <= 1e-5 to bitscore >= 39 (curator's ruling;
+results/2026-09-27_flank_bitscore_floor/NOTE.md). The e-value depends on
+genome size: real Umbelopsis loci with the Mucorales gene order scored 33-44
+bits, E 6e-8..2e-6 locally but above 1e-5 genome-wide, and were withheld.
 """
 import yaml
 
 from MATPredict.detect.family_registry import FamilyKey, load_all_families
 from MATPredict.detect.flank_carried import (
-    DEFAULT_FLANK_CARRIED_WINDOW_BP, FLANK_CARRIED_MAX_EVALUE, WITHHELD_FLANK_CARRIED,
+    DEFAULT_FLANK_CARRIED_WINDOW_BP, FLANK_CARRIED_MIN_BITSCORE, WITHHELD_FLANK_CARRIED,
     apply_flank_carried_rule,
 )
 from MATPredict.detect.idiomorph import LOCUS_CLASS_MAT, LOCUS_CLASS_PARTIAL
@@ -29,16 +34,18 @@ from MATPredict.detect.search import SearchHit
 from tests.detect.test_pipeline import _no_polish, _write_order, _write_record
 
 KEY = FamilyKey("P", "aLocus")
-STRONG, WEAK, NOISE = 1e-13, 1e-3, 2.0
+STRONG, WEAK, NOISE = 68.2, 33.5, 20.0  # bits
 
 
-def _ev(gene, role, start, end, status, method="tblastn_genome", contig="c1", evalue=None):
+def _ev(gene, role, start, end, status, method="tblastn_genome", contig="c1",
+        bitscore=None, evalue=None):
     return GeneEvidence(gene, role, contig, start, end, "+", 40.0, 50.0, "rec1",
-                        method, status=status, evalue=evalue)
+                        method, status=status, evalue=evalue, bitscore=bitscore)
 
 
-def _core(start, end, evalue=STRONG, contig="c1", gene="mfa1"):
-    return _ev(gene, "core_MAT", start, end, "unpolished", contig=contig, evalue=evalue)
+def _core(start, end, bitscore=STRONG, contig="c1", gene="mfa1", evalue=None):
+    return _ev(gene, "core_MAT", start, end, "unpolished", contig=contig,
+               bitscore=bitscore, evalue=evalue)
 
 
 def _result(evidence, confidence="medium", locus_class=LOCUS_CLASS_MAT, key=KEY):
@@ -59,7 +66,7 @@ FLANKS = [
 
 def test_the_defaults_are_the_rulings_numbers():
     assert DEFAULT_FLANK_CARRIED_WINDOW_BP == 3_000
-    assert FLANK_CARRIED_MAX_EVALUE == 1e-5
+    assert FLANK_CARRIED_MIN_BITSCORE == 39.0
 
 
 def test_a_call_with_a_modelled_core_gene_is_untouched():
@@ -116,31 +123,48 @@ def test_a_strong_core_hit_outside_the_window_is_withheld():
 
 
 def test_a_weak_or_noise_strongest_hit_is_withheld_even_inside():
-    for evalue in (WEAK, NOISE, None):
-        r = _result(FLANKS + [_core(5_000, 5_500, evalue=evalue)])
+    for bits in (WEAK, NOISE, None):
+        r = _result(FLANKS + [_core(5_000, 5_500, bitscore=bits)])
         kept, withheld = apply_flank_carried_rule([r])
-        assert kept == [] and len(withheld) == 1, evalue
+        assert kept == [] and len(withheld) == 1, bits
 
 
-def test_the_evalue_floor_is_inclusive():
-    r = _result(FLANKS + [_core(5_000, 5_500, evalue=1e-5)])
+def test_the_bitscore_floor_is_inclusive():
+    r = _result(FLANKS + [_core(5_000, 5_500, bitscore=39.0)])
     [kept], _ = apply_flank_carried_rule([r])
     assert kept.idiomorph_unmodelled is True
+    r = _result(FLANKS + [_core(5_000, 5_500, bitscore=38.9)])
+    assert apply_flank_carried_rule([r])[0] == []
+
+
+def test_a_real_umbelopsis_locus_is_kept_whatever_its_evalue():
+    """The ruling's case: a ~40-bit HMG fragment 1.5 kb from tptA, E 2e-6
+    genome-wide (above the old 1e-5 floor). The e-value no longer decides."""
+    r = _result(FLANKS + [_core(5_000, 5_500, bitscore=40.1, evalue=2e-6)])
+    [kept], withheld = apply_flank_carried_rule([r])
+    assert withheld == [] and kept.confidence == "low"
+
+
+def test_a_family_bitscore_floor_overrides_the_default():
+    r = _result(FLANKS + [_core(5_000, 5_500, bitscore=45.0)])
+    assert apply_flank_carried_rule([r], min_bitscore_by_family={KEY: 50.0})[0] == []
+    [kept], _ = apply_flank_carried_rule([r], min_bitscore_by_family={KEY: 40.0})
+    assert kept.confidence == "low"
 
 
 def test_a_stray_weak_hit_far_away_no_longer_withholds_a_good_call():
     """Didymobotryum rigidum: MAT genes between SLA2 and APN2, a stray MAT1-2-4
     hit 60 kb off. Only the strongest core hit is judged."""
-    r = _result(FLANKS + [_core(5_000, 5_500, evalue=STRONG),
-                          _core(70_000, 70_500, evalue=NOISE, gene="pra1")])
+    r = _result(FLANKS + [_core(5_000, 5_500, bitscore=STRONG),
+                          _core(70_000, 70_500, bitscore=NOISE, gene="pra1")])
     [kept], withheld = apply_flank_carried_rule([r])
     assert withheld == [] and kept.confidence == "low"
 
 
 def test_when_the_strongest_hit_is_far_the_call_is_withheld():
     """A nearer but weaker hit does not rescue it."""
-    r = _result(FLANKS + [_core(5_000, 5_500, evalue=WEAK),
-                          _core(70_000, 70_500, evalue=STRONG, gene="pra1")])
+    r = _result(FLANKS + [_core(5_000, 5_500, bitscore=WEAK),
+                          _core(70_000, 70_500, bitscore=STRONG, gene="pra1")])
     kept, withheld = apply_flank_carried_rule([r])
     assert kept == [] and len(withheld) == 1
 
@@ -178,6 +202,15 @@ def test_the_curated_windows(tmp_path):
     assert windows[FamilyKey("Mucoromycota", "MAT")] == 20_000
 
 
+def test_every_curated_family_uses_the_one_39_bit_floor():
+    """The evaluation found one floor enough for every family (2026-09-27)."""
+    from pathlib import Path
+
+    db = Path(__file__).resolve().parents[2] / "db"
+    floors = {f.flank_carried_min_bitscore for f in load_all_families(db)}
+    assert floors == {39.0}
+
+
 ORDER = (
     "phylum: P\nloci:\n  - locus_name: aLocus\n    vocabulary_type: pattern\n"
     "    idiomorph_pattern: \"^a[0-9]+$\"\n    taxonomic_scope: [1]\n"
@@ -192,17 +225,17 @@ def _annotated(gene, role, start, end):
                      "diamond_proteome", coverage=88.0)
 
 
-def _raw(gene, start, end, evalue):
+def _raw(gene, start, end, bitscore, evalue=1e-9):
     return SearchHit(KEY, gene, "core_MAT", "c1", start, end, "+", 31.0, "rec1",
-                     "tblastn_genome", coverage=12.0, evalue=evalue)
+                     "tblastn_genome", coverage=12.0, evalue=evalue, bitscore=bitscore)
 
 
-def _run(tmp_path, core_start, core_end, evalue=STRONG, extra=()):
+def _run(tmp_path, core_start, core_end, bitscore=STRONG, extra=()):
     _write_order(tmp_path, ORDER)
     _write_record(tmp_path)
     hits = [_annotated("flk1", "flanking_conserved", 100, 200),
             _annotated("flk2", "flanking_conserved", 5_000, 5_100),
-            _raw("mfa1", core_start, core_end, evalue), *extra]
+            _raw("mfa1", core_start, core_end, bitscore), *extra]
     return run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=tmp_path / "proteome.faa",
         taxid=None, db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",
@@ -219,18 +252,19 @@ def test_the_pipeline_keeps_a_strong_inside_call_at_low(tmp_path):
     assert r.idiomorph_unmodelled is True
 
 
-def test_the_evidence_carries_the_genes_best_evalue(tmp_path):
+def test_the_evidence_carries_the_genes_best_bitscore_and_evalue(tmp_path):
     """The report's hit for a gene is chosen by method and identity; its
-    e-value is the gene's best in the cluster, as the audit measured it."""
-    outcome = _run(tmp_path, 2_000, 2_300, evalue=0.5,
-                   extra=[_raw("mfa1", 2_400, 2_500, 1e-9)])
+    bitscore and e-value are the gene's best in the cluster."""
+    outcome = _run(tmp_path, 2_000, 2_300, bitscore=20.0,
+                   extra=[_raw("mfa1", 2_400, 2_500, 55.0, evalue=1e-12)])
     [r] = outcome.results
     [core] = [e for e in r.gene_evidence if e.role == "core_MAT"]
-    assert core.evalue == 1e-9
+    assert core.bitscore == 55.0
+    assert core.evalue == 1e-12
 
 
 def test_the_pipeline_withholds_a_noise_call_and_says_why(tmp_path):
-    outcome = _run(tmp_path, 2_000, 2_300, evalue=NOISE)
+    outcome = _run(tmp_path, 2_000, 2_300, bitscore=NOISE)
     assert outcome.results == []
     [w] = outcome.suppressed_loci
     assert w.withheld_reason == WITHHELD_FLANK_CARRIED
@@ -250,11 +284,12 @@ def test_the_pipeline_withholds_an_outside_call(tmp_path):
     assert outcome.results == [] and outcome.suppressed_flank_carried == 1
 
 
-def test_the_report_writes_the_flag_and_the_evalue(tmp_path):
+def test_the_report_writes_the_flag_and_the_bitscore(tmp_path):
     outcome = _run(tmp_path, 2_000, 2_300)
     path = tmp_path / "report.yaml"
     write_detection_report(outcome, path)
     doc = yaml.safe_load(path.read_text())
     assert doc["detected"][0]["idiomorph_unmodelled"] is True
     [core] = [e for e in doc["detected"][0]["gene_evidence"] if e["role"] == "core_MAT"]
-    assert core["evalue"] == STRONG
+    assert core["bitscore"] == STRONG
+    assert core["evalue"] == 1e-9

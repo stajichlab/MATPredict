@@ -84,7 +84,7 @@ from MATPredict.detect.assembly_gap import AssemblyGapAtLocus, find_gaps_at_locu
 from MATPredict.detect.caax import CAAX_METHOD, STATUS_CAAX_ORF, caax_precursor_hits, scan_config
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.flank_carried import (
-    FLANK_CARRIED_MAX_EVALUE, WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
+    WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
 )
 from MATPredict.detect.family_registry import (
     Family,
@@ -196,6 +196,7 @@ class GeneEvidence:
     # naive single-span translation for that gene, which is inherently
     # approximate for a real multi-exon gene reported this way.
     evalue: float | None = None
+    bitscore: float | None = None
     #: A `caax_scan` precursor only (`detect.caax`): the ORF length in aa, its
     #: CAAX motif, and how many distinct scan ORFs this cluster holds for the
     #: gene. None for every homology-derived gene.
@@ -206,7 +207,10 @@ class GeneEvidence:
     # gene -- not only the hit shown above, which is chosen by method and
     # identity. None when no hit carried one. Read by the flank-carried rule
     # (`flank_carried`), which judges a call on its strongest core hit; the
-    # Ascomycota audit measured it the same way.
+    # Ascomycota audit measured it the same way. `bitscore` is likewise the
+    # BEST (highest) search bitscore among this cluster's hits of the gene;
+    # the flank-carried rule has judged on it since 2026-09-27 (bitscore
+    # floor replacing the genome-size-dependent e-value floor).
 
 
 @dataclass(frozen=True)
@@ -1506,6 +1510,7 @@ def _gene_evidence(
     for cluster in member_clusters:
         raw_by_gene: dict[str, SearchHit] = {}
         best_evalue: dict[str, float] = {}
+        best_bitscore: dict[str, float] = {}
         caax_orfs: dict[str, set[tuple[str, int, int, str]]] = {}
         for hit in _live_hits_for_evidence(cluster.hits):
             if hit.family_key != family_key:
@@ -1515,6 +1520,9 @@ def _gene_evidence(
                     (hit.contig, hit.start, hit.end, hit.strand))
             if hit.evalue is not None and hit.evalue < best_evalue.get(hit.gene_name, float("inf")):
                 best_evalue[hit.gene_name] = hit.evalue
+            if (hit.bitscore is not None
+                    and hit.bitscore > best_bitscore.get(hit.gene_name, float("-inf"))):
+                best_bitscore[hit.gene_name] = hit.bitscore
             current = raw_by_gene.get(hit.gene_name)
             # Ranking among THIS cluster's own raw SearchHits for one gene: the
             # named method preference decides first, and identity only breaks a tie
@@ -1562,6 +1570,7 @@ def _gene_evidence(
                     status=outcome.status, alternate_model=alternate,
                     exons=tuple((e.start, e.end) for e in model.exons) if model.exons else None,
                     evalue=best_evalue.get(gene_name),
+                    bitscore=best_bitscore.get(gene_name),
                 )
             else:
                 hit = raw_by_gene.get(gene_name)
@@ -1591,6 +1600,7 @@ def _gene_evidence(
                     # (`detect.caax`), never "unpolished" or a homology hit.
                     status=STATUS_CAAX_ORF if is_caax else status, alternate_model=None,
                     evalue=best_evalue.get(gene_name),
+                    bitscore=best_bitscore.get(gene_name),
                     orf_length_aa=hit.align_length_aa if is_caax else None,
                     caax_motif=hit.reference_record_id.split(":", 1)[-1] if is_caax else None,
                     orf_count=len(caax_orfs.get(gene_name, ())) if is_caax else None,
@@ -2640,6 +2650,7 @@ def run_pipeline(
     # is withheld like a bar failure. See `flank_carried`.
     results, flank_withheld = apply_flank_carried_rule(
         results, {f.key: f.flank_carried_window_bp for f in families},
+        {f.key: f.flank_carried_min_bitscore for f in families},
     )
     if flank_withheld:
         logger.info(
@@ -2669,8 +2680,8 @@ def run_pipeline(
                 family_key=family.key,
                 reason=(
                     "best cluster was flank-carried -- no core gene could be "
-                    "modelled -- and its strongest core hit is weaker than "
-                    f"E={FLANK_CARRIED_MAX_EVALUE:g} or lies outside the flank "
+                    "modelled -- and its strongest core hit scores below "
+                    f"{family.flank_carried_min_bitscore:g} bits or lies outside the flank "
                     f"span (+-{family.flank_carried_window_bp} bp)"
                 ),
                 best_fraction_found=score.fraction_found if score else 0.0,

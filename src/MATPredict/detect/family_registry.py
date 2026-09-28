@@ -82,6 +82,22 @@ the evidence diagnostics, not by intuition.
 """
 
 
+DEFAULT_FLANK_CARRIED_MIN_BITSCORE = 39.0
+"""The flank-carried floor on the strongest core hit's bitscore, for every
+family unless its `order.yml` sets `flank_carried_min_bitscore`.
+
+Curator's ruling 2026-09-27, replacing the E <= 1e-5 floor of 2026-09-26: an
+e-value grows with genome size, so real Umbelopsis loci (Mucorales gene
+order, HMG fragments of 33-44 bits, E 6e-8..2e-6 in the local region) fell
+above 1e-5 genome-wide and were withheld. Evaluated on 265 flank-carried loci
+(results/2026-09-27_flank_bitscore_floor/NOTE.md): known noise (52
+Debaryomyces-type Serinales calls) scores <= 30.4 bits, real loci 33.5-68.2.
+39 bits keeps 7 of 8 real loci and 0 of 52 known noise, keeps no audit-"noise"
+Ascomycota call (21/89 kept), and is the lowest floor with no audit noise
+(38 keeps one). One floor was enough for every family on that evidence.
+"""
+
+
 DEFAULT_FLANK_CARRIED_WINDOW_BP = 3_000
 """The flank-carried window for a family that declares none: the +-3 kb of the
 curator's first ruling (2026-09-26). The narrow end is the safe default -- a
@@ -157,6 +173,11 @@ class Family:
     PAP1/OBP1/PIK1 sit inside the idiomorph (3 kb); SLA2/APN2/COX13 and the
     Mucorales tptA/rnhA sit outside it, and the Ascomycota audit found real
     loci up to 9.9 kb off (20 kb). Absent means the 3 kb of the first ruling.
+    """
+    flank_carried_min_bitscore: float = DEFAULT_FLANK_CARRIED_MIN_BITSCORE
+    """The bitscore the strongest core hit of a flank-carried call must reach
+    for the call to be kept (`flank_carried`). Absent means the 39 bits of
+    the 2026-09-27 ruling; no curated family overrides it.
     """
     model_idiomorph_alternatives: bool = False
     """Polish BOTH genes of an overlapping mutually exclusive pair, and decide
@@ -336,6 +357,9 @@ def load_all_families(db_root: Path) -> list[Family]:
                     flank_carried_window_bp=locus.get(
                         "flank_carried_window_bp", DEFAULT_FLANK_CARRIED_WINDOW_BP,
                     ),
+                    flank_carried_min_bitscore=float(locus.get(
+                        "flank_carried_min_bitscore", DEFAULT_FLANK_CARRIED_MIN_BITSCORE,
+                    )),
                     homothallic_screen=locus.get(
                         "homothallic_screen", doc.get("homothallic_screen", True),
                     ),

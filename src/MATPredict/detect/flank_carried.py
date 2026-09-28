@@ -15,9 +15,10 @@ panel it changed 89 calls, and it had two faults: one stray core hit 40-60 kb
 away withheld a good call (Didymobotryum rigidum, whose MAT1-1-2, MAT1-1-3 and
 MAT1-2-1 all sit between SLA2 and APN2), and 3 kb only fits families whose
 flanks sit INSIDE the idiomorph (Serinales MTL); SLA2/APN2/COX13 sit outside
-it. The rule now judges the call on its STRONGEST core hit (lowest e-value):
+it. The rule now judges the call on its STRONGEST core hit (highest bitscore):
 
-1. That hit has E <= `FLANK_CARRIED_MAX_EVALUE` and lies within the family's
+1. That hit scores >= the family's `flank_carried_min_bitscore` (default
+   `FLANK_CARRIED_MIN_BITSCORE`, 39 bits) and lies within the family's
    `flank_carried_window_bp` of the flank span, on the flank contig: the call
    is kept, capped at `low`, classed `partial_locus` and flagged
    `idiomorph_unmodelled`.
@@ -32,6 +33,11 @@ Generic over each family's own flanking genes (any `flanking_*` role), not
 hardcoded to the Serinales PAP1/OBP1/PIK1 roster. The span is taken over EVERY
 flank hit in the call, modelled or not, matching `results/2026-09-26_
 serinales_all_882aa01/flank_carried_audit.py`.
+
+The floor was an e-value (E <= 1e-5) until 2026-09-27, when the curator ruled
+a bitscore floor instead: an e-value depends on genome size, and it withheld
+real Umbelopsis loci (see `family_registry.DEFAULT_FLANK_CARRIED_MIN_BITSCORE`
+and results/2026-09-27_flank_bitscore_floor/NOTE.md).
 """
 from __future__ import annotations
 
@@ -39,14 +45,17 @@ import math
 from dataclasses import replace
 from typing import Mapping
 
-from MATPredict.detect.family_registry import DEFAULT_FLANK_CARRIED_WINDOW_BP
+from MATPredict.detect.family_registry import (
+    DEFAULT_FLANK_CARRIED_MIN_BITSCORE, DEFAULT_FLANK_CARRIED_WINDOW_BP,
+)
 from MATPredict.detect.idiomorph import LOCUS_CLASS_PARTIAL
 from MATPredict.detect.polish import STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE
 
-#: The strongest core hit must reach this e-value for a flank-carried call to
-#: be kept. NOT tuned: it sits in the wide gap the audit measured between
-#: strong hits (E <= 1e-5) and noise (E > 1e-2) on the 108 changed calls.
-FLANK_CARRIED_MAX_EVALUE = 1e-5
+#: The strongest core hit must reach this bitscore for a flank-carried call to
+#: be kept, unless the family sets `flank_carried_min_bitscore`. Curator's
+#: ruling 2026-09-27; evaluation and trade-off table in
+#: results/2026-09-27_flank_bitscore_floor/NOTE.md.
+FLANK_CARRIED_MIN_BITSCORE = DEFAULT_FLANK_CARRIED_MIN_BITSCORE
 
 #: `DetectionResult.withheld_reason` for a call this rule withholds.
 WITHHELD_FLANK_CARRIED = "flank_carried_core_outside_flank_span"
@@ -64,27 +73,31 @@ def _is_flank(evidence) -> bool:
     return evidence.role.startswith("flanking")
 
 
-def _evalue(evidence) -> float:
-    """A missing e-value ranks as the weakest possible hit, never the strongest."""
-    value = getattr(evidence, "evalue", None)
-    return math.inf if value is None else value
+def _bitscore(evidence) -> float:
+    """A missing bitscore ranks as the weakest possible hit, never the strongest."""
+    value = getattr(evidence, "bitscore", None)
+    return -math.inf if value is None else value
 
 
 def apply_flank_carried_rule(
     results: list,
     window_bp_by_family: Mapping | None = None,
-    max_evalue: float = FLANK_CARRIED_MAX_EVALUE,
+    min_bitscore_by_family: Mapping | None = None,
 ):
     """Split `results` into (kept, withheld) under the flank-carried rule.
 
     `window_bp_by_family` maps a `FamilyKey` to its `flank_carried_window_bp`;
     a family missing from it gets `DEFAULT_FLANK_CARRIED_WINDOW_BP`.
+    `min_bitscore_by_family` maps a `FamilyKey` to its
+    `flank_carried_min_bitscore`; a family missing from it gets
+    `FLANK_CARRIED_MIN_BITSCORE`.
 
     A result with a modelled core gene, or with no modelled flank, is not
     flank-carried and passes through unchanged: the modelled-gene bar and
     tiering already rule on it.
     """
     windows = window_bp_by_family or {}
+    floors = min_bitscore_by_family or {}
     kept, withheld = [], []
     for result in results:
         core = [e for e in result.gene_evidence if e.role == "core_MAT"]
@@ -102,9 +115,10 @@ def apply_flank_carried_rule(
             return max(low - e.end, e.start - high, 0)
 
         window = windows.get(result.family_key, DEFAULT_FLANK_CARRIED_WINDOW_BP)
-        # Strongest = lowest e-value; the nearer hit breaks a tie.
-        strongest = min(core, key=lambda e: (_evalue(e), distance(e))) if core else None
-        if (strongest is not None and _evalue(strongest) <= max_evalue
+        floor = floors.get(result.family_key, FLANK_CARRIED_MIN_BITSCORE)
+        # Strongest = highest bitscore; the nearer hit breaks a tie.
+        strongest = min(core, key=lambda e: (-_bitscore(e), distance(e))) if core else None
+        if (strongest is not None and _bitscore(strongest) >= floor
                 and distance(strongest) <= window):
             kept.append(replace(
                 result, confidence="low", locus_class=LOCUS_CLASS_PARTIAL,

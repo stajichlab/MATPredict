@@ -42,6 +42,12 @@ properties:
         flank_carried_window_bp:
           type: integer
           minimum: 0
+        # OPTIONAL. Bitscore the strongest core hit of a flank-carried call
+        # must reach (detect.flank_carried). ABSENT MEANS 39, the curator's
+        # ruling of 2026-09-27 (replacing E <= 1e-5).
+        flank_carried_min_bitscore:
+          type: number
+          minimum: 0
         # OPTIONAL. Locus-level override of the phylum's homothallic_screen.
         homothallic_screen: {type: boolean}
         # OPTIONAL. Polish both genes of an overlapping mutually exclusive

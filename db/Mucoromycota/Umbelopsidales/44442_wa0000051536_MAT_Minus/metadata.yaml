@@ -1,0 +1,203 @@
+record_id: 44442_wa0000051536_MAT_Minus
+record_version: 1
+taxonomy:
+  taxid: 44442
+  lineage: k__Fungi;p__Mucoromycota;c__Umbelopsidomycetes;o__Umbelopsidales;f__Umbelopsidaceae;g__Umbelopsis;s__Umbelopsis_vinacea
+  lineage_resolved_date: '2026-09-27'
+organism:
+  species: Umbelopsis vinacea
+  strain:
+    name: WA0000051536
+    known: true
+    culture_collection_ids:
+    - WA0000051536
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Minus
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: glrA<-|sexM<-|tptA->|algA->
+    definition_note: 'Umbelopsis vinacea WA0000051536 (GCA_016758895.1, SPAdes 3.10.5
+      on Illumina and PacBio RSII, 150 scaffolds, N50 1.33 Mb; BioProject PRJNA668042)
+      MAT Minus locus on JAEPRA010000016.1. Gene order: glrA (KAG2174489.1, -) ...
+      sexM (-) -- tptA (KAG2174464.1, +) -- algA (KAG2174465.1, +). sexM is a 3-exon,
+      225-aa model built here (CDS 154,507-154,788 / 153,704-154,036 / 153,559-153,621,
+      minus strand; canonical GT..AG introns of 470 and 82 bp; start Met is the first
+      in frame after an upstream stop; stop TAA at 153,559-153,561). Evidence: the
+      HMG-box exon was found by tblastn of the curated sexM set (HSP 44.3 bits); exons
+      2-3 are the assembly''s own annotated KAG2174494.1, which is a 3''-part-only
+      partial (131 aa, ''partial'') missing the HMG-box exon (logged in ANNOTATION_ERRORS_FIXED_REPORT.md);
+      miniprot of the joined protein reproduces the exons exactly. PF00505 HMG box
+      at aa 33-94 (E 1.1e-6). HMM classifier on the full model: sexM 35.0 vs sexP
+      25.0 bits (margin 10, below the 25-bit floor); on the HMG-box fragment alone
+      sexM by 15.3 bits. The better-assembled U. vinacea gzUmbVina2 (GCA_977110975.1)
+      was not used: its sexM maps only with frameshifts (miniprot identity 68%, Frameshift=true)
+      and is not annotated. rnhA is recorded present: false: it does not sit at this
+      locus in Umbelopsis (its ortholog is elsewhere, see definition_note), unlike
+      the Mucorales algA-tptA-[sex]-rnhA-glrA arrangement. rnhA ortholog (KAG2186781.1)
+      is on JAEPRA010000004.1. TIER 2 (genome-derived). No Umbelopsidales MAT locus
+      has a locus-specific deposit or a publication (NCBI and PubMed searched 2026-09-27). '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JAEPRA010000016.1
+        seq_region: JAEPRA010000016.1
+      start: 141140
+      end: 158574
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: glrA
+  protein_accession: ncbi_protein:KAG2174489.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 141140
+  end: 142836
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 142659
+    end: 142836
+  - start: 142327
+    end: 142590
+  - start: 141711
+    end: 142244
+  - start: 141229
+    end: 141635
+  - start: 141140
+    end: 141154
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: sexM
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 153559
+  end: 154788
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 154507
+    end: 154788
+  - start: 153704
+    end: 154036
+  - start: 153559
+    end: 153621
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: tptA
+  protein_accession: ncbi_protein:KAG2174464.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 155292
+  end: 157043
+  strand: +
+  order_in_locus: 2
+  exons:
+  - start: 155292
+    end: 156122
+  - start: 156210
+    end: 157043
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: algA
+  protein_accession: ncbi_protein:KAG2174465.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 157274
+  end: 158574
+  strand: +
+  order_in_locus: 3
+  exons:
+  - start: 157274
+    end: 157482
+  - start: 157557
+    end: 157569
+  - start: 157645
+    end: 158574
+  codon_start: 1
+  transl_table: 1
+- gene_index: 4
+  name: rnhA
+  protein_accession: null
+  role: flanking_conserved
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+evidence:
+  locus_existence:
+    tier: 2
+    citations: []
+    experimental_method: TIER 2 (genome-derived). No Umbelopsidales MAT locus has
+      a locus-specific deposit or a publication (NCBI and PubMed searched 2026-09-27).
+      Locus identified by synteny with the Mucorales MAT locus (tptA, algA, glrA at
+      the locus; an HMG-box gene 1.5 kb from tptA) and by the MATPredict HMM idiomorph
+      classifier (db/Mucoromycota/classifiers/MAT) on the HMG-box protein.
+  boundaries:
+    tier: 2
+    citations: []
+    experimental_method: TIER 2 (genome-derived). No Umbelopsidales MAT locus has
+      a locus-specific deposit or a publication (NCBI and PubMed searched 2026-09-27).
+      Record segment spans the recorded genes on JAEPRA010000016.1 (GCA_016758895.1).
+  idiomorph_assignment:
+    tier: 2
+    citations: []
+    experimental_method: 'TIER 2 (genome-derived). No Umbelopsidales MAT locus has
+      a locus-specific deposit or a publication (NCBI and PubMed searched 2026-09-27).
+      Idiomorph from the HMG-box gene: classifier and PF00505 scores in definition_note.'
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JAEPRA010000016.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-genome-curation
+  proposal_dedupe_key: GCA_016758895.1|44442|MAT|Minus
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-09-27 on curator ruling (tier-2 Umbelopsis records for both
+    idiomorphs). PENDING CURATOR SIGN-OFF: accepted on the unmerged branch curation-umbelopsis
+    only so detect can be measured with it.'
+model_provenance: null

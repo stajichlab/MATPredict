@@ -59,6 +59,23 @@ loci:
       - {name: pheromone_B43, role: core_MAT, gene_class: pheromone_precursor}
       - {name: pheromone_B44, role: core_MAT, gene_class: pheromone_precursor}
       - {name: fungal_mating_type_pheromone, role: core_MAT, gene_class: pheromone_precursor}
+      # Found only by the strict-CAAX scan below, never by homology; optional,
+      # so its absence costs nothing.
+      - {name: caax_precursor, role: core_MAT, gene_class: pheromone_precursor, optional: true}
+    # CURATOR RULING, J. Stajich, 2026-09-27 (receptor queue, option ii): count
+    # a short ORF ending in the strict CAAX motif within 10 kb of a receptor
+    # hit as the locus's second gene (detect/caax.py). Tandem receptor copies
+    # share one gene name and 25-80 aa precursors escape tblastn, so real B
+    # loci showed one distinct gene and were never admitted (Russula nobilis
+    # record, results/2026-09-27_russulaceae_receptor/). Measured basis
+    # (results/2026-09-27_pheromone_positional/): strict motif within 10 kb
+    # flagged 6/9 known mating receptors, 0/25 other STE3 copies, 2.5% of
+    # random windows. A scan precursor cannot by itself make a call high.
+    pheromone_precursor_scan:
+      gene: caax_precursor
+      receptor_genes: [pheromone_receptor]
+      motif: "C[VI][IV][AVMG]"
+      window_bp: 10000
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["alpha", "a"]

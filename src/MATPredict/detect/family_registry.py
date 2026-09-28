@@ -177,6 +177,16 @@ class Family:
     MODELLED proteins with one HMM per idiomorph; the bitscore/model-pair
     decision stays the fallback. Built only by scripts/build_idiomorph_hmms.py.
     """
+    pheromone_precursor_scan: dict | None = None
+    """Strict-CAAX pheromone-precursor scan beside receptor hits
+    (`detect.caax`), or None. Keys (defaults filled by the loader): `gene`,
+    `receptor_genes`, `motif`, `window_bp`, `min_codons`, `max_codons`.
+
+    Curation data. Curator's ruling 2026-09-27: on for Basidiomycota:PR, where
+    tandem receptor copies share one gene name and 25-80 aa precursors escape
+    tblastn, so a real B locus showed one distinct gene and was never admitted.
+    Off by default; Sporidiobolales precursors end CTxA and need their own motif.
+    """
     min_idiomorph_margin: float = DEFAULT_MIN_IDIOMORPH_MARGIN
     """Identity points two mutually exclusive idiomorph genes must be apart.
 
@@ -289,6 +299,9 @@ def _resolve_classifier(spec: dict | None, phylum_dir: Path) -> dict | None:
 
 def load_all_families(db_root: Path) -> list[Family]:
     """Read every db/<Phylum>/order.yml and flatten it into Family records."""
+    # Local import: detect.caax imports detect.search, which imports this module.
+    from MATPredict.detect.caax import scan_config
+
     families: list[Family] = []
     for order_file in sorted(db_root.glob("*/order.yml")):
         doc = yaml.safe_load(order_file.read_text())
@@ -331,6 +344,9 @@ def load_all_families(db_root: Path) -> list[Family]:
                     ),
                     idiomorph_classifier=_resolve_classifier(
                         locus.get("idiomorph_classifier"), order_file.parent,
+                    ),
+                    pheromone_precursor_scan=scan_config(
+                        locus.get("pheromone_precursor_scan")
                     ),
                 )
             )

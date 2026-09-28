@@ -395,6 +395,10 @@ def _result_doc(r: DetectionResult) -> dict:
                 "alternate_model": e.alternate_model,
                 "exons": [{"start": s, "end": end} for s, end in e.exons] if e.exons else None,
                 "evalue": e.evalue,
+                # CAAX-scan precursors only (`detect.caax`); absent otherwise,
+                # so homology-gene entries are unchanged.
+                **({"orf_length_aa": e.orf_length_aa, "caax_motif": e.caax_motif,
+                    "orf_count": e.orf_count} if e.caax_motif is not None else {}),
             }
             for e in r.gene_evidence
         ],

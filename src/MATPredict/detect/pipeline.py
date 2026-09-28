@@ -81,6 +81,7 @@ from pathlib import Path
 from typing import Callable
 
 from MATPredict.detect.assembly_gap import AssemblyGapAtLocus, find_gaps_at_locus
+from MATPredict.detect.caax import CAAX_METHOD, STATUS_CAAX_ORF, caax_precursor_hits, scan_config
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.flank_carried import (
     FLANK_CARRIED_MAX_EVALUE, WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
@@ -195,6 +196,12 @@ class GeneEvidence:
     # naive single-span translation for that gene, which is inherently
     # approximate for a real multi-exon gene reported this way.
     evalue: float | None = None
+    #: A `caax_scan` precursor only (`detect.caax`): the ORF length in aa, its
+    #: CAAX motif, and how many distinct scan ORFs this cluster holds for the
+    #: gene. None for every homology-derived gene.
+    orf_length_aa: int | None = None
+    caax_motif: str | None = None
+    orf_count: int | None = None
     # The BEST (lowest) search e-value among this cluster's own hits of this
     # gene -- not only the hit shown above, which is chosen by method and
     # identity. None when no hit carried one. Read by the flank-carried rule
@@ -394,6 +401,11 @@ def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
     family's own hits in this cluster -- never checked against another
     family's hits or expected genes (see Task 6's cross-family pooling bug)."""
     core_genes = {g["name"] for g in family.genes if g["role"] == "core_MAT"}
+    # A `pheromone_precursor_scan` gene has no curated protein to polish with;
+    # it is found by the CAAX scan (`detect.caax`) or not at all.
+    scan = scan_config(getattr(family, "pheromone_precursor_scan", None))
+    if scan is not None:
+        core_genes.discard(scan["gene"])
     found_genes = {h.gene_name for h in cluster.hits if h.family_key == family.key}
     return core_genes - found_genes
 
@@ -806,6 +818,11 @@ def _modelled_gene_names(
         and (cluster_id, key, gene_name) not in model_losers
     } & {h.gene_name for h in live}
     modelled |= {h.gene_name for h in live if h.method == "diamond_proteome"}
+    # A strict-CAAX scan precursor (`detect.caax`) is an ORF with a start, a
+    # stop and a motif -- a gene model, not a bare alignment -- so it counts.
+    # Curator's ruling 2026-09-27. It cannot by itself make a call `high`
+    # (see `_build`).
+    modelled |= {h.gene_name for h in live if h.method == CAAX_METHOD}
     return frozenset(modelled)
 
 
@@ -1489,9 +1506,13 @@ def _gene_evidence(
     for cluster in member_clusters:
         raw_by_gene: dict[str, SearchHit] = {}
         best_evalue: dict[str, float] = {}
+        caax_orfs: dict[str, set[tuple[str, int, int, str]]] = {}
         for hit in _live_hits_for_evidence(cluster.hits):
             if hit.family_key != family_key:
                 continue
+            if hit.method == CAAX_METHOD:
+                caax_orfs.setdefault(hit.gene_name, set()).add(
+                    (hit.contig, hit.start, hit.end, hit.strand))
             if hit.evalue is not None and hit.evalue < best_evalue.get(hit.gene_name, float("inf")):
                 best_evalue[hit.gene_name] = hit.evalue
             current = raw_by_gene.get(hit.gene_name)
@@ -1560,13 +1581,19 @@ def _gene_evidence(
                 # split). In both cases the raw SearchHit stands as this
                 # gene's evidence with no polished model behind it.
                 status = STATUS_UNPOLISHED if outcome is not None else STATUS_NOT_POLISH_CANDIDATE
+                is_caax = hit.method == CAAX_METHOD
                 evidence = GeneEvidence(
                     gene_name=hit.gene_name, role=hit.role, contig=hit.contig,
                     start=hit.start, end=hit.end, strand=hit.strand,
                     identity=hit.identity, coverage=hit.coverage,
                     reference_record_id=hit.reference_record_id, method=hit.method,
-                    status=status, alternate_model=None,
+                    # A CAAX-scan precursor is its own evidence type
+                    # (`detect.caax`), never "unpolished" or a homology hit.
+                    status=STATUS_CAAX_ORF if is_caax else status, alternate_model=None,
                     evalue=best_evalue.get(gene_name),
+                    orf_length_aa=hit.align_length_aa if is_caax else None,
+                    caax_motif=hit.reference_record_id.split(":", 1)[-1] if is_caax else None,
+                    orf_count=len(caax_orfs.get(gene_name, ())) if is_caax else None,
                 )
             # Keyed per (cluster, gene): a cluster visits each of its own gene
             # names exactly once, so this never overwrites and no evidence from
@@ -1801,6 +1828,12 @@ def run_pipeline(
     # evidence floor's gene count. Measured need: a 27 bp "sexM" (nine codons)
     # and a 48/51 bp sexM/sexP pair were each being reported as loci.
     hits = drop_low_quality_hits(hits)
+    # Strict-CAAX pheromone precursors beside receptor hits, for the families
+    # that ask for it (curator's ruling 2026-09-27, `detect.caax`). Added after
+    # the length filter -- a 25 aa precursor is 78 bp, under it, and is found
+    # by its motif, not by an alignment -- and before clustering, so a found
+    # precursor joins its receptor's cluster and counts as a distinct gene.
+    hits.extend(caax_precursor_hits(genome_fasta, families, hits, genetic_code=genetic_code))
 
     clusters = cluster_hits(hits, max_gap=max_gap)
 
@@ -2398,6 +2431,19 @@ def run_pipeline(
             and tier == "high"
         ):
             tier = "medium"
+        # A CAAX-scan precursor satisfies the gene-count rules but cannot by
+        # itself make a call `high` (curator's ruling 2026-09-27): it is a
+        # motif match, not a homology model. When the call's modelled genes
+        # reach the bar only through scan precursors, cap at medium.
+        scan_names = {
+            h.gene_name for c in member_clusters for h in c.hits
+            if h.family_key == score.family_key and h.method == CAAX_METHOD
+        }
+        if scan_names and tier == "high":
+            homology_modelled = _modelled_gene_names(
+                member_clusters, score.family_key, polish_by, model_losers) - scan_names
+            if len(homology_modelled) < max(min_polished_genes, MIN_POLISHED_GENES):
+                tier = "medium"
         short_genes = short_orf_by_family.get(score.family_key, set())
         # Segments are widened to cover this result's own gene evidence, so a
         # polished or rescued gene can never fall outside the locus segment

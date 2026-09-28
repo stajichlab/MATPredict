@@ -51,6 +51,21 @@ properties:
         # OPTIONAL. Profile-HMM idiomorph classifier over the modelled core
         # proteins (curator's ruling 2026-09-26). `dir` is relative to the
         # phylum directory; files are built by scripts/build_idiomorph_hmms.py.
+        # OPTIONAL. Strict-CAAX pheromone-precursor scan beside receptor hits
+        # (detect/caax.py; curator's ruling 2026-09-27, Basidiomycota:PR).
+        # `gene` must be a gene of this locus (declare it optional);
+        # `receptor_genes` are the genes whose hits are scanned around.
+        pheromone_precursor_scan:
+          type: object
+          required: [gene, receptor_genes]
+          additionalProperties: false
+          properties:
+            gene: {type: string}
+            receptor_genes: {type: array, items: {type: string}, minItems: 1}
+            motif: {type: string}
+            window_bp: {type: integer, minimum: 1}
+            min_codons: {type: integer, minimum: 1}
+            max_codons: {type: integer, minimum: 1}
         idiomorph_classifier:
           type: object
           required: [type, dir, min_margin]

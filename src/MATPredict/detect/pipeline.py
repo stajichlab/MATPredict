@@ -82,7 +82,9 @@ from pathlib import Path
 from typing import Callable
 
 from MATPredict.detect.assembly_gap import AssemblyGapAtLocus, find_gaps_at_locus
-from MATPredict.detect.caax import CAAX_METHOD, STATUS_CAAX_ORF, caax_precursor_hits, scan_config
+from MATPredict.detect.caax import (
+    CAAX_METHOD, STATUS_CAAX_ORF, admitted_only_through_scan, caax_precursor_hits, scan_config,
+)
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.split_locus import evaluate_split_locus
 from MATPredict.detect.flank_carried import (
@@ -137,7 +139,9 @@ from MATPredict.detect.search import (
 )
 from MATPredict.detect.tiering import allele_absent_genes_to_ignore, assign_tier, cap_at_medium
 from MATPredict.detect.locus_merge import merge_overlapping
-from MATPredict.detect.verification import OVERRIDE_ROUTES, label_verification
+from MATPredict.detect.verification import (
+    OVERRIDE_ROUTES, label_caax_unverified, label_verification, load_caax_unverified_rules,
+)
 from MATPredict.detect.classifier import (
     UNDETERMINED as CLASSIFIER_UNDETERMINED,
     ClassifierVerdict,
@@ -950,6 +954,15 @@ def _relaxed_results(
                 # this pass -- withheld every relaxed call.
                 polished_genes=len(
                     _modelled_gene_names([cluster], score.family_key, polish_by or {}, model_losers)
+                ),
+                caax_dependent=admitted_only_through_scan(
+                    set(score.genes_found),
+                    {h.gene_name for h in cluster.hits
+                     if h.family_key == score.family_key and h.method == CAAX_METHOD},
+                    len(_modelled_gene_names([cluster], score.family_key, polish_by or {}, model_losers)
+                        - {h.gene_name for h in cluster.hits
+                           if h.family_key == score.family_key and h.method == CAAX_METHOD}),
+                    MIN_POLISHED_GENES,
                 ),
             ))
             if on_relaxed_call is not None:
@@ -2537,11 +2550,16 @@ def run_pipeline(
             h.gene_name for c in member_clusters for h in c.hits
             if h.family_key == score.family_key and h.method == CAAX_METHOD
         }
-        if scan_names and tier == "high":
+        caax_dependent = False
+        if scan_names:
             homology_modelled = _modelled_gene_names(
                 member_clusters, score.family_key, polish_by, model_losers) - scan_names
-            if len(homology_modelled) < max(min_polished_genes, MIN_POLISHED_GENES):
+            modelled_bar = max(min_polished_genes, MIN_POLISHED_GENES)
+            if tier == "high" and len(homology_modelled) < modelled_bar:
                 tier = "medium"
+            caax_dependent = admitted_only_through_scan(
+                set(score.genes_found), scan_names, len(homology_modelled), modelled_bar,
+            )
         short_genes = short_orf_by_family.get(score.family_key, set())
         # Segments are widened to cover this result's own gene evidence, so a
         # polished or rescued gene can never fall outside the locus segment
@@ -2569,6 +2587,7 @@ def run_pipeline(
                 locus_class = LOCUS_CLASS_PARTIAL
         return DetectionResult(
             polished_genes=polished_genes,
+            caax_dependent=caax_dependent,
             family_key=score.family_key,
             contig=segments[0].contig,
             start=segments[0].start,
@@ -2866,6 +2885,11 @@ def run_pipeline(
     # called the same locus are reported once (`locus_merge`). After every
     # per-family decision above, so `not_detected` and the withheld lists are
     # unaffected; before the labels below, which then see the merged call.
+    # Curator's ruling 2026-09-27: a PR call admitted only through a CAAX-scan
+    # precursor, in a curated low-enrichment taxon, is unverified.
+    results = label_caax_unverified(
+        results, taxid, load_caax_unverified_rules(db_root), zygosity_lineage_resolver,
+    )
     results = merge_overlapping(
         results, {f.key: (f.merge_group, f.merge_generic) for f in families},
     )

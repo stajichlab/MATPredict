@@ -1,0 +1,37 @@
+# Taxa where Basidiomycota:PR calls admitted ONLY through a strict-CAAX scan
+# precursor (detect.caax) are labelled `verification: unverified`. The call is
+# still reported and its confidence is unchanged. Read by
+# src/MATPredict/detect/verification.py (label_caax_unverified).
+#
+# Curator's ruling 2026-09-27. Evidence: in the 128-genome Agaricales panel,
+# 62% (59/95) of CAAX-gained calls had a receptor whose nearest neighbour sat
+# in the subclades around the six curated Agaricales mating receptors
+# (results/2026-09-27_receptor_explore/), against 33.5% of all Agaricales
+# STE3 copies. These four families fell well below that. Taxids are NCBI
+# Taxonomy family ranks (verified 2026-09-27). Add a taxon only with measured
+# evidence, and cite it.
+caax_unverified_taxa:
+  - taxid: 3710399
+    name: Agrocybaceae
+    reason: >-
+      only 8 of 16 CAAX-gained receptors fell in the curated mating-receptor
+      clades (overall 62%)
+    evidence: results/2026-09-27_caax_precursor/per_family.tsv
+  - taxid: 2024004
+    name: Mycenaceae
+    reason: >-
+      only 2 of 6 CAAX-gained receptors fell in the curated mating-receptor
+      clades (overall 62%)
+    evidence: results/2026-09-27_caax_precursor/per_family.tsv
+  - taxid: 862241
+    name: Physalacriaceae
+    reason: >-
+      only 2 of 5 CAAX-gained receptors fell in the curated mating-receptor
+      clades (overall 62%)
+    evidence: results/2026-09-27_caax_precursor/per_family.tsv
+  - taxid: 3710460
+    name: Galerinaceae
+    reason: >-
+      0 of 2 CAAX-gained receptors fell in the curated mating-receptor clades
+      (overall 62%)
+    evidence: results/2026-09-27_caax_precursor/per_family.tsv

@@ -194,3 +194,18 @@ def caax_precursor_hits(
                     align_length_aa=orf.length_aa,
                 ))
     return found
+
+
+def admitted_only_through_scan(
+    distinct_genes: set[str], scan_names: set[str], homology_modelled: int, modelled_bar: int,
+) -> bool:
+    """Does a call reach the admission bar only by counting scan precursors?
+
+    True when it holds a scan precursor and, without it, either fewer than two
+    distinct genes remain (the evidence floor) or fewer homology-modelled genes
+    than the modelled-gene bar requires. Read by the CAAX unverified label
+    (curator's ruling 2026-09-27; `verification.label_caax_unverified`).
+    """
+    if not scan_names:
+        return False
+    return len(set(distinct_genes) - set(scan_names)) < 2 or homology_modelled < modelled_bar

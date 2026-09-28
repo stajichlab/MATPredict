@@ -452,6 +452,10 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
                 "genes_found": list(r.genes_found),
                 "withheld_reason": r.withheld_reason,
                 **(r.withheld_detail or {}),
+                # The classifier verdict (or null), so a withheld locus's
+                # idiomorph margin can be audited. Review finding F5,
+                # 2026-09-28 (results/2026-09-28_fable_review/).
+                "idiomorph_classifier": r.idiomorph_classifier,
             }
             for r in outcome.suppressed_loci
         ],

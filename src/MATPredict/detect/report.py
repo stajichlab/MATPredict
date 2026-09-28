@@ -307,6 +307,9 @@ def _result_doc(r: DetectionResult) -> dict:
         # Set when the family was searched outside the genome's phylum by an
         # override route (curator's ruling 2026-09-26; see `verification`).
         "verification": r.verification,
+        # Same-locus calls folded into this one (curator's ruling 2026-09-27;
+        # see `locus_merge`). Empty list when unmerged.
+        "merged_from": r.merged_from,
         # How many of this locus's genes a polishing tool could actually model.
         # The sharpest discriminator measured to date: across 46,647
         # lineage-routed Pezizomycotina loci, every high-confidence call had

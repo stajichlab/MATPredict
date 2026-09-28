@@ -63,6 +63,12 @@ properties:
                 max_edge_bp: {type: integer, minimum: 0}
                 min_flank_genes: {type: integer, minimum: 1}
                 flank_identity_gap: {type: number, minimum: 0}
+        # OPTIONAL. Families of one physical locus type share a merge_group;
+        # their overlapping calls are reported once (detect.locus_merge;
+        # curator's ruling 2026-09-27). merge_generic marks the broad
+        # catch-all family of the group. ABSENT MEANS never merged.
+        merge_group: {type: string}
+        merge_generic: {type: boolean}
         # OPTIONAL. Locus-level override of the phylum's homothallic_screen.
         homothallic_screen: {type: boolean}
         # OPTIONAL. Polish both genes of an overlapping mutually exclusive

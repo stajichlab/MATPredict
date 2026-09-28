@@ -8,6 +8,11 @@ phylum: Basidiomycota
 homothallic_screen: false
 loci:
   - locus_name: "HD"
+    # Same-locus calls of merge group A are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "A"
+    merge_generic: true
     vocabulary_type: "pattern"
     idiomorph_pattern: "^A[0-9]+$"
     # Widened 2026-09-20 from the two curated species (Agaricus bisporus var.
@@ -31,6 +36,11 @@ loci:
       - {name: HD1, role: core_MAT, gene_class: HD1}
       - {name: HD2, role: core_MAT, gene_class: HD2}
   - locus_name: "PR"
+    # Same-locus calls of merge group B are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "B"
+    merge_generic: true
     vocabulary_type: "pattern"
     idiomorph_pattern: "^B[0-9]+$"
     # Widened 2026-09-20 from the single curated species (Coprinopsis cinerea
@@ -212,6 +222,10 @@ loci:
       - {name: MFa, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"], aliases: [MFa1, MFa2, MFa3]}
       - {name: STE3, role: core_MAT, gene_class: pheromone_receptor}
   - locus_name: "Aalpha"
+    # Same-locus calls of merge group A are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "A"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20 from the single curated species (Schizophyllum
@@ -232,6 +246,10 @@ loci:
       - {name: Y, role: core_MAT, gene_class: HD2}
       - {name: Z, role: core_MAT, gene_class: HD1}
   - locus_name: "Abeta"
+    # Same-locus calls of merge group A are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "A"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20, same rationale as Aalpha above.
@@ -250,6 +268,10 @@ loci:
       - {name: Y, role: core_MAT, gene_class: HD2}
       - {name: Z, role: core_MAT, gene_class: HD1}
   - locus_name: "Balpha"
+    # Same-locus calls of merge group B are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "B"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20, same rationale as Aalpha above.
@@ -289,6 +311,10 @@ loci:
       - {name: bap3-1, role: core_MAT, gene_class: pheromone_precursor}
       - {name: bap3-3, role: core_MAT, gene_class: pheromone_precursor}
   - locus_name: "Bbeta"
+    # Same-locus calls of merge group B are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "B"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20, same rationale as Aalpha above.

@@ -136,6 +136,7 @@ from MATPredict.detect.search import (
     search_localize,
 )
 from MATPredict.detect.tiering import allele_absent_genes_to_ignore, assign_tier, cap_at_medium
+from MATPredict.detect.locus_merge import merge_overlapping
 from MATPredict.detect.verification import OVERRIDE_ROUTES, label_verification
 from MATPredict.detect.classifier import (
     UNDETERMINED as CLASSIFIER_UNDETERMINED,
@@ -340,6 +341,17 @@ class DetectionResult:
     end, the family's flanks on other contigs. Carries the core gene, its
     contig and edge distance, the flanks and all contigs involved. Such a call
     is `partial_locus` at `low`. None otherwise."""
+    merged_from: list[dict] = field(default_factory=list)
+    """When several families of one roster `merge_group` called the same
+    locus, the members folded into this call: each member's family,
+    idiomorph, confidence, span and genes (`locus_merge`; curator's ruling
+    2026-09-27, the Schizophyllum B locus reported by PR, Balpha and Bbeta).
+    Empty for an unmerged call."""
+    caax_dependent: bool = False
+    """True when the call reaches the admission bar (>= 2 distinct genes, or
+    the modelled-gene bar) only by counting a strict-CAAX scan precursor
+    (`detect.caax`). Read by the CAAX unverified label
+    (`verification.label_caax_unverified`)."""
 
 
 @dataclass(frozen=True)
@@ -2848,6 +2860,14 @@ def run_pipeline(
     }
     assembly_gaps = find_gaps_at_locus(
         {key: hits for key, hits in unreported_hits.items() if hits}, genome_fasta,
+    )
+
+    # Curator's ruling 2026-09-27: families of one physical locus type that
+    # called the same locus are reported once (`locus_merge`). After every
+    # per-family decision above, so `not_detected` and the withheld lists are
+    # unaffected; before the labels below, which then see the merged call.
+    results = merge_overlapping(
+        results, {f.key: (f.merge_group, f.merge_generic) for f in families},
     )
 
     # Curator's ruling 2026-09-26: a call made by searching a family outside

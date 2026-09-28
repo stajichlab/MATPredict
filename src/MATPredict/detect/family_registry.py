@@ -213,6 +213,15 @@ class Family:
     tblastn, so a real B locus showed one distinct gene and was never admitted.
     Off by default; Sporidiobolales precursors end CTxA and need their own motif.
     """
+    merge_group: str | None = None
+    """Families that describe the same physical locus type share a
+    `merge_group`; their overlapping calls are reported once
+    (`locus_merge`; curator's ruling 2026-09-27). None = never merged."""
+    merge_generic: bool = False
+    """A broad catch-all family for its merge group (e.g. Basidiomycota:PR,
+    Basidiomycota:HD): on a merge, a specific family's call is kept as the
+    primary and this family's evidence is folded into it."""
+
     min_idiomorph_margin: float = DEFAULT_MIN_IDIOMORPH_MARGIN
     """Identity points two mutually exclusive idiomorph genes must be apart.
 
@@ -378,6 +387,8 @@ def load_all_families(db_root: Path) -> list[Family]:
                     pheromone_precursor_scan=scan_config(
                         locus.get("pheromone_precursor_scan")
                     ),
+                    merge_group=locus.get("merge_group"),
+                    merge_generic=bool(locus.get("merge_generic", False)),
                 )
             )
     return families

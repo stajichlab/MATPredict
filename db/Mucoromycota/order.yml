@@ -3,7 +3,10 @@ loci:
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["Plus", "Minus"]
-    taxonomic_scope: [4827]
+    # Scope widened 2026-09-27 to Umbelopsidales (1913639, verified against NCBI
+    # Taxonomy) with the first tier-2 Umbelopsis records
+    # (db/Mucoromycota/Umbelopsidales/); curator ruling, pending record sign-off.
+    taxonomic_scope: [4827, 1913639]  # Mucorales, Umbelopsidales
     # Flank-carried window (curator's ruling 2026-09-26; results/
     # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
     # idiomorph, and real loci were found up to 9.9 kb from the flank span.

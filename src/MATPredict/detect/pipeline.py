@@ -880,6 +880,7 @@ def _relaxed_results(
     contig_lengths: dict[str, int] | None = None,
     on_relaxed_call: Callable[[DetectionResult, GeneCluster, FamilyScore], None] | None = None,
     model_losers: frozenset[tuple[int, FamilyKey, str]] | set = frozenset(),
+    classifier_verdicts: dict[tuple[int, FamilyKey], ClassifierVerdict] | None = None,
 ) -> list[DetectionResult]:
     """Sub-floor clusters admitted on gene COUNT rather than gene fraction.
 
@@ -929,6 +930,7 @@ def _relaxed_results(
             # tell from two unrelated spurious HMG hits tens of kb apart.
             evidence = _gene_evidence([cluster], score.family_key, polish_by or {})
             segments = _segments_for([cluster], contig_lengths or {}, evidence)
+            verdict = (classifier_verdicts or {}).get((id(cluster), score.family_key))
             results.append(DetectionResult(
                 family_key=score.family_key,
                 contig=segments[0].contig,
@@ -940,10 +942,19 @@ def _relaxed_results(
                 # flattening it to low would conflate weak evidence with a
                 # fragmented assembly.
                 confidence="medium",
-                idiomorph=assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key)),
-                idiomorph_candidates=idiomorph_candidates(
-                    family, score.genes_found, _own_live_hits(cluster, family.key)
+                # The HMM classifier decides where it ran on this cluster, as
+                # in the strict path; before 2026-09-28 relaxed calls ignored
+                # it (found measuring review finding F1).
+                idiomorph=(verdict.idiomorph if verdict is not None else
+                           assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key))),
+                idiomorph_candidates=(
+                    [{"idiomorph": k, "score": round(v, 1), "basis": "hmm_classifier"}
+                     for k, v in sorted(verdict.scores.items(), key=lambda kv: (-kv[1], kv[0]))]
+                    if verdict is not None else
+                    idiomorph_candidates(family, score.genes_found, _own_live_hits(cluster, family.key))
                 ),
+                idiomorph_margin=round(verdict.margin, 6) if verdict is not None else None,
+                idiomorph_classifier=verdict.as_report() if verdict is not None else None,
                 ambiguous_with=[],
                 genes_found=score.genes_found,
                 genes_missing=score.genes_missing,
@@ -2776,6 +2787,7 @@ def run_pipeline(
             contig_lengths=contig_lengths,
             on_relaxed_call=_record_relaxed,
             model_losers=model_losers,
+            classifier_verdicts=classifier_verdicts,
         )
         results, relaxed_withheld, relaxed_by_bar, relaxed_by_flank = _withhold(relaxed)
         suppressed += relaxed_withheld

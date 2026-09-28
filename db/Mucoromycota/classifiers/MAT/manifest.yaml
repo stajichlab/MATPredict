@@ -1,16 +1,16 @@
 family: Mucoromycota:MAT
-built: '2026-09-26'
+built: '2026-09-27'
 builder: scripts/build_idiomorph_hmms.py (MATPredict.detect.classifier_build)
 pyhmmer_version: 0.12.3
-mafft: v7.526 (2024/Apr/26)
+mafft: v7.505 (2022/Apr/10)
 genes:
   sexP:
     idiomorph: Plus
-    n_sequences: 76
-    n_unique: 75
+    n_sequences: 77
+    n_unique: 76
     pairwise_identity_min_median_max:
-    - 14.1
-    - 30.1
+    - 12.0
+    - 29.5
     - 100.0
     n_genera: 27
     genera:
@@ -41,19 +41,19 @@ genes:
     - Thamnidium
     - Thermomucor
     - Umbelopsis
-    sha256: e54babc05f5a5a6581414c3a3725c62452c2dae28c271b2b7e852488b67fc966
+    sha256: 2b6e662e4d977f9532d80a8e3836b20b7ef6fe5d77f6ed3b90fa5f711b26c913
     sources:
-      curated_record: 6
+      curated_record: 7
       training_extra: 70
   sexM:
     idiomorph: Minus
-    n_sequences: 9
-    n_unique: 9
+    n_sequences: 10
+    n_unique: 10
     pairwise_identity_min_median_max:
-    - 19.0
-    - 29.7
+    - 12.8
+    - 26.4
     - 50.0
-    n_genera: 7
+    n_genera: 8
     genera:
     - Absidia
     - Blakeslea
@@ -62,9 +62,10 @@ genes:
     - Phycomyces
     - Rhizopus
     - Syzygites
-    sha256: 4fc4b9866ef5c66c836939a47ba47cdde4cf8f0b3076918b3a1e65afa0ded4ad
+    - Umbelopsis
+    sha256: 697e2a54ef84820bb8764dc55b3862a00d41b2cc349be522bcf5ebc9d3ab7ef8
     sources:
-      curated_record: 9
+      curated_record: 10
       training_extra: 0
 training:
 - id: REF|101119_atcc11807_MAT_Minus|gene0|sexM
@@ -126,6 +127,14 @@ training:
 - id: REF|86630_cbs357-93_MAT_Minus|gene0|sexM
   gene: sexM
   genus: Rhizopus
+  source: curated_record
+- id: REF|41833_gzumbrama1_MAT_Plus|gene1|sexP
+  gene: sexP
+  genus: Umbelopsis
+  source: curated_record
+- id: REF|44442_wa0000051536_MAT_Minus|gene1|sexM
+  gene: sexM
+  genus: Umbelopsis
   source: curated_record
 - id: GCA_000401635.1_Muco_sp_1006Ph_V1:c0:m0|sexP|genus=Mucor
   gene: sexP
@@ -408,663 +417,679 @@ training:
   genus: Mycotypha
   source: training_extra
 leave_one_genus_out:
-  n_tested: 85
-  n_correct: 85
+  n_tested: 87
+  n_correct: 87
   n_untestable: 0
-  worst_correct_margin: 22.5
+  worst_correct_margin: 10.4
   margins:
   - id: REF|3231046_uomau377_MAT_Minus|gene1|sexM
     genus: Absidia
     truth: Minus
-    own_score: 82.9
-    other_score: 47.5
-    margin: 35.4
+    own_score: 88.1
+    other_score: 47.9
+    margin: 40.2
     correct: true
     untestable_gene: false
   - id: REF|3231046_uomd23-19_MAT_Plus|gene1|sexP
     genus: Absidia
     truth: Plus
-    own_score: 234.2
-    other_score: 59.4
-    margin: 174.7
+    own_score: 237.4
+    other_score: 59.2
+    margin: 178.2
     correct: true
     untestable_gene: false
   - id: GCA_002105175.1_Absrep1:c0:m0|sexP|genus=Absidia
     genus: Absidia
     truth: Plus
-    own_score: 247.7
-    other_score: 60.0
-    margin: 187.8
+    own_score: 246.7
+    other_score: 62.9
+    margin: 183.8
     correct: true
     untestable_gene: false
   - id: GCA_001599635.1_JCM_22485_assembly_v001:c0:m0|sexP|genus=Actinomucor
     genus: Actinomucor
     truth: Plus
-    own_score: 317.8
-    other_score: 56.3
-    margin: 261.5
+    own_score: 315.9
+    other_score: 55.5
+    margin: 260.4
     correct: true
     untestable_gene: false
   - id: GCA_014839865.1_ASM1483986v1:c0:m0|sexP|genus=Apophysomyces
     genus: Apophysomyces
     truth: Plus
-    own_score: 185.5
-    other_score: 62.3
-    margin: 123.2
+    own_score: 186.6
+    other_score: 61.7
+    margin: 125.0
     correct: true
     untestable_gene: false
   - id: GCA_024139275.1_ASM2413927v1:w1:m0|sexP|genus=Backusella
     genus: Backusella
     truth: Plus
-    own_score: 265.9
-    other_score: 67.7
-    margin: 198.2
+    own_score: 266.0
+    other_score: 68.3
+    margin: 197.7
     correct: true
     untestable_gene: false
   - id: GCA_024140155.1_ASM2414015v1:c0:m0|sexP|genus=Backusella
     genus: Backusella
     truth: Plus
-    own_score: 275.3
+    own_score: 276.3
     other_score: 65.5
-    margin: 209.8
+    margin: 210.8
     correct: true
     untestable_gene: false
   - id: GCA_024140245.1_ASM2414024v1:c0:m0|sexP|genus=Backusella
     genus: Backusella
     truth: Plus
-    own_score: 277.9
-    other_score: 68.0
-    margin: 209.9
+    own_score: 278.8
+    other_score: 68.8
+    margin: 210.0
     correct: true
     untestable_gene: false
   - id: GCA_025399235.1_Bacci1:c0:m0|sexP|genus=Backusella
     genus: Backusella
     truth: Plus
-    own_score: 263.8
-    other_score: 65.6
-    margin: 198.2
+    own_score: 262.5
+    other_score: 67.8
+    margin: 194.7
     correct: true
     untestable_gene: false
   - id: GCA_025766325.1_Benpoi1:h10:m0|sexP|genus=Benjaminiella
     genus: Benjaminiella
     truth: Plus
-    own_score: 341.4
-    other_score: 58.2
-    margin: 283.2
+    own_score: 343.5
+    other_score: 59.5
+    margin: 284.0
     correct: true
     untestable_gene: false
   - id: REF|4850_vkm-f-921_MAT_Minus|gene0|sexM
     genus: Blakeslea
     truth: Minus
-    own_score: 116.0
-    other_score: 64.6
-    margin: 51.4
+    own_score: 115.5
+    other_score: 66.4
+    margin: 49.1
     correct: true
     untestable_gene: false
   - id: GCA_025330725.1_Chlpad1:c0:m0|sexP|genus=Chlamydoabsidia
     genus: Chlamydoabsidia
     truth: Plus
-    own_score: 249.5
-    other_score: 64.5
-    margin: 185.0
+    own_score: 252.3
+    other_score: 64.7
+    margin: 187.5
     correct: true
     untestable_gene: false
   - id: GCA_001683725.1_ASM168372v1:c0:m0|sexP|genus=Choanephora
     genus: Choanephora
     truth: Plus
-    own_score: 287.8
-    other_score: 58.4
-    margin: 229.4
+    own_score: 289.0
+    other_score: 57.6
+    margin: 231.5
     correct: true
     untestable_gene: false
   - id: GCA_025331435.1_Chocucu1:c0:m0|sexP|genus=Choanephora
     genus: Choanephora
     truth: Plus
-    own_score: 289.4
-    other_score: 60.2
-    margin: 229.3
+    own_score: 289.6
+    other_score: 60.8
+    margin: 228.8
     correct: true
     untestable_gene: false
   - id: GCF_025118155.1_Cokrec1:w1:m0|sexP|genus=Cokeromyces
     genus: Cokeromyces
     truth: Plus
-    own_score: 326.8
-    other_score: 58.3
-    margin: 268.5
+    own_score: 332.1
+    other_score: 58.4
+    margin: 273.6
     correct: true
     untestable_gene: false
   - id: GCA_000697215.1_CunBer175-1.0:c0:m0|sexP|genus=Cunninghamella
     genus: Cunninghamella
     truth: Plus
-    own_score: 214.5
-    other_score: 57.9
-    margin: 156.5
+    own_score: 215.8
+    other_score: 62.2
+    margin: 153.7
     correct: true
     untestable_gene: false
   - id: GCA_017871115.1_ASM1787111v1:c0:m0|sexP|genus=Cunninghamella
     genus: Cunninghamella
     truth: Plus
-    own_score: 217.5
-    other_score: 73.2
-    margin: 144.3
+    own_score: 220.1
+    other_score: 68.3
+    margin: 151.8
     correct: true
     untestable_gene: false
   - id: GCA_025201675.1_Cunech1:c0:m0|sexP|genus=Cunninghamella
     genus: Cunninghamella
     truth: Plus
-    own_score: 220.2
-    other_score: 72.0
-    margin: 148.2
+    own_score: 223.2
+    other_score: 66.5
+    margin: 156.7
     correct: true
     untestable_gene: false
   - id: GCA_054130635.1_ASM5413063v1:c0:t0|sexP|genus=Cunninghamella
     genus: Cunninghamella
     truth: Plus
-    own_score: 182.7
-    other_score: 45.1
-    margin: 137.6
+    own_score: 184.2
+    other_score: 49.5
+    margin: 134.7
     correct: true
     untestable_gene: false
   - id: GCA_025716815.1_Dicele1:h5:t1|sexP|genus=Dichotomocladium
     genus: Dichotomocladium
     truth: Plus
-    own_score: 140.2
+    own_score: 141.8
     other_score: 43.9
-    margin: 96.2
+    margin: 97.9
     correct: true
     untestable_gene: false
   - id: GCA_024294565.1_ASM2429456v1:c0:m0|sexP|genus=Gilbertella
     genus: Gilbertella
     truth: Plus
-    own_score: 305.4
-    other_score: 53.8
-    margin: 251.6
+    own_score: 312.9
+    other_score: 51.5
+    margin: 261.5
     correct: true
     untestable_gene: false
   - id: GCA_025677825.1_Helpul1:c0:m0|sexP|genus=Helicostylum
     genus: Helicostylum
     truth: Plus
-    own_score: 356.1
-    other_score: 68.1
-    margin: 288.0
+    own_score: 349.5
+    other_score: 67.1
+    margin: 282.4
     correct: true
     untestable_gene: false
   - id: GCA_040366295.1_Hpulcur_1.0:c0:m0|sexP|genus=Helicostylum
     genus: Helicostylum
     truth: Plus
-    own_score: 358.1
-    other_score: 68.2
-    margin: 289.9
+    own_score: 351.6
+    other_score: 67.1
+    margin: 284.4
     correct: true
     untestable_gene: false
   - id: REF|29922_cbs109-16_MAT_Minus|gene1|sexM
     genus: Mucor
     truth: Minus
-    own_score: 150.8
-    other_score: 66.2
-    margin: 84.7
+    own_score: 144.0
+    other_score: 65.0
+    margin: 79.0
     correct: true
     untestable_gene: false
   - id: REF|36080_nrrl-3631_MAT_Plus|gene1|sexP
     genus: Mucor
     truth: Plus
-    own_score: 299.2
-    other_score: 56.5
-    margin: 242.7
+    own_score: 298.9
+    other_score: 53.6
+    margin: 245.3
     correct: true
     untestable_gene: false
   - id: REF|36080_r7b_MAT_Minus|gene1|sexM
     genus: Mucor
     truth: Minus
-    own_score: 69.1
-    other_score: 43.2
-    margin: 25.8
+    own_score: 76.7
+    other_score: 44.1
+    margin: 32.6
     correct: true
     untestable_gene: false
   - id: GCA_000401635.1_Muco_sp_1006Ph_V1:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 307.2
-    other_score: 52.1
-    margin: 255.1
+    own_score: 311.6
+    other_score: 50.3
+    margin: 261.3
     correct: true
     untestable_gene: false
   - id: GCA_000696935.1_MucCirB8987-1.0:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 307.6
+    own_score: 310.9
     other_score: 52.1
-    margin: 255.5
+    margin: 258.8
     correct: true
     untestable_gene: false
   - id: GCA_000697255.1_MucRacB9645-1.0:c1:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 338.0
-    other_score: 59.8
-    margin: 278.2
+    own_score: 346.2
+    other_score: 58.5
+    margin: 287.8
     correct: true
     untestable_gene: false
   - id: GCA_000950595.1_ASM95059v1:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 306.3
-    other_score: 55.4
-    margin: 250.9
+    own_score: 308.1
+    other_score: 51.9
+    margin: 256.2
     correct: true
     untestable_gene: false
   - id: GCA_016758985.1_ASM1675898v1:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 344.1
-    other_score: 68.2
-    margin: 275.9
+    own_score: 344.7
+    other_score: 65.3
+    margin: 279.4
     correct: true
     untestable_gene: false
   - id: GCA_023629835.1_ASM2362983v1:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 307.4
-    other_score: 51.3
-    margin: 256.1
+    own_score: 311.7
+    other_score: 49.5
+    margin: 262.2
     correct: true
     untestable_gene: false
   - id: GCA_040367835.1_Mfluvus_1.0:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 340.6
-    other_score: 67.5
-    margin: 273.2
+    own_score: 339.3
+    other_score: 64.2
+    margin: 275.1
     correct: true
     untestable_gene: false
   - id: GCA_048772875.1_ASM4877287v1:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 309.6
-    other_score: 51.7
-    margin: 257.9
+    own_score: 312.0
+    other_score: 50.1
+    margin: 262.0
     correct: true
     untestable_gene: false
   - id: GCA_051307255.1_Mcir_PS15p_1.0:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 308.8
-    other_score: 52.0
-    margin: 256.8
+    own_score: 311.2
+    other_score: 50.3
+    margin: 260.9
     correct: true
     untestable_gene: false
   - id: GCA_052058895.1_MBAN_PS3_1.0:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 303.0
-    other_score: 57.5
-    margin: 245.5
+    own_score: 304.4
+    other_score: 54.8
+    margin: 249.6
     correct: true
     untestable_gene: false
   - id: GCA_054123175.1_ASM5412317v1:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 309.8
-    other_score: 55.4
-    margin: 254.4
+    own_score: 313.5
+    other_score: 55.0
+    margin: 258.5
     correct: true
     untestable_gene: false
   - id: GCA_060309255.1_CBS195.68v1:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 309.6
-    other_score: 52.0
-    margin: 257.7
+    own_score: 312.0
+    other_score: 50.3
+    margin: 261.7
     correct: true
     untestable_gene: false
   - id: GCA_060309305.1_CBS205.68v1:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 300.0
-    other_score: 52.7
-    margin: 247.2
+    own_score: 301.3
+    other_score: 49.5
+    margin: 251.9
     correct: true
     untestable_gene: false
   - id: GCF_025094135.1_Mucmuc1:c0:m0|sexP|genus=Mucor
     genus: Mucor
     truth: Plus
-    own_score: 344.2
-    other_score: 67.5
-    margin: 276.7
+    own_score: 344.7
+    other_score: 65.1
+    margin: 279.7
     correct: true
     untestable_gene: false
   - id: REF|3108396_ai-2023a_MAT_Plus|gene2|sexP
     genus: Mucoraceae
     truth: Plus
-    own_score: 291.9
-    other_score: 65.8
-    margin: 226.1
+    own_score: 289.6
+    other_score: 70.9
+    margin: 218.7
     correct: true
     untestable_gene: false
   - id: GCF_025528875.1_Mycafr1:c0:m0|sexP|genus=Mycotypha
     genus: Mycotypha
     truth: Plus
-    own_score: 256.9
-    other_score: 57.0
-    margin: 199.9
+    own_score: 257.4
+    other_score: 58.1
+    margin: 199.3
     correct: true
     untestable_gene: false
   - id: REF|35722_atcc11077_MAT_Minus|gene0|sexM
     genus: Parasitella
     truth: Minus
-    own_score: 77.0
-    other_score: 44.0
-    margin: 33.0
+    own_score: 72.1
+    other_score: 43.4
+    margin: 28.7
     correct: true
     untestable_gene: false
   - id: GCA_000938895.1_PP.v1:c0:m0|sexP|genus=Parasitella
     genus: Parasitella
     truth: Plus
-    own_score: 335.9
-    other_score: 54.6
-    margin: 281.4
+    own_score: 339.5
+    other_score: 53.2
+    margin: 286.3
     correct: true
     untestable_gene: false
   - id: REF|4837_nrrl1555_MAT_Minus|gene1|sexM
     genus: Phycomyces
     truth: Minus
-    own_score: 129.1
-    other_score: 71.8
-    margin: 57.3
+    own_score: 134.9
+    other_score: 71.1
+    margin: 63.8
     correct: true
     untestable_gene: false
   - id: REF|4837_ubc21_MAT_Plus|gene1|sexP
     genus: Phycomyces
     truth: Plus
-    own_score: 252.7
-    other_score: 69.7
-    margin: 183.0
+    own_score: 254.8
+    other_score: 68.5
+    margin: 186.3
     correct: true
     untestable_gene: false
   - id: GCA_022702545.1_SJTU-YXQ:w0:t15|sexP|genus=Phycomyces
     genus: Phycomyces
     truth: Plus
-    own_score: 34.6
-    other_score: 10.9
-    margin: 23.7
+    own_score: 34.8
+    other_score: 10.0
+    margin: 24.8
     correct: true
     untestable_gene: false
   - id: GCA_025531835.1_PnitS608_1:c0:m0|sexP|genus=Phycomyces
     genus: Phycomyces
     truth: Plus
-    own_score: 254.7
-    other_score: 66.1
-    margin: 188.6
+    own_score: 254.1
+    other_score: 64.2
+    margin: 189.9
     correct: true
     untestable_gene: false
   - id: GCA_040209145.1_PhyblU21_2:c0:m0|sexP|genus=Phycomyces
     genus: Phycomyces
     truth: Plus
-    own_score: 252.7
-    other_score: 69.7
-    margin: 183.0
+    own_score: 254.8
+    other_score: 68.5
+    margin: 186.3
     correct: true
     untestable_gene: false
   - id: GCA_025716855.1_Pilano1:c0:m0|sexP|genus=Pilaira
     genus: Pilaira
     truth: Plus
-    own_score: 342.5
-    other_score: 65.8
-    margin: 276.6
+    own_score: 342.1
+    other_score: 62.6
+    margin: 279.5
     correct: true
     untestable_gene: false
   - id: GCA_025528865.1_Pilumb1:c0:m0|sexP|genus=Pilobolus
     genus: Pilobolus
     truth: Plus
-    own_score: 180.4
+    own_score: 178.9
     other_score: 59.9
-    margin: 120.5
+    margin: 119.0
     correct: true
     untestable_gene: false
   - id: GCF_025331425.1_Radspe1:w0:m0|sexP|genus=Radiomyces
     genus: Radiomyces
     truth: Plus
-    own_score: 288.4
-    other_score: 73.0
-    margin: 215.4
+    own_score: 288.1
+    other_score: 71.8
+    margin: 216.3
     correct: true
     untestable_gene: false
   - id: GCA_900175165.2_FCH_5_7:h6:t0|sexP|genus=Rhizomucor
     genus: Rhizomucor
     truth: Plus
-    own_score: 175.8
-    other_score: 65.1
-    margin: 110.7
+    own_score: 173.7
+    other_score: 67.9
+    margin: 105.8
     correct: true
     untestable_gene: false
   - id: GCA_900175165.2_FCH_5_7:h1:t0|sexP|genus=Rhizomucor
     genus: Rhizomucor
     truth: Plus
-    own_score: 166.0
-    other_score: 66.1
-    margin: 99.9
+    own_score: 165.2
+    other_score: 68.3
+    margin: 96.9
     correct: true
     untestable_gene: false
   - id: GCA_900175165.2_FCH_5_7:h3:t0|sexP|genus=Rhizomucor
     genus: Rhizomucor
     truth: Plus
-    own_score: 106.7
-    other_score: 62.3
-    margin: 44.4
+    own_score: 108.3
+    other_score: 61.6
+    margin: 46.8
     correct: true
     untestable_gene: false
   - id: REF|64495_cbs110-17_MAT_Minus|gene1|sexM
     genus: Rhizopus
     truth: Minus
-    own_score: 155.4
-    other_score: 68.4
-    margin: 87.0
+    own_score: 147.1
+    other_score: 68.6
+    margin: 78.5
     correct: true
     untestable_gene: false
   - id: REF|64495_cbs346-36_MAT_Plus|gene2|sexP
     genus: Rhizopus
     truth: Plus
-    own_score: 258.5
-    other_score: 58.8
-    margin: 199.7
+    own_score: 256.5
+    other_score: 57.0
+    margin: 199.5
     correct: true
     untestable_gene: false
   - id: REF|86630_cbs357-93_MAT_Minus|gene0|sexM
     genus: Rhizopus
     truth: Minus
-    own_score: 127.9
-    other_score: 68.8
-    margin: 59.0
+    own_score: 122.7
+    other_score: 69.0
+    margin: 53.7
     correct: true
     untestable_gene: false
   - id: GCA_000697035.1_RhiStoB9770-1.0:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 260.3
-    other_score: 51.8
-    margin: 208.5
+    own_score: 260.0
+    other_score: 52.3
+    margin: 207.7
     correct: true
     untestable_gene: false
   - id: GCA_000697095.1_RhiDel18148-1.0:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 261.9
-    other_score: 60.0
-    margin: 201.9
+    own_score: 260.2
+    other_score: 57.9
+    margin: 202.3
     correct: true
     untestable_gene: false
   - id: GCA_000697115.1_RhiOry21396-1.0:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 261.5
-    other_score: 59.2
-    margin: 202.2
+    own_score: 259.8
+    other_score: 57.3
+    margin: 202.4
     correct: true
     untestable_gene: false
   - id: GCA_000697135.1_RhiOry99-133-1.0:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 262.7
-    other_score: 59.7
-    margin: 203.0
+    own_score: 260.8
+    other_score: 60.9
+    margin: 199.9
     correct: true
     untestable_gene: false
   - id: GCA_000738565.1_RhiAzyB7455-1.0:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 281.6
-    other_score: 63.1
-    margin: 218.4
+    own_score: 280.8
+    other_score: 67.0
+    margin: 213.8
     correct: true
     untestable_gene: false
   - id: GCA_000738595.1_RhiDel21447-1.0:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 255.7
-    other_score: 55.3
-    margin: 200.4
+    own_score: 254.9
+    other_score: 55.4
+    margin: 199.4
     correct: true
     untestable_gene: false
   - id: GCA_000825725.1_Rmicro_CBS_344.29_Allpaths-LG:c1:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 282.6
-    other_score: 66.4
-    margin: 216.2
+    own_score: 280.7
+    other_score: 66.2
+    margin: 214.5
     correct: true
     untestable_gene: false
   - id: GCA_003325415.1_Rstol_CA:c1:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 189.1
-    other_score: 15.2
-    margin: 174.0
+    own_score: 190.1
+    other_score: 13.3
+    margin: 176.8
     correct: true
     untestable_gene: false
   - id: GCA_011763935.1_ASM1176393v1:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 261.5
-    other_score: 59.2
+    own_score: 259.7
+    other_score: 57.4
     margin: 202.3
     correct: true
     untestable_gene: false
   - id: GCA_011763975.1_ASM1176397v1:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 262.7
-    other_score: 60.2
-    margin: 202.4
+    own_score: 260.8
+    other_score: 60.9
+    margin: 199.9
     correct: true
     untestable_gene: false
   - id: GCA_011950985.2_ASM1195098v2:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 262.8
-    other_score: 60.2
-    margin: 202.6
+    own_score: 261.0
+    other_score: 61.0
+    margin: 200.0
     correct: true
     untestable_gene: false
   - id: GCA_025529335.1_ASM2552933v1:c1:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 277.7
-    other_score: 58.5
-    margin: 219.1
+    own_score: 278.1
+    other_score: 60.1
+    margin: 218.0
     correct: true
     untestable_gene: false
   - id: GCA_049863895.1_ASM4986389v1:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 261.5
-    other_score: 59.2
-    margin: 202.3
+    own_score: 259.8
+    other_score: 57.4
+    margin: 202.4
     correct: true
     untestable_gene: false
   - id: GCA_057662165.1_ASM5766216v1:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 256.9
-    other_score: 57.8
-    margin: 199.1
+    own_score: 255.2
+    other_score: 61.7
+    margin: 193.5
     correct: true
     untestable_gene: false
   - id: GCA_977110985.1_gzRhiStol1:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 265.5
-    other_score: 49.2
-    margin: 216.3
+    own_score: 264.9
+    other_score: 48.4
+    margin: 216.5
     correct: true
     untestable_gene: false
   - id: GCF_002708625.1_Rhimi1_1:c0:m0|sexP|genus=Rhizopus
     genus: Rhizopus
     truth: Plus
-    own_score: 270.9
-    other_score: 65.5
-    margin: 205.4
+    own_score: 268.5
+    other_score: 67.1
+    margin: 201.4
     correct: true
     untestable_gene: false
   - id: GCA_002105135.1_Synrac1:h10:t0|sexP|genus=Syncephalastrum
     genus: Syncephalastrum
     truth: Plus
-    own_score: 148.5
-    other_score: 37.2
-    margin: 111.4
+    own_score: 148.7
+    other_score: 37.4
+    margin: 111.3
     correct: true
     untestable_gene: false
   - id: REF|101119_atcc11807_MAT_Minus|gene0|sexM
     genus: Syzygites
     truth: Minus
-    own_score: 163.6
-    other_score: 68.7
-    margin: 94.9
+    own_score: 157.7
+    other_score: 68.0
+    margin: 89.7
     correct: true
     untestable_gene: false
   - id: REF|101119_atcc11807_MAT_Plus|gene0|sexP
     genus: Syzygites
     truth: Plus
-    own_score: 275.5
-    other_score: 62.6
-    margin: 212.9
+    own_score: 274.9
+    other_score: 63.7
+    margin: 211.3
     correct: true
     untestable_gene: false
   - id: GCA_016758935.1_ASM1675893v1:c0:m0|sexP|genus=Thamnidium
     genus: Thamnidium
     truth: Plus
-    own_score: 349.1
-    other_score: 74.4
-    margin: 274.7
+    own_score: 348.9
+    other_score: 71.7
+    margin: 277.2
     correct: true
     untestable_gene: false
   - id: GCA_000787465.1_ASM78746v1:h5:m0|sexP|genus=Thermomucor
     genus: Thermomucor
     truth: Plus
-    own_score: 211.5
-    other_score: 63.2
-    margin: 148.3
+    own_score: 215.9
+    other_score: 65.6
+    margin: 150.3
+    correct: true
+    untestable_gene: false
+  - id: REF|41833_gzumbrama1_MAT_Plus|gene1|sexP
+    genus: Umbelopsis
+    truth: Plus
+    own_score: 80.4
+    other_score: 34.4
+    margin: 46.0
+    correct: true
+    untestable_gene: false
+  - id: REF|44442_wa0000051536_MAT_Minus|gene1|sexM
+    genus: Umbelopsis
+    truth: Minus
+    own_score: 35.0
+    other_score: 24.6
+    margin: 10.4
     correct: true
     untestable_gene: false
   - id: GCA_000534915.1_ASM53491v1:c0:t0|sexP|genus=Umbelopsis
     genus: Umbelopsis
     truth: Plus
-    own_score: 66.2
+    own_score: 65.4
     other_score: 43.7
-    margin: 22.5
+    margin: 21.6
     correct: true
     untestable_gene: false
   - id: GCA_000697415.1_UmbIsaB7317-1.0:c0:t0|sexP|genus=Umbelopsis
     genus: Umbelopsis
     truth: Plus
-    own_score: 53.9
+    own_score: 52.3
     other_score: 26.4
-    margin: 27.4
+    margin: 25.8
     correct: true
     untestable_gene: false
   - id: GCA_016758905.1_ASM1675890v1:c1:t0|sexP|genus=Umbelopsis
     genus: Umbelopsis
     truth: Plus
-    own_score: 45.8
+    own_score: 45.9
     other_score: 18.4
     margin: 27.4
     correct: true
@@ -1072,30 +1097,30 @@ leave_one_genus_out:
   - id: GCA_021235465.1_Umbelo1:c0:t0|sexP|genus=Umbelopsis
     genus: Umbelopsis
     truth: Plus
-    own_score: 88.7
+    own_score: 88.5
     other_score: 24.3
-    margin: 64.4
+    margin: 64.3
     correct: true
     untestable_gene: false
   - id: GCA_027595865.1_Umbelopsis_isabellina_MPG-14A_reass_enz:c0:t0|sexP|genus=Umbelopsis
     genus: Umbelopsis
     truth: Plus
-    own_score: 59.6
+    own_score: 58.5
     other_score: 28.5
-    margin: 31.2
+    margin: 30.1
     correct: true
     untestable_gene: false
   - id: GCA_977110945.1_gzUmbRama1:c0:t2|sexP|genus=Umbelopsis
     genus: Umbelopsis
     truth: Plus
-    own_score: 72.2
+    own_score: 73.1
     other_score: 33.2
-    margin: 39.0
+    margin: 39.9
     correct: true
     untestable_gene: false
-recommended_min_margin: 11.2
+recommended_min_margin: 5.2
 min_margin_rule: half the worst correct leave-one-genus-out margin, so every held-out training protein
   is still called and a margin below half the weakest separation seen on held-out genera is reported undetermined
 warnings: []
-notes: 'Curator option (a), 2026-09-26: curated sexM/sexP records + UFBoot-99 sexP-clade members (results/2026-09-26_hmm_classifier/make_training_extra.py);
-  Zygo 23 excluded as the held-out test; disputed sets excluded.'
+notes: rebuilt 2026-09-27 to include the tier-2 Umbelopsis records (41833_gzumbrama1_MAT_Plus, 44442_wa0000051536_MAT_Minus);
+  training option (a), Zygo 23 held out

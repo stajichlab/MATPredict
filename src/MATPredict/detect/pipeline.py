@@ -85,6 +85,7 @@ from MATPredict.detect.assembly_gap import AssemblyGapAtLocus, find_gaps_at_locu
 from MATPredict.detect.caax import CAAX_METHOD, STATUS_CAAX_ORF, caax_precursor_hits, scan_config
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.split_locus import evaluate_split_locus
+from MATPredict.detect.secondary_undetermined import apply_secondary_undetermined_rule
 from MATPredict.detect.flank_carried import (
     WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
 )
@@ -332,7 +333,8 @@ class DetectionResult:
     call's confidence. See `verification`."""
     withheld_reason: str | None = None
     """Why a withheld locus (`DetectionOutcome.suppressed_loci`) was withheld:
-    `MODELLED_GENE_BAR` or `flank_carried.WITHHELD_FLANK_CARRIED`. None on a
+    `MODELLED_GENE_BAR`, `flank_carried.WITHHELD_FLANK_CARRIED` or
+    `secondary_undetermined.WITHHELD_SECONDARY_UNDETERMINED`. None on a
     reported call."""
     split_locus: dict | None = None
     """Set when the call was made by the split-locus rule (`split_locus`;
@@ -2755,6 +2757,17 @@ def run_pipeline(
                 for c in split_calls
             )
         ]
+
+    # Curator's ruling 2026-09-27: a second call the classifier scored but
+    # could not assign is withheld when the genome already has a determined
+    # call of the same family. See `secondary_undetermined`.
+    results, secondary_withheld = apply_secondary_undetermined_rule(results)
+    if secondary_withheld:
+        logger.info(
+            "withheld %d second call(s) the classifier could not assign beside a "
+            "determined call of the same family", len(secondary_withheld),
+        )
+    suppressed += secondary_withheld
 
     reported = {r.family_key for r in results}
     #: family -> the best withheld call for it, so `not_detected` can say that

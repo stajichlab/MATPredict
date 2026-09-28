@@ -1,0 +1,69 @@
+## Umbelopsidaceae (before 4457c3a -> after 3adfd90)
+Umbelopsis isabellina NBRC 7884 GCA_000534915.1_ASM53491v1
+  before (phylum_fallback): Plus/high/mat_locus [sexM:unpolished:35.294;sexP:polished_single:48.0] clf=model m=48.0
+  after  (lineage): Plus/high/mat_locus [sexM:polished_disagree:83.93;sexP:polished_single:31.13] clf=model m=79.5; undetermined/medium/mat_locus [sexM:polished_single:28.81] clf=model m=21.8
+Umbelopsis isabellina B7317 GCA_000697415.1_UmbIsaB7317-1.0
+  before (phylum_fallback): Plus/low/partial_locus [sexM:unpolished:33.824;sexP:unpolished:42.857] clf=- m=None
+  after  (lineage): Plus/high/mat_locus [sexM:polished_disagree:84.82;sexP:polished_single:33.33] clf=model m=94.5
+Umbelopsis vinacea WA0000051536 GCA_016758895.1_ASM1675889v1
+  before (phylum_fallback): uncalled
+  after  (lineage): Minus/high/mat_locus [sexM:polished_agree:100.0;sexP:unpolished:27.451] clf=model m=100.8; Minus/medium/mat_locus [sexM:polished_single:35.71;sexP:unpolished:38.235] clf=model m=26.2
+Umbelopsis isabellina WA0000067209 GCA_016758905.1_ASM1675890v1
+  before (phylum_fallback): Plus/low/partial_locus [sexM:unpolished:29.851;sexP:unpolished:41.667] clf=- m=None
+  after  (lineage): undetermined/medium/mat_locus [sexM:polished_single:33.96] clf=model m=23.7; Plus/high/mat_locus [sexM:polished_disagree:86.61;sexP:polished_single:32.45] clf=model m=72.3
+Umbelopsis sp. PMI_123 PMI_123 GCA_021235465.1_Umbelo1
+  before (phylum_fallback): Plus/high/mat_locus [sexM:unpolished:26.087;sexP:polished_single:40.79] clf=model m=60.9
+  after  (lineage): Plus/high/mat_locus [sexM:polished_agree:87.07;sexP:polished_disagree:56.77] clf=model m=139.7
+Umbelopsis sp. AD052 AD052 GCA_025677805.1_Umbsp_AD052_1
+  before (phylum_fallback): uncalled
+  after  (lineage): Minus/medium/mat_locus [sexM:polished_single:35.71;sexP:unpolished:38.235] clf=model m=26.4
+Umbelopsis isabellina MPG-14A GCA_027595865.1_Umbelopsis_isabellina_MPG-14A_reass_enz
+  before (phylum_fallback): Plus/low/partial_locus [sexM:unpolished:33.824;sexP:unpolished:42.857] clf=- m=None
+  after  (lineage): Plus/high/mat_locus [sexM:polished_disagree:84.82;sexP:polished_single:33.33] clf=model m=94.5
+Umbelopsis sp. M5902 M5902 GCA_037039815.1_ASM3703981v1
+  before (phylum_fallback): Minus/low/partial_locus [sexM:unpolished:36.364;sexP:unpolished:33.333] clf=- m=None
+  after  (lineage): Plus/high/mat_locus [sexM:polished_disagree:85.71;sexP:polished_single:28.91] clf=model m=80.6
+Umbelopsis sp. WA50703 WA50703 GCA_053572175.1_ASM5357217v1
+  before (phylum_fallback): uncalled
+  after  (lineage): Minus/high/mat_locus [sexM:polished_disagree:85.96;sexP:unpolished:27.778] clf=model m=42.6; undetermined/medium/mat_locus [sexM:polished_single:33.96] clf=model m=23.7
+Umbelopsis nana NBRC 117090 GCA_054906655.1_Umbelopsis_nana_v._1.0
+  before (phylum_fallback): uncalled
+  after  (lineage): undetermined/medium/partial_locus [sexM:polished_single:34.62;sexP:unpolished:32.143] clf=model m=23.4; Minus/high/mat_locus [sexM:polished_disagree:86.21;sexP:unpolished:33.333] clf=model m=39.1
+Umbelopsis sp. WA50703  GCA_964291815.1_UMBE_WA70503
+  before (phylum_fallback): uncalled
+  after  (lineage): Minus/high/mat_locus [sexM:polished_disagree:85.96;sexP:unpolished:27.778] clf=model m=42.6; undetermined/medium/mat_locus [sexM:polished_single:33.96] clf=model m=23.7
+Umbelopsis ramanniana  GCA_977110945.1_gzUmbRama1
+  before (phylum_fallback): Plus/high/mat_locus [sexM:unpolished:25.0;sexP:polished_single:30.0] clf=model m=56.1
+  after  (lineage): Plus/medium/mat_locus [sexM:polished_disagree:88.89;sexP:polished_agree:100.0] clf=model m=144.5
+Umbelopsis vinacea  GCA_977110975.1_gzUmbVina2
+  before (phylum_fallback): uncalled
+  after  (lineage): Minus/high/mat_locus [sexM:polished_disagree:80.17;sexP:unpolished:29.688] clf=model m=35.7; undetermined/medium/mat_locus [sexM:polished_single:34.62] clf=model m=23.4
+Umbelopsis ramanniana AG GCF_025399195.1_Umbra1
+  before (phylum_fallback): Plus/high/mat_locus [sexM:unpolished:36.667;sexP:polished_single:29.55] clf=model m=51.0
+  after  (lineage): Minus/medium/mat_locus [sexM:polished_single:32.84;sexP:unpolished:28.571] clf=model m=27.0; Plus/medium/mat_locus [sexM:polished_disagree:90.76;sexP:polished_agree:84.71] clf=model m=126.8
+
+## Whole scan
+  label   Umbelopsidaceae Umbelopsis isabellina GCA_000534915.1_ASM53491v1: [('BAVE01000001.1', 'Plus', 'high')] -> [('BAVE01000001.1', 'Plus', 'high'), ('BAVE01000005.1', 'undetermined', 'medium')]
+  label   Mucoraceae Apophysomyces trapeziformis GCA_000696975.1_ApoTraB9324-1.0: [('JNDP01001082.1', 'Plus', 'high')] -> [('JNDP01001082.1', 'Plus', 'high'), ('JNDP01001383.1', 'undetermined', 'medium')]
+  conf    Umbelopsidaceae Umbelopsis isabellina GCA_000697415.1_UmbIsaB7317-1.0: [('JNEQ01000056.1', 'Plus', 'low')] -> [('JNEQ01000056.1', 'Plus', 'high')]
+  label   Mucoraceae Apophysomyces variabilis GCA_002749535.1_ASM274953v1: [('MZZL01000138.1', 'Minus', 'high')] -> [('MZZL01000138.1', 'Minus', 'high'), ('MZZL01000384.1', 'undetermined', 'medium')]
+  label   Mucoraceae Apophysomyces sp. BC1015 GCA_016097715.1_ASM1609771v1: [('JAAZWU010000575.1', 'Plus', 'high')] -> [('JAAZWU010000575.1', 'Plus', 'high'), ('JAAZWU010000046.1', 'undetermined', 'medium')]
+  label   Mucoraceae Apophysomyces sp. BC1021 GCA_016097735.1_ASM1609773v1: [('JAAZWV010000301.1', 'Plus', 'high')] -> [('JAAZWV010000301.1', 'Plus', 'high'), ('JAAZWV010000019.1', 'undetermined', 'medium')]
+  label   Mucoraceae Apophysomyces sp. BC1034 GCA_016097755.1_ASM1609775v1: [('JAAZWW010000327.1', 'Plus', 'high')] -> [('JAAZWW010000327.1', 'Plus', 'high'), ('JAAZWW010000088.1', 'undetermined', 'medium')]
+  gained  Umbelopsidaceae Umbelopsis vinacea GCA_016758895.1_ASM1675889v1: [] -> [('JAEPRA010000016.1', 'Minus', 'high'), ('JAEPRA010000012.1', 'Minus', 'medium')]
+  label   Umbelopsidaceae Umbelopsis isabellina GCA_016758905.1_ASM1675890v1: [('JAEPQZ010000017.1', 'Plus', 'low')] -> [('JAEPQZ010000001.1', 'undetermined', 'medium'), ('JAEPQZ010000017.1', 'Plus', 'high')]
+  gained  Umbelopsidaceae Umbelopsis sp. AD052 GCA_025677805.1_Umbsp_AD052_1: [] -> [('JAIXMS010000013.1', 'Minus', 'medium')]
+  label   Mucoraceae Helicostylum pulchrum GCA_025677825.1_Helpul1: [('JAIXMO010000047.1', 'Plus', 'high')] -> [('JAIXMO010000047.1', 'Plus', 'high'), ('JAIXMO010000002.1', 'undetermined', 'medium')]
+  conf    Umbelopsidaceae Umbelopsis isabellina GCA_027595865.1_Umbelopsis_isabellina_MPG-14A_reass_enz: [('JANJFK010000028.1', 'Plus', 'low')] -> [('JANJFK010000028.1', 'Plus', 'high')]
+  label   Umbelopsidaceae Umbelopsis sp. M5902 GCA_037039815.1_ASM3703981v1: [('JAXQGL010000038.1', 'Minus', 'low')] -> [('JAXQGL010000038.1', 'Plus', 'high')]
+  label   Mucoraceae Helicostylum pulchrum GCA_040366295.1_Hpulcur_1.0: [('BAABUJ010000022.1', 'Plus', 'high')] -> [('BAABUJ010000022.1', 'Plus', 'high'), ('BAABUJ010000010.1', 'undetermined', 'medium')]
+  gained  Umbelopsidaceae Umbelopsis sp. WA50703 GCA_053572175.1_ASM5357217v1: [] -> [('JAYKKX010000013.1', 'Minus', 'high'), ('JAYKKX010000001.1', 'undetermined', 'medium')]
+  gained  Umbelopsidaceae Umbelopsis nana GCA_054906655.1_Umbelopsis_nana_v._1.0: [] -> [('BAAHSD010000012.1', 'undetermined', 'medium'), ('BAAHSD010000001.1', 'Minus', 'high')]
+  label   Mucoraceae Mucor griseocyanus GCA_060309175.1_CBS116.08v1: [('JBLNHG010000007.1', 'Minus', 'high')] -> [('JBLNHG010000007.1', 'undetermined', 'high')]
+  lost    Lichtheimiaceae Rhizomucor pusillus GCA_900175165.2_FCH_5_7: [('FWWN02000322.1', 'Minus', 'medium')] -> []
+  gained  Umbelopsidaceae Umbelopsis sp. WA50703 GCA_964291815.1_UMBE_WA70503: [] -> [('CAXYTU010000169.1', 'Minus', 'high'), ('CAXYTU010000001.1', 'undetermined', 'medium')]
+  conf    Umbelopsidaceae Umbelopsis ramanniana GCA_977110945.1_gzUmbRama1: [('CDSBDH010000020.1', 'Plus', 'high')] -> [('CDSBDH010000020.1', 'Plus', 'medium')]
+  gained  Umbelopsidaceae Umbelopsis vinacea GCA_977110975.1_gzUmbVina2: [] -> [('CDSBDG010000016.1', 'Minus', 'high'), ('CDSBDG010000004.1', 'undetermined', 'medium')]
+  label   Umbelopsidaceae Umbelopsis ramanniana GCF_025399195.1_Umbra1: [('NW_026252087.1', 'Plus', 'high')] -> [('NW_026252095.1', 'Minus', 'medium'), ('NW_026252087.1', 'Plus', 'medium')]
+genomes compared 293 {'unchanged': 271, 'gained': 6, 'lost': 1, 'label': 12, 'conf': 3}
+called before 231 after 236

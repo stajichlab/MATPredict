@@ -55,6 +55,7 @@ curated or corrected. Newest entries at the end of each section.
 | B1.5 | *L. thermotolerans* CBS 6340 `NC_013082.1` | MATa1 at the MAT position | ORF at 282,329-282,664 (-), 111 aa, unannotated. The only accessioned a1 (XP_002554220.1, silent cassette) lacks the homeodomain because a1's 3' end runs from the Y box into a non-homologous X box -- real switching biology, not an annotation error. | M | OPEN (upstream); curation deferred by curator 2026-09-21 |
 | B1.6 | *Mycosarcoma (Ustilago) maydis* RefSeq `NC_026482.1` | mfa1 (41 aa pheromone precursor) | Absent from the modern annotation; present in the 1995 locus deposit U37795. A curation fork had relabelled Rba1 as "mfa". | M (annotation-gap lesson) | WORKED AROUND (curated from U37795) |
 | B1.7 | *Umbelopsis vinacea* gzUmbVina2, `GCA_977110975.1` | sexM (Minus) | Not annotated. The HMG-box exon lies ~1.5 kb upstream of tptA (CAO3674301.1) on CDSBDG010000016.1 (tblastn of curated sexM, ~218,6xx-218,9xx, minus strand). miniprot of the U. vinacea WA0000051536 sexM model maps here only with frameshifts (identity 68%, Frameshift=true), so the long-read assembly may carry indel errors in this gene. | V `results/2026-09-27_umbelopsis_curation/` | WORKED AROUND: Minus record built on WA0000051536 instead (`44442_wa0000051536_MAT_Minus`) |
+| B1.8 | *U. vinacea* WA0000051536, `GCA_016758895.1` | sexM (Minus) | Not annotated: single-exon ORF JAEPRA010000016.1:154,336-154,788 (minus), 150 aa, PF00505 at aa 33-94. The neighbouring annotated `KAG2174494.1` (131 aa, 'partial') is a separate conserved gene (89% to CAO3688882.1 beside sexP in the Plus genome), not a sexM fragment. | V | WORKED AROUND: ORF curated without a protein accession in `44442_wa0000051536_MAT_Minus` |
 
 ### B2. Gene models that are truncated or split
 
@@ -65,7 +66,6 @@ curated or corrected. Newest entries at the end of each section.
 | B2.3 | *C. albicans* WO-1 MTLalpha2 model | Missed a 59 bp intron: 167 aa instead of 186. | M | WORKED AROUND (not curated; SC5314 deposit AF167163.1 used) |
 | B2.4 | *M. importuna* `KY782629.1` / `KY782630.1` | APN2 is annotated as TWO adjacent CDS in each deposit (AVI60802.1 + AVI60803.1; AVI60822.1 + AVI60823.1), almost certainly one gene split by the annotation. | V | WORKED AROUND: both kept under one gene name APN2 (`81ea22a`) |
 | B2.5 | *L. thermotolerans* MATALPHA2 | 108 aa over two exons against 210 aa (*S. cerevisiae*) and 223 aa (*K. lactis*); possibly N-terminally truncated. No continuous alternative ORF longer than 63 aa. | M (record note) | OPEN: treat as the record's weak gene |
-| B2.6 | *U. vinacea* WA0000051536 `KAG2174494.1` (131 aa, 'partial') | 3'-part-only model of sexM: lacks the HMG-box exon (JAEPRA010000016.1:154,507-154,788) and the first intron. Full model: 3 exons, 225 aa (CDS 154,507-154,788 / 153,704-154,036 / 153,559-153,621, minus), PF00505 at aa 33-94. | V | WORKED AROUND: full model curated without a protein accession in `44442_wa0000051536_MAT_Minus` |
 
 ### B3. Genes annotated without their name, or with a wrong/uninformative product
 
@@ -133,4 +133,4 @@ Recorded so a detector rule or a curator does not "fix" them.
 * **2026-09-25** B3.3a, B3.8 added; A5 fixed (MTLalpha2 optional; PAP1/OBP1/PIK1 optional flanks added to the MTL roster and all eight Serinales records).
 * **2026-09-26** B4.1-B4.2 added (C. albicans assemblies collapsing heterozygous MTL; read-depth test).
 * **2026-09-26** D9-D10 added from the Serinales-wide scan on the flank roster (`882aa01`).
-* **2026-09-27** B1.7, B2.6 added (Umbelopsis sexM: unannotated in gzUmbVina2, truncated in WA0000051536); branch `curation-umbelopsis`.
+* **2026-09-27** B1.7, B1.8 added (Umbelopsis sexM unannotated in gzUmbVina2 and WA0000051536); branch `curation-umbelopsis`.

@@ -354,6 +354,11 @@ class DetectionResult:
     withheld_detail: dict | None = None
     """For a withheld locus, the numbers behind the reason; set for
     `BELOW_FRACTION_FLOOR` (`fraction_found`, `floor`, `best_identity`)."""
+    subloci: list[dict] = field(default_factory=list)
+    """For a merged A or B call, each contributing family as a sublocus:
+    label (the family's locus name, e.g. Aalpha/Abeta/Balpha/Bbeta), generic
+    or not, idiomorph, coordinates, genes, genes missing and completeness
+    (`locus_merge`; curator's ruling 2026-09-28, option a). Empty otherwise."""
     caax_dependent: bool = False
     """True when the call reaches the admission bar (>= 2 distinct genes, or
     the modelled-gene bar) only by counting a strict-CAAX scan precursor

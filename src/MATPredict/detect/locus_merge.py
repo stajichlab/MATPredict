@@ -70,9 +70,9 @@ def _shared(a, b) -> int:
 def _split_separate(comp: list[int], results: list, groups: dict) -> list[list[int]]:
     """Split a component holding two or more `merge_separately` families.
 
-    Curator's ruling 2026-09-28, PROVISIONAL pending the subloci literature
-    review (results/2026-09-28_subloci_literature/): Aalpha and Abeta never
-    merge with each other, even through one HD call that overlaps both. Each
+    A roster switch (`merge_separately`), default off. The curator first asked
+    for Aalpha/Abeta to stay apart (2026-09-28), then ruled after the subloci
+    literature review that they merge (option a); no roster locus sets it. Each
     separate family's calls form their own sub-component; every other call
     (the generic HD call) joins the sub-component it overlaps most.
     """
@@ -185,6 +185,19 @@ def _merge(calls: list, groups: dict) -> object:
         reference_records=union("reference_records"),
         segments=union("segments"),
         polished_genes=max(r.polished_genes for r in calls),
+        # Curator's ruling 2026-09-28, option (a): subloci (Aalpha/Abeta,
+        # Balpha/Bbeta) are paralogous specificity units inside ONE locus, so
+        # they merge; each contributing family is kept as a sublocus.
+        subloci=[
+            {"sublocus": r.family_key.locus_name,
+             "generic": bool(groups[r.family_key][1]),
+             "idiomorph": r.idiomorph,
+             "contig": r.contig, "start": r.start, "end": r.end,
+             "genes": list(r.genes_found),
+             "genes_missing": list(r.genes_missing),
+             "completeness": "complete" if not r.genes_missing else "partial"}
+            for r in sorted(calls, key=rank)
+        ],
         merged_from=[
             {"family": _key(r.family_key), "idiomorph": r.idiomorph,
              "confidence": r.confidence, "start": r.start, "end": r.end,

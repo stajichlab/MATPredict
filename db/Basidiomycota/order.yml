@@ -226,12 +226,11 @@ loci:
     # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
     # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
     merge_group: "A"
-    # PROVISIONAL (curator, 2026-09-28): Aalpha and Abeta never merge with
-    # each other; each merges only with the generic HD call. The curator is
-    # not sure the biology supports separating the subloci (they may be a
-    # different kind of duplication); pending the subloci literature review,
-    # results/2026-09-28_subloci_literature/. Flip to false to merge them.
-    merge_separately: true
+    # Curator's ruling 2026-09-28, option (a), after the subloci literature
+    # review (results/2026-09-28_subloci_literature/NOTE.md): Aalpha and Abeta
+    # are paralogous specificity units inside ONE A locus, so they merge with
+    # HD and each other into one A call; the merged call lists them under
+    # `subloci`. (`merge_separately: true` would keep them apart; not set.)
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20 from the single curated species (Schizophyllum
@@ -256,12 +255,11 @@ loci:
     # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
     # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
     merge_group: "A"
-    # PROVISIONAL (curator, 2026-09-28): Aalpha and Abeta never merge with
-    # each other; each merges only with the generic HD call. The curator is
-    # not sure the biology supports separating the subloci (they may be a
-    # different kind of duplication); pending the subloci literature review,
-    # results/2026-09-28_subloci_literature/. Flip to false to merge them.
-    merge_separately: true
+    # Curator's ruling 2026-09-28, option (a), after the subloci literature
+    # review (results/2026-09-28_subloci_literature/NOTE.md): Aalpha and Abeta
+    # are paralogous specificity units inside ONE A locus, so they merge with
+    # HD and each other into one A call; the merged call lists them under
+    # `subloci`. (`merge_separately: true` would keep them apart; not set.)
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20, same rationale as Aalpha above.

@@ -223,9 +223,10 @@ class Family:
     primary and this family's evidence is folded into it."""
     merge_separately: bool = False
     """Two `merge_separately` families of one merge group never merge with
-    each other; each merges only with the group's generic call. Curator's
-    ruling 2026-09-28, PROVISIONAL (Aalpha/Abeta), pending the subloci
-    literature review."""
+    each other; each merges only with the group's generic call. Unused: the
+    curator first asked for it on Aalpha/Abeta (2026-09-28) and then, after the
+    subloci literature review, ruled they merge (option a). Kept as a roster
+    switch, default False (merge)."""
 
     min_idiomorph_margin: float = DEFAULT_MIN_IDIOMORPH_MARGIN
     """Identity points two mutually exclusive idiomorph genes must be apart.

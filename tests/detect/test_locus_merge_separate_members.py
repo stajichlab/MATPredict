@@ -1,11 +1,9 @@
-"""Aalpha and Abeta never merge with each other (curator, 2026-09-28, PROVISIONAL).
+"""The `merge_separately` roster switch (default off).
 
-Group A keeps HD (generic) + Aalpha + Abeta, but each sub-locus merges only
-with the generic HD call; Aalpha and Abeta stay separate calls, even when one
-HD call overlaps both. Set per roster locus (`merge_separately: true`), so it
-can be flipped without code while the subloci literature review runs
-(results/2026-09-28_subloci_literature/). Group B (PR + Balpha + Bbeta) does
-not set it and still merges into one call.
+The curator first asked (2026-09-28) for Aalpha and Abeta to stay separate,
+then ruled after the subloci literature review that they merge (option a);
+no roster locus sets the switch. These tests pin the switch's behaviour so it
+can be turned on without code if the ruling changes.
 """
 from MATPredict.detect.family_registry import FamilyKey
 from MATPredict.detect.locus_merge import merge_overlapping
@@ -55,11 +53,3 @@ def test_two_part_group_tuples_still_work():
     groups = {HD: ("A", True), AA: ("A", False)}
     assert len(merge_overlapping([_r(HD), _r(AA)], groups)) == 1
 
-
-def test_the_roster_sets_it_for_aalpha_and_abeta_only(tmp_path):
-    from pathlib import Path
-    from MATPredict.detect.family_registry import load_all_families as load_families
-    fams = {f.key.locus_name: f for f in load_families(Path(__file__).resolve().parents[2] / "db")
-            if f.key.phylum == "Basidiomycota"}
-    assert fams["Aalpha"].merge_separately and fams["Abeta"].merge_separately
-    assert not any(fams[n].merge_separately for n in ("HD", "PR", "Balpha", "Bbeta") if n in fams)

@@ -1,0 +1,56 @@
+== agaricales_panel: genomes old 125 new 128 both 125
+ calls old 303 new 268
+   Basidiomycota:Aalpha: 25 -> 25
+   Basidiomycota:Balpha: 4 -> 2
+   Basidiomycota:Bbeta: 6 -> 4
+   Basidiomycota:HD: 171 -> 146
+   Basidiomycota:PR: 97 -> 91
+ merges {'Aalpha+HD': 25, 'Balpha+Bbeta+PR': 4, 'Bbeta+PR': 2}
+ CAAX-unverified by taxon {'Physalacriaceae': 5, 'Agrocybaceae': 16, 'Galerinaceae': 2, 'Mycenaceae': 6} total 29
+ old loci with no covering new call: 0
+ Coprinopsis cinerea GCA_016772295.1_ASM1677229v1
+     Basidiomycota:Aalpha JAAGWA010000001.1 1622916 1632613 high ['Aalpha', 'HD'] None
+     Basidiomycota:PR JAAGWA010000010.1 1806650 1826463 high [] None
+ Schizophyllum commune GCA_019142945.1_ASM1914294v1
+     Basidiomycota:Aalpha JAGVRN010002749.1 149250 159102 high ['Aalpha', 'HD'] None
+     Basidiomycota:Aalpha JAGVRN010002272.1 137084 149031 high ['Aalpha', 'HD'] None
+     Basidiomycota:Bbeta JAGVRN010002274.1 24306 95400 high ['Bbeta', 'Balpha', 'PR'] None
+ Schizophyllum commune GCA_019143355.1_ASM1914335v1
+     Basidiomycota:Aalpha JAGVSB010001465.1 143984 158077 high ['Aalpha', 'HD'] None
+     Basidiomycota:HD JAGVSB010001760.1 146737 154087 high [] None
+     Basidiomycota:Bbeta JAGVSB010000460.1 38688 91592 medium ['Bbeta', 'PR'] None
+ Schizophyllum commune GCA_019143575.1_ASM1914357v1
+     Basidiomycota:Aalpha JAGVSF010001493.1 172343 182151 high ['Aalpha', 'HD'] None
+     Basidiomycota:HD JAGVSF010001634.1 287766 294489 high [] None
+     Basidiomycota:Balpha JAGVSF010001575.1 1151 22460 high ['Balpha', 'Bbeta', 'PR'] None
+     Basidiomycota:PR JAGVSF010001057.1 162 41025 medium [] None
+ Schizophyllum commune GCA_019143605.1_ASM1914360v1
+     Basidiomycota:Aalpha JAGVSH010001170.1 117201 130831 high ['Aalpha', 'HD'] None
+     Basidiomycota:HD JAGVSH010001161.1 331363 339398 high [] None
+     Basidiomycota:Bbeta JAGVSH010000510.1 19082 57115 medium ['Bbeta', 'PR'] None
+ Schizophyllum commune GCA_019143615.1_ASM1914361v1
+     Basidiomycota:Aalpha JAGVSI010001513.1 164533 178081 high ['Aalpha', 'HD'] None
+     Basidiomycota:HD JAGVSI010001121.1 47559 55071 high [] None
+     Basidiomycota:Balpha JAGVSI010000976.1 2232 63709 high ['Balpha', 'Bbeta', 'PR'] None
+ Schizophyllum commune GCF_000143185.2_Schco3
+     Basidiomycota:HD NW_026089539.1 1245769 1269870 high [] None
+     Basidiomycota:Aalpha NW_026089539.1 1817709 1827453 high ['Aalpha', 'HD'] None
+     Basidiomycota:Bbeta NW_026089548.1 190191 273652 high ['Bbeta', 'Balpha', 'PR'] None
+ Coprinopsis cinerea GCF_000182895.1_CC3
+     Basidiomycota:Aalpha NW_003307544.1 2646524 2668904 high ['Aalpha', 'HD'] None
+     Basidiomycota:PR NW_003307535.1 1719114 1738930 high [] None
+ rollout unverified_calls: genomes 21 calls 29
+== polyrussu_controls: genomes old 37 new 37 both 37
+ calls old 84 new 84
+   Basidiomycota:HD: 46 -> 46
+   Basidiomycota:MAT: 1 -> 1
+   Basidiomycota:PR: 35 -> 35
+   Basidiomycota:aLocus: 1 -> 1
+   Basidiomycota:bLocus: 1 -> 1
+ merges {}
+ CAAX-unverified by taxon {} total 0
+ old loci with no covering new call: 0
+ Russula nobilis GCA_984573805.1_gfRusNobi1.hap1.1
+     Basidiomycota:HD OZ475194.1 3081512 3090857 high [] None
+     Basidiomycota:PR OZ475200.1 1510837 1529433 medium [] None
+ rollout unverified_calls: genomes 0 calls 0

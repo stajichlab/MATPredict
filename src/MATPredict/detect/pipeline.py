@@ -2683,10 +2683,43 @@ def run_pipeline(
             results.append(_build(score, [cluster], scores, fragmented=False))
 
     # The relaxed second pass, and ONLY when the strict pass found nothing
-    # anywhere in this genome. Gating on the whole genome rather than per
-    # family is the curator's ruling and the conservative reading: a genome
-    # with any confident call is left exactly as it was, so the relaxed bar
-    # can never dilute a run that already worked.
+    # REPORTABLE anywhere in this genome. Gating on the whole genome rather
+    # than per family is the curator's ruling and the conservative reading: a
+    # genome with any confident call is left exactly as it was, so the relaxed
+    # bar can never dilute a run that already worked.
+    #
+    # Curator's ruling (3), 2026-09-22: "yes require more than 1". A cluster
+    # must carry at least MIN_POLISHED_GENES polished gene models to be
+    # REPORTED; and (2026-09-26) a call with no modelled core gene is kept at
+    # `low` only under the flank-carried rule (see `flank_carried`).
+    #
+    # Review finding F1 (2026-09-28, results/2026-09-28_fable_review/): these
+    # withhold rules now run on the strict results BEFORE the relaxed gate, so
+    # the gate sees only strict calls that survive. Before, a strict candidate
+    # the bar later withheld still blocked the relaxed pass; new flank
+    # references made 0-modelled noise clusters clear the strict floor and
+    # silenced real relaxed loci (Rhizomucor pusillus FCH_5_7, Absidia glauca).
+    # The same rules are applied to the relaxed calls afterwards.
+    #
+    # Nothing is destroyed: the per-candidate rows are already on disk in the
+    # evidence-diagnostics stream, a family whose only calls were withheld
+    # still gets a `not_detected` entry naming the reason, and the count is
+    # carried on the outcome.
+    flank_windows = {f.key: f.flank_carried_window_bp for f in families}
+    flank_bits = {f.key: f.flank_carried_min_bitscore for f in families}
+
+    def _withhold(candidates):
+        """(kept, withheld, n_by_bar, n_by_flank) after the bar and flank rule."""
+        by_bar = [
+            replace(r, withheld_reason=MODELLED_GENE_BAR)
+            for r in candidates if r.polished_genes < min_polished_genes
+        ]
+        kept = [r for r in candidates if r.polished_genes >= min_polished_genes]
+        kept, by_flank = apply_flank_carried_rule(kept, flank_windows, flank_bits)
+        return kept, by_bar + by_flank, len(by_bar), len(by_flank)
+
+    results, suppressed, suppressed_by_bar, suppressed_by_flank = _withhold(results)
+
     if not results and relaxed_second_pass:
         def _record_relaxed(result, cluster, score):
             # Exploration data (curator, 2026-09-26: "explore the implications"
@@ -2713,7 +2746,7 @@ def run_pipeline(
                 ),
             })
 
-        results = _relaxed_results(
+        relaxed = _relaxed_results(
             clusters, families,
             searchable_genes=searchable_genes,
             evidence_floor=evidence_floor,
@@ -2723,48 +2756,22 @@ def run_pipeline(
             on_relaxed_call=_record_relaxed,
             model_losers=model_losers,
         )
-        if results:
+        results, relaxed_withheld, relaxed_by_bar, relaxed_by_flank = _withhold(relaxed)
+        suppressed += relaxed_withheld
+        suppressed_by_bar += relaxed_by_bar
+        suppressed_by_flank += relaxed_by_flank
+        if relaxed:
             logger.info(
                 "strict pass found no locus; %d admitted by the relaxed pass "
                 "(>=2 distinct genes incl. a core gene), capped at medium",
-                len(results),
+                len(relaxed),
             )
 
-    # Curator's ruling (3), 2026-09-22: "yes require more than 1". A cluster
-    # must carry at least MIN_POLISHED_GENES polished gene models to be
-    # REPORTED. Applied here, after the relaxed pass, so the relaxed trigger
-    # ("only when the strict pass found nothing") still sees the unfiltered
-    # strict result and its behaviour is unchanged -- and so the bar applies
-    # to relaxed calls too, which is the point of having it.
-    #
-    # Nothing is destroyed: the per-candidate rows are already on disk in the
-    # evidence-diagnostics stream, a family whose only calls were withheld
-    # still gets a `not_detected` entry naming the reason, and the count is
-    # carried on the outcome.
-    suppressed = [
-        replace(r, withheld_reason=MODELLED_GENE_BAR)
-        for r in results if r.polished_genes < min_polished_genes
-    ]
-    results = [r for r in results if r.polished_genes >= min_polished_genes]
     if suppressed:
         logger.info(
-            "withheld %d locus/loci carrying fewer than %d modelled genes",
-            len(suppressed), min_polished_genes,
+            "withheld %d locus/loci (modelled-gene bar or flank-carried rule)",
+            len(suppressed),
         )
-    suppressed_by_bar = len(suppressed)
-    # Curator's ruling 2026-09-26: a call with no modelled core gene is kept
-    # at `low` only when its core hits sit inside the flank span; otherwise it
-    # is withheld like a bar failure. See `flank_carried`.
-    results, flank_withheld = apply_flank_carried_rule(
-        results, {f.key: f.flank_carried_window_bp for f in families},
-        {f.key: f.flank_carried_min_bitscore for f in families},
-    )
-    if flank_withheld:
-        logger.info(
-            "withheld %d flank-carried locus/loci whose core hits lie outside "
-            "the flank span", len(flank_withheld),
-        )
-    suppressed += flank_withheld
 
     # Curator's ruling 2026-09-27: a locus the assembly split across contigs.
     # For a family still unreported, one MODELLED core gene >= 95% near a
@@ -2922,7 +2929,7 @@ def run_pipeline(
         genetic_code_error=genetic_code_error,
         suppressed_unpolished=suppressed_by_bar,
         suppressed_loci=suppressed,
-        suppressed_flank_carried=len(flank_withheld),
+        suppressed_flank_carried=suppressed_by_flank,
         assembly_gaps_at_locus=assembly_gaps,
         zygosity=zygosity,
     )

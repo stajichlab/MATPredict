@@ -7,8 +7,16 @@ one profile HMM per idiomorph; the idiomorph whose HMM scores higher wins, and
 the margin between the two best scores is reported. A margin below the
 family's `min_margin` leaves the call `undetermined` with both scores reported
 (the 2026-09-21 ruling: report both rather than guess). The existing
-model-pair / bitscore decision stays the fallback where no protein was
-modelled or the family has no classifier.
+model-pair / bitscore decision stays the fallback where the family has no
+classifier.
+
+Where NO core protein was modelled, the classifier scores the tblastn HSP
+translations instead (curator's ruling 2026-09-27), keeping `min_margin`; the
+verdict says so (`classifier_input: hsp_fragment`). Before, an identity
+comparison of short hits decided those calls and mislabelled Umbelopsis sp.
+M5902 (sexP +75.3 on its fragment, labelled Minus) and Mucor hiemalis
+gzMucHiem1 (sexM -46.3, labelled Plus)
+(results/2026-09-27_umbelopsis_diagnosis/NOTE.md).
 
 Why a classifier and not more references: the 2026-09-26 experiment
 (results/2026-09-26_sexMP_hmm/NOTE.md) scored modelled proteins, and sexM vs
@@ -60,6 +68,10 @@ class ClassifierVerdict:
     manifest_sha256: str = ""
     method: str = "hmm"
     genes_scored: list[str] = field(default_factory=list)
+    #: "model" (polished models), "hsp_fragment" (tblastn HSP translations,
+    #: used only where no core protein was modelled), or "mixed" (a call
+    #: spanning clusters of both kinds).
+    classifier_input: str = "model"
 
     def as_report(self) -> dict:
         return {
@@ -67,6 +79,7 @@ class ClassifierVerdict:
             "idiomorph": self.idiomorph,
             "scores": {k: round(v, 1) for k, v in sorted(self.scores.items())},
             "margin": round(self.margin, 1),
+            "classifier_input": self.classifier_input,
             "min_margin": self.min_margin,
             "proteins_scored": self.proteins_scored,
             "genes_scored": sorted(self.genes_scored),
@@ -156,8 +169,8 @@ def score_proteins(clf: IdiomorphClassifier, proteins: list[str]) -> dict[str, f
     return best
 
 
-def classify(clf: IdiomorphClassifier, proteins: list[str], genes: list[str] | None = None
-             ) -> ClassifierVerdict | None:
+def classify(clf: IdiomorphClassifier, proteins: list[str], genes: list[str] | None = None,
+             classifier_input: str = "model") -> ClassifierVerdict | None:
     """The idiomorph `proteins` belong to, or None when there is nothing to
     score. Below `clf.min_margin` the verdict is `undetermined`."""
     proteins = [p for p in proteins if p]
@@ -170,7 +183,7 @@ def classify(clf: IdiomorphClassifier, proteins: list[str], genes: list[str] | N
     return ClassifierVerdict(
         scores=scores, margin=margin, idiomorph=idiomorph, min_margin=clf.min_margin,
         proteins_scored=len(proteins), manifest_sha256=clf.manifest_sha256,
-        genes_scored=list(genes or []),
+        genes_scored=list(genes or []), classifier_input=classifier_input,
     )
 
 
@@ -196,6 +209,8 @@ def combine_verdicts(verdicts: list[ClassifierVerdict]) -> ClassifierVerdict | N
         proteins_scored=sum(v.proteins_scored for v in verdicts),
         manifest_sha256=first.manifest_sha256,
         genes_scored=sorted({g for v in verdicts for g in v.genes_scored}),
+        classifier_input=(inputs.pop() if len(inputs := {v.classifier_input for v in verdicts}) == 1
+                          else "mixed"),
     )
 
 

@@ -73,6 +73,7 @@ as separate, honest, correctly-coordinated calls.
 from __future__ import annotations
 
 import dataclasses
+import types
 import json
 import logging
 import uuid
@@ -2202,10 +2203,30 @@ def run_pipeline(
                     )
                     if protein:
                         scored_models.append((gene, (model.contig, model.start, model.end), protein))
+            classifier_input = "model"
+            if not scored_models:
+                # No core protein was modelled: score the tblastn HSP
+                # translations instead (curator's ruling 2026-09-27), rather
+                # than letting an identity comparison of short hits decide.
+                # Superseded hits are scored too -- the verdict must see both
+                # halves of the pair. `min_margin` still applies.
+                for h in cluster.hits:
+                    if (h.family_key != family.key or h.gene_name not in gene_idiomorph
+                            or h.method != "tblastn_genome"):
+                        continue
+                    span = types.SimpleNamespace(
+                        contig=h.contig, start=h.start, end=h.end, strand=h.strand, exons=())
+                    protein = _translate_model(
+                        genome_fasta, span, genetic_code or 1, contig_seq_cache
+                    )
+                    if protein:
+                        scored_models.append((h.gene_name, (h.contig, h.start, h.end), protein))
+                classifier_input = "hsp_fragment"
             # The LOCUS verdict pools every scored protein (best score per
             # idiomorph) and names `idiomorph`.
             verdict = classify_idiomorph(
-                clf, [p for _, _, p in scored_models], [g for g, _, _ in scored_models]
+                clf, [p for _, _, p in scored_models], [g for g, _, _ in scored_models],
+                classifier_input=classifier_input,
             )
             if verdict is None:
                 continue
@@ -2229,7 +2250,8 @@ def run_pipeline(
                     groups.append([entry])
             flipped, events = {}, []
             for grp in groups:
-                pos = classify_idiomorph(clf, [p for _, _, p in grp], [g for g, _, _ in grp])
+                pos = classify_idiomorph(clf, [p for _, _, p in grp], [g for g, _, _ in grp],
+                                         classifier_input=classifier_input)
                 if pos is None or pos.idiomorph == CLASSIFIER_UNDETERMINED:
                     continue
                 winner = next(g for g, i in gene_idiomorph.items() if i == pos.idiomorph)

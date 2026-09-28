@@ -88,7 +88,7 @@ def _setup(tmp_path, *, min_margin=10.0, classifier=True, write_hmms=True):
     return 1000, 999 + len(cds) - 3
 
 
-def _run(tmp_path, stray=False, **kw):
+def _run(tmp_path, stray=False, core_models=True, **kw):
     start, end = _setup(tmp_path, **kw)
     spans = {"sexP": (start, end), "sexM": (start, end), "tptA": (3000, 4000),
              "rnhA": (5000, 6000)}
@@ -109,6 +109,8 @@ def _run(tmp_path, stray=False, **kw):
         return hits
 
     def model(gene_name, method):
+        if not core_models and roles[gene_name] == "core_MAT":
+            return None  # no core protein models (the fragment path)
         m = _model(gene_name, "c1", *spans[gene_name], identity=35.0, family_key=KEY,
                    role=roles[gene_name], method=method)
         # The model scores say sexM; the protein the locus encodes is sexP.
@@ -160,6 +162,38 @@ def test_a_roster_that_names_a_missing_hmm_is_an_error(tmp_path):
     from MATPredict.detect.classifier import ClassifierError
     with pytest.raises(ClassifierError):
         _run(tmp_path, write_hmms=False)
+
+
+def test_a_model_based_verdict_says_so(tmp_path):
+    (r,) = _run(tmp_path).results
+    assert r.idiomorph_classifier["classifier_input"] == "model"
+
+
+def test_with_no_core_model_the_classifier_scores_the_hsp_fragment(tmp_path):
+    """Curator's ruling 2026-09-27: when no core protein is modelled, the
+    classifier scores the tblastn HSP translation instead of the identity
+    comparison deciding (which called the sexP locus Minus: sexM 36.1% vs
+    sexP 34.0%). Measured cases: Umbelopsis sp. M5902 (sexP +75.3 on its
+    fragment, labelled Minus) and Mucor hiemalis gzMucHiem1 (sexM -46.3,
+    labelled Plus)."""
+    (r,) = _run(tmp_path, core_models=False).results
+    assert r.idiomorph == "Plus"
+    c = r.idiomorph_classifier
+    assert c["classifier_input"] == "hsp_fragment"
+    assert c["idiomorph"] == "Plus"
+    assert c["scores"]["Plus"] > c["scores"]["Minus"] + 10
+
+
+def test_a_fragment_verdict_keeps_the_min_margin(tmp_path):
+    (r,) = _run(tmp_path, core_models=False, min_margin=1e6).results
+    assert r.idiomorph == "undetermined"
+    assert r.idiomorph_classifier["classifier_input"] == "hsp_fragment"
+
+
+def test_without_a_classifier_no_core_model_falls_back_to_identity(tmp_path):
+    (r,) = _run(tmp_path, core_models=False, classifier=False).results
+    assert r.idiomorph_classifier is None
+    assert r.idiomorph == "Minus"   # the identity comparison, unchanged
 
 
 def test_the_report_carries_the_classifier_verdict(tmp_path):

@@ -84,6 +84,7 @@ from typing import Callable
 from MATPredict.detect.assembly_gap import AssemblyGapAtLocus, find_gaps_at_locus
 from MATPredict.detect.caax import CAAX_METHOD, STATUS_CAAX_ORF, caax_precursor_hits, scan_config
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
+from MATPredict.detect.split_locus import evaluate_split_locus
 from MATPredict.detect.flank_carried import (
     WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
 )
@@ -333,6 +334,12 @@ class DetectionResult:
     """Why a withheld locus (`DetectionOutcome.suppressed_loci`) was withheld:
     `MODELLED_GENE_BAR` or `flank_carried.WITHHELD_FLANK_CARRIED`. None on a
     reported call."""
+    split_locus: dict | None = None
+    """Set when the call was made by the split-locus rule (`split_locus`;
+    curator's ruling 2026-09-27): one modelled core gene >= 95% near a contig
+    end, the family's flanks on other contigs. Carries the core gene, its
+    contig and edge distance, the flanks and all contigs involved. Such a call
+    is `partial_locus` at `low`. None otherwise."""
 
 
 @dataclass(frozen=True)
@@ -1652,6 +1659,53 @@ def _segments_for(
     return segments
 
 
+def _split_locus_calls(results, clusters, families, build, *, searchable_genes,
+                       contig_lengths) -> list[DetectionResult]:
+    """The split-locus calls for families with no reported call (`split_locus`).
+
+    For each such family, every cluster holding one of its core hits is built
+    exactly as a normal call would be (`build` is `_build`, so the idiomorph
+    comes from the classifier on the modelled core protein) and tested; the
+    candidate with the strongest core gene wins. Nothing already reported is
+    changed, and a flank inside any reported locus does not count."""
+    reported_keys = {r.family_key for r in results}
+    reported_spans = [
+        (seg.contig, seg.start, seg.end)
+        for r in results for seg in (r.segments or [LocusSegment(r.contig, r.start, r.end)])
+    ]
+    calls = []
+    for family in families:
+        if family.key in reported_keys or not family.split_locus.enabled:
+            continue
+        genome_hits = [h for c in clusters for h in _own_live_hits(c, family.key)]
+        if not any(h.role == "core_MAT" for h in genome_hits):
+            continue
+        roles = {g["name"]: g["role"] for g in family.genes}
+        best = None
+        for cluster in clusters:
+            if not any(h.role == "core_MAT" for h in _own_live_hits(cluster, family.key)):
+                continue
+            scores = score_cluster(cluster, families, searchable_genes=searchable_genes)
+            score = next((s for s in scores if s.family_key == family.key), None)
+            if score is None:
+                continue
+            candidate = build(score, [cluster], scores, False)
+            info = evaluate_split_locus(
+                candidate, genome_hits, family_roles=roles,
+                contig_lengths=contig_lengths, reported_spans=reported_spans,
+                params=family.split_locus,
+            )
+            if info is not None and (best is None or info["core_identity"] > best[1]["core_identity"]):
+                best = (candidate, info)
+        if best is not None:
+            candidate, info = best
+            calls.append(replace(
+                candidate, confidence="low", locus_class=LOCUS_CLASS_PARTIAL,
+                split_locus=info, withheld_reason=None,
+            ))
+    return calls
+
+
 def run_pipeline(
     genome_fasta: Path,
     proteome_fasta: Path | None,
@@ -2680,6 +2734,27 @@ def run_pipeline(
             "the flank span", len(flank_withheld),
         )
     suppressed += flank_withheld
+
+    # Curator's ruling 2026-09-27: a locus the assembly split across contigs.
+    # For a family still unreported, one MODELLED core gene >= 95% near a
+    # contig end, with the family's flanks on other contigs, is reported as
+    # `partial_locus` at `low` instead of being withheld. See `split_locus`.
+    split_calls = _split_locus_calls(
+        results, clusters, families, _build,
+        searchable_genes=searchable_genes, contig_lengths=contig_lengths,
+    )
+    if split_calls:
+        logger.info("reported %d split locus/loci (core gene alone at a contig end)",
+                    len(split_calls))
+        results = results + split_calls
+        suppressed = [
+            s for s in suppressed
+            if not any(
+                s.family_key == c.family_key and s.contig == c.split_locus["core_contig"]
+                and s.start <= c.split_locus["core_end"] and s.end >= c.split_locus["core_start"]
+                for c in split_calls
+            )
+        ]
 
     reported = {r.family_key for r in results}
     #: family -> the best withheld call for it, so `not_detected` can say that

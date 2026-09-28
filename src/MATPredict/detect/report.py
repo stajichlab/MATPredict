@@ -348,6 +348,7 @@ def _result_doc(r: DetectionResult) -> dict:
         # ruling 2026-09-27). Written only when non-empty.
         **({"confidence_ignored_genes": list(r.confidence_ignored_genes)}
            if getattr(r, "confidence_ignored_genes", None) else {}),
+        **({"split_locus": r.split_locus} if getattr(r, "split_locus", None) else {}),
         "idiomorph_resolutions": [
             {
                 "contig": res.contig,

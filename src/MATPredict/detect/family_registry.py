@@ -10,6 +10,7 @@ import yaml
 
 from MATPredict import logger
 from MATPredict.db.taxonomy import default_lineage_phylum_name, default_lineage_taxids
+from MATPredict.detect.split_locus import DEFAULT_SPLIT_LOCUS, SplitLocusParams, split_locus_params
 
 
 DEFAULT_MAX_CLUSTER_GAP_BP = 25_000
@@ -179,6 +180,10 @@ class Family:
     for the call to be kept (`flank_carried`). Absent means the 39 bits of
     the 2026-09-27 ruling; no curated family overrides it.
     """
+    split_locus: SplitLocusParams = DEFAULT_SPLIT_LOCUS
+    """The split-locus rule's parameters (`split_locus`; curator's ruling
+    2026-09-27). General to every family unless the roster's `split_locus:`
+    overrides it (`false` turns it off)."""
     model_idiomorph_alternatives: bool = False
     """Polish BOTH genes of an overlapping mutually exclusive pair, and decide
     the pair on the two models (`idiomorph.resolve_idiomorph_by_models`).
@@ -366,6 +371,7 @@ def load_all_families(db_root: Path) -> list[Family]:
                     model_idiomorph_alternatives=locus.get(
                         "model_idiomorph_alternatives", False,
                     ),
+                    split_locus=split_locus_params(locus),
                     idiomorph_classifier=_resolve_classifier(
                         locus.get("idiomorph_classifier"), order_file.parent,
                     ),

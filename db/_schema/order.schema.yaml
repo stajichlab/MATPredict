@@ -48,6 +48,21 @@ properties:
         flank_carried_min_bitscore:
           type: number
           minimum: 0
+        # OPTIONAL. Split-locus rule (detect.split_locus; curator's ruling
+        # 2026-09-27): `false` turns it off; a mapping overrides any of
+        # min_core_identity (95), max_edge_bp (500), min_flank_genes (2),
+        # flank_identity_gap (10). ABSENT MEANS the defaults (rule on).
+        split_locus:
+          oneOf:
+            - {type: boolean}
+            - type: object
+              additionalProperties: false
+              properties:
+                enabled: {type: boolean}
+                min_core_identity: {type: number, minimum: 0, maximum: 100}
+                max_edge_bp: {type: integer, minimum: 0}
+                min_flank_genes: {type: integer, minimum: 1}
+                flank_identity_gap: {type: number, minimum: 0}
         # OPTIONAL. Locus-level override of the phylum's homothallic_screen.
         homothallic_screen: {type: boolean}
         # OPTIONAL. Polish both genes of an overlapping mutually exclusive

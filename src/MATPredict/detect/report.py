@@ -451,6 +451,7 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
                 "polished_genes": r.polished_genes,
                 "genes_found": list(r.genes_found),
                 "withheld_reason": r.withheld_reason,
+                **(r.withheld_detail or {}),
             }
             for r in outcome.suppressed_loci
         ],

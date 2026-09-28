@@ -351,6 +351,9 @@ class DetectionResult:
     idiomorph, confidence, span and genes (`locus_merge`; curator's ruling
     2026-09-27, the Schizophyllum B locus reported by PR, Balpha and Bbeta).
     Empty for an unmerged call."""
+    withheld_detail: dict | None = None
+    """For a withheld locus, the numbers behind the reason; set for
+    `BELOW_FRACTION_FLOOR` (`fraction_found`, `floor`, `best_identity`)."""
     caax_dependent: bool = False
     """True when the call reaches the admission bar (>= 2 distinct genes, or
     the modelled-gene bar) only by counting a strict-CAAX scan precursor
@@ -632,6 +635,14 @@ MIN_POLISHED_GENES = 2
 
 #: `DetectionResult.withheld_reason` for a locus withheld by the bar above.
 MODELLED_GENE_BAR = "modelled_gene_bar"
+
+#: `DetectionResult.withheld_reason` for an admitted cluster with at least one
+#: modelled gene that fell below the fraction floor (`ambiguity_floor`). Review
+#: finding F2 (2026-09-28, results/2026-09-28_fable_review/): the curated
+#: Syncephalastrum racemosum NRRL 2496 record's own locus (sexP + rnhA, 100%)
+#: scored 2/5 = 0.4 and was dropped by a bare `continue`, invisible in the
+#: report. Listed in `suppressed_loci` only; it never changes `not_detected`.
+BELOW_FRACTION_FLOOR = "below_fraction_floor"
 
 #: Polish at most this many admitted clusters per family per genome. Curator's
 #: ruling 2026-09-26, after a real run over 561 genomes (docs/notes/2026-09-26_
@@ -2651,6 +2662,9 @@ def run_pipeline(
     # must still go through normal per-cluster reporting rather than being
     # dropped just because it shares a family_key with the fragmented call.
     fragmented_reported_cluster_ids: dict[FamilyKey, set[int]] = {}
+    #: (score, cluster, scores) for admitted clusters with a modelled gene that
+    #: fell below the fraction floor -- reported as `BELOW_FRACTION_FLOOR`.
+    below_floor: list[tuple] = []
 
     for family_key, member_clusters in fragmented_segments.items():
         merged = GeneCluster(
@@ -2679,6 +2693,8 @@ def run_pipeline(
             if previous is None or score.fraction_found > previous.fraction_found:
                 best_attempt[score.family_key] = score
             if score.fraction_found < ambiguity_floor and not ambiguous:
+                if _modelled_gene_names([cluster], score.family_key, polish_by, model_losers):
+                    below_floor.append((score, cluster, scores))
                 continue
             results.append(_build(score, [cluster], scores, fragmented=False))
 
@@ -2793,6 +2809,31 @@ def run_pipeline(
                 for c in split_calls
             )
         ]
+
+    floor_withheld = []
+    for score, cluster, scores in below_floor:
+        if any(r.family_key == score.family_key and r.contig == cluster.contig
+               and r.start <= cluster.end and r.end >= cluster.start for r in results):
+            continue  # reported after all, e.g. by the relaxed pass
+        built = _build(score, [cluster], scores, fragmented=False)
+        best_identity = max((h.identity for h in cluster.hits
+                             if h.family_key == score.family_key and h.identity is not None),
+                            default=None)
+        floor_withheld.append(replace(
+            built, withheld_reason=BELOW_FRACTION_FLOOR,
+            withheld_detail={"fraction_found": round(score.fraction_found, 3),
+                             "floor": ambiguity_floor, "best_identity": best_identity},
+        ))
+        if evidence_diagnostics_path is not None:
+            family = families_by_key[score.family_key]
+            _append_diagnostics_row(evidence_diagnostics_path, {
+                "kind": BELOW_FRACTION_FLOOR, "run_id": run_id, "genome_id": genome_id,
+                "family": f"{family.key.phylum}:{family.key.locus_name}",
+                "contig": cluster.contig, "start": cluster.start, "end": cluster.end,
+                "fraction_found": score.fraction_found, "floor": ambiguity_floor,
+                "genes_found": list(score.genes_found), "polished_genes": built.polished_genes,
+                "best_identity": best_identity,
+            })
 
     reported = {r.family_key for r in results}
     #: family -> the best withheld call for it, so `not_detected` can say that
@@ -2928,7 +2969,7 @@ def run_pipeline(
         genetic_code=genetic_code,
         genetic_code_error=genetic_code_error,
         suppressed_unpolished=suppressed_by_bar,
-        suppressed_loci=suppressed,
+        suppressed_loci=suppressed + floor_withheld,
         suppressed_flank_carried=suppressed_by_flank,
         assembly_gaps_at_locus=assembly_gaps,
         zygosity=zygosity,

@@ -58,7 +58,44 @@ def _compatible(a, b) -> bool:
             or a.idiomorph == b.idiomorph)
 
 
-def _components(members: list[int], results: list, min_overlap: float) -> list[list[int]]:
+def _separate(groups: dict, key) -> bool:
+    g = groups.get(key) or ()
+    return len(g) > 2 and bool(g[2]) and not g[1]
+
+
+def _shared(a, b) -> int:
+    return max(0, min(a.end, b.end) - max(a.start, b.start) + 1)
+
+
+def _split_separate(comp: list[int], results: list, groups: dict) -> list[list[int]]:
+    """Split a component holding two or more `merge_separately` families.
+
+    Curator's ruling 2026-09-28, PROVISIONAL pending the subloci literature
+    review (results/2026-09-28_subloci_literature/): Aalpha and Abeta never
+    merge with each other, even through one HD call that overlaps both. Each
+    separate family's calls form their own sub-component; every other call
+    (the generic HD call) joins the sub-component it overlaps most.
+    """
+    sep_fams = []
+    for i in comp:
+        k = results[i].family_key
+        if _separate(groups, k) and k not in sep_fams:
+            sep_fams.append(k)
+    if len(sep_fams) < 2:
+        return [comp]
+    subs = {k: [i for i in comp if results[i].family_key == k] for k in sep_fams}
+    for i in comp:
+        k = results[i].family_key
+        if k in subs:
+            continue
+        best = max(sep_fams, key=lambda f: max(_shared(results[i], results[j]) for j in subs[f]))
+        subs[best].append(i)
+    return [sorted(v) for v in subs.values()]
+
+
+def _components(members: list[int], results: list, min_overlap: float,
+                groups: dict | None = None) -> list[list[int]]:
+    groups = groups or {}
     parent = {i: i for i in members}
 
     def find(i):
@@ -69,12 +106,18 @@ def _components(members: list[int], results: list, min_overlap: float) -> list[l
 
     for x, i in enumerate(members):
         for j in members[x + 1:]:
+            if (_separate(groups, results[i].family_key) and _separate(groups, results[j].family_key)
+                    and results[i].family_key != results[j].family_key):
+                continue  # two merge_separately sub-loci never merge directly
             if _overlaps(results[i], results[j], min_overlap) and _compatible(results[i], results[j]):
                 parent[find(i)] = find(j)
-    groups: dict[int, list[int]] = {}
+    comps: dict[int, list[int]] = {}
     for i in members:
-        groups.setdefault(find(i), []).append(i)
-    return [sorted(g) for g in groups.values()]
+        comps.setdefault(find(i), []).append(i)
+    out = []
+    for c in comps.values():
+        out.extend(_split_separate(sorted(c), results, groups))
+    return out
 
 
 def _merge(calls: list, groups: dict) -> object:
@@ -154,8 +197,9 @@ def _merge(calls: list, groups: dict) -> object:
 def merge_overlapping(results: list, groups: dict, min_overlap: float = MIN_SPAN_OVERLAP) -> list:
     """`results` with same-locus calls of one merge group collapsed.
 
-    `groups` maps a FamilyKey to `(merge_group, merge_generic)`; families
-    missing from it never merge. The first-reported position of each merged
+    `groups` maps a FamilyKey to `(merge_group, merge_generic)` or
+    `(merge_group, merge_generic, merge_separately)`; families missing from it
+    never merge. Two `merge_separately` families never merge with each other. The first-reported position of each merged
     locus is kept, so unmerged calls keep their order.
     """
     by_bucket: dict[tuple, list[int]] = {}
@@ -169,7 +213,7 @@ def merge_overlapping(results: list, groups: dict, min_overlap: float = MIN_SPAN
     for members in by_bucket.values():
         if len(members) < 2:
             continue
-        for comp in _components(members, results, min_overlap):
+        for comp in _components(members, results, min_overlap, groups):
             calls = [results[i] for i in comp]
             if len(comp) < 2 or len({c.family_key for c in calls}) < 2:
                 continue

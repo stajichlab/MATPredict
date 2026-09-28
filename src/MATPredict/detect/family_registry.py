@@ -221,6 +221,11 @@ class Family:
     """A broad catch-all family for its merge group (e.g. Basidiomycota:PR,
     Basidiomycota:HD): on a merge, a specific family's call is kept as the
     primary and this family's evidence is folded into it."""
+    merge_separately: bool = False
+    """Two `merge_separately` families of one merge group never merge with
+    each other; each merges only with the group's generic call. Curator's
+    ruling 2026-09-28, PROVISIONAL (Aalpha/Abeta), pending the subloci
+    literature review."""
 
     min_idiomorph_margin: float = DEFAULT_MIN_IDIOMORPH_MARGIN
     """Identity points two mutually exclusive idiomorph genes must be apart.
@@ -389,6 +394,7 @@ def load_all_families(db_root: Path) -> list[Family]:
                     ),
                     merge_group=locus.get("merge_group"),
                     merge_generic=bool(locus.get("merge_generic", False)),
+                    merge_separately=bool(locus.get("merge_separately", False)),
                 )
             )
     return families

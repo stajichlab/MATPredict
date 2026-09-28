@@ -2939,7 +2939,7 @@ def run_pipeline(
         results, taxid, load_caax_unverified_rules(db_root), zygosity_lineage_resolver,
     )
     results = merge_overlapping(
-        results, {f.key: (f.merge_group, f.merge_generic) for f in families},
+        results, {f.key: (f.merge_group, f.merge_generic, f.merge_separately) for f in families},
     )
 
     # Curator's ruling 2026-09-26: a call made by searching a family outside

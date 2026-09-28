@@ -22,8 +22,8 @@ fast_paths: --gate-only recomputes mat_gene_gate for these HMMs; --paralogs-only
 genes:
   sexP:
     idiomorph: Plus
-    n_sequences: 76
-    n_unique: 75
+    n_sequences: 77
+    n_unique: 76
     pairwise_identity_min_median_max:
     - 15.2
     - 29.8
@@ -59,12 +59,12 @@ genes:
     - Umbelopsis
     sha256: 98f042b0dfb1026961e484e9c8403c883c837425c6f17092f2fab5daeaa83bab
     sources:
-      curated_record: 6
+      curated_record: 7
       training_extra: 70
   sexM:
     idiomorph: Minus
-    n_sequences: 9
-    n_unique: 9
+    n_sequences: 10
+    n_unique: 10
     pairwise_identity_min_median_max:
     - 19.0
     - 28.8
@@ -80,7 +80,7 @@ genes:
     - Syzygites
     sha256: a8d0827177fed60ff36a1ee12bfe494d349cb186fe6bfaf37e0ff7b658047cb4
     sources:
-      curated_record: 9
+      curated_record: 10
       training_extra: 0
 training:
 - id: REF|101119_atcc11807_MAT_Minus|gene0|sexM
@@ -142,6 +142,14 @@ training:
 - id: REF|86630_cbs357-93_MAT_Minus|gene0|sexM
   gene: sexM
   genus: Rhizopus
+  source: curated_record
+- id: REF|41833_gzumbrama1_MAT_Plus|gene1|sexP
+  gene: sexP
+  genus: Umbelopsis
+  source: curated_record
+- id: REF|44442_wa0000051536_MAT_Minus|gene1|sexM
+  gene: sexM
+  genus: Umbelopsis
   source: curated_record
 - id: GCA_000401635.1_Muco_sp_1006Ph_V1:c0:m0|sexP|genus=Mucor
   gene: sexP
@@ -424,8 +432,8 @@ training:
   genus: Mycotypha
   source: training_extra
 leave_one_genus_out:
-  n_tested: 85
-  n_correct: 85
+  n_tested: 87
+  n_correct: 87
   n_untestable: 0
   worst_correct_margin: 21.8
   margins:

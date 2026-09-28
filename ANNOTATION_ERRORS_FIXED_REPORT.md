@@ -56,6 +56,7 @@ curated or corrected. Newest entries at the end of each section.
 | B1.6 | *Mycosarcoma (Ustilago) maydis* RefSeq `NC_026482.1` | mfa1 (41 aa pheromone precursor) | Absent from the modern annotation; present in the 1995 locus deposit U37795. A curation fork had relabelled Rba1 as "mfa". | M (annotation-gap lesson) | WORKED AROUND (curated from U37795) |
 | B1.7 | *Umbelopsis vinacea* gzUmbVina2, `GCA_977110975.1` | sexM (Minus) | Not annotated. The HMG-box exon lies ~1.5 kb upstream of tptA (CAO3674301.1) on CDSBDG010000016.1 (tblastn of curated sexM, ~218,6xx-218,9xx, minus strand). miniprot of the U. vinacea WA0000051536 sexM model maps here only with frameshifts (identity 68%, Frameshift=true), so the long-read assembly may carry indel errors in this gene. | V `results/2026-09-27_umbelopsis_curation/` | WORKED AROUND: Minus record built on WA0000051536 instead (`44442_wa0000051536_MAT_Minus`) |
 | B1.8 | *U. vinacea* WA0000051536, `GCA_016758895.1` | sexM (Minus) | Not annotated: single-exon ORF JAEPRA010000016.1:154,336-154,788 (minus), 150 aa, PF00505 at aa 33-94. The neighbouring annotated `KAG2174494.1` (131 aa, 'partial') is a separate conserved gene (89% to CAO3688882.1 beside sexP in the Plus genome), not a sexM fragment. | V | WORKED AROUND: ORF curated without a protein accession in `44442_wa0000051536_MAT_Minus` |
+| B1.9 | *Syncephalastrum racemosum* NRRL 2496, JGI `GCA_002105135.1` (Synrac1) | sexP (Plus) | Not annotated: single-exon ORF MCGN01000004.1:1,755,515-1,756,447 (+), 310 aa, PF00505 at aa 112-175 (E 1.2e-16), 69 bp upstream of the annotated rnhA `ORY97819.1`. 100% identical (228 aa) to the HMG gene MATPredict called Plus in S. racemosum B6101. A proteome-only search (no HMG protein beside rnhA) misses it. | V `results/2026-09-27_mucoro_curation_guard/` | WORKED AROUND: ORF curated without a protein accession in `13706_nrrl-2496_MAT_Plus` |
 
 ### B2. Gene models that are truncated or split
 
@@ -134,3 +135,4 @@ Recorded so a detector rule or a curator does not "fix" them.
 * **2026-09-26** B4.1-B4.2 added (C. albicans assemblies collapsing heterozygous MTL; read-depth test).
 * **2026-09-26** D9-D10 added from the Serinales-wide scan on the flank roster (`882aa01`).
 * **2026-09-27** B1.7, B1.8 added (Umbelopsis sexM unannotated in gzUmbVina2 and WA0000051536); branch `curation-umbelopsis`.
+* **2026-09-27** B1.9 added (Syncephalastrum racemosum sexP unannotated in the JGI NRRL 2496 assembly); branch `curation-umbelopsis`.

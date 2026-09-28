@@ -22,8 +22,8 @@ fast_paths: --gate-only recomputes mat_gene_gate for these HMMs; --paralogs-only
 genes:
   sexP:
     idiomorph: Plus
-    n_sequences: 77
-    n_unique: 76
+    n_sequences: 78
+    n_unique: 77
     pairwise_identity_min_median_max:
     - 15.2
     - 29.8
@@ -59,7 +59,7 @@ genes:
     - Umbelopsis
     sha256: 98f042b0dfb1026961e484e9c8403c883c837425c6f17092f2fab5daeaa83bab
     sources:
-      curated_record: 7
+      curated_record: 8
       training_extra: 70
   sexM:
     idiomorph: Minus
@@ -90,6 +90,10 @@ training:
 - id: REF|101119_atcc11807_MAT_Plus|gene0|sexP
   gene: sexP
   genus: Syzygites
+  source: curated_record
+- id: REF|13706_nrrl-2496_MAT_Plus|gene0|sexP
+  gene: sexP
+  genus: Syncephalastrum
   source: curated_record
 - id: REF|29922_cbs109-16_MAT_Minus|gene1|sexM
   gene: sexM
@@ -432,8 +436,8 @@ training:
   genus: Mycotypha
   source: training_extra
 leave_one_genus_out:
-  n_tested: 87
-  n_correct: 87
+  n_tested: 88
+  n_correct: 88
   n_untestable: 0
   worst_correct_margin: 21.8
   margins:
@@ -1088,9 +1092,9 @@ leave_one_genus_out:
   - id: GCA_016758905.1_ASM1675890v1:c1:t0|sexP|genus=Umbelopsis
     genus: Umbelopsis
     truth: Plus
-    own_score: 45.9
+    own_score: 46.6
     other_score: 18.4
-    margin: 27.4
+    margin: 28.2
     correct: true
     untestable_gene: false
   - id: GCA_021235465.1_Umbelo1:c0:t0|sexP|genus=Umbelopsis

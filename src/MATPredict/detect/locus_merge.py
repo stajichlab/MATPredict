@@ -20,8 +20,10 @@ The merged call is the most specific member (non-generic first, then higher
 confidence, then more genes): its family, and its idiomorph unless that is
 `undetermined` and another member has a label. Its span, gene evidence,
 genes found, reference records and segments are the union of the members';
-its confidence is the best member confidence; `merged_from` records every
-member's family, idiomorph, confidence and span.
+its confidence is the best member confidence when all members carry the same
+idiomorph, else the primary's; it is unverified if any member is (review
+finding F7, 2026-09-28); `merged_from` records every member's family,
+idiomorph, confidence and span.
 """
 from __future__ import annotations
 
@@ -104,11 +106,35 @@ def _merge(calls: list, groups: dict) -> object:
         return out
 
     found = union("genes_found")
+    # Review finding F7 (2026-09-28, results/2026-09-28_fable_review/): the
+    # merged call is as cautious as its most cautious member. Verification:
+    # unverified if ANY member is, reasons combined. Confidence: the best
+    # member's only when every member carries the SAME idiomorph label (all
+    # undetermined counts as the same); otherwise -- labels merely compatible,
+    # one undetermined -- the primary's own confidence stands.
+    if len({r.idiomorph for r in calls}) == 1:
+        confidence = max((r.confidence for r in calls), key=lambda c: _CONF_RANK.get(c, -1))
+    else:
+        confidence = primary.confidence
+    unverified = [r.verification for r in [primary] + [c for c in calls if c is not primary]
+                  if r.verification and r.verification.get("status") == "unverified"]
+    if not unverified:
+        verification = primary.verification
+    elif len(unverified) == 1:
+        verification = unverified[0]
+    else:
+        reasons = []
+        for v in unverified:
+            if v.get("reason") and v["reason"] not in reasons:
+                reasons.append(v["reason"])
+        verification = {"status": "unverified", "reason": "; ".join(reasons),
+                        "merged_from": unverified}
     return replace(
         primary,
         start=min(r.start for r in calls),
         end=max(r.end for r in calls),
-        confidence=max((r.confidence for r in calls), key=lambda c: _CONF_RANK.get(c, -1)),
+        confidence=confidence,
+        verification=verification,
         idiomorph=idiomorph,
         gene_evidence=evidence,
         genes_found=found,

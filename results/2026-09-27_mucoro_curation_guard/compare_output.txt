@@ -1,0 +1,756 @@
+per group:
+  Umbelopsidaceae    calls 12 -> 15; genomes gained 2, lost 0; guard-withheld 6
+  Lichtheimiaceae    calls 3 -> 2; genomes gained 0, lost 1; guard-withheld 0
+  Syncephalastraceae calls 4 -> 4; genomes gained 0, lost 0; guard-withheld 0
+  other              calls 242 -> 241; genomes gained 0, lost 1; guard-withheld 11
+genomes with any call: 247 -> 247
+
+guard-withheld calls:
+   GCA_000534915.1_ASM53491v1 Umbelopsis isabellina BAVE01000005.1 717604
+   GCA_000696975.1_ApoTraB9324-1.0 Apophysomyces trapeziformis JNDP01001383.1 140493
+   GCA_000697075.1_RhiOry13440-1.0 Rhizopus arrhizus JNDU01004688.1 7422
+   GCA_000697115.1_RhiOry21396-1.0 Rhizopus arrhizus JNDW01003512.1 33965
+   GCA_000697725.1_RhiOry99-892-1.0 Rhizopus arrhizus KK998616.1 121441
+   GCA_002749535.1_ASM274953v1 Apophysomyces variabilis MZZL01000384.1 34749
+   GCA_016097715.1_ASM1609771v1 Apophysomyces sp. BC1015 JAAZWU010000046.1 60519
+   GCA_016097735.1_ASM1609773v1 Apophysomyces sp. BC1021 JAAZWV010000019.1 14843
+   GCA_016097755.1_ASM1609775v1 Apophysomyces sp. BC1034 JAAZWW010000088.1 45709
+   GCA_016758895.1_ASM1675889v1 Umbelopsis vinacea JAEPRA010000012.1 484362
+   GCA_024220505.1_ASM2422050v1 Rhizopus arrhizus JAKZZE010000002.1 159451
+   GCA_025766325.1_Benpoi1 Benjaminiella poitrasii JAMKHW010000002.1 4143530
+   GCA_053572175.1_ASM5357217v1 Umbelopsis sp. WA50703 JAYKKX010000001.1 1215291
+   GCA_054906655.1_Umbelopsis_nana_v._1.0 Umbelopsis nana BAAHSD010000012.1 493842
+   GCA_060309335.1_CBS210.80v1 Mucor ardhlaengiktus JBLNHJ010000029.1 208257
+   GCA_964291815.1_UMBE_WA70503 Umbelopsis sp. WA50703 CAXYTU010000001.1 519163
+   GCA_977110975.1_gzUmbVina2 Umbelopsis vinacea CDSBDG010000004.1 554754
+
+changed genomes:
+other              Rhizopus microsporus CCTCC M201021 GCA_000325505.1_RHIrdgD1.0
+   old: [('ANKS01000730.1', 11886, 'Minus', 'high', 'mat_locus', 141.1)]
+   new: [('ANKS01000730.1', 11886, 'Minus', 'high', 'mat_locus', 139.0)]
+other              Mucor circinelloides 1006PhL GCA_000401635.1_Muco_sp_1006Ph_V1
+   old: [('KE123975.1', 61475, 'Plus', 'high', 'mat_locus', 328.1)]
+   new: [('KE123975.1', 61475, 'Plus', 'high', 'mat_locus', 337.7)]
+Umbelopsidaceae    Umbelopsis isabellina NBRC 7884 GCA_000534915.1_ASM53491v1
+   old: [('BAVE01000001.1', 119579, 'Plus', 'high', 'mat_locus', 48.0)]
+   new: [('BAVE01000001.1', 119366, 'Plus', 'high', 'mat_locus', 77.0)]
+other              Mucor irregularis B50 GCA_000587855.1_B50
+   old: [('KK076501.1', 473260, 'Minus', 'high', 'mat_locus', 30.1)]
+   new: [('KK076501.1', 473260, 'Minus', 'high', 'mat_locus', 38.6)]
+other              Mucor velutinosus B5328 GCA_000696895.1_MucVelB5328-1.0
+   old: [('JNDK01002395.1', 31770, 'Minus', 'high', 'mat_locus', 109.4)]
+   new: [('JNDK01002395.1', 31770, 'Minus', 'high', 'mat_locus', 105.7)]
+other              Rhizopus arrhizus B7407 GCA_000696915.1_RhiOryB7407-1.0
+   old: [('JNDL01002582.1', 2948, 'Minus', 'high', 'mat_locus', 161.2)]
+   new: [('JNDL01002582.1', 2948, 'Minus', 'high', 'mat_locus', 170.6)]
+other              Mucor circinelloides B8987 GCA_000696935.1_MucCirB8987-1.0
+   old: [('JNDM01001507.1', 2449, 'Plus', 'high', 'mat_locus', 327.1)]
+   new: [('JNDM01001507.1', 2449, 'Plus', 'high', 'mat_locus', 335.6)]
+Syncephalastraceae Syncephalastrum racemosum B6101 GCA_000696955.1_SynRacB6101-1.0
+   old: [('JNDN01000979.1', 785701, 'Plus', 'medium', 'mat_locus', 125.4)]
+   new: [('JNDN01000979.1', 785081, 'Plus', 'medium', 'mat_locus', 173.1)]
+other              Apophysomyces trapeziformis B9324 GCA_000696975.1_ApoTraB9324-1.0
+   old: [('JNDP01001082.1', 17134, 'Plus', 'high', 'mat_locus', 153.2)]
+   new: [('JNDP01001082.1', 17134, 'Plus', 'high', 'mat_locus', 154.0)]
+other              Apophysomyces elegans B7760 GCA_000696995.1_ApoEleB7760-1.0
+   old: [('JNDQ01001420.1', 63681, 'Minus', 'high', 'mat_locus', 87.4)]
+   new: [('JNDQ01001420.1', 63681, 'Minus', 'high', 'mat_locus', 81.8)]
+other              Cunninghamella elegans B9769 GCA_000697015.1_CunEleB9769-1.0
+   old: [('JNDR01001106.1', 117437, 'Minus', 'high', 'mat_locus', 62.6)]
+   new: [('JNDR01001106.1', 117437, 'Minus', 'high', 'mat_locus', 62.2)]
+other              Rhizopus stolonifer B9770 GCA_000697035.1_RhiStoB9770-1.0
+   old: [('JNDS01005206.1', 259, 'Plus', 'high', 'mat_locus', 275.0)]
+   new: [('JNDS01005206.1', 259, 'Plus', 'high', 'mat_locus', 278.4)]
+other              Saksenaea vasiformis B4078 GCA_000697055.1_SakVasB4078-1.0
+   old: [('JNDT01002012.1', 18024, 'Minus', 'high', 'mat_locus', 63.7)]
+   new: [('JNDT01002012.1', 18024, 'Minus', 'high', 'mat_locus', 60.4)]
+other              Rhizopus arrhizus Type I NRRL 13440 GCA_000697075.1_RhiOry13440-1.0
+   old: [('JNDU01002577.1', 2509, 'Minus', 'high', 'mat_locus', 164.0)]
+   new: [('JNDU01002577.1', 2509, 'Minus', 'high', 'mat_locus', 170.0)]
+other              Rhizopus arrhizus Type I NRRL 18148 GCA_000697095.1_RhiDel18148-1.0
+   old: [('JNDV01014111.1', 25739, 'Plus', 'medium', 'mat_locus', 305.6)]
+   new: [('JNDV01014111.1', 25739, 'Plus', 'medium', 'mat_locus', 299.7)]
+other              Rhizopus arrhizus Type I NRRL 21396 GCA_000697115.1_RhiOry21396-1.0
+   old: [('JNDW01002981.1', 8460, 'Plus', 'high', 'mat_locus', 305.5)]
+   new: [('JNDW01002981.1', 8460, 'Plus', 'high', 'mat_locus', 301.1)]
+other              Rhizopus arrhizus 99-133 GCA_000697135.1_RhiOry99-133-1.0
+   old: [('JNDX01004072.1', 2302, 'Plus', 'high', 'mat_locus', 305.8)]
+   new: [('JNDX01004072.1', 2302, 'Plus', 'high', 'mat_locus', 300.6)]
+other              Rhizopus delemar Type I NRRL 21789 GCA_000697155.1_RhiDel21789-1.0
+   old: [('JNDY01003786.1', 9946, 'Plus', 'high', 'mat_locus', 72.4)]
+   new: [('JNDY01003786.1', 9943, 'Plus', 'high', 'mat_locus', 73.1)]
+other              Rhizopus arrhizus 97-1192 GCA_000697195.1_MucRam97-1192-1.0
+   old: [('JNEF01003481.1', 13786, 'Plus', 'high', 'mat_locus', 305.8)]
+   new: [('JNEF01003481.1', 13786, 'Plus', 'high', 'mat_locus', 300.6)]
+other              Cunninghamella bertholletiae 175 GCA_000697215.1_CunBer175-1.0
+   old: [('JNEG01000802.1', 76004, 'Plus', 'high', 'mat_locus', 207.1)]
+   new: [('JNEG01000802.1', 76004, 'Plus', 'high', 'mat_locus', 202.9)]
+other              Cokeromyces recurvatus B5483 GCA_000697235.1_CokRecB5483-1.0
+   old: [('JNEH01001784.1', 5885, 'Minus', 'high', 'mat_locus', 119.9)]
+   new: [('JNEH01001784.1', 5885, 'Minus', 'high', 'mat_locus', 119.6)]
+other              Mucor racemosus B9645 GCA_000697255.1_MucRacB9645-1.0
+   old: [('JNEI01002668.1', 17082, 'Plus', 'high', 'mat_locus', 270.4), ('JNEI01005832.1', 3951, 'Minus', 'high', 'mat_locus', 30.9)]
+   new: [('JNEI01002668.1', 17082, 'Plus', 'high', 'mat_locus', 262.1), ('JNEI01005832.1', 3951, 'Minus', 'high', 'mat_locus', 31.5)]
+other              Rhizopus microsporus B9738 GCA_000697275.1_RhiMicB9738-1.0
+   old: [('JNEJ01002299.1', 894, 'Minus', 'high', 'mat_locus', 30.9), ('JNEJ01004598.1', 9082, 'Plus', 'high', 'mat_locus', 270.4)]
+   new: [('JNEJ01002299.1', 894, 'Minus', 'high', 'mat_locus', 31.5), ('JNEJ01004598.1', 9082, 'Plus', 'high', 'mat_locus', 262.1)]
+other              Mucor indicus B7402 GCA_000697295.1_MucIndB7402-1.0
+   old: [('JNEK01003012.1', 67551, 'Minus', 'high', 'mat_locus', 99.7), ('JNEK01003092.1', 78207, 'Minus', 'high', 'mat_locus', 29.7)]
+   new: [('JNEK01003012.1', 67551, 'Minus', 'high', 'mat_locus', 100.9), ('JNEK01003092.1', 78207, 'Minus', 'high', 'mat_locus', 27.1)]
+other              Cunninghamella bertholletiae B7461 GCA_000697315.1_CunBerB7461-1.0
+   old: [('JNEL01000814.1', 147556, 'Plus', 'high', 'mat_locus', 207.1)]
+   new: [('JNEL01000814.1', 147556, 'Plus', 'high', 'mat_locus', 202.9)]
+Syncephalastraceae Syncephalastrum monosporum B8922 GCA_000697355.1_SynMonB8922-1.0
+   old: [('JNEN01000850.1', 14545, 'undetermined', 'medium', 'mat_locus', 10.3)]
+   new: [('JNEN01000850.1', 14545, 'undetermined', 'medium', 'mat_locus', 8.0)]
+Umbelopsidaceae    Umbelopsis isabellina B7317 GCA_000697415.1_UmbIsaB7317-1.0
+   old: [('JNEQ01000056.1', 749075, 'Plus', 'low', 'partial_locus', 92.2)]
+   new: [('JNEQ01000056.1', 748685, 'Plus', 'high', 'mat_locus', 93.5)]
+other              Mucor irregularis B7584 GCA_000697435.1_RhiVarB7584-1.0
+   old: [('JNES01000944.1', 209980, 'Minus', 'high', 'mat_locus', 30.1)]
+   new: [('JNES01000944.1', 209980, 'Minus', 'high', 'mat_locus', 38.6)]
+other              Saksenaea oblongispora B3353 GCA_000697495.1_SakOblB3353-1.0
+   old: [('JNEV01001369.1', 14452, 'Minus', 'high', 'mat_locus', 45.6)]
+   new: [('JNEV01001369.1', 14452, 'Minus', 'high', 'mat_locus', 48.3)]
+other              Rhizopus arrhizus HUMC 02 GCA_000697605.1_RhiOryHUMC02-1.0
+   old: [('KK960746.1', 15724, 'Plus', 'high', 'mat_locus', 305.5)]
+   new: [('KK960746.1', 15670, 'Plus', 'high', 'mat_locus', 301.1)]
+other              Rhizopus arrhizus 99-892 GCA_000697725.1_RhiOry99-892-1.0
+   old: [('KK998240.1', 11741, 'Minus', 'high', 'mat_locus', 166.5)]
+   new: [('KK998240.1', 11741, 'Minus', 'high', 'mat_locus', 170.8)]
+other              Rhizopus microsporus B7455 GCA_000738565.1_RhiAzyB7455-1.0
+   old: [('JNER01003932.1', 13764, 'Plus', 'high', 'mat_locus', 266.9)]
+   new: [('JNER01003932.1', 13764, 'Plus', 'high', 'mat_locus', 262.5)]
+other              Rhizopus delemar Type II NRRL 21477 GCA_000738585.1_RhiDel21477-1.0
+   old: [('KL997304.1', 37668, 'Minus', 'medium', 'mat_locus', 156.6)]
+   new: [('KL997304.1', 37668, 'Minus', 'medium', 'mat_locus', 161.5)]
+other              Rhizopus delemar Type II NRRL 21447 GCA_000738595.1_RhiDel21447-1.0
+   old: [('KL996174.1', 12030, 'Plus', 'high', 'mat_locus', 297.4)]
+   new: [('KL996174.1', 12030, 'Plus', 'high', 'mat_locus', 295.0)]
+other              Rhizopus delemar Type II NRRL 21446 GCA_000738605.1_RhiDel21446-1.0
+   old: [('KL995476.1', 27198, 'Plus', 'high', 'mat_locus', 297.4)]
+   new: [('KL995476.1', 27198, 'Plus', 'high', 'mat_locus', 295.0)]
+other              Rhizopus microsporus  GCA_000825725.1_Rmicro_CBS_344.29_Allpaths-LG
+   old: [('CDGI01000513.1', 15668, 'Minus', 'high', 'mat_locus', 139.4), ('CDGI01000728.1', 4282, 'Plus', 'high', 'mat_locus', 269.0)]
+   new: [('CDGI01000513.1', 15668, 'Minus', 'high', 'mat_locus', 137.8), ('CDGI01000728.1', 4282, 'Plus', 'high', 'mat_locus', 264.5)]
+other              Parasitella parasitica CBS 412.66 substr. NGI-315 ade GCA_000938895.1_PP.v1
+   old: [('LN733372.1', 22104, 'Plus', 'medium', 'mat_locus', 305.5)]
+   new: [('LN733372.1', 22104, 'Plus', 'medium', 'mat_locus', 302.6)]
+other              Mucor ambiguus NBRC 6742 GCA_000950595.1_ASM95059v1
+   old: [('DF836646.1', 11671, 'Plus', 'high', 'mat_locus', 316.1)]
+   new: [('DF836646.1', 11671, 'Plus', 'high', 'mat_locus', 324.3)]
+other              Mucor circinelloides WJ11 GCA_001276145.1_ASM127614v1
+   old: [('KQ435617.1', 1539, 'Minus', 'high', 'mat_locus', 87.4)]
+   new: [('KQ435617.1', 1539, 'Minus', 'high', 'mat_locus', 78.1)]
+other              Mucor circinelloides JCM 22480 GCA_001599575.1_JCM_22480_assembly_v001
+   old: [('BCHG01000157.1', 4746, 'Minus', 'high', 'mat_locus', 86.6)]
+   new: [('BCHG01000157.1', 4746, 'Minus', 'high', 'mat_locus', 77.0)]
+other              Actinomucor elegans JCM 22485 GCA_001599635.1_JCM_22485_assembly_v001
+   old: [('BCHK01000042.1', 211162, 'Plus', 'high', 'mat_locus', 280.3)]
+   new: [('BCHK01000042.1', 211162, 'Plus', 'high', 'mat_locus', 283.4)]
+other              Gongronella sp. w5 w5 GCA_001650995.1_ASM165099v1
+   old: [('KV441911.1', 165009, 'Minus', 'high', 'mat_locus', 51.9)]
+   new: [('KV441911.1', 165003, 'Minus', 'high', 'mat_locus', 52.8)]
+other              Choanephora cucurbitarum KUS-F28377 GCA_001683725.1_ASM168372v1
+   old: [('LUGH01000105.1', 8906, 'Plus', 'high', 'mat_locus', 263.3)]
+   new: [('LUGH01000105.1', 8906, 'Plus', 'high', 'mat_locus', 277.0)]
+other              Rhizopus microsporus ATCC 11559 GCA_002083735.1_Rhimi_ATCC11559_1
+   old: [('KV921427.1', 9557, 'Plus', 'high', 'mat_locus', 266.9)]
+   new: [('KV921427.1', 9557, 'Plus', 'high', 'mat_locus', 262.5)]
+other              Rhizopus microsporus ATCC 52814 GCA_002083745.1_Rhimi_ATCC52814_1
+   old: [('KV922032.1', 10201, 'Minus', 'high', 'mat_locus', 141.3)]
+   new: [('KV922032.1', 10201, 'Minus', 'high', 'mat_locus', 138.5)]
+other              Hesseltinella vesiculosa NRRL 3301 GCA_002104935.1_Hesve2
+   old: [('MCGT01000028.1', 90945, 'Minus', 'medium', 'mat_locus', 48.8)]
+   new: [('MCGT01000028.1', 90945, 'Minus', 'medium', 'mat_locus', 55.0)]
+Syncephalastraceae Syncephalastrum racemosum NRRL 2496 GCA_002105135.1_Synrac1
+   old: [('MCGN01000001.1', 771475, 'undetermined', 'medium', 'mat_locus', 12.0)]
+   new: [('MCGN01000001.1', 771475, 'undetermined', 'medium', 'mat_locus', 11.8)]
+other              Absidia repens NRRL 1336 GCA_002105175.1_Absrep1
+   old: [('MCGE01000013.1', 766672, 'Plus', 'medium', 'mat_locus', 218.6)]
+   new: [('MCGE01000013.1', 766672, 'Plus', 'medium', 'mat_locus', 221.4)]
+other              Apophysomyces variabilis NCCPF 102052 GCA_002749535.1_ASM274953v1
+   old: [('MZZL01000138.1', 192120, 'Minus', 'high', 'mat_locus', 87.7)]
+   new: [('MZZL01000138.1', 192120, 'Minus', 'high', 'mat_locus', 81.8)]
+other              Rhizopus stolonifer LSU 92-RS-03 GCA_003325415.1_Rstol_CA
+   old: [('PJQM01000010.1', 1, 'Plus', 'high', 'mat_locus', 178.0), ('PJQM01000085.1', 96, 'Minus', 'high', 'mat_locus', 79.8)]
+   new: [('PJQM01000010.1', 1, 'Plus', 'high', 'mat_locus', 180.6), ('PJQM01000085.1', 96, 'Minus', 'high', 'mat_locus', 80.7)]
+other              Rhizopus azygosporus CBS 357.93 GCA_003325435.1_Razy_CA
+   old: [('PJQL01000316.1', 3611, 'Minus', 'high', 'mat_locus', 146.9), ('PJQL01000452.1', 1415, 'Plus', 'medium', 'partial_locus', 266.9)]
+   new: [('PJQL01000316.1', 3611, 'Minus', 'high', 'mat_locus', 146.8), ('PJQL01000452.1', 1415, 'Plus', 'medium', 'partial_locus', 262.5)]
+other              Rhizopus microsporus B11533 GCA_006680115.1_ASM668011v1
+   old: [('SMRR01000092.1', 2212999, 'Plus', 'high', 'mat_locus', 266.9)]
+   new: [('SMRR01000092.1', 2190177, 'Plus', 'high', 'mat_locus', 262.5)]
+other              Mucor lusitanicus MU402 GCA_010203745.1_Muccir1_3
+   old: [('JAAECE010000001.1', 2221741, 'Minus', 'high', 'mat_locus', 126.6)]
+   new: [('JAAECE010000001.1', 2221741, 'Minus', 'high', 'mat_locus', 124.5)]
+other              Rhizopus microsporus GL35 GCA_011762625.1_ASM1176262v1
+   old: [('JAANIL010000430.1', 2185, 'Plus', 'medium', 'partial_locus', 266.9)]
+   new: [('JAANIL010000430.1', 2185, 'Plus', 'medium', 'partial_locus', 262.5)]
+other              Rhizopus microsporus GL58 GCA_011762635.1_ASM1176263v1
+   old: [('JAANIK010000153.1', 1226, 'Plus', 'medium', 'partial_locus', 266.9)]
+   new: [('JAANIK010000153.1', 1226, 'Plus', 'medium', 'partial_locus', 262.5)]
+other              Rhizopus microsporus GL61 GCA_011763475.1_ASM1176347v1
+   old: [('JAANIM010000174.1', 2212, 'Plus', 'medium', 'partial_locus', 266.9)]
+   new: [('JAANIM010000174.1', 2212, 'Plus', 'medium', 'partial_locus', 262.5)]
+other              Rhizopus microsporus GL28 GCA_011763565.1_ASM1176356v1
+   old: [('JAANIN010000426.1', 1226, 'Plus', 'medium', 'partial_locus', 266.9)]
+   new: [('JAANIN010000426.1', 1226, 'Plus', 'medium', 'partial_locus', 262.5)]
+other              Rhizopus delemar GL15 GCA_011763585.1_ASM1176358v1
+   old: [('JAANIP010000341.1', 1922, 'Minus', 'high', 'mat_locus', 161.3)]
+   new: [('JAANIP010000341.1', 1922, 'Minus', 'high', 'mat_locus', 167.2)]
+other              Rhizopus delemar GL27 GCA_011763605.1_ASM1176360v1
+   old: [('JAANIO010000501.1', 339, 'Plus', 'high', 'mat_locus', 275.0)]
+   new: [('JAANIO010000501.1', 339, 'Plus', 'high', 'mat_locus', 278.4)]
+other              Rhizopus arrhizus GL39 GCA_011763645.1_ASM1176364v1
+   old: [('JAASGZ010000738.1', 1944, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JAASGZ010000738.1', 1944, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Rhizopus delemar GL14 GCA_011763695.1_ASM1176369v1
+   old: [('JAANIQ010000195.1', 6704, 'Plus', 'high', 'mat_locus', 297.4)]
+   new: [('JAANIQ010000195.1', 6650, 'Plus', 'high', 'mat_locus', 295.0)]
+other              Rhizopus delemar GL12 GCA_011763715.1_ASM1176371v1
+   old: [('JAANIR010000203.1', 2006, 'Plus', 'high', 'mat_locus', 297.4)]
+   new: [('JAANIR010000203.1', 2006, 'Plus', 'high', 'mat_locus', 295.0)]
+other              Rhizopus delemar GL23 GCA_011763735.1_ASM1176373v1
+   old: [('JAANIS010000117.1', 2003, 'Minus', 'high', 'mat_locus', 161.3)]
+   new: [('JAANIS010000117.1', 2003, 'Minus', 'high', 'mat_locus', 167.2)]
+other              Rhizopus delemar GL62 GCA_011763755.1_ASM1176375v1
+   old: [('JAANIW010000329.1', 6706, 'Plus', 'high', 'mat_locus', 297.4)]
+   new: [('JAANIW010000329.1', 6652, 'Plus', 'high', 'mat_locus', 295.0)]
+other              Rhizopus arrhizus GL16 GCA_011763775.1_ASM1176377v1
+   old: [('JAANIT010000316.1', 2001, 'Minus', 'high', 'mat_locus', 161.3)]
+   new: [('JAANIT010000316.1', 2001, 'Minus', 'high', 'mat_locus', 167.2)]
+other              Rhizopus delemar GL50 GCA_011763795.1_ASM1176379v1
+   old: [('JAANIV010000391.1', 5320, 'Minus', 'high', 'mat_locus', 161.3)]
+   new: [('JAANIV010000391.1', 5320, 'Minus', 'high', 'mat_locus', 167.2)]
+other              Rhizopus delemar GL24 GCA_011763815.1_ASM1176381v1
+   old: [('JAANIU010000625.1', 2001, 'Minus', 'high', 'mat_locus', 161.3)]
+   new: [('JAANIU010000625.1', 2001, 'Minus', 'high', 'mat_locus', 167.2)]
+other              Rhizopus delemar GL55 GCA_011763835.1_ASM1176383v1
+   old: [('JAANIX010000238.1', 1798, 'Plus', 'high', 'mat_locus', 297.4)]
+   new: [('JAANIX010000238.1', 1798, 'Plus', 'high', 'mat_locus', 295.0)]
+other              Rhizopus delemar GL51 GCA_011763855.1_ASM1176385v1
+   old: [('JAANJA010000538.1', 2000, 'Minus', 'high', 'mat_locus', 161.3)]
+   new: [('JAANJA010000538.1', 2000, 'Minus', 'high', 'mat_locus', 167.2)]
+other              Rhizopus arrhizus GL20 GCA_011763875.1_ASM1176387v1
+   old: [('JAANIZ010000347.1', 1929, 'Minus', 'high', 'mat_locus', 161.3)]
+   new: [('JAANIZ010000347.1', 1929, 'Minus', 'high', 'mat_locus', 167.2)]
+other              Rhizopus delemar GL25 GCA_011763895.1_ASM1176389v1
+   old: [('JAANIY010000640.1', 2001, 'Minus', 'high', 'mat_locus', 161.3)]
+   new: [('JAANIY010000640.1', 2001, 'Minus', 'high', 'mat_locus', 167.2)]
+other              Rhizopus delemar GL54 GCA_011763915.1_ASM1176391v1
+   old: [('JAANJB010000396.1', 4627, 'Minus', 'high', 'mat_locus', 160.7)]
+   new: [('JAANJB010000396.1', 4627, 'Minus', 'high', 'mat_locus', 167.1)]
+other              Rhizopus arrhizus GL60 GCA_011763935.1_ASM1176393v1
+   old: [('JAANJC010000844.1', 5116, 'Plus', 'high', 'mat_locus', 305.6)]
+   new: [('JAANJC010000844.1', 5116, 'Plus', 'high', 'mat_locus', 300.9)]
+other              Rhizopus arrhizus GL36 GCA_011763955.1_ASM1176395v1
+   old: [('JAANJD010000832.1', 487, 'Plus', 'high', 'mat_locus', 305.6)]
+   new: [('JAANJD010000832.1', 487, 'Plus', 'high', 'mat_locus', 300.9)]
+other              Rhizopus arrhizus GL48 GCA_011763975.1_ASM1176397v1
+   old: [('JAANJF010000979.1', 168, 'Plus', 'high', 'mat_locus', 306.5)]
+   new: [('JAANJF010000979.1', 168, 'Plus', 'high', 'mat_locus', 300.4)]
+other              Rhizopus arrhizus GL9 GCA_011763995.1_ASM1176399v1
+   old: [('JAANJE010000209.1', 2043, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JAANJE010000209.1', 2043, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Rhizopus arrhizus GL11 GCA_011764025.1_ASM1176402v1
+   old: [('JAANQT010000418.1', 2043, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JAANQT010000418.1', 2043, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Rhizopus microsporus GL19 GCA_011764045.1_ASM1176404v1
+   old: [('JAANQQ010000155.1', 1228, 'Plus', 'medium', 'partial_locus', 266.9)]
+   new: [('JAANQQ010000155.1', 1228, 'Plus', 'medium', 'partial_locus', 262.5)]
+other              Rhizopus arrhizus GL1 GCA_011764055.1_ASM1176405v1
+   old: [('JAANQS010002783.1', 166, 'Plus', 'low', 'partial_locus', 305.8)]
+   new: [('JAANQS010002783.1', 166, 'Plus', 'low', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL8 GCA_011764125.1_ASM1176412v1
+   old: [('JAANQV010000154.1', 93, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JAANQV010000154.1', 93, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Rhizopus delemar GL13 GCA_011764145.1_ASM1176414v1
+   old: [('JAANQZ010003255.1', 2, 'Plus', 'low', 'partial_locus', 306.4)]
+   new: [('JAANQZ010003255.1', 2, 'Plus', 'low', 'partial_locus', 300.7)]
+other              Rhizopus arrhizus GL21 GCA_011764185.1_ASM1176418v1
+   old: [('JAANRA010001051.1', 1894, 'Plus', 'high', 'mat_locus', 305.8)]
+   new: [('JAANRA010001051.1', 1894, 'Plus', 'high', 'mat_locus', 300.6)]
+other              Rhizopus arrhizus GL40 GCA_011800955.2_ASM1180095v2
+   old: [('JAANRM010001105.1', 183, 'Plus', 'high', 'mat_locus', 305.8)]
+   new: [('JAANRM010001105.1', 183, 'Plus', 'high', 'mat_locus', 300.6)]
+other              Rhizopus arrhizus GL53 GCA_011800985.2_ASM1180098v2
+   old: [('JAANRL010002477.1', 200, 'Plus', 'low', 'partial_locus', 305.8)]
+   new: [('JAANRL010002477.1', 200, 'Plus', 'low', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL38 GCA_011801035.2_ASM1180103v2
+   old: [('JAANRN010000391.1', 5273, 'Plus', 'high', 'mat_locus', 305.8)]
+   new: [('JAANRN010000391.1', 5219, 'Plus', 'high', 'mat_locus', 300.6)]
+other              Rhizopus arrhizus GL31 GCA_011801055.2_ASM1180105v2
+   old: [('JAANRO010000810.1', 5273, 'Plus', 'medium', 'partial_locus', 305.8)]
+   new: [('JAANRO010000810.1', 5219, 'Plus', 'medium', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL46 GCA_011801305.2_ASM1180130v2
+   old: [('JAANRS010001000.1', 2211, 'Plus', 'high', 'mat_locus', 305.8)]
+   new: [('JAANRS010001000.1', 2211, 'Plus', 'high', 'mat_locus', 300.6)]
+other              Rhizopus arrhizus GL22 GCA_011801335.2_ASM1180133v2
+   old: [('JAANRP010000654.1', 2043, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JAANRP010000654.1', 2043, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Rhizopus arrhizus GL29 GCA_011801385.2_ASM1180138v2
+   old: [('JAANRR010002648.1', 134, 'Plus', 'low', 'partial_locus', 305.8)]
+   new: [('JAANRR010002648.1', 134, 'Plus', 'low', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL45 GCA_011801495.1_ASM1180149v1
+   old: [('JAANRV010002415.1', 171, 'Plus', 'low', 'partial_locus', 305.8)]
+   new: [('JAANRV010002415.1', 171, 'Plus', 'low', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL44 GCA_011801505.2_ASM1180150v2
+   old: [('JAANRU010002094.1', 1350, 'Plus', 'low', 'partial_locus', 305.8)]
+   new: [('JAANRU010002094.1', 1350, 'Plus', 'low', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL52 GCA_011801555.2_ASM1180155v2
+   old: [('JAANRX010000827.1', 5225, 'Plus', 'medium', 'partial_locus', 305.8)]
+   new: [('JAANRX010000827.1', 5171, 'Plus', 'medium', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL34 GCA_011801575.2_ASM1180157v2
+   old: [('JAANRW010000843.1', 5225, 'Plus', 'medium', 'partial_locus', 305.8)]
+   new: [('JAANRW010000843.1', 5171, 'Plus', 'medium', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL56 GCA_011801605.2_ASM1180160v2
+   old: [('JAANRT010001072.1', 121, 'Plus', 'high', 'mat_locus', 305.8)]
+   new: [('JAANRT010001072.1', 121, 'Plus', 'high', 'mat_locus', 300.6)]
+other              Rhizopus arrhizus GL49 GCA_011801645.2_ASM1180164v2
+   old: [('JAANRB010001607.1', 596, 'Plus', 'low', 'partial_locus', 305.8)]
+   new: [('JAANRB010001607.1', 596, 'Plus', 'low', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL26 GCA_011801675.2_ASM1180167v2
+   old: [('JAANQW010000429.1', 5108, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JAANQW010000429.1', 5108, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Rhizopus arrhizus GL2 GCA_011801705.2_ASM1180170v2
+   old: [('JAANQY010002666.1', 167, 'Plus', 'low', 'partial_locus', 305.8)]
+   new: [('JAANQY010002666.1', 167, 'Plus', 'low', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL30 GCA_011801725.2_ASM1180172v2
+   old: [('JAANQX010000106.1', 27507, 'Plus', 'low', 'partial_locus', 305.8)]
+   new: [('JAANQX010000106.1', 27507, 'Plus', 'low', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL10 GCA_011801785.2_ASM1180178v2
+   old: [('JAANQR010000620.1', 2208, 'Minus', 'high', 'mat_locus', 169.6)]
+   new: [('JAANQR010000620.1', 2208, 'Minus', 'high', 'mat_locus', 174.5)]
+other              Rhizopus arrhizus GL17 GCA_011801815.2_ASM1180181v2
+   old: [('JAANQU010000727.1', 170, 'Plus', 'medium', 'partial_locus', 305.8)]
+   new: [('JAANQU010000727.1', 170, 'Plus', 'medium', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL41 GCA_011950945.2_ASM1195094v2
+   old: [('JAANRD010001073.1', 200, 'Plus', 'high', 'mat_locus', 305.8)]
+   new: [('JAANRD010001073.1', 200, 'Plus', 'high', 'mat_locus', 300.6)]
+other              Rhizopus arrhizus GL43 GCA_011950985.2_ASM1195098v2
+   old: [('JAANRF010000404.1', 1943, 'Plus', 'high', 'mat_locus', 305.5)]
+   new: [('JAANRF010000404.1', 1943, 'Plus', 'high', 'mat_locus', 300.3)]
+other              Rhizopus arrhizus GL42 GCA_011951285.2_ASM1195128v2
+   old: [('JAANRG010000803.1', 176, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JAANRG010000803.1', 176, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Rhizopus arrhizus GL3 GCA_011951295.2_ASM1195129v2
+   old: [('JAANRC010000468.1', 6803, 'Plus', 'high', 'mat_locus', 305.8)]
+   new: [('JAANRC010000468.1', 6803, 'Plus', 'high', 'mat_locus', 300.6)]
+other              Rhizopus arrhizus GL6 GCA_011952045.2_ASM1195204v2
+   old: [('JAANRH010000687.1', 2045, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JAANRH010000687.1', 2045, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Rhizopus arrhizus GL7 GCA_011952115.2_ASM1195211v2
+   old: [('JAANRI010000651.1', 181, 'Plus', 'medium', 'partial_locus', 305.8)]
+   new: [('JAANRI010000651.1', 181, 'Plus', 'medium', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL37 GCA_011952145.2_ASM1195214v2
+   old: [('JAANRJ010002406.1', 142, 'Plus', 'low', 'partial_locus', 305.8)]
+   new: [('JAANRJ010002406.1', 142, 'Plus', 'low', 'partial_locus', 300.6)]
+other              Rhizopus arrhizus GL32 GCA_011952175.2_ASM1195217v2
+   old: [('JAANRK010002299.1', 200, 'Plus', 'low', 'partial_locus', 305.8)]
+   new: [('JAANRK010002299.1', 200, 'Plus', 'low', 'partial_locus', 300.6)]
+other              Apophysomyces ossiformis NRRL A-21654 GCA_014839865.1_ASM1483986v1
+   old: [('JABAYA010000049.1', 135274, 'Plus', 'high', 'mat_locus', 135.8)]
+   new: [('JABAYA010000049.1', 135274, 'Plus', 'high', 'mat_locus', 138.0)]
+other              Apophysomyces sp. BC1015 BC1015 GCA_016097715.1_ASM1609771v1
+   old: [('JAAZWU010000575.1', 6857, 'Plus', 'high', 'mat_locus', 152.6)]
+   new: [('JAAZWU010000575.1', 6857, 'Plus', 'high', 'mat_locus', 154.8)]
+other              Apophysomyces sp. BC1021 BC1021 GCA_016097735.1_ASM1609773v1
+   old: [('JAAZWV010000301.1', 7086, 'Plus', 'high', 'mat_locus', 152.6)]
+   new: [('JAAZWV010000301.1', 7086, 'Plus', 'high', 'mat_locus', 154.8)]
+other              Apophysomyces sp. BC1034 BC1034 GCA_016097755.1_ASM1609775v1
+   old: [('JAAZWW010000327.1', 19857, 'Plus', 'high', 'mat_locus', 152.6)]
+   new: [('JAAZWW010000327.1', 19857, 'Plus', 'high', 'mat_locus', 154.8)]
+Umbelopsidaceae    Umbelopsis vinacea WA0000051536 GCA_016758895.1_ASM1675889v1
+   old: [('JAEPRA010000016.1', 141223, 'undetermined', 'low', 'partial_locus', 13.7)]
+   new: [('JAEPRA010000016.1', 121114, 'Minus', 'medium', 'mat_locus', 98.3)]
+Umbelopsidaceae    Umbelopsis isabellina WA0000067209 GCA_016758905.1_ASM1675890v1
+   old: [('JAEPQZ010000017.1', 412287, 'Plus', 'low', 'partial_locus', 68.5)]
+   new: [('JAEPQZ010000017.1', 346151, 'Plus', 'medium', 'mat_locus', 75.9)]
+other              Thamnidium elegans WA0000018081 GCA_016758935.1_ASM1675893v1
+   old: [('JAEPRE010000080.1', 5527, 'Plus', 'high', 'mat_locus', 280.3)]
+   new: [('JAEPRE010000080.1', 5527, 'Plus', 'high', 'mat_locus', 287.8)]
+other              Mucor plumbeus CBS 226.32 GCA_016758945.1_ASM1675894v1
+   old: [('JAEPRC010000728.1', 2569, 'Minus', 'high', 'mat_locus', 30.9)]
+   new: [('JAEPRC010000728.1', 2569, 'Minus', 'high', 'mat_locus', 31.5)]
+other              Mucor saturninus WA0000017839 GCA_016758985.1_ASM1675898v1
+   old: [('JAEPRD010000014.1', 253932, 'Plus', 'high', 'mat_locus', 306.9)]
+   new: [('JAEPRD010000014.1', 253932, 'Plus', 'high', 'mat_locus', 315.1)]
+other              Cunninghamella blakesleeana AS 3.970 GCA_017871115.1_ASM1787111v1
+   old: [('JAFCIZ010000005.1', 584006, 'Plus', 'high', 'mat_locus', 202.4)]
+   new: [('JAFCIZ010000005.1', 584006, 'Plus', 'high', 'mat_locus', 200.0)]
+other              Rhizopus delemar SSU VMBB-02 GCA_019022795.1_ASM1902279v1
+   old: [('JAFCNC010000323.1', 1979, 'Plus', 'high', 'mat_locus', 297.4)]
+   new: [('JAFCNC010000323.1', 1979, 'Plus', 'high', 'mat_locus', 295.0)]
+other              Rhizopus microsporus SSU VM08-07 GCA_019022815.1_ASM1902281v1
+   old: [('JAFCND010000369.1', 9413, 'Plus', 'medium', 'partial_locus', 266.9)]
+   new: [('JAFCND010000369.1', 9413, 'Plus', 'medium', 'partial_locus', 262.5)]
+other              Absidia healeyae UoMAU1 GCA_019677225.1_ASM1967722v1
+   old: [('JAFHAR010000822.1', 154, 'Minus', 'medium', 'mat_locus', 58.3)]
+   new: [('JAFHAR010000822.1', 154, 'Minus', 'medium', 'mat_locus', 52.3)]
+Umbelopsidaceae    Umbelopsis sp. PMI_123 PMI_123 GCA_021235465.1_Umbelo1
+   old: [('JAJSME010000005.1', 1355538, 'Plus', 'high', 'mat_locus', 60.9)]
+   new: [('JAJSME010000005.1', 1355538, 'Plus', 'high', 'mat_locus', 136.2)]
+other              Phycomyces nitens YXQ0117 GCA_022702545.1_SJTU-YXQ
+   old: [('JAHRBC010000002.1', 6830936, 'Minus', 'high', 'mat_locus', 134.0)]
+   new: [('JAHRBC010000002.1', 6830936, 'Minus', 'high', 'mat_locus', 133.5)]
+other              Mucor circinelloides PF3102 GCA_023629755.1_ASM2362975v1
+   old: [('JAMAMJ010000480.1', 9346, 'Minus', 'high', 'mat_locus', 87.4)]
+   new: [('JAMAMJ010000480.1', 9346, 'Minus', 'high', 'mat_locus', 78.1)]
+other              Mucor circinelloides PL2203S GCA_023629775.1_ASM2362977v1
+   old: [('JAMAML010000428.1', 7612, 'Plus', 'high', 'mat_locus', 328.1)]
+   new: [('JAMAML010000428.1', 7612, 'Plus', 'high', 'mat_locus', 337.7)]
+other              Mucor circinelloides P1204 GCA_023629815.1_ASM2362981v1
+   old: [('JAMAMK010000501.1', 1491, 'Minus', 'high', 'mat_locus', 87.4)]
+   new: [('JAMAMK010000501.1', 1491, 'Minus', 'high', 'mat_locus', 78.1)]
+other              Mucor circinelloides S1115 GCA_023629835.1_ASM2362983v1
+   old: [('JAMAMH010000487.1', 8107, 'Plus', 'high', 'mat_locus', 328.4)]
+   new: [('JAMAMH010000487.1', 8107, 'Plus', 'high', 'mat_locus', 338.1)]
+other              Mucor circinelloides PT2201 GCA_023629855.1_ASM2362985v1
+   old: [('JAMAMG010000425.1', 7610, 'Plus', 'high', 'mat_locus', 328.1)]
+   new: [('JAMAMG010000425.1', 7610, 'Plus', 'high', 'mat_locus', 337.7)]
+other              Mucor circinelloides PB2204 GCA_023629875.1_ASM2362987v1
+   old: [('JAMAMI010000975.1', 341, 'Plus', 'high', 'mat_locus', 328.1)]
+   new: [('JAMAMI010000975.1', 341, 'Plus', 'high', 'mat_locus', 337.7)]
+other              Rhizopus arrhizus R2701 GCA_023630295.1_ASM2363029v1
+   old: [('JAMAMR010000041.1', 88047, 'Plus', 'high', 'mat_locus', 305.6)]
+   new: [('JAMAMR010000041.1', 88047, 'Plus', 'high', 'mat_locus', 299.7)]
+Syncephalastraceae Syncephalastrum monosporum PYS2302 GCA_023630305.1_ASM2363030v1
+   old: [('JAMAMS010000117.1', 52196, 'undetermined', 'medium', 'mat_locus', 10.3)]
+   new: [('JAMAMS010000117.1', 52196, 'undetermined', 'medium', 'mat_locus', 8.0)]
+other              Rhizopus arrhizus PG1902 GCA_023630335.1_ASM2363033v1
+   old: [('JAMAMQ010000488.1', 3280, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JAMAMQ010000488.1', 3280, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Mucor circinelloides PT2201-2 GCA_023630435.1_ASM2363043v1
+   old: [('JAMAMP010001032.1', 4102, 'Minus', 'high', 'mat_locus', 84.9)]
+   new: [('JAMAMP010001032.1', 4102, 'Minus', 'high', 'mat_locus', 79.9)]
+other              Mucor circinelloides PL2203S-2 GCA_023630465.1_ASM2363046v1
+   old: [('JAMAMO010000771.1', 1953, 'Minus', 'high', 'mat_locus', 84.9)]
+   new: [('JAMAMO010000771.1', 1953, 'Minus', 'high', 'mat_locus', 79.9)]
+other              Mucor circinelloides PB2204-2 GCA_023630475.1_ASM2363047v1
+   old: [('JAMAMN010001208.1', 5, 'Minus', 'high', 'mat_locus', 84.9)]
+   new: [('JAMAMN010001208.1', 5, 'Minus', 'high', 'mat_locus', 79.9)]
+other              Mucor circinelloides PX3102 GCA_023630555.1_ASM2363055v1
+   old: [('JAMAMM010000510.1', 7128, 'Minus', 'high', 'mat_locus', 87.4)]
+   new: [('JAMAMM010000510.1', 7128, 'Minus', 'high', 'mat_locus', 78.1)]
+other              Backusella morwellensis UoMAU16 GCA_024139395.1_ASM2413939v1
+   old: [('VCJI01001366.1', 21890, 'Minus', 'medium', 'mat_locus', 78.4)]
+   new: [('VCJI01001366.1', 21890, 'Minus', 'medium', 'mat_locus', 79.7)]
+other              Backusella mclennaniae UoMAU11 GCA_024139405.1_ASM2413940v1
+   old: [('VCJL01001223.1', 18537, 'Minus', 'medium', 'mat_locus', 78.9)]
+   new: [('VCJL01001223.1', 18537, 'Minus', 'medium', 'mat_locus', 83.7)]
+other              Backusella tarrabulga UoMAU5 GCA_024139415.1_ASM2413941v1
+   old: [('VCJJ01001653.1', 25459, 'Plus', 'medium', 'mat_locus', 236.6)]
+   new: [('VCJJ01001653.1', 25459, 'Plus', 'medium', 'mat_locus', 236.3)]
+other              Backusella psychrophila UoMAU55 GCA_024139485.1_ASM2413948v1
+   old: [('VCJK01001374.1', 38725, 'Plus', 'medium', 'mat_locus', 226.6)]
+   new: [('VCJK01001374.1', 38725, 'Plus', 'medium', 'mat_locus', 226.1)]
+other              Backusella sp. ASU-2019c UoMAU9 GCA_024139495.1_ASM2413949v1
+   old: [('VCJM01001052.1', 15010, 'Plus', 'medium', 'mat_locus', 224.8)]
+   new: [('VCJM01001052.1', 15010, 'Plus', 'medium', 'mat_locus', 224.4)]
+other              Backusella parvicylindrica UoMAU35 GCA_024140155.1_ASM2414015v1
+   old: [('VCJB01002633.1', 6676, 'Plus', 'medium', 'mat_locus', 259.1)]
+   new: [('VCJB01002633.1', 6676, 'Plus', 'medium', 'mat_locus', 263.3)]
+other              Backusella luteola UoMAU6 GCA_024140195.1_ASM2414019v1
+   old: [('VCJC01002502.1', 22377, 'Minus', 'medium', 'mat_locus', 76.5)]
+   new: [('VCJC01002502.1', 22377, 'Minus', 'medium', 'mat_locus', 79.9)]
+other              Backusella tuberculispora UoMAU80 GCA_024140245.1_ASM2414024v1
+   old: [('VCJD01005173.1', 2542, 'Plus', 'medium', 'mat_locus', 256.0)]
+   new: [('VCJD01005173.1', 2542, 'Plus', 'medium', 'mat_locus', 263.1)]
+other              Backusella liffmaniae UoMAU58 GCA_024140265.1_ASM2414026v1
+   old: [('VCJE01002432.1', 27442, 'Plus', 'medium', 'mat_locus', 223.1)]
+   new: [('VCJE01002432.1', 27442, 'Plus', 'medium', 'mat_locus', 225.4)]
+other              Backusella australiensis UoMAU34 GCA_024140275.1_ASM2414027v1
+   old: [('VCJF01002266.1', 53706, 'Minus', 'medium', 'mat_locus', 77.7)]
+   new: [('VCJF01002266.1', 53700, 'Minus', 'medium', 'mat_locus', 80.3)]
+other              Backusella westeae UoMAU4 GCA_024140375.1_ASM2414037v1
+   old: [('VCJG01003462.1', 22301, 'Plus', 'medium', 'mat_locus', 223.5)]
+   new: [('VCJG01003462.1', 22301, 'Plus', 'medium', 'mat_locus', 219.0)]
+other              Backusella australiensis UoMAU90 GCA_024140565.1_ASM2414056v1
+   old: [('VCJH01002494.1', 56064, 'Plus', 'medium', 'mat_locus', 222.8)]
+   new: [('VCJH01002494.1', 56058, 'Plus', 'medium', 'mat_locus', 218.2)]
+other              Rhizopus arrhizus Y5 GCA_024220505.1_ASM2422050v1
+   old: [('JAKZZE010000030.1', 282592, 'Minus', 'high', 'mat_locus', 161.2)]
+   new: [('JAKZZE010000030.1', 282592, 'Minus', 'high', 'mat_locus', 170.6)]
+other              Gilbertella persicaria TFLB-J GCA_024294565.1_ASM2429456v1
+   old: [('JAIZWB010000070.1', 120189, 'Plus', 'high', 'mat_locus', 270.6)]
+   new: [('JAIZWB010000070.1', 120189, 'Plus', 'high', 'mat_locus', 276.3)]
+other              Thamnidium elegans NRRL 2467 GCA_025201345.1_Thaele1
+   old: [('JAIXMG010000015.1', 484077, 'Plus', 'high', 'mat_locus', 280.3)]
+   new: [('JAIXMG010000015.1', 484077, 'Plus', 'high', 'mat_locus', 287.8)]
+other              Gongronella butleri CBS 227.36 GCA_025201375.1_Gonbut1
+   old: [('JAIWZP010000006.1', 214310, 'Minus', 'high', 'mat_locus', 51.7)]
+   new: [('JAIWZP010000006.1', 214304, 'Minus', 'high', 'mat_locus', 51.8)]
+other              Cunninghamella echinulata NRRL 1382 GCA_025201675.1_Cunech1
+   old: [('MU612717.1', 254, 'Plus', 'high', 'mat_locus', 207.5)]
+   new: [('MU612717.1', 254, 'Plus', 'high', 'mat_locus', 206.2)]
+other              Parasitella parasitica NRRL 2501 GCA_025201805.1_Parpar1
+   old: [('MU619237.1', 391161, 'Minus', 'high', 'mat_locus', 130.9)]
+   new: [('MU619237.1', 391161, 'Minus', 'high', 'mat_locus', 131.9)]
+other              Chlamydoabsidia padenii NRRL 2977 GCA_025330725.1_Chlpad1
+   old: [('JAIWND010000020.1', 94747, 'Plus', 'medium', 'mat_locus', 209.3)]
+   new: [('JAIWND010000020.1', 94747, 'Plus', 'medium', 'mat_locus', 216.8)]
+other              Choanephora cucurbitarum NRRL 2744 GCA_025331435.1_Chocucu1
+   old: [('JAIWNI010000021.1', 246966, 'Plus', 'high', 'mat_locus', 262.2)]
+   new: [('JAIWNI010000021.1', 246966, 'Plus', 'high', 'mat_locus', 274.4)]
+other              Blakeslea trispora NRRL 2456 GCA_025331445.1_Blatri1
+   old: [('JAIWNE010000009.1', 208107, 'Plus', 'medium', 'mat_locus', 236.0)]
+   new: [('JAIWNE010000009.1', 208107, 'Plus', 'medium', 'mat_locus', 241.5)]
+other              Backusella circina FSU 941 GCA_025399235.1_Bacci1
+   old: [('MU622345.1', 79679, 'Plus', 'medium', 'mat_locus', 240.9)]
+   new: [('MU622345.1', 79679, 'Plus', 'medium', 'mat_locus', 248.2)]
+other              Mucor circinelloides F1241 GCA_025504485.1_ASM2550448v1
+   old: [('JAMFRI010000496.1', 1491, 'Plus', 'high', 'mat_locus', 328.1)]
+   new: [('JAMFRI010000496.1', 1491, 'Plus', 'high', 'mat_locus', 337.7)]
+other              Mucor circinelloides P1003 GCA_025504515.1_ASM2550451v1
+   old: [('JAMFRH010000492.1', 1546, 'Minus', 'high', 'mat_locus', 87.4)]
+   new: [('JAMFRH010000492.1', 1546, 'Minus', 'high', 'mat_locus', 78.1)]
+other              Pilobolus umbonatus NRRL 6349 GCA_025528865.1_Pilumb1
+   old: [('JAIXMH010000022.1', 297241, 'Plus', 'high', 'mat_locus', 146.4)]
+   new: [('JAIXMH010000022.1', 297241, 'Plus', 'high', 'mat_locus', 151.6)]
+other              Rhizopus sp. PT2906 PT2906 GCA_025529335.1_ASM2552933v1
+   old: [('JAMYHX010000515.1', 12795, 'Plus', 'high', 'mat_locus', 272.9), ('JAMYHX010000536.1', 15640, 'Minus', 'high', 'mat_locus', 122.2)]
+   new: [('JAMYHX010000515.1', 12795, 'Plus', 'high', 'mat_locus', 265.6), ('JAMYHX010000536.1', 15640, 'Minus', 'high', 'mat_locus', 120.0)]
+other              Phycomyces nitens S608 GCA_025531835.1_PnitS608_1
+   old: [('JAJDOM010000040.1', 163387, 'Plus', 'high', 'mat_locus', 234.9)]
+   new: [('JAJDOM010000040.1', 163387, 'Plus', 'high', 'mat_locus', 242.7)]
+Umbelopsidaceae    Umbelopsis sp. AD052 AD052 GCA_025677805.1_Umbsp_AD052_1
+   old: []
+   new: [('JAIXMS010000013.1', 107259, 'undetermined', 'medium', 'mat_locus', 24.6)]
+Lichtheimiaceae    Phascolomyces articulosus RSA 2281 GCA_025677815.1_Phaart1
+   old: [('JAIXMP010000008.1', 1467566, 'undetermined', 'medium', 'mat_locus', 18.1)]
+   new: [('JAIXMP010000008.1', 1467566, 'undetermined', 'medium', 'mat_locus', 18.9)]
+other              Helicostylum pulchrum RSA 2064 GCA_025677825.1_Helpul1
+   old: [('JAIXMO010000047.1', 144893, 'Plus', 'high', 'mat_locus', 290.6)]
+   new: [('JAIXMO010000047.1', 144893, 'Plus', 'high', 'mat_locus', 299.4)]
+other              Pilaira anomala RSA1997 GCA_025716855.1_Pilano1
+   old: [('JAIXMQ010000034.1', 197917, 'Plus', 'high', 'mat_locus', 295.0)]
+   new: [('JAIXMQ010000034.1', 197917, 'Plus', 'high', 'mat_locus', 304.4)]
+other              Benjaminiella poitrasii RSA 903 GCA_025766325.1_Benpoi1
+   old: [('JAMKHW010000001.1', 2127990, 'Minus', 'high', 'mat_locus', 123.4), ('JAMKHW010000002.1', 2105487, 'Minus', 'medium', 'mat_locus', 32.2), ('JAMKHW010000002.1', 4143530, 'undetermined', 'medium', 'partial_locus', 11.7)]
+   new: [('JAMKHW010000001.1', 2127990, 'Minus', 'high', 'mat_locus', 119.9), ('JAMKHW010000002.1', 2105487, 'Minus', 'medium', 'mat_locus', 28.2)]
+other              Actinomucor elegans CJ-6 GCA_026027325.1_ASM2602732v1
+   old: [('JAMSLZ010000001.1', 3744645, 'Plus', 'high', 'mat_locus', 280.3)]
+   new: [('JAMSLZ010000001.1', 3744645, 'Plus', 'high', 'mat_locus', 283.4)]
+other              Mucor racemosus C GCA_027405735.1_ASM2740573v1
+   old: [('JAPEHQ010000001.1', 1863159, 'Minus', 'high', 'mat_locus', 31.0)]
+   new: [('JAPEHQ010000001.1', 1863159, 'Minus', 'high', 'mat_locus', 31.4)]
+Umbelopsidaceae    Umbelopsis isabellina MPG-14A GCA_027595865.1_Umbelopsis_isabellina_MPG-14A_reass_enz
+   old: [('JANJFK010000028.1', 163721, 'Plus', 'low', 'partial_locus', 92.2)]
+   new: [('JANJFK010000028.1', 163331, 'Plus', 'high', 'mat_locus', 93.5)]
+Umbelopsidaceae    Umbelopsis sp. M5902 M5902 GCA_037039815.1_ASM3703981v1
+   old: [('JAXQGL010000038.1', 439445, 'Plus', 'low', 'partial_locus', 75.8)]
+   new: [('JAXQGL010000038.1', 387521, 'Plus', 'medium', 'mat_locus', 77.0)]
+other              Mucor sp. M7501 M7501 GCA_037040325.1_ASM3704032v1
+   old: [('JAXQGS010000806.1', 1992, 'Minus', 'high', 'mat_locus', 102.1)]
+   new: [('JAXQGS010000806.1', 1992, 'Minus', 'high', 'mat_locus', 87.6)]
+other              Cunninghamella bertholletiae Z2 GCA_037043795.1_Z2.assembly
+   old: [('JAZGVP010000001.1', 7936967, 'Plus', 'high', 'mat_locus', 207.1)]
+   new: [('JAZGVP010000001.1', 7936967, 'Plus', 'high', 'mat_locus', 202.9)]
+other              Mucor circinelloides FMV-FR1 GCA_037974945.1_ASM3797494v1
+   old: [('JBBNAA010000027.1', 1930427, 'Plus', 'high', 'mat_locus', 328.1)]
+   new: [('JBBNAA010000027.1', 1930427, 'Plus', 'high', 'mat_locus', 337.7)]
+other              Rhizopus microsporus 56028 GCA_039881115.1_ASM3988111v1
+   old: [('JARGYK010002198.1', 74, 'Plus', 'low', 'partial_locus', 248.5)]
+   new: [('JARGYK010002198.1', 74, 'Plus', 'low', 'partial_locus', 245.7)]
+other              Rhizopus microsporus RT-3 GCA_040206765.1_ASM4020676v1
+   old: [('JBEEFM010000005.1', 263139, 'Minus', 'high', 'mat_locus', 122.2)]
+   new: [('JBEEFM010000005.1', 263139, 'Minus', 'high', 'mat_locus', 120.0)]
+other              Phycomyces blakesleeanus UBC21 GCA_040209145.1_PhyblU21_2
+   old: [('JBDFSA010000017.1', 323083, 'Plus', 'high', 'mat_locus', 238.1)]
+   new: [('JBDFSA010000017.1', 323083, 'Plus', 'high', 'mat_locus', 240.2)]
+other              Phycomyces blakesleeanus L51 GCA_040209185.1_Phybl_L51_1
+   old: [('JBCLYO010000018.1', 853701, 'Minus', 'high', 'mat_locus', 175.9)]
+   new: [('JBCLYO010000018.1', 853701, 'Minus', 'high', 'mat_locus', 176.7)]
+other              Mucor lusitanicus CBS 277.49 GCA_040256725.1_ASM4025672v1
+   old: [('MU975357.1', 2208856, 'Minus', 'high', 'mat_locus', 126.8)]
+   new: [('MU975357.1', 2208856, 'Minus', 'high', 'mat_locus', 122.7)]
+other              Helicostylum pulchrum KT1b GCA_040366295.1_Hpulcur_1.0
+   old: [('BAABUJ010000022.1', 429632, 'Plus', 'high', 'mat_locus', 292.5)]
+   new: [('BAABUJ010000022.1', 429632, 'Plus', 'high', 'mat_locus', 301.5)]
+other              Mucor flavus KT1a GCA_040367835.1_Mfluvus_1.0
+   old: [('BAABUK010000017.1', 221718, 'Plus', 'high', 'mat_locus', 268.2)]
+   new: [('BAABUK010000017.1', 221718, 'Plus', 'high', 'mat_locus', 279.2)]
+other              Cunninghamella bainieri 2A1 GCA_044232465.1_ASM4423246v1
+   old: [('JAOXMU010004158.1', 1443, 'Minus', 'high', 'mat_locus', 51.0)]
+   new: [('JAOXMU010004158.1', 1443, 'Minus', 'high', 'mat_locus', 51.9)]
+other              Rhizopus arrhizus Z10C7 GCA_048164915.1_ASM4816491v1
+   old: [('JBKSNG010000002.1', 77146, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JBKSNG010000002.1', 77146, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Mucor circinelloides F3 GCA_048772875.1_ASM4877287v1
+   old: [('JBLUOM010000154.1', 1932, 'Plus', 'high', 'mat_locus', 329.0)]
+   new: [('JBLUOM010000154.1', 1932, 'Plus', 'high', 'mat_locus', 337.8)]
+other              Choanephora infundibulifera BGC1 GCA_049334105.2_ASM4933410v2
+   old: [('JBMIIC010000124.1', 249155, 'Plus', 'high', 'mat_locus', 262.2)]
+   new: [('JBMIIC010000124.1', 249155, 'Plus', 'high', 'mat_locus', 274.4)]
+other              Rhizopus sp. FBL578 FBL578 GCA_049863895.1_ASM4986389v1
+   old: [('SMHB01000855.1', 5202, 'Plus', 'high', 'mat_locus', 306.0)]
+   new: [('SMHB01000855.1', 5202, 'Plus', 'high', 'mat_locus', 301.1)]
+other              Rhizopus arrhizus W17 GCA_050389755.1_R_arrhizus_W17_v1.0
+   old: [('JBNAEE010000545.1', 3250, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JBNAEE010000545.1', 3250, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Mucor circinelloides CBS 394.68 GCA_051295215.1_Mcir_PS15m_1.0
+   old: [('JBOZQX010000005.1', 1693323, 'Minus', 'high', 'mat_locus', 81.8)]
+   new: [('JBOZQX010000005.1', 1693323, 'Minus', 'high', 'mat_locus', 78.6)]
+other              Mucor circinelloides CBS 172.27 GCA_051307255.1_Mcir_PS15p_1.0
+   old: [('JBNRQL010000006.1', 1736258, 'Plus', 'high', 'mat_locus', 327.8)]
+   new: [('JBNRQL010000006.1', 1736258, 'Plus', 'high', 'mat_locus', 336.4)]
+other              Rhizopus microsporus 56019 GCA_051997045.1_ASM5199704v1
+   old: [('JARGYJ010000412.1', 3868, 'Minus', 'high', 'mat_locus', 146.6)]
+   new: [('JARGYJ010000412.1', 3868, 'Minus', 'high', 'mat_locus', 145.2)]
+other              Rhizopus microsporus NRRL 5549 GCA_051997065.1_ASM5199706v1
+   old: [('JARGYI010000307.1', 8883, 'Minus', 'high', 'mat_locus', 146.6)]
+   new: [('JARGYI010000307.1', 8883, 'Minus', 'high', 'mat_locus', 145.2)]
+other              Rhizopus microsporus CBS 11563 GCA_051997145.1_ASM5199714v1
+   old: [('JARGYL010000220.1', 28628, 'Minus', 'high', 'mat_locus', 140.4)]
+   new: [('JARGYL010000220.1', 457, 'Minus', 'high', 'mat_locus', 137.7)]
+other              Rhizopus microsporus ATCC 52812 GCA_051997165.1_ASM5199716v1
+   old: [('JARGYM010000377.1', 3564, 'Minus', 'high', 'mat_locus', 146.6)]
+   new: [('JARGYM010000377.1', 3564, 'Minus', 'high', 'mat_locus', 145.2)]
+other              Rhizopus microsporus CBS 112285 GCA_051997195.1_ASM5199719v1
+   old: [('JARGYN010000223.1', 15697, 'Minus', 'high', 'mat_locus', 145.0)]
+   new: [('JARGYN010000223.1', 15697, 'Minus', 'high', 'mat_locus', 143.2)]
+other              Mucor atramentarius CBS 202.28 GCA_052058875.1_Matr_PS6
+   old: [('JBPVWF010000178.1', 33311, 'Plus', 'high', 'mat_locus', 327.8)]
+   new: [('JBPVWF010000178.1', 33311, 'Plus', 'high', 'mat_locus', 336.4)]
+other              Mucor bainieri CBS 293.63 GCA_052058895.1_MBAN_PS3_1.0
+   old: [('JBPVWE010000349.1', 742, 'Plus', 'high', 'mat_locus', 309.0)]
+   new: [('JBPVWE010000349.1', 742, 'Plus', 'high', 'mat_locus', 321.6)]
+Umbelopsidaceae    Umbelopsis sp. WA50703 WA50703 GCA_053572175.1_ASM5357217v1
+   old: [('JAYKKX010000013.1', 106814, 'undetermined', 'low', 'partial_locus', 16.8)]
+   new: [('JAYKKX010000013.1', 106697, 'Minus', 'high', 'mat_locus', 37.1)]
+other              Mucor lanceolatus AOP5_B1_surf_bin_24 GCA_054123175.1_ASM5412317v1
+   old: [('JBQCPB010002378.1', 2303, 'Plus', 'high', 'mat_locus', 281.7)]
+   new: [('JBQCPB010002378.1', 2303, 'Plus', 'high', 'mat_locus', 286.1)]
+other              Mucor circinelloides AOP25_D2_surf_bin_14 GCA_054124215.1_ASM5412421v1
+   old: [('JBQCRE010000396.1', 2168, 'Plus', 'high', 'mat_locus', 327.1)]
+   new: [('JBQCRE010000396.1', 2168, 'Plus', 'high', 'mat_locus', 335.6)]
+other              Rhizopus delemar SE_PDA7 GCA_054127015.1_ASM5412701v1
+   old: [('JBSZMK010000001.1', 2930560, 'Minus', 'medium', 'mat_locus', 161.3)]
+   new: [('JBSZMK010000001.1', 2930560, 'Minus', 'medium', 'mat_locus', 167.2)]
+other              Cunninghamella blakesleeana UFAC-CB2.1 GCA_054130635.1_ASM5413063v1
+   old: [('CM134281.1', 3015120, 'Plus', 'high', 'mat_locus', 164.8)]
+   new: [('CM134281.1', 3015120, 'Plus', 'high', 'mat_locus', 157.7)]
+other              Rhizopus arrhizus PR1 GCA_054130755.1_ASM5413075v1
+   old: [('JBMUIF010000240.1', 14990, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JBMUIF010000240.1', 14990, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Gilbertella persicaria SHK1000 GCA_054601915.1_FAM010_1.0
+   old: [('BAAHPX010000008.1', 289312, 'Minus', 'high', 'mat_locus', 78.8)]
+   new: [('BAAHPX010000008.1', 289133, 'Minus', 'high', 'mat_locus', 70.4)]
+Umbelopsidaceae    Umbelopsis nana NBRC 117090 GCA_054906655.1_Umbelopsis_nana_v._1.0
+   old: []
+   new: [('BAAHSD010000001.1', 143205, 'Minus', 'high', 'mat_locus', 31.7)]
+other              Rhizopus stolonifer PRFJ02 GCA_054954275.1_ASM5495427v1
+   old: [('CM143249.1', 3300997, 'Minus', 'high', 'mat_locus', 109.1)]
+   new: [('CM143244.1', 223483, 'Minus', 'medium', 'partial_locus', 26.1), ('CM143249.1', 3300997, 'Minus', 'high', 'mat_locus', 116.0)]
+other              Mucor racemosus CGMCC-40320 GCA_055471225.1_ASM5547122v1
+   old: [('JBLVOR010000002.1', 2583120, 'Minus', 'high', 'mat_locus', 31.0)]
+   new: [('JBLVOR010000002.1', 2583120, 'Minus', 'high', 'mat_locus', 31.4)]
+other              Thamnidium elegans KKP 4289 GCA_056882155.1_ASM5688215v1
+   old: [('JBXEJM010000004.1', 449255, 'Plus', 'high', 'mat_locus', 280.3)]
+   new: [('JBXEJM010000004.1', 449255, 'Plus', 'high', 'mat_locus', 287.8)]
+other              Mucor circinelloides MM GCA_057380895.1_ASM5738089v1
+   old: [('JBYAOW010000491.1', 2320, 'Plus', 'high', 'mat_locus', 328.1)]
+   new: [('JBYAOW010000491.1', 2320, 'Plus', 'high', 'mat_locus', 337.7)]
+other              Rhizopus sp. TYR1 TYR1 GCA_057662165.1_ASM5766216v1
+   old: [('JBYEQD010000037.1', 2435, 'Plus', 'high', 'mat_locus', 295.3)]
+   new: [('JBYEQD010000037.1', 2435, 'Plus', 'high', 'mat_locus', 293.0)]
+other              Rhizopus arrhizus CBS 127.08 GCA_058380175.1_DTU-UU_Rory127_1.0
+   old: [('JBYHKV010000052.1', 209008, 'Minus', 'high', 'mat_locus', 169.7)]
+   new: [('JBYHKV010000052.1', 209008, 'Minus', 'high', 'mat_locus', 174.0)]
+other              Rhizopus microsporus CBS 112.586 GCA_058380205.1_DTU-UU_Roli_1.0
+   old: [('JBYHKW010000001.1', 2425378, 'Plus', 'high', 'mat_locus', 270.4)]
+   new: [('JBYHKW010000001.1', 2425378, 'Plus', 'high', 'mat_locus', 262.1)]
+other              Rhizopus arrhizus CBS 329.47 GCA_058380225.1_DTU-UU_Rory329_1.0
+   old: [('JBYHKU010000054.1', 196018, 'Minus', 'high', 'mat_locus', 163.4)]
+   new: [('JBYHKU010000054.1', 196018, 'Minus', 'high', 'mat_locus', 168.6)]
+other              Rhizopus stolonifer PRFJ01 GCA_059058645.1_ASM5905864v1
+   old: [('CM180848.1', 3300997, 'Minus', 'high', 'mat_locus', 109.1)]
+   new: [('CM180843.1', 223483, 'Minus', 'medium', 'partial_locus', 26.1), ('CM180848.1', 3300997, 'Minus', 'high', 'mat_locus', 116.0)]
+other              Rhizopus microsporus CBS 337.62 GCA_060230415.1_ASM6023041v1
+   old: [('CM190389.1', 2538304, 'Minus', 'high', 'mat_locus', 122.2), ('CM190391.1', 2551823, 'Plus', 'high', 'mat_locus', 270.4)]
+   new: [('CM190389.1', 2538304, 'Minus', 'high', 'mat_locus', 120.0), ('CM190391.1', 2551823, 'Plus', 'high', 'mat_locus', 262.1)]
+other              Mucor griseocyanus CBS 116.08 GCA_060309175.1_CBS116.08v1
+   old: [('JBLNHG010000007.1', 613217, 'Minus', 'high', 'mat_locus', 28.5)]
+   new: [('JBLNHG010000007.1', 613217, 'undetermined', 'high', 'mat_locus', 21.7)]
+other              Mucor circinelloides CBS 195.68 GCA_060309255.1_CBS195.68v1
+   old: [('JBLNHH010000013.1', 1762571, 'Plus', 'high', 'mat_locus', 328.9)]
+   new: [('JBLNHH010000013.1', 1762571, 'Plus', 'high', 'mat_locus', 337.6)]
+other              Mucor janssenii CBS 205.68 GCA_060309305.1_CBS205.68v1
+   old: [('JBLNHI010000055.1', 194430, 'Plus', 'high', 'mat_locus', 314.3)]
+   new: [('JBLNHI010000055.1', 194430, 'Plus', 'high', 'mat_locus', 320.4)]
+other              Mucor ardhlaengiktus CBS 210.80 GCA_060309335.1_CBS210.80v1
+   old: [('JBLNHJ010000021.1', 3179304, 'Minus', 'high', 'mat_locus', 88.9), ('JBLNHJ010000029.1', 208257, 'undetermined', 'medium', 'mat_locus', 24.2), ('JBLNHJ010000034.1', 3284499, 'Minus', 'medium', 'mat_locus', 34.1)]
+   new: [('JBLNHJ010000021.1', 3179304, 'Minus', 'high', 'mat_locus', 91.3), ('JBLNHJ010000034.1', 3284499, 'Minus', 'medium', 'mat_locus', 31.4)]
+other              Absidia glauca CBS 101.48 substr. RVII-324 met GCA_900079185.1_AG_v1
+   old: [('LT553527.1', 531514, 'Minus', 'medium', 'partial_locus', None)]
+   new: []
+Lichtheimiaceae    Rhizomucor pusillus  GCA_900175165.2_FCH_5_7
+   old: [('FWWN02000322.1', 30068, 'Minus', 'medium', 'partial_locus', None)]
+   new: []
+other              Mucor piriformis  GCA_943193625.1_gzMucPiri1.1
+   old: [('OW971869.1', 1496317, 'Minus', 'high', 'mat_locus', 141.2)]
+   new: [('OW971869.1', 1496317, 'Minus', 'high', 'mat_locus', 140.3)]
+Umbelopsidaceae    Umbelopsis sp. WA50703  GCA_964291815.1_UMBE_WA70503
+   old: [('CAXYTU010000169.1', 106865, 'undetermined', 'low', 'partial_locus', 16.8)]
+   new: [('CAXYTU010000169.1', 106748, 'Minus', 'high', 'mat_locus', 37.1)]
+other              Mucor circinelloides  GCA_973907015.1_gzMucCirc1
+   old: [('CDACDM010000044.1', 1225257, 'Plus', 'high', 'mat_locus', 328.1)]
+   new: [('CDACDM010000044.1', 1225257, 'Plus', 'high', 'mat_locus', 337.7)]
+other              Absidia cylindrospora  GCA_977092135.1_gzAbsCyli1
+   old: [('CDRYNH010000023.1', 4846711, 'Minus', 'medium', 'mat_locus', 52.0)]
+   new: [('CDRYNH010000023.1', 4846711, 'Minus', 'medium', 'mat_locus', 45.5)]
+other              Mucor hiemalis  GCA_977110905.1_gzMucHiem1
+   old: [('CDSBDF010000023.1', 973776, 'Minus', 'low', 'partial_locus', 46.3)]
+   new: [('CDSBDF010000023.1', 973776, 'Minus', 'low', 'partial_locus', 53.0)]
+other              Cunninghamella echinulata  GCA_977110915.1_gzCunEchi1
+   old: [('CDSBDD010000017.1', 3545115, 'Minus', 'high', 'mat_locus', 40.1)]
+   new: [('CDSBDD010000017.1', 3545115, 'Minus', 'high', 'mat_locus', 39.4)]
+other              Cunninghamella blakesleeana  GCA_977110925.1_gzCunBlak1
+   old: [('CDSBDC010000001.1', 6061741, 'Plus', 'high', 'mat_locus', 164.8)]
+   new: [('CDSBDC010000001.1', 6061741, 'Plus', 'high', 'mat_locus', 157.7)]
+other              Mucor fragilis  GCA_977110935.1_gzMucFrag1
+   old: [('CDSBDE010000001.1', 2553168, 'Minus', 'high', 'mat_locus', 103.9)]
+   new: [('CDSBDE010000001.1', 2553168, 'Minus', 'high', 'mat_locus', 97.0)]
+Umbelopsidaceae    Umbelopsis ramanniana  GCA_977110945.1_gzUmbRama1
+   old: [('CDSBDH010000020.1', 157103, 'Plus', 'high', 'mat_locus', 56.1)]
+   new: [('CDSBDH010000020.1', 128528, 'Plus', 'medium', 'mat_locus', 139.3)]
+Umbelopsidaceae    Umbelopsis vinacea  GCA_977110975.1_gzUmbVina2
+   old: [('CDSBDG010000016.1', 219389, 'undetermined', 'low', 'partial_locus', 9.4)]
+   new: [('CDSBDG010000016.1', 165230, 'Minus', 'high', 'mat_locus', 36.3)]
+other              Rhizopus stolonifer  GCA_977110985.1_gzRhiStol1
+   old: [('CDSBDJ010000032.1', 544724, 'Plus', 'high', 'mat_locus', 284.9)]
+   new: [('CDSBDJ010000032.1', 544724, 'Plus', 'high', 'mat_locus', 284.2)]
+other              Rhizopus delemar RA 99-880 GCF_000149305.1_RO3
+   old: [('NW_027137827.1', 3252060, 'Plus', 'medium', 'mat_locus', 297.4)]
+   new: [('NW_027137827.1', 3252060, 'Plus', 'medium', 'mat_locus', 295.0)]
+other              Phycomyces blakesleeanus NRRL 1555 GCF_001638985.1_Phybl2
+   old: [('NW_017265134.1', 3978283, 'Minus', 'high', 'mat_locus', 175.9)]
+   new: [('NW_017265134.1', 3978283, 'Minus', 'high', 'mat_locus', 176.7)]
+other              Rhizopus microsporus ATCC 52813 GCF_002708625.1_Rhimi1_1
+   old: [('NW_019671934.1', 225745, 'Plus', 'high', 'mat_locus', 258.4)]
+   new: [('NW_019671934.1', 225745, 'Plus', 'high', 'mat_locus', 255.7)]
+other              Mucor mucedo NRRL 3635 GCF_025094135.1_Mucmuc1
+   old: [('NW_026252347.1', 97175, 'Plus', 'high', 'mat_locus', 308.3)]
+   new: [('NW_026252347.1', 97175, 'Plus', 'high', 'mat_locus', 315.5)]
+other              Cokeromyces recurvatus NRRL 2243 GCF_025118155.1_Cokrec1
+   old: [('NW_026251389.1', 465916, 'Minus', 'high', 'mat_locus', 119.9), ('NW_026251417.1', 142146, 'Plus', 'medium', 'partial_locus', 290.6)]
+   new: [('NW_026251389.1', 465916, 'Minus', 'high', 'mat_locus', 119.6), ('NW_026251417.1', 142146, 'Plus', 'medium', 'partial_locus', 295.8)]
+other              Gilbertella persicaria CBS 190.32 GCF_025201335.1_Gilper1
+   old: [('NW_026251964.1', 237382, 'Minus', 'high', 'mat_locus', 78.8)]
+   new: [('NW_026251964.1', 237203, 'Minus', 'high', 'mat_locus', 70.4)]
+other              Halteromyces radiatus CBS 162.75 GCF_025201355.1_Halrad1
+   old: [('NW_026251697.1', 141603, 'Minus', 'high', 'mat_locus', 50.2)]
+   new: [('NW_026251697.1', 141600, 'Minus', 'high', 'mat_locus', 46.2)]
+other              Radiomyces spectabilis NRRL 2753 GCF_025331425.1_Radspe1
+   old: [('NW_026251940.1', 262120, 'Plus', 'medium', 'partial_locus', 174.7)]
+   new: [('NW_026251940.1', 262120, 'Plus', 'medium', 'partial_locus', 177.4)]
+Umbelopsidaceae    Umbelopsis ramanniana AG GCF_025399195.1_Umbra1
+   old: [('NW_026252087.1', 139483, 'Plus', 'high', 'mat_locus', 51.0)]
+   new: [('NW_026252087.1', 113844, 'Plus', 'medium', 'mat_locus', 127.3), ('NW_026252095.1', 124006, 'Minus', 'medium', 'mat_locus', 25.6)]
+other              Mycotypha africana NRRL 2978 GCF_025528875.1_Mycafr1
+   old: [('NW_026515730.1', 1357549, 'Plus', 'high', 'mat_locus', 233.6)]
+   new: [('NW_026515730.1', 1357549, 'Plus', 'high', 'mat_locus', 238.8)]
+other              Mucor velutinosus NIH1002 GCF_035048745.1_Mvel_NIH1002.PB.canu.pilon.trimmedMito
+   old: [('NW_027041901.1', 1016680, 'Minus', 'high', 'mat_locus', 109.4), ('NW_027041914.1', 15843, 'Minus', 'high', 'mat_locus', 109.4)]
+   new: [('NW_027041901.1', 1016680, 'Minus', 'high', 'mat_locus', 105.7), ('NW_027041914.1', 15843, 'Minus', 'high', 'mat_locus', 105.7)]

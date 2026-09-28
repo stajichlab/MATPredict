@@ -1,0 +1,198 @@
+record_id: 13706_nrrl-2496_MAT_Plus
+record_version: 1
+taxonomy:
+  taxid: 13706
+  lineage: k__Fungi;p__Mucoromycota;subphylum__Mucoromycotina;c__Mucoromycetes;o__Mucorales;f__Syncephalastraceae;g__Syncephalastrum;s__Syncephalastrum_racemosum
+  lineage_resolved_date: '2026-09-27'
+organism:
+  species: Syncephalastrum racemosum
+  strain:
+    name: NRRL 2496
+    known: true
+    culture_collection_ids:
+    - NRRL 2496
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Plus
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: sexP->|rnhA->
+    definition_note: 'Syncephalastrum racemosum NRRL 2496 (GCA_002105135.1, JGI Synrac1;
+      BioProject PRJNA330704) MAT Plus locus on MCGN01000004.1. Gene order: sexP (+)
+      -- 69 bp -- rnhA (ORY97819.1, +, 1262 aa, 11 exons), the canonical Mucorales
+      sexP->rnhA adjacency and orientation (cf. tptA->btbA->sexP->rnhA in R. arrhizus
+      CBS 346-36). tptA, algA, glrA and btbA are NOT at this locus: the genome''s
+      best tptA (ORZ02716.1) and glrA (ORZ02423.1) lie on MCGN01000001.1, algA hits
+      are weak (ORY97962.1, 32.9%); recorded present: false. So the Mucorales order
+      is PARTIAL here (sexP-rnhA only). sexP is not annotated in the JGI assembly
+      (annotation gap); recorded as the single-exon ORF 1,755,515-1,756,447 (+), 310
+      aa, from the first Met after an upstream in-frame stop to the stop codon (stop-to-stop
+      334 aa). PF00505 HMG box aa 112-175 (E 1.2e-16); best tblastn to curated sexP:
+      4837_ubc21 sexP (35.2% over 165 aa, 92 bits). HMM classifier (db/Mucoromycota/classifiers/MAT)
+      on the ORF: sexP 179.1 vs sexM 38.9 bits (margin +140). The same HMG protein
+      is 100% identical (228 aa) in S. racemosum B6101 (GCA_000696955.1, JNDN01000979.1:849,656),
+      where MATPredict called Plus beside rnhA. Final ML tree (results/2026-09-27_sexMP_final_ml):
+      the called S. racemosum loci sit outside the sexP clade (other HMG; the 69-column
+      HMG box gives UFBoot 62 even for the sexP references). TIER 2 (genome-derived).
+      No Syncephalastraceae MAT locus has a locus-specific deposit or a publication
+      (NCBI and PubMed searched 2026-09-26/27). '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: MCGN01000004.1
+        seq_region: MCGN01000004.1
+      start: 1755515
+      end: 1760805
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: sexP
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1755515
+  end: 1756447
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 1755515
+    end: 1756447
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: rnhA
+  protein_accession: ncbi_protein:ORY97819.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1756516
+  end: 1760805
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 1756516
+    end: 1756535
+  - start: 1756587
+    end: 1757253
+  - start: 1757301
+    end: 1757612
+  - start: 1757660
+    end: 1757687
+  - start: 1757737
+    end: 1758015
+  - start: 1758071
+    end: 1758181
+  - start: 1758231
+    end: 1759411
+  - start: 1759462
+    end: 1759589
+  - start: 1759638
+    end: 1760241
+  - start: 1760296
+    end: 1760526
+  - start: 1760578
+    end: 1760805
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: tptA
+  protein_accession: null
+  role: flanking_conserved
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+- gene_index: 3
+  name: algA
+  protein_accession: null
+  role: flanking_variable
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+- gene_index: 4
+  name: glrA
+  protein_accession: null
+  role: flanking_variable
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+- gene_index: 5
+  name: btbA
+  protein_accession: null
+  role: flanking_variable
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+evidence:
+  locus_existence:
+    tier: 2
+    citations: []
+    experimental_method: TIER 2 (genome-derived). No Syncephalastraceae MAT locus
+      has a locus-specific deposit or a publication (NCBI and PubMed searched 2026-09-26/27).
+      Locus identified by the MATPredict HMM idiomorph classifier on the HMG-box protein
+      (margin +140 bits) and by the Mucorales sexP-rnhA adjacency (partial gene order;
+      see definition_note).
+  boundaries:
+    tier: 2
+    citations: []
+    experimental_method: TIER 2 (genome-derived). No Syncephalastraceae MAT locus
+      has a locus-specific deposit or a publication (NCBI and PubMed searched 2026-09-26/27).
+      Record segment spans sexP and rnhA on MCGN01000004.1 (GCA_002105135.1).
+  idiomorph_assignment:
+    tier: 2
+    citations: []
+    experimental_method: 'TIER 2 (genome-derived). No Syncephalastraceae MAT locus
+      has a locus-specific deposit or a publication (NCBI and PubMed searched 2026-09-26/27).
+      Idiomorph from the HMG-box gene: HMM classifier sexP 179.1 vs sexM 38.9 bits.'
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: MCGN01000004.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-genome-curation
+  proposal_dedupe_key: GCA_002105135.1|13706|MAT|Plus
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-09-27 on curator ruling (revised Lichtheimiaceae/Syncephalastraceae
+    rule: classifier margin > 25 bits and Mucorales gene order). PENDING CURATOR SIGN-OFF:
+    accepted on the unmerged branch curation-umbelopsis only so detect can be measured
+    with it.'
+model_provenance: null

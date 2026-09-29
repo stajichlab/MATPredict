@@ -228,6 +228,11 @@ class Family:
     subloci literature review, ruled they merge (option a). Kept as a roster
     switch, default False (merge)."""
 
+    two_idiomorphs_report: bool = False
+    """Write a genome-level `two_idiomorphs` statement when this family calls
+    both idiomorphs (`two_idiomorphs`; curator's ruling 2026-09-29, test
+    first). Report-level only; never changes a call. On for Mucoromycota:MAT."""
+
     min_idiomorph_margin: float = DEFAULT_MIN_IDIOMORPH_MARGIN
     """Identity points two mutually exclusive idiomorph genes must be apart.
 
@@ -396,6 +401,7 @@ def load_all_families(db_root: Path) -> list[Family]:
                     merge_group=locus.get("merge_group"),
                     merge_generic=bool(locus.get("merge_generic", False)),
                     merge_separately=bool(locus.get("merge_separately", False)),
+                    two_idiomorphs_report=bool(locus.get("two_idiomorphs_report", False)),
                 )
             )
     return families

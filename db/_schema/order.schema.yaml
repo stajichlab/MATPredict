@@ -72,6 +72,10 @@ properties:
         # OPTIONAL. Two merge_separately families of one group never merge with
         # each other (e.g. Aalpha/Abeta; curator 2026-09-28, provisional).
         merge_separately: {type: boolean}
+        # OPTIONAL. Write a genome-level two_idiomorphs statement when the
+        # family calls both idiomorphs (detect.two_idiomorphs; curator's
+        # ruling 2026-09-29, test first). Report-level only.
+        two_idiomorphs_report: {type: boolean}
         # OPTIONAL. Locus-level override of the phylum's homothallic_screen.
         homothallic_screen: {type: boolean}
         # OPTIONAL. Polish both genes of an overlapping mutually exclusive

@@ -35,6 +35,12 @@ loci:
     # held-out Zygo protein cleared 34 bits, so no measured correct call is
     # lost.
     idiomorph_classifier: {type: hmm, dir: classifiers/MAT, min_margin: 25}
+    # CURATOR RULING, J. Stajich, 2026-09-29: test first. A genome with a
+    # Plus and a Minus call is NOT a confirmed homothallic (hybrid/fusion,
+    # duplication, mixed culture, assembly artefact are all possible). The
+    # report lists the arrangement, evidence and every possible cause
+    # (detect.two_idiomorphs; results/2026-09-29_two_idiomorphs/).
+    two_idiomorphs_report: true
     # CURATOR RULING, J. Stajich, 2026-09-20: the detector's 25000 bp default
     # clustering gap is "right for Ascomycota" but too tight for Mucoromycota,
     # which should "start at 50 kb". PROVISIONAL: 50000 is a starting value, not

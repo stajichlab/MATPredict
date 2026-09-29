@@ -481,6 +481,10 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
         # `unknown` when this taxon's assemblies collapse MTL heterozygosity
         # and the calls name one idiomorph. Null when no rule applies.
         "zygosity": outcome.zygosity,
+        # Families that called both idiomorphs (curator's ruling 2026-09-29,
+        # test first; see `two_idiomorphs`): arrangement, evidence and every
+        # possible cause. Never a homothallism verdict. [] when none.
+        "two_idiomorphs": outcome.two_idiomorphs,
         "families_attempted": [_family_label(k) for k in outcome.families_attempted],
         "detected": [_result_doc(r) for r in outcome.results],
         "not_detected": [

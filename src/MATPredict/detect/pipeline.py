@@ -433,6 +433,9 @@ class DetectionOutcome:
     #: Genome-level zygosity statement, or None when no rule applies
     #: (curator's ruling 2026-09-26; see `zygosity`). Never alters a call.
     zygosity: dict | None = None
+    #: Genome-level statements for families that called both idiomorphs
+    #: (`two_idiomorphs`; curator's ruling 2026-09-29). Never alters a call.
+    two_idiomorphs: list[dict] = field(default_factory=list)
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -3032,6 +3035,11 @@ def run_pipeline(
         results, taxid, load_zygosity_rules(db_root), zygosity_lineage_resolver,
     )
 
+    # Curator's ruling 2026-09-29 (test first): a family that called both
+    # idiomorphs gets a neutral statement of arrangement, evidence and every
+    # possible cause. Report-level only; the contigs are read only then.
+    two_idiomorphs = _two_idiomorph_statements(results, families, genome_fasta, genetic_code)
+
     return DetectionOutcome(
         results=results,
         not_detected=not_detected,
@@ -3046,7 +3054,30 @@ def run_pipeline(
         suppressed_mat_gene_gate=suppressed_by_gate,
         assembly_gaps_at_locus=assembly_gaps,
         zygosity=zygosity,
+        two_idiomorphs=two_idiomorphs,
     )
+
+
+def _two_idiomorph_statements(results, families, genome_fasta, genetic_code) -> list[dict]:
+    """The `two_idiomorphs` statements, reading contig sequences only when needed."""
+    from MATPredict.detect.assembly_gap import _contig_sequences
+    from MATPredict.detect.report import _family_label
+    from MATPredict.detect.two_idiomorphs import calls_from_results, two_idiomorph_statements
+
+    enabled = {_family_label(f.key) for f in families if f.two_idiomorphs_report}
+    if not enabled:
+        return []
+    calls = [c for c in calls_from_results(results) if c["family"] in enabled]
+    per_family: dict[str, set[str]] = {}
+    for c in calls:
+        if c["idiomorph"] not in (None, "", "undetermined"):
+            per_family.setdefault(c["family"], set()).add(c["idiomorph"])
+    if not any(len(v) >= 2 for v in per_family.values()):
+        return []
+    wanted = {c["contig"] for c in calls} | {
+        g["contig"] for c in calls for g in c["gene_evidence"]}
+    seqs = _contig_sequences(genome_fasta, wanted) if genome_fasta else {}
+    return two_idiomorph_statements(calls, enabled, seqs, genetic_code=genetic_code or 1)
 
 
 def not_searched_reason(routing: RoutingDecision) -> str:

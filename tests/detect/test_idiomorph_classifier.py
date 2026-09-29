@@ -88,7 +88,7 @@ def _setup(tmp_path, *, min_margin=10.0, classifier=True, write_hmms=True):
     return 1000, 999 + len(cds) - 3
 
 
-def _run(tmp_path, stray=False, core_models=True, **kw):
+def _run(tmp_path, stray=False, core_models=True, flank_identity=90.0, **kw):
     start, end = _setup(tmp_path, **kw)
     spans = {"sexP": (start, end), "sexM": (start, end), "tptA": (3000, 4000),
              "rnhA": (5000, 6000)}
@@ -111,7 +111,10 @@ def _run(tmp_path, stray=False, core_models=True, **kw):
     def model(gene_name, method):
         if not core_models and roles[gene_name] == "core_MAT":
             return None  # no core protein models (the fragment path)
-        m = _model(gene_name, "c1", *spans[gene_name], identity=35.0, family_key=KEY,
+        # Flank models match their 90% hits (a real locus); the MAT-gene gate
+        # (2026-09-28) counts flanks modelled at >= 40% as support.
+        identity = 35.0 if roles[gene_name] == "core_MAT" else flank_identity
+        m = _model(gene_name, "c1", *spans[gene_name], identity=identity, family_key=KEY,
                    role=roles[gene_name], method=method)
         # The model scores say sexM; the protein the locus encodes is sexP.
         return dataclasses.replace(m, score={"sexM": 300.0, "sexP": 150.0}.get(gene_name, 500.0))
@@ -188,6 +191,17 @@ def test_a_fragment_verdict_keeps_the_min_margin(tmp_path):
     (r,) = _run(tmp_path, core_models=False, min_margin=1e6).results
     assert r.idiomorph == "undetermined"
     assert r.idiomorph_classifier["classifier_input"] == "hsp_fragment"
+
+
+def test_a_fragment_call_without_flank_support_is_withheld_by_the_mat_gene_gate(tmp_path):
+    """Curator's ruling 2026-09-28: absolute scores do not separate MAT genes
+    from HMG paralogs on fragments, so a fragment-typed call needs >= 2 roster
+    flanks modelled at >= 40% (`mat_gene_gate`)."""
+    out = _run(tmp_path, core_models=False, flank_identity=35.0)
+    assert out.results == []
+    (s,) = [x for x in out.suppressed_loci if x.withheld_reason == "mat_gene_gate"]
+    assert s.withheld_detail["classifier_input"] == "hsp_fragment"
+    assert s.withheld_detail["supporting_flanks"] == []
 
 
 def test_without_a_classifier_no_core_model_falls_back_to_identity(tmp_path):

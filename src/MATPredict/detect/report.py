@@ -440,6 +440,7 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
         # Flank-carried calls withheld because a core hit lay outside the
         # flank span (`flank_carried`). Also listed in `suppressed_loci`.
         "suppressed_flank_carried": outcome.suppressed_flank_carried,
+        "suppressed_mat_gene_gate": outcome.suppressed_mat_gene_gate,
         # The withheld loci themselves, compactly: enough to place each one
         # against a known locus (a holdout truth span, a curated record) and to
         # see what the bar cost, without the full evidence of a reported call.

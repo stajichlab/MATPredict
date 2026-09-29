@@ -87,6 +87,7 @@ from MATPredict.detect.caax import (
 )
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.split_locus import evaluate_split_locus
+from MATPredict.detect.mat_gene_gate import WITHHELD_MAT_GENE_GATE, apply_mat_gene_gate
 from MATPredict.detect.flank_carried import (
     WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
 )
@@ -424,6 +425,8 @@ class DetectionOutcome:
     #: outside the flank span (see `flank_carried`). They are in
     #: `suppressed_loci` too, with their `withheld_reason`.
     suppressed_flank_carried: int = 0
+    #: calls withheld by the MAT-gene gate (`mat_gene_gate`).
+    suppressed_mat_gene_gate: int = 0
     #: N blocks at a flank-anchored position of a family with no call
     #: (curator's ruling 2026-09-26; see `assembly_gap`). A report, not a call.
     assembly_gaps_at_locus: list[AssemblyGapAtLocus] = field(default_factory=list)
@@ -2740,17 +2743,23 @@ def run_pipeline(
     flank_windows = {f.key: f.flank_carried_window_bp for f in families}
     flank_bits = {f.key: f.flank_carried_min_bitscore for f in families}
 
+    classifier_specs = {f.key: f.idiomorph_classifier for f in families}
+
     def _withhold(candidates):
-        """(kept, withheld, n_by_bar, n_by_flank) after the bar and flank rule."""
+        """(kept, withheld, n_by_bar, n_by_flank, n_by_gate) after the bar, the
+        flank rule and the MAT-gene gate (`mat_gene_gate`; curator's ruling
+        2026-09-28: the classifier margin types a gene but does not tell a MAT
+        gene from an HMG paralog)."""
         by_bar = [
             replace(r, withheld_reason=MODELLED_GENE_BAR)
             for r in candidates if r.polished_genes < min_polished_genes
         ]
         kept = [r for r in candidates if r.polished_genes >= min_polished_genes]
         kept, by_flank = apply_flank_carried_rule(kept, flank_windows, flank_bits)
-        return kept, by_bar + by_flank, len(by_bar), len(by_flank)
+        kept, by_gate = apply_mat_gene_gate(kept, classifier_specs)
+        return kept, by_bar + by_flank + by_gate, len(by_bar), len(by_flank), len(by_gate)
 
-    results, suppressed, suppressed_by_bar, suppressed_by_flank = _withhold(results)
+    results, suppressed, suppressed_by_bar, suppressed_by_flank, suppressed_by_gate = _withhold(results)
 
     if not results and relaxed_second_pass:
         def _record_relaxed(result, cluster, score):
@@ -2789,10 +2798,11 @@ def run_pipeline(
             model_losers=model_losers,
             classifier_verdicts=classifier_verdicts,
         )
-        results, relaxed_withheld, relaxed_by_bar, relaxed_by_flank = _withhold(relaxed)
+        results, relaxed_withheld, relaxed_by_bar, relaxed_by_flank, relaxed_by_gate = _withhold(relaxed)
         suppressed += relaxed_withheld
         suppressed_by_bar += relaxed_by_bar
         suppressed_by_flank += relaxed_by_flank
+        suppressed_by_gate += relaxed_by_gate
         if relaxed:
             logger.info(
                 "strict pass found no locus; %d admitted by the relaxed pass "
@@ -2868,6 +2878,24 @@ def run_pipeline(
         short_genes = short_orf_by_family.get(family.key, set())
         score = best_attempt.get(family.key)
         withheld = suppressed_best.get(family.key)
+        if withheld is not None and withheld.withheld_reason == WITHHELD_MAT_GENE_GATE:
+            d = withheld.withheld_detail or {}
+            not_detected.append(NotDetectedFamily(
+                family_key=family.key,
+                reason=(
+                    "best cluster's core gene was not shown to be the MAT gene: "
+                    f"classifier score {d.get('best_score')} bits "
+                    f"({d.get('classifier_input')}) is below {d.get('mat_gene_min_score'):g} "
+                    f"or not model-based, and it has {len(d.get('supporting_flanks', []))} "
+                    f"roster flank(s) modelled at >= {d.get('flank_support_min_identity'):g}% "
+                    f"(needs {d.get('flank_support_min_genes')})"
+                ),
+                best_fraction_found=score.fraction_found if score else 0.0,
+                genes_found=list(withheld.genes_found),
+                genes_missing=[g for g in withheld.genes_missing if g not in short_genes],
+                genes_not_searchable=sorted(short_genes),
+            ))
+            continue
         if withheld is not None and withheld.withheld_reason == WITHHELD_FLANK_CARRIED:
             not_detected.append(NotDetectedFamily(
                 family_key=family.key,
@@ -2988,6 +3016,7 @@ def run_pipeline(
         suppressed_unpolished=suppressed_by_bar,
         suppressed_loci=suppressed + floor_withheld,
         suppressed_flank_carried=suppressed_by_flank,
+        suppressed_mat_gene_gate=suppressed_by_gate,
         assembly_gaps_at_locus=assembly_gaps,
         zygosity=zygosity,
     )

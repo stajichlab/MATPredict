@@ -26,3 +26,4 @@ See `README.md` for rules, template and status vocabulary. Last updated 2026-09-
 | [020](020-annotation-errors-at-mat-loci.md) | Annotation errors at MAT loci (summary) | annotation artefact | verified | various | report IDs A1, B1.6, B2.4, B5.2, C1, D3-D10 |
 | [021](021-lodderomyces-multicopy-mtla.md) | Lodderomyces beijingensis MTLa-like blocks on 7 chromosomes | artefact (unresolved) | candidate | Serinales | GCF_963989305.1 |
 | [022](022-pezizomycetes-morchella-references.md) | Morchella references raise Pezizomycetes calls 27 -> 98 | curation-first | verified | Pezizomycetes | KY782629.1, KY782630.1 |
+| [023](023-syzygites-both-idiomorphs.md) | Both Syzygites genomes carry sexP and sexM (unlinked); sexM 100% identical | biology; homothallism candidate | candidate | Mucorales | LCG Syzygites sp. MES 3091, S. megalocarpus SC16 scaffold_38; Idnurm 2011 |

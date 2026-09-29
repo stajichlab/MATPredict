@@ -805,6 +805,28 @@ def _append_diagnostics_row(out_path: Path, row: dict) -> None:
             logger.warning("could not write evidence diagnostics to %s: %s", out_path, exc)
 
 
+def sub_floor_genes(hits, family_key: FamilyKey, floor: float) -> set[str]:
+    """This family's genes whose EVERY hit in `hits` scores below `floor` bits.
+
+    Review finding F6, curator's ruling 2026-09-28: such a gene is noise, not a
+    gene "that failed to model", so it must not cap a call at medium (e.g.
+    gzUmbRama1, an rnhA HSP at 34.7 bits 28 kb from the locus). A gene with any
+    hit at or above the floor, or any hit with no bitscore recorded, is kept.
+    """
+    best: dict[str, float | None] = {}
+    for h in hits:
+        if h.family_key != family_key:
+            continue
+        bits = h.bitscore
+        if bits is None:
+            best[h.gene_name] = None
+        elif h.gene_name not in best:
+            best[h.gene_name] = float(bits)
+        elif best[h.gene_name] is not None:
+            best[h.gene_name] = max(best[h.gene_name], float(bits))
+    return {g for g, b in best.items() if b is not None and b < floor}
+
+
 def _modelled_gene_names(
     member_clusters: list[GeneCluster],
     family_key: FamilyKey,
@@ -2450,6 +2472,12 @@ def run_pipeline(
                 h.gene_name for c in clusters if id(c) in cluster_ids for h in c.hits
                 if h.family_key == family_key and h.superseded_by is None
             }
+        # A gene whose every hit here is below the family's noise floor is
+        # noise, not a failed model (review finding F6, 2026-09-28).
+        noise = sub_floor_genes(
+            [h for c in clusters if id(c) in cluster_ids for h in c.hits],
+            family_key, families_by_key[family_key].flank_carried_min_bitscore,
+        )
         return any(
             outcome.status == STATUS_UNPOLISHED
             for (cluster_id, key, gene_name), outcome in polish_by.items()
@@ -2459,6 +2487,7 @@ def run_pipeline(
             # (`tiering.allele_absent_genes_to_ignore`) is not this call's
             # gene either.
             and gene_name not in exclude
+            and gene_name not in noise
         )
 
     def _modelled_gene_count(

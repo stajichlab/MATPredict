@@ -88,7 +88,7 @@ def _setup(tmp_path, *, min_margin=10.0, classifier=True, write_hmms=True):
     return 1000, 999 + len(cds) - 3
 
 
-def _run(tmp_path, stray=False, core_models=True, flank_identity=90.0, **kw):
+def _run(tmp_path, stray=False, core_models=True, flank_identity=90.0, rnhA_bits=None, **kw):
     start, end = _setup(tmp_path, **kw)
     spans = {"sexP": (start, end), "sexM": (start, end), "tptA": (3000, 4000),
              "rnhA": (5000, 6000)}
@@ -102,7 +102,7 @@ def _run(tmp_path, stray=False, core_models=True, flank_identity=90.0, **kw):
 
     def localize(*a, **k):
         hits = [hit("sexM", 36.1, 60.0), hit("sexP", 34.0, 55.0),
-                hit("tptA", 90.0, 400.0), hit("rnhA", 90.0, 400.0)]
+                hit("tptA", 90.0, 400.0), hit("rnhA", 90.0, rnhA_bits or 400.0)]
         if stray:  # a separate weak sexM-like hit, away from the scored HMG gene
             hits.append(SearchHit(KEY, "sexM", "core_MAT", "c1", 6500, 6600, "+", 43.0, "rec1",
                                   "tblastn_genome", bitscore=30.0))
@@ -111,6 +111,8 @@ def _run(tmp_path, stray=False, core_models=True, flank_identity=90.0, **kw):
     def model(gene_name, method):
         if not core_models and roles[gene_name] == "core_MAT":
             return None  # no core protein models (the fragment path)
+        if rnhA_bits is not None and gene_name == "rnhA":
+            return None  # an rnhA hit neither tool can model
         # Flank models match their 90% hits (a real locus); the MAT-gene gate
         # (2026-09-28) counts flanks modelled at >= 40% as support.
         identity = 35.0 if roles[gene_name] == "core_MAT" else flank_identity
@@ -202,6 +204,16 @@ def test_a_fragment_call_without_flank_support_is_withheld_by_the_mat_gene_gate(
     (s,) = [x for x in out.suppressed_loci if x.withheld_reason == "mat_gene_gate"]
     assert s.withheld_detail["classifier_input"] == "hsp_fragment"
     assert s.withheld_detail["supporting_flanks"] == []
+
+
+def test_an_unmodelled_hit_below_the_noise_floor_does_not_cap_the_call(tmp_path):
+    """Review finding F6 (2026-09-28): an unpolished rnhA hit at 34.7 bits --
+    below the 39-bit floor -- must not cap the call at medium; the same hit at
+    60 bits still does (gzUmbRama1 / Umbra1 shape)."""
+    (noise,) = _run(tmp_path / "n", rnhA_bits=34.7).results
+    (real,) = _run(tmp_path / "r", rnhA_bits=60.0).results
+    assert real.confidence == "medium"
+    assert noise.confidence == "high"
 
 
 def test_without_a_classifier_no_core_model_falls_back_to_identity(tmp_path):

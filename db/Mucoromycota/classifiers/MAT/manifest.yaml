@@ -1099,3 +1099,12 @@ min_margin_rule: half the worst correct leave-one-genus-out margin, so every hel
 warnings: []
 notes: 'Curator option (a), 2026-09-26: curated sexM/sexP records + UFBoot-99 sexP-clade members (results/2026-09-26_hmm_classifier/make_training_extra.py);
   Zygo 23 excluded as the held-out test; disputed sets excluded.'
+mat_gene_gate:
+  min_score: 99.9
+  rule: nearest-rank 95th percentile of the best classifier scores of the HMG-paralog negative set (paralog_negatives.faa)
+    against this build's HMMs; curator ruling 2026-09-29
+  n_negatives: 189
+  negatives_sha256: fa0a4e356d41d912e4e985f89f257d297f3ddbe3c63a5f2c5357c66942b48922
+  negatives_at_or_above: 10
+  loo_correct_at_or_above: 75
+  loo_correct_tested: 85

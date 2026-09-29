@@ -33,10 +33,25 @@ a MAT locus. Families without a classifier, calls with no classifier verdict,
 and split-locus calls (which require roster flanks by construction) are left
 alone. All three numbers are roster-overridable inside the
 `idiomorph_classifier` block.
+
+Curator ruling 2026-09-29: the absolute threshold comes from EACH CLASSIFIER
+BUILD, not a fixed number. A rebuild with new records lowered the Circinella
+minor sexP score from 112.5 to 85.9 bits (results/2026-09-29_circinella_trace/
+NOTE.md), so a fixed 100 moved calls across the gate silently.
+`scripts/build_idiomorph_hmms.py` writes `mat_gene_gate.min_score` into the
+classifier's `manifest.yaml` (the 95th percentile of the best scores of a fixed
+HMG-paralog negative set against that build's HMMs; see
+`classifier_build.gate_threshold`). The gate reads it from the manifest; the
+roster `mat_gene_min_score`, then the 100-bit default, are used only when the
+manifest has none (`gate_min_score`).
 """
 from __future__ import annotations
 
 from dataclasses import replace
+from functools import lru_cache
+from pathlib import Path
+
+import yaml
 
 from MATPredict.detect.polish import STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE
 
@@ -66,6 +81,30 @@ def supporting_flanks(result, min_identity: float) -> list[str]:
     })
 
 
+@lru_cache(maxsize=None)
+def _manifest_min_score(directory: str) -> float | None:
+    path = Path(directory) / "manifest.yaml"
+    if not path.exists():
+        return None
+    gate = (yaml.safe_load(path.read_text()) or {}).get("mat_gene_gate") or {}
+    value = gate.get("min_score")
+    return None if value is None else float(value)
+
+
+def gate_min_score(spec: dict) -> tuple[float, str]:
+    """`(threshold, source)` for a roster `idiomorph_classifier` block: the
+    build's manifest value when present (`"manifest"`), else the roster's
+    `mat_gene_min_score` (`"roster"`), else the default (`"default"`)."""
+    directory = spec.get("dir")
+    if directory:
+        value = _manifest_min_score(str(directory))
+        if value is not None:
+            return value, "manifest"
+    if spec.get("mat_gene_min_score") is not None:
+        return float(spec["mat_gene_min_score"]), "roster"
+    return DEFAULT_MAT_GENE_MIN_SCORE, "default"
+
+
 def apply_mat_gene_gate(results, classifier_specs):
     """`(kept, withheld)` after the gate. `classifier_specs` maps each family
     key to its roster `idiomorph_classifier` block, or None."""
@@ -76,7 +115,7 @@ def apply_mat_gene_gate(results, classifier_specs):
         if not spec or not clf or r.split_locus:
             kept.append(r)
             continue
-        min_score = float(spec.get("mat_gene_min_score", DEFAULT_MAT_GENE_MIN_SCORE))
+        min_score, min_score_source = gate_min_score(spec)
         min_identity = float(spec.get("flank_support_min_identity",
                                       DEFAULT_FLANK_SUPPORT_MIN_IDENTITY))
         min_genes = int(spec.get("flank_support_min_genes", DEFAULT_FLANK_SUPPORT_MIN_GENES))
@@ -94,6 +133,7 @@ def apply_mat_gene_gate(results, classifier_specs):
                 "best_score": round(best, 1),
                 "classifier_input": clf.get("classifier_input"),
                 "mat_gene_min_score": min_score,
+                "mat_gene_min_score_source": min_score_source,
                 "supporting_flanks": flanks,
                 "flank_support_min_genes": min_genes,
                 "flank_support_min_identity": min_identity,

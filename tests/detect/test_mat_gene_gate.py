@@ -142,3 +142,74 @@ def test_the_thresholds_are_roster_overridable():
     r2 = _result([CORE, _ev("glrA", "flanking_variable", 77.2)],
                  {"Plus": 45.0, "Minus": 20.0}, classifier_input="hsp_fragment")
     assert apply_mat_gene_gate([r2], {KEY: spec})[0] == [r2]
+
+
+# --- the threshold comes from each classifier build (curator ruling 2026-09-29) ---
+# results/2026-09-29_circinella_trace/NOTE.md: a classifier rebuild lowered the
+# Circinella minor sexP score from 112.5 to 85.9 bits, so a fixed 100 moved a
+# call across the gate silently. The build now writes the threshold into its
+# manifest; the roster/default is only a fallback.
+
+import yaml
+
+from MATPredict.detect.classifier_build import gate_threshold
+from MATPredict.detect.mat_gene_gate import gate_min_score
+
+
+def _spec_with_manifest(tmp_path, gate):
+    (tmp_path / "manifest.yaml").write_text(yaml.safe_dump({"family": "Mucoromycota:MAT",
+                                                            **gate}))
+    return {**SPEC, "dir": str(tmp_path)}
+
+
+def test_the_manifest_threshold_overrides_the_roster_and_default(tmp_path):
+    spec = _spec_with_manifest(tmp_path, {"mat_gene_gate": {"min_score": 80.0}})
+    spec["mat_gene_min_score"] = 120  # roster value is ignored when the build set one
+    assert gate_min_score(spec) == (80.0, "manifest")
+    r = _result([CORE], {"Plus": 85.9, "Minus": 32.3})
+    assert apply_mat_gene_gate([r], {KEY: spec})[0] == [r]
+
+
+def test_without_a_manifest_threshold_the_roster_then_default_is_used(tmp_path):
+    spec = _spec_with_manifest(tmp_path, {})
+    assert gate_min_score(spec) == (DEFAULT_MAT_GENE_MIN_SCORE, "default")
+    assert gate_min_score({**spec, "mat_gene_min_score": 70}) == (70.0, "roster")
+    assert gate_min_score(SPEC) == (DEFAULT_MAT_GENE_MIN_SCORE, "default")  # no manifest file
+
+
+def test_a_withheld_call_records_where_its_threshold_came_from(tmp_path):
+    spec = _spec_with_manifest(tmp_path, {"mat_gene_gate": {"min_score": 90.0}})
+    r = _result([CORE], {"Plus": 85.9, "Minus": 32.3})
+    _, withheld = apply_mat_gene_gate([r], {KEY: spec})
+    assert withheld[0].withheld_detail["mat_gene_min_score"] == 90.0
+    assert withheld[0].withheld_detail["mat_gene_min_score_source"] == "manifest"
+
+
+def test_gate_threshold_is_the_nearest_rank_percentile_of_paralog_scores():
+    # 20 paralog best scores 1..20: the 95th percentile (nearest rank) is the 19th
+    scores = [float(x) for x in range(1, 21)]
+    assert gate_threshold(scores, percentile=95) == 19.0
+    assert gate_threshold([50.0], percentile=95) == 50.0
+    assert gate_threshold([], percentile=95) is None
+
+
+def test_the_shipped_mucoromycota_classifier_sets_its_own_gate_threshold():
+    """The shipped build's manifest carries the gate threshold, computed from
+    its own HMMs and the paralog negative set, and the pipeline uses it."""
+    import hashlib
+    from pathlib import Path
+
+    from MATPredict.detect.family_registry import load_all_families
+
+    db = Path(__file__).resolve().parents[2] / "db"
+    family = next(f for f in load_all_families(db) if f.key == KEY)
+    spec = family.idiomorph_classifier
+    manifest = yaml.safe_load((Path(spec["dir"]) / "manifest.yaml").read_text())
+    gate = manifest["mat_gene_gate"]
+    negatives = Path(spec["dir"]) / "paralog_negatives.faa"
+    assert gate["n_negatives"] == 189
+    assert gate["negatives_sha256"] == hashlib.sha256(negatives.read_bytes()).hexdigest()
+    # at most 5% of the negatives reach the threshold (nearest-rank 95th percentile)
+    assert gate["negatives_at_or_above"] <= -(-5 * gate["n_negatives"] // 100)
+    value, source = gate_min_score(spec)
+    assert source == "manifest" and value == gate["min_score"]

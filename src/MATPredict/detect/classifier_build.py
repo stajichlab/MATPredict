@@ -192,6 +192,74 @@ def leave_one_genus_out(rows: list[dict], genes: dict[str, str], workdir: Path) 
     return out
 
 
+#: Percentile of the HMG-paralog negative set's best scores that sets the
+#: MAT-gene gate threshold. In the 2026-09-28 validation build the paralog
+#: 95th percentile was 99.9 bits -- the 100 bits the curator adopted
+#: (results/2026-09-28_validation_f3_f4/f3_absolute.txt: >=100 kept 96/108
+#: true full proteins and 9/189 paralogs). Anchoring on the negatives makes the
+#: threshold move WITH a rebuild's score calibration.
+GATE_PARALOG_PERCENTILE = 95
+NEGATIVES_FILE = "paralog_negatives.faa"
+
+
+def gate_threshold(best_scores: list[float], percentile: int = GATE_PARALOG_PERCENTILE):
+    """The nearest-rank `percentile` of `best_scores`, rounded to 0.1, or None
+    when there are none."""
+    if not best_scores:
+        return None
+    ordered = sorted(best_scores)
+    rank = max(1, -(-percentile * len(ordered) // 100))  # ceil(p * n / 100)
+    return round(ordered[rank - 1], 1)
+
+
+def compute_gate(out_dir: Path, genes: dict[str, str], loo: list[dict]) -> dict | None:
+    """The `mat_gene_gate` manifest block for the HMMs in `out_dir`, or None
+    (with a warning) when the classifier has no negative set."""
+    import pyhmmer
+
+    negatives_path = out_dir / NEGATIVES_FILE
+    if not negatives_path.exists():
+        print(f"WARNING no {NEGATIVES_FILE} in {out_dir}: manifest gets no mat_gene_gate "
+              "threshold; the gate falls back to the roster/default", file=sys.stderr)
+        return None
+    negatives = read_fasta(negatives_path)
+    per = []
+    for gene in genes:
+        with pyhmmer.plan7.HMMFile(str(out_dir / f"{gene}.hmm")) as fh:
+            per.append(score(fh.read(), negatives))
+    best = [max(p[k] for p in per) for k in negatives]
+    threshold = gate_threshold(best)
+    own = [r["own_score"] for r in loo if r["correct"] and not r["untestable_gene"]]
+    return dict(
+        min_score=threshold,
+        rule=(f"nearest-rank {GATE_PARALOG_PERCENTILE}th percentile of the best classifier "
+              f"scores of the HMG-paralog negative set ({NEGATIVES_FILE}) against this "
+              "build's HMMs; curator ruling 2026-09-29"),
+        n_negatives=len(best),
+        negatives_sha256=_sha256(negatives_path),
+        negatives_at_or_above=sum(b >= threshold for b in best),
+        loo_correct_at_or_above=sum(o >= threshold for o in own),
+        loo_correct_tested=len(own),
+    )
+
+
+def update_gate(db_root: Path, family_key: str, out_dir: Path) -> dict | None:
+    """Recompute `mat_gene_gate` for the EXISTING HMMs in `out_dir` and write it
+    into their manifest, without rebuilding the HMMs. Rebuilds are not
+    bit-reproducible (the same training set and tools moved held-out scores by
+    up to 8 bits on 2026-09-29), so adding the threshold must not rebuild."""
+    phylum, locus = family_key.split(":")
+    family = next(f for f in load_all_families(db_root)
+                  if f.key == FamilyKey(phylum=phylum, locus_name=locus))
+    manifest = yaml.safe_load((out_dir / "manifest.yaml").read_text())
+    gate = compute_gate(out_dir, classifier_genes(family),
+                        manifest["leave_one_genus_out"]["margins"])
+    manifest["mat_gene_gate"] = gate
+    with open(out_dir / "manifest.yaml", "w") as fh:
+        yaml.safe_dump(manifest, fh, sort_keys=False, width=100)
+    return gate
+
+
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -236,6 +304,7 @@ def build(db_root: Path, family_key: str, out_dir: Path, min_margin: float | Non
                 warnings.append(msg)
                 print(f"WARNING {msg}", file=sys.stderr)
         loo = leave_one_genus_out(rows, genes, work)
+        gate = compute_gate(out_dir, genes, loo)
     testable = [r for r in loo if not r["untestable_gene"]]
     correct = [r for r in testable if r["correct"]]
     worst = min((r["margin"] for r in correct), default=None)
@@ -258,6 +327,7 @@ def build(db_root: Path, family_key: str, out_dir: Path, min_margin: float | Non
         min_margin_rule=("half the worst correct leave-one-genus-out margin, so every held-out "
                          "training protein is still called and a margin below half the weakest "
                          "separation seen on held-out genera is reported undetermined"),
+        mat_gene_gate=gate,
         warnings=warnings,
         notes=notes,
     )

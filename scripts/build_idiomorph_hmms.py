@@ -18,7 +18,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from MATPredict.detect.classifier_build import build
+from MATPredict.detect.classifier_build import build, update_gate
 
 
 def main(argv=None):
@@ -28,8 +28,15 @@ def main(argv=None):
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--extra-fasta", type=Path)
     ap.add_argument("--notes", default="", help="free text recorded in manifest.yaml")
+    ap.add_argument("--gate-only", action="store_true",
+                    help="recompute only the mat_gene_gate threshold for the existing HMMs "
+                         "in --out (no rebuild; rebuilds are not bit-reproducible)")
     args = ap.parse_args(argv)
     args.out.mkdir(parents=True, exist_ok=True)
+    if args.gate_only:
+        gate = update_gate(args.db_root, args.family, args.out)
+        print(f"{args.family}: mat_gene_gate {gate}")
+        return 0
     if args.extra_fasta:
         shutil.copyfile(args.extra_fasta, args.out / "training_extra.faa")
     m = build(args.db_root, args.family, args.out, notes=args.notes)

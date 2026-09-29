@@ -66,3 +66,32 @@ def test_the_schema_accepts_the_assembly_field_and_rejects_a_bad_one():
         pass
     else:
         raise AssertionError("an INSDC nucleotide accession is not an assembly accession")
+
+
+def test_an_assembly_type_segment_uses_its_seq_region_contig(tmp_path):
+    """Records curated from an assembly store the assembly accession on the
+    segment and the contig in `seq_region` (e.g. Coprinopsis A43)."""
+    p = tmp_path / "metadata.yaml"
+    p.write_text(
+        "record_id: r1\nmating_type: {locus_name: HD, idiomorphs: [A43]}\n"
+        "locus:\n  core:\n    segments:\n"
+        "    - sequence_source: {type: assembly, accession: GCA_016772295.1,"
+        " seq_region: JAAGWA010000001.1}\n"
+        "      start: 1625680\n      end: 1631546\n")
+    loc = record_location(p)
+    assert loc.segments == (("JAAGWA010000001.1", 1625680, 1631546),)
+    assert loc.assembly == "GCA_016772295.1"
+
+
+def test_a_merged_call_counts_for_a_member_family():
+    """After the locus merge (2026-09-27) an HD call can be reported under
+    the more specific Aalpha family, with HD in `merged_from`."""
+    from MATPredict.detect.record_selfcall import RecordLocation
+    loc = RecordLocation("r1", "HD", ("A43",), "GCA_016772295.1",
+                         (("JAAGWA010000001.1", 1625680, 1631546),))
+    report = {"detected": [{
+        "family": "Basidiomycota:Aalpha", "contig": "JAAGWA010000001.1",
+        "start": 1622916, "end": 1632613, "idiomorph": "undetermined", "confidence": "high",
+        "merged_from": [{"family": "Basidiomycota:Aalpha"}, {"family": "Basidiomycota:HD"}],
+    }]}
+    assert selfcall_verdict(loc, report)["verdict"] == "called"

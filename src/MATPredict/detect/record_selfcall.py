@@ -33,10 +33,20 @@ def record_location(metadata_path: Path) -> RecordLocation:
     doc = yaml.safe_load(Path(metadata_path).read_text())
     segs = []
     for s in (doc.get("locus", {}).get("core", {}) or {}).get("segments", []) or []:
-        acc = (s.get("sequence_source") or {}).get("accession")
+        src = s.get("sequence_source") or {}
+        # An assembly-type segment names the assembly in `accession` and the
+        # contig in `seq_region`; the contig is what a report calls.
+        acc = src.get("seq_region") if src.get("type") == "assembly" else src.get("accession")
+        acc = acc or src.get("accession")
         if acc and s.get("start") and s.get("end"):
             segs.append((acc, int(s["start"]), int(s["end"])))
     assembly = (doc.get("locus") or {}).get("assembly_accession")
+    if not assembly:
+        for s in (doc.get("locus", {}).get("core", {}) or {}).get("segments", []) or []:
+            src = s.get("sequence_source") or {}
+            if src.get("type") == "assembly" and _ASM.fullmatch(src.get("accession") or ""):
+                assembly = src["accession"]
+                break
     if not assembly:
         text = yaml.safe_dump(doc.get("curation", {})) + yaml.safe_dump(doc.get("locus", {}))
         m = _ASM.search(text)
@@ -58,8 +68,10 @@ def selfcall_verdict(loc: RecordLocation, report: dict) -> dict:
     """`called` (a detected locus of the record's family overlaps a record
     segment), `withheld` (only a suppressed locus overlaps), or `missed`."""
     def overlaps(entry):
-        fam = str(entry.get("family", ""))
-        if not fam.endswith(":" + loc.locus_name):
+        # A merged call (locus_merge) counts for every member family.
+        fams = [str(entry.get("family", ""))] + [
+            str(m.get("family", "")) for m in entry.get("merged_from") or []]
+        if not any(f.endswith(":" + loc.locus_name) for f in fams):
             return False
         return any(_same_contig(entry.get("contig", ""), c) and entry.get("start", 0) <= e
                    and entry.get("end", 0) >= s for c, s, e in loc.segments)

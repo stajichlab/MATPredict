@@ -28,9 +28,18 @@ The rules (each is a stated threshold, not a fitted one):
   copies are >= NEAR_IDENTICAL_PCT identical (allelic copies of one species).
   At >= IDENTICAL_PCT, assembly_artefact is also supported (a duplicated
   haplotype).
-* homothallism: same_locus, or a shared flank gene whose two copies are
-  intact and divergent (DIVERGENT_MIN_PCT to NEAR_IDENTICAL_PCT), as in
-  Z. heterogamus. A degraded flank copy is NOT detected here.
+* homothallism: supported ONLY by the same_locus arrangement. A shared flank
+  gene whose copies are intact and divergent (the Z. heterogamus pattern) is
+  recorded as evidence but does NOT count as support: on the first LCG test
+  (2026-09-29, results/2026-09-29_two_idiomorphs/) that rule marked 13 of 16
+  conventionally heterothallic genomes and 5 of 9 reported homothallics;
+  guarded by call strength it still marked 5 of 16 heterothallics and 0 of 9
+  homothallics. It does not discriminate. A degraded flank copy is NOT
+  detected here.
+* weak call: a call typed from a fragment, or with a classifier margin below
+  STRONG_MARGIN, may be an HMG paralog rather than the second idiomorph gene.
+  It is listed under `duplication`. On the first LCG test 22 of the 36
+  two-idiomorph genomes had such a call, nearly all a Minus call at margin ~30.
 """
 from __future__ import annotations
 
@@ -47,6 +56,7 @@ NEAR_IDENTICAL_PCT = 95.0
 IDENTICAL_PCT = 99.5
 DIVERGENT_MIN_PCT = 55.0
 MIN_PROTEIN_AA = 30
+STRONG_MARGIN = 50.0
 
 _UNDETERMINED = {None, "", "undetermined"}
 _CONF_RANK = {"high": 3, "medium": 2, "low": 1}
@@ -182,6 +192,16 @@ def two_idiomorph_statements(
         else:
             evidence["gc_difference_pct"] = None
 
+        weak = [c["idiomorph"] for c in (plus, minus)
+                if c.get("classifier_input") == "hsp_fragment"
+                or c.get("margin") is None or c["margin"] < STRONG_MARGIN]
+        evidence["weak_calls"] = weak
+        for w in weak:
+            m = (plus if w == plus["idiomorph"] else minus).get("margin")
+            support["duplication"].append(
+                f"the {w} call is weak (margin {m}, < {STRONG_MARGIN} or fragment-typed) "
+                "and may be an HMG paralog")
+
         shared = _shared_flanks(plus, minus, contig_seqs, genetic_code)
         evidence["shared_flanks"] = shared
         for s in shared:
@@ -195,8 +215,8 @@ def two_idiomorph_statements(
                     support["assembly_artefact"].append(
                         f"{s['gene']} copies {ident}% identical (possible duplicated haplotype)")
             elif ident >= DIVERGENT_MIN_PCT:
-                support["homothallism"].append(
-                    f"{s['gene']} copies intact and divergent ({ident}%), as in Z. heterogamus")
+                s["note"] = ("intact divergent copies (the Z. heterogamus pattern); "
+                             "recorded only -- did not discriminate homothallism on test")
 
         statements.append({
             "family": fam,

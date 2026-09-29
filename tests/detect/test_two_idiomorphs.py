@@ -106,15 +106,17 @@ def test_near_identical_shared_flank_supports_fusion_not_homothallism():
     assert "homothallism" not in st["supported_causes"]
 
 
-def test_divergent_shared_flank_supports_homothallism():
+def test_divergent_shared_flank_is_recorded_but_not_counted_as_homothallism():
+    """On the first LCG test the divergent-flank rule did not discriminate
+    (heterothallic 13/16 vs reported homothallic 5/9), so it is evidence only."""
     da, db = _dna(_PROT_A), _dna(_mutate(_PROT_B, 4))
     seqs = {"c1": da + "A" * 6000, "c2": db + "A" * 6000}
     st = _one([_call("Plus", "c1", 1, 8000, flanks=[_flank("rnhA", "c1", 1, len(_PROT_A))]),
                _call("Minus", "c2", 1, 8000, flanks=[_flank("rnhA", "c2", 1, len(_PROT_A))])],
               seqs)
-    ident = st["evidence"]["shared_flanks"][0]["protein_identity"]
-    assert 55.0 <= ident < 95.0
-    assert "homothallism" in st["supported_causes"]
+    pair = st["evidence"]["shared_flanks"][0]
+    assert 55.0 <= pair["protein_identity"] < 95.0 and "note" in pair
+    assert "homothallism" not in st["supported_causes"]
 
 
 def test_same_locus_supports_homothallism():
@@ -150,3 +152,18 @@ def test_pipeline_helper_only_runs_for_enabled_families_and_changes_no_call():
     out = _two_idiomorph_statements(results, on, None, 1)
     assert len(out) == 1 and out[0]["arrangement"] == "unlinked"
     assert [(r.idiomorph, r.confidence) for r in results] == before
+
+
+def test_weak_call_blocks_flank_divergence_support_and_flags_paralog():
+    """First LCG test (2026-09-29): a divergent shared flank 'supported'
+    homothallism in 13/16 conventionally heterothallic genomes, whose second
+    idiomorph call was weak (margin ~30). A weak call may be an HMG paralog."""
+    da, db = _dna(_PROT_A), _dna(_mutate(_PROT_B, 4))
+    seqs = {"c1": da + "A" * 6000, "c2": db + "A" * 6000}
+    st = _one([_call("Plus", "c1", 1, 8000, margin=250.0,
+                     flanks=[_flank("rnhA", "c1", 1, len(_PROT_A))]),
+               _call("Minus", "c2", 1, 8000, margin=30.0,
+                     flanks=[_flank("rnhA", "c2", 1, len(_PROT_A))])], seqs)
+    assert "homothallism" not in st["supported_causes"]
+    assert "duplication" in st["supported_causes"]
+    assert st["evidence"]["weak_calls"] == ["Minus"]

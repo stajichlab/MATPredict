@@ -34,7 +34,7 @@ the same training set had moved held-out scores by up to 8 bits: MAFFT with
 `--thread 4` returned a different alignment on every run, input order changed
 it too, and each HMM file carried its build time (DATE) and command line
 (COM). Now MAFFT runs single-threaded (`MAFFT_OPTIONS`) on inputs sorted by
-id, pyhmmer's Builder uses a fixed seed (`BUILDER_SEED`), the HMM's DATE is
+id with the L-INS-i strategy set explicitly (not `--auto`), pyhmmer's Builder uses a fixed seed (`BUILDER_SEED`), the HMM's DATE is
 fixed (`FIXED_HMM_TIME`) and COM is dropped, and the manifest records the tool
 versions, the alignment options and a checksum of the training inputs. The
 same inputs therefore give byte-identical HMM files and identical scores.
@@ -71,8 +71,12 @@ MIN_PROTEIN_LENGTH = 50
 #: MAFFT options. `--thread 1` because a multi-threaded MAFFT run returned a
 #: different alignment of the same input on every run (measured 2026-09-29:
 #: three `--thread 4` runs, three different outputs; three `--thread 1` runs,
-#: one output). `--auto` is kept so the strategy matches the shipped build.
-MAFFT_OPTIONS = ("--auto", "--quiet", "--thread", "1")
+#: one output). The strategy is L-INS-i, set EXPLICITLY (curator ruling
+#: 2026-09-29): `--auto` chose L-INS-i for the current training sets, but would
+#: switch to faster, less accurate modes as a training set grows. MAFFT L-INS-i,
+#: E-INS-i, MUSCLE 5 and FAMSA gave the same held-out accuracy; trimming (HMG
+#: box, ClipKIT) made the HMMs worse (results/2026-09-29_aligner_comparison/).
+MAFFT_OPTIONS = ("--localpair", "--maxiterate", "1000", "--quiet", "--thread", "1")
 #: pyhmmer Builder seed (HMMER reseeds calibration from it on every build).
 BUILDER_SEED = 42
 #: Written as every HMM's DATE, so the file bytes do not depend on build time.

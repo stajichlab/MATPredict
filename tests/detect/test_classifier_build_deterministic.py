@@ -152,3 +152,15 @@ def test_builds_in_fresh_processes_are_byte_identical(tmp_path):
     outs = [subprocess.run([sys.executable, "-c", code, str(fa)], capture_output=True, text=True,
                            env=env, check=True).stdout.strip() for _ in range(2)]
     assert outs[0] and outs[0] == outs[1]
+
+
+def test_mafft_strategy_is_explicit_l_ins_i_not_auto():
+    """Curator ruling 2026-09-29 (results/2026-09-29_aligner_comparison/):
+    L-INS-i is set explicitly so the strategy cannot change with input size,
+    as `--auto` would for larger training sets."""
+    from MATPredict.detect import classifier_build as cb
+    opts = list(cb.MAFFT_OPTIONS)
+    assert "--auto" not in opts
+    assert "--localpair" in opts
+    assert opts[opts.index("--maxiterate") + 1] == "1000"
+    assert opts[opts.index("--thread") + 1] == "1"

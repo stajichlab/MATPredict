@@ -15,6 +15,11 @@ each entry. Earlier rulings replaced by later ones are listed first.
 | CAAX unverified label for 4 Agaricales families (09-27) | All CAAX-dependent calls unverified; review at >=100 non-mating STE3 (09-28) |
 | Group A: never merge Aalpha with Abeta, provisional (09-28) | Subloci ruling: one A and one B call, subloci as evidence (09-28) |
 | btbA Plus-only (09-20); review pending (09-27) | btbA non-voting and present in both idiomorphs (09-27) |
+| Fixed MAT-gene gate threshold 100 bits (09-28) | Threshold set by each classifier build from 189 paralog negatives (09-29) |
+| Secondary-undetermined guard (09-27) | Dropped: the MAT-gene gate made it redundant (09-29) |
+| Two-idiomorph genomes flagged as homothallic candidates (proposal, 09-29) | Neutral `two_idiomorphs` field with possible causes; homothallism never asserted (09-29) |
+| Circinella/Thamnostylum Plus-labelled strains called Minus: detection error suspected (09-29) | Real sexM; labels disputed, origin unknown (09-29) |
+| MAFFT `--auto` in classifier builds (09-26) | MAFFT L-INS-i set explicitly, single-threaded, deterministic (09-29) |
 
 ## Log
 
@@ -118,3 +123,47 @@ Why: these were the three blockers in docs/HANDOFF-2026-09-26.md plus data hygie
 - F3 finding: classifier typing is reliable (0/540 wrong) but the margin does NOT separate MAT genes from HMG paralogs; full-protein absolute score >=100 bits separates well (96/108 vs 9/189), fragments do not. The MAT-vs-paralog test is pending a curator decision.
 - 2026-09-28 Q2 ruling (a): MAT-vs-paralog gate for classifier families (Mucoromycota). A modelled core protein needs >=100 bits absolute; below that, or for fragment-typed calls, flank support is required. min_margin 25 stays for typing only. Built with F6, the F4 all-CAAX unverified label and a record assembly-accession field on branch next-fixes. Review fixes landed at 3aec88b (F1, F2, F5 general part, F7, subloci evidence, relaxed pass now uses the classifier).
 - 2026-09-28: MAT-gene gate landed (PR #9 076afe4; 900 tests). Lichtheimiaceae: option (a) for now; they are called only at >=100 bits because they lack Mucorales flanks by biology. Lichtheimiaceae MAT gene order and flanks are an EXPLORATION/RESEARCH FOLLOW-UP (add to the handoff queue). The S. racemosum NRRL 2496 record now calls its own locus. curation-umbelopsis is being rebased onto 076afe4, measuring first whether the guard is still needed under the gate.
+
+### 2026-09-28 (held-out sets)
+Evidence: `results/2026-09-28_mucor_jena_holdout/`, `results/2026-09-28_lcg_holdout/`.
+- Mucor_Jena (65 strains) and ZyGoLife LCG (897 genomes) are held-out test
+  sets: never used for training, curation or classifier builds. Results are
+  keyed by strain; the curator supplies taxonomy and mating types afterwards.
+- Zygo 23 is a subset of LCG and stays the known-answer subset.
+
+### 2026-09-29
+Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased/NOTE.md`.
+- curation-umbelopsis: guard dropped (it withheld nothing under the MAT-gene
+  gate); records 41833 (Umbelopsis Plus), 44442 (Umbelopsis Minus) and 13706
+  (S. racemosum NRRL 2496 Plus) signed off; Circinella minor traced (lost to the
+  classifier rebuild; consistent with the Lichtheimiaceae ruling (a)).
+- The MAT-gene gate threshold comes from each classifier build (manifest).
+- Strain-name labels count as known answers; convention Plus/Minus ("+",
+  "(+)", "plus" and unambiguous "P" map to Plus; likewise Minus).
+- A. blakesleeana is a known gap (option c). Core-only admission of a
+  best-hit sexP/sexM cluster (option b) and the rnhA-next-to-core flank
+  hypothesis go to the Lichtheimiaceae exploration.
+- Two-idiomorph genomes are not confirmed homothallics (could be hybrid or
+  fusion, duplication, mixed culture or heterokaryon, or assembly artefact):
+  test first; neutral report field built.
+- Disputed labels (origin unknown), excluded from scoring: Ellisomyces RSA_581-,
+  Gilbertella CBS_442.64-, Pirella RSA_622-, Circinella angarensis RSA_198_Plus,
+  C. umbellata RSA_505_Plus, Thamnostylum repens RSA_459_Plus, Backusella
+  lamprospora NRRL_6044_Plus. Misidentified, excluded from species-level
+  scoring: B. ctenidia NRRL 6239, R. arrhizus NRRL 1470, T. repens NRRL 6240
+  (and the M. indicus lineage).
+- Build R4, a P1 non-MAT HMG paralog class (trained on one sequence).
+- Hold the strong-core floor rescue.
+- Record the Syzygites two-idiomorph finding (notable finding 023).
+- Classifier builds: deterministic, with `--gate-only` / `--paralogs-only`
+  fast paths (option c); no full rebuild of a shipped classifier without
+  curator approval.
+- Aligner: no aligner more accurate; keep MAFFT with L-INS-i set explicitly;
+  no trimming; deterministic full rebuild replayed on Mucoromycota, Zygo, LCG
+  and Jena before approval. The aligner finding is recorded in
+  `2026-09-29_classifier-builds.md`.
+- Future classifiers (Sporidiobolales A1/A2 first; then Ascomycota
+  MAT1-1-1/MAT1-2-1 and Serinales MTLa/alpha, gated by training diversity;
+  Basidiomycota HD later) use the chosen aligner from the start. Pfam models are
+  never rebuilt.
+

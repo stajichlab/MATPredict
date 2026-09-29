@@ -1144,3 +1144,32 @@ mat_gene_gate:
   negatives_at_or_above: 9
   loo_correct_at_or_above: 76
   loo_correct_tested: 88
+paralog_classes:
+- name: P1
+  hmm: paralogs/P1.hmm
+  n_sequences: 1
+  sequence_ids:
+  - GCA_000697295.1_MucIndB7402-1.0
+  source_sha256: 0b0ad0bb0c2fe1dc8959a1856437eab54511f462933a3bf6f952a06d7731ada6
+  sha256: 1f91cae160779355514f9946a001be6bc050fb3e3971c84ab6516c5e9864668e
+  provenance:
+    name: P1
+    source: GCA_000697295.1 (Mucor indicus B7402, BFD Mucoromycota); the 73-aa HMG-box protein called
+      "sexM" beside tptA/glrA/algA. Chosen because it is in BFD and in no held-out set (LCG, Mucor_Jena)
+      and not a curated record.
+    reason: 'Non-MAT HMG paralog of the Mucor hiemalis/indicus group. Present in BOTH mating types: an
+      85% full-length copy sits in the Plus-only genome Mucor aligarensis NRRL 3099. It scores 77-84 bits
+      as sexM and passes the MAT-gene gate on flank support, and it was the only call in 5 genomes (M.
+      indicus NRRL 13468 and 13081 in LCG; Jena CBS221_71, CBS223_63, CBS763_74).'
+    evidence: 'results/2026-09-29_sexM_like_paralog/NOTE.md, cross_type.tsv, p1_replay.tsv (replay: 17
+      LCG core proteins and all 6 Jena weak calls flagged; P1 145-159 vs sexM 77-84; no labelled strain,
+      literature positive or Zygo locus affected).'
+    curator_ruling: J. Stajich, 2026-09-29 (R4)
+    limit: Trained on ONE sequence; no leave-one-out is possible. The training genome itself is in the
+      293-genome BFD Mucoromycota scan, so its own P1 call there is withheld circularly.
+  rule: a protein whose best P1 score beats its best MAT score by >= min_margin (25) is classed P1 and
+    its call withheld
+  training_mat_proteins_checked: 88
+  training_mat_proteins_classed_paralog: 0
+  self_check_classed_paralog: 1
+  leave_one_out: 'not possible: one sequence'

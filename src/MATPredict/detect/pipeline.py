@@ -87,7 +87,9 @@ from MATPredict.detect.caax import (
 )
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.split_locus import evaluate_split_locus
-from MATPredict.detect.mat_gene_gate import WITHHELD_MAT_GENE_GATE, apply_mat_gene_gate
+from MATPredict.detect.mat_gene_gate import (
+    WITHHELD_MAT_GENE_GATE, WITHHELD_PARALOG_CLASS, apply_mat_gene_gate,
+)
 from MATPredict.detect.flank_carried import (
     WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
 )
@@ -427,6 +429,9 @@ class DetectionOutcome:
     suppressed_flank_carried: int = 0
     #: calls withheld by the MAT-gene gate (`mat_gene_gate`).
     suppressed_mat_gene_gate: int = 0
+    #: calls whose classified core protein is a known non-MAT paralog class
+    #: (`mat_gene_gate.WITHHELD_PARALOG_CLASS`; R4, 2026-09-29).
+    suppressed_paralog_class: int = 0
     #: N blocks at a flank-anchored position of a family with no call
     #: (curator's ruling 2026-09-26; see `assembly_gap`). A report, not a call.
     assembly_gaps_at_locus: list[AssemblyGapAtLocus] = field(default_factory=list)
@@ -2792,6 +2797,8 @@ def run_pipeline(
         return kept, by_bar + by_flank + by_gate, len(by_bar), len(by_flank), len(by_gate)
 
     results, suppressed, suppressed_by_bar, suppressed_by_flank, suppressed_by_gate = _withhold(results)
+    # The gate step withholds both MAT-gene-gate calls and paralog-class calls;
+    # count them apart (recomputed from `suppressed` at the end).
 
     if not results and relaxed_second_pass:
         def _record_relaxed(result, cluster, score):
@@ -2856,6 +2863,11 @@ def run_pipeline(
         results, clusters, families, _build,
         searchable_genes=searchable_genes, contig_lengths=contig_lengths,
     )
+    # A split-locus call is never judged by the MAT-gene gate (it requires
+    # roster flanks by construction), but a known paralog is never a MAT gene:
+    # the gate step withholds only its paralog-class calls here.
+    split_calls, split_paralogs = apply_mat_gene_gate(split_calls, classifier_specs)
+    suppressed = suppressed + split_paralogs
     if split_calls:
         logger.info("reported %d split locus/loci (core gene alone at a contig end)",
                     len(split_calls))
@@ -2921,6 +2933,22 @@ def run_pipeline(
                     f"or not model-based, and it has {len(d.get('supporting_flanks', []))} "
                     f"roster flank(s) modelled at >= {d.get('flank_support_min_identity'):g}% "
                     f"(needs {d.get('flank_support_min_genes')})"
+                ),
+                best_fraction_found=score.fraction_found if score else 0.0,
+                genes_found=list(withheld.genes_found),
+                genes_missing=[g for g in withheld.genes_missing if g not in short_genes],
+                genes_not_searchable=sorted(short_genes),
+            ))
+            continue
+        if withheld is not None and withheld.withheld_reason == WITHHELD_PARALOG_CLASS:
+            d = withheld.withheld_detail or {}
+            not_detected.append(NotDetectedFamily(
+                family_key=family.key,
+                reason=(
+                    f"best cluster's core gene is the known non-MAT paralog "
+                    f"{d.get('paralog_class')}: it scores {d.get('paralog_score')} bits on that "
+                    f"paralog class against {d.get('best_mat_score')} on the best MAT class "
+                    f"(margin {d.get('margin')} >= {d.get('min_margin')})"
                 ),
                 best_fraction_found=score.fraction_found if score else 0.0,
                 genes_found=list(withheld.genes_found),
@@ -3051,7 +3079,10 @@ def run_pipeline(
         suppressed_unpolished=suppressed_by_bar,
         suppressed_loci=suppressed + floor_withheld,
         suppressed_flank_carried=suppressed_by_flank,
-        suppressed_mat_gene_gate=suppressed_by_gate,
+        suppressed_mat_gene_gate=sum(
+            r.withheld_reason == WITHHELD_MAT_GENE_GATE for r in suppressed),
+        suppressed_paralog_class=sum(
+            r.withheld_reason == WITHHELD_PARALOG_CLASS for r in suppressed),
         assembly_gaps_at_locus=assembly_gaps,
         zygosity=zygosity,
         two_idiomorphs=two_idiomorphs,

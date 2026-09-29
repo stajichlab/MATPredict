@@ -20,6 +20,15 @@ pyhmmer. The build also runs leave-one-genus-out: for every genus, both HMMs
 are rebuilt without it and its sequences are scored, so the manifest records
 how often the right idiomorph wins and by how much.
 
+Non-MAT paralog classes (R4; curator's ruling 2026-09-29): every
+`paralogs/<name>.faa` in the classifier directory, with its provenance in
+`paralogs/<name>.yaml` (`source`, `reason`, `evidence` -- refused without),
+is built into `paralogs/<name>.hmm` and listed in the manifest under
+`paralog_classes`. A one-sequence class is built from the sequence itself
+(`Builder.build`, as the 2026-09-29 replay did), so it has no
+leave-one-genus-out; instead the build checks that no MAT training protein
+would be classed as the paralog and that the source sequences themselves are.
+
 Training diversity is reported and checked: the 2026-09-21 a1/alpha1 HMM
 failed partly because 778 peptides collapsed to 56 near-identical sequences
 (78-99% identity). A gene whose training set has fewer than
@@ -260,6 +269,103 @@ def update_gate(db_root: Path, family_key: str, out_dir: Path) -> dict | None:
     return gate
 
 
+PARALOG_DIR = "paralogs"
+PARALOG_PROVENANCE_FIELDS = ("source", "reason", "evidence")
+
+
+def _paralog_hmm(seqs: dict[str, str], name: str, workdir: Path):
+    """An HMM for a paralog class: from the single sequence itself when there
+    is one (the 2026-09-29 replay's construction), else from a MAFFT MSA."""
+    import pyhmmer
+
+    if len(seqs) > 1:
+        hmm, _ = build_hmm(seqs, name, workdir)
+        return hmm
+    alphabet = pyhmmer.easel.Alphabet.amino()
+    (k, v), = seqs.items()
+    seq = pyhmmer.easel.TextSequence(name=k.encode(), sequence=v).digitize(alphabet)
+    hmm, _, _ = pyhmmer.plan7.Builder(alphabet).build(seq, pyhmmer.plan7.Background(alphabet))
+    hmm.name = name.encode()
+    return hmm
+
+
+def build_paralog_classes(out_dir: Path, genes: dict[str, str], min_margin: float,
+                          check_proteins: dict) -> list[dict]:
+    """Build `paralogs/<name>.hmm` for every curated `paralogs/<name>.faa` in
+    `out_dir` and return the manifest's `paralog_classes` block.
+
+    `genes` maps each MAT gene to its idiomorph (its HMM is `<gene>.hmm` in
+    `out_dir`); `check_proteins` maps an id to `(gene, sequence)` for the MAT
+    training proteins, each of which must NOT be classed as a paralog."""
+    import pyhmmer
+
+    from MATPredict.detect.classifier import paralog_call
+
+    pdir = out_dir / PARALOG_DIR
+    if not pdir.is_dir():
+        return []
+    mat = {}
+    for gene, idiomorph in genes.items():
+        with pyhmmer.plan7.HMMFile(str(out_dir / f"{gene}.hmm")) as fh:
+            mat[idiomorph] = fh.read()
+    block = []
+    with tempfile.TemporaryDirectory() as tmp:
+        for faa in sorted(pdir.glob("*.faa")):
+            name = faa.stem
+            prov_path = pdir / f"{name}.yaml"
+            provenance = yaml.safe_load(prov_path.read_text()) if prov_path.exists() else None
+            if not provenance or any(not provenance.get(k) for k in PARALOG_PROVENANCE_FIELDS):
+                raise RuntimeError(f"{faa}: paralog class needs {prov_path.name} with "
+                                   f"{', '.join(PARALOG_PROVENANCE_FIELDS)}")
+            seqs = read_fasta(faa)
+            hmm = _paralog_hmm(seqs, name, Path(tmp))
+            hmm_path = pdir / f"{name}.hmm"
+            with open(hmm_path, "wb") as fh:
+                hmm.write(fh)
+
+            def classed(proteins: dict[str, str]) -> dict[str, bool]:
+                per = {i: score(h, proteins) for i, h in mat.items()} if proteins else {}
+                par = score(hmm, proteins) if proteins else {}
+                return {k: paralog_call({i: per[i][k] for i in per}, {name: par[k]},
+                                        min_margin) is not None for k in proteins}
+
+            check = classed({k: v for k, (_g, v) in check_proteins.items()})
+            own = classed(seqs)
+            block.append(dict(
+                name=name, hmm=f"{PARALOG_DIR}/{name}.hmm",
+                n_sequences=len(seqs), sequence_ids=sorted(seqs),
+                source_sha256=_sha256(faa), sha256=_sha256(hmm_path),
+                provenance=provenance,
+                rule=(f"a protein whose best {name} score beats its best MAT score by >= "
+                      f"min_margin ({min_margin:g}) is classed {name} and its call withheld"),
+                training_mat_proteins_checked=len(check),
+                training_mat_proteins_classed_paralog=sum(check.values()),
+                self_check_classed_paralog=sum(own.values()),
+                leave_one_out=("not possible: one sequence" if len(seqs) == 1 else
+                               "not run"),
+            ))
+    return block
+
+
+def update_paralogs(db_root: Path, family_key: str, out_dir: Path) -> list[dict]:
+    """Build the paralog classes for the EXISTING MAT HMMs in `out_dir` and
+    write them into the manifest, without rebuilding the MAT HMMs (rebuilds
+    are not bit-reproducible; see `update_gate`)."""
+    phylum, locus = family_key.split(":")
+    family = next(f for f in load_all_families(db_root)
+                  if f.key == FamilyKey(phylum=phylum, locus_name=locus))
+    genes = classifier_genes(family)
+    rows = training_set(db_root, family, out_dir)
+    min_margin = float((family.idiomorph_classifier or {}).get("min_margin", 25.0))
+    block = build_paralog_classes(out_dir, genes, min_margin,
+                                  {r["id"]: (r["gene"], r["sequence"]) for r in rows})
+    manifest = yaml.safe_load((out_dir / "manifest.yaml").read_text())
+    manifest["paralog_classes"] = block
+    with open(out_dir / "manifest.yaml", "w") as fh:
+        yaml.safe_dump(manifest, fh, sort_keys=False, width=100)
+    return block
+
+
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -305,6 +411,9 @@ def build(db_root: Path, family_key: str, out_dir: Path, min_margin: float | Non
                 print(f"WARNING {msg}", file=sys.stderr)
         loo = leave_one_genus_out(rows, genes, work)
         gate = compute_gate(out_dir, genes, loo)
+        paralog_classes = build_paralog_classes(
+            out_dir, genes, float((family.idiomorph_classifier or {}).get("min_margin", 25.0)),
+            {r["id"]: (r["gene"], r["sequence"]) for r in rows})
     testable = [r for r in loo if not r["untestable_gene"]]
     correct = [r for r in testable if r["correct"]]
     worst = min((r["margin"] for r in correct), default=None)
@@ -328,6 +437,7 @@ def build(db_root: Path, family_key: str, out_dir: Path, min_margin: float | Non
                          "training protein is still called and a margin below half the weakest "
                          "separation seen on held-out genera is reported undetermined"),
         mat_gene_gate=gate,
+        paralog_classes=paralog_classes,
         warnings=warnings,
         notes=notes,
     )

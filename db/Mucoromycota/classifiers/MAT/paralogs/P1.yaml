@@ -1,0 +1,21 @@
+name: P1
+source: >-
+  GCA_000697295.1 (Mucor indicus B7402, BFD Mucoromycota); the 73-aa HMG-box
+  protein called "sexM" beside tptA/glrA/algA. Chosen because it is in BFD and
+  in no held-out set (LCG, Mucor_Jena) and not a curated record.
+reason: >-
+  Non-MAT HMG paralog of the Mucor hiemalis/indicus group. Present in BOTH
+  mating types: an 85% full-length copy sits in the Plus-only genome Mucor
+  aligarensis NRRL 3099. It scores 77-84 bits as sexM and passes the MAT-gene
+  gate on flank support, and it was the only call in 5 genomes (M. indicus
+  NRRL 13468 and 13081 in LCG; Jena CBS221_71, CBS223_63, CBS763_74).
+evidence: >-
+  results/2026-09-29_sexM_like_paralog/NOTE.md, cross_type.tsv, p1_replay.tsv
+  (replay: 17 LCG core proteins and all 6 Jena weak calls flagged; P1 145-159
+  vs sexM 77-84; no labelled strain, literature positive or Zygo locus
+  affected).
+curator_ruling: J. Stajich, 2026-09-29 (R4)
+limit: >-
+  Trained on ONE sequence; no leave-one-out is possible. The training genome
+  itself is in the 293-genome BFD Mucoromycota scan, so its own P1 call there is
+  withheld circularly.

@@ -441,6 +441,8 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
         # flank span (`flank_carried`). Also listed in `suppressed_loci`.
         "suppressed_flank_carried": outcome.suppressed_flank_carried,
         "suppressed_mat_gene_gate": outcome.suppressed_mat_gene_gate,
+        # Calls whose core protein is a known non-MAT paralog class (R4).
+        "suppressed_paralog_class": outcome.suppressed_paralog_class,
         # The withheld loci themselves, compactly: enough to place each one
         # against a known locus (a holdout truth span, a curated record) and to
         # see what the bar cost, without the full evidence of a reported call.

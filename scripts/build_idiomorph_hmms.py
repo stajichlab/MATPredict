@@ -18,7 +18,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from MATPredict.detect.classifier_build import build, update_gate
+from MATPredict.detect.classifier_build import build, update_gate, update_paralogs
 
 
 def main(argv=None):
@@ -31,11 +31,21 @@ def main(argv=None):
     ap.add_argument("--gate-only", action="store_true",
                     help="recompute only the mat_gene_gate threshold for the existing HMMs "
                          "in --out (no rebuild; rebuilds are not bit-reproducible)")
+    ap.add_argument("--paralogs-only", action="store_true",
+                    help="build only the non-MAT paralog classes (paralogs/*.faa) for the "
+                         "existing MAT HMMs in --out and list them in the manifest (no rebuild)")
     args = ap.parse_args(argv)
     args.out.mkdir(parents=True, exist_ok=True)
     if args.gate_only:
         gate = update_gate(args.db_root, args.family, args.out)
         print(f"{args.family}: mat_gene_gate {gate}")
+        return 0
+    if args.paralogs_only:
+        for p in update_paralogs(args.db_root, args.family, args.out):
+            print(f"{args.family}: paralog class {p['name']} n={p['n_sequences']} "
+                  f"MAT training classed as paralog {p['training_mat_proteins_classed_paralog']}"
+                  f"/{p['training_mat_proteins_checked']}; self {p['self_check_classed_paralog']}"
+                  f"/{p['n_sequences']}")
         return 0
     if args.extra_fasta:
         shutil.copyfile(args.extra_fasta, args.out / "training_extra.faa")

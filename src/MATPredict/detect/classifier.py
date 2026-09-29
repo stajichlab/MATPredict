@@ -32,6 +32,20 @@ tool versions, checksums, leave-one-genus-out accuracy and margins). The
 family's roster points at them:
 
     idiomorph_classifier: {type: hmm, dir: classifiers/MAT, min_margin: 20}
+
+Non-MAT paralog classes (R4; curator's ruling 2026-09-29). A classifier may
+also carry HMMs of known non-MAT HMG paralogs, listed in the manifest under
+`paralog_classes` (`{name, hmm}` with `hmm` relative to the classifier
+directory) and built by the build script from a curated source file in
+`<dir>/paralogs/`. Each verdict records the paralog scores; when the best
+paralog score beats the best MAT score by at least `min_margin` the verdict
+names `paralog_class`, and the MAT-gene gate step withholds the call
+(`mat_gene_gate.WITHHELD_PARALOG_CLASS`). Evidence: the "P1" HMG gene of the
+Mucor hiemalis/indicus group, present in both mating types, scored 77-84 bits
+as sexM but 145-159 against a P1 HMM; every other called core protein scored
+>= 30 bits LOWER on P1 than on its own idiomorph
+(results/2026-09-29_sexM_like_paralog/NOTE.md, p1_replay.tsv). Typing
+(`idiomorph`) is unchanged by paralog classes.
 """
 from __future__ import annotations
 
@@ -55,6 +69,8 @@ class IdiomorphClassifier:
     models: dict
     min_margin: float
     manifest_sha256: str
+    #: paralog class name -> pyhmmer HMM (R4); empty when the manifest lists none
+    paralogs: dict = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -72,9 +88,13 @@ class ClassifierVerdict:
     #: used only where no core protein was modelled), or "mixed" (a call
     #: spanning clusters of both kinds).
     classifier_input: str = "model"
+    #: paralog class -> best HMM bit score (R4); empty without paralog classes
+    paralog_scores: dict[str, float] = field(default_factory=dict)
+    #: the paralog class that beats every MAT class by >= min_margin, else None
+    paralog_class: str | None = None
 
     def as_report(self) -> dict:
-        return {
+        doc = {
             "method": self.method,
             "idiomorph": self.idiomorph,
             "scores": {k: round(v, 1) for k, v in sorted(self.scores.items())},
@@ -85,6 +105,10 @@ class ClassifierVerdict:
             "genes_scored": sorted(self.genes_scored),
             "manifest_sha256": self.manifest_sha256,
         }
+        if self.paralog_scores:
+            doc["paralog_scores"] = {k: round(v, 1) for k, v in sorted(self.paralog_scores.items())}
+            doc["paralog_class"] = self.paralog_class
+        return doc
 
 
 _CACHE: dict[Path, IdiomorphClassifier] = {}
@@ -120,9 +144,17 @@ def load_classifier(spec: dict | None, family) -> IdiomorphClassifier | None:
             models[idiomorph] = (gene, handle.read())
     if len(models) < 2:
         raise ClassifierError(f"{directory}: need HMMs for at least two idiomorphs")
+    paralogs = {}
+    for entry in (yaml.safe_load(manifest.read_text()) or {}).get("paralog_classes") or []:
+        path = directory / entry["hmm"]
+        if not path.exists():
+            raise ClassifierError(f"{path} missing for paralog class {entry['name']}")
+        with pyhmmer.plan7.HMMFile(str(path)) as handle:
+            paralogs[entry["name"]] = handle.read()
     clf = IdiomorphClassifier(
         directory=directory, models=models, min_margin=float(spec["min_margin"]),
         manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),
+        paralogs=paralogs,
     )
     _CACHE[directory] = clf
     return clf
@@ -143,13 +175,9 @@ def classifier_genes(family) -> dict[str, str]:
     return out
 
 
-def score_proteins(clf: IdiomorphClassifier, proteins: list[str]) -> dict[str, float]:
-    """Best full-sequence HMM bit score per idiomorph over `proteins`.
-
-    Scored with Z=1 and permissive thresholds so every protein gets a score
-    (a protein the HMM does not match at all scores 0.0), exactly as the
-    2026-09-26 experiment did with `hmmsearch -Z 1 -E 1000`.
-    """
+def _best_scores(hmms: dict, proteins: list[str]) -> dict[str, float]:
+    """Best full-sequence bit score per named HMM over `proteins` (Z=1,
+    permissive thresholds; a protein an HMM does not match scores 0.0)."""
     import pyhmmer
 
     alphabet = pyhmmer.easel.Alphabet.amino()
@@ -157,16 +185,39 @@ def score_proteins(clf: IdiomorphClassifier, proteins: list[str]) -> dict[str, f
         pyhmmer.easel.TextSequence(name=f"p{i}".encode(), sequence=p).digitize(alphabet)
         for i, p in enumerate(proteins) if p
     ]
-    best = {idiomorph: 0.0 for idiomorph in clf.models}
+    best = {name: 0.0 for name in hmms}
     if not seqs:
         return best
     block = pyhmmer.easel.DigitalSequenceBlock(alphabet, seqs)
-    for idiomorph, (_gene, hmm) in clf.models.items():
+    for name, hmm in hmms.items():
         pipeline = pyhmmer.plan7.Pipeline(alphabet, Z=1, E=1e9, domE=1e9, bias_filter=False,
                                           F1=1.0, F2=1.0, F3=1.0)
         for hit in pipeline.search_hmm(hmm, block):
-            best[idiomorph] = max(best[idiomorph], float(hit.score))
+            best[name] = max(best[name], float(hit.score))
     return best
+
+
+def paralog_call(scores: dict[str, float], paralog_scores: dict[str, float],
+                 min_margin: float) -> str | None:
+    """The paralog class whose best score beats every MAT score by at least
+    `min_margin`, else None."""
+    if not paralog_scores:
+        return None
+    name, best = max(paralog_scores.items(), key=lambda kv: (kv[1], kv[0]))
+    if best > 0 and best - max(scores.values(), default=0.0) >= min_margin:
+        return name
+    return None
+
+
+def score_proteins(clf: IdiomorphClassifier, proteins: list[str]) -> dict[str, float]:
+    """Best full-sequence HMM bit score per idiomorph over `proteins`.
+
+    Scored with Z=1 and permissive thresholds so every protein gets a score
+    (a protein the HMM does not match at all scores 0.0), exactly as the
+    2026-09-26 experiment did with `hmmsearch -Z 1 -E 1000`.
+    """
+    return _best_scores({idiomorph: hmm for idiomorph, (_gene, hmm) in clf.models.items()},
+                        proteins)
 
 
 def classify(clf: IdiomorphClassifier, proteins: list[str], genes: list[str] | None = None,
@@ -180,10 +231,13 @@ def classify(clf: IdiomorphClassifier, proteins: list[str], genes: list[str] | N
     ranked = sorted(scores.items(), key=lambda kv: (-kv[1], kv[0]))
     margin = ranked[0][1] - ranked[1][1]
     idiomorph = ranked[0][0] if margin >= clf.min_margin and ranked[0][1] > 0 else UNDETERMINED
+    paralog_scores = _best_scores(clf.paralogs, proteins) if clf.paralogs else {}
     return ClassifierVerdict(
         scores=scores, margin=margin, idiomorph=idiomorph, min_margin=clf.min_margin,
         proteins_scored=len(proteins), manifest_sha256=clf.manifest_sha256,
         genes_scored=list(genes or []), classifier_input=classifier_input,
+        paralog_scores=paralog_scores,
+        paralog_class=paralog_call(scores, paralog_scores, clf.min_margin),
     )
 
 
@@ -204,7 +258,13 @@ def combine_verdicts(verdicts: list[ClassifierVerdict]) -> ClassifierVerdict | N
     margin = ranked[0][1] - ranked[1][1]
     first = verdicts[0]
     idiomorph = ranked[0][0] if margin >= first.min_margin and ranked[0][1] > 0 else UNDETERMINED
+    paralog_scores: dict[str, float] = {}
+    for v in verdicts:
+        for k, x in v.paralog_scores.items():
+            paralog_scores[k] = max(paralog_scores.get(k, 0.0), x)
     return ClassifierVerdict(
+        paralog_scores=paralog_scores,
+        paralog_class=paralog_call(scores, paralog_scores, first.min_margin),
         scores=scores, margin=margin, idiomorph=idiomorph, min_margin=first.min_margin,
         proteins_scored=sum(v.proteins_scored for v in verdicts),
         manifest_sha256=first.manifest_sha256,

@@ -57,6 +57,13 @@ from MATPredict.detect.polish import STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGL
 
 #: `DetectionResult.withheld_reason` for a call withheld by this gate.
 WITHHELD_MAT_GENE_GATE = "mat_gene_gate"
+#: `DetectionResult.withheld_reason` for a call whose classified core protein is
+#: a known non-MAT paralog (R4; curator's ruling 2026-09-29). Checked FIRST, and
+#: for split-locus calls too: a paralog is never a MAT gene, whatever its flanks.
+#: Withheld rather than reported `undetermined`: an undetermined call would
+#: still be reported as a MAT locus, and in 5 genomes the P1 paralog was the
+#: only call (results/2026-09-29_sexM_like_paralog/NOTE.md).
+WITHHELD_PARALOG_CLASS = "paralog_class"
 
 DEFAULT_MAT_GENE_MIN_SCORE = 100.0
 DEFAULT_FLANK_SUPPORT_MIN_IDENTITY = 40.0
@@ -112,6 +119,22 @@ def apply_mat_gene_gate(results, classifier_specs):
     for r in results:
         spec = classifier_specs.get(r.family_key)
         clf = r.idiomorph_classifier
+        if spec and clf and clf.get("paralog_class"):
+            paralog = clf["paralog_class"]
+            best_mat = max(clf.get("scores", {}).values(), default=0.0)
+            paralog_score = clf.get("paralog_scores", {}).get(paralog, 0.0)
+            withheld.append(replace(
+                r, withheld_reason=WITHHELD_PARALOG_CLASS,
+                withheld_detail={
+                    "paralog_class": paralog,
+                    "paralog_score": round(paralog_score, 1),
+                    "best_mat_score": round(best_mat, 1),
+                    "margin": round(paralog_score - best_mat, 1),
+                    "min_margin": clf.get("min_margin"),
+                    "classifier_input": clf.get("classifier_input"),
+                },
+            ))
+            continue
         if not spec or not clf or r.split_locus:
             kept.append(r)
             continue

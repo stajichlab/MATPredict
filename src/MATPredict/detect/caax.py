@@ -204,7 +204,7 @@ def admitted_only_through_scan(
     True when it holds a scan precursor and, without it, either fewer than two
     distinct genes remain (the evidence floor) or fewer homology-modelled genes
     than the modelled-gene bar requires. Read by the CAAX unverified label
-    (curator's ruling 2026-09-27; `verification.label_caax_unverified`).
+    (curator's ruling 2026-09-28: every such call; `verification.label_caax_unverified`).
     """
     if not scan_names:
         return False

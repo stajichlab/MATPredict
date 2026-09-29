@@ -141,7 +141,7 @@ from MATPredict.detect.search import (
 from MATPredict.detect.tiering import allele_absent_genes_to_ignore, assign_tier, cap_at_medium
 from MATPredict.detect.locus_merge import merge_overlapping
 from MATPredict.detect.verification import (
-    OVERRIDE_ROUTES, label_caax_unverified, label_verification, load_caax_unverified_rules,
+    OVERRIDE_ROUTES, label_caax_unverified, label_verification,
 )
 from MATPredict.detect.classifier import (
     UNDETERMINED as CLASSIFIER_UNDETERMINED,
@@ -3007,11 +3007,9 @@ def run_pipeline(
     # called the same locus are reported once (`locus_merge`). After every
     # per-family decision above, so `not_detected` and the withheld lists are
     # unaffected; before the labels below, which then see the merged call.
-    # Curator's ruling 2026-09-27: a PR call admitted only through a CAAX-scan
-    # precursor, in a curated low-enrichment taxon, is unverified.
-    results = label_caax_unverified(
-        results, taxid, load_caax_unverified_rules(db_root), zygosity_lineage_resolver,
-    )
+    # Curator's ruling 2026-09-28 (review finding F4): every call admitted only
+    # through a CAAX-scan precursor is unverified.
+    results = label_caax_unverified(results)
     results = merge_overlapping(
         results, {f.key: (f.merge_group, f.merge_generic, f.merge_separately) for f in families},
     )

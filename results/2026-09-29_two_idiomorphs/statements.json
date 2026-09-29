@@ -1,0 +1,4758 @@
+{
+ "Backusella_ctenidia_NRRL_6239": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_77",
+     "start": 45595,
+     "end": 54836,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 248.9,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 69.81,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 85.59,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_126",
+     "start": 74900,
+     "end": 79589,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 29.7,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 83.33,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 75.4,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 36.7,
+     "gc_minus_contig": 36.6,
+     "gc_difference_pct": 0.1,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_77",
+       "minus_contig": "scaffold_126",
+       "protein_identity": 87.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 29.7, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_126",
+    74900,
+    79589,
+    29.7
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_77",
+    45595,
+    54836,
+    248.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Circinella_minor_CBS_143.56": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_1115",
+     "start": 6346,
+     "end": 14002,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 82.3,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 56.29,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_1610",
+     "start": 1468,
+     "end": 8846,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 55.9,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 57.32,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 31.82,
+     "gc_minus_contig": 36.0,
+     "gc_difference_pct": 4.19,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_1115",
+       "minus_contig": "scaffold_1610",
+       "protein_identity": 91.7,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "medium",
+    "scaffold_1610",
+    1468,
+    8846,
+    55.9
+   ],
+   [
+    "Plus",
+    "medium",
+    "scaffold_1115",
+    6346,
+    14002,
+    82.3
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_foenicola_NRRL_A-10991": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_7163",
+     "start": 341,
+     "end": 1808,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 328.1,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 86.81,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_5577",
+     "start": 153,
+     "end": 2425,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 67.2,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 88.53,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_difference_pct": null,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_7163",
+       "minus_contig": "scaffold_5577",
+       "protein_identity": 97.9
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "tptA copies 97.9% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "medium",
+    "scaffold_5577",
+    153,
+    2425,
+    67.2
+   ],
+   [
+    "Plus",
+    "medium",
+    "scaffold_7163",
+    341,
+    1808,
+    328.1
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_genevensis_NRRL_1410": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_631",
+     "start": 384,
+     "end": 14903,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 285.6,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 79.05,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 83.17,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 86.77,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_524",
+     "start": 5036,
+     "end": 14263,
+     "confidence": "low",
+     "locus_class": "partial_locus",
+     "classifier_input": "hsp_fragment",
+     "margin": 28.5,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 67.38,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 66.82,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 77.91,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 39.25,
+     "gc_minus_contig": 37.9,
+     "gc_difference_pct": 1.36,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_631",
+       "minus_contig": "scaffold_524",
+       "protein_identity": 68.2,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_631",
+       "minus_contig": "scaffold_524",
+       "protein_identity": 56.0,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_631",
+       "minus_contig": "scaffold_524",
+       "protein_identity": 34.3
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 28.5, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Plus",
+    "high",
+    "scaffold_631",
+    384,
+    14903,
+    285.6
+   ],
+   [
+    "Minus",
+    "low",
+    "scaffold_524",
+    5036,
+    14263,
+    28.5
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_genevensis_NRRL_1411": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_414",
+     "start": 6637,
+     "end": 29414,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 286.9,
+     "flanks": [
+      {
+       "gene": "algA",
+       "identity": 66.93,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 79.05,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 83.89,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 86.55,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_340",
+     "start": 10448,
+     "end": 20036,
+     "confidence": "low",
+     "locus_class": "partial_locus",
+     "classifier_input": "hsp_fragment",
+     "margin": 30.2,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 69.58,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 69.74,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 84.93,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "algA",
+       "identity": 65.59,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 38.92,
+     "gc_minus_contig": 37.66,
+     "gc_difference_pct": 1.27,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "algA",
+       "plus_contig": "scaffold_414",
+       "minus_contig": "scaffold_340",
+       "protein_identity": 81.7,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_414",
+       "minus_contig": "scaffold_340",
+       "protein_identity": 86.6,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_414",
+       "minus_contig": "scaffold_340",
+       "protein_identity": 86.3,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_414",
+       "minus_contig": "scaffold_340",
+       "protein_identity": 86.3,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 30.2, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Plus",
+    "high",
+    "scaffold_414",
+    6637,
+    29414,
+    286.9
+   ],
+   [
+    "Minus",
+    "low",
+    "scaffold_340",
+    10448,
+    20036,
+    30.2
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_genevensis_NRRL_1756": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_74",
+     "start": 2262,
+     "end": 18833,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 287.8,
+     "flanks": [
+      {
+       "gene": "algA",
+       "identity": 67.2,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 79.05,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 83.81,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_21",
+     "start": 518,
+     "end": 10090,
+     "confidence": "low",
+     "locus_class": "partial_locus",
+     "classifier_input": "hsp_fragment",
+     "margin": 30.2,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 64.63,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 69.3,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 82.19,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "algA",
+       "identity": 66.67,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 2,
+      "Plus": 1
+     },
+     "gc_plus_contig": 38.48,
+     "gc_minus_contig": 37.26,
+     "gc_difference_pct": 1.22,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "algA",
+       "plus_contig": "scaffold_74",
+       "minus_contig": "scaffold_21",
+       "protein_identity": 84.9,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_74",
+       "minus_contig": "scaffold_21",
+       "protein_identity": 84.0,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_74",
+       "minus_contig": "scaffold_21",
+       "protein_identity": 85.0,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "more than one call for ['Minus']",
+       "the Minus call is weak (margin 30.2, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Plus",
+    "high",
+    "scaffold_74",
+    2262,
+    18833,
+    287.8
+   ],
+   [
+    "Minus",
+    "low",
+    "scaffold_21",
+    518,
+    10090,
+    30.2
+   ],
+   [
+    "Minus",
+    "low",
+    "scaffold_619",
+    2540,
+    8678,
+    28.5
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_genevensis_NRRL_3101": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_1079",
+     "start": 553,
+     "end": 11159,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 287.1,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 79.31,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "algA",
+       "identity": 77.22,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_964",
+     "start": 723,
+     "end": 7391,
+     "confidence": "low",
+     "locus_class": "partial_locus",
+     "classifier_input": "hsp_fragment",
+     "margin": 33.0,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 77.74,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 74.25,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 36.55,
+     "gc_minus_contig": 38.89,
+     "gc_difference_pct": 2.34,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_1079",
+       "minus_contig": "scaffold_964",
+       "protein_identity": 91.6,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 33.0, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Plus",
+    "high",
+    "scaffold_1079",
+    553,
+    11159,
+    287.1
+   ],
+   [
+    "Minus",
+    "low",
+    "scaffold_964",
+    723,
+    7391,
+    33.0
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_genevensis_NRRL_A-17770": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_227",
+     "start": 7032,
+     "end": 33546,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 287.2,
+     "flanks": [
+      {
+       "gene": "algA",
+       "identity": 67.47,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 79.05,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 84.12,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 86.33,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_820",
+     "start": 12535,
+     "end": 17032,
+     "confidence": "low",
+     "locus_class": "partial_locus",
+     "classifier_input": "hsp_fragment",
+     "margin": 31.0,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 71.88,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 64.1,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 38.97,
+     "gc_minus_contig": 38.81,
+     "gc_difference_pct": 0.16,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_227",
+       "minus_contig": "scaffold_820",
+       "protein_identity": 72.3,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_227",
+       "minus_contig": "scaffold_820",
+       "protein_identity": 79.0,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 31.0, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Plus",
+    "high",
+    "scaffold_227",
+    7032,
+    33546,
+    287.2
+   ],
+   [
+    "Minus",
+    "low",
+    "scaffold_820",
+    12535,
+    17032,
+    31.0
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_globosus_Fischer_NRRL_1759": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_1592",
+     "start": 6937,
+     "end": 11368,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 201.5,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 86.63,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 72.73,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "algA",
+       "identity": 68.06,
+       "status": "polished_single"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_5",
+     "start": 20507,
+     "end": 36993,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 31.5,
+     "flanks": [
+      {
+       "gene": "algA",
+       "identity": 70.13,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 72.95,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 83.04,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 84.82,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 32.35,
+     "gc_minus_contig": 33.78,
+     "gc_difference_pct": 1.42,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_1592",
+       "minus_contig": "scaffold_5",
+       "protein_identity": 93.9,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_1592",
+       "minus_contig": "scaffold_5",
+       "protein_identity": 96.7
+      },
+      {
+       "gene": "algA",
+       "plus_contig": "scaffold_1592",
+       "minus_contig": "scaffold_5",
+       "protein_identity": 61.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "tptA copies 96.7% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 31.5, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion",
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_5",
+    20507,
+    36993,
+    31.5
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_1592",
+    6937,
+    11368,
+    201.5
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_globosus_NRRL_1436": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_2128",
+     "start": 922,
+     "end": 5329,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 201.5,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 86.35,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 72.73,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "algA",
+       "identity": 66.67,
+       "status": "polished_single"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_383",
+     "start": 3203,
+     "end": 9451,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 31.5,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 83.04,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 65.96,
+       "status": "polished_single"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 33.88,
+     "gc_minus_contig": 34.49,
+     "gc_difference_pct": 0.61,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_2128",
+       "minus_contig": "scaffold_383",
+       "protein_identity": 93.6,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_2128",
+       "minus_contig": "scaffold_383",
+       "protein_identity": 91.1,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 31.5, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_383",
+    3203,
+    9451,
+    31.5
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_2128",
+    922,
+    5329,
+    201.5
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_hiemalis_NRRL_3140": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_66",
+     "start": 40240,
+     "end": 49574,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 248.9,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 69.81,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 85.59,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_106",
+     "start": 74958,
+     "end": 79647,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 29.7,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 83.33,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 75.4,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 36.69,
+     "gc_minus_contig": 36.59,
+     "gc_difference_pct": 0.1,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_66",
+       "minus_contig": "scaffold_106",
+       "protein_identity": 87.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 29.7, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_106",
+    74958,
+    79647,
+    29.7
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_66",
+    40240,
+    49574,
+    248.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_hiemalis_NRRL_A-26125": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_174",
+     "start": 6186,
+     "end": 15427,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 248.9,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 85.59,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 69.81,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_108",
+     "start": 74931,
+     "end": 79621,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 29.7,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 83.33,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 75.4,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 37.27,
+     "gc_minus_contig": 36.6,
+     "gc_difference_pct": 0.67,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_174",
+       "minus_contig": "scaffold_108",
+       "protein_identity": 87.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 29.7, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_108",
+    74931,
+    79621,
+    29.7
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_174",
+    6186,
+    15427,
+    248.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_indicus_Lendner_NRRL_13132": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_53",
+     "start": 45618,
+     "end": 54864,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 248.9,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 69.81,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 85.59,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_99",
+     "start": 741,
+     "end": 5432,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 29.7,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 75.4,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 83.33,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 36.7,
+     "gc_minus_contig": 36.6,
+     "gc_difference_pct": 0.09,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_53",
+       "minus_contig": "scaffold_99",
+       "protein_identity": 87.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 29.7, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_99",
+    741,
+    5432,
+    29.7
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_53",
+    45618,
+    54864,
+    248.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_indicus_NRRL_555": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_62",
+     "start": 46178,
+     "end": 55424,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 248.9,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 69.81,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 85.59,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_110",
+     "start": 75367,
+     "end": 80058,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 29.7,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 83.33,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 75.4,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 37.07,
+     "gc_minus_contig": 36.62,
+     "gc_difference_pct": 0.45,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_62",
+       "minus_contig": "scaffold_110",
+       "protein_identity": 87.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 29.7, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_110",
+    75367,
+    80058,
+    29.7
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_62",
+    46178,
+    55424,
+    248.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_philippovi_NRRL_3036": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_37",
+     "start": 45966,
+     "end": 56990,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 284.3,
+     "flanks": [
+      {
+       "gene": "algA",
+       "identity": 67.73,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 79.84,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_804",
+     "start": 8272,
+     "end": 16425,
+     "confidence": "low",
+     "locus_class": "partial_locus",
+     "classifier_input": "hsp_fragment",
+     "margin": 34.0,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 66.67,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 71.27,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 78.62,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 38.28,
+     "gc_minus_contig": 37.06,
+     "gc_difference_pct": 1.22,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_37",
+       "minus_contig": "scaffold_804",
+       "protein_identity": 59.9,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 34.0, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Plus",
+    "high",
+    "scaffold_37",
+    45966,
+    56990,
+    284.3
+   ],
+   [
+    "Minus",
+    "low",
+    "scaffold_804",
+    8272,
+    16425,
+    34.0
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_racemosus_Fresenius_NRRL_A-19185": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_268",
+     "start": 15,
+     "end": 4393,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 304.5,
+     "flanks": [
+      {
+       "gene": "algA",
+       "identity": 72.92,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 72.28,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_4114",
+     "start": 3,
+     "end": 3140,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 31.1,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 72.73,
+       "status": "polished_single"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 82.43,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_difference_pct": null,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_268",
+       "minus_contig": "scaffold_4114",
+       "protein_identity": 96.3
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "tptA copies 96.3% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 31.1, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion",
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_4114",
+    3,
+    3140,
+    31.1
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_268",
+    15,
+    4393,
+    304.5
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_racemosus_NRRL_1427": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_50",
+     "start": 58354,
+     "end": 67597,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 248.9,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 85.59,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 69.81,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_110",
+     "start": 741,
+     "end": 5432,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 29.7,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 75.4,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 83.33,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 37.13,
+     "gc_minus_contig": 36.58,
+     "gc_difference_pct": 0.55,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_50",
+       "minus_contig": "scaffold_110",
+       "protein_identity": 87.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 29.7, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_110",
+    741,
+    5432,
+    29.7
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_50",
+    58354,
+    67597,
+    248.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_rouxianus_NRRL_1430": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_64",
+     "start": 58188,
+     "end": 67536,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 248.9,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 85.59,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 69.81,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_112",
+     "start": 741,
+     "end": 5432,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 29.7,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 75.4,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 83.33,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 37.09,
+     "gc_minus_contig": 36.56,
+     "gc_difference_pct": 0.53,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_64",
+       "minus_contig": "scaffold_112",
+       "protein_identity": 87.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 29.7, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_112",
+    741,
+    5432,
+    29.7
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_64",
+    58188,
+    67536,
+    248.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_rouxii_Calmette_Wehmer_NRRL_1894": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_44",
+     "start": 45754,
+     "end": 54997,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 248.9,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 69.81,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 85.59,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_87",
+     "start": 75412,
+     "end": 80103,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 29.7,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 83.33,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 75.4,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 37.03,
+     "gc_minus_contig": 36.61,
+     "gc_difference_pct": 0.43,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_44",
+       "minus_contig": "scaffold_87",
+       "protein_identity": 87.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 29.7, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_87",
+    75412,
+    80103,
+    29.7
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_44",
+    45754,
+    54997,
+    248.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_sp._NRRL_1440": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_91",
+     "start": 7144,
+     "end": 21942,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 328.1,
+     "flanks": [
+      {
+       "gene": "algA",
+       "identity": 69.07,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 75.51,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 82.12,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 86.15,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_3193",
+     "start": 2,
+     "end": 4054,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 67.2,
+     "flanks": [
+      {
+       "gene": "algA",
+       "identity": 74.6,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 75.51,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_difference_pct": null,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "algA",
+       "plus_contig": "scaffold_91",
+       "minus_contig": "scaffold_3193",
+       "protein_identity": 98.9
+      },
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_91",
+       "minus_contig": "scaffold_3193",
+       "protein_identity": 99.8
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "algA copies 98.9% identical (allelic-like)",
+       "tptA copies 99.8% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": [
+       "tptA copies 99.8% identical (possible duplicated haplotype)"
+      ]
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion",
+     "assembly_artefact"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_3193",
+    2,
+    4054,
+    67.2
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_91",
+    7144,
+    21942,
+    328.1
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_sp._NRRL_A-25783": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_43",
+     "start": 45618,
+     "end": 54857,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 248.9,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 69.81,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 85.59,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_107",
+     "start": 741,
+     "end": 5433,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 29.7,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 75.4,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 83.33,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 37.06,
+     "gc_minus_contig": 36.6,
+     "gc_difference_pct": 0.46,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_43",
+       "minus_contig": "scaffold_107",
+       "protein_identity": 87.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 29.7, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_107",
+    741,
+    5433,
+    29.7
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_43",
+    45618,
+    54857,
+    248.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_sp._NRRL_A-25793": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_41",
+     "start": 45618,
+     "end": 54856,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 248.9,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 69.81,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 85.59,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_105",
+     "start": 74936,
+     "end": 79627,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 29.7,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 83.33,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 75.4,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 37.05,
+     "gc_minus_contig": 36.6,
+     "gc_difference_pct": 0.45,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_41",
+       "minus_contig": "scaffold_105",
+       "protein_identity": 87.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 29.7, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_105",
+    74936,
+    79627,
+    29.7
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_41",
+    45618,
+    54856,
+    248.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Mucor_subtilissimus_NRRL_6226": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_9",
+     "start": 213258,
+     "end": 222554,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 242.6,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 69.72,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 83.04,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_100",
+     "start": 46234,
+     "end": 104623,
+     "confidence": "medium",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 31.8,
+     "flanks": [
+      {
+       "gene": "algA",
+       "identity": 64.74,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 76.06,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 85.93,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 36.99,
+     "gc_minus_contig": 36.83,
+     "gc_difference_pct": 0.16,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_9",
+       "minus_contig": "scaffold_100",
+       "protein_identity": 87.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 31.8, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "undetermined",
+    "high",
+    "scaffold_54",
+    22455,
+    56573,
+    17.9
+   ],
+   [
+    "Minus",
+    "medium",
+    "scaffold_100",
+    46234,
+    104623,
+    31.8
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_9",
+    213258,
+    222554,
+    242.6
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Rhizopus_azygosporus_NRRL_13165": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_1300",
+     "start": 3100,
+     "end": 7845,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 266.9,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 95.05,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_1193",
+     "start": 1249,
+     "end": 6048,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 146.9,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 100.0,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 37.33,
+     "gc_minus_contig": 38.86,
+     "gc_difference_pct": 1.53,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_1300",
+       "minus_contig": "scaffold_1193",
+       "protein_identity": 95.1
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "rnhA copies 95.1% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "medium",
+    "scaffold_1193",
+    1249,
+    6048,
+    146.9
+   ],
+   [
+    "Plus",
+    "medium",
+    "scaffold_1300",
+    3100,
+    7845,
+    266.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Rhizopus_chinensis_NRRL_2906": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_299",
+     "start": 7563,
+     "end": 16537,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 234.3,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 98.91,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 98.39,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_74",
+     "start": 1576,
+     "end": 20721,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 141.1,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 95.01,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 100.0,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 38.04,
+     "gc_minus_contig": 37.0,
+     "gc_difference_pct": 1.03,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_299",
+       "minus_contig": "scaffold_74",
+       "protein_identity": 98.9
+      },
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_299",
+       "minus_contig": "scaffold_74",
+       "protein_identity": 95.7
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "glrA copies 98.9% identical (allelic-like)",
+       "rnhA copies 95.7% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_74",
+    1576,
+    20721,
+    141.1
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_299",
+    7563,
+    16537,
+    234.3
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Rhizopus_chinensis_Saito_NRRL_3671": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_862",
+     "start": 4114,
+     "end": 9275,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 234.3,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 98.39,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_3180",
+     "start": 921,
+     "end": 4220,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 141.1,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 94.58,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_difference_pct": null,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_862",
+       "minus_contig": "scaffold_3180",
+       "protein_identity": 95.3
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "rnhA copies 95.3% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "medium",
+    "scaffold_3180",
+    921,
+    4220,
+    141.1
+   ],
+   [
+    "Plus",
+    "medium",
+    "scaffold_862",
+    4114,
+    9275,
+    234.3
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Rhizopus_nigricans_NRRL_3370": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_445",
+     "start": 1925,
+     "end": 17333,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 297.4,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 91.25,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 94.88,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "btbA",
+       "identity": 96.24,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 97.59,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_1337",
+     "start": 1504,
+     "end": 11830,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 109.1,
+     "flanks": [
+      {
+       "gene": "btbA",
+       "identity": 67.5,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 57.55,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 84.92,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 35.89,
+     "gc_minus_contig": 34.39,
+     "gc_difference_pct": 1.5,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_445",
+       "minus_contig": "scaffold_1337",
+       "protein_identity": 72.8,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "btbA",
+       "plus_contig": "scaffold_445",
+       "minus_contig": "scaffold_1337",
+       "protein_identity": 66.9,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_445",
+       "minus_contig": "scaffold_1337",
+       "protein_identity": 34.9
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_1337",
+    1504,
+    11830,
+    109.1
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_445",
+    1925,
+    17333,
+    297.4
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Rhizopus_oligosporus_Saito_NRRL_5905": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_192",
+     "start": 4395,
+     "end": 13413,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 270.4,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 99.52,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 98.91,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_722",
+     "start": 3367,
+     "end": 11976,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 122.2,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 100.0,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 95.01,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 37.92,
+     "gc_minus_contig": 38.51,
+     "gc_difference_pct": 0.59,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_192",
+       "minus_contig": "scaffold_722",
+       "protein_identity": 94.9,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_192",
+       "minus_contig": "scaffold_722",
+       "protein_identity": 98.9
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "glrA copies 98.9% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_722",
+    3367,
+    11976,
+    122.2
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_192",
+    4395,
+    13413,
+    270.4
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Rhizopus_oligosporus_Saito_NRRL_A-26117": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_752",
+     "start": 1,
+     "end": 8731,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 270.4,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 98.69,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 99.52,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_1286",
+     "start": 1,
+     "end": 8320,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 122.2,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 100.0,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 95.01,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 38.71,
+     "gc_minus_contig": 39.1,
+     "gc_difference_pct": 0.39,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_752",
+       "minus_contig": "scaffold_1286",
+       "protein_identity": 98.7
+      },
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_752",
+       "minus_contig": "scaffold_1286",
+       "protein_identity": 94.9,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "glrA copies 98.7% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_1286",
+    1,
+    8320,
+    122.2
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_752",
+    1,
+    8731,
+    270.4
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Rhizopus_rhizopodiformis_NRRL_6500": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_812",
+     "start": 1,
+     "end": 8975,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 272.9,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 98.86,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 99.52,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_1367",
+     "start": 1,
+     "end": 8320,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 122.2,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 100.0,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 95.01,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 38.82,
+     "gc_minus_contig": 39.1,
+     "gc_difference_pct": 0.28,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_812",
+       "minus_contig": "scaffold_1367",
+       "protein_identity": 98.7
+      },
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_812",
+       "minus_contig": "scaffold_1367",
+       "protein_identity": 94.9,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "glrA copies 98.7% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_1367",
+    1,
+    8320,
+    122.2
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_812",
+    1,
+    8975,
+    272.9
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Rhizopus_sp._NRRL_5857": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_517",
+     "start": 463,
+     "end": 5668,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 270.4,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 99.52,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_2497",
+     "start": 3,
+     "end": 4344,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 122.2,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 95.22,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 35.06,
+     "gc_minus_contig": 37.95,
+     "gc_difference_pct": 2.89,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_517",
+       "minus_contig": "scaffold_2497",
+       "protein_identity": 95.1
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "rnhA copies 95.1% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "medium",
+    "scaffold_2497",
+    3,
+    4344,
+    122.2
+   ],
+   [
+    "Plus",
+    "medium",
+    "scaffold_517",
+    463,
+    5668,
+    270.4
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Rhizopus_sp._NRRL_A-16766A": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_837",
+     "start": 5740,
+     "end": 21424,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 302.5,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 100.0,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "btbA",
+       "identity": 98.25,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 98.89,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 91.03,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_1136",
+     "start": 2894,
+     "end": 17173,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 109.1,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 95.64,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 75.34,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "tptA",
+       "identity": 57.55,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "btbA",
+       "identity": 67.5,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 36.43,
+     "gc_minus_contig": 34.79,
+     "gc_difference_pct": 1.64,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "tptA",
+       "plus_contig": "scaffold_837",
+       "minus_contig": "scaffold_1136",
+       "protein_identity": 34.9
+      },
+      {
+       "gene": "btbA",
+       "plus_contig": "scaffold_837",
+       "minus_contig": "scaffold_1136",
+       "protein_identity": 67.5,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_837",
+       "minus_contig": "scaffold_1136",
+       "protein_identity": 76.0,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      },
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_837",
+       "minus_contig": "scaffold_1136",
+       "protein_identity": 90.4,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_1136",
+    2894,
+    17173,
+    109.1
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_837",
+    5740,
+    21424,
+    302.5
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Rhizopus_sp._NRRL_A-17473": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_876",
+     "start": 1,
+     "end": 8729,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 270.4,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 98.69,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 99.52,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_43",
+     "start": 1,
+     "end": 18862,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 122.2,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 100.0,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "rnhA",
+       "identity": 95.01,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 38.42,
+     "gc_minus_contig": 37.29,
+     "gc_difference_pct": 1.13,
+     "weak_calls": [],
+     "shared_flanks": [
+      {
+       "gene": "glrA",
+       "plus_contig": "scaffold_876",
+       "minus_contig": "scaffold_43",
+       "protein_identity": 98.7
+      },
+      {
+       "gene": "rnhA",
+       "plus_contig": "scaffold_876",
+       "minus_contig": "scaffold_43",
+       "protein_identity": 94.9,
+       "note": "intact divergent copies (the Z. heterogamus pattern); recorded only -- did not discriminate homothallism on test"
+      }
+     ]
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": [
+       "glrA copies 98.7% identical (allelic-like)"
+      ]
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "hybrid_or_fusion"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_43",
+    1,
+    18862,
+    122.2
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_876",
+    1,
+    8729,
+    270.4
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Syzygites_megalocarpus_SC16": {
+  "statements": [],
+  "calls": [
+   [
+    "Plus",
+    "high",
+    "scaffold_211",
+    3,
+    25587,
+    226.4
+   ]
+  ],
+  "suppressed_near": [
+   {
+    "contig": "scaffold_38",
+    "start": 1,
+    "end": 9448,
+    "idiomorph": "Minus",
+    "withheld_reason": "below_fraction_floor"
+   }
+  ]
+ },
+ "Syzygites_sp._MES_3091": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_201",
+     "start": 1,
+     "end": 24259,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 226.4,
+     "flanks": [
+      {
+       "gene": "glrA",
+       "identity": 95.16,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_132",
+     "start": 3,
+     "end": 10108,
+     "confidence": "medium",
+     "locus_class": "partial_locus",
+     "classifier_input": "model",
+     "margin": 160.4,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 99.74,
+       "status": "polished_agree"
+      },
+      {
+       "gene": "btbA",
+       "identity": 58.99,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 30.72,
+     "gc_minus_contig": 32.59,
+     "gc_difference_pct": 1.87,
+     "weak_calls": [],
+     "shared_flanks": []
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": []
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "medium",
+    "scaffold_132",
+    3,
+    10108,
+    160.4
+   ],
+   [
+    "Plus",
+    "medium",
+    "scaffold_201",
+    1,
+    24259,
+    226.4
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Zygorhynchus_exponens_NRRL_1492": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_614",
+     "start": 9261,
+     "end": 20453,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 285.3,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 74.06,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 86.77,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_605",
+     "start": 2863,
+     "end": 8369,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 41.0,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 82.09,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "algA",
+       "identity": 68.44,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 38.87,
+     "gc_minus_contig": 37.05,
+     "gc_difference_pct": 1.82,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": []
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 41.0, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_605",
+    2863,
+    8369,
+    41.0
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_614",
+    9261,
+    20453,
+    285.3
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Zygorhynchus_exponens_var._smithii_NRRL_2572T": {
+  "statements": [
+   {
+    "family": "Mucoromycota:MAT",
+    "arrangement": "unlinked",
+    "plus_call": {
+     "idiomorph": "Plus",
+     "contig": "scaffold_567",
+     "start": 9730,
+     "end": 20950,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 284.7,
+     "flanks": [
+      {
+       "gene": "rnhA",
+       "identity": 73.84,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "glrA",
+       "identity": 86.77,
+       "status": "polished_agree"
+      }
+     ]
+    },
+    "minus_call": {
+     "idiomorph": "Minus",
+     "contig": "scaffold_401",
+     "start": 2712,
+     "end": 8124,
+     "confidence": "high",
+     "locus_class": "mat_locus",
+     "classifier_input": "model",
+     "margin": 40.9,
+     "flanks": [
+      {
+       "gene": "tptA",
+       "identity": 81.27,
+       "status": "polished_disagree"
+      },
+      {
+       "gene": "algA",
+       "identity": 68.11,
+       "status": "polished_disagree"
+      }
+     ]
+    },
+    "evidence": {
+     "distance_bp": null,
+     "calls_per_idiomorph": {
+      "Minus": 1,
+      "Plus": 1
+     },
+     "gc_plus_contig": 38.91,
+     "gc_minus_contig": 37.15,
+     "gc_difference_pct": 1.76,
+     "weak_calls": [
+      "Minus"
+     ],
+     "shared_flanks": []
+    },
+    "possible_causes": [
+     {
+      "cause": "homothallism",
+      "support": []
+     },
+     {
+      "cause": "hybrid_or_fusion",
+      "support": []
+     },
+     {
+      "cause": "duplication",
+      "support": [
+       "the Minus call is weak (margin 40.9, < 50.0 or fragment-typed) and may be an HMG paralog"
+      ]
+     },
+     {
+      "cause": "mixed_culture_or_heterokaryon",
+      "support": []
+     },
+     {
+      "cause": "assembly_artefact",
+      "support": []
+     }
+    ],
+    "supported_causes": [
+     "duplication"
+    ],
+    "not_assessed": [
+     "degraded (pseudogenised) flank copies",
+     "genome-wide duplicated single-copy genes",
+     "read depth"
+    ]
+   }
+  ],
+  "calls": [
+   [
+    "Minus",
+    "high",
+    "scaffold_401",
+    2712,
+    8124,
+    40.9
+   ],
+   [
+    "Plus",
+    "high",
+    "scaffold_567",
+    9730,
+    20950,
+    284.7
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Zygorhynchus_heterogamus_Vuillemin_NRRL_1489": {
+  "statements": [],
+  "calls": [
+   [
+    "Minus",
+    "medium",
+    "scaffold_1293",
+    2483,
+    5953,
+    71.3
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Zygorhynchus_moelleri_NRRL_1498": {
+  "statements": [],
+  "calls": [
+   [
+    "Plus",
+    "high",
+    "scaffold_428",
+    773,
+    16075,
+    264.6
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Zygorhynchus_moelleri_NRRL_1625": {
+  "statements": [],
+  "calls": [
+   [
+    "Plus",
+    "high",
+    "scaffold_404",
+    393,
+    15686,
+    264.6
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Zygorhynchus_moelleri_NRRL_3138": {
+  "statements": [],
+  "calls": [
+   [
+    "Plus",
+    "high",
+    "scaffold_445",
+    1073,
+    16390,
+    264.8
+   ]
+  ],
+  "suppressed_near": []
+ },
+ "Zygorhynchus_moelleri_Vuillemin_NRRL_1497": {
+  "statements": [],
+  "calls": [
+   [
+    "Plus",
+    "high",
+    "scaffold_468",
+    809,
+    16165,
+    263.8
+   ]
+  ],
+  "suppressed_near": []
+ }
+}

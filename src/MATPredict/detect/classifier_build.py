@@ -29,6 +29,18 @@ is built into `paralogs/<name>.hmm` and listed in the manifest under
 leave-one-genus-out; instead the build checks that no MAT training protein
 would be classed as the paralog and that the source sequences themselves are.
 
+Builds are deterministic (curator's ruling 2026-09-29, option c). Rebuilding
+the same training set had moved held-out scores by up to 8 bits: MAFFT with
+`--thread 4` returned a different alignment on every run, input order changed
+it too, and each HMM file carried its build time (DATE) and command line
+(COM). Now MAFFT runs single-threaded (`MAFFT_OPTIONS`) on inputs sorted by
+id, pyhmmer's Builder uses a fixed seed (`BUILDER_SEED`), the HMM's DATE is
+fixed (`FIXED_HMM_TIME`) and COM is dropped, and the manifest records the tool
+versions, the alignment options and a checksum of the training inputs. The
+same inputs therefore give byte-identical HMM files and identical scores.
+`--gate-only` and `--paralogs-only` remain fast paths that leave the MAT HMMs
+untouched.
+
 Training diversity is reported and checked: the 2026-09-21 a1/alpha1 HMM
 failed partly because 778 peptides collapsed to 56 near-identical sequences
 (78-99% identity). A gene whose training set has fewer than
@@ -55,6 +67,16 @@ from MATPredict.detect.reference_fasta import build_reference_fasta
 MIN_UNIQUE_SEQUENCES = 5
 MAX_MEDIAN_IDENTITY = 80.0
 MIN_PROTEIN_LENGTH = 50
+
+#: MAFFT options. `--thread 1` because a multi-threaded MAFFT run returned a
+#: different alignment of the same input on every run (measured 2026-09-29:
+#: three `--thread 4` runs, three different outputs; three `--thread 1` runs,
+#: one output). `--auto` is kept so the strategy matches the shipped build.
+MAFFT_OPTIONS = ("--auto", "--quiet", "--thread", "1")
+#: pyhmmer Builder seed (HMMER reseeds calibration from it on every build).
+BUILDER_SEED = 42
+#: Written as every HMM's DATE, so the file bytes do not depend on build time.
+FIXED_HMM_TIME = datetime.datetime(1970, 1, 1)
 
 
 def read_fasta(path: Path) -> dict[str, str]:
@@ -110,22 +132,35 @@ def training_set(db_root: Path, family, classifier_dir: Path) -> list[dict]:
     return rows
 
 
+def _sorted(seqs: dict[str, str]) -> dict[str, str]:
+    """`seqs` ordered by id: MAFFT's result depends on input order."""
+    return {k: seqs[k] for k in sorted(seqs)}
+
+
 def _mafft(seqs: dict[str, str], workdir: Path, tag: str) -> Path:
     fa, aln = workdir / f"{tag}.faa", workdir / f"{tag}.afa"
-    write_fasta(fa, seqs)
+    write_fasta(fa, _sorted(seqs))
     mafft = shutil.which("mafft")
     if mafft is None:
         raise RuntimeError("mafft not found on PATH (it is in the pixi environment)")
     with open(aln, "w") as out:
-        subprocess.run([mafft, "--auto", "--quiet", "--thread", "4", str(fa)],
-                       stdout=out, check=True)
+        subprocess.run([mafft, *MAFFT_OPTIONS, str(fa)], stdout=out, check=True)
     return aln
+
+
+def _stamp(hmm, name: str):
+    """Fix the metadata that would otherwise vary between builds."""
+    hmm.name = name.encode()
+    hmm.creation_time = FIXED_HMM_TIME
+    hmm.command_line = None
+    return hmm
 
 
 def build_hmm(seqs: dict[str, str], name: str, workdir: Path):
     import pyhmmer
 
     alphabet = pyhmmer.easel.Alphabet.amino()
+    seqs = _sorted(seqs)
     if len(seqs) == 1:  # MAFFT needs two; a one-sequence "alignment" is the sequence
         (k, v), = seqs.items()
         seqs = {k: v, f"{k}_dup": v}
@@ -133,9 +168,35 @@ def build_hmm(seqs: dict[str, str], name: str, workdir: Path):
     with pyhmmer.easel.MSAFile(str(aln), digital=True, alphabet=alphabet) as fh:
         msa = fh.read()
     msa.name = name.encode()
-    builder = pyhmmer.plan7.Builder(alphabet)
+    builder = pyhmmer.plan7.Builder(alphabet, seed=BUILDER_SEED)
     hmm, _, _ = builder.build_msa(msa, pyhmmer.plan7.Background(alphabet))
-    return hmm, aln
+    return _stamp(hmm, name), aln
+
+
+def training_sha256(rows: list[dict]) -> str:
+    """Checksum of the training inputs, independent of their order."""
+    text = "".join(f"{r['id']}\t{r['gene']}\t{r['genus']}\t{r['sequence']}\n"
+                   for r in sorted(rows, key=lambda r: (r["gene"], r["id"])))
+    return hashlib.sha256(text.encode()).hexdigest()
+
+
+def tool_versions() -> dict[str, str]:
+    """pyhmmer, the HMMER it bundles (read from a written HMM's header), MAFFT."""
+    import io
+
+    import pyhmmer
+
+    alphabet = pyhmmer.easel.Alphabet.amino()
+    seq = pyhmmer.easel.TextSequence(name=b"v", sequence="MKVLAAGIVG").digitize(alphabet)
+    hmm, _, _ = pyhmmer.plan7.Builder(alphabet, seed=BUILDER_SEED).build(
+        seq, pyhmmer.plan7.Background(alphabet))
+    buf = io.BytesIO()
+    hmm.write(buf)
+    header = buf.getvalue().decode().splitlines()[0]
+    mafft = shutil.which("mafft")
+    mafft_v = (subprocess.run([mafft, "--version"], capture_output=True, text=True).stderr.strip()
+               if mafft else None)
+    return dict(pyhmmer=pyhmmer.__version__, hmmer=header, mafft=mafft_v)
 
 
 def identity_spread(aln: Path) -> tuple[int, list[float] | None]:
@@ -254,9 +315,10 @@ def compute_gate(out_dir: Path, genes: dict[str, str], loo: list[dict]) -> dict 
 
 def update_gate(db_root: Path, family_key: str, out_dir: Path) -> dict | None:
     """Recompute `mat_gene_gate` for the EXISTING HMMs in `out_dir` and write it
-    into their manifest, without rebuilding the HMMs. Rebuilds are not
-    bit-reproducible (the same training set and tools moved held-out scores by
-    up to 8 bits on 2026-09-29), so adding the threshold must not rebuild."""
+    into their manifest, without rebuilding the HMMs. Use it when only the
+    threshold should change: a full rebuild re-derives the HMMs (byte-identical
+    for unchanged inputs since the 2026-09-29 determinism fix, but it rebuilds
+    anything whose inputs changed, and the shipped HMMs predate that fix)."""
     phylum, locus = family_key.split(":")
     family = next(f for f in load_all_families(db_root)
                   if f.key == FamilyKey(phylum=phylum, locus_name=locus))
@@ -284,9 +346,9 @@ def _paralog_hmm(seqs: dict[str, str], name: str, workdir: Path):
     alphabet = pyhmmer.easel.Alphabet.amino()
     (k, v), = seqs.items()
     seq = pyhmmer.easel.TextSequence(name=k.encode(), sequence=v).digitize(alphabet)
-    hmm, _, _ = pyhmmer.plan7.Builder(alphabet).build(seq, pyhmmer.plan7.Background(alphabet))
-    hmm.name = name.encode()
-    return hmm
+    hmm, _, _ = pyhmmer.plan7.Builder(alphabet, seed=BUILDER_SEED).build(
+        seq, pyhmmer.plan7.Background(alphabet))
+    return _stamp(hmm, name)
 
 
 def build_paralog_classes(out_dir: Path, genes: dict[str, str], min_margin: float,
@@ -349,8 +411,8 @@ def build_paralog_classes(out_dir: Path, genes: dict[str, str], min_margin: floa
 
 def update_paralogs(db_root: Path, family_key: str, out_dir: Path) -> list[dict]:
     """Build the paralog classes for the EXISTING MAT HMMs in `out_dir` and
-    write them into the manifest, without rebuilding the MAT HMMs (rebuilds
-    are not bit-reproducible; see `update_gate`)."""
+    write them into the manifest, without rebuilding the MAT HMMs (see
+    `update_gate` for when a fast path is the right choice)."""
     phylum, locus = family_key.split(":")
     family = next(f for f in load_all_families(db_root)
                   if f.key == FamilyKey(phylum=phylum, locus_name=locus))
@@ -417,12 +479,20 @@ def build(db_root: Path, family_key: str, out_dir: Path, min_margin: float | Non
     testable = [r for r in loo if not r["untestable_gene"]]
     correct = [r for r in testable if r["correct"]]
     worst = min((r["margin"] for r in correct), default=None)
+    tools = tool_versions()
     manifest = dict(
         family=family_key,
         built=datetime.date.today().isoformat(),
         builder="scripts/build_idiomorph_hmms.py (MATPredict.detect.classifier_build)",
+        deterministic=True,
         pyhmmer_version=pyhmmer.__version__,
-        mafft=subprocess.run(["mafft", "--version"], capture_output=True, text=True).stderr.strip(),
+        mafft=tools["mafft"],
+        tool_versions=tools,
+        mafft_options=list(MAFFT_OPTIONS),
+        hmm_builder_seed=BUILDER_SEED,
+        training_sha256=training_sha256(rows),
+        fast_paths=("--gate-only recomputes mat_gene_gate for these HMMs; --paralogs-only "
+                    "adds or updates paralogs/*.hmm; neither rebuilds the MAT HMMs"),
         genes=per_gene,
         training=[{k: r[k] for k in ("id", "gene", "genus", "source")} for r in rows],
         leave_one_genus_out=dict(

@@ -12,6 +12,20 @@ directory as training_extra.faa (headers `>{id}|{gene}|genus={genus}`); later
 rebuilds reuse it. Writes <gene>.hmm per idiomorph-specific core gene and
 manifest.yaml (training IDs, versions, checksums, training diversity,
 leave-one-genus-out accuracy and margins, recommended min_margin).
+
+Builds are deterministic (curator's ruling 2026-09-29): the same inputs give
+byte-identical HMM files and identical scores (single-threaded MAFFT on
+id-sorted inputs, a fixed pyhmmer seed, a fixed HMM DATE, no COM line). The
+manifest records the tool versions, MAFFT options and a training checksum.
+
+When to use which mode:
+  full build       the training set changed (records added, removed or edited)
+                   and the curator has approved moving the scores that signed-
+                   off records were measured on.
+  --gate-only      only the MAT-gene gate threshold should be recomputed for
+                   the existing HMMs (e.g. the negative set changed).
+  --paralogs-only  a non-MAT paralog class was added or edited; the MAT HMMs
+                   must stay exactly as they are.
 """
 import argparse
 import shutil
@@ -30,7 +44,7 @@ def main(argv=None):
     ap.add_argument("--notes", default="", help="free text recorded in manifest.yaml")
     ap.add_argument("--gate-only", action="store_true",
                     help="recompute only the mat_gene_gate threshold for the existing HMMs "
-                         "in --out (no rebuild; rebuilds are not bit-reproducible)")
+                         "in --out (no rebuild of the MAT HMMs)")
     ap.add_argument("--paralogs-only", action="store_true",
                     help="build only the non-MAT paralog classes (paralogs/*.faa) for the "
                          "existing MAT HMMs in --out and list them in the manifest (no rebuild)")

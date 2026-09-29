@@ -40,3 +40,29 @@ def test_record_location_reads_segments_and_assembly(tmp_path):
     loc = record_location(p)
     assert loc.assembly == "GCA_002105135.1"
     assert loc.segments == (("MCGN01000004.1", 1755515, 1760805),)
+
+
+def test_the_assembly_field_wins_over_text(tmp_path):
+    """`locus.assembly_accession` (2026-09-28) is the record's own statement of
+    its source assembly; the text search is only a fallback."""
+    p = tmp_path / "metadata.yaml"
+    p.write_text(
+        "record_id: r1\nmating_type: {locus_name: MAT, idiomorphs: [Plus]}\n"
+        "curation: {notes: 'compare GCA_002105135.1'}\n"
+        "locus:\n  assembly_accession: GCA_000001405.1\n"
+        "  core:\n    definition_note: 'see also GCA_002105135.1'\n    segments: []\n")
+    assert record_location(p).assembly == "GCA_000001405.1"
+
+
+def test_the_schema_accepts_the_assembly_field_and_rejects_a_bad_one():
+    from MATPredict.db.schema import load_metadata_schema
+    import jsonschema
+    prop = load_metadata_schema()["properties"]["locus"]["properties"]["assembly_accession"]
+    jsonschema.validate("GCF_025399195.1", prop)
+    jsonschema.validate(None, prop)
+    try:
+        jsonschema.validate("AF029913.1", prop)
+    except jsonschema.ValidationError:
+        pass
+    else:
+        raise AssertionError("an INSDC nucleotide accession is not an assembly accession")

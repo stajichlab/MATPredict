@@ -27,20 +27,24 @@ class RecordLocation:
 
 
 def record_location(metadata_path: Path) -> RecordLocation:
-    """Where a record says its locus is. `assembly` comes from the record's
-    proposal key or notes (the schema has no dedicated field); None if absent."""
+    """Where a record says its locus is. `assembly` is the record's
+    `locus.assembly_accession` (added 2026-09-28); for records without it, the
+    first assembly accession in its curation or locus text; None if absent."""
     doc = yaml.safe_load(Path(metadata_path).read_text())
     segs = []
     for s in (doc.get("locus", {}).get("core", {}) or {}).get("segments", []) or []:
         acc = (s.get("sequence_source") or {}).get("accession")
         if acc and s.get("start") and s.get("end"):
             segs.append((acc, int(s["start"]), int(s["end"])))
-    text = yaml.safe_dump(doc.get("curation", {})) + yaml.safe_dump(doc.get("locus", {}))
-    m = _ASM.search(text)
+    assembly = (doc.get("locus") or {}).get("assembly_accession")
+    if not assembly:
+        text = yaml.safe_dump(doc.get("curation", {})) + yaml.safe_dump(doc.get("locus", {}))
+        m = _ASM.search(text)
+        assembly = m.group(1) if m else None
     mt = doc.get("mating_type", {}) or {}
     return RecordLocation(
         record_id=doc["record_id"], locus_name=mt.get("locus_name", ""),
-        idiomorphs=tuple(mt.get("idiomorphs") or ()), assembly=m.group(1) if m else None,
+        idiomorphs=tuple(mt.get("idiomorphs") or ()), assembly=assembly,
         segments=tuple(segs),
     )
 

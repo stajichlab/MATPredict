@@ -38,6 +38,10 @@ properties:
     properties:
       coordinate_provenance: {enum: [published_explicit, curator_derived, not_available]}
       excluded_from_coordinate_benchmark: {type: boolean}
+      # The genome assembly the record's locus sits in (added 2026-09-28 so
+      # scripts/check_record_selfcall.py can place every record). Null for a
+      # locus-specific deposit that belongs to no assembly.
+      assembly_accession: {type: [string, "null"], pattern: "^GC[AF]_[0-9]{9}\\.[0-9]+$"}
       core:
         type: object
         properties:

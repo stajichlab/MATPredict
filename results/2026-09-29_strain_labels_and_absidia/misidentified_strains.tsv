@@ -1,0 +1,6 @@
+genome	name_in_record	likely_identity	evidence	use
+Backusella_ctenidia_NRRL_6239	Backusella ctenidia	Mucor indicus lineage	100% identical to the M. indicus lineage at sexP, rnhA, glrA, tptA; tptA 100% to M. indicus NRRL 13468	exclude from species-level scoring
+Rhizopus_arrhizus_NRRL_1470	Rhizopus arrhizus	Circinella umbellata	sexM and rnhA 100% identical to C. umbellata; rnhA 57% to other R. arrhizus	exclude from species-level scoring
+Thamnostylum_repens_NRRL_6240	Thamnostylum repens	Circinomucor circinelloides	100% identical to C. circinelloides NRRL 22899 at four genes	exclude from species-level scoring
+Rhizopus_microsporus_NRRL_A-17693	Rhizopus microsporus	Circinella minor	tptA and glrA 100% identical to C. minor NRRL 1365, rnhA 97.5%; vs R. microsporus NRRL 5546 rnhA 29.2%, glrA 75.7% (blastp of annotated LCG proteins, 2026-09-29)	exclude from species-level scoring
+Also: 10 nominally different Mucor species with identical profiles are one M. indicus lineage (see ../2026-09-29_sexM_like_paralog/NOTE.md).

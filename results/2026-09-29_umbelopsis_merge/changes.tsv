@@ -1,0 +1,22 @@
+arm	genome	change	contig	start	end	detail
+Mucoromycota293	GCA_000697415.1_UmbIsaB7317-1.0	changed	JNEQ01000056.1	749075	753439	Plus/low -> Plus/high
+Mucoromycota293	GCA_016758895.1_ASM1675889v1	changed	JAEPRA010000016.1	141223	158571	undetermined/low -> Minus/high
+Mucoromycota293	GCA_016758905.1_ASM1675890v1	changed	JAEPQZ010000017.1	412287	416732	Plus/low -> Plus/medium
+Mucoromycota293	GCA_016758965.1_ASM1675896v1	lost	JAEPRB010000020.1	310559	318219	Plus/medium; now ['mat_gene_gate', 'below_fraction_floor']; only_call_lost=True
+Mucoromycota293	GCA_027595865.1_Umbelopsis_isabellina_MPG-14A_reass_enz	changed	JANJFK010000028.1	163721	168087	Plus/low -> Plus/high
+Mucoromycota293	GCA_037039815.1_ASM3703981v1	changed	JAXQGL010000038.1	439445	444075	Plus/low -> Plus/high
+Mucoromycota293	GCA_053572175.1_ASM5357217v1	changed	JAYKKX010000013.1	106814	110949	undetermined/low -> Minus/high
+Mucoromycota293	GCA_054906655.1_Umbelopsis_nana_v._1.0	gained	BAAHSD010000001.1	143205	160100	Minus/high
+Mucoromycota293	GCA_060309175.1_CBS116.08v1	changed	JBLNHG010000007.1	613217	664666	Minus/high -> undetermined/high
+Mucoromycota293	GCA_964291815.1_UMBE_WA70503	changed	CAXYTU010000169.1	106865	111000	undetermined/low -> Minus/high
+Mucoromycota293	GCA_977110975.1_gzUmbVina2	changed	CDSBDG010000016.1	219389	223444	undetermined/low -> Minus/high
+LCG	Circinella_minor_CBS_143.56	lost	scaffold_1115	6346	14002	Plus/medium; now ['mat_gene_gate', 'below_fraction_floor']; only_call_lost=False
+LCG	Circinella_minor_NRRL_1365	lost	scaffold_388	5395	13072	Plus/medium; now ['mat_gene_gate', 'below_fraction_floor']; only_call_lost=True
+LCG	Circinella_umbellata_NRRL_2417	lost	scaffold_495	3789	11466	Plus/medium; now ['mat_gene_gate', 'below_fraction_floor']; only_call_lost=True
+LCG	Mucor_pusillus_NRRL_A-13674	lost	scaffold_161	16276	25616	Plus/medium; now ['modelled_gene_bar']; only_call_lost=True
+LCG	Mucor_ramannianus_NRRL_A-21216	gained	scaffold_151	24127	41005	Minus/high
+LCG	Mucor_sp._NRRL_1454	gained	scaffold_6	766344	808529	Minus/high
+LCG	Rhizopus_microsporus_NRRL_A-17693	lost	scaffold_78	105560	113237	Plus/medium; now ['mat_gene_gate', 'below_fraction_floor']; only_call_lost=True
+LCG	Syncephalastrum_racemosum_NRRL_2495	gained	scaffold_25	80231	87442	Minus/medium
+LCG	Umbelopsis_ovata_NRRL_13127T	changed	scaffold_114	18696	23608	undetermined/low -> Minus/high
+Jena	CBS206_69	changed	scaffold_332	5792	34480	undetermined/low -> Minus/low

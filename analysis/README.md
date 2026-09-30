@@ -57,3 +57,15 @@ Paths to NOTE.md, TSVs, PDFs.
 - Unpublished manuscript content (`resource/MBE_202608/`, git-excluded) must
   never be copied here. Cite the preprint DOI 10.1101/2025.09.11.675505 only
   for facts it states, and only aggregate comparisons made by this project.
+
+## Pre-sign-off regression check (curator ruling 2026-09-30)
+
+Every new or changed curated record, classifier rebuild, paralog class,
+roster/scope change or detection-rule change must attach a regression check
+before sign-off. Run `scripts/run_regression_panel.sh` on baseline and
+candidate frozen worktrees (or `scripts/regression_check.py diff` on existing
+runs), and link `diff/summary.md` plus each panel's `regression_summary.md` in
+the study report. The curator reviews every call_lost, call_gained,
+idiomorph_changed, confidence_changed and core_model_changed line. The panel is
+`testset/regression_panel.tsv` (163 genomes + Zygo 23 both inputs). See
+docs/regression-check.md.

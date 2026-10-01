@@ -88,7 +88,7 @@ from MATPredict.detect.caax import (
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
 from MATPredict.detect.split_locus import evaluate_split_locus
 from MATPredict.detect.mat_gene_gate import (
-    WITHHELD_MAT_GENE_GATE, WITHHELD_PARALOG_CLASS, apply_mat_gene_gate,
+    WITHHELD_MAT_GENE_GATE, WITHHELD_PARALOG_CLASS, apply_mat_gene_gate, gate_min_score,
 )
 from MATPredict.detect.flank_carried import (
     WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
@@ -740,6 +740,74 @@ def _polish_rank(cluster: GeneCluster, family_key: FamilyKey) -> tuple:
     the rank."""
     own = [h for h in cluster.hits if h.family_key == family_key]
     return (-len({h.gene_name for h in own}), -max((h.identity for h in own), default=0.0), -len(own))
+
+
+def strong_fragment_scores(by_family, families, *, genome_fasta, genetic_code,
+                           load_fn=None, gate_fn=None, translate_fn=None, classify_fn=None):
+    """`{(id(cluster), family_key): best score}` for admitted clusters whose
+    unmodelled tblastn HSP fragments already score at or above the family
+    classifier's gate threshold, and which no paralog class claims.
+
+    Used only to RANK clusters inside the polish cap (V3, curator's ruling
+    2026-09-30, results/2026-09-30_cap_protection/NOTE.md). Families without
+    an `idiomorph_classifier` contribute nothing, so their rank is unchanged.
+    Only the family's own classifier-gene hits found by tblastn on the genome
+    are translated -- the same fragments the classifier scores when nothing
+    is modelled (`classifier_input: hsp_fragment`). The callables are
+    injectable for tests.
+    """
+    load_fn = load_fn or load_classifier
+    gate_fn = gate_fn or gate_min_score
+    translate_fn = translate_fn or _translate_model
+    classify_fn = classify_fn or classify_idiomorph
+    by_key = {f.key: f for f in families}
+    cache: dict = {}
+    strong: dict[tuple[int, FamilyKey], float] = {}
+    for key, members in by_family.items():
+        family = by_key.get(key)
+        if family is None or not family.idiomorph_classifier:
+            continue
+        clf = load_fn(family.idiomorph_classifier, family)
+        if clf is None:
+            continue
+        threshold, _source = gate_fn(family.idiomorph_classifier)
+        genes = classifier_genes(family)
+        for cluster in members:
+            proteins = []
+            for h in cluster.hits:
+                if h.family_key != key or h.gene_name not in genes or h.method != "tblastn_genome":
+                    continue
+                span = types.SimpleNamespace(contig=h.contig, start=h.start, end=h.end,
+                                             strand=h.strand, exons=())
+                protein = translate_fn(genome_fasta, span, genetic_code or 1, cache)
+                if protein:
+                    proteins.append(protein)
+            if not proteins:
+                continue
+            verdict = classify_fn(clf, proteins, classifier_input="hsp_fragment")
+            if verdict is None or verdict.paralog_class is not None:
+                continue
+            best = max(verdict.scores.values())
+            if best >= threshold:
+                strong[(id(cluster), key)] = best
+    return strong
+
+
+def rank_for_polish(members, family_key, strong) -> list:
+    """`members` in polish order: strong-fragment clusters first (V3), then the
+    plain `_polish_rank` order within each group."""
+    return sorted(members, key=lambda c: (0 if (id(c), family_key) in strong else 1,)
+                  + _polish_rank(c, family_key))
+
+
+def select_polish_clusters(by_family, cap: int, strong) -> set[tuple[int, FamilyKey]]:
+    """The (cluster, family) pairs allowed to be polished: the top `cap` of each
+    family in `rank_for_polish` order. Never more than `cap` per family."""
+    return {
+        (id(c), key)
+        for key, members in by_family.items()
+        for c in rank_for_polish(members, key, strong)[:cap]
+    }
 
 
 def _own_live_hits(cluster, family_key):
@@ -2086,11 +2154,12 @@ def run_pipeline(
         for cluster in clusters:
             for family in _families_meeting_evidence_floor(cluster, families, evidence_floor):
                 by_family.setdefault(family.key, []).append(cluster)
-        polish_allowed = {
-            (id(c), key)
-            for key, members in by_family.items()
-            for c in sorted(members, key=lambda c: _polish_rank(c, key))[:max_polished_clusters_per_family]
-        }
+        # V3 (curator's ruling 2026-09-30): clusters whose unmodelled fragment
+        # already scores at or above the classifier gate rank first, inside
+        # the same cap. Families without a classifier keep the plain rank.
+        strong = strong_fragment_scores(by_family, families, genome_fasta=genome_fasta,
+                                        genetic_code=genetic_code)
+        polish_allowed = select_polish_clusters(by_family, max_polished_clusters_per_family, strong)
     for cluster in clusters:
         admitted_families = _families_meeting_evidence_floor(cluster, families, evidence_floor)
         capped_keys = set()

@@ -117,3 +117,12 @@ Source: `results/2026-09-29_r4_paralog/NOTE.md`.
 `results/2026-09-29_deterministic_build/` (score_deltas.tsv, replay_changes.tsv);
 `results/2026-09-29_gate_threshold/`; `results/2026-09-29_r4_paralog/`
 (changes.tsv).
+
+## Update 2026-09-29/30: candidate shipped
+- Explicit L-INS-i (`--localpair --maxiterate 1000`, single thread) set in the
+  build (PR #9 `f084d2f`). The candidate is byte-identical to the `--auto`
+  candidate; replay changed 0 calls on Mucoromycota 293, LCG 621, Jena 64 and
+  Zygo 23 (results/2026-09-29_aligner_default/NOTE.md).
+- Curator approved; shipped as the Mucoromycota classifier in `9c39e2c`
+  (LOO 85/85, worst correct margin 21.8 bits, gate 100.3 bits;
+  results/2026-09-29_ship_classifier/NOTE.md).

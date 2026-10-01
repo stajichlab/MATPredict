@@ -81,3 +81,7 @@ gate threshold per build.
 annotated_protein_classifier.tsv, annotated_sexP_vs_call.tsv, leakage.tsv);
 `results/2026-09-28_lcg_holdout/` (per_genome.tsv, curator_table.tsv,
 leakage.tsv, model_vs_annotation.tsv).
+
+## Update 2026-10-01
+Both sets were rerun on PR #9 `52b3ff9` with curator species names applied:
+see 2026-10-01_heldout-rerun-and-curator-names.md.

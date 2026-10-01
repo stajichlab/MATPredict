@@ -10,9 +10,9 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 09-26 | [sexM/sexP trees](2026-09-26_sexMP-trees.md) | decided | label/clade 204/206 (FastTree); final tree sexP UFBoot 62 |
 | 09-26 | [Idiomorph labelling and classifier](2026-09-26_idiomorph-labelling-and-classifier.md) | decided | btbA artefact; LOO 85/85; Zygo 23/23 |
 | 09-26 | [Relaxed pass / Phycomyces](2026-09-26_relaxed-pass-phycomyces.md) | decided | defect since 6bc985d fixed |
-| 09-27 | [Umbelopsis, guard, Circinella](2026-09-27_umbelopsis.md) | decided; P1 update running | 13/14 called; records signed off; guard dropped; Circinella lost to classifier rebuild |
+| 09-27 | [Umbelopsis, guard, Circinella](2026-09-27_umbelopsis.md) | decided; merged a2fe1b4 | 13/14 called; records signed off; guard dropped; Circinella lost to classifier rebuild |
 | 09-27 | [R. arrhizus split locus](2026-09-27_rarrhizus-split-locus.md) | decided | 11 of 12 GL genomes recovered (corrected from 12) |
-| 09-29 | [Classifier builds: aligner, determinism, gate, P1](2026-09-29_classifier-builds.md) | decided; rebuild approval open | no aligner more accurate; mafft --auto = L-INS-i; ClipKIT 16 wrong; builds byte-identical; P1 withholds 26, reveals 5 |
+| 09-29 | [Classifier builds: aligner, determinism, gate, P1](2026-09-29_classifier-builds.md) | decided; shipped 9c39e2c | no aligner more accurate; mafft --auto = L-INS-i; ClipKIT 16 wrong; builds byte-identical; P1 withholds 26, reveals 5 |
 | 09-29 | [sexM-like paralogs, strain labels, Absidia](2026-09-29_paralogs-and-strain-labels.md) | decided | labels 10/7/4 (n=21); P1 in both mating types; Absidia flanks off-scaffold |
 | 09-29 | [Two idiomorphs and homothallism](2026-09-29_two-idiomorphs-and-homothallism.md) | decided (report-only); causes open | 36 unlinked; literature signal 13/16 vs 5/9; Syzygites both idiomorphs |
 
@@ -37,7 +37,9 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
 | 09-28 | [MAT-gene gate and validation](2026-09-28_mat-gene-gate-and-validation.md) | decided | typing 0/540 wrong; gate 96/108 vs 9/189 |
-| 09-28 | [Held-out sets](2026-09-28_heldout-sets.md) | decided; truth tables open | Jena 61/64; LCG 536/621 (clean 449/533); Zygo saturated |
+| 09-28 | [Held-out sets](2026-09-28_heldout-sets.md) | superseded by 10-01 rerun | Jena 61/64; LCG 536/621 (clean 449/533); Zygo saturated |
+| 10-01 | [Held-out rerun and curator names](2026-10-01_heldout-rerun-and-curator-names.md) | decided; runtime check running | LCG 536/621, both 36->24, labels 11/1/4; Jena 61/64, both 3->1; Jena 59/64 named, LCG 61 renamed |
+| 09-30 | [Cap V3 and regression check](2026-09-30_cap-v3-and-regression-check.md) | decided (signed off) | stress test 19/20 recovered, 0 wrong (V3); panel 166 + Zygo |
 
 ## Reviews and literature
 | Date | Report | Status | Key numbers |

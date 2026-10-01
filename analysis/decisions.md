@@ -167,3 +167,31 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
   Basidiomycota HD later) use the chosen aligner from the start. Pfam models are
   never rebuilt.
 
+
+## 2026-09-29/30 (J. Stajich)
+- Ship the deterministic explicit-L-INS-i Mucoromycota classifier (approved
+  after a 0-change replay on 978 genomes and Zygo 23); shipped 9c39e2c.
+- curation-umbelopsis: one deterministic full rebuild with its records; merge
+  only if every loss falls in the Lichtheimiaceae gap or in a misidentified
+  genome. Rule met; merged a2fe1b4. R. microsporus NRRL A-17693 recorded as a
+  misidentified C. minor.
+- Polish cap: test protecting strong-fragment clusters by replay; one case was
+  judged insufficient, so a stress test was run (caps 3/2 vs cap-off). V3
+  adopted (rank strong clusters first inside the cap; never add work).
+- Adopt a pre-sign-off regression check: every new or changed record, classifier
+  rebuild, paralog class, scope or rule change attaches a diff of every changed
+  call, gene model, label, confidence and withheld reason.
+
+## 2026-10-01 (J. Stajich)
+- V3 signed off on its regression summary (1 call gained, 0 lost; Zygo 23/23);
+  merged 52b3ff9.
+- Add three record source genomes to the regression panel (now 166).
+- Held-out tables: name both `curator_table.tsv`; key taxonomy to the species
+  binomial (lineage filled from NCBI); "T"/"T_of_X" = type strain (of synonym X).
+- Apply the curator's species/CBS table to Jena and to LCG by collection number;
+  keep file names elsewhere. Ellisomyces NRRL 2465 Plus-T = CBS 243.57 (type),
+  putatively Plus.
+- No curator mating truth for Jena or LCG beyond Plus/Minus in file names.
+- Rerun both held-out sets on current code.
+- Runtime: check it, but accuracy comes first; only call-neutral optimisations
+  (verified with the regression check) are acceptable.

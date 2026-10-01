@@ -27,3 +27,14 @@ Updated 2026-09-29.
 | Homothallism candidates (D. hansenii CBS767, C. kikuchii, Syzygites) | reads or literature | `docs/publication-notable-findings/` |
 | Discovery-only lineages (Mortierellomycota, Kickxellomycota, Zoopagomycota, Glomeromycota, Blastocladiomycota, Chytridiomycota, Endogonales) | discovery projects, not curation | `results/2026-09-26_flank_synteny_ED/NOTE.md` |
 | Pucciniales genome GCA_025617555.3 timed out | longer per-genome limit (GENOME_TIMEOUT) | `results/2026-09-26_basidiomycota_full/ANALYSIS.md` |
+
+## Added 2026-10-01
+- Runtime check pending (`results/2026-10-01_runtime_check/`): held-out median
+  ~260 s vs ~52 s per genome on unmatched nodes. Accuracy first; only
+  call-neutral optimisations. Waits on: the same-node timing and profile.
+- Thamnostylum lucknowense RSA_1015_Plus-T is called Minus (medium) against its
+  Plus file label. Waits on: a trace (label vs paralog vs real Minus).
+- Five Jena strains have no curator name: CBS169_57, CBS334_71, CBS417_77,
+  CBS564_66, CBS608_78. Waits on: the curator.
+- LCG names beyond the Jena-table matches cannot be verified (no framework).
+  Waits on: a verification approach (e.g. marker-gene comparison).

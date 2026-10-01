@@ -54,3 +54,17 @@ P1 class and gate threshold being added via `--paralogs-only` / `--gate-only`
 `results/2026-09-27_umbelopsis_diagnosis/`, `results/2026-09-27_umbelopsis_curation/`,
 `results/2026-09-27_mucoro_curation_guard/`, `results/2026-09-28_umbelopsis_rebased/`,
 `results/2026-09-29_circinella_trace/`.
+
+## Update 2026-09-30: merged into PR #9
+- One deterministic full rebuild with the three records (`f59353c`): LOO 88/88,
+  worst correct margin 13.6 bits, gate 98.4 bits.
+- Against the shipped classifier: Mucoromycota 253 -> 253 (1 lost, 1 gained),
+  LCG 536 -> 535 (5 lost, 3 gained), Jena 61 -> 61. All three records call their
+  own genome; Umbelopsidaceae 13/14.
+- Losses: Circinella x4 (the new S. racemosum reference changes the C. minor gene
+  model; it scores 86.4 < 98.4 although the same protein scores 111.8/113.7),
+  M. pusillus NRRL A-13674 (cap skip), and R. microsporus NRRL A-17693, shown to
+  be a misidentified C. minor (tptA, glrA 100% to C. minor NRRL 1365).
+- Curator merge rule met (losses in the Lichtheimiaceae gap or misidentified);
+  merged as `a2fe1b4` (results/2026-09-29_umbelopsis_merge/NOTE.md). M. pusillus
+  was later recovered by V3 (2026-09-30_cap-v3-and-regression-check.md).

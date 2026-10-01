@@ -71,6 +71,6 @@ j=$(sbatch --parsable --partition="$PARTITION" --time=0:30:00 --mem=8gb --cpus-p
     --output="$REPO/logs/regression_%j.log" \
     --wrap="set -e; export PYTHONPATH=$CAND_WT/src; P=$REPO/.pixi/envs/default/bin/python; \
 \$P $CAND_WT/scripts/regression_check.py diff --title 'regression $(basename "$CAND_WT") vs $(basename "$BASE_WT")' --out $OUT/diff $pairs; \
-\$P $CAND_WT/scripts/check_record_selfcall.py --db $CAND_WT/db --reports $OUT/cand/record_sources/runs --out $OUT/diff/record_selfcall_candidate.tsv || true")
+\$P $CAND_WT/scripts/check_record_selfcall.py --db $CAND_WT/db --reports $OUT/cand/*/runs --out $OUT/diff/record_selfcall_candidate.tsv || true")
 echo "$j	diff	all" | tee -a "$OUT/jobs.tsv"
 echo "summary will be written to $OUT/diff/summary.md"

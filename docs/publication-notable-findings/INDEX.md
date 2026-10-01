@@ -27,3 +27,4 @@ See `README.md` for rules, template and status vocabulary. Last updated 2026-09-
 | [021](021-lodderomyces-multicopy-mtla.md) | Lodderomyces beijingensis MTLa-like blocks on 7 chromosomes | artefact (unresolved) | candidate | Serinales | GCF_963989305.1 |
 | [022](022-pezizomycetes-morchella-references.md) | Morchella references raise Pezizomycetes calls 27 -> 98 | curation-first | verified | Pezizomycetes | KY782629.1, KY782630.1 |
 | [023](023-syzygites-both-idiomorphs.md) | Both Syzygites genomes carry sexP and sexM (unlinked); sexM 100% identical | biology; homothallism candidate | candidate | Mucorales | LCG Syzygites sp. MES 3091, S. megalocarpus SC16 scaffold_38; Idnurm 2011 |
+| [024](024-lichtheimia-published-sexm-not-idiomorph-specific.md) | Published Lichtheimia 'SexM' (CDS03202.1) is probably a conserved, non-idiomorph HMG gene | biology; annotation artefact | candidate | Lichtheimiaceae s.l. | CDS03202.1; 73 genomes, 7 genera; Schulz 2016 Table 1 |

@@ -38,3 +38,19 @@ Updated 2026-09-29.
   CBS564_66, CBS608_78. Waits on: the curator.
 - LCG names beyond the Jena-table matches cannot be verified (no framework).
   Waits on: a verification approach (e.g. marker-gene comparison).
+
+## Future research: ploidy of Circinella strains with two sex-locus calls (tagged 2026-10-01, J. Stajich)
+
+- Circinella muscae NRRL 1355, 1363 and 2403: each carries two Plus (sexP)
+  calls on separate scaffolds. Circinella minor CBS 143.56 carries a Plus and
+  a Minus locus.
+- Candidate causes: two idiomorphs (homothallism or fusion), gene duplication,
+  diploidy/heterokaryosis, or contamination (mixed culture). The curator notes
+  that the same pattern in three C. muscae strains is strange, which argues
+  against chance contamination.
+- Proposed tests: genome-wide ploidy from read k-mer spectra and allele
+  frequencies where reads exist; BUSCO duplication rate; read depth of each
+  sex-locus contig; sequence identity of the two copies and their flanks.
+- Evidence: results/2026-10-01_circinella_curation/NOTE.md;
+  ANNOTATION_ERRORS_FIXED_REPORT.md entry C5 (branch curation-circinella).
+- Waits on: availability of raw reads for these strains.

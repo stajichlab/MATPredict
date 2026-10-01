@@ -354,10 +354,6 @@ def _result_doc(r: DetectionResult) -> dict:
         **({"confidence_ignored_genes": list(r.confidence_ignored_genes)}
            if getattr(r, "confidence_ignored_genes", None) else {}),
         **({"split_locus": r.split_locus} if getattr(r, "split_locus", None) else {}),
-        # Written only when the MAT-gene gate kept the call through a
-        # taxon-scoped flank-support group (curator's ruling 2026-10-01).
-        **({"mat_gene_gate_group": r.mat_gene_gate_group}
-           if getattr(r, "mat_gene_gate_group", None) else {}),
         "idiomorph_resolutions": [
             {
                 "contig": res.contig,

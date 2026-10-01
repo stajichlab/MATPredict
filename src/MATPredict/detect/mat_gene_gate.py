@@ -44,17 +44,6 @@ HMG-paralog negative set against that build's HMMs; see
 `classifier_build.gate_threshold`). The gate reads it from the manifest; the
 roster `mat_gene_min_score`, then the 100-bit default, are used only when the
 manifest has none (`gate_min_score`).
-
-Curator ruling 2026-10-01 (Circinella-group curation; results/
-2026-10-01_circinella_curation/NOTE.md): a roster may name taxon-scoped
-`flank_support_groups` inside `idiomorph_classifier`. In Circinella,
-Thamnostylum, Fennellomyces and Zychaea the sex gene sits 2-9 kb from rnhA,
-and tptA, algA and glrA sit elsewhere (results/2026-10-01_lichtheimiaceae/),
-so a real locus there can never show two roster flanks. For a genome whose
-taxid or an ancestor is in a group's `taxids`, a call is ALSO kept when every
-gene in the group's `flanks` is a supporting flank. The genome's lineage comes
-from its taxid; a run without a taxid never uses a group (the default rule
-stands), so no other genome is affected.
 """
 from __future__ import annotations
 
@@ -123,22 +112,9 @@ def gate_min_score(spec: dict) -> tuple[float, str]:
     return DEFAULT_MAT_GENE_MIN_SCORE, "default"
 
 
-def flank_support_group(spec: dict, lineage_taxids) -> dict | None:
-    """The first roster `flank_support_groups` entry whose `taxids` meet
-    `lineage_taxids` (the genome's taxid plus its ancestors), or None."""
-    if not lineage_taxids:
-        return None
-    for group in spec.get("flank_support_groups") or ():
-        if set(group.get("taxids") or ()) & set(lineage_taxids):
-            return group
-    return None
-
-
-def apply_mat_gene_gate(results, classifier_specs, lineage_taxids=None):
+def apply_mat_gene_gate(results, classifier_specs):
     """`(kept, withheld)` after the gate. `classifier_specs` maps each family
-    key to its roster `idiomorph_classifier` block, or None. `lineage_taxids`
-    is the genome's taxid plus its ancestors (None when the run has no taxid);
-    it selects a roster `flank_support_groups` entry, if any."""
+    key to its roster `idiomorph_classifier` block, or None."""
     kept, withheld = [], []
     for r in results:
         spec = classifier_specs.get(r.family_key)
@@ -174,29 +150,16 @@ def apply_mat_gene_gate(results, classifier_specs, lineage_taxids=None):
         if len(flanks) >= min_genes:
             kept.append(r)
             continue
-        group = flank_support_group(spec, lineage_taxids)
-        group_flanks = sorted(group.get("flanks") or ()) if group else []
-        if group_flanks and set(group_flanks) <= set(flanks):
-            kept.append(replace(r, mat_gene_gate_group={
-                "group": group.get("name"),
-                "flanks": group_flanks,
-                "best_score": round(best, 1),
-                "mat_gene_min_score": min_score,
-            }))
-            continue
-        detail = {
-            "best_score": round(best, 1),
-            "classifier_input": clf.get("classifier_input"),
-            "mat_gene_min_score": min_score,
-            "mat_gene_min_score_source": min_score_source,
-            "supporting_flanks": flanks,
-            "flank_support_min_genes": min_genes,
-            "flank_support_min_identity": min_identity,
-        }
-        if group:
-            detail["flank_support_group"] = group.get("name")
-            detail["flank_support_group_flanks"] = group_flanks
         withheld.append(replace(
-            r, withheld_reason=WITHHELD_MAT_GENE_GATE, withheld_detail=detail,
+            r, withheld_reason=WITHHELD_MAT_GENE_GATE,
+            withheld_detail={
+                "best_score": round(best, 1),
+                "classifier_input": clf.get("classifier_input"),
+                "mat_gene_min_score": min_score,
+                "mat_gene_min_score_source": min_score_source,
+                "supporting_flanks": flanks,
+                "flank_support_min_genes": min_genes,
+                "flank_support_min_identity": min_identity,
+            },
         ))
     return kept, withheld

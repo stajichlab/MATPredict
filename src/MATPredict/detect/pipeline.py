@@ -348,11 +348,6 @@ class DetectionResult:
     end, the family's flanks on other contigs. Carries the core gene, its
     contig and edge distance, the flanks and all contigs involved. Such a call
     is `partial_locus` at `low`. None otherwise."""
-    mat_gene_gate_group: dict | None = None
-    """Set when the MAT-gene gate kept this call ONLY through a roster
-    `flank_support_groups` entry (`mat_gene_gate`; curator's ruling
-    2026-10-01): the group name, its flanks and the call's best classifier
-    score. None for every call the default gate rules kept."""
     merged_from: list[dict] = field(default_factory=list)
     """When several families of one roster `merge_group` called the same
     locus, the members folded into this call: each member's family,
@@ -1920,11 +1915,6 @@ def run_pipeline(
     #: Called only on an override route (`--phylum`, `--exhaustive`) with a
     #: taxid and at least one call; the router's cached efetch answers it.
     phylum_name_resolver: Callable[[int], str | None] = default_lineage_phylum_name,
-    #: Ancestor-taxid lookup for the MAT-gene gate's taxon-scoped
-    #: `flank_support_groups` (`mat_gene_gate`; curator's ruling 2026-10-01).
-    #: Called only with a taxid and only when a routed family's classifier
-    #: names such a group; the router's cached efetch answers it.
-    gate_lineage_resolver: Callable[[int], list[int]] = default_lineage_taxids,
 ) -> DetectionOutcome:
     # `routing` lets the caller route ONCE and reuse the decision, which the
     # CLI must do: it has to know the routed families BEFORE this call, so it
@@ -2860,17 +2850,6 @@ def run_pipeline(
     flank_bits = {f.key: f.flank_carried_min_bitscore for f in families}
 
     classifier_specs = {f.key: f.idiomorph_classifier for f in families}
-    # The genome's taxid plus its ancestors, for a roster's taxon-scoped
-    # flank-support group. None without a taxid, without any such group, or
-    # when the lookup fails -- then the default gate rule stands.
-    gate_lineage = None
-    if taxid is not None and any(
-        (spec or {}).get("flank_support_groups") for spec in classifier_specs.values()
-    ):
-        try:
-            gate_lineage = frozenset([taxid, *gate_lineage_resolver(taxid)])
-        except Exception as exc:  # noqa: BLE001 - logged; the default gate rule stands
-            logger.warning("lineage lookup for the MAT-gene gate failed: %s", exc)
 
     def _withhold(candidates):
         """(kept, withheld, n_by_bar, n_by_flank, n_by_gate) after the bar, the
@@ -2883,7 +2862,7 @@ def run_pipeline(
         ]
         kept = [r for r in candidates if r.polished_genes >= min_polished_genes]
         kept, by_flank = apply_flank_carried_rule(kept, flank_windows, flank_bits)
-        kept, by_gate = apply_mat_gene_gate(kept, classifier_specs, gate_lineage)
+        kept, by_gate = apply_mat_gene_gate(kept, classifier_specs)
         return kept, by_bar + by_flank + by_gate, len(by_bar), len(by_flank), len(by_gate)
 
     results, suppressed, suppressed_by_bar, suppressed_by_flank, suppressed_by_gate = _withhold(results)
@@ -2956,7 +2935,7 @@ def run_pipeline(
     # A split-locus call is never judged by the MAT-gene gate (it requires
     # roster flanks by construction), but a known paralog is never a MAT gene:
     # the gate step withholds only its paralog-class calls here.
-    split_calls, split_paralogs = apply_mat_gene_gate(split_calls, classifier_specs, gate_lineage)
+    split_calls, split_paralogs = apply_mat_gene_gate(split_calls, classifier_specs)
     suppressed = suppressed + split_paralogs
     if split_calls:
         logger.info("reported %d split locus/loci (core gene alone at a contig end)",

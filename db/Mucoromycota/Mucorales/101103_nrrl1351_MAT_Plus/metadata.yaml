@@ -1,0 +1,286 @@
+record_id: 101103_nrrl1351_MAT_Plus
+record_version: 1
+taxonomy:
+  taxid: 101103
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Lichtheimiaceae;g__Circinella;s__Circinella_umbellata
+  lineage_resolved_date: '2026-10-01'
+organism:
+  species: Circinella umbellata
+  strain:
+    name: NRRL1351
+    known: true
+    culture_collection_ids:
+    - NRRL 1351
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Plus
+  system: heterothallic
+locus:
+  assembly_accession: GCA_025093555.1
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: sexP->|rnhA->
+    definition_note: 'Circinella umbellata NRRL 1351 (GCA_025093555.1, JGI Cirumb1; BioProject PRJNA331974,
+      BioSample SAMN05444945; contig N50 688.3 kb) MAT Plus locus on JAIWNF010000086.1. Gene order: VMA1
+      (KAI7847719.1, -) -- pntA (KAI7847720.1, -) -- sexP (KAI7847721.1, +, 310 aa, single exon) -- gpmI
+      (KAI7847722.1, -) -- rnhA (KAI7847723.1, +). KAI7847721.1 is annotated only as ''hypothetical protein''
+      (ANNOTATION_ERRORS_FIXED_REPORT.md). sexP carries a PF00505 HMG box (aa 117-177, E 1.5e-15); best
+      curated match 4837_ubc21 sexP (blastp 30.1% over 166 aa); HMM classifier (a8863f3 build) sexP 115.8
+      vs sexM 32.0 bits (margin +83.8). sexP ends 98 bp from gpmI and 2.1 kb from rnhA. rnhA is 55.8%
+      identical to 29922_cbs109-16 rnhA. tptA (KAI7852361.1) and algA (KAI7852358.1) sit together on JAIWNF010000034.1
+      and glrA (KAI7860806.1) on JAIWNF010000001.1, so they are recorded present: false. VMA1, pntA and
+      gpmI are recorded in locus.extended_flank, not as roster genes, so detection never searches them.
+      The same neighbourhood (VMA1, pntA, HMG gene, gpmI, rnhA) is in the Minus record 64656_rsa-1403
+      (blastp VMA1 92.2%, pntA 77.3%, gpmI 87.5%, rnhA 77.6%). The Plus assignment of this sexP clade
+      rests on the classifier and on the two Fennellomyces strains labelled Plus (results/2026-10-01_circinella_label_tree/);
+      the HMG-box-only tree does not support the clade (IQ-TREE 0/19; full-length 83/93). Every protein
+      matches the translation of its annotated exons from JAIWNF010000086.1 at 100% (table 1, codon_start
+      1). TIER 2 (genome-derived). Not a published idiomorph.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JAIWNF010000086.1
+        seq_region: JAIWNF010000086.1
+      start: 114841
+      end: 122525
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank:
+  - name: VMA1
+    product: V-type proton ATPase catalytic subunit A
+    protein_accession: ncbi_protein:KAI7847719.1
+    searched: false
+    contig: JAIWNF010000086.1
+    start: 105115
+    end: 108408
+    strand: '-'
+    exons:
+    - start: 108406
+      end: 108408
+    - start: 108195
+      end: 108291
+    - start: 107877
+      end: 107920
+    - start: 107699
+      end: 107783
+    - start: 107561
+      end: 107626
+    - start: 107433
+      end: 107476
+    - start: 107250
+      end: 107351
+    - start: 107030
+      end: 107170
+    - start: 106793
+      end: 106944
+    - start: 106609
+      end: 106721
+    - start: 106471
+      end: 106520
+    - start: 106138
+      end: 106369
+    - start: 105921
+      end: 106035
+    - start: 105289
+      end: 105814
+    - start: 105115
+      end: 105204
+    codon_start: 1
+    transl_table: 1
+    protein_match: 100% to the translation of its annotated exons
+  - name: pntA
+    product: P-loop containing nucleoside triphosphate hydrolase protein
+    protein_accession: ncbi_protein:KAI7847720.1
+    searched: false
+    contig: JAIWNF010000086.1
+    start: 109656
+    end: 111930
+    strand: '-'
+    exons:
+    - start: 111782
+      end: 111930
+    - start: 111588
+      end: 111678
+    - start: 111472
+      end: 111508
+    - start: 111229
+      end: 111401
+    - start: 111103
+      end: 111168
+    - start: 110979
+      end: 111019
+    - start: 110636
+      end: 110921
+    - start: 110530
+      end: 110574
+    - start: 110380
+      end: 110436
+    - start: 110277
+      end: 110299
+    - start: 109771
+      end: 110187
+    - start: 109656
+      end: 109698
+    codon_start: 1
+    transl_table: 1
+    protein_match: 100% to the translation of its annotated exons
+  - name: gpmI
+    product: 2,3-bisphosphoglycerate-independent phosphoglycerate mutase
+    protein_accession: ncbi_protein:KAI7847722.1
+    searched: false
+    contig: JAIWNF010000086.1
+    start: 115872
+    end: 117615
+    strand: '-'
+    exons:
+    - start: 117399
+      end: 117615
+    - start: 117254
+      end: 117306
+    - start: 115872
+      end: 117158
+    codon_start: 1
+    transl_table: 1
+    protein_match: 100% to the translation of its annotated exons
+genes:
+- gene_index: 0
+  name: sexP
+  protein_accession: ncbi_protein:KAI7847721.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 114841
+  end: 115773
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 114841
+    end: 115773
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: rnhA
+  protein_accession: ncbi_protein:KAI7847723.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 117843
+  end: 122525
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 117843
+    end: 117910
+  - start: 117990
+    end: 118665
+  - start: 118745
+    end: 119053
+  - start: 119135
+    end: 119162
+  - start: 119242
+    end: 119517
+  - start: 119603
+    end: 119713
+  - start: 119793
+    end: 120970
+  - start: 121062
+    end: 121189
+  - start: 121286
+    end: 121889
+  - start: 121983
+    end: 122213
+  - start: 122283
+    end: 122525
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: tptA
+  protein_accession: null
+  role: flanking_conserved
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+- gene_index: 3
+  name: algA
+  protein_accession: null
+  role: flanking_variable
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+- gene_index: 4
+  name: glrA
+  protein_accession: null
+  role: flanking_variable
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+evidence:
+  locus_existence:
+    tier: 2
+    citations: []
+    experimental_method: TIER 2 (genome-derived). No Circinella, Thamnostylum, Fennellomyces or Zychaea
+      MAT locus has a locus-specific deposit or a publication (NCBI nuccore/protein and PubMed searched
+      2026-10-01). Locus identified by the HMG-box gene typed by the MATPredict HMM idiomorph classifier
+      (db/Mucoromycota/classifiers/MAT) and by the Circinella-group neighbourhood VMA1-pntA-[sex]-gpmI-rnhA,
+      conserved between Zychaea and Circinella.
+  boundaries:
+    tier: 2
+    citations: []
+    experimental_method: TIER 2 (genome-derived). No Circinella, Thamnostylum, Fennellomyces or Zychaea
+      MAT locus has a locus-specific deposit or a publication (NCBI nuccore/protein and PubMed searched
+      2026-10-01). Record segment spans the sex gene to rnhA on JAIWNF010000086.1 (GCA_025093555.1); the
+      idiomorph boundaries themselves are not mapped. VMA1, pntA and gpmI are in extended_flank (recorded,
+      not searched).
+  idiomorph_assignment:
+    tier: 2
+    citations: []
+    experimental_method: 'TIER 2 (genome-derived). No Circinella, Thamnostylum, Fennellomyces or Zychaea
+      MAT locus has a locus-specific deposit or a publication (NCBI nuccore/protein and PubMed searched
+      2026-10-01). Idiomorph from the HMG-box gene (sexP): classifier and PF00505 scores in definition_note;
+      Plus = sexP, Minus = sexM, as the curated Mucorales records.'
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: '2026-10-01'
+  accession_resolved_version: JAIWNF010000086.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: Deposited proteins compared to the translation of their annotated exons (results/2026-10-01_circinella_curation/verify_sources.tsv).
+  taxonomy_current: true
+curation:
+  proposed_by: claude-genome-curation
+  proposal_dedupe_key: GCA_025093555.1|101103|MAT|Plus
+  reviewed_by: null
+  reviewed_date: null
+  notes: Proposed 2026-10-01 on curator ruling (Circinella-group curation, tier-2 records for both idiomorphs).
+    PENDING curator sign-off.
+model_provenance: null

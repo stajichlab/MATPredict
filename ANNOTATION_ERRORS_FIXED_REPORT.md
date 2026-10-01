@@ -81,6 +81,7 @@ curated or corrected. Newest entries at the end of each section.
 | B3.6 | *M. importuna* `KY782629.1` | SLA2 annotated as "Endocytosis protein end4" (the *S. pombe* name). | V | WORKED AROUND (named SLA2) |
 | B3.7 | Mortierellomycota NCBI proteins, e.g. GJJ68563.1 "mating-type protein A1", OAQ36521.1 "mating type protein 2, partial" | Names assigned by similarity pipelines, not characterized MAT genes. | A | OPEN: do not use as references |
 | B3.8 | *C. auris* B11221 `GCA_002775015.1`: PIK1 `PIS55912.1`, OBP1 `PIS55913.1` | Both annotated only as "hypothetical protein", although they are the reciprocal-best orthologs of the *C. lusitaniae* PIK1/OBP1 and sit in the PAP1-alpha1-PIK1-OBP1 block (the neighbouring PAP is named "Poly(A) polymerase PAPalpha"). | V `results/2026-09-25_cauris_mtl/` | WORKED AROUND (named in `498019_b11221_MTL_alpha` v2, `2c6c3a7`); OPEN (upstream) |
+| B3.9 | *Circinella umbellata* NRRL 1351, JGI `GCA_025093555.1` (Cirumb1): sexP `KAI7847721.1` | Full-length sexP (310 aa, single exon, PF00505 at aa 117-177, E 1.5e-15; classifier sexP 115.8 vs sexM 32.0 bits) annotated only as "hypothetical protein". The Minus counterpart in *Zychaea mexicana* (`XP_052979473.1`) is at least named "high mobility group box-domain-containing protein". | V `results/2026-10-01_circinella_curation/verify_sources.tsv` | WORKED AROUND (named sexP in `101103_nrrl1351_MAT_Plus`); OPEN (upstream) |
 
 ### B4. Assemblies that collapse a heterozygous MTL locus
 
@@ -97,6 +98,9 @@ curated or corrected. Newest entries at the end of each section.
 | C2 | *Lobaria pulmonaria* `JX520967.1` / `JX520966.1`; *Microbotryum* `JQ423666.1`, `JQ423663.1`, `JQ423661.1`; `KX832965.1`; `ON315861.1` | Flagged UNVERIFIED in GenBank; several carry no CDS. | A | Not usable as references |
 | C3 | *P. tritici-repentis* `AM884596`-`AM884619` | Titled "mat1-1 gene and partial mat1-2 gene" -- unusual for a heterothallic MAT1-1 deposit. | A | OPEN: check before use |
 | C4 | *Morchella* literature | The Morchella locus deposits are from Chai et al. 2017 (Mycol Prog 16:743, doi:10.1007/s11557-017-1309-x), not Du et al. as first recalled. | A, V (Crossref) | FIXED in our record |
+| C5 | *Circinella minor* CBS 143.56: ZyGoLife LCG assembly vs NCBI `GCA_016758965.1` (BioSample SAMN16393841) | The two assemblies carry opposite idiomorphs at the rnhA locus: the LCG assembly a sexM-type protein (classifier sexM 125.6 bits), `GCA_016758965.1` a sexP-type protein (sexP 114.3). One of the two cultures is not CBS 143.56 as labelled, or the strain is mixed. Curator (2026-10-01): "LCG might be wrong". Not resolved by sequence alone. | V `results/2026-10-01_circinella_label_tree/strain_table.tsv` | OPEN (ruling); neither genome used as a record source |
+| C6 | ZyGoLife LCG strain names carrying a mating-type label, Circinella group | Labels contradict the HMG gene: *C. angarensis* RSA 198 "Plus" and *C. umbellata* RSA 505 "Plus" carry sexM; *Thamnostylum* labels are inverted genus-wide (RSA 1015 and RSA 459 "Plus" carry sexM; RSA 1093 and RSA 1405 "-" carry sexP-type genes, provisional). Curator's per-strain treatment: `results/2026-10-01_circinella_label_tree/label_treatment.tsv`. | V (RAxML-NG, IQ-TREE, classifier) | OPEN (upstream); labels not used as truth where ruled wrong |
+| C7 | ZyGoLife LCG *Rhizopus arrhizus* NRRL 1470 and *R. microsporus* NRRL A-17693 | Each carries a Circinella-group HMG gene at an rnhA locus with classifier scores identical to *C. umbellata* strains (sexM 133.9; sexP 113.4). Suggests a misidentified or contaminated culture/assembly. Not checked further (no rDNA/ITS test). | V (scores) / lead | OPEN: do not use as *Rhizopus* references; the taxid-scoped Circinella-group gate rule does not apply to them |
 
 ## D. Assignment traps: real biology that looks like an annotation error
 
@@ -136,3 +140,4 @@ Recorded so a detector rule or a curator does not "fix" them.
 * **2026-09-26** D9-D10 added from the Serinales-wide scan on the flank roster (`882aa01`).
 * **2026-09-27** B1.7, B1.8 added (Umbelopsis sexM unannotated in gzUmbVina2 and WA0000051536); branch `curation-umbelopsis`.
 * **2026-09-27** B1.9 added (Syncephalastrum racemosum sexP unannotated in the JGI NRRL 2496 assembly); branch `curation-umbelopsis`.
+* **2026-10-01** B3.9, C5-C7 added (Circinella-group curation: unnamed C. umbellata sexP; C. minor CBS 143.56 idiomorph conflict; LCG label inversions; Circinella-group alleles in two LCG "Rhizopus" genomes); branch `curation-circinella`.

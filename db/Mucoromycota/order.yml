@@ -37,7 +37,29 @@ loci:
     # NRRL 2496 12.0, S. monosporum x2 10.3) sit outside both clades. Every
     # held-out Zygo protein cleared 34 bits, so no measured correct call is
     # lost.
-    idiomorph_classifier: {type: hmm, dir: classifiers/MAT, min_margin: 25}
+    #
+    # CURATOR RULING, J. Stajich, 2026-10-01 (Circinella-group curation;
+    # results/2026-10-01_circinella_curation/NOTE.md): a taxon-scoped flank
+    # rule for the MAT-gene gate. In Circinella (101102), Thamnostylum (64650),
+    # Fennellomyces (101135) and Zychaea (64651) the sex gene sits 2-9 kb from
+    # rnhA, with gpmI between them, and tptA/algA/glrA sit elsewhere
+    # (results/2026-10-01_lichtheimiaceae/: core locus within 50 kb of rnhA in
+    # 43/46 genomes; algA-tptA together on another contig in 21/30
+    # Circinella). A real locus there can never show the default two roster
+    # flanks, so for a genome whose taxid lineage holds one of these genera,
+    # rnhA alone (modelled at >= 40%) is flank support. Kept as a scoped group
+    # in this family, not a sub-family: the group shares the Mucorales sexM/sexP
+    # classifier and roster, and only the gate's flank count differs. A run
+    # without a taxid never uses the group. Lichtheimia (688353) and the other
+    # Lichtheimiaceae are deliberately NOT listed (discovery-only).
+    idiomorph_classifier:
+      type: hmm
+      dir: classifiers/MAT
+      min_margin: 25
+      flank_support_groups:
+        - name: circinella_group
+          taxids: [101102, 64650, 101135, 64651]  # Circinella, Thamnostylum, Fennellomyces, Zychaea
+          flanks: [rnhA]
     # CURATOR RULING, J. Stajich, 2026-09-29: test first. A genome with a
     # Plus and a Minus call is NOT a confirmed homothallic (hybrid/fusion,
     # duplication, mixed culture, assembly artefact are all possible). The

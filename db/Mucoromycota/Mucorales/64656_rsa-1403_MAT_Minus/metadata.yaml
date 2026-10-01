@@ -1,0 +1,272 @@
+record_id: 64656_rsa-1403_MAT_Minus
+record_version: 1
+taxonomy:
+  taxid: 64656
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Lichtheimiaceae;g__Zychaea;s__Zychaea_mexicana
+  lineage_resolved_date: '2026-10-01'
+organism:
+  species: Zychaea mexicana
+  strain:
+    name: RSA 1403
+    known: true
+    culture_collection_ids:
+    - RSA 1403
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Minus
+  system: heterothallic
+locus:
+  assembly_accession: GCF_025766255.1
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: sexM->|rnhA->
+    definition_note: 'Zychaea mexicana RSA 1403 (RefSeq GCF_025766255.1 = GenBank GCA_025766255.1, JGI
+      Zycmex1; BioProject PRJNA331829, BioSample SAMN05444742; contig N50 307.7 kb) MAT Minus locus on
+      NW_026516701.1 (identical to GenBank JAIXMT010000038.1; the RefSeq copy is used because it is the
+      sequence the BFD genome library carries). Gene order: VMA1 (XP_052979470.1, -) -- pntA (XP_052979471.1,
+      -) -- [XP_052979472.1, uncharacterized, -, not recorded] -- sexM (XP_052979473.1, +, 191 aa, single
+      exon) -- gpmI (XP_052979474.1, -) -- rnhA (XP_052979475.1, +). GenBank copies of the proteins: KAI9493205.1-KAI9493210.1
+      (byte-identical). sexM carries a PF00505 HMG box (aa 46-113, E 5.0e-26); best curated match 4837_nrrl1555
+      sexM (blastp 43.4% over 203 aa); HMM classifier (a8863f3 build) sexM 132.9 vs sexP 70.7 bits (margin
+      +62.2). sexM ends 112 bp from gpmI and 2.1 kb from rnhA. rnhA is 54.9% identical to 29922_cbs109-16
+      rnhA. tptA (XP_052979568.1, NW_026516700.1), algA (XP_052976134.1, NW_026516743.1) and glrA (XP_052972719.1,
+      NW_026516849.1) are on other contigs, so they are recorded present: false. VMA1, pntA and gpmI are
+      recorded in locus.extended_flank, not as roster genes, so detection never searches them. Every protein
+      matches the translation of its annotated exons from NW_026516701.1 at 100% (table 1, codon_start
+      1). TIER 2 (genome-derived). Not a published idiomorph.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NW_026516701.1
+        seq_region: NW_026516701.1
+      start: 27357
+      end: 34620
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank:
+  - name: VMA1
+    product: V-type proton ATPase catalytic subunit A
+    protein_accession: ncbi_protein:XP_052979470.1
+    searched: false
+    contig: NW_026516701.1
+    start: 19379
+    end: 22020
+    strand: '-'
+    exons:
+    - start: 21958
+      end: 22020
+    - start: 21788
+      end: 21872
+    - start: 21599
+      end: 21708
+    - start: 21428
+      end: 21529
+    - start: 21199
+      end: 21339
+    - start: 20979
+      end: 21130
+    - start: 20792
+      end: 20904
+    - start: 20652
+      end: 20701
+    - start: 20344
+      end: 20575
+    - start: 20153
+      end: 20267
+    - start: 19540
+      end: 20065
+    - start: 19379
+      end: 19468
+    codon_start: 1
+    transl_table: 1
+    protein_match: 100% to the translation of its annotated exons
+  - name: pntA
+    product: P-loop containing nucleoside triphosphate hydrolase protein
+    protein_accession: ncbi_protein:XP_052979471.1
+    searched: false
+    contig: NW_026516701.1
+    start: 24282
+    end: 25977
+    strand: '-'
+    exons:
+    - start: 25826
+      end: 25977
+    - start: 25627
+      end: 25717
+    - start: 25512
+      end: 25548
+    - start: 25262
+      end: 25437
+    - start: 25121
+      end: 25186
+    - start: 25011
+      end: 25051
+    - start: 24636
+      end: 24924
+    - start: 24511
+      end: 24555
+    - start: 24371
+      end: 24427
+    - start: 24282
+      end: 24308
+    codon_start: 1
+    transl_table: 1
+    protein_match: 100% to the translation of its annotated exons
+  - name: gpmI
+    product: 2,3-bisphosphoglycerate-independent phosphoglycerate mutase
+    protein_accession: ncbi_protein:XP_052979474.1
+    searched: false
+    contig: NW_026516701.1
+    start: 28045
+    end: 29766
+    strand: '-'
+    exons:
+    - start: 29547
+      end: 29766
+    - start: 29416
+      end: 29468
+    - start: 28045
+      end: 29343
+    codon_start: 1
+    transl_table: 1
+    protein_match: 100% to the translation of its annotated exons
+genes:
+- gene_index: 0
+  name: sexM
+  protein_accession: ncbi_protein:XP_052979473.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 27357
+  end: 27932
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 27357
+    end: 27932
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: rnhA
+  protein_accession: ncbi_protein:XP_052979475.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 30028
+  end: 34620
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 30028
+    end: 30095
+  - start: 30202
+    end: 30841
+  - start: 30928
+    end: 31236
+  - start: 31312
+    end: 31339
+  - start: 31418
+    end: 31861
+  - start: 31944
+    end: 33124
+  - start: 33185
+    end: 33312
+  - start: 33388
+    end: 33991
+  - start: 34071
+    end: 34301
+  - start: 34378
+    end: 34620
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: tptA
+  protein_accession: null
+  role: flanking_conserved
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+- gene_index: 3
+  name: algA
+  protein_accession: null
+  role: flanking_variable
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+- gene_index: 4
+  name: glrA
+  protein_accession: null
+  role: flanking_variable
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+evidence:
+  locus_existence:
+    tier: 2
+    citations: []
+    experimental_method: TIER 2 (genome-derived). No Circinella, Thamnostylum, Fennellomyces or Zychaea
+      MAT locus has a locus-specific deposit or a publication (NCBI nuccore/protein and PubMed searched
+      2026-10-01). Locus identified by the HMG-box gene typed by the MATPredict HMM idiomorph classifier
+      (db/Mucoromycota/classifiers/MAT) and by the Circinella-group neighbourhood VMA1-pntA-[sex]-gpmI-rnhA,
+      conserved between Zychaea and Circinella.
+  boundaries:
+    tier: 2
+    citations: []
+    experimental_method: TIER 2 (genome-derived). No Circinella, Thamnostylum, Fennellomyces or Zychaea
+      MAT locus has a locus-specific deposit or a publication (NCBI nuccore/protein and PubMed searched
+      2026-10-01). Record segment spans the sex gene to rnhA on NW_026516701.1 (GCF_025766255.1); the
+      idiomorph boundaries themselves are not mapped. VMA1, pntA and gpmI are in extended_flank (recorded,
+      not searched).
+  idiomorph_assignment:
+    tier: 2
+    citations: []
+    experimental_method: 'TIER 2 (genome-derived). No Circinella, Thamnostylum, Fennellomyces or Zychaea
+      MAT locus has a locus-specific deposit or a publication (NCBI nuccore/protein and PubMed searched
+      2026-10-01). Idiomorph from the HMG-box gene (sexM): classifier and PF00505 scores in definition_note;
+      Plus = sexP, Minus = sexM, as the curated Mucorales records.'
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: '2026-10-01'
+  accession_resolved_version: NW_026516701.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: Deposited proteins compared to the translation of their annotated exons (results/2026-10-01_circinella_curation/verify_sources.tsv).
+  taxonomy_current: true
+curation:
+  proposed_by: claude-genome-curation
+  proposal_dedupe_key: GCF_025766255.1|64656|MAT|Minus
+  reviewed_by: null
+  reviewed_date: null
+  notes: Proposed 2026-10-01 on curator ruling (Circinella-group curation, tier-2 records for both idiomorphs).
+    PENDING curator sign-off.
+model_provenance: null

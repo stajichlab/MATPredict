@@ -1,0 +1,358 @@
+record_id: 5325_fp-101664-ss1_PR_B1
+record_version: 1
+taxonomy:
+  taxid: 5325
+  lineage: k__Fungi;p__Basidiomycota;subphylum__Agaricomycotina;c__Agaricomycetes;o__Polyporales;f__Polyporaceae;g__Trametes;s__Trametes_versicolor
+  lineage_resolved_date: '2026-09-27'
+organism:
+  species: Trametes versicolor
+  strain:
+    name: FP-101664 SS1
+    known: true
+    culture_collection_ids:
+    - FP-101664 SS1
+    differs_from_sequenced: false
+mating_type:
+  locus_name: PR
+  idiomorphs:
+  - B1
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: not established from coordinate data alone
+    definition_note: 'Trametes versicolor FP-101664 SS1 (Polyporales) B (pheromone/receptor) mating-type
+      locus, GCA_000271585.1 JH711790.1:1556459-1581006: 3 pheromone receptors and 9 pheromone precursors
+      in one cluster, from the JGI Trametes versicolor v1.0 annotation (Floudas et al. 2012), which names
+      the receptors ''STE3-domain-containing protein'' / ''fungal pheromone STE3G-protein-coupled receptor''
+      and the precursors ''pheromone'' / ''B mating type pheromone''. Pheromone precursors: ncbi_protein:EIW57106.1
+      43 aa, strict CAAX CIIA; ncbi_protein:EIW57105.1 40 aa, C-terminus TIAW (no CAAX); ncbi_protein:EIW57108.1
+      43 aa, strict CAAX CIIA; ncbi_protein:EIW57109.1 43 aa, strict CAAX CIIA; ncbi_protein:EIW57102.1
+      63 aa, relaxed CAAX CTIA; ncbi_protein:EIW57113.1 46 aa, strict CAAX CVIA; ncbi_protein:EIW57112.1
+      68 aa, strict CAAX CVIA; ncbi_protein:EIW57111.1 53 aa, strict CAAX CVIA; ncbi_protein:EIW57110.1
+      70 aa, strict CAAX CVIA. 7/9 precursors end in the strict CAAX motif. PR/B loci routinely carry
+      several receptor and pheromone copies (curator domain ruling 2026-09-16); receptors and precursors
+      are recorded under the family''s generic names. Which receptor(s) define the B mating specificity
+      is not established. Idiomorph ''B1'' is a placeholder label (curator convention 2026-09-26: count
+      alleles when the source does not number them). TIER 2: genome-derived; no locus-specific GenBank
+      deposit exists for this order''s B locus.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JH711790.1
+        seq_region: JH711790.1
+      start: 1556459
+      end: 1581006
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:EIW57106.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_184723
+  segment_index: 0
+  start: 1556459
+  end: 1556590
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 1556459
+    end: 1556590
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:EIW57105.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_184722
+  segment_index: 0
+  start: 1558495
+  end: 1558617
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 1558495
+    end: 1558617
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:EIW57108.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_184718
+  segment_index: 0
+  start: 1560233
+  end: 1560364
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 1560233
+    end: 1560364
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:EIW57109.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_184727
+  segment_index: 0
+  start: 1562208
+  end: 1562339
+  strand: +
+  order_in_locus: 3
+  exons:
+  - start: 1562208
+    end: 1562339
+  codon_start: 1
+  transl_table: 1
+- gene_index: 4
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:EIW56739.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_73174
+  segment_index: 0
+  start: 1563149
+  end: 1564870
+  strand: '-'
+  order_in_locus: 4
+  exons:
+  - start: 1564654
+    end: 1564870
+  - start: 1564488
+    end: 1564600
+  - start: 1564371
+    end: 1564437
+  - start: 1564180
+    end: 1564317
+  - start: 1563674
+    end: 1564127
+  - start: 1563149
+    end: 1563614
+  codon_start: 1
+  transl_table: 1
+- gene_index: 5
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:EIW57102.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_184715
+  segment_index: 0
+  start: 1566943
+  end: 1567134
+  strand: '-'
+  order_in_locus: 5
+  exons:
+  - start: 1566943
+    end: 1567134
+  codon_start: 1
+  transl_table: 1
+- gene_index: 6
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:EIW57113.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_184731
+  segment_index: 0
+  start: 1569127
+  end: 1569267
+  strand: +
+  order_in_locus: 6
+  exons:
+  - start: 1569127
+    end: 1569267
+  codon_start: 1
+  transl_table: 1
+- gene_index: 7
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:EIW56740.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_127518
+  segment_index: 0
+  start: 1571343
+  end: 1572547
+  strand: '-'
+  order_in_locus: 7
+  exons:
+  - start: 1572337
+    end: 1572547
+  - start: 1572169
+    end: 1572281
+  - start: 1572048
+    end: 1572114
+  - start: 1571857
+    end: 1571994
+  - start: 1571343
+    end: 1571797
+  codon_start: 1
+  transl_table: 1
+- gene_index: 8
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:EIW57112.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_184730
+  segment_index: 0
+  start: 1573416
+  end: 1573622
+  strand: +
+  order_in_locus: 8
+  exons:
+  - start: 1573416
+    end: 1573622
+  codon_start: 1
+  transl_table: 1
+- gene_index: 9
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:EIW56741.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_170716
+  segment_index: 0
+  start: 1575419
+  end: 1576949
+  strand: '-'
+  order_in_locus: 9
+  exons:
+  - start: 1576736
+    end: 1576949
+  - start: 1576568
+    end: 1576680
+  - start: 1576452
+    end: 1576518
+  - start: 1576256
+    end: 1576393
+  - start: 1575764
+    end: 1576202
+  - start: 1575419
+    end: 1575710
+  codon_start: 1
+  transl_table: 1
+- gene_index: 10
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:EIW57111.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_184728
+  segment_index: 0
+  start: 1577454
+  end: 1577615
+  strand: +
+  order_in_locus: 10
+  exons:
+  - start: 1577454
+    end: 1577615
+  codon_start: 1
+  transl_table: 1
+- gene_index: 11
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:EIW57110.1
+  role: core_MAT
+  present: true
+  locus_tag: TRAVEDRAFT_184729
+  segment_index: 0
+  start: 1580794
+  end: 1581006
+  strand: '-'
+  order_in_locus: 11
+  exons:
+  - start: 1580794
+    end: 1581006
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: 'genome annotation of a named B-locus cluster. Positional evidence (results/2026-09-27_pheromone_positional,
+      MATPredict receptor queue step 2): a pheromone-receptor gene with a pheromone-precursor ORF ending
+      in the strict Basidiomycota CAAX motif C[VI][IV][AVMG] within 10 kb flagged every curated Agaricomycete
+      mating receptor (Coprinopsis 3/3, Schizophyllum 2/2) and 0/25 non-mating STE3 copies; random genomic
+      windows 2.5%.'
+    citations: &id001
+    - pmid: '22745431'
+      doi: 10.1126/science.1221748
+  boundaries:
+    tier: 2
+    experimental_method: record segment spans the first to last curated gene on JH711790.1; genome-derived
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: '''B1'' is a placeholder; the strain''s B allele is not reported'
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: '2026-09-27'
+  accession_resolved_version: GCA_000271585.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 5
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 6
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 7
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 8
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 9
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 10
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 11
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: 'annotated genes: translation of the recorded coordinates equals the annotated protein; unannotated
+      precursors: translation has a start Met and no internal stop'
+  taxonomy_current: true
+curation:
+  proposed_by: claude-receptor-queue-step-c
+  proposal_dedupe_key: GCA_000271585.1|5325|PR|B1
+  reviewed_by: 'J. Stajich (sign-off 2026-09-27)'
+  reviewed_date: '2026-09-27'
+  notes: 'Proposed 2026-09-27 on curator ruling (receptor queue step c: Polyporales and Russulales). Curator J. Stajich signed off 2026-09-27 (tier 2).'
+model_provenance: null

@@ -1,0 +1,299 @@
+record_id: 984962_tc-32-1_PR_B1
+record_version: 1
+taxonomy:
+  taxid: 984962
+  lineage: k__Fungi;p__Basidiomycota;subphylum__Agaricomycotina;c__Agaricomycetes;o__Russulales;f__Bondarzewiaceae;g__Heterobasidion;s__Heterobasidion_irregulare
+  lineage_resolved_date: '2026-09-27'
+organism:
+  species: Heterobasidion irregulare
+  strain:
+    name: TC 32-1
+    known: true
+    culture_collection_ids:
+    - TC 32-1
+    differs_from_sequenced: false
+mating_type:
+  locus_name: PR
+  idiomorphs:
+  - B1
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: not established from coordinate data alone
+    definition_note: 'Heterobasidion irregulare TC 32-1 (Russulales) B (pheromone/receptor) mating-type
+      locus, GCA_000320585.2 KI925460.1:825882-849398: 5 pheromone receptors and 3 pheromone precursors
+      in one cluster, from the JGI Heterobasidion irregulare v2.0 annotation (Olson et al. 2012), which
+      names the receptors ''putative pheromone receptor'' / ''putative B mating type protein'' and the
+      precursors ''B mating type pheromone''. Pheromone precursors: ncbi_protein:ETW79705.1 30 aa, CAAX-like
+      CILF; ncbi_protein:ETW79710.1 49 aa, relaxed CAAX CTIA; ncbi_protein:ETW79712.1 43 aa, strict CAAX
+      CVVA. 1/3 precursors end in the strict CAAX motif. PR/B loci routinely carry several receptor and
+      pheromone copies (curator domain ruling 2026-09-16); receptors and precursors are recorded under
+      the family''s generic names. Which receptor(s) define the B mating specificity is not established.
+      Idiomorph ''B1'' is a placeholder label (curator convention 2026-09-26: count alleles when the source
+      does not number them). TIER 2: genome-derived; no locus-specific GenBank deposit exists for this
+      order''s B locus.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KI925460.1
+        seq_region: KI925460.1
+      start: 825882
+      end: 849398
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:ETW79702.1
+  role: core_MAT
+  present: true
+  locus_tag: HETIRDRAFT_171777
+  segment_index: 0
+  start: 825882
+  end: 827470
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 827383
+    end: 827470
+  - start: 827206
+    end: 827328
+  - start: 826968
+    end: 827147
+  - start: 826783
+    end: 826920
+  - start: 826295
+    end: 826730
+  - start: 825882
+    end: 826233
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:ETW79703.1
+  role: core_MAT
+  present: true
+  locus_tag: HETIRDRAFT_181128
+  segment_index: 0
+  start: 830304
+  end: 831730
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 831523
+    end: 831730
+  - start: 831360
+    end: 831472
+  - start: 831234
+    end: 831304
+  - start: 831169
+    end: 831176
+  - start: 830978
+    end: 831100
+  - start: 830498
+    end: 830912
+  - start: 830304
+    end: 830445
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:ETW79704.1
+  role: core_MAT
+  present: true
+  locus_tag: HETIRDRAFT_181123
+  segment_index: 0
+  start: 833453
+  end: 835073
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 834986
+    end: 835073
+  - start: 834805
+    end: 834927
+  - start: 834567
+    end: 834746
+  - start: 834376
+    end: 834513
+  - start: 833886
+    end: 834324
+  - start: 833453
+    end: 833825
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:ETW79705.1
+  role: core_MAT
+  present: true
+  locus_tag: HETIRDRAFT_181139
+  segment_index: 0
+  start: 835554
+  end: 835646
+  strand: '-'
+  order_in_locus: 3
+  exons:
+  - start: 835554
+    end: 835646
+  codon_start: 1
+  transl_table: 1
+- gene_index: 4
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:ETW79706.1
+  role: core_MAT
+  present: true
+  locus_tag: HETIRDRAFT_147163
+  segment_index: 0
+  start: 836437
+  end: 838402
+  strand: '-'
+  order_in_locus: 4
+  exons:
+  - start: 838204
+    end: 838402
+  - start: 837970
+    end: 838146
+  - start: 837780
+    end: 837917
+  - start: 837326
+    end: 837722
+  - start: 836437
+    end: 837259
+  codon_start: 1
+  transl_table: 1
+- gene_index: 5
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:ETW79709.1
+  role: core_MAT
+  present: true
+  locus_tag: HETIRDRAFT_147162
+  segment_index: 0
+  start: 844478
+  end: 845904
+  strand: '-'
+  order_in_locus: 5
+  exons:
+  - start: 845694
+    end: 845904
+  - start: 845529
+    end: 845641
+  - start: 845408
+    end: 845474
+  - start: 845336
+    end: 845350
+  - start: 845158
+    end: 845280
+  - start: 844654
+    end: 845104
+  - start: 844478
+    end: 844604
+  codon_start: 1
+  transl_table: 1
+- gene_index: 6
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:ETW79710.1
+  role: core_MAT
+  present: true
+  locus_tag: HETIRDRAFT_181135
+  segment_index: 0
+  start: 846432
+  end: 846581
+  strand: +
+  order_in_locus: 6
+  exons:
+  - start: 846432
+    end: 846581
+  codon_start: 1
+  transl_table: 1
+- gene_index: 7
+  name: fungal_mating_type_pheromone
+  protein_accession: ncbi_protein:ETW79712.1
+  role: core_MAT
+  present: true
+  locus_tag: HETIRDRAFT_181126
+  segment_index: 0
+  start: 849267
+  end: 849398
+  strand: '-'
+  order_in_locus: 7
+  exons:
+  - start: 849267
+    end: 849398
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: 'genome annotation of a named B-locus cluster. Positional evidence (results/2026-09-27_pheromone_positional,
+      MATPredict receptor queue step 2): a pheromone-receptor gene with a pheromone-precursor ORF ending
+      in the strict Basidiomycota CAAX motif C[VI][IV][AVMG] within 10 kb flagged every curated Agaricomycete
+      mating receptor (Coprinopsis 3/3, Schizophyllum 2/2) and 0/25 non-mating STE3 copies; random genomic
+      windows 2.5%.'
+    citations: &id001
+    - pmid: '22463738'
+      doi: 10.1111/j.1469-8137.2012.04128.x
+  boundaries:
+    tier: 2
+    experimental_method: record segment spans the first to last curated gene on KI925460.1; genome-derived
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: '''B1'' is a placeholder; the strain''s B allele is not reported'
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: '2026-09-27'
+  accession_resolved_version: GCA_000320585.2
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 5
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 6
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 7
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: 'annotated genes: translation of the recorded coordinates equals the annotated protein; unannotated
+      precursors: translation has a start Met and no internal stop'
+  taxonomy_current: true
+curation:
+  proposed_by: claude-receptor-queue-step-c
+  proposal_dedupe_key: GCA_000320585.2|984962|PR|B1
+  reviewed_by: 'J. Stajich (sign-off 2026-09-27)'
+  reviewed_date: '2026-09-27'
+  notes: 'Proposed 2026-09-27 on curator ruling (receptor queue step c: Polyporales and Russulales). Curator J. Stajich signed off 2026-09-27 (tier 2).'
+model_provenance: null

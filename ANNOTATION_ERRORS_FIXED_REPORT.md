@@ -89,6 +89,8 @@ curated or corrected. Newest entries at the end of each section.
 |---|---|---|---|---|
 | B4.1 | *C. albicans* A48, A67, A92, A123, A203, CHN1 (GCA_0004474x5.1 Broad series) and ATCC 36802 (GCA_029931725.1) | Assembly carries only the MTLalpha idiomorph; WGS reads cover BOTH idiomorphs at ~half the single-copy depth (a 0.36-0.53, alpha 0.42-0.61). The a haplotype was collapsed out. | V `results/2026-09-26_calbicans_mtl_reads/` | OPEN (upstream); detection is correct about the assembly -- genotype needs reads |
 | B4.2 | *C. albicans* P37037 (GCA_000773825.1) | Assembly carries only MTLa; reads show a/alpha (0.52 / 0.57). | V | OPEN (upstream) |
+| B6.1 | *Grifola frondosa* 9006-11 `GCA_001683735.1`, LUGG01000005.1: B-locus pheromone precursors | The five B-locus receptors are annotated (OBZ74837.1, OBZ74842.1, OBZ74475.1, OBZ74569.1, OBZ74474.1) but none of the pheromone precursors between them is. A six-frame scan finds three strict-CAAX ORFs (525,554-525,709; 533,656-533,820; 546,974-547,096, all minus strand); the last is the ortholog of the WM1-25 ph1 deposit LC706365.1 (tblastn 55%, E=2e-11). The annotation-gap pattern for tiny pheromone genes. | V `results/2026-09-27_receptor_curation/` | WORKED AROUND (recorded by coordinates in `5627_9006-11_PR_B1`); OPEN (upstream) |
+| B6.2 | *Trametes versicolor* FP-101664 SS1 `GCA_000271585.1`: pheromone EIW57105.1 (TRAVEDRAFT_184722) | Annotated 40-aa precursor ends ...GGCTIAW: the CAAX-like CTIA sits one residue before the annotated stop, unlike the eight neighbouring precursors which all end in CAAX. Possibly a stop-codon or model error; the record keeps the annotated protein. Not checked against reads. | V | OPEN |
 
 ### B5. Pucciniomycotina gene models and names (curation-puccinio, 2026-09-26)
 
@@ -156,5 +158,6 @@ Recorded so a detector rule or a curator does not "fix" them.
 * **2026-09-27** B5.4 added while curating the putative Wallemia MAT record (branch `curation-puccinio`).
 * **2026-09-27** B5.5 added while curating the second (v2) putative Wallemia MAT record (branch `curation-puccinio`).
 * **2026-09-27** B5.6 added while curating Rhodotorula P/R and HD records from the group's preprint (branch `curation-puccinio`).
+* **2026-09-27** B6.1-B6.2 added while curating Polyporales/Russulales B (PR) loci (branch `basidio-anchors`, receptor queue step c). Numbered B6 to avoid colliding with B5.x on branch `curation-puccinio`.
 * **2026-10-01** B3.9, C5-C7 added (Circinella-group curation: unnamed C. umbellata sexP; C. minor CBS 143.56 idiomorph conflict; LCG label inversions; Circinella-group alleles in two LCG "Rhizopus" genomes); branch `curation-circinella`.
 * **2026-10-01** C7 cross-referenced to misidentified_strains.tsv (curator ruling: record A-17693 = *C. minor* in both places).

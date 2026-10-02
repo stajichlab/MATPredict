@@ -1,0 +1,15 @@
+# MATPredict taxon overrides: genomes whose deposited name is likely wrong.
+# Curator ruling, J. Stajich, 2026-10-01 (B8). The shared BFD samples.csv and
+# the LCG metadata are never edited; identities found by MATPredict live here.
+# It sits beside db/ (like suppress.txt) so a frozen run-<sha> worktree carries
+# the list it was launched with. Read by src/MATPredict/detect/taxon_overrides.py.
+#
+# Columns: genome_id (BFD ASMID or the exact LCG/Jena genome file stem), name_in_source,
+# likely_identity, identity_rank (species|genus|lineage), basis, status
+# (unconfirmed|confirmed), use, evidence (path), ruled (who, date).
+# status=unconfirmed: by locus genes only; no rDNA/ITS or genome-wide test.
+genome_id	name_in_source	likely_identity	identity_rank	basis	status	use	evidence	ruled
+Backusella_ctenidia_NRRL_6239	Backusella ctenidia	Mucor indicus lineage	lineage	100% identical to the M. indicus lineage at sexP, rnhA, glrA, tptA; tptA 100% to M. indicus NRRL 13468	unconfirmed	exclude from species-level scoring	results/2026-09-29_strain_labels_and_absidia/misidentified_strains.tsv	J. Stajich 2026-10-01
+Rhizopus_arrhizus_NRRL_1470	Rhizopus arrhizus	Circinella umbellata	species	sexM and rnhA 100% identical to C. umbellata; rnhA 57% to other R. arrhizus	unconfirmed	exclude from species-level scoring	results/2026-09-29_strain_labels_and_absidia/misidentified_strains.tsv	J. Stajich 2026-10-01
+Thamnostylum_repens_Tieghem_Upadhyay_NRRL_6240	Thamnostylum repens	Circinomucor circinelloides	species	100% identical to C. circinelloides NRRL 22899 at four genes	unconfirmed	exclude from species-level scoring	results/2026-09-29_strain_labels_and_absidia/misidentified_strains.tsv	J. Stajich 2026-10-01
+Rhizopus_microsporus_NRRL_A-17693	Rhizopus microsporus	Circinella minor	species	tptA and glrA 100% identical to C. minor NRRL 1365, rnhA 97.5%; MAT locus nucleotide-identical (7,705 bp) to C. umbellata NRRL 2417 and C. minor NRRL 1365	unconfirmed	exclude from species-level scoring	results/2026-09-29_strain_labels_and_absidia/misidentified_strains.tsv; ANNOTATION_ERRORS_FIXED_REPORT.md C7	J. Stajich 2026-10-01

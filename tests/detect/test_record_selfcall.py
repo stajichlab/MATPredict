@@ -95,3 +95,34 @@ def test_a_merged_call_counts_for_a_member_family():
         "merged_from": [{"family": "Basidiomycota:Aalpha"}, {"family": "Basidiomycota:HD"}],
     }]}
     assert selfcall_verdict(loc, report)["verdict"] == "called"
+
+
+def test_a_strain_matched_assembly_uses_its_aligned_location(tmp_path):
+    """B10 (2026-10-01): a same-strain assembly has its own contig names, so the
+    self-check matches calls against `assembly_location`, not the deposit."""
+    p = tmp_path / "metadata.yaml"
+    p.write_text(
+        "record_id: r1\nmating_type: {locus_name: MAT, idiomorphs: [Plus]}\n"
+        "locus:\n  assembly_accession: GCA_000000002.1\n"
+        "  assembly_accession_basis: strain_match_verified\n"
+        "  assembly_location:\n    contig: scaffold_7\n    start: 500\n    end: 9000\n"
+        "  core:\n    segments:\n"
+        "    - sequence_source: {type: insdc_nucleotide, accession: JN000001.1}\n"
+        "      start: 1\n      end: 8500\n")
+    loc = record_location(p)
+    assert loc.assembly == "GCA_000000002.1"
+    assert loc.segments == (("scaffold_7", 500, 9000),)
+    report = {"detected": [{"family": "X:MAT", "contig": "scaffold_7", "start": 4000, "end": 6000}]}
+    assert selfcall_verdict(loc, report)["verdict"] == "called"
+
+
+def test_the_schema_accepts_the_strain_match_fields():
+    from MATPredict.db.schema import load_metadata_schema
+    import jsonschema
+    props = load_metadata_schema()["properties"]["locus"]["properties"]
+    jsonschema.validate("strain_match_verified", props["assembly_accession_basis"])
+    jsonschema.validate({"contig": "s1", "start": 1, "end": 9, "identity": 99.8},
+                        props["assembly_location"])
+    import pytest
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate("name_only", props["assembly_accession_basis"])

@@ -4,7 +4,8 @@
 Review finding F2 (2026-09-28). For every record whose assembly accession is
 in the record and whose genome is in the BFD library, find an existing
 detection report for that genome (a results tree) and report the verdict:
-called / withheld (with reason) / missed / no_report / no_genome.
+called / withheld (with reason) / missed / no_report, or not_possible when
+the record has no source assembly and no verified same-strain assembly.
 
 Usage:
   check_record_selfcall.py --db DB_ROOT --reports DIR [DIR ...] [--out TSV]
@@ -48,7 +49,9 @@ def main():
     for md in sorted(Path(a.db).glob("*/*/*/metadata.yaml")):
         loc = record_location(md)
         if not loc.assembly:
-            rows.append({"record_id": loc.record_id, "assembly": "", "verdict": "no_assembly"})
+            # Curator ruling 2026-10-01: a record with no source or verified
+            # same-strain assembly cannot be self-checked. That is not a failure.
+            rows.append({"record_id": loc.record_id, "assembly": "", "verdict": "not_possible"})
             continue
         rep = _find(loc.assembly, a.reports)
         if rep is None:

@@ -41,6 +41,13 @@ def record_location(metadata_path: Path) -> RecordLocation:
         if acc and s.get("start") and s.get("end"):
             segs.append((acc, int(s["start"]), int(s["end"])))
     assembly = (doc.get("locus") or {}).get("assembly_accession")
+    # A strain-matched assembly (scripts/find_record_assemblies.py, curator
+    # ruling 2026-10-01) has its own contig names, so the deposit's segment
+    # coordinates cannot match a report. Use the locus position found by
+    # aligning the record's sequence to that assembly.
+    where = (doc.get("locus") or {}).get("assembly_location") or {}
+    if assembly and where.get("contig"):
+        segs = [(str(where["contig"]), int(where["start"]), int(where["end"]))]
     if not assembly:
         for s in (doc.get("locus", {}).get("core", {}) or {}).get("segments", []) or []:
             src = s.get("sequence_source") or {}

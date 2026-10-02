@@ -265,8 +265,12 @@ validation:
 curation:
   proposed_by: claude-genome-curation
   proposal_dedupe_key: GCF_025766255.1|64656|MAT|Minus
-  reviewed_by: null
-  reviewed_date: null
-  notes: Proposed 2026-10-01 on curator ruling (Circinella-group curation, tier-2 records for both idiomorphs).
-    PENDING curator sign-off.
+  reviewed_by: 'J. Stajich (sign-off 2026-10-01)'
+  reviewed_date: '2026-10-01'
+  notes: 'Proposed 2026-10-01 on curator ruling (Circinella-group curation, tier-2 records for both idiomorphs).
+    Curator J. Stajich signed off 2026-10-01 after the placement check (results/2026-10-01_circinella_curation/NOTE.md):
+    sexM XP_052979473.1 is inside the sexM clade in IQ-TREE (HMG box 89.4/80, full length 95.2/70) and RAxML-NG
+    (HMG box 19, full length 35) trees, never in the sexP clade; nearest Minus tip is the Phycomyces NRRL 1555 sexM
+    reference; classifier LOO margin 62.2 bits. Caveats: RAxML-NG support for the sexM clade is low; the strain has
+    no mating-type label from a crossing test.'
 model_provenance: null

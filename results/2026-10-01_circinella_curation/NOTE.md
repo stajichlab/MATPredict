@@ -1,5 +1,5 @@
 # Circinella-group MAT curation (tier 2)
-Status: pending curator sign-off (records); group rule dropped
+Status: both records signed off 2026-10-01; group rule dropped
 
 ## Question
 Curator ruling 2026-10-01: curate the Circinella group (Circinella,
@@ -190,12 +190,19 @@ Circinella + *T. lucknowense*) plus *R. microsporus* A-17693 (= *C. minor*).
 - The v2 panel reused the v1 baseline outputs (same commit, a8863f3) rather
   than rerunning them.
 
-## Curator decisions
-1. Sign off `101103_nrrl1351_MAT_Plus` and `64656_rsa-1403_MAT_Minus`.
-2. Accept the *Phascolomyces* and *Absidia* NRRL 3163 Plus calls.
-3. *Absidia* sp. NRRL 3163 identity (possible *Phascolomyces* relative).
-4. *R. microsporus* NRRL A-17693 = *C. minor*: already noted in the label
-   tree; decide whether to log it in ANNOTATION_ERRORS_FIXED_REPORT.md.
+## Curator decisions (J. Stajich, 2026-10-01)
+1. `101103_nrrl1351_MAT_Plus` and `64656_rsa-1403_MAT_Minus`: signed off,
+   with caveats in each record's notes (weak HMG-box neighbour support or low
+   RAxML support; no crossing label for either strain).
+2. *Phascolomyces articulosus* RSA 2281 and *Absidia* sp. NRRL 3163 Plus
+   calls: accepted as real Plus loci at medium confidence. Neither strain has
+   a mating-type label.
+3. *Absidia* sp. NRRL 3163 identity: NOT recorded as a misidentification.
+   One MAT gene tree is too weak to support a species-identity claim.
+4. *R. microsporus* NRRL A-17693 = *C. minor*: recorded in both
+   `../2026-09-29_strain_labels_and_absidia/misidentified_strains.tsv`
+   (flank evidence) and ANNOTATION_ERRORS_FIXED_REPORT.md entry C7.
+5. Merge `curation-circinella` into PR #9.
 
 ## Files
 `verify_sources.{py,tsv}`, `make_records.py`, `rescore.{py,tsv}`,

@@ -192,26 +192,44 @@ def cmd_verify(a):
             for h in hsps:
                 if h[0] == qid and float(h[2]) >= MIN_IDENTITY:
                     per_contig.setdefault(h[1], []).append(h)
-            covs = {}
+            # Group each contig's HSPs into runs no further apart than the
+            # segment length, so repeat copies elsewhere on a chromosome do not
+            # stretch the span (a 1.4 Mb "locus" in Cryptococcus JEC20 before
+            # this). Keep the run that covers most of the segment.
+            covs, groups = {}, {}
             for contig, hs in per_contig.items():
-                cov = set()
+                hs = sorted(hs, key=lambda h: min(int(h[6]), int(h[7])))
+                runs, cur, cur_end = [], [], 0
                 for h in hs:
-                    qs, qe = sorted((int(h[4]), int(h[5])))
-                    cov.update(range(qs, qe + 1))
-                covs[contig] = 100.0 * len(cov) / L
+                    a0, a1 = sorted((int(h[6]), int(h[7])))
+                    if cur and a0 - cur_end > L:
+                        runs.append(cur)
+                        cur, cur_end = [], 0
+                    cur.append(h)
+                    cur_end = max(cur_end, a1)
+                runs.append(cur)
+                for run in runs:
+                    cov = set()
+                    for h in run:
+                        qs, qe = sorted((int(h[4]), int(h[5])))
+                        cov.update(range(qs, qe + 1))
+                    run_cov = 100.0 * len(cov) / L
+                    if run_cov > covs.get(contig, -1):
+                        covs[contig], groups[contig] = run_cov, run
             if not covs:
                 seg_cov.append(0.0)
                 continue
             contig = max(covs, key=covs.get)
             seg_cov.append(covs[contig])
-            hs = per_contig[contig]
+            hs = groups[contig]
             ss = [int(v) for h in hs for v in (h[6], h[7])]
             pid = sum(float(h[2]) * int(h[3]) for h in hs) / sum(int(h[3]) for h in hs)
             best = best or (contig, min(ss), max(ss), round(pid, 2))
         segs = list(qlen)
-        ok = bool(segs) and all(v >= MIN_SEGMENT_COVERAGE for v in seg_cov)
+        span_ok = bool(best) and (best[2] - best[1] + 1) <= 1.5 * sum(qlen.values())
+        ok = bool(segs) and all(v >= MIN_SEGMENT_COVERAGE for v in seg_cov) and span_ok
         rows.append(dict(record_id=c["record_id"], assembly=c["assembly"],
-                         verdict="verified" if ok else "not_verified",
+                         verdict="verified" if ok else ("span_too_long" if best and not span_ok else "not_verified"),
                          segment_coverage=";".join(f"{v:.1f}" for v in seg_cov),
                          contig=best[0] if best else "", start=best[1] if best else "",
                          end=best[2] if best else "", identity=best[3] if best else ""))

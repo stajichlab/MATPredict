@@ -1,0 +1,773 @@
+IQ-TREE 3.0.1 built May 14 2025
+
+Input file name: aln_mafft_g50.afa
+Type of analysis: ModelFinder + tree reconstruction + ultrafast bootstrap (1000 replicates)
+Random seed number: 817319
+
+REFERENCES
+----------
+
+To cite IQ-TREE 3 please use:
+
+Thomas K.F. Wong, Nhan Ly-Trong, Huaiyan Ren, Hector Banos, Andrew J. Roger,
+Edward Susko, Chris Bielow, Nicola De Maio, Nick Goldman, Matthew W. Hahn,
+Gavin Huttley, Robert Lanfear, Bui Quang Minh (2025)
+IQ-TREE 3: Phylogenomic Inference Software using Complex Evolutionary Models.
+Submitted.
+
+Please also cite the following paper(s) for the feature(s) that you used:
+
+To cite ModelFinder please use: 
+
+Subha Kalyaanamoorthy, Bui Quang Minh, Thomas KF Wong, Arndt von Haeseler,
+and Lars S Jermiin (2017) ModelFinder: Fast model selection for
+accurate phylogenetic estimates. Nature Methods, 14:587–589.
+https://doi.org/10.1038/nmeth.4285
+
+Since you used ultrafast bootstrap (UFBoot) please also cite: 
+
+Diep Thi Hoang, Olga Chernomor, Arndt von Haeseler, Bui Quang Minh,
+and Le Sy Vinh (2018) UFBoot2: Improving the ultrafast bootstrap
+approximation. Mol. Biol. Evol., 35:518–522.
+https://doi.org/10.1093/molbev/msx281
+
+SEQUENCE ALIGNMENT
+------------------
+
+Input data: 107 sequences with 212 amino-acid sites
+Number of constant sites: 3 (= 1.41509% of all sites)
+Number of invariant (constant or ambiguous constant) sites: 3 (= 1.41509% of all sites)
+Number of parsimony informative sites: 209
+Number of distinct site patterns: 212
+
+ModelFinder
+-----------
+
+Best-fit model according to BIC: Q.MAMMAL+F+I+R4
+
+List of models sorted by BIC scores: 
+
+Model                  LogL         AIC      w-AIC        AICc     w-AICc         BIC      w-BIC
+Q.MAMMAL+F+I+R4  -19816.690   40063.380 +    0.246  132943.380 -        0   40785.046 +    0.676
+Q.MAMMAL+F+I+G4  -19831.067   40082.134 - 2.09e-05  128702.134 -        0   40787.017 +    0.252
+Q.MAMMAL+F+I+R5  -19813.572   40061.144 +    0.754  134673.144 -        0   40789.524 +    0.072
+JTT+F+I+R4       -19859.035   40148.070 -    1e-19  133028.070 -        0   40869.736 - 2.75e-19
+JTTDCMUT+F+I+R4  -19862.960   40155.919 - 1.98e-21  133035.919 -        0   40877.585 - 5.43e-21
+JTT+F+I+R5       -19857.700   40149.399 - 5.16e-20  134761.399 -        0   40877.778 - 4.93e-21
+JTT+F+I+G4       -19876.862   40173.724 -  2.7e-25  128793.724 -        0   40878.607 - 3.26e-21
+JTTDCMUT+F+I+R5  -19862.122   40158.245 - 6.19e-22  134770.245 -        0   40886.624 - 5.92e-23
+JTTDCMUT+F+I+G4  -19882.697   40185.394 - 7.88e-28  128805.394 -        0   40890.277 - 9.53e-24
+Q.INSECT+I+R4    -19926.584   40245.167 - 8.26e-41   45393.434 - 1.03e-318   40903.058 -  1.6e-26
+Q.INSECT+I+G4    -19940.018   40262.036 - 1.79e-44   43929.236 +    0.913   40903.144 - 1.53e-26
+JTT+I+R4         -19928.845   40249.689 - 8.61e-42   45397.956 - 1.08e-319   40907.580 - 1.67e-27
+JTT+I+G4         -19942.378   40266.757 - 1.69e-45   43933.957 +   0.0862   40907.864 - 1.45e-27
+Q.INSECT+I+R5    -19924.898   40245.796 - 6.03e-41   46307.642 -        0   40910.400 - 4.07e-28
+Q.BIRD+F+I+R4    -19880.878   40191.756 - 3.27e-29  133071.756 -        0   40913.422 - 8.98e-29
+Q.PLANT+F+I+R4   -19881.466   40192.932 - 1.82e-29  133072.932 -        0   40914.598 - 4.99e-29
+JTTDCMUT+I+R4    -19932.362   40256.724 - 2.56e-43   45404.991 - 3.19e-321   40914.615 - 4.95e-29
+JTT+I+R5         -19927.390   40250.781 - 4.99e-42   46312.627 -        0   40915.385 - 3.37e-29
+Q.BIRD+F+I+R5    -19876.802   40187.604 - 2.61e-28  134799.604 -        0   40915.983 -  2.5e-29
+Q.PLANT+I+R4     -19933.530   40259.061 - 7.95e-44   45407.327 - 9.93e-322   40916.952 - 1.54e-29
+JTTDCMUT+I+G4    -19947.042   40276.084 -  1.6e-47   43943.284 - 0.000813   40917.192 - 1.36e-29
+Q.PLANT+I+G4     -19948.025   40278.051 - 5.98e-48   43945.251 - 0.000304   40919.159 -  5.1e-30
+Q.BIRD+F+I+G4    -19897.503   40215.005 - 2.93e-34  128835.005 -        0   40919.888 - 3.54e-30
+Q.PLANT+F+I+R5   -19879.389   40192.779 - 1.96e-29  134804.779 -        0   40921.158 - 1.88e-30
+JTTDCMUT+I+R5    -19931.153   40258.305 - 1.16e-43   46320.151 -        0   40922.909 - 7.82e-31
+Q.PLANT+I+R5     -19932.041   40260.082 - 4.77e-44   46321.928 -        0   40924.686 - 3.22e-31
+Q.PLANT+F+I+G4   -19900.771   40221.542 - 1.11e-35  128841.542 -        0   40926.425 - 1.35e-31
+Q.MAMMAL+I+R4    -19945.661   40283.321 - 4.29e-49   45431.588 -        0   40941.212 - 8.29e-35
+Q.MAMMAL+I+G4    -19962.408   40306.816 - 3.39e-54   43974.016 - 1.72e-10   40947.924 - 2.89e-36
+Q.MAMMAL+I+R5    -19944.881   40285.761 - 1.27e-49   46347.608 -        0   40950.366 - 8.53e-37
+Q.INSECT+F+I+R4  -19907.684   40245.368 - 7.47e-41  133125.368 -        0   40967.034 - 2.05e-40
+Q.INSECT+F+I+G4  -19924.271   40268.542 - 6.94e-46  128888.542 -        0   40973.425 - 8.39e-42
+Q.INSECT+F+I+R5  -19905.585   40245.171 - 8.25e-41  134857.171 -        0   40973.550 - 7.88e-42
+Q.YEAST+I+R4     -19964.577   40321.154 - 2.61e-57   45469.421 -        0   40979.045 - 5.05e-43
+Q.YEAST+I+G4     -19978.424   40338.849 - 3.75e-61   44006.049 - 1.91e-17   40979.957 -  3.2e-43
+Q.YEAST+I+R5     -19962.193   40320.385 - 3.83e-57   46382.232 -        0   40984.989 - 2.59e-44
+Q.BIRD+I+R4      -20010.684   40413.369 - 2.47e-77   45561.636 -        0   41071.260 - 4.78e-63
+Q.YEAST+F+I+R4   -19962.434   40354.868 - 1.25e-64  133234.868 -        0   41076.534 - 3.42e-64
+Q.BIRD+I+G4      -20027.087   40436.174 - 2.76e-82   44103.374 -  1.4e-38   41077.282 - 2.35e-64
+Q.BIRD+I+R5      -20008.683   40413.365 - 2.47e-77   46475.211 -        0   41077.969 - 1.67e-64
+Q.YEAST+F+I+R5   -19960.694   40355.387 - 9.62e-65  134967.387 -        0   41083.767 - 9.19e-66
+Q.YEAST+F+I+G4   -19980.971   40381.943 - 1.65e-70  129001.943 -        0   41086.826 - 1.99e-66
+VT+I+G4          -20037.866   40457.732 - 5.74e-87   44124.932 - 2.92e-43   41098.840 -  4.9e-69
+VT+I+R4          -20025.054   40442.107 - 1.42e-83   45590.374 -        0   41099.998 - 2.75e-69
+VT+I+R5          -20021.242   40438.483 - 8.69e-83   46500.330 -        0   41103.088 - 5.86e-70
+Q.PFAM+F+I+R4    -19997.020   40424.040 - 1.19e-79  133304.040 -        0   41145.706 - 3.26e-79
+Q.PFAM+F+I+G4    -20012.509   40445.018 - 3.31e-84  129065.018 -        0   41149.901 - 4.01e-80
+Q.PFAM+F+I+R5    -19996.074   40426.147 - 4.15e-80  135038.147 -        0   41154.526 - 3.96e-81
+Q.PFAM+I+R4      -20058.471   40508.941 - 4.36e-98   45657.208 -        0   41166.832 - 8.43e-84
+Q.PFAM+I+G4      -20072.485   40526.970 - 5.3e-102   44194.170 -  2.7e-58   41168.078 - 4.52e-84
+HIVB+F+I+R5      -20006.455   40446.910 - 1.29e-84  135058.910 -        0   41175.289 - 1.23e-85
+HIVB+F+I+R4      -20012.052   40454.105 - 3.52e-86  133334.105 -        0   41175.771 - 9.66e-86
+VT+F+I+R4        -20012.372   40454.744 - 2.56e-86  133334.744 -        0   41176.410 - 7.02e-86
+Q.PFAM+I+R5      -20058.066   40512.131 - 8.84e-99   46573.978 -        0   41176.735 - 5.96e-86
+VT+F+I+R5        -20007.904   40449.808 - 3.02e-85  135061.808 -        0   41178.187 - 2.89e-86
+VT+F+I+G4        -20029.355   40478.710 -  1.6e-91  129098.710 -        0   41183.593 - 1.93e-87
+LG+I+G4          -20080.685   40543.370 - 1.46e-105   44210.570 - 7.41e-62   41184.478 - 1.24e-87
+LG+I+R4          -20067.568   40527.136 - 4.88e-102   45675.402 -        0   41185.026 - 9.44e-88
+HIVB+F+I+G4      -20031.254   40482.508 - 2.39e-92  129102.508 -        0   41187.391 -  2.9e-88
+LG+I+R5          -20066.287   40528.574 - 2.38e-102   46590.420 -        0   41193.178 -  1.6e-89
+LG+I+R3          -20079.870   40547.740 - 1.64e-106   44998.328 - 6.46e-233   41198.917 -  9.1e-91
+LG+R4            -20081.846   40553.692 - 8.35e-108   45331.192 - 3.38e-305   41208.227 - 8.66e-93
+LG+R5            -20077.117   40548.234 - 1.28e-106   46120.520 -        0   41209.482 - 4.62e-93
+LG+F+I+R4        -20031.155   40492.310 - 1.78e-94  133372.310 -        0   41213.976 - 4.88e-94
+LG+F+I+G4        -20047.100   40514.200 - 3.14e-99  129134.200 -        0   41219.083 -  3.8e-95
+LG+F+I+R5        -20028.727   40491.454 - 2.73e-94  135103.454 -        0   41219.833 - 2.61e-95
+LG+G4            -20110.114   40600.229 - 6.55e-118   44056.419 -  2.2e-28   41237.980 -    3e-99
+CPREV+I+G4       -20115.000   40612.001 - 1.82e-120   44279.201 - 9.26e-77   41253.109 - 1.55e-102
+MTMET+F+I+G4     -20067.780   40555.561 - 3.28e-108  129175.561 -        0   41260.444 - 3.97e-104
+LG+R3            -20114.290   40614.580 - 5.01e-121   44774.802 - 2.23e-184   41262.401 - 1.49e-104
+CPREV+I+R5       -20102.684   40601.368 - 3.71e-118   46663.214 -        0   41265.972 - 2.5e-105
+WAG+I+G4         -20122.199   40626.398 - 1.36e-123   44293.598 - 6.92e-80   41267.506 - 1.16e-105
+CPREV+I+R4       -20110.911   40613.822 - 7.32e-121   45762.089 -        0   41271.713 - 1.42e-106
+MTMET+F+I+R5     -20055.887   40545.774 - 4.38e-106  135157.774 -        0   41274.154 - 4.18e-107
+MTMET+F+I+R4     -20061.634   40553.269 - 1.03e-107  133433.269 -        0   41274.935 - 2.83e-107
+WAG+I+R4         -20112.849   40617.698 - 1.05e-121   45765.965 -        0   41275.589 - 2.04e-107
+MTINV+F+I+G4     -20078.307   40576.614 - 8.8e-113  129196.614 -        0   41281.497 - 1.06e-108
+WAG+I+R5         -20111.292   40618.584 - 6.77e-122   46680.430 -        0   41283.188 - 4.57e-109
+MTINV+F+I+R4     -20071.540   40573.079 - 5.15e-112  133453.079 -        0   41294.745 - 1.41e-111
+FLU+I+G4         -20137.029   40656.059 - 4.93e-130   44323.259 - 2.51e-86   41297.167 - 4.21e-112
+MTINV+F+I+R5     -20068.032   40570.063 - 2.33e-111  135182.063 -        0   41298.443 - 2.22e-112
+FLU+I+R5         -20124.497   40644.994 - 1.25e-127   46706.841 -        0   41309.598 - 8.41e-115
+HIVB+I+R4        -20131.154   40654.309 - 1.18e-129   45802.576 -        0   41312.200 - 2.29e-115
+HIVB+I+R5        -20126.621   40649.242 - 1.49e-128   46711.088 -        0   41313.846 - 1.01e-115
+HIVB+I+G4        -20145.568   40673.135 - 9.66e-134   44340.335 - 4.91e-90   41314.243 - 8.24e-116
+FLU+I+R4         -20132.851   40657.703 - 2.17e-130   45805.969 -        0   41315.594 - 4.2e-116
+WAG+F+I+G4       -20096.517   40613.034 - 1.09e-120  129233.034 -        0   41317.917 - 1.31e-116
+FLU+F+I+R5       -20077.937   40589.874 - 1.16e-115  135201.874 -        0   41318.253 - 1.11e-116
+WAG+F+I+R4       -20083.960   40597.920 - 2.08e-117  133477.920 -        0   41319.586 - 5.7e-117
+FLU+F+I+G4       -20097.651   40615.301 - 3.5e-121  129235.301 -        0   41320.184 - 4.23e-117
+WAG+F+I+R5       -20082.160   40598.320 - 1.7e-117  135210.320 -        0   41326.699 - 1.63e-118
+FLU+F+I+R4       -20089.643   40609.285 - 7.08e-120  133489.285 -        0   41330.951 - 1.94e-119
+LG+I+R2          -20171.950   40727.899 - 1.24e-145   44628.531 - 1.29e-152   41372.364 - 1.97e-128
+RTREV+F+I+R5     -20112.463   40658.926 - 1.18e-130  135270.926 -        0   41387.305 - 1.12e-131
+RTREV+F+I+R4     -20117.930   40665.860 - 3.67e-132  133545.860 -        0   41387.526 - 1.01e-131
+RTREV+F+I+G4     -20134.353   40688.707 - 4.02e-137  129308.707 -        0   41393.590 - 4.86e-133
+FLAVI+F+I+R5     -20141.081   40716.161 - 4.39e-143  135328.161 -        0   41444.541 - 4.19e-144
+FLAVI+F+I+R4     -20147.338   40724.677 - 6.21e-145  133604.677 -        0   41446.343 - 1.7e-144
+LG+R2            -20214.002   40810.004 - 1.84e-163   44477.204 - 9.35e-120   41451.112 - 1.57e-145
+FLAVI+F+I+G4     -20175.501   40771.002 - 5.41e-155  129391.002 -        0   41475.885 - 6.55e-151
+DCMUT+F+I+G4     -20182.264   40784.529 - 6.26e-158  129404.529 -        0   41489.412 - 7.56e-154
+DAYHOFF+F+I+G4   -20182.445   40784.891 - 5.22e-158  129404.891 -        0   41489.774 - 6.31e-154
+DAYHOFF+F+I+R5   -20164.505   40763.009 - 2.95e-153  135375.009 -        0   41491.388 - 2.82e-154
+DCMUT+F+I+R5     -20164.918   40763.836 - 1.95e-153  135375.836 -        0   41492.215 - 1.86e-154
+DCMUT+F+I+R4     -20170.603   40771.206 - 4.89e-155  133651.206 -        0   41492.872 - 1.34e-154
+DAYHOFF+F+I+R4   -20170.879   40771.759 - 3.71e-155  133651.759 -        0   41493.425 - 1.02e-154
+CPREV+F+I+G4     -20196.918   40813.837 - 2.7e-164  129433.837 -        0   41518.720 - 3.27e-160
+CPREV+F+I+R5     -20181.672   40797.344 - 1.03e-160  135409.344 -        0   41525.723 - 9.86e-162
+CPREV+F+I+R4     -20188.728   40807.456 - 6.57e-163  133687.456 -        0   41529.123 - 1.8e-162
+RTREV+I+G4       -20270.104   40922.207 - 7.94e-188   44589.407 - 4.04e-144   41563.315 - 6.77e-170
+RTREV+I+R5       -20252.048   40900.097 - 5.02e-183   46961.943 -        0   41564.701 - 3.39e-170
+RTREV+I+R4       -20257.411   40906.822 - 1.74e-184   46055.089 -        0   41564.713 - 3.37e-170
+MTVER+F+I+G4     -20224.312   40868.625 - 3.43e-176  129488.625 -        0   41573.508 - 4.15e-172
+MTVER+F+I+R4     -20215.866   40861.731 - 1.08e-174  133741.731 -        0   41583.397 - 2.95e-174
+MTVER+F+I+R5     -20211.714   40857.429 - 9.25e-174  135469.429 -        0   41585.808 - 8.84e-175
+PMB+F+I+R5       -20217.334   40868.667 - 3.36e-176  135480.667 -        0   41597.047 - 3.21e-177
+PMB+F+I+R4       -20223.081   40876.163 - 7.91e-178  133756.163 -        0   41597.829 - 2.17e-177
+PMB+F+I+G4       -20237.779   40895.557 - 4.86e-182  129515.557 -        0   41600.441 - 5.88e-178
+PMB+I+G4         -20288.939   40959.879 - 5.24e-196   44627.079 - 2.67e-152   41600.987 - 4.47e-178
+PMB+I+R4         -20277.521   40947.043 - 3.21e-193   46095.310 -        0   41604.934 - 6.22e-179
+PMB+I+R5         -20273.395   40942.790 - 2.69e-192   47004.636 -        0   41607.394 - 1.82e-179
+BLOSUM62+F+I+R5  -20241.807   40917.613 - 7.89e-187  135529.613 -        0   41645.992 - 7.55e-188
+BLOSUM62+I+G4    -20312.119   41006.238 - 4.49e-206   44673.438 - 2.29e-162   41647.346 - 3.83e-188
+BLOSUM62+F+I+R4  -20247.855   40925.709 - 1.38e-188  133805.709 -        0   41647.375 - 3.78e-188
+BLOSUM62+F+I+G4  -20263.198   40946.396 - 4.44e-193  129566.396 -        0   41651.279 - 5.37e-189
+BLOSUM62+I+R4    -20301.045   40994.089 - 1.95e-203   46142.356 -        0   41651.980 - 3.78e-189
+BLOSUM62+I+R5    -20296.224   40988.447 - 3.28e-202   47050.293 -        0   41653.051 - 2.21e-189
+DAYHOFF+I+G4     -20317.669   41017.339 - 1.75e-208   44684.539 - 8.88e-165   41658.447 - 1.49e-190
+DCMUT+I+G4       -20317.951   41017.901 - 1.32e-208   44685.101 - 6.7e-165   41659.009 - 1.12e-190
+MTZOA+F+I+G4     -20268.737   40957.475 - 1.74e-195  129577.475 -        0   41662.358 - 2.11e-191
+DAYHOFF+I+R5     -20305.596   41007.192 - 2.79e-206   47069.038 -        0   41671.796 - 1.88e-193
+DCMUT+I+R5       -20305.850   41007.700 - 2.16e-206   47069.546 -        0   41672.304 - 1.46e-193
+DAYHOFF+I+R4     -20312.125   41016.251 - 3.01e-208   46164.517 -        0   41674.141 - 5.82e-194
+DCMUT+I+R4       -20312.319   41016.637 - 2.48e-208   46164.904 -        0   41674.528 - 4.8e-194
+MTZOA+F+I+R4     -20263.077   40956.155 - 3.37e-195  133836.155 -        0   41677.821 - 9.25e-195
+MTZOA+F+I+R5     -20259.706   40953.412 - 1.33e-194  135565.412 -        0   41681.791 - 1.27e-195
+MTREV+F+I+G4     -20282.169   40984.338 - 2.56e-201  129604.338 -        0   41689.222 - 3.09e-197
+MTREV+F+I+R5     -20269.257   40972.513 - 9.46e-199  135584.513 -        0   41700.892 - 9.04e-200
+MTREV+F+I+R4     -20276.740   40983.480 - 3.93e-201  133863.480 -        0   41705.146 - 1.08e-200
+FLAVI+I+R5       -20361.025   41118.050 - 2.36e-230   47179.896 -        0   41782.654 - 1.59e-217
+FLAVI+I+R4       -20370.442   41132.884 - 1.42e-233   46281.150 -        0   41790.775 - 2.75e-219
+FLAVI+I+G4       -20387.119   41156.237 - 1.2e-238   44823.437 - 6.12e-195   41797.345 - 1.03e-220
+HIVW+F+I+R5      -20317.489   41068.978 - 1.07e-219  135680.978 -        0   41797.357 - 1.02e-220
+HIVW+F+I+R4      -20323.510   41077.020 - 1.92e-221  133957.020 -        0   41798.686 - 5.26e-221
+HIVW+F+I+G4      -20341.034   41102.068 - 6.97e-227  129722.068 -        0   41806.951 - 8.43e-223
+MTMAM+F+I+G4     -20422.713   41265.426 - 2.35e-262  129885.426 -        0   41970.309 - 2.84e-258
+MTMAM+F+I+R5     -20407.556   41249.112 - 8.19e-259  135861.112 -        0   41977.491 - 7.83e-260
+MTMAM+F+I+R4     -20414.035   41258.071 - 9.29e-261  134138.071 -        0   41979.737 - 2.55e-260
+LG+I             -20494.422   41368.843 - 8.2e-285   44825.034 - 2.76e-195   42006.595 - 3.75e-266
+MTART+F+I+G4     -20482.772   41385.543 - 1.94e-288  130005.543 -        0   42090.426 - 2.34e-284
+MTART+F+I+R5     -20471.060   41376.120 - 2.16e-286  135988.120 -        0   42104.500 - 2.06e-287
+MTART+F+I+R4     -20478.980   41387.961 - 5.79e-289  134267.961 -        0   42109.627 - 1.59e-288
+LG               -20588.519   41555.037 -        0   44819.583 - 4.21e-194   42189.432 - 7.43e-306
+MTMET+I+R4       -20588.806   41569.612 -        0   46717.879 -        0   42227.503 - 4.02e-314
+MTMET+I+G4       -20603.223   41588.445 -        0   45255.645 - 8.6e-289   42229.553 - 1.44e-314
+MTMET+I+R5       -20587.844   41571.687 -        0   47633.534 -        0   42236.292 - 4.96e-316
+MTVER+I+G4       -20654.109   41690.217 -        0   45357.417 - 6.83e-311   42331.325 -        0
+MTVER+I+R5       -20638.397   41672.794 -        0   47734.640 -        0   42337.398 -        0
+MTVER+I+R4       -20644.244   41680.488 -        0   46828.755 -        0   42338.379 -        0
+HIVW+I+G4        -20658.033   41698.065 -        0   45365.265 - 1.35e-312   42339.173 -        0
+HIVW+I+R5        -20641.206   41678.413 -        0   47740.259 -        0   42343.017 -        0
+HIVW+I+R4        -20646.632   41685.264 -        0   46833.531 -        0   42343.155 -        0
+MTZOA+I+R4       -20678.448   41748.897 -        0   46897.163 -        0   42406.788 -        0
+MTZOA+I+R5       -20675.609   41747.218 -        0   47809.064 -        0   42411.822 -        0
+MTZOA+I+G4       -20694.653   41771.306 -        0   45438.506 -        0   42412.414 -        0
+MTREV+I+G4       -20706.780   41795.560 -        0   45462.760 -        0   42436.668 -        0
+MTREV+I+R4       -20699.350   41790.701 -        0   46938.967 -        0   42448.591 -        0
+MTREV+I+R5       -20695.259   41786.518 -        0   47848.364 -        0   42451.122 -        0
+MTINV+I+R4       -20810.003   42012.007 -        0   47160.273 -        0   42669.897 -        0
+MTINV+I+G4       -20824.497   42030.994 -        0   45698.194 -        0   42672.102 -        0
+MTINV+I+R5       -20808.821   42013.641 -        0   48075.487 -        0   42678.245 -        0
+MTMAM+I+R5       -20928.781   42253.563 -        0   48315.409 -        0   42918.167 -        0
+MTMAM+I+R4       -20940.668   42273.336 -        0   47421.602 -        0   42931.227 -        0
+MTMAM+I+G4       -20954.201   42290.402 -        0   45957.602 -        0   42931.510 -        0
+MTART+I+R4       -21076.776   42545.552 -        0   47693.818 -        0   43203.442 -        0
+MTART+I+R5       -21073.489   42542.978 -        0   48604.824 -        0   43207.582 -        0
+MTART+I+G4       -21099.237   42580.474 -        0   46247.674 -        0   43221.582 -        0
+
+AIC, w-AIC   : Akaike information criterion scores and weights.
+AICc, w-AICc : Corrected AIC scores and weights.
+BIC, w-BIC   : Bayesian information criterion scores and weights.
+
+Plus signs denote the 95% confidence sets.
+Minus signs denote significant exclusion.
+
+SUBSTITUTION PROCESS
+--------------------
+
+Model of substitution: Q.MAMMAL+F+I+R4
+
+State frequencies: (empirical counts from alignment)
+
+  pi(A) = 0.0568
+  pi(R) = 0.0518
+  pi(N) = 0.0802
+  pi(D) = 0.0532
+  pi(C) = 0.0152
+  pi(Q) = 0.0549
+  pi(E) = 0.0725
+  pi(G) = 0.0285
+  pi(H) = 0.0292
+  pi(I) = 0.0564
+  pi(L) = 0.0715
+  pi(K) = 0.0841
+  pi(M) = 0.0246
+  pi(F) = 0.0406
+  pi(P) = 0.0492
+  pi(S) = 0.0904
+  pi(T) = 0.0514
+  pi(W) = 0.0135
+  pi(Y) = 0.0414
+  pi(V) = 0.0345
+
+Model of rate heterogeneity: Invar+FreeRate with 4 categories
+Proportion of invariable sites: 0.0132
+Site proportion and rates:  (0.0488,0.1218) (0.2242,0.3480) (0.4643,0.8594) (0.2495,2.0719)
+
+ Category  Relative_rate  Proportion
+  0         0              0.0132
+  1         0.1218         0.0488
+  2         0.3480         0.2242
+  3         0.8594         0.4643
+  4         2.0719         0.2495
+
+MAXIMUM LIKELIHOOD TREE
+-----------------------
+
+Log-likelihood of the tree: -19800.6636 (s.e. 463.8766)
+Unconstrained log-likelihood (without tree): -1135.5963
+Number of free parameters (#branches + #model parameters): 215
+Akaike information criterion (AIC) score: 40031.3271
+Corrected Akaike information criterion (AICc) score: 132911.3271
+Bayesian information criterion (BIC) score: 40752.9932
+
+**************************** WARNING ****************************
+Number of parameters (K, model parameters and branch lengths): 215
+Sample size (n, alignment length): 212
+
+Given that K>=n, the parameter estimates might be inaccurate.
+Thus, phylogenetic estimates should be interpreted with caution.
+
+Ideally, it is desirable that n >> K. When selecting optimal models,
+1. use AIC or BIC if n > 40K;
+2. use AICc or BIC if 40K >= n > K;
+3. be extremely cautious if n <= K
+
+To improve the situation (3), consider the following options:
+  1. Increase the sample size (n)
+  2. Decrease the number of parameters (K) to be estimated. If
+     possible:
+     a. Remove the least important sequences from the alignment
+     b. Specify some of the parameter values for the substitution
+        model (e.g., the nucleotide or amino acid frequencies)
+     c. Specify some of the parameter values for the rates-across-
+        sites model (e.g., the shape parameter for the discrete
+        Gamma distribution, the proportion of invariable sites, or
+        the rates of change for different rate categories under
+        the FreeRate model)
+
+Reference:
+Burnham KR, Anderson DR (2002). Model Selection and Multimodel
+Inference: A Practical Information-Theoretic Approach. Springer,
+New York.
+************************ END OF WARNING ***********************
+
+Total tree length (sum of branch lengths): 60.7062
+Sum of internal branch lengths: 26.0689 (42.9427% of tree length)
+
+WARNING: 7 near-zero internal branches (<0.0047) should be treated with caution
+         Such branches are denoted by '**' in the figure below
+
+NOTE: Tree is UNROOTED although outgroup taxon 'OUT__MAT1-2-1__5518_3639_MAT_combined' is drawn at root
+Numbers in parentheses are SH-aLRT support (%) / ultrafast bootstrap support (%)
+
+                                                           +--CG__Circinella_angarensis_NRRL_1594
+                                                        +--| (97.5/100)
+                                                        |  |  +**CG__Circinella_muscae_NRRL_1357
+                                                        |  +--| (85.1/100)
+                                                        |     +**CG__GCA_025093555.1_Cirumb1
+                                                     +--| (97/100)
+                                                     |  |     +**CG__Circinella_minor_NRRL_1365
+                                                     |  |  +--| (94.6/100)
+                                                     |  |  |  +**CG__Circinella_umbellata_NRRL_2417
+                                                     |  +--| (86.8/99)
+                                                     |     +--CG__GCA_016758965.1_ASM1675896v1
+                                                  +--| (89.5/99)
+                                                  |  +--CG__Circinella_angarensis_NRRL_2410
+                                         +--------| (99.9/100)
+                                         |        |  +**CG__Circinella_muscae_NRRL_1355
+                                         |        +--| (87/100)
+                                         |           +**CG__Circinella_muscae_NRRL_1362
+                                   +-----| (97.1/100)
+                                   |     |   +--GAIN__GCA_025677815.1_Phaart1__detect_alternate
+                                   |     +---| (94.5/100)
+                                   |         +--GAIN__Absidia_sp._NRRL_3163__detect_alternate
+                             +-----| (88.9/98)
+                             |     +--------------CG__Thamnostylum_lucknowense_RSA_1093-
+                        +----| (59.8/91)
+                        |    |                     +--CG__Fennellomyces_mexicanus_sp._nov._RSA_1415_Plus
+                        |    |                  +--| (85.6/98)
+                        |    |                  |  +--CG__Thamnostylum_nigricans_RSA_1405-
+                        |    +------------------| (100/100)
+                        |                       |  +**CG__Fennellomyces_verticellatus_RSA_2442_Plus
+                        |                       +--| (66.2/94)
+                        |                          +**CG__Fennellomyces_verticellatus_RSA_2446
+                   +----| (87.9/93)
+                   |    |                +**LAB__Syncephalastrum_racemosum_CBS_440.59_Plus
+                   |    +----------------| (100/100)
+                   |                     +**REF__13706_nrrl-2496_MAT_Plus__gene0__sexP
+                +--| (78/93)
+                |  +-------------CG__Circinella_tenella_NRRL_A-23557
+             +--| (78.3/72)
+             |  |         +--CG__Circinella_simplex_van_Tieghem_NRRL_2407
+             |  |      +--| (13.5/41)
+             |  |      |  |                   +**CG__Thamnostylum_repens_Tieghem_Upadhyay_NRRL_6240
+             |  |      |  |                +**| (0/74)
+             |  |      |  |                |  +**ZYGO__Mucor_alternans_NRRL_A-15142__FBW89_008965-T1
+             |  |      |  |             +**| (0/51)
+             |  |      |  |             |  |  +**ZYGO__Circinomucor_circinelloides_NRRL_22899__FB648_007764-T1
+             |  |      |  |             |  +**| (0/52)
+             |  |      |  |             |     |  +--ZYGO__Mucor_sp._NRRL_A-21236__FBX43_008687-T1
+             |  |      |  |             |     +**| (0/15)
+             |  |      |  |             |        +**ZYGO__Mucor_sp._NRRL_A-25970__FBX49_008470-T1
+             |  |      |  |          +--| (90.8/93)
+             |  |      |  |          |  +--ZYGO__Actinomucor_sp._NRRL_A-23671__FBU17_008421-T1
+             |  |      |  |  +-------| (99.9/100)
+             |  |      |  |  |       |  +--ZYGO__Mucor_circinelloides_var._griseocyanus_NRRL_1416__IWY18_008082-T1
+             |  |      |  |  |       +--| (90.9/96)
+             |  |      |  |  |          +--REF__36080_nrrl-3631_MAT_Plus__gene1__sexP
+             |  |      |  +--| (83.3/80)
+             |  |      |     +--------LAB__Gilbertella_persicaria_var._persicaria_CBS_246.59_Plus
+             |  |   +--| (49.2/57)
+             |  |   |  +--------REF__3108396_ai-2023a_MAT_Plus__gene2__sexP
+             |  +---| (95.4/82)
+             |      |         +----REF__101119_atcc11807_MAT_Plus__gene0__sexP
+             |      +---------| (100/100)
+             |                +--REF__64495_cbs346-36_MAT_Plus__gene2__sexP
+   +---------| (98.5/99)
+   |         |               +--LAB__Absidia_caerulea_RSA_138_Plus
+   |         |            +--| (90.3/97)
+   |         |            |  +--REF__3231046_uomd23-19_MAT_Plus__gene1__sexP
+   |         |         +--| (95.4/99)
+   |         |         |  +-----ZYGO__Absidia_cuneospora_RSA_623_Plus__FBU52_008428-T1
+   |         |      +--| (32.5/80)
+   |         |      |  |         +--ZYGO__Cunninghamella_echinulata_NRRL_1386__FB638_007189-T1
+   |         |      |  |      +--| (83.1/100)
+   |         |      |  |      |  +--ZYGO__Cunninghamella_japonica_NRRL_2463__H4W96_006999-T1
+   |         |      |  +------| (100/100)
+   |         |      |         +**ZYGO__Cunninghamella_echinulata_RSA_2017_Plus__FBN38_004308-T1
+   |         |  +---| (93.8/71)
+   |         |  |   +-----------------------------------REF__41833_gzumbrama1_MAT_Plus__gene1__sexP
+   |         +--| (68/56)
+   |            |    +--LAB__Rhizomucor_pusillus_NRRL_2543
+   |            +----| (99.9/100)
+   |                 |        +**LAB__Syncephalastrum_racemosum_NRRL_1506
+   |                 |     +**| (0/60)
+   |                 |     |  +**REF__4837_ubc21_MAT_Plus__gene1__sexP
+   |                 |  +**| (0/66)
+   |                 |  |  +**ZYGO__Phycomyces_blakesleeanus_Burgeff_NRRL_1465__FBX89_005444-T1
+   |                 +--| (97.2/99)
+   |                    |  +--ZYGO__Phycomyces_blakesleeanus_Burgeff_var._piloboloides_NRRL_2566__FB643_006860-T1
+   |                    +--| (76.8/97)
+   |                       +**ZYGO__Phycomyces_blakesleeanus_NRRL_1554__H4W68_004107-T1
++--| (80.4/67)
+|  +----------------------OUT__MAT1-2-1__55307_ysh1-8_MATtub_MAT1-2
+|
+|                                    +**CG__Circinella_angarensis_NRRL_2628
+|                                 +--| (83/100)
+|                                 |  +**CG__Circinella_angarensis_RSA_618-
+|                              +--| (97.1/100)
+|                              |  +**CG__Circinella_angarensis_RSA_198_Plus
+|                           +--| (83.5/99)
+|                           |  |  +**CG__Circinella_umbellata_NRRL_1366
+|                           |  +--| (97/100)
+|                           |     +**CG__Circinella_umbellata_RSA_505_Plus
+|                        +--| (94.9/100)
+|                        |  |     +**CG__Circinella_chinensis_NRRL_2415
+|                        |  |  +--| (98/100)
+|                        |  |  |  +**CG__Circinella_mucoroides_NRRL_1354
+|                        |  +--| (97.6/100)
+|                        |     |  +**CG__Circinella_minor_CBS_143.56
+|                        |     +--| (99.6/100)
+|                        |        +**CG__Circinella_muscae_CBS_107.13T
+|                     +--| (94/99)
+|                     |  |              +**CG__Circinella_chinensis_CBS_150.53
+|                     |  |           +--| (100/100)
+|                     |  |           |  +**CG__Thamnostylum_repens_RSA_459_Plus
+|                     |  |        +--| (49.4/66)
+|                     |  |        |  |  +--CG__Fennellomyces_heterothallicus_RSA_2348
+|                     |  |        |  +--| (83.5/68)
+|                     |  |        |     |  +--CG__Fennellomyces_mexicanus_sp._nov._RSA_1418-
+|                     |  |        |     +--| (52.9/65)
+|                     |  |        |        +--CG__Thamnostylum_nigricans_RSA_1406
+|                     |  |     +--| (98.6/99)
+|                     |  |     |  |     +**CG__Fennellomyces_linderi_NRRL_2342
+|                     |  |     |  |  +--| (99.5/100)
+|                     |  |     |  |  |  +**CG__Fennellomyces_linderi_NRRL_2342T
+|                     |  |     |  +--| (98.1/100)
+|                     |  |     |     +--CG__GCA_025266875.1_Fenlin1
+|                     |  |  +--| (94.5/98)
+|                     |  |  |  |  +--CG__Thamnostylum_piriforme_NRRL_A-21589
+|                     |  |  |  +--| (100/100)
+|                     |  |  |     +--CG__Thamnostylum_piriforme_RSA_251
+|                     |  +--| (82.9/94)
+|                     |     |  +--CG__Thamnostylum_lucknowense_RSA_1015_Plus-T
+|                     |     +--| (99.3/100)
+|                     |        +--CG__GCF_025766255.1_Zycmex1
+|                  +--| (72.6/82)
+|                  |  +------------CG__GCA_982397305.1_T17-F
+|               +--| (94.7/94)
+|               |  +-------REF__4837_nrrl1555_MAT_Minus__gene1__sexM
+|            +--| (82.9/50)
+|            |  |                             +**CG__Circinella_naumovii_NRRL_5846
+|            |  |          +------------------| (99.5/100)
+|            |  |          |                  +--REF__36080_r7b_MAT_Minus__gene1__sexM
+|            |  |  +-------| (92.9/79)
+|            |  |  |       +---------------------------REF__35722_atcc11077_MAT_Minus__gene0__sexM
+|            |  +--| (0/35)
+|            |     |                   +**LAB__Syncephalastrum_racemosum_CBS_441.59-
+|            |     |               +---| (93/100)
+|            |     |               |   +**LAB__Syncephalastrum_racemosum_NRRL_2495
+|            |     |       +-------| (82.3/98)
+|            |     |       |       +--LAB__Syncephalastrum_verruculosum_RSA_2127
+|            |     +-------| (75.3/91)
+|            |             +------------------------------------REF__44442_wa0000051536_MAT_Minus__gene1__sexM
+|         +--| (58/52)
+|         |  |            +----CG__Circinella_muscae_NRRL_1360
+|         |  |         +--| (88.2/100)
+|         |  |         |  |     +--LAB__Pilaira_anomala_RSA_1998-
+|         |  |         |  +-----| (99.9/100)
+|         |  |         |        +--REF__29922_cbs109-16_MAT_Minus__gene1__sexM
+|         |  |      +--| (57.4/85)
+|         |  |      |  |       +------REF__101119_atcc11807_MAT_Minus__gene0__sexM
+|         |  |      |  |    +--| (70.5/87)
+|         |  |      |  |    |  +-------REF__86630_cbs357-93_MAT_Minus__gene0__sexM
+|         |  |      |  +----| (97.5/100)
+|         |  |      |       +----REF__64495_cbs110-17_MAT_Minus__gene1__sexM
+|         |  +------| (97.5/96)
+|         |         +-------------REF__4850_vkm-f-921_MAT_Minus__gene0__sexM
+|  +------| (95.2/70)
+|  |      |         +----LAB__Absidia_caerulea_RSA_138-
+|  |      |     +---| (94.9/100)
+|  |      |     |   +--REF__3231046_uomau377_MAT_Minus__gene1__sexM
+|  |      |  +--| (90.4/98)
+|  |      |  |  +------------LAB__Absidia_cuneospora_RSA_624-
+|  |      +--| (77.4/91)
+|  |         |             +--ZYGO__Chaetocladium_brefeldii_RSA_1136-__FBW75_008546-T1
+|  |         |          +--| (97.7/100)
+|  |         |          |  +--ZYGO__Cunninghamella_polymorpha_NRRL_1395__IWR46_001995-T1
+|  |         +----------| (100/100)
+|  |                    |      +--ZYGO__Cunninghamella_bertholletiae_NRRL_1376__FBU18_003362-T1
+|  |                    |   +--| (77.5/99)
+|  |                    |   |  |     +--ZYGO__Cunninghamella_elegans_NRRL_1390__FBX09_000593-T1
+|  |                    |   |  |  +**| (0/91)
+|  |                    |   |  |  |  +**ZYGO__Cunninghamella_elegans_NRRL_1393__FBX12_005906-T1
+|  |                    |   |  +--| (98.2/100)
+|  |                    |   |     +**ZYGO__Cunninghamella_elegans_NRRL_2310__H4X38_005049-T1
+|  |                    +---| (96.5/100)
+|  |                        +--ZYGO__Cunninghamella_bertholletiae_NRRL_1380__FBU20_004167-T1
++--| (21.4/43)
+|  |            +---------CG__Circinella_simplex_CBS_142.35
+|  +------------| (99.1/100)
+|               +----OUT__P1__GCA_000697295.1_MucIndB7402-1.0
+|
++---------------------OUT__MAT1-2-1__5518_3639_MAT_combined
+
+Tree in newick format:
+
+(((((((((((((CG__Circinella_angarensis_NRRL_1594:0.0051270935,(CG__Circinella_muscae_NRRL_1357:0.0000012686,CG__GCA_025093555.1_Cirumb1:0.0000012686)85.1/100:0.0097259414)97.5/100:0.0354337559,((CG__Circinella_minor_NRRL_1365:0.0000012686,CG__Circinella_umbellata_NRRL_2417:0.0000012686)94.6/100:0.0198371294,CG__GCA_016758965.1_ASM1675896v1:0.0249288165)86.8/99:0.0154618232)97/100:0.0510039359,CG__Circinella_angarensis_NRRL_2410:0.0266242937)89.5/99:0.1091612747,(CG__Circinella_muscae_NRRL_1355:0.0000012686,CG__Circinella_muscae_NRRL_1362:0.0000012686)87/100:0.0833747417)99.9/100:0.8328137737,(GAIN__GCA_025677815.1_Phaart1__detect_alternate:0.1864156880,GAIN__Absidia_sp._NRRL_3163__detect_alternate:0.0509294656)94.5/100:0.4300307635)97.1/100:0.5335040231,CG__Thamnostylum_lucknowense_RSA_1093-:1.3363488048)88.9/98:0.5257641049,((CG__Fennellomyces_mexicanus_sp._nov._RSA_1415_Plus:0.0796979828,CG__Thamnostylum_nigricans_RSA_1405-:0.1735296499)85.6/98:0.1161478712,(CG__Fennellomyces_verticellatus_RSA_2442_Plus:0.0000012686,CG__Fennellomyces_verticellatus_RSA_2446:0.0000012686)66.2/94:0.0477182316)100/100:1.6912517720)59.8/91:0.5004415933,(LAB__Syncephalastrum_racemosum_CBS_440.59_Plus:0.0000012686,REF__13706_nrrl-2496_MAT_Plus__gene0__sexP:0.0000012686)100/100:1.5315370300)87.9/93:0.4536681750,CG__Circinella_tenella_NRRL_A-23557:1.2994846840)78/93:0.2402102486,(((CG__Circinella_simplex_van_Tieghem_NRRL_2407:0.3473856363,(((((CG__Thamnostylum_repens_Tieghem_Upadhyay_NRRL_6240:0.0000012686,ZYGO__Mucor_alternans_NRRL_A-15142__FBW89_008965-T1:0.0000012686)0/74:0.0000012686,(ZYGO__Circinomucor_circinelloides_NRRL_22899__FB648_007764-T1:0.0000012686,(ZYGO__Mucor_sp._NRRL_A-21236__FBX43_008687-T1:0.0053464542,ZYGO__Mucor_sp._NRRL_A-25970__FBX49_008470-T1:0.0000012686)0/15:0.0000012686)0/52:0.0000012686)0/51:0.0000035679,ZYGO__Actinomucor_sp._NRRL_A-23671__FBU17_008421-T1:0.0269354261)90.8/93:0.1053492623,(ZYGO__Mucor_circinelloides_var._griseocyanus_NRRL_1416__IWY18_008082-T1:0.1114243576,REF__36080_nrrl-3631_MAT_Plus__gene1__sexP:0.0972662306)90.9/96:0.1025932998)99.9/100:0.7194833664,LAB__Gilbertella_persicaria_var._persicaria_CBS_246.59_Plus:0.8254246201)83.3/80:0.1937206015)13.5/41:0.1029706368,REF__3108396_ai-2023a_MAT_Plus__gene2__sexP:0.8731746997)49.2/57:0.2513441396,(REF__101119_atcc11807_MAT_Plus__gene0__sexP:0.5220146593,REF__64495_cbs346-36_MAT_Plus__gene2__sexP:0.2882089223)100/100:0.8750885490)95.4/82:0.3877352216)78.3/72:0.1792323416,(((((LAB__Absidia_caerulea_RSA_138_Plus:0.1513754577,REF__3231046_uomd23-19_MAT_Plus__gene1__sexP:0.2521093765)90.3/97:0.2044662060,ZYGO__Absidia_cuneospora_RSA_623_Plus__FBU52_008428-T1:0.5340365251)95.4/99:0.3004569372,((ZYGO__Cunninghamella_echinulata_NRRL_1386__FB638_007189-T1:0.0114106914,ZYGO__Cunninghamella_japonica_NRRL_2463__H4W96_006999-T1:0.0112324932)83.1/100:0.0985270333,ZYGO__Cunninghamella_echinulata_RSA_2017_Plus__FBN38_004308-T1:0.0000027069)100/100:0.6874541430)32.5/80:0.2145472647,REF__41833_gzumbrama1_MAT_Plus__gene1__sexP:3.2261811698)93.8/71:0.3777996460,(LAB__Rhizomucor_pusillus_NRRL_2543:0.2109583095,(((LAB__Syncephalastrum_racemosum_NRRL_1506:0.0000012686,REF__4837_ubc21_MAT_Plus__gene1__sexP:0.0000012686)0/60:0.0000012686,ZYGO__Phycomyces_blakesleeanus_Burgeff_NRRL_1465__FBX89_005444-T1:0.0000012686)0/66:0.0000028158,(ZYGO__Phycomyces_blakesleeanus_Burgeff_var._piloboloides_NRRL_2566__FB643_006860-T1:0.0186664195,ZYGO__Phycomyces_blakesleeanus_NRRL_1554__H4W68_004107-T1:0.0000012686)76.8/97:0.0051282951)97.2/99:0.1971836030)99.9/100:0.5212747436)68/56:0.0572343647)98.5/99:0.9487586668,OUT__MAT1-2-1__55307_ysh1-8_MATtub_MAT1-2:2.0814777310)80.4/67:0.2194491454,(((((((((((CG__Circinella_angarensis_NRRL_2628:0.0000012686,CG__Circinella_angarensis_RSA_618-:0.0000012686)83/100:0.0053471902,CG__Circinella_angarensis_RSA_198_Plus:0.0000031988)97.1/100:0.0548800195,(CG__Circinella_umbellata_NRRL_1366:0.0000034225,CG__Circinella_umbellata_RSA_505_Plus:0.0000032759)97/100:0.0526596022)83.5/99:0.0481984931,((CG__Circinella_chinensis_NRRL_2415:0.0000012686,CG__Circinella_mucoroides_NRRL_1354:0.0000012686)98/100:0.0645977238,(CG__Circinella_minor_CBS_143.56:0.0000012686,CG__Circinella_muscae_CBS_107.13T:0.0000012686)99.6/100:0.1007043336)97.6/100:0.0995249574)94.9/100:0.1881398434,(((((CG__Circinella_chinensis_CBS_150.53:0.0000033562,CG__Thamnostylum_repens_RSA_459_Plus:0.0000030011)100/100:0.2792203002,(CG__Fennellomyces_heterothallicus_RSA_2348:0.0823128731,(CG__Fennellomyces_mexicanus_sp._nov._RSA_1418-:0.2363818398,CG__Thamnostylum_nigricans_RSA_1406:0.1666560899)52.9/65:0.0051815234)83.5/68:0.0281280727)49.4/66:0.0179260465,((CG__Fennellomyces_linderi_NRRL_2342:0.0000012686,CG__Fennellomyces_linderi_NRRL_2342T:0.0000012686)99.5/100:0.0981058668,CG__GCA_025266875.1_Fenlin1:0.0849241218)98.1/100:0.1024667721)98.6/99:0.1826879271,(CG__Thamnostylum_piriforme_NRRL_A-21589:0.0788173499,CG__Thamnostylum_piriforme_RSA_251:0.0626448934)100/100:0.3091280680)94.5/98:0.1509776864,(CG__Thamnostylum_lucknowense_RSA_1015_Plus-T:0.1744315586,CG__GCF_025766255.1_Zycmex1:0.1941996722)99.3/100:0.2186470255)82.9/94:0.1310940450)94/99:0.3305536027,CG__GCA_982397305.1_T17-F:1.1599048369)72.6/82:0.2098632762,REF__4837_nrrl1555_MAT_Minus__gene1__sexM:0.7601825743)94.7/94:0.3352650836,(((CG__Circinella_naumovii_NRRL_5846:0.0000033841,REF__36080_r7b_MAT_Minus__gene1__sexM:0.1862127593)99.5/100:1.6812698720,REF__35722_atcc11077_MAT_Minus__gene0__sexM:2.4848909482)92.9/79:0.7470999504,(((LAB__Syncephalastrum_racemosum_CBS_441.59-:0.0000012686,LAB__Syncephalastrum_racemosum_NRRL_2495:0.0000012686)93/100:0.4365127307,LAB__Syncephalastrum_verruculosum_RSA_2127:0.1731693854)82.3/98:0.7725982143,REF__44442_wa0000051536_MAT_Minus__gene1__sexM:3.2734930386)75.3/91:0.7437996020)0/35:0.0394549499)82.9/50:0.1304311512,(((CG__Circinella_muscae_NRRL_1360:0.5094692265,(LAB__Pilaira_anomala_RSA_1998-:0.3042604852,REF__29922_cbs109-16_MAT_Minus__gene1__sexM:0.3214625019)99.9/100:0.5963013634)88.2/100:0.2593093817,((REF__101119_atcc11807_MAT_Minus__gene0__sexM:0.6780632751,REF__86630_cbs357-93_MAT_Minus__gene0__sexM:0.7438735810)70.5/87:0.1024418175,REF__64495_cbs110-17_MAT_Minus__gene1__sexM:0.5182842667)97.5/100:0.4589779647)57.4/85:0.2790250743,REF__4850_vkm-f-921_MAT_Minus__gene0__sexM:1.3091627463)97.5/96:0.6295264418)58/52:0.1563029852,(((LAB__Absidia_caerulea_RSA_138-:0.4862071786,REF__3231046_uomau377_MAT_Minus__gene1__sexM:0.2617457903)94.9/100:0.3731849196,LAB__Absidia_cuneospora_RSA_624-:1.2020328424)90.4/98:0.3388205148,((ZYGO__Chaetocladium_brefeldii_RSA_1136-__FBW75_008546-T1:0.0596364188,ZYGO__Cunninghamella_polymorpha_NRRL_1395__IWR46_001995-T1:0.0401200785)97.7/100:0.3364814125,((ZYGO__Cunninghamella_bertholletiae_NRRL_1376__FBU18_003362-T1:0.1616778983,((ZYGO__Cunninghamella_elegans_NRRL_1390__FBX09_000593-T1:0.0055116320,ZYGO__Cunninghamella_elegans_NRRL_1393__FBX12_005906-T1:0.0000012686)0/91:0.0000026761,ZYGO__Cunninghamella_elegans_NRRL_2310__H4X38_005049-T1:0.0000012686)98.2/100:0.0518080221)77.5/99:0.0154849797,ZYGO__Cunninghamella_bertholletiae_NRRL_1380__FBU20_004167-T1:0.0323803716)96.5/100:0.3545833379)100/100:1.0466145470)77.4/91:0.1892187713)95.2/70:0.6492564485,(CG__Circinella_simplex_CBS_142.35:0.8944906512,OUT__P1__GCA_000697295.1_MucIndB7402-1.0:0.4747033703)99.1/100:1.1624391590)21.4/43:0.2570900488,OUT__MAT1-2-1__5518_3639_MAT_combined:2.0088547676);
+
+CONSENSUS TREE
+--------------
+
+Consensus tree is constructed from 1000 bootstrap trees
+Log-likelihood of consensus tree: -19800.697205
+Robinson-Foulds distance between ML tree and consensus tree: 4
+
+Branches with support >0.000000% are kept (extended consensus)
+Branch lengths are optimized by maximum likelihood on original alignment
+Numbers in parentheses are bootstrap supports (%)
+
+                                                          +--CG__Circinella_angarensis_NRRL_1594
+                                                       +--| (100)
+                                                       |  |  +--CG__Circinella_muscae_NRRL_1357
+                                                       |  +--| (100)
+                                                       |     +--CG__GCA_025093555.1_Cirumb1
+                                                    +--| (100)
+                                                    |  |        +**CG__Circinella_minor_NRRL_1365
+                                                    |  |     +--|
+                                                    |  |     |  +**CG__Rhizopus_microsporus_NRRL_A-17693
+                                                    |  |  +--| (100)
+                                                    |  |  |  +--CG__Circinella_umbellata_NRRL_2417
+                                                    |  +--| (99)
+                                                    |     +--CG__GCA_016758965.1_ASM1675896v1
+                                                 +--| (99)
+                                                 |  +--CG__Circinella_angarensis_NRRL_2410
+                                        +--------| (100)
+                                        |        |           +**CG__Circinella_muscae_NRRL_1355
+                                        |        |        +**|
+                                        |        |        |  +**CG__Circinella_muscae_NRRL_1363
+                                        |        |     +**|
+                                        |        |     |  +**CG__Circinella_muscae_NRRL_1367
+                                        |        |  +--|
+                                        |        |  |  +**CG__Circinella_muscae_NRRL_2403
+                                        |        +--| (100)
+                                        |           +--CG__Circinella_muscae_NRRL_1362
+                                  +-----| (100)
+                                  |     |   +--GAIN__GCA_025677815.1_Phaart1__detect_alternate
+                                  |     +---| (100)
+                                  |         +--GAIN__Absidia_sp._NRRL_3163__detect_alternate
+                             +----| (98)
+                             |    +--------------CG__Thamnostylum_lucknowense_RSA_1093-
+                        +----| (91)
+                        |    |                     +--CG__Fennellomyces_mexicanus_sp._nov._RSA_1415_Plus
+                        |    |                  +--| (98)
+                        |    |                  |  +--CG__Thamnostylum_nigricans_RSA_1405-
+                        |    +------------------| (100)
+                        |                       |  +--CG__Fennellomyces_verticellatus_RSA_2442_Plus
+                        |                       +--| (94)
+                        |                          +--CG__Fennellomyces_verticellatus_RSA_2446
+                   +----| (93)
+                   |    |                +--LAB__Syncephalastrum_racemosum_CBS_440.59_Plus
+                   |    +----------------| (100)
+                   |                     +--REF__13706_nrrl-2496_MAT_Plus__gene0__sexP
+                +--| (93)
+                |  +-------------CG__Circinella_tenella_NRRL_A-23557
+             +--| (72)
+             |  |         +--CG__Circinella_simplex_van_Tieghem_NRRL_2407
+             |  |      +--| (41)
+             |  |      |  |                            +**CG__Thamnostylum_repens_Tieghem_Upadhyay_NRRL_6240
+             |  |      |  |                         +**|
+             |  |      |  |                         |  +**ZYGO__Mucor_sp._NRRL_A-14906__FBX37_009001-T1
+             |  |      |  |                      +**|
+             |  |      |  |                      |  +**ZYGO__Mucor_sp._NRRL_A-21232__FBX42_008741-T1
+             |  |      |  |                   +--|
+             |  |      |  |                   |  +**ZYGO__Mucor_sp._NRRL_A-21230__FBX41_008789-T1
+             |  |      |  |                +--| (74)
+             |  |      |  |                |  +--ZYGO__Mucor_alternans_NRRL_A-15142__FBW89_008965-T1
+             |  |      |  |             +--| (51)
+             |  |      |  |             |  |     +--ZYGO__Circinomucor_circinelloides_NRRL_22899__FB648_007764-T1
+             |  |      |  |             |  |  +--| (35)
+             |  |      |  |             |  |  |  +--ZYGO__Mucor_sp._NRRL_A-25970__FBX49_008470-T1
+             |  |      |  |             |  +--| (52)
+             |  |      |  |             |     +--ZYGO__Mucor_sp._NRRL_A-21236__FBX43_008687-T1
+             |  |      |  |          +--| (93)
+             |  |      |  |          |  +--ZYGO__Actinomucor_sp._NRRL_A-23671__FBU17_008421-T1
+             |  |      |  |  +-------| (100)
+             |  |      |  |  |       |  +--ZYGO__Mucor_circinelloides_var._griseocyanus_NRRL_1416__IWY18_008082-T1
+             |  |      |  |  |       +--| (96)
+             |  |      |  |  |          +--REF__36080_nrrl-3631_MAT_Plus__gene1__sexP
+             |  |      |  +--| (80)
+             |  |      |     +--------LAB__Gilbertella_persicaria_var._persicaria_CBS_246.59_Plus
+             |  |   +--| (57)
+             |  |   |  +--------REF__3108396_ai-2023a_MAT_Plus__gene2__sexP
+             |  +---| (82)
+             |      |        +----REF__101119_atcc11807_MAT_Plus__gene0__sexP
+             |      +--------| (100)
+             |               +--REF__64495_cbs346-36_MAT_Plus__gene2__sexP
+   +---------| (99)
+   |         |               +--LAB__Absidia_caerulea_RSA_138_Plus
+   |         |            +--| (97)
+   |         |            |  +--REF__3231046_uomd23-19_MAT_Plus__gene1__sexP
+   |         |         +--| (99)
+   |         |         |  +-----ZYGO__Absidia_cuneospora_RSA_623_Plus__FBU52_008428-T1
+   |         |      +--| (80)
+   |         |      |  |         +--ZYGO__Cunninghamella_echinulata_NRRL_1386__FB638_007189-T1
+   |         |      |  |      +--| (100)
+   |         |      |  |      |  +--ZYGO__Cunninghamella_japonica_NRRL_2463__H4W96_006999-T1
+   |         |      |  +------| (100)
+   |         |      |         +--ZYGO__Cunninghamella_echinulata_RSA_2017_Plus__FBN38_004308-T1
+   |         |  +---| (71)
+   |         |  |   +-----------------------------------REF__41833_gzumbrama1_MAT_Plus__gene1__sexP
+   |         +--| (56)
+   |            |    +--LAB__Rhizomucor_pusillus_NRRL_2543
+   |            +----| (100)
+   |                 |        +--LAB__Syncephalastrum_racemosum_NRRL_1506
+   |                 |     +--| (60)
+   |                 |     |  +--REF__4837_ubc21_MAT_Plus__gene1__sexP
+   |                 |  +--| (66)
+   |                 |  |  +--ZYGO__Phycomyces_blakesleeanus_Burgeff_NRRL_1465__FBX89_005444-T1
+   |                 +--| (99)
+   |                    |  +--ZYGO__Phycomyces_blakesleeanus_Burgeff_var._piloboloides_NRRL_2566__FB643_006860-T1
+   |                    +--| (97)
+   |                       +--ZYGO__Phycomyces_blakesleeanus_NRRL_1554__H4W68_004107-T1
++--| (67)
+|  +----------------------OUT__MAT1-2-1__55307_ysh1-8_MATtub_MAT1-2
+|
+|                                       +--CG__Circinella_angarensis_NRRL_2628
+|                                    +--| (100)
+|                                    |  +--CG__Circinella_angarensis_RSA_618-
+|                                 +--| (100)
+|                                 |  +--CG__Circinella_angarensis_RSA_198_Plus
+|                              +--| (99)
+|                              |  |     +**CG__Circinella_umbellata_NRRL_1366
+|                              |  |  +--|
+|                              |  |  |  +**CG__Rhizopus_arrhizus_NRRL_1470
+|                              |  +--| (100)
+|                              |     +--CG__Circinella_umbellata_RSA_505_Plus
+|                           +--| (100)
+|                           |  |     +--CG__Circinella_chinensis_NRRL_2415
+|                           |  |  +--| (100)
+|                           |  |  |  +--CG__Circinella_mucoroides_NRRL_1354
+|                           |  +--| (100)
+|                           |     |           +**CG__Circinella_minor_CBS_143.56
+|                           |     |        +**|
+|                           |     |        |  +**CG__Circinella_muscae_NRRL_1352
+|                           |     |     +**|
+|                           |     |     |  +**CG__Circinella_muscae_NRRL_1364
+|                           |     |  +--|
+|                           |     |  |  +**CG__Circinella_muscae_NRRL_1356
+|                           |     +--| (100)
+|                           |        +--CG__Circinella_muscae_CBS_107.13T
+|                        +--| (99)
+|                        |  |              +--CG__Circinella_chinensis_CBS_150.53
+|                        |  |           +--| (100)
+|                        |  |           |  +--CG__Thamnostylum_repens_RSA_459_Plus
+|                        |  |        +--| (66)
+|                        |  |        |  |  +--CG__Fennellomyces_heterothallicus_RSA_2348
+|                        |  |        |  +--| (68)
+|                        |  |        |     |  +--CG__Fennellomyces_mexicanus_sp._nov._RSA_1418-
+|                        |  |        |     +--| (65)
+|                        |  |        |        +--CG__Thamnostylum_nigricans_RSA_1406
+|                        |  |     +--| (99)
+|                        |  |     |  |     +--CG__Fennellomyces_linderi_NRRL_2342
+|                        |  |     |  |  +--| (100)
+|                        |  |     |  |  |  +--CG__Fennellomyces_linderi_NRRL_2342T
+|                        |  |     |  +--| (100)
+|                        |  |     |     +--CG__GCA_025266875.1_Fenlin1
+|                        |  |  +--| (98)
+|                        |  |  |  |  +--CG__Thamnostylum_piriforme_NRRL_A-21589
+|                        |  |  |  +--| (100)
+|                        |  |  |     +--CG__Thamnostylum_piriforme_RSA_251
+|                        |  +--| (94)
+|                        |     |  +--CG__Thamnostylum_lucknowense_RSA_1015_Plus-T
+|                        |     +--| (100)
+|                        |        +--CG__GCF_025766255.1_Zycmex1
+|                     +--| (82)
+|                     |  +------------CG__GCA_982397305.1_T17-F
+|                  +--| (94)
+|                  |  +-------REF__4837_nrrl1555_MAT_Minus__gene1__sexM
+|               +--| (35)
+|               |  |                    +--LAB__Syncephalastrum_racemosum_CBS_441.59-
+|               |  |                +---| (100)
+|               |  |                |   +--LAB__Syncephalastrum_racemosum_NRRL_2495
+|               |  |        +-------| (98)
+|               |  |        |       +--LAB__Syncephalastrum_verruculosum_RSA_2127
+|               |  +--------| (91)
+|               |           +------------------------------------REF__44442_wa0000051536_MAT_Minus__gene1__sexM
+|            +--| (50)
+|            |  |                          +--CG__Circinella_naumovii_NRRL_5846
+|            |  |       +------------------| (100)
+|            |  |       |                  +--REF__36080_r7b_MAT_Minus__gene1__sexM
+|            |  +-------| (79)
+|            |          +---------------------------REF__35722_atcc11077_MAT_Minus__gene0__sexM
+|         +--| (52)
+|         |  |            +----CG__Circinella_muscae_NRRL_1360
+|         |  |         +--| (100)
+|         |  |         |  |     +--LAB__Pilaira_anomala_RSA_1998-
+|         |  |         |  +-----| (100)
+|         |  |         |        +--REF__29922_cbs109-16_MAT_Minus__gene1__sexM
+|         |  |      +--| (85)
+|         |  |      |  |       +------REF__101119_atcc11807_MAT_Minus__gene0__sexM
+|         |  |      |  |    +--| (87)
+|         |  |      |  |    |  +-------REF__86630_cbs357-93_MAT_Minus__gene0__sexM
+|         |  |      |  +----| (100)
+|         |  |      |       +----REF__64495_cbs110-17_MAT_Minus__gene1__sexM
+|         |  +------| (96)
+|         |         +-------------REF__4850_vkm-f-921_MAT_Minus__gene0__sexM
+|  +------| (70)
+|  |      |         +----LAB__Absidia_caerulea_RSA_138-
+|  |      |     +---| (100)
+|  |      |     |   +--REF__3231046_uomau377_MAT_Minus__gene1__sexM
+|  |      |  +--| (98)
+|  |      |  |  +------------LAB__Absidia_cuneospora_RSA_624-
+|  |      +--| (91)
+|  |         |             +--ZYGO__Chaetocladium_brefeldii_RSA_1136-__FBW75_008546-T1
+|  |         |          +--| (100)
+|  |         |          |  +--ZYGO__Cunninghamella_polymorpha_NRRL_1395__IWR46_001995-T1
+|  |         +----------| (100)
+|  |                    |      +--ZYGO__Cunninghamella_bertholletiae_NRRL_1376__FBU18_003362-T1
+|  |                    |   +--| (99)
+|  |                    |   |  |     +--ZYGO__Cunninghamella_elegans_NRRL_1390__FBX09_000593-T1
+|  |                    |   |  |  +--| (91)
+|  |                    |   |  |  |  +--ZYGO__Cunninghamella_elegans_NRRL_1393__FBX12_005906-T1
+|  |                    |   |  +--| (100)
+|  |                    |   |     +--ZYGO__Cunninghamella_elegans_NRRL_2310__H4X38_005049-T1
+|  |                    +---| (100)
+|  |                        +--ZYGO__Cunninghamella_bertholletiae_NRRL_1380__FBU20_004167-T1
++--| (43)
+|  |            +---------CG__Circinella_simplex_CBS_142.35
+|  +------------| (100)
+|               +----OUT__P1__GCA_000697295.1_MucIndB7402-1.0
+|
++---------------------OUT__MAT1-2-1__5518_3639_MAT_combined
+
+
+Consensus tree in newick format: 
+
+(((((((((((((CG__Circinella_angarensis_NRRL_1594:0.0051182097,(CG__Circinella_muscae_NRRL_1357:0.0000021572,CG__GCA_025093555.1_Cirumb1:0.0000021572)100:0.0097129420)100:0.0353848548,(((CG__Circinella_minor_NRRL_1365:0.0000000000,CG__Rhizopus_microsporus_NRRL_A-17693:0.0000000000):0.0000021572,CG__Circinella_umbellata_NRRL_2417:0.0000021572)100:0.0198076047,CG__GCA_016758965.1_ASM1675896v1:0.0248897388)99:0.0154435179)100:0.0509452183,CG__Circinella_angarensis_NRRL_2410:0.0265847925)99:0.1093230088,((((CG__Circinella_muscae_NRRL_1355:0.0000000000,CG__Circinella_muscae_NRRL_1363:0.0000000000):0.0000000000,CG__Circinella_muscae_NRRL_1367:0.0000000000):0.0000000000,CG__Circinella_muscae_NRRL_2403:0.0000000000):0.0000021572,CG__Circinella_muscae_NRRL_1362:0.0000021572)100:0.0830159860)100:0.8317750604,(GAIN__GCA_025677815.1_Phaart1__detect_alternate:0.1863174046,GAIN__Absidia_sp._NRRL_3163__detect_alternate:0.0507596991)100:0.4295252861)100:0.5333885205,CG__Thamnostylum_lucknowense_RSA_1093-:1.3340340435)98:0.5251441009,((CG__Fennellomyces_mexicanus_sp._nov._RSA_1415_Plus:0.0796161194,CG__Thamnostylum_nigricans_RSA_1405-:0.1732548282)98:0.1159411981,(CG__Fennellomyces_verticellatus_RSA_2442_Plus:0.0000021572,CG__Fennellomyces_verticellatus_RSA_2446:0.0000021572)94:0.0477097629)100:1.6879236690)91:0.4999166000,(LAB__Syncephalastrum_racemosum_CBS_440.59_Plus:0.0000021572,REF__13706_nrrl-2496_MAT_Plus__gene0__sexP:0.0000021572)100:1.5298687502)93:0.4529237110,CG__Circinella_tenella_NRRL_A-23557:1.2974340658)93:0.2398077656,(((CG__Circinella_simplex_van_Tieghem_NRRL_2407:0.3469410377,((((((((CG__Thamnostylum_repens_Tieghem_Upadhyay_NRRL_6240:0.0000000000,ZYGO__Mucor_sp._NRRL_A-14906__FBX37_009001-T1:0.0000000000):0.0000000000,ZYGO__Mucor_sp._NRRL_A-21232__FBX42_008741-T1:0.0000000000):0.0000000000,ZYGO__Mucor_sp._NRRL_A-21230__FBX41_008789-T1:0.0000000000):0.0000021572,ZYGO__Mucor_alternans_NRRL_A-15142__FBW89_008965-T1:0.0000021572)74:0.0000021572,((ZYGO__Circinomucor_circinelloides_NRRL_22899__FB648_007764-T1:0.0000021572,ZYGO__Mucor_sp._NRRL_A-25970__FBX49_008470-T1:0.0000021572)35:0.0000021572,ZYGO__Mucor_sp._NRRL_A-21236__FBX43_008687-T1:0.0053393757)52:0.0000021572)51:0.0000027537,ZYGO__Actinomucor_sp._NRRL_A-23671__FBU17_008421-T1:0.0269030852)93:0.1051396886,(ZYGO__Mucor_circinelloides_var._griseocyanus_NRRL_1416__IWY18_008082-T1:0.1113184130,REF__36080_nrrl-3631_MAT_Plus__gene1__sexP:0.0971446920)96:0.1026345642)100:0.7183612218,LAB__Gilbertella_persicaria_var._persicaria_CBS_246.59_Plus:0.8242990827)80:0.1938313631)41:0.1030372174,REF__3108396_ai-2023a_MAT_Plus__gene2__sexP:0.8720555769)57:0.2509121559,(REF__101119_atcc11807_MAT_Plus__gene0__sexP:0.5218317966,REF__64495_cbs346-36_MAT_Plus__gene2__sexP:0.2875012856)100:0.8740437589)82:0.3877355086)72:0.1793479288,(((((LAB__Absidia_caerulea_RSA_138_Plus:0.1514579301,REF__3231046_uomd23-19_MAT_Plus__gene1__sexP:0.2517212590)97:0.2041462968,ZYGO__Absidia_cuneospora_RSA_623_Plus__FBU52_008428-T1:0.5337216868)99:0.3008261334,((ZYGO__Cunninghamella_echinulata_NRRL_1386__FB638_007189-T1:0.0114024347,ZYGO__Cunninghamella_japonica_NRRL_2463__H4W96_006999-T1:0.0112228657)100:0.0984423428,ZYGO__Cunninghamella_echinulata_RSA_2017_Plus__FBN38_004308-T1:0.0000023987)100:0.6863892089)80:0.2144723787,REF__41833_gzumbrama1_MAT_Plus__gene1__sexP:3.2219239872)71:0.3775930696,(LAB__Rhizomucor_pusillus_NRRL_2543:0.2110779099,(((LAB__Syncephalastrum_racemosum_NRRL_1506:0.0000021572,REF__4837_ubc21_MAT_Plus__gene1__sexP:0.0000021572)60:0.0000021572,ZYGO__Phycomyces_blakesleeanus_Burgeff_NRRL_1465__FBX89_005444-T1:0.0000021572)66:0.0000021572,(ZYGO__Phycomyces_blakesleeanus_Burgeff_var._piloboloides_NRRL_2566__FB643_006860-T1:0.0186476281,ZYGO__Phycomyces_blakesleeanus_NRRL_1554__H4W68_004107-T1:0.0000021572)97:0.0051226849)99:0.1967990468)100:0.5204321961)56:0.0571763758)99:0.9472016043,OUT__MAT1-2-1__55307_ysh1-8_MATtub_MAT1-2:2.0796003215)67:0.2192915455,((((((((((((CG__Circinella_angarensis_NRRL_2628:0.0000021572,CG__Circinella_angarensis_RSA_618-:0.0000021572)100:0.0053438626,CG__Circinella_angarensis_RSA_198_Plus:0.0000021572)100:0.0548533942,((CG__Circinella_umbellata_NRRL_1366:0.0000000000,CG__Rhizopus_arrhizus_NRRL_1470:0.0000000000):0.0000021572,CG__Circinella_umbellata_RSA_505_Plus:0.0000021572)100:0.0526508660)99:0.0480652810,((CG__Circinella_chinensis_NRRL_2415:0.0000021572,CG__Circinella_mucoroides_NRRL_1354:0.0000021572)100:0.0645805362,((((CG__Circinella_minor_CBS_143.56:0.0000000000,CG__Circinella_muscae_NRRL_1352:0.0000000000):0.0000000000,CG__Circinella_muscae_NRRL_1364:0.0000000000):0.0000000000,CG__Circinella_muscae_NRRL_1356:0.0000000000):0.0000021572,CG__Circinella_muscae_CBS_107.13T:0.0000021572)100:0.1006543385)100:0.0996205217)100:0.1883356986,(((((CG__Circinella_chinensis_CBS_150.53:0.0000021572,CG__Thamnostylum_repens_RSA_459_Plus:0.0000021572)100:0.2791098054,(CG__Fennellomyces_heterothallicus_RSA_2348:0.0822788420,(CG__Fennellomyces_mexicanus_sp._nov._RSA_1418-:0.2362354229,CG__Thamnostylum_nigricans_RSA_1406:0.1665461661)65:0.0052586582)68:0.0281215755)66:0.0179216246,((CG__Fennellomyces_linderi_NRRL_2342:0.0000021572,CG__Fennellomyces_linderi_NRRL_2342T:0.0000021572)100:0.0980477318,CG__GCA_025266875.1_Fenlin1:0.0849231556)100:0.1024568045)99:0.1825615530,(CG__Thamnostylum_piriforme_NRRL_A-21589:0.0788498205,CG__Thamnostylum_piriforme_RSA_251:0.0625873051)100:0.3090600902)98:0.1509338208,(CG__Thamnostylum_lucknowense_RSA_1015_Plus-T:0.1744716646,CG__GCF_025766255.1_Zycmex1:0.1940373066)100:0.2186580619)94:0.1310947573)99:0.3302903091,CG__GCA_982397305.1_T17-F:1.1594423086)82:0.2097868486,REF__4837_nrrl1555_MAT_Minus__gene1__sexM:0.7597201584)94:0.3382491221,(((LAB__Syncephalastrum_racemosum_CBS_441.59-:0.0000021572,LAB__Syncephalastrum_racemosum_NRRL_2495:0.0000021572)100:0.4327897686,LAB__Syncephalastrum_verruculosum_RSA_2127:0.1768516087)98:0.7521976054,REF__44442_wa0000051536_MAT_Minus__gene1__sexM:3.2808502750)91:0.7979374707)35:0.0000029408,((CG__Circinella_naumovii_NRRL_5846:0.0021817777,REF__36080_r7b_MAT_Minus__gene1__sexM:0.1839053584)100:1.6876153683,REF__35722_atcc11077_MAT_Minus__gene0__sexM:2.4853351796)79:0.7691430420)50:0.1307684508,(((CG__Circinella_muscae_NRRL_1360:0.5093874439,(LAB__Pilaira_anomala_RSA_1998-:0.3043626858,REF__29922_cbs109-16_MAT_Minus__gene1__sexM:0.3210928097)100:0.5956391510)100:0.2599626675,((REF__101119_atcc11807_MAT_Minus__gene0__sexM:0.6776727722,REF__86630_cbs357-93_MAT_Minus__gene0__sexM:0.7431901431)87:0.1031358763,REF__64495_cbs110-17_MAT_Minus__gene1__sexM:0.5177715055)100:0.4581441385)85:0.2793173833,REF__4850_vkm-f-921_MAT_Minus__gene0__sexM:1.3077236321)96:0.6294042722)52:0.1546463563,(((LAB__Absidia_caerulea_RSA_138-:0.4860672097,REF__3231046_uomau377_MAT_Minus__gene1__sexM:0.2613635512)100:0.3729762376,LAB__Absidia_cuneospora_RSA_624-:1.2006260774)98:0.3389978309,((ZYGO__Chaetocladium_brefeldii_RSA_1136-__FBW75_008546-T1:0.0596482427,ZYGO__Cunninghamella_polymorpha_NRRL_1395__IWR46_001995-T1:0.0400617540)100:0.3362063506,((ZYGO__Cunninghamella_bertholletiae_NRRL_1376__FBU18_003362-T1:0.1615492206,((ZYGO__Cunninghamella_elegans_NRRL_1390__FBX09_000593-T1:0.0048353386,ZYGO__Cunninghamella_elegans_NRRL_1393__FBX12_005906-T1:0.0000021572)91:0.0006734481,ZYGO__Cunninghamella_elegans_NRRL_2310__H4X38_005049-T1:0.0000021572)100:0.0517650193)99:0.0154866412,ZYGO__Cunninghamella_bertholletiae_NRRL_1380__FBU20_004167-T1:0.0323594615)100:0.3545087062)100:1.0454527164)91:0.1897090302)70:0.6496795323,(CG__Circinella_simplex_CBS_142.35:0.8937316051,OUT__P1__GCA_000697295.1_MucIndB7402-1.0:0.4739668511)100:1.1616501735)43:0.2556690292,OUT__MAT1-2-1__5518_3639_MAT_combined:2.0074435602);
+
+ALISIM COMMAND
+--------------
+To simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis, you can use the following command:
+
+--alisim simulated_MSA -t ml/iq_aln_mafft_g50.treefile -m "Q.MAMMAL+F+I{0.0131758}+R4{0.0487646,0.121825,0.224218,0.347998,0.464301,0.859395,0.249541,2.07186}" --length 212
+
+To mimic the alignment used to produce this analysis, i.e. simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis *and* copying the same gap positions as the original alignment, you can use the following command:
+
+iqtree -s aln_mafft_g50.afa --alisim mimicked_MSA
+
+To simulate any number of alignments in either of the two commandlines above, use the --num-alignments options, for example mimic 100 alignments you would use the command line:
+
+iqtree -s aln_mafft_g50.afa --alisim mimicked_MSA --num-alignments 100
+
+For more information on using AliSim, please visit: www.iqtree.org/doc/AliSim
+
+TIME STAMP
+----------
+
+Date and time: Thu Oct  1 16:54:56 2026
+Total CPU time used: 1691.445905 seconds (0h:28m:11s)
+Total wall-clock time used: 430.856797 seconds (0h:7m:10s)
+

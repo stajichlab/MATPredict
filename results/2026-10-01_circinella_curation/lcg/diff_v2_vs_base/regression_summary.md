@@ -1,0 +1,435 @@
+# Regression check: LCG Mucoromycotina 94d9d37 vs a8863f3 -- lcg
+
+- Genomes compared: 621; loci rows: 3706; loci with a change: 1236 (415 touch a call, 821 are withheld on both sides).
+- Classifier margin shifts below 5.0 bits are not listed as changes; 1684 unchanged loci carry such a shift (see `margin_delta` in the TSV).
+- Every withheld-only change is listed in `regression_withheld_changes.md`.
+
+## Change types (loci that touch a call)
+
+| change | loci |
+|---|---|
+| call_gained | 16 |
+| classifier_input_changed | 7 |
+| classifier_shift | 384 |
+| core_model_changed | 100 |
+| gene_set_changed | 5 |
+| idiomorph_changed | 3 |
+| span_changed | 59 |
+
+## Changes to calls
+
+- **Absidia_caerulea_RSA_138-** Mucoromycota:MAT scaffold_577 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 77.0 -> 83.4; best score 138.5 -> 143.5
+- **Absidia_caerulea_RSA_138_Plus** Mucoromycota:MAT scaffold_109 [gene_set_changed,core_model_changed,classifier_shift]: called Plus/medium -> called Plus/medium; margin 204.0 -> 215.4; best score 264.3 -> 277.4; models sexM:255bp/32.94%->219bp/35.62%; genes algA,glrA,sexP -> algA,glrA,sexM,sexP
+- **Absidia_californica_NRRL_2709** Mucoromycota:MAT scaffold_519 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 76.9 -> 90.4; best score 135.9 -> 147.3
+- **Absidia_californica_NRRL_2967** Mucoromycota:MAT scaffold_456 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 78.2 -> 91.4; best score 137.4 -> 148.3
+- **Absidia_coerulea_NRRL_1310** Mucoromycota:MAT scaffold_184 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 77.0 -> 83.4; best score 138.5 -> 143.5
+- **Absidia_coerulea_NRRL_1312** Mucoromycota:MAT scaffold_657 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 77.0 -> 83.4; best score 138.5 -> 143.5
+- **Absidia_coerulea_NRRL_1313** Mucoromycota:MAT scaffold_113 [gene_set_changed,core_model_changed,classifier_shift]: called Plus/medium -> called Plus/medium; margin 203.1 -> 213.1; best score 262.2 -> 275.0; models sexM:255bp/32.94%->219bp/35.62%; genes algA,glrA,sexP -> algA,glrA,sexM,sexP
+- **Absidia_coerulea_NRRL_1314** Mucoromycota:MAT scaffold_171 [gene_set_changed,core_model_changed,classifier_shift]: called Plus/medium -> called Plus/medium; margin 202.6 -> 212.8; best score 261.6 -> 274.3; models sexM:255bp/32.94%->219bp/35.62%; genes algA,glrA,sexP -> algA,glrA,sexM,sexP
+- **Absidia_coerulea_NRRL_1502** Mucoromycota:MAT scaffold_693 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 77.0 -> 83.4; best score 138.5 -> 143.5
+- **Absidia_coerulea_NRRL_5926** Mucoromycota:MAT scaffold_118 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 77.2 -> 85.7; best score 138.0 -> 145.3
+- **Absidia_coerulea_NRRL_A-26290** Mucoromycota:MAT scaffold_136 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 77.2 -> 85.7; best score 138.0 -> 145.3
+- **Absidia_cuneospora_NRRL_2655** Mucoromycota:MAT scaffold_226 [classifier_shift]: called Minus/high -> called Minus/high; margin 54.8 -> 64.0; best score 112.6 -> 123.5
+- **Absidia_cuneospora_RSA_623_Plus** Mucoromycota:MAT scaffold_217 [classifier_shift]: called Plus/high -> called Plus/high; margin 174.2 -> 183.1; best score 229.7 -> 242.7
+- **Absidia_cuneospora_RSA_624-** Mucoromycota:MAT scaffold_53 [classifier_shift]: called Minus/high -> called Minus/high; margin 54.8 -> 64.0; best score 112.6 -> 123.5
+- **Absidia_cylindrospora_NRRL_1341** Mucoromycota:MAT scaffold_111 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 194.4 -> 199.4; best score 257.2 -> 266.5
+- **Absidia_cylindrospora_NRRL_1343** Mucoromycota:MAT scaffold_253 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 195.0 -> 203.4; best score 260.6 -> 270.7
+- **Absidia_cylindrospora_NRRL_1560** Mucoromycota:MAT scaffold_331 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 194.5 -> 199.5; best score 257.4 -> 266.6
+- **Absidia_cylindrospora_NRRL_3069** Mucoromycota:MAT scaffold_25 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 59.4 -> 65.0; best score 109.2 -> 114.9
+- **Absidia_cylindrospora_var._cylindrospora_NRRL_2796** Mucoromycota:MAT scaffold_24 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 39.2 -> 47.2; best score 93.6 -> 99.0
+- **Absidia_cylindrospora_var._nigra_NRRL_3031** Mucoromycota:MAT scaffold_132 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 59.4 -> 68.7; best score 107.0 -> 114.9
+- **Absidia_cylindrospora_var._nigra_NRRL_3032** Mucoromycota:MAT scaffold_1 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 202.9 -> 209.0; best score 262.7 -> 274.9
+- **Absidia_cylindrospora_var._nigra_NRRL_3060** Mucoromycota:MAT scaffold_69 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 59.4 -> 68.7; best score 107.0 -> 114.9
+- **Absidia_dubia_NRRL_1322** Mucoromycota:MAT scaffold_148 [classifier_shift]: called Minus/high -> called Minus/high; margin 92.2 -> 112.3; best score 143.7 -> 162.6
+- **Absidia_glauca_NRRL_1324** Mucoromycota:MAT scaffold_153 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 95.0 -> 115.9; best score 146.4 -> 164.5
+- **Absidia_glauca_NRRL_1327** Mucoromycota:MAT scaffold_143 [classifier_shift]: called Minus/high -> called Minus/high; margin 92.2 -> 112.3; best score 143.7 -> 162.6
+- **Absidia_macrospora_NRRL_5839** Mucoromycota:MAT scaffold_443 [classifier_shift]: called Minus/high -> called Minus/high; margin 74.5 -> 81.8; best score 135.5 -> 141.8
+- **Absidia_parricida_NRRL_2409** Mucoromycota:MAT scaffold_298 [classifier_shift]: called Plus/high -> called Plus/high; margin 207.3 -> 219.6; best score 266.7 -> 284.5
+- **Absidia_pseudocylindrospora_NRRL_2984** Mucoromycota:MAT scaffold_86 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 45.9 -> 59.8; best score 102.7 -> 114.7
+- **Absidia_repens_NRRL_1338** Mucoromycota:MAT scaffold_440 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 220.6 -> 229.0; best score 280.8 -> 292.5
+- **Absidia_sp._NRRL_3163** Mucoromycota:MAT scaffold_198 [call_gained,span_changed,classifier_shift]: withheld:mat_gene_gate undetermined/ -> called Plus/medium; margin 18.9 -> 93.0; best score 41.7 -> 116.4; models no_gene_evidence_in_baseline
+- **Absidia_spinosa_NRRL_A-13651** Mucoromycota:MAT scaffold_201 [classifier_shift]: called Plus/high -> called Plus/high; margin 158.2 -> 165.9; best score 274.1 -> 285.5
+- **Absidia_spinosa_var._azygospora_NRRL_2841** Mucoromycota:MAT scaffold_1 [core_model_changed,classifier_shift]: called Plus/medium -> called Plus/medium; margin 197.3 -> 206.7; best score 250.8 -> 264.3; models sexM:225bp/33.33%->204bp/38.24%
+- **Absidia_spinosa_var._biappendiculata_NRRL_3033** Mucoromycota:MAT scaffold_35 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 211.1 -> 221.3; best score 274.2 -> 285.9
+- **Absidia_zychae_NRRL_A-23515** Mucoromycota:MAT scaffold_119 [span_changed,core_model_changed,classifier_shift]: called Plus/medium -> called Plus/medium; margin 118.0 -> 106.5; best score 193.6 -> 194.3; models sexM:231bp/36.36%->381bp/31.5%
+- **Actinomucor_elegans_NRRL_13011** Mucoromycota:MAT scaffold_24 [classifier_shift]: called Plus/high -> called Plus/high; margin 282.5 -> 291.1; best score 336.8 -> 347.2
+- **Actinomucor_elegans_NRRL_1706** Mucoromycota:MAT scaffold_21 [classifier_shift]: called Plus/high -> called Plus/high; margin 282.5 -> 291.1; best score 336.8 -> 347.2
+- **Actinomucor_elegans_NRRL_6572** Mucoromycota:MAT scaffold_23 [classifier_shift]: called Plus/high -> called Plus/high; margin 282.5 -> 291.1; best score 336.8 -> 347.2
+- **Actinomucor_sp._NRRL_A-23671** Mucoromycota:MAT scaffold_486 [classifier_shift]: called Plus/high -> called Plus/high; margin 335.7 -> 345.4; best score 383.3 -> 395.2
+- **Amylomyces_rouxii_NRRL_3160** Mucoromycota:MAT scaffold_579 [classifier_shift]: called Minus/high -> called Minus/high; margin 168.5 -> 160.5; best score 236.5 -> 228.1
+- **Amylomyces_rouxii_NRRL_5192** Mucoromycota:MAT scaffold_629 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Apophysomyces_sp._BC1015** Mucoromycota:MAT scaffold_575 [classifier_shift]: called Plus/high -> called Plus/high; margin 153.8 -> 148.7; best score 213.5 -> 214.5
+- **Apophysomyces_sp._BC1021** Mucoromycota:MAT scaffold_301 [classifier_shift]: called Plus/high -> called Plus/high; margin 153.8 -> 148.7; best score 213.5 -> 214.5
+- **Apophysomyces_sp._BC1034** Mucoromycota:MAT scaffold_327 [classifier_shift]: called Plus/high -> called Plus/high; margin 153.8 -> 148.7; best score 213.5 -> 214.5
+- **Backusella_circina_NRRL_2446** Mucoromycota:MAT scaffold_141 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 248.3 -> 240.6; best score 312.8 -> 308.2
+- **Backusella_circina_NRRL_3293** Mucoromycota:MAT scaffold_43 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 79.2 -> 67.1; best score 153.9 -> 144.5
+- **Backusella_circina_NRRL_A-17781** Mucoromycota:MAT scaffold_190 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 247.2 -> 239.5; best score 311.7 -> 307.1
+- **Backusella_lamprospora_NRRL_1401** Mucoromycota:MAT scaffold_593 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 90.8 -> 80.5; best score 167.5 -> 158.4
+- **Backusella_lamprospora_NRRL_3103** Mucoromycota:MAT scaffold_144 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 91.0 -> 79.2; best score 163.4 -> 152.9
+- **Backusella_lamprospora_NRRL_3618** Mucoromycota:MAT scaffold_72 [core_model_changed]: called Plus/medium -> called Plus/medium; margin 224.6 -> 224.7; best score 295.0 -> 298.0; models sexM:285bp/32.98%->219bp/35.62%
+- **Backusella_lamprospora_NRRL_3619** Mucoromycota:MAT scaffold_198 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 90.8 -> 80.5; best score 167.5 -> 158.4
+- **Backusella_lamprospora_NRRL_6044_Plus** Mucoromycota:MAT scaffold_279 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 85.2 -> 76.0; best score 165.0 -> 157.5
+- **Blakeslea_trispora_NRRL_2456** Mucoromycota:MAT scaffold_4 [classifier_shift]: called Plus/high -> called Plus/high; margin 246.2 -> 236.0; best score 299.8 -> 296.8
+- **Chaetocladium_brefeldii_NRRL_1350** Mucoromycota:MAT scaffold_39 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 285.1 -> 291.9; best score 346.3 -> 356.3; models sexM:207bp/36.23%->204bp/38.24%
+- **Chaetocladium_brefeldii_NRRL_2508** Mucoromycota:MAT scaffold_117 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 285.1 -> 291.9; best score 346.3 -> 356.3; models sexM:207bp/36.23%->204bp/38.24%
+- **Circinella_angarensis_NRRL_1594** Mucoromycota:MAT scaffold_103 [call_gained,span_changed,classifier_shift]: withheld:mat_gene_gate Plus/ -> called Plus/medium; margin 54.3 -> 143.4; best score 88.3 -> 175.4; models no_gene_evidence_in_baseline
+- **Circinella_angarensis_NRRL_2410** Mucoromycota:MAT scaffold_1 [call_gained,span_changed,classifier_shift]: withheld:mat_gene_gate Plus/ -> called Plus/medium; margin 53.5 -> 137.9; best score 87.5 -> 169.4; models no_gene_evidence_in_baseline
+- **Circinella_angarensis_NRRL_2628** Mucoromycota:MAT scaffold_231 [core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 68.0 -> 96.8; best score 130.5 -> 158.6; models sexM:360bp/55.56%->558bp/58.92%
+- **Circinella_angarensis_RSA_198_Plus** Mucoromycota:MAT scaffold_2 [core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 66.8 -> 94.7; best score 129.9 -> 157.2; models sexM:360bp/55.56%->558bp/58.92%
+- **Circinella_angarensis_RSA_618-** Mucoromycota:MAT scaffold_213 [core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 68.0 -> 96.8; best score 130.5 -> 158.6; models sexM:360bp/55.56%->558bp/58.92%
+- **Circinella_chinensis_CBS_150.53** Mucoromycota:MAT scaffold_136 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 47.7 -> 82.9; best score 108.7 -> 151.9; models sexM:360bp/47.86%->567bp/55.56%
+- **Circinella_chinensis_NRRL_2415** Mucoromycota:MAT scaffold_48 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 63.9 -> 90.4; best score 128.7 -> 154.5; models sexM:360bp/51.28%->555bp/59.78%
+- **Circinella_minor_CBS_143.56** Mucoromycota:MAT scaffold_1610 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 57.9 -> 86.7; best score 124.5 -> 153.6; models sexM:360bp/51.28%->558bp/56.76%
+- **Circinella_minor_CBS_143.56** Mucoromycota:MAT scaffold_1115 [call_gained,span_changed,classifier_shift]: withheld:mat_gene_gate Plus/ -> called Plus/medium; margin 54.2 -> 134.7; best score 86.4 -> 165.8; models no_gene_evidence_in_baseline
+- **Circinella_minor_NRRL_1365** Mucoromycota:MAT scaffold_388 [call_gained,span_changed,classifier_shift]: withheld:mat_gene_gate Plus/ -> called Plus/medium; margin 53.4 -> 133.7; best score 85.8 -> 164.3; models no_gene_evidence_in_baseline
+- **Circinella_mucoroides_NRRL_1354** Mucoromycota:MAT scaffold_160 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 63.9 -> 90.4; best score 128.7 -> 154.5; models sexM:360bp/51.28%->555bp/59.78%
+- **Circinella_muscae_CBS_107.13T** Mucoromycota:MAT scaffold_15 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 57.9 -> 86.7; best score 124.5 -> 153.6; models sexM:360bp/51.28%->558bp/56.76%
+- **Circinella_muscae_NRRL_1352** Mucoromycota:MAT scaffold_35 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 57.9 -> 86.7; best score 124.5 -> 153.6; models sexM:360bp/51.28%->558bp/56.76%
+- **Circinella_muscae_NRRL_1355** Mucoromycota:MAT scaffold_142 [call_gained,span_changed,classifier_input_changed,classifier_shift]: withheld:modelled_gene_bar Plus/ -> called Plus/medium; margin 77.2 -> 132.2; best score 112.9 -> 164.9; models no_gene_evidence_in_baseline
+- **Circinella_muscae_NRRL_1355** Mucoromycota:MAT scaffold_2644 [call_gained,span_changed,classifier_input_changed,classifier_shift]: withheld:modelled_gene_bar Plus/ -> called Plus/medium; margin 30.9 -> 138.4; best score 64.4 -> 169.0; models no_gene_evidence_in_baseline
+- **Circinella_muscae_NRRL_1356** Mucoromycota:MAT scaffold_15 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 57.9 -> 86.7; best score 124.5 -> 153.6; models sexM:360bp/51.28%->558bp/56.76%
+- **Circinella_muscae_NRRL_1357** Mucoromycota:MAT scaffold_1159 [call_gained,span_changed,classifier_shift]: withheld:mat_gene_gate Plus/ -> called Plus/medium; margin 54.3 -> 144.2; best score 88.3 -> 176.1; models no_gene_evidence_in_baseline
+- **Circinella_muscae_NRRL_1363** Mucoromycota:MAT scaffold_1448 [call_gained,span_changed,classifier_input_changed,classifier_shift]: withheld:modelled_gene_bar Plus/ -> called Plus/medium; margin 83.0 -> 138.3; best score 116.3 -> 169.0; models no_gene_evidence_in_baseline
+- **Circinella_muscae_NRRL_1363** Mucoromycota:MAT scaffold_2016 [call_gained,span_changed,classifier_input_changed,classifier_shift]: withheld:modelled_gene_bar Plus/ -> called Plus/medium; margin 77.2 -> 132.2; best score 112.9 -> 164.9; models no_gene_evidence_in_baseline
+- **Circinella_muscae_NRRL_1364** Mucoromycota:MAT scaffold_65 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 57.9 -> 86.7; best score 124.5 -> 153.6; models sexM:360bp/51.28%->558bp/56.76%
+- **Circinella_muscae_NRRL_1367** Mucoromycota:MAT scaffold_87 [call_gained,span_changed,classifier_input_changed,classifier_shift]: withheld:modelled_gene_bar Plus/ -> called Plus/medium; margin 77.2 -> 130.4; best score 112.9 -> 163.1; models no_gene_evidence_in_baseline
+- **Circinella_muscae_NRRL_2403** Mucoromycota:MAT scaffold_1271 [call_gained,span_changed,classifier_input_changed,classifier_shift]: withheld:modelled_gene_bar Plus/ -> called Plus/medium; margin 83.0 -> 138.3; best score 116.3 -> 169.0; models no_gene_evidence_in_baseline
+- **Circinella_muscae_NRRL_2403** Mucoromycota:MAT scaffold_396 [call_gained,span_changed,classifier_input_changed,classifier_shift]: withheld:modelled_gene_bar Plus/ -> called Plus/medium; margin 77.2 -> 132.2; best score 112.9 -> 164.9; models no_gene_evidence_in_baseline
+- **Circinella_naumovii_NRRL_5846** Mucoromycota:MAT scaffold_886 [classifier_shift]: called Minus/high -> called Minus/high; margin 107.5 -> 97.4; best score 144.4 -> 139.2
+- **Circinella_rigida_NRRL_2341** Mucoromycota:MAT scaffold_442 [classifier_shift]: called Plus/high -> called Plus/high; margin 236.9 -> 243.3; best score 307.4 -> 314.2
+- **Circinella_umbellata_NRRL_1366** Mucoromycota:MAT scaffold_302 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 68.5 -> 99.6; best score 132.2 -> 162.8; models sexM:360bp/57.26%->558bp/61.62%
+- **Circinella_umbellata_NRRL_2417** Mucoromycota:MAT scaffold_495 [call_gained,span_changed,classifier_shift]: withheld:mat_gene_gate Plus/ -> called Plus/medium; margin 53.4 -> 133.7; best score 85.8 -> 164.3; models no_gene_evidence_in_baseline
+- **Circinella_umbellata_RSA_505_Plus** Mucoromycota:MAT scaffold_255 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 68.5 -> 99.6; best score 132.2 -> 162.8; models sexM:360bp/57.26%->558bp/61.62%
+- **Circinomucor_circinelloides_NRRL_22899** Mucoromycota:MAT scaffold_511 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 339.0 -> 346.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Cunninghamella_antarctica_NRRL_6534** Mucoromycota:MAT scaffold_312 [span_changed]: called Minus/high -> called Minus/high; margin 35.5 -> 34.3; best score 91.1 -> 89.4
+- **Cunninghamella_bertholletiae_NRRL_1376** Mucoromycota:MAT scaffold_248 [core_model_changed]: called Minus/high -> called Minus/high; margin 62.9 -> 65.0; best score 119.7 -> 120.4; models sexM:318bp/38.61%->333bp/36.45%
+- **Cunninghamella_bertholletiae_NRRL_1377** Mucoromycota:MAT scaffold_544 [classifier_shift]: called Plus/high -> called Plus/high; margin 207.3 -> 219.6; best score 266.7 -> 284.5
+- **Cunninghamella_bertholletiae_NRRL_1378** Mucoromycota:MAT scaffold_295 [classifier_shift]: called Plus/high -> called Plus/high; margin 205.8 -> 218.1; best score 259.4 -> 275.6
+- **Cunninghamella_echinulata_NRRL_1384** Mucoromycota:MAT scaffold_56 [span_changed]: called Minus/high -> called Minus/high; margin 35.5 -> 34.3; best score 91.2 -> 89.6
+- **Cunninghamella_echinulata_NRRL_1386** Mucoromycota:MAT scaffold_361 [span_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 201.9 -> 219.7; best score 272.4 -> 292.6
+- **Cunninghamella_echinulata_NRRL_1387** Mucoromycota:MAT scaffold_508 [span_changed]: called Minus/high -> called Minus/high; margin 35.5 -> 34.3; best score 91.1 -> 89.4
+- **Cunninghamella_echinulata_RSA_2017_Plus** Mucoromycota:MAT scaffold_106 [classifier_shift]: called Plus/high -> called Plus/high; margin 206.8 -> 222.2; best score 276.5 -> 296.4
+- **Cunninghamella_echinulata_RSA_2018-** Mucoromycota:MAT scaffold_139 [span_changed]: called Minus/high -> called Minus/high; margin 35.5 -> 34.3; best score 91.2 -> 89.6
+- **Cunninghamella_elegans_NRRL_1388** Mucoromycota:MAT scaffold_31 [classifier_shift]: called Plus/high -> called Plus/high; margin 205.8 -> 218.1; best score 259.4 -> 275.6
+- **Cunninghamella_elegans_NRRL_1391** Mucoromycota:MAT scaffold_111 [classifier_shift]: called Plus/high -> called Plus/high; margin 205.8 -> 218.1; best score 259.4 -> 275.6
+- **Cunninghamella_elegans_NRRL_1392** Mucoromycota:MAT scaffold_490 [classifier_shift]: called Plus/high -> called Plus/high; margin 205.8 -> 218.1; best score 259.4 -> 275.6
+- **Cunninghamella_japonica_NRRL_2463** Mucoromycota:MAT scaffold_400 [span_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 201.8 -> 220.4; best score 271.0 -> 291.9
+- **Cunninghamella_polymorpha_NRRL_1395** Mucoromycota:MAT scaffold_88 [span_changed]: called Minus/high -> called Minus/high; margin 40.0 -> 39.5; best score 89.7 -> 89.3
+- **Cunninghamella_sp._NRRL_A-21238** Mucoromycota:MAT scaffold_567 [span_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 201.2 -> 220.1; best score 271.4 -> 292.7
+- **Cunninghamella_sp._NRRL_A-21271** Mucoromycota:MAT scaffold_88 [span_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 201.2 -> 220.1; best score 271.4 -> 292.7
+- **Ellisomyces_anomalus_NRRL_2465_Plus-T** Mucoromycota:MAT scaffold_169 [classifier_shift]: called Plus/high -> called Plus/high; margin 318.1 -> 328.3; best score 366.4 -> 380.2
+- **Ellisomyces_anomalus_RSA_581-** Mucoromycota:MAT scaffold_193 [classifier_shift]: called Plus/high -> called Plus/high; margin 318.1 -> 328.3; best score 366.4 -> 380.2
+- **Fennellomyces_heterothallicus_RSA_2348** Mucoromycota:MAT scaffold_283 [core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 45.0 -> 80.1; best score 112.6 -> 156.6; models sexM:360bp/49.57%->558bp/61.29%
+- **Fennellomyces_linderi_NRRL_2342** Mucoromycota:MAT scaffold_195 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 50.8 -> 77.6; best score 120.5 -> 147.0; models sexM:360bp/54.7%->558bp/60.75%
+- **Fennellomyces_linderi_NRRL_2342T** Mucoromycota:MAT scaffold_227 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 50.8 -> 77.6; best score 120.5 -> 147.0; models sexM:360bp/54.7%->558bp/60.75%
+- **Fennellomyces_mexicanus_sp._nov._RSA_1418-** Mucoromycota:MAT scaffold_143 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 51.9 -> 81.6; best score 123.8 -> 152.3; models sexM:408bp/45.86%->561bp/55.61%
+- **Helicostylum_lucknowense_NRRL_2892** Mucoromycota:MAT scaffold_350 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 61.7 -> 100.8; best score 121.2 -> 159.6; models sexM:360bp/56.41%->555bp/77.17%
+- **Helicostylum_lucknowense_NRRL_A-16732** Mucoromycota:MAT scaffold_342 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 61.7 -> 100.8; best score 121.2 -> 159.6; models sexM:360bp/56.41%->555bp/77.17%
+- **Mucor_aligarensis_NRRL_3099** Mucoromycota:MAT scaffold_427 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 292.2 -> 301.1; best score 351.0 -> 362.5; models sexM:300bp/29.0%->222bp/41.89%
+- **Mucor_alternans_NRRL_3358** Mucoromycota:MAT scaffold_5267 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 339.0 -> 346.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_alternans_NRRL_A-15142** Mucoromycota:MAT scaffold_519 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 339.0 -> 346.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_alternans_NRRL_A-16397** Mucoromycota:MAT scaffold_168 [core_model_changed]: called Plus/high -> called Plus/high; margin 339.4 -> 342.9; best score 385.3 -> 393.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_bainieri_NRRL_2988** Mucoromycota:MAT scaffold_350 [classifier_shift]: called Plus/high -> called Plus/high; margin 320.6 -> 329.4; best score 372.1 -> 387.4
+- **Mucor_caninus_NRRL_A-12555** Mucoromycota:MAT scaffold_33 [core_model_changed]: called Plus/high -> called Plus/high; margin 310.0 -> 314.8; best score 378.0 -> 389.0; models sexM:225bp/34.67%->204bp/38.24%
+- **Mucor_circinelloides_NRRL_A-25893** Mucoromycota:MAT scaffold_4595 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 339.0 -> 346.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_circinelloides_f._circinelloides_NRRL_3614** Mucoromycota:MAT scaffold_514 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 338.8 -> 346.4; best score 384.6 -> 395.8; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_circinelloides_f._griseocyanus_NRRL_3621** Mucoromycota:MAT scaffold_391 [classifier_shift]: called Plus/high -> called Plus/high; margin 322.4 -> 331.4; best score 371.8 -> 386.0
+- **Mucor_circinelloides_f._janssenii_NRRL_2404** Mucoromycota:MAT scaffold_618 [classifier_shift]: called Minus/high -> called Minus/high; margin 109.6 -> 101.7; best score 146.8 -> 143.9
+- **Mucor_circinelloides_f._janssenii_NRRL_2629** Mucoromycota:MAT scaffold_394 [classifier_shift]: called Minus/high -> called Minus/high; margin 109.6 -> 101.7; best score 146.8 -> 143.9
+- **Mucor_circinelloides_f._lusitanicus_NRRL_1442** Mucoromycota:MAT scaffold_9 [classifier_shift]: called Plus/high -> called Plus/high; margin 321.1 -> 327.4; best score 367.8 -> 379.5
+- **Mucor_circinelloides_f._lusitanicus_NRRL_3631** Mucoromycota:MAT scaffold_329 [classifier_shift]: called Plus/high -> called Plus/high; margin 321.1 -> 327.4; best score 367.8 -> 379.5
+- **Mucor_circinelloides_var._griseocyanus_NRRL_1415** Mucoromycota:MAT scaffold_785 [classifier_shift]: called Plus/high -> called Plus/high; margin 323.0 -> 330.4; best score 372.2 -> 385.5
+- **Mucor_circinelloides_var._griseocyanus_NRRL_1416** Mucoromycota:MAT scaffold_522 [classifier_shift]: called Plus/high -> called Plus/high; margin 322.4 -> 331.4; best score 371.8 -> 386.0
+- **Mucor_circinelloides_var._griseocyanus_NRRL_1417** Mucoromycota:MAT scaffold_781 [classifier_shift]: called Plus/high -> called Plus/high; margin 322.4 -> 331.4; best score 371.8 -> 386.0
+- **Mucor_circinelloides_var._griseocyanus_NRRL_1418** Mucoromycota:MAT scaffold_391 [classifier_shift]: called Minus/high -> called Minus/high; margin 98.5 -> 115.6; best score 138.6 -> 156.2
+- **Mucor_dispersus_NRRL_6039** Mucoromycota:MAT scaffold_22 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 91.0 -> 79.2; best score 163.4 -> 152.9
+- **Mucor_dispersus_NRRL_6046** Mucoromycota:MAT scaffold_11 [core_model_changed]: called Plus/high -> called Plus/high; margin 229.9 -> 228.8; best score 299.1 -> 301.1; models sexM:240bp/32.5%->219bp/35.62%
+- **Mucor_foenicola_NRRL_A-10991** Mucoromycota:MAT scaffold_7163 [core_model_changed,classifier_shift]: called Plus/medium -> called Plus/medium; margin 339.0 -> 346.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_fragilis_NRRL_2569** Mucoromycota:MAT scaffold_8 [classifier_shift]: called Plus/high -> called Plus/high; margin 321.1 -> 327.4; best score 367.8 -> 379.5
+- **Mucor_fragilis_NRRL_2714** Mucoromycota:MAT scaffold_514 [classifier_shift]: called Minus/high -> called Minus/high; margin 100.8 -> 91.4; best score 141.1 -> 138.1
+- **Mucor_fragilis_NRRL_A-16026** Mucoromycota:MAT scaffold_10 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 272.9 -> 281.2; best score 350.8 -> 361.0; models sexM:207bp/37.68%->204bp/38.24%
+- **Mucor_genevensis_NRRL_1410** Mucoromycota:MAT scaffold_631 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 289.3 -> 296.4; best score 340.8 -> 351.6; models sexM:264bp/28.41%->204bp/30.88%
+- **Mucor_genevensis_NRRL_1411** Mucoromycota:MAT scaffold_414 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 288.5 -> 298.6; best score 340.0 -> 352.2; models sexM:264bp/28.41%->204bp/30.88%
+- **Mucor_genevensis_NRRL_1756** Mucoromycota:MAT scaffold_74 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 290.6 -> 297.8; best score 342.2 -> 353.2; models sexM:264bp/28.41%->204bp/30.88%
+- **Mucor_genevensis_NRRL_3101** Mucoromycota:MAT scaffold_1079 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 289.8 -> 296.5; best score 340.0 -> 349.9; models sexM:207bp/33.33%->204bp/30.88%
+- **Mucor_genevensis_NRRL_A-17770** Mucoromycota:MAT scaffold_227 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 289.4 -> 296.5; best score 339.8 -> 349.6; models sexM:207bp/30.43%->204bp/30.88%
+- **Mucor_heterosporus_NRRL_3154** Mucoromycota:MAT scaffold_26 [classifier_shift]: called Plus/high -> called Plus/high; margin 295.3 -> 301.7; best score 363.6 -> 372.0
+- **Mucor_hiemalis_NRRL_1419** Mucoromycota:MAT scaffold_531 [classifier_shift]: called Minus/high -> called Minus/high; margin 99.1 -> 111.0; best score 142.1 -> 153.3
+- **Mucor_hiemalis_NRRL_2349** Mucoromycota:MAT scaffold_202 [core_model_changed]: called Plus/high -> called Plus/high; margin 249.6 -> 250.5; best score 321.9 -> 320.8; models sexM:315bp/32.38%->276bp/28.26%
+- **Mucor_hiemalis_NRRL_2461** Mucoromycota:MAT scaffold_259 [idiomorph_changed,classifier_shift]: called undetermined/high -> called Minus/high; margin 22.5 -> 30.2; best score 86.4 -> 92.2
+- **Mucor_hiemalis_NRRL_2462** Mucoromycota:MAT scaffold_267 [core_model_changed]: called Plus/high -> called Plus/high; margin 258.5 -> 254.5; best score 327.4 -> 325.0; models sexM:219bp/37.5%->261bp/29.89%
+- **Mucor_hiemalis_f._hiemalis_NRRL_1743** Mucoromycota:MAT scaffold_48 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 224.0 -> 231.3; best score 296.6 -> 306.7; models sexM:246bp/31.71%->261bp/34.48%
+- **Mucor_hiemalis_f._hiemalis_NRRL_3624** Mucoromycota:MAT scaffold_291 [idiomorph_changed]: called undetermined/high -> called Minus/high; margin 23.1 -> 28.0; best score 83.7 -> 86.6
+- **Mucor_hiemalis_f._luteus_NRRL_3633** Mucoromycota:MAT scaffold_118 [classifier_shift]: called Plus/high -> called Plus/high; margin 223.8 -> 218.7; best score 295.4 -> 290.8
+- **Mucor_hiemalis_f._silvaticus_NRRL_3643** Mucoromycota:MAT scaffold_95 [classifier_shift]: called Plus/high -> called Plus/high; margin 265.4 -> 271.4; best score 336.7 -> 341.8
+- **Mucor_inaequisporus_NRRL_3626** Mucoromycota:MAT scaffold_326 [classifier_shift]: called Minus/high -> called Minus/high; margin 99.4 -> 105.2; best score 179.3 -> 180.7
+- **Mucor_indicus_NRRL_13082** Mucoromycota:MAT scaffold_1916 [classifier_shift]: called Minus/high -> called Minus/high; margin 107.1 -> 112.5; best score 172.5 -> 176.0
+- **Mucor_indicus_NRRL_13133** Mucoromycota:MAT scaffold_29 [classifier_shift]: called Minus/high -> called Minus/high; margin 105.7 -> 113.1; best score 169.6 -> 176.5
+- **Mucor_intermedius_NRRL_6588T** Mucoromycota:MAT scaffold_7 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 78.3 -> 72.0; best score 215.8 -> 217.3
+- **Mucor_lamprosporus_NRRL_6037** Mucoromycota:MAT scaffold_259 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 87.3 -> 80.7; best score 161.0 -> 155.3
+- **Mucor_lamprosporus_NRRL_6040** Mucoromycota:MAT scaffold_330 [core_model_changed,classifier_shift]: called Plus/medium -> called Plus/medium; margin 261.1 -> 254.0; best score 326.9 -> 322.0; models sexM:243bp/32.1%->249bp/31.33%
+- **Mucor_lamprosporus_NRRL_6048** Mucoromycota:MAT scaffold_261 [core_model_changed,classifier_shift]: called Plus/medium -> called Plus/medium; margin 261.1 -> 254.0; best score 326.9 -> 322.0; models sexM:243bp/32.1%->249bp/31.33%
+- **Mucor_lamprosporus_NRRL_6049** Mucoromycota:MAT scaffold_487 [core_model_changed,classifier_shift]: called Plus/medium -> called Plus/medium; margin 261.1 -> 254.0; best score 326.9 -> 322.0; models sexM:243bp/32.1%->249bp/31.33%
+- **Mucor_luteus_NRRL_2847** Mucoromycota:MAT scaffold_40 [classifier_shift]: called Minus/high -> called Minus/high; margin 37.1 -> 45.4; best score 89.0 -> 97.1
+- **Mucor_luteus_NRRL_3164** Mucoromycota:MAT scaffold_185 [classifier_shift]: called Plus/high -> called Plus/high; margin 223.8 -> 218.7; best score 295.4 -> 290.8
+- **Mucor_luteus_var._indica_NRRL_3245** Mucoromycota:MAT scaffold_623 [classifier_shift]: called Minus/high -> called Minus/high; margin 87.2 -> 93.0; best score 152.1 -> 156.2
+- **Mucor_maequisporus_var._kaki_NRRL_3295** Mucoromycota:MAT scaffold_595 [span_changed]: called Plus/high -> called Plus/high; margin 251.6 -> 252.0; best score 305.7 -> 305.0
+- **Mucor_mousanensis_NRRL_3105** Mucoromycota:MAT scaffold_473 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 288.9 -> 296.9; best score 338.4 -> 347.1; models sexM:240bp/28.75%->219bp/31.51%
+- **Mucor_mucedo_Linnaeus_Fresenius_NRRL_A-13277** Mucoromycota:MAT scaffold_136 [classifier_shift]: called Minus/high -> called Minus/high; margin 161.5 -> 155.3; best score 227.0 -> 218.6
+- **Mucor_petrinsularis_var._ovalisporus_NRRL_2536** Mucoromycota:MAT scaffold_488 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 292.2 -> 301.1; best score 351.0 -> 362.5; models sexM:300bp/29.0%->222bp/41.89%
+- **Mucor_philippovi_NRRL_3036** Mucoromycota:MAT scaffold_37 [span_changed,gene_set_changed,core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 286.3 -> 294.2; best score 336.9 -> 347.4; models sexM:207bp/30.43%->204bp/30.88%; genes algA,sexP,tptA -> algA,rnhA,sexP,tptA
+- **Mucor_pusillus_NRRL_5895** Mucoromycota:MAT scaffold_256 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 305.0 -> 312.1; best score 354.3 -> 364.1; models sexM:207bp/30.43%->204bp/33.82%
+- **Mucor_racemosus_Fresenius_NRRL_1608** Mucoromycota:MAT scaffold_1 [core_model_changed]: called Plus/high -> called Plus/high; margin 311.1 -> 314.5; best score 360.1 -> 369.3; models sexM:207bp/30.43%->228bp/32.89%
+- **Mucor_racemosus_Fresenius_NRRL_A-19185** Mucoromycota:MAT scaffold_268 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 307.4 -> 313.1; best score 357.9 -> 366.7; models sexM:207bp/30.43%->204bp/33.82%
+- **Mucor_racemosus_Fresenius_NRRL_A-19189** Mucoromycota:MAT scaffold_76 [core_model_changed]: called Plus/high -> called Plus/high; margin 311.1 -> 314.5; best score 360.1 -> 369.3; models sexM:207bp/30.43%->228bp/32.89%
+- **Mucor_racemosus_f._sphaerosporus_NRRL_3645** Mucoromycota:MAT scaffold_2859 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 306.1 -> 312.8; best score 355.2 -> 365.0; models sexM:207bp/30.43%->204bp/33.82%
+- **Mucor_racemosus_var._racemosus_NRRL_3641** Mucoromycota:MAT scaffold_128 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 308.1 -> 314.0; best score 358.8 -> 368.1; models sexM:207bp/30.43%->228bp/32.89%
+- **Mucor_ramannianus_NRRL_A-21216** Mucoromycota:MAT scaffold_151 [span_changed,gene_set_changed]: called Minus/high -> called Minus/high; margin 33.2 -> 31.1; best score 51.9 -> 50.0; genes algA,glrA,sexM,tptA -> algA,glrA,rnhA,sexM,tptA
+- **Mucor_ramosissimus_NRRL_3042** Mucoromycota:MAT scaffold_429 [classifier_shift]: called Minus/high -> called Minus/high; margin 115.4 -> 123.2; best score 157.8 -> 165.5
+- **Mucor_recurvus_NRRL_2358** Mucoromycota:MAT scaffold_10 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 255.2 -> 250.1; best score 321.1 -> 318.0
+- **Mucor_rouxianus_NRRL_1429** Mucoromycota:MAT scaffold_218 [core_model_changed]: called Plus/high -> called Plus/high; margin 338.2 -> 341.7; best score 384.1 -> 391.8; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_saturninus_NRRL_2631** Mucoromycota:MAT scaffold_244 [classifier_shift]: called Plus/high -> called Plus/high; margin 305.4 -> 312.6; best score 366.1 -> 374.7
+- **Mucor_silvaticus_NRRL_1431** Mucoromycota:MAT scaffold_60 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 288.9 -> 296.9; best score 338.4 -> 347.1; models sexM:240bp/28.75%->219bp/31.51%
+- **Mucor_sp._NRRL_1439** Mucoromycota:MAT scaffold_365 [core_model_changed]: called Plus/high -> called Plus/high; margin 339.4 -> 342.9; best score 385.3 -> 393.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_sp._NRRL_1440** Mucoromycota:MAT scaffold_91 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 339.0 -> 346.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_sp._NRRL_1446** Mucoromycota:MAT scaffold_636 [classifier_shift]: called Plus/high -> called Plus/high; margin 321.1 -> 327.4; best score 367.8 -> 379.5
+- **Mucor_sp._NRRL_1449** Mucoromycota:MAT scaffold_623 [classifier_shift]: called Plus/high -> called Plus/high; margin 321.1 -> 327.4; best score 367.8 -> 379.5
+- **Mucor_sp._NRRL_1451** Mucoromycota:MAT scaffold_557 [classifier_shift]: called Plus/high -> called Plus/high; margin 321.4 -> 328.2; best score 368.3 -> 380.1
+- **Mucor_sp._NRRL_1454** Mucoromycota:MAT scaffold_6 [classifier_shift]: called Minus/high -> called Minus/high; margin 63.7 -> 56.6; best score 94.1 -> 87.8
+- **Mucor_sp._NRRL_1644** Mucoromycota:MAT scaffold_128 [classifier_shift]: called Minus/high -> called Minus/high; margin 73.3 -> 81.8; best score 156.2 -> 161.7
+- **Mucor_sp._NRRL_2728** Mucoromycota:MAT scaffold_185 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 227.7 -> 233.2; best score 305.7 -> 313.4; models sexM:237bp/30.38%->246bp/32.93%
+- **Mucor_sp._NRRL_A-14906** Mucoromycota:MAT scaffold_525 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 339.0 -> 346.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_sp._NRRL_A-17797** Mucoromycota:MAT scaffold_194 [core_model_changed]: called Plus/high -> called Plus/high; margin 339.4 -> 342.9; best score 385.3 -> 393.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_sp._NRRL_A-21230** Mucoromycota:MAT scaffold_522 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 339.0 -> 346.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_sp._NRRL_A-21232** Mucoromycota:MAT scaffold_505 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 339.0 -> 346.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_sp._NRRL_A-21236** Mucoromycota:MAT scaffold_485 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 339.0 -> 347.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->204bp/30.88%
+- **Mucor_sp._NRRL_A-25970** Mucoromycota:MAT scaffold_496 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 339.0 -> 346.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Mucor_sp._NRRL_A-26212** Mucoromycota:MAT scaffold_24 [classifier_shift]: called Minus/high -> called Minus/high; margin 105.7 -> 113.1; best score 169.6 -> 176.5
+- **Mycotypha_africana_NRRL_2978** Mucoromycota:MAT scaffold_267 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 239.0 -> 227.1; best score 294.7 -> 284.2; models sexM:237bp/30.77%->216bp/31.94%
+- **Mycotypha_microspora_Fenner_NRRL_684** Mucoromycota:MAT scaffold_16 [span_changed]: called Minus/high -> called Minus/high; margin 44.6 -> 45.1; best score 98.2 -> 99.1
+- **Mycotypha_microspora_IMI_282443** Mucoromycota:MAT scaffold_49 [span_changed]: called Minus/high -> called Minus/high; margin 44.6 -> 45.1; best score 98.2 -> 99.1
+- **Mycotypha_microspora_NRRL_1572** Mucoromycota:MAT scaffold_14 [span_changed]: called Minus/high -> called Minus/high; margin 44.6 -> 45.1; best score 98.2 -> 99.1
+- **Parasitella_simplex_NRRL_1460** Mucoromycota:MAT scaffold_6 [classifier_shift]: called Minus/high -> called Minus/high; margin 131.6 -> 139.4; best score 175.8 -> 186.9
+- **Phycomyces_blakesleeanus_Burgeff_NRRL_1465** Mucoromycota:MAT scaffold_236 [classifier_shift]: called Plus/high -> called Plus/high; margin 240.7 -> 230.7; best score 311.6 -> 305.4
+- **Phycomyces_blakesleeanus_Burgeff_var._piloboloides_NRRL_2566** Mucoromycota:MAT scaffold_396 [classifier_shift]: called Plus/high -> called Plus/high; margin 240.7 -> 230.7; best score 311.6 -> 305.4
+- **Phycomyces_blakesleeanus_NRRL_1464** Mucoromycota:MAT scaffold_267 [classifier_shift]: called Minus/high -> called Minus/high; margin 175.0 -> 161.9; best score 241.4 -> 236.3
+- **Phycomyces_blakesleeanus_NRRL_1554** Mucoromycota:MAT scaffold_145 [classifier_shift]: called Plus/high -> called Plus/high; margin 240.7 -> 230.7; best score 311.6 -> 305.4
+- **Phycomyces_blakesleeanus_NRRL_1555** Mucoromycota:MAT scaffold_2 [core_model_changed]: called Minus/medium -> called Minus/medium; margin 35.4 -> 39.8; best score 108.2 -> 110.1; models sexM:246bp/42.68%->246bp/42.68%
+- **Phycomyces_nitens_NRRL_2444** Mucoromycota:MAT scaffold_273 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 238.4 -> 226.3; best score 305.5 -> 297.2; models sexM:219bp/36.99%->237bp/34.18%
+- **Phycomyces_nitens_NRRL_2445** Mucoromycota:MAT scaffold_412 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 238.4 -> 226.3; best score 305.5 -> 297.2; models sexM:219bp/36.99%->237bp/34.18%
+- **Phycomyces_theobromatus_NRRL_1467** Mucoromycota:MAT scaffold_249 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 241.1 -> 227.2; best score 308.3 -> 297.3; models sexM:219bp/36.99%->237bp/34.18%
+- **Pilaira_anomala_NRRL_2526** Mucoromycota:MAT scaffold_24 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 299.9 -> 308.2; best score 362.4 -> 371.0; models sexM:231bp/32.47%->219bp/34.25%
+- **Pilaira_anomala_NRRL_2527** Mucoromycota:MAT scaffold_12 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 154.3 -> 159.8; best score 189.8 -> 196.3
+- **Pilaira_anomala_RSA_1997_Plus** Mucoromycota:MAT scaffold_84 [span_changed]: called Minus/high -> called Minus/high; margin 35.5 -> 34.3; best score 91.2 -> 89.6
+- **Pilaira_caucasica_CBS_523.68** Mucoromycota:MAT scaffold_209 [span_changed,core_model_changed,classifier_shift]: called Plus/medium -> called Plus/medium; margin 295.2 -> 303.5; best score 356.8 -> 365.5; models sexM:255bp/30.59%->219bp/34.25%
+- **Pilaira_moreaui_CBS_181.26** Mucoromycota:MAT scaffold_806 [span_changed]: called Minus/high -> called Minus/high; margin 110.1 -> 110.6; best score 188.4 -> 185.3
+- **Pirella_circinans_NRRL_2627** Mucoromycota:MAT scaffold_380 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 294.5 -> 308.8; best score 361.3 -> 375.4
+- **Pirella_circinans_NRRL_2701** Mucoromycota:MAT scaffold_323 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 294.5 -> 308.8; best score 361.3 -> 375.4
+- **Pirella_circinans_RSA_622-** Mucoromycota:MAT scaffold_342 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 294.5 -> 308.8; best score 361.3 -> 375.4
+- **Protomycocladus_faisalabadensis_NRRL_22826** Mucoromycota:MAT scaffold_11 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 78.3 -> 72.0; best score 215.8 -> 217.3
+- **Radiomyces_spectabilis_NRRL_2753** Mucoromycota:MAT scaffold_63 [core_model_changed,classifier_shift]: called Plus/medium -> called Plus/medium; margin 172.9 -> 166.8; best score 307.7 -> 313.6; models sexM:249bp/55.42%->552bp/41.99%
+- **Rhizomucor_pusillus_NRRL_2543** Mucoromycota:MAT scaffold_205 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 241.1 -> 227.2; best score 308.3 -> 297.3; models sexM:219bp/36.99%->237bp/34.18%
+- **Rhizopus_acetoinus_NRRL_549** Mucoromycota:MAT scaffold_516 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.1 -> 312.9; best score 353.3 -> 364.5
+- **Rhizopus_acetoinus_NRRL_5833** Mucoromycota:MAT scaffold_406 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.1 -> 312.9; best score 353.3 -> 364.5
+- **Rhizopus_arrhizus_CBS_258.28** Mucoromycota:MAT scaffold_556 [classifier_shift]: called Minus/high -> called Minus/high; margin 168.3 -> 163.1; best score 237.9 -> 232.2
+- **Rhizopus_arrhizus_CBS_330.53** Mucoromycota:MAT scaffold_607 [classifier_shift]: called Minus/high -> called Minus/high; margin 170.0 -> 163.6; best score 238.6 -> 231.6
+- **Rhizopus_arrhizus_CBS_387.34** Mucoromycota:MAT scaffold_945 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 305.3 -> 315.4; best score 359.9 -> 370.4; models sexM:270bp/26.67%->288bp/27.08%
+- **Rhizopus_arrhizus_Fischer_NRRL_1527** Mucoromycota:MAT scaffold_50 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 305.3 -> 315.4; best score 359.9 -> 370.4; models sexM:270bp/26.67%->288bp/27.08%
+- **Rhizopus_arrhizus_IMI16641** Mucoromycota:MAT scaffold_371 [classifier_shift]: called Minus/high -> called Minus/high; margin 168.5 -> 160.5; best score 236.5 -> 228.1
+- **Rhizopus_arrhizus_IMI195599** Mucoromycota:MAT scaffold_603 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_arrhizus_IMI199624** Mucoromycota:MAT scaffold_604 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_arrhizus_IMI53173** Mucoromycota:MAT scaffold_810 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.3 -> 317.9; best score 358.0 -> 368.9
+- **Rhizopus_arrhizus_NBRC_4735** Mucoromycota:MAT scaffold_620 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_arrhizus_NBRC_4770** Mucoromycota:MAT scaffold_386 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_arrhizus_NBRC_5318** Mucoromycota:MAT scaffold_613 [classifier_shift]: called Minus/high -> called Minus/high; margin 170.0 -> 163.6; best score 238.6 -> 231.6
+- **Rhizopus_arrhizus_NRRL_13014** Mucoromycota:MAT scaffold_357 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_arrhizus_NRRL_1470** Mucoromycota:MAT scaffold_414 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 68.5 -> 99.6; best score 132.2 -> 162.8; models sexM:360bp/57.26%->558bp/61.62%
+- **Rhizopus_arrhizus_NRRL_2004** Mucoromycota:MAT scaffold_248 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_arrhizus_NRRL_2286** Mucoromycota:MAT scaffold_517 [classifier_shift]: called Plus/high -> called Plus/high; margin 305.9 -> 318.2; best score 359.5 -> 370.1
+- **Rhizopus_arrhizus_NRRL_2582** Mucoromycota:MAT scaffold_523 [classifier_shift]: called Minus/high -> called Minus/high; margin 168.7 -> 159.7; best score 237.2 -> 227.8
+- **Rhizopus_arrhizus_NRRL_5896** Mucoromycota:MAT scaffold_358 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_arrhizus_NRRL_5899** Mucoromycota:MAT scaffold_473 [classifier_shift]: called Minus/high -> called Minus/high; margin 168.7 -> 159.7; best score 237.2 -> 227.8
+- **Rhizopus_arrhizus_NRRL_66519** Mucoromycota:MAT scaffold_308 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_arrhizus_NRRL_66564** Mucoromycota:MAT scaffold_187 [classifier_shift]: called Minus/high -> called Minus/high; margin 142.5 -> 129.7; best score 214.1 -> 198.9
+- **Rhizopus_arrhizus_NRRL_66565** Mucoromycota:MAT scaffold_404 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_arrhizus_NRRL_66568** Mucoromycota:MAT scaffold_491 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_arrhizus_NRRL_66592** Mucoromycota:MAT scaffold_461 [classifier_shift]: called Plus/high -> called Plus/high; margin 305.9 -> 318.2; best score 359.5 -> 370.1
+- **Rhizopus_arrhizus_NRRL_66595** Mucoromycota:MAT scaffold_534 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 305.3 -> 315.4; best score 359.9 -> 370.4; models sexM:270bp/26.67%->288bp/27.08%
+- **Rhizopus_arrhizus_NRRL_66596** Mucoromycota:MAT scaffold_370 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_arrhizus_NRRL_A-10276** Mucoromycota:MAT scaffold_661 [classifier_shift]: called Minus/high -> called Minus/high; margin 168.3 -> 163.1; best score 237.9 -> 232.2
+- **Rhizopus_arrhizus_NRRL_A-10365** Mucoromycota:MAT scaffold_390 [classifier_shift]: called Plus/high -> called Plus/high; margin 299.4 -> 312.2; best score 352.5 -> 363.7
+- **Rhizopus_arrhizus_NRRL_A-10369** Mucoromycota:MAT scaffold_439 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_arrhizus_NRRL_A-11376** Mucoromycota:MAT scaffold_860 [classifier_shift]: called Plus/high -> called Plus/high; margin 287.8 -> 300.5; best score 343.8 -> 354.5
+- **Rhizopus_arrhizus_NRRL_A-11376** Mucoromycota:MAT scaffold_499 [classifier_shift]: called Plus/high -> called Plus/high; margin 305.2 -> 315.6; best score 356.9 -> 366.6
+- **Rhizopus_arrhizus_NRRL_A-12134** Mucoromycota:MAT scaffold_542 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_arrhizus_NRRL_A-12745** Mucoromycota:MAT scaffold_472 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_arrhizus_NRRL_A-12998** Mucoromycota:MAT scaffold_296 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_arrhizus_NRRL_A-13276** Mucoromycota:MAT scaffold_578 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_arrhizus_NRRL_A-13606** Mucoromycota:MAT scaffold_373 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_arrhizus_NRRL_A-13642** Mucoromycota:MAT scaffold_548 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_arrhizus_NRRL_A-13676** Mucoromycota:MAT scaffold_472 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.1 -> 312.9; best score 353.3 -> 364.5
+- **Rhizopus_arrhizus_NRRL_A-13678** Mucoromycota:MAT scaffold_589 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_arrhizus_NRRL_A-13738** Mucoromycota:MAT scaffold_248 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_arrhizus_NRRL_A-13850** Mucoromycota:MAT scaffold_180 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_arrhizus_NRRL_A-13860** Mucoromycota:MAT scaffold_488 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_arrhizus_NRRL_A-15308** Mucoromycota:MAT scaffold_667 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_arrhizus_NRRL_A-16824** Mucoromycota:MAT scaffold_333 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_arrhizus_NRRL_A-16826** Mucoromycota:MAT scaffold_329 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_arrhizus_NRRL_A-16827** Mucoromycota:MAT scaffold_395 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_arrhizus_NRRL_A-17011** Mucoromycota:MAT scaffold_107 [classifier_shift]: called Plus/high -> called Plus/high; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_arrhizus_NRRL_A-17371** Mucoromycota:MAT scaffold_398 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_arrhizus_NRRL_A-20824** Mucoromycota:MAT scaffold_545 [classifier_shift]: called Plus/high -> called Plus/high; margin 305.9 -> 318.2; best score 359.5 -> 370.1
+- **Rhizopus_arrhizus_NRRL_A-21477** Mucoromycota:MAT scaffold_491 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_arrhizus_NRRL_A-21578** Mucoromycota:MAT scaffold_542 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 305.3 -> 315.4; best score 359.9 -> 370.4; models sexM:270bp/26.67%->288bp/27.08%
+- **Rhizopus_arrhizus_NRRL_A-21704** Mucoromycota:MAT scaffold_441 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.2 -> 316.8; best score 359.0 -> 368.7
+- **Rhizopus_arrhizus_NRRL_A-23526** Mucoromycota:MAT scaffold_584 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 305.2 -> 314.2; best score 359.5 -> 369.1; models sexM:270bp/26.67%->288bp/27.08%
+- **Rhizopus_arrhizus_NRRL_A-23527** Mucoromycota:MAT scaffold_290 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 305.2 -> 314.2; best score 359.5 -> 369.1; models sexM:270bp/26.67%->288bp/27.08%
+- **Rhizopus_arrhizus_NRRL_A-25359** Mucoromycota:MAT scaffold_476 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.0 -> 159.9; best score 234.9 -> 226.8
+- **Rhizopus_arrhizus_NRRL_A-26112** Mucoromycota:MAT scaffold_593 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_arrhizus_NRRL_A-26116** Mucoromycota:MAT scaffold_457 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.1 -> 312.9; best score 353.3 -> 364.5
+- **Rhizopus_arrhizus_NRRL_A-26501** Mucoromycota:MAT scaffold_537 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 304.5 -> 315.0; best score 359.4 -> 370.0; models sexM:270bp/26.67%->288bp/27.08%
+- **Rhizopus_arrhizus_XY00429** Mucoromycota:MAT scaffold_593 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_arrhizus_XY00507** Mucoromycota:MAT scaffold_534 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 305.3 -> 315.4; best score 359.9 -> 370.4; models sexM:270bp/26.67%->288bp/27.08%
+- **Rhizopus_arrhizus_XY01745** Mucoromycota:MAT scaffold_298 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_arrhizus_XY01865** Mucoromycota:MAT scaffold_386 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.1 -> 312.9; best score 353.3 -> 364.5
+- **Rhizopus_arrhizus_XY01909** Mucoromycota:MAT scaffold_148 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_arrhizus_XY01921** Mucoromycota:MAT scaffold_598 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_arrhizus_XY02848** Mucoromycota:MAT scaffold_305 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.1 -> 312.9; best score 353.3 -> 364.5
+- **Rhizopus_arrhizus_var._arrhizus_NRRL_66674** Mucoromycota:MAT scaffold_414 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_arrhizus_var._delemar_NRRL_5129** Mucoromycota:MAT scaffold_573 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_arrhizus_var._delemar_NRRL_66676** Mucoromycota:MAT scaffold_571 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.0 -> 159.9; best score 234.9 -> 226.8
+- **Rhizopus_azygosporus_NRRL_13165** Mucoromycota:MAT scaffold_1193 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 153.8 -> 138.0; best score 222.3 -> 206.2
+- **Rhizopus_azygosporus_NRRL_13165** Mucoromycota:MAT scaffold_1300 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_chinensis_NRRL_2906** Mucoromycota:MAT scaffold_74 [classifier_shift]: called Minus/high -> called Minus/high; margin 143.5 -> 128.5; best score 216.4 -> 199.8
+- **Rhizopus_chinensis_NRRL_2906** Mucoromycota:MAT scaffold_299 [classifier_shift]: called Plus/high -> called Plus/high; margin 231.8 -> 243.1; best score 292.1 -> 304.9
+- **Rhizopus_chinensis_NRRL_2909** Mucoromycota:MAT scaffold_218 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_chinensis_NRRL_5190** Mucoromycota:MAT scaffold_35 [classifier_shift]: called Plus/high -> called Plus/high; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_chinensis_Saito_NRRL_2905** Mucoromycota:MAT scaffold_423 [classifier_shift]: called Minus/high -> called Minus/high; margin 143.5 -> 128.5; best score 216.4 -> 199.8
+- **Rhizopus_chinensis_Saito_NRRL_3671** Mucoromycota:MAT scaffold_3180 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 143.5 -> 128.5; best score 216.4 -> 199.8
+- **Rhizopus_chinensis_Saito_NRRL_3671** Mucoromycota:MAT scaffold_862 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 231.8 -> 243.1; best score 292.1 -> 304.9
+- **Rhizopus_chinensis_var._liquefaciens_NRRL_2870** Mucoromycota:MAT scaffold_50 [classifier_shift]: called Minus/high -> called Minus/high; margin 143.5 -> 128.5; best score 216.4 -> 199.8
+- **Rhizopus_chungkuoensis_NRRL_2873** Mucoromycota:MAT scaffold_375 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_circinans_NRRL_1475** Mucoromycota:MAT scaffold_309 [classifier_shift]: called Plus/high -> called Plus/high; margin 260.7 -> 274.2; best score 313.5 -> 326.5
+- **Rhizopus_circinans_NRRL_2913** Mucoromycota:MAT scaffold_351 [classifier_shift]: called Minus/high -> called Minus/high; margin 121.3 -> 114.3; best score 194.6 -> 189.9
+- **Rhizopus_circinans_NRRL_2917** Mucoromycota:MAT scaffold_353 [classifier_shift]: called Plus/high -> called Plus/high; margin 260.7 -> 274.2; best score 313.5 -> 326.5
+- **Rhizopus_circinans_van_Tieghem_NRRL_13978** Mucoromycota:MAT scaffold_309 [classifier_shift]: called Plus/high -> called Plus/high; margin 260.7 -> 274.2; best score 313.5 -> 326.5
+- **Rhizopus_cohnii_NRRL_1517** Mucoromycota:MAT scaffold_528 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_delemar_NRRL_1472** Mucoromycota:MAT scaffold_586 [classifier_shift]: called Plus/high -> called Plus/high; margin 321.4 -> 328.2; best score 368.3 -> 380.1
+- **Rhizopus_formosaensis_NRRL_2910** Mucoromycota:MAT scaffold_277 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_formosaensis_NRRL_2911** Mucoromycota:MAT scaffold_194 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_formosaensis_NRRL_A-10180** Mucoromycota:MAT scaffold_431 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_hangchao_NRRL_2874** Mucoromycota:MAT scaffold_465 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_hangchao_NRRL_5545** Mucoromycota:MAT scaffold_429 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_japonicus_NRRL_1898** Mucoromycota:MAT scaffold_523 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_japonicus_NRRL_A-13076** Mucoromycota:MAT scaffold_176 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_liquefaciens_NRRL_1512** Mucoromycota:MAT scaffold_770 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_liquefaciens_NRRL_1514** Mucoromycota:MAT scaffold_270 [classifier_shift]: called Minus/high -> called Minus/high; margin 151.7 -> 138.1; best score 220.3 -> 206.0
+- **Rhizopus_liquefaciens_NRRL_1703** Mucoromycota:MAT scaffold_383 [classifier_shift]: called Plus/high -> called Plus/high; margin 287.8 -> 300.5; best score 343.8 -> 354.5
+- **Rhizopus_lyococcos_NRRL_1523** Mucoromycota:MAT scaffold_553 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 305.3 -> 315.4; best score 359.9 -> 370.4; models sexM:270bp/26.67%->288bp/27.08%
+- **Rhizopus_microsporus_NRRL_13129** Mucoromycota:MAT scaffold_56 [classifier_shift]: called Minus/high -> called Minus/high; margin 142.5 -> 129.7; best score 214.1 -> 198.9
+- **Rhizopus_microsporus_NRRL_5546** Mucoromycota:MAT scaffold_190 [classifier_shift]: called Minus/high -> called Minus/high; margin 151.7 -> 138.1; best score 220.3 -> 206.0
+- **Rhizopus_microsporus_NRRL_5547** Mucoromycota:MAT scaffold_229 [classifier_shift]: called Plus/high -> called Plus/high; margin 260.7 -> 276.9; best score 325.0 -> 338.1
+- **Rhizopus_microsporus_NRRL_5548** Mucoromycota:MAT scaffold_261 [classifier_shift]: called Minus/high -> called Minus/high; margin 151.7 -> 138.1; best score 220.3 -> 206.0
+- **Rhizopus_microsporus_NRRL_5550** Mucoromycota:MAT scaffold_250 [classifier_shift]: called Minus/high -> called Minus/high; margin 151.7 -> 138.1; best score 220.3 -> 206.0
+- **Rhizopus_microsporus_NRRL_5551** Mucoromycota:MAT scaffold_180 [classifier_shift]: called Plus/high -> called Plus/high; margin 265.5 -> 277.1; best score 325.7 -> 338.9
+- **Rhizopus_microsporus_NRRL_5552** Mucoromycota:MAT scaffold_306 [classifier_shift]: called Minus/high -> called Minus/high; margin 151.7 -> 138.1; best score 220.3 -> 206.0
+- **Rhizopus_microsporus_NRRL_5553** Mucoromycota:MAT scaffold_356 [classifier_shift]: called Plus/high -> called Plus/high; margin 253.9 -> 268.0; best score 321.5 -> 335.5
+- **Rhizopus_microsporus_NRRL_5554** Mucoromycota:MAT scaffold_416 [classifier_shift]: called Plus/high -> called Plus/high; margin 287.8 -> 300.5; best score 343.8 -> 354.5
+- **Rhizopus_microsporus_NRRL_5558** Mucoromycota:MAT scaffold_271 [classifier_shift]: called Plus/high -> called Plus/high; margin 260.3 -> 276.2; best score 324.6 -> 337.6
+- **Rhizopus_microsporus_NRRL_A-17693** Mucoromycota:MAT scaffold_78 [call_gained,span_changed,classifier_shift]: withheld:mat_gene_gate Plus/ -> called Plus/medium; margin 53.4 -> 133.7; best score 85.8 -> 164.3; models no_gene_evidence_in_baseline
+- **Rhizopus_nigricans_Ehrenberg_NRRL_1477** Mucoromycota:MAT scaffold_914 [classifier_shift]: called Plus/high -> called Plus/high; margin 280.2 -> 292.3; best score 329.0 -> 341.1
+- **Rhizopus_nigricans_NRRL_3370** Mucoromycota:MAT scaffold_445 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_nigricans_NRRL_3372** Mucoromycota:MAT scaffold_839 [classifier_shift]: called Plus/high -> called Plus/high; margin 280.2 -> 292.3; best score 329.0 -> 341.1
+- **Rhizopus_nodosus_NRRL_1473** Mucoromycota:MAT scaffold_455 [classifier_shift]: called Minus/high -> called Minus/high; margin 170.1 -> 163.8; best score 238.7 -> 231.9
+- **Rhizopus_nodosus_NRRL_1474** Mucoromycota:MAT scaffold_439 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_oligosporus_NRRL_6495** Mucoromycota:MAT scaffold_1039 [classifier_shift]: called Minus/high -> called Minus/high; margin 125.5 -> 116.9; best score 197.3 -> 187.5
+- **Rhizopus_oligosporus_Saito_NRRL_5905** Mucoromycota:MAT scaffold_722 [classifier_shift]: called Minus/high -> called Minus/high; margin 125.5 -> 116.9; best score 197.3 -> 187.5
+- **Rhizopus_oligosporus_Saito_NRRL_5905** Mucoromycota:MAT scaffold_192 [classifier_shift]: called Plus/high -> called Plus/high; margin 262.4 -> 277.1; best score 327.9 -> 342.0
+- **Rhizopus_oligosporus_Saito_NRRL_A-26117** Mucoromycota:MAT scaffold_1286 [classifier_shift]: called Minus/high -> called Minus/high; margin 125.5 -> 116.9; best score 197.3 -> 187.5
+- **Rhizopus_oligosporus_Saito_NRRL_A-26117** Mucoromycota:MAT scaffold_752 [classifier_shift]: called Plus/high -> called Plus/high; margin 262.4 -> 277.1; best score 327.9 -> 342.0
+- **Rhizopus_oligosporus_Saito_NRRL_A-26124** Mucoromycota:MAT scaffold_809 [classifier_shift]: called Plus/high -> called Plus/high; margin 262.4 -> 277.1; best score 327.9 -> 342.0
+- **Rhizopus_oryzae_NRRL_13098** Mucoromycota:MAT scaffold_590 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_oryzae_NRRL_1549** Mucoromycota:MAT scaffold_468 [classifier_shift]: called Minus/high -> called Minus/high; margin 168.7 -> 159.7; best score 237.2 -> 227.8
+- **Rhizopus_oryzae_NRRL_1550** Mucoromycota:MAT scaffold_476 [classifier_shift]: called Minus/high -> called Minus/high; margin 168.7 -> 159.7; best score 237.2 -> 227.8
+- **Rhizopus_oryzae_NRRL_2625** Mucoromycota:MAT scaffold_372 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_oryzae_NRRL_2871** Mucoromycota:MAT scaffold_372 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_oryzae_NRRL_3133** Mucoromycota:MAT scaffold_643 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_oryzae_NRRL_3613** Mucoromycota:MAT scaffold_254 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_oryzae_NRRL_46180** Mucoromycota:MAT scaffold_374 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_oryzae_NRRL_6202** Mucoromycota:MAT scaffold_300 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_oryzae_NRRL_62023** Mucoromycota:MAT scaffold_816 [classifier_shift]: called Plus/high -> called Plus/high; margin 287.8 -> 300.5; best score 343.8 -> 354.5
+- **Rhizopus_oryzae_NRRL_62023** Mucoromycota:MAT scaffold_874 [classifier_shift]: called Plus/high -> called Plus/high; margin 305.2 -> 315.6; best score 356.9 -> 366.6
+- **Rhizopus_oryzae_NRRL_6400** Mucoromycota:MAT scaffold_236 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_oryzae_NRRL_66569** Mucoromycota:MAT scaffold_578 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_oryzae_NRRL_66645** Mucoromycota:MAT scaffold_314 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_oryzae_NRRL_A-11564** Mucoromycota:MAT scaffold_428 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_oryzae_NRRL_A-12640** Mucoromycota:MAT scaffold_532 [classifier_shift]: called Plus/high -> called Plus/high; margin 305.6 -> 317.0; best score 359.0 -> 368.9
+- **Rhizopus_oryzae_NRRL_A-12997** Mucoromycota:MAT scaffold_885 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_oryzae_Went_Prinsen_Geerlings_NRRL_3563** Mucoromycota:MAT scaffold_257 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_peka_NRRL_1522** Mucoromycota:MAT scaffold_792 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_pseudochinensis_NRRL_2344** Mucoromycota:MAT scaffold_2644 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 254.3 -> 269.8; best score 321.5 -> 335.4
+- **Rhizopus_rhizopodiformis_Cohn_Zopf_NRRL_6258** Mucoromycota:MAT scaffold_221 [classifier_shift]: called Plus/high -> called Plus/high; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_rhizopodiformis_NRRL_2570** Mucoromycota:MAT scaffold_260 [classifier_shift]: called Plus/high -> called Plus/high; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_rhizopodiformis_NRRL_5189** Mucoromycota:MAT scaffold_161 [classifier_shift]: called Plus/high -> called Plus/high; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_rhizopodiformis_NRRL_5556** Mucoromycota:MAT scaffold_93 [classifier_shift]: called Plus/high -> called Plus/high; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_rhizopodiformis_NRRL_6246** Mucoromycota:MAT scaffold_257 [classifier_shift]: called Plus/high -> called Plus/high; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_rhizopodiformis_NRRL_6259** Mucoromycota:MAT scaffold_225 [classifier_shift]: called Plus/high -> called Plus/high; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_rhizopodiformis_NRRL_6260** Mucoromycota:MAT scaffold_157 [classifier_shift]: called Plus/high -> called Plus/high; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_rhizopodiformis_NRRL_6500** Mucoromycota:MAT scaffold_1367 [classifier_shift]: called Minus/high -> called Minus/high; margin 125.5 -> 116.9; best score 197.3 -> 187.5
+- **Rhizopus_rhizopodiformis_NRRL_6500** Mucoromycota:MAT scaffold_812 [classifier_shift]: called Plus/high -> called Plus/high; margin 265.9 -> 278.3; best score 324.6 -> 338.5
+- **Rhizopus_rhizopodiformis_NRRL_6501** Mucoromycota:MAT scaffold_283 [classifier_shift]: called Plus/high -> called Plus/high; margin 265.9 -> 278.3; best score 324.6 -> 338.5
+- **Rhizopus_rhizopodiformis_NRRL_A-16034** Mucoromycota:MAT scaffold_65 [classifier_shift]: called Plus/high -> called Plus/high; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_sp._NRRL_1524** Mucoromycota:MAT scaffold_587 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_sp._NRRL_1530** Mucoromycota:MAT scaffold_568 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.0 -> 313.3; best score 353.5 -> 364.8
+- **Rhizopus_sp._NRRL_1539** Mucoromycota:MAT scaffold_301 [classifier_shift]: called Minus/high -> called Minus/high; margin 168.7 -> 159.7; best score 237.2 -> 227.8
+- **Rhizopus_sp._NRRL_1543** Mucoromycota:MAT scaffold_569 [classifier_shift]: called Minus/high -> called Minus/high; margin 169.6 -> 160.2; best score 237.8 -> 228.2
+- **Rhizopus_sp._NRRL_1544** Mucoromycota:MAT scaffold_504 [classifier_shift]: called Minus/high -> called Minus/high; margin 168.7 -> 159.7; best score 237.2 -> 227.8
+- **Rhizopus_sp._NRRL_3368** Mucoromycota:MAT scaffold_416 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_sp._NRRL_3373** Mucoromycota:MAT scaffold_502 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_sp._NRRL_5857** Mucoromycota:MAT scaffold_2497 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 125.5 -> 116.9; best score 197.3 -> 187.5
+- **Rhizopus_sp._NRRL_5857** Mucoromycota:MAT scaffold_517 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 262.4 -> 277.1; best score 327.9 -> 342.0
+- **Rhizopus_sp._NRRL_A-10162** Mucoromycota:MAT scaffold_1455 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 231.8 -> 243.1; best score 292.1 -> 304.9
+- **Rhizopus_sp._NRRL_A-10958** Mucoromycota:MAT scaffold_29 [classifier_shift]: called Plus/medium -> called Plus/medium; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_sp._NRRL_A-16766A** Mucoromycota:MAT scaffold_837 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_sp._NRRL_A-17034** Mucoromycota:MAT scaffold_141 [classifier_shift]: called Plus/high -> called Plus/high; margin 263.2 -> 276.3; best score 329.7 -> 342.6
+- **Rhizopus_sp._NRRL_A-17388** Mucoromycota:MAT scaffold_60 [classifier_shift]: called Minus/high -> called Minus/high; margin 143.5 -> 128.5; best score 216.4 -> 199.8
+- **Rhizopus_sp._NRRL_A-17389** Mucoromycota:MAT scaffold_85 [classifier_shift]: called Minus/high -> called Minus/high; margin 125.5 -> 116.9; best score 197.3 -> 187.5
+- **Rhizopus_sp._NRRL_A-17473** Mucoromycota:MAT scaffold_43 [classifier_shift]: called Minus/high -> called Minus/high; margin 125.5 -> 116.9; best score 197.3 -> 187.5
+- **Rhizopus_sp._NRRL_A-17473** Mucoromycota:MAT scaffold_876 [classifier_shift]: called Plus/high -> called Plus/high; margin 262.4 -> 277.1; best score 327.9 -> 342.0
+- **Rhizopus_sp._NRRL_A-17548** Mucoromycota:MAT scaffold_568 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_sp._NRRL_A-18472** Mucoromycota:MAT scaffold_294 [classifier_shift]: called Plus/high -> called Plus/high; margin 306.0 -> 317.4; best score 357.7 -> 368.4
+- **Rhizopus_sp._NRRL_A-18714** Mucoromycota:MAT scaffold_376 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_sp._NRRL_A-21231** Mucoromycota:MAT scaffold_596 [classifier_shift]: called Minus/high -> called Minus/high; margin 174.7 -> 166.2; best score 243.7 -> 235.0
+- **Rhizopus_sp._NRRL_A-23913** Mucoromycota:MAT scaffold_301 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 305.3 -> 315.4; best score 359.9 -> 370.4; models sexM:270bp/26.67%->288bp/27.08%
+- **Rhizopus_stolonifer_NRRL_1479** Mucoromycota:MAT scaffold_249 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_stolonifer_NRRL_1480** Mucoromycota:MAT scaffold_480 [classifier_shift]: called Minus/high -> called Minus/high; margin 166.6 -> 158.5; best score 235.8 -> 227.1
+- **Rhizopus_stolonifer_NRRL_1483** Mucoromycota:MAT scaffold_298 [classifier_shift]: called Minus/high -> called Minus/high; margin 167.6 -> 159.6; best score 235.2 -> 226.7
+- **Rhizopus_stolonifer_NRRL_54667** Mucoromycota:MAT scaffold_883 [classifier_shift]: called Plus/high -> called Plus/high; margin 280.2 -> 292.3; best score 329.0 -> 341.1
+- **Rhizopus_stolonifer_NRRL_66456** Mucoromycota:MAT scaffold_962 [classifier_shift]: called Plus/high -> called Plus/high; margin 280.2 -> 292.3; best score 329.0 -> 341.1
+- **Rhizopus_stolonifer_NRRL_66460** Mucoromycota:MAT scaffold_220 [classifier_shift]: called Plus/high -> called Plus/high; margin 283.4 -> 296.3; best score 330.8 -> 343.2
+- **Rhizopus_thermosus_Yamamoto_NRRL_2862** Mucoromycota:MAT scaffold_273 [classifier_shift]: called Plus/high -> called Plus/high; margin 301.6 -> 315.2; best score 354.2 -> 365.3
+- **Rhizopus_tritici_NRRL_1476** Mucoromycota:MAT scaffold_560 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 305.3 -> 315.4; best score 359.9 -> 370.4; models sexM:270bp/26.67%->288bp/27.08%
+- **Rhizopus_tritici_NRRL_1529** Mucoromycota:MAT scaffold_489 [classifier_shift]: called Minus/high -> called Minus/high; margin 169.6 -> 160.2; best score 237.8 -> 228.2
+- **Syncephalastrum_racemosum_CBS_440.59_Plus** Mucoromycota:MAT scaffold_46 [span_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 189.7 -> 182.8; best score 227.7 -> 219.1
+- **Syncephalastrum_racemosum_CBS_441.59-** Mucoromycota:MAT scaffold_167 [span_changed]: called Minus/high -> called Minus/high; margin 35.5 -> 34.3; best score 91.2 -> 89.6
+- **Syncephalastrum_racemosum_NRRL_1506** Mucoromycota:MAT scaffold_242 [classifier_shift]: called Plus/high -> called Plus/high; margin 240.7 -> 230.7; best score 311.6 -> 305.4
+- **Syncephalastrum_sp._NRRL_1487** Mucoromycota:MAT scaffold_6 [core_model_changed]: called Minus/medium -> called Minus/medium; margin 35.4 -> 39.8; best score 108.2 -> 110.1; models sexM:246bp/42.68%->246bp/42.68%
+- **Syncephalastrum_sp._NRRL_1505** Mucoromycota:MAT scaffold_8 [core_model_changed]: called Minus/medium -> called Minus/medium; margin 35.4 -> 39.8; best score 108.2 -> 110.1; models sexM:246bp/42.68%->246bp/42.68%
+- **Syncephalastrum_sp._NRRL_1507** Mucoromycota:MAT scaffold_33 [idiomorph_changed]: called undetermined/medium -> called Minus/medium; margin 24.5 -> 27.1; best score 107.0 -> 106.5
+- **Syncephalastrum_verruculosum_RSA_2127** Mucoromycota:MAT scaffold_5 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 34.9 -> 40.1; best score 104.4 -> 107.5
+- **Syzygites_sp._MES_3091** Mucoromycota:MAT scaffold_132 [span_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 164.7 -> 154.5; best score 232.5 -> 221.4
+- **Thamnidium_elegans_NRRL_1613** Mucoromycota:MAT scaffold_112 [classifier_shift]: called Plus/high -> called Plus/high; margin 286.0 -> 292.5; best score 356.5 -> 363.3
+- **Thamnidium_elegans_NRRL_2467** Mucoromycota:MAT scaffold_81 [span_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 189.7 -> 182.8; best score 227.7 -> 219.1
+- **Thamnostylum_lucknowense_RSA_1015_Plus-T** Mucoromycota:MAT scaffold_383 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 61.7 -> 100.8; best score 121.2 -> 159.6; models sexM:360bp/56.41%->555bp/77.17%
+- **Thamnostylum_lucknowense_RSA_1093-** Mucoromycota:MAT scaffold_203 [call_gained,span_changed,classifier_shift]: withheld:mat_gene_gate Plus/ -> called Plus/medium; margin 54.2 -> 73.8; best score 86.6 -> 99.7; models no_gene_evidence_in_baseline
+- **Thamnostylum_nigricans_RSA_1406** Mucoromycota:MAT scaffold_270 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 44.7 -> 71.9; best score 115.1 -> 146.5; models sexM:360bp/50.43%->549bp/57.38%
+- **Thamnostylum_piriforme_NRRL_A-21589** Mucoromycota:MAT scaffold_25 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 46.4 -> 84.1; best score 113.2 -> 155.2; models sexM:360bp/52.14%->561bp/57.22%
+- **Thamnostylum_piriforme_RSA_251** Mucoromycota:MAT scaffold_693 [core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 48.8 -> 88.8; best score 116.8 -> 159.7; models sexM:360bp/50.43%->561bp/57.22%
+- **Thamnostylum_repens_RSA_459_Plus** Mucoromycota:MAT scaffold_351 [span_changed,core_model_changed,classifier_shift]: called Minus/medium -> called Minus/medium; margin 47.7 -> 82.9; best score 108.7 -> 151.9; models sexM:360bp/47.86%->567bp/55.56%
+- **Thamnostylum_repens_Tieghem_Upadhyay_NRRL_6240** Mucoromycota:MAT scaffold_561 [core_model_changed,classifier_shift]: called Plus/high -> called Plus/high; margin 339.0 -> 346.6; best score 384.8 -> 396.0; models sexM:207bp/28.99%->216bp/30.56%
+- **Zygorhynchus_exponens_NRRL_1492** Mucoromycota:MAT scaffold_605 [classifier_shift]: called Minus/high -> called Minus/high; margin 42.0 -> 35.8; best score 98.1 -> 92.0
+- **Zygorhynchus_exponens_NRRL_1492** Mucoromycota:MAT scaffold_614 [classifier_shift]: called Plus/high -> called Plus/high; margin 284.0 -> 292.5; best score 338.4 -> 346.8
+- **Zygorhynchus_exponens_var._smithii_NRRL_2572T** Mucoromycota:MAT scaffold_401 [classifier_shift]: called Minus/high -> called Minus/high; margin 41.8 -> 34.4; best score 98.6 -> 91.2
+- **Zygorhynchus_exponens_var._smithii_NRRL_2572T** Mucoromycota:MAT scaffold_567 [classifier_shift]: called Plus/high -> called Plus/high; margin 285.1 -> 291.8; best score 339.6 -> 348.1
+- **Zygorhynchus_macrocarpus_NRRL_2663** Mucoromycota:MAT scaffold_123 [classifier_shift]: called Minus/medium -> called Minus/medium; margin 85.9 -> 78.4; best score 157.6 -> 152.6
+- **Zygorhynchus_sp._NRRL_3102** Mucoromycota:MAT scaffold_58 [core_model_changed]: called Plus/high -> called Plus/high; margin 295.5 -> 295.6; best score 363.4 -> 366.0; models sexM:207bp/33.33%->267bp/29.21%

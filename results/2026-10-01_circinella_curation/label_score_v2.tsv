@@ -1,0 +1,58 @@
+strain	truth	provisional	base	base_verdict	cand	cand_verdict
+Fennellomyces_mexicanus_sp._nov._RSA_1415_Plus	Plus	no	none	uncalled	none	uncalled
+Fennellomyces_verticellatus_RSA_2442_Plus	Plus	no	none(withheld:mat_gene_gate)	uncalled	none(withheld:mat_gene_gate)	uncalled
+Fennellomyces_mexicanus_sp._nov._RSA_1418-	Minus	no	Minus:medium	correct	Minus:medium	correct
+Circinella_angarensis_RSA_618-	Minus	no	Minus:medium	correct	Minus:medium	correct
+Circinella_angarensis_RSA_198_Plus	Minus	no	Minus:medium	correct	Minus:medium	correct
+Circinella_umbellata_RSA_505_Plus	Minus	no	Minus:medium	correct	Minus:medium	correct
+Thamnostylum_lucknowense_RSA_1015_Plus-T	Minus	no	Minus:medium	correct	Minus:medium	correct
+Thamnostylum_repens_RSA_459_Plus	Minus	no	Minus:medium	correct	Minus:medium	correct
+Thamnostylum_lucknowense_RSA_1093-	Plus	yes	none(withheld:mat_gene_gate)	uncalled	Plus:medium	correct
+Thamnostylum_nigricans_RSA_1405-	Plus	yes	none(withheld:mat_gene_gate)	uncalled	none(withheld:mat_gene_gate)	uncalled
+#scored (non-provisional)	base={'uncalled': 2, 'correct': 6}	cand={'uncalled': 2, 'correct': 6}
+#all Circinella-group LCG genomes (not scored)
+genome	strain_table_type	base	cand
+Circinella_angarensis_NRRL_1594	sexP-type	none(withheld:mat_gene_gate)	Plus:medium
+Circinella_angarensis_NRRL_2410	sexP-type	none(withheld:mat_gene_gate)	Plus:medium
+Circinella_angarensis_NRRL_2628	sexM-type	Minus:medium	Minus:medium
+Circinella_angarensis_RSA_198_Plus	sexM-type	Minus:medium	Minus:medium
+Circinella_angarensis_RSA_618-	sexM-type	Minus:medium	Minus:medium
+Circinella_chinensis_CBS_150.53	sexM-type	Minus:medium	Minus:medium
+Circinella_chinensis_NRRL_2415	sexM-type	Minus:medium	Minus:medium
+Circinella_minor_CBS_143.56	sexM-type	Minus:medium	Plus:medium;Minus:medium
+Circinella_minor_NRRL_1365	sexP-type	none(withheld:mat_gene_gate)	Plus:medium
+Circinella_mucoroides_NRRL_1354	sexM-type	Minus:medium	Minus:medium
+Circinella_muscae_CBS_107.13T	sexM-type	Minus:medium	Minus:medium
+Circinella_muscae_NRRL_1352	sexM-type	Minus:medium	Minus:medium
+Circinella_muscae_NRRL_1355	sexP-type	none	Plus:medium;Plus:medium
+Circinella_muscae_NRRL_1356	sexM-type	Minus:medium	Minus:medium
+Circinella_muscae_NRRL_1357	sexP-type	none(withheld:mat_gene_gate)	Plus:medium
+Circinella_muscae_NRRL_1360	standard sexM 0.9 kb from rnhA (annot)	Minus:high	Minus:high
+Circinella_muscae_NRRL_1362	sexP-type on a scaffold without rnhA	none	none
+Circinella_muscae_NRRL_1363	sexP-type	none	Plus:medium;Plus:medium
+Circinella_muscae_NRRL_1364	sexM-type	Minus:medium	Minus:medium
+Circinella_muscae_NRRL_1367	sexP-type	none	Plus:medium
+Circinella_muscae_NRRL_2403	sexP-type	none	Plus:medium;Plus:medium
+Circinella_naumovii_NRRL_5846	standard sexM 0.1 kb from rnhA	Minus:high	Minus:high
+Circinella_rigida_NRRL_2341		Plus:high	Plus:high
+Circinella_simplex_CBS_142.35	partial 103 aa, not at rnhA	Minus:high	Minus:high
+Circinella_simplex_van_Tieghem_NRRL_2407	standard sexP 0.3 kb from rnhA	Plus:high	Plus:high
+Circinella_tenella_NRRL_A-23557	exonerate model, not at rnhA	none	none
+Circinella_umbellata_NRRL_1366	sexM-type	Minus:medium	Minus:medium
+Circinella_umbellata_NRRL_2417	sexP-type	none(withheld:mat_gene_gate)	Plus:medium
+Circinella_umbellata_RSA_505_Plus	sexM-type	Minus:medium	Minus:medium
+Fennellomyces_heterothallicus_RSA_2348	sexM-type	Minus:medium	Minus:medium
+Fennellomyces_linderi_NRRL_2342	sexM-type	Minus:medium	Minus:medium
+Fennellomyces_linderi_NRRL_2342T	sexM-type	Minus:medium	Minus:medium
+Fennellomyces_mexicanus_sp._nov._RSA_1415_Plus	sexP-type	none	none
+Fennellomyces_mexicanus_sp._nov._RSA_1418-	sexM-type	Minus:medium	Minus:medium
+Fennellomyces_verticellatus_RSA_2442_Plus	sexP-type	none(withheld:mat_gene_gate)	none(withheld:mat_gene_gate)
+Fennellomyces_verticellatus_RSA_2446	sexP-type	none(withheld:mat_gene_gate)	none(withheld:mat_gene_gate)
+Thamnostylum_lucknowense_RSA_1015_Plus-T	sexM-type	Minus:medium	Minus:medium
+Thamnostylum_lucknowense_RSA_1093-	sexP-type	none(withheld:mat_gene_gate)	Plus:medium
+Thamnostylum_nigricans_RSA_1405-	sexP-type	none(withheld:mat_gene_gate)	none(withheld:mat_gene_gate)
+Thamnostylum_nigricans_RSA_1406	sexM-type	Minus:medium	Minus:medium
+Thamnostylum_piriforme_NRRL_A-21589	sexM-type on a scaffold without rnhA	Minus:medium	Minus:medium
+Thamnostylum_piriforme_RSA_251	sexM-type	Minus:medium	Minus:medium
+Thamnostylum_repens_RSA_459_Plus	sexM-type	Minus:medium	Minus:medium
+Thamnostylum_repens_Tieghem_Upadhyay_NRRL_6240	misidentified: Circinomucor circinelloides	Plus:high	Plus:high

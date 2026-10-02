@@ -78,6 +78,9 @@ properties:
         two_idiomorphs_report: {type: boolean}
         # OPTIONAL. Locus-level override of the phylum's homothallic_screen.
         homothallic_screen: {type: boolean}
+        # OPTIONAL (curator ruling 2026-10-01). false = scope-only family: never
+        # searched in phylum fallback or an explicit-phylum run. Absent = true.
+        fallback_searchable: {type: boolean}
         # OPTIONAL. Polish both genes of an overlapping mutually exclusive
         # pair and decide it on the two models (curator's ruling 2026-09-26,
         # Mucoromycota sexM/sexP). Absent means false.

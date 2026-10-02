@@ -79,7 +79,11 @@ loci:
     # Trametes versicolor and Grifola frondosa. The family keeps one receptor
     # name and generic precursor names, so all orders share the roster. Before
     # this, those orders were HD-only (results/2026-09-26_basidiomycota_full).
-    taxonomic_scope: [5338, 5303, 452342]  # Agaricales, Polyporales, Russulales (orders)
+    # CURATOR RULING, J. Stajich, 2026-10-01: Boletales (68889) added. The new
+    # Boletales HD record moved Serpula lacrymans from phylum fallback to
+    # lineage routing, where PR was not searched, and its 3 PR calls (all
+    # CAAX-dependent, unverified) were lost. No Boletales PR record exists yet.
+    taxonomic_scope: [5338, 5303, 452342, 68889]  # Agaricales, Polyporales, Russulales, Boletales (orders)
     # 25 kb per the curator's Agaricales upper bound. Measured largest
     # intra-locus gene gap in the one curated PR record: 3,186 bp (n=1).
     # The 2026-09-27 records' largest gap is 9,913 bp (Grifola frondosa).
@@ -518,6 +522,14 @@ loci:
     # so allele identity is not callable by homology.
     # Rank verified against NCBI Taxonomy (5258 = order Pucciniales).
     taxonomic_scope: [5258]  # Pucciniales (order)
+    # CURATOR RULING, J. Stajich, 2026-10-01: scope-only family. Searched only
+    # for genomes inside taxonomic_scope; never in phylum fallback or an
+    # explicit-phylum run. Why: in the regression check of curation-puccinio
+    # (results/2026-10-01_regression_puccinio, _net_both) the STE3 receptor
+    # references made redPR "A1/A2 high" and wallMAT calls in Rhizoctonia,
+    # Auricularia, Fomitiporia, Dacryopinax, Exobasidium, Microbotryum and
+    # Leucosporidium -- receptor homology, not these lineages' loci.
+    fallback_searchable: false
     # 10 kb. Measured bE-bW intergenic distance in the four curated records:
     # 538-640 bp; largest record span 3,956 bp (Pst). Pucciniales genomes
     # are large and repeat-rich, so the gap is kept tight.
@@ -545,6 +557,14 @@ loci:
     # Rhodotorula sp. (clade I).
     # Rank verified against NCBI Taxonomy (231213 = order Sporidiobolales).
     taxonomic_scope: [231213]  # Sporidiobolales (order)
+    # CURATOR RULING, J. Stajich, 2026-10-01: scope-only family. Searched only
+    # for genomes inside taxonomic_scope; never in phylum fallback or an
+    # explicit-phylum run. Why: in the regression check of curation-puccinio
+    # (results/2026-10-01_regression_puccinio, _net_both) the STE3 receptor
+    # references made redPR "A1/A2 high" and wallMAT calls in Rhizoctonia,
+    # Auricularia, Fomitiporia, Dacryopinax, Exobasidium, Microbotryum and
+    # Leucosporidium -- receptor homology, not these lineages' loci.
+    fallback_searchable: false
     # 20 kb. RibL6 sits 416 bp (A2, JN246612.1) to 9 bp (A1, JN246653.1)
     # from STE3 in the curated deposits; the MAT region itself is larger than
     # these amplicons (Coelho 2008), so the gap is not set to the deposit span.
@@ -583,6 +603,14 @@ loci:
     # are the preprint's catalogue names and are not callable by homology.
     # Rank verified against NCBI Taxonomy (231213 = order Sporidiobolales).
     taxonomic_scope: [231213]  # Sporidiobolales (order)
+    # CURATOR RULING, J. Stajich, 2026-10-01: scope-only family. Searched only
+    # for genomes inside taxonomic_scope; never in phylum fallback or an
+    # explicit-phylum run. Why: in the regression check of curation-puccinio
+    # (results/2026-10-01_regression_puccinio, _net_both) the STE3 receptor
+    # references made redPR "A1/A2 high" and wallMAT calls in Rhizoctonia,
+    # Auricularia, Fomitiporia, Dacryopinax, Exobasidium, Microbotryum and
+    # Leucosporidium -- receptor homology, not these lineages' loci.
+    fallback_searchable: false
     # 10 kb. HD1-HD2 intergenic distance in the records: 358-463 bp; largest
     # record span 3,134 bp (R. glutinis CBS 20).
     max_cluster_gap_bp: 10000
@@ -608,6 +636,14 @@ loci:
     # records are tier 2, genome-derived.
     # Rank verified against NCBI Taxonomy (431958 = order Wallemiales).
     taxonomic_scope: [431958]  # Wallemiales (order)
+    # CURATOR RULING, J. Stajich, 2026-10-01: scope-only family. Searched only
+    # for genomes inside taxonomic_scope; never in phylum fallback or an
+    # explicit-phylum run. Why: in the regression check of curation-puccinio
+    # (results/2026-10-01_regression_puccinio, _net_both) the STE3 receptor
+    # references made redPR "A1/A2 high" and wallMAT calls in Rhizoctonia,
+    # Auricularia, Fomitiporia, Dacryopinax, Exobasidium, Microbotryum and
+    # Leucosporidium -- receptor homology, not these lineages' loci.
+    fallback_searchable: false
     # 25 kb (was 20 kb with one record). Largest intra-locus gene gaps: v1
     # HMG end 26,300 to SXI1 start 41,384 = 15,084 bp; v2 CAF1 end 330,352 to
     # BAP31 start 350,841 = 20,489 bp (n=2). 25 kb matches the Basidiomycota

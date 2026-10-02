@@ -157,6 +157,16 @@ class Family:
     a call wider than this is still reported, marked so a reader can see it.
     See `DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP` for the measured basis.
     """
+    fallback_searchable: bool = True
+    """May this family be searched for a genome OUTSIDE its taxonomic scope?
+
+    Curation data. Curator's ruling 2026-10-01: a lineage-specific family
+    (Basidiomycota redPR, redHD, rustHD, wallMAT) is `false`: it is searched
+    only when the genome's taxid is inside `taxonomic_scope`, never in phylum
+    fallback or an explicit-phylum run, where its receptor references match
+    any basidiomycete STE3 and name a foreign lineage's alleles. `exhaustive`
+    (an explicit operator request) still searches it. Absent means True.
+    """
     homothallic_screen: bool = True
     """May this family's calls be labelled `homothallic_candidate`?
 
@@ -388,6 +398,7 @@ def load_all_families(db_root: Path) -> list[Family]:
                     homothallic_screen=locus.get(
                         "homothallic_screen", doc.get("homothallic_screen", True),
                     ),
+                    fallback_searchable=locus.get("fallback_searchable", True),
                     model_idiomorph_alternatives=locus.get(
                         "model_idiomorph_alternatives", False,
                     ),
@@ -636,7 +647,8 @@ def route(
     """
     if phylum is not None:
         return RoutingDecision(
-            families=[f for f in families if f.key.phylum == phylum],
+            families=[f for f in families
+                      if f.key.phylum == phylum and f.fallback_searchable],
             routing_mode="explicit_phylum",
             phylum=phylum,
         )
@@ -687,7 +699,10 @@ def route(
         query_phylum = None
         errors.append(f"phylum lookup failed: {type(exc).__name__}: {str(exc)[:160]}")
     if query_phylum:
-        in_phylum = [f for f in families if f.key.phylum == query_phylum]
+        # Scope-only families (fallback_searchable: false) are never searched
+        # outside their scope (curator ruling 2026-10-01).
+        in_phylum = [f for f in families
+                     if f.key.phylum == query_phylum and f.fallback_searchable]
         if in_phylum:
             return RoutingDecision(
                 families=in_phylum, routing_mode="phylum_fallback", phylum=query_phylum,

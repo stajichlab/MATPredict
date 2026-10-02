@@ -1,0 +1,10 @@
+gid	model	coords	len	base_sexM	base_sexP	base_P1	cand_sexM	cand_sexP	cand_P1	note
+GCA_025677815.1_Phaart1	detect_polished	JAIXMP010000004.1:1101621-1101830+	70	24.0	47.2	0.0	24.2	61.9	0.0	exonerate_refine
+GCA_025677815.1_Phaart1	detect_alternate	JAIXMP010000004.1:1101267-1102289+	341	25.0	87.6	0.0	22.1	116.9	0.0	miniprot_refine
+GCA_025677815.1_Phaart1	miniprot_best	JAIXMP010000004.1:1101267-1102259+	332	24.8	88.1	0.0	22.8	116.8	0.0	query sexPtype_Cang|EV165_000015-T1 AS 516
+# tree tip for GCA_025677815.1_Phaart1: detect_alternate
+Absidia_sp._NRRL_3163	detect_polished	scaffold_198:35061-35354-	98	0.0	35.5	0.0	0.0	43.0	0.0	exonerate_refine
+Absidia_sp._NRRL_3163	detect_alternate	scaffold_198:34554-35354-	267	24.0	92.8	0.0	23.4	116.4	0.0	miniprot_refine
+Absidia_sp._NRRL_3163	miniprot_best	scaffold_198:34554-35354-	268	24.0	92.7	0.0	23.4	116.5	0.0	query REC_101103_nrrl1351_MAT_Plus|101103_nrrl1351_MAT_Plus|gene_index=0|name=sexP|role=core_MAT AS 501
+Absidia_sp._NRRL_3163	funannotate	scaffold_198:34320-35156-	278	24.2	62.3	0.0	23.5	82.4	0.0	IWR59_004882-T1
+# tree tip for Absidia_sp._NRRL_3163: detect_alternate

@@ -1,5 +1,5 @@
 # Circinella-group MAT curation (tier 2)
-Status: Plus record signed off 2026-10-01; Minus record pending; group rule dropped
+Status: pending curator sign-off (records); group rule dropped
 
 ## Question
 Curator ruling 2026-10-01: curate the Circinella group (Circinella,
@@ -191,7 +191,7 @@ Circinella + *T. lucknowense*) plus *R. microsporus* A-17693 (= *C. minor*).
   than rerunning them.
 
 ## Curator decisions
-1. `101103_nrrl1351_MAT_Plus` signed off 2026-10-01. Sign off `64656_rsa-1403_MAT_Minus`.
+1. Sign off `101103_nrrl1351_MAT_Plus` and `64656_rsa-1403_MAT_Minus`.
 2. Accept the *Phascolomyces* and *Absidia* NRRL 3163 Plus calls.
 3. *Absidia* sp. NRRL 3163 identity (possible *Phascolomyces* relative).
 4. *R. microsporus* NRRL A-17693 = *C. minor*: already noted in the label

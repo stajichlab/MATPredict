@@ -279,11 +279,8 @@ validation:
 curation:
   proposed_by: claude-genome-curation
   proposal_dedupe_key: GCA_025093555.1|101103|MAT|Plus
-  reviewed_by: 'J. Stajich (sign-off 2026-10-01)'
-  reviewed_date: '2026-10-01'
-  notes: 'Proposed 2026-10-01 on curator ruling (Circinella-group curation, tier-2 records for both idiomorphs).
-    Curator J. Stajich signed off 2026-10-01 after the placement check (results/2026-10-01_circinella_curation/NOTE.md):
-    sexP KAI7847721.1 is inside the sexP clade in IQ-TREE (HMG box 98.2/87, full length 98.5/99) and RAxML-NG
-    (HMG box 42, full length 83) trees, never in the sexM clade; classifier LOO margin 83.8 bits. Caveat: on the HMG
-    box alone its nearest Plus tips are the tier-2 / labelled Syncephalastrum racemosum (IQ 0/39).'
+  reviewed_by: null
+  reviewed_date: null
+  notes: Proposed 2026-10-01 on curator ruling (Circinella-group curation, tier-2 records for both idiomorphs).
+    PENDING curator sign-off.
 model_provenance: null

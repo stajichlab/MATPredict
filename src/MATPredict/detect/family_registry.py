@@ -157,6 +157,14 @@ class Family:
     a call wider than this is still reported, marked so a reader can see it.
     See `DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP` for the measured basis.
     """
+    idiomorph_classes: dict[str, str] = field(default_factory=dict)
+    """Idiomorph label -> cross-lineage class (MAT1-1 / MAT1-2 / unassigned).
+
+    Curator's ruling 2026-10-01 (B9): a report-only column on one axis,
+    MAT1-1 = the alpha-box idiomorph, MAT1-2 = the HMG idiomorph. Family names
+    and idiomorph labels do not change. Read from `idiomorph_class:` in
+    order.yml; absent means no map.
+    """
     fallback_searchable: bool = True
     """May this family be searched for a genome OUTSIDE its taxonomic scope?
 
@@ -399,6 +407,7 @@ def load_all_families(db_root: Path) -> list[Family]:
                         "homothallic_screen", doc.get("homothallic_screen", True),
                     ),
                     fallback_searchable=locus.get("fallback_searchable", True),
+                    idiomorph_classes=dict(locus.get("idiomorph_class") or {}),
                     model_idiomorph_alternatives=locus.get(
                         "model_idiomorph_alternatives", False,
                     ),

@@ -231,6 +231,25 @@ class LocusSegment:
     contig_edge_distance: int | None = None
 
 
+def idiomorph_class_for(family, idiomorph: str | None) -> str | None:
+    """The cross-lineage class of one idiomorph label (B9, 2026-10-01).
+
+    None when the family has no `idiomorph_class` map (Basidiomycota,
+    Mucoromycota) or the label is not a single declared idiomorph
+    (`undetermined`, empty); "unassigned" when the family has a map but not
+    this label (S. pombe P, Yarrowia A/B)."""
+    mapping = getattr(family, "idiomorph_classes", None) or {}
+    if not mapping or not idiomorph or idiomorph == "undetermined":
+        return None
+    return mapping.get(idiomorph, "unassigned")
+
+
+def _with_idiomorph_class(results, families):
+    by_key = {f.key: f for f in families}
+    return [replace(r, idiomorph_class=idiomorph_class_for(by_key.get(r.family_key), r.idiomorph))
+            for r in results]
+
+
 @dataclass(frozen=True)
 class DetectionResult:
     family_key: FamilyKey
@@ -276,6 +295,11 @@ class DetectionResult:
     #: visible rather than collapsed. Curator's ruling 2026-09-21: on a tie
     #: "report both instead of worrying about getting it right".
     idiomorph_candidates: list[dict] = field(default_factory=list)
+    #: Cross-lineage class of `idiomorph` (curator ruling 2026-10-01, B9):
+    #: MAT1-1 (alpha-box idiomorph) or MAT1-2 (HMG idiomorph), from the
+    #: family's `idiomorph_class` map; "unassigned" where the family declares
+    #: a map without this label; None for families with no map. Report only.
+    idiomorph_class: str | None = None
     idiomorph_margin: float | None = None
     """Identity points separating the winning idiomorph gene from the loser.
 
@@ -3136,6 +3160,9 @@ def run_pipeline(
     # idiomorphs gets a neutral statement of arrangement, evidence and every
     # possible cause. Report-level only; the contigs are read only then.
     two_idiomorphs = _two_idiomorph_statements(results, families, genome_fasta, genetic_code)
+
+    # Curator's ruling 2026-10-01 (B9): a report-only cross-lineage class.
+    results = _with_idiomorph_class(results, families)
 
     return DetectionOutcome(
         results=results,

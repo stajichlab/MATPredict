@@ -18,6 +18,11 @@ properties:
         locus_name: {type: string}
         vocabulary_type: {enum: [enum, pattern]}
         idiomorph_values: {type: array, items: {type: string}}
+        # OPTIONAL (curator ruling 2026-10-01, B9): idiomorph label -> cross-
+        # lineage class on the MAT1-1 (alpha box) / MAT1-2 (HMG) axis. Report only.
+        idiomorph_class:
+          type: object
+          additionalProperties: {enum: [MAT1-1, MAT1-2, unassigned]}
         idiomorph_pattern: {type: string}
         # OPTIONAL. How far apart (bp) two tblastn hits of this locus may be and
         # still be clustered as one candidate locus. ABSENT MEANS 25000: that was

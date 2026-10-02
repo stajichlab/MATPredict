@@ -3,6 +3,9 @@ loci:
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["MAT1-1", "MAT1-2"]
+    # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
+    # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
+    idiomorph_class: {MAT1-1: MAT1-1, MAT1-2: MAT1-2}
     taxonomic_scope: [716546]  # leotiomyceta -- live-confirmed via NCBI esummary
     # Flank-carried window (curator's ruling 2026-09-26; results/
     # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
@@ -146,6 +149,10 @@ loci:
   - locus_name: "PM"
     vocabulary_type: "enum"
     idiomorph_values: ["M", "P"]
+    # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
+    # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
+    # M -> MAT1-2 (Mc carries an HMG box). P unassigned: Pc vs alpha-box homology not settled.
+    idiomorph_class: {M: MAT1-2, P: unassigned}
     taxonomic_scope: [451866]
     genes:
       - {name: matMc, role: core_MAT, present_in_idiomorphs: ["M"]}
@@ -155,6 +162,10 @@ loci:
   - locus_name: "mat1"
     vocabulary_type: "enum"
     idiomorph_values: ["M", "P"]
+    # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
+    # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
+    # M -> MAT1-2 (Mc carries an HMG box). P unassigned: Pc vs alpha-box homology not settled.
+    idiomorph_class: {M: MAT1-2, P: unassigned}
     taxonomic_scope: [4895]
     genes:
       - {name: mat1-Mc, role: core_MAT, present_in_idiomorphs: ["M"]}
@@ -164,6 +175,10 @@ loci:
   - locus_name: "mat2"
     vocabulary_type: "enum"
     idiomorph_values: ["P"]
+    # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
+    # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
+    # P unassigned: Pc vs alpha-box homology not settled.
+    idiomorph_class: {P: unassigned}
     taxonomic_scope: [4896]
     genes:
       - {name: matPc, role: core_MAT, present_in_idiomorphs: ["P"]}
@@ -171,6 +186,10 @@ loci:
   - locus_name: "mat3"
     vocabulary_type: "enum"
     idiomorph_values: ["M"]
+    # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
+    # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
+    # M -> MAT1-2 (Mc carries an HMG box).
+    idiomorph_class: {M: MAT1-2}
     taxonomic_scope: [4896]
     genes:
       - {name: matMc, role: core_MAT, present_in_idiomorphs: ["M"]}
@@ -178,6 +197,10 @@ loci:
   - locus_name: "MATsc"
     vocabulary_type: "enum"
     idiomorph_values: ["MATalpha", "MATa"]
+    # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
+    # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
+    # MATalpha1 carries the alpha box; MATa by convention (S. cerevisiae lost its HMG gene).
+    idiomorph_class: {MATalpha: MAT1-1, MATa: MAT1-2}
     taxonomic_scope: [4893]
     # Flank-carried window (curator's ruling 2026-09-26): sla2/cha1 sit OUTSIDE
     # the idiomorph, like SLA2/APN2/COX13. Set by analogy with the audited
@@ -251,6 +274,11 @@ loci:
   - locus_name: "MATyl"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "B"]
+    # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
+    # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
+    # Unmapped by ruling: MATA (MATA1, MATA2) / MATB (MATB1, MATB2) per Han et al. 2020,
+    # FEMS Yeast Res 20:foaa011, which gives no protein domains. Only A is curated.
+    idiomorph_class: {A: unassigned, B: unassigned}
     taxonomic_scope: [4952]
     # Flank-carried window (curator's ruling 2026-09-26; results/
     # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
@@ -272,6 +300,10 @@ loci:
   - locus_name: "MTL"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "alpha"]
+    # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
+    # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
+    # MTLalpha1 carries the alpha box; MTLa2 the HMG box.
+    idiomorph_class: {alpha: MAT1-1, A: MAT1-2}
     # Widened 2026-09-21 from 4959 -- which is Debaryomyces hansenii, a single
     # SPECIES -- to Serinales, the CUG-Ser1 / CTG clade. Verified live: 2916678
     # is rank ORDER, and the lineages of BOTH Candida albicans (5476) and
@@ -341,6 +373,9 @@ loci:
   - locus_name: "MATtub"
     vocabulary_type: "enum"
     idiomorph_values: ["MAT1-1", "MAT1-2"]
+    # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
+    # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
+    idiomorph_class: {MAT1-1: MAT1-1, MAT1-2: MAT1-2}
     # Pezizomycetes (class; NCBI taxid 147549, verified via NCBI Taxonomy esearch/efetch
     # 2026-09-17) plus the four Tuber species taxids actually curated so far, matching
     # this file's existing style of mixing one broad rank id with specific species ids

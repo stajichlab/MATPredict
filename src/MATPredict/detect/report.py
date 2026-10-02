@@ -287,6 +287,9 @@ def _result_doc(r: DetectionResult) -> dict:
         "end": r.end,
         "confidence": r.confidence,
         "idiomorph": r.idiomorph,
+        # Cross-lineage class (B9, 2026-10-01): MAT1-1 / MAT1-2 / unassigned,
+        # or null for families with no map. Report only.
+        "idiomorph_class": r.idiomorph_class,
         # Every idiomorph with evidence here, best score first. On an exact tie
         # `idiomorph` stays "undetermined" and BOTH appear here, per the
         # curator's 2026-09-21 ruling -- a tie is reported, not guessed at.

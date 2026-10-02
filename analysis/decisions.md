@@ -229,3 +229,4 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
   db/taxon_overrides.tsv (4 strains; T. repens NRRL 6240 newly excluded from
   LCG species scoring); GENOME_TIMEOUT + size-binned submitter; record source
   assemblies for 61 records (23 sequence link, 38 verified strain match).
+- M. sympodialis ATCC 42132 bLocus record: use the RefSeq assembly GCF_000349305.1 (curator ruling 2026-10-01).

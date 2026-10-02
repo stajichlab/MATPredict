@@ -51,4 +51,3 @@ Updated 2026-10-01. Closed rows (deterministic rebuild, Umbelopsis merge) are in
 | Ascomycota locus synonym map (MAT/MATtub/MATyl/MATsc/MTL) | draft for curator edit | Fable review Q5 |
 | LCG name check | marker genes, Mucorales first | `results/2026-09-28_lcg_holdout/` |
 | Absidia sp. NRRL 3163 identity | optional marker-gene check (not recorded as misidentified) | `results/2026-10-01_circinella_curation/NOTE.md` |
-| M. sympodialis ATCC 42132 record verifies in two assemblies (GCA_001264925.1, GCF_000349305.1) | curator picks one | `results/2026-10-01_record_assemblies/verified.tsv` |

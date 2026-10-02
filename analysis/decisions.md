@@ -195,3 +195,29 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
 - Rerun both held-out sets on current code.
 - Runtime: check it, but accuracy comes first; only call-neutral optimisations
   (verified with the regression check) are acceptable.
+- Lichtheimiaceae: discovery only; the published Lichtheimia SexM is logged as
+  notable finding 024. Circinella labels: tree-based treatment accepted
+  (`results/2026-10-01_circinella_label_tree/label_treatment.tsv`).
+- Circinella group: drop the rnhA-only gate rule (94d9d37). Sign off
+  101103_nrrl1351_MAT_Plus and 64656_rsa-1403_MAT_Minus with caveats
+  (04edc2d); accept the Phascolomyces RSA 2281 and Absidia sp. NRRL 3163 Plus
+  calls at medium confidence; do not record Absidia NRRL 3163 as
+  misidentified (one MAT gene tree is too weak); record A-17693 = C. minor in
+  misidentified_strains.tsv and annotation-errors C7. Merged into PR #9
+  (5b07b7c). Tag ploidy tests for the two-locus Circinella strains.
+- Jena unnamed strains: look up the CBS catalogue (form "CBS 169.57");
+  the curator confirms names before use.
+- Misidentified strains: keep identities in a versioned MATPredict override
+  file (db/curation/taxon_overrides.tsv) with basis and status; never edit
+  BFD samples.csv.
+- Ascomycota locus names: assistant drafts a synonym map; the curator edits
+  it before any code uses it.
+- Record self-check: search NCBI for a same-strain assembly; with none, report
+  "self-check not possible", not a failure.
+- Add GENOME_TIMEOUT with size bins (>500 Mb on epyc, 4 h; <500 Mb on short in
+  ~1-1.5 h jobs).
+- LCG names: check with marker genes, Mucorales first; flags go to the
+  curator, no automatic renames.
+- Basidiomycota: no full re-run. Merge curation-puccinio and basidio-anchors
+  into PR #9 first (regression check and sign-off each), then a cap-off test
+  on ~50 uncalled fallback-order genomes.

@@ -230,3 +230,9 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
   LCG species scoring); GENOME_TIMEOUT + size-binned submitter; record source
   assemblies for 61 records (23 sequence link, 38 verified strain match).
 - M. sympodialis ATCC 42132 bLocus record: use the RefSeq assembly GCF_000349305.1 (curator ruling 2026-10-01).
+- T. lucknowense RSA_1015_Plus-T Minus call: resolved by the Circinella label
+  tree (Thamnostylum labels inverted genus-wide; sexM clade IQ-TREE 91/74,
+  95/85; classifier sexM 121.6). The call is right; the file label is wrong.
+- B9: report-only `idiomorph_class` (MAT1-1 alpha box / MAT1-2 HMG) on
+  Ascomycota families; S. pombe P and Yarrowia A/B unassigned (2aa966f).
+- B12: LCG name check by an nf_phyling tree (running).

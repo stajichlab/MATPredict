@@ -25,8 +25,6 @@ Updated 2026-10-01. Closed rows (deterministic rebuild, Umbelopsis merge) are in
 - Runtime check pending (`results/2026-10-01_runtime_check/`): held-out median
   ~260 s vs ~52 s per genome on unmatched nodes. Accuracy first; only
   call-neutral optimisations. Waits on: the same-node timing and profile.
-- Thamnostylum lucknowense RSA_1015_Plus-T is called Minus (medium) against its
-  Plus file label. Waits on: a trace (label vs paralog vs real Minus).
 
 ## Future research: ploidy of Circinella strains with two sex-locus calls (tagged 2026-10-01, J. Stajich)
 

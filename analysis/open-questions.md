@@ -12,7 +12,7 @@ Updated 2026-10-01. Closed rows (deterministic rebuild, Umbelopsis merge) are in
 | P1 paralog class trained on one sequence; P1b and the Z. exponens gene not covered | more paralog copies | `results/2026-09-29_r4_paralog/NOTE.md` |
 | CAAX-dependent calls: review the unverified label | a labelled set of >= 100 non-mating STE3 loci | `results/2026-09-28_validation_f3_f4/NOTE.md`; handoff review-later item |
 | Group distant subloci by conserved flanks (mip/beta-fg) | design and test; S. commune Aα–Aβ ~450–550 kb apart | `results/2026-09-28_subloci_literature/NOTE.md` |
-| F9: tests that assert roster state, not intent | rewrite | `results/2026-09-28_fable_review/README.md` |
+
 | Future classifiers (Sporidiobolales A1/A2 first; Ascomycota MAT1-1-1/MAT1-2-1; Serinales MTLa/alpha; Basidiomycota HD later) | build with the chosen aligner; training-diversity check | `results/2026-09-27_receptor_explore/NOTE.md`; `2026-09-29_classifier-builds.md` |
 | Receptor curation for Boletales, Hymenochaetales, rusts | locus deposits or precursor data | `results/2026-09-27_pheromone_positional/NOTE.md` |
 | Receptor copy number at a locus is not visible in reports | report design | `results/2026-09-27_russulaceae_receptor/NOTE.md` |

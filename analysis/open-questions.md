@@ -46,6 +46,6 @@ Updated 2026-10-01. Closed rows (deterministic rebuild, Umbelopsis merge) are in
 
 | Item | Next step | Where |
 |---|---|---|
-| Ascomycota locus synonym map (MAT/MATtub/MATyl/MATsc/MTL) | draft for curator edit | Fable review Q5 |
-| LCG name check | marker genes, Mucorales first | `results/2026-09-28_lcg_holdout/` |
+| S. pombe P and Yarrowia A/B idiomorph class (unassigned) | protein-domain evidence (Pc vs alpha box; MATA/MATB proteins) | `db/Ascomycota/order.yml` (B9) |
+| LCG name check | nf_phyling tree, Mucorales first (running) | `results/2026-10-01_lcg_name_check/` |
 | Absidia sp. NRRL 3163 identity | optional marker-gene check (not recorded as misidentified) | `results/2026-10-01_circinella_curation/NOTE.md` |

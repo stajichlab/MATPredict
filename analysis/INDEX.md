@@ -18,6 +18,7 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 
 ## Basidiomycota
 | Date | Report | Status | Key numbers |
+| 10-01 | [Branch merges and scope-only families](2026-10-01_basidio-merges-and-scope-only.md) | decided | net 14 gained in-lineage, 2 CAAX-only PR lost, 0 label changes |
 |---|---|---|---|
 | 09-26 | [Anchors, full run, cap-off](2026-09-26_basidiomycota.md) | decided | 3,269 genomes; Agaricomycotina 83.0% |
 | 09-26 | [Cryptococcus SXI slot](2026-09-26_cryptococcus-sxi.md) | decided | 243 genomes, 0 lost, 53 gained |

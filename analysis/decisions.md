@@ -221,3 +221,7 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
 - Basidiomycota: no full re-run. Merge curation-puccinio and basidio-anchors
   into PR #9 first (regression check and sign-off each), then a cap-off test
   on ~50 uncalled fallback-order genomes.
+- B13b regression: wrong-lineage redPR/wallMAT calls in fallback genomes ->
+  scope-only families (`fallback_searchable: false` on redPR, redHD, rustHD,
+  wallMAT); PR scope adds Boletales. Net result signed off; curation-puccinio,
+  basidio-anchors and the fix merged into PR #9 (5885a7e).

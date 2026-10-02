@@ -54,6 +54,4 @@ Updated 2026-10-01. Closed rows (deterministic rebuild, Umbelopsis merge) are in
 | Record self-check for 92 locus-deposit records | NCBI same-strain assembly search; else "not possible" | `results/2026-09-28_next_fixes/NOTE.md` |
 | GENOME_TIMEOUT and size bins | implement in scripts/run_clade_panel.slurm | `results/2026-09-26_basidiomycota_full/ANALYSIS.md` |
 | LCG name check | marker genes, Mucorales first | `results/2026-09-28_lcg_holdout/` |
-| Merge curation-puccinio and basidio-anchors into PR #9 | regression check and sign-off each | branches |
-| Basidiomycota cap-off test (~50 uncalled fallback genomes) | after the two merges | `results/2026-09-26_basidiomycota_full/ANALYSIS.md` |
 | Absidia sp. NRRL 3163 identity | optional marker-gene check (not recorded as misidentified) | `results/2026-10-01_circinella_curation/NOTE.md` |

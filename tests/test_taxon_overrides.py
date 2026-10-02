@@ -11,10 +11,11 @@ DB = Path(__file__).resolve().parents[1] / "db"
 HEADER = "\t".join(COLUMNS)
 
 
-def test_shipped_file_loads_with_the_four_ruled_strains():
+def test_shipped_file_loads_the_ruled_strains():
     ov = load_taxon_overrides(DB)
     assert set(ov) == {"Backusella_ctenidia_NRRL_6239", "Rhizopus_arrhizus_NRRL_1470",
-                       "Thamnostylum_repens_Tieghem_Upadhyay_NRRL_6240", "Rhizopus_microsporus_NRRL_A-17693"}
+                       "Thamnostylum_repens_Tieghem_Upadhyay_NRRL_6240", "Rhizopus_microsporus_NRRL_A-17693",
+                       "Absidia_sp._NRRL_3163"}
     assert ov["Rhizopus_microsporus_NRRL_A-17693"].likely_identity == "Circinella minor"
     assert all(o.status == "unconfirmed" for o in ov.values())
 

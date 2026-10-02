@@ -47,5 +47,5 @@ Updated 2026-10-01. Closed rows (deterministic rebuild, Umbelopsis merge) are in
 | Item | Next step | Where |
 |---|---|---|
 | S. pombe P and Yarrowia A/B idiomorph class (unassigned) | protein-domain evidence (Pc vs alpha box; MATA/MATB proteins) | `db/Ascomycota/order.yml` (B9) |
-| LCG name check | nf_phyling tree, Mucorales first (running) | `results/2026-10-01_lcg_name_check/` |
-| Absidia sp. NRRL 3163 identity | optional marker-gene check (not recorded as misidentified) | `results/2026-10-01_circinella_curation/NOTE.md` |
+| LCG distant-genus placements (13) and same-strain mismatches (Pilaira anomala RSA 1997, Thamnidium elegans NRRL 2467) | ITS check before recording | `results/2026-10-01_lcg_name_check/NOTE.md` |
+| LCG flag support | IQ-TREE UFBoot subtree around the flags | `results/2026-10-01_lcg_name_check/` |

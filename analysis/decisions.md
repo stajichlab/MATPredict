@@ -236,3 +236,10 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
 - B9: report-only `idiomorph_class` (MAT1-1 alpha box / MAT1-2 HMG) on
   Ascomycota families; S. pombe P and Yarrowia A/B unassigned (2aa966f).
 - B12: LCG name check by an nf_phyling tree (running).
+- B12 (2026-10-02): nf_phyling trees flagged 102 of 620 placed LCG genomes;
+  all 4 known misidentified controls flagged. 47 old names where tree and NCBI
+  synonymy agree go to the LCG curator_table (species 205 -> 200; no label
+  score change). Absidia sp. NRRL 3163 -> taxon_overrides as Phascolomyces
+  sp. (genus, unconfirmed; reverses the 10-01 'don't record'). The 13
+  distant-genus placements and 2 same-strain mismatches wait on an ITS check.
+  IQ-TREE UFBoot on a subtree around the flags.

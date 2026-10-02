@@ -225,3 +225,7 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
   scope-only families (`fallback_searchable: false` on redPR, redHD, rustHD,
   wallMAT); PR scope adds Boletales. Net result signed off; curation-puccinio,
   basidio-anchors and the fix merged into PR #9 (5885a7e).
+- Done 2026-10-01: Jena names applied from NCBI BioSample (curator approved);
+  db/taxon_overrides.tsv (4 strains; T. repens NRRL 6240 newly excluded from
+  LCG species scoring); GENOME_TIMEOUT + size-binned submitter; record source
+  assemblies for 61 records (23 sequence link, 38 verified strain match).

@@ -48,10 +48,7 @@ Updated 2026-10-01. Closed rows (deterministic rebuild, Umbelopsis merge) are in
 
 | Item | Next step | Where |
 |---|---|---|
-| Five unnamed Jena strains (CBS 169.57, 334.71, 417.77, 564.66, 608.78) | CBS catalogue lookup; curator confirms | `results/2026-09-28_mucor_jena_holdout/` |
-| Misidentified strains override file | create db/curation/taxon_overrides.tsv; scoring and reports read it | `results/2026-09-29_strain_labels_and_absidia/misidentified_strains.tsv` |
 | Ascomycota locus synonym map (MAT/MATtub/MATyl/MATsc/MTL) | draft for curator edit | Fable review Q5 |
-| Record self-check for 92 locus-deposit records | NCBI same-strain assembly search; else "not possible" | `results/2026-09-28_next_fixes/NOTE.md` |
-| GENOME_TIMEOUT and size bins | implement in scripts/run_clade_panel.slurm | `results/2026-09-26_basidiomycota_full/ANALYSIS.md` |
 | LCG name check | marker genes, Mucorales first | `results/2026-09-28_lcg_holdout/` |
 | Absidia sp. NRRL 3163 identity | optional marker-gene check (not recorded as misidentified) | `results/2026-10-01_circinella_curation/NOTE.md` |
+| M. sympodialis ATCC 42132 record verifies in two assemblies (GCA_001264925.1, GCF_000349305.1) | curator picks one | `results/2026-10-01_record_assemblies/verified.tsv` |

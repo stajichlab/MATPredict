@@ -112,14 +112,24 @@ def test_order_of_unmerged_calls_is_kept():
     assert [r.family_key for r in out] == [HD, BA]
 
 
-def test_the_real_roster_groups_the_basidiomycota_b_and_a_loci_only():
+def test_the_real_roster_merge_groups_are_well_formed():
+    """Intent, not roster state (Fable review F9, 2026-09-28). The curator's
+    group A (HD) and group B (PR) rules: each group has exactly one generic
+    family, every member is in one phylum, and the generic PR and HD families
+    head groups B and A. Adding or removing a specific member family must not
+    break this test; the old one listed every member."""
+    from collections import defaultdict
     from pathlib import Path
     from MATPredict.detect.family_registry import load_all_families as load_families
     db = Path(__file__).resolve().parents[2] / "db"
-    fams = {f.key: f for f in load_families(db)}
-    groups = {k: (f.merge_group, f.merge_generic) for k, f in fams.items() if f.merge_group}
-    assert groups[PR] == ("B", True)
-    assert groups[BA] == ("B", False) and groups[BB] == ("B", False)
-    assert groups[HD] == ("A", True)
-    assert groups[FamilyKey("Basidiomycota", "Aalpha")] == ("A", False)
-    assert not any(k.phylum == "Ascomycota" for k in groups)
+    groups = defaultdict(list)
+    for f in load_families(db):
+        if f.merge_group:
+            groups[(f.key.phylum, f.merge_group)].append(f)
+    assert groups, "no merge groups declared"
+    for (phylum, g), members in groups.items():
+        assert sum(m.merge_generic for m in members) == 1, (phylum, g)
+        assert {m.key.phylum for m in members} == {phylum}
+    generic = {(p, g): next(m.key for m in ms if m.merge_generic) for (p, g), ms in groups.items()}
+    assert generic[("Basidiomycota", "B")] == PR
+    assert generic[("Basidiomycota", "A")] == HD

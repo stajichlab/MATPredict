@@ -202,13 +202,30 @@ def test_the_curated_windows(tmp_path):
     assert windows[FamilyKey("Mucoromycota", "MAT")] == 20_000
 
 
-def test_every_curated_family_uses_the_one_39_bit_floor():
-    """The evaluation found one floor enough for every family (2026-09-27)."""
+def test_an_undeclared_floor_is_the_default_and_a_declared_one_is_kept(tmp_path):
+    """Intent, not roster state (Fable review F9, 2026-09-28): a family that
+    declares no floor gets the 39-bit default chosen by the 2026-09-27
+    evaluation; a declared floor is honoured. The old test pinned every real
+    family to 39, so any legitimate per-family floor would have failed it."""
+    from MATPredict.detect.family_registry import DEFAULT_FLANK_CARRIED_MIN_BITSCORE
+
+    assert DEFAULT_FLANK_CARRIED_MIN_BITSCORE == 39.0
+    base = ("phylum: P\nloci:\n  - locus_name: L{n}\n    vocabulary_type: enum\n"
+            "    idiomorph_values: [x]\n    taxonomic_scope: [1]\n{extra}"
+            "    genes:\n      - {{name: g, role: core_MAT}}\n")
+    for n, extra, want in ((1, "", 39.0), (2, "    flank_carried_min_bitscore: 55\n", 55.0)):
+        d = tmp_path / f"P{n}"
+        d.mkdir()
+        (d / "order.yml").write_text(base.format(n=n, extra=extra).replace("phylum: P", f"phylum: P{n}"))
+    floors = {f.key.locus_name: f.flank_carried_min_bitscore for f in load_all_families(tmp_path)}
+    assert floors == {"L1": 39.0, "L2": 55.0}
+
+
+def test_every_shipped_floor_is_a_positive_bitscore():
     from pathlib import Path
 
     db = Path(__file__).resolve().parents[2] / "db"
-    floors = {f.flank_carried_min_bitscore for f in load_all_families(db)}
-    assert floors == {39.0}
+    assert all(f.flank_carried_min_bitscore > 0 for f in load_all_families(db))
 
 
 ORDER = (

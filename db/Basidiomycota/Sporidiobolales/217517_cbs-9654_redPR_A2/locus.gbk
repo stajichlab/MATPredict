@@ -1,0 +1,81 @@
+LOCUS       JN246612.1              2594 bp    DNA              UNK 01-JAN-1980
+DEFINITION  217517_cbs-9654_redPR_A2 core locus segment 0 (JN246612.1).
+ACCESSION   217517_cbs-9654_redPR_A2.segment0
+VERSION     217517_cbs-9654_redPR_A2.segment0
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     gene            1..813
+                     /gene="RibL6"
+                     /role="flanking_conserved"
+     CDS             join(1..669,754..813)
+                     /gene="RibL6"
+                     /role="flanking_conserved"
+                     /translation="MVSRSSSLGCVPRALLRRQFSSSPRVPSHVGSAPIPYPPAVTFEF
+                     ATLAAQSGPDPSSSLVIQGPKGRLAVNVPSFVNIDFSVPPTSDAVVAGSTSPPASLLSV
+                     AVKDASIKQQQAAWGLTRSLVANAVRGVSEGYTLSLRLVGVGYRAAVEDLAPSPSGSPT
+                     PRQRLNLKLGFAHPVLIALPPDVVASTPSSTTITLSGIDKQRLGEVAARIRSWRVPEPY
+                     NGKGIFVGDEQVKRKEVKKK"
+     gene            1230..2594
+                     /gene="STE3a2"
+                     /role="core_MAT"
+     CDS             join(1230..1373,1446..1514,1578..1887,1945..2162,
+                     2227..2402,2477..2594)
+                     /gene="STE3a2"
+                     /role="core_MAT"
+                     /translation="MSSNLALVICSAILTVCNSVPLYWHVRQGNSGPIAMGVWVLVATL
+                     TDFVNFATWHNDAVNRAPIWCDISVKIRLGVQVGRLAAVACIARFLADVVSPRATALTR
+                     RDRRHRAIFDYSVAFGFPLLLMACHVLYQPNRFTIVRGIGCAITQTLTWPTILLGMIWG
+                     PIFSAIGVLYSSYTVYRLIRHRRNFRHVVSGAHSALTTSRFLHLLALSVSYLFIGVPLS
+                     ISSTISYVRTSGKYYDYSWEYIHSAWHLYPIVQISKPTTADFYNWSDVIVGFIYLAAFG
+                     VGTEAFQKIVAPARRWLTASSTEKSLPVDARTPVAVDVIAFQDTSRSCAKGIKVVIERE
+                     EDVV"
+                     /gene_class="pheromone_receptor"
+ORIGIN
+        1 atggtttccc gatcttcctc gttgggttgc gtacctcgcg ctctcctccg tcgccaattc
+       61 tcctcgtccc ctcgcgttcc ctcccacgtc gggtcggccc cgatacccta tcctcccgcg
+      121 gtcaccttcg agtttgcgac cctcgcggct caatctggtc ccgatccttc gtcgtcgctc
+      181 gtcattcaag gtccgaaagg tcgcctcgcc gtcaatgtcc cctcgttcgt caacatcgac
+      241 ttttccgtgc ctcctacatc ggatgccgtc gtcgcgggct caacctcgcc accggcctct
+      301 cttctgtcgg tcgccgtgaa ggacgcctcg atcaagcaac agcaagccgc ctggggactg
+      361 acccgatctc tcgtcgctaa tgccgtccgc ggtgtctcgg aaggttacac tctgtccctc
+      421 cggctcgtcg gcgtgggcta ccgtgccgcg gtcgaagacc ttgcgccttc tccgtcgggc
+      481 tcgccgacac cccgccaacg cctcaacctc aaactcggtt ttgcccaccc tgttctgatc
+      541 gctctgccgc ccgacgtcgt cgcctccact ccctcatcaa cgaccatcac gctcagcggg
+      601 atcgacaagc agaggctggg cgaggtggcc gctcgcatcc ggagctggag ggttcccgag
+      661 ccgtacaacg taagtccgct tcgagctccc gctctcctgc acgtctatca ctctgcatgc
+      721 ccggcctgac ctcacaaccg cgtcggtaaa tagggtaaag ggatcttcgt tggagacgag
+      781 caagtgaaac gtaaggaggt caaaaagaag tagggaatat tgcttccttg gtattgcaac
+      841 cgttcgtcgc gaagtgggca gttgtccagt tggcattgat tcctcgctcg cgctgattgc
+      901 ggactgcata ggccgcaagg tctggcataa gcgggtgaag tgggcgagca ggccagcttc
+      961 tcaaatggta ccgagattgg ccggcttcat ttcgaaaatg cacgtctgct agcatgtcct
+     1021 atagagatcc ggcggctggg aatactgtat cgcgcgagag attcgggaac accgatcagt
+     1081 ccgacatgaa tattctgctg tgtctcatcg cgtttctttg ttccgacgcc tttgtccttc
+     1141 accccaaagt gactccacag acctgatgtt ctgttcctcc ttcgtccttc accgccgctt
+     1201 gcccaaccag cctcaaccct ctactcgaca tgtcttcgaa tctcgccctc gtcatctgca
+     1261 gcgcgatctt gacagtctgc aactccgtcc ctctctactg gcacgttcgg caaggcaatt
+     1321 ccggaccgat tgctatggga gtatgggttc tggttgcgac cctcactgac ttcgtgagca
+     1381 ctgtcttctc ctgtcgacta cccggagaaa ggctgacagc gaatactcgc tgcgtgcatc
+     1441 gccaggtgaa tttcgcgact tggcataacg acgcagtgaa ccgggccccg atctggtgcg
+     1501 acataagtgt caaggttcgc tccctctttc taccctgtcc gcattgctcg atgttgctga
+     1561 gtgctcgacc cctgcagatc cgcctcggag tccaagtcgg gcgtctagca gccgtcgctt
+     1621 gcatcgctcg cttcctcgca gacgttgtca gtcctcgtgc gactgcactg actcgtagag
+     1681 accgccgcca ccgagccata ttcgactatt ccgtggcttt cggatttccc ctccttctca
+     1741 tggcttgcca tgttctctac caaccgaacc gcttcaccat tgttcgagga attggctgcg
+     1801 cgatcaccca gacgttgacc tggccaacaa tccttctcgg aatgatttgg ggtcccatct
+     1861 tttcggcgat tggagttcta tactcttgta tgttcgcggc ctggctcgca tctttgggtc
+     1921 cgctctgacg tctttcctgg acagcctaca ccgtctatcg cttgattcga catcggcgca
+     1981 acttccgtca cgtcgtttca ggcgcccatt ccgctttaac gaccagtcgt ttcctgcatc
+     2041 tccttgccct ttcagtctcg taccttttca tcggtgtccc cctgtctatc tcttcgacaa
+     2101 tctcttacgt cagaacgagc ggcaagtatt acgactactc ttgggagtac atccattccg
+     2161 ctgtaagcac accgtaatca cctcacaccg tctccggaga cgagtctgag ccttctttct
+     2221 gcgcagtggc acctgtaccc catcgttcag atctcgaagc ccacaaccgc cgacttttac
+     2281 aattggtcag acgtgatcgt cggtttcatc tatctcgcag cattcggcgt cgggaccgaa
+     2341 gcattccaga aaatcgttgc tcctgctcgt cggtggctga ccgcgtcgag caccgagaag
+     2401 aggtgcgcac gagctactgc catttccctc gcccagcatt ttctcgtaga cgtcaaattg
+     2461 atccttgtca ttgcagtttg ccggtggacg ctcggactcc ggtcgccgtg gatgttatcg
+     2521 ccttccaaga cacaagtcga tcatgcgcca aaggcatcaa ggtagtcatt gagcgagagg
+     2581 aagacgttgt gtaa
+//

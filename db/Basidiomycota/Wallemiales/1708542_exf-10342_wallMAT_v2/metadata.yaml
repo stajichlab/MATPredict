@@ -1,0 +1,223 @@
+record_id: 1708542_exf-10342_wallMAT_v2
+record_version: 1
+taxonomy:
+  taxid: 1708542
+  lineage: k__Fungi;p__Basidiomycota;sc__Wallemiomycotina;c__Wallemiomycetes;o__Wallemiales;f__Wallemiaceae;g__Wallemia;s__Wallemia_canadensis
+  lineage_resolved_date: '2026-09-27'
+organism:
+  species: Wallemia canadensis
+  strain:
+    name: EXF-10342
+    known: true
+    culture_collection_ids:
+    - EXF-10342
+    differs_from_sequenced: false
+mating_type:
+  locus_name: wallMAT
+  idiomorphs:
+  - v2
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: STE3v2<-|CAF1<-|BAP31<-
+    definition_note: 'PUTATIVE. Wallemia canadensis EXF-10342 (GCA_056320075.1, SPAdes,
+      159 contigs, contig N50 186 kb) putative mating-type locus, the second of the
+      two versions described by Sun et al. 2019 (W. mellicola) and Gostincar et al.
+      2019 (W. ichthyophaga), on JBHFOR010000004.1. Chosen as the best-assembled genome
+      of this version among the 18 BFD Wallemiales genomes that carry it, and the
+      only one whose assembly annotates the locus receptor. STE3v2 = KAN3001147.1
+      (ACAZ38_004777, ''Pheromone B beta 1 receptor''), CAF1 = KAN3001148.1 (ACAZ38_004780,
+      ''CCR4-NOT transcription complex subunit 7''; 99.6% to the v1 CAF1), BAP31 =
+      KAN3001158.1 (ACAZ38_004824, ''hypothetical protein''; 98.4% to the v1 BAP31).
+      STE3v2 is 34.8% to the v1 receptor EIM23479.1 over 155 aa, and 80% (tblastn,
+      136 aa) to the receptor of this version in W. mellicola, 65% in W. ichthyophaga.
+      The annotated STE3v2 (192 aa) is probably 3''-truncated: tblastn and exonerate
+      of the v1 STE3 (366 aa) continue about 260 bp past its annotated stop (logged
+      B5.5); the record keeps the annotated protein. HMG: recorded present: false.
+      Only a 43-aa HMG-box fragment is found (exonerate of the v1 HMG, 60.5% identity,
+      331,565-331,693, unannotated), consistent with Gostincar et al. 2019 who report
+      a truncated HMG gene in the inverted version; no intact ORF is asserted. SXI1:
+      recorded present: false; Gostincar et al. 2019 report it absent from the inverted
+      version and no homeodomain hit lies in the locus. The pheromone-processing gene
+      STE14 (KAN3001145.1) and an NDUFA6-like gene (KAN3001146.1) lie next to STE3v2,
+      as in v1, and are not curated. BAP31 sits on the far side of CAF1 here (about
+      20 kb), the reverse of v1, consistent with the published inversion. Idiomorph
+      ''v2'' is a placeholder for this version; which version is which mating type
+      is not known. TIER 2: genome-derived.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JBHFOR010000004.1
+        seq_region: JBHFOR010000004.1
+      start: 328288
+      end: 351767
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: STE3v2
+  protein_accession: ncbi_protein:KAN3001147.1
+  role: core_MAT
+  present: true
+  locus_tag: ACAZ38_004777
+  segment_index: 0
+  start: 328288
+  end: 329003
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 328799
+    end: 329003
+  - start: 328435
+    end: 328752
+  - start: 328351
+    end: 328389
+  - start: 328288
+    end: 328304
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: CAF1
+  protein_accession: ncbi_protein:KAN3001148.1
+  role: flanking_conserved
+  present: true
+  locus_tag: ACAZ38_004780
+  segment_index: 0
+  start: 329205
+  end: 330352
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 330257
+    end: 330352
+  - start: 330022
+    end: 330212
+  - start: 329814
+    end: 329975
+  - start: 329592
+    end: 329769
+  - start: 329428
+    end: 329543
+  - start: 329205
+    end: 329379
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: BAP31
+  protein_accession: ncbi_protein:KAN3001158.1
+  role: flanking_conserved
+  present: true
+  locus_tag: ACAZ38_004824
+  segment_index: 0
+  start: 350841
+  end: 351767
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 351730
+    end: 351767
+  - start: 351521
+    end: 351679
+  - start: 351381
+    end: 351470
+  - start: 351300
+    end: 351331
+  - start: 351228
+    end: 351249
+  - start: 351099
+    end: 351168
+  - start: 350983
+    end: 351049
+  - start: 350841
+    end: 350935
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: HMG
+  protein_accession: null
+  role: core_MAT
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+- gene_index: 4
+  name: SXI1
+  protein_accession: null
+  role: core_MAT
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+evidence:
+  locus_existence:
+    tier: 2
+    citations: &id001
+    - doi: 10.1016/j.fgb.2012.01.007
+      pmid: '22326418'
+    - doi: 10.3390/genes10060427
+      pmid: '31167502'
+    - doi: 10.3389/fmicb.2019.02019
+      pmid: '31551960'
+    experimental_method: PUTATIVE MAT LOCUS, TIER 2 (genome-derived). No MAT gene
+      of Wallemia has a locus-specific GenBank deposit, and no mating or meiosis has
+      been observed in the genus. The two locus versions are described as putative
+      by Sun et al. 2019 and Gostincar et al. 2019 from population genomes; this record
+      is the version without SXI1.
+  boundaries:
+    tier: 2
+    citations: *id001
+    experimental_method: PUTATIVE MAT LOCUS, TIER 2 (genome-derived). No MAT gene
+      of Wallemia has a locus-specific GenBank deposit, and no mating or meiosis has
+      been observed in the genus. Record segment spans STE3v2 to BAP31 on JBHFOR010000004.1;
+      three genes from the assembly's own CDS features.
+  idiomorph_assignment:
+    tier: 2
+    citations: *id001
+    experimental_method: 'PUTATIVE MAT LOCUS, TIER 2 (genome-derived). No MAT gene
+      of Wallemia has a locus-specific GenBank deposit, and no mating or meiosis has
+      been observed in the genus. ''v2'' is a placeholder for the second locus version;
+      which version is which mating type is not known. mating_type.system ''heterothallic''
+      is itself putative: it rests on two locus versions each carried by part of the
+      sequenced strains.'
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JBHFOR010000004.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.3389/fmicb.2019.02019|1708542|wallMAT|v2
+  reviewed_by: 'J. Stajich (sign-off 2026-09-27)'
+  reviewed_date: '2026-09-27'
+  notes: 'Proposed 2026-09-27 on curator ruling (a second record from a genome carrying
+    the other version). Curator J. Stajich signed off 2026-09-27 (tier 2, putative).'
+model_provenance: null

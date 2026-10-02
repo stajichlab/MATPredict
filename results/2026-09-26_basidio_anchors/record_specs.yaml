@@ -1,0 +1,88 @@
+- record_id: 984962_um274_HD_A1
+  accession: KF280353.1
+  taxid: 984962
+  strain: UM274
+  idiomorph: A1
+  completeness: complete
+  orientation: MIP1->[HD1(a1)<-|->HD2(a2)]-[HD1(b1)<-|->HD2(b2)]->beta-fg
+  dedupe: 23864721|984962|HD|UM274
+  citations:
+  - {pmid: '23864721', doi: 10.1093/molbev/mst126}
+  methods:
+  - targeted sequencing of the HD mating-type locus across Heterobasidion strains; balancing-selection and trans-specific polymorphism signature at the HD genes (van Diepen et al. 2013)
+  - targeted sequencing; the deposit spans MIP (5' partial) through beta-fg (partial), the published flanks of the HD locus
+  - HD1/HD2 homeodomain gene identity at the sequenced HD locus; allele not named in the source (see definition_note)
+  genes:
+  - [AGS09183.1, MIP1, flanking_conserved]
+  - [AGS09184.1, HD1, core_MAT]
+  - [AGS09185.1, HD2, core_MAT]
+  - [AGS09186.1, HD1, core_MAT]
+  - [AGS09187.1, HD2, core_MAT]
+  note: 'Heterobasidion irregulare UM274 HD (A) mating-type locus, from the locus deposit
+    KF280353.1 (11,009 bp; van Diepen et al. 2013, Mol Biol Evol 30:2286). Gene order on
+    the deposit: MIP (5'' partial, AGS09183.1) - a1 HD1 (AGS09184.1) - a2 HD2 (AGS09185.1) -
+    b1 HD1 (AGS09186.1) - b2 HD2 (AGS09187.1) - beta-flanking protein (partial, AGS09188.1).
+    Two divergently transcribed HD1/HD2 pairs (a and b subloci), as in Coprinopsis. The
+    beta-fg fragment is 28 aa and is NOT curated: too short to be a useful search query.
+    MIP is curated as a flanking gene: AGS09183.1 matches the full-length A. bisporus MIP
+    ortholog XP_006454076.1 at 71.5% over its 221 aa (blastp, 2026-09-26).
+    IDIOMORPH LABEL: the source does not number this allele. "A1" follows the convention
+    already used for Agaricus bisporus in this database (derived from the "a1" HD1 gene
+    name) and is a PLACEHOLDER, not a published allele designation. Curator decision
+    pending on a label convention for unnamed multiallelic HD alleles.'
+- record_id: 90004_unknown_HD_A1
+  accession: AB646132.2
+  taxid: 90004
+  strain: unknown
+  idiomorph: A1
+  completeness: complete
+  orientation: MIP1->[HD1(hox1)<-|->HD2(hox2)]
+  dedupe: 10.1007/s11557-012-0840-z|90004|HD|A1
+  citations:
+  - {pmid: null, doi: 10.1007/s11557-012-0840-z}
+  methods:
+  - targeted cloning and sequencing of the A (HD) mating-type locus; allele polymorphism among strains used for strain identification (Wan et al. 2013)
+  - targeted sequencing; the deposit spans MIP (5' partial) through the two HD genes
+  - allele RrA1, as named by the depositors (gene names RrA1-hox1, RrA1-hox2)
+  genes:
+  - [BAL45601.2, MIP1, flanking_conserved]
+  - [BAL45602.2, HD1, core_MAT]
+  - [BAL45603.2, HD2, core_MAT]
+  note: 'Rhizopogon roseolus HD (A) mating-type locus, allele RrA1, from the locus
+    deposit AB646132.2 (5,786 bp; Wan J, Li Y, Shimomura N, Yamaguchi T, Aimi T 2013,
+    Mycol Prog 12:353-365, doi:10.1007/s11557-012-0840-z; no PMID). Gene order: mip
+    (5'' partial, codon_start 3, BAL45601.2) - RrA1-hox1 HD1 (BAL45602.2, minus strand) -
+    RrA1-hox2 HD2 (BAL45603.2, plus strand). The strain is not stated on the deposit.
+    The idiomorph label A1 is the depositors'' own allele name (RrA1). This is the first
+    Boletales MAT reference in the database. The paper has no PMID; recorded by DOI
+    only, as for the Morchella records.'
+- record_id: 2822231_sb25_HD_A1
+  accession: HQ188438.1
+  taxid: 2822231
+  strain: SB25
+  idiomorph: A1
+  completeness: complete
+  orientation: MIP1->[HD2(A2)<-|->HD1(A1)]
+  dedupe: 21131435|2822231|HD|SB25
+  citations:
+  - {pmid: '21131435', doi: 10.1128/EC.00212-10}
+  methods:
+  - inheritance and segregation of the HD genes in crosses, heterozygosity in wild strains; the HD genes form the single MAT locus (James et al. 2011)
+  - targeted sequencing; the deposit spans MIP (5' partial) through the two HD genes and a partial hypothetical protein
+  - HD1/HD2 gene identity at the MAT locus; allele not numbered in the deposit (see definition_note)
+  genes:
+  - [ADN97170.1, MIP1, flanking_conserved]
+  - [ADN97171.1, HD2, core_MAT]
+  - [ADN97172.1, HD1, core_MAT]
+  note: 'Phanerochaete chrysosporium strain SB25 HD mating-type locus, from the locus
+    deposit HQ188438.1 (10,066 bp; James TY, Lee M, van Diepen LTA 2011, Eukaryot Cell
+    10:249-261). P. chrysosporium is bipolar with the HD genes as the single MAT locus;
+    the pheromone receptor genes are unlinked and not mating-type determinants in this
+    species. Gene order: MIP (5'' partial, codon_start 3, ADN97170.1) - "A2 mating-type
+    protein" HD2 (ADN97171.1, minus) - "A1 mating-type protein" HD1 (ADN97172.1, plus) -
+    hypothetical protein HP2 (partial, ADN97173.1, not curated: not a roster gene).
+    The gene names A1/A2 in the deposit denote the HD1/HD2 genes, NOT alleles. The
+    idiomorph label "A1" is a PLACEHOLDER (the allele of SB25 is not numbered); curator
+    decision pending on a label convention. NCBI taxid 2822231 is the current name for
+    this species (lineage resolved 2026-09-26). No Phanerochaete genome is in the BFD
+    library, so this record cannot be scored against its own assembly.'

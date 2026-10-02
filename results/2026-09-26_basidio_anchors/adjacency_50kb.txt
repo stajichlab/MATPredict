@@ -1,0 +1,38 @@
+window 50000 bp; anchor = top tblastn HSP; HD/receptor hit = any HSP e<=1e-5
+subphylum	order	species	MIP(pid,contig)	HD_near_MIP(best pid)	BFG(pid)	HD_near_BFG	MIP-BFG_same_contig_dist	HD_clusters	bg_HD_frac	ICMT_pid	PR_near_ICMT	PR_clusters
+Agaricomycotina	Agaricales	Coprinopsis_cinerea	77	28(100)	36	28	19096	1	0.003	31	0	3
+Agaricomycotina	Agaricales	Agaricus_bisporus	96	10(96)	80	10	12674	1	0.003	43	0	4
+Agaricomycotina	Agaricales	Laccaria_bicolor	72	10(49)	90	10	4508	1	0.002	53	0	6
+Agaricomycotina	Agaricales	Schizophyllum_commune	76	14(64)	54	0	-	2	0.006	38	0	6
+Agaricomycotina	Boletales	Serpula_lacrymans	75	7(37)	32	7	23941	1	0.002	41	0	24
+Agaricomycotina	Boletales	Suillus_luteus	67	13(34)	-	0	-	1	0.003	30	0	1
+Agaricomycotina	Boletales	Rhizopogon_vinicolor	66	15(40)	-	0	-	1	0.003	31	0	2
+Agaricomycotina	Polyporales	Trametes_versicolor	64	1(27)	43	1	4521	1	0.002	46	0	3
+Agaricomycotina	Polyporales	Gelatoporia_subvermispora	66	3(39)	58	3	9937	1	0.003	29	0	2
+Agaricomycotina	Polyporales	Ganoderma_boninense	69	0(0)	48	0	277034	0	0.000	39	0	1
+Agaricomycotina	Russulales	Heterobasidion_irregulare	65	7(38)	47	7	11098	2	0.006	29	0	1
+Agaricomycotina	Russulales	Stereum_hirsutum	58	2(29)	42	2	18997	1	0.002	31	0	4
+Agaricomycotina	Russulales	Russula_aff._rugulosa_BPL654	52	0(0)	-	0	-	0	0.000	45	0	5
+Agaricomycotina	Hymenochaetales	Fomitiporia_mediterranea	57	8(41)	78	8	36772	1	0.002	39	0	3
+Agaricomycotina	Cantharellales	Rhizoctonia_solani	49	0(0)	44	18	-	2	0.005	43	0	4
+Agaricomycotina	Auriculariales	Auricularia_auricula-judae	49	0(0)	62	0	7151	3	0.007	63	0	1
+Agaricomycotina	Dacrymycetales	Dacryopinax_primogenitus	45	0(0)	38	9	-	1	0.003	45	0	2
+Agaricomycotina	Tremellales	Cryptococcus_neoformans	41	0(0)	56	0	-	1	0.005	27	0	2
+Ustilaginomycotina	Ustilaginales	Sporisorium_reilianum	45	0(0)	-	0	-	1	0.006	49	0	1
+Ustilaginomycotina	Malasseziales	Malassezia_sympodialis	49	0(0)	-	0	-	1	0.014	47	0	1
+Ustilaginomycotina	Tilletiales	Tilletia_caries	46	0(0)	37	0	-	2	0.006	38	0	1
+Ustilaginomycotina	Exobasidiales	Exobasidium_cylindrosporum	47	0(0)	36	0	2358941	2	0.011	31	0	1
+Pucciniomycotina	Sporidiobolales	Rhodotorula_toruloides	44	0(0)	37	0	-	1	0.005	73	0	1
+Pucciniomycotina	Pucciniales	Puccinia_graminis	34	0(0)	38	0	-	0	0.000	43	0	3
+Pucciniomycotina	Microbotryales	Microbotryum_lychnidis-dioicae	43	0(0)	46	0	-	3	0.009	32	0	2
+Pucciniomycotina	Leucosporidiales	Leucosporidium_creatinivorum	45	0(0)	62	0	-	1	0.004	40	0	1
+Pucciniomycotina	Sporidiobolales	Sporobolomyces_johnsonii	43	0(0)	-	0	-	1	0.005	65	0	2
+Pucciniomycotina	Mixiales	Mixia_osmundae	37	0(0)	52	0	901988	2	0.015	41	0	1
+Pucciniomycotina	Pucciniales	Melampsora_americana	39	0(0)	36	0	-	0	0.000	32	0	3
+Wallemiomycotina	Wallemiales	Wallemia_ichthyophaga	42	0(0)	32	0	-	1	0.011	31	37	1
+
+subphylum	genomes	HD_near_MIP	HD_near_BFG	PR_near_ICMT	mean_bg_HD_frac
+Agaricomycotina	18	12	11	0	0.003
+Ustilaginomycotina	4	0	0	0	0.009
+Pucciniomycotina	7	0	0	0	0.005
+Wallemiomycotina	1	0	0	1	0.011

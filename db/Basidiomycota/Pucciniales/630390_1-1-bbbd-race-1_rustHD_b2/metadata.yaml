@@ -1,0 +1,129 @@
+record_id: 630390_1-1-bbbd-race-1_rustHD_b2
+record_version: 1
+taxonomy:
+  taxid: 630390
+  lineage: k__Fungi;p__Basidiomycota;sc__Pucciniomycotina;c__Pucciniomycetes;o__Pucciniales;f__Pucciniaceae;g__Puccinia;s__Puccinia_triticina_1-1_BBBD_Race_1
+  lineage_resolved_date: '2026-09-26'
+organism:
+  species: Puccinia triticina 1-1 BBBD Race 1
+  strain:
+    name: 1-1 BBBD Race 1
+    known: true
+    culture_collection_ids:
+    - 1-1 BBBD Race 1
+    differs_from_sequenced: false
+mating_type:
+  locus_name: rustHD
+  idiomorphs:
+  - b2
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: bW<-|->bE
+    definition_note: 'Puccinia triticina 1-1 BBBD Race 1, b mating-type HD pair on
+      ADAS02000068.1 (Pt v2 supercontig 2.68), divergently transcribed, 620 bp apart:
+      bW2-HD1 = PTTG_27730 (OAV92158.1, 621 aa, one intron) and bE2-HD2 = PTTG_03697
+      (OAV92159.1, 374 aa, two introns), per Cuomo et al. 2017 Table S11 and Figure
+      S9. The PtbW2/PtbE2 alleles were cloned from cDNA and tested in the Ustilago
+      hordei b-deletion mating assay (File S1). The Pt b1 allele pair has only partial
+      genome models (PTTG_10928 53 aa, PTTG_09683 137 aa) and is not curated. TIER
+      2: genome-derived.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: ADAS02000068.1
+        seq_region: ADAS02000068.1
+      start: 214012
+      end: 217852
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: bW
+  protein_accession: ncbi_protein:OAV92158.1
+  role: core_MAT
+  present: true
+  locus_tag: PTTG_27730
+  segment_index: 0
+  start: 214012
+  end: 215954
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 215545
+    end: 215954
+  - start: 214012
+    end: 215467
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: bE
+  protein_accession: ncbi_protein:OAV92159.1
+  role: core_MAT
+  present: true
+  locus_tag: PTTG_03697
+  segment_index: 0
+  start: 216575
+  end: 217852
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 216575
+    end: 217246
+  - start: 217318
+    end: 217452
+  - start: 217535
+    end: 217852
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: TIER 2 (genome-derived). The proteins are the depositors'
+      own gene models in the Pt 1-1 BBBD Race 1 genome; Cuomo et al. 2017 identified
+      them as the b HD1/HD2 genes, cloned the PtbW2/PtbE2 alleles from cDNA and tested
+      them in a heterologous Ustilago mating assay.
+    citations: &id001
+    - doi: 10.1534/g3.116.032797
+      pmid: '27913634'
+  boundaries:
+    tier: 2
+    experimental_method: record segment spans the two curated gene models on ADAS02000068.1,
+      from the assembly's own CDS features
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: allele number from Cuomo et al. 2017 Table S11 (bE2/bW2);
+      pattern placeholder
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: ADAS02000068.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1534/g3.116.032797|630390|rustHD|b2
+  reviewed_by: 'J. Stajich (sign-off 2026-09-27)'
+  reviewed_date: '2026-09-27'
+  notes: 'Proposed 2026-09-26 on curator request (Sporidiobolales, Pucciniales). Curator J. Stajich signed off 2026-09-27.'
+model_provenance: null

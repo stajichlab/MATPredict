@@ -97,3 +97,22 @@ fungi_odb12 interim tree.
   genome is from (NRRL 1360 shows they can differ).
 - Genus rank only. Species names from ITS hits are in the basis column, not
   recorded as identities.
+
+## Follow-up rulings (2026-10-03)
+- Pilaira_anomala_RSA_1997_Plus: the file label Plus is wrong for this
+  assembly. Curator ruled the label Minus, from the MATPredict call and the
+  Cunninghamella neighbour. Changed in
+  `results/2026-09-28_lcg_holdout/curator_table.tsv` (backup
+  `.bak_20261003`). No score changes: the genome is already out of clean label
+  scoring (misidentified and training_leak). The new label comes from the
+  MATPredict call, so it must not be used as an independent test.
+  ANNOTATION_ERRORS_FIXED_REPORT.md C12.
+- Phycomyces_blakesleeanus_NRRL_1556 and Phycomyces_nitens_NRRL_2700: identical
+  ITS and locus. Curator: the strains are very close; no further check.
+- Pilaira_anomala_RSA_1997_Plus and Thamnidium_elegans_NRRL_2467 (the two
+  same-strain mismatches): curator ruling, hold both out of later analyses as
+  a possible sample mixup, contamination, or for further investigation. They
+  do not carry the same MAT gene: RSA 1997 has a Minus (sexM) call, NRRL 2467 a
+  Plus (sexP) call. This does not affect MATPredict as a tool.
+  `db/taxon_overrides.tsv` `use` column updated for both. Both were already out
+  of species scoring, and neither is in clean label scoring.

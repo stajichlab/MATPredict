@@ -1,0 +1,83 @@
+name: docker
+
+# Release images: ghcr.io/stajichlab/matpredict:<version> and :latest.
+# A v* tag or a published release builds and pushes; a pull request that touches
+# the image inputs builds and smoke-tests without pushing; workflow_dispatch
+# builds and pushes on demand.
+on:
+  push:
+    tags: ["v*"]
+  release:
+    types: [published]
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - pixi.toml
+      - pixi.lock
+      - pyproject.toml
+      - .github/workflows/docker.yml
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/${{ github.repository_owner }}/matpredict
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Image tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') || github.event_name == 'release' }}
+            type=ref,event=pr
+            type=sha,format=short
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build (load locally for the smoke test)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: matpredict:test
+          build-args: VERSION=${{ steps.meta.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Smoke test
+        run: |
+          docker run --rm matpredict:test --version
+          docker run --rm matpredict:test detect --help > /dev/null
+          docker run --rm --entrypoint /bin/bash matpredict:test /shell-hook.sh \
+            bash -c 'for t in tblastn diamond miniprot exonerate mafft augustus taxonkit; do command -v $t > /dev/null || { echo "missing $t"; exit 1; }; done; python -c "import pyhmmer, MATPredict"'
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: VERSION=${{ steps.meta.outputs.version }}
+          cache-from: type=gha

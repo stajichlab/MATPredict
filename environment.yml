@@ -1,0 +1,22 @@
+name: matpredict
+channels:
+- conda-forge
+- bioconda
+- nodefaults
+dependencies:
+- python >=3.11
+- pip *
+- taxonkit *
+- diamond *
+- blast *
+- miniprot *
+- exonerate *
+- augustus *
+- clinker-py >=0.0.32,<0.0.33
+- pygenomeviz >=1.7.0,<2
+- pyhmmer >=0.12.3,<0.13
+- mafft >=7.526,<8
+- pip
+- pip:
+  - -e .
+

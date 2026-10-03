@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from io import StringIO
@@ -11,6 +12,9 @@ from Bio import SeqIO
 from MATPredict.db.http_cache import CachedFetcher
 
 _EUTILS_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+
+log = logging.getLogger(__name__)
+_warned_no_email = False
 
 
 @dataclass(frozen=True)
@@ -58,13 +62,24 @@ class AccessionStatus:
 class NcbiClient:
     """Thin wrapper around NCBI E-utilities, backed by an injected CachedFetcher."""
 
-    email: str
+    email: str | None
     api_key: str | None
     fetcher: CachedFetcher
 
     def _url(self, path: str, params: str) -> str:
+        """E-utilities URL. NCBI asks callers to send `tool` and `email`; the e-mail
+        is sent only when one is configured (see `MATPredict.config.ncbi_identity`).
+        The cache key leaves these out (`http_cache.IDENTITY_PARAMS`)."""
+        global _warned_no_email
+        if not self.email and not _warned_no_email:
+            from MATPredict.config import config_path
+            log.warning("no NCBI e-mail configured; set MATPREDICT_NCBI_EMAIL or add "
+                        "[ncbi] email = \"...\" to %s (NCBI asks E-utilities users to "
+                        "identify themselves)", config_path())
+            _warned_no_email = True
+        email_param = f"&email={self.email}" if self.email else ""
         key_param = f"&api_key={self.api_key}" if self.api_key else ""
-        return f"{_EUTILS_BASE}/{path}?{params}&email={self.email}{key_param}"
+        return f"{_EUTILS_BASE}/{path}?{params}&tool=MATPredict{email_param}{key_param}"
 
     def resolve_accession(self, accession: str) -> AccessionStatus:
         """Look up an accession's live/suppressed status and current version via esummary."""

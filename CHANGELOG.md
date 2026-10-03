@@ -16,6 +16,16 @@ release completed.
 - README rewritten: goals, workflow, curation process, quickstart, usage,
   validation, citation.
 
+### Added
+- `pixi.lock` is now committed, so environments and images are reproducible.
+- `environment.yml` for conda/mamba users (exported from `pixi.toml`).
+- `Dockerfile` (pixi build stage, Ubuntu 24.04 runtime with the environment,
+  the package and `db/`).
+- `.github/workflows/docker.yml`: builds and smoke-tests the image on pull
+  requests that touch the image inputs; on a `v*` tag, a published release or a
+  manual run it also pushes `ghcr.io/stajichlab/matpredict:<version>` and
+  `:latest`.
+
 ## [0.6.0] — 2026-10-03 — `v0.6.0`
 
 Post-#9 work merged as PR #10: confidence and tier rules, the V3 polish cap,

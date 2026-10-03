@@ -1,0 +1,11 @@
+# Only pixi.toml, pixi.lock, pyproject.toml, README.md, src/ and db/ go into the image.
+*
+!pixi.toml
+!pixi.lock
+!pyproject.toml
+!README.md
+!src/
+!db/
+**/__pycache__
+db/*.duckdb
+db/candidates/

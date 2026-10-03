@@ -171,6 +171,37 @@ pixi install
 pixi run matpredict --help
 ```
 
+### Other ways to install
+
+**Docker.** Each release publishes an image to the GitHub Container Registry.
+The image holds the environment, the package and the curated database.
+
+```bash
+docker pull ghcr.io/stajichlab/matpredict:latest     # or a release version, :<version>
+docker run --rm -v "$PWD":/data -e MATPREDICT_NCBI_EMAIL=you@example.org \
+  ghcr.io/stajichlab/matpredict:latest \
+  detect --genome /data/genome.fna --taxid 4837 --out-dir /data/out
+```
+
+On an HPC system without Docker, use Apptainer/Singularity:
+
+```bash
+apptainer pull matpredict.sif docker://ghcr.io/stajichlab/matpredict:latest
+apptainer run matpredict.sif detect --genome genome.fna --taxid 4837 --out-dir out
+```
+
+**Conda / mamba.** [environment.yml](environment.yml) lists the same packages
+as `pixi.toml` (exported with `pixi workspace export conda-environment`). Run
+from the repository root, because it installs MATPredict from the checkout:
+
+```bash
+mamba env create -f environment.yml
+mamba activate matpredict
+matpredict --help
+```
+
+The exact versions used for releases are in [pixi.lock](pixi.lock).
+
 ### Run one genome
 
 This example uses *Phycomyces blakesleeanus* NRRL 1555 (NCBI taxid 4837).

@@ -13,13 +13,22 @@ def _clean_env(monkeypatch, tmp_path):
     for v in ("MATPREDICT_NCBI_EMAIL", "MATPREDICT_NCBI_API_KEY", "MATPREDICT_CONFIG", "XDG_CONFIG_HOME"):
         monkeypatch.delenv(v, raising=False)
     monkeypatch.setenv("HOME", str(tmp_path / "home"))
-    monkeypatch.setattr(config, "_warned_no_email", False)
+    import MATPredict.db.ncbi_client as nc
+    monkeypatch.setattr(nc, "_warned_no_email", False)
 
 
-def test_no_default_email(caplog):
+def test_no_default_email_and_no_warning_at_lookup(caplog):
     with caplog.at_level(logging.WARNING):
         assert config.ncbi_identity() == (None, None)
-    assert "no NCBI e-mail configured" in caplog.text
+    assert caplog.text == ""
+
+
+def test_the_first_request_without_email_warns_once(caplog):
+    client = NcbiClient(email=None, api_key=None, fetcher=None)
+    with caplog.at_level(logging.WARNING):
+        client._url("efetch.fcgi", "db=taxonomy&id=1")
+        client._url("efetch.fcgi", "db=taxonomy&id=2")
+    assert caplog.text.count("no NCBI e-mail configured") == 1
 
 
 def test_the_config_file_supplies_email_and_key(monkeypatch, tmp_path):

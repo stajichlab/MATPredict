@@ -251,3 +251,6 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
   and taxa later: analysis/2026-10-02_lcg-overrides-manual-review.md. fungi_odb12
   IQ-TREE cancelled (FastTree is final); 4 reference genomes with foreign rDNA
   kept as a side note in open-questions.md.
+- B12 closed (2026-10-03): curator reviewed the trees and accepted them.
+  RSA 1997 label set to Minus (C12); RSA 1997 and NRRL 2467 held out as a
+  possible sample mixup or contamination; no effect on MATPredict as a tool.

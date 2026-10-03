@@ -1,7 +1,7 @@
 # LCG distant-genus placements: overrides recorded, for manual review (2026-10-02)
 
-Status: decided (overrides recorded); the curator will review the trees and
-taxa by hand later. This report lists what to look at.
+Status: decided (overrides recorded); curator manual review done 2026-10-03,
+trees accepted. This report lists what was reviewed.
 
 ## Question
 13 LCG genomes sit next to a genus far from their file-name genus in the
@@ -116,3 +116,5 @@ fungi_odb12 interim tree.
   Plus (sexP) call. This does not affect MATPredict as a tool.
   `db/taxon_overrides.tsv` `use` column updated for both. Both were already out
   of species scoring, and neither is in clean label scoring.
+- Manual review done (J. Stajich, 2026-10-03): the trees are acceptable and
+  help resolve some of the placement questions. No override changed.

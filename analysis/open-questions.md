@@ -74,4 +74,3 @@ not match the genome's name:
 | Item | Next step | Where |
 |---|---|---|
 | S. pombe P and Yarrowia A/B idiomorph class (unassigned) | protein-domain evidence (Pc vs alpha box; MATA/MATB proteins) | `db/Ascomycota/order.yml` (B9) |
-| LCG distant-genus placements (13): recorded as overrides 2026-10-02 | curator manual review of trees and taxa | `analysis/2026-10-02_lcg-overrides-manual-review.md` |

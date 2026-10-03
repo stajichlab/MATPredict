@@ -86,9 +86,10 @@ def _get_default_ncbi_client():
         from MATPredict.db.http_cache import CachedFetcher
         from MATPredict.db.ncbi_client import NcbiClient
 
+        from MATPredict.config import ncbi_identity
+
         cache_dir = Path(os.environ.get("MATPREDICT_CACHE_DIR", Path.cwd() / ".matpredict_cache"))
-        email = os.environ.get("MATPREDICT_NCBI_EMAIL", "jason.stajich@ucr.edu")
-        api_key = os.environ.get("MATPREDICT_NCBI_API_KEY")
+        email, api_key = ncbi_identity()
         fetcher = CachedFetcher(cache_dir=cache_dir, transport=_default_transport)
         _default_ncbi_client = NcbiClient(email=email, api_key=api_key, fetcher=fetcher)
     return _default_ncbi_client

@@ -4,6 +4,27 @@ All notable changes to MATPredict. Versions follow [semantic versioning](https:/
 release tags may carry a clade suffix naming the lineage whose infrastructure that
 release completed.
 
+## [Unreleased]
+
+### Changed
+- No default NCBI e-mail. The address comes from `$MATPREDICT_NCBI_EMAIL` or the
+  `[ncbi]` table of `~/.config/matpredict/config.toml` (`$MATPREDICT_CONFIG`,
+  `$XDG_CONFIG_HOME`). Without one, requests carry no e-mail and one warning is
+  logged. Requests now send `tool=MATPredict`.
+- The NCBI response cache key leaves out `email`, `api_key` and `tool`. Entries
+  cached under the old full-URL key are still found and copied forward.
+- README rewritten: goals, workflow, curation process, quickstart, usage,
+  validation, citation.
+
+## [0.6.0] — 2026-10-03 — `v0.6.0`
+
+Post-#9 work merged as PR #10: confidence and tier rules, the V3 polish cap,
+the flank-carried rule, `not_searched` routing, the MAT-gene gate, the P1
+paralog class, deterministic classifier builds, scope-only families,
+`idiomorph_class`, the regression check, new curated records, and held-out
+validation (LCG 536/621, Jena 61/64, Zygo 23/23). See the `v0.6.0` tag message
+and `analysis/INDEX.md`.
+
 ## [0.5.0] — 2026-09-20 — `v0.5.0-mucoromycota`
 
 Mucoromycota detection becomes usable end to end: idiomorph calling works, the

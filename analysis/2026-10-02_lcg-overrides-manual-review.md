@@ -29,7 +29,14 @@ review entry for a later manual check of the trees and taxa.
   `its_verdicts.tsv`, `regions.*.fa`.
 - IQ-TREE subtree (325 tips, LG+F+R8, UFBoot 1000):
   `results/2026-10-01_lcg_name_check/iqtree_subtree/`.
-  - mucoromycota_odb12: job 29344888, running at the time of writing.
+  - mucoromycota_odb12: job 29344888, completed 2026-10-03 (12 h 36 min).
+    Of 101 FastTree flags: 75 held (UFBoot >= 95), 26 weakened, 0 changed
+    genus. All 13 genomes in this report are held. 25 of the 26 weak flags are
+    weak inside the tree genus only: the clade of the tip plus all tree-genus
+    references has UFBoot 100 and no named-genus reference. Only Absidia sp.
+    NRRL A-16789 (-> Mucor) is weak at genus level (Mucor-wide clade UFBoot 65).
+    Detail: `iqtree_subtree/NOTE.md`, `ufboot_flag_comparison.tsv`,
+    `weakened_genus_clade.tsv`.
   - fungi_odb12: job 29344889 cancelled by the curator after 10.4 h at search
     iteration 20 (projected more than 35 h to finish). The FastTree tree is the
     fungi_odb12 result. The last best ML tree (no supports) is at
@@ -69,14 +76,16 @@ fungi_odb12 interim tree.
 ## Manual review checklist (curator, later)
 1. Open each genome's tip in both FastTree trees. Check the sister clade and the
    SH-like value against the table above.
-2. Syncephalastrum_racemosum_NRRL_1506: fungi_odb12 support is 0.565. Check
-   whether the mucoromycota_odb12 UFBoot result (when it finishes) supports it.
+2. Syncephalastrum_racemosum_NRRL_1506: fungi_odb12 SH-like support is 0.565;
+   mucoromycota_odb12 UFBoot holds it (>= 95) with a Phycomyces reference.
 3. Circinella_muscae_NRRL_1360: decide between mixed sample, misnamed culture,
    or an unassembled Benjaminiella rDNA. Read coverage would separate these.
 4. Thamnidium_elegans_NRRL_2467 and Rhizomucor_pusillus_NRRL_2543: each has a
    second ITS copy that matches nothing above 89%. Not tested.
 5. Syncephalastrum_racemosum_NRRL_1623: the tree reference it pairs with (Jena
    Pilaira anomala CBS 695.68) has Mucor saturninus rDNA. Check that reference.
+8. Absidia sp. NRRL A-16789 (not an override): the only flag weak at genus
+   level (Mucor-wide clade UFBoot 65).
 6. The 2 same-strain mismatches suggest LCG sample swaps or contamination. The
    JGI genomes (Pilano1, Thaele1) of the same strain ids have the expected rDNA.
 7. Reference genomes with foreign rDNA: see the side note in

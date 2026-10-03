@@ -29,6 +29,7 @@ from MATPredict.detect.batch_runner import GenomeRunFailure, run_batch
 from MATPredict.detect.genome_acquisition import AcquiredGenome
 from MATPredict.detect.pipeline import EvidenceFloor
 from MATPredict.detect.reference_fasta import build_reference_fasta
+from MATPredict.detect.suppress import default_suppress_paths, filter_rows, load_suppress_list
 
 
 def _load_genomes(genomes_json: Path) -> list[AcquiredGenome]:
@@ -102,6 +103,13 @@ def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
 
     genomes = _load_genomes(args.genomes_json)
+    # Curator's ruling 2026-09-26: suppressed genomes (the BFD list plus
+    # <db root>/suppress.txt) are never run, and the number skipped is logged.
+    suppressed = load_suppress_list(default_suppress_paths(args.db_root))
+    _, skipped = filter_rows([g.accession for g in genomes], suppressed)
+    genomes = [g for g in genomes if g.accession not in set(skipped)]
+    print(f"skipped {len(skipped)} suppressed genome(s): {', '.join(skipped) or '-'}",
+          file=sys.stderr)
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 

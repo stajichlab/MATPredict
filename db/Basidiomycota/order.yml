@@ -1,6 +1,18 @@
 phylum: Basidiomycota
+# Curator's ruling 2026-09-26: no `homothallic_candidate` label in this phylum.
+# "The basidiomycetes agaricomycotina aren't really homothallic in the same
+# way so it doesn't really apply to try give that label." The anchor pilot
+# (docs/notes/2026-09-26_basidiomycota-anchors.md, branch basidio-anchors)
+# measured the rule firing on HD1+HD2 and bE+bW partner pairs in 8 of 30
+# genomes. A locus entry may set `homothallic_screen: true` to override.
+homothallic_screen: false
 loci:
   - locus_name: "HD"
+    # Same-locus calls of merge group A are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "A"
+    merge_generic: true
     vocabulary_type: "pattern"
     idiomorph_pattern: "^A[0-9]+$"
     # Widened 2026-09-20 from the two curated species (Agaricus bisporus var.
@@ -15,7 +27,12 @@ loci:
     # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
     # reasonable for most"), replacing the family-rank values set 2026-09-20.
     # Rank verified against NCBI Taxonomy, not assumed.
-    taxonomic_scope: [5338]  # Agaricales (order)
+    # Widened 2026-09-26 to Russulales, Boletales and Polyporales, which now
+    # carry curated HD records (Heterobasidion KF280353.1, Rhizopogon
+    # AB646132.2, Phanerochaete HQ188438.1). Taxids verified against NCBI
+    # Taxonomy (rank order): Russulales 452342, Boletales 68889,
+    # Polyporales 5303.
+    taxonomic_scope: [5338, 452342, 68889, 5303]  # Agaricales, Russulales, Boletales, Polyporales
     # Curator's ruling 2026-09-21: 25 kb is a reasonable upper bound for
     # Agaricales. Measured largest intra-locus gene gap in the two curated HD
     # records: 352 bp (n=2), so 25 kb is generous and costs nothing here.
@@ -23,7 +40,32 @@ loci:
     genes:
       - {name: HD1, role: core_MAT, gene_class: HD1}
       - {name: HD2, role: core_MAT, gene_class: HD2}
+      # Agaricomycete HD-locus anchors, added 2026-09-26 on the curator's
+      # request to define Basidiomycota anchors before the phylum launch.
+      # Literature: MIP (mitochondrial intermediate peptidase) 5' and beta-fg
+      # 3' of the HD genes "for nearly all characterized Agaricomycetes"
+      # (Mujic et al. 2017, G3 7:1775, PMID 28450370); MIP "consistently
+      # syntenic" with MAT-HD in Polyporales and other Agaricomycetes (James
+      # et al. 2013, Mycologia 105:1374, PMID 23928418). Known exceptions:
+      # Lentinula edodes, MIP not closely linked (PMID 24295887); Sparassis,
+      # beta-fg absent (PMID 33213780).
+      # Measured on a 30-genome pilot (results/2026-09-26_basidio_anchors/):
+      # an HD hit lies within 20 kb of the genome's top MIP1 hit in 12/18
+      # Agaricomycotina genomes, 0/4 Ustilaginomycotina, 0/7
+      # Pucciniomycotina, 0/1 Wallemiomycotina. The anchors are
+      # Agaricomycete-specific; this family's scope is Agaricomycete orders
+      # only, so that is where they are searched.
+      # OPTIONAL (a bonus flank, as sla2 in MATsc): finding one promotes the
+      # call, its absence (Lentinula, Sparassis, assembly breaks) costs
+      # nothing.
+      - {name: MIP1, role: flanking_conserved, optional: true}
+      - {name: beta_fg, role: flanking_conserved, optional: true}
   - locus_name: "PR"
+    # Same-locus calls of merge group B are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "B"
+    merge_generic: true
     vocabulary_type: "pattern"
     idiomorph_pattern: "^B[0-9]+$"
     # Widened 2026-09-20 from the single curated species (Coprinopsis cinerea
@@ -32,9 +74,19 @@ loci:
     # Scope widened to ORDER rank 2026-09-21, curator's ruling ("order is
     # reasonable for most"), replacing the family-rank values set 2026-09-20.
     # Rank verified against NCBI Taxonomy, not assumed.
-    taxonomic_scope: [5338]  # Agaricales (order)
+    # Widened 2026-09-27 to Polyporales (5303) and Russulales (452342), receptor
+    # queue step (c): tier-2 B-locus records for Heterobasidion irregulare,
+    # Trametes versicolor and Grifola frondosa. The family keeps one receptor
+    # name and generic precursor names, so all orders share the roster. Before
+    # this, those orders were HD-only (results/2026-09-26_basidiomycota_full).
+    # CURATOR RULING, J. Stajich, 2026-10-01: Boletales (68889) added. The new
+    # Boletales HD record moved Serpula lacrymans from phylum fallback to
+    # lineage routing, where PR was not searched, and its 3 PR calls (all
+    # CAAX-dependent, unverified) were lost. No Boletales PR record exists yet.
+    taxonomic_scope: [5338, 5303, 452342, 68889]  # Agaricales, Polyporales, Russulales, Boletales (orders)
     # 25 kb per the curator's Agaricales upper bound. Measured largest
     # intra-locus gene gap in the one curated PR record: 3,186 bp (n=1).
+    # The 2026-09-27 records' largest gap is 9,913 bp (Grifola frondosa).
     max_cluster_gap_bp: 25000
     # Gene names must match the names used by this family's curated records
     # exactly -- detect/search.py:_attribute drops any hit whose curated gene
@@ -52,6 +104,23 @@ loci:
       - {name: pheromone_B43, role: core_MAT, gene_class: pheromone_precursor}
       - {name: pheromone_B44, role: core_MAT, gene_class: pheromone_precursor}
       - {name: fungal_mating_type_pheromone, role: core_MAT, gene_class: pheromone_precursor}
+      # Found only by the strict-CAAX scan below, never by homology; optional,
+      # so its absence costs nothing.
+      - {name: caax_precursor, role: core_MAT, gene_class: pheromone_precursor, optional: true}
+    # CURATOR RULING, J. Stajich, 2026-09-27 (receptor queue, option ii): count
+    # a short ORF ending in the strict CAAX motif within 10 kb of a receptor
+    # hit as the locus's second gene (detect/caax.py). Tandem receptor copies
+    # share one gene name and 25-80 aa precursors escape tblastn, so real B
+    # loci showed one distinct gene and were never admitted (Russula nobilis
+    # record, results/2026-09-27_russulaceae_receptor/). Measured basis
+    # (results/2026-09-27_pheromone_positional/): strict motif within 10 kb
+    # flagged 6/9 known mating receptors, 0/25 other STE3 copies, 2.5% of
+    # random windows. A scan precursor cannot by itself make a call high.
+    pheromone_precursor_scan:
+      gene: caax_precursor
+      receptor_genes: [pheromone_receptor]
+      motif: "C[VI][IV][AVMG]"
+      window_bp: 10000
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["alpha", "a"]
@@ -115,8 +184,19 @@ loci:
       # main findings were the MFa/MFalpha and neighbors". An optional gene is
       # still searched and still reported, it is simply out of fraction_found
       # and out of the core requirement.
-      - {name: SXI1, role: core_MAT, gene_class: HD1, present_in_idiomorphs: ["alpha"], optional: true}
-      - {name: SXI2, role: core_MAT, gene_class: HD2, present_in_idiomorphs: ["a"], optional: true}
+      #
+      # slot SXI is a BONUS slot, not a required one (curator J. Stajich
+      # approved the bonus design on 2026-09-26, after first approving a
+      # required slot). SXI1/SXI2 stay optional (their absence costs nothing);
+      # exactly one FOUND member adds 1 to both numerator and denominator of
+      # fraction_found; both found in one cluster adds nothing. A required slot
+      # would penalise every Tremellales genome without SXI. Four MATalpha
+      # C. neoformans assemblies split the locus over 5-6 contigs; the true
+      # piece (SXI1 + FAO1) scored 1/3 and was dropped. See
+      # results/2026-09-26_cryptococcus_zero/NOTE.md and
+      # results/2026-09-26_sxi_slot_gateA/.
+      - {name: SXI1, role: core_MAT, gene_class: HD1, present_in_idiomorphs: ["alpha"], optional: true, slot: SXI}
+      - {name: SXI2, role: core_MAT, gene_class: HD2, present_in_idiomorphs: ["a"], optional: true, slot: SXI}
       # Recombination-trapped, present in both idiomorphs as divergent alleles.
       # One roster entry each, not an a/alpha pair: presence does not
       # discriminate the idiomorph (both have them), sequence does, and the
@@ -177,6 +257,15 @@ loci:
       - {name: MFa, role: core_MAT, gene_class: pheromone_precursor, present_in_idiomorphs: ["a"], aliases: [MFa1, MFa2, MFa3]}
       - {name: STE3, role: core_MAT, gene_class: pheromone_receptor}
   - locus_name: "Aalpha"
+    # Same-locus calls of merge group A are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "A"
+    # Curator's ruling 2026-09-28, option (a), after the subloci literature
+    # review (results/2026-09-28_subloci_literature/NOTE.md): Aalpha and Abeta
+    # are paralogous specificity units inside ONE A locus, so they merge with
+    # HD and each other into one A call; the merged call lists them under
+    # `subloci`. (`merge_separately: true` would keep them apart; not set.)
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20 from the single curated species (Schizophyllum
@@ -197,6 +286,15 @@ loci:
       - {name: Y, role: core_MAT, gene_class: HD2}
       - {name: Z, role: core_MAT, gene_class: HD1}
   - locus_name: "Abeta"
+    # Same-locus calls of merge group A are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "A"
+    # Curator's ruling 2026-09-28, option (a), after the subloci literature
+    # review (results/2026-09-28_subloci_literature/NOTE.md): Aalpha and Abeta
+    # are paralogous specificity units inside ONE A locus, so they merge with
+    # HD and each other into one A call; the merged call lists them under
+    # `subloci`. (`merge_separately: true` would keep them apart; not set.)
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20, same rationale as Aalpha above.
@@ -215,6 +313,10 @@ loci:
       - {name: Y, role: core_MAT, gene_class: HD2}
       - {name: Z, role: core_MAT, gene_class: HD1}
   - locus_name: "Balpha"
+    # Same-locus calls of merge group B are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "B"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20, same rationale as Aalpha above.
@@ -254,6 +356,10 @@ loci:
       - {name: bap3-1, role: core_MAT, gene_class: pheromone_precursor}
       - {name: bap3-3, role: core_MAT, gene_class: pheromone_precursor}
   - locus_name: "Bbeta"
+    # Same-locus calls of merge group B are reported once (detect.locus_merge;
+    # curator's ruling 2026-09-27: the Schizophyllum B locus came back from
+    # PR, Balpha and Bbeta at one span; HD and Aalpha likewise for the A locus).
+    merge_group: "B"
     vocabulary_type: "pattern"
     idiomorph_pattern: "^[0-9]+$"
     # Widened 2026-09-20, same rationale as Aalpha above.
@@ -397,3 +503,163 @@ loci:
     genes:
       - {name: bE, role: core_MAT, gene_class: HD2}
       - {name: bW, role: core_MAT, gene_class: HD1}
+  - locus_name: "rustHD"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^b[0-9]+$"
+    # Pucciniales (rust) b/HD locus, added 2026-09-26 on the curator's ruling to
+    # curate Pucciniales ("curate Sporidiobolales and Pucciniales now"). A
+    # SEPARATE family from the Ustilaginales/Malasseziales bLocus: the rust
+    # HD pair is homologous, but the smut records score it at ~30% identity
+    # and the full Basidiomycota run called 1/129 Pucciniales genomes
+    # (results/2026-09-26_basidiomycota_full/ANALYSIS.md).
+    # Records are TIER 2 (genome-derived): no locus-specific GenBank deposit
+    # exists for any rust HD gene. The genes are the depositors' own models,
+    # identified as the b mating-type genes by Cuomo et al. 2017 (G3 7:361,
+    # PMID 27913634, Table S11) for Pgt, Pt and Pst; Melampsora by
+    # blastp orthology to the Pgt pair (see its record).
+    # Pattern vocabulary: HD is multiallelic in all rusts studied (Luo et al.
+    # 2024, PMID 38498573) and a dikaryotic rust assembly carries two alleles,
+    # so allele identity is not callable by homology.
+    # Rank verified against NCBI Taxonomy (5258 = order Pucciniales).
+    taxonomic_scope: [5258]  # Pucciniales (order)
+    # CURATOR RULING, J. Stajich, 2026-10-01: scope-only family. Searched only
+    # for genomes inside taxonomic_scope; never in phylum fallback or an
+    # explicit-phylum run. Why: in the regression check of curation-puccinio
+    # (results/2026-10-01_regression_puccinio, _net_both) the STE3 receptor
+    # references made redPR "A1/A2 high" and wallMAT calls in Rhizoctonia,
+    # Auricularia, Fomitiporia, Dacryopinax, Exobasidium, Microbotryum and
+    # Leucosporidium -- receptor homology, not these lineages' loci.
+    fallback_searchable: false
+    # 10 kb. Measured bE-bW intergenic distance in the four curated records:
+    # 538-640 bp; largest record span 3,956 bp (Pst). Pucciniales genomes
+    # are large and repeat-rich, so the gap is kept tight.
+    max_cluster_gap_bp: 10000
+    # Same names and HD-class mapping as bLocus (bE = HD2, bW = HD1), which is
+    # also the naming of Cuomo et al. 2017 Table S11 ("bE1-HD2", "bW1-HD1").
+    genes:
+      - {name: bE, role: core_MAT, gene_class: HD2}
+      - {name: bW, role: core_MAT, gene_class: HD1}
+  - locus_name: "redPR"
+    vocabulary_type: "enum"
+    idiomorph_values: ["A1", "A2"]
+    # Sporidiobolales ("red yeast") pheromone/receptor MAT locus, added
+    # 2026-09-26 on the curator's ruling. Biallelic MAT A1 / A2, each
+    # idiomorph carrying its own, highly divergent STE3 receptor (Coelho et
+    # al. 2008 PMID 18408057; Coelho et al. 2010 PMID 20700437; Coelho et al.
+    # 2011 PMID 21880139). HD genes are NOT near the P/R genes in
+    # R. toruloides, S. roseus or S. salmonicolor (Coelho 2008); the HD locus
+    # is its own family, redHD (below), added 2026-09-27.
+    # Rhodotorula records added 2026-09-27 (tier 2, genome-derived) from the
+    # curator's group's preprint (Liu et al., bioRxiv 10.1101/2025.09.11.675505,
+    # not yet peer-reviewed): STE3 plus the allele-specific STE20 of the P/R
+    # region (STE20 kept in the records, not searched), on public assemblies
+    # of R. toruloides, R. glutinis, R. mucilaginosa, R. sphaerocarpa and
+    # Rhodotorula sp. (clade I).
+    # Rank verified against NCBI Taxonomy (231213 = order Sporidiobolales).
+    taxonomic_scope: [231213]  # Sporidiobolales (order)
+    # CURATOR RULING, J. Stajich, 2026-10-01: scope-only family. Searched only
+    # for genomes inside taxonomic_scope; never in phylum fallback or an
+    # explicit-phylum run. Why: in the regression check of curation-puccinio
+    # (results/2026-10-01_regression_puccinio, _net_both) the STE3 receptor
+    # references made redPR "A1/A2 high" and wallMAT calls in Rhizoctonia,
+    # Auricularia, Fomitiporia, Dacryopinax, Exobasidium, Microbotryum and
+    # Leucosporidium -- receptor homology, not these lineages' loci.
+    fallback_searchable: false
+    # 20 kb. RibL6 sits 416 bp (A2, JN246612.1) to 9 bp (A1, JN246653.1)
+    # from STE3 in the curated deposits; the MAT region itself is larger than
+    # these amplicons (Coelho 2008), so the gap is not set to the deposit span.
+    # Not raised for the Rhodotorula STE20 (4.9-26.0 kb from STE3), because
+    # STE20 is not searched.
+    max_cluster_gap_bp: 20000
+    genes:
+      - {name: STE3a1, role: core_MAT, gene_class: pheromone_receptor, present_in_idiomorphs: ["A1"]}
+      - {name: STE3a2, role: core_MAT, gene_class: pheromone_receptor, present_in_idiomorphs: ["A2"]}
+      # Ribosomal protein L6 flanks the STE3 gene of BOTH idiomorphs in the
+      # Coelho 2011 deposits (A2: upstream, same strand; A1: downstream,
+      # opposite strand). It is the only complete flank CDS deposited
+      # (JN246612.1, S. longiusculus). Optional: it is needed as the second
+      # modelled gene for the 2-gene bar, but its absence must not block a
+      # call where the receptor is modelled with another gene.
+      - {name: RibL6, role: flanking_conserved, optional: true}
+      # STE20 (PAK kinase) sits in the P/R region of both alleles in the
+      # Rhodotorula records (A1 and A2 copies differ), 4.9-26.0 kb from STE3.
+      # Declared so the records' curated name validates, but OFF the search
+      # list, as in the Tremellales MAT family (2026-09-21: STE20 gave 187 of
+      # 272 genome-wide HSPs on Cryptococcus JEC21 and one run went 8 s ->
+      # 535 s; a large ubiquitous kinase family). If it is ever searched, it
+      # must NOT vote on the idiomorph (the btbA lesson, 2026-09-26).
+      - {name: STE20, role: flanking_variable, optional: true, idiomorph_informative: false, exclude_from_search: true}
+  - locus_name: "redHD"
+    vocabulary_type: "pattern"
+    idiomorph_pattern: "^B[0-9]+$"
+    # Sporidiobolales HD MAT locus, added 2026-09-27 on the curator's request
+    # (Rhodotorula MAT "including HD loci"); fills the queued Sporidiobolales
+    # HD gap (the rust HD records found 0/15 Sporidiobolales). A divergently
+    # transcribed HD1/HD2 pair, physically separate from the P/R locus
+    # (tetrapolar) per the curator's group's preprint (Liu et al., bioRxiv
+    # 10.1101/2025.09.11.675505, not yet peer-reviewed). Records are TIER 2
+    # (genome-derived): no locus-specific HD deposit exists.
+    # Pattern vocabulary: HD is multiallelic; the allele labels (B41, B39, ...)
+    # are the preprint's catalogue names and are not callable by homology.
+    # Rank verified against NCBI Taxonomy (231213 = order Sporidiobolales).
+    taxonomic_scope: [231213]  # Sporidiobolales (order)
+    # CURATOR RULING, J. Stajich, 2026-10-01: scope-only family. Searched only
+    # for genomes inside taxonomic_scope; never in phylum fallback or an
+    # explicit-phylum run. Why: in the regression check of curation-puccinio
+    # (results/2026-10-01_regression_puccinio, _net_both) the STE3 receptor
+    # references made redPR "A1/A2 high" and wallMAT calls in Rhizoctonia,
+    # Auricularia, Fomitiporia, Dacryopinax, Exobasidium, Microbotryum and
+    # Leucosporidium -- receptor homology, not these lineages' loci.
+    fallback_searchable: false
+    # 10 kb. HD1-HD2 intergenic distance in the records: 358-463 bp; largest
+    # record span 3,134 bp (R. glutinis CBS 20).
+    max_cluster_gap_bp: 10000
+    genes:
+      - {name: HD1, role: core_MAT, gene_class: HD1}
+      - {name: HD2, role: core_MAT, gene_class: HD2}
+  - locus_name: "wallMAT"
+    vocabulary_type: "enum"
+    idiomorph_values: ["v1", "v2"]
+    # Enum since 2026-09-27 (second record, curator ruling): v1 = the version of
+    # W. mellicola CBS 633.66 (671144_cbs-633-66_wallMAT_v1), v2 = the version of
+    # W. canadensis EXF-10342 (1708542_exf-10342_wallMAT_v2). Placeholders: which
+    # version is which mating type is not known. The receptor differs by version
+    # (STE3 v1 vs STE3v2 about 29-35%), so each version's receptor is its own
+    # gene name and votes for its version; the flanks BAP31/CAF1 are shared.
+    # Wallemiales PUTATIVE MAT locus, added 2026-09-27 on the curator's ruling
+    # ("make it a tier 2 record putative"). Described as putative by Padamsee
+    # et al. 2012 (PMID 22326418), Sun et al. 2019 (PMID 31167502, W.
+    # mellicola) and Gostincar et al. 2019 (PMID 31551960, W. ichthyophaga):
+    # BAP31, a homeodomain gene SXI1, an HMG-box gene, the pheromone receptor
+    # STE3 and CAF1, in two versions (one inverted; SXI1 absent and the HMG
+    # gene truncated in the inverted version per Gostincar 2019). The one
+    # records are tier 2, genome-derived.
+    # Rank verified against NCBI Taxonomy (431958 = order Wallemiales).
+    taxonomic_scope: [431958]  # Wallemiales (order)
+    # CURATOR RULING, J. Stajich, 2026-10-01: scope-only family. Searched only
+    # for genomes inside taxonomic_scope; never in phylum fallback or an
+    # explicit-phylum run. Why: in the regression check of curation-puccinio
+    # (results/2026-10-01_regression_puccinio, _net_both) the STE3 receptor
+    # references made redPR "A1/A2 high" and wallMAT calls in Rhizoctonia,
+    # Auricularia, Fomitiporia, Dacryopinax, Exobasidium, Microbotryum and
+    # Leucosporidium -- receptor homology, not these lineages' loci.
+    fallback_searchable: false
+    # 25 kb (was 20 kb with one record). Largest intra-locus gene gaps: v1
+    # HMG end 26,300 to SXI1 start 41,384 = 15,084 bp; v2 CAF1 end 330,352 to
+    # BAP31 start 350,841 = 20,489 bp (n=2). 25 kb matches the Basidiomycota
+    # families' Agaricales value.
+    max_cluster_gap_bp: 25000
+    # gene_class: STE3 = pheromone_receptor from the deposit's own product name
+    # ("STE3-domain-containing protein"); HMG = HMG_box from the record's
+    # definition_note (Pfam HMG_box hit; the papers' "HMG DNA binding motif").
+    # SXI1 has NO gene_class: whether it is HD1 or HD2 is not documented by the
+    # record and has not been ruled on by the curator.
+    genes:
+      # SXI1 and an intact HMG are in v1 only (v2 lacks SXI1 and carries only a
+      # truncated HMG-box fragment, per Gostincar et al. 2019 and the v2 record).
+      - {name: SXI1, role: core_MAT, present_in_idiomorphs: ["v1"]}
+      - {name: HMG, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["v1"]}
+      - {name: STE3, role: core_MAT, gene_class: pheromone_receptor, present_in_idiomorphs: ["v1"]}
+      - {name: STE3v2, role: core_MAT, gene_class: pheromone_receptor, present_in_idiomorphs: ["v2"]}
+      - {name: BAP31, role: flanking_conserved}
+      - {name: CAF1, role: flanking_conserved}

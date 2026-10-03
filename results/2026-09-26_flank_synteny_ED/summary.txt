@@ -1,0 +1,47 @@
+# PAD=5000 SPAN=100000 NEAR=20000 HMG_E=0.001
+
+## Genome level (independent of the pipeline)
+unit                                   genomes tptA_orth rnhA_orth strict_both  pair pair+HMG HMG<=20kb
+Mucoromycota                               293       280       293         276   139      117       241
+Mucoromycota/Rhizopodaceae                 111       111       111         111    45       45        95
+Mucoromycota/Mucoraceae                     70        62        70          59    48       47        69
+Mucoromycota/Lichtheimiaceae                30        28        30          28     0        0         7
+Mucoromycota/Cunninghamellaceae             22        21        22          21    19       13        18
+Mucoromycota/Backusellaceae                 14        14        14          14    13        0        14
+Mucoromycota/Umbelopsidaceae                14        13        14          13     0        0        12
+Mucoromycota/Syncephalastraceae              9         9         9           9     0        0         9
+Mucoromycota/Choanephoraceae                 7         7         7           7     7        7         7
+Mucoromycota/Phycomycetaceae                 6         6         6           6     6        5         5
+Mucoromycota/Endogonaceae                    4         4         4           4     0        0         0
+Mucoromycota/Saksenaeaceae                   2         2         2           2     1        0         2
+Mucoromycota/Mycotyphaceae                   1         0         1           0     0        0         1
+Mucoromycota/Radiomycetaceae                 1         1         1           1     0        0         1
+Mucoromycota/                                1         1         1           0     0        0         0
+Mucoromycota/Pilobolaceae                    1         1         1           1     0        0         1
+Mortierellomycota                          100       100       100          99     0        0         0
+Kickxellomycota                            190        27        91           0     0        0         0
+chytrid_control                             19        17        19          12     0        0         0
+
+## Locus level (sexM/sexP loci from the detection reports)
+unit                                   kind      loci flank@  conf =gOrth HMGbtw
+Mucoromycota                           called     242    242   238    234    167
+Mucoromycota                           withheld   393    359    28     19      0
+Mortierellomycota                      called       6      6     3      2      0
+Mortierellomycota                      withheld   388    282    43     26      0
+Kickxellomycota                        called       7      7     1      1      0
+Kickxellomycota                        withheld   744    514    19     14      0
+chytrid_control                        called       0      0     0      0      0
+chytrid_control                        withheld   163     25     2      2      0
+
+## Genomes with >=1 locus where HMG lies between confirmed flanks, per species
+Mortierellomycota: species 55, species with >=1 such genome 0
+Kickxellomycota: species 169, species with >=1 such genome 0
+Mucoromycota: species 118, species with >=1 such genome 63
+
+## Confirmed flank genes at loci, by group
+Mucoromycota {'-': 369, 'algA,glrA,rnhA,tptA': 52, 'btbA,glrA,rnhA,tptA': 48, 'algA,rnhA,tptA': 21, 'algA,tptA': 20, 'btbA,glrA,rnhA': 20, 'glrA,rnhA': 19, 'rnhA': 19}
+Mortierellomycota {'-': 348, 'rnhA': 18, 'glrA': 12, 'algA': 11, 'tptA': 3, 'rnhA,tptA': 1, 'btbA': 1}
+Kickxellomycota {'-': 731, 'glrA': 9, 'rnhA': 6, 'algA': 2, 'tptA': 2, 'btbA': 1}
+chytrid_control {'-': 161, 'rnhA': 1, 'tptA': 1}
+
+genomes analysed: 602

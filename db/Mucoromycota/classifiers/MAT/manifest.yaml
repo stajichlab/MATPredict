@@ -1,0 +1,1218 @@
+family: Mucoromycota:MAT
+built: '2026-10-01'
+builder: scripts/build_idiomorph_hmms.py (MATPredict.detect.classifier_build)
+deterministic: true
+pyhmmer_version: 0.12.3
+mafft: v7.526 (2024/Apr/26)
+tool_versions:
+  pyhmmer: 0.12.3
+  hmmer: HMMER3/f [3.4 | Aug 2023]
+  mafft: v7.526 (2024/Apr/26)
+mafft_options:
+- --localpair
+- --maxiterate
+- '1000'
+- --quiet
+- --thread
+- '1'
+hmm_builder_seed: 42
+training_sha256: 70397fee83f57e23452a8065c7a7cf15baa5110e9425a40246617c381f7ae2c0
+fast_paths: --gate-only recomputes mat_gene_gate for these HMMs; --paralogs-only adds or updates paralogs/*.hmm;
+  neither rebuilds the MAT HMMs
+genes:
+  sexP:
+    idiomorph: Plus
+    n_sequences: 79
+    n_unique: 78
+    pairwise_identity_min_median_max:
+    - 13.1
+    - 28.9
+    - 100.0
+    n_genera: 28
+    genera:
+    - Absidia
+    - Actinomucor
+    - Apophysomyces
+    - Backusella
+    - Benjaminiella
+    - Chlamydoabsidia
+    - Choanephora
+    - Circinella
+    - Cokeromyces
+    - Cunninghamella
+    - Dichotomocladium
+    - Gilbertella
+    - Helicostylum
+    - Mucor
+    - Mucoraceae
+    - Mycotypha
+    - Parasitella
+    - Phycomyces
+    - Pilaira
+    - Pilobolus
+    - Radiomyces
+    - Rhizomucor
+    - Rhizopus
+    - Syncephalastrum
+    - Syzygites
+    - Thamnidium
+    - Thermomucor
+    - Umbelopsis
+    sha256: 6b445a992b519945f6024697f5621907470b151213e991efb8b4382586cfd52d
+    sources:
+      curated_record: 9
+      training_extra: 70
+  sexM:
+    idiomorph: Minus
+    n_sequences: 11
+    n_unique: 11
+    pairwise_identity_min_median_max:
+    - 15.8
+    - 26.7
+    - 50.0
+    n_genera: 9
+    genera:
+    - Absidia
+    - Blakeslea
+    - Mucor
+    - Parasitella
+    - Phycomyces
+    - Rhizopus
+    - Syzygites
+    - Umbelopsis
+    - Zychaea
+    sha256: 83c975a123d53ecbc27b196981e467989e942836acdad45687b1252ff7d2bf4e
+    sources:
+      curated_record: 11
+      training_extra: 0
+training:
+- id: REF|101103_nrrl1351_MAT_Plus|gene0|sexP
+  gene: sexP
+  genus: Circinella
+  source: curated_record
+- id: REF|101119_atcc11807_MAT_Minus|gene0|sexM
+  gene: sexM
+  genus: Syzygites
+  source: curated_record
+- id: REF|101119_atcc11807_MAT_Plus|gene0|sexP
+  gene: sexP
+  genus: Syzygites
+  source: curated_record
+- id: REF|13706_nrrl-2496_MAT_Plus|gene0|sexP
+  gene: sexP
+  genus: Syncephalastrum
+  source: curated_record
+- id: REF|29922_cbs109-16_MAT_Minus|gene1|sexM
+  gene: sexM
+  genus: Mucor
+  source: curated_record
+- id: REF|3108396_ai-2023a_MAT_Plus|gene2|sexP
+  gene: sexP
+  genus: Mucoraceae
+  source: curated_record
+- id: REF|3231046_uomau377_MAT_Minus|gene1|sexM
+  gene: sexM
+  genus: Absidia
+  source: curated_record
+- id: REF|3231046_uomd23-19_MAT_Plus|gene1|sexP
+  gene: sexP
+  genus: Absidia
+  source: curated_record
+- id: REF|35722_atcc11077_MAT_Minus|gene0|sexM
+  gene: sexM
+  genus: Parasitella
+  source: curated_record
+- id: REF|36080_nrrl-3631_MAT_Plus|gene1|sexP
+  gene: sexP
+  genus: Mucor
+  source: curated_record
+- id: REF|36080_r7b_MAT_Minus|gene1|sexM
+  gene: sexM
+  genus: Mucor
+  source: curated_record
+- id: REF|4837_nrrl1555_MAT_Minus|gene1|sexM
+  gene: sexM
+  genus: Phycomyces
+  source: curated_record
+- id: REF|4837_ubc21_MAT_Plus|gene1|sexP
+  gene: sexP
+  genus: Phycomyces
+  source: curated_record
+- id: REF|4850_vkm-f-921_MAT_Minus|gene0|sexM
+  gene: sexM
+  genus: Blakeslea
+  source: curated_record
+- id: REF|64495_cbs110-17_MAT_Minus|gene1|sexM
+  gene: sexM
+  genus: Rhizopus
+  source: curated_record
+- id: REF|64495_cbs346-36_MAT_Plus|gene2|sexP
+  gene: sexP
+  genus: Rhizopus
+  source: curated_record
+- id: REF|64656_rsa-1403_MAT_Minus|gene0|sexM
+  gene: sexM
+  genus: Zychaea
+  source: curated_record
+- id: REF|86630_cbs357-93_MAT_Minus|gene0|sexM
+  gene: sexM
+  genus: Rhizopus
+  source: curated_record
+- id: REF|41833_gzumbrama1_MAT_Plus|gene1|sexP
+  gene: sexP
+  genus: Umbelopsis
+  source: curated_record
+- id: REF|44442_wa0000051536_MAT_Minus|gene1|sexM
+  gene: sexM
+  genus: Umbelopsis
+  source: curated_record
+- id: GCA_000401635.1_Muco_sp_1006Ph_V1:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_000534915.1_ASM53491v1:c0:t0|sexP|genus=Umbelopsis
+  gene: sexP
+  genus: Umbelopsis
+  source: training_extra
+- id: GCA_000696935.1_MucCirB8987-1.0:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_000697035.1_RhiStoB9770-1.0:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_000697095.1_RhiDel18148-1.0:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_000697115.1_RhiOry21396-1.0:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_000697135.1_RhiOry99-133-1.0:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_000697215.1_CunBer175-1.0:c0:m0|sexP|genus=Cunninghamella
+  gene: sexP
+  genus: Cunninghamella
+  source: training_extra
+- id: GCA_000697255.1_MucRacB9645-1.0:c1:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_000697415.1_UmbIsaB7317-1.0:c0:t0|sexP|genus=Umbelopsis
+  gene: sexP
+  genus: Umbelopsis
+  source: training_extra
+- id: GCA_000738565.1_RhiAzyB7455-1.0:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_000738595.1_RhiDel21447-1.0:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_000787465.1_ASM78746v1:h5:m0|sexP|genus=Thermomucor
+  gene: sexP
+  genus: Thermomucor
+  source: training_extra
+- id: GCA_000825725.1_Rmicro_CBS_344.29_Allpaths-LG:c1:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_000938895.1_PP.v1:c0:m0|sexP|genus=Parasitella
+  gene: sexP
+  genus: Parasitella
+  source: training_extra
+- id: GCA_000950595.1_ASM95059v1:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_001599635.1_JCM_22485_assembly_v001:c0:m0|sexP|genus=Actinomucor
+  gene: sexP
+  genus: Actinomucor
+  source: training_extra
+- id: GCA_001683725.1_ASM168372v1:c0:m0|sexP|genus=Choanephora
+  gene: sexP
+  genus: Choanephora
+  source: training_extra
+- id: GCA_002105135.1_Synrac1:h10:t0|sexP|genus=Syncephalastrum
+  gene: sexP
+  genus: Syncephalastrum
+  source: training_extra
+- id: GCA_002105175.1_Absrep1:c0:m0|sexP|genus=Absidia
+  gene: sexP
+  genus: Absidia
+  source: training_extra
+- id: GCA_003325415.1_Rstol_CA:c1:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_011763935.1_ASM1176393v1:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_011763975.1_ASM1176397v1:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_011950985.2_ASM1195098v2:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_014839865.1_ASM1483986v1:c0:m0|sexP|genus=Apophysomyces
+  gene: sexP
+  genus: Apophysomyces
+  source: training_extra
+- id: GCA_016758905.1_ASM1675890v1:c1:t0|sexP|genus=Umbelopsis
+  gene: sexP
+  genus: Umbelopsis
+  source: training_extra
+- id: GCA_016758935.1_ASM1675893v1:c0:m0|sexP|genus=Thamnidium
+  gene: sexP
+  genus: Thamnidium
+  source: training_extra
+- id: GCA_016758985.1_ASM1675898v1:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_017871115.1_ASM1787111v1:c0:m0|sexP|genus=Cunninghamella
+  gene: sexP
+  genus: Cunninghamella
+  source: training_extra
+- id: GCA_021235465.1_Umbelo1:c0:t0|sexP|genus=Umbelopsis
+  gene: sexP
+  genus: Umbelopsis
+  source: training_extra
+- id: GCA_022702545.1_SJTU-YXQ:w0:t15|sexP|genus=Phycomyces
+  gene: sexP
+  genus: Phycomyces
+  source: training_extra
+- id: GCA_023629835.1_ASM2362983v1:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_024139275.1_ASM2413927v1:w1:m0|sexP|genus=Backusella
+  gene: sexP
+  genus: Backusella
+  source: training_extra
+- id: GCA_024140155.1_ASM2414015v1:c0:m0|sexP|genus=Backusella
+  gene: sexP
+  genus: Backusella
+  source: training_extra
+- id: GCA_024140245.1_ASM2414024v1:c0:m0|sexP|genus=Backusella
+  gene: sexP
+  genus: Backusella
+  source: training_extra
+- id: GCA_024294565.1_ASM2429456v1:c0:m0|sexP|genus=Gilbertella
+  gene: sexP
+  genus: Gilbertella
+  source: training_extra
+- id: GCA_025201675.1_Cunech1:c0:m0|sexP|genus=Cunninghamella
+  gene: sexP
+  genus: Cunninghamella
+  source: training_extra
+- id: GCA_025330725.1_Chlpad1:c0:m0|sexP|genus=Chlamydoabsidia
+  gene: sexP
+  genus: Chlamydoabsidia
+  source: training_extra
+- id: GCA_025331435.1_Chocucu1:c0:m0|sexP|genus=Choanephora
+  gene: sexP
+  genus: Choanephora
+  source: training_extra
+- id: GCA_025399235.1_Bacci1:c0:m0|sexP|genus=Backusella
+  gene: sexP
+  genus: Backusella
+  source: training_extra
+- id: GCA_025528865.1_Pilumb1:c0:m0|sexP|genus=Pilobolus
+  gene: sexP
+  genus: Pilobolus
+  source: training_extra
+- id: GCA_025529335.1_ASM2552933v1:c1:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_025531835.1_PnitS608_1:c0:m0|sexP|genus=Phycomyces
+  gene: sexP
+  genus: Phycomyces
+  source: training_extra
+- id: GCA_025677825.1_Helpul1:c0:m0|sexP|genus=Helicostylum
+  gene: sexP
+  genus: Helicostylum
+  source: training_extra
+- id: GCA_025716815.1_Dicele1:h5:t1|sexP|genus=Dichotomocladium
+  gene: sexP
+  genus: Dichotomocladium
+  source: training_extra
+- id: GCA_025716855.1_Pilano1:c0:m0|sexP|genus=Pilaira
+  gene: sexP
+  genus: Pilaira
+  source: training_extra
+- id: GCA_025766325.1_Benpoi1:h10:m0|sexP|genus=Benjaminiella
+  gene: sexP
+  genus: Benjaminiella
+  source: training_extra
+- id: GCA_027595865.1_Umbelopsis_isabellina_MPG-14A_reass_enz:c0:t0|sexP|genus=Umbelopsis
+  gene: sexP
+  genus: Umbelopsis
+  source: training_extra
+- id: GCA_040209145.1_PhyblU21_2:c0:m0|sexP|genus=Phycomyces
+  gene: sexP
+  genus: Phycomyces
+  source: training_extra
+- id: GCA_040366295.1_Hpulcur_1.0:c0:m0|sexP|genus=Helicostylum
+  gene: sexP
+  genus: Helicostylum
+  source: training_extra
+- id: GCA_040367835.1_Mfluvus_1.0:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_048772875.1_ASM4877287v1:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_049863895.1_ASM4986389v1:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_051307255.1_Mcir_PS15p_1.0:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_052058895.1_MBAN_PS3_1.0:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_054123175.1_ASM5412317v1:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_054130635.1_ASM5413063v1:c0:t0|sexP|genus=Cunninghamella
+  gene: sexP
+  genus: Cunninghamella
+  source: training_extra
+- id: GCA_057662165.1_ASM5766216v1:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCA_060309255.1_CBS195.68v1:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_060309305.1_CBS205.68v1:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCA_900175165.2_FCH_5_7:h6:t0|sexP|genus=Rhizomucor
+  gene: sexP
+  genus: Rhizomucor
+  source: training_extra
+- id: GCA_900175165.2_FCH_5_7:h1:t0|sexP|genus=Rhizomucor
+  gene: sexP
+  genus: Rhizomucor
+  source: training_extra
+- id: GCA_900175165.2_FCH_5_7:h3:t0|sexP|genus=Rhizomucor
+  gene: sexP
+  genus: Rhizomucor
+  source: training_extra
+- id: GCA_977110945.1_gzUmbRama1:c0:t2|sexP|genus=Umbelopsis
+  gene: sexP
+  genus: Umbelopsis
+  source: training_extra
+- id: GCA_977110985.1_gzRhiStol1:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCF_002708625.1_Rhimi1_1:c0:m0|sexP|genus=Rhizopus
+  gene: sexP
+  genus: Rhizopus
+  source: training_extra
+- id: GCF_025094135.1_Mucmuc1:c0:m0|sexP|genus=Mucor
+  gene: sexP
+  genus: Mucor
+  source: training_extra
+- id: GCF_025118155.1_Cokrec1:w1:m0|sexP|genus=Cokeromyces
+  gene: sexP
+  genus: Cokeromyces
+  source: training_extra
+- id: GCF_025331425.1_Radspe1:w0:m0|sexP|genus=Radiomyces
+  gene: sexP
+  genus: Radiomyces
+  source: training_extra
+- id: GCF_025528875.1_Mycafr1:c0:m0|sexP|genus=Mycotypha
+  gene: sexP
+  genus: Mycotypha
+  source: training_extra
+leave_one_genus_out:
+  n_tested: 90
+  n_correct: 90
+  n_untestable: 0
+  worst_correct_margin: 12.6
+  margins:
+  - id: REF|3231046_uomau377_MAT_Minus|gene1|sexM
+    genus: Absidia
+    truth: Minus
+    own_score: 91.9
+    other_score: 47.1
+    margin: 44.8
+    correct: true
+    untestable_gene: false
+  - id: REF|3231046_uomd23-19_MAT_Plus|gene1|sexP
+    genus: Absidia
+    truth: Plus
+    own_score: 238.3
+    other_score: 58.7
+    margin: 179.6
+    correct: true
+    untestable_gene: false
+  - id: GCA_002105175.1_Absrep1:c0:m0|sexP|genus=Absidia
+    genus: Absidia
+    truth: Plus
+    own_score: 249.6
+    other_score: 64.5
+    margin: 185.1
+    correct: true
+    untestable_gene: false
+  - id: GCA_001599635.1_JCM_22485_assembly_v001:c0:m0|sexP|genus=Actinomucor
+    genus: Actinomucor
+    truth: Plus
+    own_score: 310.0
+    other_score: 55.9
+    margin: 254.1
+    correct: true
+    untestable_gene: false
+  - id: GCA_014839865.1_ASM1483986v1:c0:m0|sexP|genus=Apophysomyces
+    genus: Apophysomyces
+    truth: Plus
+    own_score: 185.3
+    other_score: 62.6
+    margin: 122.6
+    correct: true
+    untestable_gene: false
+  - id: GCA_024139275.1_ASM2413927v1:w1:m0|sexP|genus=Backusella
+    genus: Backusella
+    truth: Plus
+    own_score: 267.5
+    other_score: 67.8
+    margin: 199.7
+    correct: true
+    untestable_gene: false
+  - id: GCA_024140155.1_ASM2414015v1:c0:m0|sexP|genus=Backusella
+    genus: Backusella
+    truth: Plus
+    own_score: 280.2
+    other_score: 67.4
+    margin: 212.9
+    correct: true
+    untestable_gene: false
+  - id: GCA_024140245.1_ASM2414024v1:c0:m0|sexP|genus=Backusella
+    genus: Backusella
+    truth: Plus
+    own_score: 280.4
+    other_score: 68.7
+    margin: 211.7
+    correct: true
+    untestable_gene: false
+  - id: GCA_025399235.1_Bacci1:c0:m0|sexP|genus=Backusella
+    genus: Backusella
+    truth: Plus
+    own_score: 261.5
+    other_score: 67.6
+    margin: 193.9
+    correct: true
+    untestable_gene: false
+  - id: GCA_025766325.1_Benpoi1:h10:m0|sexP|genus=Benjaminiella
+    genus: Benjaminiella
+    truth: Plus
+    own_score: 342.5
+    other_score: 57.8
+    margin: 284.6
+    correct: true
+    untestable_gene: false
+  - id: REF|4850_vkm-f-921_MAT_Minus|gene0|sexM
+    genus: Blakeslea
+    truth: Minus
+    own_score: 113.1
+    other_score: 67.5
+    margin: 45.6
+    correct: true
+    untestable_gene: false
+  - id: GCA_025330725.1_Chlpad1:c0:m0|sexP|genus=Chlamydoabsidia
+    genus: Chlamydoabsidia
+    truth: Plus
+    own_score: 246.5
+    other_score: 65.5
+    margin: 180.9
+    correct: true
+    untestable_gene: false
+  - id: GCA_001683725.1_ASM168372v1:c0:m0|sexP|genus=Choanephora
+    genus: Choanephora
+    truth: Plus
+    own_score: 288.1
+    other_score: 59.3
+    margin: 228.8
+    correct: true
+    untestable_gene: false
+  - id: GCA_025331435.1_Chocucu1:c0:m0|sexP|genus=Choanephora
+    genus: Choanephora
+    truth: Plus
+    own_score: 288.8
+    other_score: 60.5
+    margin: 228.3
+    correct: true
+    untestable_gene: false
+  - id: REF|101103_nrrl1351_MAT_Plus|gene0|sexP
+    genus: Circinella
+    truth: Plus
+    own_score: 115.8
+    other_score: 31.9
+    margin: 83.8
+    correct: true
+    untestable_gene: false
+  - id: GCF_025118155.1_Cokrec1:w1:m0|sexP|genus=Cokeromyces
+    genus: Cokeromyces
+    truth: Plus
+    own_score: 326.8
+    other_score: 57.4
+    margin: 269.3
+    correct: true
+    untestable_gene: false
+  - id: GCA_000697215.1_CunBer175-1.0:c0:m0|sexP|genus=Cunninghamella
+    genus: Cunninghamella
+    truth: Plus
+    own_score: 214.0
+    other_score: 64.9
+    margin: 149.1
+    correct: true
+    untestable_gene: false
+  - id: GCA_017871115.1_ASM1787111v1:c0:m0|sexP|genus=Cunninghamella
+    genus: Cunninghamella
+    truth: Plus
+    own_score: 222.6
+    other_score: 72.9
+    margin: 149.8
+    correct: true
+    untestable_gene: false
+  - id: GCA_025201675.1_Cunech1:c0:m0|sexP|genus=Cunninghamella
+    genus: Cunninghamella
+    truth: Plus
+    own_score: 223.8
+    other_score: 72.8
+    margin: 150.9
+    correct: true
+    untestable_gene: false
+  - id: GCA_054130635.1_ASM5413063v1:c0:t0|sexP|genus=Cunninghamella
+    genus: Cunninghamella
+    truth: Plus
+    own_score: 183.0
+    other_score: 53.5
+    margin: 129.4
+    correct: true
+    untestable_gene: false
+  - id: GCA_025716815.1_Dicele1:h5:t1|sexP|genus=Dichotomocladium
+    genus: Dichotomocladium
+    truth: Plus
+    own_score: 145.4
+    other_score: 41.7
+    margin: 103.7
+    correct: true
+    untestable_gene: false
+  - id: GCA_024294565.1_ASM2429456v1:c0:m0|sexP|genus=Gilbertella
+    genus: Gilbertella
+    truth: Plus
+    own_score: 308.7
+    other_score: 52.1
+    margin: 256.6
+    correct: true
+    untestable_gene: false
+  - id: GCA_025677825.1_Helpul1:c0:m0|sexP|genus=Helicostylum
+    genus: Helicostylum
+    truth: Plus
+    own_score: 350.3
+    other_score: 67.2
+    margin: 283.0
+    correct: true
+    untestable_gene: false
+  - id: GCA_040366295.1_Hpulcur_1.0:c0:m0|sexP|genus=Helicostylum
+    genus: Helicostylum
+    truth: Plus
+    own_score: 352.4
+    other_score: 67.3
+    margin: 285.1
+    correct: true
+    untestable_gene: false
+  - id: REF|29922_cbs109-16_MAT_Minus|gene1|sexM
+    genus: Mucor
+    truth: Minus
+    own_score: 145.2
+    other_score: 62.6
+    margin: 82.6
+    correct: true
+    untestable_gene: false
+  - id: REF|36080_nrrl-3631_MAT_Plus|gene1|sexP
+    genus: Mucor
+    truth: Plus
+    own_score: 299.2
+    other_score: 49.6
+    margin: 249.6
+    correct: true
+    untestable_gene: false
+  - id: REF|36080_r7b_MAT_Minus|gene1|sexM
+    genus: Mucor
+    truth: Minus
+    own_score: 71.0
+    other_score: 43.4
+    margin: 27.6
+    correct: true
+    untestable_gene: false
+  - id: GCA_000401635.1_Muco_sp_1006Ph_V1:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 307.4
+    other_score: 47.0
+    margin: 260.4
+    correct: true
+    untestable_gene: false
+  - id: GCA_000696935.1_MucCirB8987-1.0:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 308.8
+    other_score: 46.1
+    margin: 262.7
+    correct: true
+    untestable_gene: false
+  - id: GCA_000697255.1_MucRacB9645-1.0:c1:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 340.9
+    other_score: 65.6
+    margin: 275.3
+    correct: true
+    untestable_gene: false
+  - id: GCA_000950595.1_ASM95059v1:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 308.3
+    other_score: 49.9
+    margin: 258.4
+    correct: true
+    untestable_gene: false
+  - id: GCA_016758985.1_ASM1675898v1:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 343.9
+    other_score: 69.5
+    margin: 274.4
+    correct: true
+    untestable_gene: false
+  - id: GCA_023629835.1_ASM2362983v1:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 307.6
+    other_score: 46.1
+    margin: 261.5
+    correct: true
+    untestable_gene: false
+  - id: GCA_040367835.1_Mfluvus_1.0:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 335.1
+    other_score: 69.1
+    margin: 266.0
+    correct: true
+    untestable_gene: false
+  - id: GCA_048772875.1_ASM4877287v1:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 309.0
+    other_score: 46.4
+    margin: 262.6
+    correct: true
+    untestable_gene: false
+  - id: GCA_051307255.1_Mcir_PS15p_1.0:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 308.2
+    other_score: 46.1
+    margin: 262.1
+    correct: true
+    untestable_gene: false
+  - id: GCA_052058895.1_MBAN_PS3_1.0:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 304.5
+    other_score: 53.4
+    margin: 251.2
+    correct: true
+    untestable_gene: false
+  - id: GCA_054123175.1_ASM5412317v1:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 307.9
+    other_score: 56.8
+    margin: 251.1
+    correct: true
+    untestable_gene: false
+  - id: GCA_060309255.1_CBS195.68v1:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 309.0
+    other_score: 46.1
+    margin: 262.9
+    correct: true
+    untestable_gene: false
+  - id: GCA_060309305.1_CBS205.68v1:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 299.4
+    other_score: 49.0
+    margin: 250.4
+    correct: true
+    untestable_gene: false
+  - id: GCF_025094135.1_Mucmuc1:c0:m0|sexP|genus=Mucor
+    genus: Mucor
+    truth: Plus
+    own_score: 344.0
+    other_score: 68.7
+    margin: 275.3
+    correct: true
+    untestable_gene: false
+  - id: REF|3108396_ai-2023a_MAT_Plus|gene2|sexP
+    genus: Mucoraceae
+    truth: Plus
+    own_score: 282.7
+    other_score: 69.2
+    margin: 213.5
+    correct: true
+    untestable_gene: false
+  - id: GCF_025528875.1_Mycafr1:c0:m0|sexP|genus=Mycotypha
+    genus: Mycotypha
+    truth: Plus
+    own_score: 254.0
+    other_score: 57.1
+    margin: 196.8
+    correct: true
+    untestable_gene: false
+  - id: REF|35722_atcc11077_MAT_Minus|gene0|sexM
+    genus: Parasitella
+    truth: Minus
+    own_score: 75.9
+    other_score: 46.0
+    margin: 29.9
+    correct: true
+    untestable_gene: false
+  - id: GCA_000938895.1_PP.v1:c0:m0|sexP|genus=Parasitella
+    genus: Parasitella
+    truth: Plus
+    own_score: 346.4
+    other_score: 48.4
+    margin: 298.0
+    correct: true
+    untestable_gene: false
+  - id: REF|4837_nrrl1555_MAT_Minus|gene1|sexM
+    genus: Phycomyces
+    truth: Minus
+    own_score: 158.2
+    other_score: 71.1
+    margin: 87.1
+    correct: true
+    untestable_gene: false
+  - id: REF|4837_ubc21_MAT_Plus|gene1|sexP
+    genus: Phycomyces
+    truth: Plus
+    own_score: 254.2
+    other_score: 71.0
+    margin: 183.3
+    correct: true
+    untestable_gene: false
+  - id: GCA_022702545.1_SJTU-YXQ:w0:t15|sexP|genus=Phycomyces
+    genus: Phycomyces
+    truth: Plus
+    own_score: 34.7
+    other_score: 12.4
+    margin: 22.3
+    correct: true
+    untestable_gene: false
+  - id: GCA_025531835.1_PnitS608_1:c0:m0|sexP|genus=Phycomyces
+    genus: Phycomyces
+    truth: Plus
+    own_score: 255.6
+    other_score: 67.0
+    margin: 188.6
+    correct: true
+    untestable_gene: false
+  - id: GCA_040209145.1_PhyblU21_2:c0:m0|sexP|genus=Phycomyces
+    genus: Phycomyces
+    truth: Plus
+    own_score: 254.2
+    other_score: 71.0
+    margin: 183.3
+    correct: true
+    untestable_gene: false
+  - id: GCA_025716855.1_Pilano1:c0:m0|sexP|genus=Pilaira
+    genus: Pilaira
+    truth: Plus
+    own_score: 333.7
+    other_score: 62.9
+    margin: 270.9
+    correct: true
+    untestable_gene: false
+  - id: GCA_025528865.1_Pilumb1:c0:m0|sexP|genus=Pilobolus
+    genus: Pilobolus
+    truth: Plus
+    own_score: 181.1
+    other_score: 56.8
+    margin: 124.3
+    correct: true
+    untestable_gene: false
+  - id: GCF_025331425.1_Radspe1:w0:m0|sexP|genus=Radiomyces
+    genus: Radiomyces
+    truth: Plus
+    own_score: 287.5
+    other_score: 73.9
+    margin: 213.6
+    correct: true
+    untestable_gene: false
+  - id: GCA_900175165.2_FCH_5_7:h6:t0|sexP|genus=Rhizomucor
+    genus: Rhizomucor
+    truth: Plus
+    own_score: 173.0
+    other_score: 69.2
+    margin: 103.8
+    correct: true
+    untestable_gene: false
+  - id: GCA_900175165.2_FCH_5_7:h1:t0|sexP|genus=Rhizomucor
+    genus: Rhizomucor
+    truth: Plus
+    own_score: 163.9
+    other_score: 69.9
+    margin: 94.0
+    correct: true
+    untestable_gene: false
+  - id: GCA_900175165.2_FCH_5_7:h3:t0|sexP|genus=Rhizomucor
+    genus: Rhizomucor
+    truth: Plus
+    own_score: 105.0
+    other_score: 64.6
+    margin: 40.4
+    correct: true
+    untestable_gene: false
+  - id: REF|64495_cbs110-17_MAT_Minus|gene1|sexM
+    genus: Rhizopus
+    truth: Minus
+    own_score: 163.9
+    other_score: 67.9
+    margin: 96.0
+    correct: true
+    untestable_gene: false
+  - id: REF|64495_cbs346-36_MAT_Plus|gene2|sexP
+    genus: Rhizopus
+    truth: Plus
+    own_score: 254.5
+    other_score: 60.2
+    margin: 194.3
+    correct: true
+    untestable_gene: false
+  - id: REF|86630_cbs357-93_MAT_Minus|gene0|sexM
+    genus: Rhizopus
+    truth: Minus
+    own_score: 127.3
+    other_score: 69.7
+    margin: 57.7
+    correct: true
+    untestable_gene: false
+  - id: GCA_000697035.1_RhiStoB9770-1.0:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 259.4
+    other_score: 49.3
+    margin: 210.1
+    correct: true
+    untestable_gene: false
+  - id: GCA_000697095.1_RhiDel18148-1.0:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 258.1
+    other_score: 61.1
+    margin: 197.0
+    correct: true
+    untestable_gene: false
+  - id: GCA_000697115.1_RhiOry21396-1.0:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 257.8
+    other_score: 59.4
+    margin: 198.3
+    correct: true
+    untestable_gene: false
+  - id: GCA_000697135.1_RhiOry99-133-1.0:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 258.9
+    other_score: 60.8
+    margin: 198.0
+    correct: true
+    untestable_gene: false
+  - id: GCA_000738565.1_RhiAzyB7455-1.0:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 284.2
+    other_score: 65.6
+    margin: 218.6
+    correct: true
+    untestable_gene: false
+  - id: GCA_000738595.1_RhiDel21447-1.0:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 253.6
+    other_score: 57.1
+    margin: 196.5
+    correct: true
+    untestable_gene: false
+  - id: GCA_000825725.1_Rmicro_CBS_344.29_Allpaths-LG:c1:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 284.0
+    other_score: 63.7
+    margin: 220.4
+    correct: true
+    untestable_gene: false
+  - id: GCA_003325415.1_Rstol_CA:c1:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 189.9
+    other_score: 13.6
+    margin: 176.3
+    correct: true
+    untestable_gene: false
+  - id: GCA_011763935.1_ASM1176393v1:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 257.6
+    other_score: 59.4
+    margin: 198.3
+    correct: true
+    untestable_gene: false
+  - id: GCA_011763975.1_ASM1176397v1:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 258.9
+    other_score: 61.2
+    margin: 197.6
+    correct: true
+    untestable_gene: false
+  - id: GCA_011950985.2_ASM1195098v2:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 259.0
+    other_score: 61.1
+    margin: 197.9
+    correct: true
+    untestable_gene: false
+  - id: GCA_025529335.1_ASM2552933v1:c1:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 279.5
+    other_score: 60.6
+    margin: 218.9
+    correct: true
+    untestable_gene: false
+  - id: GCA_049863895.1_ASM4986389v1:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 257.8
+    other_score: 59.4
+    margin: 198.3
+    correct: true
+    untestable_gene: false
+  - id: GCA_057662165.1_ASM5766216v1:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 254.6
+    other_score: 58.2
+    margin: 196.4
+    correct: true
+    untestable_gene: false
+  - id: GCA_977110985.1_gzRhiStol1:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 265.7
+    other_score: 46.8
+    margin: 218.9
+    correct: true
+    untestable_gene: false
+  - id: GCF_002708625.1_Rhimi1_1:c0:m0|sexP|genus=Rhizopus
+    genus: Rhizopus
+    truth: Plus
+    own_score: 273.2
+    other_score: 65.7
+    margin: 207.5
+    correct: true
+    untestable_gene: false
+  - id: REF|13706_nrrl-2496_MAT_Plus|gene0|sexP
+    genus: Syncephalastrum
+    truth: Plus
+    own_score: 155.2
+    other_score: 36.3
+    margin: 118.9
+    correct: true
+    untestable_gene: false
+  - id: GCA_002105135.1_Synrac1:h10:t0|sexP|genus=Syncephalastrum
+    genus: Syncephalastrum
+    truth: Plus
+    own_score: 151.9
+    other_score: 36.5
+    margin: 115.4
+    correct: true
+    untestable_gene: false
+  - id: REF|101119_atcc11807_MAT_Minus|gene0|sexM
+    genus: Syzygites
+    truth: Minus
+    own_score: 167.8
+    other_score: 68.9
+    margin: 98.9
+    correct: true
+    untestable_gene: false
+  - id: REF|101119_atcc11807_MAT_Plus|gene0|sexP
+    genus: Syzygites
+    truth: Plus
+    own_score: 271.5
+    other_score: 59.8
+    margin: 211.7
+    correct: true
+    untestable_gene: false
+  - id: GCA_016758935.1_ASM1675893v1:c0:m0|sexP|genus=Thamnidium
+    genus: Thamnidium
+    truth: Plus
+    own_score: 344.9
+    other_score: 70.8
+    margin: 274.1
+    correct: true
+    untestable_gene: false
+  - id: GCA_000787465.1_ASM78746v1:h5:m0|sexP|genus=Thermomucor
+    genus: Thermomucor
+    truth: Plus
+    own_score: 215.9
+    other_score: 64.8
+    margin: 151.1
+    correct: true
+    untestable_gene: false
+  - id: REF|41833_gzumbrama1_MAT_Plus|gene1|sexP
+    genus: Umbelopsis
+    truth: Plus
+    own_score: 76.5
+    other_score: 35.9
+    margin: 40.6
+    correct: true
+    untestable_gene: false
+  - id: REF|44442_wa0000051536_MAT_Minus|gene1|sexM
+    genus: Umbelopsis
+    truth: Minus
+    own_score: 40.1
+    other_score: 27.5
+    margin: 12.6
+    correct: true
+    untestable_gene: false
+  - id: GCA_000534915.1_ASM53491v1:c0:t0|sexP|genus=Umbelopsis
+    genus: Umbelopsis
+    truth: Plus
+    own_score: 67.9
+    other_score: 45.8
+    margin: 22.0
+    correct: true
+    untestable_gene: false
+  - id: GCA_000697415.1_UmbIsaB7317-1.0:c0:t0|sexP|genus=Umbelopsis
+    genus: Umbelopsis
+    truth: Plus
+    own_score: 56.5
+    other_score: 27.2
+    margin: 29.3
+    correct: true
+    untestable_gene: false
+  - id: GCA_016758905.1_ASM1675890v1:c1:t0|sexP|genus=Umbelopsis
+    genus: Umbelopsis
+    truth: Plus
+    own_score: 46.7
+    other_score: 21.2
+    margin: 25.5
+    correct: true
+    untestable_gene: false
+  - id: GCA_021235465.1_Umbelo1:c0:t0|sexP|genus=Umbelopsis
+    genus: Umbelopsis
+    truth: Plus
+    own_score: 91.3
+    other_score: 26.8
+    margin: 64.4
+    correct: true
+    untestable_gene: false
+  - id: GCA_027595865.1_Umbelopsis_isabellina_MPG-14A_reass_enz:c0:t0|sexP|genus=Umbelopsis
+    genus: Umbelopsis
+    truth: Plus
+    own_score: 61.6
+    other_score: 29.6
+    margin: 32.0
+    correct: true
+    untestable_gene: false
+  - id: GCA_977110945.1_gzUmbRama1:c0:t2|sexP|genus=Umbelopsis
+    genus: Umbelopsis
+    truth: Plus
+    own_score: 70.3
+    other_score: 35.8
+    margin: 34.5
+    correct: true
+    untestable_gene: false
+  - id: REF|64656_rsa-1403_MAT_Minus|gene0|sexM
+    genus: Zychaea
+    truth: Minus
+    own_score: 132.9
+    other_score: 70.1
+    margin: 62.8
+    correct: true
+    untestable_gene: false
+recommended_min_margin: 6.3
+min_margin_rule: half the worst correct leave-one-genus-out margin, so every held-out training protein
+  is still called and a margin below half the weakest separation seen on held-out genera is reported undetermined
+mat_gene_gate:
+  min_score: 99.7
+  rule: nearest-rank 95th percentile of the best classifier scores of the HMG-paralog negative set (paralog_negatives.faa)
+    against this build's HMMs; curator ruling 2026-09-29
+  n_negatives: 189
+  negatives_sha256: fa0a4e356d41d912e4e985f89f257d297f3ddbe3c63a5f2c5357c66942b48922
+  negatives_at_or_above: 9
+  loo_correct_at_or_above: 78
+  loo_correct_tested: 90
+paralog_classes:
+- name: P1
+  hmm: paralogs/P1.hmm
+  n_sequences: 1
+  sequence_ids:
+  - GCA_000697295.1_MucIndB7402-1.0
+  source_sha256: 0b0ad0bb0c2fe1dc8959a1856437eab54511f462933a3bf6f952a06d7731ada6
+  sha256: a802fe1a9719ae31d2cfd6159683bb9fe872189ed8aa313e3f399e533faddf71
+  provenance:
+    name: P1
+    source: GCA_000697295.1 (Mucor indicus B7402, BFD Mucoromycota); the 73-aa HMG-box protein called
+      "sexM" beside tptA/glrA/algA. Chosen because it is in BFD and in no held-out set (LCG, Mucor_Jena)
+      and not a curated record.
+    reason: 'Non-MAT HMG paralog of the Mucor hiemalis/indicus group. Present in BOTH mating types: an
+      85% full-length copy sits in the Plus-only genome Mucor aligarensis NRRL 3099. It scores 77-84 bits
+      as sexM and passes the MAT-gene gate on flank support, and it was the only call in 5 genomes (M.
+      indicus NRRL 13468 and 13081 in LCG; Jena CBS221_71, CBS223_63, CBS763_74).'
+    evidence: 'results/2026-09-29_sexM_like_paralog/NOTE.md, cross_type.tsv, p1_replay.tsv (replay: 17
+      LCG core proteins and all 6 Jena weak calls flagged; P1 145-159 vs sexM 77-84; no labelled strain,
+      literature positive or Zygo locus affected).'
+    curator_ruling: J. Stajich, 2026-09-29 (R4)
+    limit: Trained on ONE sequence; no leave-one-out is possible. The training genome itself is in the
+      293-genome BFD Mucoromycota scan, so its own P1 call there is withheld circularly.
+  rule: a protein whose best P1 score beats its best MAT score by >= min_margin (25) is classed P1 and
+    its call withheld
+  training_mat_proteins_checked: 90
+  training_mat_proteins_classed_paralog: 0
+  self_check_classed_paralog: 1
+  leave_one_out: 'not possible: one sequence'
+warnings: []
+notes: Deterministic explicit-L-INS-i full rebuild including the Circinella-group records 64656_rsa-1403_MAT_Minus
+  (Zychaea mexicana) and 101103_nrrl1351_MAT_Plus (Circinella umbellata) (2026-10-01)

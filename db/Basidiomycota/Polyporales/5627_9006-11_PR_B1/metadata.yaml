@@ -1,0 +1,304 @@
+record_id: 5627_9006-11_PR_B1
+record_version: 1
+taxonomy:
+  taxid: 5627
+  lineage: k__Fungi;p__Basidiomycota;subphylum__Agaricomycotina;c__Agaricomycetes;o__Polyporales;f__Grifolaceae;g__Grifola;s__Grifola_frondosa
+  lineage_resolved_date: '2026-09-27'
+organism:
+  species: Grifola frondosa
+  strain:
+    name: 9006-11
+    known: true
+    culture_collection_ids:
+    - 9006-11
+    differs_from_sequenced: false
+mating_type:
+  locus_name: PR
+  idiomorphs:
+  - B1
+  system: heterothallic
+locus:
+  assembly_accession: GCA_001683735.1
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: not established from coordinate data alone
+    definition_note: 'Grifola frondosa 9006-11 (Polyporales) B (pheromone/receptor) mating-type locus,
+      GCA_001683735.1 LUGG01000005.1:512153-547096: 5 pheromone receptors and 3 pheromone precursors in
+      one cluster, from the GenBank annotation of GCA_001683735.1 for the five receptors (''Pheromone
+      B alpha/beta receptor''); the three precursors are not annotated in the assembly. Pheromone precursors:
+      unannotated 525554-525709(-) 51 aa, strict CAAX CVIA; unannotated 533656-533820(-) 54 aa, strict
+      CAAX CIIG; unannotated 546974-547096(-) 40 aa, strict CAAX CIIA. 3/3 precursors end in the strict
+      CAAX motif. Unannotated precursors (3) are recorded by coordinates only: 525554-525709(-) unannotated
+      ORF, strict-CAAX scan; 533656-533820(-) unannotated ORF, strict-CAAX scan; 546974-547096(-) unannotated
+      ORF, strict-CAAX scan; tblastn of G. frondosa WM1-25 ph1 (LC706365.1, BDI00750.1) 55% identity over
+      40 aa, E=2e-11. PR/B loci routinely carry several receptor and pheromone copies (curator domain
+      ruling 2026-09-16); receptors and precursors are recorded under the family''s generic names. Which
+      receptor(s) define the B mating specificity is not established. Idiomorph ''B1'' is a placeholder
+      label (curator convention 2026-09-26: count alleles when the source does not number them). TIER
+      2: genome-derived; no locus-specific GenBank deposit exists for this order''s B locus.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: LUGG01000005.1
+        seq_region: LUGG01000005.1
+      start: 512153
+      end: 547096
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:OBZ74837.1
+  role: core_MAT
+  present: true
+  locus_tag: A0H81_05265
+  segment_index: 0
+  start: 512153
+  end: 513843
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 513747
+    end: 513843
+  - start: 513573
+    end: 513695
+  - start: 513339
+    end: 513518
+  - start: 513148
+    end: 513285
+  - start: 512647
+    end: 513091
+  - start: 512153
+    end: 512585
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:OBZ74842.1
+  role: core_MAT
+  present: true
+  locus_tag: A0H81_05268
+  segment_index: 0
+  start: 522500
+  end: 523984
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 523786
+    end: 523984
+  - start: 523543
+    end: 523722
+  - start: 523352
+    end: 523489
+  - start: 522849
+    end: 523299
+  - start: 522500
+    end: 522785
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: fungal_mating_type_pheromone
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 525554
+  end: 525709
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 525554
+    end: 525709
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:OBZ74475.1
+  role: core_MAT
+  present: true
+  locus_tag: A0H81_05273
+  segment_index: 0
+  start: 528035
+  end: 528840
+  strand: +
+  order_in_locus: 3
+  exons:
+  - start: 528035
+    end: 528245
+  - start: 528293
+    end: 528405
+  - start: 528460
+    end: 528526
+  - start: 528579
+    end: 528593
+  - start: 528643
+    end: 528765
+  - start: 528818
+    end: 528840
+  codon_start: 1
+  transl_table: 1
+- gene_index: 4
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:OBZ74569.1
+  role: core_MAT
+  present: true
+  locus_tag: A0H81_05270
+  segment_index: 0
+  start: 531184
+  end: 532810
+  strand: +
+  order_in_locus: 4
+  exons:
+  - start: 531184
+    end: 531394
+  - start: 531449
+    end: 531561
+  - start: 531612
+    end: 531678
+  - start: 531730
+    end: 531867
+  - start: 531916
+    end: 532366
+  - start: 532428
+    end: 532487
+  - start: 532564
+    end: 532810
+  codon_start: 1
+  transl_table: 1
+- gene_index: 5
+  name: fungal_mating_type_pheromone
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 533656
+  end: 533820
+  strand: '-'
+  order_in_locus: 5
+  exons:
+  - start: 533656
+    end: 533820
+  codon_start: 1
+  transl_table: 1
+- gene_index: 6
+  name: pheromone_receptor
+  protein_accession: ncbi_protein:OBZ74474.1
+  role: core_MAT
+  present: true
+  locus_tag: A0H81_05272
+  segment_index: 0
+  start: 535380
+  end: 537061
+  strand: +
+  order_in_locus: 6
+  exons:
+  - start: 535380
+    end: 535581
+  - start: 535636
+    end: 535814
+  - start: 535867
+    end: 535946
+  - start: 535994
+    end: 536004
+  - start: 536058
+    end: 536499
+  - start: 536556
+    end: 536982
+  - start: 537035
+    end: 537061
+  codon_start: 1
+  transl_table: 1
+- gene_index: 7
+  name: fungal_mating_type_pheromone
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 546974
+  end: 547096
+  strand: '-'
+  order_in_locus: 7
+  exons:
+  - start: 546974
+    end: 547096
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: 'genetic crosses (test crosses and three-round mating experiments) establishing
+      a tetrapolar system, and genome localization of the B locus (six pheromone receptors and five precursors)
+      on chromosome 11 of strain y59 (Zhang et al. 2023). This record''s genes come from a different strain''s
+      assembly (9006-11). Positional evidence (results/2026-09-27_pheromone_positional, MATPredict receptor
+      queue step 2): a pheromone-receptor gene with a pheromone-precursor ORF ending in the strict Basidiomycota
+      CAAX motif C[VI][IV][AVMG] within 10 kb flagged every curated Agaricomycete mating receptor (Coprinopsis
+      3/3, Schizophyllum 2/2) and 0/25 non-mating STE3 copies; random genomic windows 2.5%.'
+    citations: &id001
+    - pmid: '37888215'
+      doi: 10.3390/jof9100959
+  boundaries:
+    tier: 2
+    experimental_method: record segment spans the first to last curated gene on LUGG01000005.1; genome-derived
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: '''B1'' is a placeholder; the strain''s B allele is not reported'
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: '2026-09-27'
+  accession_resolved_version: GCA_001683735.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 5
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 6
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 7
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: 'annotated genes: translation of the recorded coordinates equals the annotated protein; unannotated
+      precursors: translation has a start Met and no internal stop'
+  taxonomy_current: true
+curation:
+  proposed_by: claude-receptor-queue-step-c
+  proposal_dedupe_key: GCA_001683735.1|5627|PR|B1
+  reviewed_by: 'J. Stajich (sign-off 2026-09-27)'
+  reviewed_date: '2026-09-27'
+  notes: 'Proposed 2026-09-27 on curator ruling (receptor queue step c: Polyporales and Russulales). Curator J. Stajich signed off 2026-09-27 (tier 2).'
+model_provenance: null

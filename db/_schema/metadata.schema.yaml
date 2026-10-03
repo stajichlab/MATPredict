@@ -38,6 +38,26 @@ properties:
     properties:
       coordinate_provenance: {enum: [published_explicit, curator_derived, not_available]}
       excluded_from_coordinate_benchmark: {type: boolean}
+      # The genome assembly the record's locus sits in (added 2026-09-28 so
+      # scripts/check_record_selfcall.py can place every record). Null for a
+      # locus-specific deposit that belongs to no assembly.
+      assembly_accession: {type: [string, "null"], pattern: "^GC[AF]_[0-9]{9}\\.[0-9]+$"}
+      # Curator ruling 2026-10-01 (B10): how assembly_accession was found.
+      # sequence_link = the deposit's own sequence is in that assembly (NCBI
+      # elink); strain_match_verified = an assembly of the same strain whose
+      # genome holds the locus at >= 99% identity over >= 90% of every segment
+      # (scripts/find_record_assemblies.py). Absent on older records = sequence_link.
+      assembly_accession_basis: {enum: [sequence_link, strain_match_verified]}
+      # The locus position in a strain_match_verified assembly (its contigs
+      # differ from the deposit's); the self-check matches calls against it.
+      assembly_location:
+        type: object
+        required: [contig, start, end]
+        properties:
+          contig: {type: string}
+          start: {type: integer, minimum: 1}
+          end: {type: integer, minimum: 1}
+          identity: {type: number}
       core:
         type: object
         properties:

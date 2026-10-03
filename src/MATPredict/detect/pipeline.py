@@ -72,14 +72,27 @@ as separate, honest, correctly-coordinated calls.
 """
 from __future__ import annotations
 
+import dataclasses
+import types
 import json
 import logging
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Callable
 
+from MATPredict.detect.assembly_gap import AssemblyGapAtLocus, find_gaps_at_locus
+from MATPredict.detect.caax import (
+    CAAX_METHOD, STATUS_CAAX_ORF, admitted_only_through_scan, caax_precursor_hits, scan_config,
+)
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
+from MATPredict.detect.split_locus import evaluate_split_locus
+from MATPredict.detect.mat_gene_gate import (
+    WITHHELD_MAT_GENE_GATE, WITHHELD_PARALOG_CLASS, apply_mat_gene_gate, gate_min_score,
+)
+from MATPredict.detect.flank_carried import (
+    WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
+)
 from MATPredict.detect.family_registry import (
     Family,
     FamilyKey,
@@ -101,6 +114,7 @@ from MATPredict.detect.idiomorph import (
     assign_idiomorph,
     classify_locus,
     evidenced_idiomorphs,
+    resolve_idiomorph_by_models,
     resolve_idiomorph_overlaps,
 )
 from MATPredict.detect.polish import (
@@ -113,7 +127,9 @@ from MATPredict.detect.polish import (
     PolishOutcome,
     classify,
 )
-from MATPredict.db.taxonomy import default_genetic_code
+from MATPredict.db.taxonomy import (
+    default_genetic_code, default_lineage_phylum_name, default_lineage_taxids,
+)
 from MATPredict.detect.reference_fasta import searchable_genes_by_family
 from MATPredict.detect.scoring import FamilyScore, is_ambiguous, score_cluster
 from MATPredict.detect.search import (
@@ -124,7 +140,20 @@ from MATPredict.detect.search import (
     search_fast_path,
     search_localize,
 )
-from MATPredict.detect.tiering import assign_tier, cap_at_medium
+from MATPredict.detect.tiering import allele_absent_genes_to_ignore, assign_tier, cap_at_medium
+from MATPredict.detect.locus_merge import merge_overlapping
+from MATPredict.detect.verification import (
+    OVERRIDE_ROUTES, label_caax_unverified, label_verification,
+)
+from MATPredict.detect.classifier import (
+    UNDETERMINED as CLASSIFIER_UNDETERMINED,
+    ClassifierVerdict,
+    classifier_genes,
+    classify as classify_idiomorph,
+    combine_verdicts,
+    load_classifier,
+)
+from MATPredict.detect.zygosity import genome_zygosity, load_zygosity_rules
 
 logger = logging.getLogger(__name__)
 
@@ -176,6 +205,22 @@ class GeneEvidence:
     # that need a protein sequence for a `None`-exons gene fall back to
     # naive single-span translation for that gene, which is inherently
     # approximate for a real multi-exon gene reported this way.
+    evalue: float | None = None
+    bitscore: float | None = None
+    #: A `caax_scan` precursor only (`detect.caax`): the ORF length in aa, its
+    #: CAAX motif, and how many distinct scan ORFs this cluster holds for the
+    #: gene. None for every homology-derived gene.
+    orf_length_aa: int | None = None
+    caax_motif: str | None = None
+    orf_count: int | None = None
+    # The BEST (lowest) search e-value among this cluster's own hits of this
+    # gene -- not only the hit shown above, which is chosen by method and
+    # identity. None when no hit carried one. Read by the flank-carried rule
+    # (`flank_carried`), which judges a call on its strongest core hit; the
+    # Ascomycota audit measured it the same way. `bitscore` is likewise the
+    # BEST (highest) search bitscore among this cluster's hits of the gene;
+    # the flank-carried rule has judged on it since 2026-09-27 (bitscore
+    # floor replacing the genome-size-dependent e-value floor).
 
 
 @dataclass(frozen=True)
@@ -184,6 +229,25 @@ class LocusSegment:
     start: int
     end: int
     contig_edge_distance: int | None = None
+
+
+def idiomorph_class_for(family, idiomorph: str | None) -> str | None:
+    """The cross-lineage class of one idiomorph label (B9, 2026-10-01).
+
+    None when the family has no `idiomorph_class` map (Basidiomycota,
+    Mucoromycota) or the label is not a single declared idiomorph
+    (`undetermined`, empty); "unassigned" when the family has a map but not
+    this label (S. pombe P, Yarrowia A/B)."""
+    mapping = getattr(family, "idiomorph_classes", None) or {}
+    if not mapping or not idiomorph or idiomorph == "undetermined":
+        return None
+    return mapping.get(idiomorph, "unassigned")
+
+
+def _with_idiomorph_class(results, families):
+    by_key = {f.key: f for f in families}
+    return [replace(r, idiomorph_class=idiomorph_class_for(by_key.get(r.family_key), r.idiomorph))
+            for r in results]
 
 
 @dataclass(frozen=True)
@@ -231,6 +295,11 @@ class DetectionResult:
     #: visible rather than collapsed. Curator's ruling 2026-09-21: on a tie
     #: "report both instead of worrying about getting it right".
     idiomorph_candidates: list[dict] = field(default_factory=list)
+    #: Cross-lineage class of `idiomorph` (curator ruling 2026-10-01, B9):
+    #: MAT1-1 (alpha-box idiomorph) or MAT1-2 (HMG idiomorph), from the
+    #: family's `idiomorph_class` map; "unassigned" where the family declares
+    #: a map without this label; None for families with no map. Report only.
+    idiomorph_class: str | None = None
     idiomorph_margin: float | None = None
     """Identity points separating the winning idiomorph gene from the loser.
 
@@ -273,6 +342,55 @@ class DetectionResult:
     rather than silently resolved away. Also the observations a future
     recalibration of the overlap threshold needs.
     """
+    idiomorph_unmodelled: bool = False
+    """True when the call is flank-carried: no core_MAT gene was modelled, so
+    its idiomorph rests on unmodelled hits. Such a call is kept only when the
+    core hits lie inside the flank span, and is then capped at `low` and
+    classed `partial_locus`. See `flank_carried`."""
+    idiomorph_classifier: dict | None = None
+    """The profile-HMM classifier's verdict on this locus's modelled core
+    proteins (`classifier.ClassifierVerdict.as_report`), or None when the
+    family has no classifier or nothing was modelled. When set, it decided
+    `idiomorph`. Curator's ruling 2026-09-26."""
+    confidence_ignored_genes: list[str] = field(default_factory=list)
+    """Genes of the OTHER allele that the confidence tier did not count
+    against this call: weak (< 50%) cross-hits at least 10 points below the
+    called allele's best modelled core gene (curator's ruling 2026-09-27;
+    `tiering.allele_absent_genes_to_ignore`). Empty when none applied."""
+    verification: dict | None = None
+    """`{status: unverified, reason, family_phylum, genome_phylum, evidence}`
+    when the family was searched outside the genome's phylum by an override
+    route; None otherwise. Curator's ruling 2026-09-26. Never changes the
+    call's confidence. See `verification`."""
+    withheld_reason: str | None = None
+    """Why a withheld locus (`DetectionOutcome.suppressed_loci`) was withheld:
+    `MODELLED_GENE_BAR` or `flank_carried.WITHHELD_FLANK_CARRIED`. None on a
+    reported call."""
+    split_locus: dict | None = None
+    """Set when the call was made by the split-locus rule (`split_locus`;
+    curator's ruling 2026-09-27): one modelled core gene >= 95% near a contig
+    end, the family's flanks on other contigs. Carries the core gene, its
+    contig and edge distance, the flanks and all contigs involved. Such a call
+    is `partial_locus` at `low`. None otherwise."""
+    merged_from: list[dict] = field(default_factory=list)
+    """When several families of one roster `merge_group` called the same
+    locus, the members folded into this call: each member's family,
+    idiomorph, confidence, span and genes (`locus_merge`; curator's ruling
+    2026-09-27, the Schizophyllum B locus reported by PR, Balpha and Bbeta).
+    Empty for an unmerged call."""
+    withheld_detail: dict | None = None
+    """For a withheld locus, the numbers behind the reason; set for
+    `BELOW_FRACTION_FLOOR` (`fraction_found`, `floor`, `best_identity`)."""
+    subloci: list[dict] = field(default_factory=list)
+    """For a merged A or B call, each contributing family as a sublocus:
+    label (the family's locus name, e.g. Aalpha/Abeta/Balpha/Bbeta), generic
+    or not, idiomorph, coordinates, genes, genes missing and completeness
+    (`locus_merge`; curator's ruling 2026-09-28, option a). Empty otherwise."""
+    caax_dependent: bool = False
+    """True when the call reaches the admission bar (>= 2 distinct genes, or
+    the modelled-gene bar) only by counting a strict-CAAX scan precursor
+    (`detect.caax`). Read by the CAAX unverified label
+    (`verification.label_caax_unverified`)."""
 
 
 @dataclass(frozen=True)
@@ -327,6 +445,26 @@ class DetectionOutcome:
     #: when the lookup failed (None when it did not fail).
     genetic_code: int | None = None
     genetic_code_error: str | None = None
+    #: Why the genome was not searched, on a `not_searched` route; else None.
+    not_searched_reason: str | None = None
+    #: How many flank-carried calls were withheld because a core hit lay
+    #: outside the flank span (see `flank_carried`). They are in
+    #: `suppressed_loci` too, with their `withheld_reason`.
+    suppressed_flank_carried: int = 0
+    #: calls withheld by the MAT-gene gate (`mat_gene_gate`).
+    suppressed_mat_gene_gate: int = 0
+    #: calls whose classified core protein is a known non-MAT paralog class
+    #: (`mat_gene_gate.WITHHELD_PARALOG_CLASS`; R4, 2026-09-29).
+    suppressed_paralog_class: int = 0
+    #: N blocks at a flank-anchored position of a family with no call
+    #: (curator's ruling 2026-09-26; see `assembly_gap`). A report, not a call.
+    assembly_gaps_at_locus: list[AssemblyGapAtLocus] = field(default_factory=list)
+    #: Genome-level zygosity statement, or None when no rule applies
+    #: (curator's ruling 2026-09-26; see `zygosity`). Never alters a call.
+    zygosity: dict | None = None
+    #: Genome-level statements for families that called both idiomorphs
+    #: (`two_idiomorphs`; curator's ruling 2026-09-29). Never alters a call.
+    two_idiomorphs: list[dict] = field(default_factory=list)
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -334,6 +472,11 @@ def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
     family's own hits in this cluster -- never checked against another
     family's hits or expected genes (see Task 6's cross-family pooling bug)."""
     core_genes = {g["name"] for g in family.genes if g["role"] == "core_MAT"}
+    # A `pheromone_precursor_scan` gene has no curated protein to polish with;
+    # it is found by the CAAX scan (`detect.caax`) or not at all.
+    scan = scan_config(getattr(family, "pheromone_precursor_scan", None))
+    if scan is not None:
+        core_genes.discard(scan["gene"])
     found_genes = {h.gene_name for h in cluster.hits if h.family_key == family.key}
     return core_genes - found_genes
 
@@ -530,6 +673,27 @@ class EvidenceFloor:
 #: stricter bar removes a further 1,161 loci for nothing.
 MIN_POLISHED_GENES = 2
 
+#: `DetectionResult.withheld_reason` for a locus withheld by the bar above.
+MODELLED_GENE_BAR = "modelled_gene_bar"
+
+#: `DetectionResult.withheld_reason` for an admitted cluster with at least one
+#: modelled gene that fell below the fraction floor (`ambiguity_floor`). Review
+#: finding F2 (2026-09-28, results/2026-09-28_fable_review/): the curated
+#: Syncephalastrum racemosum NRRL 2496 record's own locus (sexP + rnhA, 100%)
+#: scored 2/5 = 0.4 and was dropped by a bare `continue`, invisible in the
+#: report. Listed in `suppressed_loci` only; it never changes `not_detected`.
+BELOW_FRACTION_FLOOR = "below_fraction_floor"
+
+#: Polish at most this many admitted clusters per family per genome. Curator's
+#: ruling 2026-09-26, after a real run over 561 genomes (docs/notes/2026-09-26_
+#: polish-cap-measured-and-serinales-scan.md): cap 6 cut compute 135.3 -> 74.6
+#: h, removed all 6 timeouts, and lost 4 of 613 calls, all phylum-fallback
+#: Saccharomycopsis. Ranked genes-first over all distinct genes, superseded
+#: cross-hits included (`_polish_rank`, curator's ruling 2026-09-26); the
+#: identity-first rank was tested out of sample and lost 2 Mucoromycota Minus
+#: calls, and the mixed rank lost calls either single rank kept.
+DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY = 6
+
 #: The permissive floor the evidence diagnostics enumerate candidates with:
 #: every family with >=1 own hit in the cluster, of any gene, any role, any
 #: identity. This is the retired `_families_with_a_foothold` behavior, and it
@@ -540,6 +704,134 @@ MIN_POLISHED_GENES = 2
 _DIAGNOSTICS_CANDIDATE_FLOOR = EvidenceFloor(
     min_hits=1, min_identity=None, require_core_role=False
 )
+
+
+def _translate_model(genome_fasta: Path, model, genetic_code: int, cache: dict) -> str:
+    """The protein a polished model encodes, spliced from its exons and
+    translated with the genome's genetic code, stopping at the first stop.
+    Contig sequences are read once per run into `cache`."""
+    from Bio import SeqIO
+    from Bio.Seq import Seq
+
+    if model.contig not in cache:
+        wanted = model.contig
+        with open(genome_fasta) as handle:
+            for record in SeqIO.parse(handle, "fasta"):
+                cache.setdefault(record.id, record.seq)
+        cache.setdefault(wanted, None)
+    seq = cache.get(model.contig)
+    if seq is None:
+        return ""
+    exons = sorted((e.start, e.end) for e in model.exons) or [(model.start, model.end)]
+    ordered = list(reversed(exons)) if model.strand == "-" else exons
+    parts = []
+    for start, end in ordered:
+        span = seq[start - 1:end]
+        parts.append(str(span.reverse_complement() if model.strand == "-" else span))
+    cds = "".join(parts)
+    # Frame-robust: a polished model's first exon does not always start on a
+    # codon boundary (never assume frame 1 -- see the genetic-code memory), so
+    # translate all three frames and keep the longest stop-free stretch.
+    # Measured on the first 293-genome run: three Mucor circinelloides sexM
+    # models (60.8% identity, 761 bp single exon) translated from base 1 gave
+    # proteins that scored 0.0-0.3 bits against both HMMs.
+    best = ""
+    for frame in range(3):
+        sub = cds[frame:]
+        sub = sub[: len(sub) - len(sub) % 3]
+        for piece in str(Seq(sub).translate(table=genetic_code)).split("*"):
+            if len(piece) > len(best):
+                best = piece
+    return best
+
+
+def _polish_rank(cluster: GeneCluster, family_key: FamilyKey) -> tuple:
+    """Sort key ranking a family's admitted clusters BEFORE polishing: more
+    distinct genes first, then higher best identity, then more hits. Used by
+    the per-family polish cap.
+
+    Counts ALL of the family's hits, superseded cross-hits included. Curator's
+    ruling 2026-09-26 (results/2026-09-26_polish_cap/MIXED_RANK_NOTE.md): a
+    real MAT locus usually draws a cross-hit from the other idiomorph's
+    reference, which the first resolution supersedes, so ranking on LIVE genes
+    alone demoted true loci -- Zymoseptoria brevis's MAT1-1-1 at 95.6% ranked
+    below six 3-gene noise clusters at 33-43% and was never polished. Measured
+    by replay: 7 calls lost across the cap panels against 14 for the live rank;
+    the one call it loses that the live rank kept (GCA_029290875.1) is an
+    unpolished 29% MAT1-1-3 fragment beside SLA2/APN2 in a phylum-fallback
+    yeast. These keys are exactly the evidence-diagnostics row's `gene_count`,
+    `best_identity` and `hit_count`, so a replay over existing runs reproduces
+    the rank."""
+    own = [h for h in cluster.hits if h.family_key == family_key]
+    return (-len({h.gene_name for h in own}), -max((h.identity for h in own), default=0.0), -len(own))
+
+
+def strong_fragment_scores(by_family, families, *, genome_fasta, genetic_code,
+                           load_fn=None, gate_fn=None, translate_fn=None, classify_fn=None):
+    """`{(id(cluster), family_key): best score}` for admitted clusters whose
+    unmodelled tblastn HSP fragments already score at or above the family
+    classifier's gate threshold, and which no paralog class claims.
+
+    Used only to RANK clusters inside the polish cap (V3, curator's ruling
+    2026-09-30, results/2026-09-30_cap_protection/NOTE.md). Families without
+    an `idiomorph_classifier` contribute nothing, so their rank is unchanged.
+    Only the family's own classifier-gene hits found by tblastn on the genome
+    are translated -- the same fragments the classifier scores when nothing
+    is modelled (`classifier_input: hsp_fragment`). The callables are
+    injectable for tests.
+    """
+    load_fn = load_fn or load_classifier
+    gate_fn = gate_fn or gate_min_score
+    translate_fn = translate_fn or _translate_model
+    classify_fn = classify_fn or classify_idiomorph
+    by_key = {f.key: f for f in families}
+    cache: dict = {}
+    strong: dict[tuple[int, FamilyKey], float] = {}
+    for key, members in by_family.items():
+        family = by_key.get(key)
+        if family is None or not family.idiomorph_classifier:
+            continue
+        clf = load_fn(family.idiomorph_classifier, family)
+        if clf is None:
+            continue
+        threshold, _source = gate_fn(family.idiomorph_classifier)
+        genes = classifier_genes(family)
+        for cluster in members:
+            proteins = []
+            for h in cluster.hits:
+                if h.family_key != key or h.gene_name not in genes or h.method != "tblastn_genome":
+                    continue
+                span = types.SimpleNamespace(contig=h.contig, start=h.start, end=h.end,
+                                             strand=h.strand, exons=())
+                protein = translate_fn(genome_fasta, span, genetic_code or 1, cache)
+                if protein:
+                    proteins.append(protein)
+            if not proteins:
+                continue
+            verdict = classify_fn(clf, proteins, classifier_input="hsp_fragment")
+            if verdict is None or verdict.paralog_class is not None:
+                continue
+            best = max(verdict.scores.values())
+            if best >= threshold:
+                strong[(id(cluster), key)] = best
+    return strong
+
+
+def rank_for_polish(members, family_key, strong) -> list:
+    """`members` in polish order: strong-fragment clusters first (V3), then the
+    plain `_polish_rank` order within each group."""
+    return sorted(members, key=lambda c: (0 if (id(c), family_key) in strong else 1,)
+                  + _polish_rank(c, family_key))
+
+
+def select_polish_clusters(by_family, cap: int, strong) -> set[tuple[int, FamilyKey]]:
+    """The (cluster, family) pairs allowed to be polished: the top `cap` of each
+    family in `rank_for_polish` order. Never more than `cap` per family."""
+    return {
+        (id(c), key)
+        for key, members in by_family.items()
+        for c in rank_for_polish(members, key, strong)[:cap]
+    }
 
 
 def _own_live_hits(cluster, family_key):
@@ -613,6 +905,96 @@ def _append_diagnostics_row(out_path: Path, row: dict) -> None:
             logger.warning("could not write evidence diagnostics to %s: %s", out_path, exc)
 
 
+def sub_floor_genes(hits, family_key: FamilyKey, floor: float) -> set[str]:
+    """This family's genes whose EVERY hit in `hits` scores below `floor` bits.
+
+    Review finding F6, curator's ruling 2026-09-28: such a gene is noise, not a
+    gene "that failed to model", so it must not cap a call at medium (e.g.
+    gzUmbRama1, an rnhA HSP at 34.7 bits 28 kb from the locus). A gene with any
+    hit at or above the floor, or any hit with no bitscore recorded, is kept.
+    """
+    best: dict[str, float | None] = {}
+    for h in hits:
+        if h.family_key != family_key:
+            continue
+        bits = h.bitscore
+        if bits is None:
+            best[h.gene_name] = None
+        elif h.gene_name not in best:
+            best[h.gene_name] = float(bits)
+        elif best[h.gene_name] is not None:
+            best[h.gene_name] = max(best[h.gene_name], float(bits))
+    return {g for g, b in best.items() if b is not None and b < floor}
+
+
+def _modelled_gene_names(
+    member_clusters: list[GeneCluster],
+    family_key: FamilyKey,
+    polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome],
+    model_losers: frozenset[tuple[int, FamilyKey, str]] | set = frozenset(),
+) -> frozenset[str]:
+    """How many DISTINCT genes of this family, in these exact clusters, rest
+    on a real gene model rather than on a bare alignment.
+
+    A gene counts when either:
+
+    * a polishing tool modelled it (`polished_agree`, `polished_disagree`
+      or `polished_single`), or
+    * it came from the annotated fast path, i.e. it has a
+      `diamond_proteome` hit here -- a gene model somebody already called,
+      which was never put to the tools precisely BECAUSE it needs no
+      refining.
+
+    Counting the fast path is not a loosening, it is the whole reason this
+    is not called `polished_gene_count`. Gating on polish alone would score
+    every gene of a fully annotated genome as unmodelled and withhold its
+    real MAT locus -- the annotated ZygoLife and BFD-proteome workflows
+    would report nothing at all. The measurement behind the bar came from
+    genome-only runs, where no diamond hit exists and the two definitions
+    coincide, so it does not speak to that case either way.
+
+    What never counts is `STATUS_UNPOLISHED`: a localized HSP that BOTH
+    tools were given a window for and neither could turn into a gene. That
+    is the population the bar exists to remove.
+
+    Nor does a gene whose every hit here is superseded. A RESCUED model is
+    recorded as modelled before the post-polish idiomorph pass runs, and
+    that pass can then find it is the losing half of a sexM/sexP-style
+    pair -- the same physical gene as the winner. Counting it let one gene
+    clear a bar of two (25 of 3,101 Saccharomyces loci were over-counted).
+
+    Counted per distinct gene NAME, not per hit: a cluster routinely holds
+    many HSPs of one gene, and three fragments of one alpha-box must not
+    add up to the bar on their own. Scoped by (cluster, family) exactly as
+    `_any_gene_unpolished` is, and for the same reasons.
+    """
+    cluster_ids = {id(c) for c in member_clusters}
+    live = [
+        h for c in member_clusters for h in c.hits
+        if h.family_key == family_key and h.superseded_by is None
+    ]
+    # `model_losers`: a gene whose model LOST a model-based idiomorph decision
+    # (`model_idiomorph_alternatives`) is the same physical gene as the winner.
+    # Its name can stay live through a separate weak hit elsewhere in the
+    # cluster, so the live-name test alone would count that losing model --
+    # found in Umbelopsis vinacea GCA_016758895.1, where it let one gene clear
+    # a bar of two.
+    modelled = {
+        gene_name
+        for (cluster_id, key, gene_name), outcome in polish_by.items()
+        if key == family_key and cluster_id in cluster_ids
+        and outcome.status in (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE)
+        and (cluster_id, key, gene_name) not in model_losers
+    } & {h.gene_name for h in live}
+    modelled |= {h.gene_name for h in live if h.method == "diamond_proteome"}
+    # A strict-CAAX scan precursor (`detect.caax`) is an ORF with a start, a
+    # stop and a motif -- a gene model, not a bare alignment -- so it counts.
+    # Curator's ruling 2026-09-27. It cannot by itself make a call `high`
+    # (see `_build`).
+    modelled |= {h.gene_name for h in live if h.method == CAAX_METHOD}
+    return frozenset(modelled)
+
+
 def _relaxed_results(
     clusters: list[GeneCluster],
     families: list[Family],
@@ -621,6 +1003,9 @@ def _relaxed_results(
     ambiguity_floor: float = 0.5,
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] | None = None,
     contig_lengths: dict[str, int] | None = None,
+    on_relaxed_call: Callable[[DetectionResult, GeneCluster, FamilyScore], None] | None = None,
+    model_losers: frozenset[tuple[int, FamilyKey, str]] | set = frozenset(),
+    classifier_verdicts: dict[tuple[int, FamilyKey], ClassifierVerdict] | None = None,
 ) -> list[DetectionResult]:
     """Sub-floor clusters admitted on gene COUNT rather than gene fraction.
 
@@ -670,6 +1055,7 @@ def _relaxed_results(
             # tell from two unrelated spurious HMG hits tens of kb apart.
             evidence = _gene_evidence([cluster], score.family_key, polish_by or {})
             segments = _segments_for([cluster], contig_lengths or {}, evidence)
+            verdict = (classifier_verdicts or {}).get((id(cluster), score.family_key))
             results.append(DetectionResult(
                 family_key=score.family_key,
                 contig=segments[0].contig,
@@ -681,10 +1067,19 @@ def _relaxed_results(
                 # flattening it to low would conflate weak evidence with a
                 # fragmented assembly.
                 confidence="medium",
-                idiomorph=assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key)),
-                idiomorph_candidates=idiomorph_candidates(
-                    family, score.genes_found, _own_live_hits(cluster, family.key)
+                # The HMM classifier decides where it ran on this cluster, as
+                # in the strict path; before 2026-09-28 relaxed calls ignored
+                # it (found measuring review finding F1).
+                idiomorph=(verdict.idiomorph if verdict is not None else
+                           assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key))),
+                idiomorph_candidates=(
+                    [{"idiomorph": k, "score": round(v, 1), "basis": "hmm_classifier"}
+                     for k, v in sorted(verdict.scores.items(), key=lambda kv: (-kv[1], kv[0]))]
+                    if verdict is not None else
+                    idiomorph_candidates(family, score.genes_found, _own_live_hits(cluster, family.key))
                 ),
+                idiomorph_margin=round(verdict.margin, 6) if verdict is not None else None,
+                idiomorph_classifier=verdict.as_report() if verdict is not None else None,
                 ambiguous_with=[],
                 genes_found=score.genes_found,
                 genes_missing=score.genes_missing,
@@ -706,7 +1101,24 @@ def _relaxed_results(
                 segments=segments,
                 gene_evidence=evidence,
                 reference_records=sorted({e.reference_record_id for e in evidence}),
+                # Same rule as the strict path. Before 2026-09-26 this was never
+                # set, so it stayed 0 and the modelled-gene bar -- applied after
+                # this pass -- withheld every relaxed call.
+                polished_genes=len(
+                    _modelled_gene_names([cluster], score.family_key, polish_by or {}, model_losers)
+                ),
+                caax_dependent=admitted_only_through_scan(
+                    set(score.genes_found),
+                    {h.gene_name for h in cluster.hits
+                     if h.family_key == score.family_key and h.method == CAAX_METHOD},
+                    len(_modelled_gene_names([cluster], score.family_key, polish_by or {}, model_losers)
+                        - {h.gene_name for h in cluster.hits
+                           if h.family_key == score.family_key and h.method == CAAX_METHOD}),
+                    MIN_POLISHED_GENES,
+                ),
             ))
+            if on_relaxed_call is not None:
+                on_relaxed_call(results[-1], cluster, score)
     return results
 
 
@@ -796,8 +1208,12 @@ def _write_evidence_diagnostics(
     admitted: bool,
     run_id: str,
     genome_id: str,
+    polish_capped: bool = False,
 ) -> None:
     """Append one JSON line describing this (cluster, family) admission decision.
+
+    `polish_capped` marks an admitted cluster that the per-family polish cap
+    (`max_polished_clusters_per_family`) left unpolished.
 
     The real calibration dataset `EvidenceFloor`'s docstring refers to. It
     could not actually serve that purpose before carrying `genome_id`: a row
@@ -817,6 +1233,7 @@ def _write_evidence_diagnostics(
         "roles": sorted({h.role for h in own_hits}),
         "best_identity": max((h.identity for h in own_hits), default=None),
         "admitted": admitted,
+        "polish_capped": polish_capped,
     })
 
 
@@ -855,6 +1272,9 @@ def _write_idiomorph_diagnostics(
         "overlap_fraction": resolution.overlap_fraction,
         "winner_coverage": resolution.winner_coverage,
         "loser_coverage": resolution.loser_coverage,
+        "basis": resolution.basis,
+        "winner_model_score": resolution.winner_model_score,
+        "loser_model_score": resolution.loser_model_score,
     })
 
 
@@ -1274,9 +1694,20 @@ def _gene_evidence(
     best: dict[tuple[int, str], GeneEvidence] = {}
     for cluster in member_clusters:
         raw_by_gene: dict[str, SearchHit] = {}
+        best_evalue: dict[str, float] = {}
+        best_bitscore: dict[str, float] = {}
+        caax_orfs: dict[str, set[tuple[str, int, int, str]]] = {}
         for hit in _live_hits_for_evidence(cluster.hits):
             if hit.family_key != family_key:
                 continue
+            if hit.method == CAAX_METHOD:
+                caax_orfs.setdefault(hit.gene_name, set()).add(
+                    (hit.contig, hit.start, hit.end, hit.strand))
+            if hit.evalue is not None and hit.evalue < best_evalue.get(hit.gene_name, float("inf")):
+                best_evalue[hit.gene_name] = hit.evalue
+            if (hit.bitscore is not None
+                    and hit.bitscore > best_bitscore.get(hit.gene_name, float("-inf"))):
+                best_bitscore[hit.gene_name] = hit.bitscore
             current = raw_by_gene.get(hit.gene_name)
             # Ranking among THIS cluster's own raw SearchHits for one gene: the
             # named method preference decides first, and identity only breaks a tie
@@ -1323,6 +1754,8 @@ def _gene_evidence(
                     reference_record_id=model.reference_record_id, method=model.method,
                     status=outcome.status, alternate_model=alternate,
                     exons=tuple((e.start, e.end) for e in model.exons) if model.exons else None,
+                    evalue=best_evalue.get(gene_name),
+                    bitscore=best_bitscore.get(gene_name),
                 )
             else:
                 hit = raw_by_gene.get(gene_name)
@@ -1342,12 +1775,20 @@ def _gene_evidence(
                 # split). In both cases the raw SearchHit stands as this
                 # gene's evidence with no polished model behind it.
                 status = STATUS_UNPOLISHED if outcome is not None else STATUS_NOT_POLISH_CANDIDATE
+                is_caax = hit.method == CAAX_METHOD
                 evidence = GeneEvidence(
                     gene_name=hit.gene_name, role=hit.role, contig=hit.contig,
                     start=hit.start, end=hit.end, strand=hit.strand,
                     identity=hit.identity, coverage=hit.coverage,
                     reference_record_id=hit.reference_record_id, method=hit.method,
-                    status=status, alternate_model=None,
+                    # A CAAX-scan precursor is its own evidence type
+                    # (`detect.caax`), never "unpolished" or a homology hit.
+                    status=STATUS_CAAX_ORF if is_caax else status, alternate_model=None,
+                    evalue=best_evalue.get(gene_name),
+                    bitscore=best_bitscore.get(gene_name),
+                    orf_length_aa=hit.align_length_aa if is_caax else None,
+                    caax_motif=hit.reference_record_id.split(":", 1)[-1] if is_caax else None,
+                    orf_count=len(caax_orfs.get(gene_name, ())) if is_caax else None,
                 )
             # Keyed per (cluster, gene): a cluster visits each of its own gene
             # names exactly once, so this never overwrites and no evidence from
@@ -1395,6 +1836,53 @@ def _segments_for(
     return segments
 
 
+def _split_locus_calls(results, clusters, families, build, *, searchable_genes,
+                       contig_lengths) -> list[DetectionResult]:
+    """The split-locus calls for families with no reported call (`split_locus`).
+
+    For each such family, every cluster holding one of its core hits is built
+    exactly as a normal call would be (`build` is `_build`, so the idiomorph
+    comes from the classifier on the modelled core protein) and tested; the
+    candidate with the strongest core gene wins. Nothing already reported is
+    changed, and a flank inside any reported locus does not count."""
+    reported_keys = {r.family_key for r in results}
+    reported_spans = [
+        (seg.contig, seg.start, seg.end)
+        for r in results for seg in (r.segments or [LocusSegment(r.contig, r.start, r.end)])
+    ]
+    calls = []
+    for family in families:
+        if family.key in reported_keys or not family.split_locus.enabled:
+            continue
+        genome_hits = [h for c in clusters for h in _own_live_hits(c, family.key)]
+        if not any(h.role == "core_MAT" for h in genome_hits):
+            continue
+        roles = {g["name"]: g["role"] for g in family.genes}
+        best = None
+        for cluster in clusters:
+            if not any(h.role == "core_MAT" for h in _own_live_hits(cluster, family.key)):
+                continue
+            scores = score_cluster(cluster, families, searchable_genes=searchable_genes)
+            score = next((s for s in scores if s.family_key == family.key), None)
+            if score is None:
+                continue
+            candidate = build(score, [cluster], scores, False)
+            info = evaluate_split_locus(
+                candidate, genome_hits, family_roles=roles,
+                contig_lengths=contig_lengths, reported_spans=reported_spans,
+                params=family.split_locus,
+            )
+            if info is not None and (best is None or info["core_identity"] > best[1]["core_identity"]):
+                best = (candidate, info)
+        if best is not None:
+            candidate, info = best
+            calls.append(replace(
+                candidate, confidence="low", locus_class=LOCUS_CLASS_PARTIAL,
+                split_locus=info, withheld_reason=None,
+            ))
+    return calls
+
+
 def run_pipeline(
     genome_fasta: Path,
     proteome_fasta: Path | None,
@@ -1423,6 +1911,11 @@ def run_pipeline(
     #: which is what the tests written before it use to keep asserting the
     #: behaviour they were written for.
     min_polished_genes: int = MIN_POLISHED_GENES,
+    #: Polish at most this many admitted clusters PER FAMILY, the best-ranked
+    #: by what is known before polishing (see `_polish_rank`); the rest are
+    #: left unpolished and so cannot clear the modelled-gene bar. None = no cap.
+    #: See `DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY` for the measured default.
+    max_polished_clusters_per_family: int | None = DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY,
     #: Curated records withheld from THIS run, for leave-one-out recall. The
     #: caller must build `reference_fasta` with the same set (see
     #: `reference_fasta.build_reference_fasta`); this parameter additionally
@@ -1438,6 +1931,14 @@ def run_pipeline(
     #: serine; translating those genomes with table 1 is systematically wrong.
     genetic_code: int | None = None,
     genetic_code_resolver: Callable[[int], int | None] = default_genetic_code,
+    #: Ancestor-taxid lookup for the zygosity rule (`zygosity`). Called only
+    #: when a genome has a single-idiomorph call and its own taxid is not a
+    #: listed taxon; the router's cached efetch document answers it.
+    zygosity_lineage_resolver: Callable[[int], list[int]] = default_lineage_taxids,
+    #: The genome's phylum name, for the unverified label (`verification`).
+    #: Called only on an override route (`--phylum`, `--exhaustive`) with a
+    #: taxid and at least one call; the router's cached efetch answers it.
+    phylum_name_resolver: Callable[[int], str | None] = default_lineage_phylum_name,
 ) -> DetectionOutcome:
     # `routing` lets the caller route ONCE and reuse the decision, which the
     # CLI must do: it has to know the routed families BEFORE this call, so it
@@ -1445,8 +1946,21 @@ def run_pipeline(
     # well would repeat the taxonomy lookup and, worse, could disagree with the
     # reference FASTA the caller already built. When it is omitted the old
     # self-routing behaviour is unchanged.
+    #
+    # Self-routing with no taxid searches every family (`exhaustive=True`):
+    # that is the direct library call, the shape the unit tests use. Every
+    # production entry point -- the CLI and `batch_runner` -- routes with a
+    # real taxid, where the curator's `not_searched` default applies.
     if routing is None:
-        routing = route(taxid, load_all_families(db_root))
+        routing = route(taxid, load_all_families(db_root), exhaustive=taxid is None)
+    if routing.routing_mode == "not_searched":
+        # No search, no polish, no taxonomy lookup: the report says why, so it
+        # can never read as "searched and found nothing".
+        return DetectionOutcome(
+            results=[], routing_mode=routing.routing_mode,
+            routing_error=routing.routing_error,
+            not_searched_reason=not_searched_reason(routing),
+        )
     families = routing.families
     # The clustering gap is per-locus CURATION data (`order.yml`
     # `max_cluster_gap_bp`), not a code constant: how spread out a MAT locus is
@@ -1556,6 +2070,12 @@ def run_pipeline(
     # evidence floor's gene count. Measured need: a 27 bp "sexM" (nine codons)
     # and a 48/51 bp sexM/sexP pair were each being reported as loci.
     hits = drop_low_quality_hits(hits)
+    # Strict-CAAX pheromone precursors beside receptor hits, for the families
+    # that ask for it (curator's ruling 2026-09-27, `detect.caax`). Added after
+    # the length filter -- a 25 aa precursor is 78 bp, under it, and is found
+    # by its motif, not by an alignment -- and before clustering, so a found
+    # precursor joins its receptor's cluster and counts as a distinct gene.
+    hits.extend(caax_precursor_hits(genome_fasta, families, hits, genetic_code=genetic_code))
 
     clusters = cluster_hits(hits, max_gap=max_gap)
 
@@ -1589,6 +2109,11 @@ def run_pipeline(
             if not own_events:
                 continue
             by_id = dict(zip((id(h) for h in own), resolved_own))
+            # A superseded hit is a NEW object (dataclasses.replace); keep its
+            # "came from tblastn localization" standing, which is keyed by id.
+            localized_hit_ids.update(
+                id(new) for old_id, new in by_id.items() if old_id in localized_hit_ids
+            )
             cluster_hits_out = [by_id.get(id(h), h) for h in cluster_hits_out]
             events.extend(own_events)
             resolutions_with_family.extend((family, e) for e in own_events)
@@ -1643,15 +2168,35 @@ def run_pipeline(
     # the same scoping the retired second-pass tracking set used, now carrying a
     # per-gene outcome instead of a per-family boolean.
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] = {}
+    # Per-family polish cap: decide up front which (cluster, family) pairs
+    # may be polished, ranking each family's admitted clusters before any
+    # polishing. Everything else stays admitted (diagnostics say so) but is
+    # not polished.
+    polish_allowed: set[tuple[int, FamilyKey]] | None = None
+    if max_polished_clusters_per_family is not None:
+        by_family: dict[FamilyKey, list[GeneCluster]] = {}
+        for cluster in clusters:
+            for family in _families_meeting_evidence_floor(cluster, families, evidence_floor):
+                by_family.setdefault(family.key, []).append(cluster)
+        # V3 (curator's ruling 2026-09-30): clusters whose unmodelled fragment
+        # already scores at or above the classifier gate rank first, inside
+        # the same cap. Families without a classifier keep the plain rank.
+        strong = strong_fragment_scores(by_family, families, genome_fasta=genome_fasta,
+                                        genetic_code=genetic_code)
+        polish_allowed = select_polish_clusters(by_family, max_polished_clusters_per_family, strong)
     for cluster in clusters:
         admitted_families = _families_meeting_evidence_floor(cluster, families, evidence_floor)
+        capped_keys = set()
+        if polish_allowed is not None:
+            capped_keys = {f.key for f in admitted_families if (id(cluster), f.key) not in polish_allowed}
+            admitted_families = [f for f in admitted_families if f.key not in capped_keys]
         if evidence_diagnostics_path is not None:
             # Diagnostics cover every family the OLD unconditional-admit set
             # would have considered (i.e. every family with >=1 own hit in
             # this cluster), not just the ones the real `evidence_floor`
             # actually admits -- so both admitted and would-have-been-rejected
             # cases are captured for later threshold analysis.
-            admitted_keys = {f.key for f in admitted_families}
+            admitted_keys = {f.key for f in admitted_families} | capped_keys
             for family in _families_meeting_evidence_floor(
                 cluster, families, _DIAGNOSTICS_CANDIDATE_FLOOR
             ):
@@ -1659,6 +2204,7 @@ def run_pipeline(
                     evidence_diagnostics_path, cluster, family,
                     admitted=family.key in admitted_keys,
                     run_id=run_id, genome_id=genome_id,
+                    polish_capped=family.key in capped_keys,
                 )
         for family in admitted_families:
             # Eligibility is decided per (cluster, family), NOT from a single
@@ -1705,10 +2251,16 @@ def run_pipeline(
             }
             # Localized genes: this family's own genes that tblastn placed in
             # THIS cluster, whose approximate HSP coordinates need refining.
+            #
+            # The losing half of a resolved idiomorph pair (superseded) is
+            # polished only where the family sets `model_idiomorph_alternatives`
+            # (curator's ruling 2026-09-26, Mucoromycota sexM/sexP): there both
+            # genes get a model and the models decide the pair, below.
             localized_genes = {
                 h.gene_name
                 for h in cluster.hits
                 if h.family_key == family.key and id(h) in localized_hit_ids
+                and (h.superseded_by is None or family.model_idiomorph_alternatives)
             } - already_annotated_genes
             # Rescue genes: this family's own core_MAT genes still missing from
             # this cluster, checked strictly against this family's own hits in
@@ -1816,6 +2368,169 @@ def run_pipeline(
                         run_id=run_id, genome_id=genome_id,
                     )
 
+    #: (cluster, family, gene) whose polished model LOST a model-based decision.
+    model_losers: set[tuple[int, FamilyKey, str]] = set()
+    # Decide each sexM/sexP-style pair on its two MODELS, for the families that
+    # ask for it. Runs after the post-polish pass so the tblastn-identity rule
+    # cannot overwrite the model verdict. The first-pass event for the same
+    # pair is replaced, so each real gene still carries ONE verdict.
+    for cluster in clusters:
+        for family in families:
+            if not family.model_idiomorph_alternatives:
+                continue
+            own = [h for h in cluster.hits if h.family_key == family.key]
+            if len(own) < 2:
+                continue
+            models = {
+                gene: {"miniprot": outcome.miniprot_model, "exonerate": outcome.exonerate_model}
+                for (cluster_id, key, gene), outcome in polish_by.items()
+                if cluster_id == id(cluster) and key == family.key
+            }
+            resolved_own, own_events = resolve_idiomorph_by_models(
+                own, family, models, min_overlap_fraction=idiomorph_overlap_fraction
+            )
+            if not own_events:
+                continue
+            model_losers.update((id(cluster), family.key, e.loser) for e in own_events)
+            by_id = dict(zip((id(h) for h in own), resolved_own))
+            cluster.hits[:] = [by_id.get(id(h), h) for h in cluster.hits]
+            decided = {frozenset((e.winner, e.loser)) for e in own_events}
+            kept = [
+                e for e in idiomorph_events_by_cluster.get(id(cluster), [])
+                if frozenset((e.winner, e.loser)) not in decided
+            ]
+            idiomorph_events_by_cluster[id(cluster)] = kept + own_events
+            resolutions_with_family.extend((family, e) for e in own_events)
+            if evidence_diagnostics_path is not None:
+                for event in own_events:
+                    _write_idiomorph_diagnostics(
+                        evidence_diagnostics_path, event, family,
+                        run_id=run_id, genome_id=genome_id,
+                    )
+
+    # Decide the idiomorph on the MODELLED proteins with the family's profile-HMM
+    # classifier, where the roster names one (curator's ruling 2026-09-26;
+    # `detect.classifier`). Runs after the model-pair decision so it has the
+    # final models of both halves of a pair. A decisive verdict also makes the
+    # pair's live/superseded state agree with it; an `undetermined` verdict
+    # changes no hit and is reported as such.
+    classifier_verdicts: dict[tuple[int, FamilyKey], ClassifierVerdict] = {}
+    contig_seq_cache: dict[str, object] = {}
+    for cluster in clusters:
+        for family in families:
+            if not family.idiomorph_classifier:
+                continue
+            clf = load_classifier(family.idiomorph_classifier, family)
+            gene_idiomorph = classifier_genes(family)
+            # One entry per scored model: (gene, span, protein).
+            scored_models = []
+            for (cluster_id, key, gene), outcome in polish_by.items():
+                if cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph:
+                    continue
+                for model in (outcome.miniprot_model, outcome.exonerate_model):
+                    if model is None:
+                        continue
+                    protein = _translate_model(
+                        genome_fasta, model, genetic_code or 1, contig_seq_cache
+                    )
+                    if protein:
+                        scored_models.append((gene, (model.contig, model.start, model.end), protein))
+            classifier_input = "model"
+            if not scored_models:
+                # No core protein was modelled: score the tblastn HSP
+                # translations instead (curator's ruling 2026-09-27), rather
+                # than letting an identity comparison of short hits decide.
+                # Superseded hits are scored too -- the verdict must see both
+                # halves of the pair. `min_margin` still applies.
+                for h in cluster.hits:
+                    if (h.family_key != family.key or h.gene_name not in gene_idiomorph
+                            or h.method != "tblastn_genome"):
+                        continue
+                    span = types.SimpleNamespace(
+                        contig=h.contig, start=h.start, end=h.end, strand=h.strand, exons=())
+                    protein = _translate_model(
+                        genome_fasta, span, genetic_code or 1, contig_seq_cache
+                    )
+                    if protein:
+                        scored_models.append((h.gene_name, (h.contig, h.start, h.end), protein))
+                classifier_input = "hsp_fragment"
+            # The LOCUS verdict pools every scored protein (best score per
+            # idiomorph) and names `idiomorph`.
+            verdict = classify_idiomorph(
+                clf, [p for _, _, p in scored_models], [g for g, _, _ in scored_models],
+                classifier_input=classifier_input,
+            )
+            if verdict is None:
+                continue
+            classifier_verdicts[(id(cluster), family.key)] = verdict
+            # Hits change PER GENE POSITION, on that position's own proteins,
+            # and only at that position (as in `resolve_idiomorph_by_models`).
+            # Measured on the 293-genome runs: flipping every loser hit in the
+            # cluster dropped 11 real calls below the fraction floor, and
+            # applying the pooled verdict to a second, separate HMG gene
+            # dropped 2 more. A position whose own verdict is undetermined, or
+            # whose winner has no hit there to make live, is left as it is.
+            own = [h for h in cluster.hits if h.family_key == family.key]
+            groups: list[list] = []
+            for entry in scored_models:
+                c, b, e = entry[1]
+                for grp in groups:
+                    if any(c == c2 and min(e, e2) >= max(b, b2) for _, (c2, b2, e2), _ in grp):
+                        grp.append(entry)
+                        break
+                else:
+                    groups.append([entry])
+            flipped, events = {}, []
+            for grp in groups:
+                pos = classify_idiomorph(clf, [p for _, _, p in grp], [g for g, _, _ in grp],
+                                         classifier_input=classifier_input)
+                if pos is None or pos.idiomorph == CLASSIFIER_UNDETERMINED:
+                    continue
+                winner = next(g for g, i in gene_idiomorph.items() if i == pos.idiomorph)
+                spans = [sp for _, sp, _ in grp]
+
+                def here(h, spans=spans):
+                    return any(h.contig == c and min(h.end, e) >= max(h.start, b) for c, b, e in spans)
+
+                at = [h for h in own if here(h)]
+                if not any(h.gene_name == winner for h in at):
+                    continue
+                grp_losers = set()
+                for h in at:
+                    if h.gene_name != winner and h.gene_name in gene_idiomorph and h.superseded_by is None:
+                        flipped[id(h)] = dataclasses.replace(h, superseded_by=winner)
+                        grp_losers.add(h.gene_name)
+                    elif h.gene_name == winner and h.superseded_by in gene_idiomorph:
+                        flipped[id(h)] = dataclasses.replace(h, superseded_by=None)
+                        grp_losers.add(h.superseded_by)
+                for loser in sorted(grp_losers):
+                    events.append(IdiomorphResolution(
+                        contig=cluster.contig, winner=winner, loser=loser,
+                        winner_identity=max((h.identity for h in at if h.gene_name == winner), default=0.0),
+                        loser_identity=max((h.identity for h in at if h.gene_name == loser), default=0.0),
+                        overlap_fraction=1.0, basis="hmm_classifier",
+                        winner_model_score=pos.scores[gene_idiomorph[winner]],
+                        loser_model_score=pos.scores[gene_idiomorph[loser]],
+                    ))
+                    model_losers.discard((id(cluster), family.key, winner))
+                    model_losers.add((id(cluster), family.key, loser))
+            if not flipped:
+                continue  # every position already agrees with its own verdict
+            cluster.hits[:] = [flipped.get(id(h), h) for h in cluster.hits]
+            decided = {frozenset((e.winner, e.loser)) for e in events}
+            kept = [
+                e for e in idiomorph_events_by_cluster.get(id(cluster), [])
+                if frozenset((e.winner, e.loser)) not in decided
+            ]
+            idiomorph_events_by_cluster[id(cluster)] = kept + events
+            resolutions_with_family.extend((family, e) for e in events)
+            if evidence_diagnostics_path is not None:
+                for event in events:
+                    _write_idiomorph_diagnostics(
+                        evidence_diagnostics_path, event, family,
+                        run_id=run_id, genome_id=genome_id,
+                    )
+
     # Cross-contig fragment merging is OFF by default. Curator's ruling,
     # 2026-09-20, after Basidiomycota order testing found a real Cryptococcus
     # deneoformans MAT locus -- both genes matching at 100% identity --
@@ -1836,7 +2551,10 @@ def run_pipeline(
             if segments:
                 fragmented_segments[family.key] = segments
 
-    def _any_gene_unpolished(cluster_ids: set[int], family_key: FamilyKey) -> bool:
+    def _any_gene_unpolished(
+        cluster_ids: set[int], family_key: FamilyKey,
+        exclude: frozenset[str] = frozenset(),
+    ) -> bool:
         """True when ANY of this family's own genes, in these exact clusters,
         was localized but neither polishing tool could model it.
 
@@ -1846,68 +2564,37 @@ def run_pipeline(
         (`polished_agree` vs `polished_disagree`) is deliberately NOT consulted
         -- both are "polished" as far as tiering is concerned.
         """
+        # Where both halves of an idiomorph pair are modelled on purpose
+        # (`model_idiomorph_alternatives`), the losing half is not this locus's
+        # gene: its failure to model says nothing about the call.
+        live_genes = None
+        if families_by_key[family_key].model_idiomorph_alternatives:
+            live_genes = {
+                h.gene_name for c in clusters if id(c) in cluster_ids for h in c.hits
+                if h.family_key == family_key and h.superseded_by is None
+            }
+        # A gene whose every hit here is below the family's noise floor is
+        # noise, not a failed model (review finding F6, 2026-09-28).
+        noise = sub_floor_genes(
+            [h for c in clusters if id(c) in cluster_ids for h in c.hits],
+            family_key, families_by_key[family_key].flank_carried_min_bitscore,
+        )
         return any(
             outcome.status == STATUS_UNPOLISHED
-            for (cluster_id, key, _gene_name), outcome in polish_by.items()
+            for (cluster_id, key, gene_name), outcome in polish_by.items()
             if key == family_key and cluster_id in cluster_ids
+            and (live_genes is None or gene_name in live_genes)
+            # A weak, clearly separated cross-hit to the other allele's gene
+            # (`tiering.allele_absent_genes_to_ignore`) is not this call's
+            # gene either.
+            and gene_name not in exclude
+            and gene_name not in noise
         )
 
     def _modelled_gene_count(
         member_clusters: list[GeneCluster], family_key: FamilyKey
     ) -> int:
-        return len(_modelled_gene_names(member_clusters, family_key))
-
-    def _modelled_gene_names(
-        member_clusters: list[GeneCluster], family_key: FamilyKey
-    ) -> frozenset[str]:
-        """How many DISTINCT genes of this family, in these exact clusters, rest
-        on a real gene model rather than on a bare alignment.
-
-        A gene counts when either:
-
-        * a polishing tool modelled it (`polished_agree`, `polished_disagree`
-          or `polished_single`), or
-        * it came from the annotated fast path, i.e. it has a
-          `diamond_proteome` hit here -- a gene model somebody already called,
-          which was never put to the tools precisely BECAUSE it needs no
-          refining.
-
-        Counting the fast path is not a loosening, it is the whole reason this
-        is not called `polished_gene_count`. Gating on polish alone would score
-        every gene of a fully annotated genome as unmodelled and withhold its
-        real MAT locus -- the annotated ZygoLife and BFD-proteome workflows
-        would report nothing at all. The measurement behind the bar came from
-        genome-only runs, where no diamond hit exists and the two definitions
-        coincide, so it does not speak to that case either way.
-
-        What never counts is `STATUS_UNPOLISHED`: a localized HSP that BOTH
-        tools were given a window for and neither could turn into a gene. That
-        is the population the bar exists to remove.
-
-        Nor does a gene whose every hit here is superseded. A RESCUED model is
-        recorded as modelled before the post-polish idiomorph pass runs, and
-        that pass can then find it is the losing half of a sexM/sexP-style
-        pair -- the same physical gene as the winner. Counting it let one gene
-        clear a bar of two (25 of 3,101 Saccharomyces loci were over-counted).
-
-        Counted per distinct gene NAME, not per hit: a cluster routinely holds
-        many HSPs of one gene, and three fragments of one alpha-box must not
-        add up to the bar on their own. Scoped by (cluster, family) exactly as
-        `_any_gene_unpolished` is, and for the same reasons.
-        """
-        cluster_ids = {id(c) for c in member_clusters}
-        live = [
-            h for c in member_clusters for h in c.hits
-            if h.family_key == family_key and h.superseded_by is None
-        ]
-        modelled = {
-            gene_name
-            for (cluster_id, key, gene_name), outcome in polish_by.items()
-            if key == family_key and cluster_id in cluster_ids
-            and outcome.status in (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE)
-        } & {h.gene_name for h in live}
-        modelled |= {h.gene_name for h in live if h.method == "diamond_proteome"}
-        return frozenset(modelled)
+        return len(_modelled_gene_names(member_clusters, family_key, polish_by, model_losers))
 
     def _build(
         score: FamilyScore,
@@ -1917,12 +2604,56 @@ def run_pipeline(
     ) -> DetectionResult:
         family = families_by_key[score.family_key]
         ambiguous = is_ambiguous(scores_in_context, floor=ambiguity_floor)
+        # The call's idiomorph and per-gene evidence are needed BEFORE the
+        # tier (curator's ruling 2026-09-27): a weak, clearly separated
+        # cross-hit to the other allele's gene must not cap the confidence.
+        # Neither depends on the tier, so computing them first changes
+        # nothing else.
+        verdict = combine_verdicts([
+            classifier_verdicts.get((id(c), score.family_key)) for c in member_clusters
+        ])
+        called_idiomorph = verdict.idiomorph if verdict is not None else assign_idiomorph(
+            family, score.genes_found,
+            [h for c in member_clusters for h in _own_live_hits(c, family.key)],
+        )
+        evidence = _gene_evidence(member_clusters, score.family_key, polish_by)
+        identities: dict[str, float | None] = {}
+        for e in evidence:
+            if e.identity is not None:
+                identities[e.gene_name] = max(e.identity, identities.get(e.gene_name) or 0.0)
+            else:
+                identities.setdefault(e.gene_name, None)
+        # The class is decided BEFORE the tier too: a `homothallic_candidate`
+        # may not have either allele ignored (curator's ruling 2026-09-27).
+        # Classified BEFORE the result is built, because the class decides the
+        # confidence cap: a `partial_locus` may never be `high`.
+        partial_strength = is_partial_strength(
+            score.fraction_found, ambiguity_floor, relaxed=False
+        )
+        locus_class = apply_partial_locus(
+            classify_locus(member_clusters[0], family, full_length_models=full_length_models(
+                polish_by, {id(c) for c in member_clusters}, score.family_key,
+                record_protein_lengths,
+                {g for c in member_clusters
+                 for e in idiomorph_events_by_cluster.get(id(c), ())
+                 for g in (e.winner, e.loser)},
+            )),
+            fraction_found=score.fraction_found,
+            ambiguity_floor=ambiguity_floor,
+            relaxed=False,
+        )
+        tier_ignored = allele_absent_genes_to_ignore(
+            family, called_idiomorph, identities,
+            _modelled_gene_names(member_clusters, score.family_key, polish_by, model_losers),
+            locus_class=locus_class,
+        )
         tier = assign_tier(
             score, family, member_clusters[0],
             any_gene_unpolished=_any_gene_unpolished(
-                {id(c) for c in member_clusters}, score.family_key
+                {id(c) for c in member_clusters}, score.family_key, exclude=tier_ignored,
             ),
             fragmented=fragmented,
+            ignore_genes=tier_ignored,
         )
         # The idiomorph calls behind this result, and the narrowest of them.
         # A thin margin does NOT withhold the call -- refusing would cost real
@@ -1954,35 +2685,46 @@ def run_pipeline(
         idiomorph_margin = idiomorph_margin_from_vote(own_vote)
         if idiomorph_margin is None and own_resolutions:
             idiomorph_margin = min(e.margin for e in own_resolutions)
-        if (
+        # Where the family has a profile-HMM classifier and a protein was
+        # modelled, the classifier decides and its bit-score margin is THE
+        # margin (curator's ruling 2026-09-26). Its own `min_margin` already
+        # turns a close call into `undetermined`, so the identity-point
+        # `min_idiomorph_margin` tier cap -- a different unit -- does not apply.
+        if verdict is not None:
+            own_vote = [
+                {"idiomorph": k, "score": round(v, 1), "basis": "hmm_classifier"}
+                for k, v in sorted(verdict.scores.items(), key=lambda kv: (-kv[1], kv[0]))
+            ]
+            idiomorph_margin = round(verdict.margin, 6)
+        elif (
             idiomorph_margin is not None
             and idiomorph_margin < family.min_idiomorph_margin
             and tier == "high"
         ):
             tier = "medium"
+        # A CAAX-scan precursor satisfies the gene-count rules but cannot by
+        # itself make a call `high` (curator's ruling 2026-09-27): it is a
+        # motif match, not a homology model. When the call's modelled genes
+        # reach the bar only through scan precursors, cap at medium.
+        scan_names = {
+            h.gene_name for c in member_clusters for h in c.hits
+            if h.family_key == score.family_key and h.method == CAAX_METHOD
+        }
+        caax_dependent = False
+        if scan_names:
+            homology_modelled = _modelled_gene_names(
+                member_clusters, score.family_key, polish_by, model_losers) - scan_names
+            modelled_bar = max(min_polished_genes, MIN_POLISHED_GENES)
+            if tier == "high" and len(homology_modelled) < modelled_bar:
+                tier = "medium"
+            caax_dependent = admitted_only_through_scan(
+                set(score.genes_found), scan_names, len(homology_modelled), modelled_bar,
+            )
         short_genes = short_orf_by_family.get(score.family_key, set())
-        evidence = _gene_evidence(member_clusters, score.family_key, polish_by)
         # Segments are widened to cover this result's own gene evidence, so a
         # polished or rescued gene can never fall outside the locus segment
         # that reports it.
         segments = _segments_for(member_clusters, contig_lengths, evidence)
-        # Classified BEFORE the result is built, because the class decides the
-        # confidence cap: a `partial_locus` may never be `high`.
-        partial_strength = is_partial_strength(
-            score.fraction_found, ambiguity_floor, relaxed=False
-        )
-        locus_class = apply_partial_locus(
-            classify_locus(member_clusters[0], family, full_length_models=full_length_models(
-                polish_by, {id(c) for c in member_clusters}, score.family_key,
-                record_protein_lengths,
-                {g for c in member_clusters
-                 for e in idiomorph_events_by_cluster.get(id(c), ())
-                 for g in (e.winner, e.loser)},
-            )),
-            fraction_found=score.fraction_found,
-            ambiguity_floor=ambiguity_floor,
-            relaxed=False,
-        )
         polished_genes = _modelled_gene_count(member_clusters, score.family_key)
         if polished_genes == 0:
             # Curator's rulings, 2026-09-22. (1) "without polishing it is low":
@@ -2005,6 +2747,7 @@ def run_pipeline(
                 locus_class = LOCUS_CLASS_PARTIAL
         return DetectionResult(
             polished_genes=polished_genes,
+            caax_dependent=caax_dependent,
             family_key=score.family_key,
             contig=segments[0].contig,
             start=segments[0].start,
@@ -2017,11 +2760,10 @@ def run_pipeline(
             # (it is a statement about which genes are present) but must not
             # keep `high` (that is a statement about how sure we are).
             confidence=cap_at_medium(tier) if partial_strength else tier,
-            idiomorph=assign_idiomorph(
-                family, score.genes_found,
-                [h for c in member_clusters for h in _own_live_hits(c, family.key)],
-            ),
+            idiomorph=called_idiomorph,
             idiomorph_candidates=own_vote,
+            confidence_ignored_genes=sorted(tier_ignored),
+            idiomorph_classifier=verdict.as_report() if verdict is not None else None,
             ambiguous_with=(
                 [
                     s.family_key
@@ -2069,6 +2811,9 @@ def run_pipeline(
     # must still go through normal per-cluster reporting rather than being
     # dropped just because it shares a family_key with the fragmented call.
     fragmented_reported_cluster_ids: dict[FamilyKey, set[int]] = {}
+    #: (score, cluster, scores) for admitted clusters with a modelled gene that
+    #: fell below the fraction floor -- reported as `BELOW_FRACTION_FLOOR`.
+    below_floor: list[tuple] = []
 
     for family_key, member_clusters in fragmented_segments.items():
         merged = GeneCluster(
@@ -2097,48 +2842,162 @@ def run_pipeline(
             if previous is None or score.fraction_found > previous.fraction_found:
                 best_attempt[score.family_key] = score
             if score.fraction_found < ambiguity_floor and not ambiguous:
+                if _modelled_gene_names([cluster], score.family_key, polish_by, model_losers):
+                    below_floor.append((score, cluster, scores))
                 continue
             results.append(_build(score, [cluster], scores, fragmented=False))
 
     # The relaxed second pass, and ONLY when the strict pass found nothing
-    # anywhere in this genome. Gating on the whole genome rather than per
-    # family is the curator's ruling and the conservative reading: a genome
-    # with any confident call is left exactly as it was, so the relaxed bar
-    # can never dilute a run that already worked.
+    # REPORTABLE anywhere in this genome. Gating on the whole genome rather
+    # than per family is the curator's ruling and the conservative reading: a
+    # genome with any confident call is left exactly as it was, so the relaxed
+    # bar can never dilute a run that already worked.
+    #
+    # Curator's ruling (3), 2026-09-22: "yes require more than 1". A cluster
+    # must carry at least MIN_POLISHED_GENES polished gene models to be
+    # REPORTED; and (2026-09-26) a call with no modelled core gene is kept at
+    # `low` only under the flank-carried rule (see `flank_carried`).
+    #
+    # Review finding F1 (2026-09-28, results/2026-09-28_fable_review/): these
+    # withhold rules now run on the strict results BEFORE the relaxed gate, so
+    # the gate sees only strict calls that survive. Before, a strict candidate
+    # the bar later withheld still blocked the relaxed pass; new flank
+    # references made 0-modelled noise clusters clear the strict floor and
+    # silenced real relaxed loci (Rhizomucor pusillus FCH_5_7, Absidia glauca).
+    # The same rules are applied to the relaxed calls afterwards.
+    #
+    # Nothing is destroyed: the per-candidate rows are already on disk in the
+    # evidence-diagnostics stream, a family whose only calls were withheld
+    # still gets a `not_detected` entry naming the reason, and the count is
+    # carried on the outcome.
+    flank_windows = {f.key: f.flank_carried_window_bp for f in families}
+    flank_bits = {f.key: f.flank_carried_min_bitscore for f in families}
+
+    classifier_specs = {f.key: f.idiomorph_classifier for f in families}
+
+    def _withhold(candidates):
+        """(kept, withheld, n_by_bar, n_by_flank, n_by_gate) after the bar, the
+        flank rule and the MAT-gene gate (`mat_gene_gate`; curator's ruling
+        2026-09-28: the classifier margin types a gene but does not tell a MAT
+        gene from an HMG paralog)."""
+        by_bar = [
+            replace(r, withheld_reason=MODELLED_GENE_BAR)
+            for r in candidates if r.polished_genes < min_polished_genes
+        ]
+        kept = [r for r in candidates if r.polished_genes >= min_polished_genes]
+        kept, by_flank = apply_flank_carried_rule(kept, flank_windows, flank_bits)
+        kept, by_gate = apply_mat_gene_gate(kept, classifier_specs)
+        return kept, by_bar + by_flank + by_gate, len(by_bar), len(by_flank), len(by_gate)
+
+    results, suppressed, suppressed_by_bar, suppressed_by_flank, suppressed_by_gate = _withhold(results)
+    # The gate step withholds both MAT-gene-gate calls and paralog-class calls;
+    # count them apart (recomputed from `suppressed` at the end).
+
     if not results and relaxed_second_pass:
-        results = _relaxed_results(
+        def _record_relaxed(result, cluster, score):
+            # Exploration data (curator, 2026-09-26: "explore the implications"
+            # of the fixed `medium`): the tier the strict path's rule WOULD give
+            # this call, beside the confidence actually reported.
+            if evidence_diagnostics_path is None:
+                return
+            family = families_by_key[score.family_key]
+            _append_diagnostics_row(evidence_diagnostics_path, {
+                "kind": "relaxed_call",
+                "run_id": run_id,
+                "genome_id": genome_id,
+                "family": f"{family.key.phylum}:{family.key.locus_name}",
+                "contig": result.contig, "start": result.start, "end": result.end,
+                "idiomorph": result.idiomorph,
+                "fraction_found": score.fraction_found,
+                "genes_found": list(score.genes_found),
+                "polished_genes": result.polished_genes,
+                "confidence_reported": result.confidence,
+                "tier_uncapped": assign_tier(
+                    score, family, cluster,
+                    any_gene_unpolished=_any_gene_unpolished({id(cluster)}, score.family_key),
+                    fragmented=False,
+                ),
+            })
+
+        relaxed = _relaxed_results(
             clusters, families,
             searchable_genes=searchable_genes,
             evidence_floor=evidence_floor,
             ambiguity_floor=ambiguity_floor,
             polish_by=polish_by,
             contig_lengths=contig_lengths,
+            on_relaxed_call=_record_relaxed,
+            model_losers=model_losers,
+            classifier_verdicts=classifier_verdicts,
         )
-        if results:
+        results, relaxed_withheld, relaxed_by_bar, relaxed_by_flank, relaxed_by_gate = _withhold(relaxed)
+        suppressed += relaxed_withheld
+        suppressed_by_bar += relaxed_by_bar
+        suppressed_by_flank += relaxed_by_flank
+        suppressed_by_gate += relaxed_by_gate
+        if relaxed:
             logger.info(
                 "strict pass found no locus; %d admitted by the relaxed pass "
                 "(>=2 distinct genes incl. a core gene), capped at medium",
-                len(results),
+                len(relaxed),
             )
 
-    # Curator's ruling (3), 2026-09-22: "yes require more than 1". A cluster
-    # must carry at least MIN_POLISHED_GENES polished gene models to be
-    # REPORTED. Applied here, after the relaxed pass, so the relaxed trigger
-    # ("only when the strict pass found nothing") still sees the unfiltered
-    # strict result and its behaviour is unchanged -- and so the bar applies
-    # to relaxed calls too, which is the point of having it.
-    #
-    # Nothing is destroyed: the per-candidate rows are already on disk in the
-    # evidence-diagnostics stream, a family whose only calls were withheld
-    # still gets a `not_detected` entry naming the reason, and the count is
-    # carried on the outcome.
-    suppressed = [r for r in results if r.polished_genes < min_polished_genes]
-    results = [r for r in results if r.polished_genes >= min_polished_genes]
     if suppressed:
         logger.info(
-            "withheld %d locus/loci carrying fewer than %d modelled genes",
-            len(suppressed), min_polished_genes,
+            "withheld %d locus/loci (modelled-gene bar or flank-carried rule)",
+            len(suppressed),
         )
+
+    # Curator's ruling 2026-09-27: a locus the assembly split across contigs.
+    # For a family still unreported, one MODELLED core gene >= 95% near a
+    # contig end, with the family's flanks on other contigs, is reported as
+    # `partial_locus` at `low` instead of being withheld. See `split_locus`.
+    split_calls = _split_locus_calls(
+        results, clusters, families, _build,
+        searchable_genes=searchable_genes, contig_lengths=contig_lengths,
+    )
+    # A split-locus call is never judged by the MAT-gene gate (it requires
+    # roster flanks by construction), but a known paralog is never a MAT gene:
+    # the gate step withholds only its paralog-class calls here.
+    split_calls, split_paralogs = apply_mat_gene_gate(split_calls, classifier_specs)
+    suppressed = suppressed + split_paralogs
+    if split_calls:
+        logger.info("reported %d split locus/loci (core gene alone at a contig end)",
+                    len(split_calls))
+        results = results + split_calls
+        suppressed = [
+            s for s in suppressed
+            if not any(
+                s.family_key == c.family_key and s.contig == c.split_locus["core_contig"]
+                and s.start <= c.split_locus["core_end"] and s.end >= c.split_locus["core_start"]
+                for c in split_calls
+            )
+        ]
+
+    floor_withheld = []
+    for score, cluster, scores in below_floor:
+        if any(r.family_key == score.family_key and r.contig == cluster.contig
+               and r.start <= cluster.end and r.end >= cluster.start for r in results):
+            continue  # reported after all, e.g. by the relaxed pass
+        built = _build(score, [cluster], scores, fragmented=False)
+        best_identity = max((h.identity for h in cluster.hits
+                             if h.family_key == score.family_key and h.identity is not None),
+                            default=None)
+        floor_withheld.append(replace(
+            built, withheld_reason=BELOW_FRACTION_FLOOR,
+            withheld_detail={"fraction_found": round(score.fraction_found, 3),
+                             "floor": ambiguity_floor, "best_identity": best_identity},
+        ))
+        if evidence_diagnostics_path is not None:
+            family = families_by_key[score.family_key]
+            _append_diagnostics_row(evidence_diagnostics_path, {
+                "kind": BELOW_FRACTION_FLOOR, "run_id": run_id, "genome_id": genome_id,
+                "family": f"{family.key.phylum}:{family.key.locus_name}",
+                "contig": cluster.contig, "start": cluster.start, "end": cluster.end,
+                "fraction_found": score.fraction_found, "floor": ambiguity_floor,
+                "genes_found": list(score.genes_found), "polished_genes": built.polished_genes,
+                "best_identity": best_identity,
+            })
 
     reported = {r.family_key for r in results}
     #: family -> the best withheld call for it, so `not_detected` can say that
@@ -2156,6 +3015,55 @@ def run_pipeline(
         short_genes = short_orf_by_family.get(family.key, set())
         score = best_attempt.get(family.key)
         withheld = suppressed_best.get(family.key)
+        if withheld is not None and withheld.withheld_reason == WITHHELD_MAT_GENE_GATE:
+            d = withheld.withheld_detail or {}
+            not_detected.append(NotDetectedFamily(
+                family_key=family.key,
+                reason=(
+                    "best cluster's core gene was not shown to be the MAT gene: "
+                    f"classifier score {d.get('best_score')} bits "
+                    f"({d.get('classifier_input')}) is below {d.get('mat_gene_min_score'):g} "
+                    f"or not model-based, and it has {len(d.get('supporting_flanks', []))} "
+                    f"roster flank(s) modelled at >= {d.get('flank_support_min_identity'):g}% "
+                    f"(needs {d.get('flank_support_min_genes')})"
+                ),
+                best_fraction_found=score.fraction_found if score else 0.0,
+                genes_found=list(withheld.genes_found),
+                genes_missing=[g for g in withheld.genes_missing if g not in short_genes],
+                genes_not_searchable=sorted(short_genes),
+            ))
+            continue
+        if withheld is not None and withheld.withheld_reason == WITHHELD_PARALOG_CLASS:
+            d = withheld.withheld_detail or {}
+            not_detected.append(NotDetectedFamily(
+                family_key=family.key,
+                reason=(
+                    f"best cluster's core gene is the known non-MAT paralog "
+                    f"{d.get('paralog_class')}: it scores {d.get('paralog_score')} bits on that "
+                    f"paralog class against {d.get('best_mat_score')} on the best MAT class "
+                    f"(margin {d.get('margin')} >= {d.get('min_margin')})"
+                ),
+                best_fraction_found=score.fraction_found if score else 0.0,
+                genes_found=list(withheld.genes_found),
+                genes_missing=[g for g in withheld.genes_missing if g not in short_genes],
+                genes_not_searchable=sorted(short_genes),
+            ))
+            continue
+        if withheld is not None and withheld.withheld_reason == WITHHELD_FLANK_CARRIED:
+            not_detected.append(NotDetectedFamily(
+                family_key=family.key,
+                reason=(
+                    "best cluster was flank-carried -- no core gene could be "
+                    "modelled -- and its strongest core hit scores below "
+                    f"{family.flank_carried_min_bitscore:g} bits or lies outside the flank "
+                    f"span (+-{family.flank_carried_window_bp} bp)"
+                ),
+                best_fraction_found=score.fraction_found if score else 0.0,
+                genes_found=list(withheld.genes_found),
+                genes_missing=[g for g in withheld.genes_missing if g not in short_genes],
+                genes_not_searchable=sorted(short_genes),
+            ))
+            continue
         if withheld is not None:
             modelled = (
                 "none of its genes could be modelled" if withheld.polished_genes == 0
@@ -2208,6 +3116,54 @@ def run_pipeline(
                 genes_not_searchable=[g for g in score.genes_missing if g in short_genes],
             ))
 
+    # Curator's ruling 2026-09-26: a family with no call whose flank anchors an
+    # N block is reported as an assembly gap at the locus, not left to read as
+    # absence. Only uncalled families are checked, so no call is ever altered.
+    unreported_hits = {
+        family.key: [h for c in clusters for h in c.hits if h.family_key == family.key]
+        for family in families if family.key not in reported
+    }
+    assembly_gaps = find_gaps_at_locus(
+        {key: hits for key, hits in unreported_hits.items() if hits}, genome_fasta,
+    )
+
+    # Curator's ruling 2026-09-27: families of one physical locus type that
+    # called the same locus are reported once (`locus_merge`). After every
+    # per-family decision above, so `not_detected` and the withheld lists are
+    # unaffected; before the labels below, which then see the merged call.
+    # Curator's ruling 2026-09-28 (review finding F4): every call admitted only
+    # through a CAAX-scan precursor is unverified.
+    results = label_caax_unverified(results)
+    results = merge_overlapping(
+        results, {f.key: (f.merge_group, f.merge_generic, f.merge_separately) for f in families},
+    )
+
+    # Curator's ruling 2026-09-26: a call made by searching a family outside
+    # the genome's phylum (an override route) is unverified. A failed lookup
+    # is an unknown phylum, never an error that loses the calls.
+    if results and routing.routing_mode in OVERRIDE_ROUTES:
+        genome_phylum = None
+        if taxid is not None:
+            try:
+                genome_phylum = phylum_name_resolver(taxid)
+            except Exception as exc:  # noqa: BLE001 - logged, treated as an unknown phylum
+                logger.warning("phylum lookup for the unverified label failed: %s", exc)
+        results = label_verification(results, routing.routing_mode, genome_phylum)
+
+    # Curator's ruling 2026-09-26: in a taxon whose assemblies collapse MTL
+    # heterozygosity, a single-idiomorph genome is of unknown zygosity.
+    zygosity = genome_zygosity(
+        results, taxid, load_zygosity_rules(db_root), zygosity_lineage_resolver,
+    )
+
+    # Curator's ruling 2026-09-29 (test first): a family that called both
+    # idiomorphs gets a neutral statement of arrangement, evidence and every
+    # possible cause. Report-level only; the contigs are read only then.
+    two_idiomorphs = _two_idiomorph_statements(results, families, genome_fasta, genetic_code)
+
+    # Curator's ruling 2026-10-01 (B9): a report-only cross-lineage class.
+    results = _with_idiomorph_class(results, families)
+
     return DetectionOutcome(
         results=results,
         not_detected=not_detected,
@@ -2216,6 +3172,49 @@ def run_pipeline(
         routing_error=routing.routing_error,
         genetic_code=genetic_code,
         genetic_code_error=genetic_code_error,
-        suppressed_unpolished=len(suppressed),
-        suppressed_loci=suppressed,
+        suppressed_unpolished=suppressed_by_bar,
+        suppressed_loci=suppressed + floor_withheld,
+        suppressed_flank_carried=suppressed_by_flank,
+        suppressed_mat_gene_gate=sum(
+            r.withheld_reason == WITHHELD_MAT_GENE_GATE for r in suppressed),
+        suppressed_paralog_class=sum(
+            r.withheld_reason == WITHHELD_PARALOG_CLASS for r in suppressed),
+        assembly_gaps_at_locus=assembly_gaps,
+        zygosity=zygosity,
+        two_idiomorphs=two_idiomorphs,
     )
+
+
+def _two_idiomorph_statements(results, families, genome_fasta, genetic_code) -> list[dict]:
+    """The `two_idiomorphs` statements, reading contig sequences only when needed."""
+    from MATPredict.detect.assembly_gap import _contig_sequences
+    from MATPredict.detect.report import _family_label
+    from MATPredict.detect.two_idiomorphs import calls_from_results, two_idiomorph_statements
+
+    enabled = {_family_label(f.key) for f in families if f.two_idiomorphs_report}
+    if not enabled:
+        return []
+    calls = [c for c in calls_from_results(results) if c["family"] in enabled]
+    per_family: dict[str, set[str]] = {}
+    for c in calls:
+        if c["idiomorph"] not in (None, "", "undetermined"):
+            per_family.setdefault(c["family"], set()).add(c["idiomorph"])
+    if not any(len(v) >= 2 for v in per_family.values()):
+        return []
+    wanted = {c["contig"] for c in calls} | {
+        g["contig"] for c in calls for g in c["gene_evidence"]}
+    seqs = _contig_sequences(genome_fasta, wanted) if genome_fasta else {}
+    return two_idiomorph_statements(calls, enabled, seqs, genetic_code=genetic_code or 1)
+
+
+def not_searched_reason(routing: RoutingDecision) -> str:
+    """One sentence for a `not_searched` report: why, and how to search anyway."""
+    override = "use --exhaustive, or --phylum, to search it anyway"
+    if routing.phylum:
+        return (f"phylum {routing.phylum} has no curated MAT locus family; "
+                f"not searched ({override})")
+    if routing.routing_error:
+        return (f"taxonomy lookup failed ({routing.routing_error}); not searched -- "
+                f"re-run once the lookup succeeds, or {override}")
+    return f"no taxid, or no phylum could be resolved; not searched ({override})"
+

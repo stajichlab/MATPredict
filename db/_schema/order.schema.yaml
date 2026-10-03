@@ -4,6 +4,10 @@ type: object
 required: [phylum, loci]
 properties:
   phylum: {type: string}
+  # OPTIONAL. May this phylum's calls be labelled `homothallic_candidate`?
+  # ABSENT MEANS true. A locus entry may override it with the same key.
+  # Curator's ruling 2026-09-26: false for Basidiomycota.
+  homothallic_screen: {type: boolean}
   loci:
     type: array
     minItems: 1
@@ -14,6 +18,11 @@ properties:
         locus_name: {type: string}
         vocabulary_type: {enum: [enum, pattern]}
         idiomorph_values: {type: array, items: {type: string}}
+        # OPTIONAL (curator ruling 2026-10-01, B9): idiomorph label -> cross-
+        # lineage class on the MAT1-1 (alpha box) / MAT1-2 (HMG) axis. Report only.
+        idiomorph_class:
+          type: object
+          additionalProperties: {enum: [MAT1-1, MAT1-2, unassigned]}
         idiomorph_pattern: {type: string}
         # OPTIONAL. How far apart (bp) two tblastn hits of this locus may be and
         # still be clustered as one candidate locus. ABSENT MEANS 25000: that was
@@ -30,6 +39,87 @@ properties:
         max_cluster_gap_bp:
           type: integer
           minimum: 1
+        # OPTIONAL. How far (bp) from its flank span a flank-carried call's
+        # strongest core hit may lie and still be kept (detect.flank_carried).
+        # ABSENT MEANS 3000, the curator's first ruling. Curator's ruling
+        # 2026-09-26: 3000 where the flanks sit inside the idiomorph (Serinales
+        # MTL), 20000 where they sit outside it (SLA2/APN2/COX13, tptA/rnhA).
+        flank_carried_window_bp:
+          type: integer
+          minimum: 0
+        # OPTIONAL. Bitscore the strongest core hit of a flank-carried call
+        # must reach (detect.flank_carried). ABSENT MEANS 39, the curator's
+        # ruling of 2026-09-27 (replacing E <= 1e-5).
+        flank_carried_min_bitscore:
+          type: number
+          minimum: 0
+        # OPTIONAL. Split-locus rule (detect.split_locus; curator's ruling
+        # 2026-09-27): `false` turns it off; a mapping overrides any of
+        # min_core_identity (95), max_edge_bp (500), min_flank_genes (2),
+        # flank_identity_gap (10). ABSENT MEANS the defaults (rule on).
+        split_locus:
+          oneOf:
+            - {type: boolean}
+            - type: object
+              additionalProperties: false
+              properties:
+                enabled: {type: boolean}
+                min_core_identity: {type: number, minimum: 0, maximum: 100}
+                max_edge_bp: {type: integer, minimum: 0}
+                min_flank_genes: {type: integer, minimum: 1}
+                flank_identity_gap: {type: number, minimum: 0}
+        # OPTIONAL. Families of one physical locus type share a merge_group;
+        # their overlapping calls are reported once (detect.locus_merge;
+        # curator's ruling 2026-09-27). merge_generic marks the broad
+        # catch-all family of the group. ABSENT MEANS never merged.
+        merge_group: {type: string}
+        merge_generic: {type: boolean}
+        # OPTIONAL. Two merge_separately families of one group never merge with
+        # each other (e.g. Aalpha/Abeta; curator 2026-09-28, provisional).
+        merge_separately: {type: boolean}
+        # OPTIONAL. Write a genome-level two_idiomorphs statement when the
+        # family calls both idiomorphs (detect.two_idiomorphs; curator's
+        # ruling 2026-09-29, test first). Report-level only.
+        two_idiomorphs_report: {type: boolean}
+        # OPTIONAL. Locus-level override of the phylum's homothallic_screen.
+        homothallic_screen: {type: boolean}
+        # OPTIONAL (curator ruling 2026-10-01). false = scope-only family: never
+        # searched in phylum fallback or an explicit-phylum run. Absent = true.
+        fallback_searchable: {type: boolean}
+        # OPTIONAL. Polish both genes of an overlapping mutually exclusive
+        # pair and decide it on the two models (curator's ruling 2026-09-26,
+        # Mucoromycota sexM/sexP). Absent means false.
+        model_idiomorph_alternatives: {type: boolean}
+        # OPTIONAL. Profile-HMM idiomorph classifier over the modelled core
+        # proteins (curator's ruling 2026-09-26). `dir` is relative to the
+        # phylum directory; files are built by scripts/build_idiomorph_hmms.py.
+        # OPTIONAL. Strict-CAAX pheromone-precursor scan beside receptor hits
+        # (detect/caax.py; curator's ruling 2026-09-27, Basidiomycota:PR).
+        # `gene` must be a gene of this locus (declare it optional);
+        # `receptor_genes` are the genes whose hits are scanned around.
+        pheromone_precursor_scan:
+          type: object
+          required: [gene, receptor_genes]
+          additionalProperties: false
+          properties:
+            gene: {type: string}
+            receptor_genes: {type: array, items: {type: string}, minItems: 1}
+            motif: {type: string}
+            window_bp: {type: integer, minimum: 1}
+            min_codons: {type: integer, minimum: 1}
+            max_codons: {type: integer, minimum: 1}
+        idiomorph_classifier:
+          type: object
+          required: [type, dir, min_margin]
+          additionalProperties: false
+          properties:
+            type: {enum: [hmm]}
+            dir: {type: string}
+            min_margin: {type: number, minimum: 0}
+            # MAT-gene gate (detect/mat_gene_gate.py; curator 2026-09-28).
+            mat_gene_min_score: {type: number, minimum: 0}
+            flank_support_min_identity: {type: number, minimum: 0, maximum: 100}
+            flank_support_min_genes: {type: integer, minimum: 0}
         taxonomic_scope:
           type: array
           minItems: 1
@@ -107,3 +197,8 @@ properties:
               # where exonerate dominates runtime (curator ruling 2026-09-26,
               # PAP1/OBP1/PIK1 in MTL).
               polish: {enum: [miniprot]}
+              # slot: groups OPTIONAL idiomorph-alternative genes into one bonus
+              # scoring unit (detect.scoring.score_cluster). Found -> +1 to the
+              # numerator and denominator of fraction_found; absent -> no effect.
+              # Curator-approved 2026-09-26 for Cryptococcus SXI1/SXI2.
+              slot: {type: string}

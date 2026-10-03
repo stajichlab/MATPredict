@@ -1,0 +1,7 @@
+sequences 878
+A hmmalign PF00505 match cols: columns 69 parsimony-informative 68 gap_fraction 0.123
+B mafft --localpair --maxiterate 1000 + clipkit smart-gap: columns 161 parsimony-informative 107 gap_fraction 0.57
+MAT1-2-1 coverage of HMG box (A): OUT|MAT1-2-1|55307_ysh1-8_MATtub_MAT1-2|gene_index=0|name=MAT1-2-1|role=core_MAT 69/69
+MAT1-2-1 coverage of HMG box (A): OUT|MAT1-2-1|5518_3639_MAT_combined|gene_index=3|name=MAT1-2-1|role=core_MAT 69/69
+A: columns with <=50% gaps 65, of them parsimony-informative 64
+B: columns with <=50% gaps 76, of them parsimony-informative 75

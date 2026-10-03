@@ -1,0 +1,105 @@
+record_id: 5005_cbs-490_redPR_A2
+record_version: 1
+taxonomy:
+  taxid: 5005
+  lineage: k__Fungi;p__Basidiomycota;sc__Pucciniomycotina;c__Microbotryomycetes;o__Sporidiobolales;f__Sporidiobolaceae;g__Sporobolomyces;s__Sporobolomyces_salmonicolor
+  lineage_resolved_date: '2026-09-26'
+organism:
+  species: Sporobolomyces salmonicolor
+  strain:
+    name: CBS 490
+    known: true
+    culture_collection_ids:
+    - CBS 490
+    differs_from_sequenced: false
+mating_type:
+  locus_name: redPR
+  idiomorphs:
+  - A2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: STE3a2
+    definition_note: Sporobolomyces (= Sporidiobolus) salmonicolor CBS 490, STE3-A2
+      allele, complete CDS (359 aa). The deposit also carries a partial ribosomal
+      protein L6 (RibL6) gene, not curated (no complete CDS feature). Curated as STE3a2
+      (deposit /gene STE3, "STE3-A2 allele"). Coelho et al. 2010, PLoS Genet 6(8):e1001052.
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: GU474641.1
+        seq_region: GU474641.1
+      start: 578
+      end: 1963
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: STE3a2
+  protein_accession: ncbi_protein:ADM24775.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 578
+  end: 1963
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 578
+    end: 721
+  - start: 782
+    end: 850
+  - start: 902
+    end: 1211
+  - start: 1266
+    end: 1483
+  - start: 1567
+    end: 1751
+  - start: 1810
+    end: 1963
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: targeted PCR/genome-walking sequencing of the mating-type
+      receptor allele by the describing authors, deposited as a GenBank record
+    citations: &id001
+    - doi: 10.1371/journal.pgen.1001052
+      pmid: '20700437'
+  boundaries:
+    tier: 1
+    experimental_method: record segment spans the deposited CDS
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: A2 by the depositors' own allele designation (STE3-A2)
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: GU474641.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1371/journal.pgen.1001052|5005|redPR|A2
+  reviewed_by: 'J. Stajich (sign-off 2026-09-27)'
+  reviewed_date: '2026-09-27'
+  notes: 'Proposed 2026-09-26 on curator request (Sporidiobolales, Pucciniales). Curator J. Stajich signed off 2026-09-27.'
+model_provenance: null

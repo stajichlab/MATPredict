@@ -1,0 +1,34 @@
+## Mucoromycota / Lichtheimiaceae: withheld-only genomes 29; genera {'Lichtheimia': 17, 'Rhizomucor': 5, 'Zychaea': 2, 'Circinella': 2, 'Thermomucor': 1}
+     23  core+flank, 0 modelled         median best identity 41.935
+      3  flank only, 0 modelled         median best identity 62.209
+      2  core only, 0 modelled          median best identity 45.946
+      1  core+flank, 1 modelled         median best identity 45.455
+## Mucoromycota / Rhizopodaceae: withheld-only genomes 18; genera {'Rhizopus': 17, 'Sporodiniella': 1}
+     17  core+flank, 0 modelled         median best identity 40.476
+      1  core+flank, 1 modelled         median best identity 47.21
+## Mucoromycota / Syncephalastraceae: withheld-only genomes 5; genera {'Syncephalastrum': 5}
+      3  core+flank, 0 modelled         median best identity 41.935
+      2  core+flank, 1 modelled         median best identity 46.667
+## Mortierellomycota: withheld-only genomes 93; genera {'Mortierella': 32, 'Linnemannia': 20, 'Podila': 15, 'Entomortierella': 6, 'Actinomortierella': 5}
+     45  core+flank, 0 modelled         median best identity 41.026
+     29  core only, 0 modelled          median best identity 46.512
+     16  core+flank, 1 modelled         median best identity 44.186
+      3  flank only, 0 modelled         median best identity 43.333
+## Kickxellomycota: withheld-only genomes 179; genera {'Coemansia': 153, 'Dimargaris': 4, 'Smittium': 4, 'Kickxella': 3, 'Linderina': 3}
+     96  core+flank, 0 modelled         median best identity 37.705
+     45  core only, 0 modelled          median best identity 39.024
+     32  core+flank, 1 modelled         median best identity 40.678
+      6  flank only, 0 modelled         median best identity 34.328
+   CALL Mortie Podila horticola             Minus medium partial_locus  {'sexP': (30.9, 'not_polish_candidate'), 'algA': (32.1, 'polished_single'), 'sexM': (46.6, 'polished_single')}
+   CALL Mortie Mortierella alpina           Minus medium mat_locus      {'glrA': (35.8, 'polished_disagree'), 'rnhA': (25.8, 'unpolished'), 'sexM': (43.0, 'polished_single'), 'sexP': (33.0, 'not_polish_candidate')}
+   CALL Mortie Dissophora ornata            Minus medium mat_locus      {'tptA': (35.4, 'unpolished'), 'glrA': (37.2, 'polished_disagree'), 'sexM': (37.5, 'polished_single'), 'sexP': (31.2, 'not_polish_candidate')}
+   CALL Mortie Linnemannia gamsii           Plus  medium mat_locus      {'glrA': (65.6, 'polished_agree'), 'rnhA': (72.7, 'polished_single'), 'sexP': (29.0, 'unpolished')}
+   CALL Mortie Mortierella alpina           Minus medium mat_locus      {'rnhA': (44.9, 'polished_single'), 'tptA': (58.0, 'polished_disagree'), 'sexM': (38.6, 'unpolished')}
+   CALL Mortie Gryganskiella cystojenkinii  Minus medium mat_locus      {'glrA': (37.2, 'polished_disagree'), 'rnhA': (34.0, 'unpolished'), 'sexP': (28.2, 'not_polish_candidate'), 'sexM': (38.3, 'polished_single')}
+   CALL Kickxe Coemansia sp. S146           Minus medium mat_locus      {'glrA': (63.5, 'polished_disagree'), 'sexM': (30.6, 'unpolished'), 'rnhA': (34.3, 'polished_single')}
+   CALL Kickxe Coemansia sp. RSA 1085       Minus medium partial_locus  {'rnhA': (36.2, 'polished_single'), 'sexM': (27.3, 'polished_disagree'), 'sexP': (35.9, 'not_polish_candidate')}
+   CALL Kickxe Coemansia mojavensis         Minus medium partial_locus  {'rnhA': (36.2, 'polished_single'), 'sexM': (27.3, 'polished_disagree'), 'sexP': (35.9, 'not_polish_candidate')}
+   CALL Kickxe Coemansia sp. RSA 1972       Minus medium partial_locus  {'sexM': (36.5, 'polished_single'), 'rnhA': (34.6, 'polished_single'), 'sexP': (29.0, 'not_polish_candidate')}
+   CALL Kickxe Coemansia sp. RSA 989        Minus medium partial_locus  {'rnhA': (36.2, 'polished_single'), 'sexM': (27.3, 'polished_disagree'), 'sexP': (35.9, 'not_polish_candidate')}
+   CALL Kickxe Coemansia sp. RSA 1250       Minus medium partial_locus  {'rnhA': (36.2, 'polished_single'), 'sexM': (27.3, 'polished_disagree'), 'sexP': (35.9, 'not_polish_candidate')}
+   CALL Kickxe Coemansia sp. RSA 990        Minus medium partial_locus  {'sexP': (35.9, 'not_polish_candidate'), 'sexM': (27.3, 'polished_disagree'), 'rnhA': (36.2, 'polished_single')}

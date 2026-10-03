@@ -105,6 +105,23 @@ class RolloutSummary:
     not_detected: list[NotDetectedEntry] = field(default_factory=list)
     anomalies: list[Anomaly] = field(default_factory=list)
     genome_errors: list[GenomeReportError] = field(default_factory=list)
+    #: Genomes whose report says `routing_mode: not_searched` (curator's ruling
+    #: 2026-09-26): no family was searched, so they are neither failures nor
+    #: not-detected, and they are left out of anomaly detection.
+    not_searched: list[str] = field(default_factory=list)
+    #: Genomes whose report names an `assembly_gap_at_locus` (curator's ruling
+    #: 2026-09-26): an uncalled family's flank-anchored position is an N
+    #: block, so the miss is an assembly gap, not evidence of absence.
+    assembly_gap_at_locus: list[str] = field(default_factory=list)
+    #: Genomes whose report says `zygosity: {status: unknown}` (curator's
+    #: ruling 2026-09-26): a single-idiomorph call in a taxon whose assemblies
+    #: collapse MTL heterozygosity. Their genotype is not a zygosity count.
+    zygosity_unknown: list[str] = field(default_factory=list)
+    #: genome -> how many of its calls carry `verification: {status:
+    #: unverified}` (curator's ruling 2026-09-26): a family searched outside
+    #: the genome's phylum by an override route. Counted apart so they never
+    #: read as confirmed detections.
+    unverified_calls: dict[str, int] = field(default_factory=dict)
 
     def to_doc(self) -> dict:
         """Plain-dict form for YAML serialization (`write_rollout_summary`)."""
@@ -128,6 +145,10 @@ class RolloutSummary:
             "genome_errors": [
                 {"genome": g.genome, "reason": g.reason} for g in self.genome_errors
             ],
+            "not_searched": list(self.not_searched),
+            "assembly_gap_at_locus": list(self.assembly_gap_at_locus),
+            "zygosity_unknown": list(self.zygosity_unknown),
+            "unverified_calls": dict(self.unverified_calls),
         }
 
 
@@ -206,6 +227,10 @@ def aggregate_reports(
     locus_class_tally: dict[str, dict[str, int]] = {}
     not_detected: list[NotDetectedEntry] = []
     genome_errors: list[GenomeReportError] = []
+    not_searched: list[str] = []
+    assembly_gap_at_locus: list[str] = []
+    zygosity_unknown: list[str] = []
+    unverified_calls: dict[str, int] = {}
 
     # genome -> set of families it detected; family -> set of genomes that
     # detected it. Built while reading, used afterward for anomaly detection.
@@ -226,6 +251,17 @@ def aggregate_reports(
                 GenomeReportError(genome=genome_id, reason="report file is empty")
             )
             continue
+        if doc.get("routing_mode") == "not_searched":
+            # Never searched: not a failure, not a negative, and it must not
+            # enter `detected_by_genome`, or every relative's call would flag
+            # it as an anomaly for "missing" a family it never looked for.
+            not_searched.append(genome_id)
+            continue
+
+        if doc.get("assembly_gap_at_locus"):
+            assembly_gap_at_locus.append(genome_id)
+        if (doc.get("zygosity") or {}).get("status") == "unknown":
+            zygosity_unknown.append(genome_id)
 
         detected_families: set[str] = set()
         for result in doc.get("detected") or []:
@@ -235,6 +271,8 @@ def aggregate_reports(
                 continue
             detected_families.add(family)
             genomes_by_family.setdefault(family, set()).add(genome_id)
+            if (result.get("verification") or {}).get("status") == "unverified":
+                unverified_calls[genome_id] = unverified_calls.get(genome_id, 0) + 1
             confidence_tally.setdefault(family, {}).setdefault(confidence, 0)
             confidence_tally[family][confidence] += 1
             # Guarded, not defaulted: a report written before `locus_class`
@@ -269,6 +307,10 @@ def aggregate_reports(
         not_detected=not_detected,
         anomalies=anomalies,
         genome_errors=genome_errors,
+        not_searched=not_searched,
+        assembly_gap_at_locus=assembly_gap_at_locus,
+        zygosity_unknown=zygosity_unknown,
+        unverified_calls=unverified_calls,
     )
 
 

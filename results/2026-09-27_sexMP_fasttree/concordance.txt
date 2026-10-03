@@ -1,0 +1,32 @@
+== before (../2026-09-26_sexMP_phylogeny/candidates.tsv)
+  sexP  clade: Minus=13, Plus=112
+  sexM  clade: Minus=36, Plus=34
+  both  clade: 
+  label agrees with clade: 148 / 195 called loci placed in sexP or sexM
+    Backusellaceae               agree   7  disagree   6
+    Choanephoraceae              agree   6  disagree   1
+    Cunninghamellaceae           agree  13  disagree   0
+    Mucoraceae                   agree  41  disagree   4
+    Mycotyphaceae                agree   1  disagree   0
+    Phycomycetaceae              agree   5  disagree   0
+    Pilobolaceae                 agree   1  disagree   0
+    Rhizopodaceae                agree  63  disagree  34
+    Saksenaeaceae                agree   2  disagree   0
+    Syncephalastraceae           agree   1  disagree   0
+    Umbelopsidaceae              agree   8  disagree   2
+== after (candidates.tsv)
+  sexP  clade: Minus=1, Plus=127
+  sexM  clade: Minus=77, Plus=1
+  both  clade: Plus=1
+  label agrees with clade: 204 / 206 called loci placed in sexP or sexM
+    Backusellaceae               agree  14  disagree   0
+    Choanephoraceae              agree   7  disagree   0
+    Cunninghamellaceae           agree  19  disagree   0
+    Lichtheimiaceae              agree   1  disagree   0
+    Mucoraceae                   agree  48  disagree   1
+    Mycotyphaceae                agree   1  disagree   0
+    Phycomycetaceae              agree   5  disagree   0
+    Rhizopodaceae                agree  99  disagree   0
+    Saksenaeaceae                agree   2  disagree   0
+    Syncephalastraceae           agree   1  disagree   0
+    Umbelopsidaceae              agree   7  disagree   1

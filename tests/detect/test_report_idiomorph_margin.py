@@ -53,4 +53,7 @@ def test_the_margin_and_both_members_reach_the_report():
         "overlap_fraction": 1.0,
         "winner_coverage": None,
         "loser_coverage": 23.6,
+        "basis": "first_pass_identity",
+        "winner_model_score": None,
+        "loser_model_score": None,
     }]

@@ -1,0 +1,198 @@
+record_id: 41833_gzumbrama1_MAT_Plus
+record_version: 1
+taxonomy:
+  taxid: 41833
+  lineage: k__Fungi;p__Mucoromycota;c__Umbelopsidomycetes;o__Umbelopsidales;f__Umbelopsidaceae;g__Umbelopsis;s__Umbelopsis_ramanniana
+  lineage_resolved_date: '2026-09-27'
+organism:
+  species: Umbelopsis ramanniana
+  strain:
+    name: gzUmbRama1
+    known: false
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Plus
+  system: heterothallic
+locus:
+  assembly_accession: GCA_977110945.1
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: glrA<-|sexP<-|tptA->|algA->
+    definition_note: 'Umbelopsis ramanniana gzUmbRama1 (GCA_977110945.1, canu v2.2
+      on PromethION, 23 contigs, contig N50 1.65 Mb; BioProject PRJEB96040, BioSample
+      SAMEA118965535; the assembly name is used as the strain label because the BioSample
+      gives no strain) MAT Plus locus on CDSBDH010000020.1. Gene order: glrA (CAO3688830.1,
+      -) ... sexP (CAO3688886.1, -, 320 aa, single exon) -- tptA (CAO3688890.1, +)
+      -- algA (CAO3688894.1, +). sexP carries a PF00505 HMG box (aa 108-172, E 6.8e-14);
+      best curated match 36080_nrrl-3631 sexP (blastp 25.5% over 153 aa); HMM classifier
+      sexP 145.2 vs sexM 34.2 bits (margin +111). The detection scan modelled only
+      an 88-aa sexP fragment here (29.6%); this record supplies the full-length protein.
+      rnhA is recorded present: false: it does not sit at this locus in Umbelopsis
+      (its ortholog is elsewhere, see definition_note), unlike the Mucorales algA-tptA-[sex]-rnhA-glrA
+      arrangement. rnhA ortholog (CAO3689817.1, 48.2% to 3108396 rnhA) lies at CDSBDH010000020.1:683,887-690,792,
+      ~513 kb away. glrA has several annotated isoforms (CAO3688830/34/38/42/46.1);
+      the longest (CAO3688830.1, 465 aa) is recorded. TIER 2 (genome-derived). No
+      Umbelopsidales MAT locus has a locus-specific deposit or a publication (NCBI
+      and PubMed searched 2026-09-27). '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: CDSBDH010000020.1
+        seq_region: CDSBDH010000020.1
+      start: 157014
+      end: 174784
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: glrA
+  protein_accession: ncbi_protein:CAO3688830.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 157014
+  end: 158733
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 158556
+    end: 158733
+  - start: 158225
+    end: 158488
+  - start: 157597
+    end: 158130
+  - start: 157109
+    end: 157515
+  - start: 157014
+    end: 157028
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: sexP
+  protein_accession: ncbi_protein:CAO3688886.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 170020
+  end: 170982
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 170020
+    end: 170982
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: tptA
+  protein_accession: ncbi_protein:CAO3688890.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 171575
+  end: 173262
+  strand: +
+  order_in_locus: 2
+  exons:
+  - start: 171575
+    end: 172339
+  - start: 172432
+    end: 173262
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: algA
+  protein_accession: ncbi_protein:CAO3688894.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 173492
+  end: 174784
+  strand: +
+  order_in_locus: 3
+  exons:
+  - start: 173492
+    end: 173700
+  - start: 173772
+    end: 173784
+  - start: 173855
+    end: 174784
+  codon_start: 1
+  transl_table: 1
+- gene_index: 4
+  name: rnhA
+  protein_accession: null
+  role: flanking_conserved
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+evidence:
+  locus_existence:
+    tier: 2
+    citations: []
+    experimental_method: TIER 2 (genome-derived). No Umbelopsidales MAT locus has
+      a locus-specific deposit or a publication (NCBI and PubMed searched 2026-09-27).
+      Locus identified by synteny with the Mucorales MAT locus (tptA, algA, glrA at
+      the locus; an HMG-box gene 1.5 kb from tptA) and by the MATPredict HMM idiomorph
+      classifier (db/Mucoromycota/classifiers/MAT) on the HMG-box protein.
+  boundaries:
+    tier: 2
+    citations: []
+    experimental_method: TIER 2 (genome-derived). No Umbelopsidales MAT locus has
+      a locus-specific deposit or a publication (NCBI and PubMed searched 2026-09-27).
+      Record segment spans the recorded genes on CDSBDH010000020.1 (GCA_977110945.1).
+  idiomorph_assignment:
+    tier: 2
+    citations: []
+    experimental_method: 'TIER 2 (genome-derived). No Umbelopsidales MAT locus has
+      a locus-specific deposit or a publication (NCBI and PubMed searched 2026-09-27).
+      Idiomorph from the HMG-box gene: classifier and PF00505 scores in definition_note.'
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: CDSBDH010000020.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-genome-curation
+  proposal_dedupe_key: GCA_977110945.1|41833|MAT|Plus
+  reviewed_by: 'J. Stajich (sign-off 2026-09-29)'
+  reviewed_date: '2026-09-29'
+  notes: 'Proposed 2026-09-27 on curator ruling (tier-2 Umbelopsis records for both
+    idiomorphs). Curator J. Stajich signed off 2026-09-29 (tier 2; record calls its own source genome under 076afe4+).'
+model_provenance: null

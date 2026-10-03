@@ -1,0 +1,208 @@
+genomes compared: 293
+overall: {'unchanged': 187, 'Plus->Minus': 34, 'Minus->Plus': 13, 'new': 11, 'lost': 8}
+
+per family (only families with a change):
+  Backusellaceae               {'new': 1, 'unchanged': 7, 'Minus->Plus': 6}
+  Choanephoraceae              {'unchanged': 6, 'Minus->Plus': 1}
+  Cunninghamellaceae           {'unchanged': 18, 'new': 2, 'lost': 1}
+  Lichtheimiaceae              {'new': 2, 'unchanged': 1}
+  Mucoraceae                   {'unchanged': 70, 'Minus->Plus': 5, 'new': 3}
+  Radiomycetaceae              {'new': 1}
+  Rhizopodaceae                {'unchanged': 65, 'Plus->Minus': 34, 'new': 2}
+  Syncephalastraceae           {'unchanged': 3, 'Minus->Plus': 1}
+  Umbelopsidaceae              {'unchanged': 8, 'lost': 7}
+
+33 Rhizopus sexM-only Plus calls (33 found in OLD) -> NEW label: {'Minus': 33}
+
+13 sexP-clade Minus genomes:
+  GCA_000696975.1_ApoTraB9324-1. Apophysomyces trapeziformis  OLD ['Minus'] NEW ['Plus']
+      model_score_exonerate: sexP 264.0 vs sexM 127.0 (id 44.5/37.7)
+  GCA_016097715.1_ASM1609771v1   Apophysomyces sp. BC1015     OLD ['Minus'] NEW ['Plus']
+      model_score_exonerate: sexP 267.0 vs sexM 147.0 (id 35.2/34.9)
+  GCA_016097735.1_ASM1609773v1   Apophysomyces sp. BC1021     OLD ['Minus'] NEW ['Plus']
+      model_score_exonerate: sexP 267.0 vs sexM 147.0 (id 35.2/34.9)
+  GCA_016097755.1_ASM1609775v1   Apophysomyces sp. BC1034     OLD ['Minus'] NEW ['Plus']
+      model_score_exonerate: sexP 267.0 vs sexM 147.0 (id 35.2/34.9)
+  GCA_024139415.1_ASM2413941v1   Backusella tarrabulga        OLD ['Minus'] NEW ['Plus']
+      model_score_exonerate: sexP 304.0 vs sexM 132.0 (id 48.6/32.4)
+  GCA_024139485.1_ASM2413948v1   Backusella psychrophila      OLD ['Minus'] NEW ['Plus']
+      model_score_exonerate: sexP 327.0 vs sexM 146.0 (id 37.8/32.7)
+  GCA_024139495.1_ASM2413949v1   Backusella sp. ASU-2019c     OLD ['Minus'] NEW ['Plus']
+      model_score_exonerate: sexP 321.0 vs sexM 142.0 (id 40.7/32.5)
+  GCA_024140265.1_ASM2414026v1   Backusella liffmaniae        OLD ['Minus'] NEW ['Plus']
+      model_score_exonerate: sexP 319.0 vs sexM 147.0 (id 37.5/28.1)
+  GCA_024140375.1_ASM2414037v1   Backusella westeae           OLD ['Minus'] NEW ['Plus']
+      model_score_exonerate: sexP 301.0 vs sexM 146.0 (id 38.0/29.8)
+  GCA_024140565.1_ASM2414056v1   Backusella australiensis     OLD ['Minus'] NEW ['Plus']
+      model_score_exonerate: sexP 306.0 vs sexM 146.0 (id 48.6/29.8)
+  GCA_025331445.1_Blatri1        Blakeslea trispora           OLD ['Minus'] NEW ['Plus']
+      model_score_exonerate: sexP 449.0 vs sexM 110.0 (id 35.7/31.9)
+  GCA_037039815.1_ASM3703981v1   Umbelopsis sp. M5902         OLD ['Plus', 'Minus'] NEW ['Minus']
+      first_pass_identity: sexM None vs sexP None (id 36.4/33.3)
+  GCF_025399195.1_Umbra1         Umbelopsis ramanniana        OLD ['Minus'] NEW ['Minus']
+      first_pass_identity: sexM None vs sexP None (id 36.7/30.1)
+
+Lichtheimiaceae: 30 genomes; called OLD 1, NEW 3; NEW labels {'Plus': 2, 'Minus': 1}
+
+Syncephalastraceae: 9 genomes; called OLD 4, NEW 4; NEW labels {'Plus': 2, 'Minus': 2}
+
+relaxed-pass candidates 91; reported 8; uncapped tier {'medium': 81, 'high': 10}
+  GCA_000787465.1_ASM78746v1     JSYX01000049.1:42162 Minus genes=['sexM', 'glrA'] modelled=1 uncapped=medium
+  GCA_000787465.1_ASM78746v1     JSYX01000256.1:27249 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_000787465.1_ASM78746v1     JSYX01000253.1:20108 Minus genes=['sexM', 'algA'] modelled=0 uncapped=medium
+  GCA_000787465.1_ASM78746v1     JSYX01000281.1:1108 Minus genes=['sexM', 'rnhA'] modelled=0 uncapped=medium
+  GCA_000787465.1_ASM78746v1     JSYX01000044.1:49274 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_000787465.1_ASM78746v1     JSYX01000318.1:7510 Plus genes=['sexP', 'rnhA'] modelled=0 uncapped=medium
+  GCA_000787465.1_ASM78746v1     JSYX01000395.1:6355 Plus genes=['sexP', 'glrA'] modelled=0 uncapped=medium
+  GCA_000787465.1_ASM78746v1     JSYX01000135.1:23278 Minus genes=['sexM', 'algA'] modelled=0 uncapped=medium
+  GCA_000787465.1_ASM78746v1     JSYX01000223.1:23578 Minus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_000787465.1_ASM78746v1     JSYX01000529.1:39 Plus genes=['sexP', 'rnhA'] modelled=0 uncapped=medium
+  GCA_000787465.1_ASM78746v1     JSYX01000209.1:36268 Minus genes=['tptA', 'sexM'] modelled=0 uncapped=high
+  GCA_000787465.1_ASM78746v1     JSYX01000020.1:16587 Minus genes=['sexM', 'glrA'] modelled=0 uncapped=medium
+  GCA_003951145.1_OSU_Jimlac_1.0 RQIL01042027.1:859 Minus genes=['sexM', 'btbA'] modelled=0 uncapped=medium
+  GCA_003990765.1_Jimfl_AD_1     RBNJ01000257.1:9859 Minus genes=['sexM', 'btbA'] modelled=0 uncapped=medium
+  GCA_003990785.1_Endsp1         RBNK01000025.1:4566 Plus genes=['sexP', 'rnhA'] modelled=0 uncapped=medium
+  GCA_011764225.1_ASM1176422v1   JAANRQ010003168.1:38 Plus genes=['sexP', 'btbA'] modelled=2 uncapped=medium
+  GCA_011764225.1_ASM1176422v1   JAANRQ010001408.1:3812 Plus genes=['tptA', 'sexP'] modelled=0 uncapped=medium
+  GCA_011764225.1_ASM1176422v1   JAANRQ010001707.1:693 Plus genes=['tptA', 'sexP'] modelled=0 uncapped=medium
+  GCA_011764225.1_ASM1176422v1   JAANRQ010000766.1:503 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_011764225.1_ASM1176422v1   JAANRQ010004559.1:474 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_011764225.1_ASM1176422v1   JAANRQ010002759.1:2332 Minus genes=['tptA', 'sexM'] modelled=1 uncapped=medium
+  GCA_011764225.1_ASM1176422v1   JAANRQ010000798.1:3196 Minus genes=['sexM', 'rnhA'] modelled=0 uncapped=high
+  GCA_011764265.1_ASM1176426v1   JAANRE010000581.1:3689 Plus genes=['tptA', 'sexP'] modelled=0 uncapped=medium
+  GCA_011764265.1_ASM1176426v1   JAANRE010000891.1:3657 Plus genes=['tptA', 'sexP'] modelled=0 uncapped=medium
+  GCA_011764265.1_ASM1176426v1   JAANRE010003799.1:1537 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_011764265.1_ASM1176426v1   JAANRE010001940.1:24 Minus genes=['tptA', 'sexM'] modelled=1 uncapped=medium
+  GCA_011764265.1_ASM1176426v1   JAANRE010000288.1:2891 Minus genes=['sexM', 'rnhA'] modelled=0 uncapped=medium
+  GCA_019677255.1_ASM1967725v1   JABLTD010005199.1:19171 Minus genes=['sexM', 'rnhA'] modelled=1 uncapped=medium
+  GCA_019677255.1_ASM1967725v1   JABLTD010003416.1:16714 Plus genes=['sexP', 'glrA'] modelled=1 uncapped=medium
+  GCA_019677255.1_ASM1967725v1   JABLTD010003560.1:9069 Plus genes=['sexP', 'rnhA'] modelled=0 uncapped=medium
+  GCA_019828915.1_ASM1982891v1   JACVQQ010004644.1:10 Minus genes=['tptA', 'sexM'] modelled=2 uncapped=high
+  GCA_019828915.1_ASM1982891v1   JACVQQ010000322.1:3201 Plus genes=['tptA', 'sexP'] modelled=0 uncapped=medium
+  GCA_019828915.1_ASM1982891v1   JACVQQ010003549.1:6630 Plus genes=['tptA', 'sexP'] modelled=0 uncapped=medium
+  GCA_019828915.1_ASM1982891v1   JACVQQ010001656.1:423 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_019828915.1_ASM1982891v1   JACVQQ010003071.1:1078 Minus genes=['tptA', 'sexM'] modelled=0 uncapped=medium
+  GCA_023512895.1_ASM2351289v1   JAKNBM010000127.1:3603 Plus genes=['sexP', 'sexM'] modelled=2 uncapped=medium
+  GCA_023512895.1_ASM2351289v1   JAKNBM010000724.1:1273 Plus genes=['tptA', 'sexP'] modelled=0 uncapped=medium
+  GCA_024139275.1_ASM2413927v1   VCJA01002450.1:19262 Minus genes=['sexP', 'sexM'] modelled=1 uncapped=medium
+  GCA_024139275.1_ASM2413927v1   VCJA01002019.1:796 Plus genes=['sexP', 'algA'] modelled=2 uncapped=medium
+  GCA_024139275.1_ASM2413927v1   VCJA01002117.1:7170 Minus genes=['sexM', 'algA'] modelled=0 uncapped=medium
+  GCA_024139275.1_ASM2413927v1   VCJA01004871.1:55058 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_024139275.1_ASM2413927v1   VCJA01003005.1:613 Plus genes=['sexP', 'btbA'] modelled=0 uncapped=medium
+  GCA_025094145.1_Spifus1        JALLLS010000010.1:129883 Minus genes=['sexM', 'rnhA'] modelled=0 uncapped=medium
+  GCA_025094145.1_Spifus1        JALLLS010000039.1:117519 Minus genes=['sexM', 'rnhA'] modelled=0 uncapped=medium
+  GCA_025094145.1_Spifus1        JALLLS010000020.1:431372 Plus genes=['sexP', 'rnhA'] modelled=0 uncapped=high
+  GCA_025094145.1_Spifus1        JALLLS010000070.1:20653 Minus genes=['sexM', 'rnhA'] modelled=0 uncapped=high
+  GCA_025094145.1_Spifus1        JALLLS010000065.1:18191 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_025094145.1_Spifus1        JALLLS010000005.1:11917 Plus genes=['sexP', 'sexM'] modelled=1 uncapped=medium
+  GCA_025094145.1_Spifus1        JALLLS010000002.1:915902 Plus genes=['sexP', 'rnhA'] modelled=0 uncapped=medium
+  GCA_025094145.1_Spifus1        JALLLS010000031.1:196155 Minus genes=['sexM', 'algA'] modelled=0 uncapped=medium
+  GCA_037041495.1_ASM3704149v1   JAXQIO010004400.1:82 Minus genes=['sexP', 'sexM'] modelled=1 uncapped=medium
+  GCA_037041495.1_ASM3704149v1   JAXQIO010000946.1:6346 Minus genes=['sexP', 'sexM'] modelled=1 uncapped=medium
+  GCA_037041495.1_ASM3704149v1   JAXQIO010001157.1:5222 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_037041495.1_ASM3704149v1   JAXQIO010000507.1:11496 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_037041495.1_ASM3704149v1   JAXQIO010001765.1:1064 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_040807105.1_ASM4080710v1   JBEWOQ010000465.1:1525 Minus genes=['sexM', 'rnhA'] modelled=2 uncapped=high
+  GCA_040807105.1_ASM4080710v1   JBEWOQ010000549.1:1670 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_040807105.1_ASM4080710v1   JBEWOQ010000162.1:1534 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_040807105.1_ASM4080710v1   JBEWOQ010001597.1:2092 Minus genes=['sexM', 'rnhA'] modelled=0 uncapped=medium
+  GCA_040807145.1_ASM4080714v1   JBEWOR010000747.1:1584 Minus genes=['sexM', 'rnhA'] modelled=0 uncapped=medium
+  GCA_040807145.1_ASM4080714v1   JBEWOR010000139.1:268 Minus genes=['sexM', 'rnhA'] modelled=0 uncapped=medium
+  GCA_050656845.1_ASM5065684v1   JBOEPV010000879.1:5487 Minus genes=['sexM', 'glrA'] modelled=2 uncapped=medium
+  GCA_050656845.1_ASM5065684v1   JBOEPV010000707.1:12590 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_050656845.1_ASM5065684v1   JBOEPV010000198.1:5941 Minus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_050656845.1_ASM5065684v1   JBOEPV010001783.1:1173 Minus genes=['tptA', 'sexM'] modelled=0 uncapped=medium
+  GCA_050656845.1_ASM5065684v1   JBOEPV010000627.1:2607 Plus genes=['sexP', 'glrA'] modelled=1 uncapped=medium
+  GCA_050656845.1_ASM5065684v1   JBOEPV010000091.1:30520 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_050656845.1_ASM5065684v1   JBOEPV010000485.1:3154 Plus genes=['sexP', 'rnhA'] modelled=0 uncapped=medium
+  GCA_050656845.1_ASM5065684v1   JBOEPV010000117.1:8031 Plus genes=['sexP', 'algA'] modelled=0 uncapped=medium
+  GCA_050656845.1_ASM5065684v1   JBOEPV010000096.1:6336 Plus genes=['sexP', 'rnhA'] modelled=0 uncapped=high
+  GCA_900079185.1_AG_v1          LT553527.1:531514 Minus genes=['sexM', 'algA'] modelled=2 uncapped=medium
+  GCA_900079185.1_AG_v1          LT553804.1:65491 Minus genes=['sexP', 'sexM'] modelled=1 uncapped=medium
+  GCA_900079185.1_AG_v1          LT552359.1:288547 Minus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_900079185.1_AG_v1          LT550136.1:35371 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_900079185.1_AG_v1          LT554730.1:83701 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_900079185.1_AG_v1          LT554489.1:14286 Plus genes=['sexP', 'rnhA'] modelled=1 uncapped=medium
+  GCA_900079185.1_AG_v1          LT553105.1:131412 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_900079185.1_AG_v1          LT552697.1:17098 Plus genes=['sexP', 'btbA'] modelled=0 uncapped=medium
+  GCA_900175165.2_FCH_5_7        FWWN02000373.1:60580 Minus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_900175165.2_FCH_5_7        FWWN02000322.1:30068 Minus genes=['sexM', 'algA', 'btbA'] modelled=2 uncapped=medium
+  GCA_900175165.2_FCH_5_7        FWWN02000565.1:3417 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_900175165.2_FCH_5_7        FWWN02000236.1:87441 Minus genes=['sexM', 'rnhA'] modelled=0 uncapped=high
+  GCA_900175165.2_FCH_5_7        FWWN02000526.1:30780 Minus genes=['sexM', 'rnhA'] modelled=0 uncapped=high
+  GCA_900175165.2_FCH_5_7        FWWN02000234.1:4611 Plus genes=['sexP', 'rnhA'] modelled=0 uncapped=medium
+  GCA_900175165.2_FCH_5_7        FWWN02000697.1:75246 Plus genes=['sexP', 'glrA'] modelled=1 uncapped=medium
+  GCA_900175165.2_FCH_5_7        FWWN02000182.1:43132 Minus genes=['sexM', 'algA'] modelled=0 uncapped=medium
+  GCA_900175165.2_FCH_5_7        FWWN02000679.1:6004 Plus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_900175165.2_FCH_5_7        FWWN02000571.1:46945 Minus genes=['tptA', 'sexM'] modelled=0 uncapped=high
+  GCA_900175165.2_FCH_5_7        FWWN02000624.1:82467 Minus genes=['sexM', 'glrA'] modelled=0 uncapped=medium
+  GCA_900175165.2_FCH_5_7        FWWN02000426.1:1284 Minus genes=['sexP', 'sexM'] modelled=0 uncapped=medium
+  GCA_900175165.2_FCH_5_7        FWWN02000695.1:95574 Plus genes=['tptA', 'sexP'] modelled=0 uncapped=medium
+
+all changes:
+   GCA_000696915.1_RhiOryB7407-1.0 Rhizopodaceae Rhizopus arrhizus Plus->Minus JNDL01002582.1 2948 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_000696975.1_ApoTraB9324-1.0 Mucoraceae Apophysomyces trapeziformis Minus->Plus JNDP01001082.1 17134 ['tptA', 'sexM', 'algA'] ['tptA', 'sexP', 'algA']
+   GCA_000697075.1_RhiOry13440-1.0 Rhizopodaceae Rhizopus arrhizus Plus->Minus JNDU01002577.1 2509 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_000697725.1_RhiOry99-892-1.0 Rhizopodaceae Rhizopus arrhizus Plus->Minus KK998240.1 11741 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_000738585.1_RhiDel21477-1.0 Rhizopodaceae Rhizopus delemar Plus->Minus KL997304.1 37668 ['tptA', 'sexM', 'rnhA', 'algA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'algA', 'glrA', 'btbA']
+   GCA_002105135.1_Synrac1 Syncephalastraceae Syncephalastrum racemosum Minus->Plus MCGN01000001.1 771475 ['sexM', 'rnhA', 'glrA'] ['sexP', 'rnhA', 'glrA']
+   GCA_003325415.1_Rstol_CA Rhizopodaceae Rhizopus stolonifer Plus->Minus PJQM01000085.1 96 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011763585.1_ASM1176358v1 Rhizopodaceae Rhizopus delemar Plus->Minus JAANIP010000341.1 1922 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011763735.1_ASM1176373v1 Rhizopodaceae Rhizopus delemar Plus->Minus JAANIS010000117.1 2003 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011763775.1_ASM1176377v1 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAANIT010000316.1 2001 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011763795.1_ASM1176379v1 Rhizopodaceae Rhizopus delemar Plus->Minus JAANIV010000391.1 5320 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011763815.1_ASM1176381v1 Rhizopodaceae Rhizopus delemar Plus->Minus JAANIU010000625.1 2001 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011763855.1_ASM1176385v1 Rhizopodaceae Rhizopus delemar Plus->Minus JAANJA010000538.1 2000 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011763875.1_ASM1176387v1 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAANIZ010000347.1 1929 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011763895.1_ASM1176389v1 Rhizopodaceae Rhizopus delemar Plus->Minus JAANIY010000640.1 2001 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011763915.1_ASM1176391v1 Rhizopodaceae Rhizopus delemar Plus->Minus JAANJB010000396.1 4627 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011763995.1_ASM1176399v1 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAANJE010000209.1 2043 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011764025.1_ASM1176402v1 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAANQT010000418.1 2043 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011764125.1_ASM1176412v1 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAANQV010000154.1 93 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011764225.1_ASM1176422v1 Rhizopodaceae Rhizopus arrhizus new JAANRQ010003168.1 38 None ['sexP', 'btbA']
+   GCA_011801335.2_ASM1180133v2 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAANRP010000654.1 2043 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011801675.2_ASM1180167v2 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAANQW010000429.1 5108 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011801785.2_ASM1180178v2 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAANQR010000620.1 2208 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011951285.2_ASM1195128v2 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAANRG010000803.1 176 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_011952045.2_ASM1195204v2 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAANRH010000687.1 2045 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_016097715.1_ASM1609771v1 Mucoraceae Apophysomyces sp. BC1015 Minus->Plus JAAZWU010000575.1 6857 ['tptA', 'sexM', 'algA'] ['tptA', 'sexP', 'algA']
+   GCA_016097735.1_ASM1609773v1 Mucoraceae Apophysomyces sp. BC1021 Minus->Plus JAAZWV010000301.1 7086 ['tptA', 'sexM', 'algA'] ['tptA', 'sexP', 'algA']
+   GCA_016097755.1_ASM1609775v1 Mucoraceae Apophysomyces sp. BC1034 Minus->Plus JAAZWW010000327.1 19857 ['tptA', 'sexM', 'algA'] ['tptA', 'sexP', 'algA']
+   GCA_016758895.1_ASM1675889v1 Umbelopsidaceae Umbelopsis vinacea lost JAEPRA010000016.1 141223 ['tptA', 'sexM', 'algA', 'glrA'] None
+   GCA_016758905.1_ASM1675890v1 Umbelopsidaceae Umbelopsis isabellina lost JAEPQZ010000017.1 104013 ['sexP', 'rnhA', 'glrA'] None
+   GCA_019828915.1_ASM1982891v1 Rhizopodaceae Rhizopus arrhizus new JACVQQ010004644.1 10 None ['tptA', 'sexM']
+   GCA_023512895.1_ASM2351289v1 Lichtheimiaceae Rhizomucor pusillus new JAKNBM010000127.1 3603 None ['sexP', 'sexM']
+   GCA_023630335.1_ASM2363033v1 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAMAMQ010000488.1 3280 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_024139275.1_ASM2413927v1 Backusellaceae Backusella macrospora new VCJA01002019.1 796 None ['sexP', 'algA']
+   GCA_024139415.1_ASM2413941v1 Backusellaceae Backusella tarrabulga Minus->Plus VCJJ01001653.1 25459 ['sexM', 'algA', 'glrA'] ['sexP', 'algA', 'glrA']
+   GCA_024139485.1_ASM2413948v1 Backusellaceae Backusella psychrophila Minus->Plus VCJK01001374.1 38725 ['tptA', 'sexM', 'algA', 'glrA'] ['tptA', 'sexP', 'algA', 'glrA']
+   GCA_024139495.1_ASM2413949v1 Backusellaceae Backusella sp. ASU-2019c Minus->Plus VCJM01001052.1 15010 ['sexM', 'algA', 'glrA'] ['sexP', 'algA', 'glrA']
+   GCA_024140265.1_ASM2414026v1 Backusellaceae Backusella liffmaniae Minus->Plus VCJE01002432.1 27442 ['sexM', 'algA', 'glrA'] ['sexP', 'algA', 'glrA']
+   GCA_024140375.1_ASM2414037v1 Backusellaceae Backusella westeae Minus->Plus VCJG01003462.1 22301 ['sexM', 'algA', 'glrA'] ['sexP', 'algA', 'glrA']
+   GCA_024140565.1_ASM2414056v1 Backusellaceae Backusella australiensis Minus->Plus VCJH01002494.1 56064 ['tptA', 'sexM', 'algA', 'glrA'] ['tptA', 'sexP', 'algA', 'glrA']
+   GCA_024220505.1_ASM2422050v1 Rhizopodaceae Rhizopus arrhizus Plus->Minus JAKZZE010000030.1 282592 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_025331445.1_Blatri1 Choanephoraceae Blakeslea trispora Minus->Plus JAIWNE010000009.1 208107 ['tptA', 'sexM', 'rnhA', 'algA', 'glrA', 'btbA'] ['tptA', 'sexP', 'sexM', 'rnhA', 'algA', 'glrA', 'btbA']
+   GCA_025766325.1_Benpoi1 Mucoraceae Benjaminiella poitrasii new JAMKHW010000002.1 4143530 None ['sexP', 'sexM', 'rnhA']
+   GCA_037039815.1_ASM3703981v1 Umbelopsidaceae Umbelopsis sp. M5902 lost JAXQGL010000038.1 212610 ['sexP', 'rnhA', 'glrA'] None
+   GCA_040206765.1_ASM4020676v1 Rhizopodaceae Rhizopus microsporus Plus->Minus JBEEFM010000005.1 263139 ['sexM', 'rnhA', 'glrA', 'btbA'] ['sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_040807105.1_ASM4080710v1 Mucoraceae Mucor sp. PG5414 new JBEWOQ010000465.1 1525 None ['sexM', 'rnhA']
+   GCA_048164915.1_ASM4816491v1 Rhizopodaceae Rhizopus arrhizus Plus->Minus JBKSNG010000002.1 77146 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_050389755.1_R_arrhizus_W17_v1.0 Rhizopodaceae Rhizopus arrhizus Plus->Minus JBNAEE010000545.1 3250 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_050656845.1_ASM5065684v1 Cunninghamellaceae Absidia sp. YW-2025a new JBOEPV010000879.1 5487 None ['sexM', 'glrA']
+   GCA_053572175.1_ASM5357217v1 Umbelopsidaceae Umbelopsis sp. WA50703 lost JAYKKX010000013.1 106814 ['tptA', 'sexM', 'algA'] None
+   GCA_054127015.1_ASM5412701v1 Rhizopodaceae Rhizopus delemar Plus->Minus JBSZMK010000001.1 2930560 ['tptA', 'sexM', 'rnhA', 'algA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'algA', 'glrA', 'btbA']
+   GCA_054130755.1_ASM5413075v1 Rhizopodaceae Rhizopus arrhizus Plus->Minus JBMUIF010000240.1 14990 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_054906655.1_Umbelopsis_nana_v._1.0 Umbelopsidaceae Umbelopsis nana lost BAAHSD010000001.1 143205 ['tptA', 'sexP', 'algA', 'glrA'] None
+   GCA_054954275.1_ASM5495427v1 Rhizopodaceae Rhizopus stolonifer Plus->Minus CM143249.1 3300997 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_058380175.1_DTU-UU_Rory127_1.0 Rhizopodaceae Rhizopus arrhizus Plus->Minus JBYHKV010000052.1 209008 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_058380225.1_DTU-UU_Rory329_1.0 Rhizopodaceae Rhizopus arrhizus Plus->Minus JBYHKU010000054.1 196018 ['tptA', 'sexP', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexP', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_059058645.1_ASM5905864v1 Rhizopodaceae Rhizopus stolonifer Plus->Minus CM180848.1 3300997 ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA'] ['tptA', 'sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_060230415.1_ASM6023041v1 Rhizopodaceae Rhizopus microsporus Plus->Minus CM190389.1 2538304 ['sexM', 'rnhA', 'glrA', 'btbA'] ['sexM', 'rnhA', 'glrA', 'btbA']
+   GCA_060309335.1_CBS210.80v1 Mucoraceae Mucor ardhlaengiktus Minus->Plus JBLNHJ010000029.1 208257 ['tptA', 'sexM', 'rnhA'] ['tptA', 'sexP', 'rnhA']
+   GCA_900079185.1_AG_v1 Cunninghamellaceae Absidia glauca new LT553527.1 531514 None ['sexM', 'algA']
+   GCA_900175165.2_FCH_5_7 Lichtheimiaceae Rhizomucor pusillus new FWWN02000322.1 30068 None ['sexM', 'algA', 'btbA']
+   GCA_964291815.1_UMBE_WA70503 Umbelopsidaceae Umbelopsis sp. WA50703 lost CAXYTU010000169.1 106865 ['tptA', 'sexM', 'algA'] None
+   GCA_977092135.1_gzAbsCyli1 Cunninghamellaceae Absidia cylindrospora lost CDRYNH010000012.1 717983 ['sexP', 'rnhA', 'glrA'] None
+   GCA_977110975.1_gzUmbVina2 Umbelopsidaceae Umbelopsis vinacea lost CDSBDG010000016.1 219389 ['tptA', 'sexM', 'algA'] None
+   GCF_025118155.1_Cokrec1 Mucoraceae Cokeromyces recurvatus new NW_026251417.1 142146 None ['sexP', 'sexM', 'rnhA']
+   GCF_025331425.1_Radspe1 Radiomycetaceae Radiomyces spectabilis new NW_026251940.1 262120 None ['sexP', 'sexM', 'rnhA']

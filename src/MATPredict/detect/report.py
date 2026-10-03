@@ -287,6 +287,9 @@ def _result_doc(r: DetectionResult) -> dict:
         "end": r.end,
         "confidence": r.confidence,
         "idiomorph": r.idiomorph,
+        # Cross-lineage class (B9, 2026-10-01): MAT1-1 / MAT1-2 / unassigned,
+        # or null for families with no map. Report only.
+        "idiomorph_class": r.idiomorph_class,
         # Every idiomorph with evidence here, best score first. On an exact tie
         # `idiomorph` stays "undetermined" and BOTH appear here, per the
         # curator's 2026-09-21 ruling -- a tie is reported, not guessed at.
@@ -301,6 +304,17 @@ def _result_doc(r: DetectionResult) -> dict:
         # `homothallic_candidate` is both idiomorphs in one locus, the real
         # architecture of a homothallic Mucorale.
         "locus_class": r.locus_class,
+        # True on a flank-carried call kept inside the flank span: its
+        # idiomorph rests on core hits no tool could model.
+        "idiomorph_unmodelled": r.idiomorph_unmodelled,
+        # Set when the family was searched outside the genome's phylum by an
+        # override route (curator's ruling 2026-09-26; see `verification`).
+        "verification": r.verification,
+        # Same-locus calls folded into this one (curator's ruling 2026-09-27;
+        # see `locus_merge`). Empty list when unmerged.
+        "merged_from": r.merged_from,
+        # The subloci of a merged A or B call (curator's ruling 2026-09-28).
+        "subloci": r.subloci,
         # How many of this locus's genes a polishing tool could actually model.
         # The sharpest discriminator measured to date: across 46,647
         # lineage-routed Pezizomycotina loci, every high-confidence call had
@@ -333,6 +347,16 @@ def _result_doc(r: DetectionResult) -> dict:
         # observations the provisional overlap threshold will be recalibrated
         # against.
         "idiomorph_margin": r.idiomorph_margin,
+        # The profile-HMM classifier's scores on the modelled core proteins,
+        # when the family has one (curator's ruling 2026-09-26). When present
+        # it decided `idiomorph`; `undetermined` means its margin fell below
+        # the family's `min_margin`.
+        "idiomorph_classifier": r.idiomorph_classifier,
+        # Other-allele cross-hits the confidence tier did not count (curator's
+        # ruling 2026-09-27). Written only when non-empty.
+        **({"confidence_ignored_genes": list(r.confidence_ignored_genes)}
+           if getattr(r, "confidence_ignored_genes", None) else {}),
+        **({"split_locus": r.split_locus} if getattr(r, "split_locus", None) else {}),
         "idiomorph_resolutions": [
             {
                 "contig": res.contig,
@@ -343,6 +367,9 @@ def _result_doc(r: DetectionResult) -> dict:
                 "overlap_fraction": res.overlap_fraction,
                 "winner_coverage": res.winner_coverage,
                 "loser_coverage": res.loser_coverage,
+                "basis": res.basis,
+                "winner_model_score": res.winner_model_score,
+                "loser_model_score": res.loser_model_score,
             }
             for res in r.idiomorph_resolutions
         ],
@@ -376,6 +403,12 @@ def _result_doc(r: DetectionResult) -> dict:
                 "status": e.status,
                 "alternate_model": e.alternate_model,
                 "exons": [{"start": s, "end": end} for s, end in e.exons] if e.exons else None,
+                "evalue": e.evalue,
+                "bitscore": e.bitscore,
+                # CAAX-scan precursors only (`detect.caax`); absent otherwise,
+                # so homology-gene entries are unchanged.
+                **({"orf_length_aa": e.orf_length_aa, "caax_motif": e.caax_motif,
+                    "orf_count": e.orf_count} if e.caax_motif is not None else {}),
             }
             for e in r.gene_evidence
         ],
@@ -396,6 +429,9 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
         # because of it: this report searched more families than its taxid
         # warrants and should be re-run once the lookup succeeds.
         "routing_error": outcome.routing_error,
+        # Set only on a `not_searched` route (curator's ruling 2026-09-26):
+        # why no family was searched, and how to search anyway.
+        "not_searched_reason": outcome.not_searched_reason,
         "genetic_code": outcome.genetic_code,
         "genetic_code_error": outcome.genetic_code_error,
         # Loci that were built and then withheld for carrying fewer than
@@ -404,6 +440,12 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
         # says whether six others were withheld or never existed. The
         # per-candidate detail is in the evidence-diagnostics stream.
         "suppressed_unpolished": outcome.suppressed_unpolished,
+        # Flank-carried calls withheld because a core hit lay outside the
+        # flank span (`flank_carried`). Also listed in `suppressed_loci`.
+        "suppressed_flank_carried": outcome.suppressed_flank_carried,
+        "suppressed_mat_gene_gate": outcome.suppressed_mat_gene_gate,
+        # Calls whose core protein is a known non-MAT paralog class (R4).
+        "suppressed_paralog_class": outcome.suppressed_paralog_class,
         # The withheld loci themselves, compactly: enough to place each one
         # against a known locus (a holdout truth span, a curated record) and to
         # see what the bar cost, without the full evidence of a reported call.
@@ -416,9 +458,38 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
                 "idiomorph": r.idiomorph,
                 "polished_genes": r.polished_genes,
                 "genes_found": list(r.genes_found),
+                "withheld_reason": r.withheld_reason,
+                **(r.withheld_detail or {}),
+                # The classifier verdict (or null), so a withheld locus's
+                # idiomorph margin can be audited. Review finding F5,
+                # 2026-09-28 (results/2026-09-28_fable_review/).
+                "idiomorph_classifier": r.idiomorph_classifier,
             }
             for r in outcome.suppressed_loci
         ],
+        # A flank-anchored N block where an uncalled family's locus should be
+        # (curator's ruling 2026-09-26; see `assembly_gap`): the assembly never
+        # resolved the locus, so the not-detected entry is not evidence of
+        # absence. Written unconditionally, as [] when there is none.
+        "assembly_gap_at_locus": [
+            {
+                "family": _family_label(g.family_key),
+                "contig": g.contig,
+                "start": g.start,
+                "end": g.end,
+                "n_bases": g.n_bases,
+                "anchors": list(g.anchors),
+            }
+            for g in outcome.assembly_gaps_at_locus
+        ],
+        # Genome-level zygosity (curator's ruling 2026-09-26; see `zygosity`):
+        # `unknown` when this taxon's assemblies collapse MTL heterozygosity
+        # and the calls name one idiomorph. Null when no rule applies.
+        "zygosity": outcome.zygosity,
+        # Families that called both idiomorphs (curator's ruling 2026-09-29,
+        # test first; see `two_idiomorphs`): arrangement, evidence and every
+        # possible cause. Never a homothallism verdict. [] when none.
+        "two_idiomorphs": outcome.two_idiomorphs,
         "families_attempted": [_family_label(k) for k in outcome.families_attempted],
         "detected": [_result_doc(r) for r in outcome.results],
         "not_detected": [

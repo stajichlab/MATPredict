@@ -10,6 +10,7 @@ import yaml
 
 from MATPredict import logger
 from MATPredict.db.taxonomy import default_lineage_phylum_name, default_lineage_taxids
+from MATPredict.detect.split_locus import DEFAULT_SPLIT_LOCUS, SplitLocusParams, split_locus_params
 
 
 DEFAULT_MAX_CLUSTER_GAP_BP = 25_000
@@ -82,6 +83,30 @@ the evidence diagnostics, not by intuition.
 """
 
 
+DEFAULT_FLANK_CARRIED_MIN_BITSCORE = 39.0
+"""The flank-carried floor on the strongest core hit's bitscore, for every
+family unless its `order.yml` sets `flank_carried_min_bitscore`.
+
+Curator's ruling 2026-09-27, replacing the E <= 1e-5 floor of 2026-09-26: an
+e-value grows with genome size, so real Umbelopsis loci (Mucorales gene
+order, HMG fragments of 33-44 bits, E 6e-8..2e-6 in the local region) fell
+above 1e-5 genome-wide and were withheld. Evaluated on 265 flank-carried loci
+(results/2026-09-27_flank_bitscore_floor/NOTE.md): known noise (52
+Debaryomyces-type Serinales calls) scores <= 30.4 bits, real loci 33.5-68.2.
+39 bits keeps 7 of 8 real loci and 0 of 52 known noise, keeps no audit-"noise"
+Ascomycota call (21/89 kept), and is the lowest floor with no audit noise
+(38 keeps one). One floor was enough for every family on that evidence.
+"""
+
+
+DEFAULT_FLANK_CARRIED_WINDOW_BP = 3_000
+"""The flank-carried window for a family that declares none: the +-3 kb of the
+curator's first ruling (2026-09-26). The narrow end is the safe default -- a
+family whose flanks sit outside its idiomorph says so in `order.yml`
+(`flank_carried_window_bp`). See `flank_carried`.
+"""
+
+
 @dataclass(frozen=True)
 class FamilyKey:
     phylum: str
@@ -132,6 +157,100 @@ class Family:
     a call wider than this is still reported, marked so a reader can see it.
     See `DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP` for the measured basis.
     """
+    idiomorph_classes: dict[str, str] = field(default_factory=dict)
+    """Idiomorph label -> cross-lineage class (MAT1-1 / MAT1-2 / unassigned).
+
+    Curator's ruling 2026-10-01 (B9): a report-only column on one axis,
+    MAT1-1 = the alpha-box idiomorph, MAT1-2 = the HMG idiomorph. Family names
+    and idiomorph labels do not change. Read from `idiomorph_class:` in
+    order.yml; absent means no map.
+    """
+    fallback_searchable: bool = True
+    """May this family be searched for a genome OUTSIDE its taxonomic scope?
+
+    Curation data. Curator's ruling 2026-10-01: a lineage-specific family
+    (Basidiomycota redPR, redHD, rustHD, wallMAT) is `false`: it is searched
+    only when the genome's taxid is inside `taxonomic_scope`, never in phylum
+    fallback or an explicit-phylum run, where its receptor references match
+    any basidiomycete STE3 and name a foreign lineage's alleles. `exhaustive`
+    (an explicit operator request) still searches it. Absent means True.
+    """
+    homothallic_screen: bool = True
+    """May this family's calls be labelled `homothallic_candidate`?
+
+    Curation data. Curator's ruling 2026-09-26: Basidiomycota
+    (Agaricomycotina especially) "aren't really homothallic in the same way",
+    so the label does not apply there -- the anchor pilot found it firing on
+    HD1+HD2 and bE+bW partner pairs in 8 of 30 genomes. Set at phylum level
+    in `order.yml`; a locus may override it. Absent means True.
+    """
+    flank_carried_window_bp: int = DEFAULT_FLANK_CARRIED_WINDOW_BP
+    """How far from its flank span a flank-carried call's strongest core hit
+    may lie and the call still be kept (`flank_carried`).
+
+    Curation data: it depends on WHERE the curated flanks sit. The Serinales
+    PAP1/OBP1/PIK1 sit inside the idiomorph (3 kb); SLA2/APN2/COX13 and the
+    Mucorales tptA/rnhA sit outside it, and the Ascomycota audit found real
+    loci up to 9.9 kb off (20 kb). Absent means the 3 kb of the first ruling.
+    """
+    flank_carried_min_bitscore: float = DEFAULT_FLANK_CARRIED_MIN_BITSCORE
+    """The bitscore the strongest core hit of a flank-carried call must reach
+    for the call to be kept (`flank_carried`). Absent means the 39 bits of
+    the 2026-09-27 ruling; no curated family overrides it.
+    """
+    split_locus: SplitLocusParams = DEFAULT_SPLIT_LOCUS
+    """The split-locus rule's parameters (`split_locus`; curator's ruling
+    2026-09-27). General to every family unless the roster's `split_locus:`
+    overrides it (`false` turns it off)."""
+    model_idiomorph_alternatives: bool = False
+    """Polish BOTH genes of an overlapping mutually exclusive pair, and decide
+    the pair on the two models (`idiomorph.resolve_idiomorph_by_models`).
+
+    Curation data. Curator's ruling 2026-09-26, for Mucoromycota sexM/sexP,
+    which "are hard to tell apart": the first-pass raw-identity verdict left
+    the losing gene unmodelled, and 13 Minus calls rested on margins of
+    0.1-2 identity points. Off by default: no other family has been shown to
+    need it, and it costs one extra polish per resolved pair.
+    """
+    idiomorph_classifier: dict | None = None
+    """Profile-HMM idiomorph classifier for this family (`detect.classifier`),
+    or None. Keys: `type` ("hmm"), `dir` (resolved to an absolute path by the
+    loader, from `db/<Phylum>/<dir>`), `min_margin` (bits).
+
+    Curation data. Curator's ruling 2026-09-26: decide the idiomorph on the
+    MODELLED proteins with one HMM per idiomorph; the bitscore/model-pair
+    decision stays the fallback. Built only by scripts/build_idiomorph_hmms.py.
+    """
+    pheromone_precursor_scan: dict | None = None
+    """Strict-CAAX pheromone-precursor scan beside receptor hits
+    (`detect.caax`), or None. Keys (defaults filled by the loader): `gene`,
+    `receptor_genes`, `motif`, `window_bp`, `min_codons`, `max_codons`.
+
+    Curation data. Curator's ruling 2026-09-27: on for Basidiomycota:PR, where
+    tandem receptor copies share one gene name and 25-80 aa precursors escape
+    tblastn, so a real B locus showed one distinct gene and was never admitted.
+    Off by default; Sporidiobolales precursors end CTxA and need their own motif.
+    """
+    merge_group: str | None = None
+    """Families that describe the same physical locus type share a
+    `merge_group`; their overlapping calls are reported once
+    (`locus_merge`; curator's ruling 2026-09-27). None = never merged."""
+    merge_generic: bool = False
+    """A broad catch-all family for its merge group (e.g. Basidiomycota:PR,
+    Basidiomycota:HD): on a merge, a specific family's call is kept as the
+    primary and this family's evidence is folded into it."""
+    merge_separately: bool = False
+    """Two `merge_separately` families of one merge group never merge with
+    each other; each merges only with the group's generic call. Unused: the
+    curator first asked for it on Aalpha/Abeta (2026-09-28) and then, after the
+    subloci literature review, ruled they merge (option a). Kept as a roster
+    switch, default False (merge)."""
+
+    two_idiomorphs_report: bool = False
+    """Write a genome-level `two_idiomorphs` statement when this family calls
+    both idiomorphs (`two_idiomorphs`; curator's ruling 2026-09-29, test
+    first). Report-level only; never changes a call. On for Mucoromycota:MAT."""
+
     min_idiomorph_margin: float = DEFAULT_MIN_IDIOMORPH_MARGIN
     """Identity points two mutually exclusive idiomorph genes must be apart.
 
@@ -159,13 +278,18 @@ class RoutingDecision:
     * `lineage` -- an ancestor of the query taxid is.
     * `phylum_fallback` -- nothing matched, so the run was narrowed to the
       query taxon's own phylum.
-    * `exhaustive` -- nothing matched and the phylum could not be used, so
-      every family in every phylum is searched. This is the expensive,
-      low-value path; it is what Task 1 exists to make rare.
+    * `not_searched` -- nothing matched and the phylum could not be used (no
+      taxid, an unresolvable lineage, or a phylum with no curated family).
+      No family is searched; the default since the curator's 2026-09-26
+      ruling. `phylum` names the uncurated phylum when it was resolved.
+    * `exhaustive` -- as `not_searched`, but the operator asked for every
+      family in every phylum to be searched (`--exhaustive`). The expensive,
+      low-value path.
     * `explicit_phylum` -- the operator passed `--phylum`, overriding all
       taxid-based routing.
 
-    `phylum` is set only for the two phylum-scoped modes, and is None otherwise.
+    `phylum` is set for the two phylum-scoped modes and, when resolved, for
+    `not_searched`; None otherwise.
     """
 
     families: list[Family]
@@ -230,8 +354,18 @@ def _gene_alias_map(genes: list) -> dict[str, str]:
     return mapping
 
 
+def _resolve_classifier(spec: dict | None, phylum_dir: Path) -> dict | None:
+    """A roster's `idiomorph_classifier` block with `dir` made absolute."""
+    if not spec:
+        return None
+    return {**spec, "dir": str((phylum_dir / spec["dir"]).resolve())}
+
+
 def load_all_families(db_root: Path) -> list[Family]:
     """Read every db/<Phylum>/order.yml and flatten it into Family records."""
+    # Local import: detect.caax imports detect.search, which imports this module.
+    from MATPredict.detect.caax import scan_config
+
     families: list[Family] = []
     for order_file in sorted(db_root.glob("*/order.yml")):
         doc = yaml.safe_load(order_file.read_text())
@@ -263,6 +397,31 @@ def load_all_families(db_root: Path) -> list[Family]:
                         "max_plausible_locus_span_bp",
                         DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP,
                     ),
+                    flank_carried_window_bp=locus.get(
+                        "flank_carried_window_bp", DEFAULT_FLANK_CARRIED_WINDOW_BP,
+                    ),
+                    flank_carried_min_bitscore=float(locus.get(
+                        "flank_carried_min_bitscore", DEFAULT_FLANK_CARRIED_MIN_BITSCORE,
+                    )),
+                    homothallic_screen=locus.get(
+                        "homothallic_screen", doc.get("homothallic_screen", True),
+                    ),
+                    fallback_searchable=locus.get("fallback_searchable", True),
+                    idiomorph_classes=dict(locus.get("idiomorph_class") or {}),
+                    model_idiomorph_alternatives=locus.get(
+                        "model_idiomorph_alternatives", False,
+                    ),
+                    split_locus=split_locus_params(locus),
+                    idiomorph_classifier=_resolve_classifier(
+                        locus.get("idiomorph_classifier"), order_file.parent,
+                    ),
+                    pheromone_precursor_scan=scan_config(
+                        locus.get("pheromone_precursor_scan")
+                    ),
+                    merge_group=locus.get("merge_group"),
+                    merge_generic=bool(locus.get("merge_generic", False)),
+                    merge_separately=bool(locus.get("merge_separately", False)),
+                    two_idiomorphs_report=bool(locus.get("two_idiomorphs_report", False)),
                 )
             )
     return families
@@ -438,6 +597,7 @@ def route(
     lineage_taxids_resolver: Callable[[int], list[int]] = default_lineage_taxids,
     phylum_name_resolver: Callable[[int], str | None] = default_lineage_phylum_name,
     phylum: str | None = None,
+    exhaustive: bool = False,
 ) -> RoutingDecision:
     """Choose the families a detection run will search, and report which rule chose them.
 
@@ -466,10 +626,15 @@ def route(
        2916678, 766764, 5475, 5476] -- intersects NO curated family's scope, so
        before this rule it routed to all 19 families across all three phyla and
        one small yeast genome ran past 24 minutes without finishing.
-    5. **Exhaustive**: every family. Reached when there is no taxid at all, or
-       the phylum cannot be determined, or the determined phylum has no curated
-       families (returning that phylum's EMPTY family set instead would silently
-       detect nothing, which is worse than searching too much).
+    5. **Not searched** (the default) or **exhaustive** (on request). Reached
+       when there is no taxid at all, or the phylum cannot be determined, or the
+       determined phylum has no curated families. Curator's ruling 2026-09-26:
+       the default is `not_searched` -- no family, and a mode that says so, so
+       the report can never read as "searched and found nothing". The chytrid
+       negative control is why: under `exhaustive` it spent a median 1,866 s
+       per genome, 6 of 25 genomes hit the 60-minute timeout, and it called
+       nothing. `exhaustive=True` (`matpredict detect --exhaustive`) restores
+       the old search of every family; it never widens a route that matched.
 
     **How the phylum is determined.** Not from a hardcoded phylum-name-to-taxid
     table, and not by testing which phylum's families have a scope taxid in the
@@ -484,17 +649,20 @@ def route(
     already fetched the lineage.
 
     Every resolver failure (network error, unknown taxid) degrades to the next
-    rule rather than raising, so a taxonomy outage makes detection slower, never
-    broken.
+    rule rather than raising, and is recorded in `routing_error`. With the
+    `not_searched` default an outage therefore skips a genome visibly -- its
+    report carries the error, so it can be re-run -- rather than searching it
+    against every family.
     """
     if phylum is not None:
         return RoutingDecision(
-            families=[f for f in families if f.key.phylum == phylum],
+            families=[f for f in families
+                      if f.key.phylum == phylum and f.fallback_searchable],
             routing_mode="explicit_phylum",
             phylum=phylum,
         )
     if taxid is None:
-        return RoutingDecision(families=list(families), routing_mode="exhaustive")
+        return _unrouted(families, exhaustive)
 
     # Exact-taxid and lineage matches are UNIONED, not cascaded. Returning at
     # the first tier that matched anything let a SPECIES-scoped family shadow a
@@ -540,12 +708,29 @@ def route(
         query_phylum = None
         errors.append(f"phylum lookup failed: {type(exc).__name__}: {str(exc)[:160]}")
     if query_phylum:
-        in_phylum = [f for f in families if f.key.phylum == query_phylum]
+        # Scope-only families (fallback_searchable: false) are never searched
+        # outside their scope (curator ruling 2026-10-01).
+        in_phylum = [f for f in families
+                     if f.key.phylum == query_phylum and f.fallback_searchable]
         if in_phylum:
             return RoutingDecision(
                 families=in_phylum, routing_mode="phylum_fallback", phylum=query_phylum,
                 routing_error="; ".join(errors) or None,
             )
 
-    return RoutingDecision(families=list(families), routing_mode="exhaustive",
-                           routing_error="; ".join(errors) or None)
+    return _unrouted(families, exhaustive, phylum=query_phylum,
+                     routing_error="; ".join(errors) or None)
+
+
+def _unrouted(
+    families: list[Family], exhaustive: bool, phylum: str | None = None,
+    routing_error: str | None = None,
+) -> RoutingDecision:
+    """The decision when no rule matched: nothing, unless a search of every
+    family was asked for. `phylum` is kept on a `not_searched` decision so the
+    report can name the uncurated phylum that caused it."""
+    if exhaustive:
+        return RoutingDecision(families=list(families), routing_mode="exhaustive",
+                               routing_error=routing_error)
+    return RoutingDecision(families=[], routing_mode="not_searched", phylum=phylum,
+                           routing_error=routing_error)

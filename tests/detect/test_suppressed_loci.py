@@ -78,7 +78,7 @@ def test_a_failed_genetic_code_lookup_is_recorded(tmp_path, monkeypatch):
 
     from MATPredict.detect import pipeline
     from MATPredict.detect.family_registry import RoutingDecision
-    monkeypatch.setattr(pipeline, "route", lambda taxid, fams: RoutingDecision(fams, "lineage"))
+    monkeypatch.setattr(pipeline, "route", lambda taxid, fams, **k: RoutingDecision(fams, "lineage"))
     outcome = run_pipeline(
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=5476,
         db_root=tmp_path, reference_fasta=tmp_path / "reference.faa",

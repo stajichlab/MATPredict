@@ -10,6 +10,8 @@ dependencies = [
     "duckdb>=1.0",
     "biopython>=1.83",
     "requests>=2.31",
+    # Profile-HMM idiomorph classifier (detect/classifier.py), curator 2026-09-26.
+    "pyhmmer>=0.12",
 ]
 
 # `draw-locus`/`draw-synteny` (curate-db's visualization commands) need these, but no

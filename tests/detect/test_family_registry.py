@@ -39,9 +39,18 @@ def test_route_narrows_to_matching_scope_by_direct_membership():
     assert result.routing_mode == "direct"
 
 
-def test_route_falls_back_to_all_when_taxid_is_none():
+def test_route_does_not_search_when_taxid_is_none():
+    """Curator's ruling 2026-09-26: with nothing to route on, the default is
+    to search nothing and say so, not to search every family."""
     families = [_family("Basidiomycota", "MAT", [5270]), _family("Ascomycota", "MATsc", [4930])]
     decision = route(None, families)
+    assert decision.families == []
+    assert decision.routing_mode == "not_searched"
+
+
+def test_route_searches_everything_with_no_taxid_only_on_explicit_override():
+    families = [_family("Basidiomycota", "MAT", [5270]), _family("Ascomycota", "MATsc", [4930])]
+    decision = route(None, families, exhaustive=True)
     assert decision.families == families
     assert decision.routing_mode == "exhaustive"
 
@@ -57,8 +66,16 @@ def test_route_falls_back_to_all_when_no_scope_matches():
         lineage_taxids_resolver=fake_resolver,
         phylum_name_resolver=lambda _taxid: None,  # phylum unresolvable -> no narrower fallback
     )
-    assert result.families == families
-    assert result.routing_mode == "exhaustive"
+    assert result.families == []
+    assert result.routing_mode == "not_searched"
+    overridden = route(
+        999999, families,
+        lineage_taxids_resolver=fake_resolver,
+        phylum_name_resolver=lambda _taxid: None,
+        exhaustive=True,
+    )
+    assert overridden.families == families
+    assert overridden.routing_mode == "exhaustive"
 
 
 def test_route_matches_via_lineage_when_no_direct_membership():
@@ -90,9 +107,9 @@ def test_route_does_not_match_lineage_that_only_shares_unrelated_ancestors():
         lineage_taxids_resolver=fake_resolver,
         phylum_name_resolver=lambda _taxid: None,
     )
-    # exhaustive fallback, not a false-positive kingdom-level match
-    assert result.families == families
-    assert result.routing_mode == "exhaustive"
+    # not searched, not a false-positive kingdom-level match
+    assert result.families == []
+    assert result.routing_mode == "not_searched"
 
 
 def test_load_all_families_reads_real_order_yml(tmp_path):
@@ -144,23 +161,51 @@ def test_route_falls_back_to_the_query_phylum_when_no_scope_matches():
     assert result.phylum == "Ascomycota"
 
 
-def test_route_phylum_fallback_is_exhaustive_when_the_phylum_has_no_families():
+def test_route_a_phylum_with_no_families_is_not_searched():
     """A resolvable phylum with no curated families (e.g. Chytridiomycota,
-    absent from db/) must not route to an EMPTY family set -- that would
-    silently detect nothing. It degrades to the exhaustive set instead."""
+    absent from db/) is NOT searched by default -- curator's ruling
+    2026-09-26, after the chytrid control spent a median 31 min per genome
+    under `exhaustive` and called nothing. The mode says so explicitly, so it
+    can never read as "searched and found nothing"."""
     families = _three_phyla()
     result = route(
         999999, families,
         lineage_taxids_resolver=lambda _t: [4751],
         phylum_name_resolver=lambda _t: "Chytridiomycota",
     )
+    assert result.families == []
+    assert result.routing_mode == "not_searched"
+    assert result.phylum == "Chytridiomycota"
+
+
+def test_route_a_phylum_with_no_families_is_exhaustive_on_explicit_override():
+    families = _three_phyla()
+    result = route(
+        999999, families,
+        lineage_taxids_resolver=lambda _t: [4751],
+        phylum_name_resolver=lambda _t: "Chytridiomycota",
+        exhaustive=True,
+    )
     assert result.families == families
     assert result.routing_mode == "exhaustive"
 
 
-def test_route_phylum_resolver_failure_degrades_to_exhaustive():
+def test_the_exhaustive_override_never_widens_a_matched_route():
+    families = _three_phyla()
+    result = route(
+        294748, families,
+        lineage_taxids_resolver=lambda _t: [4751, 4890],
+        phylum_name_resolver=lambda _t: "Ascomycota",
+        exhaustive=True,
+    )
+    assert result.routing_mode == "phylum_fallback"
+    assert [f.key.phylum for f in result.families] == ["Ascomycota", "Ascomycota"]
+
+
+def test_route_phylum_resolver_failure_degrades_to_not_searched():
     """A resolver failure (network error, unknown taxid) degrades the same
-    way the lineage resolver's failure already does -- never raises out."""
+    way the lineage resolver's failure already does -- never raises out --
+    and the error is recorded so the genome can be re-run."""
     families = _three_phyla()
 
     def boom(_taxid):
@@ -171,8 +216,9 @@ def test_route_phylum_resolver_failure_degrades_to_exhaustive():
         lineage_taxids_resolver=lambda _t: [4751],
         phylum_name_resolver=boom,
     )
-    assert result.families == families
-    assert result.routing_mode == "exhaustive"
+    assert result.families == []
+    assert result.routing_mode == "not_searched"
+    assert "NCBI unreachable" in result.routing_error
 
 
 def test_route_explicit_phylum_skips_taxid_routing_entirely():
@@ -377,7 +423,7 @@ def test_a_resolver_failure_is_recorded_not_silent():
         raise RuntimeError("429 Too Many Requests")
 
     result = route(999999, families, lineage_taxids_resolver=boom, phylum_name_resolver=boom)
-    assert result.routing_mode == "exhaustive"
+    assert result.routing_mode == "not_searched"
     assert result.routing_error and "429" in result.routing_error
 
 

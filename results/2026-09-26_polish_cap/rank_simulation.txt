@@ -1,0 +1,13 @@
+genomes: 561
+genes-first     N= 4: calls lost 15/613  gene-load kept 37%  {'dothideomycetes': 2, 'saccharomycetes_other': 9, 'dipodascomycetes_etc': 3, 'saccharomyces_sample': 1}
+genes-first     N= 6: calls lost  4/613  gene-load kept 47%  {'saccharomycetes_other': 4}
+genes-first     N= 8: calls lost  2/613  gene-load kept 54%  {'saccharomycetes_other': 2}
+genes-first     N=10: calls lost  1/613  gene-load kept 61%  {'saccharomycetes_other': 1}
+identity-first  N= 4: calls lost  2/613  gene-load kept 33%  {'saccharomycetes_other': 1, 'saccharomyces_sample': 1}
+identity-first  N= 6: calls lost  0/613  gene-load kept 43%  {}
+identity-first  N= 8: calls lost  0/613  gene-load kept 51%  {}
+identity-first  N=10: calls lost  0/613  gene-load kept 58%  {}
+('genes-first', 6) [('GCA_010994365.1', 'Ascomycota:MTL', 'A', 'high'), ('GCA_010994365.1', 'Ascomycota:MTL', 'A', 'high'), ('GCA_029290875.1', 'Ascomycota:MAT', 'MAT1-1', 'medium'), ('GCA_030564765.1', 'Ascomycota:MAT', 'MAT1-1', 'medium')]
+('identity-first', 6) []
+('identity-first', 8) []
+('genes-first', 8) [('GCA_010994365.1', 'Ascomycota:MTL', 'A', 'high'), ('GCA_030564765.1', 'Ascomycota:MAT', 'MAT1-1', 'medium')]

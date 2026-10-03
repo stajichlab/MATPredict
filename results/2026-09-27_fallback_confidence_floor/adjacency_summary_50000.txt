@@ -1,0 +1,25 @@
+window 50000 bp; best_core_any identity bands; cells = supported/tested (not_testable excluded)
+  Ascomycota         all    <30:32/32  30-35:43/45  35-40:57/75  40-50:104/129  >=50:68/81
+  Ascomycota         high   <30:0/0  30-35:0/0  35-40:4/4  40-50:12/13  >=50:6/7
+  Ascomycota         medium <30:32/32  30-35:43/45  35-40:53/71  40-50:92/116  >=50:62/74
+  Basidiomycota:HD   all    <30:0/13  30-35:15/27  35-40:33/49  40-50:45/58  >=50:25/39
+  Basidiomycota:HD   high   <30:0/1  30-35:10/19  35-40:24/38  40-50:22/31  >=50:23/36
+  Basidiomycota:HD   low    <30:0/0  30-35:0/0  35-40:1/1  40-50:0/0  >=50:0/0
+  Basidiomycota:HD   medium <30:0/12  30-35:5/8  35-40:8/10  40-50:23/27  >=50:2/3
+
+status counts by family:
+  Ascomycota:MAT           not_supported   4
+  Ascomycota:MAT           supported       130
+  Ascomycota:MATsc         not_supported   41
+  Ascomycota:MATsc         supported       114
+  Ascomycota:MATtub        supported       22
+  Ascomycota:MATyl         not_supported   3
+  Ascomycota:MATyl         supported       38
+  Ascomycota:MTL           not_testable    52
+  Ascomycota:PM            not_supported   10
+  Basidiomycota:HD         not_supported   68
+  Basidiomycota:HD         supported       118
+  Basidiomycota:MAT        not_testable    21
+  Basidiomycota:aLocus     not_testable    2
+  Basidiomycota:bLocus     not_testable    139
+  Mucoromycota:MAT         not_testable    15

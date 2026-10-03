@@ -77,6 +77,9 @@ def main() -> int:
         FOUND, NO_REFERENCE, Radius, load_record_idiomorphs, records_to_withhold,
         score_holdout,
     )
+    from MATPredict.detect.suppress import (  # noqa: E402
+        default_suppress_paths, filter_rows, load_suppress_list,
+    )
 
     wt, db = args.worktree, args.worktree / "db"
     truth = truth_rows(wt)
@@ -95,6 +98,10 @@ def main() -> int:
                  f"say which code wrote a report. Commit first.")
     record_families = load_record_families(db)
     record_idiomorphs = load_record_idiomorphs(db)
+    # Curator's ruling 2026-09-26: a suppressed genome (the BFD list plus the
+    # worktree's db/suppress.txt) is never run.
+    suppressed = load_suppress_list(default_suppress_paths(db))
+    n_suppressed = 0
 
     results = []
     for rid, t in sorted(truth.items()):
@@ -102,6 +109,11 @@ def main() -> int:
         if not a.get("bfd_asmid"):
             results.append({"record_id": rid, "species": t["species"], "status": "no_assembly"})
             print(f"{rid[:33]:35}SKIP no assembly", file=sys.stderr)
+            continue
+        if filter_rows([a["bfd_asmid"]], suppressed)[1]:
+            n_suppressed += 1
+            results.append({"record_id": rid, "species": t["species"], "status": "genome_suppressed"})
+            print(f"{rid[:33]:35}SKIP suppressed {a['bfd_asmid']}", file=sys.stderr)
             continue
         # Decompressed ONCE and shared between the per-radius jobs, which all
         # walk this record list in lockstep and so reach each new genome at the
@@ -175,6 +187,8 @@ def main() -> int:
                   f"{score.status} {loc.get('idiomorph') or ''}", file=sys.stderr)
     args.out.write_text(yaml.safe_dump({"results": results}, sort_keys=False))
     print(f"\nwrote {args.out}", file=sys.stderr)
+    # Not `suppressed`, which below means a locus the modelled-gene bar withheld.
+    print(f"skipped {n_suppressed} record(s) whose genome is on a suppress list", file=sys.stderr)
     # Recall = found / (found + suppressed + miss), per radius, never pooled.
     # `no_reference_*` leave the denominator; `wrong_idiomorph` is found but
     # is also printed on its own, because a found locus with the wrong call is

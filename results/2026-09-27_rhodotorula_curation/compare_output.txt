@@ -1,0 +1,34 @@
+genomes 221; before PR called 215; after PR called 216; after HD called 217
+HD and PR on the same contig (after): 0
+known answers (all) n=67: {('after', 'agree'): 66, ('before', 'agree'): 66, ('HD', 'called'): 67, ('after', 'uncalled'): 1, ('before', 'uncalled'): 1}
+known answers (held-out) n=62: {('after', 'agree'): 61, ('before', 'agree'): 61, ('HD', 'called'): 62, ('after', 'uncalled'): 1, ('before', 'uncalled'): 1}
+allele split by species (after):
+    Rhodotorula mucilaginosa {'A2': 117, 'uncalled': 2, 'A1': 6}
+    Rhodotorula toruloides {'A2': 13, 'A1': 20, 'A1+A2': 2}
+    Rhodotorula kratochvilovae {'A2': 10, 'A1': 1}
+    Rhodotorula paludigena {'A2': 5, 'A1': 2}
+    Rhodotorula glutinis {'A1': 3, 'A2': 1}
+    Rhodotorula graminis {'A2': 3, 'uncalled': 1}
+    Rhodotorula pacifica {'A1+A2': 1, 'A2': 2, 'A1': 1}
+    Sporobolomyces salmonicolor {'A2': 2, 'A1': 1}
+    Rhodotorula sphaerocarpa {'A2': 3}
+    Rhodotorula babjevae {'A1': 3}
+    Rhodotorula sp. JG-1b {'A2': 2}
+    Rhodotorula sp. CCFEE 5036 {'A2': 2}
+    Rhodotorula diobovata {'A1': 1, 'A2': 1}
+    Sporobolomyces pararoseus {'A1': 2}
+    Rhodotorula sp. FNED7-22 {'A1': 1}
+    Rhodotorula taiwanensis {'A2': 1}
+    Rhodotorula sp. ZM1 {'A2': 1}
+    Rhodotorula sp. VS67 {'A2': 1}
+    Rhodotorula sp. CC01 {'A2': 1}
+    Rhodotorula sp. S30-09 {'A2': 1}
+    Rhodotorula sp. M30-05A-2 {'A2': 1}
+    Rhodotorula sp. PL61-2 {'A2': 1}
+    Rhodotorula sp. CP72-2 {'A2': 1}
+    Rhodotorula sp. BUB8 {'uncalled': 1}
+    Rhodotorula araucariae {'A2': 1}
+    Rhodotorula dairenensis {'uncalled': 1}
+    Rhodotorula sp. HGY2 {'A2': 1}
+    Rhodotorula sp. HGY1 {'A1': 1}
+median wall s: before 18, after 106

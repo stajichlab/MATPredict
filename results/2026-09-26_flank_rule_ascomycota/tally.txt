@@ -1,0 +1,22 @@
+family                 rule A outcome  strong   weak  noise
+Ascomycota:MAT         low              5      8     15
+Ascomycota:MAT         withheld         1      8     26
+Ascomycota:MATtub      low              2      2      5
+Ascomycota:MATtub      withheld         0      0      1
+Ascomycota:MATyl       low              1      2      9
+Ascomycota:MATyl       withheld         0      0      1
+Ascomycota:MTL         low              0      0      3
+Mucoromycota:MAT       low              6      4      4
+Mucoromycota:MAT       withheld         2      0      3
+
+Ascomycota withheld by order x evidence:
+  1 ('Amphisphaeriales', 'noise(E>1e-2 or none)')
+  1 ('Ascoideales', 'noise(E>1e-2 or none)')
+  9 ('Dipodascales', 'noise(E>1e-2 or none)')
+  2 ('Dipodascales', 'weak(1e-5<E<=1e-2)')
+  15 ('Orbiliales', 'noise(E>1e-2 or none)')
+  5 ('Orbiliales', 'weak(1e-5<E<=1e-2)')
+  1 ('Pleosporales', 'noise(E>1e-2 or none)')
+  1 ('Rhizocarpales', 'noise(E>1e-2 or none)')
+  1 ('Trigonopsidales', 'strong(E<=1e-5)')
+  1 ('Xylariales', 'weak(1e-5<E<=1e-2)')

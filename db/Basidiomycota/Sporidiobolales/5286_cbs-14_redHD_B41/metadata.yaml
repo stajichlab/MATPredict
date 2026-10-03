@@ -1,0 +1,132 @@
+record_id: 5286_cbs-14_redHD_B41
+record_version: 1
+taxonomy:
+  taxid: 5286
+  lineage: k__Fungi;p__Basidiomycota;sc__Pucciniomycotina;c__Microbotryomycetes;o__Sporidiobolales;f__Sporidiobolaceae;g__Rhodotorula;s__Rhodotorula_toruloides
+  lineage_resolved_date: '2026-09-27'
+organism:
+  species: Rhodotorula toruloides
+  strain:
+    name: CBS 14
+    known: true
+    culture_collection_ids:
+    - CBS 14
+    differs_from_sequenced: false
+mating_type:
+  locus_name: redHD
+  idiomorphs:
+  - B41
+  system: heterothallic
+locus:
+  assembly_accession: GCA_921037615.3
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: HD2<->HD1
+    definition_note: 'R. toruloides CBS 14 (manuscript clade B), HD MAT locus, divergently transcribed
+      HD1/HD2 pair; allele B41 is the manuscript''s HD allele name for this strain. HD2 (327 aa, no start
+      Met: 5-prime partial) is a miniprot 0.18 model built here (R. toruloides NBRC 0880 HD2 (this set))
+      because the group''s model did not translate cleanly on the public contig; HD1 (419 aa) is the group''s
+      funannotate/miniprot model (RHOT14_005505). The HD locus sits on a different contig from the P/R
+      locus, as the manuscript reports for the genus.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: CAKLCE030000016.1
+        seq_region: CAKLCE030000016.1
+      start: 73460
+      end: 76222
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: HD2
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 73460
+  end: 74499
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 74230
+    end: 74499
+  - start: 73460
+    end: 74173
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: HD1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 74963
+  end: 76222
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 74963
+    end: 76222
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: TIER 2 (genome-derived, preprint). Locus located and genes re-annotated by the
+      curator's group (Liu, Tsai, Coelho, ... Stajich) with Leucosporidium scottii CBS 5931 MAT genes
+      as reference, manual re-annotation and miniprot for short or hypervariable genes; reported in a
+      bioRxiv preprint that is NOT yet peer-reviewed. No locus-specific GenBank deposit exists. The public
+      assembly GCA_921037615.3 carries the sequence; the gene coordinates are the group's models, verified
+      here to translate on the public contig.
+    citations:
+    - &id001
+      doi: 10.1101/2025.09.11.675505
+      pmid: null
+    - doi: 10.5281/zenodo.18230104
+      pmid: null
+  boundaries:
+    tier: 2
+    experimental_method: record segment spans the curated gene models on CAKLCE030000016.1
+    citations:
+    - *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: allele label B41 from the manuscript's HD allele catalogue; alleles are not callable
+      by homology (pattern vocabulary)
+    citations:
+    - *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: '2026-09-27'
+  accession_resolved_version: CAKLCE030000016.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: 'No protein accession: sequences are translations of the recorded coordinates on the public
+      contig (checked: no internal stop).'
+  taxonomy_current: true
+curation:
+  proposed_by: claude-curation-from-group-preprint
+  proposal_dedupe_key: 10.1101/2025.09.11.675505|5286|redHD|B41|cbs-14
+  reviewed_by: 'J. Stajich (sign-off 2026-09-27)'
+  reviewed_date: '2026-09-27'
+  notes: 'Proposed 2026-09-27 on curator request (Rhodotorula MAT from the group''s preprint, incl. HD).
+    Curator J. Stajich signed off 2026-09-27 (tier 2, preprint source).'
+model_provenance: null

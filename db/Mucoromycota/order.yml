@@ -3,7 +3,47 @@ loci:
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["Plus", "Minus"]
-    taxonomic_scope: [4827]
+    # Scope widened 2026-09-27 to Umbelopsidales (1913639, verified against NCBI
+    # Taxonomy) with the first tier-2 Umbelopsis records
+    # (db/Mucoromycota/Umbelopsidales/); curator ruling; records signed off 2026-09-29.
+    taxonomic_scope: [4827, 1913639]  # Mucorales, Umbelopsidales
+    # Flank-carried window (curator's ruling 2026-09-26; results/
+    # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
+    # idiomorph, and real loci were found up to 9.9 kb from the flank span.
+    flank_carried_window_bp: 20000
+    # CURATOR RULING, J. Stajich, 2026-09-26: sexM and sexP "are hard to tell
+    # apart", so model BOTH and decide on the two models' alignment scores.
+    # 13 Minus calls whose HMG box sits in the supported sexP clade of the
+    # 2026-09-26 HMG-box tree rested on first-pass margins of 0.1-2 identity
+    # points, with sexP never modelled (results/2026-09-26_sexMP_phylogeny).
+    model_idiomorph_alternatives: true
+    # CURATOR RULING, J. Stajich, 2026-09-26: decide the idiomorph on the
+    # MODELLED proteins with a profile-HMM classifier ("a cleaner way to make
+    # these assignments"). Files in classifiers/MAT/ are built ONLY by
+    # scripts/build_idiomorph_hmms.py (manifest.yaml records training IDs,
+    # versions and checksums). Training = curator option (a): curated
+    # sexM/sexP records + UFBoot-99 sexP-clade members of the 2026-09-26
+    # HMG-box tree; the Zygo 23 loci are held out. Build: 85/85 correct
+    # leave-one-genus-out, worst correct margin 22.5 bits; held-out Zygo
+    # 23/23, smallest margin 47.5 bits (results/2026-09-26_hmm_classifier).
+    # Below min_margin the call is `undetermined` with both scores reported.
+    # CURATOR RULING, J. Stajich, 2026-09-27: min_margin = 25 bits (the
+    # build's recommendation, half the worst leave-one-genus-out margin, was
+    # 11.2). Reason: the FastTree HMG-box tree of the classifier scan
+    # (results/2026-09-27_sexMP_fasttree) split the label changes at this
+    # value. The three changes with margin >= 30 bits (Mucor irregularis x2,
+    # 30.1; Umbelopsis ramanniana, 51.0) sit in the matching clade; the four
+    # at <= 24.2 bits (M. ardhlaengiktus 24.2, Syncephalastrum racemosum
+    # NRRL 2496 12.0, S. monosporum x2 10.3) sit outside both clades. Every
+    # held-out Zygo protein cleared 34 bits, so no measured correct call is
+    # lost.
+    idiomorph_classifier: {type: hmm, dir: classifiers/MAT, min_margin: 25}
+    # CURATOR RULING, J. Stajich, 2026-09-29: test first. A genome with a
+    # Plus and a Minus call is NOT a confirmed homothallic (hybrid/fusion,
+    # duplication, mixed culture, assembly artefact are all possible). The
+    # report lists the arrangement, evidence and every possible cause
+    # (detect.two_idiomorphs; results/2026-09-29_two_idiomorphs/).
+    two_idiomorphs_report: true
     # CURATOR RULING, J. Stajich, 2026-09-20: the detector's 25000 bp default
     # clustering gap is "right for Ascomycota" but too tight for Mucoromycota,
     # which should "start at 50 kb". PROVISIONAL: 50000 is a starting value, not
@@ -78,4 +118,25 @@ loci:
       # i.e. algA - tptA - [btbA] - sexP/sexM - rnhA - glrA. One reference
       # protein is also why 26% is a floor on its detectability rather than a
       # property of the gene; revisit if more btbA-bearing records are added.
-      - {name: btbA, role: flanking_variable, present_in_idiomorphs: ["Plus"], optional: true}
+      #
+      # CURATOR RULING, J. Stajich, 2026-09-26: btbA is `idiomorph_informative:
+      # false`. It still marks the locus (and stays optional), but it no longer
+      # votes on Plus vs Minus. Why: the "0 of 207 Minus loci" count above was
+      # circular -- btbA's own vote made those loci Plus. In the 294-genome
+      # early-diverging scan, 33 Rhizopus calls carried sexM (~96% identity,
+      # 99% coverage) and no sexP, yet were labelled Plus; btbA was present in
+      # all 33, and as a long protein its bitscore (e.g. 871 in GCA_000696915.1)
+      # outvoted sexM (378). See
+      # docs/notes/2026-09-26_early-diverging-scan-and-chytrid-control.md.
+      #
+      # CURATOR RULING, J. Stajich, 2026-09-27: btbA carries NO idiomorph
+      # restriction -- it belongs to both. The Plus-only label came from the
+      # one curated record above and is now contradicted by the data: btbA
+      # sits at 66-99% identity in 29 Rhizopus Minus loci
+      # (results/2026-09-27_tier_rule_replay) and in all 33 relabelled
+      # Rhizopus Minus calls. This resolves the "revisit if more btbA-bearing
+      # records are added" note above. It stays optional and non-voting. The
+      # Plus-only label had also made a sexM + btbA locus name both
+      # idiomorphs, so its expected core fell back to the full roster and
+      # sexP counted as missing.
+      - {name: btbA, role: flanking_variable, optional: true, idiomorph_informative: false}

@@ -1,0 +1,37 @@
+('A', 'ALL', 'called_best<40', '') 10
+('A', 'basidio', 'Basidiomycota:MAT', 'clear(>=10)') 3
+('A', 'cap6', 'Ascomycota:MAT', 'clear(>=10)') 3
+('A', 'cap6', 'Ascomycota:MAT', 'close(<10)') 11
+('A', 'cap6', 'Ascomycota:MATsc', 'close(<10)') 2
+('A', 'cap6', 'Ascomycota:MTL', 'clear(>=10)') 2
+('A', 'cap6', 'Ascomycota:MTL', 'close(<10)') 2
+('A', 'dothideo', 'Ascomycota:MAT', 'clear(>=10)') 9
+('A', 'dothideo', 'Ascomycota:MAT', 'close(<10)') 4
+('A', 'serinales', 'Ascomycota:MTL', 'clear(>=10)') 6
+('A', 'serinales', 'Ascomycota:MTL', 'close(<10)') 10
+('Bp', 'ALL', 'called_best<40', '') 32
+('Bp', 'basidio', 'Basidiomycota:MAT', 'clear(>=10)') 3
+('Bp', 'cap6', 'Ascomycota:MAT', 'clear(>=10)') 8
+('Bp', 'cap6', 'Ascomycota:MAT', 'close(<10)') 16
+('Bp', 'cap6', 'Ascomycota:MATsc', 'close(<10)') 7
+('Bp', 'cap6', 'Ascomycota:MTL', 'clear(>=10)') 2
+('Bp', 'cap6', 'Ascomycota:MTL', 'close(<10)') 2
+('Bp', 'dothideo', 'Ascomycota:MAT', 'clear(>=10)') 20
+('Bp', 'dothideo', 'Ascomycota:MAT', 'close(<10)') 9
+('Bp', 'early', 'Mucoromycota:MAT', 'close(<10)') 1
+('Bp', 'serinales', 'Ascomycota:MTL', 'clear(>=10)') 39
+('Bp', 'serinales', 'Ascomycota:MTL', 'close(<10)') 43
+('Bp', 'wallemia', 'Basidiomycota:wallMAT', 'clear(>=10)') 17
+close examples:
+   ('Bp', 'cap6_f7b9773', 'GCA_000498155.1_1.0', 'Ascomycota:MAT', 'MAT1-2', 34.8, 47.2)
+   ('A', 'cap6_f7b9773', 'GCA_001936135.1_KJJ81', 'Ascomycota:MATsc', 'MATalpha', 40.5, 47.2)
+   ('Bp', 'cap6_f7b9773', 'GCA_001936135.1_KJJ81', 'Ascomycota:MATsc', 'MATalpha', 40.5, 47.2)
+   ('A', 'cap6_f7b9773', 'GCA_001936135.1_KJJ81', 'Ascomycota:MTL', 'alpha', 47.2, 47.2)
+   ('Bp', 'cap6_f7b9773', 'GCA_001936135.1_KJJ81', 'Ascomycota:MTL', 'alpha', 47.2, 47.2)
+   ('A', 'cap6_f7b9773', 'GCA_001936135.1_KJJ81', 'Ascomycota:MTL', 'alpha', 42.3, 50.0)
+   ('A', 'cap6_f7b9773', 'GCA_002924885.1_ASM292488v1', 'Ascomycota:MAT', 'MAT1-1', 33.5, 38.2)
+   ('Bp', 'cap6_f7b9773', 'GCA_002924885.1_ASM292488v1', 'Ascomycota:MAT', 'MAT1-1', 33.5, 38.2)
+   ('Bp', 'cap6_f7b9773', 'GCA_003313425.1_ASM331342v1', 'Ascomycota:MAT', 'MAT1-2', 35.1, 34.1)
+   ('A', 'cap6_f7b9773', 'GCA_003705895.2_ASM370589v2', 'Ascomycota:MAT', 'MAT1-2', 47.5, 40.6)
+   ('Bp', 'cap6_f7b9773', 'GCA_003705895.2_ASM370589v2', 'Ascomycota:MAT', 'MAT1-2', 47.5, 40.6)
+   ('Bp', 'cap6_f7b9773', 'GCA_010015785.1_Sacpr1', 'Ascomycota:MAT', 'MAT1-2', 33.6, 31.1)

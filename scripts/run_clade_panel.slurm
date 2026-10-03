@@ -56,6 +56,11 @@ RANK="${RANK:-ORDER}"          # any column of samples.csv: GENUS, FAMILY, ORDER
 CLADE="${CLADE:-${ORDER:-Tremellales}}"
 OUT_DIR="${OUT_DIR:-$REPO/results/$(date +%Y-%m-%d)_${CLADE,,}_panel}"
 THREADS="${SLURM_CPUS_PER_TASK:-4}"
+# Per-genome wall limit in seconds (curator ruling 2026-10-01). 3600 suits
+# genomes < 500 Mb (max measured 1,737 s); a 1.71 Gb Pucciniales genome timed
+# out twice at 3600. scripts/submit_binned_panel.py sets 14400 for the
+# > 500 Mb bin. Size the job --time to fit it.
+GENOME_TIMEOUT="${GENOME_TIMEOUT:-3600}"
 
 PY="$REPO/.pixi/envs/default/bin/python"
 export PATH="$REPO/.pixi/envs/default/bin:$PATH"   # exonerate, miniprot, tblastn
@@ -97,9 +102,10 @@ mkdir -p "$WORK/fasta" "$OUT_DIR/runs" "$REPO/logs"
 echo "repo=$REPO"
 echo "src=$SRC"
 echo "db=$MATPREDICT_DB_ROOT"
+echo "detect_args=${DETECT_ARGS:-}"
 echo "clade=$RANK=$CLADE  samples=$SAMPLES"
 echo "scratch=$WORK"
-echo "out=$OUT_DIR  threads=$THREADS"
+echo "out=$OUT_DIR  threads=$THREADS  genome_timeout=${GENOME_TIMEOUT}s"
 
 # ---------------------------------------------------------------- sample list
 # One "ASMID<TAB>TAXID" line per genome that exists on disk.
@@ -134,6 +140,16 @@ for r in reader:
 print(f"{rank}={clade}: {n} rows, {kept} with a genome file", file=sys.stderr)
 PYEOF
 fi
+
+# ------------------------------------------------------------ suppress lists
+# Curator's ruling 2026-09-26: genomes on the BFD suppress list
+# (Fungi_BFD/data/curation/suppress.txt) or on $MATPREDICT_DB_ROOT/suppress.txt
+# are never run -- e.g. the PRJEB104476 "genomes" that are single Sanger
+# amplicons. The count skipped is logged; SUPPRESS_ARGS passes extra
+# `--suppress FILE` lists through.
+"$PY" -m MATPredict detect suppress-filter --list "$WORK/panel.tsv" ${SUPPRESS_ARGS:-} \
+    > "$WORK/panel.kept.tsv" || { echo "suppress-filter failed" >&2; exit 1; }
+mv "$WORK/panel.kept.tsv" "$WORK/panel.tsv"
 
 # ----------------------------------------------------------- taxonomy warm-up
 # Resolve every distinct taxid ONCE, serially, before fanning out. The routing,
@@ -187,9 +203,10 @@ run_one() {
     # Wall time per genome, written beside the report. Without it runtime had
     # to be reconstructed from file mtimes, which a non-empty stderr breaks.
     t0=$(date +%s)
-    timeout 3600 "$PY" -m MATPredict detect \
+    timeout "$GENOME_TIMEOUT" "$PY" -m MATPredict detect \
         --genome "$fna" --taxid "$taxid" --out-dir "$out" \
         --evidence-diagnostics "$out/evidence_diagnostics.jsonl" \
+        ${DETECT_ARGS:-} \
         > "$out/stdout.log" 2> "$out/stderr.log"
     rc=$?
     echo "$(( $(date +%s) - t0 ))" > "$out/wall_seconds"
@@ -202,7 +219,7 @@ run_one() {
     rm -f "$fna"
 }
 export -f run_one
-export REPO LIBRARY OUT_DIR WORK PY
+export REPO LIBRARY OUT_DIR WORK PY DETECT_ARGS GENOME_TIMEOUT
 
 # xargs, not a job array: the per-genome cost is ~20 s, far below the point
 # where a separate SLURM job per unit would pay for its own scheduling.

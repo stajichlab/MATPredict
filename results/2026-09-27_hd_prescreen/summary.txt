@@ -1,0 +1,17 @@
+evaluated (record genomes excluded): pos 217 neg admitted 590 neg non-admitted sample 1454
+HMM score min/median/max  pos (159.5, 237.8, 540.8)  neg-admitted (-1000000000.0, -1000000000.0, 251.1)  neg-nonadm (-1000000000.0, -1000000000.0, 26.9)
+tblastn best bits          pos (148.0, 479.0, 894.0)  neg-admitted (27.7, 29.6, 150.0)
+HMM: threshold = worst positive 159.5; admitted negatives removed 589/590 (100%); best admitted negative 251.1
+blast: threshold = worst positive 148.0; admitted negatives removed 589/590 (100%); best admitted negative 150.0
+admitted negatives scoring >= worst positive: 1
+   Sporobolomyces pararoseus GCA_010758995.1_ASM1075899v1 251.1 blast 150.0 capped False
+lowest positives:
+   Rhodotorula mucilaginosa GCA_024500305.1_UAEM_Rmus_1.0 159.5 hd1 159.5 hd2 84.4 LOSO-excl Rhodotorula mucilaginosa
+   Rhodotorula mucilaginosa GCA_002806785.1_ASM280678v1 175.1 hd1 175.1 hd2 44.9 LOSO-excl Rhodotorula mucilaginosa
+   Rhodotorula mucilaginosa GCA_019805405.1_ASM1980540v1 214.2 hd1 214.2 hd2 122.2 LOSO-excl Rhodotorula mucilaginosa
+   Rhodotorula mucilaginosa GCA_019190235.1_ASM1919023v1 218.9 hd1 218.9 hd2 93.4 LOSO-excl Rhodotorula mucilaginosa
+   Rhodotorula mucilaginosa GCA_019190245.1_ASM1919024v1 218.9 hd1 218.9 hd2 93.4 LOSO-excl Rhodotorula mucilaginosa
+   Rhodotorula mucilaginosa GCA_019190265.1_ASM1919026v1 218.9 hd1 218.9 hd2 93.4 LOSO-excl Rhodotorula mucilaginosa
+   Rhodotorula mucilaginosa GCA_019190345.1_ASM1919034v1 218.9 hd1 218.9 hd2 93.4 LOSO-excl Rhodotorula mucilaginosa
+   Rhodotorula mucilaginosa GCA_019190365.1_ASM1919036v1 218.9 hd1 218.9 hd2 93.4 LOSO-excl Rhodotorula mucilaginosa
+admitted clusters per genome median 3 -> kept median 1

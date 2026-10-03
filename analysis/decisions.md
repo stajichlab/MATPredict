@@ -243,3 +243,11 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
   sp. (genus, unconfirmed; reverses the 10-01 'don't record'). The 13
   distant-genus placements and 2 same-strain mismatches wait on an ITS check.
   IQ-TREE UFBoot on a subtree around the flags.
+- B12 ITS (2026-10-02): rDNA agrees with the tree genus for 12 of 13
+  distant-genus placements. Curator ruling: record all 13 in
+  db/taxon_overrides.tsv (12 genus/confirmed; Circinella muscae NRRL 1360
+  unconfirmed, possible mixed sample, not renamed); all excluded from species
+  scoring (LCG species 200 -> 199, excluded 5 -> 18). Manual review of trees
+  and taxa later: analysis/2026-10-02_lcg-overrides-manual-review.md. fungi_odb12
+  IQ-TREE cancelled (FastTree is final); 4 reference genomes with foreign rDNA
+  kept as a side note in open-questions.md.

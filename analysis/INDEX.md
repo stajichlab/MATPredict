@@ -40,6 +40,7 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 09-28 | [MAT-gene gate and validation](2026-09-28_mat-gene-gate-and-validation.md) | decided | typing 0/540 wrong; gate 96/108 vs 9/189 |
 | 09-28 | [Held-out sets](2026-09-28_heldout-sets.md) | superseded by 10-01 rerun | Jena 61/64; LCG 536/621 (clean 449/533); Zygo saturated |
 | 10-01 | [Held-out rerun and curator names](2026-10-01_heldout-rerun-and-curator-names.md) | decided; runtime check running | LCG 536/621, both 36->24, labels 11/1/4; Jena 61/64, both 3->1; Jena 59/64 named, LCG 61 renamed |
+| 10-02 | [LCG overrides for manual review](2026-10-02_lcg-overrides-manual-review.md) | decided; manual review pending | 12/13 rDNA agree with tree; 13 overrides (12 confirmed, 1 unconfirmed); LCG species 200->199 |
 | 09-30 | [Cap V3 and regression check](2026-09-30_cap-v3-and-regression-check.md) | decided (signed off) | stress test 19/20 recovered, 0 wrong (V3); panel 166 + Zygo |
 
 ## Reviews and literature

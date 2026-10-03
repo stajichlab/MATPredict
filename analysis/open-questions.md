@@ -42,10 +42,37 @@ Updated 2026-10-01. Closed rows (deterministic rebuild, Umbelopsis merge) are in
   ANNOTATION_ERRORS_FIXED_REPORT.md entry C5 (branch curation-circinella).
 - Waits on: availability of raw reads for these strains.
 
+## Side note: reference genomes with foreign rDNA (found 2026-10-02, kept at curator's request)
+
+The B12 ITS check (`results/2026-10-01_lcg_name_check/its_check/NOTE.md`)
+ran barrnap + ITSx on the reference genomes too. In 4 of them, the rDNA does
+not match the genome's name:
+
+| Genome | rDNA best match | Use in MATPredict |
+|---|---|---|
+| BFD Cunninghamella bertholletiae 175 (GCA_000697215) | ITS 98.9% Rhizopus arrhizus CBS 112.07 (type); LSU 99.6% R. arrhizus | its sexP is a Mucoromycota MAT classifier training sequence (`training_extra.faa`) |
+| BFD Lichtheimia ramosa B5399 (GCA_000738555) | ITS 98.5% Mucor circinelloides CBS 195.68 (type); LSU 99.8% M. circinelloides | none found in db/ |
+| BFD Lichtheimia ramosa PG115-04A (GCA_037041495) | ITS 100% Nothophoma pruni (type); LSU 99.4% Epicoccum proteae (Ascomycota) | 2 proteins in `paralog_negatives.faa` |
+| Jena Pilaira anomala CBS 695.68 (held-out set) | ITS 100% Mucor saturninus CBS 974.68 (type) | held-out; tree reference for the LCG Pilaira call |
+
+- Only rDNA was checked. Nuclear markers were not. rDNA from a minor
+  contaminant can assemble in a short-read assembly, so this is not yet
+  evidence that the nuclear genome is misnamed.
+- Check made 2026-10-02: the C. bertholletiae 175 sexP training protein
+  matches the 3 other Cunninghamella sexP training proteins at 74-79%
+  identity (blastp), and no Rhizopus sexP is in its top hits. The training
+  label looks correct.
+- Use: a diagnostic of reference-genome errors (contamination or
+  mislabelled cultures). A possible routine check for reference genomes:
+  rDNA identity vs genome name.
+- Next step, if wanted: marker-protein placement of these 4 genomes; check
+  the 2 PG115-04A paralog negatives are fungal Mucorales proteins, not
+  ascomycete contaminant proteins.
+
 ## Ruled 2026-10-01, work pending
 
 | Item | Next step | Where |
 |---|---|---|
 | S. pombe P and Yarrowia A/B idiomorph class (unassigned) | protein-domain evidence (Pc vs alpha box; MATA/MATB proteins) | `db/Ascomycota/order.yml` (B9) |
-| LCG distant-genus placements (13) and same-strain mismatches (Pilaira anomala RSA 1997, Thamnidium elegans NRRL 2467) | ITS check before recording | `results/2026-10-01_lcg_name_check/NOTE.md` |
-| LCG flag support | IQ-TREE UFBoot subtree around the flags | `results/2026-10-01_lcg_name_check/` |
+| LCG distant-genus placements (13): recorded as overrides 2026-10-02 | curator manual review of trees and taxa | `analysis/2026-10-02_lcg-overrides-manual-review.md` |
+| LCG flag support | mucoromycota_odb12 UFBoot (job 29344888); fungi_odb12 IQ-TREE cancelled, FastTree is final | `results/2026-10-01_lcg_name_check/iqtree_subtree/` |

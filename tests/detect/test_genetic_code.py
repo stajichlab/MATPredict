@@ -130,13 +130,32 @@ def _exonerate_args(tmp_path, code, cmds):
                                  ("c1", 1, 400), runner=_runner(cmds), genetic_code=code)
 
 
-def test_exonerate_is_skipped_for_a_code_it_does_not_have(tmp_path):
-    """Table 26 (Alaninales, CUG = Ala) is not built into exonerate 2.4.0. Run
-    anyway, it exits 1 and the whole genome failed (20 BFD genomes in the v0.6.0
-    Ascomycota run). Now exonerate is not run and the gene is left to miniprot."""
+TABLE_26 = "FFLLSSSSYY**CC*WLLLAPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
+
+
+def test_exonerate_gets_the_ncbi_string_for_a_code_it_does_not_have(tmp_path):
+    """Table 26 (Alaninales, CUG = Ala) is not built into exonerate 2.4.0; by id
+    it exits 1, which failed 20 BFD genomes in the v0.6.0 Ascomycota run.
+    exonerate takes the table as a 64-letter string instead (TCAG order)."""
     cmds = []
-    assert _exonerate_args(tmp_path, 26, cmds) is None
+    _exonerate_args(tmp_path, 26, cmds)
+    exo = next(c for c in cmds if c[0] == "exonerate")
+    assert exo[exo.index("--geneticcode") + 1] == TABLE_26
+
+
+def test_exonerate_is_skipped_only_for_a_code_with_no_ncbi_table(tmp_path):
+    cmds = []
+    assert _exonerate_args(tmp_path, 99, cmds) is None
     assert not any(c[0] == "exonerate" for c in cmds)
+
+
+def test_ncbi_code_strings():
+    from MATPredict.detect.search import ncbi_code_string
+    assert ncbi_code_string(26) == TABLE_26
+    # identical to exonerate's built-in table 1 and table 12 strings
+    assert ncbi_code_string(1) == "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
+    assert ncbi_code_string(12) == "FFLLSSSSYY**CC*WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
+    assert ncbi_code_string(99) is None
 
 
 @pytest.mark.parametrize("code", [1, 12, None])

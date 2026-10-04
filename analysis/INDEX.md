@@ -17,6 +17,8 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 09-29 | [Two idiomorphs and homothallism](2026-09-29_two-idiomorphs-and-homothallism.md) | decided (report-only); causes open | 36 unlinked; literature signal 13/16 vs 5/9; Syzygites both idiomorphs |
 | 10-03 | [Mucoromycotina MAT campaign](2026-10-03_mucoromycotina-mat-campaign.md) | running (RAxML check) | 865/973 genomes, 911 loci; locus size 579 loci/23 genera; full length: sexP 0 sexM inside (UFBoot 40), sexM one clade (93); HMG box: sexP one clade (99), sexM split (69 sites) |
 | 10-04 | [sexP and sexM gene trees](2026-10-04_sexP-sexM-gene-trees.md) | decided (descriptive); RAxML check running | full length: sexM one clade 173/173 (UFBoot 93); HMG box: sexP one clade 162/162 (99), sexM split; outgroup not monophyletic; 5 non-MAT HMG nested; NRRL 1454 = Umbelopsis (override added) |
+| 10-04 | [Non-MAT HMG genes in the gene trees](2026-10-04_unclassified-hmg-in-gene-trees.md) | open | most = rooting; 40-gene sexP-related paralog family (both mating types); Mycotypha sexM missed (153 kb from sexP, in negatives); Dichotomocladium candidate sexP |
+
 
 ## Basidiomycota
 | Date | Report | Status | Key numbers |

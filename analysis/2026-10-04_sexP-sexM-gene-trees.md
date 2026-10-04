@@ -119,7 +119,8 @@ were not compared with the species tree here.
 LCG "Mucor sp. NRRL 1454" groups with Umbelopsis sexM in both gene trees. The
 B12 name check placed it with Umbelopsis in both BUSCO species trees (support
 1.0; `results/2026-10-01_lcg_name_check/flags.tsv`), but it has no row in
-`db/taxon_overrides.tsv`. Candidate override (curator decision).
+`db/taxon_overrides.tsv`. Curator, 2026-10-04: override added (Umbelopsis sp.,
+genus, confirmed; LSU D1/D2 99.5% U. tibetica type; ANNOTATION_ERRORS C13).
 
 ### 7. Divergence
 Median patristic distance between random tip pairs inside the main clade
@@ -136,7 +137,6 @@ state that the root and the sexP-sexM relationship are not resolved.
 ## Open
 - RAxML-NG check of the HMG-box tree (job 29397060).
 - The 5 nested outgroup HMG genes: locus, gene order, identity.
-- NRRL 1454 override.
 - Compare genus placement with the species tree; test the sexM/sexP divergence
   difference.
 - A better outgroup: HMG genes chosen by a criterion independent of the

@@ -254,3 +254,13 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
 - B12 closed (2026-10-03): curator reviewed the trees and accepted them.
   RSA 1997 label set to Minus (C12); RSA 1997 and NRRL 2467 held out as a
   possible sample mixup or contamination; no effect on MATPredict as a tool.
+- Held-out genomes in publications (2026-10-04): curator ruling: held-out
+  LCG/Jena genomes may appear in publication figures and tables. They stay out
+  of training, curation, classifier builds and scoring. (Atlas context use,
+  spec question 7, not ruled.)
+- R. toruloides HD (2026-10-04): curator ruling: keep redHD; the 2026-09-26
+  generic-HD call is not the MAT HD locus
+  (analysis/2026-10-04_rtoruloides-hd-old-vs-redhd.md). No code change.
+- LCG Mucor sp. NRRL 1454 (2026-10-04): curator ruling: override to
+  Umbelopsis sp. (genus, confirmed: BUSCO trees, both sexM gene trees, LSU
+  D1/D2 99.5% U. tibetica type); excluded from species-level scoring; C13.

@@ -1,6 +1,6 @@
 # R. toruloides HD: generic-HD call (2026-09-26) versus redHD (v0.6.0)
 
-Status: open (curator ruling pending). Recommendation below.
+Status: decided (curator, 2026-10-04): keep redHD.
 
 ## Question
 In 26 Sporidiobolales genomes, the 2026-09-26 run called a generic
@@ -89,4 +89,5 @@ redHD only in R. kratochvilovae.
   identity to Agaricomycete HD1/HD2).
 
 ## Decision
-Pending curator.
+J. Stajich, 2026-10-04: keep redHD ("it appears superior"). No code change:
+v0.6.0 and later already call redHD for Sporidiobolales.

@@ -79,16 +79,13 @@ not match the genome's name:
 
 | Item | Next step | Where |
 |---|---|---|
-| R. toruloides HD: 2026-09-26 generic-HD locus vs v0.6.0 `redHD` locus | data in `2026-10-04_rtoruloides-hd-old-vs-redhd.md` (recommend redHD); curator ruling | `2026-10-04_rtoruloides-hd-old-vs-redhd.md` |
 | Basidiomycota PR calls: 1,360 unverified (strict-CAAX only); most phylum-fallback calls are PR only | keep the caveat in any summary; review with the receptor-loci study | same |
 | Mucoromycotina locus size: flank pair differs by lineage | compare within one pair, or plot all with the pair marked | `2026-10-03_mucoromycotina-mat-campaign.md` |
-| Held-out LCG/Jena genomes in publication figures | curator ruling | same |
 | 3 outgroup HMG genes inside the sexP/sexM clades (Dicele1 h5, GCA_016758965.1 h6, Mycafr1 h1) | check locus and identity | same |
 
 ## Opened 2026-10-04 (sexP/sexM gene trees)
 
 | Item | Next step | Where |
 |---|---|---|
-| LCG "Mucor sp. NRRL 1454" groups with Umbelopsis (both BUSCO trees, support 1.0; both sexM gene trees); no override row | curator: add an override (genus Umbelopsis) | `2026-10-04_sexP-sexM-gene-trees.md` |
 | 5 non-MAT HMG genes nested in sexP/sexM clades (Dichotomocladium, Circinella minor, Mycotypha in Mucorales; Bifiguratus, Dispira outside) | check locus, gene order, identity | same |
 | Gene-tree root: non-MAT HMG outgroup not monophyletic | choose an outgroup independent of the 2026-09 trees | same |

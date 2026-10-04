@@ -95,10 +95,37 @@ def _get_default_ncbi_client():
     return _default_ncbi_client
 
 
+def _local_or_none(taxid: int):
+    """The local taxonomy table when it can answer for `taxid`, else None.
+
+    Order: the table in `$MATPREDICT_TAXONOMY` (no network); then NCBI
+    E-utilities. With `$MATPREDICT_OFFLINE=1`, a taxid the table does not hold
+    (or no table at all) raises `TaxidNotInSnapshot` instead of calling NCBI;
+    the router records the message in `routing_error`.
+    """
+    from MATPredict.db.local_taxonomy import TaxidNotInSnapshot, get_local, offline
+
+    local = get_local()
+    if local is not None and taxid in local:
+        return local
+    if offline():
+        if local is None:
+            raise TaxidNotInSnapshot(
+                "offline ($MATPREDICT_OFFLINE) and no local taxonomy table "
+                "($MATPREDICT_TAXONOMY); give --phylum and --genetic-code")
+        raise TaxidNotInSnapshot(
+            f"taxid {taxid} is not in the local NCBI taxonomy snapshot {local.snapshot} "
+            "and the run is offline; give --phylum and --genetic-code")
+    return None
+
+
 def default_lineage_taxids(taxid: int) -> list[int]:
     """Fetch `taxid`'s ancestor lineage as a list of taxids using a lazily-built default
     `NcbiClient` (see `_get_default_ncbi_client`). This is the default
     `lineage_taxids_resolver` for `detect.family_registry.route`."""
+    local = _local_or_none(taxid)
+    if local is not None:
+        return local.lineage(taxid)
     return _get_default_ncbi_client().fetch_taxonomy_lineage(taxid)
 
 
@@ -113,6 +140,9 @@ def default_lineage_phylum_name(taxid: int) -> str | None:
     asking for the lineage of the same taxid is a cache hit, not a second
     network request.
     """
+    local = _local_or_none(taxid)
+    if local is not None:
+        return local.phylum_name(taxid)
     return _get_default_ncbi_client().fetch_taxonomy_phylum(taxid)
 
 
@@ -123,4 +153,7 @@ def default_genetic_code(taxid: int) -> int | None:
     `default_lineage_taxids`, reading the identical efetch document, so a run
     that already routed by taxid pays nothing extra for this.
     """
+    local = _local_or_none(taxid)
+    if local is not None:
+        return local.genetic_code(taxid)
     return _get_default_ncbi_client().fetch_taxonomy_genetic_code(taxid)

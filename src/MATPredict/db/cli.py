@@ -373,6 +373,14 @@ def _cmd_build_duckdb(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_build_taxonomy(args: argparse.Namespace) -> int:
+    from MATPredict.db.local_taxonomy import build_table
+    counts = build_table(Path(args.taxdump), Path(args.out), snapshot=args.snapshot)
+    print(f"built {args.out}: {counts['taxa']} taxa, {counts['merged']} merged ids, "
+          f"snapshot {counts['snapshot']}")
+    return 0
+
+
 def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     """Register `curate-db` and its actions onto the top-level parser."""
     curate_db = subparsers.add_parser("curate-db", help="Curate the MAT locus reference database")
@@ -425,6 +433,15 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     draw_synteny.add_argument("--record-ids", required=True, nargs="+", help="2 or more curated record ids to compare")
     draw_synteny.add_argument("--out", required=True, help="Output clinker plot HTML path")
     draw_synteny.set_defaults(func=_cmd_draw_synteny)
+
+    build_tax = action.add_parser(
+        "build-taxonomy",
+        help="Build the offline NCBI taxonomy table (lineage, phylum, genetic code) from a taxdump")
+    build_tax.add_argument("--taxdump", required=True,
+                           help="taxdump directory (plain/.gz/.zst files), NCBI taxdmp_*.zip or taxdump.tar.gz")
+    build_tax.add_argument("--out", required=True, help="output table, e.g. ncbi_taxonomy.tsv.zst")
+    build_tax.add_argument("--snapshot", required=True, help="taxdump date, e.g. 2026-10-01 (written to reports)")
+    build_tax.set_defaults(func=_cmd_build_taxonomy)
 
     build_db = action.add_parser("build-duckdb")
     build_db.add_argument("--out", required=False)

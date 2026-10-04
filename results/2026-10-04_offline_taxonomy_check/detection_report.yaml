@@ -1,0 +1,1947 @@
+routing_mode: phylum_fallback
+routing_error: null
+not_searched_reason: null
+genetic_code: 26
+genetic_code_error: null
+taxonomy_source: local NCBI taxonomy snapshot 2026-10-01
+suppressed_unpolished: 121
+suppressed_flank_carried: 0
+suppressed_mat_gene_gate: 0
+suppressed_paralog_class: 0
+suppressed_loci:
+- family: Ascomycota:PM
+  contig: KV454014.1
+  start: 185089
+  end: 282802
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454014.1
+  start: 185089
+  end: 282802
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - mat1-Mc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat2
+  contig: KV454014.1
+  start: 185089
+  end: 282802
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATtub
+  contig: KV454014.1
+  start: 185089
+  end: 282802
+  idiomorph: MAT1-2
+  polished_genes: 1
+  genes_found:
+  - MAT1-2-1
+  - SLA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454014.1
+  start: 345322
+  end: 357829
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MAT1-1-1
+  - MAT1-2-1
+  - APN2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454014.1
+  start: 467592
+  end: 493836
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454014.1
+  start: 467592
+  end: 493836
+  idiomorph: MAT1-1
+  polished_genes: 0
+  genes_found:
+  - MAT1-1-1
+  - APN2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454014.1
+  start: 467592
+  end: 493836
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - PAP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454014.1
+  start: 547436
+  end: 559301
+  idiomorph: MATalpha
+  polished_genes: 0
+  genes_found:
+  - MATALPHA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454014.1
+  start: 633666
+  end: 646028
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - mat1-Mc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454014.1
+  start: 633666
+  end: 646028
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - matMc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATtub
+  contig: KV454014.1
+  start: 633666
+  end: 646028
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - MAT1-2-1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454014.1
+  start: 633666
+  end: 646028
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - MAT1-2-1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454014.1
+  start: 633666
+  end: 646028
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - PAP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454014.1
+  start: 811497
+  end: 811586
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454014.1
+  start: 913930
+  end: 914055
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - matMc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454014.1
+  start: 1130757
+  end: 1130846
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454014.1
+  start: 1158937
+  end: 1202891
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - MAT1-2-1
+  - APN2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454014.1
+  start: 1158937
+  end: 1202891
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATyl
+  contig: KV454014.1
+  start: 1158937
+  end: 1202891
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - mata2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454011.1
+  start: 44148
+  end: 72723
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - matMc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454011.1
+  start: 397912
+  end: 398142
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - mat1-Mc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454011.1
+  start: 635816
+  end: 636124
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - matMc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454011.1
+  start: 693866
+  end: 714133
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat2
+  contig: KV454011.1
+  start: 748337
+  end: 748471
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454011.1
+  start: 1104369
+  end: 1130936
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - mat1-Pc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454011.1
+  start: 1353063
+  end: 1359606
+  idiomorph: MATalpha
+  polished_genes: 0
+  genes_found:
+  - MATALPHA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat2
+  contig: KV454011.1
+  start: 1424445
+  end: 1445648
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454011.1
+  start: 1513006
+  end: 1534864
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - matMc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454011.1
+  start: 1513006
+  end: 1534864
+  idiomorph: MATa
+  polished_genes: 0
+  genes_found:
+  - MATA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454011.1
+  start: 1936549
+  end: 1947046
+  idiomorph: MATalpha
+  polished_genes: 0
+  genes_found:
+  - MATALPHA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat2
+  contig: KV454011.1
+  start: 2045886
+  end: 2061234
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454011.1
+  start: 2090901
+  end: 2170604
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - mat1-Pi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454011.1
+  start: 2090901
+  end: 2170604
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MATA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454011.1
+  start: 2090901
+  end: 2170604
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA1
+  - OBP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454011.1
+  start: 2090901
+  end: 2170604
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - SLA2
+  - MAT1-2-10
+  - MAT1-2-4
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATtub
+  contig: KV454011.1
+  start: 2090901
+  end: 2170604
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - unnamed_flanking_ORF
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454011.1
+  start: 2212690
+  end: 2212785
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MTLalpha1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454011.1
+  start: 2372833
+  end: 2401432
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - mat1-Mc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454011.1
+  start: 2372833
+  end: 2401432
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATtub
+  contig: KV454011.1
+  start: 2372833
+  end: 2401432
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - MAT1-2-1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454011.1
+  start: 2372833
+  end: 2401432
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - MAT1-2-1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454011.1
+  start: 2453474
+  end: 2453578
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MATALPHA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454018.1
+  start: 94181
+  end: 112133
+  idiomorph: MATa
+  polished_genes: 0
+  genes_found:
+  - MATA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat2
+  contig: KV454018.1
+  start: 146582
+  end: 202008
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454018.1
+  start: 146582
+  end: 202008
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA2
+  - PAP1
+  - PIK1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454018.1
+  start: 146582
+  end: 202008
+  idiomorph: MAT1-1
+  polished_genes: 0
+  genes_found:
+  - MAT1-1-5
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454018.1
+  start: 437332
+  end: 485038
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454018.1
+  start: 437332
+  end: 485038
+  idiomorph: MAT1-1
+  polished_genes: 0
+  genes_found:
+  - MAT1-1-1
+  - SLA2
+  - COX13
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454018.1
+  start: 437332
+  end: 485038
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATtub
+  contig: KV454018.1
+  start: 437332
+  end: 485038
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - SLA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454018.1
+  start: 594351
+  end: 594476
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MTLalpha1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454018.1
+  start: 676666
+  end: 676935
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - mat1-Pc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454015.1
+  start: 29705
+  end: 29866
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - mat1-Pc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454015.1
+  start: 591978
+  end: 594986
+  idiomorph: MATalpha
+  polished_genes: 0
+  genes_found:
+  - MATALPHA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454015.1
+  start: 639057
+  end: 639155
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454015.1
+  start: 788678
+  end: 788791
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454015.1
+  start: 959947
+  end: 960381
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - mat1-Mc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454015.1
+  start: 959947
+  end: 960381
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - matMc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454015.1
+  start: 959947
+  end: 960381
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MATA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATtub
+  contig: KV454015.1
+  start: 959947
+  end: 960381
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - MAT1-2-1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454015.1
+  start: 959947
+  end: 960381
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - MAT1-2-1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454015.1
+  start: 995012
+  end: 995182
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MTLalpha1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454015.1
+  start: 1132327
+  end: 1137883
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - mat1-Mc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454015.1
+  start: 1242312
+  end: 1242629
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - mat1-Pi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat2
+  contig: KV454015.1
+  start: 1242312
+  end: 1242629
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454015.1
+  start: 1242312
+  end: 1242629
+  idiomorph: MATa
+  polished_genes: 0
+  genes_found:
+  - MATA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454015.1
+  start: 1242312
+  end: 1242629
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATyl
+  contig: KV454015.1
+  start: 1242312
+  end: 1242629
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - mata1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454016.1
+  start: 3613
+  end: 3726
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - mat1-Mc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454016.1
+  start: 30734
+  end: 66537
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA1
+  - MTLA2
+  - PIK1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454016.1
+  start: 235814
+  end: 271194
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - mat1-Mc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454016.1
+  start: 235814
+  end: 271194
+  idiomorph: MAT1-2
+  polished_genes: 1
+  genes_found:
+  - MAT1-2-1
+  - COX13
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454016.1
+  start: 235814
+  end: 271194
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - matMc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454016.1
+  start: 235814
+  end: 271194
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATtub
+  contig: KV454016.1
+  start: 235814
+  end: 271194
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - MAT1-2-1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATyl
+  contig: KV454016.1
+  start: 235814
+  end: 271194
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - apn2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454016.1
+  start: 301776
+  end: 301940
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454016.1
+  start: 667027
+  end: 682552
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - mat1-Mc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454016.1
+  start: 852065
+  end: 852238
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MTLalpha1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454016.1
+  start: 878080
+  end: 894070
+  idiomorph: MATalpha
+  polished_genes: 0
+  genes_found:
+  - MATALPHA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454016.1
+  start: 971767
+  end: 971913
+  idiomorph: MATalpha
+  polished_genes: 0
+  genes_found:
+  - MATALPHA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454016.1
+  start: 1028201
+  end: 1028317
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MATALPHA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454017.1
+  start: 789567
+  end: 796185
+  idiomorph: alpha
+  polished_genes: 1
+  genes_found:
+  - MTLalpha1
+  - PAP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454017.1
+  start: 971149
+  end: 971244
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454012.1
+  start: 27291
+  end: 27488
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MTLalpha1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454012.1
+  start: 324645
+  end: 344191
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454012.1
+  start: 472523
+  end: 483990
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MTLalpha1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454012.1
+  start: 472523
+  end: 483990
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MATALPHA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454012.1
+  start: 524736
+  end: 524948
+  idiomorph: MATa
+  polished_genes: 0
+  genes_found:
+  - MATA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454012.1
+  start: 524736
+  end: 524948
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATyl
+  contig: KV454012.1
+  start: 524736
+  end: 524948
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - mata1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat2
+  contig: KV454012.1
+  start: 602414
+  end: 608262
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454012.1
+  start: 602414
+  end: 608262
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MATALPHA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454012.1
+  start: 602414
+  end: 608262
+  idiomorph: MAT1-1
+  polished_genes: 0
+  genes_found:
+  - MAT1-1-4
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454012.1
+  start: 602414
+  end: 608262
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - PIK1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454012.1
+  start: 666874
+  end: 666999
+  idiomorph: MATa
+  polished_genes: 0
+  genes_found:
+  - MATA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454012.1
+  start: 1044757
+  end: 1050526
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454012.1
+  start: 1086975
+  end: 1099512
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454012.1
+  start: 1438729
+  end: 1438845
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MTLalpha1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454012.1
+  start: 1587973
+  end: 1588290
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454012.1
+  start: 1686907
+  end: 1696308
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MATALPHA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454012.1
+  start: 1813504
+  end: 1843051
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454012.1
+  start: 1813504
+  end: 1843051
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - mat1-Pi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat2
+  contig: KV454012.1
+  start: 1813504
+  end: 1843051
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - matPi
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454012.1
+  start: 1813504
+  end: 1843051
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MATA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454012.1
+  start: 1813504
+  end: 1843051
+  idiomorph: MAT1-1
+  polished_genes: 0
+  genes_found:
+  - MAT1-1-1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454012.1
+  start: 1813504
+  end: 1843051
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MTLalpha2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454012.1
+  start: 2015851
+  end: 2021549
+  idiomorph: MATalpha
+  polished_genes: 0
+  genes_found:
+  - MATALPHA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454013.1
+  start: 39375
+  end: 63235
+  idiomorph: MATalpha
+  polished_genes: 0
+  genes_found:
+  - MATALPHA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454013.1
+  start: 291174
+  end: 291329
+  idiomorph: P
+  polished_genes: 0
+  genes_found:
+  - mat1-Pc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454013.1
+  start: 442369
+  end: 470331
+  idiomorph: MATalpha
+  polished_genes: 0
+  genes_found:
+  - MATALPHA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454013.1
+  start: 537589
+  end: 537720
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: KV454013.1
+  start: 578780
+  end: 580606
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - MAT1-2-1
+  - APN2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454013.1
+  start: 606390
+  end: 606485
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MTLalpha1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454013.1
+  start: 675858
+  end: 675965
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MATALPHA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MATsc
+  contig: KV454013.1
+  start: 878903
+  end: 901828
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MATALPHA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:mat1
+  contig: KV454013.1
+  start: 964404
+  end: 964667
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - mat1-Mc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454013.1
+  start: 1180717
+  end: 1209395
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MTLalpha1
+  - PIK1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:PM
+  contig: KV454013.1
+  start: 1388470
+  end: 1396568
+  idiomorph: M
+  polished_genes: 0
+  genes_found:
+  - matMc
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MTL
+  contig: KV454013.1
+  start: 1636639
+  end: 1636794
+  idiomorph: A
+  polished_genes: 0
+  genes_found:
+  - MTLA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+assembly_gap_at_locus:
+- family: Ascomycota:MATtub
+  contig: KV454014.1
+  start: 241410
+  end: 241814
+  n_bases: 405
+  anchors:
+  - SLA2
+zygosity: null
+two_idiomorphs: []
+families_attempted:
+- Ascomycota:MAT
+- Ascomycota:PM
+- Ascomycota:mat1
+- Ascomycota:mat2
+- Ascomycota:mat3
+- Ascomycota:MATsc
+- Ascomycota:MATyl
+- Ascomycota:MTL
+- Ascomycota:MATtub
+detected:
+- family: Ascomycota:MATsc
+  contig: KV454014.1
+  start: 185089
+  end: 288393
+  confidence: medium
+  idiomorph: MATa
+  idiomorph_class: MAT1-2
+  idiomorph_candidates:
+  - idiomorph: MATa
+    score: 79.7
+  - idiomorph: MATalpha
+    score: 60.1
+  detection_pass: strict
+  locus_class: mat_locus
+  idiomorph_unmodelled: false
+  verification: null
+  merged_from: []
+  subloci: []
+  polished_genes: 4
+  distinct_intervals: 5
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: 19.6
+  idiomorph_classifier: null
+  idiomorph_resolutions:
+  - contig: KV454014.1
+    winner: MAT1-1-3
+    loser: MAT1-2-1
+    winner_identity: 30.0
+    loser_identity: 24.242
+    overlap_fraction: 0.9696969696969697
+    winner_coverage: 21.0
+    loser_coverage: 17.0
+    basis: first_pass_identity
+    winner_model_score: null
+    loser_model_score: null
+  - contig: KV454014.1
+    winner: MATA2
+    loser: MATALPHA2
+    winner_identity: 30.693
+    loser_identity: 27.451
+    overlap_fraction: 1.0
+    winner_coverage: 55.0
+    loser_coverage: 49.0
+    basis: first_pass_identity
+    winner_model_score: null
+    loser_model_score: null
+  ambiguous_with:
+  - Ascomycota:PM
+  - Ascomycota:mat1
+  - Ascomycota:MTL
+  - Ascomycota:MAT
+  - Ascomycota:mat2
+  - Ascomycota:MATyl
+  genes_found:
+  - MATALPHA1
+  - MATALPHA2
+  - MATA1
+  - MATA2
+  - sla2
+  genes_missing: []
+  genes_not_searchable:
+  - cha1
+  fragmented: false
+  reference_records:
+  - 28985_nrrl-y-1140_MATsc_MATa
+  - 4932_s288c_MATsc_HMRa
+  - 4956_da2_MATsc_MATalpha
+  segments:
+  - contig: KV454014.1
+    start: 185089
+    end: 288393
+    contig_edge_distance: 185088
+  gene_evidence:
+  - gene: MATALPHA1
+    role: core_MAT
+    contig: KV454014.1
+    start: 227925
+    end: 228107
+    strand: '-'
+    identity: 37.705
+    coverage: 30.0
+    reference_record: 4956_da2_MATsc_MATalpha
+    method: tblastn_genome
+    status: unpolished
+    alternate_model: null
+    exons: null
+    evalue: 1.4e-10
+    bitscore: 60.1
+  - gene: MATA2
+    role: core_MAT
+    contig: KV454014.1
+    start: 229114
+    end: 229455
+    strand: '-'
+    identity: 40.660000000000004
+    coverage: null
+    reference_record: 4932_s288c_MATsc_HMRa
+    method: miniprot_refine
+    status: polished_single
+    alternate_model: null
+    exons:
+    - start: 229114
+      end: 229210
+    - start: 229307
+      end: 229455
+    evalue: 4.47e-08
+    bitscore: 48.5
+  - gene: MATALPHA2
+    role: core_MAT
+    contig: KV454014.1
+    start: 229306
+    end: 229617
+    strand: '-'
+    identity: 26.92
+    coverage: null
+    reference_record: 4956_da2_MATsc_MATalpha
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: KV454014.1
+      start: 229114
+      end: 229593
+      strand: '-'
+      exons:
+      - start: 229114
+        end: 229210
+      - start: 229307
+        end: 229593
+      identity: 32.81
+      method: miniprot_refine
+    exons:
+    - start: 229306
+      end: 229617
+    evalue: 1.6
+    bitscore: 28.5
+  - gene: MATA1
+    role: core_MAT
+    contig: KV454014.1
+    start: 236074
+    end: 236358
+    strand: +
+    identity: 44.21
+    coverage: null
+    reference_record: 4932_s288c_MATsc_HMRa
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: KV454014.1
+      start: 236062
+      end: 236361
+      strand: +
+      exons:
+      - start: 236062
+        end: 236361
+      identity: 43.0
+      method: miniprot_refine
+    exons:
+    - start: 236074
+      end: 236358
+    evalue: 7.79e-19
+    bitscore: 79.7
+  - gene: sla2
+    role: flanking_conserved
+    contig: KV454014.1
+    start: 238254
+    end: 288393
+    strand: '-'
+    identity: 45.52
+    coverage: null
+    reference_record: 28985_nrrl-y-1140_MATsc_MATa
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: KV454014.1
+      start: 236553
+      end: 238667
+      strand: '-'
+      exons:
+      - start: 236553
+        end: 236599
+      - start: 237335
+        end: 237805
+      - start: 238154
+        end: 238667
+      identity: 29.509999999999998
+      method: miniprot_refine
+    exons:
+    - start: 238254
+      end: 238394
+    - start: 238461
+      end: 238667
+    - start: 288340
+      end: 288393
+    evalue: 8.86e-18
+    bitscore: 87.0
+- family: Ascomycota:MTL
+  contig: KV454014.1
+  start: 185089
+  end: 282802
+  confidence: medium
+  idiomorph: alpha
+  idiomorph_class: MAT1-1
+  idiomorph_candidates:
+  - idiomorph: alpha
+    score: 80.1
+  - idiomorph: A
+    score: 69.3
+  detection_pass: strict
+  locus_class: mat_locus
+  idiomorph_unmodelled: false
+  verification: null
+  merged_from: []
+  subloci: []
+  polished_genes: 2
+  distinct_intervals: 5
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: 10.8
+  idiomorph_classifier: null
+  idiomorph_resolutions:
+  - contig: KV454014.1
+    winner: MAT1-1-3
+    loser: MAT1-2-1
+    winner_identity: 30.0
+    loser_identity: 24.242
+    overlap_fraction: 0.9696969696969697
+    winner_coverage: 21.0
+    loser_coverage: 17.0
+    basis: first_pass_identity
+    winner_model_score: null
+    loser_model_score: null
+  - contig: KV454014.1
+    winner: MATA2
+    loser: MATALPHA2
+    winner_identity: 30.693
+    loser_identity: 27.451
+    overlap_fraction: 1.0
+    winner_coverage: 55.0
+    loser_coverage: 49.0
+    basis: first_pass_identity
+    winner_model_score: null
+    loser_model_score: null
+  ambiguous_with:
+  - Ascomycota:PM
+  - Ascomycota:mat1
+  - Ascomycota:MATsc
+  - Ascomycota:MAT
+  - Ascomycota:mat2
+  - Ascomycota:MATyl
+  genes_found:
+  - MTLA1
+  - MTLA2
+  - MTLalpha1
+  - MTLalpha2
+  - PIK1
+  genes_missing: []
+  genes_not_searchable: []
+  fragmented: false
+  reference_records:
+  - 4959_cbs767_MTL_A
+  - 5476_sc5314_MTL_A
+  - 5476_sc5314_MTL_alpha
+  segments:
+  - contig: KV454014.1
+    start: 185089
+    end: 282802
+    contig_edge_distance: 185088
+  gene_evidence:
+  - gene: PIK1
+    role: flanking_variable
+    contig: KV454014.1
+    start: 219632
+    end: 219763
+    strand: '-'
+    identity: 41.304
+    coverage: 5.0
+    reference_record: 5476_sc5314_MTL_A
+    method: tblastn_genome
+    status: unpolished
+    alternate_model: null
+    exons: null
+    evalue: 9.96e-11
+    bitscore: 64.7
+  - gene: MTLalpha1
+    role: core_MAT
+    contig: KV454014.1
+    start: 227907
+    end: 228158
+    strand: '-'
+    identity: 44.58
+    coverage: null
+    reference_record: 4959_cbs767_MTL_A
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: KV454014.1
+      start: 227907
+      end: 228392
+      strand: '-'
+      exons:
+      - start: 227907
+        end: 228392
+      identity: 29.24
+      method: miniprot_refine
+    exons:
+    - start: 227907
+      end: 228158
+    evalue: 8.63e-18
+    bitscore: 80.1
+  - gene: MTLalpha2
+    role: core_MAT
+    contig: KV454014.1
+    start: 229114
+    end: 229461
+    strand: '-'
+    identity: 27.119
+    coverage: 44.0
+    reference_record: 5476_sc5314_MTL_alpha
+    method: tblastn_genome
+    status: unpolished
+    alternate_model: null
+    exons: null
+    evalue: 0.14
+    bitscore: 31.2
+  - gene: MTLA2
+    role: core_MAT
+    contig: KV454014.1
+    start: 234541
+    end: 234768
+    strand: '-'
+    identity: 37.037
+    coverage: 31.0
+    reference_record: 4959_cbs767_MTL_A
+    method: tblastn_genome
+    status: unpolished
+    alternate_model: null
+    exons: null
+    evalue: 1.18e-07
+    bitscore: 40.4
+  - gene: MTLA1
+    role: core_MAT
+    contig: KV454014.1
+    start: 236185
+    end: 236358
+    strand: +
+    identity: 53.45
+    coverage: null
+    reference_record: 5476_sc5314_MTL_A
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: KV454014.1
+      start: 235825
+      end: 236358
+      strand: +
+      exons:
+      - start: 235825
+        end: 236358
+      identity: 30.0
+      method: miniprot_refine
+    exons:
+    - start: 236185
+      end: 236358
+    evalue: 4.0e-14
+    bitscore: 69.3
+- family: Ascomycota:MAT
+  contig: KV454014.1
+  start: 185089
+  end: 282802
+  confidence: high
+  idiomorph: MAT1-1
+  idiomorph_class: MAT1-1
+  idiomorph_candidates:
+  - idiomorph: MAT1-1
+    score: 35.0
+  - idiomorph: MAT1-2
+    score: 23.5
+  detection_pass: strict
+  locus_class: mat_locus
+  idiomorph_unmodelled: false
+  verification: null
+  merged_from: []
+  subloci: []
+  polished_genes: 2
+  distinct_intervals: 5
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: 11.5
+  idiomorph_classifier: null
+  idiomorph_resolutions:
+  - contig: KV454014.1
+    winner: MAT1-1-3
+    loser: MAT1-2-1
+    winner_identity: 30.0
+    loser_identity: 24.242
+    overlap_fraction: 0.9696969696969697
+    winner_coverage: 21.0
+    loser_coverage: 17.0
+    basis: first_pass_identity
+    winner_model_score: null
+    loser_model_score: null
+  - contig: KV454014.1
+    winner: MATA2
+    loser: MATALPHA2
+    winner_identity: 30.693
+    loser_identity: 27.451
+    overlap_fraction: 1.0
+    winner_coverage: 55.0
+    loser_coverage: 49.0
+    basis: first_pass_identity
+    winner_model_score: null
+    loser_model_score: null
+  ambiguous_with:
+  - Ascomycota:PM
+  - Ascomycota:mat1
+  - Ascomycota:MATsc
+  - Ascomycota:MTL
+  - Ascomycota:mat2
+  - Ascomycota:MATyl
+  genes_found:
+  - MAT1-1-1
+  - MAT1-2-1
+  - SLA2
+  - MAT1-1-3
+  - MAT1-1-4
+  genes_missing:
+  - APN2
+  - COX13
+  genes_not_searchable: []
+  fragmented: false
+  reference_records:
+  - 115814_voucher-101_MAT_MAT1-2
+  - 199306_rmscc1040_MAT_MAT1-1
+  - 5141_74-ors-a_MAT_MAT1-1
+  - 5518_3639_MAT_combined
+  - 746128_a1163_MAT_MAT1-1
+  segments:
+  - contig: KV454014.1
+    start: 185089
+    end: 282802
+    contig_edge_distance: 185088
+  gene_evidence:
+  - gene: MAT1-1-4
+    role: core_MAT
+    contig: KV454014.1
+    start: 185089
+    end: 185199
+    strand: +
+    identity: 35.135
+    coverage: 15.0
+    reference_record: 199306_rmscc1040_MAT_MAT1-1
+    method: tblastn_genome
+    status: unpolished
+    alternate_model: null
+    exons: null
+    evalue: 6.6
+    bitscore: 26.9
+  - gene: MAT1-1-1
+    role: core_MAT
+    contig: KV454014.1
+    start: 227961
+    end: 228128
+    strand: '-'
+    identity: 35.709999999999994
+    coverage: null
+    reference_record: 5518_3639_MAT_combined
+    method: miniprot_refine
+    status: polished_single
+    alternate_model: null
+    exons:
+    - start: 227961
+      end: 228128
+    evalue: 0.028
+    bitscore: 35.0
+  - gene: MAT1-2-1
+    role: core_MAT
+    contig: KV454014.1
+    start: 234336
+    end: 234443
+    strand: '-'
+    identity: 27.778
+    coverage: 10.0
+    reference_record: 115814_voucher-101_MAT_MAT1-2
+    method: tblastn_genome
+    status: unpolished
+    alternate_model: null
+    exons: null
+    evalue: 0.18
+    bitscore: 23.5
+  - gene: MAT1-1-3
+    role: core_MAT
+    contig: KV454014.1
+    start: 234553
+    end: 234750
+    strand: '-'
+    identity: 30.0
+    coverage: 21.0
+    reference_record: 5141_74-ors-a_MAT_MAT1-1
+    method: tblastn_genome
+    status: unpolished
+    alternate_model: null
+    exons: null
+    evalue: 0.089
+    bitscore: 31.6
+  - gene: SLA2
+    role: flanking_conserved
+    contig: KV454014.1
+    start: 236568
+    end: 238640
+    strand: '-'
+    identity: 57.68
+    coverage: null
+    reference_record: 746128_a1163_MAT_MAT1-1
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: KV454014.1
+      start: 236568
+      end: 279373
+      strand: '-'
+      exons:
+      - start: 236568
+        end: 238640
+      - start: 279061
+        end: 279373
+      identity: 52.370000000000005
+      method: miniprot_refine
+    exons:
+    - start: 236568
+      end: 238640
+    evalue: 0.0
+    bitscore: 727.0
+- family: Ascomycota:MATyl
+  contig: KV454014.1
+  start: 185089
+  end: 282802
+  confidence: medium
+  idiomorph: A
+  idiomorph_class: unassigned
+  idiomorph_candidates:
+  - idiomorph: A
+    score: 46.2
+  detection_pass: strict
+  locus_class: partial_locus
+  idiomorph_unmodelled: false
+  verification: null
+  merged_from: []
+  subloci: []
+  polished_genes: 2
+  distinct_intervals: 2
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: 3.242000000000001
+  idiomorph_classifier: null
+  idiomorph_resolutions:
+  - contig: KV454014.1
+    winner: MAT1-1-3
+    loser: MAT1-2-1
+    winner_identity: 30.0
+    loser_identity: 24.242
+    overlap_fraction: 0.9696969696969697
+    winner_coverage: 21.0
+    loser_coverage: 17.0
+    basis: first_pass_identity
+    winner_model_score: null
+    loser_model_score: null
+  - contig: KV454014.1
+    winner: MATA2
+    loser: MATALPHA2
+    winner_identity: 30.693
+    loser_identity: 27.451
+    overlap_fraction: 1.0
+    winner_coverage: 55.0
+    loser_coverage: 49.0
+    basis: first_pass_identity
+    winner_model_score: null
+    loser_model_score: null
+  ambiguous_with:
+  - Ascomycota:PM
+  - Ascomycota:mat1
+  - Ascomycota:MATsc
+  - Ascomycota:MTL
+  - Ascomycota:MAT
+  - Ascomycota:mat2
+  genes_found:
+  - mata1
+  - sla2
+  genes_missing:
+  - mata2
+  - apn2
+  genes_not_searchable: []
+  fragmented: false
+  reference_records:
+  - 4952_w29_MATyl_A
+  segments:
+  - contig: KV454014.1
+    start: 185089
+    end: 282802
+    contig_edge_distance: 185088
+  gene_evidence:
+  - gene: mata1
+    role: core_MAT
+    contig: KV454014.1
+    start: 236230
+    end: 236352
+    strand: +
+    identity: 46.34
+    coverage: null
+    reference_record: 4952_w29_MATyl_A
+    method: exonerate_refine
+    status: polished_single
+    alternate_model: null
+    exons:
+    - start: 236230
+      end: 236352
+    evalue: 1.3e-06
+    bitscore: 46.2
+  - gene: sla2
+    role: flanking_conserved
+    contig: KV454014.1
+    start: 236556
+    end: 237809
+    strand: '-'
+    identity: 60.19
+    coverage: null
+    reference_record: 4952_w29_MATyl_A
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: KV454014.1
+      start: 236556
+      end: 238646
+      strand: '-'
+      exons:
+      - start: 236556
+        end: 238646
+      identity: 56.220000000000006
+      method: miniprot_refine
+    exons:
+    - start: 236556
+      end: 237809
+    evalue: 0.0
+    bitscore: 694.0
+not_detected:
+- family: Ascomycota:PM
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+  best_fraction_found: 1.0
+  genes_found:
+  - matPi
+  genes_missing: []
+  genes_not_searchable: []
+- family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+  best_fraction_found: 1.0
+  genes_found:
+  - mat1-Mc
+  genes_missing: []
+  genes_not_searchable:
+  - mat1-Mi
+- family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+  best_fraction_found: 0.5
+  genes_found:
+  - matPi
+  genes_missing:
+  - matPc
+  genes_not_searchable: []
+- family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+  best_fraction_found: 0.0
+  genes_found: []
+  genes_missing:
+  - matMc
+  - matMi
+  genes_not_searchable: []
+- family: Ascomycota:MATtub
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+  best_fraction_found: 0.3333333333333333
+  genes_found:
+  - MAT1-2-1
+  - SLA2
+  genes_missing:
+  - Rsm22-like
+  - unnamed_flanking_ORF
+  genes_not_searchable: []

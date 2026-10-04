@@ -415,6 +415,14 @@ def _result_doc(r: DetectionResult) -> dict:
     }
 
 
+def _taxonomy_source() -> str:
+    from MATPredict.db.local_taxonomy import source_label
+    try:
+        return source_label()
+    except Exception as exc:  # an unreadable table must not lose the report
+        return f"error reading local taxonomy table: {type(exc).__name__}: {str(exc)[:120]}"
+
+
 def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
     # `routing_mode` is written next to `families_attempted` because the two
     # are only meaningful together: the list says WHICH families were searched,
@@ -434,6 +442,9 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
         "not_searched_reason": outcome.not_searched_reason,
         "genetic_code": outcome.genetic_code,
         "genetic_code_error": outcome.genetic_code_error,
+        # What answered taxonomy lookups: a local NCBI snapshot (with its date)
+        # or NCBI E-utilities. Routing and the genetic code depend on it.
+        "taxonomy_source": _taxonomy_source(),
         # Loci that were built and then withheld for carrying fewer than
         # `pipeline.MIN_POLISHED_GENES` polished gene models. Written
         # unconditionally, including as 0, so a genome that reports one locus

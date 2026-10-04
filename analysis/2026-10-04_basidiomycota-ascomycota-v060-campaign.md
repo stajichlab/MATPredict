@@ -75,6 +75,13 @@ inputs. `results/2026-10-03_regression_v060/diff/summary.md`.
   each, miniprot-only models. 4 called (P. tannophilus GCA_001661245.1: MATsc
   MATa, MTL alpha, MAT MAT1-1; 3 others one MATsc call each), 16 uncalled. All
   route `phylum_fallback`: no Alaninales record exists (reference gap).
+  Curator (2026-10-04): miniprot models genes less well than exonerate, so pass
+  exonerate the NCBI table as a 64-letter string (accepted by stock exonerate
+  2.4.0) instead of skipping it. Re-run on that code (`run-b04a77b`,
+  `results/2026-10-04_alaninales_v061_exostring/`): 20/20 reports, **15/20
+  called** (miniprot-only 4/20); median 457 s per genome (34 s). Regression vs
+  v0.6.0: 0 changed loci (`results/2026-10-04_regression_v061s/`). Family labels
+  under phylum fallback are not reliable (MATsc and MTL in one genome).
 - 17,314 of 19,380 genomes have >= 1 call (89.3%). 848 CPU-h; median 162 s per
   genome; maximum 3,095 s.
 

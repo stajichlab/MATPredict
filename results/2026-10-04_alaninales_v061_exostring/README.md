@@ -9,8 +9,8 @@ Same 20 genomes as ../2026-10-04_alaninales_v061 (miniprot-only, run-ff0e581). J
   a MATyl A partial_locus. 11 genomes gained a call (mostly one MATsc locus).
 - Cause: with exonerate, genes that miniprot left unmodelled now have a model
   (`polished_single`/`polished_disagree`), so the modelled-gene bar passes.
-- `polished_disagree` (exonerate and miniprot boundaries differ) is common: 15
-  genes across the 15 called genomes.
+- `polished_disagree` (exonerate and miniprot boundaries differ) is common: 21
+  genes in the 15 called genomes (7 in P. tannophilus).
 - Cost: median 457 s per genome (miniprot-only: 34 s).
 - Caveat: all route `phylum_fallback` (no Alaninales record). Family labels are
   not reliable there: GCA_003706035.2 and GCA_003706045.2 get MATsc MATalpha and

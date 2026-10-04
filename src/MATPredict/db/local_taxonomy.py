@@ -85,7 +85,15 @@ def _open_text(path: Path):
         from compression import zstd  # Python >= 3.14: streamed
         return zstd.open(path, "rt", encoding="utf-8")
     except ImportError:
-        return io.StringIO(_zstd_decompress(Path(path).read_bytes()).decode("utf-8"))
+        pass
+    try:
+        import zstandard  # Python < 3.14 (a dependency there): streamed
+        raw = open(path, "rb")
+        return io.TextIOWrapper(zstandard.ZstdDecompressor().stream_reader(raw, closefd=True),
+                                encoding="utf-8")
+    except ImportError:
+        pass
+    return io.StringIO(_zstd_decompress(Path(path).read_bytes()).decode("utf-8"))
 
 
 def _decode(name: str, data: bytes) -> str:

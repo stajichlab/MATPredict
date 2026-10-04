@@ -6,6 +6,9 @@ platforms = ["linux-64"]
 [dependencies]
 python = ">=3.11"
 zstd = "*"
+# Streamed reading of the offline taxonomy table on Python < 3.14 (3.14 has
+# compression.zstd); the lock pins 3.13.
+zstandard = "*"
 pip = "*"
 taxonkit = "*"
 # Search binaries `matpredict detect` shells out to (see detect/search.py):

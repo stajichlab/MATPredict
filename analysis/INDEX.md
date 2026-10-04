@@ -15,7 +15,7 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 09-29 | [Classifier builds: aligner, determinism, gate, P1](2026-09-29_classifier-builds.md) | decided; shipped 9c39e2c | no aligner more accurate; mafft --auto = L-INS-i; ClipKIT 16 wrong; builds byte-identical; P1 withholds 26, reveals 5 |
 | 09-29 | [sexM-like paralogs, strain labels, Absidia](2026-09-29_paralogs-and-strain-labels.md) | decided | labels 10/7/4 (n=21); P1 in both mating types; Absidia flanks off-scaffold |
 | 09-29 | [Two idiomorphs and homothallism](2026-09-29_two-idiomorphs-and-homothallism.md) | decided (report-only); causes open | 36 unlinked; literature signal 13/16 vs 5/9; Syzygites both idiomorphs |
-| 10-03 | [Mucoromycotina MAT campaign](2026-10-03_mucoromycotina-mat-campaign.md) | running (HMG tree) | 865/973 genomes, 911 loci; locus size 579 loci/23 genera; full-length tree sexP 0 sexM inside (UFBoot 40), sexM 0 sexP inside (UFBoot 93) |
+| 10-03 | [Mucoromycotina MAT campaign](2026-10-03_mucoromycotina-mat-campaign.md) | running (RAxML check) | 865/973 genomes, 911 loci; locus size 579 loci/23 genera; full length: sexP 0 sexM inside (UFBoot 40), sexM one clade (93); HMG box: sexP one clade (99), sexM split (69 sites) |
 
 ## Basidiomycota
 | Date | Report | Status | Key numbers |

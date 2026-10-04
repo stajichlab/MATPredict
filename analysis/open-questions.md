@@ -79,7 +79,7 @@ not match the genome's name:
 
 | Item | Next step | Where |
 |---|---|---|
-| R. toruloides HD: 2026-09-26 generic-HD locus (PR contig, ~200 kb from PR, with MIP1) vs v0.6.0 `redHD` locus (other contig, no MIP1); 26 genomes | curator ruling on which is the MAT-linked HD pair | `2026-10-04_basidiomycota-ascomycota-v060-campaign.md` |
+| R. toruloides HD: 2026-09-26 generic-HD locus vs v0.6.0 `redHD` locus | data in `2026-10-04_rtoruloides-hd-old-vs-redhd.md` (recommend redHD); curator ruling | `2026-10-04_rtoruloides-hd-old-vs-redhd.md` |
 | Basidiomycota PR calls: 1,360 unverified (strict-CAAX only); most phylum-fallback calls are PR only | keep the caveat in any summary; review with the receptor-loci study | same |
 | Mucoromycotina locus size: flank pair differs by lineage | compare within one pair, or plot all with the pair marked | `2026-10-03_mucoromycotina-mat-campaign.md` |
 | Held-out LCG/Jena genomes in publication figures | curator ruling | same |

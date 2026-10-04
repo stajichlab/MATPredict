@@ -24,10 +24,10 @@ def test_shipped_file_loads_the_ruled_strains():
                        "Syncephalastrum_racemosum_NRRL_1506", "Syncephalastrum_racemosum_NRRL_1623",
                        "Syncephalastrum_sp._NRRL_1485", "Rhizomucor_pusillus_NRRL_2543",
                        "Cunninghamella_japonica_NRRL_2464", "Circinella_tenella_NRRL_A-23557",
-                       "Circinella_muscae_NRRL_1360"}
+                       "Circinella_muscae_NRRL_1360", "Mucor_sp._NRRL_1454"}
     assert ov["Rhizopus_microsporus_NRRL_A-17693"].likely_identity == "Circinella minor"
     confirmed = {g for g, o in ov.items() if o.status == "confirmed"}
-    assert len(confirmed) == 12
+    assert len(confirmed) == 13
     assert ov["Circinella_muscae_NRRL_1360"].status == "unconfirmed"
 
 

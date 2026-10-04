@@ -1,0 +1,1096 @@
+IQ-TREE version 3.0.1 for Linux x86 64-bit built May 14 2025
+Developed by Bui Quang Minh, Thomas Wong, Nhan Ly-Trong, Huaiyan Ren
+Contributed by Lam-Tung Nguyen, Dominik Schrempf, Chris Bielow,
+Olga Chernomor, Michael Woodhams, Diep Thi Hoang, Heiko Schmidt
+
+Host:    r29 (AVX2, FMA3, 1007 GB RAM)
+Command: iqtree3 -s full.afa --prefix iq_full -T 16 -m MFP -mset LG,WAG,JTT,VT,Q.pfam -B 1000 -alrt 1000 -seed 20261003
+Seed:    20261003 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Sat Oct  3 16:05:55 2026
+Kernel:  AVX+FMA - 16 threads (16 CPU cores detected)
+
+Reading alignment file full.afa ... Fasta format detected
+Reading fasta file: done in 0.00591381 secs using 89.67% CPU
+Alignment most likely contains protein sequences
+Constructing alignment: done in 0.00525395 secs using 438.1% CPU
+Alignment has 526 sequences with 526 columns, 526 distinct patterns
+516 parsimony-informative, 1 singleton sites, 9 constant sites
+                                                             Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 0.0158594 secs using 1382% CPU
+   1  BFD_GCA_002105175.1_Absrep1_L0                                44.87%    passed     23.15%
+   2  BFD_GCA_026027325.1_ASM2602732v1_L0                           45.63%    passed     27.76%
+   3  BFD_GCA_014839865.1_ASM1483986v1_L0                           73.19%    passed     34.66%
+   4  BFD_GCA_016097715.1_ASM1609771v1_L0                           65.59%    passed     66.98%
+   5  BFD_GCA_000696975.1_ApoTraB9324-1.0_L0                        71.67%    passed     30.39%
+   6  BFD_GCA_025399235.1_Bacci1_L0                                 66.16%    passed     82.88%
+   7  BFD_GCA_024140265.1_ASM2414026v1_L0                           65.21%    passed     84.51%
+   8  BFD_GCA_024139275.1_ASM2413927v1_L0                           72.24%    passed     78.75%
+   9  BFD_GCA_024140155.1_ASM2414015v1_L0                           66.92%    passed     44.96%
+  10  BFD_GCA_024139485.1_ASM2413948v1_L0                           65.21%    passed     91.55%
+  11  BFD_GCA_024139415.1_ASM2413941v1_L0                           72.24%    passed     91.43%
+  12  BFD_GCA_024140375.1_ASM2414037v1_L0                           67.68%    passed     81.08%
+  13  BFD_GCA_025331445.1_Blatri1_L0                                53.80%    passed     14.97%
+  14  BFD_GCA_025330725.1_Chlpad1_L0                                43.54%    passed     55.98%
+  15  BFD_GCA_001683725.1_ASM168372v1_L0                            53.80%    passed     92.01%
+  16  BFD_GCA_025331435.1_Chocucu1_L0                               53.80%    passed     82.05%
+  17  BFD_GCA_016758965.1_ASM1675896v1_L0                           44.49%    passed     24.75%
+  18  BFD_GCA_025093555.1_Cirumb1_L0                                44.49%    passed     19.81%
+  19  BFD_GCF_025118155.1_Cokrec1_L0                                44.30%    passed     33.65%
+  20  BFD_GCA_000697215.1_CunBer175-1.0_L0                          63.50%    passed      7.64%
+  21  BFD_GCA_977110925.1_gzCunBlak1_L0                             57.98%    passed     22.68%
+  22  BFD_GCA_017871115.1_ASM1787111v1_L0                           57.22%    passed     42.68%
+  23  BFD_GCA_025201675.1_Cunech1_L0                                57.22%    passed     30.19%
+  24  BFD_GCA_024294565.1_ASM2429456v1_L0                           42.02%    passed     16.64%
+  25  BFD_GCA_040366295.1_Hpulcur_1.0_L0                            59.32%    passed     74.07%
+  26  BFD_GCA_000950595.1_ASM95059v1_L0                             38.40%    passed     93.86%
+  27  BFD_GCA_052058875.1_Matr_PS6_L0                               39.16%    passed     69.45%
+  28  BFD_GCA_052058895.1_MBAN_PS3_1.0_L0                           38.21%    passed     87.62%
+  29  BFD_GCA_973907015.1_gzMucCirc1_L0                             39.16%    passed     67.04%
+  30  BFD_GCA_054124215.1_ASM5412421v1_L0                           39.35%    passed     81.97%
+  31  BFD_GCA_040367835.1_Mfluvus_1.0_L0                            58.56%    passed     85.65%
+  32  BFD_GCA_060309305.1_CBS205.68v1_L0                            38.21%    passed     99.43%
+  33  BFD_GCA_054123175.1_ASM5412317v1_L0                           41.83%    failed      2.55%
+  34  BFD_GCF_025094135.1_Mucmuc1_L0                                42.21%    passed     46.98%
+  35  BFD_GCA_000697255.1_MucRacB9645-1.0_L1                        42.78%    passed      9.27%
+  36  BFD_GCF_025528875.1_Mycafr1_L0                                66.92%    passed     56.70%
+  37  BFD_GCA_000938895.1_PP.v1_L0                                  54.94%    passed     31.23%
+  38  BFD_GCA_025677815.1_Phaart1_L0                                86.88%    passed     80.50%
+  39  BFD_GCA_040209145.1_PhyblU21_2_L0                             43.73%    passed     92.50%
+  40  BFD_GCA_025531835.1_PnitS608_1_L0                             43.73%    passed     82.48%
+  41  BFD_GCA_025716855.1_Pilano1_L0                                42.02%    passed     42.71%
+  42  BFD_GCA_025528865.1_Pilumb1_L0                                67.49%    passed     88.64%
+  43  BFD_GCF_025331425.1_Radspe1_L0                                65.21%    passed     86.07%
+  44  BFD_GCA_023512895.1_ASM2351289v1_L0                           67.49%    passed     63.72%
+  45  BFD_GCA_000697195.1_MucRam97-1192-1.0_L0                      40.68%    passed     41.95%
+  46  BFD_GCA_011950985.2_ASM1195098v2_L0                           41.44%    passed     42.61%
+  47  BFD_GCA_003325435.1_Razy_CA_L1                                42.78%    failed      2.52%
+  48  BFD_GCA_011763715.1_ASM1176371v1_L0                           40.68%    passed     24.71%
+  49  BFD_GCA_011763605.1_ASM1176360v1_L0                           42.59%    passed     76.64%
+  50  BFD_GCF_002708625.1_Rhimi1_1_L0                               42.78%    failed      0.48%
+  51  BFD_GCA_057662165.1_ASM5766216v1_L0                           41.25%    passed     22.11%
+  52  BFD_GCA_977110985.1_gzRhiStol1_L0                             42.59%    passed     63.17%
+  53  BFD_GCA_059714295.1_ASM5971429v1_L0                           43.54%    failed      0.48%
+  54  BFD_GCA_023630305.1_ASM2363030v1_L0                           44.11%    failed      3.17%
+  55  BFD_GCA_000696955.1_SynRacB6101-1.0_L0                        43.35%    failed      0.97%
+  56  BFD_GCA_023630325.1_ASM2363032v1_L0                           43.16%    failed      1.54%
+  57  BFD_GCA_056882155.1_ASM5688215v1_L0                           47.15%    passed     20.89%
+  58  BFD_GCA_000697415.1_UmbIsaB7317-1.0_L0                        73.57%    passed     44.77%
+  59  BFD_GCA_000534915.1_ASM53491v1_L0                             52.28%    passed      7.43%
+  60  BFD_GCA_016758905.1_ASM1675890v1_L0                           71.29%    passed     15.67%
+  61  BFD_GCA_977110945.1_gzUmbRama1_L0                             43.35%    passed     21.44%
+  62  BFD_GCF_025399195.1_Umbra1_L0                                 43.73%    passed     23.81%
+  63  BFD_GCA_037039815.1_ASM3703981v1_L0                           52.66%    failed      0.09%
+  64  BFD_GCA_021235465.1_Umbelo1_L0                                45.63%    passed      8.51%
+  65  LCG_Absidia_caerulea_RSA_138_Plus_L0                          43.73%    passed     92.68%
+  66  LCG_Absidia_coerulea_NRRL_1314_L0                             43.73%    passed     95.71%
+  67  LCG_Absidia_cuneospora_RSA_623_Plus_L0                        56.08%    passed     64.45%
+  68  LCG_Absidia_cylindrospora_NRRL_1341_L0                        44.87%    passed     12.82%
+  69  LCG_Absidia_cylindrospora_NRRL_1343_L0                        44.87%    passed      8.32%
+  70  LCG_Absidia_cylindrospora_var._nigra_NRRL_3032_L0             43.92%    failed      2.08%
+  71  LCG_Absidia_spinosa_NRRL_A-13651_L0                           44.49%    passed     17.27%
+  72  LCG_Absidia_spinosa_var._azygospora_NRRL_2841_L0              44.49%    passed     16.51%
+  73  LCG_Absidia_spinosa_var._biappendiculata_NRRL_3033_L0         44.49%    passed     15.25%
+  74  LCG_Absidia_sp._NRRL_3163_L0                                  82.32%    passed     31.59%
+  75  LCG_Absidia_zychae_NRRL_A-23515_L0                            64.83%    passed     59.57%
+  76  LCG_Actinomucor_elegans_NRRL_3104_L0                          63.88%    passed     55.81%
+  77  LCG_Backusella_ctenidia_NRRL_6239_L0                          57.60%    passed     85.94%
+  78  LCG_Backusella_lamprospora_NRRL_3618_L0                       65.21%    passed     72.51%
+  79  LCG_Chaetocladium_brefeldii_NRRL_1350_L0                      41.44%    passed      7.32%
+  80  LCG_Choanephora_circinans_NRRL_2546_L0                        57.41%    passed     96.89%
+  81  LCG_Circinella_angarensis_NRRL_2410_L0                        44.49%    passed     11.17%
+  82  LCG_Circinella_minor_NRRL_1365_L0                             44.49%    passed     20.79%
+  83  LCG_Circinella_muscae_NRRL_1355_L0                            44.49%    passed      5.09%
+  84  LCG_Circinella_muscae_NRRL_1355_L1                            45.06%    passed      6.10%
+  85  LCG_Circinella_rigida_NRRL_2341_L0                            46.39%    passed     39.06%
+  86  LCG_Circinella_simplex_van_Tieghem_NRRL_2407_L0               40.49%    passed     39.63%
+  87  LCG_Cunninghamella_bertholletiae_NRRL_1378_L0                 63.50%    passed     13.11%
+  88  LCG_Ellisomyces_anomalus_NRRL_2465_Plus-T_L0                  38.21%    passed     68.40%
+  89  LCG_Gilbertella_persicaria_var._indica_CBS_442.64-_L0         42.78%    passed     44.57%
+  90  LCG_Gongronella_butleri_NRRL_1340_L0                          71.29%    passed     10.15%
+  91  LCG_Gongronella_butleri_NRRL_2422_L0                          69.20%    passed     29.56%
+  92  LCG_Gongronella_butleri_NRRL_A-23795_L0                       71.29%    passed      5.61%
+  93  LCG_Mucor_aligarensis_NRRL_3099_L0                            41.25%    passed     43.52%
+  94  LCG_Mucor_circinelloides_f._griseocyanus_NRRL_3621_L0         38.40%    passed     92.77%
+  95  LCG_Mucor_circinelloides_f._lusitanicus_NRRL_1442_L0          38.21%    passed     90.79%
+  96  LCG_Mucor_dispersus_NRRL_6045_L0                              65.21%    passed     82.29%
+  97  LCG_Mucor_dispersus_NRRL_6046_L0                              65.21%    passed     91.11%
+  98  LCG_Mucor_fragilis_NRRL_A-16026_L0                            38.78%    passed     68.13%
+  99  LCG_Mucor_genevensis_NRRL_1410_L0                             43.73%    passed     25.89%
+ 100  LCG_Mucor_genevensis_NRRL_1411_L0                             43.16%    passed     29.14%
+ 101  LCG_Mucor_genevensis_NRRL_3101_L1                             43.16%    passed     35.80%
+ 102  LCG_Mucor_heterosporus_NRRL_3154_L0                           42.59%    passed     33.89%
+ 103  LCG_Mucor_hiemalis_f._corticola_NRRL_3617_L0                  45.63%    passed     19.69%
+ 104  LCG_Mucor_hiemalis_f._hiemalis_NRRL_1743_L0                   42.78%    passed     53.88%
+ 105  LCG_Mucor_hiemalis_f._luteus_NRRL_3633_L0                     64.83%    passed     66.12%
+ 106  LCG_Mucor_hiemalis_f._silvaticus_NRRL_3643_L0                 44.68%    passed     14.23%
+ 107  LCG_Mucor_hiemalis_NRRL_2349_L0                               42.59%    failed      2.11%
+ 108  LCG_Mucor_hiemalis_NRRL_2462_L0                               42.59%    failed      2.60%
+ 109  LCG_Mucor_indicus_NRRL_13471_L0                               43.73%    passed     69.96%
+ 110  LCG_Mucor_intermedius_NRRL_6588T_L0                           66.16%    passed     54.18%
+ 111  LCG_Mucor_lamprosporus_NRRL_6040_L0                           66.92%    passed     60.14%
+ 112  LCG_Mucor_maequisporus_var._kaki_NRRL_3295_L0                 57.41%    passed     87.69%
+ 113  LCG_Mucor_mousanensis_NRRL_3105_L0                            39.16%    failed      2.38%
+ 114  LCG_Mucor_odoratus_NRRL_3064_L0                               59.13%    passed     11.82%
+ 115  LCG_Mucor_petrinsularis_var._echinosporus_NRRL_3141_L0        41.83%    passed     15.28%
+ 116  LCG_Mucor_philippovi_NRRL_3036_L1                             43.16%    passed     34.48%
+ 117  LCG_Mucor_pusillus_NRRL_5895_L0                               39.73%    passed     41.22%
+ 118  LCG_Mucor_pusillus_NRRL_A-13674_L0                            68.06%    passed     67.37%
+ 119  LCG_Mucor_racemosus_Fresenius_NRRL_1608_L0                    39.73%    passed     38.43%
+ 120  LCG_Mucor_racemosus_Fresenius_NRRL_A-19185_L0                 39.73%    passed     26.89%
+ 121  LCG_Mucor_recurvus_NRRL_2358_L0                               72.24%    passed     93.46%
+ 122  LCG_Mucor_saturninus_NRRL_2631_L0                             41.83%    passed     62.57%
+ 123  LCG_Mucor_sp._NRRL_2728_L0                                    43.35%    passed     37.66%
+ 124  LCG_Mucor_sp._NRRL_A-25546_L0                                 41.44%    passed     54.67%
+ 125  LCG_Mucor_subtilissimus_NRRL_6226_L0                          60.27%    passed     43.33%
+ 126  LCG_Mucor_zychae_var._zychae_NRRL_3243_L0                     57.79%    passed     45.70%
+ 127  LCG_Parasitella_parasitica_Bainier_Sydow_NRRL_1461_L0         54.94%    passed     21.02%
+ 128  LCG_Phycomyces_nitens_NRRL_2444_L0                            43.73%    passed     57.46%
+ 129  LCG_Pilaira_caucasica_CBS_523.68_L0                           42.02%    passed     30.37%
+ 130  LCG_Pirella_circinans_NRRL_2627_L0                            40.68%    passed     50.52%
+ 131  LCG_Rhizopus_arrhizus_IMI53173_L0                             40.68%    passed     27.71%
+ 132  LCG_Rhizopus_arrhizus_NRRL_A-11376_L0                         42.59%    passed     26.38%
+ 133  LCG_Rhizopus_chinensis_NRRL_2906_L0                           59.51%    passed      7.78%
+ 134  LCG_Rhizopus_circinans_NRRL_1475_L0                           42.78%    passed     90.69%
+ 135  LCG_Rhizopus_pseudochinensis_NRRL_2344_L0                     42.78%    failed      0.31%
+ 136  LCG_Rhizopus_stolonifer_NRRL_66460_L0                         42.59%    passed     86.51%
+ 137  LCG_Syzygites_megalocarpus_SC16_L0                            46.20%    passed     56.09%
+ 138  LCG_Thamnostylum_lucknowense_RSA_1093-_L0                     70.34%    passed     83.62%
+ 139  LCG_Zygorhynchus_exponens_NRRL_1492_L0                        41.83%    passed     36.29%
+ 140  LCG_Zygorhynchus_exponens_var._smithii_NRRL_2572T_L0          41.83%    passed     20.18%
+ 141  LCG_Zygorhynchus_sp._NRRL_3102_L0                             42.21%    passed     25.04%
+ 142  JENA_CBS110662_L0                                             42.59%    passed     21.93%
+ 143  JENA_CBS122_23_L0                                             42.21%    passed     59.93%
+ 144  JENA_CBS125018_L0                                             42.40%    passed     82.81%
+ 145  JENA_CBS169_57_L0                                             55.51%    passed     25.00%
+ 146  JENA_CBS204_28_L0                                             44.49%    passed     69.33%
+ 147  JENA_CBS236_35_L0                                             38.21%    passed     89.88%
+ 148  JENA_CBS251_35_L0                                             56.46%    passed     89.49%
+ 149  JENA_CBS251_53_L0                                             43.16%    passed     71.97%
+ 150  JENA_CBS334_71_L0                                             41.83%    passed      7.05%
+ 151  JENA_CBS336_39_L0                                             42.59%    passed     76.32%
+ 152  JENA_CBS385_95_L0                                             42.78%    passed      9.10%
+ 153  JENA_CBS427_87_L0                                             41.63%    passed     52.61%
+ 154  JENA_CBS541_78_L0                                             38.40%    passed     81.30%
+ 155  JENA_CBS576_66_L0                                             40.87%    passed     61.05%
+ 156  JENA_CBS695_68_L0                                             40.68%    passed     18.96%
+ 157  JENA_CBS763_74_L0                                             57.79%    passed     49.19%
+ 158  JENA_CBS816_70_L0                                             57.60%    passed     66.90%
+ 159  JENA_EMLQT1_L0                                                41.83%    passed     72.72%
+ 160  JENA_NRZ2022_0058_L0                                          38.21%    passed     92.88%
+ 161  JENA_URM7218_L0                                               67.68%    passed     51.73%
+ 162  REC_3108396_ai-2023a_MAT_Plus                                 42.59%    passed     38.25%
+ 163  REC_3231046_uomd23-19_MAT_Plus                                42.59%    passed     57.54%
+ 164  BFD_GCA_977092135.1_gzAbsCyli1_L0                             66.35%    passed     58.75%
+ 165  BFD_GCA_900079185.1_AG_v1_L0                                  56.84%    passed      5.95%
+ 166  BFD_GCA_019677225.1_ASM1967722v1_L0                           65.78%    passed     37.23%
+ 167  BFD_GCA_050656845.1_ASM5065684v1_L0                           65.21%    passed     84.47%
+ 168  BFD_GCA_000696995.1_ApoEleB7760-1.0_L0                        84.22%    passed     17.19%
+ 169  BFD_GCA_024140275.1_ASM2414027v1_L0                           84.22%    passed     42.75%
+ 170  BFD_GCA_024140195.1_ASM2414019v1_L0                           73.95%    passed     94.11%
+ 171  BFD_GCA_024139405.1_ASM2413940v1_L0                           82.51%    passed     62.28%
+ 172  BFD_GCA_024139395.1_ASM2413939v1_L0                           84.22%    passed     41.52%
+ 173  BFD_GCA_025766325.1_Benpoi1_L0                                65.78%    passed      6.94%
+ 174  BFD_GCA_000697235.1_CokRecB5483-1.0_L0                        66.92%    passed     15.79%
+ 175  BFD_GCA_044232465.1_ASM4423246v1_L0                           80.99%    failed      1.17%
+ 176  BFD_GCA_977110915.1_gzCunEchi1_L0                             84.79%    failed      4.10%
+ 177  BFD_GCA_000697015.1_CunEleB9769-1.0_L0                        69.96%    passed     50.29%
+ 178  BFD_GCA_025266875.1_Fenlin1_L0                                64.83%    passed     35.70%
+ 179  BFD_GCF_025201335.1_Gilper1_L0                                61.98%    passed     20.41%
+ 180  BFD_GCA_025201375.1_Gonbut1_L0                                70.34%    passed     42.77%
+ 181  BFD_GCA_001650995.1_ASM165099v1_L0                            70.15%    passed     34.44%
+ 182  BFD_GCF_025201355.1_Halrad1_L0                                70.91%    passed     95.90%
+ 183  BFD_GCA_002104935.1_Hesve2_L0                                 72.05%    passed     63.21%
+ 184  BFD_GCA_060309335.1_CBS210.80v1_L0                            66.92%    passed     35.27%
+ 185  BFD_GCA_051295215.1_Mcir_PS15m_1.0_L0                         52.47%    passed     58.48%
+ 186  BFD_GCA_001599575.1_JCM_22480_assembly_v001_L0                52.47%    passed     40.19%
+ 187  BFD_GCA_977110935.1_gzMucFrag1_L0                             52.47%    passed     22.56%
+ 188  BFD_GCA_060309175.1_CBS116.08v1_L0                            80.23%    passed     22.28%
+ 189  BFD_GCA_000697295.1_MucIndB7402-1.0_L0                        65.59%    passed     75.40%
+ 190  BFD_GCA_000587855.1_B50_L0                                    72.62%    passed     79.89%
+ 191  BFD_GCA_040256725.1_ASM4025672v1_L0                           55.70%    passed     52.14%
+ 192  BFD_GCA_010203745.1_Muccir1_3_L0                              53.42%    passed     35.47%
+ 193  BFD_GCA_943193625.1_gzMucPiri1.1_L0                           59.51%    passed     39.98%
+ 194  BFD_GCA_016758945.1_ASM1675894v1_L0                           84.41%    passed     40.89%
+ 195  BFD_GCA_027405735.1_ASM2740573v1_L0                           85.74%    passed     38.88%
+ 196  BFD_GCA_037040325.1_ASM3704032v1_L0                           52.47%    passed      6.51%
+ 197  BFD_GCA_000696895.1_MucVelB5328-1.0_L0                        52.47%    passed     56.90%
+ 198  BFD_GCA_025201805.1_Parpar1_L0                                73.38%    passed     27.92%
+ 199  BFD_GCA_040209185.1_Phybl_L51_1_L0                            60.27%    passed     34.83%
+ 200  BFD_GCA_022702545.1_SJTU-YXQ_L0                               60.27%    passed     81.45%
+ 201  BFD_GCA_000697725.1_RhiOry99-892-1.0_L0                       64.45%    passed     47.59%
+ 202  BFD_GCA_000696915.1_RhiOryB7407-1.0_L0                        64.64%    passed     84.02%
+ 203  BFD_GCA_058380175.1_DTU-UU_Rory127_1.0_L0                     64.45%    passed     74.59%
+ 204  BFD_GCA_058380225.1_DTU-UU_Rory329_1.0_L0                     64.45%    passed     74.99%
+ 205  BFD_GCA_019828915.1_ASM1982891v1_L0                           64.64%    passed     85.14%
+ 206  BFD_GCA_003325435.1_Razy_CA_L0                                65.02%    passed     84.08%
+ 207  BFD_GCA_000738585.1_RhiDel21477-1.0_L0                        64.83%    passed     67.63%
+ 208  BFD_GCA_000825725.1_Rmicro_CBS_344.29_Allpaths-LG_L1          64.83%    passed     71.40%
+ 209  BFD_GCA_051997045.1_ASM5199704v1_L0                           65.02%    passed     73.26%
+ 210  BFD_GCA_002083745.1_Rhimi_ATCC52814_1_L0                      64.83%    passed     84.23%
+ 211  BFD_GCA_051997195.1_ASM5199719v1_L0                           64.83%    passed     79.57%
+ 212  BFD_GCA_051997145.1_ASM5199714v1_L0                           64.83%    passed     73.76%
+ 213  BFD_GCA_059058645.1_ASM5905864v1_L0                           64.64%    passed     23.53%
+ 214  BFD_GCA_000697495.1_SakOblB3353-1.0_L0                        76.05%    passed     78.66%
+ 215  BFD_GCA_000697055.1_SakVasB4078-1.0_L0                        82.70%    passed     11.73%
+ 216  BFD_GCA_013461545.1_ASM1346154v1_L0                           84.60%    passed     71.16%
+ 217  BFD_GCA_000697355.1_SynMonB8922-1.0_L0                        84.60%    passed     69.01%
+ 218  BFD_GCA_054906655.1_Umbelopsis_nana_v._1.0_L0                 77.76%    passed     57.19%
+ 219  BFD_GCA_964291815.1_UMBE_WA70503_L0                           88.21%    passed     91.11%
+ 220  BFD_GCA_977110975.1_gzUmbVina2_L0                             76.62%    passed     79.81%
+ 221  BFD_GCA_016758895.1_ASM1675889v1_L0                           72.43%    passed      6.92%
+ 222  BFD_GCF_025766255.1_Zycmex1_L0                                64.07%    passed     93.87%
+ 223  LCG_Absidia_caerulea_RSA_138-_L0                              64.83%    passed     29.32%
+ 224  LCG_Absidia_californica_NRRL_2709_L0                          63.50%    passed     30.49%
+ 225  LCG_Absidia_cuneospora_NRRL_2655_L0                           72.81%    passed     26.16%
+ 226  LCG_Absidia_cylindrospora_NRRL_1342_L0                        65.40%    passed     77.68%
+ 227  LCG_Absidia_cylindrospora_NRRL_3069_L0                        65.40%    passed     55.27%
+ 228  LCG_Absidia_cylindrospora_var._cylindrospora_NRRL_2796_L0     65.40%    passed     13.34%
+ 229  LCG_Absidia_cylindrospora_var._nigra_NRRL_3031_L0             65.40%    passed     18.05%
+ 230  LCG_Absidia_dubia_NRRL_1322_L0                                60.84%    passed     16.47%
+ 231  LCG_Absidia_glauca_NRRL_1324_L0                               56.84%    passed     33.97%
+ 232  LCG_Absidia_inflata_NRRL_6591_L0                              63.12%    failed      3.90%
+ 233  LCG_Absidia_macrospora_NRRL_5839_L0                           65.59%    passed     10.19%
+ 234  LCG_Absidia_pseudocylindrospora_NRRL_2984_L0                  65.78%    passed     23.66%
+ 235  LCG_Absidia_repens_NRRL_1337_L0                               80.23%    passed     26.95%
+ 236  LCG_Actinomucor_elegans_NRRL_1403_L0                          66.35%    passed     97.14%
+ 237  LCG_Backusella_circina_NRRL_3293_L0                           84.22%    passed     69.01%
+ 238  LCG_Backusella_circina_NRRL_6007_L0                           81.75%    passed     63.62%
+ 239  LCG_Backusella_lamprospora_NRRL_1401_L0                       84.22%    passed     67.30%
+ 240  LCG_Backusella_lamprospora_NRRL_3103_L0                       84.22%    passed     45.43%
+ 241  LCG_Backusella_lamprospora_NRRL_6044_Plus_L0                  79.28%    passed     70.60%
+ 242  LCG_Chaetocladium_brefeldii_RSA_1136-_L0                      82.89%    failed      4.69%
+ 243  LCG_Chaetocladium_brefeldii_Tieghem_Le_Monnier_NRRL_2509_L0   63.69%    passed     73.38%
+ 244  LCG_Circinella_angarensis_NRRL_2628_L0                        64.83%    passed     92.62%
+ 245  LCG_Circinella_chinensis_CBS_150.53_L0                        64.26%    passed     22.62%
+ 246  LCG_Circinella_chinensis_NRRL_2415_L0                         65.02%    passed     73.72%
+ 247  LCG_Circinella_minor_CBS_143.56_L1                            64.83%    passed     94.69%
+ 248  LCG_Circinella_naumovii_NRRL_5846_L0                          52.47%    failed      4.96%
+ 249  LCG_Circinella_simplex_CBS_142.35_L0                          80.23%    passed     91.87%
+ 250  LCG_Circinella_umbellata_NRRL_1366_L0                         64.83%    passed     75.41%
+ 251  LCG_Cunninghamella_bertholletiae_NRRL_1376_L0                 79.09%    failed      0.66%
+ 252  LCG_Cunninghamella_echinulata_NRRL_1385_L0                    82.89%    failed      3.63%
+ 253  LCG_Cunninghamella_elegans_NRRL_1390_L0                       82.51%    passed     22.50%
+ 254  LCG_Fennellomyces_heterothallicus_RSA_2348_L0                 64.83%    passed     86.55%
+ 255  LCG_Fennellomyces_linderi_NRRL_2342_L0                        64.83%    passed     47.43%
+ 256  LCG_Fennellomyces_mexicanus_sp._nov._RSA_1418-_L0             64.64%    passed     90.29%
+ 257  LCG_Gilbertella_persicaria_Eddy_Hesseltine_NRRL_A-13613_L0    61.79%    passed     14.45%
+ 258  LCG_Helicostylum_lucknowense_NRRL_2892_L0                     65.02%    passed     95.69%
+ 259  LCG_Helicostylum_pulchrum_RSA_2065_L0                         58.75%    passed     19.05%
+ 260  LCG_Mucor_circinelloides_f._janssenii_NRRL_2404_L0            52.47%    passed     44.81%
+ 261  LCG_Mucor_circinelloides_f._janssenii_NRRL_553_L0             52.47%    passed     77.76%
+ 262  LCG_Mucor_circinelloides_var._griseocyanus_NRRL_1418_L0       52.47%    passed     80.07%
+ 263  LCG_Mucor_ctenidius_NRRL_2929T_L0                             51.90%    passed     83.78%
+ 264  LCG_Mucor_foenicola_NRRL_A-10991_L1                           71.48%    passed     20.49%
+ 265  LCG_Mucor_globosus_Fischer_NRRL_1759_L0                       85.74%    passed     38.95%
+ 266  LCG_Mucor_griseo-ochraceus_var._minuta_NRRL_3246_L0           74.90%    passed     14.94%
+ 267  LCG_Mucor_hiemalis_f._hiemalis_NRRL_3624_L0                   82.89%    passed     58.04%
+ 268  LCG_Mucor_hiemalis_NRRL_1419_L0                               52.47%    passed     71.48%
+ 269  LCG_Mucor_hiemalis_NRRL_2461_L0                               80.42%    passed     44.67%
+ 270  LCG_Mucor_inaequisporus_NRRL_3626_L0                          83.46%    passed     46.98%
+ 271  LCG_Mucor_indicus_NRRL_13133_L0                               65.78%    passed     62.18%
+ 272  LCG_Mucor_lamprosporus_NRRL_6037_L0                           76.81%    passed     92.35%
+ 273  LCG_Mucor_luteus_NRRL_2847_L0                                 72.81%    passed     39.73%
+ 274  LCG_Mucor_luteus_NRRL_2865_L0                                 83.46%    passed     17.06%
+ 275  LCG_Mucor_luteus_var._indica_NRRL_3245_L0                     80.23%    passed     38.53%
+ 276  LCG_Mucor_mephitis_NRRL_2596_L0                               59.70%    passed     40.16%
+ 277  LCG_Mucor_mucedo_Linnaeus_Fresenius_NRRL_A-13277_L0           59.51%    passed     42.18%
+ 278  LCG_Mucor_nidicola_NRRL_54520_L0                              83.27%    passed     54.26%
+ 279  LCG_Mucor_oblongisporus_var._macrosporus_NRRL_1574_L0         76.81%    passed     81.71%
+ 280  LCG_Mucor_plasmaticus_NRRL_2708_L0                            59.89%    passed     64.87%
+ 281  LCG_Mucor_racemosus_Fresenius_NRRL_1622_L0                    81.56%    passed     64.25%
+ 282  LCG_Mucor_ramannianus_NRRL_A-21216_L0                         77.76%    passed     63.47%
+ 283  LCG_Mucor_ramosissimus_NRRL_3042_L0                           53.42%    passed     64.48%
+ 284  LCG_Mucor_recurvus_var._indicus_NRRL_3247_L0                  79.28%    passed     41.98%
+ 285  LCG_Mucor_sp._NRRL_1454_L0                                    72.62%    passed      7.36%
+ 286  LCG_Mucor_sp._NRRL_1533_L0                                    80.23%    passed     73.29%
+ 287  LCG_Mucor_sp._NRRL_1644_L0                                    62.55%    passed     65.25%
+ 288  LCG_Mycotypha_microspora_Fenner_NRRL_A-11005_L0               84.22%    passed     39.07%
+ 289  LCG_Parasitella_simplex_NRRL_1460_L0                          62.55%    passed     54.49%
+ 290  LCG_Pilaira_anomala_RSA_1998-_L0                              73.76%    passed     83.36%
+ 291  LCG_Pilaira_caucasica_Milko_NRRL_6282_L0                      60.27%    passed     56.90%
+ 292  LCG_Pirella_circinans_NRRL_2698_L0                            59.51%    passed     50.72%
+ 293  LCG_Pirella_circinans_var._volvogradensis_RSA_2566_L0         59.51%    passed     28.90%
+ 294  LCG_Pirella_naumovii_IMI_133977_L0                            59.51%    passed     34.18%
+ 295  LCG_Pirella_reniformis_NRRL_5259_L0                           59.70%    passed     19.18%
+ 296  LCG_Rhizopus_americanus_NRRL_66675_L0                         64.45%    passed     51.44%
+ 297  LCG_Rhizopus_artocarpi_NRRL_1799_L0                           64.26%    passed     37.06%
+ 298  LCG_Rhizopus_circinans_NRRL_2913_L0                           66.73%    passed     90.47%
+ 299  LCG_Rhizopus_sp._NRRL_2934_L0                                 64.83%    passed     63.41%
+ 300  LCG_Syncephalastrum_racemosum_NRRL_2495_L0                    84.22%    passed     60.68%
+ 301  LCG_Syncephalastrum_verruculosum_RSA_2127_L0                  84.60%    passed     60.71%
+ 302  LCG_Syzygites_sp._MES_3091_L1                                 64.64%    passed     62.24%
+ 303  LCG_Thamnidium_elegans_NRRL_2468_L0                           59.51%    passed     33.01%
+ 304  LCG_Thamnostylum_nigricans_RSA_1406_L0                        65.40%    passed     53.17%
+ 305  LCG_Thamnostylum_piriforme_NRRL_A-21589_L0                    64.64%    passed     97.07%
+ 306  LCG_Thamnostylum_piriforme_RSA_251_L0                         64.64%    passed     93.74%
+ 307  LCG_Umbelopsis_ovata_NRRL_13127T_L0                           87.83%    passed     96.90%
+ 308  LCG_Zygorhynchus_exponens_NRRL_1492_L1                        77.76%    passed     41.71%
+ 309  LCG_Zygorhynchus_heterogamus_Vuillemin_NRRL_1489_L0           68.63%    passed     22.42%
+ 310  LCG_Zygorhynchus_macrocarpus_NRRL_2663_L0                     76.81%    passed     55.78%
+ 311  JENA_CBS117697_L0                                             63.88%    passed     48.83%
+ 312  JENA_CBS129_41_L0                                             85.74%    passed     32.01%
+ 313  JENA_CBS156_58_L0                                             60.65%    passed     50.56%
+ 314  JENA_CBS174_27_L0                                             86.31%    passed     43.16%
+ 315  JENA_CBS195_77_L0                                             65.59%    passed     37.11%
+ 316  JENA_CBS210_71_L0                                             60.46%    passed     64.09%
+ 317  JENA_CBS221_71_L0                                             83.08%    passed     71.47%
+ 318  JENA_CBS223_63_L0                                             78.90%    passed     51.51%
+ 319  JENA_CBS230_35_L0                                             59.51%    passed     51.69%
+ 320  JENA_CBS329_73_L0                                             70.15%    passed     46.43%
+ 321  JENA_CBS336_62_L0                                             66.35%    passed     93.04%
+ 322  JENA_CBS336_62_L1                                             65.59%    passed     83.21%
+ 323  JENA_CBS388_35_L0                                             84.41%    passed     56.63%
+ 324  JENA_CBS421_70_L0                                             70.91%    passed      6.49%
+ 325  JENA_CBS526_68_L0                                             52.47%    passed     83.55%
+ 326  JENA_CBS540_78_L0                                             52.47%    passed     24.46%
+ 327  JENA_CBS566_91_L0                                             80.04%    passed     45.60%
+ 328  JENA_CBS568_70_L0                                             64.83%    passed     23.20%
+ 329  JENA_CBS569_70_L0                                             65.97%    passed     12.02%
+ 330  JENA_CBS608_78_L0                                             69.20%    passed     24.17%
+ 331  JENA_CBS635_65_L0                                             52.47%    passed      5.95%
+ 332  JENA_CBS735_70_L0                                             65.40%    passed     27.19%
+ 333  JENA_OTU100_L0                                                83.08%    passed     97.39%
+ 334  REC_29922_cbs109-16_MAT_Minus                                 59.51%    passed     58.92%
+ 335  REC_3231046_uomau377_MAT_Minus                                56.84%    passed     45.47%
+ 336  REC_4850_vkm-f-921_MAT_Minus                                  60.65%    passed     76.49%
+ 337  OUT_GCA_000697295.1_MucIndB7402-1.0_h2_t0                     83.27%    passed     12.43%
+ 338  OUT_GCA_000697295.1_MucIndB7402-1.0_h3_t0                     85.17%    passed     40.18%
+ 339  OUT_GCA_000697295.1_MucIndB7402-1.0_h9_t0                     83.27%    failed      0.69%
+ 340  OUT_GCA_000697495.1_SakOblB3353-1.0_h2_t0                     83.46%    passed     34.14%
+ 341  OUT_GCA_000697495.1_SakOblB3353-1.0_h3_t0                     88.40%    passed     72.80%
+ 342  OUT_GCA_000697495.1_SakOblB3353-1.0_h4_t0                     69.20%    passed     76.76%
+ 343  OUT_GCA_000787465.1_ASM78746v1_h2_t0                          73.38%    passed     34.09%
+ 344  OUT_GCA_000938895.1_PP.v1_h12_t0                              81.37%    passed     95.82%
+ 345  OUT_GCA_000938895.1_PP.v1_h5_t1                               78.52%    passed     60.04%
+ 346  OUT_GCA_000938895.1_PP.v1_h6_t1                               86.88%    passed     39.77%
+ 347  OUT_GCA_001650995.1_ASM165099v1_h1_t0                         80.61%    passed     38.28%
+ 348  OUT_GCA_001650995.1_ASM165099v1_h3_t1                         86.50%    passed      6.19%
+ 349  OUT_GCA_001650995.1_ASM165099v1_h4_t0                         85.36%    passed      5.56%
+ 350  OUT_GCA_001661515.1_ASM166151v1_h1_t0                         83.84%    passed     77.41%
+ 351  OUT_GCA_001661515.1_ASM166151v1_h2_t0                         83.84%    passed     29.38%
+ 352  OUT_GCA_001661515.1_ASM166151v1_h5_t0                         87.07%    passed     14.87%
+ 353  OUT_GCA_002104935.1_Hesve2_h2_t0                              84.79%    passed     11.75%
+ 354  OUT_GCA_002104935.1_Hesve2_h4_t0                              75.48%    passed     44.82%
+ 355  OUT_GCA_002104935.1_Hesve2_h7_t0                              86.31%    passed     15.86%
+ 356  OUT_GCA_002105135.1_Synrac1_h1_t1                             75.10%    failed      3.12%
+ 357  OUT_GCA_002105135.1_Synrac1_h6_t0                             78.33%    passed     47.28%
+ 358  OUT_GCA_002261195.1_ASM226119v1_h2_t0                         80.61%    failed      0.17%
+ 359  OUT_GCA_002261195.1_ASM226119v1_h3_t0                         78.52%    passed     10.01%
+ 360  OUT_GCA_002261195.1_ASM226119v1_h4_t0                         84.41%    passed      8.84%
+ 361  OUT_GCA_002749535.1_ASM274953v1_h2_t1                         79.66%    passed     60.08%
+ 362  OUT_GCA_002749535.1_ASM274953v1_h7_t0                         79.66%    passed     76.40%
+ 363  OUT_GCA_002749535.1_ASM274953v1_h8_t0                         84.79%    passed     17.39%
+ 364  OUT_GCA_003086725.1_ASM308672v1_h1_t1                         78.14%    failed      0.83%
+ 365  OUT_GCA_003086725.1_ASM308672v1_h2_t0                         79.09%    passed     13.71%
+ 366  OUT_GCA_003086725.1_ASM308672v1_h3_t0                         78.90%    passed     83.03%
+ 367  OUT_GCA_003990765.1_Jimfl_AD_1_h2_t0                          83.27%    passed     16.62%
+ 368  OUT_GCA_003990785.1_Endsp1_h1_m0                              80.99%    passed      5.23%
+ 369  OUT_GCA_003990785.1_Endsp1_h2_t0                              59.13%    passed      6.25%
+ 370  OUT_GCA_003990785.1_Endsp1_h3_t0                              83.08%    failed      1.54%
+ 371  OUT_GCA_011634665.1_ASM1163466v1_h1_t0                        85.93%    passed      7.67%
+ 372  OUT_GCA_011634665.1_ASM1163466v1_h3_t0                        81.75%    passed     39.24%
+ 373  OUT_GCA_011764225.1_ASM1176422v1_h1_t0                        80.42%    passed     53.27%
+ 374  OUT_GCA_011764225.1_ASM1176422v1_h2_t0                        78.33%    passed     31.21%
+ 375  OUT_GCA_011764225.1_ASM1176422v1_h7_t0                        84.22%    failed      4.73%
+ 376  OUT_GCA_015499975.1_UCR_DornN22417_1.0_h2_t0                  86.50%    passed     21.05%
+ 377  OUT_GCA_015499975.1_UCR_DornN22417_1.0_h3_t0                  83.65%    passed     13.90%
+ 378  OUT_GCA_015499975.1_UCR_DornN22417_1.0_h4_t0                  83.84%    passed     61.66%
+ 379  OUT_GCA_015502565.1_UCR_MambBC1291_h1_m0                      85.55%    failed      3.66%
+ 380  OUT_GCA_015502565.1_UCR_MambBC1291_h2_t0                      71.29%    passed     14.54%
+ 381  OUT_GCA_015502565.1_UCR_MambBC1291_h4_t0                      81.56%    passed     33.10%
+ 382  OUT_GCA_015529795.1_UCR_MspNRRL3175_1.0_h1_t0                 80.80%    passed     33.48%
+ 383  OUT_GCA_015529795.1_UCR_MspNRRL3175_1.0_h2_t0                 85.93%    passed     68.29%
+ 384  OUT_GCA_015529795.1_UCR_MspNRRL3175_1.0_h3_t0                 83.27%    passed      6.32%
+ 385  OUT_GCA_015680635.1_UCR_MselenKOD1015_1.0_h1_t0               77.57%    passed      6.27%
+ 386  OUT_GCA_015680635.1_UCR_MselenKOD1015_1.0_h2_t0               81.94%    passed     34.15%
+ 387  OUT_GCA_015680635.1_UCR_MselenKOD1015_1.0_h4_t0               80.04%    passed     14.47%
+ 388  OUT_GCA_015849295.1_UCR_MrenMES-2147_1.0_h1_t0                81.75%    passed     83.01%
+ 389  OUT_GCA_015849295.1_UCR_MrenMES-2147_1.0_h3_t0                87.64%    passed     76.21%
+ 390  OUT_GCA_015849295.1_UCR_MrenMES-2147_1.0_h6_t0                90.49%    passed     17.44%
+ 391  OUT_GCA_015852425.1_UCR_Mcyst1230_1.0_h2_t0                   86.50%    failed      3.39%
+ 392  OUT_GCA_015852425.1_UCR_Mcyst1230_1.0_h3_t0                   84.98%    passed     24.50%
+ 393  OUT_GCA_015852425.1_UCR_Mcyst1230_1.0_h5_t0                   86.31%    passed     73.92%
+ 394  OUT_GCA_016758965.1_ASM1675896v1_h1_t0                        82.51%    passed     69.12%
+ 395  OUT_GCA_016758965.1_ASM1675896v1_h4_t0                        76.81%    passed     97.18%
+ 396  OUT_GCA_016758965.1_ASM1675896v1_h6_t0                        61.03%    passed     50.08%
+ 397  OUT_GCA_020891255.1_Epvsp_1.0_h1_t0                           85.74%    failed      0.13%
+ 398  OUT_GCA_020891255.1_Epvsp_1.0_h3_t0                           79.85%    passed     15.01%
+ 399  OUT_GCA_020891255.1_Epvsp_1.0_h6_t0                           84.98%    passed     17.41%
+ 400  OUT_GCA_022702545.1_SJTU-YXQ_h4_t0                            89.92%    passed      5.12%
+ 401  OUT_GCA_022702545.1_SJTU-YXQ_h5_t1                            79.85%    failed      0.07%
+ 402  OUT_GCA_022702545.1_SJTU-YXQ_h9_t0                            87.26%    passed     98.42%
+ 403  OUT_GCA_024139275.1_ASM2413927v1_h3_t0                        81.75%    passed     37.14%
+ 404  OUT_GCA_024139275.1_ASM2413927v1_h5_t0                        86.50%    passed     23.01%
+ 405  OUT_GCA_024139275.1_ASM2413927v1_h9_t0                        90.87%    passed     69.43%
+ 406  OUT_GCA_025094145.1_Spifus1_h1_t0                             88.02%    passed     57.03%
+ 407  OUT_GCA_025094145.1_Spifus1_h2_t0                             88.40%    passed     25.98%
+ 408  OUT_GCA_025094145.1_Spifus1_h7_t1                             84.60%    passed     62.13%
+ 409  OUT_GCA_025201845.1_Marpt1_h6_t0                              82.89%    passed     48.23%
+ 410  OUT_GCA_025201845.1_Marpt1_h7_t0                              83.27%    passed     61.30%
+ 411  OUT_GCA_025201845.1_Marpt1_h8_t0                              88.40%    passed     58.84%
+ 412  OUT_GCA_025201865.1_Rambr1_h1_t0                              85.17%    passed     14.20%
+ 413  OUT_GCA_025201865.1_Rambr1_h2_t0                              88.97%    passed     45.90%
+ 414  OUT_GCA_025201865.1_Rambr1_h3_t0                              84.79%    passed     47.97%
+ 415  OUT_GCA_025266875.1_Fenlin1_h2_t0                             83.84%    passed     35.50%
+ 416  OUT_GCA_025266875.1_Fenlin1_h6_t0                             83.84%    passed     99.85%
+ 417  OUT_GCA_025330725.1_Chlpad1_h1_t0                             75.48%    passed     75.00%
+ 418  OUT_GCA_025330725.1_Chlpad1_h3_t0                             81.18%    passed      9.37%
+ 419  OUT_GCA_025330725.1_Chlpad1_h6_t0                             87.45%    passed     40.27%
+ 420  OUT_GCA_025331445.1_Blatri1_h1_t0                             80.42%    passed     51.15%
+ 421  OUT_GCA_025331445.1_Blatri1_h2_t0                             73.38%    passed     93.17%
+ 422  OUT_GCA_025331445.1_Blatri1_h4_t0                             83.84%    passed     71.55%
+ 423  OUT_GCA_025528865.1_Pilumb1_h2_t1                             77.95%    passed     87.15%
+ 424  OUT_GCA_025528865.1_Pilumb1_h3_t0                             84.98%    passed     38.87%
+ 425  OUT_GCA_025528865.1_Pilumb1_h5_t0                             80.99%    passed     16.82%
+ 426  OUT_GCA_025603085.1_LANL_1351_123_1.0_h1_t0                   69.77%    failed      0.01%
+ 427  OUT_GCA_025603085.1_LANL_1351_123_1.0_h3_t0                   76.24%    failed      0.08%
+ 428  OUT_GCA_025603085.1_LANL_1351_123_1.0_h4_t0                   79.09%    passed     10.52%
+ 429  OUT_GCA_025677815.1_Phaart1_h1_t0                             77.57%    passed     64.24%
+ 430  OUT_GCA_025677815.1_Phaart1_h2_m0                             85.17%    passed     48.50%
+ 431  OUT_GCA_025677815.1_Phaart1_h4_t0                             76.43%    passed     68.25%
+ 432  OUT_GCA_025677825.1_Helpul1_h1_t0                             81.18%    passed     38.81%
+ 433  OUT_GCA_025677825.1_Helpul1_h2_t0                             82.13%    passed     39.27%
+ 434  OUT_GCA_025677825.1_Helpul1_h9_t0                             83.46%    passed     76.41%
+ 435  OUT_GCA_025677835.1_Spoumb1_h1_t0                             73.76%    passed     11.85%
+ 436  OUT_GCA_025677835.1_Spoumb1_h2_t0                             74.14%    failed      2.22%
+ 437  OUT_GCA_025677835.1_Spoumb1_h9_t0                             83.46%    passed     87.51%
+ 438  OUT_GCA_025716815.1_Dicele1_h1_t1                             79.28%    failed      3.10%
+ 439  OUT_GCA_025716815.1_Dicele1_h5_t1                             66.35%    passed     49.85%
+ 440  OUT_GCA_025716815.1_Dicele1_h9_t1                             87.26%    passed     97.37%
+ 441  OUT_GCA_025716855.1_Pilano1_h1_t1                             78.71%    failed      1.42%
+ 442  OUT_GCA_025716855.1_Pilano1_h2_t0                             77.95%    passed      6.14%
+ 443  OUT_GCA_025716855.1_Pilano1_h3_t0                             76.24%    failed      3.40%
+ 444  OUT_GCA_025766325.1_Benpoi1_h2_t0                             84.60%    failed      1.09%
+ 445  OUT_GCA_025766325.1_Benpoi1_h8_t0                             91.25%    passed     57.24%
+ 446  OUT_GCA_026027325.1_ASM2602732v1_h2_m0                        85.93%    passed     35.18%
+ 447  OUT_GCA_026027325.1_ASM2602732v1_h6_t0                        72.24%    passed     67.31%
+ 448  OUT_GCA_026027325.1_ASM2602732v1_h8_t0                        85.17%    passed     88.32%
+ 449  OUT_GCA_027478255.1_UCR_DsimpRSA1455_1.1_h1_t0                85.36%    passed      5.51%
+ 450  OUT_GCA_027478255.1_UCR_DsimpRSA1455_1.1_h4_t0                84.98%    passed     86.95%
+ 451  OUT_GCA_027478255.1_UCR_DsimpRSA1455_1.1_h5_t0                81.94%    failed      4.32%
+ 452  OUT_GCA_027478575.1_UCR_SaspiralisRSA2271_1.0_h1_t0           80.99%    passed     25.77%
+ 453  OUT_GCA_027478575.1_UCR_SaspiralisRSA2271_1.0_h2_m0           77.57%    failed      1.22%
+ 454  OUT_GCA_027478575.1_UCR_SaspiralisRSA2271_1.0_h9_t0           78.90%    passed     41.08%
+ 455  OUT_GCA_027575665.1_UCR_KalabBenny63K_1.0_h1_t0               83.27%    passed     83.60%
+ 456  OUT_GCA_027575665.1_UCR_KalabBenny63K_1.0_h6_t0               83.46%    passed     13.89%
+ 457  OUT_GCA_027575765.1_UCR_TipaRSA861_1.0_h1_t1                  85.36%    passed     19.22%
+ 458  OUT_GCA_027575765.1_UCR_TipaRSA861_1.0_h2_t1                  83.84%    passed     87.94%
+ 459  OUT_GCA_027575765.1_UCR_TipaRSA861_1.0_h3_m0                  67.30%    failed      0.00%
+ 460  OUT_GCA_027575805.1_UCR_MyscNBRC100468_1.0_h3_t0              85.36%    passed     85.27%
+ 461  OUT_GCA_027575805.1_UCR_MyscNBRC100468_1.0_h4_t0              88.78%    passed     66.28%
+ 462  OUT_GCA_027575805.1_UCR_MyscNBRC100468_1.0_h7_t1              89.16%    passed     35.10%
+ 463  OUT_GCA_027575855.1_UCR_LimaNRRL5244_1.0_h1_t0                80.23%    failed      0.32%
+ 464  OUT_GCA_027575855.1_UCR_LimaNRRL5244_1.0_h3_t0                79.09%    passed     19.13%
+ 465  OUT_GCA_027575855.1_UCR_LimaNRRL5244_1.0_h5_t0                90.87%    passed     65.37%
+ 466  OUT_GCA_027576915.1_UCR_DiacNRRL2925_1.0_h3_t0                84.79%    passed     64.49%
+ 467  OUT_GCA_027576915.1_UCR_DiacNRRL2925_1.0_h4_t0                84.98%    passed     48.49%
+ 468  OUT_GCA_027576915.1_UCR_DiacNRRL2925_1.0_h8_t0                88.59%    passed     41.63%
+ 469  OUT_GCA_027576935.1_UCR_DiveRSA567_1.0_h1_t0                  77.95%    passed     48.20%
+ 470  OUT_GCA_027576935.1_UCR_DiveRSA567_1.0_h2_t0                  85.74%    passed      9.10%
+ 471  OUT_GCA_027576935.1_UCR_DiveRSA567_1.0_h3_t0                  84.41%    passed     84.59%
+ 472  OUT_GCA_027579785.1_UCR_CoacCBS516.66_1.0_h5_t0               82.89%    passed     79.47%
+ 473  OUT_GCA_027579785.1_UCR_CoacCBS516.66_1.0_h6_t0               85.93%    passed     69.15%
+ 474  OUT_GCA_027579785.1_UCR_CoacCBS516.66_1.0_h8_t0               85.55%    passed     14.69%
+ 475  OUT_GCA_033807495.1_MorAD185_1_1_h1_t0                        83.84%    failed      4.41%
+ 476  OUT_GCA_033807495.1_MorAD185_1_1_h2_t0                        74.33%    passed     37.16%
+ 477  OUT_GCA_033807495.1_MorAD185_1_1_h3_t0                        85.17%    failed      3.21%
+ 478  OUT_GCA_037041495.1_ASM3704149v1_h3_t0                        80.04%    passed      9.58%
+ 479  OUT_GCA_037041495.1_ASM3704149v1_h5_t0                        85.74%    passed     70.71%
+ 480  OUT_GCA_045269135.1_ASM4526913v1_h1_t0                        78.71%    passed     38.02%
+ 481  OUT_GCA_045269135.1_ASM4526913v1_h2_t1                        82.51%    passed      8.12%
+ 482  OUT_GCA_045269135.1_ASM4526913v1_h7_t0                        88.78%    passed     59.35%
+ 483  OUT_GCA_049334105.2_ASM4933410v2_h1_t0                        79.28%    passed     76.47%
+ 484  OUT_GCA_049334105.2_ASM4933410v2_h2_t0                        80.99%    passed     69.38%
+ 485  OUT_GCA_049334105.2_ASM4933410v2_h4_t0                        80.42%    passed     42.41%
+ 486  OUT_GCA_050656845.1_ASM5065684v1_h2_t1                        75.10%    passed     40.45%
+ 487  OUT_GCA_050656845.1_ASM5065684v1_h3_t0                        79.85%    passed     21.61%
+ 488  OUT_GCA_050656845.1_ASM5065684v1_h4_t0                        83.84%    passed     48.34%
+ 489  OUT_GCA_052426225.1_ASM5242622v1_h1_t0                        85.36%    passed     25.29%
+ 490  OUT_GCA_052426225.1_ASM5242622v1_h3_t0                        80.80%    passed     10.73%
+ 491  OUT_GCA_052426225.1_ASM5242622v1_h4_t1                        88.02%    passed     41.99%
+ 492  OUT_GCA_054601915.1_FAM010_1.0_h2_t1                          80.04%    passed     62.59%
+ 493  OUT_GCA_054601915.1_FAM010_1.0_h3_t0                          77.57%    passed     69.84%
+ 494  OUT_GCA_054601915.1_FAM010_1.0_h9_t0                          88.59%    passed     71.48%
+ 495  OUT_GCA_056882155.1_ASM5688215v1_h1_t0                        77.95%    passed     27.81%
+ 496  OUT_GCA_056882155.1_ASM5688215v1_h7_t0                        77.95%    passed     66.77%
+ 497  OUT_GCA_056882155.1_ASM5688215v1_h9_t0                        78.33%    passed     18.63%
+ 498  OUT_GCA_977013585.1_ggMorFluv1.1_h1_t0                        74.14%    failed      1.24%
+ 499  OUT_GCA_977013585.1_ggMorFluv1.1_h2_t0                        82.32%    passed      6.73%
+ 500  OUT_GCA_977013585.1_ggMorFluv1.1_h5_t0                        85.93%    passed     78.90%
+ 501  OUT_GCA_977110925.1_gzCunBlak1_h1_t0                          83.08%    passed     21.29%
+ 502  OUT_GCA_977110925.1_gzCunBlak1_h2_t0                          81.37%    passed     85.58%
+ 503  OUT_GCA_977110925.1_gzCunBlak1_h4_t0                          87.83%    passed     68.02%
+ 504  OUT_GCA_977110945.1_gzUmbRama1_h10_t0                         86.12%    passed     63.26%
+ 505  OUT_GCA_977110945.1_gzUmbRama1_h1_t1                          84.41%    passed     33.39%
+ 506  OUT_GCA_977110945.1_gzUmbRama1_h5_t0                          84.79%    passed     55.68%
+ 507  OUT_GCA_982397305.1_T17-F_h4_t0                               81.56%    passed     17.24%
+ 508  OUT_GCA_982397305.1_T17-F_h8_t0                               83.84%    passed     76.63%
+ 509  OUT_GCF_002105155.1_Lobtra1_h1_t1                             84.03%    passed      8.95%
+ 510  OUT_GCF_002105155.1_Lobtra1_h2_t0                             77.00%    failed      1.43%
+ 511  OUT_GCF_002105155.1_Lobtra1_h4_t1                             85.36%    passed     84.50%
+ 512  OUT_GCF_025024155.1_Mormul1_h1_t0                             84.98%    failed      0.19%
+ 513  OUT_GCF_025024155.1_Mormul1_h2_t0                             85.36%    passed     36.83%
+ 514  OUT_GCF_025024155.1_Mormul1_h4_t0                             86.88%    failed      3.46%
+ 515  OUT_GCF_025118155.1_Cokrec1_h2_t0                             74.71%    failed      3.16%
+ 516  OUT_GCF_025118155.1_Cokrec1_h3_t0                             83.46%    passed     14.62%
+ 517  OUT_GCF_025118155.1_Cokrec1_h9_t1                             88.59%    passed     64.61%
+ 518  OUT_GCF_025201355.1_Halrad1_h4_t0                             83.84%    passed     65.11%
+ 519  OUT_GCF_025201355.1_Halrad1_h5_t0                             89.35%    passed     60.54%
+ 520  OUT_GCF_025201355.1_Halrad1_h9_t0                             86.88%    passed     95.11%
+ 521  OUT_GCF_025331425.1_Radspe1_h4_t0                             73.19%    passed     42.50%
+ 522  OUT_GCF_025331425.1_Radspe1_h6_t1                             86.50%    passed     16.57%
+ 523  OUT_GCF_025528875.1_Mycafr1_h1_t0                             63.69%    passed     71.03%
+ 524  OUT_GCF_025528875.1_Mycafr1_h3_t0                             83.27%    passed     47.65%
+ 525  OUT_GCF_025528875.1_Mycafr1_h9_t0                             87.26%    passed     62.06%
+ 526  OUT_P1_GCA_000697295.1_MucIndB7402-1.0                        86.31%    passed      9.15%
+WARNING: 422 sequences contain more than 50% gaps/ambiguity
+****  TOTAL                                                         67.88%  48 sequences failed composition chi2 test (p-value<5%; df=19)
+Checking for duplicate sequences: done in 0.0124064 secs using 1473% CPU
+
+
+Create initial parsimony tree by phylogenetic likelihood library (PLL)... 0.470 seconds
+Perform fast likelihood tree search using LG+I+G model...
+Estimate model parameters (epsilon = 5.000)
+Perform nearest neighbor interchange...
+Optimizing NNI: done in 7.64532 secs using 1581% CPU
+Estimate model parameters (epsilon = 1.000)
+1. Initial log-likelihood: -102248.942
+Optimal log-likelihood: -102248.788
+Proportion of invariable sites: 0.000
+Gamma shape alpha: 1.405
+Parameters optimization took 1 rounds (7.116 sec)
+Time for fast ML tree search: 26.715 seconds
+
+NOTE: ModelFinder requires 447 MB RAM!
+ModelFinder will test up to 220 protein models (sample size: 526 epsilon: 0.100) ...
+ No. Model         -LnL         df  AIC          AICc         BIC
+  1  LG            105838.734   1049 213775.468   2416675.468  218249.769
+  2  LG+I          105838.718   1050 213777.435   2420877.435  218256.001
+  3  LG+G4         102248.775   1050 206597.551   2413697.551  211076.117
+  4  LG+I+G4       102248.762   1051 206599.524   2417903.524  211082.356
+  5  LG+R2         103217.720   1051 208537.440   2419841.440  213020.272
+  6  LG+R3         102424.394   1053 206954.789   2426678.789  211446.151
+  7  LG+R4         102199.283   1055 206508.565   2434668.565  211008.458
+  8  LG+R5         102065.852   1057 206245.704   2442857.704  210754.128
+  9  LG+R6         102003.084   1059 206124.168   2451204.168  210641.122
+ 10  LG+R7         101993.443   1061 206108.887   2459672.887  210634.371
+ 11  LG+R8         101958.713   1063 206043.427   2468107.427  210577.442
+ 12  LG+R9         101956.326   1065 206042.651   2476622.651  210585.197
+ 14  LG+I+R2       103217.735   1052 208539.471   2424051.471  213026.568
+ 15  LG+I+R3       102412.880   1054 206933.761   2430873.761  211429.388
+ 16  LG+I+R4       102199.274   1056 206510.547   2438894.547  211014.705
+ 17  LG+I+R5       102065.843   1058 206247.686   2447091.686  210760.375
+ 18  LG+I+R6       102003.079   1060 206126.158   2455446.158  210647.377
+ 19  LG+I+R7       101993.352   1062 206110.704   2463922.704  210640.454
+ 20  LG+I+R8       101958.650   1064 206045.300   2472365.300  210583.581
+ 21  LG+I+R9       101956.276   1066 206044.553   2480888.553  210591.364
+ 33  LG+F+R8       101990.532   1082 206145.064   2549757.064  210760.120
+ 34  LG+F+R9       101986.440   1084 206140.879   2558420.879  210764.466
+ 42  LG+F+I+R8     101990.536   1083 206147.071   2554091.071  210766.393
+ 55  WAG+R8        101954.216   1063 206034.432   2468098.432  210568.447
+ 56  WAG+R9        101948.380   1065 206026.761   2476606.761  210569.307
+ 64  WAG+I+R8      101953.365   1064 206034.729   2472354.729  210573.010
+ 77  WAG+F+R8      102046.977   1082 206257.954   2549869.954  210873.010
+ 78  WAG+F+R9      102038.069   1084 206244.137   2558524.137  210867.724
+ 86  WAG+F+I+R8    102046.411   1083 206258.821   2554202.821  210878.142
+ 99  JTT+R8        100802.761   1063 203731.522   2465795.522  208265.537
+100  JTT+R9        100794.253   1065 203718.507   2474298.507  208261.052
+108  JTT+I+R8      100802.237   1064 203732.473   2470052.473  208270.754
+121  JTT+F+R8      100689.325   1082 203542.650   2547154.650  208157.706
+122  JTT+F+R9      100683.154   1084 203534.309   2555814.309  208157.895
+130  JTT+F+I+R8    100688.107   1083 203542.214   2551486.214  208161.535
+143  VT+R8         101704.803   1063 205535.606   2467599.606  210069.621
+144  VT+R9         101700.554   1065 205531.107   2476111.107  210073.653
+152  VT+I+R8       101704.865   1064 205537.731   2471857.731  210076.011
+165  VT+F+R8       101830.396   1082 205824.793   2549436.793  210439.849
+166  VT+F+R9       101827.106   1084 205822.212   2558102.212  210445.799
+174  VT+F+I+R8     101830.195   1083 205826.390   2553770.390  210445.711
+187  Q.PFAM+R8     101888.086   1063 205902.172   2467966.172  210436.187
+188  Q.PFAM+R9     101878.853   1065 205887.707   2476467.707  210430.252
+196  Q.PFAM+I+R8   101888.092   1064 205904.185   2472224.185  210442.465
+209  Q.PFAM+F+R8   101765.963   1082 205695.925   2549307.925  210310.981
+210  Q.PFAM+F+R9   101761.770   1084 205691.539   2557971.539  210315.126
+218  Q.PFAM+F+I+R8 101765.866   1083 205697.732   2553641.732  210317.053
+Akaike Information Criterion:           JTT+F+R9
+Corrected Akaike Information Criterion: LG+G4
+Bayesian Information Criterion:         JTT+F+R8
+Best-fit model: JTT+F+R8 chosen according to BIC
+
+All model information printed to iq_full.model.gz
+CPU time for ModelFinder: 45434.253 seconds (12h:37m:14s)
+Wall-clock time for ModelFinder: 3032.000 seconds (0h:50m:31s)
+Generating 1000 samples for ultrafast bootstrap (seed: 20261003)...
+
+NOTE: 358 MB RAM (0 GB) is required!
+Estimate model parameters (epsilon = 0.100)
+1. Initial log-likelihood: -100721.267
+2. Current log-likelihood: -100693.003
+3. Current log-likelihood: -100690.827
+4. Current log-likelihood: -100690.289
+5. Current log-likelihood: -100689.895
+6. Current log-likelihood: -100689.619
+7. Current log-likelihood: -100689.463
+8. Current log-likelihood: -100689.236
+9. Current log-likelihood: -100689.114
+10. Current log-likelihood: -100688.996
+11. Current log-likelihood: -100688.886
+12. Current log-likelihood: -100688.784
+Optimal log-likelihood: -100688.647
+Site proportion and rates:  (0.018,0.041) (0.037,0.143) (0.092,0.274) (0.126,0.453) (0.199,0.675) (0.192,1.019) (0.277,1.576) (0.059,2.438)
+Parameters optimization took 12 rounds (76.244 sec)
+Wrote distance file to... 
+Computing ML distances based on estimated model parameters...
+Calculating distance matrix: done in 8.39543 secs using 1588% CPU
+Computing ML distances took 8.397697 sec (of wall-clock time) 133.307751 sec (of CPU time)
+WARNING: Some pairwise ML distances are too long (saturated)
+Setting up auxiliary I and S matrices: done in 0.00845578 secs using 238.3% CPU
+Constructing RapidNJ tree: done in 4.78557 secs using 46.91% CPU
+Computing RapidNJ tree took 4.794311 sec (of wall-clock time) 2.265306 sec (of CPU time)
+Log-likelihood of RapidNJ tree: -101781.791
+--------------------------------------------------------------------
+|             INITIALIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Generating 98 parsimony trees... 51.228 second
+Computing log-likelihood of 98 initial trees ... 58.984 seconds
+Current best score: -100688.647
+
+Do NNI search on 20 best initial trees
+Optimizing NNI: done in 14.0076 secs using 1584% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 1: -100607.758
+Optimizing NNI: done in 29.2565 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 2: -100549.946
+Optimizing NNI: done in 97.3977 secs using 1300% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 3: -100461.418
+Optimizing NNI: done in 28.116 secs using 1586% CPU
+Optimizing NNI: done in 32.8136 secs using 1586% CPU
+Optimizing NNI: done in 29.4735 secs using 1586% CPU
+Optimizing NNI: done in 24.4377 secs using 1585% CPU
+Optimizing NNI: done in 25.4781 secs using 1586% CPU
+Optimizing NNI: done in 27.3338 secs using 1586% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 9: -100441.172
+Optimizing NNI: done in 23.9447 secs using 1586% CPU
+Iteration 10 / LogL: -100512.291 / Time: 1h:1m:42s
+Optimizing NNI: done in 31.8294 secs using 1585% CPU
+Optimizing NNI: done in 26.6418 secs using 1586% CPU
+Optimizing NNI: done in 29.7394 secs using 1586% CPU
+Optimizing NNI: done in 27.5252 secs using 1586% CPU
+Optimizing NNI: done in 27.1883 secs using 1586% CPU
+Optimizing NNI: done in 27.2859 secs using 1586% CPU
+Optimizing NNI: done in 30.6152 secs using 1585% CPU
+Optimizing NNI: done in 29.9901 secs using 1586% CPU
+Optimizing NNI: done in 28.5308 secs using 1586% CPU
+Optimizing NNI: done in 25.9479 secs using 1586% CPU
+Iteration 20 / LogL: -100596.925 / Time: 1h:6m:28s
+Finish initializing candidate tree set (20)
+Current best tree score: -100441.172 / CPU time: 816.652
+Number of iterations: 20
+--------------------------------------------------------------------
+|               OPTIMIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Optimizing NNI: done in 18.5943 secs using 1586% CPU
+Optimizing NNI: done in 17.2833 secs using 1584% CPU
+Optimizing NNI: done in 18.2827 secs using 1585% CPU
+Optimizing NNI: done in 23.2301 secs using 1585% CPU
+Optimizing NNI: done in 18.4383 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 25: -100429.282
+Optimizing NNI: done in 18.0682 secs using 1585% CPU
+Optimizing NNI: done in 16.3734 secs using 1585% CPU
+Optimizing NNI: done in 16.9358 secs using 1585% CPU
+Optimizing NNI: done in 15.2189 secs using 1585% CPU
+Optimizing NNI: done in 17.8936 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 30: -100427.813
+Iteration 30 / LogL: -100427.813 / Time: 1h:10m:3s (1h:7m:20s left)
+Optimizing NNI: done in 20.7185 secs using 1586% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 31: -100412.801
+Optimizing NNI: done in 18.825 secs using 1585% CPU
+Optimizing NNI: done in 16.4287 secs using 1585% CPU
+Optimizing NNI: done in 25.9013 secs using 1581% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 34: -100409.564
+Optimizing NNI: done in 15.5131 secs using 1585% CPU
+Optimizing NNI: done in 21.2798 secs using 1585% CPU
+Optimizing NNI: done in 16.4754 secs using 1585% CPU
+Optimizing NNI: done in 16.9797 secs using 1585% CPU
+Optimizing NNI: done in 19.3635 secs using 1585% CPU
+Optimizing NNI: done in 16.729 secs using 1585% CPU
+Iteration 40 / LogL: -100468.879 / Time: 1h:13m:30s (0h:55m:21s left)
+Optimizing NNI: done in 18.2769 secs using 1585% CPU
+Optimizing NNI: done in 15.0939 secs using 1585% CPU
+Optimizing NNI: done in 17.8491 secs using 1585% CPU
+Optimizing NNI: done in 15.9846 secs using 1585% CPU
+Optimizing NNI: done in 14.6194 secs using 1585% CPU
+Optimizing NNI: done in 19.6182 secs using 1585% CPU
+Optimizing NNI: done in 18.4764 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 47: -100399.516
+Optimizing NNI: done in 15.7823 secs using 1585% CPU
+Optimizing NNI: done in 19.2296 secs using 1586% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 49: -100390.084
+Optimizing NNI: done in 17.7696 secs using 1584% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 50: -100374.132
+Iteration 50 / LogL: -100374.132 / Time: 1h:16m:57s (0h:53m:56s left)
+Log-likelihood cutoff on original alignment: -100581.451
+Optimizing NNI: done in 46.8463 secs using 1467% CPU
+Optimizing NNI: done in 14.8524 secs using 1586% CPU
+Optimizing NNI: done in 16.448 secs using 1586% CPU
+Optimizing NNI: done in 15.5821 secs using 1586% CPU
+Optimizing NNI: done in 15.3362 secs using 1586% CPU
+Optimizing NNI: done in 17.1195 secs using 1586% CPU
+Optimizing NNI: done in 21.1381 secs using 1586% CPU
+Optimizing NNI: done in 18.6428 secs using 1586% CPU
+Optimizing NNI: done in 16.6183 secs using 1586% CPU
+Optimizing NNI: done in 17.2638 secs using 1586% CPU
+Iteration 60 / LogL: -100381.062 / Time: 1h:20m:21s (0h:45m:29s left)
+Optimizing NNI: done in 18.7176 secs using 1585% CPU
+Optimizing NNI: done in 15.5323 secs using 1584% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 62: -100362.485
+Optimizing NNI: done in 19.6235 secs using 1585% CPU
+Optimizing NNI: done in 20.8255 secs using 1585% CPU
+Optimizing NNI: done in 19.272 secs using 1585% CPU
+Optimizing NNI: done in 19.4139 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 66: -100361.470
+Optimizing NNI: done in 21.3767 secs using 1586% CPU
+Optimizing NNI: done in 18.1722 secs using 1585% CPU
+Optimizing NNI: done in 18.8027 secs using 1583% CPU
+Optimizing NNI: done in 17.3553 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 70: -100347.981
+Iteration 70 / LogL: -100347.981 / Time: 1h:24m:7s (0h:48m:41s left)
+Optimizing NNI: done in 19.5153 secs using 1585% CPU
+Optimizing NNI: done in 19.3685 secs using 1585% CPU
+Optimizing NNI: done in 17.3579 secs using 1585% CPU
+Optimizing NNI: done in 19.9237 secs using 1583% CPU
+Optimizing NNI: done in 17.0941 secs using 1585% CPU
+Optimizing NNI: done in 23.5718 secs using 1552% CPU
+Optimizing NNI: done in 21.3411 secs using 1585% CPU
+Optimizing NNI: done in 17.4899 secs using 1585% CPU
+Optimizing NNI: done in 17.7025 secs using 1585% CPU
+Optimizing NNI: done in 15.7844 secs using 1585% CPU
+Iteration 80 / LogL: -100350.837 / Time: 1h:27m:18s (0h:41m:53s left)
+Optimizing NNI: done in 18.0134 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 81: -100346.609
+Optimizing NNI: done in 22.2946 secs using 1583% CPU
+Optimizing NNI: done in 21.2544 secs using 1562% CPU
+Optimizing NNI: done in 22.9014 secs using 1585% CPU
+Optimizing NNI: done in 16.9757 secs using 1585% CPU
+Optimizing NNI: done in 19.107 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 86: -100346.303
+Optimizing NNI: done in 17.7901 secs using 1585% CPU
+Optimizing NNI: done in 17.1497 secs using 1585% CPU
+Optimizing NNI: done in 15.8398 secs using 1585% CPU
+Optimizing NNI: done in 17.8491 secs using 1585% CPU
+Iteration 90 / LogL: -100414.310 / Time: 1h:30m:50s (0h:43m:28s left)
+Optimizing NNI: done in 18.221 secs using 1585% CPU
+Optimizing NNI: done in 20.027 secs using 1578% CPU
+Optimizing NNI: done in 17.2572 secs using 1584% CPU
+Optimizing NNI: done in 19.8958 secs using 1585% CPU
+Optimizing NNI: done in 16.958 secs using 1585% CPU
+Optimizing NNI: done in 18.3054 secs using 1585% CPU
+Optimizing NNI: done in 22.8844 secs using 1585% CPU
+Optimizing NNI: done in 16.5519 secs using 1585% CPU
+Optimizing NNI: done in 17.3891 secs using 1586% CPU
+Optimizing NNI: done in 17.1301 secs using 1585% CPU
+Iteration 100 / LogL: -100434.696 / Time: 1h:33m:56s (0h:37m:42s left)
+Log-likelihood cutoff on original alignment: -100488.405
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.935
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Optimizing NNI: done in 18.8833 secs using 1585% CPU
+Optimizing NNI: done in 20.9898 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 102: -100343.362
+Optimizing NNI: done in 20.8582 secs using 1561% CPU
+Optimizing NNI: done in 18.0426 secs using 1584% CPU
+Optimizing NNI: done in 19.3163 secs using 1585% CPU
+Optimizing NNI: done in 17.0093 secs using 1585% CPU
+Optimizing NNI: done in 17.2678 secs using 1577% CPU
+Optimizing NNI: done in 20.5136 secs using 1585% CPU
+Optimizing NNI: done in 15.032 secs using 1585% CPU
+Optimizing NNI: done in 24.0538 secs using 1585% CPU
+Iteration 110 / LogL: -100366.182 / Time: 1h:37m:24s (0h:39m:33s left)
+Optimizing NNI: done in 19.0758 secs using 1585% CPU
+Optimizing NNI: done in 16.3329 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 112: -100342.050
+Optimizing NNI: done in 18.1048 secs using 1585% CPU
+Optimizing NNI: done in 17.6601 secs using 1585% CPU
+Optimizing NNI: done in 17.3367 secs using 1584% CPU
+Optimizing NNI: done in 16.6436 secs using 1585% CPU
+Optimizing NNI: done in 20.5922 secs using 1586% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 117: -100330.693
+Optimizing NNI: done in 23.9405 secs using 1545% CPU
+Optimizing NNI: done in 17.3078 secs using 1585% CPU
+Optimizing NNI: done in 16.7526 secs using 1585% CPU
+Iteration 120 / LogL: -100360.987 / Time: 1h:40m:42s (0h:40m:54s left)
+Optimizing NNI: done in 14.7509 secs using 1585% CPU
+Optimizing NNI: done in 15.1168 secs using 1585% CPU
+Optimizing NNI: done in 19.0345 secs using 1569% CPU
+Optimizing NNI: done in 18.3002 secs using 1585% CPU
+Optimizing NNI: done in 21.2841 secs using 1585% CPU
+Optimizing NNI: done in 15.6255 secs using 1585% CPU
+Optimizing NNI: done in 19.7765 secs using 1585% CPU
+Optimizing NNI: done in 15.4377 secs using 1586% CPU
+Optimizing NNI: done in 19.187 secs using 1585% CPU
+Optimizing NNI: done in 15.4446 secs using 1585% CPU
+Iteration 130 / LogL: -100344.198 / Time: 1h:43m:37s (0h:35m:48s left)
+Optimizing NNI: done in 20.6015 secs using 1586% CPU
+Optimizing NNI: done in 15.9955 secs using 1585% CPU
+Optimizing NNI: done in 17.0098 secs using 1585% CPU
+Optimizing NNI: done in 17.9468 secs using 1585% CPU
+Optimizing NNI: done in 15.8668 secs using 1586% CPU
+Optimizing NNI: done in 16.1193 secs using 1586% CPU
+Optimizing NNI: done in 16.505 secs using 1585% CPU
+Optimizing NNI: done in 18.2938 secs using 1585% CPU
+Optimizing NNI: done in 17.1733 secs using 1585% CPU
+Optimizing NNI: done in 17.9443 secs using 1585% CPU
+Iteration 140 / LogL: -100344.108 / Time: 1h:46m:32s (0h:31m:1s left)
+Optimizing NNI: done in 18.3955 secs using 1585% CPU
+Optimizing NNI: done in 15.1433 secs using 1585% CPU
+Optimizing NNI: done in 26.4829 secs using 1543% CPU
+Optimizing NNI: done in 18.0233 secs using 1585% CPU
+Optimizing NNI: done in 19.3335 secs using 1585% CPU
+Optimizing NNI: done in 16.6457 secs using 1585% CPU
+Optimizing NNI: done in 17.6414 secs using 1585% CPU
+Optimizing NNI: done in 18.8526 secs using 1585% CPU
+Optimizing NNI: done in 18.485 secs using 1586% CPU
+Optimizing NNI: done in 14.4464 secs using 1585% CPU
+Iteration 150 / LogL: -100423.049 / Time: 1h:49m:37s (0h:26m:34s left)
+Log-likelihood cutoff on original alignment: -100488.405
+Optimizing NNI: done in 20.1714 secs using 1584% CPU
+Optimizing NNI: done in 18.0183 secs using 1585% CPU
+Optimizing NNI: done in 18.4287 secs using 1585% CPU
+Optimizing NNI: done in 23.0762 secs using 1586% CPU
+Optimizing NNI: done in 17.2231 secs using 1585% CPU
+Optimizing NNI: done in 20.417 secs using 1586% CPU
+Optimizing NNI: done in 17.1171 secs using 1586% CPU
+Optimizing NNI: done in 17.4249 secs using 1585% CPU
+Optimizing NNI: done in 17.3986 secs using 1586% CPU
+Optimizing NNI: done in 15.7066 secs using 1585% CPU
+Iteration 160 / LogL: -100339.383 / Time: 1h:52m:46s (0h:22m:18s left)
+Optimizing NNI: done in 20.7578 secs using 1585% CPU
+Optimizing NNI: done in 17.1194 secs using 1586% CPU
+Optimizing NNI: done in 21.078 secs using 1586% CPU
+Optimizing NNI: done in 16.6181 secs using 1585% CPU
+Optimizing NNI: done in 18.7342 secs using 1586% CPU
+Optimizing NNI: done in 23.3818 secs using 1585% CPU
+Optimizing NNI: done in 18.2431 secs using 1585% CPU
+Optimizing NNI: done in 16.2088 secs using 1585% CPU
+Optimizing NNI: done in 17.2247 secs using 1585% CPU
+Optimizing NNI: done in 22.4185 secs using 1586% CPU
+Iteration 170 / LogL: -100402.007 / Time: 1h:55m:59s (0h:18m:12s left)
+Optimizing NNI: done in 17.6892 secs using 1572% CPU
+Optimizing NNI: done in 20.753 secs using 1585% CPU
+Optimizing NNI: done in 17.8799 secs using 1586% CPU
+Optimizing NNI: done in 23.249 secs using 1585% CPU
+Optimizing NNI: done in 16.3815 secs using 1586% CPU
+Optimizing NNI: done in 18.7291 secs using 1585% CPU
+Optimizing NNI: done in 17.945 secs using 1585% CPU
+Optimizing NNI: done in 17.2998 secs using 1585% CPU
+Optimizing NNI: done in 19.5345 secs using 1585% CPU
+Optimizing NNI: done in 17.5665 secs using 1585% CPU
+Iteration 180 / LogL: -100336.169 / Time: 1h:59m:8s (0h:14m:10s left)
+Optimizing NNI: done in 25.2886 secs using 1585% CPU
+Optimizing NNI: done in 20.8806 secs using 1585% CPU
+Optimizing NNI: done in 17.0731 secs using 1585% CPU
+Optimizing NNI: done in 18.7872 secs using 1586% CPU
+Optimizing NNI: done in 18.127 secs using 1585% CPU
+Optimizing NNI: done in 19.5146 secs using 1585% CPU
+Optimizing NNI: done in 16.9283 secs using 1585% CPU
+Optimizing NNI: done in 19.0627 secs using 1580% CPU
+Optimizing NNI: done in 23.1853 secs using 1585% CPU
+Optimizing NNI: done in 17.2216 secs using 1585% CPU
+Iteration 190 / LogL: -100338.334 / Time: 2h:2m:25s (0h:10m:16s left)
+Optimizing NNI: done in 18.8013 secs using 1585% CPU
+Optimizing NNI: done in 16.6695 secs using 1585% CPU
+Optimizing NNI: done in 17.2761 secs using 1585% CPU
+Optimizing NNI: done in 22.6711 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 194: -100328.927
+Optimizing NNI: done in 18.3011 secs using 1585% CPU
+Optimizing NNI: done in 20.3381 secs using 1585% CPU
+Optimizing NNI: done in 21.8932 secs using 1555% CPU
+Optimizing NNI: done in 15.296 secs using 1585% CPU
+Optimizing NNI: done in 16.7789 secs using 1585% CPU
+Optimizing NNI: done in 17.6878 secs using 1585% CPU
+Iteration 200 / LogL: -100412.483 / Time: 2h:5m:38s (0h:35m:28s left)
+Log-likelihood cutoff on original alignment: -100488.405
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.983
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Optimizing NNI: done in 18.8877 secs using 1585% CPU
+Optimizing NNI: done in 14.0351 secs using 1585% CPU
+Optimizing NNI: done in 15.7608 secs using 1585% CPU
+Optimizing NNI: done in 18.2156 secs using 1585% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 204: -100327.767
+Optimizing NNI: done in 16.9426 secs using 1585% CPU
+Optimizing NNI: done in 19.5227 secs using 1585% CPU
+Optimizing NNI: done in 21.1014 secs using 1585% CPU
+Optimizing NNI: done in 23.9994 secs using 1585% CPU
+Optimizing NNI: done in 16.2877 secs using 1579% CPU
+Optimizing NNI: done in 20.7753 secs using 1585% CPU
+Iteration 210 / LogL: -100344.951 / Time: 2h:9m:1s (0h:35m:18s left)
+Optimizing NNI: done in 17.2363 secs using 1585% CPU
+Optimizing NNI: done in 29.4215 secs using 1525% CPU
+Optimizing NNI: done in 16.572 secs using 1585% CPU
+Optimizing NNI: done in 17.2862 secs using 1585% CPU
+Optimizing NNI: done in 24.5048 secs using 1540% CPU
+Optimizing NNI: done in 17.1696 secs using 1585% CPU
+Optimizing NNI: done in 18.1429 secs using 1585% CPU
+Optimizing NNI: done in 18.7891 secs using 1585% CPU
+Optimizing NNI: done in 20.5454 secs using 1585% CPU
+Optimizing NNI: done in 21.4319 secs using 1547% CPU
+Iteration 220 / LogL: -100391.100 / Time: 2h:12m:24s (0h:31m:24s left)
+Optimizing NNI: done in 18.9684 secs using 1585% CPU
+Optimizing NNI: done in 20.894 secs using 1585% CPU
+Optimizing NNI: done in 18.0583 secs using 1585% CPU
+Optimizing NNI: done in 16.6237 secs using 1585% CPU
+Optimizing NNI: done in 19.2053 secs using 1583% CPU
+Optimizing NNI: done in 15.8657 secs using 1585% CPU
+Optimizing NNI: done in 16.4094 secs using 1585% CPU
+Optimizing NNI: done in 16.8446 secs using 1585% CPU
+Optimizing NNI: done in 21.3699 secs using 1585% CPU
+Optimizing NNI: done in 17.8286 secs using 1585% CPU
+Iteration 230 / LogL: -100347.822 / Time: 2h:15m:28s (0h:27m:26s left)
+Optimizing NNI: done in 21.7192 secs using 1585% CPU
+Optimizing NNI: done in 16.9183 secs using 1585% CPU
+Optimizing NNI: done in 23.7806 secs using 1585% CPU
+Optimizing NNI: done in 17.1424 secs using 1585% CPU
+Optimizing NNI: done in 15.9009 secs using 1585% CPU
+Optimizing NNI: done in 22.347 secs using 1565% CPU
+Optimizing NNI: done in 16.3146 secs using 1585% CPU
+Optimizing NNI: done in 17.6532 secs using 1585% CPU
+Optimizing NNI: done in 17.1733 secs using 1585% CPU
+Optimizing NNI: done in 17.8925 secs using 1586% CPU
+Iteration 240 / LogL: -100343.464 / Time: 2h:18m:36s (0h:23m:35s left)
+Optimizing NNI: done in 24.5213 secs using 1585% CPU
+Optimizing NNI: done in 21.66 secs using 1585% CPU
+Optimizing NNI: done in 15.9765 secs using 1585% CPU
+Optimizing NNI: done in 17.9609 secs using 1585% CPU
+Optimizing NNI: done in 16.0836 secs using 1585% CPU
+Optimizing NNI: done in 19.1657 secs using 1584% CPU
+Optimizing NNI: done in 16.9234 secs using 1585% CPU
+Optimizing NNI: done in 16.8568 secs using 1585% CPU
+Optimizing NNI: done in 18.281 secs using 1585% CPU
+Optimizing NNI: done in 16.5481 secs using 1586% CPU
+Iteration 250 / LogL: -100332.038 / Time: 2h:21m:42s (0h:19m:46s left)
+Log-likelihood cutoff on original alignment: -100488.405
+Optimizing NNI: done in 15.2696 secs using 1585% CPU
+Optimizing NNI: done in 16.9243 secs using 1585% CPU
+Optimizing NNI: done in 19.1536 secs using 1585% CPU
+Optimizing NNI: done in 17.3253 secs using 1586% CPU
+Optimizing NNI: done in 15.5505 secs using 1586% CPU
+Optimizing NNI: done in 16.712 secs using 1586% CPU
+Optimizing NNI: done in 15.4251 secs using 1586% CPU
+Optimizing NNI: done in 15.5174 secs using 1586% CPU
+Optimizing NNI: done in 17.5997 secs using 1586% CPU
+Optimizing NNI: done in 19.3145 secs using 1586% CPU
+Iteration 260 / LogL: -100364.138 / Time: 2h:24m:35s (0h:15m:58s left)
+Optimizing NNI: done in 18.397 secs using 1584% CPU
+Optimizing NNI: done in 16.1027 secs using 1585% CPU
+Optimizing NNI: done in 20.6999 secs using 1585% CPU
+Optimizing NNI: done in 18.7491 secs using 1585% CPU
+Optimizing NNI: done in 17.4133 secs using 1584% CPU
+Optimizing NNI: done in 16.5891 secs using 1585% CPU
+Optimizing NNI: done in 18.2604 secs using 1585% CPU
+Optimizing NNI: done in 17.4912 secs using 1585% CPU
+Optimizing NNI: done in 17.8889 secs using 1585% CPU
+Optimizing NNI: done in 16.673 secs using 1585% CPU
+Iteration 270 / LogL: -100345.175 / Time: 2h:27m:35s (0h:12m:16s left)
+Optimizing NNI: done in 16.5523 secs using 1585% CPU
+Optimizing NNI: done in 18.1186 secs using 1585% CPU
+Optimizing NNI: done in 19.5074 secs using 1557% CPU
+Optimizing NNI: done in 17.1064 secs using 1585% CPU
+Optimizing NNI: done in 17.5723 secs using 1585% CPU
+Optimizing NNI: done in 21.7902 secs using 1574% CPU
+Optimizing NNI: done in 14.7624 secs using 1585% CPU
+Optimizing NNI: done in 15.858 secs using 1585% CPU
+Optimizing NNI: done in 20.3619 secs using 1585% CPU
+Optimizing NNI: done in 15.5991 secs using 1585% CPU
+Iteration 280 / LogL: -100410.879 / Time: 2h:30m:34s (0h:8m:36s left)
+Optimizing NNI: done in 17.7784 secs using 1585% CPU
+Optimizing NNI: done in 17.5949 secs using 1584% CPU
+Optimizing NNI: done in 15.3855 secs using 1585% CPU
+Optimizing NNI: done in 21.1516 secs using 1584% CPU
+Optimizing NNI: done in 17.4577 secs using 1579% CPU
+Optimizing NNI: done in 17.2213 secs using 1583% CPU
+Optimizing NNI: done in 21.1742 secs using 1583% CPU
+Optimizing NNI: done in 18.8055 secs using 1583% CPU
+Optimizing NNI: done in 18.9761 secs using 1583% CPU
+Optimizing NNI: done in 20.4092 secs using 1571% CPU
+Iteration 290 / LogL: -100572.585 / Time: 2h:33m:42s (0h:4m:59s left)
+Optimizing NNI: done in 19.5794 secs using 1581% CPU
+Optimizing NNI: done in 15.7609 secs using 1583% CPU
+Optimizing NNI: done in 16.2015 secs using 1581% CPU
+Optimizing NNI: done in 19.6754 secs using 1560% CPU
+Optimizing NNI: done in 17.8749 secs using 1583% CPU
+Optimizing NNI: done in 15.671 secs using 1583% CPU
+Optimizing NNI: done in 21.319 secs using 1583% CPU
+Optimizing NNI: done in 18.752 secs using 1584% CPU
+Optimizing NNI: done in 18.1107 secs using 1583% CPU
+Optimizing NNI: done in 18.0346 secs using 1582% CPU
+Iteration 300 / LogL: -100542.909 / Time: 2h:36m:45s (0h:1m:25s left)
+Log-likelihood cutoff on original alignment: -100488.405
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.993
+Optimizing NNI: done in 100.579 secs using 1378% CPU
+Optimizing NNI: done in 15.7615 secs using 1584% CPU
+Optimizing NNI: done in 18.0696 secs using 1583% CPU
+Optimizing NNI: done in 15.9464 secs using 1584% CPU
+Optimizing NNI: done in 34.5203 secs using 1512% CPU
+TREE SEARCH COMPLETED AFTER 305 ITERATIONS / Time: 2h:39m:53s
+
+--------------------------------------------------------------------
+|                    FINALIZING TREE SEARCH                        |
+--------------------------------------------------------------------
+Performs final model parameters optimization
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -100327.767
+Optimal log-likelihood: -100327.756
+Site proportion and rates:  (0.015,0.035) (0.035,0.125) (0.093,0.268) (0.118,0.439) (0.202,0.659) (0.184,0.993) (0.286,1.547) (0.067,2.379)
+Parameters optimization took 1 rounds (6.328 sec)
+BEST SCORE FOUND : -100327.756
+
+Testing tree branches by SH-like aLRT with 1000 replicates...
+Alternative NNI shows better log-likelihood -100327.621 > -100327.756
+Alternative NNI shows better log-likelihood -100327.754 > -100327.756
+2.800 sec.
+Creating bootstrap support values...
+Split supports printed to NEXUS file iq_full.splits.nex
+Total tree length: 399.991
+
+Total number of iterations: 305
+CPU time used for tree search: 99795.890 sec (27h:43m:15s)
+Wall-clock time used for tree search: 6422.321 sec (1h:47m:2s)
+Total CPU time used: 147319.586 sec (40h:55m:19s)
+Total wall-clock time used: 9604.962 sec (2h:40m:4s)
+
+Computing bootstrap consensus tree...
+Reading input file iq_full.splits.nex...
+526 taxa and 2945 splits.
+Consensus tree written to iq_full.contree
+Reading input trees file iq_full.contree
+Log-likelihood of consensus tree: -100324.279
+
+Analysis results written to: 
+  IQ-TREE report:                iq_full.iqtree
+  Maximum-likelihood tree:       iq_full.treefile
+  Likelihood distances:          iq_full.mldist
+
+Ultrafast bootstrap approximation results written to:
+  Split support values:          iq_full.splits.nex
+  Consensus tree:                iq_full.contree
+  Screen log file:               iq_full.log
+
+Date and Time: Sat Oct  3 18:46:09 2026

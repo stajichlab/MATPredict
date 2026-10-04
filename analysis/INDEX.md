@@ -15,15 +15,17 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 09-29 | [Classifier builds: aligner, determinism, gate, P1](2026-09-29_classifier-builds.md) | decided; shipped 9c39e2c | no aligner more accurate; mafft --auto = L-INS-i; ClipKIT 16 wrong; builds byte-identical; P1 withholds 26, reveals 5 |
 | 09-29 | [sexM-like paralogs, strain labels, Absidia](2026-09-29_paralogs-and-strain-labels.md) | decided | labels 10/7/4 (n=21); P1 in both mating types; Absidia flanks off-scaffold |
 | 09-29 | [Two idiomorphs and homothallism](2026-09-29_two-idiomorphs-and-homothallism.md) | decided (report-only); causes open | 36 unlinked; literature signal 13/16 vs 5/9; Syzygites both idiomorphs |
+| 10-03 | [Mucoromycotina MAT campaign](2026-10-03_mucoromycotina-mat-campaign.md) | running (HMG tree) | 865/973 genomes, 911 loci; locus size 579 loci/23 genera; full-length tree sexP 0 sexM inside (UFBoot 40), sexM 0 sexP inside (UFBoot 93) |
 
 ## Basidiomycota
 | Date | Report | Status | Key numbers |
-| 10-01 | [Branch merges and scope-only families](2026-10-01_basidio-merges-and-scope-only.md) | decided | net 14 gained in-lineage, 2 CAAX-only PR lost, 0 label changes |
 |---|---|---|---|
+| 10-01 | [Branch merges and scope-only families](2026-10-01_basidio-merges-and-scope-only.md) | decided | net 14 gained in-lineage, 2 CAAX-only PR lost, 0 label changes |
 | 09-26 | [Anchors, full run, cap-off](2026-09-26_basidiomycota.md) | decided | 3,269 genomes; Agaricomycotina 83.0% |
 | 09-26 | [Cryptococcus SXI slot](2026-09-26_cryptococcus-sxi.md) | decided | 243 genomes, 0 lost, 53 gained |
 | 09-26 | [Pucciniomycotina, Wallemia, Rhodotorula](2026-09-26_pucciniomycotina-wallemia-rhodotorula.md) | decided | Wallemia 51/51; Rhodotorula P/R 61/62 held-out |
 | 09-27 | [Receptor (B/PR) loci](2026-09-27_receptor-loci.md) | decided (review later) | CAAX: 6/9 vs 0/25; Agaricales PR 14->132 |
+| 10-04 | [Basidiomycota + Ascomycota v0.6.0 campaign](2026-10-04_basidiomycota-ascomycota-v060-campaign.md) | decided; R. toruloides HD open | Basidio 2,982/3,270 (2,745 without PR-only); Asco 17,314/19,380; 20 code-26 failures -> v0.6.1 |
 
 ## Ascomycota (incl. Serinales, Dothideomycetes)
 | Date | Report | Status | Key numbers |
@@ -33,6 +35,7 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 09-26 | [Serinales, C. albicans, C. auris](2026-09-26_serinales-candida.md) | decided | C. albicans 8/11 collapsed |
 | 09-26 | [Dothideomycetes curation](2026-09-26_dothideomycetes.md) | decided | 90/99; C. kikuchii homothallism candidate |
 | 09-27 | [Confidence rules](2026-09-27_confidence-rules.md) | decided | 86 risers; no fallback floor |
+| 10-04 | [Basidiomycota + Ascomycota v0.6.0 campaign](2026-10-04_basidiomycota-ascomycota-v060-campaign.md) | decided | 19,415 genomes; 89.3% called; Dipodascomycetes 28.7%, Orbiliomycetes 9.0% (fallback) |
 
 ## Validation and held-out sets
 | Date | Report | Status | Key numbers |

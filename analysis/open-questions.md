@@ -74,3 +74,13 @@ not match the genome's name:
 | Item | Next step | Where |
 |---|---|---|
 | S. pombe P and Yarrowia A/B idiomorph class (unassigned) | protein-domain evidence (Pc vs alpha box; MATA/MATB proteins) | `db/Ascomycota/order.yml` (B9) |
+
+## Opened 2026-10-04 (campaign runs)
+
+| Item | Next step | Where |
+|---|---|---|
+| R. toruloides HD: 2026-09-26 generic-HD locus (PR contig, ~200 kb from PR, with MIP1) vs v0.6.0 `redHD` locus (other contig, no MIP1); 26 genomes | curator ruling on which is the MAT-linked HD pair | `2026-10-04_basidiomycota-ascomycota-v060-campaign.md` |
+| Basidiomycota PR calls: 1,360 unverified (strict-CAAX only); most phylum-fallback calls are PR only | keep the caveat in any summary; review with the receptor-loci study | same |
+| Mucoromycotina locus size: flank pair differs by lineage | compare within one pair, or plot all with the pair marked | `2026-10-03_mucoromycotina-mat-campaign.md` |
+| Held-out LCG/Jena genomes in publication figures | curator ruling | same |
+| 3 outgroup HMG genes inside the sexP/sexM clades (Dicele1 h5, GCA_016758965.1 h6, Mycafr1 h1) | check locus and identity | same |

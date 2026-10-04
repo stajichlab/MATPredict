@@ -92,3 +92,11 @@ not match the genome's name:
 | LCG "Mucor sp. NRRL 1454" groups with Umbelopsis (both BUSCO trees, support 1.0; both sexM gene trees); no override row | curator: add an override (genus Umbelopsis) | `2026-10-04_sexP-sexM-gene-trees.md` |
 | 5 non-MAT HMG genes nested in sexP/sexM clades (Dichotomocladium, Circinella minor, Mycotypha in Mucorales; Bifiguratus, Dispira outside) | check locus, gene order, identity | same |
 | Gene-tree root: non-MAT HMG outgroup not monophyletic | choose an outgroup independent of the 2026-09 trees | same |
+
+## Opened 2026-10-04 (non-MAT HMG genes in the gene trees)
+
+| Item | Next step | Where |
+|---|---|---|
+| Mycotypha africana sexM (GCF_025528875.1 NW_026515730.1:1,203,502-1,204,971; 153 kb from sexP; Schulz 2016) not called and in the classifier negative set | curate as a record; remove from negatives; recompute gate (approval) | `2026-10-04_unclassified-hmg-in-gene-trees.md` |
+| Dichotomocladium elegans h5 groups with Lichtheimiaceae-type sexP (UFBoot 96); genome uncalled; no flanks within 60 kb | synteny, annotation, classifier score | same |
+| Report-only check for an unlinked second idiomorph (strong HMG hit, no flanks) in called genomes | design | same |

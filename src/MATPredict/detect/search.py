@@ -358,6 +358,23 @@ _TBLASTN_OUTFMT = (
 #: single HSP with it and sum only across HSPs already grouped into one gene.
 
 
+#: NCBI translation tables built into exonerate 2.4.0. Measured 2026-10-04 by
+#: running `exonerate --geneticcode N` for every NCBI table: 1-6, 9-16 and
+#: 21-23 run; 24 and higher exit 1 with "No built in genetic code
+#: corresponding to id [N]". Table 26 (Alternative Yeast Nuclear, CUG = Ala,
+#: the Alaninales: Pachysolen, Nakazawaea) made every such genome fail in the
+#: v0.6.0 Ascomycota run (20 of 19,415 BFD genomes). miniprot 0.18 has table 26
+#: (a synthetic gene with 15 CTG codons in 120 aa aligns at 100% identity with
+#: `-T 26`, 87.5% with `-T 1` or `-T 12`).
+EXONERATE_GENETIC_CODES = frozenset({1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23})
+_warned_exonerate_codes: set[int] = set()
+
+
+def exonerate_supports_code(genetic_code: int | None) -> bool:
+    """True when exonerate can translate with this code (None = table 1)."""
+    return genetic_code is None or int(genetic_code) in EXONERATE_GENETIC_CODES
+
+
 def _gencode_args(genetic_code: int | None, flag: str) -> list[str]:
     """`[flag, str(code)]`, or `[]` for the standard code / unknown.
 
@@ -637,6 +654,20 @@ def polish_with_exonerate(
     """
     roles_by_family = _roles_by_family([family])
     contig, win_start, _win_end = window
+
+    # exonerate has no table for some NCBI codes (EXONERATE_GENETIC_CODES).
+    # Running it anyway exits 1, which `_run_checked` makes fatal for the whole
+    # genome. Translating with a different table would give wrong residues.
+    # So skip exonerate: the caller's `classify` then records a
+    # `polished_single` model on miniprot alone, as for `polish: miniprot` genes.
+    if not exonerate_supports_code(genetic_code):
+        if int(genetic_code) not in _warned_exonerate_codes:
+            _warned_exonerate_codes.add(int(genetic_code))
+            logger.warning(
+                "exonerate has no genetic code %d; gene models use miniprot only",
+                int(genetic_code),
+            )
+        return None
 
     with tempfile.TemporaryDirectory() as tmp_dir_name:
         tmp_dir = Path(tmp_dir_name)

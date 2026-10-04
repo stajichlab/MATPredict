@@ -8,7 +8,7 @@ idiomorph or mating type it is (for example Plus/Minus, MAT1-1/MAT1-2, HD/PR
 alleles). Every reference record traces to a publication or a validated
 deposit, and every call reports the evidence behind it.
 
-Current release: [`v0.6.0`](https://github.com/stajichlab/MATPredict/releases/tag/v0.6.0).
+Current release: [`v0.6.1`](https://github.com/stajichlab/MATPredict/releases/tag/v0.6.1).
 Changes: [CHANGELOG.md](CHANGELOG.md).
 
 ## Contents
@@ -385,14 +385,14 @@ No paper describes MATPredict yet. Cite the software and the release you used.
 The citation metadata is in [CITATION.cff](CITATION.cff); GitHub shows it under
 "Cite this repository".
 
-> Stajich JE. MATPredict: MAT locus identification in Fungi. Version 0.6.0.
+> Stajich JE. MATPredict: MAT locus identification in Fungi. Version 0.6.1.
 > https://github.com/stajichlab/MATPredict
 
 ```bibtex
 @software{matpredict,
   author  = {Stajich, Jason E.},
   title   = {MATPredict: MAT locus identification in Fungi},
-  version = {0.6.0},
+  version = {0.6.1},
   url     = {https://github.com/stajichlab/MATPredict},
   year    = {2026}
 }

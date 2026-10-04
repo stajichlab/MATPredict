@@ -4,7 +4,15 @@ All notable changes to MATPredict. Versions follow [semantic versioning](https:/
 release tags may carry a clade suffix naming the lineage whose infrastructure that
 release completed.
 
-## [Unreleased]
+## [0.6.1] — 2026-10-04 — `v0.6.1`
+
+### Fixed
+- Genomes that use an NCBI genetic code exonerate does not have no longer fail.
+  exonerate 2.4.0 has tables 1-6, 9-16 and 21-23; for any other code it exited 1
+  and the whole genome got no report. Code 26 (Alaninales: *Pachysolen*,
+  *Nakazawaea*; CUG = Ala) failed 20 of the 19,415 BFD Ascomycota genomes in the
+  v0.6.0 run. Exonerate is now skipped for such codes and gene models come from
+  miniprot alone (`polished_single`), which translates code 26 correctly.
 
 ### Changed
 - No default NCBI e-mail. The address comes from `$MATPREDICT_NCBI_EMAIL` or the

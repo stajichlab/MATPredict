@@ -116,3 +116,57 @@ def test_tblastn_omits_the_flag_for_the_standard_code(tmp_path):
     search_localize(tmp_path / "g.fa", [fam], tmp_path / "r.faa", {"r": key},
                     runner=_runner(cmds), genetic_code=1)
     assert "-db_gencode" not in next(c for c in cmds if c[0] == "tblastn")
+
+
+def _exonerate_args(tmp_path, code, cmds):
+    from MATPredict.detect.family_registry import Family, FamilyKey
+    from MATPredict.detect.search import polish_with_exonerate
+    key = FamilyKey("P", "MAT")
+    fam = Family(key=key, vocabulary_type="enum", idiomorph_values=["a"],
+                 idiomorph_pattern=None,
+                 genes=[{"name": "g1", "role": "core_MAT"}], taxonomic_scope=[1])
+    (tmp_path / "g.fa").write_text(">c1\n" + "ACGT" * 100 + "\n")
+    return polish_with_exonerate(tmp_path / "g.fa", fam, "g1", tmp_path / "r.faa", {"r": key},
+                                 ("c1", 1, 400), runner=_runner(cmds), genetic_code=code)
+
+
+def test_exonerate_is_skipped_for_a_code_it_does_not_have(tmp_path):
+    """Table 26 (Alaninales, CUG = Ala) is not built into exonerate 2.4.0. Run
+    anyway, it exits 1 and the whole genome failed (20 BFD genomes in the v0.6.0
+    Ascomycota run). Now exonerate is not run and the gene is left to miniprot."""
+    cmds = []
+    assert _exonerate_args(tmp_path, 26, cmds) is None
+    assert not any(c[0] == "exonerate" for c in cmds)
+
+
+@pytest.mark.parametrize("code", [1, 12, None])
+def test_exonerate_still_runs_for_codes_it_has(tmp_path, code):
+    cmds = []
+    _exonerate_args(tmp_path, code, cmds)
+    exo = next(c for c in cmds if c[0] == "exonerate")
+    if code in (None, 1):
+        assert "--geneticcode" not in exo
+    else:
+        assert exo[exo.index("--geneticcode") + 1] == str(code)
+
+
+def test_miniprot_is_given_code_26(tmp_path):
+    from MATPredict.detect.family_registry import Family, FamilyKey
+    from MATPredict.detect.search import polish_with_miniprot
+    key = FamilyKey("P", "MAT")
+    fam = Family(key=key, vocabulary_type="enum", idiomorph_values=["a"],
+                 idiomorph_pattern=None,
+                 genes=[{"name": "g1", "role": "core_MAT"}], taxonomic_scope=[1])
+    (tmp_path / "g.fa").write_text(">c1\n" + "ACGT" * 100 + "\n")
+    cmds = []
+    polish_with_miniprot(tmp_path / "g.fa", fam, "g1", tmp_path / "r.faa", {"r": key},
+                         ("c1", 1, 400), runner=_runner(cmds), genetic_code=26)
+    mp = next(c for c in cmds if c[0] == "miniprot")
+    assert mp[mp.index("-T") + 1] == "26"
+
+
+def test_the_exonerate_code_table_matches_exonerate_2_4_0():
+    from MATPredict.detect.search import EXONERATE_GENETIC_CODES, exonerate_supports_code
+    assert EXONERATE_GENETIC_CODES == {1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23}
+    assert exonerate_supports_code(None) and exonerate_supports_code(12)
+    assert not exonerate_supports_code(26)

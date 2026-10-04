@@ -1,0 +1,29 @@
+
+===== full
+Plus: 163 tips; main clade 163 (UFBoot 29.0), outgroup tips in it 131
+   genera monophyletic 11/18; not: [('Mucor', 59), ('Rhizopus', 16), ('Backusella', 13), ('Absidia', 12), ('Circinella', 7), ('Pilaira', 3), ('Helicostylum', 2)]
+   patristic distance in main clade: median 3.76 (IQR 2.56-4.74)
+   Umbelopsis MRCA: {'Umbelopsis': 7}; sister group: 145 tips [('Mucor', 59), ('Rhizopus', 16), ('Backusella', 13), ('Absidia', 11), ('Cunninghamella', 5)]
+Minus: 173 tips; main clade 173 (UFBoot 93.0), outgroup tips in it 1
+   genera monophyletic 9/21; not: [('Mucor', 53), ('Rhizopus', 19), ('Absidia', 17), ('Backusella', 14), ('Circinella', 7), ('Cunninghamella', 6), ('Umbelopsis', 6), ('Fennellomyces', 4), ('Thamnostylum', 3), ('Helicostylum', 2), ('Chaetocladium', 2), ('Parasitella', 2)]
+   patristic distance in main clade: median 4.69 (IQR 3.58-5.50)
+   Umbelopsis MRCA: {'Umbelopsis': 6, 'Mucor': 1}; sister group: 14 tips [('Backusella', 12), ('Absidia', 1), ('Zygorhynchus', 1)]
+     non-Umbelopsis tip in Umbelopsis clade: Mucor sp. NRRL 1454 (LCG) (Mucor_sp._NRRL_1454)
+
+===== hmg
+Plus: 162 tips; main clade 162 (UFBoot 99.0), outgroup tips in it 4
+   genera monophyletic 10/18; not: [('Mucor', 59), ('Rhizopus', 16), ('Backusella', 13), ('Absidia', 11), ('Circinella', 7), ('Cunninghamella', 5), ('Pilaira', 3), ('Helicostylum', 2)]
+   patristic distance in main clade: median 1.09 (IQR 0.76-1.65)
+   Umbelopsis MRCA: {'Umbelopsis': 7}; sister group: 4 tips [('Syncephalastrum', 4)]
+Minus: 173 tips; main clade 48 (UFBoot 53.0), outgroup tips in it 0
+   genera monophyletic 10/21; not: [('Mucor', 53), ('Rhizopus', 19), ('Absidia', 17), ('Backusella', 14), ('Circinella', 7), ('Umbelopsis', 6), ('Fennellomyces', 4), ('Thamnostylum', 3), ('Chaetocladium', 2), ('Helicostylum', 2), ('Benjaminiella', 2)]
+   patristic distance in main clade: median 0.99 (IQR 0.60-1.22)
+   Umbelopsis MRCA: {'Umbelopsis': 6, 'Mucor': 1}; sister group: 7 tips [('Cunninghamella', 6), ('Chaetocladium', 1)]
+     non-Umbelopsis tip in Umbelopsis clade: Mucor sp. NRRL 1454 (LCG) (Mucor_sp._NRRL_1454)
+
+== outgroup tips nested in a main clade (<= 10 per clade)
+  OUT_GCA_002261195.1_ASM226119v1_h3_t0 -> Bifiguratus adelaidae (Endogonales)
+  OUT_GCA_016758965.1_ASM1675896v1_h6_t0 -> Circinella minor (Mucorales)
+  OUT_GCA_025716815.1_Dicele1_h5_t1 -> Dichotomocladium elegans (Mucorales)
+  OUT_GCA_027478255.1_UCR_DsimpRSA1455_1.1_h4_t0 -> Dispira simplex (Dimargaritales)
+  OUT_GCF_025528875.1_Mycafr1_h1_t0 -> Mycotypha africana (Mucorales)

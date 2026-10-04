@@ -84,3 +84,11 @@ not match the genome's name:
 | Mucoromycotina locus size: flank pair differs by lineage | compare within one pair, or plot all with the pair marked | `2026-10-03_mucoromycotina-mat-campaign.md` |
 | Held-out LCG/Jena genomes in publication figures | curator ruling | same |
 | 3 outgroup HMG genes inside the sexP/sexM clades (Dicele1 h5, GCA_016758965.1 h6, Mycafr1 h1) | check locus and identity | same |
+
+## Opened 2026-10-04 (sexP/sexM gene trees)
+
+| Item | Next step | Where |
+|---|---|---|
+| LCG "Mucor sp. NRRL 1454" groups with Umbelopsis (both BUSCO trees, support 1.0; both sexM gene trees); no override row | curator: add an override (genus Umbelopsis) | `2026-10-04_sexP-sexM-gene-trees.md` |
+| 5 non-MAT HMG genes nested in sexP/sexM clades (Dichotomocladium, Circinella minor, Mycotypha in Mucorales; Bifiguratus, Dispira outside) | check locus, gene order, identity | same |
+| Gene-tree root: non-MAT HMG outgroup not monophyletic | choose an outgroup independent of the 2026-09 trees | same |

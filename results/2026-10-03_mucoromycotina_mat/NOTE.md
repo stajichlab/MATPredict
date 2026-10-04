@@ -60,6 +60,18 @@ Study report: `analysis/2026-10-03_mucoromycotina-mat-campaign.md`.
   - Outgroup tips inside sexP: Dicele1 h5, GCA_016758965.1 h6; inside sexM:
     Mycafr1 h1. All are HMG genes from Mucorales genomes away from the called
     locus.
-- HMG box: first run (in job 29374314) hit the 12 h limit with nothing copied
-  back. Re-run as job 29389343 (48 h, checkpointed). The RAxML-NG check starts
-  after it.
+- HMG box (job 29389343, 12 h 30 min; the first run in job 29374314 hit its
+  12 h limit with nothing copied back): 523 sequences x 69 sites, LG+R6.
+  `draw_gene_tree.py hmg`:
+  - sexP: all 162 tips in one clade with no sexM tip and 4 outgroup tips,
+    UFBoot 99 (the sexP MRCA alone: 165 tips, 3 outgroup, UFBoot 93).
+  - sexM: not one clade. The largest clade without sexP holds 48 of 173 sexM
+    tips (UFBoot 53); the sexP clade nests among the other sexM lineages, so
+    the sexM MRCA is the ingroup MRCA (435 tips, UFBoot 69).
+  - 69 sites give weak deep nodes; read the sexM split as unresolved, not as
+    sexP arising within sexM. The full-length tree has sexM as one clade
+    (173/173, 1 outgroup tip, UFBoot 93).
+- Clade test used for both trees: the largest clade that holds no tip of the
+  other idiomorph (outgroup tips allowed). Full length: sexM 173/173 (UFBoot
+  93), sexP 163/163 but only with 131 outgroup tips (UFBoot 29).
+- RAxML-NG check on the HMG box: job 29397060 (running).

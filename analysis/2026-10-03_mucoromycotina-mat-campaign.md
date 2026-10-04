@@ -1,6 +1,6 @@
 # Mucoromycotina MAT campaign: calls, locus size, synteny, sexP/sexM trees (2026-10-03)
 
-Status: running (HMG-box tree and RAxML-NG check not in yet); figures are drafts.
+Status: running (RAxML-NG check not in yet); figures are drafts.
 
 ## Question
 Across BFD, LCG and Jena Mucoromycotina genomes: which genomes carry a sexP
@@ -45,12 +45,22 @@ See `results/2026-10-03_mucoromycotina_mat/NOTE.md` for every step and file.
   - The outgroup is not monophyletic; 132 outgroup tips fall between sexP and
     sexM after rooting. This tree does not support or reject sexP + sexM as
     sister groups.
+- HMG-box gene tree (523 sequences x 69 sites, LG+R6, UFBoot 1000):
+  - sexP: one clade, 162/162 tips, no sexM tip, 4 outgroup tips, UFBoot 99.
+  - sexM: not one clade; the largest sexM-only clade holds 48/173 (UFBoot 53)
+    and the sexP clade nests among the other sexM lineages.
+  - With 69 sites the deep nodes are weak; this does not support sexP arising
+    within sexM. The two trees agree that no sexP tip falls among sexM tips of
+    a clean clade, and the reverse.
+- Both trees: 0 genomes whose sexP or sexM protein falls in the other
+  idiomorph's clade.
 
 ## Decision
 None yet. Figures are drafts for the curator.
 
 ## Open
-- HMG-box tree (job 29389343) and RAxML-NG check.
+- RAxML-NG check on the HMG box (job 29397060).
+- sexM monophyly: unresolved on the HMG box (69 sites), supported on full length (UFBoot 93).
 - Compare locus size within one flank pair, or show all with the pair marked?
 - May held-out LCG/Jena genomes appear in publication figures? (They are used
   here for description only, not for any build or score.)

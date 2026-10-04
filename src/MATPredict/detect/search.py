@@ -361,18 +361,57 @@ _TBLASTN_OUTFMT = (
 #: NCBI translation tables built into exonerate 2.4.0. Measured 2026-10-04 by
 #: running `exonerate --geneticcode N` for every NCBI table: 1-6, 9-16 and
 #: 21-23 run; 24 and higher exit 1 with "No built in genetic code
-#: corresponding to id [N]". Table 26 (Alternative Yeast Nuclear, CUG = Ala,
-#: the Alaninales: Pachysolen, Nakazawaea) made every such genome fail in the
-#: v0.6.0 Ascomycota run (20 of 19,415 BFD genomes). miniprot 0.18 has table 26
-#: (a synthetic gene with 15 CTG codons in 120 aa aligns at 100% identity with
-#: `-T 26`, 87.5% with `-T 1` or `-T 12`).
+#: corresponding to id [N]". Table 26 (Pachysolen tannophilus nuclear, CUG =
+#: Ala; the Alaninales) made every such genome fail in the v0.6.0 Ascomycota run
+#: (20 of 19,415 BFD genomes).
+#:
+#: exonerate also takes a code in "longhand": the 64 amino acids of the NCBI
+#: table in TCAG codon order (`Translate_get_genetic_code`, len == 64). For a
+#: code it has no built-in table for, it gets that string, built from
+#: Biopython's NCBI tables. Measured: a synthetic 120-aa gene with 15 CTG codons
+#: aligns at identity 100.00 with the table-26 string, 87.50 with code 1 or 12.
+#: The 17 built-in strings match Biopython's NCBI tables exactly.
 EXONERATE_GENETIC_CODES = frozenset({1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23})
 _warned_exonerate_codes: set[int] = set()
 
 
 def exonerate_supports_code(genetic_code: int | None) -> bool:
-    """True when exonerate can translate with this code (None = table 1)."""
+    """True when exonerate has this code built in (None = table 1)."""
     return genetic_code is None or int(genetic_code) in EXONERATE_GENETIC_CODES
+
+
+def ncbi_code_string(genetic_code: int) -> str | None:
+    """The NCBI table as 64 amino acids in TCAG codon order (stops = `*`).
+
+    This is exonerate's longhand `--geneticcode` form. None when Biopython has
+    no table with this id.
+    """
+    from Bio.Data import CodonTable
+    table = CodonTable.unambiguous_dna_by_id.get(int(genetic_code))
+    if table is None:
+        return None
+    bases = "TCAG"
+    codons = (a + b + c for a in bases for b in bases for c in bases)
+    return "".join("*" if codon in table.stop_codons else table.forward_table[codon]
+                   for codon in codons)
+
+
+def exonerate_gencode_args(genetic_code: int | None) -> list[str] | None:
+    """`--geneticcode` arguments for exonerate, or None if it cannot use the code.
+
+    The built-in id when exonerate has it; otherwise the NCBI table as a
+    64-letter string. None only when no NCBI table has this id.
+    """
+    if exonerate_supports_code(genetic_code):
+        return _gencode_args(genetic_code, "--geneticcode")
+    code_string = ncbi_code_string(genetic_code)
+    if code_string is None:
+        return None
+    if int(genetic_code) not in _warned_exonerate_codes:
+        _warned_exonerate_codes.add(int(genetic_code))
+        logger.info("exonerate has no built-in genetic code %d; passing the NCBI table as a string",
+                    int(genetic_code))
+    return ["--geneticcode", code_string]
 
 
 def _gencode_args(genetic_code: int | None, flag: str) -> list[str]:
@@ -655,18 +694,14 @@ def polish_with_exonerate(
     roles_by_family = _roles_by_family([family])
     contig, win_start, _win_end = window
 
-    # exonerate has no table for some NCBI codes (EXONERATE_GENETIC_CODES).
-    # Running it anyway exits 1, which `_run_checked` makes fatal for the whole
-    # genome. Translating with a different table would give wrong residues.
-    # So skip exonerate: the caller's `classify` then records a
-    # `polished_single` model on miniprot alone, as for `polish: miniprot` genes.
-    if not exonerate_supports_code(genetic_code):
-        if int(genetic_code) not in _warned_exonerate_codes:
-            _warned_exonerate_codes.add(int(genetic_code))
-            logger.warning(
-                "exonerate has no genetic code %d; gene models use miniprot only",
-                int(genetic_code),
-            )
+    # A code exonerate has no built-in table for is passed as the NCBI table
+    # string (`exonerate_gencode_args`). Only a code with no NCBI table at all
+    # skips exonerate; running it would exit 1, which `_run_checked` makes fatal
+    # for the whole genome. `classify` then uses the miniprot model alone.
+    gencode_args = exonerate_gencode_args(genetic_code)
+    if gencode_args is None:
+        logger.warning("no NCBI table for genetic code %s; gene models use miniprot only",
+                       genetic_code)
         return None
 
     with tempfile.TemporaryDirectory() as tmp_dir_name:
@@ -677,7 +712,7 @@ def polish_with_exonerate(
         base_cmd = [
             "exonerate", "--model", "protein2genome",
             "--query", str(reference_fasta), "--target", str(target_fasta),
-        ] + _gencode_args(genetic_code, "--geneticcode")
+        ] + gencode_args
         tail = ["--showtargetgff", "yes", "--showalignment", "no"]
         result = _run_checked(
             runner, base_cmd + ["--refine", "region"] + tail, tolerate_signal=True

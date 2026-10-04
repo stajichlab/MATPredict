@@ -77,6 +77,16 @@ reviewer should settle.
     - A maintainer command rebuilds the table from a new taxdump at release.
     Alternatives: the full taxdump with `taxonkit` (already a dependency;
     larger image), or require `--phylum` and `--genetic-code` from every user.
+    Compressed reading (measured 2026-10-04):
+    - `taxonkit` v0.20.0 reads gzip and zstd content (it detects the format),
+      but only under the plain names (`nodes.dmp`, ...); `nodes.dmp.gz` or
+      `.zst` names give "taxonomy data not found". A symlink `nodes.dmp ->
+      nodes.dmp.zst` works. Compressed nodes + names + merged + delnodes: 67.4 MB
+      gzip, 65.8 MB zstd. Each call loads the whole taxonomy: about 2 s and
+      440 MB RAM, so batch taxids into one call.
+    - Python 3.14 (our environment) has `gzip` and `compression.zstd` in the
+      standard library, so a MATPredict reader of the slim `.zst` table needs no
+      new dependency.
   - Measure the image size and cold-start time.
   - Apptainer/Singularity: build from the GHCR image for HPC use (README has the
     command; test on UCR HPCC).

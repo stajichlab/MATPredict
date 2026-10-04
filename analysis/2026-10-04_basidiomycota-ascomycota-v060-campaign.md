@@ -1,6 +1,6 @@
 # Basidiomycota and Ascomycota campaign on v0.6.0 (2026-10-03/04)
 
-Status: decided (runs complete); R. toruloides HD locus open.
+Status: decided (runs complete; R. toruloides HD ruled 2026-10-04: keep redHD).
 
 ## Question
 Can MATPredict v0.6.0 run over every BFD Basidiomycota and Ascomycota genome?

@@ -16,8 +16,9 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 09-29 | [sexM-like paralogs, strain labels, Absidia](2026-09-29_paralogs-and-strain-labels.md) | decided | labels 10/7/4 (n=21); P1 in both mating types; Absidia flanks off-scaffold |
 | 09-29 | [Two idiomorphs and homothallism](2026-09-29_two-idiomorphs-and-homothallism.md) | decided (report-only); causes open | 36 unlinked; literature signal 13/16 vs 5/9; Syzygites both idiomorphs |
 | 10-03 | [Mucoromycotina MAT campaign](2026-10-03_mucoromycotina-mat-campaign.md) | running (RAxML check) | 865/973 genomes, 911 loci; locus size 579 loci/23 genera; full length: sexP 0 sexM inside (UFBoot 40), sexM one clade (93); HMG box: sexP one clade (99), sexM split (69 sites) |
-| 10-04 | [sexP and sexM gene trees](2026-10-04_sexP-sexM-gene-trees.md) | decided (descriptive); RAxML check running | full length: sexM one clade 173/173 (UFBoot 93); HMG box: sexP one clade 162/162 (99), sexM split; outgroup not monophyletic; 5 non-MAT HMG nested; NRRL 1454 = Umbelopsis |
+| 10-04 | [sexP and sexM gene trees](2026-10-04_sexP-sexM-gene-trees.md) | decided (descriptive); RAxML check running | full length: sexM one clade 173/173 (UFBoot 93); HMG box: sexP one clade 162/162 (99), sexM split; outgroup not monophyletic; 5 non-MAT HMG nested; NRRL 1454 = Umbelopsis (override added) |
 | 10-04 | [Non-MAT HMG genes in the gene trees](2026-10-04_unclassified-hmg-in-gene-trees.md) | open | most = rooting; 40-gene sexP-related paralog family (both mating types); Mycotypha sexM missed (153 kb from sexP, in negatives); Dichotomocladium candidate sexP |
+
 
 ## Basidiomycota
 | Date | Report | Status | Key numbers |
@@ -27,8 +28,8 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 09-26 | [Cryptococcus SXI slot](2026-09-26_cryptococcus-sxi.md) | decided | 243 genomes, 0 lost, 53 gained |
 | 09-26 | [Pucciniomycotina, Wallemia, Rhodotorula](2026-09-26_pucciniomycotina-wallemia-rhodotorula.md) | decided | Wallemia 51/51; Rhodotorula P/R 61/62 held-out |
 | 09-27 | [Receptor (B/PR) loci](2026-09-27_receptor-loci.md) | decided (review later) | CAAX: 6/9 vs 0/25; Agaricales PR 14->132 |
-| 10-04 | [Basidiomycota + Ascomycota v0.6.0 campaign](2026-10-04_basidiomycota-ascomycota-v060-campaign.md) | decided; R. toruloides HD open | Basidio 2,982/3,270 (2,745 without PR-only); Asco 17,314/19,380; 20 code-26 failures -> v0.6.1 |
-| 10-04 | [R. toruloides HD: generic HD vs redHD](2026-10-04_rtoruloides-hd-old-vs-redhd.md) | open (recommend redHD) | old 0/24 R. toruloides at the known locus; no R. toruloides HD hit at the old locus; HD1 id 34.9% vs 65.5% median |
+| 10-04 | [Basidiomycota + Ascomycota v0.6.0 campaign](2026-10-04_basidiomycota-ascomycota-v060-campaign.md) | decided | Basidio 2,982/3,270 (2,745 without PR-only); Asco 17,314/19,380; 20 code-26 failures -> v0.6.1 |
+| 10-04 | [R. toruloides HD: generic HD vs redHD](2026-10-04_rtoruloides-hd-old-vs-redhd.md) | decided: keep redHD | old 0/24 R. toruloides at the known locus; no R. toruloides HD hit at the old locus; HD1 id 34.9% vs 65.5% median |
 
 ## Ascomycota (incl. Serinales, Dothideomycetes)
 | Date | Report | Status | Key numbers |

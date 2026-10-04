@@ -62,8 +62,9 @@ None yet. Figures are drafts for the curator.
 - RAxML-NG check on the HMG box (job 29397060).
 - sexM monophyly: unresolved on the HMG box (69 sites), supported on full length (UFBoot 93).
 - Compare locus size within one flank pair, or show all with the pair marked?
-- May held-out LCG/Jena genomes appear in publication figures? (They are used
-  here for description only, not for any build or score.)
+- Held-out LCG/Jena genomes in publication figures: **allowed** (curator,
+  J. Stajich, 2026-10-04). They stay out of training, curation, classifier
+  builds and scoring.
 - LCG called 548 genomes on v0.6.0 versus 536 on 52b3ff9; not yet compared
   call by call.
 - Identity of the 3 outgroup tips inside the sexP/sexM clades.

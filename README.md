@@ -174,11 +174,13 @@ pixi run matpredict --help
 ### Other ways to install
 
 **Docker.** Each release publishes an image to the GitHub Container Registry.
-The image holds the environment, the package and the curated database.
+The image holds the environment, the package, the curated database and an
+NCBI taxonomy snapshot (see [Offline taxonomy](#offline-taxonomy)), so a run
+needs no network.
 
 ```bash
 docker pull ghcr.io/stajichlab/matpredict:latest     # or a release version, :<version>
-docker run --rm -v "$PWD":/data -e MATPREDICT_NCBI_EMAIL=you@example.org \
+docker run --rm -v "$PWD":/data \
   ghcr.io/stajichlab/matpredict:latest \
   detect --genome /data/genome.fna --taxid 4837 --out-dir /data/out
 ```
@@ -339,6 +341,27 @@ tool still runs, sends no e-mail, and logs one warning.
 | `MATPREDICT_CONFIG` | `~/.config/matpredict/config.toml` | Config file path |
 | `MATPREDICT_DB_ROOT` | `./db` | Reference database to use |
 | `MATPREDICT_CACHE_DIR` | `./.matpredict_cache` | Cache for NCBI responses. The e-mail and API key are not part of the cache key, so users with different settings share one cache |
+| `MATPREDICT_TAXONOMY` | none (image: `/app/taxonomy/ncbi_taxonomy.tsv.zst`) | Offline NCBI taxonomy table; used before E-utilities |
+| `MATPREDICT_OFFLINE` | off (image: `1`) | `1`: never call NCBI; a taxid not in the table is reported in `routing_error` |
+
+### Offline taxonomy
+
+`detect` needs the lineage, phylum and genetic code of a `--taxid`. A local
+table answers these without NCBI E-utilities. Build it from a dated NCBI
+archive and point `MATPREDICT_TAXONOMY` at it:
+
+```bash
+curl -O https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump_archive/taxdmp_2026-10-01.zip
+matpredict curate-db build-taxonomy --taxdump taxdmp_2026-10-01.zip \
+    --snapshot 2026-10-01 --out ncbi_taxonomy.tsv.zst
+export MATPREDICT_TAXONOMY=$PWD/ncbi_taxonomy.tsv.zst
+export MATPREDICT_OFFLINE=1        # optional: never call NCBI
+```
+
+All taxa, about 24 MB; loading it takes about 2 s and 80 MB of memory. Each
+report records the source in `taxonomy_source` (for example
+`local NCBI taxonomy snapshot 2026-10-01`). The Docker image builds this table
+at image build time and sets both variables.
 
 ### Tests
 

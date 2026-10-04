@@ -12,6 +12,8 @@ dependencies = [
     "requests>=2.31",
     # Profile-HMM idiomorph classifier (detect/classifier.py), curator 2026-09-26.
     "pyhmmer>=0.12",
+    # Offline taxonomy table (.zst); Python 3.14+ has compression.zstd instead.
+    "zstandard>=0.22; python_version < '3.14'",
 ]
 
 # `draw-locus`/`draw-synteny` (curate-db's visualization commands) need these, but no

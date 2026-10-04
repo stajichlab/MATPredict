@@ -4,6 +4,20 @@ All notable changes to MATPredict. Versions follow [semantic versioning](https:/
 release tags may carry a clade suffix naming the lineage whose infrastructure that
 release completed.
 
+## [Unreleased]
+
+### Added
+- Offline NCBI taxonomy. `matpredict curate-db build-taxonomy` writes a slim
+  all-taxa table (taxid, parent, rank, genetic code, scientific name; merged
+  ids) from an NCBI taxdump directory, `taxdmp_*.zip` or `taxdump.tar.gz`
+  (plain, `.gz` or `.zst` files). With `$MATPREDICT_TAXONOMY` set, lineage,
+  phylum and genetic code come from it; `$MATPREDICT_OFFLINE=1` never calls
+  NCBI. Checked against 8,185 cached efetch answers: phylum and genetic code
+  identical for all; lineage identical for 8,179 (6 re-parented by NCBI between
+  fetch and snapshot). Reports gain `taxonomy_source`.
+- The Docker image builds the table from the dated archive
+  `taxdmp_2026-10-01.zip` (SHA-256 pinned) and runs offline by default.
+
 ## [0.6.1] — 2026-10-04 — `v0.6.1`
 
 ### Fixed

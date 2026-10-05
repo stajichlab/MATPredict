@@ -61,7 +61,8 @@ None yet. Figures are drafts for the curator.
 ## Open
 - RAxML-NG check on the HMG box (job 29397060).
 - sexM monophyly: unresolved on the HMG box (69 sites), supported on full length (UFBoot 93).
-- Compare locus size within one flank pair, or show all with the pair marked?
+- Locus size: show all genera with the flank pair marked; compare only within
+  one pair (curator, 2026-10-04).
 - Held-out LCG/Jena genomes in publication figures: **allowed** (curator,
   J. Stajich, 2026-10-04). They stay out of training, curation, classifier
   builds and scoring.

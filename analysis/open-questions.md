@@ -103,3 +103,11 @@ not match the genome's name:
 | Item | Next step | Where |
 |---|---|---|
 | Alignment refinement and placement testing for training proteins (Mycotypha sexM region) | plan in the report: aligner comparison, region-boundary sweep, EPA-ng placement | `2026-10-04_mycotypha-record-and-classifier-rebuild.md` |
+
+## Opened 2026-10-05 (read-typing test sets)
+
+| Item | Next step | Where |
+|---|---|---|
+| A. fumigatus putative hybrids: `detect` calls MAT1-2 only; MAT1-1 on 2.4-kb contigs withheld | report-only unlinked-second-idiomorph check; Tool A read depth | `docs/superpowers/specs/2026-10-05-reads-typing-and-population-locus-discovery-design.md` |
+| Fola: 15/19 assemblies not readable (permissions) | ask N. L. for group read; re-run `results/2026-10-05_fola_detect/run.slurm` | same |
+| Unreadable genome gives a BLAST database error, not a clear input error | check the genome is readable before makeblastdb | `src/MATPredict/detect/` |

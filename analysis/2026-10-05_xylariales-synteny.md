@@ -1,7 +1,6 @@
 # Xylariales SLA2-APN2 neighbourhood: synteny, rearrangement and MAT-region loss
 
-Status: first pass (2026-10-05). The RNA-seq mapping and the HMG-box tree were still running when this was
-written; their sections are marked pending. Handoff: `docs/HANDOFF-xylariales-2026-10-05.md`.
+Status: first pass (2026-10-05); RNA-seq coverage and the HMG-box tree are included (section 6 for the tree). Handoff: `docs/HANDOFF-xylariales-2026-10-05.md`.
 Data and scripts: `results/2026-10-05_xylariales_nc1011_interval/`.
 
 ## Question
@@ -27,7 +26,13 @@ Gene models (NCBI): SLA2 KAI0195601.1 (243,984-247,733, partial), COX13 KAI01956
 - None of the 14 annotated proteins in 225-272 kb has an HMG-box, MATalpha_HMGbox or MAT1-1-2 domain (Pfam; E 1e-3).
 - None of 139 six-frame ORFs (>= 150 nt) hits those HMMs (E 1e-2).
 - tBLASTn of 105 database MAT proteins: best 28 bits (E 0.005), fragments of 20-67 aa. Real Xylariales MAT hits were 39-47 bits.
-- RNA-seq (SRR8861595): pending.
+- RNA-seq (SRR8861595, 70.0 M read pairs, hisat2, 94.99% aligned; unstranded; `work/rna/coverage_summary.tsv`):
+  - SLA2 mean 663x, COX13 2,543x (median 708x), APN2 188x, all expressed. The 475-bp SLA2-COX13 gap is transcribed (mean 410x, up to 1,060x), so the SLA2 model,
+    partial at its 3' end, is probably truncated and the signal is its 3' end, not a separate gene. The 118-bp COX13-APN2 gap has zero coverage.
+  - The 783-bp gap between APN2 and H604 is covered at a flat 57x (20-85x) with no annotated gene and no MAT-domain or tBLASTn hit. It is a stretch
+    to inspect (UTR overlap or a small unannotated transcript) and is where a displaced MAT site would lie under the far-side model, but nothing in it
+    resembles a MAT gene.
+  - Elsewhere in 225-272 kb the only unannotated stretches of 100 bp or more at 10x or higher are next to annotated genes (their UTRs).
 So there is no room for, and no sign of, a MAT gene between SLA2 and APN2 in NC1011.
 
 ## 2. Gene-order states across 414 genomes
@@ -74,7 +79,7 @@ NC1011 and G536 (same species), *Rosellinia* and *Eutypa lata* are SCA; *M. boll
 Read ARM to H610 (JS573 coordinates descend, so its list is reversed):
 - NC1011 (SCA): ARM, FRE, APC5, CIA30, SLA2 (244,381-247,733), COX13 (248,567-249,330), APN2 (249,890-252,055), H604, CPN10, H606, GPR1, H608, H609, H610.
 - JS573 (SAC): ARM, FRE, APC5, CIA30, SLA2 (1,044,624-1,041,275), 7.5-kb gap, APN2 (1,033,725-1,031,536), COX13 (1,030,919-1,029,937), H609, H610.
-This is not a clean inversion of [MAT site, APN2, COX13]: the five genes H604-H608 (~10.5 kb, 253,093-263,646 in NC1011) lie between APN2 and H609 in NC1011 and
+RNA-seq weakens the "gain" half of this: three of the five H604-H608 genes show no expression in the SRR8861595 library (H606 0.5x, GPR1 0x, H608 0.8x; H604 243x, CPN10 10,724x), so some of those models may be spurious or condition-specific. This is not a clean inversion of [MAT site, APN2, COX13]: the five genes H604-H608 (~10.5 kb, 253,093-263,646 in NC1011) lie between APN2 and H609 in NC1011 and
 have no hit in the JS573 window. The minimal reading is an inversion or translocation of the COX13-APN2 unit relative to SLA2, plus a gain or loss of the
 H604-H608 block and loss of the MAT region (JS573's 7.5-kb gap holds the HMG gene the paper placed "between").
 Nucleotide breakpoints were not resolved: minimap2 (asm20 and a sensitive preset) on 57-kb windows gave one 704-bp block for NC1011 vs JS573 and none for
@@ -95,6 +100,19 @@ more, mostly *Eutypa* 38, *Peroneutypa* 3, with a few *Hypomontagnella*, *Daldin
   insensitive to count as evidence of absence (it also misses the divergent HMG genes the paper reports in *M. bolleyi*); the HMG tree is the better test.
 - Paper agreement: "between" 2/2 SAC; "adjacent" 2/2 SCA (1 more incomplete); "unlinked" is mixed (SAC 3, SCA 1, other 3, incomplete 2).
 
+## 6. HMG-box tree placement
+Tree: 169 HMG-box domains (HMG_box PF00505 or HMG_box_2 PF09011, plus ~35 aa) from 19 of 31 proteomes (12 had no NCBI proteins), including 91 from Xylariales and
+Amphisphaeriales-type genomes of the paper's set and ours; mafft L-INS-i, trimAl -gt 0.3, RAxML-NG LG+G4, 200 bootstraps (`tree/`). Labelled references are only 9 database
+MAT1-2-1/MAT1-1-3-type proteins, NCU03481 and fmf-1 (*N. crassa*). Placement: `tree/hmg_placement.tsv` (`08_hmg_placement.py`).
+- **KAI0192626.1** (the HMG protein v0.6.0 called MAT1-2 in NC1011): nearest labelled reference is NCU03481 at 1.02 substitutions/site; the nearest MAT reference is 2.22.
+  Its smallest clade with a labelled reference has 13 tips and holds NCU03481 only. Bootstrap support for that clade is 14%, so this is a nearest-neighbour result, not a resolved placement.
+  It agrees with the expectation that the called gene is an NCU03481-type regulator and not MAT1-2-1.
+- Across the 91 Xylariales HMG proteins, 10 are nearest to NCU03481 and 12 to fmf-1. The 69 "nearest to a MAT reference" are uninformative: the median distance to any
+  labelled reference is 3.6 substitutions/site (maximum 12.0), i.e. saturated, and most of these are other HMG families (SOX-like and so on).
+- **The tree lacks the power to define the MAT1-2-1 clade.** The 9 MAT references are not monophyletic (their smallest common clade has 62 tips, support 21%, and contains NCU03481 and
+  fmf-1), unlike the paper's trees, which had many more references and consistently separated MAT1-2-1. A usable test needs more MAT1-2-1/MAT1-1-3 references, NCU03481 and
+  fmf-1 orthologs from several Sordariomycetes (by reciprocal best hit), the paper's TreeBase alignment (S23036) as a seed, and the 12 missing proteomes.
+
 ## Conclusions
 1. The SLA2-APN2 neighbourhood was rearranged twice relative to outgroups (junctions 1 and 2), and the second rearrangement is shared by Xylariaceae and Diatrypaceae
    (NC1011, G536, *Rosellinia*, *Eutypa lata*). So NC1011's order is lineage-wide, not a strain oddity.
@@ -110,6 +128,5 @@ more, mostly *Eutypa* 38, *Peroneutypa* 3, with a few *Hypomontagnella*, *Daldin
 - No statistics; counts are descriptive. Calls from v0.6.0 are not validated for these genomes.
 
 ## Pending
-- RNA-seq coverage across the NC1011 block (job 29402370).
-- HMG-box tree placement of KAI0192626.1 and the Xylariales HMG proteins (job 29402372; 19 of 31 proteomes available).
+- A better-powered HMG tree (more references, reciprocal-best-hit NCU03481/fmf-1 orthologs, the 12 proteomes without NCBI annotation, the paper's alignment as seed).
 - Closer SAC/SCA pairs for bp-level breakpoints (a protein-level or LASTZ alignment, or long-read assembly of the NC1011/G536 block).

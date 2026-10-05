@@ -43,6 +43,8 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 09-26 | [Dothideomycetes curation](2026-09-26_dothideomycetes.md) | decided | 90/99; C. kikuchii homothallism candidate |
 | 09-27 | [Confidence rules](2026-09-27_confidence-rules.md) | decided | 86 risers; no fallback floor |
 | 10-04 | [Basidiomycota + Ascomycota v0.6.0 campaign](2026-10-04_basidiomycota-ascomycota-v060-campaign.md) | decided | 19,415 genomes; 89.3% called; Dipodascomycetes 28.7%, Orbiliomycetes 9.0% (fallback) |
+| 10-05 | [Dothideomycetes: SLA2 not beside the MAT locus](2026-10-05_dothideomycetes-sla2.md) | open | SLA2 in all 200 sampled genomes but inside the locus in 14% (80% in Sordariomycetes); Cladosporiales exception |
+| 10-05 | [Dothideomycetes: full run with the curated records](2026-10-05_dothideomycetes-full-run.md) | open (polish cap) | 89.4% to 89.8% called; Parastagonospora 178:4 to 91:91 MAT1-1:MAT1-2; 15 calls lost to the cap, all return with it off |
 
 ## Validation and held-out sets
 | Date | Report | Status | Key numbers |
@@ -59,6 +61,7 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 09-28 | [Fable review and fixes](2026-09-28_fable-review-and-fixes.md) | decided | 6 major findings; fixes at 3aec88b; 247->258 genomes |
 | 09-29 | [Homothallism literature](2026-09-29_two-idiomorphs-and-homothallism.md) | decided | Z. heterogamus one locus 5.3 kb; Mycotypha ~150 kb; Syzygites two loci |
 | 09-28 | [Subloci literature](2026-09-28_subloci-literature.md) | decided | one locus with subloci |
+| 10-05 | [Campaign overview](2026-10-05_campaign-overview.md) | decided | v0.6.0 campaigns: call rates, locus class, size and content; PDF report and dashboard guide alongside |
 
 ## Data quality
 | Date | Report | Status | Key numbers |

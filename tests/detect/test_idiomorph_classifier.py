@@ -260,7 +260,9 @@ def test_the_build_training_set_is_curated_records_plus_the_recorded_extra():
         by[(r["gene"], r["source"])] += 1
     assert by.get(("sexM", "training_extra"), 0) == 0
     assert by[("sexM", "curated_record")] >= 9
-    assert by[("sexP", "training_extra")] == 70
+    # 70 -> 69 (2026-10-04): the Mycotypha sexP extra was replaced by the
+    # 64632_nrrl-2978_MAT_combined record's RefSeq protein.
+    assert by[("sexP", "training_extra")] == 69
     assert not any("zygo" in r["id"].lower() for r in rows)
 
 

@@ -10,7 +10,12 @@ copies that fell OUTSIDE the sexM and sexP clades ("other_HMG") in the
 2026-09-27 FastTree HMG-box tree, full-length proteins. They are never used to
 train the HMMs.
 
-Usage: make_paralog_negatives.py TIP_NAMES.tsv ALL_PROTEINS.faa OUT.faa
+Usage: make_paralog_negatives.py TIP_NAMES.tsv ALL_PROTEINS.faa OUT.faa [EXCLUDED.tsv]
+
+EXCLUDED.tsv (optional; `protein_id<TAB>reason<TAB>evidence<TAB>ruled`, `#`
+comments allowed): proteins later shown to be MAT genes are left out
+(curator ruling 2026-10-04; db/Mucoromycota/classifiers/MAT/
+paralog_negatives_excluded.tsv).
 """
 import csv
 import sys
@@ -29,20 +34,32 @@ def read_fasta(path):
     return {k: "".join(v) for k, v in seqs.items()}
 
 
-def main(tips_path, proteins_path, out_path):
+def read_excluded(path):
+    if not path:
+        return set()
+    out = set()
+    for line in open(path):
+        if line.strip() and not line.startswith("#") and not line.startswith("protein_id"):
+            out.add(line.split("\t")[0].strip())
+    return out
+
+
+def main(tips_path, proteins_path, out_path, excluded_path=None):
     tips = [r for r in csv.DictReader(open(tips_path), delimiter="\t")
             if r["status"] == "nonlocus" and r["tree_clade"] == "other_HMG"]
     proteins = read_fasta(proteins_path)
-    keep = {r["source"]: proteins[r["source"]] for r in tips if r["source"] in proteins}
+    excluded = read_excluded(excluded_path)
+    keep = {r["source"]: proteins[r["source"]] for r in tips
+            if r["source"] in proteins and r["source"] not in excluded}
     with open(out_path, "w") as fh:
         for name in sorted(keep):
             seq = keep[name].replace("*", "")
             fh.write(f">{name}\n")
             for i in range(0, len(seq), 60):
                 fh.write(seq[i:i + 60] + "\n")
-    print(f"{len(tips)} other_HMG non-locus tips; {len(keep)} with a protein -> {out_path}",
-          file=sys.stderr)
+    print(f"{len(tips)} other_HMG non-locus tips; {len(excluded)} excluded; "
+          f"{len(keep)} with a protein -> {out_path}", file=sys.stderr)
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:4])
+    main(*sys.argv[1:5])

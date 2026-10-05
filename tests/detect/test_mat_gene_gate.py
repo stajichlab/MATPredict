@@ -207,7 +207,9 @@ def test_the_shipped_mucoromycota_classifier_sets_its_own_gate_threshold():
     manifest = yaml.safe_load((Path(spec["dir"]) / "manifest.yaml").read_text())
     gate = manifest["mat_gene_gate"]
     negatives = Path(spec["dir"]) / "paralog_negatives.faa"
-    assert gate["n_negatives"] == 189
+    # 189 -> 186 (2026-10-04): three probable MAT genes excluded
+    # (paralog_negatives_excluded.tsv).
+    assert gate["n_negatives"] == 186
     assert gate["negatives_sha256"] == hashlib.sha256(negatives.read_bytes()).hexdigest()
     # at most 5% of the negatives reach the threshold (nearest-rank 95th percentile)
     assert gate["negatives_at_or_above"] <= -(-5 * gate["n_negatives"] // 100)

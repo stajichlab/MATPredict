@@ -1,0 +1,122 @@
+record_id: 61372_suf959_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 61372
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Hypocreales;f__Nectriaceae;g__Fusarium;s__Fusarium_oxysporum
+  lineage_resolved_date: '2026-10-05'
+organism:
+  species: Fusarium oxysporum
+  strain:
+    name: SUF959
+    known: true
+    culture_collection_ids:
+    - SUF959
+    differs_from_sequenced: true
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: MAT1-2-1(+)
+    definition_note: 'SOURCE. GenBank AB011378.1 (5122 bp; /isolate="SUF959"; db_xref
+      taxon:61372; organism Fusarium oxysporum f. sp. radicis-lycopersici). The deposit''s
+      reference is Yoshida T, Arie T, Noguchi M, Nomura Y, Yoder OC et al. 1998, Ann.
+      Phytopathol. Soc. Jpn. (in press; no PMID). The peer-reviewed description is
+      Arie et al. 2000, Mol Plant Microbe Interact 13:1330-1339 (PMID 11106025): the
+      same group cloned the F. oxysporum MAT1-1 (~4.6 kb) and MAT1-2 (~3.8 kb) idiomorphs
+      with flanking regions (alpha-box gene in MAT1-1, HMG-box gene in MAT1-2). The
+      abstract does not list the accessions; the link is by authors, organism and
+      gene content (curator check 2026-10-05).
+
+
+      NOMENCLATURE. The deposit''s legacy /gene MAT-2 is recorded as MAT1-2-1 (Turgeon
+      and Yoder 2000, PMID 11118130).
+
+
+      BOUNDARIES. No idiomorph endpoints or flank genes are annotated on the deposit;
+      the core segment is the curator-defined span of the MAT CDS. CDS join(4115..4283,4331..4542),
+      126 aa, annotated ''putative'': shorter than typical MAT1-2-1 proteins; it may
+      be a partial model of the gene.
+
+
+      USE. Canonical F. oxysporum MAT reference (curator ruling 2026-10-05); the same
+      two accessions are the references of the read-based Fola mating-type typing
+      (/bigdata/stajichlab/nicolel/Fola/06_Align/Mating_Types).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AB011378.1
+        seq_region: AB011378.1
+      start: 4115
+      end: 4542
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:BAA28611.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4115
+  end: 4542
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 4115
+    end: 4283
+  - start: 4331
+    end: 4542
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: PCR-based cloning and sequencing of the F. oxysporum MAT
+      idiomorphs with flanking regions; MAT-specific PCR used to type field isolates
+      (Arie et al. 2000).
+    citations: &id001
+    - pmid: '11106025'
+      doi: 10.1094/MPMI.2000.13.12.1330
+  boundaries:
+    tier: 2
+    experimental_method: No idiomorph endpoints on the accession; curator-defined
+      CDS span from the depositors' own annotation (re-fetched 2026-10-05). Tier 2
+      for the boundary claim.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: HMG-box gene in the MAT1-2 idiomorph (Arie et al. 2000);
+      deposit /gene MAT-2.
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AB011378.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-curation
+  proposal_dedupe_key: AB011378.1|61372|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+  notes: Proposed 2026-10-05 on curator ruling (curate the F. oxysporum MAT1-1 and
+    MAT1-2 deposits as canonical records). Awaiting curator sign-off.
+model_provenance: null

@@ -95,6 +95,10 @@ All 288 BFD Mucoromycotina genomes, campaign mode, vs the 2026-10-03 campaign
   long protein (notable finding 025).
 - M. griseocyanus: find why the model is truncated (done: Nanopore frameshift;
   notable finding 026).
+- Training region: agreed to use only the part of the Mycotypha sexM that
+  matches the other sexM proteins up to their C-terminal end (aa 26-218 does
+  this). The curator asked for further work on refining these alignments and
+  testing for better match and placement (plan under Open).
 - R. pusillus new Plus calls: acceptable; uncurated discoveries are part of the
   approach, not everything will be a curated set.
 
@@ -111,6 +115,21 @@ Pending curator sign-off after the alignment review.
   Nanopore-only assemblies. Not implemented; needs curator approval.
 - Rhizomucor pusillus: no curated Rhizomucor record; the two new Plus calls
   are medium confidence.
+
+## Plan: alignment refinement and placement tests (curator request 2026-10-04)
+1. Alignment method: compare MAFFT L-INS-i (current), MAFFT E-INS-i, and
+   hmmalign to the sexM/sexP HMMs, scored by LOO margins and column agreement
+   in the HMG box and the C-terminal motif block.
+2. Region boundary: rebuild with the Mycotypha sexM region ending at aa 200,
+   218 (current) and 240, and starting at aa 1 vs 26; measure LOO margins, the
+   gate and the regression panel. Keep the boundary that changes calls least
+   and keeps the C-terminal motifs.
+3. Placement: place the Mycotypha sexM region (and other long or partial
+   models) on the full-length reference tree with EPA-ng and on a fresh
+   IQ-TREE tree; check that it falls in sexM with support.
+4. Apply the same region rule to any future record whose protein is much
+   longer than its family's training set (flag by length outliers in the
+   build manifest).
 
 ## Files
 Record `db/Mucoromycota/Mucorales/64632_nrrl-2978_MAT_combined/`; classifier

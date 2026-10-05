@@ -1,6 +1,6 @@
 # Dothideomycetes: full run with the curated references (2026-10-05)
 
-Status: results in; two decisions open (polish cap, ambiguous idiomorph calls).
+Status: results in; the polish cap options are measured (recommendation below); two decisions open (cap rule, ambiguous idiomorph calls).
 
 ## Question
 The ten Dothideomycete MAT records (PR #36, from the branch `curation-mucor-dothideo`) were never in the database for the v0.6.0 Ascomycota campaign. What do they change across all
@@ -52,9 +52,42 @@ Table: `parastagonospora_check.txt`.
 - Test: the 15 genomes re-run on the same frozen tree with `--max-polished-clusters-per-family 0` (`results/2026-10-05_dothideo_cap0_lost/`). **All 15 calls return**, each identical to its v0.6.0 call. The run took 43 minutes
   on 8 CPUs for 15 genomes, so removing the cap for the whole class is costly.
 
+## The polish cap, in plain terms
+After the search, nearby hits are grouped into candidate regions. A candidate is **admitted** if it hits at least 2 different MAT genes, one of them a core MAT gene (alpha-box or HMG); there is no identity cutoff. Admitted candidates are then
+**polished**: their genes are modelled with exonerate and miniprot, which is the slow step, and only polished candidates can become calls. The **cap** limits polishing to the top 6 admitted candidates per genome, because polishing everything cost
+too much (measured on 561 genomes: 135 to 75 hours, six timeouts removed). "Top 6" is decided by a ranking made before any polishing: most distinct genes first, then best identity, then number of hits.
+The cap does not cull noise; it only decides which candidates get a chance. A candidate that is not polished is never called.
+
+### Why the records broke it, measured (`cap_rank_replay.py`, `cap_tiered_replay.py`)
+- The median genome has 33 admitted candidates (90th percentile 47, maximum 80), so the cap binds in 99% of genomes. Across the class there are 88,371 noise candidates for 2,582 true loci.
+- The ranking prefers breadth over strength. A noise region that hits three genes at 33 to 43% outranks a true locus that hits two genes at about 100%. In the 15 lost genomes the true locus ranked 7th (8 genomes), 8th (3), 10th (3) and 12th (1), just past the cap of 6.
+- The replay of the current rank agrees with the candidates actually polished in 99.9% of slots, so it is a valid way to test alternatives. Truth = loci called in v0.6.0, in the full run, or in the cap-off re-run.
+- Identity separates real from noise: true candidates have a median best identity of 84% (5th percentile 75%, lowest 39.5%); noise candidates have a median of 36% (95th percentile 47.5%).
+
+### Options, with measured loss and cost (true loci lost out of 2,582; polishing work relative to today)
+| option | true loci lost | polishing work |
+|---|---|---|
+| Today: cap 6, rank genes then identity | 17 | 1.00x (16,281 clusters) |
+| Cap 10 | 2 | 1.66x |
+| Cap 15 | 0 | 2.47x |
+| Cap 20 / cap 30 | 0 / 0 | 3.25x / 4.56x |
+| No cap | 0 | 5.59x (90,953 clusters) |
+| Rank by identity first (cap 6) | 6 | 1.00x; the project's earlier out-of-sample test lost 2 Mucoromycota Minus calls with this rule |
+| Rank candidates with best identity of 50% or more first, then today's rule (cap 6) | 0 | 1.00x |
+| **Tiered: polish every candidate at 50% or more, then top up to 6 with today's rule** | **0** | **1.00x (16,284 clusters)** |
+| Tiered at 45% / at 60% | 3 / 1 | 1.02x / 1.00x |
+| Identity floor before ranking (drop candidates below the floor) at 40% / 50% | 3 / 21 | removes 72.5% / 96.1% of noise candidates |
+
+- With the 50% tier, genomes have 0 to 8 strong candidates (801 have 1, 873 have 2, 663 have 3, 257 have 4, 50 have 5, 25 have 6 or more, 53 have none), and only 2 genomes have more than 6, so the tier costs the same as today.
+- The 21 true loci below 50% identity are mostly one species, *Botryosphaeria dothidea* (44.5%), plus *Friedmanniomyces endolithicus* (39.5%), *Cladosporium* sp. BSL10, *Vermiconidia calcicola*, *Microcyclospora tardicrescens* and one *Dothideomycetes* sp. They rank in the top 3 on today's rule, so the tiered rule
+  still polishes them; a hard floor would lose them.
+
+### Recommendation
+Use the tiered rule: it keeps today's rule for everything weak and only adds a guarantee that a strong hit is never skipped. On this class it recovers all 15 lost genomes at no extra cost. A hard identity floor would cut the most noise but loses divergent real loci, and raising the cap works but costs 1.7 to 5.6 times
+more polishing. The 50% tier is calibrated on Dothideomycetes only; because the cap code is shared by every clade, it needs the project's cap and regression panels (Mucoromycota, Basidiomycota, Zygo 23) to show no change before it ships.
+
 ## Decisions for the curator
-1. Polish cap: raise or remove it for Dothideomycetes (cost above), or change the ranking so a cluster that matches a curated record at high identity is protected. As it stands the curation costs 15 calls
-   (including its own reference genome) while correcting 87 *Parastagonospora* calls.
+1. Polish cap: adopt the tiered rule (above), or one of the other options. If adopted: implement on a branch with tests, re-run the 15 lost genomes and the full Dothideomycete run, and run the regression panels.
 2. *Aureobasidium* and the 17 double calls: leave as reported with the homothallism caveat, or add a rule. No ground truth is available here.
 3. Treat the new run as the Dothideomycete baseline only after (1), or keep v0.6.0 for the 15 genomes.
 
@@ -64,4 +97,4 @@ Table: `parastagonospora_check.txt`.
 - The 3 genomes without a new report were not investigated.
 
 ## Files
-`results/2026-10-05_dothideomycetes_full/` (list, jobs, `compare_v060.py`, `compare_vs_v060_*`, `parastagonospora_check.*`, `reports_all.tar.zst`), `results/2026-10-05_dothideo_cap0_lost/` (the 15 genomes, `cap0_recovery.txt`, reports).
+`results/2026-10-05_dothideomycetes_full/` (list, jobs, `compare_v060.py`, `compare_vs_v060_*`, `parastagonospora_check.*`, `reports_all.tar.zst`), `results/2026-10-05_dothideo_cap0_lost/` (the 15 genomes, `cap0_recovery.txt`, reports). Ranking replays: `cap_rank_replay.py` and `cap_tiered_replay.py` with their `_summary.txt` tables, in `results/2026-10-05_dothideomycetes_full/`.

@@ -1,7 +1,7 @@
 # MATPredict side projects: MAT typing from reads, and MAT-like locus discovery from populations
 
 Date: 2026-10-05
-Status: draft for review. Nothing here is implemented. Separate branch and
+Status: draft; curator answers of 2026-10-05 recorded below. Nothing here is implemented. Separate branch and
 separate code from `detect`; no change to the curated database or classifiers.
 
 ## Context
@@ -31,6 +31,42 @@ The curator asked for both as specifications for a separate line of work
 
 Fusarium population read sets are not local; they would come from SRA
 (selection is part of the work, not done here).
+
+## Curator decisions (J. Stajich, 2026-10-05)
+- Code home: MATPredict subcommands (`matpredict reads-type`,
+  `matpredict population-scan`) on a feature branch; heavier tools (minimap2,
+  KMC, Bifrost) as optional pixi features.
+- Hybrid / mixed strains: simulated mixes first (reads of a MAT1-1 and a
+  MAT1-2 strain merged at 50:50, 80:20, 95:5) to calibrate the "both" call and
+  the depth ratios; then the A. fumigatus putative hybrid strains from
+  Lofgren et al. (strain list to be supplied).
+- Fusarium: Fusarium oxysporum f. sp. lactucae is the main use case; the
+  curator has local data (path to be supplied). Also any F. oxysporum with a
+  genome, a MAT assignment and raw reads, to confirm the same assignment from
+  reads.
+- Batrachochytrium: all lineages first; a MAT-like partition should cut across
+  lineages rather than follow them.
+- Xylaria flabelliformis NC1011 is a named target (below).
+
+## Case: Xylaria flabelliformis NC1011 (checked 2026-10-05)
+What MATPredict v0.6.0 found (`results/2026-10-03_ascomycota_v060/`, wave_7):
+- GCA_022453505.1 (JGI Xylcub1, NC1011): one call, Ascomycota:MAT MAT1-2,
+  medium, idiomorph_gene_only, JAJLYR010000012.1:276,138-285,941. The gene is
+  KAI0192626.1 ("HMG box protein", 734 aa; PF00505 E 5e-23), matched only
+  weakly by MAT1-2-1 (44%) and MAT1-1-3 (41%) references, among housekeeping
+  genes (dynactin, SRP19, TIP49, TFIID). Its length and neighbours suggest a
+  general HMG transcription factor, not MAT1-2-1 (not tested further).
+- The conserved flank block is intact on JAJLYR010000004.1: APC5
+  (KAI0195599.1, 240 kb) - SLA2 (KAI0195601.1, 244,382-247,733) - COX13
+  (KAI0195602.1) - APN2 (KAI0195603.1, 249,891-252,058), with no MAT gene
+  between SLA2 and APN2. MATPredict withheld this cluster (no MAT gene).
+- Strain G536 (GCA_007182795.1) shows the same pattern (flank block on
+  VFLP01000025.1, no call).
+- So no MAT locus is identified: the idiomorph genes are either moved away
+  from SLA2-APN2 (as in A. nidulans), too divergent for the current
+  references, or absent. Next steps: search the proteome for alpha-box
+  (PF04769) and HMG proteins genome-wide and rank by similarity to
+  Sordariomycetes MAT proteins; Tool B if a Xylaria population read set exists.
 
 ## Tool A: idiomorph typing from reads (`matpredict reads-type`, proposed)
 
@@ -66,8 +102,12 @@ Fusarium population read sets are not local; they would come from SRA
 - Downsampling: 0.5x, 1x, 2x, 5x, 10x genome depth on 50 strains: the lowest
   depth that keeps concordance >= 95% (to be measured).
 - Controls with known MAT: A. fumigatus, C. lusitaniae, R. mucilaginosa,
-  Rhizopus; Fusarium from SRA (heterothallic F. oxysporum; homothallic
-  F. graminearum should give "both").
+  Rhizopus; Fusarium oxysporum f. sp. lactucae (curator's local data) and other
+  F. oxysporum with a genome, MAT assignment and reads; homothallic
+  F. graminearum should give "both".
+- Mixed and hybrid samples: simulated mixes of a MAT1-1 and a MAT1-2 read set
+  (50:50, 80:20, 95:5) first, then the Lofgren et al. A. fumigatus putative
+  hybrids.
 - Zygo 23 truth set where reads exist.
 
 ### Outputs
@@ -155,10 +195,9 @@ of a few hundred CPU-hours; the k-mer path needs per-strain k-mer databases on
 `$SCRATCH`.
 
 ## Questions for the reviewer
-1. Separate subcommands in MATPredict (`reads-type`, `population-scan`) or a
-   separate repository that uses MATPredict's database?
-2. Read typing: is the k-mer fast path enough for a first version, with the
-   alignment path second?
-3. Which Xylariales species and which Fusarium read sets to use?
-4. For Bd: which lineage set first (GPL only, or all lineages)?
-5. Minimum evidence to report a "candidate MAT-like locus" from Tool B.
+Answered 2026-10-05: code home, hybrid order, Fusarium source, Bd scope (see
+Curator decisions). Still open:
+1. Minimum evidence to report a "candidate MAT-like locus" from Tool B.
+2. Which Xylariales species has a population read set (>= 30 strains)?
+3. Paths: F. oxysporum f. sp. lactucae data; the Lofgren et al. hybrid strain
+   list.

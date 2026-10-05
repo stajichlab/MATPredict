@@ -76,6 +76,48 @@ many of the 1,360 calls the rule would give by chance.
   carry an unverified v0.6.0 PR call, 55 do not. 213 have no flagged locus; 6 of
   them carry a call (the detect receptor hits differ from the miniprot loci).
 
+### 3. Precursor homology (Hx) added to the CAAX rule (`hx_summary.txt`, `analyze_hx.py`)
+Hx = tblastn hit (E <= 1) of the 31 curated precursors within 10 kb. Sample
+statistics leave out 4 genomes of genera that supplied precursors (Cryptococcus,
+Schizophyllum, Coprinopsis, Ustilaginales genera); 498 genomes, 3,560 loci.
+
+| Rule | Mating, independent (n=9) | Other (n=46) | Sample observed / chance | Excess share |
+|---|---|---|---|---|
+| T (CAAX) | 6/9 (35-88%) | 1/46 (0.4-11.3%) | 578 / 86.9 | 0.85 (0.82-0.87) |
+| Hx | 3/9 (12-65%) | 0/46 (0-7.7%) | 194 / 61.0 | 0.69 (0.61-0.74) |
+| T and Hx | 3/9 (12-65%) | 0/46 (0-7.7%) | 149 / 1.8 | 0.99 (0.98-0.99) |
+
+- T and Hx together is very specific but finds only about a third of the
+  independent mating receptors. It is a high-confidence tier, not a replacement.
+- Hx is sparse where precursors diverge: Cantharellales T 49 / Hx 0; Boletales
+  23 / 1; Tilletiales 21 / 0; Auriculariales 45 / 2. Calls in those orders rest on
+  CAAX alone. Hx is strong in Polyporales (T&Hx 45 vs 0.2 expected) and
+  Cystofilobasidiales (25 vs 0.0).
+- I did not apply T and Hx to the 1,360 calls: that needs the scan on all 1,027
+  genomes (about 10 core-hours).
+
+### 4. Receptor-protein pilot, 6 Agaricomycete species (`pilot_summary.txt`, `pilot_scores_A.tsv`)
+Leave-one-species-out: for each held-out species, rank its STE3-like loci by
+similarity or HMM score built from the other species' mating receptors (plus
+curated REF receptors). 47 loci, 14 mating (Coprinopsis 3, Grifola 3,
+Heterobasidion 3, Schizophyllum 2, Trametes 2, Russula 1). Variant A uses
+Agaricomycete REFs only; variant B all 34 REFs.
+
+| Score | Pooled AUC (A) | Bootstrap 95% | Pooled AUC (B) | Mean per-species AUC (A) |
+|---|---|---|---|---|
+| Nearest-neighbour similarity (mating minus other) | 0.59 | 0.42-0.76 | 0.59 | 0.70 |
+| Profile HMM from mating receptors | 0.70 | 0.54-0.85 | 0.73 | 0.64 |
+| Strict CAAX flag (reference) | 0.95 | 0.86-1.00 | 0.95 | 0.96 |
+
+- Similarity does not separate mating from non-mating copies (interval includes
+  0.5). The HMM shows a modest signal (mean score 429 mating vs 303 other).
+- The top-ranked locus in a held-out species is a mating receptor in 2/6
+  species by similarity and 1/6 by HMM. Neither picks the mating copy.
+- The CAAX AUC is not an independent result: 4 of the 6 species' receptors were
+  chosen from CAAX evidence.
+- This agrees with the 2026-09-27 receptor tree: Agaricomycete mating receptors
+  are not monophyletic.
+
 ## What changed in detection
 Nothing. This is a measurement only.
 
@@ -100,11 +142,21 @@ Nothing. This is a measurement only.
 - The sample covers 502 genomes, not all 1,027 called genomes. Genomes of 500
   Mb or more were left out.
 - The step 4 extrapolation mixes loci and calls; treat 179 as approximate.
+- Pilot (section 4): 6 species, 14 mating receptors; the "other" label is an
+  assumption; intervals are wide. It tests only one training design.
+- No promoter or motif analysis was done (no curated promoter set).
 
 ## Curator decisions
 Made: 2026-10-04, interim negative set from the in-repo STE3 copies until a
 literature set exists; pass criterion = hit rate on curated B-locus receptors
 and false-positive rate on non-mating STE3, each with Wilson 95% intervals.
+Curator view (2026-10-05, not a ruling): PR calls will be a weaker confirmation
+of mating relatedness and may belong to a broader receptor class. The work may
+focus on (a) detection at all, (b) detection in context around known genes and
+genomic motifs or promoters, (c) protein alignments of candidates to classify
+related groups. HMMs from true positives may not be useful; tried in a small
+pilot (section 4). Approved: try the precursor-homology signal and a small
+receptor-protein pilot.
 Open: whether any order may lose the `unverified` label. Candidate evidence is
 excess share with a lower bound of 0.7 or more (Agaricales, Polyporales,
 Cantharellales, Trichosporonales, Tilletiales, Cystofilobasidiales,
@@ -118,6 +170,9 @@ unverified. Needed: a literature set of non-mating STE3 loci (>= 100).
   (`scan_genome.py`, `evaluate_panel.py`, `make_sample.py`, `analyze_sample.py`,
   `run_new_genomes.sh`, `run_sample.sh`), raw tables
   `out_new.tar.zst`, `out_sample_loci_random.tar.zst`.
+- Hx and pilot: `hx_summary.txt`, `analyze_hx.py`, `pilot_extract.py`,
+  `pilot_test.py`, `run_pilot.sh`, `pilot_summary.txt`, `pilot_scores_A.tsv`,
+  `pilot_scores_B.tsv`, `pilot_loci.tsv`, `pilot_proteins.faa` (SLURM job 29406597).
 - SLURM jobs 29404658 (4 genomes, about 35 s each) and 29404666 (502 genomes,
   11 tasks, 12-23 min each, 0 failures).
 - Earlier work: `analysis/2026-09-27_receptor-loci.md`.

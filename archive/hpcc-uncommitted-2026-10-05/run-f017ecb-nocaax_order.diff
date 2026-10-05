@@ -1,0 +1,17 @@
+diff --git a/db/Basidiomycota/order.yml b/db/Basidiomycota/order.yml
+index 1d96adf..b5bc294 100644
+--- a/db/Basidiomycota/order.yml
++++ b/db/Basidiomycota/order.yml
+@@ -102,11 +102,7 @@ loci:
+     # (results/2026-09-27_pheromone_positional/): strict motif within 10 kb
+     # flagged 6/9 known mating receptors, 0/25 other STE3 copies, 2.5% of
+     # random windows. A scan precursor cannot by itself make a call high.
+-    pheromone_precursor_scan:
+-      gene: caax_precursor
+-      receptor_genes: [pheromone_receptor]
+-      motif: "C[VI][IV][AVMG]"
+-      window_bp: 10000
++    # FINDER-OFF ARM (run-f017ecb-nocaax, not committed): scan removed to isolate its effect.
+   - locus_name: "MAT"
+     vocabulary_type: "enum"
+     idiomorph_values: ["alpha", "a"]

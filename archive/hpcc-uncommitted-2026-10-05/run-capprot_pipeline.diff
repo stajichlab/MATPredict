@@ -1,0 +1,91 @@
+diff --git a/src/MATPredict/detect/pipeline.py b/src/MATPredict/detect/pipeline.py
+index 71a99df..d8406ab 100644
+--- a/src/MATPredict/detect/pipeline.py
++++ b/src/MATPredict/detect/pipeline.py
+@@ -88,7 +88,7 @@ from MATPredict.detect.caax import (
+ from MATPredict.detect.clustering import GeneCluster, cluster_hits
+ from MATPredict.detect.split_locus import evaluate_split_locus
+ from MATPredict.detect.mat_gene_gate import (
+-    WITHHELD_MAT_GENE_GATE, WITHHELD_PARALOG_CLASS, apply_mat_gene_gate,
++    WITHHELD_MAT_GENE_GATE, WITHHELD_PARALOG_CLASS, apply_mat_gene_gate, gate_min_score,
+ )
+ from MATPredict.detect.flank_carried import (
+     WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
+@@ -2081,16 +2081,72 @@ def run_pipeline(
+     # polishing. Everything else stays admitted (diagnostics say so) but is
+     # not polished.
+     polish_allowed: set[tuple[int, FamilyKey]] | None = None
++    # CAP-PROTECTION EXPERIMENT: env MATP_CAP overrides the cap (0 = off).
++    import os as _os0
++    if _os0.environ.get("MATP_CAP", "") != "":
++        _c = int(_os0.environ["MATP_CAP"])
++        max_polished_clusters_per_family = None if _c <= 0 else _c
+     if max_polished_clusters_per_family is not None:
+         by_family: dict[FamilyKey, list[GeneCluster]] = {}
+         for cluster in clusters:
+             for family in _families_meeting_evidence_floor(cluster, families, evidence_floor):
+                 by_family.setdefault(family.key, []).append(cluster)
+-        polish_allowed = {
+-            (id(c), key)
+-            for key, members in by_family.items()
+-            for c in sorted(members, key=lambda c: _polish_rank(c, key))[:max_polished_clusters_per_family]
+-        }
++        # CAP-PROTECTION EXPERIMENT (uncommitted; results/2026-09-30_cap_protection):
++        # env MATP_CAP_EXEMPT in {V1,V2,V3}; unset = baseline behaviour.
++        import os as _os
++        _variant = _os.environ.get("MATP_CAP_EXEMPT", "")
++        _strong: dict[tuple[int, FamilyKey], float] = {}
++        if _variant:
++            from MATPredict.detect.classifier import classify as _clf_classify
++            _fam_by_key = {f.key: f for f in families}
++            _cache: dict = {}
++            for key, members in by_family.items():
++                fam = _fam_by_key.get(key)
++                if fam is None or not fam.idiomorph_classifier:
++                    continue
++                clf = load_classifier(fam.idiomorph_classifier, fam)
++                gthr, _src = gate_min_score(fam.idiomorph_classifier)
++                gene_idiomorph = classifier_genes(fam)
++                for c in members:
++                    prots = []
++                    for h in c.hits:
++                        if (h.family_key != key or h.gene_name not in gene_idiomorph
++                                or h.method != "tblastn_genome"):
++                            continue
++                        span = types.SimpleNamespace(contig=h.contig, start=h.start, end=h.end,
++                                                     strand=h.strand, exons=())
++                        pr = _translate_model(genome_fasta, span, genetic_code or 1, _cache)
++                        if pr:
++                            prots.append(pr)
++                    if not prots:
++                        continue
++                    v = _clf_classify(clf, prots, classifier_input="hsp_fragment")
++                    if v is None or v.paralog_class is not None:
++                        continue
++                    best = max(v.scores.values())
++                    if best >= gthr:
++                        _strong[(id(c), key)] = best
++            _log_path = _os.environ.get("MATP_CAP_EXEMPT_LOG")
++        polish_allowed = set()
++        for key, members in by_family.items():
++            if _variant == "V3":
++                ranked = sorted(members, key=lambda c: (0 if (id(c), key) in _strong else 1,) + _polish_rank(c, key))
++            else:
++                ranked = sorted(members, key=lambda c: _polish_rank(c, key))
++            top = ranked[:max_polished_clusters_per_family]
++            polish_allowed |= {(id(c), key) for c in top}
++            rest = [c for c in ranked[max_polished_clusters_per_family:] if (id(c), key) in _strong]
++            if _variant == "V1":
++                polish_allowed |= {(id(c), key) for c in rest}
++            elif _variant == "V2" and rest:
++                bestc = max(rest, key=lambda c: _strong[(id(c), key)])
++                polish_allowed.add((id(bestc), key))
++            if _variant and _os.environ.get("MATP_CAP_EXEMPT_LOG"):
++                with open(_os.environ["MATP_CAP_EXEMPT_LOG"], "a") as _fh:
++                    for c in ranked:
++                        if (id(c), key) in _strong:
++                            _fh.write(f"{genome_id}\t{key}\t{c.hits[0].contig}\t{_strong[(id(c), key)]:.1f}\t"
++                                      f"{int(c in top)}\t{int((id(c), key) in polish_allowed)}\n")
+     for cluster in clusters:
+         admitted_families = _families_meeting_evidence_floor(cluster, families, evidence_floor)
+         capped_keys = set()

@@ -72,6 +72,38 @@ Data (curator): `/bigdata/stajichlab/nicolel/Fola/`
   same-species reference panel and let `detect` type the Fola assemblies, so
   assembly calls, read calls and N. L.'s calls can be compared three ways.
 
+## Case: Aspergillus fumigatus putative hybrids (Lofgren et al. 2022)
+Source: Lofgren LA et al. 2022, PLoS Biol, doi:10.1371/journal.pbio.3001890
+(PMC9714929); S9 Fig; supplementary table (journal.pbio.3001890.s009).
+- Their method, summarised: MAT type from BLASTN of the MAT1-1 (AY898661.1,
+  strain AF250) and MAT1-2 (Afu3g06170, Af293) CDS against each assembly; the
+  11 strains with hits to both were rechecked by mapping raw reads to the two
+  references (Bowtie2, very-sensitive-local), with depth profiles, consensus
+  sequences, and ploidy checks (k-mer spectra with GenomeScope, k = 21; allele
+  frequencies at heterozygous sites). S9 Fig shows 9 strains with alignments
+  over both idiomorphs at different depths.
+- Design point for Tool A: about 270 bp at the end of the MAT1-2 reference is
+  shared with MAT1-1, so a MAT1-1 strain covers that part of the MAT1-2
+  reference. Breadth and depth must be computed on idiomorph-specific
+  positions only (mask the shared part), as the F. oxysporum data also show
+  (MAT1-1 11.6% breadth in a MAT1-2 strain).
+- Putative hybrids named by the curator (reasonable read coverage on both
+  idiomorphs): IFM_59359, AF100-1_3, IFM_61407.
+- Local data (checked 2026-10-05):
+  - assemblies: `/bigdata/stajichlab/shared/projects/Afumigatus_pangenome/scaffolded/genomes/`
+    (610 files; IFM_59359 and IFM_61407 present; AF100-1_3 not found there);
+  - reads: full alignments to Af293 (FungiDB-50) as CRAM in
+    `/bigdata/stajichlab/shared/projects/Population_Genomics/Afumigatus_Global/aln/`
+    (IFM_59359 0.53 GB, AF100-1_3 1.49 GB, IFM_61407 0.49 GB); use these
+    (samtools fastq, or the alignments directly);
+  - do NOT use `Afumigatus_Global/unmapped/*.fastq.gz`: they are only the reads
+    that did not map to Af293 (input to `pipeline/05_assemble_unmapped.sh`), so
+    the Af293-type (MAT1-2) reads are missing from them.
+- Test: Tool A must report "both" with depth ratios for these 3, single
+  idiomorphs for the population, and match the published calls; the ploidy
+  check (k-mer spectrum, allele balance) is reported next to the call, not used
+  to make it.
+
 ## Case: Xylaria flabelliformis NC1011 (checked 2026-10-05)
 What MATPredict v0.6.0 found (`results/2026-10-03_ascomycota_v060/`, wave_7):
 - GCA_022453505.1 (JGI Xylcub1, NC1011): one call, Ascomycota:MAT MAT1-2,
@@ -223,6 +255,6 @@ Answered 2026-10-05: code home, hybrid order, Fusarium source, Bd scope (see
 Curator decisions). Still open:
 1. Minimum evidence to report a "candidate MAT-like locus" from Tool B.
 2. Which Xylariales species has a population read set (>= 30 strains)?
-3. The Lofgren et al. A. fumigatus hybrid strain list (Fola data: supplied).
+3. A. fumigatus AF100-1_3 assembly location (reads are in the CRAM set).
 4. Curate the F. oxysporum MAT1-1/MAT1-2 idiomorphs (AB011379.2, AB011378.1)
    as records?

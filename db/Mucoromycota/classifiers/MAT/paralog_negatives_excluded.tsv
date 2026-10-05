@@ -1,0 +1,8 @@
+# Proteins removed from paralog_negatives.faa because they are probable MAT genes
+# (curator ruling 2026-10-04). Rule: placed inside a supported sexP or sexM clade of the
+# 2026-10-03 gene trees AND classifier margin >= 25 bits (2026-10-01 build).
+# Evidence: analysis/2026-10-04_unclassified-hmg-in-gene-trees.md; results/2026-10-04_unclassified_hmg/.
+protein_id	reason	evidence	ruled
+GCF_025528875.1_Mycafr1|h1|t0	Mycotypha africana sexM (homothallic; same scaffold as sexP, 153 kb; Schulz 2016); now curated in 64632_nrrl-2978_MAT_combined	sexM clade (full-length tree); sexM 116.3 vs sexP 64.9 bits	J. Stajich 2026-10-04
+GCA_025716815.1_Dicele1|h5|t1	Dichotomocladium elegans: probable sexP (genome has no call)	inside Circinella-type sexP clade, UFBoot 96 (full) / 95 (HMG box); sexP 187.3 vs sexM 41.7 bits	J. Stajich 2026-10-04
+GCA_016758965.1_ASM1675896v1|h6|t0	Circinella minor: probable second sexP-type copy (genome already called Plus)	inside the sexP MRCA (full-length tree); sexP 157.2 vs sexM 31.6 bits	J. Stajich 2026-10-04

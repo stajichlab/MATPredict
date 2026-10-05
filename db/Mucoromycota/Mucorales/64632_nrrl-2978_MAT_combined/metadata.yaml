@@ -1,0 +1,210 @@
+record_id: 64632_nrrl-2978_MAT_combined
+record_version: 1
+taxonomy:
+  taxid: 64632
+  lineage: k__Fungi;p__Mucoromycota;c__Mucoromycetes;o__Mucorales;f__Mycotyphaceae;g__Mycotypha;s__Mycotypha_africana
+  lineage_resolved_date: '2026-10-04'
+organism:
+  species: Mycotypha africana
+  strain:
+    name: NRRL 2978
+    known: true
+    culture_collection_ids:
+    - NRRL 2978
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - Plus
+  - Minus
+  system: homothallic
+locus:
+  assembly_accession: GCF_025528875.1
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: fragmented
+    reference_orientation: 'segment 0: sexP-> rnhA-> <-glrA | segment 1 (153 kb away,
+      same scaffold): <-sexM'
+    definition_note: 'Homothallic (Schulz et al. 2016, Endocytobiosis Cell Res 27(4):39-57,
+      p. 46: sexP and sexM on the same scaffold, about 150 kb apart; no DOI or PMID).
+      Mycotypha africana NRRL 2978, JGI assembly Mycafr1 (GCF_025528875.1), scaffold
+      NW_026515730.1. Segment 0: sexP (XP_052935775.1, +, 247 aa) -> rnhA (XP_052935776.1,
+      +) -> glrA (XP_052935777.1, -), 1,357,729-1,365,893; MATPredict v0.6.0 calls
+      this Plus (sexP, rnhA, glrA). Segment 1: sexM, 1,203,454-1,205,049 (-), 153
+      kb from sexP; no flank gene within 60 kb. sexM model: single-exon ORF, Met to
+      stop, 531 aa, curator-derived from the assembly (RefSeq has only an 83-aa partial
+      fragment, XP_052935737.1, 1,204,699-1,204,947; the BFD re-annotation F5387F0C_005515
+      spans the same ORF). PF00505 HMG box at aa 33-98 (i-E 6.8e-16); two weak HMG-like
+      repeats at aa 221-249 and 367-395 (i-E 5.4e-4). Classifier (db/Mucoromycota/classifiers/MAT,
+      built 2026-10-01) on the full ORF: sexM 171.6, sexP 70.4 (margin +101), P1 34.6
+      bits; on aa 26-218: sexM 116.3, sexP 64.9. The full ORF is unusually long for
+      a sexM (about 180-220 aa in other records); the classifier trains on aa 26-218
+      only (curator ruling 2026-10-04). In the 2026-10-03 full-length gene tree this
+      protein groups with sexM. It was in the classifier paralog-negative set (GCF_025528875.1_Mycafr1|h1|t0)
+      until this record. TIER 2 (genome-derived, with literature support for the arrangement).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NW_026515730.1
+        seq_region: NW_026515730.1
+      start: 1357729
+      end: 1365893
+      contig_edge_distance: null
+      sequence_checksum: null
+    - segment_index: 1
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NW_026515730.1
+        seq_region: NW_026515730.1
+      start: 1203454
+      end: 1205049
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: sexP
+  protein_accession: ncbi_protein:XP_052935775.1
+  role: core_MAT
+  present: true
+  locus_tag: BDF20DRAFT_875166
+  segment_index: 0
+  start: 1357729
+  end: 1358472
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 1357729
+    end: 1358472
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: rnhA
+  protein_accession: ncbi_protein:XP_052935776.1
+  role: flanking_conserved
+  present: true
+  locus_tag: BDF20DRAFT_875170
+  segment_index: 0
+  start: 1358600
+  end: 1362852
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 1358600
+    end: 1358661
+  - start: 1358723
+    end: 1359329
+  - start: 1359392
+    end: 1359998
+  - start: 1360066
+    end: 1360176
+  - start: 1360243
+    end: 1361387
+  - start: 1361460
+    end: 1361587
+  - start: 1361652
+    end: 1362255
+  - start: 1362313
+    end: 1362543
+  - start: 1362601
+    end: 1362852
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: glrA
+  protein_accession: ncbi_protein:XP_052935777.1
+  role: flanking_variable
+  present: true
+  locus_tag: BDF20DRAFT_875179
+  segment_index: 0
+  start: 1364314
+  end: 1365893
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 1365446
+    end: 1365893
+  - start: 1364842
+    end: 1365372
+  - start: 1364383
+    end: 1364789
+  - start: 1364314
+    end: 1364328
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: sexM
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 1
+  start: 1203454
+  end: 1205049
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 1203454
+    end: 1205049
+  codon_start: 1
+  transl_table: 1
+  classifier_training_region:
+    aa_start: 26
+    aa_end: 218
+    reason: 'Curator ruling 2026-10-04: train on the HMG-box region (the 193-aa span
+      that aligns to curated sexM); the C-terminal HMG-like repeats (aa 221-249, 367-395)
+      stay out of the HMM.'
+evidence:
+  locus_existence:
+    tier: 2
+    citations: []
+    experimental_method: 'TIER 2 (genome-derived). Literature: Schulz et al. 2016
+      (Endocytobiosis Cell Res 27(4):39-57; no DOI/PMID) reports sexP and sexM in
+      M. africana NRRL 2978 on one scaffold about 150 kb apart (p. 46). Genes located
+      on GCF_025528875.1 by MATPredict (sexP locus) and by tblastn/exonerate of curated
+      sexM (sexM).'
+  boundaries:
+    tier: 2
+    citations: []
+    experimental_method: TIER 2 (genome-derived). Segment 0 spans sexP, rnhA, glrA
+      (RefSeq models); segment 1 spans the sexM ORF (curator-derived, Met to stop).
+  idiomorph_assignment:
+    tier: 2
+    citations: []
+    experimental_method: 'TIER 2 (genome-derived). Idiomorphs from the HMG-box genes:
+      classifier and PF00505 scores in definition_note; sexM groups with sexM in the
+      2026-10-03 full-length gene tree.'
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NW_026515730.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-genome-curation
+  proposal_dedupe_key: GCF_025528875.1|64632|MAT|Plus+Minus
+  reviewed_by: null
+  reviewed_date: null
+  notes: Proposed 2026-10-04 on curator ruling (curate the Mycotypha sexM; one combined
+    homothallic record; record the full 531-aa sexM ORF, train on aa 26-218). Awaiting
+    curator sign-off.
+model_provenance: null

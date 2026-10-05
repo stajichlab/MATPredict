@@ -117,6 +117,18 @@ properties:
         codon_start: {type: integer, enum: [1, 2, 3]}
         # transl_table: NCBI genetic code table number. Absence means 1 (standard code).
         transl_table: {type: integer}
+        # classifier_training_region: train the idiomorph classifier on this
+        # 1-based inclusive amino-acid range of the protein instead of the whole
+        # protein (curator ruling 2026-10-04: Mycotypha africana sexM is a
+        # 531-aa ORF whose C-terminal repeats should not enter the HMM). Search
+        # and the record keep the full protein.
+        classifier_training_region:
+          type: object
+          required: [aa_start, aa_end, reason]
+          properties:
+            aa_start: {type: integer, minimum: 1}
+            aa_end: {type: integer, minimum: 1}
+            reason: {type: string}
   evidence:
     type: object
     required: [locus_existence, boundaries, idiomorph_assignment]

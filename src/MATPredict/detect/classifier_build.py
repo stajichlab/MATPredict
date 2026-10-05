@@ -112,15 +112,41 @@ def _record_genera(db_root: Path) -> dict[str, str]:
     return out
 
 
+def _training_regions(db_root: Path) -> dict[tuple[str, int], tuple[int, int]]:
+    """(record_id, gene_index) -> (aa_start, aa_end) for every gene with a
+    `classifier_training_region` (1-based, inclusive; curator ruling 2026-10-04)."""
+    out = {}
+    for meta in db_root.glob("*/*/*/metadata.yaml"):
+        if meta.relative_to(db_root).parts[0] == "candidates":
+            continue
+        try:
+            rec = yaml.safe_load(meta.read_text())
+        except Exception:
+            continue
+        for g in rec.get("genes") or []:
+            region = g.get("classifier_training_region") if isinstance(g, dict) else None
+            if region:
+                out[(rec["record_id"], int(g["gene_index"]))] = (int(region["aa_start"]),
+                                                                   int(region["aa_end"]))
+    return out
+
+
 def training_set(db_root: Path, family, classifier_dir: Path) -> list[dict]:
-    """One dict per training protein: id, gene, genus, source, sequence."""
+    """One dict per training protein: id, gene, genus, source, sequence.
+
+    A record gene with `classifier_training_region` contributes only that
+    amino-acid range; its full protein still goes to search."""
     genes = classifier_genes(family)
     rows = []
+    regions = _training_regions(db_root)
     with tempfile.TemporaryDirectory() as tmp:
         ref = build_reference_fasta(db_root, Path(tmp) / "ref.faa", family_keys={family.key})
         genera = _record_genera(db_root)
         for header, seq in read_fasta(ref).items():
-            record, _idx, gene = header.split("|")
+            record, idx, gene = header.split("|")
+            region = regions.get((record, int(idx.removeprefix("gene"))))
+            if region:
+                seq = seq[region[0] - 1:region[1]]
             if gene in genes and len(seq) >= MIN_PROTEIN_LENGTH:
                 rows.append(dict(id=f"REF|{header}", gene=gene, genus=genera.get(record, record),
                                  source="curated_record", sequence=seq))

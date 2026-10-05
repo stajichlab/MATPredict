@@ -48,7 +48,7 @@ Slurm script gotchas already fixed: source `common.sh` by absolute path (Slurm r
 - xyl-mpsyn (29402670) and the breakpoint alignments (29403041) are DONE. Results are summarised in `analysis/2026-10-05_xylariales-synteny.md`
   (read that first; it supersedes result 2 above, which was a 4-gene, annotated-only first pass and mis-described state A as an inversion).
   Tables: `genomes_miniprot.tsv`, `adjacency_miniprot.tsv`, `genes_miniprot.tsv`, `breakpoints/summary.md` (in the results directory).
-- Still running at the time of writing: xyl-rnaseq (29402370, ~54 GB of reads) and xyl-hmgtree (29402372). Their sections in the analysis note are marked pending.
+- xyl-rnaseq (29402370) is DONE: summary in the analysis note and `work/rna/coverage_summary.tsv` (script `07_rna_summary.py`). xyl-hmgtree (29402372) is DONE: placement in `tree/hmg_placement.tsv` (script `08_hmg_placement.py`), summarised in section 6 of the analysis note. KAI0192626.1 is nearest NCU03481 (1.02 vs 2.22 for the nearest MAT reference) at 14% bootstrap; the tree is under-powered (9 MAT references, not monophyletic).
 - Items 1 and 2 below are done at gene level; nucleotide-level breakpoints are NOT resolved (minimap2 found almost no alignable blocks).
 
 ## Still to do (in order)

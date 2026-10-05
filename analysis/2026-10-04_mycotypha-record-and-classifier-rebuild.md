@@ -103,16 +103,15 @@ All 288 BFD Mucoromycotina genomes, campaign mode, vs the 2026-10-03 campaign
   approach, not everything will be a curated set.
 
 ## Decision
-Merged to main 2026-10-05 (PR #25).
+Merged to main 2026-10-05 (PR #25). The alignment refinement and placement plan below is still open, pending the curator's review of the alignments.
 
 ## Open
 - Mycotypha sexM is still not called in its genome (no flanks); a report-only
   check for an unlinked second idiomorph would surface it.
 - Dichotomocladium elegans h5: candidate missed sexP (review).
-- Frameshift-aware classification (proposal): when exonerate reports a
-  frameshift in a core MAT gene model, classify the frame-corrected translation
-  and flag `frameshift_in_model`. Would restore M. griseocyanus (Minus) and help
-  Nanopore-only assemblies. Not implemented; needs curator approval.
+- Frameshift-aware classification: implemented (PR #26,
+  `2026-10-04_frameshift-aware-classification.md`); M. griseocyanus is now Minus.
+  (This note said "not implemented" until 2026-10-05.)
 - Rhizomucor pusillus: no curated Rhizomucor record; the two new Plus calls
   are medium confidence.
 

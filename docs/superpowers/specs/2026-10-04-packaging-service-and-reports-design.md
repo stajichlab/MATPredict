@@ -294,3 +294,11 @@ matpredict atlas build    --runs DIR... --out ATLAS   # maintainers only
   under-curated lineages (21 genes in 15 Alaninales genomes).
 - The tool is not a mating-type assay: two idiomorphs in one assembly can be a
   homothallic species, a mixed culture or a merged diploid assembly.
+
+## Side note (2026-10-05): reads-based typing and population locus discovery
+Two further lines of work are specified separately:
+`docs/superpowers/specs/2026-10-05-reads-typing-and-population-locus-discovery-design.md`
+(idiomorph typing from unassembled reads against a species' known idiomorphs;
+and discovery of MAT-like loci from presence/absence and depth patterns across a
+population of strains, with Batrachochytrium and Xylariales as targets). They
+would be developed on their own branch and are not part of the phases above.

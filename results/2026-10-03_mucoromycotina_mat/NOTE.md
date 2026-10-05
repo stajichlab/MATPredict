@@ -74,4 +74,7 @@ Study report: `analysis/2026-10-03_mucoromycotina-mat-campaign.md`.
 - Clade test used for both trees: the largest clade that holds no tip of the
   other idiomorph (outgroup tips allowed). Full length: sexM 173/173 (UFBoot
   93), sexP 163/163 but only with 131 outgroup tips (UFBoot 29).
-- RAxML-NG check on the HMG box: job 29397060 (running).
+- RAxML-NG check on the HMG box (job 29397060, 1 h 35 min; `rx_hmg.*`,
+  `rx_hmg_summary.txt`): better log-likelihood than IQ-TREE (-28,044.5 vs
+  -28,123.8); sexP not one clade (largest sexP-only clade 80/162, bootstrap 3);
+  deep bootstraps 0-5%. The HMG-box sexP clade (UFBoot 99) is not robust.

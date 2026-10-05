@@ -104,6 +104,32 @@ Source: Lofgren LA et al. 2022, PLoS Biol, doi:10.1371/journal.pbio.3001890
   check (k-mer spectrum, allele balance) is reported next to the call, not used
   to make it.
 
+## Results 2026-10-05: what `detect` (assembly) says for the two read-typing test sets
+- A. fumigatus putative hybrids (`results/2026-10-05_afum_hybrids_detect/`,
+  main at the time; assemblies `/bigdata/stajichlab/shared/projects/Afumigatus_pangenome/genomes/`,
+  symlinks into `Afum_popgenome/asm/scaffold/genomes_scaffolded/`):
+  - BLASTN of MAT1-1 (AY898661.1) and MAT1-2 (Afu3g06170 from Af293 FungiDB-50)
+    finds both in all three: MAT1-1 at 99.7-99.8% over 2.3-2.4 kb on a small
+    scaffold (IFM_59359 scaffold_79, 2,420 bp; DMC_AF100-1_3 scaffold_134,
+    2,318 bp; IFM_61407 scaffold_69, 2,418 bp); MAT1-2 at 99.1-99.4% over
+    0.9-1.1 kb on scaffold_3 (the chromosome-3 scaffold).
+  - `detect` calls only MAT1-2 (medium, mat_locus on scaffold_3 with SLA2,
+    APN2, COX13, MAT1-2-4). The MAT1-1 contig is withheld as
+    `below_fraction_floor` (DMC_AF100-1_3, IFM_61407) or not reported
+    (IFM_59359): a 2.4-kb contig carries no flank genes.
+  - So the assembly path under-reports these hybrids; read depth (Tool A) is
+    what separates a second nucleus/allele from contamination. This is the
+    case for the report-only "unlinked second idiomorph" check.
+  - DMC_AF100-1_3 and DMC2_AF100-1_3 are two near-identical scaffoldings (872
+    scaffolds each, sizes differ by 180 bp); BLAST results are the same.
+- Fola assemblies (`results/2026-10-05_fola_detect/`, run-94c1a3b with the new
+  F. oxysporum records): 4 of 19 typed -- AT141 MAT1-2 (Chr7), JCP043 MAT1-2
+  (chr8), VSP-0916 flye MAT1-2, VSP-0980 MAT1-1 (all high, mat_locus). The
+  other 15 `*.fna` files in `/bigdata/stajichlab/nicolel/Fola/genomes/` are not
+  readable by the jstajich account (Permission denied); they need group read
+  permission before a re-run. Tool bug found: an unreadable genome surfaces as
+  a BLAST "No alias or index file" error instead of a clear input error.
+
 ## Case: Xylaria flabelliformis NC1011 (checked 2026-10-05)
 What MATPredict v0.6.0 found (`results/2026-10-03_ascomycota_v060/`, wave_7):
 - GCA_022453505.1 (JGI Xylcub1, NC1011): one call, Ascomycota:MAT MAT1-2,
@@ -123,6 +149,8 @@ What MATPredict v0.6.0 found (`results/2026-10-03_ascomycota_v060/`, wave_7):
   references, or absent. Next steps: search the proteome for alpha-box
   (PF04769) and HMG proteins genome-wide and rank by similarity to
   Sordariomycetes MAT proteins; Tool B if a Xylaria population read set exists.
+- Further work on NC1011 (interval, gene-order classes, HMG tree, RNA-seq):
+  branch `xylariales-interval`, `docs/HANDOFF-xylariales-2026-10-05.md`.
 - SRA (checked 2026-10-05, txid2512241): no population. DNA from two strains
   only: NC1011 PacBio Sequel WGS (SRR8861568-73, ~12 Gb; the JGI assembly) and
   G536 Illumina MiSeq WGS (SRR9166620, 14 Gb, filed as "Xylaria cubensis").

@@ -1,6 +1,7 @@
 # sexP and sexM gene trees across Mucoromycotina (2026-10-04)
 
-Status: decided (descriptive); RAxML-NG check of the HMG-box tree running.
+Status: decided (descriptive). RAxML-NG check done (2026-10-04): the HMG-box
+sexP clade is not robust; see section 1b.
 Part of the Mucoromycotina MAT campaign
 ([2026-10-03 report](2026-10-03_mucoromycotina-mat-campaign.md)).
 
@@ -73,6 +74,19 @@ idiomorph (outgroup tips allowed).
   the first with all sexM in one clade at UFBoot >= 90 (the 2026-09-27 trimmed
   tree had the 9 sexM references together at UFBoot 74).
 
+### 1b. RAxML-NG check of the HMG-box tree
+RAxML-NG 2.0.2, same alignment and model (LG+R6), 200 bootstraps (job
+29397060, 1 h 35 min; `tree/rx_hmg.raxml.support`, `tree/rx_hmg_summary.txt`):
+- Its ML tree has a **better log-likelihood than the IQ-TREE tree**
+  (-28,044.5 versus -28,123.8, 79 units).
+- In it sexP is **not** one clade: the largest sexP-only clade holds 80 of 162
+  tips (bootstrap 3); all 173 sexM tips fall in one clade only together with 186
+  outgroup tips (bootstrap 4).
+- Deep-node bootstrap support is 0-5%.
+- So the HMG-box "sexP one clade, UFBoot 99" result does not survive: the
+  69-site HMG box does not resolve the deep sexP/sexM relationships. UFBoot on
+  this alignment overstates support. The full-length tree is the main evidence.
+
 ### 2. Rooting and the outgroup
 - The non-MAT HMG outgroup is not monophyletic in either tree. In the full-
   length tree 132 outgroup tips fall inside the MRCA of all MAT tips (100 in the
@@ -131,11 +145,12 @@ tested for significance, and the sexP main clade there includes outgroup tips.
 
 ## Decision
 Descriptive; no tool change. For figures: show the full-length tree as the
-main tree (sexM one clade, UFBoot 93) and the HMG-box tree as a supplement, and
-state that the root and the sexP-sexM relationship are not resolved.
+main tree (sexM one clade, UFBoot 93). The HMG-box tree is a supplement only,
+with the RAxML-NG result stated (sexP not resolved). State that the root and
+the sexP-sexM relationship are not resolved.
 
 ## Open
-- RAxML-NG check of the HMG-box tree (job 29397060).
+- RAxML-NG check of the full-length tree (not run).
 - The 5 nested outgroup HMG genes: locus, gene order, identity.
 - Compare genus placement with the species tree; test the sexM/sexP divergence
   difference.

@@ -1,6 +1,6 @@
 # Mucoromycotina MAT campaign: calls, locus size, synteny, sexP/sexM trees (2026-10-03)
 
-Status: running (RAxML-NG check not in yet); figures are drafts.
+Status: figures are drafts (to be redrawn after the NRRL 1454 override).
 
 ## Question
 Across BFD, LCG and Jena Mucoromycotina genomes: which genomes carry a sexP
@@ -59,7 +59,8 @@ See `results/2026-10-03_mucoromycotina_mat/NOTE.md` for every step and file.
 None yet. Figures are drafts for the curator.
 
 ## Open
-- RAxML-NG check on the HMG box (job 29397060).
+- RAxML-NG on the HMG box (done): its better-likelihood tree splits sexP;
+  the HMG-box sexP clade is not robust (see the gene-tree report, 1b).
 - sexM monophyly: unresolved on the HMG box (69 sites), supported on full length (UFBoot 93).
 - Compare locus size within one flank pair, or show all with the pair marked?
 - Held-out LCG/Jena genomes in publication figures: **allowed** (curator,

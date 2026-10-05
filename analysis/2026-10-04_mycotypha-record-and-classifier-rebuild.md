@@ -1,6 +1,6 @@
 # Mycotypha africana combined record, cleaned negatives, classifier rebuild
 
-Status: awaiting curator sign-off (record and rebuild).
+Status: merged (PR #25); alignment-refinement tests open.
 
 ## Question
 Curate the Mycotypha africana sexM found in the gene trees
@@ -103,7 +103,7 @@ All 288 BFD Mucoromycotina genomes, campaign mode, vs the 2026-10-03 campaign
   approach, not everything will be a curated set.
 
 ## Decision
-Pending curator sign-off after the alignment review.
+Merged to main 2026-10-05 (PR #25).
 
 ## Open
 - Mycotypha sexM is still not called in its genome (no flanks); a report-only

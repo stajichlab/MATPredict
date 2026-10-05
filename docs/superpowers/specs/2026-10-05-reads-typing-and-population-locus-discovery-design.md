@@ -48,6 +48,30 @@ Fusarium population read sets are not local; they would come from SRA
   lineages rather than follow them.
 - Xylaria flabelliformis NC1011 is a named target (below).
 
+## Case: Fusarium oxysporum f. sp. lactucae (Fola) -- existing read-based typing (checked 2026-10-05)
+Data (curator): `/bigdata/stajichlab/nicolel/Fola/`
+- Reads: `02_fastq/NCBI_SRAs_retrieved/` (SRA runs, e.g. 20a = SRR28734943;
+  94 FASTQ files) and `04_AVITI_rawoutput/Martin_Nov2025/` (AVITI, 66 FASTQ
+  files); assemblies in `genomes/`.
+- Existing typing (N. L.), `06_Align/Mating_Types/`
+  (`00_pipeline/Align/runAlign_MatingTypes_v3.sb`): reads mapped with bwa-mem2
+  to the F. oxysporum MAT1-1 and MAT1-2 idiomorph sequences (GenBank
+  AB011379.2, 5,220 bp; AB011378.1, 5,122 bp; `References/`); `samtools
+  coverage` per idiomorph; breadth separates the types (strain 20a: MAT1-2
+  99.6% breadth, 74x; MAT1-1 11.6%, the part shared with the flanks).
+- Result table `MAT_vs_Phenotype_counts.tsv`: 148 strains -- MAT2 129, MAT1 17,
+  Both 1, Neither 1, cross-tabulated with race (MAT1 strains are all
+  weak/non-pathogenic in that table). VSP-0947 has a de novo assembled MAT locus
+  (`VSP-0947_denovo/`).
+- Use for Tool A: this is the alignment path, already run; Tool A should
+  reproduce these 148 calls from the same reads (the benchmark), and add the
+  k-mer path, the depth ratios for "Both", and a standard report.
+- MATPredict database: Fusarium records exist for F. fujikuroi (5127_mo44
+  MAT1-1, 5127_mo45 MAT1-2) and F. graminearum (5518_3639 combined), none for
+  F. oxysporum. Curating AB011379.2 and AB011378.1 as records would give the
+  same-species reference panel and let `detect` type the Fola assemblies, so
+  assembly calls, read calls and N. L.'s calls can be compared three ways.
+
 ## Case: Xylaria flabelliformis NC1011 (checked 2026-10-05)
 What MATPredict v0.6.0 found (`results/2026-10-03_ascomycota_v060/`, wave_7):
 - GCA_022453505.1 (JGI Xylcub1, NC1011): one call, Ascomycota:MAT MAT1-2,
@@ -199,5 +223,6 @@ Answered 2026-10-05: code home, hybrid order, Fusarium source, Bd scope (see
 Curator decisions). Still open:
 1. Minimum evidence to report a "candidate MAT-like locus" from Tool B.
 2. Which Xylariales species has a population read set (>= 30 strains)?
-3. Paths: F. oxysporum f. sp. lactucae data; the Lofgren et al. hybrid strain
-   list.
+3. The Lofgren et al. A. fumigatus hybrid strain list (Fola data: supplied).
+4. Curate the F. oxysporum MAT1-1/MAT1-2 idiomorphs (AB011379.2, AB011378.1)
+   as records?

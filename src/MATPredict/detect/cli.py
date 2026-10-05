@@ -9,7 +9,8 @@ from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect.pipeline import (
-    DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DetectionOutcome, EvidenceFloor,
+    DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DEFAULT_POLISH_STRONG_IDENTITY, DetectionOutcome,
+    EvidenceFloor,
     not_searched_reason, run_pipeline,
 )
 from MATPredict.detect.family_registry import available_phyla, load_all_families, route
@@ -93,6 +94,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         routing=routing,
         exclude_record_ids=exclude_record_ids,
         max_polished_clusters_per_family=_polish_cap_from_args(args),
+        polish_strong_identity=_polish_strong_identity_from_args(args),
     )
 
     # `genome_fasta` is passed ONLY when asked for: it is what makes
@@ -122,6 +124,14 @@ def _polish_cap_from_args(args) -> int | None:
     cap = getattr(args, "max_polished_clusters_per_family",
                   DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY)
     return None if cap is None or cap <= 0 else cap
+
+
+def _polish_strong_identity_from_args(args) -> float | None:
+    """The identity tier above the polish cap for this run: the flag's value as a
+    percentage, 0 meaning no tier. An args object without the attribute (a test
+    double) gets the pipeline's default."""
+    value = getattr(args, "polish_strong_identity", DEFAULT_POLISH_STRONG_IDENTITY)
+    return None if value is None or value <= 0 else float(value)
 
 
 def _cmd_suppress_filter(args: argparse.Namespace) -> int:
@@ -349,6 +359,14 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "polishing by distinct genes, then best identity, then hit count. "
              f"Default: {DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY} (curator's ruling "
              "2026-09-26; measured -45%% compute, 4 of 613 calls lost). 0 = no cap.",
+    )
+    detect.add_argument(
+        "--polish-strong-identity", type=float, default=DEFAULT_POLISH_STRONG_IDENTITY,
+        help="Also polish every admitted cluster whose best identity is at or above "
+             "this percentage, even past the cap; the rest of the cap is filled from "
+             "the usual rank. Stops a true locus that hits few genes at high identity "
+             "being outranked by noise that hits more genes at low identity. "
+             f"Default: {DEFAULT_POLISH_STRONG_IDENTITY:g}. 0 = the plain cap.",
     )
     detect.add_argument(
         "--exhaustive", action="store_true",

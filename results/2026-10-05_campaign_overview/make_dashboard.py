@@ -115,7 +115,7 @@ cards = [
  card('ex', 'Zygomycete benchmark 23 of 23', 'All 23 Zygo genomes are typed on both scaffold and contig input, and the regression panel shows no changed locus across five panels.', 'results/2026-10-03_regression_v060'),
  card('out', 'Reference gaps: Orbiliomycetes 9%, Dipodascomycetes 29%', 'Both classes are searched through the phylum fallback. Low rates mark missing curation.', 'results/2026-10-03_ascomycota_v060/by_class.tsv'),
  card('out', 'PR-only calls inflate fallback orders', 'Cantharellales 91% drops to 17% and Trichosporonales 47% to 8% without PR-only calls. The CAAX-only calls are under a chance-level test in a draft PR (#33): about 13% of the unverified calls sit at chance.', 'analysis/2026-10-05_caax-receptor-test.md (draft)'),
- card('out', f'Dothideomycetes: flank genes split ({dboth:.0f}%)', f'Only {dboth:.0f}% of full Dothideomycete loci carry both APN2 and SLA2, against 82 to 91% in Sordariomycetes, Eurotiomycetes, Leotiomycetes and Lecanoromycetes. The locus is organised differently.', 'results/2026-10-03_ascomycota_v060/loci.tsv'),
+ card('out', f'Dothideomycetes: SLA2 detached ({dboth:.0f}% with both flanks)', f'Only {dboth:.0f}% of full Dothideomycete loci carry both APN2 and SLA2, against 82 to 91% in the other filamentous classes. A genome-wide search finds SLA2 in every sampled genome but inside the locus in only 14% (80% in Sordariomycetes); Cladosporiales are the exception. Mostly organisation, not missed detection.', 'analysis/2026-10-05_dothideomycetes-sla2.md'),
  card('out', 'Early-diverging fungi: few calls', 'Mortierellomycota 6 of 100, Kickxellomycota 7 of 190, and Lichtheimiaceae 1 of 30 in the 2026-09-26 scan. No Mucorales-type synteny support in Mortierella or Kickxella.', 'results/2026-09-26_early_diverging/summary.txt'),
  card('out', 'Xylaria NC1011: flanks, no MAT gene', 'SLA2, COX13 and APN2 are intact and expressed, with 475 and 118 bp between them and no HMG-box or alpha-box domain in the 47-kb region. The one call is an HMG gene nearest NCU03481 (14% support).', 'analysis/2026-10-05_xylariales-synteny.md'),
  card('out', 'Mycotypha: sexM 153 kb from sexP', 'A homothallic species with its two idiomorph genes about 150 kb apart on one scaffold. v0.6.0 did not call the sexM gene and the classifier carried it among its negatives; the classifier was rebuilt on 2026-10-04 and the new outcome has not been re-checked here.', 'analysis/2026-10-04_unclassified-hmg-in-gene-trees.md'),
@@ -258,6 +258,29 @@ tab_syn = f'''
 {legend([(1,f'SAC, n={ns}'),(2,f'SCA excluding E. lata, n={nc}'),(3,f'Eutypa lata, n={ne}')])}{grouped_hist()}</section>
 <p class="note">Sources: results/2026-10-05_xylariales_nc1011_interval, analysis/2026-10-05_xylariales-synteny.md. Gene-level only; breakpoints are bounded by gene ends.</p>'''
 
+# ------------------------------------------------------------------ SLA2 position test (Dothideomycetes)
+SLA2T = [r for r in rd('2026-10-05_dothideo_sla2_test/sla2_distance.tsv') if r['gene'] == 'SLA2']
+def sla2_cat(r):
+    if r['where'] == 'within_locus': return 'in'
+    if r['where'] == 'same_contig':
+        d = int(r['dist_best_bp'] or 0)
+        return 'in' if d == 0 else 'near' if d <= 100000 else 'far'
+    return 'other'
+sla_rows = []
+def add_row(label, sel):
+    c = collections.Counter(sla2_cat(r) for r in sel)
+    if sum(c.values()): sla_rows.append((label, dict(c)))
+add_row('Sordariomycetes (control)', [r for r in SLA2T if r['class'] == 'Sordariomycetes'])
+dothi = [r for r in SLA2T if r['class'] == 'Dothideomycetes']
+add_row('Dothideomycetes, all sampled', dothi)
+bo = collections.defaultdict(list)
+for r in dothi: bo[r['order'] or 'order not assigned'].append(r)
+for o, v in sorted(bo.items(), key=lambda x: -len(x[1])):
+    if len(v) >= 20: add_row(o, v)
+sla_cats = [('in', 'inside the called locus', 1), ('near', '20 to 100 kb away, same contig', 3), ('far', 'over 100 kb away, same contig', 4), ('other', 'on another contig', 2)]
+n_dothi_sla = len(dothi); pos_med = sorted(float(r['positives']) for r in dothi if r['where'] != 'no_hit')[len([1 for r in dothi if r['where'] != 'no_hit']) // 2]
+n_hit = sum(r['where'] != 'no_hit' for r in dothi)
+
 # ------------------------------------------------------------------ tab 4: size and content
 muc = collections.defaultdict(list)
 for r in MUC_C:
@@ -308,7 +331,11 @@ tab_size = f'''
 <section><h2>Filamentous Ascomycota: APN2 and SLA2 in the same locus</h2>
 <p class="note">Share of full loci that carry both flank genes. Dothideomycetes stand out.</p>
 {hbars([(c, n, p, s) for c, n, p, s in fil_flank])}
-<p class="note">Sources: results/2026-10-03_mucoromycotina_mat/calls.tsv (BFD, called), results/2026-10-03_ascomycota_v060/loci.tsv.</p></section>'''
+<p class="note">Sources: results/2026-10-03_mucoromycotina_mat/calls.tsv (BFD, called), results/2026-10-03_ascomycota_v060/loci.tsv.</p></section>
+<section><h2>Dothideomycetes: SLA2 is detached from the MAT locus, not missed</h2>
+<p class="note">A genome-wide search for SLA2 in {n_dothi_sla} sampled Dothideomycete genomes finds it in {n_hit} (best hit {pos_med*100:.0f}% positives against the NC1011 protein), so the gene is present and recognisable. Only a minority place it inside the called locus, against 80% in the Sordariomycete control. Cladosporiales keep it there; in most other orders SLA2 sits tens of kb away or on another contig. "Another contig" includes assembly breaks and misses (17% in the control). Sample: up to 25 genomes per order, one locus each.</p>
+{legend([(c[2], c[1]) for c in sla_cats])}{stacked(sla_rows, sla_cats, lab_w=235)}
+<p class="note">Source: results/2026-10-05_dothideo_sla2_test/sla2_distance.tsv (miniprot, SLA2 query from Xylaria NC1011), analysis/2026-10-05_dothideomycetes-sla2.md.</p></section>'''
 
 # ------------------------------------------------------------------ page
 CSS = '''
@@ -389,3 +416,61 @@ page = f'''<title>MATPredict Campaign Dashboard</title>
 '''
 open(os.path.join(HERE, 'dashboard.html'), 'w').write(page)
 print('dashboard.html', len(page), 'bytes; species', n_sp, 'eutypa', eutypa, 'maj', dict(sp_maj))
+
+# ------------------------------------------------------------------ print version (all tabs, with a reading guide) for the PDF
+GUIDE = '''
+<section class="guide"><h2>How to read this report</h2>
+<p>MATPredict finds mating-type (MAT) loci in fungal genomes. This report summarises three whole-clade runs of code version 0.6.0 over the BFD genome collection
+(Ascomycota, Basidiomycota and the Mucoromycotina part of Mucoromycota), then looks at two kinds of change: gene order near the MAT region in Xylariales, and locus
+length and gene content across groups. Everything is drawn from tables committed in the repository; nothing here is new computation.</p>
+<dl>
+<dt>Called</dt><dd>A genome with at least one MAT call. This measures detection, not truth. Most clades have no curated reference locus, so an uncalled genome is a
+reference gap until shown otherwise.</dd>
+<dt>Routed by lineage / phylum fallback</dt><dd>Genomes whose order has its own curated record are searched with it (blue). Others are searched against the whole phylum
+(orange) and call less reliably.</dd>
+<dt>Locus class</dt><dd>Full locus: the MAT gene(s) plus the expected flank structure. Partial locus: some of it. Gene only: the idiomorph gene without a recognised locus.
+Homothallic candidate: both idiomorphs at one locus.</dd>
+<dt>Confidence</dt><dd>High, medium or low, from how complete the evidence is.</dd>
+<dt>PR-only calls</dt><dd>Basidiomycota genomes whose only call is the pheromone-receptor family. 1,360 of these come from a motif scan alone and are labelled unverified.</dd>
+<dt>SAC and SCA (Xylariales)</dt><dd>Orders of the flank genes SLA2, COX13 and APN2. SAC keeps the outgroup order with an open interval between SLA2 and APN2 where a MAT locus
+sits. SCA has COX13 between SLA2 and APN2, so the interval is closed.</dd>
+</dl>
+<h3>Panel by panel</h3>
+<ul>
+<li><b>Summary.</b> Headline counts; call rate per class or order (a marker shows the rate without PR-only calls); and the composition of the calls. Takeaway: rates are high
+where a clade has its own record and low where it does not.</li>
+<li><b>Exemplars and outliers.</b> Short cards with a source file each. Exemplars show what the approach recovers; outliers show where it falls short or where biology differs.</li>
+<li><b>Xylariales synteny.</b> A gene-order map of seven genomes on one frame; the sampling bar chart (genomes versus species); a table of which neighbours remain adjacent; and
+a histogram of the SLA2 to APN2 distance. Takeaway: the NC1011 order is shared by many species and its MAT interval is closed.</li>
+<li><b>Locus size and content.</b> Locus length per Mucoromycotina genus and per filamentous Ascomycota class (bar = interquartile range, dot = median, line = range), a table
+of which genes each Mucoromycotina genus carries, and the share of Ascomycota loci carrying both flank genes.</li>
+</ul>
+<p class="note">Limits: counts are descriptive; several runs used earlier code; genome counts reflect uneven strain sampling; synteny is gene-level only. The markdown overview is
+<code>analysis/2026-10-05_campaign-overview.md</code> and the guide is <code>analysis/2026-10-05_campaign-dashboard-guide.md</code>.</p></section>'''
+PRINT_CSS = '''
+@page{size:Letter;margin:13mm 12mm}
+body{background:#fff;color:#101312;font-size:11.5px}
+:root{--bg:#fff;--panel:#fff;--grid:#e3e5e2;--line:#cfd2cf}
+.wrap{max-width:none;padding:0}
+nav{display:none}
+.tab{display:block !important;break-before:page}
+.tab:first-of-type{break-before:auto}
+.tab>h1{font-size:18px;margin:0 0 8px}
+section,.card,.tile{break-inside:avoid}
+section{border-color:#cfd2cf}
+.chart.wide{min-width:0}
+details{display:block}details>summary{display:none}
+.guide dl{display:grid;grid-template-columns:170px 1fr;gap:4px 12px;margin:8px 0}.guide dt{font-weight:600}.guide dd{margin:0;color:var(--ink2)}
+.guide h3{font-size:13px;margin:12px 0 4px}.guide li{margin:0 0 4px}
+.cards{grid-template-columns:repeat(2,1fr)}
+'''
+def tabbed(title, body): return f'<div class="tab"><h1>{E(title)}</h1>{body}</div>'
+print_page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><title>MATPredict campaign report</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>{CSS}{PRINT_CSS}</style></head><body><div class="wrap">
+<header><h1>MATPredict campaign report</h1><p>Whole-clade runs on the BFD genomes with code v0.6.0 (2026-10-03 to 05). Generated {__import__("datetime").date.today().isoformat()} from committed tables by results/2026-10-05_campaign_overview/make_dashboard.py.</p></header>
+{GUIDE}
+{tabbed('1. Summary', tab_summary)}{tabbed('2. Exemplars and outliers', tab_ex)}{tabbed('3. Xylariales synteny', tab_syn)}{tabbed('4. Locus size and content', tab_size)}
+</div></body></html>'''
+open(os.path.join(HERE, 'campaign_report_print.html'), 'w').write(print_page)
+print('print version written')

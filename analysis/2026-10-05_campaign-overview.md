@@ -35,7 +35,8 @@ v0.6.0 runs: `analysis/2026-10-04_basidiomycota-ascomycota-v060-campaign.md`.
 
 ## Locus size and content
 - Ascomycota full generic-MAT loci, median length: Sordariomycetes 17.1 kb, Eurotiomycetes 13.5, Leotiomycetes 13.1, Lecanoromycetes 12.7, Dothideomycetes 8.9.
-  Share carrying both APN2 and SLA2: 82 to 91% in all of these except Dothideomycetes (6%).
+  Share carrying both APN2 and SLA2: 82 to 91% in all of these except Dothideomycetes (6%). A genome-wide test (`analysis/2026-10-05_dothideomycetes-sla2.md`) finds SLA2 in
+  every sampled Dothideomycete genome but inside the called locus in only 14% (80% in Sordariomycetes): mostly lineage-specific detachment of SLA2, not missed detection.
 - Mucoromycotina (BFD): median 14.5 kb overall; Umbelopsis 41.5 kb, Rhizopus 14.5, Mucor 14.8, Backusella 9.2, Cunninghamella 10.4, Apophysomyces 7.8,
   Syncephalastrum 5.3. btbA appears only in Rhizopus (77% of its loci). Per-genus gene presence is a table in the dashboard.
 
@@ -46,7 +47,7 @@ v0.6.0 runs: `analysis/2026-10-04_basidiomycota-ascomycota-v060-campaign.md`.
 
 ## Exemplars and outliers (more in the dashboard)
 Exemplars: Wallemiales 0 to 51 of 51 from one record; Rhodotorula P/R 61 of 62 held-out strains; Zygo 23 of 23. Outliers: Orbiliomycetes 9% and
-Dipodascomycetes 29% (fallback); PR-only calls in fallback orders; Dothideomycetes flank genes split; early-diverging fungi with few calls; Xylaria NC1011 with
+Dipodascomycetes 29% (fallback); PR-only calls in fallback orders; Dothideomycetes with SLA2 detached from the locus; early-diverging fungi with few calls; Xylaria NC1011 with
 intact flanks and no MAT gene; Mycotypha sexM 153 kb from sexP.
 
 ## Where the full reports are

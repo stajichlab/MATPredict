@@ -264,3 +264,14 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
 - LCG Mucor sp. NRRL 1454 (2026-10-04): curator ruling: override to
   Umbelopsis sp. (genus, confirmed: BUSCO trees, both sexM gene trees, LSU
   D1/D2 99.5% U. tibetica type); excluded from species-level scoring; C13.
+- Curator rulings 2026-10-04 (second set):
+  - Mycotypha africana NRRL 2978 sexM (GCF_025528875.1 NW_026515730.1:
+    1,203,502-1,204,971; 153 kb from the called sexP; Schulz 2016): curate as a
+    record; remove probable MAT genes from the classifier negative set; rebuild
+    the classifier and gate; regression check; then curator sign-off.
+  - Next development: Phase 1 reports (`report genome`, `report aggregate`).
+  - Mucoromycotina locus size: show all genera with the flank pair marked;
+    compare statistically only within one flank pair.
+  - Basidiomycota PR calls admitted only by the strict-CAAX scan: show in
+    reports with the unverified flag; give summary call rates with and without
+    unverified-only genomes.

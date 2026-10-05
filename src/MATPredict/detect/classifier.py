@@ -92,6 +92,9 @@ class ClassifierVerdict:
     paralog_scores: dict[str, float] = field(default_factory=dict)
     #: the paralog class that beats every MAT class by >= min_margin, else None
     paralog_class: str | None = None
+    #: True when a scored model had exonerate frameshifts and was translated
+    #: from its aligned blocks (possible assembly error; finding 026).
+    frameshift_corrected: bool = False
 
     def as_report(self) -> dict:
         doc = {
@@ -105,6 +108,8 @@ class ClassifierVerdict:
             "genes_scored": sorted(self.genes_scored),
             "manifest_sha256": self.manifest_sha256,
         }
+        if self.frameshift_corrected:
+            doc["frameshift_corrected"] = True
         if self.paralog_scores:
             doc["paralog_scores"] = {k: round(v, 1) for k, v in sorted(self.paralog_scores.items())}
             doc["paralog_class"] = self.paralog_class
@@ -271,6 +276,7 @@ def combine_verdicts(verdicts: list[ClassifierVerdict]) -> ClassifierVerdict | N
         genes_scored=sorted({g for v in verdicts for g in v.genes_scored}),
         classifier_input=(inputs.pop() if len(inputs := {v.classifier_input for v in verdicts}) == 1
                           else "mixed"),
+        frameshift_corrected=any(v.frameshift_corrected for v in verdicts),
     )
 
 

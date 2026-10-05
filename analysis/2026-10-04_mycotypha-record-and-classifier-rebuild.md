@@ -1,6 +1,6 @@
 # Mycotypha africana combined record, cleaned negatives, classifier rebuild
 
-Status: awaiting curator sign-off (record and rebuild).
+Status: merged (PR #25); alignment-refinement tests open.
 
 ## Question
 Curate the Mycotypha africana sexM found in the gene trees
@@ -78,18 +78,58 @@ All 288 BFD Mucoromycotina genomes, campaign mode, vs the 2026-10-03 campaign
   scored it weakly before (Minus 35.2 vs Plus 4.1, margin 31.1, just above the
   25-bit minimum) and now 20.1 vs 3.8 (margin 16.3). A fragile call on a short
   model, not a reversal; identity still points to Minus.
+  Cause (checked 2026-10-04 at the curator's request): the assembly
+  (GCA_060309175.1, Oxford Nanopore MinION only, SRR32276708) has a 2-nt
+  frameshift in an A5 homopolymer inside the sexM, after "...PKPSR". The curated
+  R7B sexM aligns over aa 1-247 of 249 at 77.7% with that one frameshift; the
+  model's translation stops there. The frame-corrected protein (253 aa) scores
+  sexM 137.9 vs sexP 44.3 in the rebuild (156.6 vs 40.9 before). So this is a
+  genome (assembly) problem, not a database or classifier problem. Notable
+  finding 026.
+
+## Curator comments (2026-10-04)
+- Record: seems okay; the curator asked to see the multiple alignment that
+  includes the Mycotypha record (`results/2026-10-04_mycotypha_alignment/`:
+  `sexM_training.png` = the 12 training sexM as built, Mycotypha aa 26-218;
+  `sexM_fulllength.png` = with the full 531-aa ORF) and a manuscript note on the
+  long protein (notable finding 025).
+- M. griseocyanus: find why the model is truncated (done: Nanopore frameshift;
+  notable finding 026).
+- Training region: agreed to use only the part of the Mycotypha sexM that
+  matches the other sexM proteins up to their C-terminal end (aa 26-218 does
+  this). The curator asked for further work on refining these alignments and
+  testing for better match and placement (plan under Open).
+- R. pusillus new Plus calls: acceptable; uncurated discoveries are part of the
+  approach, not everything will be a curated set.
 
 ## Decision
-Pending curator sign-off of the record and the rebuild.
+Merged to main 2026-10-05 (PR #25).
 
 ## Open
 - Mycotypha sexM is still not called in its genome (no flanks); a report-only
   check for an unlinked second idiomorph would surface it.
 - Dichotomocladium elegans h5: candidate missed sexP (review).
-- M. griseocyanus CBS 116.08: improve the sexM model (fragment) or accept
-  undetermined.
+- Frameshift-aware classification (proposal): when exonerate reports a
+  frameshift in a core MAT gene model, classify the frame-corrected translation
+  and flag `frameshift_in_model`. Would restore M. griseocyanus (Minus) and help
+  Nanopore-only assemblies. Not implemented; needs curator approval.
 - Rhizomucor pusillus: no curated Rhizomucor record; the two new Plus calls
   are medium confidence.
+
+## Plan: alignment refinement and placement tests (curator request 2026-10-04)
+1. Alignment method: compare MAFFT L-INS-i (current), MAFFT E-INS-i, and
+   hmmalign to the sexM/sexP HMMs, scored by LOO margins and column agreement
+   in the HMG box and the C-terminal motif block.
+2. Region boundary: rebuild with the Mycotypha sexM region ending at aa 200,
+   218 (current) and 240, and starting at aa 1 vs 26; measure LOO margins, the
+   gate and the regression panel. Keep the boundary that changes calls least
+   and keeps the C-terminal motifs.
+3. Placement: place the Mycotypha sexM region (and other long or partial
+   models) on the full-length reference tree with EPA-ng and on a fresh
+   IQ-TREE tree; check that it falls in sexM with support.
+4. Apply the same region rule to any future record whose protein is much
+   longer than its family's training set (flag by length outliers in the
+   build manifest).
 
 ## Files
 Record `db/Mucoromycota/Mucorales/64632_nrrl-2978_MAT_combined/`; classifier

@@ -1,0 +1,194 @@
+# Withheld-only changes: regression 84b6b55 (frameshift-aware classification) vs v0.6.1 (b04a77b) -- mucoromycota
+
+Loci withheld (or absent) on both sides whose span, genes or withheld reason changed.
+
+## Change types
+
+| change | loci |
+|---|---|
+| classifier_input_changed | 3 |
+| classifier_shift | 4 |
+| gene_set_changed | 17 |
+| span_changed | 46 |
+| withheld_reason_changed | 131 |
+
+## Loci
+
+- **GCA_000325505.1_RHIrdgD1.0** Mucoromycota:MAT ANKS01002565.1 [classifier_shift]: withheld:below_fraction_floor Plus/ -> withheld:below_fraction_floor Plus/; margin 243.1 -> 235.2; best score 304.9 -> 306.9
+- **GCA_000534915.1_ASM53491v1** Mucoromycota:MAT BAVE01000012.1 [gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0; genes rnhA,sexP,tptA -> glrA,rnhA,sexP,tptA
+- **GCA_000587855.1_B50** Mucoromycota:MAT KK076514.1 [withheld_reason_changed]: withheld:below_fraction_floor undetermined/ -> absent /; margin 0.4 -> ; best score 0.4 -> 
+- **GCA_000587855.1_B50** Mucoromycota:MAT KK076501.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 5.3; best score  -> 5.3
+- **GCA_000611695.1_RhzM_1.0** Mucoromycota:MAT KK100179.1 [withheld_reason_changed,span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.9 -> 0.6; best score 0.9 -> 0.6
+- **GCA_000611695.1_RhzM_1.0** Mucoromycota:MAT KK100179.1 [withheld_reason_changed]: withheld:below_fraction_floor undetermined/ -> absent /; margin 0.9 -> ; best score 0.9 -> 
+- **GCA_000611695.1_RhzM_1.0** Mucoromycota:MAT KK100038.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar Plus/; margin  -> 114.1; best score  -> 193.4
+- **GCA_000611695.1_RhzM_1.0** Mucoromycota:MAT KK100206.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_000611695.1_RhzM_1.0** Mucoromycota:MAT KK100037.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_000611695.1_RhzM_1.0** Mucoromycota:MAT KK100038.1 [withheld_reason_changed]: absent / -> withheld:below_fraction_floor Plus/; margin  -> 114.1; best score  -> 193.4
+- **GCA_000696895.1_MucVelB5328-1.0** Mucoromycota:MAT JNDK01001781.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_000696915.1_RhiOryB7407-1.0** Mucoromycota:MAT JNDL01004298.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.4; best score  -> 0.4
+- **GCA_000696955.1_SynRacB6101-1.0** Mucoromycota:MAT JNDN01000979.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 7.4 -> 8.3; best score 39.2 -> 39.2
+- **GCA_000697175.1_LicCor008-049-1.0** Mucoromycota:MAT JNEE01000984.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 3.9 -> 5.5; best score 36.5 -> 36.7
+- **GCA_000697175.1_LicCor008-049-1.0** Mucoromycota:MAT JNEE01001590.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_000697175.1_LicCor008-049-1.0** Mucoromycota:MAT JNEE01001563.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 6.8; best score  -> 30.2
+- **GCA_000697355.1_SynMonB8922-1.0** Mucoromycota:MAT JNEN01000790.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 6.1 -> 7.2; best score 60.5 -> 60.9
+- **GCA_000697355.1_SynMonB8922-1.0** Mucoromycota:MAT JNEN01001259.1 [span_changed,gene_set_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 1.4; best score 0.0 -> 13.8; genes sexM,tptA -> sexM,sexP,tptA
+- **GCA_000697355.1_SynMonB8922-1.0** Mucoromycota:MAT JNEN01001165.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_000697395.1_LicCorB5792-1.0** Mucoromycota:MAT JNEP01002954.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.4 -> 1.2; best score 34.9 -> 35.1
+- **GCA_000697395.1_LicCorB5792-1.0** Mucoromycota:MAT JNEP01003653.1 [withheld_reason_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 1.1 -> 1.5; best score 1.1 -> 1.5
+- **GCA_000697415.1_UmbIsaB7317-1.0** Mucoromycota:MAT JNEQ01000056.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_000697415.1_UmbIsaB7317-1.0** Mucoromycota:MAT JNEQ01000055.1 [withheld_reason_changed,span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 4.3 -> 3.7; best score 30.5 -> 33.2
+- **GCA_000697415.1_UmbIsaB7317-1.0** Mucoromycota:MAT JNEQ01000036.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 3.1; best score  -> 29.5
+- **GCA_000697415.1_UmbIsaB7317-1.0** Mucoromycota:MAT JNEQ01000036.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 21.3; best score  -> 60.3
+- **GCA_000697475.1_LicCorB2541-1.0** Mucoromycota:MAT JNEU01000971.1 [withheld_reason_changed,span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 3.9 -> 5.5; best score 36.5 -> 36.7
+- **GCA_000697475.1_LicCorB2541-1.0** Mucoromycota:MAT JNEU01001144.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_000697475.1_LicCorB2541-1.0** Mucoromycota:MAT JNEU01000706.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 6.8; best score  -> 30.2
+- **GCA_000697475.1_LicCorB2541-1.0** Mucoromycota:MAT JNEU01001144.1 [withheld_reason_changed]: absent / -> withheld:below_fraction_floor undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_000697495.1_SakOblB3353-1.0** Mucoromycota:MAT JNEV01001081.1 [span_changed]: withheld:below_fraction_floor undetermined/ -> withheld:below_fraction_floor undetermined/; margin 24.5 -> 24.9; best score 75.9 -> 76.5
+- **GCA_000723665.1_454Minimus** Mucoromycota:MAT CBTN010000002.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_000738555.1_LicRamB5399-1.0** Mucoromycota:MAT JNDO01003125.1 [classifier_shift]: withheld:modelled_gene_bar Minus/ -> withheld:modelled_gene_bar Minus/; margin 43.3 -> 48.3; best score 110.2 -> 115.2
+- **GCA_000738555.1_LicRamB5399-1.0** Mucoromycota:MAT JNDO01003125.1 [classifier_shift]: withheld:below_fraction_floor Minus/ -> withheld:below_fraction_floor Minus/; margin 43.3 -> 48.3; best score 110.2 -> 115.2
+- **GCA_000787465.1_ASM78746v1** Mucoromycota:MAT JSYX01000135.1 [gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0; genes algA,sexM,tptA -> algA,glrA,sexM,tptA
+- **GCA_000945115.1_Lramosa_hybrid_454_Illumina** Mucoromycota:MAT LK023313.1 [span_changed,gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 8.1 -> 5.9; best score 25.4 -> 26.5; genes rnhA,sexP -> glrA,rnhA,sexP
+- **GCA_000945115.1_Lramosa_hybrid_454_Illumina** Mucoromycota:MAT LK023320.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_002105135.1_Synrac1** Mucoromycota:MAT MCGN01000004.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 7.5 -> 8.5; best score 39.8 -> 39.9
+- **GCA_002105135.1_Synrac1** Mucoromycota:MAT MCGN01000001.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_002105135.1_Synrac1** Mucoromycota:MAT MCGN01000006.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_002105135.1_Synrac1** Mucoromycota:MAT MCGN01000006.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.1; best score  -> 0.1
+- **GCA_002261195.1_ASM226119v1** Mucoromycota:MAT MVBO01000011.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_002261195.1_ASM226119v1** Mucoromycota:MAT MVBO01000027.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 3.6 -> 3.6; best score 36.7 -> 38.0
+- **GCA_002261195.1_ASM226119v1** Mucoromycota:MAT MVBO01000028.1 [withheld_reason_changed,span_changed,gene_set_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0; genes rnhA,sexM -> rnhA,sexM,sexP
+- **GCA_002261195.1_ASM226119v1** Mucoromycota:MAT MVBO01000125.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_002261195.1_ASM226119v1** Mucoromycota:MAT MVBO01000282.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_008728235.1_ASM872823v1** Mucoromycota:MAT CP031825.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 5.9; best score  -> 26.5
+- **GCA_013461545.1_ASM1346154v1** Mucoromycota:MAT VAFG01000274.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 13.7 -> 15.7; best score 70.5 -> 72.5
+- **GCA_013461545.1_ASM1346154v1** Mucoromycota:MAT VAFG01000270.1 [gene_set_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0; genes sexM,tptA -> glrA,sexM,tptA
+- **GCA_016758895.1_ASM1675889v1** Mucoromycota:MAT JAEPRA010000006.1 [gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 10.1 -> 12.9; best score 67.7 -> 70.5; genes sexM,sexP,tptA -> glrA,sexM,sexP,tptA
+- **GCA_016758895.1_ASM1675889v1** Mucoromycota:MAT JAEPRA010000006.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 8.0 -> 8.8; best score 40.1 -> 40.2
+- **GCA_016758895.1_ASM1675889v1** Mucoromycota:MAT JAEPRA010000014.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 14.0; best score  -> 14.0
+- **GCA_016758895.1_ASM1675889v1** Mucoromycota:MAT JAEPRA010000001.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_016758905.1_ASM1675890v1** Mucoromycota:MAT JAEPQZ010000004.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 2.9; best score  -> 32.7
+- **GCA_016758905.1_ASM1675890v1** Mucoromycota:MAT JAEPQZ010000015.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_023629895.1_ASM2362989v1** Mucoromycota:MAT JAMAMF010000038.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 3.1 -> 3.4; best score 49.2 -> 50.1
+- **GCA_023629895.1_ASM2362989v1** Mucoromycota:MAT JAMAMF010000411.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_023629915.1_ASM2362991v1** Mucoromycota:MAT JAMAMD010000020.1 [withheld_reason_changed,span_changed,classifier_input_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 23.1 -> 24.2; best score 37.5 -> 38.3
+- **GCA_023629915.1_ASM2362991v1** Mucoromycota:MAT JAMAMD010000007.1 [span_changed,gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 8.1 -> 5.9; best score 25.4 -> 26.5; genes rnhA,sexP -> glrA,rnhA,sexP
+- **GCA_023629915.1_ASM2362991v1** Mucoromycota:MAT JAMAMD010000020.1 [withheld_reason_changed]: withheld:below_fraction_floor undetermined/ -> absent /; margin 23.1 -> ; best score 37.5 -> 
+- **GCA_023629915.1_ASM2362991v1** Mucoromycota:MAT JAMAMD010000058.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_023629935.1_ASM2362993v1** Mucoromycota:MAT JAMAME010000349.1 [withheld_reason_changed,span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 3.9 -> 5.5; best score 36.5 -> 36.7
+- **GCA_023629935.1_ASM2362993v1** Mucoromycota:MAT JAMAME010000021.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_023629935.1_ASM2362993v1** Mucoromycota:MAT JAMAME010000002.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 6.8; best score  -> 30.2
+- **GCA_023629935.1_ASM2362993v1** Mucoromycota:MAT JAMAME010000021.1 [withheld_reason_changed]: absent / -> withheld:below_fraction_floor undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_023630305.1_ASM2363030v1** Mucoromycota:MAT JAMAMS010000030.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 6.1 -> 7.2; best score 60.5 -> 60.9
+- **GCA_023630305.1_ASM2363030v1** Mucoromycota:MAT JAMAMS010000035.1 [classifier_shift]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 7.9 -> 12.9; best score 60.1 -> 65.2
+- **GCA_023630305.1_ASM2363030v1** Mucoromycota:MAT JAMAMS010000024.1 [span_changed,gene_set_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 1.4; best score 0.0 -> 13.8; genes sexM,tptA -> sexM,sexP,tptA
+- **GCA_023630315.1_ASM2363031v1** Mucoromycota:MAT JAMAMU010000080.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 5.6 -> 7.3; best score 59.8 -> 61.0
+- **GCA_023630315.1_ASM2363031v1** Mucoromycota:MAT JAMAMU010000043.1 [span_changed]: withheld:modelled_gene_bar Minus/ -> withheld:modelled_gene_bar Minus/; margin 30.6 -> 32.2; best score 101.1 -> 102.8
+- **GCA_023630315.1_ASM2363031v1** Mucoromycota:MAT JAMAMU010000007.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 1.8 -> 1.4; best score 28.4 -> 28.9
+- **GCA_023630315.1_ASM2363031v1** Mucoromycota:MAT JAMAMU010000043.1 [span_changed]: withheld:below_fraction_floor Minus/ -> withheld:below_fraction_floor Minus/; margin 30.6 -> 32.2; best score 101.1 -> 102.8
+- **GCA_023630315.1_ASM2363031v1** Mucoromycota:MAT JAMAMU010000020.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 2.2; best score  -> 2.2
+- **GCA_023630315.1_ASM2363031v1** Mucoromycota:MAT JAMAMU010000040.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 6.6; best score  -> 24.0
+- **GCA_023630315.1_ASM2363031v1** Mucoromycota:MAT JAMAMU010000063.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 16.2; best score  -> 38.8
+- **GCA_023630315.1_ASM2363031v1** Mucoromycota:MAT JAMAMU010000047.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 1.1; best score  -> 12.9
+- **GCA_023630315.1_ASM2363031v1** Mucoromycota:MAT JAMAMU010000055.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_023630325.1_ASM2363032v1** Mucoromycota:MAT JAMAMT010000228.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 5.6 -> 7.3; best score 59.8 -> 61.0
+- **GCA_023630325.1_ASM2363032v1** Mucoromycota:MAT JAMAMT010000043.1 [span_changed]: withheld:modelled_gene_bar Minus/ -> withheld:modelled_gene_bar Minus/; margin 30.6 -> 32.2; best score 101.1 -> 102.8
+- **GCA_023630325.1_ASM2363032v1** Mucoromycota:MAT JAMAMT010000006.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 1.8 -> 1.4; best score 28.4 -> 28.9
+- **GCA_023630325.1_ASM2363032v1** Mucoromycota:MAT JAMAMT010000043.1 [span_changed]: withheld:below_fraction_floor Minus/ -> withheld:below_fraction_floor Minus/; margin 30.6 -> 32.2; best score 101.1 -> 102.8
+- **GCA_023630325.1_ASM2363032v1** Mucoromycota:MAT JAMAMT010000022.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 2.2; best score  -> 2.2
+- **GCA_023630325.1_ASM2363032v1** Mucoromycota:MAT JAMAMT010000137.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 16.2; best score  -> 38.8
+- **GCA_023630325.1_ASM2363032v1** Mucoromycota:MAT JAMAMT010000054.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 1.1; best score  -> 12.9
+- **GCA_023630325.1_ASM2363032v1** Mucoromycota:MAT JAMAMT010000061.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_024139275.1_ASM2413927v1** Mucoromycota:MAT VCJA01001347.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> absent /; margin 8.4 -> ; best score 46.1 -> 
+- **GCA_025093555.1_Cirumb1** Mucoromycota:MAT JAIWNF010000034.1 [withheld_reason_changed,span_changed,gene_set_changed,classifier_input_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:flank_carried_core_outside_flank_span undetermined/; margin  -> 1.1; best score  -> 1.6; genes algA,rnhA,tptA -> algA,rnhA,sexP,tptA
+- **GCA_025093555.1_Cirumb1** Mucoromycota:MAT JAIWNF010000001.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 2.0 -> 2.1; best score 39.7 -> 39.8
+- **GCA_025094155.1_Lichy1** Mucoromycota:MAT PTRB01000069.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 2.5 -> 2.9; best score 3.4 -> 4.1
+- **GCA_025094155.1_Lichy1** Mucoromycota:MAT PTRB01000069.1 [withheld_reason_changed]: withheld:below_fraction_floor undetermined/ -> absent /; margin 2.5 -> ; best score 3.4 -> 
+- **GCA_025094155.1_Lichy1** Mucoromycota:MAT PTRB01000019.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_025094155.1_Lichy1** Mucoromycota:MAT PTRB01000001.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_025094155.1_Lichy1** Mucoromycota:MAT PTRB01000017.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_025094155.1_Lichy1** Mucoromycota:MAT PTRB01000037.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_025094155.1_Lichy1** Mucoromycota:MAT PTRB01000001.1 [withheld_reason_changed]: absent / -> withheld:below_fraction_floor undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_025266875.1_Fenlin1** Mucoromycota:MAT JALLLT010000005.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 5.5 -> 4.2; best score 11.7 -> 10.5
+- **GCA_025266875.1_Fenlin1** Mucoromycota:MAT JALLLT010000007.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 11.5; best score  -> 59.4
+- **GCA_025266875.1_Fenlin1** Mucoromycota:MAT JALLLT010000008.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_025266875.1_Fenlin1** Mucoromycota:MAT JALLLT010000012.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_025266875.1_Fenlin1** Mucoromycota:MAT JALLLT010000007.1 [withheld_reason_changed]: absent / -> withheld:below_fraction_floor undetermined/; margin  -> 11.5; best score  -> 59.4
+- **GCA_025528865.1_Pilumb1** Mucoromycota:MAT JAIXMH010000021.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.2; best score  -> 1.3
+- **GCA_025677805.1_Umbsp_AD052_1** Mucoromycota:MAT JAIXMS010000022.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 8.1 -> 7.8; best score 41.1 -> 41.2
+- **GCA_025677805.1_Umbsp_AD052_1** Mucoromycota:MAT JAIXMS010000003.1 [withheld_reason_changed,gene_set_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 6.7 -> 6.9; best score 31.1 -> 31.2; genes btbA,sexP -> btbA,sexM
+- **GCA_025677805.1_Umbsp_AD052_1** Mucoromycota:MAT JAIXMS010000011.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 10.5 -> 13.1; best score 70.5 -> 73.4
+- **GCA_025677805.1_Umbsp_AD052_1** Mucoromycota:MAT JAIXMS010000008.1 [gene_set_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0; genes sexM,tptA -> rnhA,sexM,tptA
+- **GCA_025677805.1_Umbsp_AD052_1** Mucoromycota:MAT JAIXMS010000039.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.6 -> 0.2; best score 21.5 -> 21.2
+- **GCA_025677805.1_Umbsp_AD052_1** Mucoromycota:MAT JAIXMS010000022.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_025677805.1_Umbsp_AD052_1** Mucoromycota:MAT JAIXMS010000014.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 1.4; best score  -> 1.4
+- **GCA_025677805.1_Umbsp_AD052_1** Mucoromycota:MAT JAIXMS010000002.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_025677805.1_Umbsp_AD052_1** Mucoromycota:MAT JAIXMS010000017.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 1.1; best score  -> 1.1
+- **GCA_025716815.1_Dicele1** Mucoromycota:MAT JAIXMN010000006.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_025716815.1_Dicele1** Mucoromycota:MAT JAIXMN010000007.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_025716815.1_Dicele1** Mucoromycota:MAT JAIXMN010000001.1 [withheld_reason_changed,span_changed,gene_set_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0; genes algA,sexM -> algA,rnhA,sexM
+- **GCA_025716815.1_Dicele1** Mucoromycota:MAT JAIXMN010000007.1 [withheld_reason_changed]: withheld:below_fraction_floor undetermined/ -> absent /; margin 0.0 -> ; best score 0.0 -> 
+- **GCA_025716815.1_Dicele1** Mucoromycota:MAT JAIXMN010000003.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_025716815.1_Dicele1** Mucoromycota:MAT JAIXMN010000002.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_025716815.1_Dicele1** Mucoromycota:MAT JAIXMN010000019.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 2.2; best score  -> 2.2
+- **GCA_025716815.1_Dicele1** Mucoromycota:MAT JAIXMN010000022.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.6; best score  -> 0.6
+- **GCA_025716815.1_Dicele1** Mucoromycota:MAT JAIXMN010000014.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_025716815.1_Dicele1** Mucoromycota:MAT JAIXMN010000015.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 4.1; best score  -> 4.3
+- **GCA_027595865.1_Umbelopsis_isabellina_MPG-14A_reass_enz** Mucoromycota:MAT JANJFK010000003.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 4.3 -> 3.7; best score 30.5 -> 33.2
+- **GCA_029582045.1_ASM2958204v1** Mucoromycota:MAT JAQGDH010000009.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_029582045.1_ASM2958204v1** Mucoromycota:MAT JAQGDH010000010.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 8.1 -> 5.9; best score 25.4 -> 26.5
+- **GCA_029582045.1_ASM2958204v1** Mucoromycota:MAT JAQGDH010000005.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_029582045.1_ASM2958204v1** Mucoromycota:MAT JAQGDH010000008.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_037039815.1_ASM3703981v1** Mucoromycota:MAT JAXQGL010000038.1 [span_changed]: withheld:flank_carried_core_outside_flank_span undetermined/ -> withheld:flank_carried_core_outside_flank_span undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_037042035.1_ASM3704203v1** Mucoromycota:MAT JAXQJR010000376.1 [withheld_reason_changed,span_changed,classifier_input_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 23.1 -> 24.2; best score 37.5 -> 38.3
+- **GCA_037042035.1_ASM3704203v1** Mucoromycota:MAT JAXQJR010000398.1 [span_changed,gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 8.1 -> 5.9; best score 25.4 -> 26.5; genes rnhA,sexP -> glrA,rnhA,sexP
+- **GCA_037042035.1_ASM3704203v1** Mucoromycota:MAT JAXQJR010000376.1 [withheld_reason_changed]: withheld:below_fraction_floor undetermined/ -> absent /; margin 23.1 -> ; best score 37.5 -> 
+- **GCA_037042035.1_ASM3704203v1** Mucoromycota:MAT JAXQJR010000021.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_037042095.1_ASM3704209v1** Mucoromycota:MAT JAXQJT010000425.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 3.9 -> 5.5; best score 36.5 -> 36.7
+- **GCA_037042095.1_ASM3704209v1** Mucoromycota:MAT JAXQJT010000014.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_037042095.1_ASM3704209v1** Mucoromycota:MAT JAXQJT010000057.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_037042095.1_ASM3704209v1** Mucoromycota:MAT JAXQJT010001416.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 6.8; best score  -> 30.2
+- **GCA_037042095.1_ASM3704209v1** Mucoromycota:MAT JAXQJT010000057.1 [withheld_reason_changed]: absent / -> withheld:below_fraction_floor undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_037042155.1_ASM3704215v1** Mucoromycota:MAT JAXQJX010000210.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_037042155.1_ASM3704215v1** Mucoromycota:MAT JAXQJX010000075.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 6.1 -> 7.2; best score 60.5 -> 60.9
+- **GCA_037042155.1_ASM3704215v1** Mucoromycota:MAT JAXQJX010000086.1 [withheld_reason_changed,span_changed,gene_set_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 0.0 -> 1.4; best score 0.0 -> 13.8; genes sexM,tptA -> sexM,sexP,tptA
+- **GCA_048164995.1_ASM4816499v1** Mucoromycota:MAT JBKSNF010000001.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_048164995.1_ASM4816499v1** Mucoromycota:MAT JBKSNF010000002.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 8.1 -> 5.9; best score 25.4 -> 26.5
+- **GCA_048164995.1_ASM4816499v1** Mucoromycota:MAT JBKSNF010000003.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_053572175.1_ASM5357217v1** Mucoromycota:MAT JAYKKX010000005.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_053572175.1_ASM5357217v1** Mucoromycota:MAT JAYKKX010000007.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_053572175.1_ASM5357217v1** Mucoromycota:MAT JAYKKX010000008.1 [withheld_reason_changed]: withheld:below_fraction_floor undetermined/ -> absent /; margin 4.2 -> ; best score 55.9 -> 
+- **GCA_053572175.1_ASM5357217v1** Mucoromycota:MAT JAYKKX010000015.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_053572175.1_ASM5357217v1** Mucoromycota:MAT JAYKKX010000002.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 22.7; best score  -> 69.8
+- **GCA_053572175.1_ASM5357217v1** Mucoromycota:MAT JAYKKX010000006.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_053572175.1_ASM5357217v1** Mucoromycota:MAT JAYKKX010000005.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_054906655.1_Umbelopsis_nana_v._1.0** Mucoromycota:MAT BAAHSD010000013.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 4.9 -> 5.6; best score 56.2 -> 56.2
+- **GCA_059714295.1_ASM5971429v1** Mucoromycota:MAT JCAOFY010000002.1 [gene_set_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0; genes sexM,tptA -> glrA,sexM,tptA
+- **GCA_059714295.1_ASM5971429v1** Mucoromycota:MAT JCAOFY010000004.1 [span_changed]: withheld:modelled_gene_bar+polish_capped undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 12.5 -> 15.0; best score 71.7 -> 74.2
+- **GCA_900175165.2_FCH_5_7** Mucoromycota:MAT FWWN02000234.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_900175165.2_FCH_5_7** Mucoromycota:MAT FWWN02000184.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_900175165.2_FCH_5_7** Mucoromycota:MAT FWWN02000627.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 14.1; best score  -> 65.7
+- **GCA_964291815.1_UMBE_WA70503** Mucoromycota:MAT CAXYTU010000046.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_964291815.1_UMBE_WA70503** Mucoromycota:MAT CAXYTU010000191.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCA_964291815.1_UMBE_WA70503** Mucoromycota:MAT CAXYTU010000158.1 [withheld_reason_changed]: withheld:below_fraction_floor undetermined/ -> absent /; margin 4.2 -> ; best score 55.9 -> 
+- **GCA_964291815.1_UMBE_WA70503** Mucoromycota:MAT CAXYTU010000046.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_964291815.1_UMBE_WA70503** Mucoromycota:MAT CAXYTU010000124.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_964291815.1_UMBE_WA70503** Mucoromycota:MAT CAXYTU010000112.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 22.7; best score  -> 69.8
+- **GCA_964291815.1_UMBE_WA70503** Mucoromycota:MAT CAXYTU010000180.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_977110945.1_gzUmbRama1** Mucoromycota:MAT CDSBDH010000022.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCA_977110975.1_gzUmbVina2** Mucoromycota:MAT CDSBDG010000004.1 [span_changed]: withheld:mat_gene_gate undetermined/ -> withheld:mat_gene_gate undetermined/; margin 22.9 -> 23.6; best score 38.9 -> 39.6
+- **GCA_982397305.1_T17-F** Mucoromycota:MAT CEVXIM010000055.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 7.1 -> 7.2; best score 17.0 -> 17.2
+- **GCA_982397305.1_T17-F** Mucoromycota:MAT CEVXIM010000065.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.5; best score  -> 0.5
+- **GCA_982397305.1_T17-F** Mucoromycota:MAT CEVXIM010000003.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 8.0; best score  -> 8.0
+- **GCA_982397305.1_T17-F** Mucoromycota:MAT CEVXIM010000065.1 [withheld_reason_changed]: absent / -> withheld:below_fraction_floor undetermined/; margin  -> 0.5; best score  -> 0.5
+- **GCF_025331425.1_Radspe1** Mucoromycota:MAT NW_026251930.1 [withheld_reason_changed]: withheld:below_fraction_floor undetermined/ -> absent /; margin 22.8 -> ; best score 81.8 -> 
+- **GCF_025331425.1_Radspe1** Mucoromycota:MAT NW_026251930.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 1.7; best score  -> 1.7
+- **GCF_025399195.1_Umbra1** Mucoromycota:MAT NW_026252166.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCF_025528875.1_Mycafr1** Mucoromycota:MAT NW_026515728.1 [withheld_reason_changed]: withheld:below_fraction_floor undetermined/ -> absent /; margin 21.2 -> ; best score 75.0 -> 
+- **GCF_025528875.1_Mycafr1** Mucoromycota:MAT NW_026515737.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.3; best score  -> 1.2
+- **GCF_025766255.1_Zycmex1** Mucoromycota:MAT NW_026516699.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCF_025766255.1_Zycmex1** Mucoromycota:MAT NW_026516671.1 [gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin 2.8 -> 1.6; best score 26.4 -> 25.4; genes sexM,tptA -> sexP,tptA
+- **GCF_025766255.1_Zycmex1** Mucoromycota:MAT NW_026516825.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCF_029851405.1_ASM2985140v1** Mucoromycota:MAT NW_026695328.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 2.9; best score  -> 2.9
+- **GCF_029851405.1_ASM2985140v1** Mucoromycota:MAT NW_026695390.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 0.0; best score  -> 0.0
+- **GCF_041956525.1_Rhipu1** Mucoromycota:MAT NW_027192156.1 [withheld_reason_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin 0.0 -> 0.0; best score 0.0 -> 0.0
+- **GCF_041956525.1_Rhipu1** Mucoromycota:MAT NW_027192151.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> 14.1; best score  -> 65.7

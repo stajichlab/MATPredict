@@ -97,3 +97,9 @@ not match the genome's name:
 | Mycotypha africana sexM (GCF_025528875.1 NW_026515730.1:1,203,502-1,204,971; 153 kb from sexP; Schulz 2016) not called and in the classifier negative set | curate as a record; remove from negatives; recompute gate (approval) | `2026-10-04_unclassified-hmg-in-gene-trees.md` |
 | Dichotomocladium elegans h5 groups with Lichtheimiaceae-type sexP (UFBoot 96); genome uncalled; no flanks within 60 kb | synteny, annotation, classifier score | same |
 | Report-only check for an unlinked second idiomorph (strong HMG hit, no flanks) in called genomes | design | same |
+
+## Opened 2026-10-04 (classifier alignments)
+
+| Item | Next step | Where |
+|---|---|---|
+| Alignment refinement and placement testing for training proteins (Mycotypha sexM region) | plan in the report: aligner comparison, region-boundary sweep, EPA-ng placement | `2026-10-04_mycotypha-record-and-classifier-rebuild.md` |

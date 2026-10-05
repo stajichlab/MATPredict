@@ -564,6 +564,48 @@ class _AlignmentRecord:
     score: float
     feature: list[str]  # the `gene` (exonerate) / `mRNA` (miniprot) GFF fields
     parts: list[list[str]]  # that alignment's own `exon` / `CDS` GFF fields
+    similarity: list[str] | None = None  # exonerate's `similarity` line (Align blocks)
+
+
+def _exonerate_frameshifts(exon_fields: list[list[str]]) -> int:
+    """Sum of exonerate's `frameshifts N` exon attributes (0 when absent)."""
+    total = 0
+    for f in exon_fields:
+        for part in f[8].split(" ; "):
+            if part.startswith("frameshifts "):
+                try:
+                    total += int(part.split(" ")[1])
+                except ValueError:
+                    pass
+    return total
+
+
+def _exonerate_cds_blocks(similarity: list[str] | None, strand: str,
+                          offset: int) -> tuple[tuple[int, int], ...]:
+    """Exonerate `Align <target> <query> <length>` blocks as 1-based closed
+    genomic spans in transcript order.
+
+    Coordinates measured on exonerate 2.4.0 protein2genome output (the
+    M. griseocyanus sexM, both strands of the same window): on the plus strand a
+    block covers [t, t + length - 1]; on the minus strand [t - length, t - 1]
+    (exonerate's 0-based reverse-strand position). Joined in this order the
+    blocks give the frame-corrected coding sequence.
+    """
+    if not similarity:
+        return ()
+    blocks = []
+    for part in similarity[8].split(" ; "):
+        if not part.startswith("Align "):
+            continue
+        try:
+            t, _q, length = (int(x) for x in part.split()[1:4])
+        except ValueError:
+            continue
+        if strand == "-":
+            blocks.append((t - length + offset, t - 1 + offset))
+        else:
+            blocks.append((t + offset, t + length - 1 + offset))
+    return tuple(blocks)
 
 
 def _feature_score(fields: list[str]) -> float:
@@ -754,6 +796,8 @@ def polish_with_exonerate(
                 )
             elif fields[2] == "exon" and records:
                 records[-1].parts.append(fields)
+            elif fields[2] == "similarity" and records:
+                records[-1].similarity = fields
 
         selected = _select_requested_gene(records, gene_name, record_families, roles_by_family)
         if selected is None:
@@ -771,12 +815,16 @@ def polish_with_exonerate(
             ExonSpan(int(e[3]) + offset, int(e[4]) + offset)
             for e in sorted(record.parts, key=lambda e: int(e[3]))
         ]
+        frameshifts = _exonerate_frameshifts(record.parts)
+        cds_blocks = (_exonerate_cds_blocks(record.similarity, gene_line[6], offset)
+                      if frameshifts else ())
         return PolishModel(
             gene_name=gene_name, family_key=family_key, role=role, contig=contig,
             start=int(gene_line[3]) + offset, end=int(gene_line[4]) + offset,
             strand=gene_line[6], exons=exons, identity=identity,
             reference_record_id=record_id, method=method,
             score=record.score if gene_line[5] not in ("", ".") else None,
+            frameshifts=frameshifts, cds_blocks=cds_blocks,
         )
 
 

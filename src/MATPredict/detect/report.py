@@ -402,6 +402,7 @@ def _result_doc(r: DetectionResult) -> dict:
                 "method": e.method,
                 "status": e.status,
                 "alternate_model": e.alternate_model,
+                **({"frameshifts": e.frameshifts} if getattr(e, "frameshifts", 0) else {}),
                 "exons": [{"start": s, "end": end} for s, end in e.exons] if e.exons else None,
                 "evalue": e.evalue,
                 "bitscore": e.bitscore,

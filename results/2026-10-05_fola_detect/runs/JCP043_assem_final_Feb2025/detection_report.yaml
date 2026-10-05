@@ -1,0 +1,294 @@
+routing_mode: lineage
+routing_error: null
+not_searched_reason: null
+genetic_code: 1
+genetic_code_error: null
+taxonomy_source: NCBI E-utilities
+suppressed_unpolished: 6
+suppressed_flank_carried: 0
+suppressed_mat_gene_gate: 0
+suppressed_paralog_class: 0
+suppressed_loci:
+- family: Ascomycota:MAT
+  contig: chr4
+  start: 3929070
+  end: 3937305
+  idiomorph: MAT1-1
+  polished_genes: 0
+  genes_found:
+  - MAT1-1-1
+  - APN2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: chr4
+  start: 4558008
+  end: 4562055
+  idiomorph: MAT1-1
+  polished_genes: 0
+  genes_found:
+  - MAT1-1-1
+  - SLA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: chr13
+  start: 442032
+  end: 452399
+  idiomorph: MAT1-1
+  polished_genes: 0
+  genes_found:
+  - MAT1-1-1
+  - APN2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: chr14
+  start: 1216787
+  end: 1235510
+  idiomorph: MAT1-1
+  polished_genes: 0
+  genes_found:
+  - MAT1-1-1
+  - APN2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: chr9
+  start: 1747892
+  end: 1749367
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - MAT1-2-1
+  - APN2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: chr3
+  start: 3898640
+  end: 3917222
+  idiomorph: MAT1-2
+  polished_genes: 0
+  genes_found:
+  - MAT1-2-1
+  - SLA2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+assembly_gap_at_locus: []
+zygosity: null
+two_idiomorphs: []
+families_attempted:
+- Ascomycota:MAT
+detected:
+- family: Ascomycota:MAT
+  contig: chr8
+  start: 1101859
+  end: 1113932
+  confidence: high
+  idiomorph: MAT1-2
+  idiomorph_class: MAT1-2
+  idiomorph_candidates:
+  - idiomorph: MAT1-2
+    score: 174.0
+  detection_pass: strict
+  locus_class: mat_locus
+  idiomorph_unmodelled: false
+  verification: null
+  merged_from: []
+  subloci: []
+  polished_genes: 4
+  distinct_intervals: 4
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: 46.747
+  idiomorph_classifier: null
+  confidence_ignored_genes:
+  - MAT1-1-3
+  idiomorph_resolutions:
+  - contig: chr8
+    winner: MAT1-2-1
+    loser: MAT1-1-3
+    winner_identity: 96.552
+    loser_identity: 39.394
+    overlap_fraction: 1.0
+    winner_coverage: 46.0
+    loser_coverage: 18.0
+    basis: first_pass_identity
+    winner_model_score: null
+    loser_model_score: null
+  - contig: chr8
+    winner: MAT1-2-1
+    loser: MAT1-1-3
+    winner_identity: 86.747
+    loser_identity: 40.0
+    overlap_fraction: 1.0
+    winner_coverage: 66.0
+    loser_coverage: 22.0
+    basis: first_pass_identity
+    winner_model_score: null
+    loser_model_score: null
+  ambiguous_with: []
+  genes_found:
+  - MAT1-2-1
+  - APN2
+  - SLA2
+  - COX13
+  genes_missing: []
+  genes_not_searchable: []
+  fragmented: false
+  reference_records:
+  - 5127_mo45_MAT_MAT1-2
+  - 5518_3639_MAT_combined
+  - 578113_sxlc146_MAT_MAT1-2
+  - 746128_a1163_MAT_MAT1-1
+  segments:
+  - contig: chr8
+    start: 1101859
+    end: 1113932
+    contig_edge_distance: 1101858
+  gene_evidence:
+  - gene: SLA2
+    role: flanking_conserved
+    contig: chr8
+    start: 1101871
+    end: 1105346
+    strand: +
+    identity: 84.39
+    coverage: null
+    reference_record: 578113_sxlc146_MAT_MAT1-2
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 1101871
+      end: 1102013
+    - start: 1102067
+      end: 1102551
+    - start: 1102609
+      end: 1105022
+    - start: 1105263
+      end: 1105346
+    evalue: 0.0
+    bitscore: 1572.0
+  - gene: MAT1-2-1
+    role: core_MAT
+    contig: chr8
+    start: 1109096
+    end: 1109867
+    strand: +
+    identity: 91.86
+    coverage: null
+    reference_record: 5127_mo45_MAT_MAT1-2
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 1109096
+      end: 1109292
+    - start: 1109349
+      end: 1109611
+    - start: 1109659
+      end: 1109867
+    evalue: 5.3e-76
+    bitscore: 174.0
+  - gene: MAT1-1-3
+    role: core_MAT
+    contig: chr8
+    start: 1109655
+    end: 1109774
+    strand: +
+    identity: 40.0
+    coverage: 22.0
+    reference_record: 5518_3639_MAT_combined
+    method: tblastn_genome
+    status: not_polish_candidate
+    alternate_model: null
+    exons: null
+    evalue: 1.68e-08
+    bitscore: 47.4
+  - gene: APN2
+    role: flanking_conserved
+    contig: chr8
+    start: 1110905
+    end: 1112653
+    strand: '-'
+    identity: 53.31
+    coverage: null
+    reference_record: 746128_a1163_MAT_MAT1-1
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: chr8
+      start: 1110424
+      end: 1112653
+      strand: '-'
+      exons:
+      - start: 1110424
+        end: 1110533
+      - start: 1110661
+        end: 1112223
+      - start: 1112273
+        end: 1112405
+      - start: 1112462
+        end: 1112507
+      - start: 1112622
+        end: 1112653
+      identity: 51.739999999999995
+      method: miniprot_refine
+    frameshifts: 2
+    exons:
+    - start: 1110905
+      end: 1111101
+    - start: 1111141
+      end: 1112223
+    - start: 1112273
+      end: 1112507
+    - start: 1112564
+      end: 1112576
+    - start: 1112626
+      end: 1112653
+    evalue: 3.46e-158
+    bitscore: 505.0
+  - gene: COX13
+    role: flanking_conserved
+    contig: chr8
+    start: 1113261
+    end: 1113932
+    strand: +
+    identity: 74.74
+    coverage: null
+    reference_record: 578113_sxlc146_MAT_MAT1-2
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: chr8
+      start: 1113222
+      end: 1113935
+      strand: +
+      exons:
+      - start: 1113222
+        end: 1113318
+      - start: 1113390
+        end: 1113414
+      - start: 1113537
+        end: 1113696
+      - start: 1113750
+        end: 1113757
+      - start: 1113890
+        end: 1113935
+      identity: 69.83
+      method: miniprot_refine
+    exons:
+    - start: 1113261
+      end: 1113318
+    - start: 1113390
+      end: 1113414
+    - start: 1113537
+      end: 1113696
+    - start: 1113750
+      end: 1113757
+    - start: 1113890
+      end: 1113932
+    evalue: 3.96e-25
+    bitscore: 100.0
+not_detected: []

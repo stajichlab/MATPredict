@@ -1,0 +1,7 @@
+read-based calls (breadth >= 90% of the idiomorph reference): {'MAT2': 129, 'MAT1': 17, 'Neither': 1, 'Both': 1} n = 148
+
+strain | MATPredict (assembly) | reads: MAT-1 breadth/depth | MAT-2 breadth/depth | read call
+AT141 | MAT1-2/high | no read coverage file in N. L.'s set
+JCP043 | MAT1-2/high | no read coverage file in N. L.'s set
+VSP-0916 | MAT1-2/high | 11.6% / 23.2x | 99.6% / 201.4x | MAT2
+VSP-0980 | MAT1-1/high | 100.0% / 44.3x | 24.5% / 10.5x | MAT1

@@ -1,0 +1,91 @@
+order	genomes	loci	flagged_O	expected_E	O/E	excess_(O-E)/O	boot95_lo	boot95_hi
+Polyporales	30	258	93	8.3	11.27	0.91	0.88	0.94
+Agaricales	30	309	76	8.2	9.29	0.89	0.87	0.91
+Cantharellales	30	266	49	9.2	5.32	0.81	0.72	0.88
+Russulales	30	512	47	12.1	3.90	0.74	0.58	0.85
+Auriculariales	20	112	45	2.7	16.65	0.94	0.93	0.95
+Sebacinales	12	489	40	9.4	4.26	0.77	0.48	0.92
+Cystofilobasidiales	30	121	26	1.7	15.59	0.94	0.90	0.96
+Boletales	30	188	23	4.9	4.71	0.79	0.53	0.93
+Tilletiales	30	88	21	0.6	35.84	0.97	0.94	0.99
+Trichosporonales	30	109	19	3.2	5.94	0.83	0.71	0.89
+Filobasidiales	30	124	14	3.5	4.04	0.75	0.52	0.85
+Hymenochaetales	30	243	12	7.3	1.64	0.39	-1.30	0.69
+Corticiales	7	55	11	1.6	7.06	0.86	0.61	0.98
+(no order)	16	46	10	0.8	11.93	0.92	0.78	0.95
+Amylocorticiales	8	61	10	2.1	4.84	0.79	0.64	0.88
+Thelephorales	6	94	9	2.2	4.18	0.76	0.21	0.90
+Atheliales	3	48	8	1.1	7.36	0.86	0.78	0.90
+Microstromatales	11	37	8	1.1	7.41	0.87	0.76	0.91
+Gloeophyllales	3	24	7	0.6	11.08	0.91	0.75	0.97
+Gomphales	8	42	7	0.4	17.33	0.94	0.77	0.99
+Microbotryales	30	81	7	0.9	7.61	0.87	0.64	0.93
+Cystobasidiales	18	27	6	1.0	6.16	0.84	0.58	0.90
+Dacrymycetales	4	18	6	0.6	10.87	0.91	0.89	0.93
+Geastrales	1	12	4	0.2	19.61	0.95	0.95	0.95
+Golubeviales	4	12	4	0.1	47.62	0.98	0.97	0.99
+Peribolosporales	4	19	4	0.2	21.74	0.95	0.93	0.97
+Sistotremastrales	2	9	3	0.2	13.10	0.92	0.90	0.94
+Atractiellales	1	3	2	0.0	44.44	0.98	0.98	0.98
+Classiculales	1	4	2	0.0	55.56	0.98	0.98	0.98
+Exobasidiales	6	14	2	0.3	6.45	0.84	0.77	0.96
+Holtermanniales	6	27	2	0.6	3.23	0.69	0.28	0.85
+Hysterangiales	1	6	2	0.1	13.89	0.93	0.93	0.93
+Jaapiales	1	12	2	0.4	4.90	0.80	0.80	0.80
+Urocystidales	5	16	2	0.2	8.30	0.88	0.69	0.97
+Ceraceosorales	2	4	1	0.1	16.13	0.94	0.94	0.95
+Heterogastridiales	1	2	1	0.0	27.78	0.96	0.96	0.96
+Kriegeriales	10	36	1	0.3	3.31	0.70	0.60	0.91
+Phallales	5	44	1	1.3	0.80	-0.25	-0.52	0.76
+Violaceomycetales	1	2	1	0.0	nan	1.00	1.00	1.00
+Agaricostilbales	5	20	0	0.4	0.00	nan	nan	nan
+ALL	502	3594	588	87.8	6.70	0.85	0.82	0.87
+
+genomes: any flagged locus (rows) vs unverified PR call in v0.6.0 (columns)
+flagged	called	uncalled
+True	234	55
+False	6	207
+
+1,360 unverified calls by order, with the chance-expected number
+order	calls	chance_share	chance_calls	beyond_chance_calls	genomes_sampled
+Agaricales	702	0.11	76	626	30
+Polyporales	132	0.09	12	120	30
+Cantharellales	123	0.19	23	100	30
+Boletales	81	0.21	17	64	30
+Trichosporonales	63	0.17	11	52	30
+Tilletiales	49	0.03	1	48	30
+Russulales	28	0.26	7	21	30
+Cystofilobasidiales	23	0.06	1	22	30
+Auriculariales	20	0.06	1	19	20
+Sebacinales	16	0.23	4	12	12
+Hymenochaetales	15	0.61	9	6	30
+Filobasidiales	13	0.25	3	10	30
+Thelephorales	10	0.24	2	8	6
+Corticiales	9	0.14	1	8	7
+Amylocorticiales	8	0.21	2	6	8
+Microbotryales	7	0.13	1	6	30
+Atheliales	6	0.14	1	5	3
+Cystobasidiales	6	0.16	1	5	18
+(no order)	6	0.08	1	5	16
+Gomphales	5	0.06	0	5	8
+Golubeviales	4	0.02	0	4	4
+Dacrymycetales	4	0.09	0	4	4
+Microstromatales	4	0.13	1	3	11
+Peribolosporales	4	0.05	0	4	4
+Geastrales	2	0.05	0	2	1
+Holtermanniales	2	0.31	1	1	6
+Sistotremastrales	2	0.08	0	2	2
+Gloeophyllales	2	0.09	0	2	3
+Atractiellales	2	0.02	0	2	1
+Urocystidales	2	0.12	0	2	5
+Jaapiales	1	0.20	0	1	1
+Violaceomycetales	1	0.00	0	1	1
+Hysterangiales	1	0.07	0	1	1
+Phallales	1	1.00	1	0	5
+Exobasidiales	1	0.15	0	1	6
+Kriegeriales	1	0.30	0	1	10
+Agaricostilbales	1	nan	nan	nan	5
+Heterogastridiales	1	0.04	0	1	1
+Classiculales	1	0.02	0	1	1
+Ceraceosorales	1	0.06	0	1	2
+TOTAL	1359	0.13	179	1180	

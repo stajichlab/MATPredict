@@ -1,0 +1,40 @@
+PANEL (+-10 kb)
+group	rule	flagged/n	rate	Wilson95%
+mating, independent	T	6/9	66.7%	[35.4, 87.9]
+mating, independent	Hx	3/9	33.3%	[12.1, 64.6]
+mating, independent	T&Hx	3/9	33.3%	[12.1, 64.6]
+mating, CAAX-selected	T	8/9	88.9%	[56.5, 98.0]
+mating, CAAX-selected	Hx	5/9	55.6%	[26.7, 81.1]
+mating, CAAX-selected	T&Hx	5/9	55.6%	[26.7, 81.1]
+other	T	1/46	2.2%	[0.4, 11.3]
+other	Hx	0/46	0.0%	[0.0, 7.7]
+other	T&Hx	0/46	0.0%	[0.0, 7.7]
+
+SAMPLE: 498 genomes (4 source-genus genomes left out), 3560 STE3-like loci
+rule	observed	expected_by_chance	ratio	excess_(O-E)/O	boot95
+T	578	86.9	6.7	0.85	0.82-0.87
+Hx	194	61.0	3.2	0.69	0.61-0.74
+T&Hx	149	1.8	83.9	0.99	0.98-0.99
+
+per order (observed/expected; genomes)
+order	genomes	loci	T	Hx	T&Hx
+Polyporales	30	258	93/8.3	48/4.4	45/0.2
+Agaricales	26	275	66/7.3	29/2.9	25/0.2
+Cantharellales	30	266	49/9.2	0/3.6	0/0.3
+Russulales	30	512	47/12.1	17/8.4	11/0.1
+Auriculariales	20	112	45/2.7	2/1.4	2/0.1
+Sebacinales	12	489	40/9.4	3/2.8	1/0.1
+Cystofilobasidiales	30	121	26/1.7	35/4.6	25/0.0
+Boletales	30	188	23/4.9	1/0.7	1/0.0
+Tilletiales	30	88	21/0.6	0/0.8	0/0.0
+Trichosporonales	30	109	19/3.2	13/4.0	8/0.1
+Filobasidiales	30	124	14/3.5	5/6.2	5/0.2
+Hymenochaetales	30	243	12/7.3	9/3.1	6/0.1
+Corticiales	7	55	11/1.6	2/0.3	2/0.0
+(no order)	16	46	10/0.8	1/1.4	0/0.0
+Amylocorticiales	8	61	10/2.1	13/0.7	10/0.0
+Thelephorales	6	94	9/2.2	4/1.6	2/0.0
+Atheliales	3	48	8/1.1	0/0.4	0/0.0
+Microstromatales	11	37	8/1.1	3/2.0	0/0.1
+Gloeophyllales	3	24	7/0.6	0/0.5	0/0.0
+Gomphales	8	42	7/0.4	0/0.1	0/0.0

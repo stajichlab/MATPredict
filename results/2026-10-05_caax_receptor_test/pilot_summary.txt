@@ -1,0 +1,16 @@
+
+Variant A (Agaricomycete REFs only); 47 held-out loci, 14 mating
+score	pooled AUC	boot95	per-species AUC (mean over species with both classes)
+sim	0.59	0.42-0.76	0.70 (n=6)
+hmm	0.70	0.54-0.85	0.64 (n=6)
+T	0.95	0.86-1.00	0.96 (n=6)
+top-ranked locus is mating, by sim: 2/6 species
+top-ranked locus is mating, by hmm: 1/6 species
+
+Variant B (all 34 REFs); 47 held-out loci, 14 mating
+score	pooled AUC	boot95	per-species AUC (mean over species with both classes)
+sim	0.59	0.42-0.76	0.70 (n=6)
+hmm	0.73	0.57-0.87	0.65 (n=6)
+T	0.95	0.86-1.00	0.96 (n=6)
+top-ranked locus is mating, by sim: 2/6 species
+top-ranked locus is mating, by hmm: 1/6 species

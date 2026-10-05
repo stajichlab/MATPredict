@@ -1,0 +1,100 @@
+record_id: 13684_sn436ga98_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 13684
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Dothideomycetes;o__Pleosporales;f__Phaeosphaeriaceae;g__Parastagonospora;s__Parastagonospora_nodorum
+  lineage_resolved_date: '2026-09-26'
+organism:
+  species: Parastagonospora nodorum
+  strain:
+    name: sn436ga98
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: ORF1->MAT1-2-1
+    definition_note: 'Parastagonospora nodorum isolate SN436GA98 (Georgia, USA) MAT1-2,
+      deposit AY212019.1 (6,401 bp). Curated: MAT1-2-1 (AAO31742.1). Not curated:
+      ORF1 (AAO31741.1).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AY212019.1
+        seq_region: AY212019.1
+      start: 2272
+      end: 3362
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AAO31742.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2272
+  end: 3362
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 2272
+    end: 2761
+  - start: 2815
+    end: 3362
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Idiomorphs identified "using DNA from a pair of isolates
+      from Poland and Georgia, USA that are known to mate"; MAT-specific primers then
+      typed field isolates of both mating types (Bennett et al. 2003, abstract).
+    citations:
+    - &id001
+      pmid: '12948511'
+      doi: 10.1016/s1087-1845(03)00062-8
+  boundaries:
+    tier: 1
+    experimental_method: Boundaries are the GenBank deposit's own; the record segment
+      spans the curated genes on it.
+    citations:
+    - *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Idiomorph from MAT gene content (alpha-box MAT1-1-1 vs HMG-box
+      MAT1-2-1) of the targeted locus sequence.
+    citations:
+    - *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AY212019.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1016/s1087-1845(03)00062-8|13684|MAT|MAT1-2
+  reviewed_by: 'J. Stajich (sign-off 2026-09-26)'
+  reviewed_date: '2026-09-26'
+  notes: 'Proposed 2026-09-26 on curator request (round 2: Leptosphaeria, Parastagonospora,
+    Pseudocercospora, Fulvia) from docs/notes/2026-09-24_mat-reference-gap-literature.md.
+    Curator J. Stajich signed off 2026-09-26.'
+model_provenance: null

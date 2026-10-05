@@ -1,0 +1,36 @@
+before f81dad1: genomes 100 no_report 0 called 90 loci 91 conf {'high': 46, 'medium': 45} idiomorph {'MAT1-1': 46, 'MAT1-2': 45} genomes_with_both 1
+after  dca6ccc: genomes 100 no_report 0 called 91 loci 92 conf {'high': 47, 'medium': 45} idiomorph {'MAT1-1': 46, 'MAT1-2': 46} genomes_with_both 1
+
+order                 n  called_before  called_after  high_before  high_after
+Pleosporales          37             35            36           16          17
+Mycosphaerellales     12             11            11            4           4
+Dothideales            8              8             8            4           4
+Botryosphaeriales      8              8             8            6           6
+Venturiales            5              5             5            0           0
+Capnodiales            4              2             2            1           1
+?                      4              4             4            2           2
+Cladosporiales         3              2             2            2           2
+Mytilinidiales         2              2             2            1           1
+Myriangiales           2              2             2            2           2
+Aulographales          2              1             1            1           1
+Hysteriales            1              1             1            1           1
+Lineolatales           1              0             0            0           0
+Patellariales          1              1             1            1           1
+Phaeotrichales         1              1             1            1           1
+Microthyriales         1              1             1            1           1
+Valsariales            1              1             1            0           0
+Lichenotheliales       1              1             1            1           1
+Trypetheliales         1              0             0            0           0
+Gloniales              1              1             1            0           0
+Neophaeothecales       1              1             1            0           0
+Tubeufiales            1              0             0            0           0
+Eremomycetales         1              1             1            1           1
+Acrospermales          1              1             1            0           0
+
+genomes whose idiomorph/confidence set changed: 2
+   Pleosporales GCA_010093805.1_Polfu1 MAT1-2/medium MAT1-2/high
+   Pleosporales GCA_060176455.1_ASM6017645v1 none MAT1-2/medium
+
+idiomorph_margin (winner minus runner-up score) of called loci, median [n]
+f81dad1 {'Mycosphaerellales': (20.1, 8), 'Pleosporales': (9.0, 19), 'other': (25.5, 30)}
+dca6ccc {'Mycosphaerellales': (26.5, 8), 'Pleosporales': (18.7, 22), 'other': (27.0, 31)}

@@ -1,0 +1,130 @@
+record_id: 1047171_ipo94269_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 1047171
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Dothideomycetes;o__Mycosphaerellales;f__Mycosphaerellaceae;g__Zymoseptoria;s__Zymoseptoria_tritici
+  lineage_resolved_date: '2026-09-26'
+organism:
+  species: Zymoseptoria tritici
+  strain:
+    name: IPO94269
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: APC5->APN2->MAT1-2-1
+    definition_note: 'Zymoseptoria tritici (teleomorph Mycosphaerella graminicola)
+      MAT1-2 idiomorph with flanks, deposit AF440398.1 (14,878 bp). The GenBank record
+      carries no strain; the paper states the MAT1-2 library came from isolate IPO94269.
+      Curated: APN2 (annotated ''DNA lyase-like protein'', AAL30835.1) and MAT1-2-1
+      (AAL30836.1, 394 aa). Not curated: pal1-like (partial, AAL30833.1) and the anaphase-promoting
+      complex protein (AAL30834.1); neither is a roster gene.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AF440398.1
+        seq_region: AF440398.1
+      start: 4565
+      end: 10902
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: APN2
+  protein_accession: ncbi_protein:AAL30835.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4565
+  end: 6440
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 4565
+    end: 4581
+  - start: 4631
+    end: 5630
+  - start: 5673
+    end: 6440
+- gene_index: 1
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AAL30836.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 9670
+  end: 10902
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 9670
+    end: 10303
+  - start: 10352
+    end: 10902
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: MAT1-2 cloned from isolate IPO94269 by heterologous probing;
+      MAT1-1 from the opposite-mating-type isolate IPO323 by long-range PCR. "For
+      each of the MAT genes specific primers were designed and tested on an F1 mapping
+      population that was generated from a cross between IPO323 and IPO94269. An absolute
+      correlation was found between the amplified allele-specific fragments and the
+      mating type as determined by backcrosses of each F1 progeny isolate to the parental
+      isolates." (Waalwijk et al. 2002, abstract)
+    citations:
+    - &id001
+      pmid: '11929216'
+      doi: 10.1006/fgbi.2001.1322
+  boundaries:
+    tier: 1
+    experimental_method: Boundaries are the GenBank deposit's own; the record segment
+      spans the curated genes on it. The published idiomorph lies inside.
+    citations:
+    - *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Idiomorph from MAT gene content (alpha-box MAT1-1-1 vs HMG-box
+      MAT1-2-1) of isolates of known, opposite mating type, confirmed genetically
+      (see locus_existence).
+    citations:
+    - *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AF440398.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 10.1006/fgbi.2001.1322|1047171|MAT|MAT1-2
+  reviewed_by: 'J. Stajich (sign-off 2026-09-26)'
+  reviewed_date: '2026-09-26'
+  notes: 'Proposed 2026-09-26 from docs/notes/2026-09-24_mat-reference-gap-literature.md
+    (Tier 2: Dothideomycetes). First Dothideomycetes references; the 2026-09-24 pilot
+    called 90/100 Dothideomycetes genomes with no record of the class. Curator J. Stajich signed off 2026-09-26.'
+model_provenance: null

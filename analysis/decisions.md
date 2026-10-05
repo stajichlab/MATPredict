@@ -275,3 +275,12 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
   - Basidiomycota PR calls admitted only by the strict-CAAX scan: show in
     reports with the unverified flag; give summary call rates with and without
     unverified-only genomes.
+
+## 2026-10-04 (J. Stajich, PR test)
+- CAAX unverified-label review, interim rules (evidence: `2026-10-05_caax-receptor-test.md`):
+  - Use the non-mating STE3 copies already in the repo (other copies in genomes
+    with a curated B-locus receptor) as the interim negative set, until a
+    literature set exists.
+  - Pass criterion for now: strict-CAAX hit rate on curated B-locus receptors and
+    false-positive rate on non-mating STE3, each with a Wilson 95% interval.
+  - No ruling yet on lifting the unverified label for any order.

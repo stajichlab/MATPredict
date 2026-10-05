@@ -31,6 +31,7 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 09-26 | [Pucciniomycotina, Wallemia, Rhodotorula](2026-09-26_pucciniomycotina-wallemia-rhodotorula.md) | decided | Wallemia 51/51; Rhodotorula P/R 61/62 held-out |
 | 09-27 | [Receptor (B/PR) loci](2026-09-27_receptor-loci.md) | decided (review later) | CAAX: 6/9 vs 0/25; Agaricales PR 14->132 |
 | 10-04 | [Basidiomycota + Ascomycota v0.6.0 campaign](2026-10-04_basidiomycota-ascomycota-v060-campaign.md) | decided | Basidio 2,982/3,270 (2,745 without PR-only); Asco 17,314/19,380; 20 code-26 failures -> v0.6.1 |
+| 10-05 | [PR test: the 1,360 CAAX-only calls](2026-10-05_caax-receptor-test.md) | open (interim negatives) | panel: non-mating 1/46 flagged (Wilson upper 11.3%), independent mating 6/9; 502 genomes: 588 flagged vs 88 chance; about 13% of the 1,360 calls at chance level |
 | 10-04 | [R. toruloides HD: generic HD vs redHD](2026-10-04_rtoruloides-hd-old-vs-redhd.md) | decided: keep redHD | old 0/24 R. toruloides at the known locus; no R. toruloides HD hit at the old locus; HD1 id 34.9% vs 65.5% median |
 
 ## Ascomycota (incl. Serinales, Dothideomycetes)

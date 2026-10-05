@@ -10,7 +10,7 @@ Updated 2026-10-01. Closed rows (deterministic rebuild, Umbelopsis merge) are in
 | Core-only admission for split loci (Z. heterogamus sexP on a 4.8 kb scaffold) | design and test with the gate and P1 class | `results/2026-09-29_sexM_like_paralog/NOTE.md` |
 | Two-idiomorph genomes: resolve causes per genome | pseudogene test, duplicated single-copy genes, read depth (not assessed) | `results/2026-09-29_two_idiomorphs/NOTE.md` |
 | P1 paralog class trained on one sequence; P1b and the Z. exponens gene not covered | more paralog copies | `results/2026-09-29_r4_paralog/NOTE.md` |
-| CAAX-dependent calls: review the unverified label | a labelled set of >= 100 non-mating STE3 loci | `results/2026-09-28_validation_f3_f4/NOTE.md`; handoff review-later item |
+| CAAX-dependent calls: review the unverified label | a literature set of >= 100 non-mating STE3 loci (interim in-repo set gives 1/46 flagged, Wilson upper 11.3%); curator ruling per order (excess share and bounds in the 10-05 report; Hymenochaetales weak) | `analysis/2026-10-05_caax-receptor-test.md`; `results/2026-09-28_validation_f3_f4/NOTE.md` |
 | Group distant subloci by conserved flanks (mip/beta-fg) | design and test; S. commune Aα–Aβ ~450–550 kb apart | `results/2026-09-28_subloci_literature/NOTE.md` |
 
 | Future classifiers (Sporidiobolales A1/A2 first; Ascomycota MAT1-1-1/MAT1-2-1; Serinales MTLa/alpha; Basidiomycota HD later) | build with the chosen aligner; training-diversity check | `results/2026-09-27_receptor_explore/NOTE.md`; `2026-09-29_classifier-builds.md` |

@@ -15,7 +15,7 @@ from MATPredict.detect.pipeline import (
     select_polish_clusters,
 )
 
-from tests.detect.test_cap_v3_strong_fragment import KEY, _cluster
+from tests.detect.test_cap_v3_strong_fragment import KEY, _cluster, _hit
 from tests.detect.test_pipeline import _model, _tblastn, _write_order, _write_record
 from tests.detect.test_polish_cluster_cap import ORDER
 
@@ -73,10 +73,15 @@ def test_the_boundary_is_inclusive():
     assert (id(just_out), KEY) not in selected
 
 
+def _cluster_of(key, n_genes, identity, contig):
+    genes = ["sexP", "tptA", "rnhA", "glrA", "algA"][:n_genes]
+    return types.SimpleNamespace(hits=[_hit(g, identity, contig, key=key) for g in genes])
+
+
 def test_each_family_gets_its_own_tier_and_top_up():
     noise_a, true_a = _scenario()
-    true_b = _cluster(1, 95.0, "b-true")
-    noise_b = [_cluster(2, 38.0, f"b{i}") for i in range(7)]
+    true_b = _cluster_of(OTHER, 1, 95.0, "b-true")
+    noise_b = [_cluster_of(OTHER, 2, 38.0, f"b{i}") for i in range(7)]
     selected = select_polish_clusters({KEY: noise_a + [true_a], OTHER: noise_b + [true_b]}, 6, {},
                                       strong_identity=50.0)
     assert (id(true_a), KEY) in selected and (id(true_b), OTHER) in selected
@@ -131,6 +136,18 @@ def test_the_pipeline_polishes_the_strong_cluster_by_default(tmp_path):
 
 def test_turning_the_tier_off_restores_the_plain_cap(tmp_path):
     assert _run(tmp_path, max_polished_clusters_per_family=1, polish_strong_identity=None) == {"c1"}
+
+
+def test_the_default_polishes_every_strong_cluster_even_past_the_cap(tmp_path):
+    """The cap fixture of test_polish_cluster_cap: c1 3 genes at 80%, c2 2 genes at 70%, c3 2 genes at
+    40%. With a cap of 1 the plain cap polishes c1 only; both c1 and c2 are at or above 50%, so the tier
+    polishes both and leaves only the weak c3 capped."""
+    from tests.detect.test_polish_cluster_cap import _run as run_cap_fixture
+    (tmp_path / "plain").mkdir(); (tmp_path / "tiered").mkdir()
+    _, plain = run_cap_fixture(tmp_path / "plain", max_polished_clusters_per_family=1, polish_strong_identity=None)
+    _, tiered = run_cap_fixture(tmp_path / "tiered", max_polished_clusters_per_family=1)
+    assert plain == {"c1"}
+    assert tiered == {"c1", "c2"}
 
 
 def test_with_the_cap_off_the_tier_changes_nothing(tmp_path):

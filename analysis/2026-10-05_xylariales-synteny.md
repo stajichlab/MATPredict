@@ -53,6 +53,8 @@ in Xylariales and Amphisphaeriales.)
 Xylariales by family (SAC / SCA / other / incomplete): Xylariaceae 15 / 84 / 1 / 7; Hypoxylaceae 54 / 5 / 10 / 8; Diatrypaceae 0 / 44 / 0 / 3;
 Microdochiaceae 7 / 0 / 0 / 0; family unassigned 12 / 1 / 1 / 4. Main genera: *Xylaria* 1 SAC / 49 SCA, *Eutypa* 0 / 38, *Nemania* 0 / 9,
 *Daldinia* 15 / 2, *Hypoxylon* 16 / 1, *Annulohypoxylon* 16 / 0, *Hypomontagnella* 3 / 2. The state is conserved at genus and family level.
+Genome counts overstate independent events: the 257 Xylariales genomes carry 164 species labels, and 41 are *Eutypa lata* strains. By majority state per species,
+SAC is 69 species, SCA 73, other 9, incomplete 13.
 NC1011 and G536 (same species), *Rosellinia* and *Eutypa lata* are SCA; *M. bolleyi*, *Hypoxylon* CI-4A, *Daldinia* EC12 and *Xylaria* JS573 are SAC.
 
 ## 3. Gene-level breakpoints (adjacency of NC1011 neighbours; conserved / genomes with both genes)
@@ -88,6 +90,9 @@ Nucleotide breakpoints were not resolved: minimap2 (asm20 and a sensitive preset
 ## 5. Where the MAT-like sequence is
 SLA2-APN2 hit-to-hit gap (bp), Xylariales: SAC median 8,898 (21 of 89 under 4 kb); SCA median 2,345 (85 of 134 under 6 kb, i.e. COX13 only; 49 at 6 kb or
 more, mostly *Eutypa* 38, *Peroneutypa* 3, with a few *Hypomontagnella*, *Daldinia*, *Diatrype*, *Eutypella*, *Xylaria*, *Alloperoneutypa*).
+Correction (2026-10-05, after the dashboard work): the large SCA gaps are mostly a third arrangement, not paralog hits. In 48 SCA genomes another gene lies inside
+the SLA2-COX13-APN2 interval: H609 in 44, H610 and H609 in 3, CIA30, H610 and H609 in 1. All 38 *Eutypa lata* genomes with a gap read SLA2, H609, COX13, APN2 with
+a gap of about 22.4 kb, so H609 has moved into the interval there; in NC1011 it lies beyond H608.
 - **SAC keeps a MAT-sized interval.** 18 of 89 SAC genomes have a v0.6.0 locus within 30 kb of the flank hits, and in 17 of them it lies between SLA2 and the
   APN2/COX13 unit. The paper's two "between" genomes (*M. bolleyi*, *Xylaria* JS573) are both SAC.
 - **SCA has no room between SLA2 and the unit.** Of 33 SCA genomes with a v0.6.0 locus at the block, 20 span the unit itself (flank-carried) and 13 extend
@@ -123,7 +128,7 @@ MAT1-2-1/MAT1-1-3-type proteins, NCU03481 and fmf-1 (*N. crassa*). Placement: `t
 
 ## Limitations
 - Gene-level only; breakpoints are bounded by gene ends, not located to bp. Draft assemblies can mimic a rearrangement; 22 Xylariales genomes were incomplete.
-- Window choice, coverage and identity cut-offs are heuristics; paralogs can capture a query (large gaps in *Eutypa* may be such cases, to check).
+- Window choice, coverage and identity cut-offs are heuristics; paralogs can capture a query. Strain sampling is uneven (41 *Eutypa lata* genomes), so species-level counts are given beside genome counts.
 - Outgroup sampling is small and several outgroup orders lack some genes.
 - No statistics; counts are descriptive. Calls from v0.6.0 are not validated for these genomes.
 

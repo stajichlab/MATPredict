@@ -123,6 +123,12 @@ What MATPredict v0.6.0 found (`results/2026-10-03_ascomycota_v060/`, wave_7):
   references, or absent. Next steps: search the proteome for alpha-box
   (PF04769) and HMG proteins genome-wide and rank by similarity to
   Sordariomycetes MAT proteins; Tool B if a Xylaria population read set exists.
+- SRA (checked 2026-10-05, txid2512241): no population. DNA from two strains
+  only: NC1011 PacBio Sequel WGS (SRR8861568-73, ~12 Gb; the JGI assembly) and
+  G536 Illumina MiSeq WGS (SRR9166620, 14 Gb, filed as "Xylaria cubensis").
+  NC1011 RNA-seq: transcriptome SRR8861595 (21 Gb) and 7 expression-profiling
+  runs (SRR37043446-52, 2-3 Gb each). Use: expression evidence and gene-model
+  checks for candidate alpha-box/HMG genes in NC1011; Tool B is not possible.
 
 ## Tool A: idiomorph typing from reads (`matpredict reads-type`, proposed)
 
@@ -209,6 +215,27 @@ homeodomain). Search the population for regions with that pattern.
    (absent, heterozygous, homozygous); loss of heterozygosity in Bd lineages
    adds 0/1 patterns that are not MAT. The model must use the three-state depth.
 
+### Evidence levels for a candidate (proposed; thresholds calibrated on the controls)
+Presence/absence has many non-MAT causes (transposons, accessory chromosomes,
+deletions, contamination, assembly gaps), so a candidate needs several
+independent signals:
+1. Clean presence/absence: near-zero depth over the whole block in some
+   strains, present in others; minority group >= 3 strains and >= 10%; the
+   flanking sequence on both sides present in every strain.
+2. Complementary block: strains lacking block A carry a different sequence B
+   between the same flanks (assembled from their unplaced reads or k-mers):
+   the idiomorph signature.
+3. Gene content: A or B carries a transcription-factor gene (HMG box, alpha
+   box, homeodomain).
+4. Independence from the strain tree: the A/B partition recurs in several
+   clades rather than marking one lineage.
+5. Artefact checks: not repeat-dominated, not at a contig or chromosome end,
+   not a whole-chromosome depth change.
+Levels: strong = 1-4 with 5 passing; weak = 1 + 3, or 1 + 2; otherwise
+reported only as a presence/absence polymorphism. Each control's known MAT
+locus must reach "strong"; the number of non-MAT strong candidates per control
+is the false-positive measure.
+
 ### Positive controls (run blind; the known locus must rank near the top)
 A. fumigatus (MAT1-1/MAT1-2), C. lusitaniae (MTL), R. mucilaginosa (redPR/redHD),
 Rhizopus stolonifer and R. microsporus (sexP/sexM). Report the rank of the known
@@ -253,8 +280,8 @@ of a few hundred CPU-hours; the k-mer path needs per-strain k-mer databases on
 ## Questions for the reviewer
 Answered 2026-10-05: code home, hybrid order, Fusarium source, Bd scope (see
 Curator decisions). Still open:
-1. Minimum evidence to report a "candidate MAT-like locus" from Tool B.
-2. Which Xylariales species has a population read set (>= 30 strains)?
+1. Accept the proposed evidence levels for Tool B candidates (above)?
+2. Which Xylariales species has a population read set (>= 30 strains)? (X. flabelliformis: none in SRA.)
 3. A. fumigatus AF100-1_3 assembly location (reads are in the CRAM set).
-4. Curate the F. oxysporum MAT1-1/MAT1-2 idiomorphs (AB011379.2, AB011378.1)
-   as records?
+4. F. oxysporum MAT1-1/MAT1-2 records: curator said yes (2026-10-05); curated
+   on branch curate-foxysporum.

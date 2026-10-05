@@ -184,6 +184,9 @@ class GeneEvidence:
     # this field; real pipeline code below always passes a real, computed
     # status, never this default.
     alternate_model: dict | None = None  # the OTHER tool's model
+    #: Frameshifts in the canonical exonerate model (0 = none); reported only
+    #: when > 0, so reports of frameshift-free genes are unchanged.
+    frameshifts: int = 0
     # (contig/start/end/strand/exons/identity/method), populated only when
     # status == polish.STATUS_DISAGREE, else None.
     exons: tuple[tuple[int, int], ...] | None = None
@@ -722,6 +725,20 @@ def _translate_model(genome_fasta: Path, model, genetic_code: int, cache: dict) 
     seq = cache.get(model.contig)
     if seq is None:
         return ""
+    # A model with frameshifts (exonerate) is translated from its aligned
+    # blocks, which leave the frameshift bases out (curator ruling 2026-10-04,
+    # notable finding 026): the exon CDS no longer reads through, and the
+    # longest stop-free stretch below would be a fragment. Used only when the
+    # corrected sequence translates without an internal stop.
+    blocks = getattr(model, "cds_blocks", ())
+    if getattr(model, "frameshifts", 0) and blocks:
+        cds = "".join(
+            str(seq[a - 1:b].reverse_complement() if model.strand == "-" else seq[a - 1:b])
+            for a, b in blocks)
+        cds = cds[: len(cds) - len(cds) % 3]
+        corrected = str(Seq(cds).translate(table=genetic_code)).rstrip("*")
+        if corrected and "*" not in corrected:
+            return corrected
     exons = sorted((e.start, e.end) for e in model.exons) or [(model.start, model.end)]
     ordered = list(reversed(exons)) if model.strand == "-" else exons
     parts = []
@@ -1753,6 +1770,7 @@ def _gene_evidence(
                     identity=model.identity, coverage=None,
                     reference_record_id=model.reference_record_id, method=model.method,
                     status=outcome.status, alternate_model=alternate,
+                    frameshifts=getattr(model, "frameshifts", 0),
                     exons=tuple((e.start, e.end) for e in model.exons) if model.exons else None,
                     evalue=best_evalue.get(gene_name),
                     bitscore=best_bitscore.get(gene_name),
@@ -2424,6 +2442,7 @@ def run_pipeline(
             gene_idiomorph = classifier_genes(family)
             # One entry per scored model: (gene, span, protein).
             scored_models = []
+            frameshift_corrected = False
             for (cluster_id, key, gene), outcome in polish_by.items():
                 if cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph:
                     continue
@@ -2435,6 +2454,8 @@ def run_pipeline(
                     )
                     if protein:
                         scored_models.append((gene, (model.contig, model.start, model.end), protein))
+                        if getattr(model, "frameshifts", 0):
+                            frameshift_corrected = True
             classifier_input = "model"
             if not scored_models:
                 # No core protein was modelled: score the tblastn HSP
@@ -2462,6 +2483,8 @@ def run_pipeline(
             )
             if verdict is None:
                 continue
+            if frameshift_corrected:
+                verdict = dataclasses.replace(verdict, frameshift_corrected=True)
             classifier_verdicts[(id(cluster), family.key)] = verdict
             # Hits change PER GENE POSITION, on that position's own proteins,
             # and only at that position (as in `resolve_idiomorph_by_models`).

@@ -55,6 +55,16 @@ class PolishModel:
     #: tool reported none. Used to decide a sexM/sexP-style pair on two
     #: models (`resolve_idiomorph_by_models`).
     score: float | None = None
+    #: Frameshifts exonerate placed inside the model (its exon `frameshifts`
+    #: attribute, summed). A model with frameshifts no longer translates
+    #: through from its exons -- e.g. a Nanopore homopolymer indel (notable
+    #: finding 026: Mucor griseocyanus sexM). 0 for miniprot models.
+    frameshifts: int = 0
+    #: The target bases exonerate aligned to the query, as 1-based closed
+    #: genomic spans in TRANSCRIPT order (exonerate `Align` blocks). Joined, they
+    #: are the frame-corrected coding sequence: frameshift bases and target-only
+    #: insertions are left out. Empty unless the model has frameshifts.
+    cds_blocks: tuple[tuple[int, int], ...] = ()
 
 
 def boundaries_agree(a: PolishModel, b: PolishModel, tolerance_bp: int = 10) -> bool:

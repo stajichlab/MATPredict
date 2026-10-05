@@ -341,11 +341,48 @@ detect requires SLA2 for Pleosporales, the requirement will fail.
 
 **Xylariales (257).**
 - Robinson AJ & Natvig DO 2019. Fungal Genet Biol 122:47-52. PMID 30557613,
-  doi:10.1016/j.fgb.2018.12.004. 35 genomes, 15 genera. No MAT1-1-1 or MAT1-1-2
-  candidates were found in any member. The MAT1-2-1/MAT1-1-3-like HMG genes found
-  are highly divergent or are non-MAT HMG paralogs.
-- **Architecture flag**: expect no call in this order. That is biology, not a
-  miss.
+  doi:10.1016/j.fgb.2018.12.004, PMC6321786. 35 genomes, 15 genera (10 new
+  *Monosporascus* assemblies, QJNS00000000-QJOB00000000, plus public genomes;
+  per-isolate table: `2026-10-05_robinson-natvig-2019-xylariales.tsv`, from
+  supplementary Tables S2 and S3). Queries were Sordariomycete MAT proteins
+  (BLASTp, tBLASTn, tBLASTx) plus a search of the SLA2-APN2 region
+  (*N. crassa* SLA2 XP_964240.1, APN2 ESA43843.1). Gene models were AUGUSTUS
+  with *N. crassa* parameters, so missed genes are possible.
+- No MAT1-1-1 or MAT1-1-2 candidate in any genome. In the order's homothallic
+  species the usual MAT1-1-1 + MAT1-1-2/-3 combination is absent.
+- SLA2 and APN2 are on the same scaffold in 28 of 35 genomes. A MATA_HMG
+  (MAT1-2-1/MAT1-1-3-family) gene is linked to them in 16 genomes (7 between,
+  9 adjacent; 18 genes, since two genomes have two) and not linked in the other
+  19. Order and orientation of SLA2, APN2 and the HMG gene vary (their Fig. 1).
+- The 18 linked HMG genes almost all have *N. crassa* NCU03481 (*P. anserina*
+  PaHMG8) as the top reciprocal hit, not Mat a-1; the one exception is
+  *Xylaria* JS573 (NCU04729, E 0.2). NCU03481 and fmf-1 (NCU09387, PaHMG5) are
+  non-MAT MATA_HMG genes required for sexual development. In the ML trees
+  (their Fig. S1; HMG core = residues 122-233 of *N. crassa* Mat a-1,
+  AAA33598; TreeBase S23036) no Xylariales protein groups with the known
+  MAT1-2-1 clade; some group with NCU03481 or fmf-1 and many with neither.
+- Authors' reading: either MAT1-1 was lost and the MAT1-2-1 gene diverged
+  (the linked HMG genes are derived MAT1-2-1), or sexual development is
+  controlled upstream by the PaHMG5/PaHMG8 pathway. Unisexual reproduction as
+  in *Huntiella* is also possible. Heterothallism has only circumstantial
+  support (*Hypoxylon mediterraneum*, *H. mammatum*). *E. lata*: 100+ PCR
+  attempts on 34 isolates found no MAT1-1-1 or MAT1-2-1 (Long & Bradshaw 2002,
+  grey literature).
+- Taxonomy: the paper's set includes *Pestalotiopsis* (Amphisphaeriales in the
+  current taxonomy, listed separately above), *Apiospora*, *Truncatella*,
+  *Microdochium* and *Pseudomassariella*.
+- Conflicts with our own results (2026-09-27 flank-bitscore note): MATPredict
+  finds a MAT gene between SLA2 and APN2 in *Microdochium paspali* and
+  Xylariales sp. XT01 (weak core, 39-47 bits), and MAT1-1-2/-3 in
+  *Didymobotryum rigidum*. The paper reports no MAT1-1-2 in any member, and
+  *M. bolleyi* and *M. trichocladiopsis* are among its "between" cases. The
+  *D. rigidum* call needs a PF17043 and position check before it is used as a
+  seed. NC1011 (JGI Xylcub1) is not in the paper's set.
+- **Architecture flag**: expect no canonical idiomorph call in most of this
+  order, but not uniformly. A SLA2-APN2 HMG gene is common and most such genes
+  look like NCU03481/fmf-1-type regulators. A call on a MATA_HMG gene needs
+  clade placement against those paralogs (see
+  `docs/superpowers/specs/2026-10-05-xylariales-models-design.md`).
 
 **Microascales (164).**
 - Wilken PM et al. 2014. PLoS ONE 9:e92180. PMID 24651494. *Ceratocystis

@@ -1,0 +1,55 @@
+genomes with both arms: 162 of 163
+mating subclade tips: 87 around 6 curated Agaricales receptors
+PR calls off -> on: 14 -> 132; gained 118, lost 0, changed 0
+Balpha/Bbeta calls off -> on: 10 -> 10
+HD-type calls changed on vs off: 0 genomes []
+vs full run (Agaricales): gained 95, lost 0, changed 0; HD differ in 0 genomes
+wall on/off total: 21.34 h / 19.73 h (x1.08)
+gained calls: 118; with a caax precursor: 118
+  caax ORFs per gained call: median 2, max 8
+  confidence: Counter({'medium': 118})
+  receptor status: Counter({'polished_disagree': 97, 'polished_agree': 21})
+  same contig as HD: 0
+  step-1 NN inside a curated-mating subclade: 62; NN is a curated mating receptor: 25; no NN: 0
+  receptor identity to curated mating receptors: min 31.5 median 62.1 max 100.0
+per family (gained / genomes gaining / NN in subclade):
+  Agaricales/?: 2 calls in 2 genomes; NN in subclade 2; median receptor id 64.7
+  Agaricales/Agrocybaceae: 16 calls in 12 genomes; NN in subclade 8; median receptor id 67.7
+  Agaricales/Callistosporiaceae: 1 calls in 1 genomes; NN in subclade 0; median receptor id 66.0
+  Agaricales/Campanellaceae: 1 calls in 1 genomes; NN in subclade 1; median receptor id 60.7
+  Agaricales/Clavariaceae: 1 calls in 1 genomes; NN in subclade 0; median receptor id 63.7
+  Agaricales/Cortinariaceae: 3 calls in 2 genomes; NN in subclade 2; median receptor id 64.6
+  Agaricales/Crassisporiaceae: 1 calls in 1 genomes; NN in subclade 1; median receptor id 72.9
+  Agaricales/Crepidotaceae: 1 calls in 1 genomes; NN in subclade 0; median receptor id 52.9
+  Agaricales/Cyphellaceae: 3 calls in 2 genomes; NN in subclade 3; median receptor id 64.0
+  Agaricales/Galerinaceae: 2 calls in 1 genomes; NN in subclade 0; median receptor id 68.0
+  Agaricales/Hydnangiaceae: 1 calls in 1 genomes; NN in subclade 1; median receptor id 67.8
+  Agaricales/Hymenogastraceae: 1 calls in 1 genomes; NN in subclade 1; median receptor id 74.8
+  Agaricales/Inocybaceae: 2 calls in 2 genomes; NN in subclade 1; median receptor id 58.6
+  Agaricales/Kuehneromycetaceae: 1 calls in 1 genomes; NN in subclade 1; median receptor id 71.1
+  Agaricales/Lycoperdaceae: 3 calls in 2 genomes; NN in subclade 3; median receptor id 62.1
+  Agaricales/Lyophyllaceae: 8 calls in 5 genomes; NN in subclade 6; median receptor id 62.8
+  Agaricales/Marasmiaceae: 1 calls in 1 genomes; NN in subclade 0; median receptor id 55.7
+  Agaricales/Mycenaceae: 6 calls in 4 genomes; NN in subclade 2; median receptor id 59.3
+  Agaricales/Nidulariaceae: 1 calls in 1 genomes; NN in subclade 1; median receptor id 63.4
+  Agaricales/Omphalinaceae: 2 calls in 2 genomes; NN in subclade 1; median receptor id 73.0
+  Agaricales/Omphalotaceae: 7 calls in 5 genomes; NN in subclade 5; median receptor id 58.2
+  Agaricales/Physalacriaceae: 5 calls in 4 genomes; NN in subclade 2; median receptor id 60.6
+  Agaricales/Pleurotaceae: 3 calls in 3 genomes; NN in subclade 3; median receptor id 72.1
+  Agaricales/Pluteaceae: 1 calls in 1 genomes; NN in subclade 0; median receptor id 62.3
+  Agaricales/Porotheleaceae: 1 calls in 1 genomes; NN in subclade 0; median receptor id 60.8
+  Agaricales/Psathyrellaceae: 1 calls in 1 genomes; NN in subclade 1; median receptor id 61.5
+  Agaricales/Pterulaceae: 4 calls in 2 genomes; NN in subclade 4; median receptor id 58.0
+  Agaricales/Schizophyllaceae: 7 calls in 6 genomes; NN in subclade 5; median receptor id 58.9
+  Agaricales/Stephanosporaceae: 1 calls in 1 genomes; NN in subclade 0; median receptor id 60.5
+  Agaricales/Strophariaceae: 4 calls in 3 genomes; NN in subclade 2; median receptor id 71.0
+  Agaricales/Tricholomataceae: 4 calls in 2 genomes; NN in subclade 3; median receptor id 66.0
+  Polyporales/Cerrenaceae: 2 calls in 1 genomes; NN in subclade 0; median receptor id 72.1
+  Polyporales/Fomitopsidaceae: 2 calls in 1 genomes; NN in subclade 0; median receptor id 65.7
+  Polyporales/Phaeolaceae: 1 calls in 1 genomes; NN in subclade 0; median receptor id 57.8
+  Polyporales/Polyporaceae: 9 calls in 6 genomes; NN in subclade 0; median receptor id 65.8
+  Polyporales/Sparassidaceae: 1 calls in 1 genomes; NN in subclade 0; median receptor id 66.8
+  Russulales/Auriscalpiaceae: 2 calls in 1 genomes; NN in subclade 1; median receptor id 66.0
+  Russulales/Hericiaceae: 4 calls in 2 genomes; NN in subclade 1; median receptor id 64.4
+  Russulales/Russulaceae: 1 calls in 1 genomes; NN in subclade 0; median receptor id 100.0
+  Russulales/Stereaceae: 1 calls in 1 genomes; NN in subclade 1; median receptor id 55.3

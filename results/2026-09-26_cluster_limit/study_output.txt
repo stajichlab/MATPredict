@@ -1,0 +1,80 @@
+
+## 2026-09-25_serinales_all_8dec9e1: 2368 genomes, 1327 calls, admitted clusters/genome median 3.0 mean 2.5 max 12; admitted clusters that became a call: 1327/6029 (22%)
+    top-N  calls lost  genomes losing a call  polish work saved
+        1   161/1327           153/2368                  63%
+        2    11/1327             5/2368                  34%
+        3     7/1327             2/2368                  12%
+        4     5/1327             1/2368                   2%
+        6     3/1327             1/2368                   0%
+   wall_s ~ 10.5 + 0.72 x (admitted-cluster genes); R^2 0.40; n=2368 (median wall 14s)
+
+## 2026-09-25_serinales_all_2c6c3a7: 885 genomes, 1071 calls, admitted clusters/genome median 13 mean 11.2 max 22; admitted clusters that became a call: 1071/9893 (11%)
+    top-N  calls lost  genomes losing a call  polish work saved
+        1   208/1071           201/885                   83%
+        2    11/1071            11/885                   70%
+        3     1/1071             1/885                   61%
+        4     0/1071             0/885                   53%
+        6     0/1071             0/885                   39%
+   wall_s ~ 219.5 + 0.35 x (admitted-cluster genes); R^2 0.00; n=885 (median wall 231s)
+
+## 2026-09-23_saccharomyces_bar: 1553 genomes, 3101 calls, admitted clusters/genome median 5 mean 5.0 max 11; admitted clusters that became a call: 3101/7755 (40%)
+    top-N  calls lost  genomes losing a call  polish work saved
+        1  1733/3101          1141/1553                  73%
+        2   612/3101           563/1553                  52%
+        3    65/3101            49/1553                  34%
+        4    16/3101            11/1553                  19%
+        6     1/3101             1/1553                   2%
+
+## 2026-09-25_pezizomycetes_d689647: 172 genomes, 98 calls, admitted clusters/genome median 1.0 mean 1.2 max 5; admitted clusters that became a call: 98/201 (49%)
+    top-N  calls lost  genomes losing a call  polish work saved
+        1     0/98               0/172                   18%
+        2     0/98               0/172                    3%
+        3     0/98               0/172                    1%
+        4     0/98               0/172                    0%
+        6     0/98               0/172                    0%
+   wall_s ~ 41.5 + 6.08 x (admitted-cluster genes); R^2 0.22; n=172 (median wall 60s)
+
+## 2026-09-24_pilots/dothideomycetes: 100 genomes, 91 calls, admitted clusters/genome median 26.0 mean 26.6 max 67; admitted clusters that became a call: 91/2657 (3%)
+    top-N  calls lost  genomes losing a call  polish work saved
+        1    11/91              11/100                   93%
+        2     4/91               4/100                   87%
+        3     3/91               3/100                   83%
+        4     2/91               2/100                   78%
+        6     0/91               0/100                   70%
+   wall_s ~ 126.6 + 8.75 x (admitted-cluster genes); R^2 0.81; n=100 (median wall 622s)
+
+## 2026-09-24_pilots/pezizomycotina_uncurated: 100 genomes, 88 calls, admitted clusters/genome median 19.0 mean 20.0 max 43; admitted clusters that became a call: 88/2000 (4%)
+    top-N  calls lost  genomes losing a call  polish work saved
+        1     7/88               7/100                   90%
+        2     0/88               0/100                   83%
+        3     0/88               0/100                   77%
+        4     0/88               0/100                   72%
+        6     0/88               0/100                   62%
+   wall_s ~ 148.3 + 9.83 x (admitted-cluster genes); R^2 0.65; n=100 (median wall 620s)
+
+## 2026-09-24_pilots/orbiliomycetes: 67 genomes, 28 calls, admitted clusters/genome median 18 mean 18.5 max 39; admitted clusters that became a call: 28/1239 (2%)
+    top-N  calls lost  genomes losing a call  polish work saved
+        1     4/28               4/67                    92%
+        2     2/28               2/67                    86%
+        3     2/28               2/67                    80%
+        4     0/28               0/67                    74%
+        6     0/28               0/67                    64%
+   wall_s ~ 43.1 + 8.24 x (admitted-cluster genes); R^2 0.70; n=67 (median wall 336s)
+
+## 2026-09-24_pilots/dipodascomycetes_etc: 99 genomes, 63 calls, admitted clusters/genome median 32 mean 32.8 max 72; admitted clusters that became a call: 50/3248 (2%)
+    top-N  calls lost  genomes losing a call  polish work saved
+        1    15/63              12/99                    95%
+        2     9/63               8/99                    90%
+        3     6/63               6/99                    86%
+        4     4/63               4/99                    83%
+        6     0/63               0/99                    76%
+   wall_s ~ 53.6 + 6.51 x (admitted-cluster genes); R^2 0.92; n=99 (median wall 551s)
+
+## 2026-09-24_pilots/saccharomycetes_other: 100 genomes, 80 calls, admitted clusters/genome median 27.0 mean 27.5 max 55; admitted clusters that became a call: 65/2749 (2%)
+    top-N  calls lost  genomes losing a call  polish work saved
+        1    44/80              33/100                   94%
+        2    34/80              26/100                   88%
+        3    24/80              18/100                   84%
+        4    17/80              13/100                   79%
+        6     8/80               7/100                   71%
+   wall_s ~ 19.5 + 8.54 x (admitted-cluster genes); R^2 0.83; n=100 (median wall 516s)

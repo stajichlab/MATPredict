@@ -1,0 +1,118 @@
+genomes: base 2368  new 2368  both 2368
+
+species                              n  genotype base -> new (counts)
+Candidozyma auris                  952  base {'a': 681, 'none': 271}
+                                        new  {'a': 682, 'alpha': 258, 'none': 12}  loci/genome 0.72 -> 0.99
+                                        new loci 941: with a flank 941, >=2 flanks 907, alpha loci 259 (with alpha2 0), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> alpha': 258, 'change none -> a': 1}
+Candida albicans                   134  base {'a': 93, 'a+alpha': 1, 'homothallic': 1, 'none': 39}
+                                        new  {'a': 17, 'a+alpha': 77, 'alpha': 34, 'homothallic': 1, 'none': 5}  loci/genome 0.74 -> 1.58
+                                        new loci 212: with a flank 212, >=2 flanks 211, alpha loci 115 (with alpha2 110), flank-carried 0 (single-flank 0)
+                                        changes: {'change a -> a+alpha': 76, 'change none -> alpha': 34}
+Candida tropicalis                 115  base {'a': 104, 'none': 11}
+                                        new  {'a': 17, 'a+alpha': 87, 'alpha': 11}  loci/genome 0.90 -> 1.77
+                                        new loci 203: with a flank 203, >=2 flanks 199, alpha loci 99 (with alpha2 93), flank-carried 0 (single-flank 0)
+                                        changes: {'change a -> a+alpha': 87, 'change none -> alpha': 11}
+Lizanozyma spartinae               111  base {'none': 111}
+                                        new  {'alpha': 110, 'none': 1}  loci/genome 0.00 -> 0.99
+                                        new loci 110: with a flank 110, >=2 flanks 110, alpha loci 110 (with alpha2 85), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> alpha': 110}
+Lodderomyces parapsilosis           98  base {'none': 98}
+                                        new  {'a': 97, 'none': 1}  loci/genome 0.00 -> 0.99
+                                        new loci 97: with a flank 97, >=2 flanks 97, alpha loci 0 (with alpha2 0), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> a': 97}
+Clavispora lusitaniae               88  base {'a': 25, 'none': 63}
+                                        new  {'a': 25, 'alpha': 54, 'none': 9}  loci/genome 0.28 -> 0.90
+                                        new loci 79: with a flank 79, >=2 flanks 79, alpha loci 54 (with alpha2 0), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> alpha': 54}
+Debaryomyces hansenii               77  base {'a': 5, 'a+homothallic': 1, 'alpha': 2, 'homothallic': 64, 'none': 5}
+                                        new  {'a': 5, 'a+alpha': 1, 'a+homothallic': 43, 'alpha': 1, 'homothallic': 22, 'none': 5}  loci/genome 1.03 -> 1.62
+                                        new loci 125: with a flank 46, >=2 flanks 46, alpha loci 17 (with alpha2 0), flank-carried 46 (single-flank 0)
+                                        changes: {'change homothallic -> a+homothallic': 42, 'change alpha -> a+alpha': 1}
+Meyerozyma guilliermondii           21  base {'a': 1, 'none': 20}
+                                        new  {'a': 11, 'a+alpha': 1, 'alpha': 9}  loci/genome 0.05 -> 1.05
+                                        new loci 22: with a flank 22, >=2 flanks 21, alpha loci 10 (with alpha2 0), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> a': 11, 'change none -> alpha': 9, 'change a -> a+alpha': 1}
+Diutina catenulata                  18  base {'none': 18}
+                                        new  {'a': 3, 'alpha': 14, 'none': 1}  loci/genome 0.00 -> 0.94
+                                        new loci 17: with a flank 17, >=2 flanks 17, alpha loci 14 (with alpha2 0), flank-carried 17 (single-flank 0)
+                                        changes: {'change none -> alpha': 14, 'change none -> a': 3}
+Metschnikowia pulcherrima           17  base {'a': 15, 'none': 2}
+                                        new  {'a': 3, 'a+alpha': 13, 'alpha': 1}  loci/genome 0.88 -> 1.76
+                                        new loci 30: with a flank 30, >=2 flanks 26, alpha loci 14 (with alpha2 0), flank-carried 0 (single-flank 0)
+                                        changes: {'change a -> a+alpha': 12, 'change none -> alpha': 1, 'change none -> a+alpha': 1}
+Lodderomyces metapsilosis           15  base {'a': 10, 'none': 5}
+                                        new  {'a': 3, 'a+alpha': 7, 'alpha': 5}  loci/genome 0.67 -> 1.47
+                                        new loci 22: with a flank 16, >=2 flanks 14, alpha loci 12 (with alpha2 2), flank-carried 0 (single-flank 0)
+                                        changes: {'change a -> a+alpha': 7, 'change none -> alpha': 5}
+Candida viswanathii                 13  base {'a': 13}
+                                        new  {'a': 2, 'a+alpha': 11}  loci/genome 1.00 -> 1.85
+                                        new loci 24: with a flank 24, >=2 flanks 24, alpha loci 11 (with alpha2 11), flank-carried 0 (single-flank 0)
+                                        changes: {'change a -> a+alpha': 11}
+Lodderomyces orthopsilosis          11  base {'a': 6, 'none': 5}
+                                        new  {'a': 6, 'alpha': 5}  loci/genome 0.55 -> 1.00
+                                        new loci 11: with a flank 11, >=2 flanks 11, alpha loci 5 (with alpha2 5), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> alpha': 5}
+Candida dubliniensis                10  base {'a': 8, 'none': 2}
+                                        new  {'a+alpha': 8, 'alpha': 2}  loci/genome 0.80 -> 1.80
+                                        new loci 18: with a flank 18, >=2 flanks 18, alpha loci 10 (with alpha2 10), flank-carried 0 (single-flank 0)
+                                        changes: {'change a -> a+alpha': 8, 'change none -> alpha': 2}
+Fermentozyma sake                   10  base {'none': 10}
+                                        new  {'alpha': 10}  loci/genome 0.00 -> 1.00
+                                        new loci 10: with a flank 10, >=2 flanks 10, alpha loci 10 (with alpha2 10), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> alpha': 10}
+Kodamaea ohmeri                     10  base {'alpha': 8, 'none': 2}
+                                        new  {'a': 2, 'alpha': 8}  loci/genome 0.80 -> 1.00
+                                        new loci 10: with a flank 10, >=2 flanks 10, alpha loci 8 (with alpha2 8), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> a': 2}
+Candidozyma haemuli                 10  base {'none': 10}
+                                        new  {'alpha': 10}  loci/genome 0.00 -> 1.00
+                                        new loci 10: with a flank 10, >=2 flanks 10, alpha loci 10 (with alpha2 0), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> alpha': 10}
+Keqinozyma nonsorbophila             9  base {'none': 9}
+                                        new  {'a': 6, 'alpha': 2, 'none': 1}  loci/genome 0.00 -> 0.89
+                                        new loci 8: with a flank 8, >=2 flanks 8, alpha loci 2 (with alpha2 2), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> a': 6, 'change none -> alpha': 2}
+Candida anglica                      7  base {'none': 7}
+                                        new  {'a': 3, 'alpha': 4}  loci/genome 0.00 -> 1.00
+                                        new loci 7: with a flank 7, >=2 flanks 7, alpha loci 4 (with alpha2 0), flank-carried 1 (single-flank 0)
+                                        changes: {'change none -> alpha': 4, 'change none -> a': 3}
+Meyerozyma caribbica                 6  base {'none': 6}
+                                        new  {'a': 5, 'alpha': 1}  loci/genome 0.00 -> 1.00
+                                        new loci 6: with a flank 6, >=2 flanks 6, alpha loci 1 (with alpha2 0), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> a': 5, 'change none -> alpha': 1}
+Lodderomyces elongisporus            6  base {'none': 6}
+                                        new  {'a': 5, 'none': 1}  loci/genome 0.00 -> 0.83
+                                        new loci 5: with a flank 5, >=2 flanks 5, alpha loci 0 (with alpha2 0), flank-carried 5 (single-flank 0)
+                                        changes: {'change none -> a': 5}
+Sungouiella intermedia               5  base {'none': 5}
+                                        new  {'a': 2, 'alpha': 3}  loci/genome 0.00 -> 1.00
+                                        new loci 5: with a flank 5, >=2 flanks 5, alpha loci 3 (with alpha2 0), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> alpha': 3, 'change none -> a': 2}
+Millerozyma farinosa                 5  base {'homothallic': 5}
+                                        new  {'homothallic': 5}  loci/genome 1.40 -> 1.40
+                                        new loci 7: with a flank 7, >=2 flanks 7, alpha loci 7 (with alpha2 0), flank-carried 0 (single-flank 0)
+Metschnikowia matae                  5  base {'a': 2, 'none': 3}
+                                        new  {'a': 2, 'alpha': 3}  loci/genome 0.40 -> 1.00
+                                        new loci 5: with a flank 5, >=2 flanks 5, alpha loci 3 (with alpha2 0), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> alpha': 3}
+Hyphopichia burtonii                 5  base {'a': 3, 'none': 2}
+                                        new  {'a': 3, 'alpha': 2}  loci/genome 0.60 -> 1.00
+                                        new loci 5: with a flank 5, >=2 flanks 5, alpha loci 2 (with alpha2 2), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> alpha': 2}
+Metschnikowia bicuspidata            5  base {'a': 4, 'none': 1}
+                                        new  {'a': 2, 'a+alpha': 2, 'alpha': 1}  loci/genome 0.80 -> 1.40
+                                        new loci 7: with a flank 7, >=2 flanks 7, alpha loci 3 (with alpha2 0), flank-carried 0 (single-flank 0)
+                                        changes: {'change a -> a+alpha': 2, 'change none -> alpha': 1}
+Clavispora santaluciae               5  base {'none': 5}
+                                        new  {'alpha': 5}  loci/genome 0.00 -> 1.00
+                                        new loci 5: with a flank 5, >=2 flanks 5, alpha loci 5 (with alpha2 5), flank-carried 0 (single-flank 0)
+                                        changes: {'change none -> alpha': 5}
+Schwanniomyces polymorphus           5  base {'homothallic': 5}
+                                        new  {'homothallic': 5}  loci/genome 1.00 -> 1.00
+                                        new loci 5: with a flank 5, >=2 flanks 5, alpha loci 5 (with alpha2 0), flank-carried 0 (single-flank 0)
+Schwanniomyces etchellsii            5  base {'homothallic': 5}
+                                        new  {'homothallic': 5}  loci/genome 1.00 -> 1.00
+                                        new loci 5: with a flank 5, >=2 flanks 4, alpha loci 5 (with alpha2 0), flank-carried 0 (single-flank 0)
+
+species with <5 genomes, pooled: {'base:a': 174, 'base:a+alpha': 2, 'base:alpha': 14, 'base:homothallic': 47, 'base:none': 353, 'new:a': 241, 'new:a+alpha': 44, 'new:a+homothallic': 3, 'new:alpha': 240, 'new:alpha+homothallic': 2, 'new:homothallic': 44, 'new:none': 16}

@@ -1,0 +1,212 @@
+reproduction (current gate route of reported calls):
+   ('Jena', 'flank') 11
+   ('Jena', 'score') 55
+   ('LCG', 'flank') 72
+   ('LCG', 'score') 512
+   ('Mucoro293', 'flank') 28
+   ('Mucoro293', 'score') 236
+   ('Zygo23', 'flank') 7
+   ('Zygo23', 'score') 9
+   ('Zygo23', None) 7
+  a 'fail' route here would mean the replay does not reproduce the gate
+
+=== V1
+  withheld per set: {}
+  targets withheld: []
+  clean labelled (disputed excluded): agree 10 disagree 5 uncalled 4
+
+=== V2_75
+  withheld per set: {'LCG': 12, 'Mucoro293': 6, 'Jena': 1}
+  targets withheld: []
+   LCG       Mucor_genevensis_NRRL_1410                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1411                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1412                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1412                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1756                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1756                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1821                    Minus        low    partial_locus in=hsp_fragment best=50.7 m=28.9 fl=glrA,rnhA 
+   LCG       Mucor_genevensis_NRRL_1821                    Minus        low    partial_locus in=hsp_fragment best=49.5 m=29.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_3101                    Minus        low    partial_locus in=hsp_fragment best=57.1 m=33.0 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_A-17770                 Minus        low    partial_locus in=hsp_fragment best=50.2 m=31.0 fl=rnhA,tptA 
+   LCG       Mucor_philippovi_NRRL_3036                    Minus        low    partial_locus in=hsp_fragment best=56.5 m=34.0 fl=glrA,rnhA,tptA 
+   LCG       Umbelopsis_ovata_NRRL_13127T                  undetermined low    partial_locus in=hsp_fragment best=35.9 m=19.5 fl=algA,tptA 
+   Mucoro293 GCA_016758895.1_ASM1675889v1                  undetermined low    partial_locus in=hsp_fragment best=41.0 m=13.7 fl=algA,glrA,tptA 
+   Mucoro293 GCA_016758905.1_ASM1675890v1                  Plus         low    partial_locus in=hsp_fragment best=101.0 m=68.5 fl=algA,tptA 
+   Mucoro293 GCA_053572175.1_ASM5357217v1                  undetermined low    partial_locus in=hsp_fragment best=33.5 m=16.8 fl=algA,tptA 
+   Mucoro293 GCA_964291815.1_UMBE_WA70503                  undetermined low    partial_locus in=hsp_fragment best=33.5 m=16.8 fl=algA,tptA 
+   Mucoro293 GCA_977110905.1_gzMucHiem1                    Minus        low    partial_locus in=hsp_fragment best=97.2 m=46.3 fl=algA,glrA,rnhA,tptA 
+   Mucoro293 GCA_977110975.1_gzUmbVina2                    undetermined low    partial_locus in=hsp_fragment best=31.8 m=9.4 fl=algA,tptA 
+   Jena      CBS206_69                                     undetermined low    partial_locus in=hsp_fragment best=51.1 m=21.1 fl=algA,glrA,rnhA,tptA 
+  clean labelled (disputed excluded): agree 10 disagree 5 uncalled 4
+
+=== V2_100
+  withheld per set: {'LCG': 12, 'Mucoro293': 9, 'Jena': 1}
+  targets withheld: []
+   LCG       Mucor_genevensis_NRRL_1410                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1411                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1412                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1412                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1756                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1756                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1821                    Minus        low    partial_locus in=hsp_fragment best=50.7 m=28.9 fl=glrA,rnhA 
+   LCG       Mucor_genevensis_NRRL_1821                    Minus        low    partial_locus in=hsp_fragment best=49.5 m=29.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_3101                    Minus        low    partial_locus in=hsp_fragment best=57.1 m=33.0 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_A-17770                 Minus        low    partial_locus in=hsp_fragment best=50.2 m=31.0 fl=rnhA,tptA 
+   LCG       Mucor_philippovi_NRRL_3036                    Minus        low    partial_locus in=hsp_fragment best=56.5 m=34.0 fl=glrA,rnhA,tptA 
+   LCG       Umbelopsis_ovata_NRRL_13127T                  undetermined low    partial_locus in=hsp_fragment best=35.9 m=19.5 fl=algA,tptA 
+   Mucoro293 GCA_000697415.1_UmbIsaB7317-1.0               Plus         low    partial_locus in=hsp_fragment best=121.8 m=92.2 fl=algA,tptA 
+   Mucoro293 GCA_016758895.1_ASM1675889v1                  undetermined low    partial_locus in=hsp_fragment best=41.0 m=13.7 fl=algA,glrA,tptA 
+   Mucoro293 GCA_016758905.1_ASM1675890v1                  Plus         low    partial_locus in=hsp_fragment best=101.0 m=68.5 fl=algA,tptA 
+   Mucoro293 GCA_027595865.1_Umbelopsis_isabellina_MPG-14A Plus         low    partial_locus in=hsp_fragment best=121.8 m=92.2 fl=algA,tptA 
+   Mucoro293 GCA_037039815.1_ASM3703981v1                  Plus         low    partial_locus in=hsp_fragment best=103.7 m=75.8 fl=algA,tptA 
+   Mucoro293 GCA_053572175.1_ASM5357217v1                  undetermined low    partial_locus in=hsp_fragment best=33.5 m=16.8 fl=algA,tptA 
+   Mucoro293 GCA_964291815.1_UMBE_WA70503                  undetermined low    partial_locus in=hsp_fragment best=33.5 m=16.8 fl=algA,tptA 
+   Mucoro293 GCA_977110905.1_gzMucHiem1                    Minus        low    partial_locus in=hsp_fragment best=97.2 m=46.3 fl=algA,glrA,rnhA,tptA 
+   Mucoro293 GCA_977110975.1_gzUmbVina2                    undetermined low    partial_locus in=hsp_fragment best=31.8 m=9.4 fl=algA,tptA 
+   Jena      CBS206_69                                     undetermined low    partial_locus in=hsp_fragment best=51.1 m=21.1 fl=algA,glrA,rnhA,tptA 
+  clean labelled (disputed excluded): agree 10 disagree 5 uncalled 4
+
+=== V2b_75
+  withheld per set: {'LCG': 46, 'Mucoro293': 11, 'Jena': 2}
+  targets withheld: ['Circinella_angarensis_RSA_198_Plus', 'Circinella_umbellata_RSA_505_Plus', 'Thamnostylum_repens_RSA_459_Plus']
+   LCG       Circinella_angarensis_NRRL_2628               Minus        medium partial_locus in=model best=133.5 m=70.6 fl=rnhA licht
+   LCG       Circinella_angarensis_RSA_198_Plus            Minus        medium partial_locus in=model best=132.5 m=68.8 fl=rnhA TARGET licht label=Plus(disagree)
+   LCG       Circinella_angarensis_RSA_618-                Minus        medium partial_locus in=model best=133.5 m=70.6 fl=rnhA licht label=Minus(agree)
+   LCG       Circinella_chinensis_CBS_150.53               Minus        medium partial_locus in=model best=109.3 m=46.6 fl=rnhA licht
+   LCG       Circinella_chinensis_NRRL_2415                Minus        medium partial_locus in=model best=126.1 m=59.3 fl=rnhA licht
+   LCG       Circinella_minor_CBS_143.56                   Minus        medium partial_locus in=model best=124.3 m=55.9 fl=rnhA licht
+   LCG       Circinella_mucoroides_NRRL_1354               Minus        medium partial_locus in=model best=126.1 m=59.3 fl=rnhA licht
+   LCG       Circinella_muscae_CBS_107.13T                 Minus        medium partial_locus in=model best=124.3 m=55.9 fl=rnhA licht
+   LCG       Circinella_muscae_NRRL_1352                   Minus        medium partial_locus in=model best=124.3 m=55.9 fl=rnhA licht
+   LCG       Circinella_muscae_NRRL_1356                   Minus        medium partial_locus in=model best=124.3 m=55.9 fl=rnhA licht
+   LCG       Circinella_muscae_NRRL_1364                   Minus        medium partial_locus in=model best=124.3 m=55.9 fl=rnhA licht
+   LCG       Circinella_umbellata_NRRL_1366                Minus        medium partial_locus in=model best=134.4 m=69.0 fl=rnhA licht
+   LCG       Circinella_umbellata_RSA_505_Plus             Minus        medium partial_locus in=model best=134.4 m=69.0 fl=rnhA TARGET licht label=Plus(disagree)
+   LCG       Fennellomyces_heterothallicus_RSA_2348        Minus        medium partial_locus in=model best=113.0 m=44.6 fl=rnhA 
+   LCG       Fennellomyces_linderi_NRRL_2342               Minus        medium partial_locus in=model best=122.1 m=51.2 fl=rnhA 
+   LCG       Fennellomyces_linderi_NRRL_2342T              Minus        medium partial_locus in=model best=122.1 m=51.2 fl=rnhA 
+   LCG       Fennellomyces_mexicanus_sp._nov._RSA_1418-    Minus        medium partial_locus in=model best=124.1 m=50.9 fl=rnhA label=Minus(agree)
+   LCG       Helicostylum_lucknowense_NRRL_2892            Minus        medium partial_locus in=model best=124.3 m=63.0 fl=rnhA 
+   LCG       Helicostylum_lucknowense_NRRL_A-16732         Minus        medium partial_locus in=model best=124.3 m=63.0 fl=rnhA 
+   LCG       Mucor_foenicola_NRRL_A-10991                  Minus        medium partial_locus in=model best=105.5 m=67.2 fl=tptA 
+   LCG       Mucor_genevensis_NRRL_1410                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1411                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1412                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1412                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1756                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1756                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1821                    Minus        low    partial_locus in=hsp_fragment best=50.7 m=28.9 fl=glrA,rnhA 
+   LCG       Mucor_genevensis_NRRL_1821                    Minus        low    partial_locus in=hsp_fragment best=49.5 m=29.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_3101                    Minus        low    partial_locus in=hsp_fragment best=57.1 m=33.0 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_A-17770                 Minus        low    partial_locus in=hsp_fragment best=50.2 m=31.0 fl=rnhA,tptA 
+   LCG       Mucor_intermedius_NRRL_6588T                  Plus         medium partial_locus in=model best=216.7 m=73.1 fl=rnhA 
+   LCG       Mucor_philippovi_NRRL_3036                    Minus        low    partial_locus in=hsp_fragment best=56.5 m=34.0 fl=glrA,rnhA,tptA 
+   LCG       Phycomyces_blakesleeanus_NRRL_1555            Minus        medium partial_locus in=model best=102.6 m=28.0 fl=rnhA 
+   LCG       Protomycocladus_faisalabadensis_NRRL_22826    Plus         medium partial_locus in=model best=216.7 m=73.1 fl=rnhA 
+   LCG       Rhizopus_arrhizus_NRRL_1470                   Minus        medium partial_locus in=model best=134.4 m=69.0 fl=rnhA 
+   LCG       Syncephalastrum_sp._NRRL_1487                 Minus        medium partial_locus in=model best=102.6 m=28.0 fl=rnhA 
+   LCG       Syncephalastrum_sp._NRRL_1505                 Minus        medium partial_locus in=model best=102.6 m=28.0 fl=rnhA 
+   LCG       Syncephalastrum_sp._NRRL_1507                 undetermined medium partial_locus in=model best=101.6 m=18.3 fl=rnhA 
+   LCG       Syncephalastrum_verruculosum_RSA_2127         Minus        medium partial_locus in=model best=101.0 m=30.2 fl=rnhA 
+   LCG       Thamnostylum_lucknowense_RSA_1015_Plus-T      Minus        medium partial_locus in=model best=124.3 m=63.0 fl=rnhA 
+   LCG       Thamnostylum_nigricans_RSA_1406               Minus        medium partial_locus in=model best=114.7 m=44.0 fl=rnhA 
+   LCG       Thamnostylum_piriforme_NRRL_A-21589           Minus        medium partial_locus in=model best=115.5 m=47.8 fl=glrA 
+   LCG       Thamnostylum_piriforme_RSA_251                Minus        medium partial_locus in=model best=118.7 m=49.7 fl=rnhA 
+   LCG       Thamnostylum_repens_RSA_459_Plus              Minus        medium partial_locus in=model best=109.3 m=46.6 fl=rnhA TARGET label=Plus(disagree)
+   LCG       Umbelopsis_ovata_NRRL_13127T                  undetermined low    partial_locus in=hsp_fragment best=35.9 m=19.5 fl=algA,tptA 
+   LCG       Zygorhynchus_heterogamus_Vuillemin_NRRL_1489  Minus        medium partial_locus in=model best=146.7 m=71.3 fl=algA 
+   Mucoro293 GCA_000697355.1_SynMonB8922-1.0               Minus        medium partial_locus in=model best=104.9 m=29.7 fl=rnhA 
+   Mucoro293 GCA_013461545.1_ASM1346154v1                  Minus        medium partial_locus in=model best=101.7 m=29.9 fl=rnhA 
+   Mucoro293 GCA_016758895.1_ASM1675889v1                  undetermined low    partial_locus in=hsp_fragment best=41.0 m=13.7 fl=algA,glrA,tptA 
+   Mucoro293 GCA_016758905.1_ASM1675890v1                  Plus         low    partial_locus in=hsp_fragment best=101.0 m=68.5 fl=algA,tptA 
+   Mucoro293 GCA_025266875.1_Fenlin1                       Minus        medium partial_locus in=model best=123.2 m=57.5 fl=rnhA 
+   Mucoro293 GCA_050656845.1_ASM5065684v1                  Minus        medium partial_locus in=model best=106.6 m=63.3 fl=glrA 
+   Mucoro293 GCA_053572175.1_ASM5357217v1                  undetermined low    partial_locus in=hsp_fragment best=33.5 m=16.8 fl=algA,tptA 
+   Mucoro293 GCA_964291815.1_UMBE_WA70503                  undetermined low    partial_locus in=hsp_fragment best=33.5 m=16.8 fl=algA,tptA 
+   Mucoro293 GCA_977110905.1_gzMucHiem1                    Minus        low    partial_locus in=hsp_fragment best=97.2 m=46.3 fl=algA,glrA,rnhA,tptA 
+   Mucoro293 GCA_977110975.1_gzUmbVina2                    undetermined low    partial_locus in=hsp_fragment best=31.8 m=9.4 fl=algA,tptA 
+   Mucoro293 GCF_025766255.1_Zycmex1                       Minus        medium partial_locus in=model best=133.8 m=61.0 fl=rnhA 
+   Jena      CBS206_69                                     undetermined low    partial_locus in=hsp_fragment best=51.1 m=21.1 fl=algA,glrA,rnhA,tptA 
+   Jena      CBS566_91                                     Minus        medium partial_locus in=model best=119.2 m=49.5 fl=glrA 
+  clean labelled (disputed excluded): agree 8 disagree 2 uncalled 9
+
+=== V2b_100
+  withheld per set: {'LCG': 56, 'Mucoro293': 15, 'Jena': 4}
+  targets withheld: ['Circinella_angarensis_RSA_198_Plus', 'Circinella_umbellata_RSA_505_Plus', 'Thamnostylum_repens_RSA_459_Plus']
+   LCG       Absidia_californica_NRRL_2709                 Minus        medium partial_locus in=model best=135.6 m=76.2 fl=glrA 
+   LCG       Absidia_californica_NRRL_2967                 Minus        medium partial_locus in=model best=135.8 m=76.3 fl=glrA 
+   LCG       Backusella_lamprospora_NRRL_1401              Minus        medium partial_locus in=model best=158.4 m=81.7 fl=algA 
+   LCG       Backusella_lamprospora_NRRL_3619              Minus        medium partial_locus in=model best=158.4 m=81.7 fl=algA 
+   LCG       Circinella_angarensis_NRRL_2628               Minus        medium partial_locus in=model best=133.5 m=70.6 fl=rnhA licht
+   LCG       Circinella_angarensis_RSA_198_Plus            Minus        medium partial_locus in=model best=132.5 m=68.8 fl=rnhA TARGET licht label=Plus(disagree)
+   LCG       Circinella_angarensis_RSA_618-                Minus        medium partial_locus in=model best=133.5 m=70.6 fl=rnhA licht label=Minus(agree)
+   LCG       Circinella_chinensis_CBS_150.53               Minus        medium partial_locus in=model best=109.3 m=46.6 fl=rnhA licht
+   LCG       Circinella_chinensis_NRRL_2415                Minus        medium partial_locus in=model best=126.1 m=59.3 fl=rnhA licht
+   LCG       Circinella_minor_CBS_143.56                   Minus        medium partial_locus in=model best=124.3 m=55.9 fl=rnhA licht
+   LCG       Circinella_minor_CBS_143.56                   Plus         medium partial_locus in=model best=112.5 m=82.3 fl=rnhA licht
+   LCG       Circinella_minor_NRRL_1365                    Plus         medium partial_locus in=model best=112.0 m=81.6 fl=rnhA licht
+   LCG       Circinella_mucoroides_NRRL_1354               Minus        medium partial_locus in=model best=126.1 m=59.3 fl=rnhA licht
+   LCG       Circinella_muscae_CBS_107.13T                 Minus        medium partial_locus in=model best=124.3 m=55.9 fl=rnhA licht
+   LCG       Circinella_muscae_NRRL_1352                   Minus        medium partial_locus in=model best=124.3 m=55.9 fl=rnhA licht
+   LCG       Circinella_muscae_NRRL_1356                   Minus        medium partial_locus in=model best=124.3 m=55.9 fl=rnhA licht
+   LCG       Circinella_muscae_NRRL_1364                   Minus        medium partial_locus in=model best=124.3 m=55.9 fl=rnhA licht
+   LCG       Circinella_umbellata_NRRL_1366                Minus        medium partial_locus in=model best=134.4 m=69.0 fl=rnhA licht
+   LCG       Circinella_umbellata_NRRL_2417                Plus         medium partial_locus in=model best=112.0 m=81.6 fl=rnhA licht
+   LCG       Circinella_umbellata_RSA_505_Plus             Minus        medium partial_locus in=model best=134.4 m=69.0 fl=rnhA TARGET licht label=Plus(disagree)
+   LCG       Fennellomyces_heterothallicus_RSA_2348        Minus        medium partial_locus in=model best=113.0 m=44.6 fl=rnhA 
+   LCG       Fennellomyces_linderi_NRRL_2342               Minus        medium partial_locus in=model best=122.1 m=51.2 fl=rnhA 
+   LCG       Fennellomyces_linderi_NRRL_2342T              Minus        medium partial_locus in=model best=122.1 m=51.2 fl=rnhA 
+   LCG       Fennellomyces_mexicanus_sp._nov._RSA_1418-    Minus        medium partial_locus in=model best=124.1 m=50.9 fl=rnhA label=Minus(agree)
+   LCG       Helicostylum_lucknowense_NRRL_2892            Minus        medium partial_locus in=model best=124.3 m=63.0 fl=rnhA 
+   LCG       Helicostylum_lucknowense_NRRL_A-16732         Minus        medium partial_locus in=model best=124.3 m=63.0 fl=rnhA 
+   LCG       Mucor_foenicola_NRRL_A-10991                  Minus        medium partial_locus in=model best=105.5 m=67.2 fl=tptA 
+   LCG       Mucor_genevensis_NRRL_1410                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1411                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1412                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1412                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1756                    Minus        low    partial_locus in=hsp_fragment best=49.8 m=30.2 fl=algA,glrA,rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1756                    Minus        low    partial_locus in=hsp_fragment best=50.1 m=28.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_1821                    Minus        low    partial_locus in=hsp_fragment best=50.7 m=28.9 fl=glrA,rnhA 
+   LCG       Mucor_genevensis_NRRL_1821                    Minus        low    partial_locus in=hsp_fragment best=49.5 m=29.5 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_3101                    Minus        low    partial_locus in=hsp_fragment best=57.1 m=33.0 fl=rnhA,tptA 
+   LCG       Mucor_genevensis_NRRL_A-17770                 Minus        low    partial_locus in=hsp_fragment best=50.2 m=31.0 fl=rnhA,tptA 
+   LCG       Mucor_intermedius_NRRL_6588T                  Plus         medium partial_locus in=model best=216.7 m=73.1 fl=rnhA 
+   LCG       Mucor_oblongisporus_var._macrosporus_NRRL_157 Minus        medium partial_locus in=model best=164.9 m=88.0 fl=algA 
+   LCG       Mucor_oblongisporus_var._macrosporus_NRRL_158 Minus        medium partial_locus in=model best=154.8 m=83.2 fl=algA 
+   LCG       Mucor_philippovi_NRRL_3036                    Minus        low    partial_locus in=hsp_fragment best=56.5 m=34.0 fl=glrA,rnhA,tptA 
+   LCG       Phycomyces_blakesleeanus_NRRL_1555            Minus        medium partial_locus in=model best=102.6 m=28.0 fl=rnhA 
+   LCG       Protomycocladus_faisalabadensis_NRRL_22826    Plus         medium partial_locus in=model best=216.7 m=73.1 fl=rnhA 
+   LCG       Rhizopus_arrhizus_NRRL_1470                   Minus        medium partial_locus in=model best=134.4 m=69.0 fl=rnhA 
+   LCG       Rhizopus_microsporus_NRRL_A-17693             Plus         medium partial_locus in=model best=112.0 m=81.6 fl=rnhA 
+   LCG       Syncephalastrum_sp._NRRL_1487                 Minus        medium partial_locus in=model best=102.6 m=28.0 fl=rnhA 
+   LCG       Syncephalastrum_sp._NRRL_1505                 Minus        medium partial_locus in=model best=102.6 m=28.0 fl=rnhA 
+   LCG       Syncephalastrum_sp._NRRL_1507                 undetermined medium partial_locus in=model best=101.6 m=18.3 fl=rnhA 
+   LCG       Syncephalastrum_verruculosum_RSA_2127         Minus        medium partial_locus in=model best=101.0 m=30.2 fl=rnhA 
+   LCG       Thamnostylum_lucknowense_RSA_1015_Plus-T      Minus        medium partial_locus in=model best=124.3 m=63.0 fl=rnhA 
+   LCG       Thamnostylum_nigricans_RSA_1406               Minus        medium partial_locus in=model best=114.7 m=44.0 fl=rnhA 
+   LCG       Thamnostylum_piriforme_NRRL_A-21589           Minus        medium partial_locus in=model best=115.5 m=47.8 fl=glrA 
+   LCG       Thamnostylum_piriforme_RSA_251                Minus        medium partial_locus in=model best=118.7 m=49.7 fl=rnhA 
+   LCG       Thamnostylum_repens_RSA_459_Plus              Minus        medium partial_locus in=model best=109.3 m=46.6 fl=rnhA TARGET label=Plus(disagree)
+   LCG       Umbelopsis_ovata_NRRL_13127T                  undetermined low    partial_locus in=hsp_fragment best=35.9 m=19.5 fl=algA,tptA 
+   LCG       Zygorhynchus_heterogamus_Vuillemin_NRRL_1489  Minus        medium partial_locus in=model best=146.7 m=71.3 fl=algA 
+   Mucoro293 GCA_000697355.1_SynMonB8922-1.0               Minus        medium partial_locus in=model best=104.9 m=29.7 fl=rnhA 
+   Mucoro293 GCA_000697415.1_UmbIsaB7317-1.0               Plus         low    partial_locus in=hsp_fragment best=121.8 m=92.2 fl=algA,tptA 
+   Mucoro293 GCA_013461545.1_ASM1346154v1                  Minus        medium partial_locus in=model best=101.7 m=29.9 fl=rnhA 
+   Mucoro293 GCA_016758895.1_ASM1675889v1                  undetermined low    partial_locus in=hsp_fragment best=41.0 m=13.7 fl=algA,glrA,tptA 
+   Mucoro293 GCA_016758905.1_ASM1675890v1                  Plus         low    partial_locus in=hsp_fragment best=101.0 m=68.5 fl=algA,tptA 
+   Mucoro293 GCA_016758965.1_ASM1675896v1                  Plus         medium partial_locus in=model best=112.5 m=82.3 fl=rnhA 
+   Mucoro293 GCA_025266875.1_Fenlin1                       Minus        medium partial_locus in=model best=123.2 m=57.5 fl=rnhA 
+   Mucoro293 GCA_027595865.1_Umbelopsis_isabellina_MPG-14A Plus         low    partial_locus in=hsp_fragment best=121.8 m=92.2 fl=algA,tptA 
+   Mucoro293 GCA_037039815.1_ASM3703981v1                  Plus         low    partial_locus in=hsp_fragment best=103.7 m=75.8 fl=algA,tptA 
+   Mucoro293 GCA_050656845.1_ASM5065684v1                  Minus        medium partial_locus in=model best=106.6 m=63.3 fl=glrA 
+   Mucoro293 GCA_053572175.1_ASM5357217v1                  undetermined low    partial_locus in=hsp_fragment best=33.5 m=16.8 fl=algA,tptA 
+   Mucoro293 GCA_964291815.1_UMBE_WA70503                  undetermined low    partial_locus in=hsp_fragment best=33.5 m=16.8 fl=algA,tptA 
+   Mucoro293 GCA_977110905.1_gzMucHiem1                    Minus        low    partial_locus in=hsp_fragment best=97.2 m=46.3 fl=algA,glrA,rnhA,tptA 
+   Mucoro293 GCA_977110975.1_gzUmbVina2                    undetermined low    partial_locus in=hsp_fragment best=31.8 m=9.4 fl=algA,tptA 
+   Mucoro293 GCF_025766255.1_Zycmex1                       Minus        medium partial_locus in=model best=133.8 m=61.0 fl=rnhA 
+   Jena      CBS195_77                                     Minus        medium partial_locus in=model best=165.1 m=99.2 fl=btbA,rnhA 
+   Jena      CBS206_69                                     undetermined low    partial_locus in=hsp_fragment best=51.1 m=21.1 fl=algA,glrA,rnhA,tptA 
+   Jena      CBS336_62                                     Minus        medium partial_locus in=model best=170.6 m=95.0 fl=rnhA 
+   Jena      CBS566_91                                     Minus        medium partial_locus in=model best=119.2 m=49.5 fl=glrA 
+  clean labelled (disputed excluded): agree 8 disagree 2 uncalled 9
+

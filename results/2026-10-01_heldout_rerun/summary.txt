@@ -1,0 +1,39 @@
+LCG genomes 621; reports new 621; called old 536 -> new 536
+LCG new call split: {'uncalled': 85, 'Minus': 249, 'Plus': 257, 'both': 24, 'undetermined': 6}
+LCG old call split: {'uncalled': 85, 'Minus': 246, 'Plus': 247, 'both': 36, 'undetermined': 7}
+LCG new best confidence: {'medium': 115, 'high': 419, 'low': 2}
+LCG two_idiomorphs (new): {'unlinked': 24}
+LCG species summarised 199 (misidentified excluded: 18)
+LCG file-label scoring (new code):
+  clean (no disputed/misidentified/training/zygo): n=16 agree=11 disagree=1 uncalled=4 both=0 undetermined=0; by tier {('agree', 'medium'): 4, ('agree', 'high'): 7, ('uncalled', '-'): 4, ('disagree', 'medium'): 1}
+    uncalled: Fennellomyces_mexicanus_sp._nov._RSA_1415_Plus label=Plus call=uncalled conf=
+    uncalled: Fennellomyces_verticellatus_RSA_2442_Plus label=Plus call=uncalled conf=
+    disagree: Thamnostylum_lucknowense_RSA_1015_Plus-T label=Plus call=Minus conf=medium
+    uncalled: Thamnostylum_lucknowense_RSA_1093- label=Minus call=uncalled conf=
+    uncalled: Thamnostylum_nigricans_RSA_1405- label=Minus call=uncalled conf=
+  labelled zygo23: n=3 agree=3 disagree=0 uncalled=0 both=0 undetermined=0; by tier {('agree', 'high'): 3}
+  disputed (for reference): n=7 agree=0 disagree=7 uncalled=0 both=0 undetermined=0; by tier {('disagree', 'medium'): 5, ('disagree', 'high'): 2}
+    disagree: Backusella_lamprospora_NRRL_6044_Plus label=Plus call=Minus conf=medium
+    disagree: Circinella_angarensis_RSA_198_Plus label=Plus call=Minus conf=medium
+    disagree: Circinella_umbellata_RSA_505_Plus label=Plus call=Minus conf=medium
+    disagree: Ellisomyces_anomalus_RSA_581- label=Minus call=Plus conf=high
+    disagree: Gilbertella_persicaria_var._indica_CBS_442.64- label=Minus call=Plus conf=high
+    disagree: Pirella_circinans_RSA_622- label=Minus call=Plus conf=medium
+    disagree: Thamnostylum_repens_RSA_459_Plus label=Plus call=Minus conf=medium
+Zygo 23 subset (LCG scaffolds, new code): locus 23/23, idiomorph 23/23
+Jena strains 64; scaffold reports new 64; called old 61 -> new 61
+Jena new call split (scaffolds): {'Plus': 29, 'Minus': 31, 'uncalled': 3, 'both': 1}
+Jena old call split (scaffolds): {'Plus': 26, 'Minus': 31, 'both': 3, 'uncalled': 3, 'undetermined': 1}
+Jena scaffolds vs contigs same call (new): 63/63
+Jena two_idiomorphs (new, scaffolds): [('CBS372_39', 'Syzygites megalocarpus', 'unlinked')]
+Jena strains whose scaffold call changed (old -> new):
+  CBS169_57 (Helicostylum elegans): both/high -> Plus/high  paralog_withheld=2
+  CBS206_69 (Mucor sp. nov.): undetermined/low -> Minus/low  paralog_withheld=0
+  CBS221_71 (Mucor ucrainicus): Minus/high -> Minus/medium  paralog_withheld=1
+  CBS223_63 (Kirkomyces cordensis): Minus/high -> Minus/medium  paralog_withheld=1
+  CBS251_35 (Mucor falcatus): both/high -> Plus/high  paralog_withheld=1
+  CBS763_74 (Mucor amphibiorum): Minus/high -> Plus/medium  paralog_withheld=1
+  P1 case CBS221_71 (Mucor ucrainicus): new scaffold_538:2705-7604|Minus|medium|partial_locus|model|102.4 paralog_withheld=1
+  P1 case CBS223_63 (Kirkomyces cordensis): new scaffold_57:40321-45202|Minus|medium|partial_locus|model|89.4 paralog_withheld=1
+  P1 case CBS763_74 (Mucor amphibiorum): new scaffold_980:5977-11231|Plus|medium|partial_locus|model|254.5 paralog_withheld=1
+Jena species summarised 56

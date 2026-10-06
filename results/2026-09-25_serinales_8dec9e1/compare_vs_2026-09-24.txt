@@ -1,0 +1,12 @@
+order/family                                  n  old  new gain lost  adj SLA2 loci high
+Serinales/Debaryomycetaceae                  43    2   18   16    0    0    0   19   15
+Serinales/Metschnikowiaceae                  30    0   18   18    0    0    0   18   18
+Serinales/Cephaloascaceae                     1    0    0    0    0    0    0    0    0
+Serinales/                                    1    0    0    0    0    0    0    0    0
+TOTAL                                        75    2   36   34    0    0    0   37   33
+
+genomes whose EXISTING call changed place or idiomorph: 2
+   ('GCA_030564605.1_ASM3056460v1', 'Serinales/Debaryomycetaceae', [('JAKTYF010000010.1', 183, 'A')], [('JAKTYF010000010.1', 182, 'alpha')])
+   ('GCA_056149625.1_EIMB_Dhan_Wch_1.0', 'Serinales/Debaryomycetaceae', [('CM148907.1', 1622, 'A')], [('CM148907.1', 1620, 'A')])
+new calls by confidence/class/idiomorph: {('high', 'idiomorph_gene_only', 'A'): 30, ('high', 'homothallic_candidate', 'alpha'): 1, ('medium', 'idiomorph_gene_only', 'alpha'): 3, ('medium', 'homothallic_candidate', 'alpha'): 1, ('high', 'idiomorph_gene_only', 'alpha'): 1, ('high', 'homothallic_candidate', 'A'): 1}
+wall s: median 7 p90 9 max 37

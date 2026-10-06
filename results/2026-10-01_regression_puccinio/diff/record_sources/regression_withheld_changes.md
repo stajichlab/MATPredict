@@ -1,0 +1,160 @@
+# Withheld-only changes: regression run-cand-puccinio vs run-c26669c -- record_sources
+
+Loci withheld (or absent) on both sides whose span, genes or withheld reason changed.
+
+## Change types
+
+| change | loci |
+|---|---|
+| gene_set_changed | 5 |
+| span_changed | 26 |
+| withheld_reason_changed | 121 |
+
+## Loci
+
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:Aalpha JAAGWA010000001.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000007.1 [span_changed,gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> ; genes HD2 -> HD1,HD2
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:Aalpha JAAGWA010000007.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000003.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:Aalpha JAAGWA010000003.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:PR JAAGWA010000004.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:Balpha JAAGWA010000004.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:Bbeta JAAGWA010000004.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:Aalpha JAAGWA010000004.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:Balpha JAAGWA010000004.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000001.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000001.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000001.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000001.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000001.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000001.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000001.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000001.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000007.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000007.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000003.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000003.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000003.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000009.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000008.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000012.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000012.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000012.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000012.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000004.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000004.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000004.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000004.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000002.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000002.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000002.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000006.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000010.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000010.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000010.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000005.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000005.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000005.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000005.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCA_016772295.1_ASM1677229v1** Basidiomycota:HD JAAGWA010000011.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:Aalpha NW_026089539.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:Aalpha NW_026089539.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089540.1 [span_changed,gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> ; genes HD2 -> HD1,HD2
+- **GCF_000143185.2_Schco3** Basidiomycota:Aalpha NW_026089540.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089538.1 [withheld_reason_changed,span_changed,gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> ; best score  -> ; genes HD1 -> HD1,HD2
+- **GCF_000143185.2_Schco3** Basidiomycota:Aalpha NW_026089543.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089544.1 [span_changed,gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> ; genes HD1 -> HD1,HD2
+- **GCF_000143185.2_Schco3** Basidiomycota:Aalpha NW_026089553.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:Balpha NW_026089554.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:Balpha NW_026089547.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089539.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089539.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089539.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089539.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089539.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089539.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089539.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089540.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089540.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089540.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089540.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089542.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089542.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089542.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089542.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089542.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089550.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089550.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089549.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089549.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089538.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089538.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089538.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089538.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089538.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089543.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089543.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089543.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:PR NW_026089543.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089543.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089544.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089544.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089548.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089547.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089547.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089541.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089541.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089541.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089541.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089541.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089541.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089553.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089553.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089553.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089553.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089554.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089552.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089545.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089545.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089545.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar+polish_capped undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089545.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089546.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089546.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000143185.2_Schco3** Basidiomycota:HD NW_026089555.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:Aalpha NW_006267344.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:PR NW_006267344.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267370.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:Aalpha NW_006267370.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267369.1 [span_changed,gene_set_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> ; genes HD1 -> HD1,HD2
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267368.1 [span_changed]: withheld:modelled_gene_bar undetermined/ -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267344.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267344.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267344.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267348.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267347.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267371.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267371.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267355.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267355.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267369.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267369.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267369.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267369.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267369.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267369.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267369.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267369.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267367.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267368.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267368.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267368.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267366.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267366.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267366.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267346.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267372.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267349.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267349.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267353.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267352.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 
+- **GCF_000300575.1_Agabi_varbisH97_2** Basidiomycota:HD NW_006267352.1 [withheld_reason_changed]: absent / -> withheld:modelled_gene_bar undetermined/; margin  -> ; best score  -> 

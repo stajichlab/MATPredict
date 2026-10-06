@@ -1,0 +1,37 @@
+
+== mucoro V1: genomes compared 293; called 253 -> 253; lost 0 gained 0 changed 0; median wall 265.0 -> 189.0 s; total 76753 -> 53556 s
+
+== mucoro V2: genomes compared 293; called 253 -> 253; lost 0 gained 0 changed 0; median wall 265.0 -> 194.0 s; total 76753 -> 55498 s
+
+== mucoro V3: genomes compared 293; called 253 -> 253; lost 0 gained 0 changed 0; median wall 265.0 -> 154.0 s; total 76753 -> 45422 s
+
+== lcg V1: genomes compared 621; called 535 -> 536; lost 0 gained 1 changed 0; median wall 287.0 -> 206.0 s; total 171559 -> 122956 s
+   GAINED  Mucor_pusillus_NRRL_A-13674 ('Mucoromycota:MAT', 'scaffold_161', 16276, 25616, 'Plus', 'medium', 90.5, 'model', None)
+
+== lcg V2: genomes compared 621; called 535 -> 536; lost 0 gained 1 changed 0; median wall 287.0 -> 207.0 s; total 171559 -> 126058 s
+   GAINED  Mucor_pusillus_NRRL_A-13674 ('Mucoromycota:MAT', 'scaffold_161', 16276, 25616, 'Plus', 'medium', 90.5, 'model', None)
+
+== lcg V3: genomes compared 621; called 535 -> 536; lost 0 gained 1 changed 0; median wall 287.0 -> 161.0 s; total 171559 -> 98705 s
+   GAINED  Mucor_pusillus_NRRL_A-13674 ('Mucoromycota:MAT', 'scaffold_161', 16276, 25616, 'Plus', 'medium', 90.5, 'model', None)
+
+== jena V1: genomes compared 64; called 61 -> 61; lost 0 gained 0 changed 0; median wall 237.0 -> 208.0 s; total 14056 -> 12943 s
+
+== jena V2: genomes compared 64; called 61 -> 61; lost 0 gained 0 changed 0; median wall 237.0 -> 220.0 s; total 14056 -> 13213 s
+
+== jena V3: genomes compared 64; called 61 -> 61; lost 0 gained 0 changed 0; median wall 237.0 -> 185.0 s; total 14056 -> 10855 s
+
+== control asco50: genomes 50; lost 0 gained 0 changed 0
+
+== control basidio50: genomes 50; lost 0 gained 0 changed 0
+
+== zygo V1: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== zygo V2: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== zygo V3: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== exemptions V1: {'strong': 965, 'strong_in_top6': 954, 'strong_allowed': 965, 'newly_allowed': 11}
+
+== exemptions V2: {'strong': 965, 'strong_in_top6': 954, 'strong_allowed': 965, 'newly_allowed': 11}
+
+== exemptions V3: {'strong': 965, 'strong_in_top6': 965, 'strong_allowed': 965, 'newly_allowed': 0}

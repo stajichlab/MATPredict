@@ -1,0 +1,10 @@
+scaffolds: {'called': 61, 'not_called': 3}
+  calls by (idiomorph, confidence): {('Plus', 'high'): 25, ('Minus', 'high'): 29, ('Minus', 'medium'): 7, ('undetermined', 'low'): 1, ('Plus', 'medium'): 4}
+  genomes with >1 call: 5
+contigs: {'called': 60, 'not_called': 3, 'no_input': 1}
+  calls by (idiomorph, confidence): {('Plus', 'high'): 24, ('Minus', 'high'): 29, ('Minus', 'medium'): 7, ('undetermined', 'low'): 1, ('Plus', 'medium'): 4}
+  genomes with >1 call: 5
+scaffold vs contig status differs: [('CBS334_71', 'called', 'no_input')]
+(rows for the called idiomorph's gene only: 65; annotation shorter than 70% of model: 6)
+sexM/sexP gene models in calls: 132; not annotated: 33; model vs annotation identity >=95%: 97; classifier on annotated protein agrees with detect: {'True': 98, '': 33, 'False': 1}
+top annotated HMM hit per strain (independent of detect): {'sexP': 36, 'undetermined': 11, 'sexM': 17}

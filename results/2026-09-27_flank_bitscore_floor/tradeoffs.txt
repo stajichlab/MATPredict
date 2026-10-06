@@ -1,0 +1,115 @@
+loci 265; real 14; independent noise 52; unlabelled best-locus 97; unlabelled not-best 102
+
+real loci:
+   mucoro_4457c3a Umbelopsis vinacea sexM 44.3 1.47e-05 23099947
+   mucoro_4457c3a Umbelopsis sp. WA50703 sexM 40.8 0.000183 23000717
+   mucoro_4457c3a Umbelopsis nana sexP 33.5 0.19 27230748
+   mucoro_4457c3a Umbelopsis sp. WA50703 sexM 40.8 0.00018 22610520
+   mucoro_4457c3a Umbelopsis vinacea sexM 39.7 0.000593 26980624
+   early_div_634dda4 Mucor irregularis sexM 68.2 1.48e-13 33673062
+   early_div_634dda4 Mucor irregularis sexM 68.2 1.43e-13 32713373
+   early_div_634dda4 Umbelopsis vinacea sexM 44.3 1.47e-05 23099947
+   early_div_634dda4 Umbelopsis sp. WA50703 sexM 40.8 0.000183 23000717
+   early_div_634dda4 Umbelopsis nana sexP 33.5 0.19 27230748
+   early_div_634dda4 Umbelopsis sp. WA50703 sexM 40.8 0.00018 22610520
+   early_div_634dda4 Umbelopsis vinacea sexM 39.7 0.000593 26980624
+   audit_cap6 Trigonopsis variabilis MAT1-1-3 56.6 3.59e-10 11376920
+   audit_cap6 Trigonopsis variabilis MAT1-2-1 53.1 1.18e-08 11376920
+
+rule                real_kept  noise_kept  bestlocus_kept  notbest_kept  total_pass
+E<=1e-5 (current)      4/14      0/52       45/97          6/102       55/265
+bits>=30              14/14      2/52       96/97         59/102      171/265
+bits>=35              12/14      0/52       84/97         32/102      128/265
+bits>=40              10/14      0/52       58/97         11/102       79/265
+bits>=45               4/14      0/52       39/97          7/102       50/265
+bits>=50               4/14      0/52       24/97          3/102       31/265
+E_fixed1e8<=1e-5       4/14      0/52       42/97          5/102       51/265
+
+pass counts per group
+rule                Ascomycota (cap6 audit        Basidiomycota HD         Dothideomycetes    Mucoro-group 634dda4            Mucoromycota           Serinales MTL
+E<=1e-5 (current)            9/89                    9/11                    0/2                     8/19                    5/13                   24/131        
+bits>=30                    64/89                   11/11                    2/2                    15/19                   11/13                   68/131        
+bits>=35                    38/89                   11/11                    0/2                    13/19                   10/13                   56/131        
+bits>=40                    19/89                   11/11                    0/2                    11/19                    8/13                   30/131        
+bits>=45                     9/89                   10/11                    0/2                     8/19                    5/13                   18/131        
+bits>=50                     6/89                    9/11                    0/2                     7/19                    5/13                    4/131        
+E_fixed1e8<=1e-5             8/89                    9/11                    0/2                     7/19                    5/13                   22/131        
+
+bitscore distribution by label (min / median / max)
+  real       n= 14  33.5 / 40.8 / 68.2
+  noise      n= 52  25.4 / 29.3 / 30.4
+  best-locus n= 97  28.9 / 42.0 / 105.0
+  not-best   n=102  25.0 / 31.0 / 57.4
+
+noise loci passing bits>=40:
+
+# unique real loci (dedup across runs)
+   33.5  GCA_054906655.1_Umbelopsis_nana_v._1.0
+   39.7  GCA_977110975.1_gzUmbVina2
+   40.8  GCA_053572175.1_ASM5357217v1
+   40.8  GCA_964291815.1_UMBE_WA70503
+   44.3  GCA_016758895.1_ASM1675889v1
+   56.6  GCA_003707065.3_ASM370706v3
+   68.2  GCA_000587855.1_B50
+   68.2  GCA_000697435.1_RhiVarB7584-1.0
+  bits>=30: 8/8
+  bits>=35: 7/8
+  bits>=40: 6/8
+
+# cap6 audit calls: audit evidence class (genome-wide E) x bitscore floor
+  strong n=  9  >=30:9  >=35:9  >=40:9  >=45:8
+  weak   n= 20  >=30:20  >=35:20  >=40:10  >=45:1
+  noise  n= 60  >=30:35  >=35:9  >=40:0  >=45:0
+
+# cap6 audit passers at bits>=35 by order
+   8 ('Dipodascales', 'weak')
+   7 ('Orbiliales', 'weak')
+   7 ('Orbiliales', 'noise')
+   3 ('Xylariales', 'weak')
+   3 ('Lipomycetales', 'strong')
+   3 ('Dipodascales', 'strong')
+   2 ('Trigonopsidales', 'strong')
+   2 ('Dipodascales', 'noise')
+   1 ('Trigonopsidales', 'weak')
+   1 ('Ascoideales', 'weak')
+   1 ('Pertusariales', 'strong')
+
+# Serinales loci by category x floor
+  Serinales: only locus, core inside flank span                          n= 45 >=30:41 >=35:40 >=40:23 >=45:17
+  Serinales: second call outside PAP1-OBP1-PIK1 span in a genome with a  n= 52 >=30:2 >=35:0 >=40:0 >=45:0
+  other                                                                  n= 34 >=30:25 >=35:16 >=40:7 >=45:1
+
+# Basidiomycota HD loci
+   Pterulicium gracile Agaricales kept_low HD1 66.6 4.4e-11 1
+   Pleurotus tuoliensis Agaricales withheld HD1 42.7 0.001 1
+   Flagelloscypha sp. PMI_526 Agaricales kept_low HD1 65.5 2.27e-10 1
+   Sistotremastrum suecicum Sistotremastrales kept_low HD1 68.9 8.28e-12 1
+   Lentinus brumalis Polyporales kept_low HD2 59.3 7.38e-09 1
+   Dichomitus squalens Polyporales kept_low HD1 50.4 4.56e-06 1
+   Coriolopsis trogii Polyporales withheld HD2 48.1 1.7e-05 1
+   Artomyces pyxidatus Russulales kept_low HD1 51.6 1.83e-06 1
+   Peniophora incarnata Russulales kept_low HD1 50.1 1.09e-09 1
+   Phaeoclavulina alboapiculata Gomphales withheld HD1 105.0 5.63e-23 1
+   Epithele typhae Polyporales kept_low HD2 61.2 2.37e-09 1
+
+# Mucoromycota 4457c3a loci
+   Umbelopsis isabellina kept_low sexP 62.4 6.76e-11 1 unknown
+   Umbelopsis vinacea withheld sexM 44.3 1.47e-05 4 real
+   Umbelopsis isabellina kept_low sexP 58.9 8.9e-10 1 unknown
+   Umbelopsis isabellina withheld sexP 27.7 7.2 30 unknown
+   Umbelopsis isabellina kept_low sexP 62.4 6.74e-11 1 unknown
+   Umbelopsis sp. M5902 kept_low sexP 58.2 1.5e-09 1 unknown
+   Umbelopsis sp. M5902 withheld sexP 28.5 3.7 24 unknown
+   Umbelopsis sp. WA50703 withheld sexM 40.8 0.000183 4 real
+   Umbelopsis nana withheld sexP 33.5 0.19 14 real
+   Umbelopsis sp. WA50703 withheld sexM 40.8 0.00018 4 real
+   Absidia cylindrospora withheld sexP 37.7 0.015 11 unknown
+   Mucor hiemalis kept_low sexM 54.7 1.02e-08 2 unknown
+   Umbelopsis vinacea withheld sexM 39.7 0.000593 5 real
+
+# fine floors 36-40
+  bits>=36: real unique 7/8  indep-noise 0/52  cap6 pass 33/89 (audit-noise 4)  Serinales pass 47/131
+  bits>=37: real unique 7/8  indep-noise 0/52  cap6 pass 31/89 (audit-noise 4)  Serinales pass 42/131
+  bits>=38: real unique 7/8  indep-noise 0/52  cap6 pass 27/89 (audit-noise 1)  Serinales pass 36/131
+  bits>=39: real unique 7/8  indep-noise 0/52  cap6 pass 21/89 (audit-noise 0)  Serinales pass 32/131
+  bits>=40: real unique 6/8  indep-noise 0/52  cap6 pass 19/89 (audit-noise 0)  Serinales pass 30/131

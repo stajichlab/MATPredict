@@ -1,0 +1,62 @@
+strain	group	label	label_disputed	detection_call	rnhA_gene	dist_rnhA_kb	len	sexM	sexP	P1	margin_sexP_minus_sexM	FT_hmm_clade(support)	IQ_hmm_clade(support)	IQ_mafft_clade(support)	verdict	note
+Circinella_angarensis_NRRL_1594	circinella_group			uncalled	sexP-type	2.2	310	31.6	115.2	0.0	83.6	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Circinella_angarensis_NRRL_2410	circinella_group			uncalled	sexP-type	2.2	313	32.0	116.4	0.0	84.4	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Circinella_angarensis_NRRL_2628	circinella_group			Minus	sexM-type	2.3	188	131.6	62.9	43.7	-68.7	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Circinella_angarensis_RSA_198_Plus	circinella_group	Plus	yes	Minus	sexM-type	2.3	188	130.8	63.5	43.7	-67.3	sexM(0.676)	sexM(91/74)	sexM(95.1/85)	label inverted	
+Circinella_angarensis_RSA_618-	circinella_group	Minus		Minus	sexM-type	2.3	188	131.6	62.9	43.7	-68.7	sexM(0.676)	sexM(91/74)	sexM(95.1/85)	label matches phylogeny	
+Circinella_chinensis_CBS_150.53	circinella_group			Minus	sexM-type	4.0	189	117.8	71.0	43.6	-46.8	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Circinella_chinensis_NRRL_2415	circinella_group			Minus	sexM-type	2.3	187	129.3	65.2	48.6	-64.1	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Circinella_minor_CBS_143.56	circinella_group			Minus	sexM-type	2.3	188	125.6	66.5	45.5	-59.1	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Circinella_minor_NRRL_1365	circinella_group			uncalled	sexP-type	2.2	312	31.0	113.4	0.0	82.4	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Circinella_mucoroides_NRRL_1354	circinella_group			Minus	sexM-type	2.3	187	129.3	65.2	48.6	-64.1	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Circinella_muscae_CBS_107.13T	circinella_group			Minus	sexM-type	2.3	188	125.6	66.5	45.5	-59.1	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Circinella_muscae_NRRL_1352	circinella_group			Minus	sexM-type	2.3	188	125.6	66.5	45.5	-59.1	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Circinella_muscae_NRRL_1355	circinella_group			uncalled	sexP-type	2.2	312	32.5	111.6	0.0	79.1	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Circinella_muscae_NRRL_1356	circinella_group			Minus	sexM-type	2.3	188	125.6	66.5	45.5	-59.1	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Circinella_muscae_NRRL_1357	circinella_group			uncalled	sexP-type	2.2	310	32.0	115.8	0.0	83.8	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Circinella_muscae_NRRL_1360	circinella_group			Minus	standard sexM 0.9 kb from rnhA (annot)	1.0	230	194.8	76.6	51.3	-118.2	sexM(0.795)	sexM(78.2/96)	sexM(77.4/97)		
+Circinella_muscae_NRRL_1362	circinella_group			uncalled	sexP-type on a scaffold without rnhA		115	89.5	68.1	88.2	-21.4	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Circinella_muscae_NRRL_1363	circinella_group			uncalled	sexP-type	2.2	312	32.5	111.6	0.0	79.1	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Circinella_muscae_NRRL_1364	circinella_group			Minus	sexM-type	2.3	188	125.6	66.5	45.5	-59.1	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Circinella_muscae_NRRL_1367	circinella_group			uncalled	sexP-type	2.2	312	32.5	111.6	0.0	79.1	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Circinella_muscae_NRRL_2403	circinella_group			uncalled	sexP-type	2.2	312	32.5	111.6	0.0	79.1	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Circinella_naumovii_NRRL_5846	circinella_group			Minus	standard sexM 0.1 kb from rnhA	0.1	256	144.4	36.9	28.1	-107.5	sexM(0.839)	sexM(88.1/99)	sexM(100/100)		
+Circinella_simplex_CBS_142.35	circinella_group			Minus	partial 103 aa, not at rnhA		103	77.6	64.3	97.2	-13.3	sexP(0.142)	sexM(51.4/80)	mixed(57.4/53)		
+Circinella_simplex_van_Tieghem_NRRL_2407	circinella_group			Plus	standard sexP 0.3 kb from rnhA	0.3	328	77.4	359.1	37.8	281.7	sexP(0.634)	sexP(19.1/86)	sexP(33.9/44)		
+Circinella_tenella_NRRL_A-23557	circinella_group			uncalled	exonerate model, not at rnhA		182					sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Circinella_umbellata_NRRL_1366	circinella_group			Minus	sexM-type	2.3	188	133.9	64.3	47.9	-69.6	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Circinella_umbellata_NRRL_2417	circinella_group			uncalled	sexP-type	2.2	312	31.0	113.4	0.0	82.4	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Circinella_umbellata_RSA_505_Plus	circinella_group	Plus	yes	Minus	sexM-type	2.3	188	133.9	64.3	47.9	-69.6	sexM(0.676)	sexM(91/74)	sexM(95.1/85)	label inverted	
+Fennellomyces_heterothallicus_RSA_2348	circinella_group			Minus	sexM-type	4.8	189	122.5	75.3	47.9	-47.2	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Fennellomyces_linderi_NRRL_2342	circinella_group			Minus	sexM-type	6.0	189	120.1	69.5	37.2	-50.6	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Fennellomyces_linderi_NRRL_2342T	circinella_group			Minus	sexM-type	6.0	189	120.1	69.5	37.2	-50.6	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Fennellomyces_mexicanus_sp._nov._RSA_1415_Plus	circinella_group	Plus		uncalled	sexP-type	5.8	326	29.9	92.8	12.8	62.9	sexP(0.0)	sexP(0/19)	sexP(83/93)	label matches phylogeny	
+Fennellomyces_mexicanus_sp._nov._RSA_1418-	circinella_group	Minus		Minus	sexM-type	5.5	190	123.7	71.9	37.8	-51.8	sexM(0.676)	sexM(91/74)	sexM(95.1/85)	label matches phylogeny	
+Fennellomyces_verticellatus_RSA_2442_Plus	circinella_group	Plus		uncalled	sexP-type	4.8	326	30.0	90.2	0.0	60.2	sexP(0.0)	sexP(0/19)	sexP(83/93)	label matches phylogeny	
+Fennellomyces_verticellatus_RSA_2446	circinella_group			uncalled	sexP-type	4.8	326	30.0	90.2	0.0	60.2	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+Thamnostylum_lucknowense_RSA_1015_Plus-T	circinella_group	Plus		Minus	sexM-type	2.3	187	121.6	59.1	39.6	-62.5	sexM(0.676)	sexM(91/74)	sexM(95.1/85)	label inverted	
+Thamnostylum_lucknowense_RSA_1093-	circinella_group	Minus		uncalled	sexP-type	2.2	274	30.7	62.3	15.4	31.6	sexP(0.0)	sexP(0/19)	sexP(83/93)	label inverted	
+Thamnostylum_nigricans_RSA_1405-	circinella_group	Minus		uncalled	sexP-type	5.2	326	25.4	81.5	0.0	56.1	sexP(0.0)	sexP(0/19)	sexP(83/93)	label inverted	
+Thamnostylum_nigricans_RSA_1406	circinella_group			Minus	sexM-type	5.2	189	122.9	73.0	43.8	-49.9	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Thamnostylum_piriforme_NRRL_A-21589	circinella_group			Minus	sexM-type on a scaffold without rnhA		190					sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Thamnostylum_piriforme_RSA_251	circinella_group			Minus	sexM-type	2.9	190	123.0	69.8	47.5	-53.2	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Thamnostylum_repens_RSA_459_Plus	circinella_group	Plus	yes	Minus	sexM-type	4.0	189	117.8	71.0	43.6	-46.8	sexM(0.676)	sexM(91/74)	sexM(95.1/85)	label inverted	
+Thamnostylum_repens_Tieghem_Upadhyay_NRRL_6240	circinella_group			Plus	misidentified: Circinomucor circinelloides	0.3	322	45.7	384.8	30.7	339.1	sexP(NA)	sexP(NA)	sexP(NA)		
+GCA_016758965.1_ASM1675896v1	circinella_group				sexP-type	2.2	312	31.1	114.3	0.0	83.2	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+GCA_025093555.1_Cirumb1	circinella_group				sexP-type	2.2	310	32.0	115.8	0.0	83.8	sexP(0.0)	sexP(0/19)	sexP(83/93)		
+GCA_025266875.1_Fenlin1	circinella_group				sexM-type	5.6	189	121.8	65.3	34.7	-56.5	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+GCA_982397305.1_T17-F	circinella_group				partial 143 aa		166	122.8	79.3	50.1	-43.5	sexM(0.676)	sexM(17.6/25)	sexM(95.1/85)		
+GCF_025766255.1_Zycmex1	circinella_group				sexM-type	2.3	191	132.9	70.7	41.2	-62.2	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		
+Rhizopus_arrhizus_NRRL_1470	circinella_group			Minus	sexM-type	2.3	188	133.9	64.3	47.9	-69.6	sexM(0.676)	sexM(91/74)	sexM(95.1/85)		misidentified; prior finding: C. umbellata
+Rhizopus_microsporus_NRRL_A-17693	circinella_group			uncalled	sexP-type	2.2	312	31.0	113.4	0.0	82.4	sexP(0.0)	sexP(0/19)	sexP(83/93)		misidentified; prior finding: C. minor
+Absidia_caerulea_RSA_138-	reference_labelled	Minus		Minus	standard sexM		205	138.7	61.6	23.8	-77.1	sexM(0.911)	sexM(89/99)	sexM(97.9/100)	label matches phylogeny	
+Absidia_caerulea_RSA_138_Plus	reference_labelled	Plus		Plus	standard sexP		299	60.3	265.5	29.4	205.2	sexP(0.91)	sexP(90.3/90)	sexP(78/95)	label matches phylogeny	
+Absidia_cuneospora_RSA_624-	reference_labelled	Minus		Minus	standard sexM	0.4	230	112.6	54.3	37.6	-58.3	sexM(0.636)	sexM(26.2/60)	sexM(83/96)	label matches phylogeny	
+Gilbertella_persicaria_var._persicaria_CBS_246.59_Plus	reference_labelled	Plus		Plus	standard sexP	0.2	307	49.5	327.6	26.7	278.1	sexP(0.925)	sexP(91.6/74)	sexP(88.4/98)	label matches phylogeny	
+Pilaira_anomala_RSA_1998-	reference_labelled	Minus		Minus	standard sexM	0.2	211	187.7	74.4	49.8	-113.3	sexM(0.986)	sexM(96.6/100)	sexM(99.7/100)	label matches phylogeny	
+Rhizomucor_pusillus_NRRL_2543	reference_mucorales			Plus	standard sexP	2.6	297	67.2	308.3	37.4	241.1	sexP(0.96)	sexP(96.4/99)	sexP(99.6/100)		name from curator table
+Syncephalastrum_racemosum_CBS_440.59_Plus	reference_labelled	Plus		Plus	standard sexP	0.1	310	38.0	227.7	14.3	189.7	sexP(NA)	sexP(93.2/100)	sexP(100/100)	label matches phylogeny	
+Syncephalastrum_racemosum_CBS_441.59-	reference_labelled	Minus		Minus	standard sexM	2.6	94	103.3	77.4	34.6	-25.9	sexM(0.941)	sexM(96.7/94)	sexM(81.7/83)	label matches phylogeny	
+Syncephalastrum_racemosum_NRRL_1506	reference_mucorales			Plus	standard sexP	4.2	297	70.9	311.6	40.9	240.7	sexP(NA)	sexP(NA)	sexP(0/74)		
+Syncephalastrum_racemosum_NRRL_2495	reference_mucorales			Minus	standard sexM	2.6	94	103.3	77.4	34.6	-25.9	sexM(0.941)	sexM(96.7/94)	sexM(81.7/83)		
+Syncephalastrum_verruculosum_RSA_2127	reference_mucorales			Minus	standard sexM	0.0	112	104.7	69.8	34.5	-34.9	sexM(0.941)	sexM(96.7/94)	sexM(81.7/83)		

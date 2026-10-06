@@ -1,0 +1,16 @@
+absolute best-HMM score (bits): positives (own gene, LOO) vs paralogs (shipped HMMs)
+full   pos min 34.7 p05 73.1 p50 260.1 | par p50 64.9 p95 99.9 max 184.6
+   abs>=60: positives kept 104/108  paralogs kept 113/189
+   abs>=80: positives kept 100/108  paralogs kept 37/189
+   abs>=100: positives kept 96/108  paralogs kept 9/189
+   abs>=120: positives kept 91/108  paralogs kept 1/189
+hmgbox pos min 36.7 p05 58.3 p50 133.1 | par p50 62.1 p95 95.0 max 101.0
+   abs>=60: positives kept 102/108  paralogs kept 103/189
+   abs>=80: positives kept 93/108  paralogs kept 27/189
+   abs>=100: positives kept 86/108  paralogs kept 2/189
+   abs>=120: positives kept 75/108  paralogs kept 0/189
+win    pos min 14.8 p05 41.1 p50 93.1 | par p50 50.7 p95 78.8 max 101.1
+   abs>=60: positives kept 281/324  paralogs kept 158/558
+   abs>=80: positives kept 230/324  paralogs kept 25/558
+   abs>=100: positives kept 132/324  paralogs kept 1/558
+   abs>=120: positives kept 42/324  paralogs kept 0/558

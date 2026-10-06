@@ -1,0 +1,64 @@
+
+## dipodascomycetes_etc: genomes=100 no_report=0 routing={'lineage': 1, 'direct': 10, 'phylum_fallback': 89}
+  called=48 (48%)  bar-withheld only=51  loci/genome=0.63 dist={0: 52, 1: 35, 2: 11, 3: 2}
+  confidence={'high': 12, 'medium': 51} families={'Ascomycota:MATyl': 21, 'Ascomycota:MAT': 37, 'Ascomycota:MATsc': 4, 'Ascomycota:PM': 1}
+  idiomorph={'A': 21, 'MAT1-1': 20, 'MAT1-2': 16, 'MATa': 2, 'MATalpha': 2, 'P': 1, 'undetermined': 1}
+  wall_s n=100 median=549 p90=1029 max=1380 sum_slot_h=15.6
+  by order: Dipodascales 33/80 (+46 bar); Lipomycetales 10/11 (+1 bar); Trigonopsidales 2/6 (+4 bar); Sporopachydermiales 2/2; Alloascoideales 1/1
+  top not-detected reasons (uncalled, not bar): {'no reference-protein hits found for this family in this genome': 1}
+
+## dothideomycetes: genomes=100 no_report=0 routing={'lineage': 100}
+  called=90 (90%)  bar-withheld only=10  loci/genome=0.91 dist={0: 10, 1: 89, 2: 1}
+  confidence={'high': 46, 'medium': 45} families={'Ascomycota:MAT': 91}
+  idiomorph={'MAT1-1': 46, 'MAT1-2': 45}
+  wall_s n=100 median=622 p90=948 max=1410 sum_slot_h=18.1
+  by order: Pleosporales 35/37 (+2 bar); Mycosphaerellales 11/12 (+1 bar); Dothideales 8/8; Botryosphaeriales 8/8; Venturiales 5/5; Capnodiales 2/4 (+2 bar); ? 4/4; Cladosporiales 2/3 (+1 bar); Mytilinidiales 2/2; Myriangiales 2/2; Aulographales 1/2 (+1 bar); Hysteriales 1/1; Lineolatales 0/1 (+1 bar); Patellariales 1/1; Phaeotrichales 1/1; Microthyriales 1/1; Valsariales 1/1; Lichenotheliales 1/1; Trypetheliales 0/1 (+1 bar); Gloniales 1/1; Neophaeothecales 1/1; Tubeufiales 0/1 (+1 bar); Eremomycetales 1/1; Acrospermales 1/1
+  top not-detected reasons (uncalled, not bar): {}
+
+## orbiliomycetes: genomes=67 no_report=0 routing={'phylum_fallback': 67}
+  called=27 (40%)  bar-withheld only=40  loci/genome=0.42 dist={0: 40, 1: 26, 2: 1}
+  confidence={'medium': 27, 'high': 1} families={'Ascomycota:MAT': 26, 'Ascomycota:MATsc': 2}
+  idiomorph={'MAT1-2': 17, 'MAT1-1': 9, 'undetermined': 2}
+  wall_s n=67 median=336 p90=582 max=712 sum_slot_h=6.8
+  by order: Orbiliales 27/67 (+40 bar)
+  top not-detected reasons (uncalled, not bar): {}
+
+## pezizomycetes: genomes=172 no_report=0 routing={'lineage': 169, 'direct': 3}
+  called=27 (16%)  bar-withheld only=81  loci/genome=0.16 dist={0: 145, 1: 27}
+  confidence={'high': 27} families={'Ascomycota:MATtub': 27}
+  idiomorph={'MAT1-1': 22, 'MAT1-2': 5}
+  wall_s n=172 median=22 p90=41 max=80 sum_slot_h=1.2
+  by order: Pezizales 27/172 (+81 bar)
+  top not-detected reasons (uncalled, not bar): {"best cluster matched 0.33 of this family's expected genes, below the a": 64}
+
+## pezizomycotina_uncurated: genomes=100 no_report=0 routing={'lineage': 100}
+  called=82 (82%)  bar-withheld only=18  loci/genome=0.88 dist={0: 18, 1: 76, 2: 6}
+  confidence={'medium': 49, 'high': 39} families={'Ascomycota:MAT': 88}
+  idiomorph={'MAT1-2': 47, 'MAT1-1': 41}
+  wall_s n=100 median=620 p90=856 max=1299 sum_slot_h=16.6
+  by order: Peltigerales 6/8 (+2 bar); Xylariales 4/6 (+2 bar); Chaetothyriales 5/6 (+1 bar); Microascales 3/5 (+2 bar); Pertusariales 5/5; Glomerellales 4/4; Magnaporthales 4/4; Ostropales 4/4; ? 4/4; Amphisphaeriales 1/4 (+3 bar); Arthoniales 2/4 (+2 bar); Lichinales 3/4 (+1 bar); Verrucariales 1/2 (+1 bar); Rhizocarpales 2/2; Sarrameanales 1/2 (+1 bar); Baeomycetales 1/2 (+1 bar); Umbilicariales 2/2; Coronophorales 2/2; Leotiales 1/2 (+1 bar); Caliciales 2/2; Leprocaulales 2/2; Thelebolales 1/1; Phaeomoniellales 1/1; Coniochaetales 1/1; Geoglossales 1/1; Lulworthiales 1/1; Phacidiales 1/1; Acarosporales 1/1; Phyllachorales 1/1; Calosphaeriales 1/1; Marthamycetales 1/1; Chaetomellales 1/1; Coryneliales 1/1; Cephalothecales 1/1; Barbatosphaeriales 1/1; Chaetosphaeriales 1/1; Pyrenulales 1/1; Pleurotheciales 1/1; Lichenostigmatales 1/1; Mycocaliciales 1/1; Lecideales 1/1; Hymeneliales 0/1 (+1 bar); Trapeliales 1/1; Togniniales 1/1; Thyridiales 1/1
+  top not-detected reasons (uncalled, not bar): {}
+
+## pichiomycetes: genomes=99 no_report=1 routing={'lineage': 75, 'phylum_fallback': 24}
+  called=18 (18%)  bar-withheld only=81  loci/genome=0.37 dist={0: 81, 1: 7, 2: 5, 3: 4, 4: 2}
+  confidence={'medium': 30, 'high': 7} families={'Ascomycota:MATsc': 22, 'Ascomycota:PM': 8, 'Ascomycota:MATyl': 4, 'Ascomycota:MTL': 2, 'Ascomycota:MAT': 1}
+  idiomorph={'MATalpha': 13, 'MATa': 9, 'A': 6, 'M': 5, 'P': 2, 'undetermined': 1, 'MAT1-1': 1}
+  wall_s n=99 median=4 p90=663 max=1359 sum_slot_h=4.7
+  by order: Serinales 2/75 (+73 bar); Pichiales 16/24 (+8 bar)
+  top not-detected reasons (uncalled, not bar): {}
+
+## saccharomycetes_other: genomes=100 no_report=0 routing={'phylum_fallback': 100}
+  called=56 (56%)  bar-withheld only=44  loci/genome=0.80 dist={0: 44, 1: 35, 2: 18, 3: 3}
+  confidence={'medium': 67, 'high': 13} families={'Ascomycota:MATsc': 60, 'Ascomycota:MTL': 12, 'Ascomycota:MATyl': 4, 'Ascomycota:MAT': 4}
+  idiomorph={'MATa': 36, 'MATalpha': 24, 'A': 16, 'MAT1-1': 4}
+  wall_s n=100 median=516 p90=900 max=1286 sum_slot_h=15.5
+  by order: Phaffomycetales 37/46 (+9 bar); Ascoideales 11/26 (+15 bar); Saccharomycodales 3/21 (+18 bar); Saccharomycetales 4/5 (+1 bar); ? 1/2 (+1 bar)
+  top not-detected reasons (uncalled, not bar): {}
+
+## taphrinomycotina: genomes=103 no_report=1 routing={'lineage': 44, 'direct': 59}
+  called=80 (78%)  bar-withheld only=23  loci/genome=1.74 dist={0: 23, 1: 23, 2: 32, 3: 11, 4: 12, 5: 1, 6: 1}
+  confidence={'high': 165, 'medium': 14} families={'Ascomycota:PM': 14, 'Ascomycota:mat2': 69, 'Ascomycota:mat1': 96}
+  idiomorph={'P': 95, 'M': 84}
+  wall_s n=103 median=13 p90=69 max=94 sum_slot_h=0.7
+  by order: Schizosaccharomycetales 66/67 (+1 bar); Taphrinales 5/22 (+17 bar); Pneumocystales 9/11 (+2 bar); Saitoellales 0/2 (+2 bar); Neolectales 0/1 (+1 bar)
+  top not-detected reasons (uncalled, not bar): {}

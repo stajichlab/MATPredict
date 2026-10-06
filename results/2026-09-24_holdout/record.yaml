@@ -1,0 +1,263 @@
+results:
+- record_id: 162425_fgsc-a4_MAT_combined
+  species: Aspergillus nidulans
+  radius: record
+  withheld: 1
+  loci: 2
+  status: hit
+  expected_idiomorph:
+  - MAT1-1
+  - MAT1-2
+  family: Ascomycota:MAT
+  confidence: medium
+  idiomorph: MAT1-1
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 15
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 28985_nrrl-y-1140_MATsc_HMLalpha
+  species: Kluyveromyces lactis
+  radius: record
+  withheld: 1
+  loci: 3
+  status: hit
+  expected_idiomorph:
+  - MATalpha
+  family: Ascomycota:MATsc
+  confidence: medium
+  idiomorph: MATalpha
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 15
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 28985_nrrl-y-1140_MATsc_MATa
+  species: Kluyveromyces lactis
+  radius: record
+  withheld: 1
+  loci: 1
+  status: suppressed
+  expected_idiomorph:
+  - MATa
+  family: Ascomycota:MATsc
+  confidence: null
+  idiomorph: MATa
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 21
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 381046_cbs-6340_MATsc_HMLalpha
+  species: Lachancea thermotolerans
+  radius: record
+  withheld: 1
+  loci: 2
+  status: hit
+  expected_idiomorph:
+  - MATalpha
+  family: Ascomycota:MATsc
+  confidence: high
+  idiomorph: MATalpha
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 30
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 40559_sas56_MAT_MAT1-1
+  species: Botrytis cinerea
+  radius: record
+  withheld: 1
+  loci: 1
+  status: hit
+  expected_idiomorph:
+  - MAT1-1
+  family: Ascomycota:MAT
+  confidence: high
+  idiomorph: MAT1-1
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 4
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 42068_ru7_PM_combined
+  species: Pneumocystis jirovecii
+  radius: record
+  withheld: 1
+  loci: 1
+  status: hit
+  expected_idiomorph:
+  - M
+  - P
+  family: Ascomycota:PM
+  confidence: high
+  idiomorph: P
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 6
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 4754_b80_PM_combined
+  species: Pneumocystis carinii
+  radius: record
+  withheld: 1
+  loci: 1
+  status: hit
+  expected_idiomorph:
+  - M
+  - P
+  family: Ascomycota:PM
+  confidence: medium
+  idiomorph: P
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 6
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 4896_972h_mat1_M
+  species: Schizosaccharomyces pombe
+  radius: record
+  withheld: 1
+  loci: 0
+  status: suppressed
+  expected_idiomorph:
+  - M
+  family: Ascomycota:PM
+  confidence: null
+  idiomorph: M
+  families_attempted: 4
+  routing_mode: direct
+  suppressed_unpolished: 28
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 4896_h90_mat2_P
+  species: Schizosaccharomyces pombe
+  status: no_assembly
+- record_id: 4899_yfs286_mat1_P
+  species: Schizosaccharomyces octosporus
+  radius: record
+  withheld: 1
+  loci: 0
+  status: suppressed
+  expected_idiomorph:
+  - P
+  family: Ascomycota:mat1
+  confidence: null
+  idiomorph: M
+  families_attempted: 2
+  routing_mode: lineage
+  suppressed_unpolished: 25
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 4932_s288c_MATsc_HMRa
+  species: Saccharomyces cerevisiae
+  radius: record
+  withheld: 1
+  loci: 3
+  status: wrong_idiomorph
+  expected_idiomorph:
+  - MATa
+  family: Ascomycota:MATsc
+  confidence: medium
+  idiomorph: MATalpha
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 26
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 4932_s288c_MATsc_MATalpha
+  species: Saccharomyces cerevisiae
+  radius: record
+  withheld: 1
+  loci: 3
+  status: hit
+  expected_idiomorph:
+  - MATalpha
+  family: Ascomycota:MATsc
+  confidence: medium
+  idiomorph: MATalpha
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 31
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 4959_cbs767_MTL_A
+  species: Debaryomyces hansenii
+  radius: record
+  withheld: 1
+  loci: 0
+  status: no_reference_family
+  expected_idiomorph:
+  - A
+  family: null
+  confidence: null
+  idiomorph: null
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 0
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 5141_74-ors-a_MAT_MAT1-1
+  species: Neurospora crassa
+  radius: record
+  withheld: 1
+  loci: 1
+  status: hit
+  expected_idiomorph:
+  - MAT1-1
+  family: Ascomycota:MAT
+  confidence: medium
+  idiomorph: MAT1-1
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 12
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 5180_44ba1_MAT_combined
+  species: Sclerotinia sclerotiorum
+  radius: record
+  withheld: 1
+  loci: 1
+  status: hit
+  expected_idiomorph:
+  - MAT1-1
+  - MAT1-2
+  family: Ascomycota:MAT
+  confidence: high
+  idiomorph: MAT1-1
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 6
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 5501_rs_MAT_MAT1-2
+  species: Coccidioides immitis
+  radius: record
+  withheld: 1
+  loci: 1
+  status: hit
+  expected_idiomorph:
+  - MAT1-2
+  family: Ascomycota:MAT
+  confidence: medium
+  idiomorph: MAT1-2
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 9
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 746128_a1163_MAT_MAT1-1
+  species: Aspergillus fumigatus
+  radius: record
+  withheld: 1
+  loci: 1
+  status: hit
+  expected_idiomorph:
+  - MAT1-1
+  family: Ascomycota:MAT
+  confidence: high
+  idiomorph: MAT1-1
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 8
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d
+- record_id: 746128_af293_MAT_MAT1-2
+  species: Aspergillus fumigatus
+  radius: record
+  withheld: 1
+  loci: 1
+  status: hit
+  expected_idiomorph:
+  - MAT1-2
+  family: Ascomycota:MAT
+  confidence: medium
+  idiomorph: MAT1-2
+  families_attempted: 1
+  routing_mode: lineage
+  suppressed_unpolished: 11
+  source_commit: 6d15944e20d3fd2bc0750ed0914d7406cbc5ad0d

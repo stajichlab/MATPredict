@@ -1,0 +1,10 @@
+status: {'not_called': 85, 'called': 536}
+clean: n=584 called=499 idiomorphs={'Minus': 235, 'Plus': 222, 'Minus+Plus': 34, 'undetermined': 7, 'Minus+Plus+undetermined': 1}
+in_BFD_not_training: n=8 called=8 idiomorphs={'Plus': 5, 'Minus+Plus': 1, 'Minus': 2}
+training_leak: n=6 called=6 idiomorphs={'Plus': 4, 'Minus': 2}
+zygo23: n=23 called=23 idiomorphs={'Plus': 16, 'Minus': 7}
+Zygo23: n=23 locus_ok=23 idiomorph_ok=23
+models: 1167; annotated at locus: 504; identity>=95 & cov>=90: 343; annotated protein classifier agrees with call: 481 of 489
+  unannotated models (annotation gap): 663
+not-called genomes with an annotated protein scoring >=100 bits to sexM/sexP: 62 (86 proteins)
+wall s: median 162 max 378

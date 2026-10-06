@@ -1,0 +1,55 @@
+60 genomes finished in all 7 variants
+
+variant                    group             called  loci/g  median s  genotypes
+V0_base                    C. albicans       10/20     0.50        12  {'A': 10, 'none': 10}
+V0_base                    C. auris          15/17     0.88        14  {'A': 15, 'none': 2}
+V0_base                    other Serinales    9/23     0.43        14  {'A': 6, 'homothallic': 3, 'none': 14}
+
+V1_alpha2only              C. albicans       19/20     1.25        70  {'A': 4, 'A+alpha': 6, 'alpha': 9, 'none': 1}
+V1_alpha2only              C. auris          15/17     0.88        70  {'A': 15, 'none': 2}
+V1_alpha2only              other Serinales    9/23     0.52        44  {'A': 4, 'A+alpha': 2, 'homothallic': 3, 'none': 14}
+
+V2_flanksonly              C. albicans       20/20     1.30       162  {'A': 4, 'A+alpha': 6, 'alpha': 10}
+V2_flanksonly              C. auris          16/17     0.94       196  {'A': 15, 'alpha': 1, 'none': 1}
+V2_flanksonly              other Serinales   20/23     1.04       160  {'A': 6, 'A+alpha': 3, 'alpha': 8, 'homothallic': 3, 'none': 3}
+
+V3_both                    C. albicans       20/20     1.30       150  {'A': 4, 'A+alpha': 6, 'alpha': 10}
+V3_both                    C. auris          16/17     0.94       204  {'A': 15, 'alpha': 1, 'none': 1}
+V3_both                    other Serinales   20/23     1.04       173  {'A': 6, 'A+alpha': 3, 'alpha': 8, 'homothallic': 3, 'none': 3}
+
+V3m_both_miniprotflanks    C. albicans       20/20     1.30        77  {'A': 4, 'A+alpha': 6, 'alpha': 10}
+V3m_both_miniprotflanks    C. auris          16/17     0.94       127  {'A': 15, 'alpha': 1, 'none': 1}
+V3m_both_miniprotflanks    other Serinales   20/23     1.04       112  {'A': 6, 'A+alpha': 3, 'alpha': 8, 'homothallic': 3, 'none': 3}
+
+V4_flanksminiprot_noalpha2 C. albicans       20/20     1.30        68  {'A': 4, 'A+alpha': 6, 'alpha': 10}
+V4_flanksminiprot_noalpha2 C. auris          16/17     0.94        53  {'A': 15, 'alpha': 1, 'none': 1}
+V4_flanksminiprot_noalpha2 other Serinales   20/23     1.04        42  {'A': 6, 'A+alpha': 3, 'alpha': 8, 'homothallic': 3, 'none': 3}
+
+V5_flanksminiprot_alpha2   C. albicans       20/20     1.30        42  {'A': 4, 'A+alpha': 6, 'alpha': 10}
+V5_flanksminiprot_alpha2   C. auris          16/17     0.94        66  {'A': 15, 'alpha': 1, 'none': 1}
+V5_flanksminiprot_alpha2   other Serinales   20/23     1.04        48  {'A': 6, 'A+alpha': 3, 'alpha': 8, 'homothallic': 3, 'none': 3}
+
+flank-carried calls (no modelled core gene) per variant:
+  V0_base                    0
+  V1_alpha2only              0
+  V2_flanksonly              0
+  V3_both                    0
+  V3m_both_miniprotflanks    0
+  V4_flanksminiprot_noalpha2 0
+  V5_flanksminiprot_alpha2   0
+
+agreement with V3_both (same genotype per genome):
+  V0_base                    29/60
+  V1_alpha2only              46/60
+  V2_flanksonly              60/60
+  V3_both                    60/60
+  V3m_both_miniprotflanks    60/60
+  V4_flanksminiprot_noalpha2 60/60
+  V5_flanksminiprot_alpha2   60/60
+
+V3m_both_miniprotflanks vs V3_both: 60/60 same genotype; differ: []
+
+V5_flanksminiprot_alpha2 vs V3m_both_miniprotflanks: 60/60 same genotype; differ: []
+
+V4_flanksminiprot_noalpha2 vs V5_flanksminiprot_alpha2: 60/60 same genotype; differ: []
+V5 calls that include MTLalpha2: 23

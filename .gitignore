@@ -6,3 +6,42 @@ __pycache__/
 .pytest_cache/
 .pixi/
 db/*.duckdb
+
+# Bulk analysis output (2026-10-06). A results folder tracks its README/NOTE,
+# jobs.tsv, summary markdown/TSV and scripts, not per-genome output.
+# Files already tracked are not affected; to add one on purpose use `git add -f`.
+results/*/runs/
+results/**/work/[0-9a-f][0-9a-f]/
+results/**/.nextflow/
+results/**/.nextflow.log*
+*.jsonl
+*.jsonl.zst
+_reference.faa
+*.ckp
+*.wall_seconds
+*.bam
+*.bai
+*.cram
+*.crai
+*.sam
+*.paf
+*.nsq
+*.nin
+*.nhr
+*.nsi
+*.nsd
+*.nog
+*.ndb
+*.njs
+*.not
+*.ntf
+*.nto
+*.psq
+*.pin
+*.phr
+*.pdb
+*.pjs
+*.pot
+*.ptf
+*.pto
+logs/*.log

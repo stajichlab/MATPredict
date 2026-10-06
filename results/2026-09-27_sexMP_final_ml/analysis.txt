@@ -1,0 +1,30 @@
+IQ-TREE sexP: monophyletic (6/6 refs), size 86, SH-aLRT 78.1, bootstrap 62.0
+IQ-TREE sexM: monophyletic (9/9 refs), size 62, SH-aLRT 85.7, bootstrap 74.0
+RAxML-NG sexP: monophyletic (6/6 refs), size 61, SH-aLRT None, bootstrap 6.0
+RAxML-NG sexM: monophyletic (9/9 refs), size 57, SH-aLRT None, bootstrap 0.0
+concordance (called loci placed in a clade), IQ-TREE: {('sexP', 'Plus'): 50, ('sexM', 'Minus'): 44, ('sexM', 'Plus'): 2, ('sexP', 'undetermined'): 1}
+disagreements: 3
+    ('Radiomyces spectabilis', 'GCF_025331425.1_Radspe1', 'Plus', 'sexM')
+    ('Phascolomyces articulosus', 'GCA_025677815.1_Phaart1', 'undetermined', 'sexP')
+    ('Mucor hiemalis', 'GCA_977110905.1_gzMucHiem1', 'Plus', 'sexM')
+tip	species	genome	status	label	clade_IQ	IQ_SH_join_ref	IQ_UFBoot_join_ref	IQ_join_size	clade_RX	RX_bootstrap_join_ref
+F016	Syncephalastrum monosporum	GCA_000697355.1_SynMonB8922-1.0	call	undetermined	other_HMG	None	None	0	other_HMG	None
+F038	Lichtheimia ramosa	GCA_037041495.1_ASM3704149v1	nonlocus	-	sexM	80.9	31.0	41	sexM	4.0
+F044	Syncephalastrum racemosum	GCA_002105135.1_Synrac1	call	undetermined	other_HMG	None	None	0	other_HMG	None
+F054	Rhizomucor pusillus	GCA_900175165.2_FCH_5_7	nonlocus	-	sexP	83.3	57.0	11	sexP	13.0
+F056	Rhizomucor pusillus	GCA_023512895.1_ASM2351289v1	call	Plus	sexP	83.3	57.0	11	sexP	13.0
+F107	Syncephalastrum racemosum	GCA_000696955.1_SynRacB6101-1.0	call	Plus	other_HMG	None	None	0	other_HMG	None
+F132	Rhizomucor pusillus	GCA_900175165.2_FCH_5_7	call	Minus	sexM	64.8	97.0	4	sexM	43.0
+F145	Lichtheimia corymbifera	GCA_000723665.1_454Minimus	withheld	Plus	sexP	82.9	91.0	32	other_HMG	None
+F148	Lichtheimia corymbifera	GCA_000723665.1_454Minimus	withheld	Minus	other_HMG	None	None	0	other_HMG	None
+F155	Syncephalastrum racemosum	GCA_002105135.1_Synrac1	withheld	Plus	sexP	82.9	91.0	32	other_HMG	None
+F161	Syncephalastrum monosporum	GCA_000697355.1_SynMonB8922-1.0	withheld	Minus	other_HMG	None	None	0	other_HMG	None
+F162	Syncephalastrum racemosum	GCA_002105135.1_Synrac1	withheld	undetermined	sexP	82.9	91.0	32	other_HMG	None
+F166	Rhizomucor pusillus	GCA_900175165.2_FCH_5_7	withheld	Minus	sexP	82.9	91.0	32	other_HMG	None
+F175	Rhizomucor pusillus	GCA_900175165.2_FCH_5_7	withheld	Plus	sexP	82.9	91.0	32	other_HMG	None
+F177	Syncephalastrum racemosum	GCA_000696955.1_SynRacB6101-1.0	withheld	Plus	sexP	82.9	91.0	32	other_HMG	None
+F180	Lichtheimia ornata	GCF_029851405.1_ASM2985140v1	withheld	Plus	sexP	82.9	91.0	32	other_HMG	None
+
+Robinson-Foulds IQ-TREE vs RAxML-NG: 80 of 356 (normalised 0.225); shared splits 138
+sexP clade identical in both: False (IQ 86 tips, RX 61 tips)
+sexM clade identical in both: False (IQ 62 tips, RX 57 tips)

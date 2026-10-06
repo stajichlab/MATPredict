@@ -1,0 +1,27 @@
+order/family                                  n  old  new gain lost  adj SLA2 loci high
+Pezizales/Discinaceae                        72    1   41   40    0   39   32   41    1
+Pezizales/Morchellaceae                      60   14   43   29    0   43   40   43   15
+Pezizales/Tuberaceae                         12   12   12    0    0    5    5   12   12
+Pezizales/Pyronemataceae                      9    0    2    2    0    2    2    2    1
+Pezizales/Pezizaceae                          8    0    0    0    0    0    0    0    0
+Pezizales/Rhizinaceae                         5    0    0    0    0    0    0    0    0
+Pezizales/Tarzettaceae                        3    0    0    0    0    0    0    0    0
+Pezizales/Ascodesmidaceae                     2    0    0    0    0    0    0    0    0
+Pezizales/Ascobolaceae                        1    0    0    0    0    0    0    0    0
+TOTAL                                       172   27   98   71    0   89   79   98   29
+
+genomes whose EXISTING call changed place or idiomorph: 19
+   ('GCA_003070745.1_Tubbor1', 'Pezizales/Tuberaceae', [('NESQ01000023.1', 160, 'MAT1-1')], [('NESQ01000023.1', 148, 'MAT1-1')])
+   ('GCA_003314575.1_ASM331457v1', 'Pezizales/Morchellaceae', [('QMFJ01002329.1', 21, 'MAT1-1')], [('QMFJ01002329.1', 11, 'MAT1-1')])
+   ('GCA_003521225.1_ASM352122v1', 'Pezizales/Tuberaceae', [('QOVD01000472.1', 31, 'MAT1-2')], [('QOVD01000472.1', 15, 'MAT1-2')])
+   ('GCA_003790465.1_Morco1', 'Pezizales/Morchellaceae', [('ML119152.1', 242, 'MAT1-1')], [('ML119152.1', 225, 'MAT1-1')])
+   ('GCA_024521645.1_Morsny1', 'Pezizales/Morchellaceae', [('JAJJXB010000008.1', 542, 'MAT1-1')], [('JAJJXB010000008.1', 531, 'MAT1-1')])
+   ('GCA_024713675.1_ASM2471367v1', 'Pezizales/Morchellaceae', [('JAMGYV010000015.1', 1136, 'MAT1-1')], [('JAMGYV010000015.1', 1118, 'MAT1-1')])
+   ('GCA_024713705.1_ASM2471370v1', 'Pezizales/Morchellaceae', [('JAMJEX010000015.1', 1271, 'MAT1-1')], [('JAMJEX010000015.1', 1252, 'MAT1-1')])
+   ('GCA_024713855.1_ASM2471385v1', 'Pezizales/Morchellaceae', [('JAMGZD010000013.1', 1237, 'MAT1-1')], [('JAMGZD010000013.1', 1217, 'MAT1-1')])
+   ('GCA_024713935.1_ASM2471393v1', 'Pezizales/Morchellaceae', [('JAMGZG010000010.1', 1253, 'MAT1-1')], [('JAMGZG010000010.1', 1237, 'MAT1-1')])
+   ('GCA_033030425.1_ASM3303042v1', 'Pezizales/Morchellaceae', [('JAUFSD010000009.1', 578, 'MAT1-1')], [('JAUFSD010000009.1', 572, 'MAT1-1')])
+   ('GCA_040803995.1_ASM4080399v1', 'Pezizales/Discinaceae', [('JBAMAF010000022.1', 184, 'MAT1-1')], [('JBAMAF010000022.1', 156, 'MAT1-1')])
+   ('GCA_050495735.1_Tpan_genome', 'Pezizales/Tuberaceae', [('JBFMHV010000006.1', 6107, 'MAT1-1')], [('JBFMHV010000006.1', 6089, 'MAT1-1')])
+new calls by confidence/class/idiomorph: {('high', 'mat_locus', 'MAT1-1'): 21, ('medium', 'mat_locus', 'MAT1-2'): 29, ('high', 'mat_locus', 'MAT1-2'): 8, ('medium', 'mat_locus', 'MAT1-1'): 38, ('medium', 'idiomorph_gene_only', 'MAT1-2'): 1, ('medium', 'partial_locus', 'MAT1-1'): 1}
+wall s: median 59.5 p90 92 max 204

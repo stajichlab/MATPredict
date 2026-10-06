@@ -1,0 +1,29 @@
+tips negatives available: 189; with sequence: 189
+positive proteins: 108 over 30 genera
+neg full   n= 189 min=    0.1 p05=    2.1 p50=   15.9 max=  140.5
+neg hmgbox n= 189 min=    0.1 p05=    2.2 p50=   15.4 max=   54.2
+neg win    n= 558 min=    0.1 p05=    1.4 p50=   12.1 max=   48.1
+pos full   n= 108 min=   21.2 p05=   29.5 p50=  200.9 max=  284.8 wrong(<=0)=0
+pos hmgbox n= 108 min=   12.7 p05=   25.7 p50=   75.6 max=   95.1 wrong(<=0)=0
+pos win    n= 324 min=    2.4 p05=   20.3 p50=   57.6 max=   95.6 wrong(<=0)=0
+floor  10 full  : positives called correctly 108/108  wrong-but-above-floor 0  paralogs above floor 137/189
+floor  10 hmgbox: positives called correctly 108/108  wrong-but-above-floor 0  paralogs above floor 134/189
+floor  10 win   : positives called correctly 321/324  wrong-but-above-floor 0  paralogs above floor 328/558
+floor  15 full  : positives called correctly 108/108  wrong-but-above-floor 0  paralogs above floor 107/189
+floor  15 hmgbox: positives called correctly 107/108  wrong-but-above-floor 0  paralogs above floor 97/189
+floor  15 win   : positives called correctly 315/324  wrong-but-above-floor 0  paralogs above floor 215/558
+floor  20 full  : positives called correctly 108/108  wrong-but-above-floor 0  paralogs above floor 74/189
+floor  20 hmgbox: positives called correctly 107/108  wrong-but-above-floor 0  paralogs above floor 64/189
+floor  20 win   : positives called correctly 308/324  wrong-but-above-floor 0  paralogs above floor 128/558
+floor  25 full  : positives called correctly 106/108  wrong-but-above-floor 0  paralogs above floor 46/189
+floor  25 hmgbox: positives called correctly 104/108  wrong-but-above-floor 0  paralogs above floor 37/189
+floor  25 win   : positives called correctly 294/324  wrong-but-above-floor 0  paralogs above floor 63/558
+floor  30 full  : positives called correctly 102/108  wrong-but-above-floor 0  paralogs above floor 28/189
+floor  30 hmgbox: positives called correctly 98/108  wrong-but-above-floor 0  paralogs above floor 25/189
+floor  30 win   : positives called correctly 273/324  wrong-but-above-floor 0  paralogs above floor 35/558
+floor  40 full  : positives called correctly 99/108  wrong-but-above-floor 0  paralogs above floor 10/189
+floor  40 hmgbox: positives called correctly 87/108  wrong-but-above-floor 0  paralogs above floor 7/189
+floor  40 win   : positives called correctly 250/324  wrong-but-above-floor 0  paralogs above floor 10/558
+floor  50 full  : positives called correctly 96/108  wrong-but-above-floor 0  paralogs above floor 2/189
+floor  50 hmgbox: positives called correctly 82/108  wrong-but-above-floor 0  paralogs above floor 1/189
+floor  50 win   : positives called correctly 204/324  wrong-but-above-floor 0  paralogs above floor 0/558

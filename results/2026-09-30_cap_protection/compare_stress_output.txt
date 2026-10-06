@@ -1,0 +1,64 @@
+
+== mucoro c3: genomes 293; cap-off calls 262; lost by plain 1; plain calls not in cap-off 0; wall off 67049s plain 49096s
+   V1: recovered 1/1; false promotions 0; plain calls dropped 0; wall 43193s
+   V2: recovered 1/1; false promotions 0; plain calls dropped 0; wall 71560s
+   V3: recovered 1/1; false promotions 0; plain calls dropped 0; wall 71502s
+
+== mucoro c2: genomes 293; cap-off calls 262; lost by plain 4; plain calls not in cap-off 0; wall off 67049s plain 26082s
+   V1: recovered 4/4; false promotions 0; plain calls dropped 0; wall 39680s
+   V2: recovered 4/4; false promotions 0; plain calls dropped 0; wall 42036s
+   V3: recovered 4/4; false promotions 0; plain calls dropped 0; wall 38186s
+
+== lcg c3: genomes 621; cap-off calls 567; lost by plain 3; plain calls not in cap-off 0; wall off 113736s plain 91194s
+   V1: recovered 3/3; false promotions 0; plain calls dropped 0; wall 89752s
+   V2: recovered 3/3; false promotions 0; plain calls dropped 0; wall 104527s
+   V3: recovered 3/3; false promotions 0; plain calls dropped 0; wall 97676s
+
+== lcg c2: genomes 621; cap-off calls 567; lost by plain 11; plain calls not in cap-off 0; wall off 113736s plain 107809s
+   V1: recovered 10/11; false promotions 0; plain calls dropped 0; wall 78916s
+   V2: recovered 9/11; false promotions 1; plain calls dropped 0; wall 91080s
+      FALSE Mucor_indicus_NRRL_13082 ('Mucoromycota:MAT', 'scaffold_101', 'Plus') ('medium', 247.8, None, 1, 3005)
+   V3: recovered 10/11; false promotions 0; plain calls dropped 2; wall 104319s
+      DROPPED Mucor_genevensis_NRRL_1821 ('Mucoromycota:MAT', 'scaffold_188', 'Minus')
+      DROPPED Mucor_genevensis_NRRL_1412 ('Mucoromycota:MAT', 'scaffold_980', 'Minus')
+      STILL_LOST Mucor_genevensis_NRRL_1756 ('Mucoromycota:MAT', 'scaffold_619', 'Minus')
+
+== jena c3: genomes 64; cap-off calls 63; lost by plain 0; plain calls not in cap-off 0; wall off 11010s plain 9731s
+   V1: recovered 0/0; false promotions 0; plain calls dropped 0; wall 9565s
+   V2: recovered 0/0; false promotions 0; plain calls dropped 0; wall 12979s
+   V3: recovered 0/0; false promotions 0; plain calls dropped 0; wall 13212s
+
+== jena c2: genomes 64; cap-off calls 63; lost by plain 1; plain calls not in cap-off 0; wall off 11010s plain 9109s
+   V1: recovered 1/1; false promotions 0; plain calls dropped 0; wall 7383s
+   V2: recovered 1/1; false promotions 0; plain calls dropped 0; wall 10448s
+   V3: recovered 1/1; false promotions 0; plain calls dropped 0; wall 15830s
+
+== zygo c2_V2: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== zygo off_plain: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== zygo c2_plain: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== zygo c2_V1: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== zygo c3_plain: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== zygo c3_V2: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== zygo c3_V3: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== zygo c2_V3: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== zygo c3_V1: scaffold locus on truth scaffold 23/23; idiomorph correct 23/23 | contig   locus on truth scaffold 23/23; idiomorph correct 23/23
+
+== ED c6 mort_00: genomes 100; called plain 0 V3 0; gained 0 lost 0; wall 10801s -> 10932s
+
+== ED c6 kickx_00: genomes 93; called plain 0 V3 0; gained 0 lost 0; wall 7535s -> 7596s
+
+== ED c6 kickx_01: genomes 97; called plain 0 V3 0; gained 0 lost 0; wall 7567s -> 7544s
+
+== ED c3 mort_00: genomes 100; called plain 0 V3 0; gained 0 lost 0; wall 4296s -> 4305s
+
+== ED c3 kickx_00: genomes 93; called plain 0 V3 0; gained 0 lost 0; wall 2938s -> 5628s
+
+== ED c3 kickx_01: genomes 97; called plain 0 V3 0; gained 0 lost 0; wall 3658s -> 5870s

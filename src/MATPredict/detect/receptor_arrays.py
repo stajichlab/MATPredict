@@ -90,7 +90,7 @@ RECEPTOR_ARRAYS_NOTE = (
 #: every other call.
 LOCI_ARRAY_COLUMNS = (
     "receptor_array_id", "receptor_array_size", "receptor_array_members", "receptor_array_support", "receptor_array_support_reasons",
-    "receptor_cassette_loci", "receptor_cassette_class", "receptor_cassette_members", "receptor_cassette_caax_orfs",
+    "receptor_cassette_loci", "receptor_cassette_class", "receptor_cassette_members", "receptor_cassette_max_caax_orfs",
 )
 
 
@@ -132,7 +132,7 @@ class ReceptorArray:
         return CASSETTE_C if CASSETTE_C in classes else CASSETTE_B if CASSETTE_B in classes else CASSETTE_NONE
 
     @property
-    def cassette_caax_orfs(self) -> int:
+    def cassette_max_caax_orfs(self) -> int:
         return max((n for n, _, _ in self.cassettes), default=0)
 
     def cassette_member_strings(self) -> list[str]:
@@ -150,7 +150,7 @@ class ReceptorArray:
             "receptor_cassette_loci": self.cassette_loci,
             "receptor_cassette_class": self.cassette_class,
             "receptor_cassette_members": self.cassette_member_strings(),
-            "receptor_cassette_caax_orfs": self.cassette_caax_orfs,
+            "receptor_cassette_max_caax_orfs": self.cassette_max_caax_orfs,
         }
 
     def as_report(self) -> dict:
@@ -385,7 +385,7 @@ def attach_array_support(results, families, arrays: list[ReceptorArray]):
             doc = {"receptor_array_id": None, "receptor_array_size": None, "receptor_array_members": [],
                    "receptor_array_support": None, "receptor_array_support_reasons": [],
                    "receptor_cassette_loci": None, "receptor_cassette_class": None,
-                   "receptor_cassette_members": [], "receptor_cassette_caax_orfs": None}
+                   "receptor_cassette_members": [], "receptor_cassette_max_caax_orfs": None}
         else:
             calls[i] += 1
             a = arrays[i]
@@ -413,7 +413,7 @@ def loci_columns(detected_doc: dict) -> dict:
         "receptor_cassette_loci": _blank_none(detected_doc.get("receptor_cassette_loci")),
         "receptor_cassette_class": detected_doc.get("receptor_cassette_class") or "",
         "receptor_cassette_members": "|".join(detected_doc.get("receptor_cassette_members") or []),
-        "receptor_cassette_caax_orfs": _blank_none(detected_doc.get("receptor_cassette_caax_orfs")),
+        "receptor_cassette_max_caax_orfs": _blank_none(detected_doc.get("receptor_cassette_max_caax_orfs")),
     }
 
 

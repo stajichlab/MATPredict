@@ -21,7 +21,7 @@ release completed.
   `analysis/2026-10-06_b-locus-clustering.md`, option 1). Per array, per PR call and in `loci.tsv`:
   `receptor_cassette_loci` (loci with 2 or more strict-CAAX ORFs within 5 kb), `receptor_cassette_class` (`none`, `B`, or `C` when 2 or
   more of the ORFs also carry tblastn precursor homology; best over the array), `receptor_cassette_members` (locus and ORF
-  coordinates, `|`-joined in `loci.tsv`) and `receptor_cassette_caax_orfs` (the most ORFs near one locus). Reuses the existing
+  coordinates, `|`-joined in `loci.tsv`) and `receptor_cassette_max_caax_orfs` (the maximum number of strict-CAAX ORFs within the window of any single locus of the array; not a count of cassettes). Reuses the existing
   strict-CAAX and precursor hits; descriptive only (circular for CAAX-admitted calls, class C a self-hit for species with
   curated precursors, tandem receptors may merge into one locus) and no call, tier, label, confidence or count changes. See
   `docs/receptor-arrays.md`.

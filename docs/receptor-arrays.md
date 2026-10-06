@@ -39,7 +39,9 @@ On each PR call in `detection_report.yaml` (absent on other calls) and as column
 | `receptor_cassette_loci` | number of loci of the array that carry a cassette (class B or C) |
 | `receptor_cassette_class` | `none`, `B` or `C`, the best over the array's loci |
 | `receptor_cassette_members` | one entry per cassette locus: `start-end:strand=orfstart-orfend:strand[+hx],...` (its strict-CAAX ORFs; `+hx` marks an ORF with precursor homology); `\|`-joined in `loci.tsv` |
-| `receptor_cassette_caax_orfs` | the largest number of strict-CAAX ORFs within the window of one locus of the array |
+| `receptor_cassette_max_caax_orfs` | the maximum number of strict-CAAX ORFs within the window of any single locus in the array; not a count of cassettes, and it can be 1 on an array with no cassette |
+
+An ORF lying between two loci of an array is listed under both (no deduplication), so it appears in both loci's members and may be double counted if the per-locus counts are summed.
 
 A PR call that overlaps no array reports nulls (empty list for the members). Top-level `receptor_arrays` lists every array of the
 genome once (including arrays with no call), with `strict_caax_orfs`, `precursor_homology_hits` and

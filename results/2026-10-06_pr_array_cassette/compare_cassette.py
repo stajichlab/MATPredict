@@ -14,7 +14,7 @@ import yaml
 
 from MATPredict.detect.receptor_arrays import LOCI_ARRAY_COLUMNS, loci_columns
 
-CAS = {"receptor_cassette_loci", "receptor_cassette_class", "receptor_cassette_members", "receptor_cassette_caax_orfs"}
+CAS = {"receptor_cassette_loci", "receptor_cassette_class", "receptor_cassette_members", "receptor_cassette_max_caax_orfs"}
 SKIP_TOP = {"receptor_arrays_note"}
 
 

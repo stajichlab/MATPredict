@@ -287,16 +287,16 @@ def test_a_report_without_arrays_writes_an_empty_list(tmp_path):
 def test_loci_columns_for_a_pr_call_and_a_non_pr_call():
     assert LOCI_ARRAY_COLUMNS == ("receptor_array_id", "receptor_array_size", "receptor_array_members", "receptor_array_support",
                                   "receptor_array_support_reasons", "receptor_cassette_loci", "receptor_cassette_class",
-                                  "receptor_cassette_members", "receptor_cassette_caax_orfs")
+                                  "receptor_cassette_members", "receptor_cassette_max_caax_orfs")
     pr = {"receptor_array_id": "P:PR:c1:1-9", "receptor_array_size": 2, "receptor_array_members": ["1-2:+", "5-9:-"],
           "receptor_array_support": SUPPORTED, "receptor_array_support_reasons": ["array_size>=2"],
           "receptor_cassette_loci": 1, "receptor_cassette_class": "B",
-          "receptor_cassette_members": ["1-2:+=10-40:+", "5-9:-=60-90:-+hx"], "receptor_cassette_caax_orfs": 2}
+          "receptor_cassette_members": ["1-2:+=10-40:+", "5-9:-=60-90:-+hx"], "receptor_cassette_max_caax_orfs": 2}
     assert loci_columns(pr) == {
         "receptor_array_id": "P:PR:c1:1-9", "receptor_array_size": 2, "receptor_array_members": "1-2:+|5-9:-",
         "receptor_array_support": SUPPORTED, "receptor_array_support_reasons": "array_size>=2",
         "receptor_cassette_loci": 1, "receptor_cassette_class": "B",
-        "receptor_cassette_members": "1-2:+=10-40:+|5-9:-=60-90:-+hx", "receptor_cassette_caax_orfs": 2}
+        "receptor_cassette_members": "1-2:+=10-40:+|5-9:-=60-90:-+hx", "receptor_cassette_max_caax_orfs": 2}
     assert set(loci_columns({}).values()) == {""}
 
 
@@ -348,7 +348,7 @@ def one(hits):
 
 def test_two_caax_orfs_within_the_window_are_class_b():
     a = one([rec(10_000, 11_000), caax(11_500, 11_600), caax(8_000, 8_100, "-")])
-    assert (a.cassette_loci, a.cassette_class, a.cassette_caax_orfs) == (1, "B", 2)
+    assert (a.cassette_loci, a.cassette_class, a.cassette_max_caax_orfs) == (1, "B", 2)
     assert a.cassette_member_strings() == ["10000-11000:+=8000-8100:-,11500-11600:+"]
 
 
@@ -366,13 +366,13 @@ def test_class_c_needs_two_caax_orfs_that_each_carry_precursor_homology():
 
 def test_no_caax_orf_is_no_cassette():
     a = one([rec(10_000, 11_000), prec(11_500, 11_600)])
-    assert (a.cassette_loci, a.cassette_class, a.cassette_caax_orfs) == (0, "none", 0)
+    assert (a.cassette_loci, a.cassette_class, a.cassette_max_caax_orfs) == (0, "none", 0)
     assert a.cassette_member_strings() == []
 
 
 def test_one_caax_orf_is_not_a_cassette():
     a = one([rec(10_000, 11_000), caax(11_500, 11_600)])
-    assert (a.cassette_loci, a.cassette_class, a.cassette_caax_orfs) == (0, "none", 1)
+    assert (a.cassette_loci, a.cassette_class, a.cassette_max_caax_orfs) == (0, "none", 1)
 
 
 def test_the_window_boundary_is_5_kb_inclusive_from_either_end():
@@ -403,14 +403,14 @@ def test_an_array_with_several_loci_reports_each_cassette_locus():
              rec(30_000, 31_000), caax(60_000, 60_100),
              rec(80_000, 81_000, "-"), caax(82_000, 82_100), caax(83_000, 83_100), prec(82_050, 82_080), prec(83_050, 83_080)])
     assert a.size == 3
-    assert (a.cassette_loci, a.cassette_class, a.cassette_caax_orfs) == (2, "C", 2)
+    assert (a.cassette_loci, a.cassette_class, a.cassette_max_caax_orfs) == (2, "C", 2)
     assert a.cassette_member_strings() == [
         "10000-11000:+=11500-11600:+,12000-12100:+", "80000-81000:-=82000-82100:++hx,83000-83100:++hx"]
 
 
 def test_the_same_caax_orf_near_two_loci_is_listed_for_each_locus():
     a = one([rec(10_000, 11_000), rec(14_000, 15_000), caax(12_000, 12_100), caax(12_500, 12_600)])
-    assert a.cassette_loci == 2 and a.cassette_caax_orfs == 2
+    assert a.cassette_loci == 2 and a.cassette_max_caax_orfs == 2
 
 
 def test_cassette_fields_reach_the_call_the_array_and_the_report(tmp_path):
@@ -418,7 +418,7 @@ def test_cassette_fields_reach_the_call_the_array_and_the_report(tmp_path):
     new, arrs = attach_array_support([_call(start=9_900, end=11_100), _call(family=OTHER)], [_Fam()], out)
     pr, hd = new
     assert pr.receptor_array["receptor_cassette_loci"] == 1 and pr.receptor_array["receptor_cassette_class"] == "B"
-    assert pr.receptor_array["receptor_cassette_caax_orfs"] == 2
+    assert pr.receptor_array["receptor_cassette_max_caax_orfs"] == 2
     assert pr.receptor_array["receptor_cassette_members"] == ["10000-11000:+=11500-11600:+,12000-12100:+"]
     assert hd.receptor_array is None  # absent on a non-PR call
     path = tmp_path / "r.yaml"

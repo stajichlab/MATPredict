@@ -377,17 +377,17 @@ def test_one_caax_orf_is_not_a_cassette():
 
 def test_the_window_boundary_is_5_kb_inclusive_from_either_end():
     assert CASSETTE_WINDOW_BP == 5_000
-    # gap of exactly 5,000 bp counts, 5,001 does not (right of the locus: gap = start - end)
-    inside = one([rec(10_000, 11_000), caax(16_000, 16_100), caax(16_200, 16_300)])
-    outside = one([rec(10_000, 11_000), caax(16_001, 16_100), caax(16_200, 16_300)])
-    assert inside.cassette_class == "B" and outside.cassette_class == "none"
-    assert outside.cassette_caax_orfs == 0
+    base = rec(10_000, 11_000)
+    near = caax(11_500, 11_600)  # well inside
+    # right of the locus: gap = ORF start - locus end; exactly 5,000 counts, 5,001 does not
+    assert one([base, near, caax(16_000, 16_100)]).cassette_class == "B"
+    assert one([base, near, caax(16_001, 16_100)]).cassette_class == "none"
     # left of the locus: gap = locus start - ORF end
-    left_in = one([rec(10_000, 11_000), caax(4_900, 5_000), caax(4_000, 4_100)])
-    left_out = one([rec(10_000, 11_000), caax(4_900, 4_999), caax(4_000, 4_100)])
-    assert left_in.cassette_class == "B" and left_out.cassette_class == "none"
-    # one inside and one just outside is one ORF only
-    assert one([rec(10_000, 11_000), caax(16_000, 16_100), caax(16_001, 16_100)]).cassette_class == "none"
+    assert one([base, near, caax(4_900, 5_000)]).cassette_class == "B"
+    assert one([base, near, caax(4_900, 4_999)]).cassette_class == "none"
+    # the window runs from either end of a multi-kb locus, not from its middle
+    wide = rec(10_000, 17_000)
+    assert one([wide, caax(11_000, 11_100), caax(22_000, 22_100)]).cassette_class == "B"
 
 
 def test_caax_orfs_on_either_strand_count_and_another_contig_does_not():

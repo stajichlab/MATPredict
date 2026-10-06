@@ -265,8 +265,8 @@ for r in pnl.itertuples():
     g = loci[(loci.genome == r.asm) & (loci.contig == r.contig) & (loci.start <= r.end) & (loci.end >= r.start)]
     if g.empty:
         prow.append(dict(asm=r.asm, mating=r.mating, independent=r.independent, found=False)); continue
-    x = g.iloc[0]; a = arr[arr.array == x.array].iloc[0]
-    prow.append(dict(asm=r.asm, mating=r.mating, independent=r.independent, found=True, contig=r.contig, start=r.start, array=x.array,
+    x = g.iloc[0]; a = arr[arr["array"] == x["array"]].iloc[0]
+    prow.append(dict(asm=r.asm, mating=r.mating, independent=r.independent, found=True, contig=r.contig, start=r.start, array=x["array"],
                      array_n=a.n, array_flagged=bool(a.has_flag), array_n_flag=int(a.n_flag), locus_flag=bool(x.flag), in_call=bool(x.in_call),
                      array_covered=bool(a.covered), d_HD=a.d_HD, d_STE20=a.d_STE20))
 PN = pd.DataFrame(prow); PN.to_csv("panel_agaricomycetes.tsv", sep="\t", index=False)
@@ -280,7 +280,7 @@ if len(PN) and PN.found.any():
     for asm in PN.asm.unique():
         a = arr[arr.genome == asm].sort_values(["n", "n_flag"], ascending=False)
         mating_arrays = set(PN[(PN.asm == asm) & (PN.mating == "mating") & PN.found].array)
-        top_a = a.iloc[0].array if len(a) else None
+        top_a = a.iloc[0]["array"] if len(a) else None
         fl = a[a.has_flag]
         lar.append(dict(asm=asm, arrays=len(a), largest_array_n=int(a.n.max()), largest_holds_mating=top_a in mating_arrays,
                         flagged_arrays=len(fl), flagged_hold_mating=int(fl.array.isin(mating_arrays).sum()),

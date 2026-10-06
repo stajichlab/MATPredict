@@ -1,13 +1,13 @@
 scenario	scope	n	note
-S0 current: PR calls (loci)	qpass	129	103 unverified, 26 verified by other evidence
-S1 one call per receptor array (merge calls sharing an array; calls overlapping no scan locus kept)	qpass	126	129 -> 126
-S2 admit CAAX-flagged arrays that no call covers (new arrays)	qpass	91	in 65 genomes; approx chance share (per-order flagged-locus level) 13
-S3 lift `unverified` in orders with chance-share upper 95% <= 0.30	qpass	71	orders: Agaricales, Polyporales, Auriculariales
-S4 calls whose array also has tblastn precursor homology (T and Hx tier)	qpass	48	of 103 unverified calls
-S5 unverified calls whose array has one STE3 locus (no array support)	qpass	29	of 103
-S0 current: PR calls (loci)	allscanned	178	145 unverified, 33 verified by other evidence
-S1 one call per receptor array (merge calls sharing an array; calls overlapping no scan locus kept)	allscanned	175	178 -> 175
-S2 admit CAAX-flagged arrays that no call covers (new arrays)	allscanned	114	in 83 genomes; approx chance share (per-order flagged-locus level) 16
-S3 lift `unverified` in orders with chance-share upper 95% <= 0.30	allscanned	89	orders: Agaricales, Polyporales, Auriculariales
-S4 calls whose array also has tblastn precursor homology (T and Hx tier)	allscanned	59	of 145 unverified calls
-S5 unverified calls whose array has one STE3 locus (no array support)	allscanned	48	of 145
+S0 current: PR calls (loci)	qpass	1044	949 unverified, 95 verified by other evidence
+S1 one call per receptor array (merge calls sharing an array; calls overlapping no scan locus kept)	qpass	1033	1044 -> 1033
+S2 admit CAAX-flagged arrays that no call covers (new arrays)	qpass	631	in 469 genomes; approx chance share (per-order flagged-locus level) 85
+S3 lift `unverified` in orders with chance-share upper 95% <= 0.30	qpass	768	orders: Agaricales, Boletales, Polyporales, Auriculariales
+S4 calls whose array also has tblastn precursor homology (T and Hx tier)	qpass	413	of 949 unverified calls
+S5 unverified calls whose array has one STE3 locus (no array support)	qpass	288	of 949
+S0 current: PR calls (loci)	allscanned	1273	1161 unverified, 112 verified by other evidence
+S1 one call per receptor array (merge calls sharing an array; calls overlapping no scan locus kept)	allscanned	1261	1273 -> 1261
+S2 admit CAAX-flagged arrays that no call covers (new arrays)	allscanned	803	in 601 genomes; approx chance share (per-order flagged-locus level) 108
+S3 lift `unverified` in orders with chance-share upper 95% <= 0.30	allscanned	932	orders: Agaricales, Boletales, Polyporales, Auriculariales
+S4 calls whose array also has tblastn precursor homology (T and Hx tier)	allscanned	507	of 1161 unverified calls
+S5 unverified calls whose array has one STE3 locus (no array support)	allscanned	379	of 1161

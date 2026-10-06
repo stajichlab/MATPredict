@@ -126,6 +126,20 @@ def test_withheld_reason_marks_polish_cap_from_diagnostics(tmp_path):
     assert rows[0]["cand_state"] == "withheld:modelled_gene_bar+polish_capped"
 
 
+def test_polish_cap_read_from_zstd_compressed_diagnostics(tmp_path):
+    # Archived runs keep evidence_diagnostics.jsonl compressed as .jsonl.zst.
+    from MATPredict.db.local_taxonomy import _zstd_compress
+    _write(tmp_path / "cand", "g1",
+           diagnostics=[{"kind": "evidence", "family": "Mucoromycota:MAT", "contig": "c1",
+                         "cluster_start": 100, "cluster_end": 5000, "polish_capped": True}])
+    plain = tmp_path / "cand" / "runs" / "g1" / "evidence_diagnostics.jsonl"
+    plain.with_suffix(".jsonl.zst").write_bytes(
+        _zstd_compress(plain.read_bytes()))
+    plain.unlink()
+    rep = load_reports(tmp_path / "cand")["g1"]
+    assert rep["_capped"] == [("Mucoromycota:MAT", "c1", 100, 5000)]
+
+
 def test_loci_match_by_contig_overlap_not_exact_coordinates(tmp_path):
     _write(tmp_path / "base", "g1", detected=[_call(start=100, end=5000)])
     _write(tmp_path / "cand", "g1", detected=[_call(start=90, end=5600)])

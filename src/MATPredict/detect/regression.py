@@ -25,6 +25,8 @@ from pathlib import Path
 
 import yaml
 
+from MATPredict.db.local_taxonomy import _open_text
+
 #: Default classifier margin shift, in bits, that counts as a change.
 DEFAULT_SCORE_DELTA = 5.0
 
@@ -51,7 +53,10 @@ def load_reports(root: Path) -> dict[str, dict]:
         parts = [p for p in f.parent.relative_to(root).parts if p != "runs"]
         key = "/".join(parts) or f.parent.name
         rep = yaml.safe_load(f.read_text()) or {}
-        rep["_capped"] = _capped_clusters(f.parent / "evidence_diagnostics.jsonl")
+        diag = f.parent / "evidence_diagnostics.jsonl"
+        if not diag.exists() and diag.with_suffix(".jsonl.zst").exists():
+            diag = diag.with_suffix(".jsonl.zst")  # archived runs are compressed
+        rep["_capped"] = _capped_clusters(diag)
         out[key] = rep
     return out
 
@@ -60,7 +65,9 @@ def _capped_clusters(path: Path) -> list[tuple]:
     if not path.exists():
         return []
     capped = []
-    for line in path.read_text().splitlines():
+    with _open_text(path) as fh:
+        lines = fh.read().splitlines()
+    for line in lines:
         try:
             row = json.loads(line)
         except ValueError:

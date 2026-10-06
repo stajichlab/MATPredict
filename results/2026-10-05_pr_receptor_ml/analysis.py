@@ -188,7 +188,7 @@ def fit_predict(name, tr, te, D, ctx):
         return D.pf02076_score.values[te]
     if name.startswith("LR_") or name.startswith("GBM_") or name.startswith("RF_"):
         cols = {"prec": FEAT_PREC, "all": FEAT_PREC + FEAT_MAT + FEAT_PROT, "noprec": FEAT_MAT + FEAT_PROT,
-                "prot": FEAT_PROT, "mat": FEAT_MAT}[name.split("_", 1)[1]]
+                "prot": FEAT_PROT, "mat": FEAT_MAT, "flank": ["log_dFLANK_xo", "n_FLANK_50kb_xo"], "noflank": FEAT_PREC + ["log_dHD_xo", "n_HD_20kb_xo"] + FEAT_PROT, "hd": ["log_dHD_xo", "n_HD_20kb_xo"]}[name.split("_", 1)[1]]
         X = D[cols].values.astype(float)
         if name.startswith("LR_"):
             m = lr(0.3)
@@ -295,12 +295,14 @@ def add_conservation():
     L["cons_maxsim_order"], L["cons_ngenomes_order"] = ms, ng
 
 
-MODELS = ["rule_caax10", "rule_dist", "pf02076_only", "LR_prec", "LR_all", "LR_noprec", "LR_prot", "GBM_all", "RF_all",
+MODELS = ["rule_caax10", "rule_dist", "pf02076_only", "LR_prec", "LR_all", "LR_noprec", "LR_prot", "LR_flank", "LR_noflank", "LR_hd", "GBM_all", "RF_all",
           "kmer2", "kmer3", "alignNN"] + [f"ESM_LR_{m}" for m in EMB] + [f"ESM_kNN_{m}" for m in EMB] + [f"ESMprec_LR_{m}" for m in EMB]
 
 if __name__ == "__main__":
     add_conservation()
     UNI += ["cons_maxsim_order", "cons_ngenomes_order"]
+    if os.environ.get("EXTRA"):
+        MODELS = ["rule_caax10", "LR_flank", "LR_noflank", "LR_hd", "LR_all", "LR_noprec"]
     SETS = {"H": L[L.headline].reset_index(drop=True), "ALL": L.reset_index(drop=True)}
     # sensitivity set: headline without Coprinopsis "other" copies (many receptors in that genome)
     SETS["Hnocc"] = L[L.headline & ~((L.species == "Coprinopsis cinerea") & (L.y == 0))].reset_index(drop=True)
@@ -313,7 +315,7 @@ if __name__ == "__main__":
         print(tag, len(D), D.y.sum(), D.genome.nunique(), flush=True)
         univariate(D, tag)
         for cv in ("LOCO", "LOSO"):
-            run_cv(D, tag, cv, MODELS)
+            run_cv(D, tag + os.environ.get("EXTRA", ""), cv, MODELS)
             print("done", tag, cv, flush=True)
     if only and only != "PROFILE":
         sys.exit(0)

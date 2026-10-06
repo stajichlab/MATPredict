@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -p short -c 8 --mem 16G -t 1:00:00 -J bl_hx
 # run from the worktree copy on HPCC scratch; reads genomes only
-cd "$(dirname "$0")"
+cd "${SLURM_SUBMIT_DIR:-$(dirname "$0")}"
 export SCRATCH=${SCRATCH:-/tmp}
 PY=/bigdata/stajichlab/jstajich/projects/MATPredict/.pixi/envs/default/bin/python
 O=$PWD/hx_out

@@ -82,6 +82,7 @@ from pathlib import Path
 from typing import Callable
 
 from MATPredict.detect.assembly_gap import AssemblyGapAtLocus, find_gaps_at_locus
+from MATPredict.detect.receptor_arrays import attach_array_support, build_receptor_arrays
 from MATPredict.detect.caax import (
     CAAX_METHOD, STATUS_CAAX_ORF, admitted_only_through_scan, caax_precursor_hits, scan_config,
 )
@@ -394,6 +395,11 @@ class DetectionResult:
     the modelled-gene bar) only by counting a strict-CAAX scan precursor
     (`detect.caax`). Read by the CAAX unverified label
     (`verification.label_caax_unverified`)."""
+    receptor_array: dict | None = None
+    """PR calls only: the receptor array this call sits in (`receptor_arrays`):
+    `array_id`, `array_size`, `array_members`, `array_support` and its
+    reasons. A report-only flag, set after every call decision; None for any
+    other family. Never read by a rule."""
 
 
 @dataclass(frozen=True)
@@ -468,6 +474,9 @@ class DetectionOutcome:
     #: Genome-level statements for families that called both idiomorphs
     #: (`two_idiomorphs`; curator's ruling 2026-09-29). Never alters a call.
     two_idiomorphs: list[dict] = field(default_factory=list)
+    #: Every pheromone-receptor array of the genome (`receptor_arrays`), one
+    #: record per array, with the number of reported calls in it. Report only.
+    receptor_arrays: list = field(default_factory=list)
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -3234,6 +3243,12 @@ def run_pipeline(
     # Curator's ruling 2026-10-01 (B9): a report-only cross-lineage class.
     results = _with_idiomorph_class(results, families)
 
+    # Report-only receptor arrays (analysis/2026-10-06_agaricomycetes-pr-arrays.md,
+    # options 1 and 2): after every call decision, so no call, tier or label can
+    # depend on it.
+    results, receptor_arrays = attach_array_support(
+        results, families, build_receptor_arrays(families, hits))
+
     return DetectionOutcome(
         results=results,
         not_detected=not_detected,
@@ -3252,6 +3267,7 @@ def run_pipeline(
         assembly_gaps_at_locus=assembly_gaps,
         zygosity=zygosity,
         two_idiomorphs=two_idiomorphs,
+        receptor_arrays=receptor_arrays,
     )
 
 

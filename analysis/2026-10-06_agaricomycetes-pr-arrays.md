@@ -155,5 +155,13 @@ For the 944 unverified calls, mostly no: 804 (85%) have array support, which agr
 - Repeat the STE20 test with a query set built from Agaricomycete genomes only, and with a second MAT-linked gene chosen blind to this data.
 - A local-density chance model (shuffle CAAX ORFs within gene-matched windows) to bound the chance share.
 
+## Inventory and where to find the data
+
+The protein sequences of the 17,129 STE3-like loci are saved (they had not been before): `results/2026-10-06_agaricomycetes_pr_arrays/inventory/` (README.md describes every file and column).
+- `ste3_loci_proteins.faa.gz` (all 17,129 loci of the 1,853 scanned genomes) and `ste3_loci_proteins_qpass.faa.gz` (the 12,518 loci of the 1,287 quality-passing genomes), from miniprot `--gff` models of each locus's best query; 2,878 (1,991 in the qpass set) are complete models (Met, stop, no internal stop or frameshift), the rest are kept as partial translations.
+- `ste3_loci_table.tsv.gz`: per locus coordinates, best query, identity, completeness, array, CAAX flag, call status and full taxonomy (`qpass` column).
+- Count reconciliation: `loci_all.tsv.gz` has 17,129 rows (all scanned genomes); the 12,518 of this note are the rows with `qpass` (BUSCO >= 70, N50 >= 20 kb, contigs <= 5,000); without the contig limit it is 12,576 loci in 1,292 genomes.
+- Taxonomic distribution tables (loci, arrays, genomes, species by class, order, family; per-genome receptor count by order and family; call status by family) are in the same directory.
+
 ## Files
 `results/2026-10-06_agaricomycetes_pr_arrays/`: `array_verify.py`, `array_verify2.py`, `array_verify3.py`, `contig_lengths.sh`, `scan_out_full.tar.xz`, `v_*.tsv`, `v2_*.tsv`, `v3_summary.txt`, `v_summary.txt`, `v_arrays.tsv.gz`, `v_calls.tsv.gz`, plus the regenerated `order_summary.tsv`, `call_coverage_*.tsv`, `scenarios.tsv`, `array_organisation.tsv`, `flagged_vs_unflagged_arrays.tsv` (full scan, `analyze.py`).

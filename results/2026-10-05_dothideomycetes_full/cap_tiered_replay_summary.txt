@@ -1,0 +1,48 @@
+Tiered rule: polish every admitted cluster with best identity >= T, then top up to 6 polished in total from the rest (current rank)
+cap 6 today: 16281 clusters polished; no cap: 90953
+| T | true loci lost | clusters polished | vs cap 6 | genomes with more than 6 strong clusters | max strong clusters in a genome |
+|---|---|---|---|---|---|
+| 45% | 3 | 16672 | 1.02x | 199 | 13 |
+| 50% | 0 | 16284 | 1.00x | 2 | 8 |
+| 60% | 1 | 16281 | 1.00x | 0 | 5 |
+
+Distribution of the number of admitted clusters with best identity >= 50% per genome: {0: 53, 1: 801, 2: 873, 3: 663, 4: 257, 5: 50, 6: 23, 7: 1, 8: 1} (10 = 10 or more)
+
+True loci whose cluster has best identity < 50% (the divergent ones a floor would cut): genome | species | order | identity | genes | rank under current rule | strong clusters in genome | admitted
+  GCA_030553215.1_ASM3055321v1 | Friedmanniomyces endolithicus | Mycosphaerellales | 39.506 | 4 | 3 | 2 | 38
+  GCA_030553295.1_ASM3055329v1 | Friedmanniomyces endolithicus | Mycosphaerellales | 39.506 | 4 | 3 | 2 | 37
+  GCA_030412055.1_ASM3041205v1 | Friedmanniomyces endolithicus | Mycosphaerellales | 39.506 | 4 | 3 | 2 | 36
+  GCA_054600615.1_NU332_1.0 | Dothideomycetes sp. NU332 |  | 41.026 | 4 | 1 | 3 | 56
+  GCA_001553865.1_ASM155386v1 | Cladosporium sp. BSL10 | Cladosporiales | 42.424 | 4 | 2 | 1 | 37
+  GCA_001553865.1_ASM155386v1 | Cladosporium sp. BSL10 | Cladosporiales | 42.424 | 4 | 2 | 1 | 37
+  GCA_033675295.1_ASM3367529v1 | Vermiconidia calcicola | Mycosphaerellales | 44.186 | 3 | 1 | 1 | 27
+  GCA_033675295.1_ASM3367529v1 | Vermiconidia calcicola | Mycosphaerellales | 44.186 | 3 | 1 | 1 | 27
+  GCA_023085085.1_ASM2308508v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 3 | 1 | 34
+  GCA_023085085.1_ASM2308508v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 3 | 1 | 34
+  GCA_023087565.1_ASM2308756v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 33
+  GCA_023087565.1_ASM2308756v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 33
+  GCA_023089185.1_ASM2308918v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 26
+  GCA_023089185.1_ASM2308918v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 26
+  GCA_023087465.1_ASM2308746v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 31
+  GCA_023087465.1_ASM2308746v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 31
+  GCA_023088125.1_ASM2308812v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 3 | 1 | 32
+  GCA_023088125.1_ASM2308812v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 3 | 1 | 32
+  GCA_023089465.1_ASM2308946v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 3 | 1 | 35
+  GCA_023089465.1_ASM2308946v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 3 | 1 | 35
+  GCA_023089085.1_ASM2308908v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 31
+  GCA_023089085.1_ASM2308908v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 31
+  GCA_023089515.1_ASM2308951v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 31
+  GCA_023089515.1_ASM2308951v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 31
+  GCA_023084645.1_ASM2308464v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 3 | 1 | 34
+  GCA_023084645.1_ASM2308464v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 3 | 1 | 34
+  GCA_023085185.1_ASM2308518v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 4 | 1 | 0 | 35
+  GCA_023085185.1_ASM2308518v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 4 | 1 | 0 | 35
+  GCA_023086915.1_ASM2308691v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 34
+  GCA_023086915.1_ASM2308691v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 34
+  GCA_023089535.1_ASM2308953v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 32
+  GCA_023089535.1_ASM2308953v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 2 | 1 | 32
+  GCA_023088945.1_ASM2308894v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 3 | 2 | 32
+  GCA_023088945.1_ASM2308894v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 3 | 2 | 32
+  GCA_023087555.1_ASM2308755v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 1 | 0 | 28
+  GCA_023087555.1_ASM2308755v1 | Botryosphaeria dothidea | Botryosphaeriales | 44.538 | 3 | 1 | 0 | 28
+  GCA_003012245.1_Microcyclospora_tardicrescens_HJS1936_MTARD_contigs | Microcyclospora tardicrescens | Capnodiales | 49.275 | 3 | 5 | 2 | 63

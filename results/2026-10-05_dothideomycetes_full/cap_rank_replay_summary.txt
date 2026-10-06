@@ -1,0 +1,25 @@
+genomes with diagnostics 2722; true loci mapped to an admitted cluster 2582; true loci with no admitted cluster 0
+admitted clusters per genome: median 33.0, p90 47, max 80; genomes with more than 6: 2689 (99%)
+replay check: top-6 of the current rank agrees with the clusters actually polished in 99.9% of cluster slots
+rank of the true cluster in the 15 lost genomes under the current rank: [7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 10, 10, 10, 12]
+
+Calls (true loci) lost, by ranking rule and cap:
+| rule | cap 6 | cap 10 | cap 15 | cap 20 | cap 30 | cap none |
+|---|---|---|---|---|---|---|
+| current: genes, identity, hits | 17 | 2 | 0 | 0 | 0 | 0 |
+| identity first | 6 | 4 | 0 | 0 | 0 | 0 |
+| strong hit (>=60%) first, then current | 1 | 0 | 0 | 0 | 0 | 0 |
+| strong hit (>=50%) first, then current | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Polishing work (clusters polished, relative to cap 6): cap 6: 16281 (1.00x), cap 10: 27020 (1.66x), cap 15: 40194 (2.47x), cap 20: 52933 (3.25x), cap 30: 74305 (4.56x), cap none: 90953 (5.59x)
+
+Identity floor test (best identity of the cluster): true clusters below t lost vs noise clusters removed
+true clusters 2582: min 39.5, 5th pct 74.6, median 84.1; noise clusters 88371: median 36.2, 95th pct 47.5
+| floor t | true clusters below t | noise clusters below t |
+|---|---|---|
+| 30% | 0 (0.0%) | 9405 (10.6%) |
+| 35% | 0 (0.0%) | 36987 (41.9%) |
+| 40% | 3 (0.1%) | 64036 (72.5%) |
+| 45% | 20 (0.8%) | 80231 (90.8%) |
+| 50% | 21 (0.8%) | 84965 (96.1%) |
+| 60% | 34 (1.3%) | 86889 (98.3%) |

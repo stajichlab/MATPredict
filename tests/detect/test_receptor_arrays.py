@@ -1,4 +1,4 @@
-"""Report-only pheromone-receptor arrays and the `array_support` flag.
+"""Report-only pheromone-receptor arrays and the `receptor_array_support` flag.
 
 Study: analysis/2026-10-06_agaricomycetes-pr-arrays.md, options 1 and 2. STE3-like
 loci on one contig within 50 kb are one array; an array is `supported` when it
@@ -152,8 +152,8 @@ def test_helpers_group_and_merge_directly():
 
 def test_array_id_is_stable_and_names_family_contig_and_span():
     [arr] = arrays([rec(5_000, 6_000), rec(9_000, 9_900)])
-    assert arr.array_id == "P:PR:c1:5000-9900"
-    assert arrays([rec(9_000, 9_900), rec(5_000, 6_000)])[0].array_id == arr.array_id
+    assert arr.receptor_array_id == "P:PR:c1:5000-9900"
+    assert arrays([rec(9_000, 9_900), rec(5_000, 6_000)])[0].receptor_array_id == arr.receptor_array_id
 
 
 # ---- support ------------------------------------------------------------
@@ -222,10 +222,10 @@ def test_a_call_gets_its_array_and_only_that_field_changes():
     out = arrays([rec(1_000, 2_000), rec(20_000, 21_000)])
     call = _call(verification={"status": "unverified", "reason": "x"}, caax_dependent=True)
     [new], [arr] = attach_array_support([call], [_Fam()], out)
-    assert new.receptor_array["array_id"] == out[0].array_id
-    assert new.receptor_array["array_size"] == 2
-    assert new.receptor_array["array_members"] == ["1000-2000:+", "20000-21000:+"]
-    assert new.receptor_array["array_support"] == SUPPORTED
+    assert new.receptor_array["receptor_array_id"] == out[0].receptor_array_id
+    assert new.receptor_array["receptor_array_size"] == 2
+    assert new.receptor_array["receptor_array_members"] == ["1000-2000:+", "20000-21000:+"]
+    assert new.receptor_array["receptor_array_support"] == SUPPORTED
     assert replace(new, receptor_array=None) == call
     assert arr.n_calls == 1
 
@@ -235,7 +235,7 @@ def test_two_calls_in_one_array_list_the_array_once_with_both_calls():
     calls = [_call(start=900, end=2_100), _call(start=19_900, end=21_100)]
     new, arrs = attach_array_support(calls, [_Fam()], out)
     assert len(arrs) == 1 and arrs[0].n_calls == 2
-    assert new[0].receptor_array["array_id"] == new[1].receptor_array["array_id"]
+    assert new[0].receptor_array["receptor_array_id"] == new[1].receptor_array["receptor_array_id"]
 
 
 def test_a_call_that_is_not_pr_is_untouched_and_a_merged_pr_call_is_found():
@@ -244,13 +244,13 @@ def test_a_call_that_is_not_pr_is_untouched_and_a_merged_pr_call_is_found():
     merged = _call(family=FamilyKey("P", "Bbeta"), merged_from=[{"family": "P:PR"}])
     new, _ = attach_array_support([hd, merged], [_Fam()], out)
     assert new[0].receptor_array is None
-    assert new[1].receptor_array["array_size"] == 1
+    assert new[1].receptor_array["receptor_array_size"] == 1
 
 
 def test_a_pr_call_beside_no_array_reports_nulls_not_a_guess():
     other_contig = replace(_call(), contig="c9")
     [new], _ = attach_array_support([other_contig], [_Fam()], arrays([rec(1_000, 2_000)]))
-    assert new.receptor_array["array_id"] is None and new.receptor_array["array_support"] is None
+    assert new.receptor_array["receptor_array_id"] is None and new.receptor_array["receptor_array_support"] is None
 
 
 # ---- report and loci.tsv columns ---------------------------------------
@@ -263,12 +263,12 @@ def test_the_report_carries_call_fields_arrays_and_the_note(tmp_path):
     write_detection_report(outcome, path)
     doc = yaml.safe_load(path.read_text())
     pr, hd = doc["detected"]
-    assert pr["array_id"] == "P:PR:c1:1000-21000" and pr["array_size"] == 2
-    assert pr["array_support"] == SUPPORTED
-    assert pr["array_support_reasons"] == ["array_size>=2"]
-    assert not any(k.startswith("array_") for k in hd)
+    assert pr["receptor_array_id"] == "P:PR:c1:1000-21000" and pr["receptor_array_size"] == 2
+    assert pr["receptor_array_support"] == SUPPORTED
+    assert pr["receptor_array_support_reasons"] == ["array_size>=2"]
+    assert not any(k.startswith("receptor_array_") for k in hd)
     [a] = doc["receptor_arrays"]
-    assert a["calls"] == 1 and a["array_members"] == ["1000-2000:+", "20000-21000:+"]
+    assert a["calls"] == 1 and a["receptor_array_members"] == ["1000-2000:+", "20000-21000:+"]
     assert "does not establish" in doc["receptor_arrays_note"]
     assert "both mating and non-mating" in doc["receptor_arrays_note"]
     assert doc["receptor_arrays_note"] == RECEPTOR_ARRAYS_NOTE
@@ -281,13 +281,13 @@ def test_a_report_without_arrays_writes_an_empty_list(tmp_path):
 
 
 def test_loci_columns_for_a_pr_call_and_a_non_pr_call():
-    assert LOCI_ARRAY_COLUMNS == ("array_id", "array_size", "array_members", "array_support",
-                                  "array_support_reasons")
-    pr = {"array_id": "P:PR:c1:1-9", "array_size": 2, "array_members": ["1-2:+", "5-9:-"],
-          "array_support": SUPPORTED, "array_support_reasons": ["array_size>=2"]}
+    assert LOCI_ARRAY_COLUMNS == ("receptor_array_id", "receptor_array_size", "receptor_array_members", "receptor_array_support",
+                                  "receptor_array_support_reasons")
+    pr = {"receptor_array_id": "P:PR:c1:1-9", "receptor_array_size": 2, "receptor_array_members": ["1-2:+", "5-9:-"],
+          "receptor_array_support": SUPPORTED, "receptor_array_support_reasons": ["array_size>=2"]}
     assert loci_columns(pr) == {
-        "array_id": "P:PR:c1:1-9", "array_size": 2, "array_members": "1-2:+|5-9:-",
-        "array_support": SUPPORTED, "array_support_reasons": "array_size>=2"}
+        "receptor_array_id": "P:PR:c1:1-9", "receptor_array_size": 2, "receptor_array_members": "1-2:+|5-9:-",
+        "receptor_array_support": SUPPORTED, "receptor_array_support_reasons": "array_size>=2"}
     assert set(loci_columns({}).values()) == {""}
 
 
@@ -323,8 +323,8 @@ def test_the_pipeline_flags_the_call_and_changes_nothing_else(tmp_path, monkeypa
     assert (a.confidence, a.verification) == (b.confidence, b.verification)
     assert with_arrays.suppressed_loci == without.suppressed_loci
     # the flag: one receptor locus, one CAAX ORF -> an unsupported singleton
-    assert a.receptor_array["array_size"] == 1
-    assert a.receptor_array["array_support"] == UNSUPPORTED
+    assert a.receptor_array["receptor_array_size"] == 1
+    assert a.receptor_array["receptor_array_support"] == UNSUPPORTED
     assert a.verification["status"] == "unverified"
     assert [x.n_calls for x in with_arrays.receptor_arrays] == [1]
     assert without.receptor_arrays == []

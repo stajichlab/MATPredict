@@ -20,14 +20,14 @@ release completed.
 - Report-only pheromone-receptor arrays (`detect.receptor_arrays`; study
   `analysis/2026-10-06_agaricomycetes-pr-arrays.md`, options 1 and 2). The STE3-like receptor hits of every family
   with a `pheromone_precursor_scan` (Basidiomycota PR) are merged per strand into loci and grouped into arrays (same
-  contig, gap of 50 kb or less); a locus needs hits covering 50% or more of one reference receptor and a span of 8 kb or less. Each PR call gains `array_id`, `array_size`, `array_members`, `array_support`
+  contig, gap of 50 kb or less); a locus needs hits covering 50% or more of one reference receptor and a span of 8 kb or less. Each PR call gains `receptor_array_id`, `receptor_array_size`, `receptor_array_members`, `receptor_array_support`
   (`supported` when the array has 2 or more loci, a pheromone-precursor homology hit, or 2 or more distinct strict-CAAX
-  ORFs; else `unsupported`) and `array_support_reasons`. `detection_report.yaml` gains `receptor_arrays` (each array
+  ORFs; else `unsupported`) and `receptor_array_support_reasons`. `detection_report.yaml` gains `receptor_arrays` (each array
   once, with its call count) and `receptor_arrays_note`. A flag only: calls, tiers, confidence, verification labels and
   counts are unchanged. Arrays hold mating and non-mating receptors (paralogs sit beside the mating copies in
   *Coprinopsis cinerea* and *Schizophyllum commune*), so membership does not show that a locus is a mating receptor.
   The per-locus table (`loci.tsv`, written by campaign scripts) takes the same five columns; `receptor_arrays.loci_columns`
-  builds them from a report entry. See `docs/receptor-arrays.md`.
+  builds them from a report entry. Per-array keys of `receptor_arrays` use the same `receptor_array_*` names. Arrays are for the PR family only (B-alpha/B-beta receptors form arrays only when merged into a PR call; B-locus sublocus structure is a planned assessment); the pheromone receptors are part of the B mating-type locus in tetrapolar Agaricomycetes. See `docs/receptor-arrays.md`.
 - Offline NCBI taxonomy. `matpredict curate-db build-taxonomy` writes a slim
   all-taxa table (taxid, parent, rank, genetic code, scientific name; merged
   ids) from an NCBI taxdump directory, `taxdmp_*.zip` or `taxdump.tar.gz`

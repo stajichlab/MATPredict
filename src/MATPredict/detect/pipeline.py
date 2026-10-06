@@ -397,7 +397,7 @@ class DetectionResult:
     (`verification.label_caax_unverified`)."""
     receptor_array: dict | None = None
     """PR calls only: the receptor array this call sits in (`receptor_arrays`):
-    `array_id`, `array_size`, `array_members`, `array_support` and its
+    `receptor_array_id`, `receptor_array_size`, `receptor_array_members`, `receptor_array_support` and its
     reasons. A report-only flag, set after every call decision; None for any
     other family. Never read by a rule."""
 

@@ -1,9 +1,9 @@
-# Receptor arrays (`array_support`): before/after check
+# Receptor arrays (`receptor_array_support`): before/after check
 
 Branch `pr-array-support`; baseline = `origin/main` 2d1860a, candidate = this branch. Report-only change.
 
 - `compare_calls.py`: reads two sets of `detection_report.yaml`, checks every `detected` entry and every top-level key
-  (bar the two new ones) is identical once the `array_*` fields are dropped, writes `loci.tsv` with the five array
+  (bar the two new ones) is identical once the `receptor_array_*` fields are dropped, writes `loci.tsv` with the five array
   columns (`receptor_arrays.loci_columns`) and a summary.
 - `summary_final37.txt`, `loci_final37.tsv`: final code (df08f63) on the 37 Basidiomycota genomes (the 33 of the regression
   panel plus 6 Agaricomycete study-panel genomes, 2 overlap). 57 calls on each side, 0 differences outside the array fields.

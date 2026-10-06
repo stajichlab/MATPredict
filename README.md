@@ -392,8 +392,8 @@ Known limits (open items in [analysis/open-questions.md](analysis/open-questions
 - In Mucoromycota, *Absidia* flanking genes are often off-scaffold, and the
   gene order of the Lichtheimiaceae is not yet known.
 - Basidiomycota pheromone-receptor calls that depend only on the CAAX motif are
-  marked unverified. Each pheromone-receptor call also carries `array_id`,
-  `array_size`, `array_members` and an `array_support` flag; receptor arrays
+  marked unverified. Each pheromone-receptor call also carries `receptor_array_id`,
+  `receptor_array_size`, `receptor_array_members` and an `receptor_array_support` flag; receptor arrays
   occur for mating and non-mating receptors alike, so membership does not make
   a locus a mating receptor ([docs/receptor-arrays.md](docs/receptor-arrays.md)).
 - A two-idiomorph result is a flag for review. It can come from homothallism,

@@ -5,7 +5,7 @@ Study: analysis/2026-10-06_agaricomycetes-pr-arrays.md (option 1 and 2). In
 loci and the rest are tandem arrays of 2-10 loci, and the same array was
 reported as up to 14 separate calls. This module groups the receptor hits of
 every family with a `pheromone_precursor_scan` (the PR family) into arrays and
-attaches to each PR call the array it sits in and an `array_support` flag.
+attaches to each PR call the array it sits in and an `receptor_array_support` flag.
 
 A FLAG, never a gate. Nothing here changes whether a locus is called, its
 confidence, its verification label or the call counts; it runs after every
@@ -14,7 +14,7 @@ call decision and only adds fields to the report.
 Arrays occur for BOTH mating and non-mating receptors. The study found arrays
 that hold the mating receptors beside paralogs (Coprinopsis cinerea,
 Schizophyllum commune), so array membership does not establish that a locus is
-a mating receptor, and `array_support` says only how much evidence sits behind
+a mating receptor, and `receptor_array_support` says only how much evidence sits behind
 the array, not which copy mates.
 
 Definitions (ported from results/2026-10-06_agaricomycetes_pr_arrays/):
@@ -62,7 +62,7 @@ RECEPTOR_ARRAYS_NOTE = (
     "Receptor arrays occur for both mating and non-mating STE3-like receptors "
     "(the study found arrays holding paralogs beside the mating receptors in "
     "Coprinopsis cinerea and Schizophyllum commune), so array membership does "
-    "not establish that a locus is a mating receptor. array_support is a flag "
+    "not establish that a locus is a mating receptor. receptor_array_support is a flag "
     "on the evidence behind an array; it never changes a call, its confidence "
     "or its verification label."
 )
@@ -70,7 +70,7 @@ RECEPTOR_ARRAYS_NOTE = (
 #: Columns a per-locus table (`loci.tsv`) adds for a PR call; None/empty for
 #: every other call.
 LOCI_ARRAY_COLUMNS = (
-    "array_id", "array_size", "array_members", "array_support", "array_support_reasons",
+    "receptor_array_id", "receptor_array_size", "receptor_array_members", "receptor_array_support", "receptor_array_support_reasons",
 )
 
 
@@ -89,7 +89,7 @@ class ReceptorArray:
     window_bp: int = 10_000
 
     @property
-    def array_id(self) -> str:
+    def receptor_array_id(self) -> str:
         return f"{self.family}:{self.contig}:{self.start}-{self.end}"
 
     @property
@@ -101,17 +101,17 @@ class ReceptorArray:
 
     def as_report(self) -> dict:
         return {
-            "array_id": self.array_id,
+            "receptor_array_id": self.receptor_array_id,
             "family": self.family,
             "contig": self.contig,
             "start": self.start,
             "end": self.end,
-            "array_size": self.size,
-            "array_members": self.member_strings(),
+            "receptor_array_size": self.size,
+            "receptor_array_members": self.member_strings(),
             "strict_caax_orfs": self.n_caax_orfs,
             "precursor_homology_hits": self.n_precursor_hits,
-            "array_support": self.support,
-            "array_support_reasons": list(self.reasons),
+            "receptor_array_support": self.support,
+            "receptor_array_support_reasons": list(self.reasons),
             "calls": self.n_calls,
         }
 
@@ -305,14 +305,14 @@ def attach_array_support(results, families, arrays: list[ReceptorArray]):
             continue
         i = _best_array(r, arrays)
         if i is None:
-            doc = {"array_id": None, "array_size": None, "array_members": [],
-                   "array_support": None, "array_support_reasons": []}
+            doc = {"receptor_array_id": None, "receptor_array_size": None, "receptor_array_members": [],
+                   "receptor_array_support": None, "receptor_array_support_reasons": []}
         else:
             calls[i] += 1
             a = arrays[i]
-            doc = {"array_id": a.array_id, "array_size": a.size,
-                   "array_members": a.member_strings(), "array_support": a.support,
-                   "array_support_reasons": list(a.reasons)}
+            doc = {"receptor_array_id": a.receptor_array_id, "receptor_array_size": a.size,
+                   "receptor_array_members": a.member_strings(), "receptor_array_support": a.support,
+                   "receptor_array_support_reasons": list(a.reasons)}
         new.append(replace(r, receptor_array=doc))
     return new, [replace(a, n_calls=n) for a, n in zip(arrays, calls)]
 
@@ -320,15 +320,15 @@ def attach_array_support(results, families, arrays: list[ReceptorArray]):
 def loci_columns(detected_doc: dict) -> dict:
     """The `LOCI_ARRAY_COLUMNS` cells for one `detected` entry of a report.
 
-    `array_members` and `array_support_reasons` are `|`-joined, as
+    `receptor_array_members` and `receptor_array_support_reasons` are `|`-joined, as
     `genes_found` is in loci.tsv. Empty strings for a non-PR call.
     """
-    if "array_id" not in detected_doc:
+    if "receptor_array_id" not in detected_doc:
         return {c: "" for c in LOCI_ARRAY_COLUMNS}
     return {
-        "array_id": detected_doc["array_id"] or "",
-        "array_size": "" if detected_doc["array_size"] is None else detected_doc["array_size"],
-        "array_members": "|".join(detected_doc.get("array_members") or []),
-        "array_support": detected_doc["array_support"] or "",
-        "array_support_reasons": "|".join(detected_doc.get("array_support_reasons") or []),
+        "receptor_array_id": detected_doc["receptor_array_id"] or "",
+        "receptor_array_size": "" if detected_doc["receptor_array_size"] is None else detected_doc["receptor_array_size"],
+        "receptor_array_members": "|".join(detected_doc.get("receptor_array_members") or []),
+        "receptor_array_support": detected_doc["receptor_array_support"] or "",
+        "receptor_array_support_reasons": "|".join(detected_doc.get("receptor_array_support_reasons") or []),
     }

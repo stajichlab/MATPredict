@@ -4,7 +4,7 @@
 Reads two sets of detection reports (baseline = origin/main, candidate = the branch),
 checks that every `detected` entry and every `suppressed_loci` entry is identical once the
 array fields are dropped, and writes loci.tsv (candidate calls with the five array columns
-added through `receptor_arrays.loci_columns`) plus an array_support summary.
+added through `receptor_arrays.loci_columns`) plus an receptor_array_support summary.
 
 Usage: compare_calls.py OUTDIR BASE_RUNS_DIR CAND_RUNS_DIR [BASE_RUNS_DIR CAND_RUNS_DIR ...]
 Each RUNS_DIR holds <genome>/detection_report.yaml (or <chunk>/runs/<genome>/...).
@@ -15,7 +15,7 @@ import yaml
 
 from MATPredict.detect.receptor_arrays import LOCI_ARRAY_COLUMNS, loci_columns
 
-ARRAY_KEYS = {"array_id", "array_size", "array_members", "array_support", "array_support_reasons"}
+ARRAY_KEYS = {"receptor_array_id", "receptor_array_size", "receptor_array_members", "receptor_array_support", "receptor_array_support_reasons"}
 TOP_NEW = {"receptor_arrays", "receptor_arrays_note"}
 
 
@@ -64,8 +64,8 @@ def main():
                    "genes_found": "|".join(x.get("genes_found") or [])}
             row.update(loci_columns(x))
             rows.append(row)
-            if "array_id" in x:
-                sup[(row["verification"] or "none", row["array_support"] or "no_array")] += 1
+            if "receptor_array_id" in x:
+                sup[(row["verification"] or "none", row["receptor_array_support"] or "no_array")] += 1
         for a in c.get("receptor_arrays") or []:
             arr_rows.append({"genome": g, **{k: (",".join(v) if isinstance(v, list) else v) for k, v in a.items()}})
     cols = ["genome", "family", "contig", "start", "end", "confidence", "locus_class", "detection_pass",
@@ -83,9 +83,9 @@ def main():
             fo.write(f"  {g}\t{d}\n")
         fo.write(f"PR calls with array fields: {sum(sup.values())}\n")
         for (v, s), n in sorted(sup.items()):
-            fo.write(f"  verification={v}\tarray_support={s}\t{n}\n")
+            fo.write(f"  verification={v}\treceptor_array_support={s}\t{n}\n")
         fo.write(f"arrays: {len(arr_rows)}, by size: "
-                 f"{dict(sorted(collections.Counter(int(a['array_size']) for a in arr_rows).items()))}\n")
+                 f"{dict(sorted(collections.Counter(int(a['receptor_array_size']) for a in arr_rows).items()))}\n")
     print(open(os.path.join(outdir, "summary.txt")).read())
     sys.exit(1 if diffs else 0)
 

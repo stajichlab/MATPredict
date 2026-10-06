@@ -83,18 +83,20 @@ def test_the_cli_defaults_to_six_and_zero_turns_it_off():
     assert _polish_cap_from_args(off) is None
 
 
+# These tests are about the cap and its rank, so they turn the identity tier off
+# (`polish_strong_identity=None`); the tier has its own tests in test_polish_strong_tier.py.
 def test_a_cap_polishes_only_the_top_ranked_clusters(tmp_path):
-    _, contigs = _run(tmp_path, max_polished_clusters_per_family=2)
+    _, contigs = _run(tmp_path, max_polished_clusters_per_family=2, polish_strong_identity=None)
     assert contigs == {"c1", "c2"}          # c3: fewest genes tied with c2, lower identity
 
 
 def test_a_capped_cluster_is_not_reported(tmp_path):
-    outcome, _ = _run(tmp_path, max_polished_clusters_per_family=1)
+    outcome, _ = _run(tmp_path, max_polished_clusters_per_family=1, polish_strong_identity=None)
     assert {r.contig for r in outcome.results} == {"c1"}
 
 
 def test_diagnostics_mark_the_capped_clusters(tmp_path):
-    _run(tmp_path, max_polished_clusters_per_family=1)
+    _run(tmp_path, max_polished_clusters_per_family=1, polish_strong_identity=None)
     rows = [json.loads(line) for line in (tmp_path / "ed.jsonl").read_text().splitlines()]
     ev = {r["contig"]: r for r in rows if r["kind"] == "evidence"}
     assert ev["c1"]["admitted"] and not ev["c1"]["polish_capped"]

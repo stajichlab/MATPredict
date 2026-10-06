@@ -697,6 +697,24 @@ BELOW_FRACTION_FLOOR = "below_fraction_floor"
 #: calls, and the mixed rank lost calls either single rank kept.
 DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY = 6
 
+#: Every admitted cluster whose best identity (any of the family's hits, superseded
+#: cross-hits included, as in `_polish_rank`) is at or above this percentage is
+#: polished, even past the cap; the remaining slots up to the cap are filled from the
+#: rest in the usual rank. None turns the tier off (the plain cap). Why: the rank above
+#: puts breadth before strength, so a region that hits three genes at 35-45% outranks a
+#: true locus that hits two genes at ~100%. After the Dothideomycete records were added
+#: (more admitted clusters: median 33 per genome) the true locus ranked 7th to 12th in
+#: 15 genomes and was never polished, 10 of them Zymoseptoria including the IPO323
+#: reference (analysis/2026-10-05_dothideomycetes-full-run.md). Measured by replay over
+#: 2,722 Dothideomycete genomes and 2,582 true loci: this rule loses 0 true loci at the
+#: same polishing work as the plain cap (16,284 against 16,281 clusters); the plain cap
+#: loses 17, a cap of 15 needs 2.5x the work. Genomes have 0-8 clusters at or above 50%
+#: (2 of 2,722 above 6), so the tier rarely exceeds the cap. Calibrated on
+#: Dothideomycetes only; true loci below 50% (21 of 2,582, mostly Botryosphaeria
+#: dothidea at 44.5%) are kept by the top-up. The cap's "never more than N per family"
+#: no longer holds: a genome with more than N strong clusters polishes all of them.
+DEFAULT_POLISH_STRONG_IDENTITY = 50.0
+
 #: The permissive floor the evidence diagnostics enumerate candidates with:
 #: every family with >=1 own hit in the cluster, of any gene, any role, any
 #: identity. This is the retired `_families_with_a_foothold` behavior, and it
@@ -841,14 +859,38 @@ def rank_for_polish(members, family_key, strong) -> list:
                   + _polish_rank(c, family_key))
 
 
-def select_polish_clusters(by_family, cap: int, strong) -> set[tuple[int, FamilyKey]]:
-    """The (cluster, family) pairs allowed to be polished: the top `cap` of each
-    family in `rank_for_polish` order. Never more than `cap` per family."""
-    return {
-        (id(c), key)
-        for key, members in by_family.items()
-        for c in rank_for_polish(members, key, strong)[:cap]
-    }
+def _best_identity(cluster, family_key) -> float:
+    """The best identity among this family's hits in `cluster`, superseded
+    cross-hits included (the same hits `_polish_rank` counts)."""
+    return max((h.identity for h in cluster.hits if h.family_key == family_key), default=0.0)
+
+
+def select_polish_clusters(by_family, cap: int, strong,
+                           strong_identity: float | None = None) -> set[tuple[int, FamilyKey]]:
+    """The (cluster, family) pairs allowed to be polished.
+
+    Without `strong_identity` (None): the top `cap` of each family in
+    `rank_for_polish` order, never more than `cap` per family.
+
+    With `strong_identity` (a percentage): every cluster whose best identity is at
+    or above it, then the remaining slots up to `cap` from the rest in
+    `rank_for_polish` order. A family with more strong clusters than `cap` polishes
+    all of them; one with fewer polishes exactly `cap` (or all, if it has fewer
+    admitted). The strong tier is ordered by the same rank, and the top-up keeps
+    the strong-fragment (V3) preference, so with no strong cluster this is the
+    plain cap."""
+    chosen = set()
+    for key, members in by_family.items():
+        ranked = rank_for_polish(members, key, strong)
+        if strong_identity is None:
+            picked = ranked[:cap]
+        else:
+            tier = [c for c in ranked if _best_identity(c, key) >= strong_identity]
+            tier_ids = {id(c) for c in tier}
+            rest = [c for c in ranked if id(c) not in tier_ids]
+            picked = tier + rest[:max(0, cap - len(tier))]
+        chosen.update((id(c), key) for c in picked)
+    return chosen
 
 
 def _own_live_hits(cluster, family_key):
@@ -1934,6 +1976,10 @@ def run_pipeline(
     #: left unpolished and so cannot clear the modelled-gene bar. None = no cap.
     #: See `DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY` for the measured default.
     max_polished_clusters_per_family: int | None = DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY,
+    #: With the cap on, also polish every admitted cluster whose best identity is
+    #: at or above this percentage, even past the cap (the tier above the cap).
+    #: None = the plain cap. See `DEFAULT_POLISH_STRONG_IDENTITY`.
+    polish_strong_identity: float | None = DEFAULT_POLISH_STRONG_IDENTITY,
     #: Curated records withheld from THIS run, for leave-one-out recall. The
     #: caller must build `reference_fasta` with the same set (see
     #: `reference_fasta.build_reference_fasta`); this parameter additionally
@@ -2201,7 +2247,8 @@ def run_pipeline(
         # the same cap. Families without a classifier keep the plain rank.
         strong = strong_fragment_scores(by_family, families, genome_fasta=genome_fasta,
                                         genetic_code=genetic_code)
-        polish_allowed = select_polish_clusters(by_family, max_polished_clusters_per_family, strong)
+        polish_allowed = select_polish_clusters(by_family, max_polished_clusters_per_family, strong,
+                                                polish_strong_identity)
     for cluster in clusters:
         admitted_families = _families_meeting_evidence_floor(cluster, families, evidence_floor)
         capped_keys = set()

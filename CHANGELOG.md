@@ -6,6 +6,16 @@ release completed.
 
 ## [Unreleased]
 
+### Changed
+- The polish cap now has an identity tier. With the default cap of 6 per family, every admitted cluster whose best
+  identity is 50% or more is polished even past the cap, and the remaining slots are filled in the usual rank
+  (distinct genes, identity, hits); `--polish-strong-identity PCT` sets the threshold, 0 restores the plain cap. The plain
+  rank put a true locus hitting 2 genes at ~100% behind six noise regions hitting 3 genes at 33-43%, so after the
+  Dothideomycete records were added 15 genomes (10 *Zymoseptoria*, including IPO323) lost their call to the cap. Replay over
+  2,722 Dothideomycete genomes and 2,582 true loci: 0 lost (the plain cap loses 17) at the same polishing work (16,284 against
+  16,281 clusters); a cap of 15 would need 2.5 times the work. A genome with more than 6 strong clusters now polishes all of
+  them (2 of 2,722). Calibrated on Dothideomycetes; see `analysis/2026-10-05_dothideomycetes-full-run.md`.
+
 ### Added
 - Offline NCBI taxonomy. `matpredict curate-db build-taxonomy` writes a slim
   all-taxa table (taxid, parent, rank, genetic code, scientific name; merged

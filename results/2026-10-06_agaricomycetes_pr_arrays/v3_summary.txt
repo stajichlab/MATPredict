@@ -1,0 +1,61 @@
+
+== v_scenarios_by_gap.tsv
+ gap_kb  arrays  S0_calls  S1_one_per_array  S2_uncovered_flagged  S2_size_ge2  unverified_single_locus  unverified_array_ge2  arrays_with_gt1_call
+     10   10294      1039              1237                   691          212                      380                   555                     0
+     25    9745      1039              1057                   648          278                      323                   612                     0
+     50    9436      1039              1028                   627          289                      284                   651                    14
+    100    9207      1039              1012                   613          291                      257                   678                    27
+    200    9010      1039              1004                   603          292                      241                   694                    35
+
+== v_call_tiers.tsv
+                                            tier   n
+                                unverified calls 944
+                            array >= 2 STE3 loci 651
+       precursor homology (tblastn) within 10 kb 414
+              >= 2 strict-CAAX ORFs within 10 kb 501
+              any of the three (array-supported) 804
+  none (single locus, one CAAX ORF, no homology) 140
+         none, receptor + CAAX only gene content  72
+
+== v_call_tiers_by_order.tsv
+          order  unverified  supported  unsupported
+     Agaricales         577        541           36
+ Auriculariales          13         13            0
+      Boletales          58         55            3
+ Cantharellales          99         26           73
+Hymenochaetales          13         13            0
+    Polyporales         116        105           11
+     Russulales          23         20            3
+   other orders          45         31           14
+
+chance share (expected/observed flagged) by array size and CAAX multiplicity, all arrays
+  size 1: flagged 628, expected 184, share 0.29
+  size 2: flagged 454, expected 54, share 0.12
+  size>=3: flagged 551, expected 61, share 0.11
+  size 1 with >=2 CAAX ORFs: flagged 179, expected 10.7
+
+== v_flagged_arrays_per_genome.tsv
+          count_per_genome  zero  one  two  three_plus  genomes
+            flagged arrays   281  561  330         115     1287
+flagged arrays of >=2 loci   482  633  151          21     1287
+flagged arrays of >=3 loci   772  480   34           1     1287
+
+== v_S2_genome_effect.tsv
+                            rule  arrays  genomes_new_first_call  genomes_extra_call
+ S2 all uncovered flagged arrays     627                     245                 221
+                   S2b size >= 2     289                     178                  83
+S2c flagged + precursor homology     156                     103                  43
+            S2d size >= 2 AND Hx     123                      89                  28
+genomes without a PR call: 521 of 1287 ; with >=1 flagged array (any): 245
+
+== v_S2_by_order.tsv
+          order  S2  S2b_size_ge2  S2c_Hx  S2d_both
+     Agaricales 463           225     139       111
+ Auriculariales   0             0       0         0
+      Boletales  80            40       9         7
+ Cantharellales   5             0       0         0
+Hymenochaetales   2             0       0         0
+    Polyporales  40             8       6         3
+     Russulales  36            16       2         2
+   other orders   1             0       0         0
+done

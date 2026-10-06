@@ -1,0 +1,287 @@
+/private/tmp/claude-501/venv/lib/python3.14/site-packages/statsmodels/stats/contingency_tables.py:1123: RuntimeWarning: divide by zero encountered in scalar divide
+  odds_ratio = np.sum(self._ad / self._n) / np.sum(self._bc / self._n)
+/private/tmp/claude-501/venv/lib/python3.14/site-packages/numpy/lib/_nanfunctions_impl.py:1592: RuntimeWarning: Mean of empty slice
+  return np.nanmean(a, axis, out=out, keepdims=keepdims)
+genomes with contig lengths: 1853
+
+== v_sample.tsv
+          order  genomes_all  species_all  scanned  quality_pass  plus_contigs_le5000  species_ok  one_per_species  busco_median  n50_median_kb  contigs_median
+     Agaricales          824          385      823           679                  676         313              313         99.00            273           686.5
+      Boletales          509          347      509           183                  182         143              143         98.30             60          1518.5
+    Polyporales          198          113      198           175                  175         107              107         99.20            858           173.0
+ Cantharellales           99           18       99            77                   77          14               14         97.10            346           724.0
+     Russulales           92           72       92            77                   76          60               60         98.70            479           341.0
+Hymenochaetales           55           30       55            47                   47          29               29         99.00           2338            41.0
+ Auriculariales           20            8       20            14                   14           8                8         97.70           1858            79.0
+   other orders           57           38       57            40                   40          31               31         98.65            640           372.5
+            ALL         1854         1011     1853          1292                 1287         705              705         98.80            327           563.0
+note: qpass = BUSCO complete >= 70 and N50 >= 20 kb; contigs <= 5000 removes 5 genomes
+
+B. my arrays (gap 50 kb) reproduce analyze.py partition on 12518 loci: True
+loci overlapping the previous locus (opposite strand): 386 of 12518 (3.1%)
+
+== v_gap_sensitivity.tsv
+ gap_kb  genomes  loci  arrays  arrays_per_genome  singleton_arrays_pct  loci_in_arrays_ge2_pct  largest_median  flagged_arrays  flagged_pct_of_arrays
+     10     1287 12518   10294               8.00                  84.8                    30.3             2.0            1787                   17.4
+     25     1287 12518    9745               7.57                  81.6                    36.4             2.0            1672                   17.2
+     50     1287 12518    9436               7.33                  80.2                    39.5             2.0            1633                   17.3
+    100     1287 12518    9207               7.15                  79.3                    41.7             3.0            1606                   17.4
+    200     1287 12518    9010               7.00                  78.0                    43.9             3.0            1588                   17.6
+
+== v_clustering_vs_null.tsv
+ gap_kb           order  loci  obs_frac_loci_in_arrays_ge2  null_mean  null_min  null_max
+     10             ALL 12518                        0.303      0.124     0.120     0.128
+     10      Agaricales  7032                        0.310      0.132     0.126     0.138
+     10       Boletales  1450                        0.268      0.125     0.112     0.146
+     10     Polyporales  1473                        0.407      0.129     0.116     0.142
+     10  Cantharellales   674                        0.131      0.049     0.037     0.058
+     10      Russulales   993                        0.319      0.150     0.137     0.168
+     10 Hymenochaetales   425                        0.224      0.047     0.026     0.071
+     10  Auriculariales    85                        0.247      0.025     0.000     0.047
+     50             ALL 12518                        0.395      0.226     0.222     0.229
+     50      Agaricales  7032                        0.420      0.239     0.234     0.244
+     50       Boletales  1450                        0.313      0.202     0.192     0.214
+     50     Polyporales  1473                        0.487      0.244     0.237     0.248
+     50  Cantharellales   674                        0.166      0.107     0.091     0.123
+     50      Russulales   993                        0.422      0.289     0.273     0.309
+     50 Hymenochaetales   425                        0.292      0.149     0.129     0.169
+     50  Auriculariales    85                        0.388      0.075     0.024     0.129
+    200             ALL 12518                        0.439      0.338     0.330     0.341
+    200      Agaricales  7032                        0.467      0.353     0.344     0.362
+    200       Boletales  1450                        0.332      0.275     0.266     0.283
+    200     Polyporales  1473                        0.501      0.378     0.358     0.396
+    200  Cantharellales   674                        0.218      0.180     0.166     0.194
+    200      Russulales   993                        0.465      0.401     0.384     0.428
+    200 Hymenochaetales   425                        0.435      0.313     0.278     0.348
+    200  Auriculariales    85                        0.400      0.168     0.106     0.247
+
+== v_array_chance_by_order.tsv
+          order                 flag_def  arrays  observed_flagged  expected_by_chance  chance_share    lo    hi
+     Agaricales T within 10kb (pipeline)    5232              1035               144.6         0.140 0.117 0.167
+      Boletales T within 10kb (pipeline)    1201               136                31.6         0.232 0.180 0.314
+    Polyporales T within 10kb (pipeline)     964               227                47.8         0.210 0.173 0.252
+ Cantharellales T within 10kb (pipeline)     610               100                27.1         0.271 0.198 0.618
+     Russulales T within 10kb (pipeline)     716                65                21.8         0.336 0.249 0.461
+Hymenochaetales T within 10kb (pipeline)     346                13                10.8         0.834 0.485 2.337
+ Auriculariales T within 10kb (pipeline)      64                13                 3.2         0.249 0.177 0.356
+   other orders T within 10kb (pipeline)     303                44                11.0         0.251 0.172 0.354
+            ALL T within 10kb (pipeline)    9436              1633               298.0         0.182 0.158 0.209
+
+== v_flag_definition_sensitivity.tsv
+          order          flag_def  arrays  observed_flagged  expected_by_chance  chance_share    lo           hi
+     Agaricales      T within 5kb    5232               986               129.3         0.131 0.093 1.930000e-01
+     Agaricales     T within 10kb    5232              1035               144.6         0.140 0.118 1.670000e-01
+     Agaricales     T within 20kb    5232              1117               191.8         0.172 0.151 2.000000e-01
+     Agaricales     T within 50kb    5232              1344               316.1         0.235 0.207 2.750000e-01
+     Agaricales >=2 T within 10kb    5232               501                12.6         0.025 0.012 4.300000e-02
+      Boletales      T within 5kb    1201               124                22.9         0.185 0.141 2.570000e-01
+      Boletales     T within 10kb    1201               136                31.6         0.232 0.179 3.120000e-01
+      Boletales     T within 20kb    1201               159                39.2         0.247 0.199 3.180000e-01
+      Boletales     T within 50kb    1201               199                55.5         0.279 0.219 3.490000e-01
+      Boletales >=2 T within 10kb    1201                56                 3.9         0.069 0.025 1.440000e-01
+    Polyporales      T within 5kb     964               208                40.1         0.193 0.158 2.300000e-01
+    Polyporales     T within 10kb     964               227                47.8         0.210 0.172 2.510000e-01
+    Polyporales     T within 20kb     964               232                63.5         0.274 0.222 3.340000e-01
+    Polyporales     T within 50kb     964               283                91.6         0.324 0.257 3.870000e-01
+    Polyporales >=2 T within 10kb     964               154                11.2         0.073 0.049 9.900000e-02
+ Cantharellales      T within 5kb     610                90                21.5         0.239 0.159 1.066000e+00
+ Cantharellales     T within 10kb     610               100                27.1         0.271 0.197 6.300000e-01
+ Cantharellales     T within 20kb     610               127                31.1         0.245 0.176 3.710000e-01
+ Cantharellales     T within 50kb     610               169                40.0         0.237 0.131 3.270000e-01
+ Cantharellales >=2 T within 10kb     610                15                 1.6         0.108 0.055 1.035000e+00
+     Russulales      T within 5kb     716                54                16.5         0.306 0.216 4.430000e-01
+     Russulales     T within 10kb     716                65                21.8         0.336 0.252 4.610000e-01
+     Russulales     T within 20kb     716                80                30.8         0.385 0.289 5.280000e-01
+     Russulales     T within 50kb     716               119                46.6         0.391 0.274 5.710000e-01
+     Russulales >=2 T within 10kb     716                31                 1.7         0.056 0.031 1.000000e-01
+Hymenochaetales      T within 5kb     346                10                 7.4         0.740 0.456 2.673000e+00
+Hymenochaetales     T within 10kb     346                13                10.8         0.834 0.490 2.520000e+00
+Hymenochaetales     T within 20kb     346                18                17.9         0.994 0.609 2.093000e+00
+Hymenochaetales     T within 50kb     346                38                35.7         0.938 0.657 1.451000e+00
+Hymenochaetales >=2 T within 10kb     346                 3                 0.7         0.218 0.062 2.683065e+08
+            ALL      T within 5kb    9436              1523               248.4         0.163 0.129 2.070000e-01
+            ALL     T within 10kb    9436              1633               298.0         0.182 0.158 2.100000e-01
+            ALL     T within 20kb    9436              1798               394.6         0.219 0.196 2.460000e-01
+            ALL     T within 50kb    9436              2251               612.9         0.272 0.246 3.030000e-01
+            ALL >=2 T within 10kb    9436               787                32.9         0.042 0.029 5.700000e-02
+
+== v_array_chance_one_per_species.tsv
+          order                              flag_def  arrays  observed_flagged  expected_by_chance  chance_share    lo    hi
+     Agaricales T within 10kb, one genome per species    2530               504                75.3         0.149 0.133 0.167
+      Boletales T within 10kb, one genome per species     917               102                23.3         0.228 0.180 0.290
+    Polyporales T within 10kb, one genome per species     604               127                26.8         0.211 0.177 0.247
+ Cantharellales T within 10kb, one genome per species     113                15                 3.4         0.228 0.141 0.322
+     Russulales T within 10kb, one genome per species     586                54                17.7         0.327 0.238 0.469
+Hymenochaetales T within 10kb, one genome per species     247                13                 8.3         0.637 0.403 1.569
+ Auriculariales T within 10kb, one genome per species      37                 7                 2.2         0.310 0.194 0.457
+   other orders T within 10kb, one genome per species     247                35                 8.6         0.247 0.168 0.366
+            ALL T within 10kb, one genome per species    5281               857               165.6         0.193 0.178 0.210
+
+locus level, ALL: flagged 2875, expected by pipeline p_random 375.1 (share 0.130)
+array level (within-contig null) flagged 1633, expected 298.0 (share 0.182)
+
+== v_flag_by_array_size.tsv
+array_size  arrays  flagged  flagged_pct  expected_chance  chance_pct_per_array
+         1    7572      628          8.3            183.6                   2.4
+         2    1164      454         39.0             53.6                   4.6
+         3     389      294         75.6             24.5                   6.3
+        4+     311      257         82.6             36.2                  11.7
+
+== v_STE20_enrichment_250kb.tsv
+          order     group  arrays  contig_len_median_Mb  same_contig  near_obs  near_pct  exp_genome_null  exp_pct_genome  obs_over_exp_genome  exp_same_contig_null
+            ALL   flagged    1631                  0.23          603       550      33.7              9.6             0.6                 57.6                 329.1
+            ALL unflagged    7763                  0.32          522       328       4.2             45.4             0.6                  7.2                 205.8
+     Agaricales   flagged    1033                  0.20          314       280      27.1              5.0             0.5                 56.5                 168.7
+     Agaricales unflagged    4173                  0.33          249       162       3.9             21.6             0.5                  7.5                  94.7
+      Boletales   flagged     136                  0.18           34        26      19.1              0.7             0.6                 34.7                  20.5
+      Boletales unflagged    1056                  0.12           31        17       1.6              4.2             0.4                  4.0                  14.7
+    Polyporales   flagged     227                  0.48          136       136      59.9              2.1             0.9                 65.0                  74.6
+    Polyporales unflagged     737                  0.62           37        31       4.2              6.1             0.8                  5.1                  17.8
+ Cantharellales   flagged     100                  0.19           61        56      56.0              0.6             0.6                 87.3                  40.0
+ Cantharellales unflagged     510                  0.26           31        19       3.7              3.4             0.7                  5.6                  18.2
+     Russulales   flagged      65                  0.38           25        22      33.8              0.6             0.9                 35.9                   9.7
+     Russulales unflagged     648                  0.39           62        36       5.6              4.6             0.7                  7.9                  23.6
+Hymenochaetales   flagged      13                  3.29            7         5      38.5              0.1             1.1                 35.9                   2.2
+Hymenochaetales unflagged     329                  1.99           88        45      13.7              3.7             1.1                 12.2                  28.9
+ Auriculariales   flagged      13                  3.30           12        12      92.3              0.1             0.8                112.2                   3.9
+ Auriculariales unflagged      51                  1.76            3         1       2.0              0.3             0.6                  3.1                   0.4
+   other orders   flagged      44                  0.21           14        13      29.5              0.3             0.6                 50.3                   9.5
+   other orders unflagged     259                  0.35           21        17       6.6              1.5             0.6                 11.5                   7.5
+
+== v_MIPBF_enrichment_250kb.tsv
+          order     group  arrays  contig_len_median_Mb  same_contig  near_obs  near_pct  exp_genome_null  exp_pct_genome  obs_over_exp_genome  exp_same_contig_null
+            ALL   flagged    1630                  0.23            7         0       0.0             13.5             0.8                  0.0                   1.2
+            ALL unflagged    7782                  0.32           75        11       0.1             56.4             0.7                  0.2                   9.7
+     Agaricales   flagged    1034                  0.19            2         0       0.0              7.9             0.8                  0.0                   0.8
+     Agaricales unflagged    4187                  0.32           22         3       0.1             28.6             0.7                  0.1                   3.2
+      Boletales   flagged     134                  0.18            1         0       0.0              1.1             0.8                  0.0                   0.1
+      Boletales unflagged    1054                  0.12            9         5       0.5              6.1             0.6                  0.8                   1.3
+    Polyporales   flagged     227                  0.48            2         0       0.0              2.5             1.1                  0.0                   0.1
+    Polyporales unflagged     737                  0.62           11         3       0.4              6.9             0.9                  0.4                   1.6
+ Cantharellales   flagged     100                  0.19            1         0       0.0              1.0             1.0                  0.0                   0.0
+ Cantharellales unflagged     510                  0.26            9         0       0.0              4.7             0.9                  0.0                   0.6
+     Russulales   flagged      65                  0.38            0         0       0.0              0.5             0.8                  0.0                   0.0
+     Russulales unflagged     651                  0.39            6         0       0.0              4.3             0.7                  0.0                   0.6
+Hymenochaetales   flagged      13                  3.29            0         0       0.0              0.1             1.1                  0.0                   0.0
+Hymenochaetales unflagged     333                  1.95            0         0       0.0              3.6             1.1                  0.0                   0.0
+ Auriculariales   flagged      13                  3.30            0         0       0.0              0.1             0.8                  0.0                   0.0
+ Auriculariales unflagged      51                  1.76           10         0       0.0              0.4             0.7                  0.0                   1.2
+   other orders   flagged      44                  0.21            1         0       0.0              0.4             0.9                  0.0                   0.1
+   other orders unflagged     259                  0.35            8         0       0.0              1.9             0.8                  0.0                   1.1
+
+== v_region_by_threshold.tsv
+ gene  D_kb     group  arrays  near  expected_genome_null  expected_same_contig_null
+STE20   100   flagged    1631   497                   5.3                      236.9
+STE20   100 unflagged    7763   247                  23.3                      125.3
+STE20   250   flagged    1631   550                   9.6                      329.1
+STE20   250 unflagged    7763   328                  45.4                      205.8
+STE20   500   flagged    1631   570                  14.7                      414.7
+STE20   500 unflagged    7763   374                  73.3                      298.3
+MIPBF   100   flagged    1630     0                   7.2                        0.5
+MIPBF   100 unflagged    7782     5                  27.3                        4.2
+MIPBF   250   flagged    1630     0                  13.5                        1.2
+MIPBF   250 unflagged    7782    11                  56.4                        9.7
+MIPBF   500   flagged    1630     1                  21.5                        2.0
+MIPBF   500 unflagged    7782    24                  95.3                       17.7
+
+== v_STE20_conditional_on_contig.tsv
+ D_kb     group  arrays_on_STE20_contig  near  expected_if_position_random_on_contig
+  100   flagged                     603   497                                  236.9
+  100 unflagged                     522   247                                  125.3
+  250   flagged                     603   550                                  329.1
+  250 unflagged                     522   328                                  205.8
+  500   flagged                     603   570                                  414.7
+  500 unflagged                     522   374                                  298.3
+
+== v_STE20_within_genome.tsv
+                     scope  D_kb  genomes_with_both  flagged_near  flagged_total  unflagged_near  unflagged_total  MH_odds_ratio  MH_species_boot_lo  MH_species_boot_hi        CMH_p  perm_p  mean_perm_flagged_near                                            note
+         ALL qpass genomes 250.0             1003.0         550.0         1628.0           147.0           6117.0          23.86               17.56               33.08 0.000000e+00  0.0002                   163.1                                             NaN
+         ALL qpass genomes 100.0             1003.0         497.0         1628.0           101.0           6117.0          22.41               16.45               32.69 0.000000e+00  0.0002                   140.7                                             NaN
+         ALL qpass genomes 500.0             1003.0         570.0         1628.0           181.0           6117.0          21.23               15.97               29.01 0.000000e+00  0.0002                   173.5                                             NaN
+    one genome per species 250.0              514.0         290.0          857.0           102.0           3296.0          19.46               14.81               26.92 0.000000e+00  0.0002                    89.3                                             NaN
+                Agaricales 250.0              597.0         280.0         1033.0            88.0           3757.0          20.36               13.79               33.77 0.000000e+00  0.0005                    86.3                                             NaN
+                 Boletales 250.0               89.0          26.0          136.0            10.0            498.0          10.66                4.37               29.60 2.879419e-11  0.0005                     9.5                                             NaN
+               Polyporales 250.0              161.0         136.0          224.0            15.0            664.0          85.79               42.71              282.11 0.000000e+00  0.0005                    37.7                                             NaN
+            Cantharellales 250.0               66.0          56.0          100.0             8.0            429.0          39.16               12.53               81.42 0.000000e+00  0.0005                    13.9                                             NaN
+                Russulales 250.0               43.0          22.0           65.0            16.0            429.0           8.84                3.78               24.75 2.998735e-11  0.0005                     6.9                                             NaN
+           Hymenochaetales 250.0                6.0           5.0           13.0             2.0            106.0          14.94                3.70               56.46 1.932611e-06  0.0015                     0.9                                             NaN
+            Auriculariales   NaN                NaN           NaN            NaN             NaN              NaN            NaN                 NaN                 NaN          NaN     NaN                     NaN cannot unpack non-iterable numpy.float64 object
+     all except Agaricales 250.0              406.0         270.0          595.0            59.0           2360.0          28.91               19.42               43.42 0.000000e+00  0.0005                    76.2                                             NaN
+      all except Boletales 250.0              914.0         524.0         1492.0           137.0           5619.0          25.34               19.03               35.38 0.000000e+00  0.0005                   153.3                                             NaN
+    all except Polyporales 250.0              842.0         414.0         1404.0           132.0           5453.0          19.32               13.63               27.01 0.000000e+00  0.0005                   124.8                                             NaN
+ all except Cantharellales 250.0              937.0         494.0         1528.0           139.0           5688.0          22.80               16.93               31.85 0.000000e+00  0.0005                   148.4                                             NaN
+     all except Russulales 250.0              960.0         528.0         1563.0           131.0           5688.0          25.78               19.28               37.12 0.000000e+00  0.0005                   156.1                                             NaN
+all except Hymenochaetales 250.0              997.0         545.0         1615.0           145.0           6011.0          24.02               17.97               33.80 0.000000e+00  0.0005                   161.8                                             NaN
+ all except Auriculariales 250.0              991.0         538.0         1615.0           146.0           6073.0          23.33               17.09               32.40 0.000000e+00  0.0005                   159.7                                             NaN
+
+== v_MIPBF_within_genome.tsv
+ gene  genomes_with_both  flagged_near  flagged_total  unflagged_near  unflagged_total  MH_odds_ratio    CMH_p
+MIPBF               1003             0           1627               7             6120            0.0 0.092254
+
+flagged vs unflagged arrays: median contig length (Mb), median array size, median span (kb)
+flagged 1633 0.23 2.0 13.7
+unflagged 7803 0.32 1.0 2.0
+
+excess near-STE20 fraction beyond genome-position null, flagged minus unflagged, species bootstrap: 0.295 (0.256-0.339)
+
+== v_STE20_by_order.tsv
+          order  species  flagged  flagged_near_pct  unflagged  unflagged_near_pct
+     Agaricales      313     1033              27.1       4173                 3.9
+      Boletales      142      136              19.1       1056                 1.6
+    Polyporales      107      227              59.9        737                 4.2
+ Cantharellales       14      100              56.0        510                 3.7
+     Russulales       60       65              33.8        648                 5.6
+Hymenochaetales       29       13              38.5        329                13.7
+ Auriculariales        8       13              92.3         51                 2.0
+   other orders       31       44              29.5        259                 6.6
+
+flagged arrays near STE20 (250 kb): 550 in 532 genomes, 296 species, 8 order groups; flagged arrays near STE20 per genome: {'mean': 1.03, '50%': 1.0, 'max': 3.0}
+
+HD calls: arrays in genomes with an HD call 8057; on a contig that also holds an HD call 60; expected if arrays placed at random by contig length 315.3
+  flagged: 1386 arrays, same contig as HD 7, expected 50.2
+  unflagged: 6671 arrays, same contig as HD 53, expected 265.1
+
+== v_scenarios.tsv
+                                                           scenario    n                                                                                                       note
+                                                S0 current PR calls 1039                                                                          944 unverified, 95 other evidence
+                                              S1 one call per array 1028                                                                                               1039 -> 1028
+                          S2 add every uncovered CAAX-flagged array  627 in 466 genomes; expected flagged by chance among all uncovered arrays 230 (within-contig null); excess 397
+                     S2b add uncovered flagged arrays with >=2 loci  289                                                                           chance for size>=2 uncovered: 61
+S2c add uncovered flagged arrays with precursor homology (Hx<=10kb)  156                                                                        flag AND tblastn precursor homology
+            S4 unverified calls in an array with precursor homology  414                                                                                                     of 944
+                  S5 unverified calls whose array is a single locus  284                                                                                                     of 944
+                          S6 unverified calls in arrays of >=2 loci  651                                                                                                     of 944
+
+== v_calls_and_uncovered_by_order.tsv
+          order  genomes  calls  unverified  one_array_per_call  unverified_single_locus_array  unverified_array_ge2  unverified_with_Hx_array  flagged_arrays  flagged_uncovered  uncovered_expected_by_chance  uncovered_flagged_with_Hx  uncovered_flagged_size_ge2  genomes_with_uncovered_flagged  genomes_with_call
+     Agaricales      676    580         577                 576                            141                   434                       321            1035                463                         122.1                        139                         225                             342                423
+      Boletales      182     60          58                  59                             12                    45                        15             136                 80                          27.6                          9                          40                              61                 49
+    Polyporales      175    198         116                 193                             22                    92                        48             227                 40                          22.1                          6                           8                              31                155
+ Cantharellales       77     99          99                  98                             75                    21                         1             100                  5                          19.3                          0                           0                               5                 67
+     Russulales       76     31          23                  31                              6                    17                        11              65                 36                          18.9                          2                          16                              24                 26
+Hymenochaetales       47     13          13                  13                              1                    12                         5              13                  2                           9.8                          0                           0                               2                  5
+ Auriculariales       14     13          13                  13                              1                    12                         1              13                  0                           1.2                          0                           0                               0                 12
+   other orders       40     45          45                  45                             26                    18                        12              44                  1                           9.5                          0                           0                               1                 29
+            ALL     1287   1039         944                1028                            284                   651                       414            1633                627                         230.4                        156                         289                             466                766
+
+== v_genome_rates_by_order.tsv
+          order  genomes  species pct_genomes_with_call pct_genomes_with_uncovered_flagged_array pct_genomes_call_or_uncovered calls_per_genome uncovered_flagged_per_genome
+     Agaricales      676      313      62.6 (48.9-74.8)                         50.6 (41.5-61.3)              88.6 (82.0-93.5) 0.86 (0.63-1.10)             0.68 (0.56-0.83)
+      Boletales      182      143      26.9 (18.5-36.1)                         33.5 (26.3-41.2)              50.0 (40.4-58.8) 0.33 (0.23-0.44)             0.44 (0.31-0.58)
+    Polyporales      175      107      88.6 (82.6-93.3)                         17.7 (12.0-23.9)              92.6 (87.7-96.5) 1.13 (1.01-1.26)             0.23 (0.14-0.32)
+ Cantharellales       77       14      87.0 (68.2-94.9)                           6.5 (1.0-26.3)              87.0 (67.6-95.1) 1.29 (0.77-1.53)             0.06 (0.01-0.25)
+     Russulales       76       60      34.2 (21.1-48.1)                         31.6 (20.7-43.4)              59.2 (46.7-72.0) 0.41 (0.24-0.58)             0.47 (0.28-0.71)
+Hymenochaetales       47       29       10.6 (2.2-21.6)                           4.3 (0.0-11.6)               12.8 (3.8-26.2) 0.28 (0.06-0.58)             0.04 (0.00-0.11)
+ Auriculariales       14        8     85.7 (55.6-100.0)                            0.0 (0.0-0.0)             85.7 (58.3-100.0) 0.93 (0.60-1.14)             0.00 (0.00-0.00)
+   other orders       40       31      72.5 (55.9-86.1)                            2.5 (0.0-8.8)              72.5 (56.4-86.4) 1.12 (0.77-1.55)             0.03 (0.00-0.09)
+            ALL     1287      705      59.5 (51.1-66.9)                         36.2 (30.5-43.3)              78.6 (73.5-83.0) 0.81 (0.66-0.95)             0.49 (0.41-0.58)
+
+== v_withheld_in_arrays.tsv
+                    arrays    n  with_withheld_PR_locus  with_modelled_gene_bar  with_fraction_floor  size_ge2
+flagged, covered by a call 1006                      24                      16                    8       716
+          flagged, no call  627                     445                      15                  437       289
+        unflagged, no call 7791                     910                     907                    3       852
+
+called arrays 1018; loci 2475; loci inside a call 2311; sibling loci not inside any call 164; arrays with all members inside a call 885
+
+done

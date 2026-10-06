@@ -1,9 +1,51 @@
 LINK 150000
-order	cls	c_linked	c_split	b_receptor_only	a_hd_only	e_absent	d_assembly	total
-Tremellales	uncalled	0	7	3	0	0	5	15
-Trichosporonales	uncalled	34	3	26	0	0	4	67
-Trichosporonales	PR_only	11	4	35	0	0	0	50
-Filobasidiales	uncalled	0	19	2	0	0	1	22
-Filobasidiales	PR_only	1	6	4	0	0	0	11
-Cystofilobasidiales	uncalled	0	11	9	0	0	1	21
-Cystofilobasidiales	PR_only	1	12	1	0	0	0	14
+order	cls	linked_hd1	linked_homeobox_only	hd1_found_not_linked	no_hd1_domain_found	e_absent	d_assembly	total
+Tremellales	uncalled	0	0	7	3	0	5	15
+Trichosporonales	uncalled	34	7	2	20	0	4	67
+Trichosporonales	PR_only	11	7	3	29	0	0	50
+Filobasidiales	uncalled	0	2	17	2	0	1	22
+Filobasidiales	PR_only	1	0	6	4	0	0	11
+Cystofilobasidiales	uncalled	0	1	10	9	0	1	21
+Cystofilobasidiales	PR_only	1	0	12	1	0	0	14
+total		47	17	57	68	0	11	200
+
+LINK 50000
+order	cls	linked_hd1	linked_homeobox_only	hd1_found_not_linked	no_hd1_domain_found	e_absent	d_assembly	total
+Tremellales	uncalled	0	0	7	3	0	5	15
+Trichosporonales	uncalled	21	9	12	21	0	4	67
+Trichosporonales	PR_only	6	11	3	30	0	0	50
+Filobasidiales	uncalled	0	0	19	2	0	1	22
+Filobasidiales	PR_only	0	0	7	4	0	0	11
+Cystofilobasidiales	uncalled	0	0	11	9	0	1	21
+Cystofilobasidiales	PR_only	1	0	12	1	0	0	14
+total		28	20	71	70	0	11	200
+LINK 100000
+order	cls	linked_hd1	linked_homeobox_only	hd1_found_not_linked	no_hd1_domain_found	e_absent	d_assembly	total
+Tremellales	uncalled	0	0	7	3	0	5	15
+Trichosporonales	uncalled	34	7	2	20	0	4	67
+Trichosporonales	PR_only	11	7	3	29	0	0	50
+Filobasidiales	uncalled	0	2	17	2	0	1	22
+Filobasidiales	PR_only	1	0	6	4	0	0	11
+Cystofilobasidiales	uncalled	0	1	10	9	0	1	21
+Cystofilobasidiales	PR_only	1	0	12	1	0	0	14
+total		47	17	57	68	0	11	200
+LINK 200000
+order	cls	linked_hd1	linked_homeobox_only	hd1_found_not_linked	no_hd1_domain_found	e_absent	d_assembly	total
+Tremellales	uncalled	0	0	7	3	0	5	15
+Trichosporonales	uncalled	34	7	2	20	0	4	67
+Trichosporonales	PR_only	11	7	3	29	0	0	50
+Filobasidiales	uncalled	0	3	17	1	0	1	22
+Filobasidiales	PR_only	2	0	5	4	0	0	11
+Cystofilobasidiales	uncalled	1	1	9	9	0	1	21
+Cystofilobasidiales	PR_only	1	0	12	1	0	0	14
+total		49	18	55	67	0	11	200
+LINK 300000
+order	cls	linked_hd1	linked_homeobox_only	hd1_found_not_linked	no_hd1_domain_found	e_absent	d_assembly	total
+Tremellales	uncalled	0	0	7	3	0	5	15
+Trichosporonales	uncalled	34	7	2	20	0	4	67
+Trichosporonales	PR_only	11	7	3	29	0	0	50
+Filobasidiales	uncalled	0	3	17	1	0	1	22
+Filobasidiales	PR_only	2	0	5	4	0	0	11
+Cystofilobasidiales	uncalled	1	1	9	9	0	1	21
+Cystofilobasidiales	PR_only	1	0	12	1	0	0	14
+total		49	18	55	67	0	11	200

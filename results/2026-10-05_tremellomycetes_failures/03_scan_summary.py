@@ -61,7 +61,7 @@ def mind(A, B):
 
 cols = ['genome', 'n_contigs_scanned', 'n_ste3', 'n_ste3_hmm', 'n_ste3_caax', 'n_hd_loci', 'n_kn', 'n_hdbox',
         'n_hd_mp_strong', 'n_kn_hd_pairs_5kb', 'd_kn_ste3', 'd_kn_ste3caax', 'd_hdany_ste3', 'd_hdany_ste3caax',
-        'd_hdstrong_ste3', 'ste3_contig_len_max_of_nearest', 'status']
+        'd_hdstrong_ste3', 'd_hb_ste3', 'status']
 with open(out, 'w') as fo:
     w = csv.writer(fo, delimiter='\t')
     w.writerow(cols)
@@ -113,4 +113,4 @@ with open(out, 'w') as fo:
                     pairs += 1
         HS = merge(hdmp, GAP)
         w.writerow([g, len(clen), len(S), sum('hmm' in s['tags'] for s in S), len(Sc), len(H), len(K), len(B),
-                    len(HS), pairs, mind(K, S), mind(K, Sc), mind(H, S), mind(H, Sc), mind(HS, S), '', 'ok'])
+                    len(HS), pairs, mind(K, S), mind(K, Sc), mind(H, S), mind(H, Sc), mind(HS, S), mind(B, S), 'ok'])

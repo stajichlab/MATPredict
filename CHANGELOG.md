@@ -20,7 +20,7 @@ release completed.
 - Report-only pheromone-receptor arrays (`detect.receptor_arrays`; study
   `analysis/2026-10-06_agaricomycetes-pr-arrays.md`, options 1 and 2). The STE3-like receptor hits of every family
   with a `pheromone_precursor_scan` (Basidiomycota PR) are merged per strand into loci and grouped into arrays (same
-  contig, gap of 50 kb or less). Each PR call gains `array_id`, `array_size`, `array_members`, `array_support`
+  contig, gap of 50 kb or less); a locus needs hits covering 50% or more of one reference receptor and a span of 8 kb or less. Each PR call gains `array_id`, `array_size`, `array_members`, `array_support`
   (`supported` when the array has 2 or more loci, a pheromone-precursor homology hit, or 2 or more distinct strict-CAAX
   ORFs; else `unsupported`) and `array_support_reasons`. `detection_report.yaml` gains `receptor_arrays` (each array
   once, with its call count) and `receptor_arrays_note`. A flag only: calls, tiers, confidence, verification labels and

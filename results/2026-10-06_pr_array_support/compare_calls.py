@@ -65,7 +65,7 @@ def main():
             row.update(loci_columns(x))
             rows.append(row)
             if "array_id" in x:
-                sup[(row["verification"] or "verified_other", row["array_support"] or "no_array")] += 1
+                sup[(row["verification"] or "none", row["array_support"] or "no_array")] += 1
         for a in c.get("receptor_arrays") or []:
             arr_rows.append({"genome": g, **{k: (",".join(v) if isinstance(v, list) else v) for k, v in a.items()}})
     cols = ["genome", "family", "contig", "start", "end", "confidence", "locus_class", "detection_pass",

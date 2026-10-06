@@ -10,7 +10,10 @@ For every family with a `pheromone_precursor_scan` (Basidiomycota `PR`):
 
 1. **STE3-like loci**: the family's non-superseded receptor-gene search hits, merged per strand where
    they overlap or lie within 300 bp (intron-split HSPs, several references over one gene). Hits on
-   opposite strands are never merged.
+   opposite strands are never merged. A merged locus counts only when its hits cover at least 50% of one reference
+   receptor (HSP lengths summed per reference, overlapping HSPs once) and it spans 8 kb or less, the
+   study's miniprot filter; without it the raw tblastn fragments gave about ten times too many
+   single-locus arrays (*Trametes versicolor*: 67 merged loci, 6 with 50% coverage).
 2. **Arrays**: loci on one contig linked by single linkage, gap between neighbouring locus ends of
    50 kb or less (the study's rule; 80% of arrays are single loci at 50 kb, and the share barely moves
    from 10 kb to 200 kb). An array never crosses a contig.

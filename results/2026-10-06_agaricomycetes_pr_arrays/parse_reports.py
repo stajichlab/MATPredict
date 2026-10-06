@@ -19,9 +19,9 @@ for f in glob.glob(f"{rep}/*/runs/*/detection_report.yaml"):
         fam = x["family"].split(":")[1]
         ev = x.get("gene_evidence") or []
         rec = [e for e in ev if e["gene"] == "pheromone_receptor"]
-        if fam == "PR":
+        if fam in ("PR", "Balpha", "Bbeta"):
             ver = x.get("verification")
-            pr.append(dict(genome=asm, status="called", contig=x["contig"], start=x["start"], end=x["end"],
+            pr.append(dict(genome=asm, family=fam, status="called", contig=x["contig"], start=x["start"], end=x["end"],
                            confidence=x["confidence"], verification=(ver or {}).get("status", "verified_other") if ver else "none",
                            detection_pass=x["detection_pass"], genes_found="|".join(x["genes_found"]),
                            polished_genes=x["polished_genes"], n_receptor_rows=len(rec),
@@ -33,14 +33,14 @@ for f in glob.glob(f"{rep}/*/runs/*/detection_report.yaml"):
                            genes_found="|".join(x["genes_found"])))
     for x in d.get("suppressed_loci") or []:
         fam = x["family"].split(":")[1]
-        if fam == "PR":
-            pr.append(dict(genome=asm, status="withheld:" + str(x.get("withheld_reason")), contig=x["contig"], start=x["start"], end=x["end"],
+        if fam in ("PR", "Balpha", "Bbeta"):
+            pr.append(dict(genome=asm, family=fam, status="withheld:" + str(x.get("withheld_reason")), contig=x["contig"], start=x["start"], end=x["end"],
                            confidence="", verification="", detection_pass="", genes_found="|".join(x["genes_found"]),
                            polished_genes=x["polished_genes"], n_receptor_rows=0, rec_identity=x.get("best_identity") or 0, caax_motif="",
                            n_merged=0, n_subloci=0))
         elif fam in ("HD", "bLocus"):
             hd.append(dict(genome=asm, status="withheld:" + str(x.get("withheld_reason")), family=fam, contig=x["contig"],
                            start=x["start"], end=x["end"], genes_found="|".join(x["genes_found"])))
-pd.DataFrame(pr).to_csv("pr_calls.tsv", sep="\t", index=False)
-pd.DataFrame(hd).to_csv("hd_loci.tsv", sep="\t", index=False)
+pd.DataFrame(pr).to_csv("pr_calls.tsv.gz", sep="\t", index=False)
+pd.DataFrame(hd).to_csv("hd_loci.tsv.gz", sep="\t", index=False)
 print(len(pr), "PR rows", len(hd), "HD rows")

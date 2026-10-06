@@ -17,6 +17,14 @@ release completed.
   them (2 of 2,722). Calibrated on Dothideomycetes; see `analysis/2026-10-05_dothideomycetes-full-run.md`.
 
 ### Added
+- Report-only cassette fields on the receptor arrays (stacked on the arrays entry below; assessment
+  `analysis/2026-10-06_b-locus-clustering.md`, option 1). Per array, per PR call and in `loci.tsv`:
+  `receptor_cassette_loci` (loci with 2 or more strict-CAAX ORFs within 5 kb), `receptor_cassette_class` (`none`, `B`, or `C` when 2 or
+  more of the ORFs also carry tblastn precursor homology; best over the array), `receptor_cassette_members` (locus and ORF
+  coordinates, `|`-joined in `loci.tsv`) and `receptor_cassette_caax_orfs` (the most ORFs near one locus). Reuses the existing
+  strict-CAAX and precursor hits; descriptive only (circular for CAAX-admitted calls, class C a self-hit for species with
+  curated precursors, tandem receptors may merge into one locus) and no call, tier, label, confidence or count changes. See
+  `docs/receptor-arrays.md`.
 - Report-only pheromone-receptor arrays (`detect.receptor_arrays`; study
   `analysis/2026-10-06_agaricomycetes-pr-arrays.md`, options 1 and 2). The STE3-like receptor hits of every family
   with a `pheromone_precursor_scan` (Basidiomycota PR) are merged per strand into loci and grouped into arrays (same

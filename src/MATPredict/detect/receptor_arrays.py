@@ -30,6 +30,10 @@ Definitions (ported from results/2026-10-06_agaricomycetes_pr_arrays/):
   within the family's CAAX window of a member, OR >= 2 distinct strict-CAAX
   ORFs within that window of a member (4% of arrays by chance in the study,
   against 18% for one). Otherwise `unsupported`.
+- Cassette (descriptive; analysis/2026-10-06_b-locus-clustering.md): a locus carries a cassette
+  when >= 2 distinct strict-CAAX ORFs lie within `CASSETTE_WINDOW_BP` of it (class B); class C
+  when >= 2 of those ORFs also carry tblastn precursor homology. Reuses the CAAX hits and
+  precursor hits the PR scan already produced; never used to call.
 """
 from __future__ import annotations
 
@@ -50,6 +54,16 @@ LOCUS_MERGE_GAP_BP = 300
 #: single-locus arrays.
 MIN_LOCUS_REF_COVERAGE = 0.5
 MAX_LOCUS_SPAN_BP = 8_000
+#: Cassette window: a strict-CAAX ORF counts for a receptor locus when the gap
+#: between the ORF and the locus is at most this (measured from either end of
+#: the locus; inclusive). From analysis/2026-10-06_b-locus-clustering.md.
+CASSETTE_WINDOW_BP = 5_000
+#: A CAAX ORF "carries precursor homology" when a tblastn precursor hit lies
+#: within this many bp of it (the assessment merged homology hits within 300 bp).
+CASSETTE_HOMOLOGY_TOL_BP = 300
+#: `receptor_cassette_class` values.
+CASSETTE_NONE, CASSETTE_B, CASSETTE_C = "none", "B", "C"
+CASSETTE_MIN_ORFS = 2
 
 SUPPORTED = "supported"
 UNSUPPORTED = "unsupported"
@@ -64,13 +78,19 @@ RECEPTOR_ARRAYS_NOTE = (
     "Coprinopsis cinerea and Schizophyllum commune), so array membership does "
     "not establish that a locus is a mating receptor. receptor_array_support is a flag "
     "on the evidence behind an array; it never changes a call, its confidence "
-    "or its verification label."
+    "or its verification label. receptor_cassette_* fields describe pheromone-precursor "
+    "cassette structure (2 or more strict-CAAX ORFs within 5 kb of a receptor locus; class C "
+    "when that many of those ORFs also carry tblastn precursor homology). They are descriptive "
+    "only: the CAAX scan is also what admits a PR call, so cassettes are circular as "
+    "confirmation; own-species curated precursors are a self-hit for class C; tandem receptors "
+    "may be merged into one locus. They never change a call, tier, label, confidence or count."
 )
 
 #: Columns a per-locus table (`loci.tsv`) adds for a PR call; None/empty for
 #: every other call.
 LOCI_ARRAY_COLUMNS = (
     "receptor_array_id", "receptor_array_size", "receptor_array_members", "receptor_array_support", "receptor_array_support_reasons",
+    "receptor_cassette_loci", "receptor_cassette_class", "receptor_cassette_members", "receptor_cassette_caax_orfs",
 )
 
 
@@ -87,6 +107,9 @@ class ReceptorArray:
     reasons: tuple[str, ...]
     n_calls: int = 0
     window_bp: int = 10_000
+    #: per locus of `members` (same order): (n_caax_orfs, class, orfs) with
+    #: orfs = ((start, end, strand, has_precursor_homology), ...) within the cassette window.
+    cassettes: tuple = ()
 
     @property
     def receptor_array_id(self) -> str:
@@ -98,6 +121,37 @@ class ReceptorArray:
 
     def member_strings(self) -> list[str]:
         return [f"{s}-{e}:{st}" for s, e, st in self.members]
+
+    @property
+    def cassette_loci(self) -> int:
+        return sum(1 for _, cls, _ in self.cassettes if cls != CASSETTE_NONE)
+
+    @property
+    def cassette_class(self) -> str:
+        classes = {cls for _, cls, _ in self.cassettes}
+        return CASSETTE_C if CASSETTE_C in classes else CASSETTE_B if CASSETTE_B in classes else CASSETTE_NONE
+
+    @property
+    def cassette_caax_orfs(self) -> int:
+        return max((n for n, _, _ in self.cassettes), default=0)
+
+    def cassette_member_strings(self) -> list[str]:
+        """`locus_start-locus_end:strand=orf_start-orf_end:strand[+hx],...` for each locus with a cassette."""
+        out = []
+        for (s, e, st), (_, cls, orfs) in zip(self.members, self.cassettes):
+            if cls == CASSETTE_NONE:
+                continue
+            out.append(f"{s}-{e}:{st}=" + ",".join(
+                f"{os}-{oe}:{ost}" + ("+hx" if hx else "") for os, oe, ost, hx in orfs))
+        return out
+
+    def cassette_report(self) -> dict:
+        return {
+            "receptor_cassette_loci": self.cassette_loci,
+            "receptor_cassette_class": self.cassette_class,
+            "receptor_cassette_members": self.cassette_member_strings(),
+            "receptor_cassette_caax_orfs": self.cassette_caax_orfs,
+        }
 
     def as_report(self) -> dict:
         return {
@@ -112,6 +166,7 @@ class ReceptorArray:
             "precursor_homology_hits": self.n_precursor_hits,
             "receptor_array_support": self.support,
             "receptor_array_support_reasons": list(self.reasons),
+            **self.cassette_report(),
             "calls": self.n_calls,
         }
 
@@ -205,6 +260,27 @@ def _near(contig, start, end, hit, window) -> bool:
     return hit.contig == contig and lo <= end + window and hi >= start - window
 
 
+def _locus_cassette(contig, s, e, caax_orfs, precursor_hits):
+    """(n_orfs, class, orfs) for one receptor locus from the scan results already in hand.
+
+    `caax_orfs` are the distinct strict-CAAX ORFs `(contig, start, end, strand)` and
+    `precursor_hits` the tblastn precursor hits of the run; nothing is rescanned.
+    """
+    orfs = sorted((lo, hi, st) for c, lo, hi, st in caax_orfs
+                  if c == contig and lo <= e + CASSETTE_WINDOW_BP and hi >= s - CASSETTE_WINDOW_BP)
+    detail = tuple(
+        (lo, hi, st, any(h.contig == contig and min(h.start, h.end) <= hi + CASSETTE_HOMOLOGY_TOL_BP
+                         and max(h.start, h.end) >= lo - CASSETTE_HOMOLOGY_TOL_BP for h in precursor_hits))
+        for lo, hi, st in orfs)
+    if len(detail) < CASSETTE_MIN_ORFS:
+        cls = CASSETTE_NONE
+    elif sum(1 for d in detail if d[3]) >= CASSETTE_MIN_ORFS:
+        cls = CASSETTE_C
+    else:
+        cls = CASSETTE_B
+    return len(detail), cls, detail
+
+
 def _support(size: int, n_caax: int, n_prec: int) -> tuple[str, tuple[str, ...]]:
     met = []
     if size >= 2:
@@ -255,11 +331,12 @@ def build_receptor_arrays(families, hits) -> list[ReceptorArray]:
                     for h in caax if near_member(h)}
             n_prec = sum(1 for h in precursors if near_member(h))
             support, reasons = _support(len(group), len(orfs), n_prec)
+            cassettes = tuple(_locus_cassette(contig, ls, le, orfs, precursors) for _, ls, le, _ in group)
             out.append(ReceptorArray(
                 family=label, contig=contig, start=start, end=end,
                 members=tuple((s, e, st) for _, s, e, st in group),
                 n_caax_orfs=len(orfs), n_precursor_hits=n_prec,
-                support=support, reasons=reasons, window_bp=window,
+                support=support, reasons=reasons, window_bp=window, cassettes=cassettes,
             ))
     return out
 
@@ -306,13 +383,15 @@ def attach_array_support(results, families, arrays: list[ReceptorArray]):
         i = _best_array(r, arrays)
         if i is None:
             doc = {"receptor_array_id": None, "receptor_array_size": None, "receptor_array_members": [],
-                   "receptor_array_support": None, "receptor_array_support_reasons": []}
+                   "receptor_array_support": None, "receptor_array_support_reasons": [],
+                   "receptor_cassette_loci": None, "receptor_cassette_class": None,
+                   "receptor_cassette_members": [], "receptor_cassette_caax_orfs": None}
         else:
             calls[i] += 1
             a = arrays[i]
             doc = {"receptor_array_id": a.receptor_array_id, "receptor_array_size": a.size,
                    "receptor_array_members": a.member_strings(), "receptor_array_support": a.support,
-                   "receptor_array_support_reasons": list(a.reasons)}
+                   "receptor_array_support_reasons": list(a.reasons), **a.cassette_report()}
         new.append(replace(r, receptor_array=doc))
     return new, [replace(a, n_calls=n) for a, n in zip(arrays, calls)]
 
@@ -331,4 +410,12 @@ def loci_columns(detected_doc: dict) -> dict:
         "receptor_array_members": "|".join(detected_doc.get("receptor_array_members") or []),
         "receptor_array_support": detected_doc["receptor_array_support"] or "",
         "receptor_array_support_reasons": "|".join(detected_doc.get("receptor_array_support_reasons") or []),
+        "receptor_cassette_loci": _blank_none(detected_doc.get("receptor_cassette_loci")),
+        "receptor_cassette_class": detected_doc.get("receptor_cassette_class") or "",
+        "receptor_cassette_members": "|".join(detected_doc.get("receptor_cassette_members") or []),
+        "receptor_cassette_caax_orfs": _blank_none(detected_doc.get("receptor_cassette_caax_orfs")),
     }
+
+
+def _blank_none(v):
+    return "" if v is None else v

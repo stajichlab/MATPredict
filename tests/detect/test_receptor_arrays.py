@@ -79,10 +79,11 @@ def test_the_gap_is_the_studys_50_kb_between_locus_ends():
 
 
 def test_single_linkage_chains_through_the_furthest_end():
-    # a long locus keeps the array open: the gap is measured from the furthest end
-    hits = [rec(1_000, 80_000), rec(20_000, 21_000, "-"), rec(120_000, 121_000)]
-    [arr] = arrays(hits)
-    assert arr.size == 3 and (arr.start, arr.end) == (1_000, 121_000)
+    # a long member keeps the array open: the gap is measured from the furthest end
+    loci = [("c1", 1_000, 80_000, "+"), ("c1", 20_000, 21_000, "-"), ("c1", 120_000, 121_000, "+"),
+            ("c1", 171_001, 172_000, "+")]
+    first, second = group_arrays(loci)
+    assert len(first) == 3 and second == [("c1", 171_001, 172_000, "+")]
 
 
 def test_fragments_of_one_gene_are_one_locus_not_an_array():
@@ -90,6 +91,39 @@ def test_fragments_of_one_gene_are_one_locus_not_an_array():
     hits = [rec(1_000, 1_500), rec(1_650, 2_400), rec(1_020, 2_390, ref="rec2")]
     [arr] = arrays(hits)
     assert arr.size == 1 and arr.members == ((1_000, 2_400, "+"),)
+
+
+def hsp(start, end, aa, ref="r1", ref_len=400, strand="+"):
+    return SearchHit(KEY, "pheromone_receptor", "core_MAT", "c1", start, end, strand, 40.0, ref,
+                     "tblastn_genome", coverage=100.0 * aa / ref_len, align_length_aa=aa,
+                     reference_length_aa=ref_len)
+
+
+def test_weak_fragments_are_not_ste3_like_loci():
+    # a lone exon-sized HSP covering 12% of the reference is noise, not a locus
+    assert arrays([hsp(1_000, 1_150, 50)]) == []
+    # exon HSPs of one gene add up: 3 x 80 aa of a 400 aa reference = 60%
+    [arr] = arrays([hsp(1_000, 1_240, 80), hsp(1_300, 1_540, 80), hsp(1_600, 1_840, 80)])
+    assert arr.size == 1 and arr.members == ((1_000, 1_840, "+"),)
+
+
+def test_the_same_alignment_seen_twice_is_not_counted_twice():
+    # two overlapping HSPs of one reference are one alignment: 80 aa = 20%
+    assert arrays([hsp(1_000, 1_240, 80), hsp(1_010, 1_250, 80)]) == []
+    # two references over one gene are not summed either
+    assert arrays([hsp(1_000, 1_240, 80, ref="r1"), hsp(1_000, 1_240, 80, ref="r2")]) == []
+
+
+def test_a_locus_wider_than_8_kb_is_not_a_receptor_gene():
+    assert arrays([hsp(1_000, 1_300, 150), hsp(1_400, 9_500, 150)]) == []
+
+
+def test_a_proteome_hit_uses_its_own_coverage():
+    ok = SearchHit(KEY, "pheromone_receptor", "core_MAT", "c1", 1_000, 2_500, "+", 40.0, "r1",
+                   "diamond_proteome", coverage=80.0)
+    weak = replace(ok, start=9_000, end=9_500, coverage=20.0)
+    [arr] = arrays([ok, weak])
+    assert arr.size == 1
 
 
 def test_an_array_holds_loci_of_both_strands_and_opposite_strands_are_not_merged():

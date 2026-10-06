@@ -21,7 +21,9 @@ Definitions (ported from results/2026-10-06_agaricomycetes_pr_arrays/):
 - STE3-like locus: the family's non-superseded receptor-gene hits, merged per
   strand where they overlap or lie within `LOCUS_MERGE_GAP_BP` (the study
   merged miniprot alignments per strand; raw reference-protein HSPs of one
-  gene can be split by an intron or drawn by several references).
+  gene can be split by an intron or drawn by several references), kept when
+  the hits cover >= 50% of one reference receptor and span <= 8 kb (the
+  study's miniprot filter; the raw tblastn hits are mostly weak fragments).
 - Array: single linkage over loci on one contig, gap <= `ARRAY_GAP_BP` (50 kb)
   between neighbouring locus ends.
 - `supported`: the array has >= 2 loci, OR a pheromone-precursor homology hit
@@ -40,6 +42,14 @@ from MATPredict.detect.caax import CAAX_METHOD, scan_config
 ARRAY_GAP_BP = 50_000
 #: Same-strand receptor hits closer than this are one locus.
 LOCUS_MERGE_GAP_BP = 300
+#: A locus counts as STE3-like only if its hits cover at least this fraction of
+#: one reference receptor, and span at most `MAX_LOCUS_SPAN_BP` (the study kept
+#: miniprot alignments covering >= 50% of the query and <= 8 kb). Without this
+#: the raw tblastn hits (372 receptor HSPs in Trametes versicolor, 67 merged
+#: loci, 6 of them with >= 50% coverage) would make about ten times too many
+#: single-locus arrays.
+MIN_LOCUS_REF_COVERAGE = 0.5
+MAX_LOCUS_SPAN_BP = 8_000
 
 SUPPORTED = "supported"
 UNSUPPORTED = "unsupported"
@@ -106,23 +116,70 @@ class ReceptorArray:
         }
 
 
-def merge_receptor_loci(hits, gap: int = LOCUS_MERGE_GAP_BP) -> list[tuple[str, int, int, str]]:
-    """(contig, start, end, strand) loci from receptor hits, merged per strand."""
-    by: dict[tuple[str, str], list[tuple[int, int]]] = {}
+def locus_ref_coverage(hits) -> float:
+    """Best fraction of one reference receptor covered by a locus's hits.
+
+    tblastn HSPs are exon-sized, so per reference record the aligned lengths
+    of its HSPs are summed (an HSP that mostly overlaps one already counted is
+    skipped, so a repeated alignment is not counted twice). Hits with no
+    reference length (the proteome fast path: one hit per predicted protein)
+    use their own `coverage` percentage; a hit with neither is not filtered.
+    """
+    best = 0.0
+    by_ref: dict[tuple, list] = {}
     for h in hits:
-        lo, hi = sorted((h.start, h.end))
-        by.setdefault((h.contig, h.strand), []).append((lo, hi))
+        if h.reference_length_aa and h.align_length_aa:
+            by_ref.setdefault((h.reference_record_id, h.reference_length_aa), []).append(h)
+        elif h.coverage is not None:
+            best = max(best, h.coverage / 100.0)
+        else:
+            return 1.0
+    for (_, ref_len), group in by_ref.items():
+        counted: list[tuple[int, int]] = []
+        total = 0
+        for h in sorted(group, key=lambda x: min(x.start, x.end)):
+            lo, hi = sorted((h.start, h.end))
+            if any(min(hi, e) - max(lo, s) > 0.5 * (hi - lo) for s, e in counted):
+                continue
+            counted.append((lo, hi))
+            total += h.align_length_aa
+        best = max(best, total / ref_len)
+    return best
+
+
+def merge_receptor_loci(
+    hits, gap: int = LOCUS_MERGE_GAP_BP, min_coverage: float = MIN_LOCUS_REF_COVERAGE,
+    max_span: int = MAX_LOCUS_SPAN_BP,
+) -> list[tuple[str, int, int, str]]:
+    """(contig, start, end, strand) STE3-like loci from receptor hits.
+
+    Hits are merged per strand where they overlap or lie within `gap`; a
+    merged locus is kept when its hits cover at least `min_coverage` of one
+    reference receptor and it spans at most `max_span` (pass 0 / a huge span
+    to disable).
+    """
+    by: dict[tuple[str, str], list] = {}
+    for h in hits:
+        by.setdefault((h.contig, h.strand), []).append(h)
     loci = []
-    for (contig, strand), spans in by.items():
-        spans.sort()
-        cs, ce = spans[0]
-        for s, e in spans[1:]:
+
+    def close(contig, strand, members, cs, ce):
+        if ce - cs + 1 <= max_span and locus_ref_coverage(members) >= min_coverage:
+            loci.append((contig, cs, ce, strand))
+
+    for (contig, strand), group in by.items():
+        group.sort(key=lambda h: min(h.start, h.end))
+        members = [group[0]]
+        cs, ce = sorted((group[0].start, group[0].end))
+        for h in group[1:]:
+            s, e = sorted((h.start, h.end))
             if s - ce <= gap:
+                members.append(h)
                 ce = max(ce, e)
             else:
-                loci.append((contig, cs, ce, strand))
-                cs, ce = s, e
-        loci.append((contig, cs, ce, strand))
+                close(contig, strand, members, cs, ce)
+                members, cs, ce = [h], s, e
+        close(contig, strand, members, cs, ce)
     return sorted(loci)
 
 

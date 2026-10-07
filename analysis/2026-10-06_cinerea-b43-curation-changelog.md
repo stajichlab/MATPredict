@@ -82,3 +82,21 @@ NCBI model KAG2006188.1, locus tag CC2G_002524, JAAGWA010000010.1:1,824,970-1,82
 > with known B-locus complexity in fungi, not a sign of misassignment. This judgment upgraded boundaries evidence below 
 > from tier 2 to tier 1. completeness remains "partial" only because the individual gene roster is not claimed to be the 
 > full B-locus gene complement, not because the cluster's validity as a B locus is in doubt.
+
+## Validation and regression (candidate 6983433 vs baseline main 2d1860a)
+
+- Full test suite (HPCC `.pixi/envs/test`, mafft/7.505): 1038 passed (includes the schema, gene-vocabulary and real-record checks). `matpredict curate-db build-duckdb` built from the candidate db without error.
+- Regression panel (`scripts/run_regression_panel.sh`, 163 genomes + Zygo 23) plus T48-F (GCA_982397435.1, not in the panel) run separately; frozen worktrees `run-2d1860a` and `run-6983433`. Output: `results/2026-10-06_regression_cinerea_b43/` on HPCC (not committed). A base-vs-base rerun of T48-F gives 0 changes, so the changes below are real, not run noise.
+- Calls lost, gained, idiomorph, confidence or verification changes: 0 in all panels (Ascomycota 0, Mucoromycota 0, Zygo 23 0 changed loci).
+- Calls with a change: 2 expected (Basidiomycota PR in GCA_016772295.1 and GCF_000182895.1) plus 1 unexpected (T48-F HD, below). Both PR calls stay called, idiomorph undetermined, confidence high; span 1,806,650-1,826,463 -> 1,806,650-1,827,699 (phb3.3 is now inside the call); core model of `fungal_mating_type_pheromone` 369 bp -> 216 bp (the wrong-frame 123-aa gene 6 reference was replaced by phb3.1, 72 aa). Gene set unchanged. The same holds for the Okayama 7 #130 copy (1,719,114-1,738,930 -> 1,719,114-1,740,166).
+- GCA_982397435.1 (T48-F): its PR array is not called on either side (withheld, partial models); PR withheld-only rows changed state between absent and withheld. The called HD locus on CEVXIV010000004.1 changed span only (still called, undetermined, high). The cause is not established; the B43 record does not contain HD genes.
+- Withheld on both sides: 164 loci in the Basidiomycota panel and 10 in record_sources changed span, gene set or withheld reason (`regression_withheld_changes.md`), mostly span widening of withheld loci across genomes unrelated to C. cinerea. The five new short precursor references (all alias `fungal_mating_type_pheromone`) are the only change to the search input; the mechanism by which they widen HD/aLocus spans in other genomes is not established. 1 withheld PR locus became `+polish_capped` in each of the two C. cinerea references.
+- `check_record_selfcall.py`: both C. cinerea records (HD_A43, PR_B43) still called at GCA_016772295.1.
+
+## Follow-ups not applied
+
+- (8) A separate provisional T48-F record (different B haplotype, partial models).
+- (9) Report array span separately from B-locus span in the array study.
+- The sibling HD record `5346_a43-b43-okayama-7_HD_A43` carries the same strain statement with `differs_from_sequenced: false`.
+- Rename the legacy roster label `pheromone_B44` (kept so reported gene names do not change).
+- Investigate the span widening of withheld loci in other genomes.

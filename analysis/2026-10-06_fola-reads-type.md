@@ -130,8 +130,33 @@ VSP-1150 + VSP-0798, VSP-0777 + VSP-2032, VSP-1057 + JCP360. The first run stall
 - So a minor MAT1-1 share of 1 to 10% is visible only as `trace_MAT1-1`, and a minor MAT1-2 share below 5% is not visible. The `both` rule (relative depth 0.10) is set above this background; no change was made to it.
 - Limits: three pairs; R1 only; fractions are shares of reads, not of nuclei; two haploid strains mixed, not a heterokaryon; no sequencing-error or index-hopping model. The A. fumigatus putative hybrids (Lofgren et al.) are not run.
 
+## Update 5: second and later rounds of recruitment for Update 3 (curator request)
+Method (`recruit_ext.slurm`, job 29600198): start from the round-1 scaffolds of Update 3. Each round maps all read pairs (R1 and R2, uncapped) to the previous scaffolds with minimap2 `-ax sr`, keeps pairs with a mate mapped at MAPQ >= 10, reassembles them with SPAdes `--careful`, and runs `detect --taxid 5506`.
+Guards: stop after round 5, if recruited pairs grow less than 5%, or if more than 1,000,000 pairs. No run hit a guard; all four reached the round limit before converging (growth was still 12 to 18% per round except VSP-0947, below). Per-round tables: `results/2026-10-06_fola_reads_blastx/recruit_ext/<strain>/rounds.tsv`.
+
+| Strain | Round 1 (Update 3) | Round 5 |
+|---|---|---|
+| 50a (MAT1-2) | 1,786 pairs; longest contig 4.5 kb; locus 4.1 kb | 6,035 pairs; longest 15.8 kb; MAT1-2 high, 15.5-kb locus with SLA2, APN2, COX13 |
+| VSP-0980 (MAT1-1) | 1,479 pairs; 4.7 kb | 2,613 pairs; 15.3 kb; MAT1-1 high, 15.1-kb locus with the 3 flank genes |
+| VSP-0931 (divergent) | 1,262 pairs; no call | 3,562 pairs; 15.6 kb; MAT1-2 high from round 2 (medium in round 3); 15.4-kb locus with the 3 flank genes |
+| VSP-0947 (both) | 1,072 pairs; MAT1-2 only, 580-bp contig | 1,742 pairs; 5.8 kb; MAT1-1 high from round 2; MAT1-2 only in round 3 (1.2-kb contig, no flanks); no MAT1-2 in rounds 4 and 5 |
+
+Checks against the full-genome assemblies (BLASTN, evalue 1e-50):
+- 50a: the round-5 contig of 15,778 bp is 100.000% identical over its full length to NODE_86 of the independent whole-genome assembly (positions 115,322 to 131,099). The extension is correct.
+- VSP-0980: the round-5 contig of 15,270 bp matches NODE_12 of the AVITI assembly (298,998 to 313,026) at 99.1 to 99.2%, which is 130 or so differences, not 0. I do not know the cause. The reads of VSP-0980 in `05_Pre-Processing` may not be the library of that assembly. This fits the lower MAT1-1 k-mer breadth of VSP-0980 (0.73, median 0.975 for MAT1-1 strains) when its own assembly supplied the panel. Not verified; it needs N. L.
+- VSP-0931: no whole-genome assembly exists, so the 15.4-kb locus is not checked.
+
+False second calls: round 5 also reports a second "high" MAT1-2 locus in 50a (NODE_3, 5.3 kb, 100% identical to another place in the genome, NODE_41) and in VSP-0980 (NODE_2, 2.3 kb, 98.7% to a non-MAT region of NODE_2 of the genome assembly). The VSP-0947 round-3 MAT1-2 call (1.2-kb contig) is the same type. In every real locus the three flank genes (SLA2, APN2, COX13) are present on the contig (3 of 3 loci in the table above); in these false calls they are absent or only one is present (3 of 3). That rule was read off six loci after the fact; it has not been tested on other strains.
+
+What it shows:
+- With extension, the recruit-and-assemble path reaches a full flanked locus in 3 of 4 strains, including VSP-0931 (no call before), and with no species-specific reference needed beyond the blastx proteins.
+- It does not recover the second idiomorph of VSP-0947 (heterokaryon or mixed library): the MAT1-1 locus stays at 4.9 to 5.8 kb, and the MAT1-2 contig stays short. Mixed or two-allele samples are a failure case here.
+- Without a flank-gene requirement, short paralog contigs are called as extra loci.
+- Cost per strain: five rounds of minimap2 on the full read set and five small SPAdes runs; 11 minutes for the first two rounds of the 4 strains in parallel (8 CPUs each). The exact total time per strain was not recorded.
+- Limits: four strains, chosen as known cases (not a random sample); the extension rounds have no truth for VSP-0931 and VSP-0947; rounds stopped at the limit, not at convergence.
+
 ## Curator decisions
-Open: (1) keep the 0.50 breadth fraction and 0.10 relative-depth cut-offs (now checked against simulated mixes, Update 4). (2) Alignment path: build, or accept k-mers only for same-species panels. (3) Whether to follow up VSP-0947 as a real two-idiomorph strain (heterokaryon or diploid) or a contaminated library: depths are 7.7 and 5.7 against shared 15.5, with assembled contigs both near 8x. (4) blastx for populations without a species locus: use T2-level references (same genus) with an identity filter of 40 to 80% (policy: a high filter removes paralog noise but loses divergent real alleles like VSP-0931); do not use distant references alone (T4). (5) Whether to assemble VSP-0931 to confirm it is a divergent MAT1-2-1 in a non-oxysporum Fusarium. (6) Whether to build a second round of recruitment (map to first-round contigs, reassemble) for the recruit-and-assemble path.
+Open: (1) keep the 0.50 breadth fraction and 0.10 relative-depth cut-offs (now checked against simulated mixes, Update 4). (2) Alignment path: build, or accept k-mers only for same-species panels. (3) Whether to follow up VSP-0947 as a real two-idiomorph strain (heterokaryon or diploid) or a contaminated library: depths are 7.7 and 5.7 against shared 15.5, with assembled contigs both near 8x. (4) blastx for populations without a species locus: use T2-level references (same genus) with an identity filter of 40 to 80% (policy: a high filter removes paralog noise but loses divergent real alleles like VSP-0931); do not use distant references alone (T4). (5) Whether to assemble VSP-0931 to confirm it is a divergent MAT1-2-1 in a non-oxysporum Fusarium. (6) The second round of recruitment was built and tested (Update 5): decide whether to require at least 2 flank genes on a contig before calling a locus, test that on more strains, and whether to run more rounds. (7) VSP-0980: ask N. L. whether the reads in `05_Pre-Processing` belong to the AVITI assembly used for the panel.
 
 ## Files
 - `results/2026-10-06_fola_reads_type/` (samples.tsv, run_v2.slurm, v2_concordance.tsv); full per-strain TSVs in the main checkout `out_v2/`.

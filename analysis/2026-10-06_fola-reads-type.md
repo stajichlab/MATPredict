@@ -71,6 +71,44 @@ Run: `run_v3.slurm`, same code, same 8M-read cap, same rule (job 29550029). Resu
 - Circularity: VSP-0980 supplied the MAT1-1 reference, so its call (breadth 0.732) is not independent. AT141 has no reads in the 148, so the MAT1-2 reference strain is not in the benchmark. The other 147 strains are independent of the reference intervals, but the truth (samtools breadth) is still from the same reads.
 - The v2 limits above stay true for a panel taken from another species or lineage.
 
+## Update 2: no species-specific locus: protein (DIAMOND blastx) search of reads
+Question (curator): without a locus defined for the species or population, can blastx of reads against MAT proteins match the k-mer accuracy?
+Test design: references are database proteins (`scripts/build_blastx_tiers.py`), each tier holds one taxonomic distance from *F. oxysporum*:
+T1 same species (2 proteins: MAT1-1-1, MAT1-2-1, other formae speciales), T2 same genus, other species (F. fujikuroi, F. graminearum; 8 proteins),
+T3 other Hypocreales (0 proteins in the database, not tested), T4 Pezizomycotina outside Hypocreales (49 MAT proteins in 25 MAT1-1 and 24 MAT1-2 entries).
+Every tier also holds 37 APN2/SLA2 proteins as a depth control. DIAMOND 2.2.6 blastx, `-k 3 -e 1e-5`, first 4,000,000 R1 reads of each of the 148 strains (job 29551121).
+Call: best hit per read (max bitscore); keep reads with identity >= I and aligned length >= 30 aa; density of a class = reads of its best gene / mean reference length;
+present = density >= 0.10 x control density (mean of APN2 and SLA2) and >= 3 reads. Truth = the samtools breadth call, as above (`v3_concordance.tsv`).
+I was tuned on odd-numbered strains (sorted by name) and tested on even ones (`scripts/blastx_threshold_sweep.py`, `sweep_calls.tsv`).
+
+| Tier | min identity | tune agree (74) | test agree (74) |
+|---|---|---|---|
+| T1 same species | 0 / 40-80 | 87.8% / 100% | 90.5% / 97.3% |
+| T2 same genus | 0 / 40-80 | 95.9% / 100% | 97.3% / 98.6% (100% at 80) |
+| T4 distant | 0 | 83.8% | 89.2% |
+| T4 distant | 40 / 50 | 79.7% / 73.0% | 89.2% / 87.8% |
+| T4 distant | 60 or more | 8% or less | 9.5% or less |
+
+- Close references (T1, T2) reach 97 to 100% from a filter of 40% identity upward. The tune split cannot choose between 40 and 80%; every value gives 100%.
+- At T1 (identity 50) and T2 (identity 60) over all 148 strains: MAT1-1 17/17, MAT1-2 128/129 and 129/129, both 1/1. Differences: VSP-0931 (below) and, at T1 only, VSP-0992 (MAT1-2 called none; shared control depth 0.85).
+- T4 (distant references) is asymmetric. At identity 0: MAT1-2 strains 127/129 correct; MAT1-1 strains 1/17 correct (9 called MAT1-2, 2 called both, 5 none). The false MAT1-2 calls in MAT1-1 strains come from HMG-box paralogs (example: VSP-0980, 30 reads at 47% identity to MAT1-2-1, 26 real MAT1-1-1 reads at 54%). Real hits at T4 lie near 54% identity, so any filter above 55% removes them.
+- So with only distant references, blastx finds MAT1-2-1 but not MAT1-1-1 in this genus, and cannot be used for a call on its own.
+
+VSP-0931 (the "Neither" strain of the samtools table; k-mer call `low_depth`): blastx calls MAT1-2 at T1 and T2 (28 and 73 reads) at only 60 to 66% identity to MAT1-2-1, while real *F. oxysporum* strains hit at 84 to 98%. Control depth is normal. The Kraken report assigns 69% of its reads to "Fusarium sp. MBC 181" and none to F. oxysporum among the top species. Reading: VSP-0931 is probably not *F. oxysporum*, and carries a divergent MAT1-2-1 that nucleotide matching misses. Not verified; the species is not established and the locus was not assembled to the end.
+
+## Update 3: recruit reads, assemble, run `detect` (curator idea)
+Method (`recruit.slurm`, job 29551936): blastx of all R1 and R2 reads (not capped) against the T2 + T4 MAT and flank proteins (81 proteins after removing duplicate headers, which also drops a few proteins that share species and gene name); keep both mates of every hit read; SPAdes `--careful`; `detect --taxid 5506` (frozen `run-94c1a3b` database, which contains F. oxysporum records) on the scaffolds.
+Pilot on 4 strains (`results/2026-10-06_fola_reads_blastx/recruit/`):
+| Strain | pairs recruited | assembly | `detect` | Right? |
+|---|---|---|---|---|
+| VSP-0980 (MAT1-1) | 1,479 | 4 scaffolds, 11.4 kb | MAT1-1 high, 4.7-kb contig | yes |
+| 50a (MAT1-2) | 1,786 | 5 scaffolds, 11.3 kb | MAT1-2 high, 4.4-kb contig (also a 1.2-kb contig) | idiomorph yes; locus is 4.4 kb here against 12.1 kb with flanks in the genome assembly |
+| VSP-0947 (both) | 1,072 | 20 scaffolds, 13.8 kb | MAT1-2 high on a 580-bp contig; MAT1-1 contigs (1.5 to 3.4 kb) withheld | no: "both" missed, MAT1-2 call on a 580-bp contig |
+| VSP-0931 (divergent) | 1,262 | 6 scaffolds, 9.6 kb | none called; all 7 loci withheld | no call |
+- The recruited assemblies cover the genes and a little around them, not the flanks. `detect` withholds short contigs without flanks (`modelled_gene_bar`). It works when a contig reaches the flanks (VSP-0980, 50a) and fails when it does not.
+- Four strains is a pilot, not an accuracy estimate.
+- Next test (not run): a second round, mapping the reads to the first-round contigs to extend into the flanks, then a new assembly.
+
 ## Curator decisions
 Open: (1) keep the 0.50 breadth fraction and 0.10 relative-depth cut-offs, or recalibrate on simulated mixes first. (2) Alignment path: build, or accept k-mers only for same-species panels. (3) Whether to follow up VSP-0947 as a real two-idiomorph strain (heterokaryon or diploid) or a contaminated library: depths are 7.7 and 5.7 against shared 15.5, with assembled contigs both near 8x.
 

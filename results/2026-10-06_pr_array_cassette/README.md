@@ -13,3 +13,7 @@ Full test suite: 1075 passed.
 window of any single locus in the array, not a count of cassettes (it can be 1 on an array with no cassette). The run outputs above
 were produced under the old name; only the column header of `arrays.tsv`/`loci.tsv` and `compare_cassette.py` were relabeled, the
 values are unchanged. The before/after was rerun on the final commit (see below).
+
+Rerun on the renamed field: frozen worktree run-pr-array-cassette2 (aac1539), HPCC job 29534306, same 37 genomes; output
+`cand2/` and `compare2/` on HPCC. `compare_cassette.py` gives 0 differences outside `receptor_cassette_*`, and its `loci.tsv` and
+`arrays.tsv` are identical to the committed (relabeled) files. Full test suite on aac1539: 1075 passed.

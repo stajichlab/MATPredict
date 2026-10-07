@@ -53,6 +53,24 @@ Step 3, concordance with the samtools call (`results/2026-10-06_fola_reads_type/
 - Only the first 8M reads (R1 first) were used. Depth is a k-mer count, not a genome depth.
 - Alignment path, divergent references (blastx) and a panel builder from the database are not built.
 
+## Update: panel built from Fola genomes (same day)
+Why: the first panel (GenBank) lost about 22% of the MAT1-2 unique k-mers in every strain. The Fola locus is 99.119% identical to AB011378.1 over 5,106 bp
+(39 mismatches, 6 gaps), with the same alignment in AT141, JCP043 and the VSP-0916 flye assembly. MAT1-1 is 99.789% (11 mismatches) in VSP-0980.
+Panel (`panels/fusarium_oxysporum_fola/`, README there): MAT1-2 from AT141 Chr7:1107520-1112622 (chromosome-level Fola genome), MAT1-1 from VSP-0980 NODE_12:304601-309820.
+FON_AJ275 was not used: it is f. sp. niveum, not Fola.
+Run: `run_v3.slurm`, same code, same 8M-read cap, same rule (job 29550029). Result: `results/2026-10-06_fola_reads_type/v3_concordance.tsv`.
+
+| Panel | agree | MAT1-2 strains: median MAT1-2 breadth (min) | MAT1-1 strains: median MAT1-1 breadth (min) |
+|---|---|---|---|
+| GenBank (v2) | 145/148 (98.0%) | 0.783 (0.517) | 0.935 (0.704) |
+| Fola (v3) | 147/148 (99.3%) | 1.000 (0.627) | 0.975 (0.732) |
+
+- v3 table: MAT1-1 17/17, MAT1-2 129/129, both 1/1. AL185 and VSP-0992 (low_depth in v2) are now MAT1-2. The one difference is VSP-0931 (truth none, `low_depth`): no signal in either method.
+- 50a: MAT1-2 breadth 1.000, MAT1-1 breadth 0.011 (depth 0.02), flag `trace_MAT1-1`. 20a has no MAT-1 signal at all. VSP-0947: both, breadth 0.968 and 1.000, depths 7.5 and 7.3.
+- With breadth now near 1.0 where the allele matches, the 0.50 breadth fraction is no longer needed to pass the cohort; it is kept unchanged. It is untested on the Fola panel as a tighter value, so this note does not claim a better threshold.
+- Circularity: VSP-0980 supplied the MAT1-1 reference, so its call (breadth 0.732) is not independent. AT141 has no reads in the 148, so the MAT1-2 reference strain is not in the benchmark. The other 147 strains are independent of the reference intervals, but the truth (samtools breadth) is still from the same reads.
+- The v2 limits above stay true for a panel taken from another species or lineage.
+
 ## Curator decisions
 Open: (1) keep the 0.50 breadth fraction and 0.10 relative-depth cut-offs, or recalibrate on simulated mixes first. (2) Alignment path: build, or accept k-mers only for same-species panels. (3) Whether to follow up VSP-0947 as a real two-idiomorph strain (heterokaryon or diploid) or a contaminated library: depths are 7.7 and 5.7 against shared 15.5, with assembled contigs both near 8x.
 

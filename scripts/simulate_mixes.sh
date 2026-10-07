@@ -9,7 +9,7 @@ N=${N_READS:-8000000}
 export PYTHONPATH=$PROJ_ROOT/.claude/worktrees/reads-type/src
 PY=$PROJ_ROOT/.pixi/envs/test/bin/python
 rm -f "$OUT.part"
-for f in 0 1 2 5 10 20 50 80 90 95 98 99 100; do
+for f in ${FRACS:-0 1 2 5 10 20 50 80 90 95 98 99 100}; do
   nb=$(( N * f / 100 )); na=$(( N - nb ))
   $PY -m MATPredict reads-type --idiomorph MAT1-1=$PANEL_DIR/MAT1-1.fasta --idiomorph MAT1-2=$PANEL_DIR/MAT1-2.fasta \
     --reads <(zcat $READS_DIR/${A}_R1_trimmed.fastq.gz | head -n $(( na * 4 ))) <(zcat $READS_DIR/${B}_R1_trimmed.fastq.gz | head -n $(( nb * 4 ))) \

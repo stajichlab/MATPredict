@@ -49,7 +49,7 @@ Step 3, concordance with the samtools call (`results/2026-10-06_fola_reads_type/
 - The 50% breadth fraction was set after a first run with a 90% fraction failed. MAT1-2 breadth was 0.78 of expected in all strains, because the Fola MAT1-2 allele differs from the GenBank reference at about 22% of the unique k-mers. The new value was chosen from the failed first run (the first 40 strains it finished, all MAT1-2 at 0.78 of expected) and a k scan on 20a and VSP-0947. The same 148 strains then gave the 98.0%, so it is a consistency check on the same cohort, not an independent test.
 - A test with a SNP every 40 bp (about half the k-mers lost) is called `none`; every 60 bp is called correctly. Allele divergence above about 1 SNP per 40 bp needs the alignment path or a shorter k (not built).
 - The truth comes from the same reads, so both methods share any sample mix-up. Only one "both" strain (VSP-0947) tests the non-single outcome, and the one truth "none" strain (VSP-0931) came out `low_depth`, so `none` is not tested on real data (only in a synthetic test).
-- Mixed samples are not calibrated yet. The planned simulated mixes (50:50, 80:20, 95:5) are not run. A 2% contaminant (like 50a's trace) would fall under the 0.10 depth cut-off and be flagged, not called.
+- Mixed samples are not calibrated yet. The planned simulated mixes (50:50, 80:20, 95:5) are not run. A 2% contaminant (like 50a's trace) would fall under the 0.10 depth cut-off and be flagged, not called. (Superseded in part by Update 4: mixes were run for the k-mer path, 3 strain pairs.)
 - Only the first 8M reads (R1 first) were used. Depth is a k-mer count, not a genome depth.
 - Alignment path, divergent references (blastx) and a panel builder from the database are not built.
 
@@ -109,8 +109,29 @@ Pilot on 4 strains (`results/2026-10-06_fola_reads_blastx/recruit/`):
 - Four strains is a pilot, not an accuracy estimate.
 - Next test (not run): a second round, mapping the reads to the first-round contigs to extend into the flanks, then a new assembly.
 
+## Update 4: simulated mixed samples (k-mer path, Fola panel)
+Method (`scripts/simulate_mixes.sh`, `results/2026-10-06_fola_reads_mixes/`): 8,000,000 R1 reads per mixture; a MAT1-1 strain and a MAT1-2 strain are combined as the first n reads of each (process substitution, no temporary FASTQ). Minor and major roles are both tested (0 to 100% MAT1-2 reads). Three pairs, each of two strains with shared k-mer depth of 15 or more, chosen by depth (the best-covered strains, not a random draw):
+VSP-1150 + VSP-0798, VSP-0777 + VSP-2032, VSP-1057 + JCP360. The first run stalled on one node; the missing fractions were re-run (jobs 29551712, 29552687). Table: `mixes_all.tsv`.
+
+| MAT1-2 reads | VSP-1150+VSP-0798 | VSP-0777+VSP-2032 | VSP-1057+JCP360 |
+|---|---|---|---|
+| 0% | MAT1-1 (trace MAT1-2) | MAT1-1 (trace MAT1-2) | MAT1-1 (trace MAT1-2) |
+| 1% / 2% | MAT1-1 (trace MAT1-2) | MAT1-1 (trace MAT1-2) | MAT1-1 (trace MAT1-2) |
+| 5% | MAT1-1 (trace MAT1-2) | both (ratio < 0.25) | both (ratio < 0.25) |
+| 10% | both (ratio < 0.25) | both (ratio < 0.25) | both (ratio < 0.25) |
+| 20% / 50% | both | both | both |
+| 80% | both | both (ratio < 0.25) | both |
+| 90% to 99% | MAT1-2 (trace MAT1-1) | not run | MAT1-2 (trace MAT1-1) |
+| 100% | MAT1-2 | not run | MAT1-2 |
+
+- Pair 2 stops at 80%: VSP-2032 has about 7.0M R1 reads (fastp), so mixtures above 87% would not hold 8M reads and the true fraction would be wrong.
+- Detection limit for `both` in these 3 pairs: a minor MAT1-2 share of 10% is called `both` in 3 of 3 pairs, 5% in 2 of 3, 2% and below in 0 of 3. A minor MAT1-1 share of 20% is called `both` in 2 of 2 pairs; 10% and below in 0 of 2 (called MAT1-2 with a `trace_MAT1-1` flag).
+- The `trace_MAT1-2` flag is background: it appears at 0% MAT1-2 in all three pure MAT1-1 strains (MAT1-2 depth 1.0 to 1.6 against 15 to 17). Some part of the MAT1-2 reference occurs in these MAT1-1 genomes. The flag therefore does not detect a minor MAT1-2 idiomorph. `trace_MAT1-1` is not background: it is absent at 100% MAT1-2 and present at 90 to 99% (breadth 0.21 at 99% in pair 1).
+- So a minor MAT1-1 share of 1 to 10% is visible only as `trace_MAT1-1`, and a minor MAT1-2 share below 5% is not visible. The `both` rule (relative depth 0.10) is set above this background; no change was made to it.
+- Limits: three pairs; R1 only; fractions are shares of reads, not of nuclei; two haploid strains mixed, not a heterokaryon; no sequencing-error or index-hopping model. The A. fumigatus putative hybrids (Lofgren et al.) are not run.
+
 ## Curator decisions
-Open: (1) keep the 0.50 breadth fraction and 0.10 relative-depth cut-offs, or recalibrate on simulated mixes first. (2) Alignment path: build, or accept k-mers only for same-species panels. (3) Whether to follow up VSP-0947 as a real two-idiomorph strain (heterokaryon or diploid) or a contaminated library: depths are 7.7 and 5.7 against shared 15.5, with assembled contigs both near 8x.
+Open: (1) keep the 0.50 breadth fraction and 0.10 relative-depth cut-offs (now checked against simulated mixes, Update 4). (2) Alignment path: build, or accept k-mers only for same-species panels. (3) Whether to follow up VSP-0947 as a real two-idiomorph strain (heterokaryon or diploid) or a contaminated library: depths are 7.7 and 5.7 against shared 15.5, with assembled contigs both near 8x. (4) blastx for populations without a species locus: use T2-level references (same genus) with an identity filter of 40 to 80% (policy: a high filter removes paralog noise but loses divergent real alleles like VSP-0931); do not use distant references alone (T4). (5) Whether to assemble VSP-0931 to confirm it is a divergent MAT1-2-1 in a non-oxysporum Fusarium. (6) Whether to build a second round of recruitment (map to first-round contigs, reassemble) for the recruit-and-assemble path.
 
 ## Files
 - `results/2026-10-06_fola_reads_type/` (samples.tsv, run_v2.slurm, v2_concordance.tsv); full per-strain TSVs in the main checkout `out_v2/`.

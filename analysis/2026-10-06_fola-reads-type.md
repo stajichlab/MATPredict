@@ -125,7 +125,7 @@ VSP-1150 + VSP-0798, VSP-0777 + VSP-2032, VSP-1057 + JCP360. The first run stall
 | 100% | MAT1-2 | not run | MAT1-2 |
 
 - Pair 2 stops at 80%: VSP-2032 has about 7.0M R1 reads (fastp), so mixtures above 87% would not hold 8M reads and the true fraction would be wrong.
-- Detection limit for `both` in these 3 pairs: a minor MAT1-2 share of 10% is called `both` in 3 of 3 pairs, 5% in 2 of 3, 2% and below in 0 of 3. A minor MAT1-1 share of 20% is called `both` in 2 of 2 pairs; 10% and below in 0 of 2 (called MAT1-2 with a `trace_MAT1-1` flag).
+- Detection limit for `both` in these 3 pairs: a minor MAT1-2 share of 10% is called `both` in 3 of 3 pairs, 5% in 2 of 3, 2% and below in 0 of 3. A minor MAT1-1 share of 20% is called `both` in 3 of 3 pairs; 10% and below in 0 of 2 pairs (pair 2 was not run above 80%); those are called MAT1-2 with a `trace_MAT1-1` flag.
 - The `trace_MAT1-2` flag is background: it appears at 0% MAT1-2 in all three pure MAT1-1 strains (MAT1-2 depth 1.0 to 1.6 against 15 to 17). Some part of the MAT1-2 reference occurs in these MAT1-1 genomes. The flag therefore does not detect a minor MAT1-2 idiomorph. `trace_MAT1-1` is not background: it is absent at 100% MAT1-2 and present at 90 to 99% (breadth 0.21 at 99% in pair 1).
 - So a minor MAT1-1 share of 1 to 10% is visible only as `trace_MAT1-1`, and a minor MAT1-2 share below 5% is not visible. The `both` rule (relative depth 0.10) is set above this background; no change was made to it.
 - Limits: three pairs; R1 only; fractions are shares of reads, not of nuclei; two haploid strains mixed, not a heterokaryon; no sequencing-error or index-hopping model. The A. fumigatus putative hybrids (Lofgren et al.) are not run.

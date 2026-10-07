@@ -152,7 +152,7 @@ What it shows:
 - With extension, the recruit-and-assemble path reaches a full flanked locus in 3 of 4 strains, including VSP-0931 (no call before), and with no species-specific reference needed beyond the blastx proteins.
 - It does not recover the second idiomorph of VSP-0947 (heterokaryon or mixed library): the MAT1-1 locus stays at 4.9 to 5.8 kb, and the MAT1-2 contig stays short. Mixed or two-allele samples are a failure case here.
 - Without a flank-gene requirement, short paralog contigs are called as extra loci.
-- Cost per strain: five rounds of minimap2 on the full read set and five small SPAdes runs; 11 minutes for the first two rounds of the 4 strains in parallel (8 CPUs each). The exact total time per strain was not recorded.
+- Cost per strain: four rounds of minimap2 on the full read set plus four small SPAdes runs (8 CPUs). The run time per strain was not recorded.
 - Limits: four strains, chosen as known cases (not a random sample); the extension rounds have no truth for VSP-0931 and VSP-0947; rounds stopped at the limit, not at convergence.
 
 ## Curator decisions

@@ -23,6 +23,7 @@ from MATPredict.detect.benchmark import (
     translate_gene_from_contig_sequence,
 )
 from MATPredict.detect.pipeline import DetectionOutcome, DetectionResult
+from MATPredict.detect.receptor_arrays import RECEPTOR_ARRAYS_NOTE
 from MATPredict.detect.scoring import count_distinct_intervals
 
 logger = logging.getLogger(__name__)
@@ -315,6 +316,10 @@ def _result_doc(r: DetectionResult) -> dict:
         "merged_from": r.merged_from,
         # The subloci of a merged A or B call (curator's ruling 2026-09-28).
         "subloci": r.subloci,
+        # PR calls only (`receptor_arrays`): the array this call sits in and
+        # its support flag. A flag, never a gate; arrays occur for mating and
+        # non-mating receptors alike. Absent for every other call.
+        **(r.receptor_array if getattr(r, "receptor_array", None) else {}),
         # How many of this locus's genes a polishing tool could actually model.
         # The sharpest discriminator measured to date: across 46,647
         # lineage-routed Pezizomycotina loci, every high-confidence call had
@@ -502,6 +507,11 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
         # test first; see `two_idiomorphs`): arrangement, evidence and every
         # possible cause. Never a homothallism verdict. [] when none.
         "two_idiomorphs": outcome.two_idiomorphs,
+        # Pheromone-receptor arrays (`receptor_arrays`), each listed once with
+        # the number of calls in it. Report only; written unconditionally, as
+        # [] when the genome has none or no family scans for receptors.
+        "receptor_arrays_note": RECEPTOR_ARRAYS_NOTE,
+        "receptor_arrays": [a.as_report() for a in getattr(outcome, "receptor_arrays", [])],
         "families_attempted": [_family_label(k) for k in outcome.families_attempted],
         "detected": [_result_doc(r) for r in outcome.results],
         "not_detected": [

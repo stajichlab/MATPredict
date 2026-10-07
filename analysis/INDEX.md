@@ -67,3 +67,8 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
 | 09-26 | [Data quality](2026-09-26_data-quality.md) | decided | 9 amplicons suppressed |
+
+## Reads-only typing
+| Date | Report | Status | Key numbers |
+|---|---|---|---|
+| 10-06 | [Fola reads-type](2026-10-06_fola-reads-type.md) | open | 145/148 agree with samtools breadth; 3 refusals (low_depth); 50a locus assembled (MAT1-2) |

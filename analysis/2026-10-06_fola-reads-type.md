@@ -79,7 +79,7 @@ T3 other Hypocreales (0 proteins in the database, not tested), T4 Pezizomycotina
 Every tier also holds 37 APN2/SLA2 proteins as a depth control. DIAMOND 2.2.6 blastx, `-k 3 -e 1e-5`, first 4,000,000 R1 reads of each of the 148 strains (job 29551121).
 Call: best hit per read (max bitscore); keep reads with identity >= I and aligned length >= 30 aa; density of a class = reads of its best gene / mean reference length;
 present = density >= 0.10 x control density (mean of APN2 and SLA2) and >= 3 reads. Truth = the samtools breadth call, as above (`v3_concordance.tsv`).
-I was tuned on odd-numbered strains (sorted by name) and tested on even ones (`scripts/blastx_threshold_sweep.py`, `sweep_calls.tsv`).
+The filter was tuned on odd-numbered strains (sorted by name) and tested on even ones (`scripts/blastx_threshold_sweep.py`, `sweep_calls.tsv`).
 
 | Tier | min identity | tune agree (74) | test agree (74) |
 |---|---|---|---|

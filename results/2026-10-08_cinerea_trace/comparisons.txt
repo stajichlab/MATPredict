@@ -1,0 +1,35 @@
+### baseA baseB
+GCA_002105055.1_Leucr1 {'identical': 312}
+GCF_000292625.1_Dacryopinax_sp._DJM_731_SSP1_v1.0 {'identical': 237}
+GCF_000708205.1_Mixia_osmundae_v1.0 {'identical': 301}
+TOTAL {'identical': 850}
+### baseA cand
+GCA_002105055.1_Leucr1 {'identical': 296, 'only_in_A': 1, 'span_changed': 14, 'count_changed_at_same_contig_family': 1, 'only_in_B': 2}
+GCF_000292625.1_Dacryopinax_sp._DJM_731_SSP1_v1.0 {'identical': 221, 'span_changed': 16, 'gene_set_changed': 1, 'count_changed_at_same_contig_family': 2}
+GCF_000708205.1_Mixia_osmundae_v1.0 {'identical': 272, 'span_changed': 26, 'gene_set_changed': 10, 'count_changed_at_same_contig_family': 9, 'reason_changed': 1}
+TOTAL {'identical': 789, 'only_in_A': 1, 'span_changed': 56, 'count_changed_at_same_contig_family': 12, 'only_in_B': 2, 'gene_set_changed': 11, 'reason_changed': 1}
+### baseA noNew
+GCA_002105055.1_Leucr1 {'identical': 304, 'only_in_A': 1, 'span_changed': 6, 'count_changed_at_same_contig_family': 1}
+GCF_000292625.1_Dacryopinax_sp._DJM_731_SSP1_v1.0 {'identical': 229, 'span_changed': 8}
+GCF_000708205.1_Mixia_osmundae_v1.0 {'identical': 281, 'span_changed': 18, 'gene_set_changed': 5, 'count_changed_at_same_contig_family': 5, 'reason_changed': 1}
+TOTAL {'identical': 814, 'only_in_A': 1, 'span_changed': 32, 'count_changed_at_same_contig_family': 6, 'gene_set_changed': 5, 'reason_changed': 1}
+### baseA oldSeq6
+GCA_002105055.1_Leucr1 {'identical': 304, 'span_changed': 8, 'only_in_B': 2}
+GCF_000292625.1_Dacryopinax_sp._DJM_731_SSP1_v1.0 {'identical': 228, 'span_changed': 9, 'gene_set_changed': 1, 'count_changed_at_same_contig_family': 2}
+GCF_000708205.1_Mixia_osmundae_v1.0 {'identical': 290, 'span_changed': 10, 'gene_set_changed': 6, 'count_changed_at_same_contig_family': 4}
+TOTAL {'identical': 822, 'span_changed': 27, 'only_in_B': 2, 'gene_set_changed': 7, 'count_changed_at_same_contig_family': 6}
+### baseA both
+GCA_002105055.1_Leucr1 {'identical': 312}
+GCF_000292625.1_Dacryopinax_sp._DJM_731_SSP1_v1.0 {'identical': 237}
+GCF_000708205.1_Mixia_osmundae_v1.0 {'identical': 301}
+TOTAL {'identical': 850}
+### noNew cand
+GCA_002105055.1_Leucr1 {'identical': 302, 'span_changed': 8, 'only_in_B': 2}
+GCF_000292625.1_Dacryopinax_sp._DJM_731_SSP1_v1.0 {'identical': 228, 'span_changed': 9, 'gene_set_changed': 1, 'count_changed_at_same_contig_family': 2}
+GCF_000708205.1_Mixia_osmundae_v1.0 {'identical': 291, 'span_changed': 12, 'gene_set_changed': 8, 'count_changed_at_same_contig_family': 4}
+TOTAL {'identical': 821, 'span_changed': 29, 'only_in_B': 2, 'gene_set_changed': 9, 'count_changed_at_same_contig_family': 6}
+### oldSeq6 cand
+GCA_002105055.1_Leucr1 {'identical': 306, 'only_in_A': 1, 'span_changed': 6, 'count_changed_at_same_contig_family': 1}
+GCF_000292625.1_Dacryopinax_sp._DJM_731_SSP1_v1.0 {'identical': 232, 'span_changed': 7}
+GCF_000708205.1_Mixia_osmundae_v1.0 {'identical': 283, 'span_changed': 18, 'gene_set_changed': 5, 'count_changed_at_same_contig_family': 5, 'reason_changed': 1}
+TOTAL {'identical': 821, 'only_in_A': 1, 'span_changed': 31, 'count_changed_at_same_contig_family': 6, 'gene_set_changed': 5, 'reason_changed': 1}

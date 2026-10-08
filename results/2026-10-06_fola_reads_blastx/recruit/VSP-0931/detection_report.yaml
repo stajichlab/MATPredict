@@ -1,0 +1,122 @@
+routing_mode: lineage
+routing_error: null
+not_searched_reason: null
+genetic_code: 1
+genetic_code_error: null
+taxonomy_source: NCBI E-utilities
+suppressed_unpolished: 6
+suppressed_flank_carried: 0
+suppressed_mat_gene_gate: 0
+suppressed_paralog_class: 0
+suppressed_loci:
+- family: Ascomycota:MAT
+  contig: NODE_1_length_4056_cov_23.896708
+  start: 163
+  end: 3843
+  idiomorph: MAT1-1
+  polished_genes: 1
+  genes_found:
+  - MAT1-1-1
+  - MAT1-2-1
+  - APN2
+  - SLA2
+  - MAT1-1-3
+  - MAT1-2-10
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: NODE_4_length_636_cov_10.468694
+  start: 38
+  end: 601
+  idiomorph: MAT1-2
+  polished_genes: 1
+  genes_found:
+  - MAT1-2-1
+  - APN2
+  - SLA2
+  - MAT1-1-3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: NODE_3_length_1237_cov_16.686207
+  start: 142
+  end: 1175
+  idiomorph: MAT1-2
+  polished_genes: 1
+  genes_found:
+  - MAT1-2-1
+  - APN2
+  - MAT1-2-10
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: NODE_5_length_559_cov_8.568465
+  start: 108
+  end: 554
+  idiomorph: MAT1-2
+  polished_genes: 1
+  genes_found:
+  - MAT1-2-1
+  - APN2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: NODE_2_length_2651_cov_19.179487
+  start: 26
+  end: 2505
+  idiomorph: MAT1-2
+  polished_genes: 1
+  genes_found:
+  - MAT1-1-1
+  - MAT1-2-1
+  - APN2
+  - MAT1-1-2
+  - MAT1-1-5
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: NODE_6_length_492_cov_9.245783
+  start: 9
+  end: 323
+  idiomorph: MAT1-1
+  polished_genes: 1
+  genes_found:
+  - MAT1-1-1
+  - MAT1-2-1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Ascomycota:MAT
+  contig: NODE_6_length_492_cov_9.245783
+  start: 9
+  end: 323
+  idiomorph: MAT1-1
+  polished_genes: 1
+  genes_found:
+  - MAT1-1-1
+  - MAT1-2-1
+  withheld_reason: below_fraction_floor
+  fraction_found: 0.4
+  floor: 0.5
+  best_identity: 60.0
+  idiomorph_classifier: null
+assembly_gap_at_locus: []
+zygosity: null
+two_idiomorphs: []
+families_attempted:
+- Ascomycota:MAT
+detected: []
+not_detected:
+- family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+  best_fraction_found: 0.8
+  genes_found:
+  - MAT1-1-1
+  - MAT1-2-1
+  - APN2
+  - SLA2
+  - MAT1-1-3
+  - MAT1-2-10
+  genes_missing:
+  - COX13
+  genes_not_searchable: []

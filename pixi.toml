@@ -43,6 +43,11 @@ pygenomeviz = ">=1.7.0,<2"
 # scripts/build_idiomorph_hmms.py, to align the training set.
 pyhmmer = ">=0.12.3,<0.13"
 mafft = ">=7.526,<8"
+# PDF of the per-genome report (`detect --pdf`, `report genome --pdf`; MATPredict.report.pdf).
+# Curator's choice 2026-10-07: WeasyPrint over a headless Chromium in the image (25 conda packages,
+# 10.3 MB download, against ~300 MB for chrome-headless-shell and its system libraries), and it makes
+# --pdf work in pixi/conda installs too, not only in the container.
+weasyprint = ">=69.0,<70"
 
 [pypi-dependencies]
 MATPredict = { path = ".", editable = true }

@@ -65,6 +65,9 @@ jobs:
           # embedded taxonomy answers with no network (P. tannophilus: code 26)
           docker run --rm --network none --entrypoint /bin/bash matpredict:test /shell-hook.sh \
             python -c "from MATPredict.db import taxonomy as t; assert t.default_genetic_code(4918) == 26; assert t.default_lineage_phylum_name(4918) == 'Ascomycota'; print('taxonomy ok')"
+          # report PDF with no network: WeasyPrint from the pixi environment (not a browser)
+          docker run --rm --network none --entrypoint /bin/bash matpredict:test /shell-hook.sh \
+            python -c "from MATPredict.report.html import render_genome_report as r; from MATPredict.report.pdf import html_to_pdf as p; e = p(r({'detected': []}, print_mode=True), '/tmp/r.pdf'); assert e == 'weasyprint', e; assert open('/tmp/r.pdf', 'rb').read(5) == b'%PDF-'; print('pdf ok')"
 
       - name: Log in to GHCR
         if: github.event_name != 'pull_request'

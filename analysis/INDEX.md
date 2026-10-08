@@ -72,3 +72,8 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
 | 10-06 | [Fola reads-type](2026-10-06_fola-reads-type.md) | open | 145/148 agree with samtools breadth; 3 refusals (low_depth); 50a locus assembled (MAT1-2) |
+
+## Reports and tooling
+| Date | Report | Status | Key numbers |
+|---|---|---|---|
+| 10-07 | [Per-genome HTML/PDF report: design review](2026-10-07_report-design-review.md) | open | 3 review rounds; round 1 6 P0, round 2 1 P0; Chrome and WeasyPrint PDFs; 30 tests |

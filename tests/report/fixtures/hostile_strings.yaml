@@ -1,0 +1,176 @@
+run:
+  sample: <script>alert(1)</script>
+  organism: Phycomyces blakesleeanus NRRL 1555
+  taxid: 4837
+  phylum: Mucoromycota
+  matpredict_version: 0.6.1
+  database:
+    root: /app/db
+    content_sha256: 3f2a9c41d07be5aa0c1e9d4f6b2a7781e3d05c6b9a1f4e2d8c7b6a5f4e3d2c1b
+    records: 150
+  taxonomy_source: local NCBI taxonomy snapshot 2026-10-01
+  genome:
+    file: Phybl2.fna
+    sha256: 9d1e4c0b7a2f3e5d6c8b9a0f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6b7a8f9e0d
+    contigs: 80
+    length_bp: 53939167
+    n50: 4521222
+  proteins: null
+  parameters:
+    phylum: null
+    exhaustive: false
+    genetic_code: null
+    min_hits: 2
+    require_core_role: true
+    max_polished_clusters_per_family: 6
+    polish_strong_identity: 50.0
+  started: '2026-10-07T14:03:11Z'
+  wall_seconds: 96
+routing_mode: lineage
+routing_error: null
+not_searched_reason: null
+genetic_code: 1
+genetic_code_error: null
+taxonomy_source: local NCBI taxonomy snapshot 2026-10-01
+suppressed_unpolished: 0
+suppressed_flank_carried: 0
+suppressed_mat_gene_gate: 0
+suppressed_paralog_class: 0
+suppressed_loci: []
+assembly_gap_at_locus: []
+zygosity: null
+two_idiomorphs: []
+receptor_arrays_note: 'Report only: receptor arrays occur for mating and non-mating
+  receptors alike.'
+receptor_arrays: []
+families_attempted:
+- Mucoromycota:MAT
+detected:
+- family: Mucoromycota:MAT
+  contig: ctg"><img src=x onerror=alert(1)>
+  start: 3978283
+  end: 3991589
+  confidence: high
+  idiomorph: Minus
+  idiomorph_class: null
+  idiomorph_candidates:
+  - idiomorph: Minus
+    score: 402.3
+    basis: hmm_classifier
+  - idiomorph: Plus
+    score: 61.9
+    basis: hmm_classifier
+  detection_pass: strict
+  locus_class: mat_locus
+  idiomorph_unmodelled: false
+  verification: null
+  merged_from: []
+  subloci: []
+  polished_genes: 4
+  distinct_intervals: 4
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: 340.4
+  idiomorph_classifier:
+    method: profile_hmm
+    idiomorph: Minus
+    scores:
+      Minus: 402.3
+      Plus: 61.9
+    margin: 340.4
+    classifier_input: polished_model
+    min_margin: 25.0
+    proteins_scored: 1
+    genes_scored:
+    - sexM
+    manifest_sha256: ab12
+  idiomorph_resolutions: []
+  ambiguous_with: []
+  genes_found:
+  - tptA
+  - sexM
+  - rnhA
+  - algA
+  genes_missing: []
+  genes_not_searchable: []
+  fragmented: false
+  reference_records:
+  - 4837_nrrl1555_MAT_Minus
+  segments:
+  - contig: ctg"><img src=x onerror=alert(1)>
+    start: 3978283
+    end: 3991589
+    contig_edge_distance: 210455
+  gene_evidence:
+  - gene: tptA
+    role: flanking_conserved
+    contig: ctg"><img src=x onerror=alert(1)>
+    start: 3978283
+    end: 3980101
+    strand: +
+    identity: 98.2
+    coverage: null
+    reference_record: 4837_nrrl1555_MAT_Minus
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 3978283
+      end: 3978390
+    - start: 3978460
+      end: 3980101
+    evalue: 1.0e-50
+    bitscore: 300.0
+  - gene: sexM
+    role: core_MAT
+    contig: ctg"><img src=x onerror=alert(1)>
+    start: 3984120
+    end: 3984918
+    strand: '-'
+    identity: 100.0
+    coverage: null
+    reference_record: 4837_nrrl1555_MAT_Minus
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 3984120
+      end: 3984602
+    - start: 3984680
+      end: 3984918
+    evalue: 1.0e-50
+    bitscore: 300.0
+  - gene: rnhA
+    role: flanking_conserved
+    contig: ctg"><img src=x onerror=alert(1)>
+    start: 3987022
+    end: 3988410
+    strand: +
+    identity: 99.1
+    coverage: null
+    reference_record: 4837_nrrl1555_MAT_Minus
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 3987022
+      end: 3988410
+    evalue: 1.0e-50
+    bitscore: 300.0
+  - gene: algA
+    role: flanking_variable
+    contig: ctg"><img src=x onerror=alert(1)>
+    start: 3989877
+    end: 3991589
+    strand: '-'
+    identity: 97.5
+    coverage: null
+    reference_record: 4837_nrrl1555_MAT_Minus
+    method: exonerate_refine
+    status: polished_single
+    alternate_model: null
+    exons:
+    - start: 3989877
+      end: 3991589
+    evalue: 1.0e-50
+    bitscore: 300.0
+not_detected: []

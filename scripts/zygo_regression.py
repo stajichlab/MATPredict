@@ -81,7 +81,9 @@ def _detect(src: Path, db: Path, genome: Path, proteins: Path | None, out: Path)
            "--evidence-diagnostics", str(out / "evidence_diagnostics.jsonl")]
     if proteins is not None:
         cmd += ["--proteins", str(proteins)]
-    env = dict(os.environ, PYTHONPATH=str(src), MATPREDICT_DB_ROOT=str(db))
+    # MATPREDICT_HTML=0: no report.html per genome; an env var because `src` may be an older worktree.
+    env = dict(os.environ, PYTHONPATH=str(src), MATPREDICT_DB_ROOT=str(db),
+               MATPREDICT_HTML=os.environ.get("MATPREDICT_HTML", "0"))
     with open(out / "stdout.log", "w") as so, open(out / "stderr.log", "w") as se:
         rc = subprocess.run(cmd, env=env, stdout=so, stderr=se, timeout=3600).returncode
     return "ok" if rc == 0 else f"rc={rc}"

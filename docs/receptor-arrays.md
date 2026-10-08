@@ -36,9 +36,40 @@ On each PR call in `detection_report.yaml` (absent on other calls) and as column
 | `receptor_array_support` | `supported` or `unsupported` |
 | `receptor_array_support_reasons` | met criteria (`array_size>=2`, `precursor_homology`, `caax_orfs>=2`), or for `unsupported`: `single_locus`, `no_precursor_homology`, `strict_caax_orfs=N(<2)` |
 
-A PR call that overlaps no array reports nulls. Top-level `receptor_arrays` lists every array of the
+| `receptor_cassette_loci` | number of loci of the array that carry a cassette (class B or C) |
+| `receptor_cassette_class` | `none`, `B` or `C`, the best over the array's loci |
+| `receptor_cassette_members` | one entry per cassette locus: `start-end:strand=orfstart-orfend:strand[+hx],...` (its strict-CAAX ORFs; `+hx` marks an ORF with precursor homology); `\|`-joined in `loci.tsv` |
+| `receptor_cassette_max_caax_orfs` | the maximum number of strict-CAAX ORFs within the window of any single locus in the array; not a count of cassettes, and it can be 1 on an array with no cassette |
+
+An ORF lying between two loci of an array is listed under both (no deduplication), so it appears in both loci's members and may be double counted if the per-locus counts are summed.
+
+A PR call that overlaps no array reports nulls (empty list for the members). Top-level `receptor_arrays` lists every array of the
 genome once (including arrays with no call), with `strict_caax_orfs`, `precursor_homology_hits` and
 `calls`; its per-array keys use the same `receptor_array_*` names as the call fields; `receptor_arrays_note` carries the caveat below.
+
+## Cassette fields (descriptive)
+
+Source: `analysis/2026-10-06_b-locus-clustering.md` (option 1: report, do not call). A receptor locus carries
+a **cassette** when 2 or more distinct strict-CAAX ORFs lie within `CASSETTE_WINDOW_BP` (5 kb) of it,
+measured as the gap between the ORF and either end of the locus (gap of 5,000 bp or less counts; ORFs on
+either strand). Class **B**: that. Class **C**: 2 or more of those ORFs also carry tblastn precursor homology
+(a precursor hit of the run within 300 bp of the ORF). (The assessment calls these cassette A and cassette C; its
+own "B" is a looser definition not reported here.) The fields reuse the strict-CAAX ORFs and precursor hits the
+PR scan already produced; nothing is rescanned. The scan looks 10 kb around each receptor hit, so the 5 kb window
+is always covered.
+
+Caveats, all in `receptor_arrays_note`:
+- **Descriptive, never used to call.** No call, tier, label, confidence or count depends on it.
+- **Circular for CAAX-called genomes.** The CAAX scan is what admits most PR calls (and four of the six
+  curated Agaricomycete B records were chosen from CAAX positions), so "this call has a cassette" is largely true by
+  construction and is not independent confirmation.
+- **Class C is weaker than it looks** where the genome's own species has curated precursors in the reference set:
+  the homology is then a self-hit (held-out, *S. commune* fell from 11 homology clusters to 0 and
+  *C. cinerea* from 6 to 1).
+- **Tandem receptors may be merged into one locus**, so `receptor_cassette_loci` and the per-locus ORF counts are lower
+  bounds on receptors, and two receptors can share one cassette.
+- The same ORF between two loci is listed under both.
+- Cantharellales and Hymenochaetales have almost no cassettes in the assessment (2 of 674 and 2 of 425 loci).
 
 ## Scope: PR family only, and the B locus
 
@@ -55,7 +86,7 @@ done here.
 ## Parameters
 
 Accepted and fixed: merge gap 300 bp; a locus needs at least 50% reference coverage and a span of at most
-8 kb; precursor-homology and strict-CAAX window 10 kb around a member; array gap 50 kb. Each call
+8 kb; precursor-homology and strict-CAAX window 10 kb around a member; cassette window 5 kb (`CASSETTE_WINDOW_BP`) around a locus, homology within 300 bp of an ORF; array gap 50 kb. Each call
 reports one array, the one with the most loci overlapping the call (ties: leftmost); an array is
 identified by coordinates (`receptor_array_id` = `<phylum>:<locus>:<contig>:<start>-<end>`).
 

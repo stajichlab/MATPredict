@@ -37,6 +37,14 @@ release completed.
   works everywhere MATPredict is installed: 25 packages, 10.3 MB download (Pango, Cairo, HarfBuzz, fonts). Chosen
   over a headless Chromium in the image (about 300 MB). No locked version of any existing package changed. The
   Docker CI smoke test renders a PDF with no network.
+- Report-only cassette fields on the receptor arrays (stacked on the arrays entry below; assessment
+  `analysis/2026-10-06_b-locus-clustering.md`, option 1). Per array, per PR call and in `loci.tsv`:
+  `receptor_cassette_loci` (loci with 2 or more strict-CAAX ORFs within 5 kb), `receptor_cassette_class` (`none`, `B`, or `C` when 2 or
+  more of the ORFs also carry tblastn precursor homology; best over the array), `receptor_cassette_members` (locus and ORF
+  coordinates, `|`-joined in `loci.tsv`) and `receptor_cassette_max_caax_orfs` (the maximum number of strict-CAAX ORFs within the window of any single locus of the array; not a count of cassettes). Reuses the existing
+  strict-CAAX and precursor hits; descriptive only (circular for CAAX-admitted calls, class C a self-hit for species with
+  curated precursors, tandem receptors may merge into one locus) and no call, tier, label, confidence or count changes. See
+  `docs/receptor-arrays.md`.
 - Report-only pheromone-receptor arrays (`detect.receptor_arrays`; study
   `analysis/2026-10-06_agaricomycetes-pr-arrays.md`, options 1 and 2). The STE3-like receptor hits of every family
   with a `pheromone_precursor_scan` (Basidiomycota PR) are merged per strand into loci and grouped into arrays (same

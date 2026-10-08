@@ -15,7 +15,7 @@ from MATPredict.detect.caax import CAAX_METHOD
 from MATPredict.detect.family_registry import FamilyKey
 from MATPredict.detect.pipeline import DetectionOutcome, DetectionResult, run_pipeline
 from MATPredict.detect.receptor_arrays import (
-    ARRAY_GAP_BP, LOCI_ARRAY_COLUMNS, RECEPTOR_ARRAYS_NOTE, SUPPORTED, UNSUPPORTED,
+    ARRAY_GAP_BP, CASSETTE_WINDOW_BP, LOCI_ARRAY_COLUMNS, RECEPTOR_ARRAYS_NOTE, SUPPORTED, UNSUPPORTED,
     attach_array_support, build_receptor_arrays, group_arrays, loci_columns, merge_receptor_loci,
 )
 from MATPredict.detect.report import write_detection_report
@@ -228,6 +228,8 @@ def test_a_call_gets_its_array_and_only_that_field_changes():
     assert new.receptor_array["receptor_array_support"] == SUPPORTED
     assert replace(new, receptor_array=None) == call
     assert arr.n_calls == 1
+    assert new.receptor_array["receptor_cassette_class"] == "none"
+    assert new.receptor_array["receptor_cassette_loci"] == 0
 
 
 def test_two_calls_in_one_array_list_the_array_once_with_both_calls():
@@ -251,6 +253,8 @@ def test_a_pr_call_beside_no_array_reports_nulls_not_a_guess():
     other_contig = replace(_call(), contig="c9")
     [new], _ = attach_array_support([other_contig], [_Fam()], arrays([rec(1_000, 2_000)]))
     assert new.receptor_array["receptor_array_id"] is None and new.receptor_array["receptor_array_support"] is None
+    assert new.receptor_array["receptor_cassette_class"] is None
+    assert new.receptor_array["receptor_cassette_loci"] is None and new.receptor_array["receptor_cassette_members"] == []
 
 
 # ---- report and loci.tsv columns ---------------------------------------
@@ -266,7 +270,7 @@ def test_the_report_carries_call_fields_arrays_and_the_note(tmp_path):
     assert pr["receptor_array_id"] == "P:PR:c1:1000-21000" and pr["receptor_array_size"] == 2
     assert pr["receptor_array_support"] == SUPPORTED
     assert pr["receptor_array_support_reasons"] == ["array_size>=2"]
-    assert not any(k.startswith("receptor_array_") for k in hd)
+    assert not any(k.startswith(("receptor_array_", "receptor_cassette_")) for k in hd)
     [a] = doc["receptor_arrays"]
     assert a["calls"] == 1 and a["receptor_array_members"] == ["1000-2000:+", "20000-21000:+"]
     assert "does not establish" in doc["receptor_arrays_note"]
@@ -282,12 +286,17 @@ def test_a_report_without_arrays_writes_an_empty_list(tmp_path):
 
 def test_loci_columns_for_a_pr_call_and_a_non_pr_call():
     assert LOCI_ARRAY_COLUMNS == ("receptor_array_id", "receptor_array_size", "receptor_array_members", "receptor_array_support",
-                                  "receptor_array_support_reasons")
+                                  "receptor_array_support_reasons", "receptor_cassette_loci", "receptor_cassette_class",
+                                  "receptor_cassette_members", "receptor_cassette_max_caax_orfs")
     pr = {"receptor_array_id": "P:PR:c1:1-9", "receptor_array_size": 2, "receptor_array_members": ["1-2:+", "5-9:-"],
-          "receptor_array_support": SUPPORTED, "receptor_array_support_reasons": ["array_size>=2"]}
+          "receptor_array_support": SUPPORTED, "receptor_array_support_reasons": ["array_size>=2"],
+          "receptor_cassette_loci": 1, "receptor_cassette_class": "B",
+          "receptor_cassette_members": ["1-2:+=10-40:+", "5-9:-=60-90:-+hx"], "receptor_cassette_max_caax_orfs": 2}
     assert loci_columns(pr) == {
         "receptor_array_id": "P:PR:c1:1-9", "receptor_array_size": 2, "receptor_array_members": "1-2:+|5-9:-",
-        "receptor_array_support": SUPPORTED, "receptor_array_support_reasons": "array_size>=2"}
+        "receptor_array_support": SUPPORTED, "receptor_array_support_reasons": "array_size>=2",
+        "receptor_cassette_loci": 1, "receptor_cassette_class": "B",
+        "receptor_cassette_members": "1-2:+=10-40:+|5-9:-=60-90:-+hx", "receptor_cassette_max_caax_orfs": 2}
     assert set(loci_columns({}).values()) == {""}
 
 
@@ -328,3 +337,106 @@ def test_the_pipeline_flags_the_call_and_changes_nothing_else(tmp_path, monkeypa
     assert a.verification["status"] == "unverified"
     assert [x.n_calls for x in with_arrays.receptor_arrays] == [1]
     assert without.receptor_arrays == []
+
+
+# ---- cassette (descriptive) ---------------------------------------------
+
+def one(hits):
+    [a] = arrays(hits)
+    return a
+
+
+def test_two_caax_orfs_within_the_window_are_class_b():
+    a = one([rec(10_000, 11_000), caax(11_500, 11_600), caax(8_000, 8_100, "-")])
+    assert (a.cassette_loci, a.cassette_class, a.cassette_max_caax_orfs) == (1, "B", 2)
+    assert a.cassette_member_strings() == ["10000-11000:+=8000-8100:-,11500-11600:+"]
+
+
+def test_class_c_needs_two_caax_orfs_that_each_carry_precursor_homology():
+    a = one([rec(10_000, 11_000), caax(11_500, 11_600), caax(8_000, 8_100, "-"),
+             prec(11_550, 11_700), prec(7_900, 8_050)])
+    assert (a.cassette_class, a.cassette_loci) == ("C", 1)
+    assert a.cassette_member_strings() == ["10000-11000:+=8000-8100:-+hx,11500-11600:++hx"]
+    # homology on one ORF only: still B
+    assert one([rec(10_000, 11_000), caax(11_500, 11_600), caax(8_000, 8_100), prec(11_550, 11_700)]).cassette_class == "B"
+    # homology far from the ORFs (beyond 300 bp) does not make them class C
+    assert one([rec(10_000, 11_000), caax(11_500, 11_600), caax(8_000, 8_100),
+                prec(12_000, 12_100), prec(7_000, 7_500)]).cassette_class == "B"
+
+
+def test_no_caax_orf_is_no_cassette():
+    a = one([rec(10_000, 11_000), prec(11_500, 11_600)])
+    assert (a.cassette_loci, a.cassette_class, a.cassette_max_caax_orfs) == (0, "none", 0)
+    assert a.cassette_member_strings() == []
+
+
+def test_one_caax_orf_is_not_a_cassette():
+    a = one([rec(10_000, 11_000), caax(11_500, 11_600)])
+    assert (a.cassette_loci, a.cassette_class, a.cassette_max_caax_orfs) == (0, "none", 1)
+
+
+def test_the_window_boundary_is_5_kb_inclusive_from_either_end():
+    assert CASSETTE_WINDOW_BP == 5_000
+    base = rec(10_000, 11_000)
+    near = caax(11_500, 11_600)  # well inside
+    # right of the locus: gap = ORF start - locus end; exactly 5,000 counts, 5,001 does not
+    assert one([base, near, caax(16_000, 16_100)]).cassette_class == "B"
+    assert one([base, near, caax(16_001, 16_100)]).cassette_class == "none"
+    # left of the locus: gap = locus start - ORF end
+    assert one([base, near, caax(4_900, 5_000)]).cassette_class == "B"
+    assert one([base, near, caax(4_900, 4_999)]).cassette_class == "none"
+    # the window runs from either end of a multi-kb locus, not from its middle
+    wide = rec(10_000, 17_000)
+    assert one([wide, caax(11_000, 11_100), caax(22_000, 22_100)]).cassette_class == "B"
+
+
+def test_caax_orfs_on_either_strand_count_and_another_contig_does_not():
+    plus_minus = one([rec(10_000, 11_000), caax(12_000, 12_100, "+"), caax(12_200, 12_300, "-")])
+    assert plus_minus.cassette_class == "B"
+    other = one([rec(10_000, 11_000), caax(12_000, 12_100), caax(12_200, 12_300, contig="c2")])
+    assert other.cassette_class == "none"
+
+
+def test_an_array_with_several_loci_reports_each_cassette_locus():
+    # locus 1 has a cassette (class B), locus 2 none, locus 3 a class C cassette
+    a = one([rec(10_000, 11_000), caax(11_500, 11_600), caax(12_000, 12_100),
+             rec(30_000, 31_000), caax(60_000, 60_100),
+             rec(80_000, 81_000, "-"), caax(82_000, 82_100), caax(83_000, 83_100), prec(82_050, 82_080), prec(83_050, 83_080)])
+    assert a.size == 3
+    assert (a.cassette_loci, a.cassette_class, a.cassette_max_caax_orfs) == (2, "C", 2)
+    assert a.cassette_member_strings() == [
+        "10000-11000:+=11500-11600:+,12000-12100:+", "80000-81000:-=82000-82100:++hx,83000-83100:++hx"]
+
+
+def test_the_same_caax_orf_near_two_loci_is_listed_for_each_locus():
+    a = one([rec(10_000, 11_000), rec(14_000, 15_000), caax(12_000, 12_100), caax(12_500, 12_600)])
+    assert a.cassette_loci == 2 and a.cassette_max_caax_orfs == 2
+
+
+def test_cassette_fields_reach_the_call_the_array_and_the_report(tmp_path):
+    out = arrays([rec(10_000, 11_000), caax(11_500, 11_600), caax(12_000, 12_100)])
+    new, arrs = attach_array_support([_call(start=9_900, end=11_100), _call(family=OTHER)], [_Fam()], out)
+    pr, hd = new
+    assert pr.receptor_array["receptor_cassette_loci"] == 1 and pr.receptor_array["receptor_cassette_class"] == "B"
+    assert pr.receptor_array["receptor_cassette_max_caax_orfs"] == 2
+    assert pr.receptor_array["receptor_cassette_members"] == ["10000-11000:+=11500-11600:+,12000-12100:+"]
+    assert hd.receptor_array is None  # absent on a non-PR call
+    path = tmp_path / "r.yaml"
+    write_detection_report(DetectionOutcome(results=new, receptor_arrays=arrs), path)
+    doc = yaml.safe_load(path.read_text())
+    assert doc["receptor_arrays"][0]["receptor_cassette_class"] == "B"
+    assert doc["detected"][0]["receptor_cassette_members"] == pr.receptor_array["receptor_cassette_members"]
+    assert "receptor_cassette_class" not in doc["detected"][1]
+    assert loci_columns(doc["detected"][0])["receptor_cassette_class"] == "B"
+    assert loci_columns(doc["detected"][1])["receptor_cassette_class"] == ""
+
+
+def test_a_cassette_changes_no_call_tier_label_or_count():
+    # same receptor, with and without the CAAX ORFs that make the cassette: the call objects differ
+    # only in `receptor_array`, and the array-support flag and call count are those of the old rule
+    hits = [rec(10_000, 11_000), caax(11_500, 11_600), caax(12_000, 12_100)]
+    call = _call(verification={"status": "unverified", "reason": "x"}, caax_dependent=True)
+    [new], [arr] = attach_array_support([call], [_Fam()], arrays(hits))
+    assert replace(new, receptor_array=None) == call
+    assert arr.n_calls == 1
+    assert (arr.support, arr.reasons) == (SUPPORTED, ("caax_orfs>=2",))

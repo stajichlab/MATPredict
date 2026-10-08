@@ -1,0 +1,1276 @@
+run:
+  sample: basidio_serpula_HD_PR
+  organism: null
+  taxid: 936435
+  phylum: null
+  matpredict_version: 0.6.1
+  database:
+    root: /bigdata/stajichlab/jstajich/projects/MATPredict/.claude/worktrees/run-e9060da/db
+    content_sha256: 2b90ce832408b10990f4d1a77efe4587fa085b91268fb6461930cee28681c6fc
+    records: 163
+  taxonomy_source: NCBI E-utilities
+  genome:
+    file: basidio_serpula_HD_PR.fna
+    sha256: f6fabdee1e313be7d2be1ee5610ae93ec85091955df52f79792f76a72d7c1972
+    contigs: 201
+    length_bp: 46116567
+    n50: 2701176
+  proteins: null
+  parameters:
+    phylum: null
+    exhaustive: false
+    genetic_code: null
+    exclude_records: null
+    min_hits: 2
+    min_identity: null
+    require_core_role: true
+    max_polished_clusters_per_family: 6
+    polish_strong_identity: 50.0
+  started: '2026-10-08T04:22:53Z'
+  wall_seconds: 86
+routing_mode: lineage
+routing_error: null
+not_searched_reason: null
+genetic_code: 1
+genetic_code_error: null
+taxonomy_source: NCBI E-utilities
+suppressed_unpolished: 36
+suppressed_flank_carried: 0
+suppressed_mat_gene_gate: 0
+suppressed_paralog_class: 0
+suppressed_loci:
+- family: Basidiomycota:HD
+  contig: GL945494.1
+  start: 112924
+  end: 113127
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945481.1
+  start: 347130
+  end: 362558
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945481.1
+  start: 1068836
+  end: 1068997
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945485.1
+  start: 134377
+  end: 134550
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945485.1
+  start: 792088
+  end: 792321
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945485.1
+  start: 994187
+  end: 994321
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945476.1
+  start: 337894
+  end: 338034
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945476.1
+  start: 1324647
+  end: 1324778
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945484.1
+  start: 1139478
+  end: 1139630
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945484.1
+  start: 1208343
+  end: 1208690
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945484.1
+  start: 1318514
+  end: 1318741
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945490.1
+  start: 295907
+  end: 296134
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945496.1
+  start: 39024
+  end: 39362
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945474.1
+  start: 455847
+  end: 456113
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945474.1
+  start: 904455
+  end: 904598
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945474.1
+  start: 2863441
+  end: 2863566
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945474.1
+  start: 5300113
+  end: 5300448
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945479.1
+  start: 721111
+  end: 721299
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945479.1
+  start: 958916
+  end: 959098
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945480.1
+  start: 1159799
+  end: 1159993
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945480.1
+  start: 2583556
+  end: 2583864
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945477.1
+  start: 911465
+  end: 911890
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945477.1
+  start: 1284747
+  end: 1284863
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945477.1
+  start: 1592030
+  end: 1592212
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: GL945478.1
+  start: 522678
+  end: 539217
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945491.1
+  start: 329751
+  end: 329885
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: GL945492.1
+  start: 4562
+  end: 34453
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945482.1
+  start: 619108
+  end: 619200
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945486.1
+  start: 1083087
+  end: 1083326
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945486.1
+  start: 1329566
+  end: 1352640
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945483.1
+  start: 85456
+  end: 85572
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945483.1
+  start: 719502
+  end: 719630
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945513.1
+  start: 5399
+  end: 10253
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945495.1
+  start: 62539
+  end: 62697
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945497.1
+  start: 182086
+  end: 182313
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: GL945613.1
+  start: 128
+  end: 217
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: GL945488.1
+  start: 783106
+  end: 787667
+  idiomorph: undetermined
+  polished_genes: 2
+  genes_found:
+  - pheromone_receptor
+  - caax_precursor
+  withheld_reason: below_fraction_floor
+  fraction_found: 0.25
+  floor: 0.5
+  best_identity: 53.125
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: GL945491.1
+  start: 543584
+  end: 550724
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - pheromone_receptor
+  - caax_precursor
+  withheld_reason: below_fraction_floor
+  fraction_found: 0.25
+  floor: 0.5
+  best_identity: 30.189
+  idiomorph_classifier: null
+assembly_gap_at_locus: []
+zygosity: null
+two_idiomorphs: []
+receptor_arrays_note: Receptor arrays occur for both mating and non-mating STE3-like
+  receptors (the study found arrays holding paralogs beside the mating receptors in
+  Coprinopsis cinerea and Schizophyllum commune), so array membership does not establish
+  that a locus is a mating receptor. receptor_array_support is a flag on the evidence
+  behind an array; it never changes a call, its confidence or its verification label.
+receptor_arrays:
+- receptor_array_id: Basidiomycota:PR:GL945474.1:4713912-4714208
+  family: Basidiomycota:PR
+  contig: GL945474.1
+  start: 4713912
+  end: 4714208
+  receptor_array_size: 1
+  receptor_array_members:
+  - 4713912-4714208:-
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945474.1:5389600-5394375
+  family: Basidiomycota:PR
+  contig: GL945474.1
+  start: 5389600
+  end: 5394375
+  receptor_array_size: 2
+  receptor_array_members:
+  - 5389600-5390680:+
+  - 5393117-5394375:+
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: supported
+  receptor_array_support_reasons:
+  - array_size>=2
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945475.1:35023-36319
+  family: Basidiomycota:PR
+  contig: GL945475.1
+  start: 35023
+  end: 36319
+  receptor_array_size: 1
+  receptor_array_members:
+  - 35023-36319:-
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945475.1:535802-537196
+  family: Basidiomycota:PR
+  contig: GL945475.1
+  start: 535802
+  end: 537196
+  receptor_array_size: 1
+  receptor_array_members:
+  - 535802-537196:+
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945475.1:1033223-1034555
+  family: Basidiomycota:PR
+  contig: GL945475.1
+  start: 1033223
+  end: 1034555
+  receptor_array_size: 1
+  receptor_array_members:
+  - 1033223-1034555:-
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945475.1:1368498-1369750
+  family: Basidiomycota:PR
+  contig: GL945475.1
+  start: 1368498
+  end: 1369750
+  receptor_array_size: 1
+  receptor_array_members:
+  - 1368498-1369750:+
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945477.1:359515-360748
+  family: Basidiomycota:PR
+  contig: GL945477.1
+  start: 359515
+  end: 360748
+  receptor_array_size: 1
+  receptor_array_members:
+  - 359515-360748:+
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945477.1:2839835-2841105
+  family: Basidiomycota:PR
+  contig: GL945477.1
+  start: 2839835
+  end: 2841105
+  receptor_array_size: 1
+  receptor_array_members:
+  - 2839835-2841105:-
+  strict_caax_orfs: 1
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=1(<2)
+  calls: 1
+- receptor_array_id: Basidiomycota:PR:GL945477.1:3072958-3074228
+  family: Basidiomycota:PR
+  contig: GL945477.1
+  start: 3072958
+  end: 3074228
+  receptor_array_size: 1
+  receptor_array_members:
+  - 3072958-3074228:+
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945478.1:522742-524014
+  family: Basidiomycota:PR
+  contig: GL945478.1
+  start: 522742
+  end: 524014
+  receptor_array_size: 1
+  receptor_array_members:
+  - 522742-524014:+
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945478.1:1384609-1392726
+  family: Basidiomycota:PR
+  contig: GL945478.1
+  start: 1384609
+  end: 1392726
+  receptor_array_size: 3
+  receptor_array_members:
+  - 1384609-1385509:-
+  - 1386223-1387646:-
+  - 1391122-1392726:-
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: supported
+  receptor_array_support_reasons:
+  - array_size>=2
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945481.1:438312-514117
+  family: Basidiomycota:PR
+  contig: GL945481.1
+  start: 438312
+  end: 514117
+  receptor_array_size: 5
+  receptor_array_members:
+  - 438312-439864:+
+  - 457801-459400:-
+  - 506109-507714:-
+  - 509538-510851:-
+  - 512533-514117:-
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: supported
+  receptor_array_support_reasons:
+  - array_size>=2
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945481.1:744959-763356
+  family: Basidiomycota:PR
+  contig: GL945481.1
+  start: 744959
+  end: 763356
+  receptor_array_size: 2
+  receptor_array_members:
+  - 744959-746200:-
+  - 762016-763356:+
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: supported
+  receptor_array_support_reasons:
+  - array_size>=2
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945485.1:1485124-1486281
+  family: Basidiomycota:PR
+  contig: GL945485.1
+  start: 1485124
+  end: 1486281
+  receptor_array_size: 1
+  receptor_array_members:
+  - 1485124-1486281:-
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945487.1:506177-507452
+  family: Basidiomycota:PR
+  contig: GL945487.1
+  start: 506177
+  end: 507452
+  receptor_array_size: 1
+  receptor_array_members:
+  - 506177-507452:-
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945488.1:432901-434194
+  family: Basidiomycota:PR
+  contig: GL945488.1
+  start: 432901
+  end: 434194
+  receptor_array_size: 1
+  receptor_array_members:
+  - 432901-434194:+
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945488.1:786372-787667
+  family: Basidiomycota:PR
+  contig: GL945488.1
+  start: 786372
+  end: 787667
+  receptor_array_size: 1
+  receptor_array_members:
+  - 786372-787667:+
+  strict_caax_orfs: 1
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=1(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945488.1:1048033-1049268
+  family: Basidiomycota:PR
+  contig: GL945488.1
+  start: 1048033
+  end: 1049268
+  receptor_array_size: 1
+  receptor_array_members:
+  - 1048033-1049268:+
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945489.1:329536-330787
+  family: Basidiomycota:PR
+  contig: GL945489.1
+  start: 329536
+  end: 330787
+  receptor_array_size: 1
+  receptor_array_members:
+  - 329536-330787:-
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945494.1:176372-177451
+  family: Basidiomycota:PR
+  contig: GL945494.1
+  start: 176372
+  end: 177451
+  receptor_array_size: 1
+  receptor_array_members:
+  - 176372-177451:+
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945501.1:42260-66616
+  family: Basidiomycota:PR
+  contig: GL945501.1
+  start: 42260
+  end: 66616
+  receptor_array_size: 5
+  receptor_array_members:
+  - 42260-43389:-
+  - 44207-45757:-
+  - 54527-55967:-
+  - 60508-61780:+
+  - 65087-66616:+
+  strict_caax_orfs: 2
+  precursor_homology_hits: 2
+  receptor_array_support: supported
+  receptor_array_support_reasons:
+  - array_size>=2
+  - precursor_homology
+  - caax_orfs>=2
+  calls: 1
+- receptor_array_id: Basidiomycota:PR:GL945525.1:32929-34269
+  family: Basidiomycota:PR
+  contig: GL945525.1
+  start: 32929
+  end: 34269
+  receptor_array_size: 1
+  receptor_array_members:
+  - 32929-34269:-
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+- receptor_array_id: Basidiomycota:PR:GL945543.1:3212-4569
+  family: Basidiomycota:PR
+  contig: GL945543.1
+  start: 3212
+  end: 4569
+  receptor_array_size: 1
+  receptor_array_members:
+  - 3212-4569:-
+  strict_caax_orfs: 0
+  precursor_homology_hits: 0
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=0(<2)
+  calls: 0
+families_attempted:
+- Basidiomycota:HD
+- Basidiomycota:PR
+detected:
+- family: Basidiomycota:HD
+  contig: GL945494.1
+  start: 160053
+  end: 192142
+  confidence: high
+  idiomorph: undetermined
+  idiomorph_class: null
+  idiomorph_candidates: []
+  detection_pass: strict
+  locus_class: mat_locus
+  idiomorph_unmodelled: false
+  verification: null
+  merged_from: []
+  subloci: []
+  polished_genes: 4
+  distinct_intervals: 4
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: null
+  idiomorph_classifier: null
+  idiomorph_resolutions: []
+  ambiguous_with: []
+  genes_found:
+  - HD1
+  - HD2
+  - MIP1
+  - beta_fg
+  genes_missing: []
+  genes_not_searchable: []
+  fragmented: false
+  reference_records:
+  - 192523_h97_HD_A1
+  - 90004_unknown_HD_A1
+  segments:
+  - contig: GL945494.1
+    start: 160053
+    end: 192142
+    contig_edge_distance: 70691
+  gene_evidence:
+  - gene: MIP1
+    role: flanking_conserved
+    contig: GL945494.1
+    start: 160053
+    end: 162535
+    strand: +
+    identity: 69.32
+    coverage: null
+    reference_record: 192523_h97_HD_A1
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: GL945494.1
+      start: 160053
+      end: 162538
+      strand: +
+      exons:
+      - start: 160053
+        end: 160565
+      - start: 160623
+        end: 161139
+      - start: 161195
+        end: 161854
+      - start: 161910
+        end: 162538
+      identity: 68.08999999999999
+      method: miniprot_refine
+    exons:
+    - start: 160053
+      end: 160132
+    - start: 160169
+      end: 160565
+    - start: 160623
+      end: 161139
+    - start: 161195
+      end: 161854
+    - start: 161910
+      end: 162535
+    evalue: 0.0
+    bitscore: 419.0
+  - gene: HD1
+    role: core_MAT
+    contig: GL945494.1
+    start: 163632
+    end: 164804
+    strand: '-'
+    identity: 49.86
+    coverage: null
+    reference_record: 90004_unknown_HD_A1
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: GL945494.1
+      start: 162954
+      end: 165228
+      strand: '-'
+      exons:
+      - start: 162954
+        end: 163507
+      - start: 163601
+        end: 164822
+      - start: 164905
+        end: 165228
+      identity: 39.01
+      method: miniprot_refine
+    exons:
+    - start: 163632
+      end: 163870
+    - start: 163934
+      end: 164019
+    - start: 164077
+      end: 164804
+    evalue: 1.25e-99
+    bitscore: 329.0
+  - gene: HD2
+    role: core_MAT
+    contig: GL945494.1
+    start: 166414
+    end: 167376
+    strand: +
+    identity: 44.52
+    coverage: null
+    reference_record: 90004_unknown_HD_A1
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: GL945494.1
+      start: 165575
+      end: 167421
+      strand: +
+      exons:
+      - start: 165575
+        end: 166084
+      - start: 166156
+        end: 166359
+      - start: 166414
+        end: 167421
+      identity: 39.93
+      method: miniprot_refine
+    exons:
+    - start: 166414
+      end: 166693
+    - start: 166751
+      end: 167376
+    evalue: 9.22e-73
+    bitscore: 219.0
+  - gene: beta_fg
+    role: flanking_conserved
+    contig: GL945494.1
+    start: 168402
+    end: 168638
+    strand: '-'
+    identity: 68.35
+    coverage: null
+    reference_record: 192523_h97_HD_A1
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: GL945494.1
+      start: 168402
+      end: 169313
+      strand: '-'
+      exons:
+      - start: 168402
+        end: 168656
+      - start: 168737
+        end: 168856
+      - start: 168918
+        end: 169018
+      - start: 169103
+        end: 169177
+      - start: 169256
+        end: 169313
+      identity: 48.17
+      method: miniprot_refine
+    exons:
+    - start: 168402
+      end: 168638
+    evalue: 3.49e-12
+    bitscore: 65.5
+- family: Basidiomycota:PR
+  contig: GL945477.1
+  start: 2815887
+  end: 2846352
+  confidence: medium
+  idiomorph: undetermined
+  idiomorph_class: null
+  idiomorph_candidates: []
+  detection_pass: strict
+  locus_class: idiomorph_gene_only
+  idiomorph_unmodelled: false
+  verification:
+    status: unverified
+    reason: admitted only through a strict-CAAX scan precursor; the scan's false-positive
+      rate is not yet bounded (0/25 non-mating STE3 copies flagged, 95% upper limit
+      13.7%)
+    evidence: results/2026-09-28_validation_f3_f4/NOTE.md
+  merged_from: []
+  subloci: []
+  receptor_array_id: Basidiomycota:PR:GL945477.1:2839835-2841105
+  receptor_array_size: 1
+  receptor_array_members:
+  - 2839835-2841105:-
+  receptor_array_support: unsupported
+  receptor_array_support_reasons:
+  - single_locus
+  - no_precursor_homology
+  - strict_caax_orfs=1(<2)
+  polished_genes: 2
+  distinct_intervals: 3
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: null
+  idiomorph_classifier: null
+  idiomorph_resolutions: []
+  ambiguous_with: []
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  - caax_precursor
+  genes_missing:
+  - pheromone_B43
+  - pheromone_B44
+  genes_not_searchable: []
+  fragmented: false
+  reference_records:
+  - 5346_a43-b43-okayama-7_PR_B43
+  - 984962_tc-32-1_PR_B1
+  - caax_scan:CVIG
+  segments:
+  - contig: GL945477.1
+    start: 2815887
+    end: 2846352
+    contig_edge_distance: 280276
+  gene_evidence:
+  - gene: fungal_mating_type_pheromone
+    role: core_MAT
+    contig: GL945477.1
+    start: 2815887
+    end: 2816000
+    strand: '-'
+    identity: 34.211
+    coverage: 55.0
+    reference_record: 5346_a43-b43-okayama-7_PR_B43
+    method: tblastn_genome
+    status: unpolished
+    alternate_model: null
+    exons: null
+    evalue: 3.0
+    bitscore: 25.8
+  - gene: pheromone_receptor
+    role: core_MAT
+    contig: GL945477.1
+    start: 2839871
+    end: 2841102
+    strand: '-'
+    identity: 54.92
+    coverage: null
+    reference_record: 984962_tc-32-1_PR_B1
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: GL945477.1
+      start: 2813932
+      end: 2841108
+      strand: '-'
+      exons:
+      - start: 2813932
+        end: 2814309
+      - start: 2839841
+        end: 2840304
+      - start: 2840370
+        end: 2840507
+      - start: 2840562
+        end: 2840628
+      - start: 2840688
+        end: 2840788
+      - start: 2840844
+        end: 2840966
+      - start: 2841021
+        end: 2841108
+      identity: 46.550000000000004
+      method: miniprot_refine
+    exons:
+    - start: 2839871
+      end: 2840304
+    - start: 2840370
+      end: 2840507
+    - start: 2840562
+      end: 2840640
+    - start: 2840688
+      end: 2840788
+    - start: 2840844
+      end: 2840966
+    - start: 2841021
+      end: 2841102
+    evalue: 5.91e-74
+    bitscore: 175.0
+  - gene: caax_precursor
+    role: core_MAT
+    contig: GL945477.1
+    start: 2846230
+    end: 2846352
+    strand: +
+    identity: 0.0
+    coverage: null
+    reference_record: caax_scan:CVIG
+    method: caax_scan
+    status: caax_orf
+    alternate_model: null
+    exons: null
+    evalue: null
+    bitscore: null
+    orf_length_aa: 40
+    caax_motif: CVIG
+    orf_count: 1
+- family: Basidiomycota:PR
+  contig: GL945501.1
+  start: 17376
+  end: 66616
+  confidence: medium
+  idiomorph: undetermined
+  idiomorph_class: null
+  idiomorph_candidates: []
+  detection_pass: strict
+  locus_class: idiomorph_gene_only
+  idiomorph_unmodelled: false
+  verification:
+    status: unverified
+    reason: admitted only through a strict-CAAX scan precursor; the scan's false-positive
+      rate is not yet bounded (0/25 non-mating STE3 copies flagged, 95% upper limit
+      13.7%)
+    evidence: results/2026-09-28_validation_f3_f4/NOTE.md
+  merged_from: []
+  subloci: []
+  receptor_array_id: Basidiomycota:PR:GL945501.1:42260-66616
+  receptor_array_size: 5
+  receptor_array_members:
+  - 42260-43389:-
+  - 44207-45757:-
+  - 54527-55967:-
+  - 60508-61780:+
+  - 65087-66616:+
+  receptor_array_support: supported
+  receptor_array_support_reasons:
+  - array_size>=2
+  - precursor_homology
+  - caax_orfs>=2
+  polished_genes: 2
+  distinct_intervals: 4
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: null
+  idiomorph_classifier: null
+  idiomorph_resolutions: []
+  ambiguous_with: []
+  genes_found:
+  - pheromone_receptor
+  - pheromone_B43
+  - fungal_mating_type_pheromone
+  - caax_precursor
+  genes_missing:
+  - pheromone_B44
+  genes_not_searchable: []
+  fragmented: false
+  reference_records:
+  - 5346_a43-b43-okayama-7_PR_B43
+  - 5627_9006-11_PR_B1
+  - 984962_tc-32-1_PR_B1
+  - caax_scan:CVIA
+  segments:
+  - contig: GL945501.1
+    start: 17376
+    end: 66616
+    contig_edge_distance: 17375
+  gene_evidence:
+  - gene: fungal_mating_type_pheromone
+    role: core_MAT
+    contig: GL945501.1
+    start: 17376
+    end: 17501
+    strand: '-'
+    identity: 40.476
+    coverage: 100.0
+    reference_record: 5627_9006-11_PR_B1
+    method: tblastn_genome
+    status: unpolished
+    alternate_model: null
+    exons: null
+    evalue: 0.003
+    bitscore: 32.7
+  - gene: caax_precursor
+    role: core_MAT
+    contig: GL945501.1
+    start: 46358
+    end: 46489
+    strand: +
+    identity: 0.0
+    coverage: null
+    reference_record: caax_scan:CVIA
+    method: caax_scan
+    status: caax_orf
+    alternate_model: null
+    exons: null
+    evalue: null
+    bitscore: null
+    orf_length_aa: 43
+    caax_motif: CVIA
+    orf_count: 2
+  - gene: pheromone_B43
+    role: core_MAT
+    contig: GL945501.1
+    start: 53498
+    end: 53650
+    strand: '-'
+    identity: 38.333
+    coverage: 92.0
+    reference_record: 5346_a43-b43-okayama-7_PR_B43
+    method: tblastn_genome
+    status: unpolished
+    alternate_model: null
+    exons: null
+    evalue: 7.98e-05
+    bitscore: 38.5
+  - gene: pheromone_receptor
+    role: core_MAT
+    contig: GL945501.1
+    start: 65087
+    end: 66244
+    strand: +
+    identity: 65.37
+    coverage: null
+    reference_record: 984962_tc-32-1_PR_B1
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: GL945501.1
+      start: 65087
+      end: 66604
+      strand: +
+      exons:
+      - start: 65087
+        end: 65351
+      - start: 65411
+        end: 65782
+      - start: 65835
+        end: 66604
+      identity: 52.27
+      method: miniprot_refine
+    exons:
+    - start: 65087
+      end: 65174
+    - start: 65229
+      end: 65351
+    - start: 65411
+      end: 65590
+    - start: 65645
+      end: 65782
+    - start: 65835
+      end: 66244
+    evalue: 2.17e-115
+    bitscore: 308.0
+not_detected: []

@@ -6,6 +6,14 @@ release completed.
 
 ## [Unreleased]
 
+### Fixed
+- PDF report: gene-evidence tables no longer run past their card. In print, header, number and status cells may wrap, and
+  table cells break long names (for example `fungal_mating_type_pheromone`). Found on real campaign reports (Serpula
+  lacrymans, 78 px past the card). New layout test `tests/report/test_report_layout.py` checks every fixture, including one
+  real campaign report.
+- `detect --genome` on a gzip or zstd file now stops at once with a message that says to decompress it (it used to fail
+  minutes later with a BLAST or index error). Recognised by the first bytes, not the file name.
+
 ### Changed
 - The polish cap now has an identity tier. With the default cap of 6 per family, every admitted cluster whose best
   identity is 50% or more is polished even past the cap, and the remaining slots are filled in the usual rank

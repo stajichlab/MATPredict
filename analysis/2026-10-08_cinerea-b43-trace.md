@@ -39,8 +39,19 @@ Nothing. This note adds the experiment; no source change.
 - The hit coordinates come from my own tblastn runs with detect's settings, not from detect's hit table; the match with the cluster boundaries is exact in both cases.
 - Whether the spans of withheld loci matter to anyone is not established; they only appear in reports.
 
+## Update: `core_span` (curator ruled option 3, report only) and what it shows
+Built on branch `core-span` (code, tests and results there): each called locus gets `core_span` (extent of its own gene models on its contig) and `beyond_core_bp` (part of the cluster span outside them), in `detection_report.yaml`, on the GFF3 `MAT_locus` line and in the HTML report. Calls and clustering are unchanged.
+
+Results (`results/2026-10-08_core_span_panel/` and `results/2026-10-08_core_span_trace3/` on `core-span`):
+- **T48-F**, the case that motivated it: HD span 118,043-153,196, own genes 118,043-130,301, 22,895 bp beyond. This matches the baseline run (span 118,043-130,301) exactly, so for this locus the field recovers the pre-edit extent.
+- **The 33-genome Basidiomycota regression panel, old and new database** (new code both times): 33 genomes each, 47 called loci each. 44 of the 45 loci that match one-to-one have identical span and core under both databases. The exception is the curated C. cinerea genome (CC3), where span and core both moved because its own gene models changed. Two loci could not be matched one-to-one (several loci on one contig and family). So this panel contains no case of "span moved, core unchanged"; T48-F is the only one, and it is outside the panel. The earlier 164 changed loci are withheld loci, which carry no gene coordinates in the report, so `core_span` cannot be computed for them.
+- **How far spans extend past their genes** (new database, 47 called loci): 37 loci (79%) have `beyond_core_bp` > 0; the median is 948 bp (13% of the span); 23 loci are 1 kb or more beyond, 11 are 10 kb or more (largest 43.5 kb, a PR locus on NCVV01000007.1); 10 loci have at least half of their span outside their own genes. Why each extends was traced for only two loci (below), so these numbers show the extent, not that the extra span is noise: some may be real unmodelled genes.
+- **Leucr1 bLocus on MCGR01000028.1** (span 145,579-160,941; own genes 145,636-147,187; 13.8 kb beyond). tblastn of the run's whole reference set over that contig: the stretch 147,188-161,500 holds 52 hits; 50 have e-value 0.088 to 10 and come from a dozen unrelated queries (bW, pheromone, receptor, bE, mfa1, HD2, PAN6 and others). The only two better hits (e-value 5e-5, 29 bits, 30% identity over 80 aa) come from one bE query at 160,622-160,941, and the span ends at 160,941, the end of that hit. No modelled gene lies in the stretch. Whether that bE hit is real is not established.
+
+Open: (a) `core_span` for withheld loci needs gene coordinates added to `suppressed_loci` in the report (a pipeline-output change, not done). (b) Which of the 10 loci with half their span outside their genes are noise and which hold real unmodelled genes.
+
 ## Curator decisions
-Open, with the options:
+Ruled 2026-10-08 (J. Stajich): option 3, a report-only `core span` (built, see the update above). Options considered:
 1. Keep the curation (the old gene-6 entry was wrong and the four peptides are real) and accept span noise from short queries as a known property. Cost: reported spans of called loci can include a 20-kb or larger stretch for no biological reason (T48-F).
 2. Change the code so that a hit joins a cluster only above a floor (a minimum bit-score or e-value, or a per-family cluster span built from that family's own hits). This changes detection for every family and needs the regression panel and a ruling on the threshold.
 3. Report a "core span" next to the cluster span (report-only), so nothing in calls changes.

@@ -71,4 +71,4 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 ## Reads-only typing
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
-| 10-06 | [Fola reads-type](2026-10-06_fola-reads-type.md) | open | 145/148 agree with samtools breadth; 3 refusals (low_depth); 50a locus assembled (MAT1-2) |
+| 10-06 | [Fola reads-type](2026-10-06_fola-reads-type.md) | open | 147/148 agree with samtools breadth using a Fola-derived panel (145/148 with GenBank); 50a locus assembled (MAT1-2) |

@@ -284,3 +284,4 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
   - Pass criterion for now: strict-CAAX hit rate on curated B-locus receptors and
     false-positive rate on non-mating STE3, each with a Wilson 95% interval.
   - No ruling yet on lifting the unverified label for any order.
+- Reads-only typing, recruit-and-assemble (2026-10-07): a contig needs at least 1 flank gene (SLA2, APN2 or COX13), probably 2, before `detect` calls it a locus in a recruited assembly. Number not fixed, not implemented. The Update 5 pilot is accepted as a start; further rounds and strains deferred. See `2026-10-06_fola-reads-type.md`.

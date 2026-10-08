@@ -76,4 +76,4 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 ## Reports and tooling
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
-| 10-07 | [Per-genome HTML/PDF report: design review](2026-10-07_report-design-review.md) | open | 3 review rounds; round 1 6 P0, round 2 1 P0; Chrome and WeasyPrint PDFs; 30 tests |
+| 10-07 | [Per-genome HTML/PDF report: design review](2026-10-07_report-design-review.md) | decided; PR #48 | 3 review rounds; round 1 6 P0, round 2 1 P0; Chrome and WeasyPrint PDFs; 30 tests |

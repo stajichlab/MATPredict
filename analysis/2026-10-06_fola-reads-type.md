@@ -158,10 +158,20 @@ What it shows:
 ## Update 6: Aspergillus fumigatus (moved)
 The 304-assembly and 331-read-set profile, the flank-SNP filter (`--min-unique-run`) and the open decisions are in [2026-10-07_afum-reads-and-assembly.md](2026-10-07_afum-reads-and-assembly.md). That test also changes this note: the Fola benchmark was re-run with the filter and is unchanged (147/148, `v4_concordance.tsv`).
 
+## Figures
+![Fola overview](figures/fola_overview.png)
+
+**Figure 1.** (a) Unique k-mer depth of the two idiomorphs for the 148 Fola strains with the Fola-derived panel; colour is the samtools breadth call (VSP-0947 "both", VSP-0931 "neither"). (b) Breadth of the carried idiomorph's unique k-mers with the GenBank panel and with the Fola panel; black bar = median (MAT1-2 strains 0.78 to 1.00, MAT1-1 strains 0.93 to 0.98). (c) Two-strain mixtures, 3 pairs, 8M reads each: depth of each idiomorph against the share of reads from the MAT1-2 strain, with the call as squares below (pair 2 stops at 80%, see Update 4). (d) DIAMOND blastx of reads against proteins at three taxonomic distances from *F. oxysporum*: agreement with the samtools call against the minimum read-to-protein identity, test half (solid) and tune half (dotted). Script: `scripts/figures/fig_fola_overview.py`; data: `v2_concordance.tsv`, `v4_concordance.tsv`, `mixes_all.tsv`, `sweep_calls.tsv`.
+
+![Fola loci](figures/fola_loci.png)
+
+**Figure 2.** (a) Isolate 50a: the MAT1-2 locus in the whole-genome SPAdes assembly (top, NODE_86) and in the contigs assembled from recruited reads at rounds 1, 3 and 5; green ribbons are BLASTN blocks (>= 95%). Round 1 (4.4 kb) holds APN2 and MAT1-2-1, round 3 (6.4 kb) adds COX13, and round 5 (15.8 kb) adds SLA2; the round-5 contig is 100.000% identical to NODE_86 over its full length. (b) VSP-0947: the two idiomorphs are in the whole-genome assembly, each on its own short contig (NODE_931, 5.5 kb, SPAdes coverage 9.7x, 99.9% to the MAT1-1 reference; NODE_1613, 4.1 kb, 7.7x, 99.4% to the MAT1-2 reference) with no flank genes, so `detect` cannot call the pair. (c) Longest assembled contig at each recruit-and-extend round for the four pilot strains. Gene arrows in (a) and for NODE_931 are `detect` gene models restricted to the flank genes and MAT1-1-1 / MAT1-2-1 at >= 50% identity (one per name; `scripts/figures/gff_genes.py`); NODE_1613 has no gene call. Script: `scripts/figures/fig_fola_loci.py`.
+
 ## Curator decisions
 Open: (1) keep the 0.50 breadth fraction and 0.10 relative-depth cut-offs (now checked against simulated mixes, Update 4). (2) Alignment path: build, or accept k-mers only for same-species panels. (3) Whether to follow up VSP-0947 as a real two-idiomorph strain (heterokaryon or diploid) or a contaminated library: depths are 7.7 and 5.7 against shared 15.5, with assembled contigs both near 8x. (4) blastx for populations without a species locus: use T2-level references (same genus) with an identity filter of 40 to 80% (policy: a high filter removes paralog noise but loses divergent real alleles like VSP-0931); do not use distant references alone (T4). (5) Whether to assemble VSP-0931 to confirm it is a divergent MAT1-2-1 in a non-oxysporum Fusarium. (6) The second round of recruitment was built and tested (Update 5): RULED 2026-10-07 (J. Stajich): a contig needs at least 1 flank gene to be called a locus, probably 2; the exact number is not fixed and the rule is not implemented. More rounds and more strains are left for later; the pilot is accepted as a good start and the work moves on. (7) VSP-0980: ask N. L. whether the reads in `05_Pre-Processing` belong to the AVITI assembly used for the panel.
 
 ## Files
+- Figures: `analysis/figures/fola_overview.png`, `analysis/figures/fola_loci.png`; scripts in `scripts/figures/`.
 - `results/2026-10-06_fola_reads_type/` (samples.tsv, run_v2.slurm, v2_concordance.tsv); full per-strain TSVs in the main checkout `out_v2/`.
 - `results/2026-10-06_fola_detect_all/`, `results/2026-10-06_fola_50a/` (reports, GFF3, scripts).
 - `scripts/compare_reads_type.py`; code `src/MATPredict/reads/`.

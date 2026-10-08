@@ -360,7 +360,7 @@ the minor idiomorph has less than a quarter of the depth of the major one.
 references by taxonomic distance, for DIAMOND blastx of reads),
 [scripts/recruit_pairs.py](scripts/recruit_pairs.py) (collect read pairs for a
 local assembly), [scripts/simulate_mixes.sh](scripts/simulate_mixes.sh) (mixed
-samples) and [scripts/compare_reads_type.py](scripts/compare_reads_type.py).
+samples) and [scripts/compare_reads_type.py](scripts/compare_reads_type.py). Figure scripts for the two reports are in [scripts/figures/](scripts/figures/); outputs are in [analysis/figures/](analysis/figures/).
 A protein search works with references from the same genus and fails with
 distant ones; see the analysis note.
 

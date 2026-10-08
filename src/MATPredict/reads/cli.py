@@ -16,6 +16,9 @@ def register_subcommands(subparsers) -> None:
     p.add_argument("--idiomorph", action="append", required=True, metavar="NAME=FASTA",
                    help="Idiomorph reference, repeat once per idiomorph (at least two), e.g. MAT1-1=AB011379.2.fa")
     p.add_argument("--k", type=int, default=31, help="k-mer length (default 31)")
+    p.add_argument("--min-unique-run", type=int, default=100,
+                   help="Keep an idiomorph-unique k-mer only if it lies in a run of this many consecutive unique "
+                        "positions (drops k-mers made unique by SNPs in shared flanks; 0 keeps all; default 100)")
     p.add_argument("--reads", nargs="+", help="FASTQ file(s) of one strain (.gz/.zst accepted)")
     p.add_argument("--sample", default=None, help="Sample name for --reads (default: first file's stem)")
     p.add_argument("--samples", help="TSV with columns sample, reads (comma-separated files); one row per strain")
@@ -39,7 +42,7 @@ def _parse_idiomorphs(items: list[str]) -> dict[str, str]:
 
 def _cmd_reads_type(args: argparse.Namespace) -> int:
     fastas = _parse_idiomorphs(args.idiomorph)
-    panel = Panel.from_fastas(fastas, k=args.k)
+    panel = Panel.from_fastas(fastas, k=args.k, min_run=args.min_unique_run)
     jobs: list[tuple[str, list[str]]] = []
     if args.samples:
         with open(args.samples, newline="") as fh:

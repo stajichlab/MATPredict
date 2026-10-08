@@ -1,0 +1,66 @@
+== withheld clusters (n_suppressed), median [n]
+Tremellales all genomes 2.0 [342]
+   called_other good 2 [317]
+   called_other poor 3.0 [10]
+   uncalled good 3.5 [10]
+   uncalled poor 2 [5]
+Trichosporonales all genomes 316 [127]
+   called_other good 332.0 [10]
+   PR_only good 314.0 [50]
+   uncalled good 329 [63]
+   uncalled poor 307.0 [4]
+Filobasidiales all genomes 289 [41]
+   called_other good 305.5 [8]
+   PR_only good 253 [11]
+   uncalled good 291 [21]
+   uncalled poor 244 [1]
+Cystofilobasidiales all genomes 258.5 [42]
+   called_other good 251.0 [6]
+   called_other poor 250 [1]
+   PR_only good 180.0 [14]
+   uncalled good 274.5 [20]
+   uncalled poor 293 [1]
+
+== CAAX near STE3: share of genomes with a strict-CAAX ORF within 10 kb of a STE3 locus
+Trichosporonales called_other 8 / 10
+Trichosporonales PR_only 50 / 50
+Trichosporonales uncalled 13 / 63
+Filobasidiales called_other 2 / 8
+Filobasidiales PR_only 10 / 11
+Filobasidiales uncalled 4 / 21
+Cystofilobasidiales called_other 6 / 6
+Cystofilobasidiales PR_only 14 / 14
+Cystofilobasidiales uncalled 3 / 20
+
+== Trichosporonales, good assemblies: allele type x call status
+called_other {'HD1type(KN)': 7, 'HD2type(homeobox near STE3)': 1, 'neither': 2}
+PR_only {'HD1type(KN)': 15, 'HD2type(homeobox near STE3)': 6, 'neither': 29}
+uncalled {'HD1type(KN)': 37, 'HD2type(homeobox near STE3)': 6, 'neither': 20}
+
+allele x CAAX-near-STE3 x call status (KN, CAAX):
+called_other KN+/CAAX- 2 KN+/CAAX+ 5 KN-/CAAX+ 3 KN-/CAAX- 0
+PR_only KN+/CAAX- 0 KN+/CAAX+ 15 KN-/CAAX+ 35 KN-/CAAX- 0
+uncalled KN+/CAAX- 33 KN+/CAAX+ 4 KN-/CAAX+ 9 KN-/CAAX- 17
+
+== by genus (Trichosporonales, good): genus, status -> KN+ / n ; allele classes
+genus	status	n	KN+	HD2type	neither	CAAX+
+Trichosporon	PR_only	21	3	0	18	21
+Trichosporon	uncalled	19	17	0	2	6
+Cutaneotrichosporon	called_other	1	1	0	0	1
+Cutaneotrichosporon	PR_only	13	8	4	1	13
+Cutaneotrichosporon	uncalled	23	13	5	5	4
+Apiotrichum	called_other	2	0	0	2	2
+Apiotrichum	PR_only	10	1	0	9	10
+Apiotrichum	uncalled	15	1	1	13	3
+Vanrija	called_other	5	4	1	0	3
+Vanrija	PR_only	3	2	1	0	3
+Pascua	uncalled	6	6	0	0	0
+Takashimella	PR_only	2	1	1	0	2
+Cryptotrichosporon	called_other	2	2	0	0	2
+Prillingera	PR_only	1	0	0	1	1
+
+== species with both a called/PR-only and an uncalled genome (Trichosporonales, good): allele types
+Cutaneotrichosporon cutaneum [('PR_only', 'neither'), ('uncalled', 'neither'), ('PR_only', 'HD2type'), ('uncalled', 'HD2type'), ('uncalled', 'HD2type'), ('PR_only', 'HD2type'), ('uncalled', 'HD2type'), ('PR_only', 'HD2type')]
+Cutaneotrichosporon dermatis [('PR_only', 'HD1type'), ('uncalled', 'HD2type'), ('uncalled', 'HD2type')]
+Trichosporon asahii [('uncalled', 'HD1type'), ('PR_only', 'HD1type'), ('uncalled', 'HD1type'), ('uncalled', 'HD1type'), ('uncalled', 'HD1type'), ('uncalled', 'HD1type'), ('uncalled', 'HD1type'), ('uncalled', 'HD1type'), ('uncalled', 'HD1type'), ('uncalled', 'HD1type'), ('uncalled', 'neither'), ('PR_only', 'HD1type'), ('PR_only', 'neither'), ('uncalled', 'neither')]
+species with both: 3

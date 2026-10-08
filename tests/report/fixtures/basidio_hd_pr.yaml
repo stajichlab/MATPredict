@@ -1,0 +1,281 @@
+run:
+  sample: Schco-H4-8
+  organism: Schizophyllum commune H4-8
+  taxid: 5334
+  phylum: Basidiomycota
+  matpredict_version: 0.6.1
+  database:
+    root: /app/db
+    content_sha256: 3f2a9c41d07be5aa0c1e9d4f6b2a7781e3d05c6b9a1f4e2d8c7b6a5f4e3d2c1b
+    records: 150
+  taxonomy_source: local NCBI taxonomy snapshot 2026-10-01
+  genome:
+    file: Schco-H4-8.fna
+    sha256: 9d1e4c0b7a2f3e5d6c8b9a0f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6b7a8f9e0d
+    contigs: 36
+    length_bp: 38500000
+    n50: 3100000
+  proteins: null
+  parameters:
+    phylum: null
+    exhaustive: false
+    genetic_code: null
+    min_hits: 2
+    require_core_role: true
+    max_polished_clusters_per_family: 6
+    polish_strong_identity: 50.0
+  started: '2026-10-07T14:03:11Z'
+  wall_seconds: 96
+routing_mode: lineage
+routing_error: null
+not_searched_reason: null
+genetic_code: 1
+genetic_code_error: null
+taxonomy_source: local NCBI taxonomy snapshot 2026-10-01
+suppressed_unpolished: 0
+suppressed_flank_carried: 0
+suppressed_mat_gene_gate: 0
+suppressed_paralog_class: 0
+suppressed_loci: []
+assembly_gap_at_locus: []
+zygosity: null
+two_idiomorphs: []
+receptor_arrays_note: 'Report only: receptor arrays occur for mating and non-mating
+  receptors alike.'
+receptor_arrays:
+- receptor_array_id: RA1
+  family: Basidiomycota:PR
+  contig: scaffold_9
+  start: 61000
+  end: 89400
+  receptor_array_size: 3
+  receptor_array_members: []
+  strict_caax_orfs: 2
+  precursor_homology_hits: 0
+  receptor_array_support: supported
+  receptor_array_support_reasons:
+  - array_size>=2
+  - strict_caax_orfs=2
+  calls: 1
+families_attempted:
+- Basidiomycota:HD
+- Basidiomycota:PR
+detected:
+- family: Basidiomycota:HD
+  contig: scaffold_3
+  start: 405000
+  end: 418400
+  confidence: medium
+  idiomorph: A43-like
+  idiomorph_class: null
+  idiomorph_candidates:
+  - idiomorph: A43-like
+    score: 300.0
+  detection_pass: strict
+  locus_class: mat_locus
+  idiomorph_unmodelled: false
+  verification: null
+  merged_from: []
+  subloci:
+  - sublocus: Aalpha
+    generic: false
+    idiomorph: Aa1
+    contig: scaffold_3
+    start: 410200
+    end: 415100
+    genes:
+    - HD1
+    - HD2
+    genes_missing: []
+    completeness: complete
+  - sublocus: Abeta
+    generic: false
+    idiomorph: Ab3
+    contig: scaffold_3
+    start: 416000
+    end: 418400
+    genes:
+    - beta-fg
+    genes_missing:
+    - Abeta HD1
+    completeness: partial
+  polished_genes: 3
+  distinct_intervals: 4
+  span_exceeds_plausible_bound: true
+  idiomorph_margin: null
+  idiomorph_classifier: null
+  idiomorph_resolutions: []
+  ambiguous_with: []
+  genes_found:
+  - HD1
+  - HD2
+  - MIP
+  - beta-fg
+  genes_missing:
+  - Abeta HD1
+  genes_not_searchable: []
+  fragmented: false
+  reference_records:
+  - 5334_h48_HD_A43
+  segments:
+  - contig: scaffold_3
+    start: 405000
+    end: 418400
+    contig_edge_distance: 210455
+  gene_evidence:
+  - gene: HD1
+    role: core_MAT
+    contig: scaffold_3
+    start: 410200
+    end: 412300
+    strand: '-'
+    identity: 64.0
+    coverage: null
+    reference_record: 5334_h48_HD_A43
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 410200
+      end: 410900
+    - start: 410960
+      end: 412300
+    evalue: 1.0e-50
+    bitscore: 300.0
+  - gene: HD2
+    role: core_MAT
+    contig: scaffold_3
+    start: 412900
+    end: 415100
+    strand: +
+    identity: 58.2
+    coverage: null
+    reference_record: 5334_h48_HD_A43
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 412900
+      end: 415100
+    evalue: 1.0e-50
+    bitscore: 300.0
+  - gene: MIP
+    role: flanking_conserved
+    contig: scaffold_3
+    start: 405000
+    end: 407800
+    strand: +
+    identity: 81.0
+    coverage: null
+    reference_record: 5334_h48_HD_A43
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 405000
+      end: 407800
+    evalue: 1.0e-50
+    bitscore: 300.0
+  - gene: beta-fg
+    role: flanking_variable
+    contig: scaffold_3
+    start: 417000
+    end: 418400
+    strand: '-'
+    identity: 70.2
+    coverage: 61.0
+    reference_record: 5334_h48_HD_A43
+    method: tblastn_genome
+    status: unpolished
+    alternate_model: null
+    exons:
+    - start: 417000
+      end: 418400
+    evalue: 1.0e-50
+    bitscore: 300.0
+- family: Basidiomycota:PR
+  contig: scaffold_9
+  start: 88000
+  end: 90220
+  confidence: low
+  idiomorph: B43-like
+  idiomorph_class: null
+  idiomorph_candidates:
+  - idiomorph: B43-like
+    score: 300.0
+  detection_pass: strict
+  locus_class: mat_locus
+  idiomorph_unmodelled: false
+  verification:
+    status: unverified
+    reason: admitted only through a strict-CAAX scan precursor; the scan's false-positive
+      rate is not yet bounded
+  merged_from: []
+  subloci: []
+  polished_genes: 1
+  distinct_intervals: 2
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: null
+  idiomorph_classifier: null
+  idiomorph_resolutions: []
+  ambiguous_with: []
+  genes_found:
+  - STE3.1
+  - phb1
+  genes_missing: []
+  genes_not_searchable:
+  - pheromone_receptor
+  fragmented: false
+  reference_records:
+  - 5334_h48_PR_B43
+  segments:
+  - contig: scaffold_9
+    start: 88000
+    end: 90220
+    contig_edge_distance: 210455
+  gene_evidence:
+  - gene: STE3.1
+    role: core_MAT
+    contig: scaffold_9
+    start: 88000
+    end: 89400
+    strand: +
+    identity: 47.0
+    coverage: null
+    reference_record: 5334_h48_PR_B43
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 88000
+      end: 89400
+    evalue: 1.0e-50
+    bitscore: 300.0
+  - gene: phb1
+    role: core_MAT
+    contig: scaffold_9
+    start: 90100
+    end: 90220
+    strand: '-'
+    identity: null
+    coverage: null
+    reference_record: null
+    method: caax_scan
+    status: not_polish_candidate
+    alternate_model: null
+    exons:
+    - start: 90100
+      end: 90220
+    evalue: 1.0e-50
+    bitscore: 300.0
+    orf_length_aa: 40
+    caax_motif: CVIA
+    orf_count: 1
+  receptor_array_id: RA1
+  receptor_array_size: 3
+  receptor_array_members:
+  - scaffold_9:88000-89400(+)
+  receptor_array_support: supported
+  receptor_array_support_reasons:
+  - array_size>=2
+not_detected: []

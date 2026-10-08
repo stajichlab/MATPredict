@@ -429,7 +429,7 @@ def _taxonomy_source() -> str:
         return f"error reading local taxonomy table: {type(exc).__name__}: {str(exc)[:120]}"
 
 
-def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
+def write_detection_report(outcome: DetectionOutcome, out_path: Path, run: dict | None = None) -> None:
     # `routing_mode` is written next to `families_attempted` because the two
     # are only meaningful together: the list says WHICH families were searched,
     # the mode says why -- and an `exhaustive` run's not-detected entries for
@@ -526,4 +526,9 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path) -> None:
             for n in outcome.not_detected
         ],
     }
+    # `run` (detect.provenance): input, code and database identity. First, so a
+    # reader sees what the report describes before what it found; absent when
+    # the caller gives none (tests, older callers), never written as null.
+    if run is not None:
+        doc = {"run": run, **doc}
     out_path.write_text(yaml.safe_dump(doc, sort_keys=False))

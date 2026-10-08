@@ -258,6 +258,9 @@ matpredict detect --genome GENOME [--proteins PROTEINS] [--taxid TAXID]
 | `--no-require-core-role` | Allow polishing of clusters without a core MAT gene hit |
 | `--exclude-records IDS` | Withhold curated records (comma-separated) for leave-one-out tests |
 | `--evidence-diagnostics FILE` | Write per-hit evidence as JSON lines |
+| `--html` / `--no-html` | Write `report.html` (default: on). `MATPREDICT_HTML=0` turns the default off; the batch scripts set it |
+| `--pdf` | Also write `report.pdf` (WeasyPrint, in the pixi environment and the image; off by default). A report or PDF error is logged and never fails the run |
+| `--sample` / `--organism` | Names shown in the report and recorded in the `run` block |
 | `--emit-cds-fasta` | Add CDS features with translations to the GFF3, and write `detected_loci.fasta` (full sequence of every contig with a call; can be large) |
 
 **Outputs** (in `--out-dir`):
@@ -267,10 +270,25 @@ matpredict detect --genome GENOME [--proteins PROTEINS] [--taxid TAXID]
 | `detection_report.yaml` | Routing mode, genetic code, detected loci (family, contig, coordinates, idiomorph, confidence, `locus_class`, genes found and missing, classifier scores and margin, gene evidence), withheld loci with the reason, zygosity and two-idiomorph flags, families not detected |
 | `detected_loci.gff3` | One gene feature per found or missing gene at each locus |
 | `detected_loci.fasta` | Only with `--emit-cds-fasta` |
+| `report.html` | Readable report (see `matpredict report genome`); not with `--no-html` |
+| `report.pdf` | Only with `--pdf` |
 
 **Routing modes** (`routing_mode` in the report): `lineage` (taxid matched a
 family scope), `phylum_fallback`, `explicit_phylum` (`--phylum`),
 `exhaustive`, `not_searched`.
+
+### `matpredict report genome`
+
+```
+matpredict report genome --run OUT_DIR [--out report.html] [--pdf report.pdf] [--sample NAME]
+```
+
+`detect` writes this report itself by default; use this command to re-render a run (for example one made before
+the report existed, or with `--pdf`). Writes a self-contained HTML report of one `detect` run (default `OUT_DIR/report.html`): the result in plain words,
+a gene-order figure and evidence table per called locus, what was searched, withheld candidates and provenance. Open it
+in any browser; "Save as PDF" prints it. `--pdf` writes the PDF directly with WeasyPrint (part of the pixi environment,
+`environment.yml` and the Docker image), or, where WeasyPrint is missing, a headless Chrome or Chromium on PATH. `detect --sample` and `--organism` set the names the report
+shows.
 
 ### `matpredict detect` helper commands
 

@@ -58,6 +58,9 @@ THREADS="${SLURM_CPUS_PER_TASK:-4}"
 
 PY="$REPO/.pixi/envs/default/bin/python"
 export PATH="$REPO/.pixi/envs/default/bin:$PATH"   # exonerate, miniprot, tblastn, makeblastdb
+# No per-genome report.html in batch runs (the YAML is the result; set MATPREDICT_HTML=1 to keep it).
+# An env var, not --no-html: an older frozen worktree would reject the flag and ignores the variable.
+export MATPREDICT_HTML="${MATPREDICT_HTML:-0}"
 
 WORK="${SCRATCH:?SCRATCH is not set -- run this under SLURM}/matpredict_ab_${SLURM_JOB_ID:-local}"
 mkdir -p "$WORK/fasta" "$OUT_DIR/runs" "$REPO/logs"

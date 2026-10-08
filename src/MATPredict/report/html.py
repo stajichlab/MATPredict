@@ -912,6 +912,10 @@ a{color:var(--accent)}
   table .small,table .mono,table .sub{font-size:inherit}
   table .sub{font-size:7pt}
   th,td{padding:3px 5px}
+  /* A table must not run past its card on paper: let headers, numbers and record names wrap. */
+  thead th,tbody th,.num,.status{white-space:normal}
+  th,td{overflow-wrap:anywhere}
+  td.rec{min-width:0}
   thead{display:table-header-group}
   .glossary-card{break-inside:avoid}
   .glossary>div{flex-basis:30%}

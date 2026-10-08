@@ -51,7 +51,7 @@ Nothing. This note adds results and one figure; no source changes.
 - Full test suite ran on one node type (gpu12) only.
 
 ## Curator decisions
-Open: (1) table overflow in the PDF: fix in `src/MATPredict/report` (the other agent's code) or accept. (2) A clear error for gzipped genome input, or let `detect` read `.gz`. (3) Whether to re-run all BFD and the pangenome sets now; see the answer below. (4) Disk: `detect` now writes `report.html` per genome (28 to 78 KB here); for 22,685 genomes that is about 0.6 to 1.8 GB by extrapolation from four reports (not measured).
+Open: (1) table overflow in the PDF: fix in `src/MATPredict/report` (the other agent's code) or accept. (2) A clear error for gzipped genome input, or let `detect` read `.gz`. (3) Whether to re-run all BFD and the pangenome sets now (open items are in `HANDOFF-2026-10-06-from-github.md`). (4) Disk: `detect` now writes `report.html` per genome (28 to 78 KB here); for 22,685 genomes that is about 0.6 to 1.8 GB by extrapolation from four reports (not measured).
 
 ## Files
 - `results/2026-10-08_full_test_suite/` (`run.slurm`, `rerun_classifier.slurm`, `shards.tsv`, logs).

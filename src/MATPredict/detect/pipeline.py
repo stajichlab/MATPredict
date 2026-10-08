@@ -87,6 +87,7 @@ from MATPredict.detect.caax import (
     CAAX_METHOD, STATUS_CAAX_ORF, admitted_only_through_scan, caax_precursor_hits, scan_config,
 )
 from MATPredict.detect.clustering import GeneCluster, cluster_hits
+from MATPredict.detect.supported_span import DEFAULT_SUPPORTED_MIN_BITSCORE, supported_span
 from MATPredict.detect.split_locus import evaluate_split_locus
 from MATPredict.detect.mat_gene_gate import (
     WITHHELD_MAT_GENE_GATE, WITHHELD_PARALOG_CLASS, apply_mat_gene_gate, gate_min_score,
@@ -314,6 +315,9 @@ class DetectionResult:
     `min_idiomorph_margin` the confidence tier is capped; the number is
     reported either way so a close call is never mistaken for a clean one.
     """
+    supported_span: dict | None = None
+    """Report only: extent of this locus's modelled genes and its own hits at or above a bitscore floor
+    (`supported_span.py`), with `beyond_supported_bp`, how much of start-end lies outside it. None when unset."""
     polished_genes: int = 0
     """How many of this locus's genes produced a real polished gene model.
 
@@ -1074,6 +1078,7 @@ def _relaxed_results(
     on_relaxed_call: Callable[[DetectionResult, GeneCluster, FamilyScore], None] | None = None,
     model_losers: frozenset[tuple[int, FamilyKey, str]] | set = frozenset(),
     classifier_verdicts: dict[tuple[int, FamilyKey], ClassifierVerdict] | None = None,
+    supported_min_bitscore: float = DEFAULT_SUPPORTED_MIN_BITSCORE,
 ) -> list[DetectionResult]:
     """Sub-floor clusters admitted on gene COUNT rather than gene fraction.
 
@@ -1129,6 +1134,8 @@ def _relaxed_results(
                 contig=segments[0].contig,
                 start=segments[0].start,
                 end=segments[0].end,
+                supported_span=supported_span([cluster], score.family_key, segments[0].contig, evidence,
+                                              segments[0].start, segments[0].end, supported_min_bitscore),
                 # Capped, never high: this call failed the fraction floor. Not
                 # forced to low either -- a core gene plus a conserved flank at
                 # high identity next to a contig break is real evidence, and
@@ -1980,6 +1987,8 @@ def run_pipeline(
     #: which is what the tests written before it use to keep asserting the
     #: behaviour they were written for.
     min_polished_genes: int = MIN_POLISHED_GENES,
+    #: Bitscore floor for `supported_span` (report only); see `supported_span.py`.
+    supported_min_bitscore: float = DEFAULT_SUPPORTED_MIN_BITSCORE,
     #: Polish at most this many admitted clusters PER FAMILY, the best-ranked
     #: by what is known before polishing (see `_polish_rank`); the rest are
     #: left unpolished and so cannot clear the modelled-gene bar. None = no cap.
@@ -2866,6 +2875,8 @@ def run_pipeline(
             ),
             segments=segments,
             gene_evidence=evidence,
+            supported_span=supported_span(member_clusters, score.family_key, segments[0].contig, evidence,
+                                          segments[0].start, segments[0].end, supported_min_bitscore),
             reference_records=sorted({e.reference_record_id for e in evidence}),
             idiomorph_margin=idiomorph_margin,
             idiomorph_resolutions=own_resolutions,
@@ -3000,6 +3011,7 @@ def run_pipeline(
 
         relaxed = _relaxed_results(
             clusters, families,
+            supported_min_bitscore=supported_min_bitscore,
             searchable_genes=searchable_genes,
             evidence_floor=evidence_floor,
             ambiguity_floor=ambiguity_floor,

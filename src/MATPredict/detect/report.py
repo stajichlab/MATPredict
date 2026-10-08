@@ -187,6 +187,9 @@ def write_detection_gff3(
             core = core_span(r)
             if core is not None and contig == r.contig:
                 attrs += f";core_start={core['start']};core_end={core['end']};beyond_core_bp={core['beyond_core_bp']}"
+            sup = r.supported_span
+            if sup is not None and contig == r.contig:
+                attrs += f";supported_start={sup['start']};supported_end={sup['end']};beyond_supported_bp={sup['beyond_supported_bp']}"
             if r.ambiguous_with:
                 attrs += ";ambiguous_with=" + ",".join(_family_label(k) for k in r.ambiguous_with)
             if r.reference_records:
@@ -304,6 +307,8 @@ def _result_doc(r: DetectionResult) -> dict:
         "end": r.end,
         # Extent of this locus's own genes and how much of start-end lies outside it (report only).
         "core_span": core_span(r),
+        # Extent of this locus's modelled genes plus its own hits at or above a bitscore floor (report only).
+        "supported_span": r.supported_span,
         "confidence": r.confidence,
         "idiomorph": r.idiomorph,
         # Cross-lineage class (B9, 2026-10-01): MAT1-1 / MAT1-2 / unassigned,

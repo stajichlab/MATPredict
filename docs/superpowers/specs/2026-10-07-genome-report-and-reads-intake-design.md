@@ -276,8 +276,8 @@ and the possible causes (heterokaryon, diploid, mixed or contaminated library).
 1. ~~`detect --html` default~~: decided 2026-10-07, on by default everywhere, opt out.
 2. ~~PDF engine~~: decided 2026-10-07, WeasyPrint in the pixi environment (10.3 MB download against about 300 MB
    for Chromium); revisit if its output proves insufficient.
-3. Show withheld loci in the default report, or only in an "expert" section
-   (proposed: collapsed section, always present)?
+3. ~~Withheld loci~~: decided 2026-10-07, always-present section, table collapsed on screen and expanded in
+   print.
 4. Genus-level panels: offer them at all in the service, or species-level only
    until a divergence test exists?
 5. Assembly route in the service: offer it (hours of compute per sample) or

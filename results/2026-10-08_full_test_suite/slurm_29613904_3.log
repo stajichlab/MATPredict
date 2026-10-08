@@ -1,0 +1,22 @@
+shard 3: 15 files on gpu12
+........................................................................ [ 47%]
+........................................................................ [ 95%]
+.......                                                                  [100%]
+============================= slowest 15 durations =============================
+76.80s call     tests/detect/test_integration_localize_polish.py::test_genome_only_pipeline_reaches_high_confidence_with_polished_agreement
+5.72s call     tests/test_cli_smoke.py::test_build_duckdb_subcommand_runs_against_real_db
+4.07s call     tests/test_cli_smoke.py::test_cmd_detect_restricts_the_reference_fasta_to_the_routed_families
+1.14s call     tests/detect/test_reference_fasta.py::test_per_phylum_builds_partition_the_unrestricted_build
+0.26s call     tests/test_cli_smoke.py::test_draw_locus_subcommand_writes_a_real_image
+0.25s call     tests/detect/test_integration_localize_polish.py::test_genome_only_pipeline_disagreeing_polish_models_still_reach_same_tier
+0.06s call     tests/detect/test_flank_carried_rule.py::test_the_curated_windows
+0.05s call     tests/test_cli_smoke.py::test_detect_phylum_defaults_to_none
+0.05s call     tests/test_cli_smoke.py::test_detect_subcommand_registered
+0.05s call     tests/test_cli_smoke.py::test_backfill_gff_stale_gbk_flag_registered
+0.05s call     tests/test_cli_smoke.py::test_detect_accepts_the_polish_cluster_cap
+0.05s call     tests/test_cli_smoke.py::test_help_exits_zero
+0.05s call     tests/test_cli_smoke.py::test_detect_evidence_floor_flags_parse_with_defaults
+0.05s call     tests/test_cli_smoke.py::test_detect_evidence_floor_flags_parse_when_given
+0.05s call     tests/test_cli_smoke.py::test_detect_emit_cds_fasta_flag_parses_when_given
+151 passed in 232.50s (0:03:52)
+shard 3 exit 0 wall 429 s

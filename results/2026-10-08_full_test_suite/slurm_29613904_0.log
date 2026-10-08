@@ -1,0 +1,22 @@
+shard 0: 15 files on gpu12
+........................................................................ [ 49%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+============================= slowest 15 durations =============================
+0.16s call     tests/reads/test_reads_type.py::test_cli_writes_tsv
+0.11s setup    tests/db/test_local_taxonomy.py::test_lookups_match_efetch_semantics
+0.05s call     tests/reads/test_reads_type.py::test_cli_min_unique_run_option_parses
+0.05s call     tests/reads/test_reads_type.py::test_cli_rejects_bad_idiomorph_spec
+0.04s call     tests/detect/test_fallback_searchable.py::test_shipped_roster_flags_the_four_lineage_families
+0.04s call     tests/detect/test_locus_merge.py::test_the_real_roster_merge_groups_are_well_formed
+0.04s call     tests/detect/test_fallback_searchable.py::test_pr_scope_includes_boletales
+0.04s call     tests/db/test_local_taxonomy.py::test_builds_from_compressed_dumps[zip]
+0.03s call     tests/reads/test_reads_type.py::test_min_run_removes_background_in_a_strain_with_the_other_flank_haplotype
+0.03s call     tests/reads/test_reads_type.py::test_unrelated_reads_have_no_depth_control
+0.02s call     tests/reads/test_reads_type.py::test_both_idiomorphs_reports_depth_ratio
+0.02s call     tests/reads/test_reads_type.py::test_single_idiomorph_strain[MAT1-1-MAT1-1]
+0.02s call     tests/reads/test_reads_type.py::test_single_idiomorph_strain[MAT1-2-MAT1-2]
+0.02s call     tests/reads/test_reads_type.py::test_diverged_reads_do_not_make_a_second_call
+0.02s call     tests/reads/test_reads_type.py::test_diverged_reference_allele_still_calls
+145 passed in 138.73s (0:02:18)
+shard 0 exit 0 wall 336 s

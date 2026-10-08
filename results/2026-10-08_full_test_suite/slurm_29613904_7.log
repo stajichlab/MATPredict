@@ -1,0 +1,22 @@
+shard 7: 15 files on gpu12
+........................................................................ [ 66%]
+....................................                                     [100%]
+============================= slowest 15 durations =============================
+77.15s call     tests/detect/test_exclude_from_search.py::test_the_reference_fasta_omits_them
+0.23s call     tests/detect/test_zygosity_unknown.py::test_the_pipeline_and_report_carry_it
+0.11s call     tests/detect/test_exclude_from_search.py::test_they_are_reported_as_not_searchable
+0.04s call     tests/detect/test_exclude_from_search.py::test_the_roster_still_declares_the_excluded_genes
+0.04s call     tests/detect/test_model_idiomorph_alternatives.py::test_the_setting_is_read_from_the_curated_mucoromycota_roster
+0.04s call     tests/detect/test_partial_locus.py::test_a_homothallic_candidate_at_the_floor_keeps_its_class_but_not_high
+0.04s call     tests/detect/test_partial_locus.py::test_tptA_sexP_sexM_is_partial_and_medium_on_the_real_roster
+0.03s call     tests/detect/test_exclude_from_search.py::test_the_records_still_hold_their_proteins
+0.03s call     tests/detect/test_caax_precursor.py::test_a_receptor_alone_is_not_a_locus_without_the_scan
+0.02s setup    tests/db/test_uniprot_client.py::test_resolve_accession_found
+0.01s call     tests/detect/test_caax_precursor.py::test_the_report_carries_the_orf_fields
+0.01s call     tests/test_taxon_overrides.py::test_shipped_file_loads_the_ruled_strains
+0.01s call     tests/detect/test_caax_precursor.py::test_the_scan_supplies_the_second_gene_and_the_call_is_made
+0.01s call     tests/detect/test_caax_precursor.py::test_a_scan_precursor_cannot_by_itself_make_a_call_high
+
+(1 durations < 0.005s hidden.  Use -vv to show these durations.)
+108 passed in 215.23s (0:03:35)
+shard 7 exit 0 wall 412 s

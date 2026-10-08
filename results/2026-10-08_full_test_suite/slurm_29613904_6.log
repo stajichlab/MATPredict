@@ -1,0 +1,21 @@
+shard 6: 15 files on gpu12
+........................................................................ [ 72%]
+...........................                                              [100%]
+============================= slowest 15 durations =============================
+13.98s call     tests/detect/test_paralog_class.py::test_a_paralog_protein_is_named_by_its_class
+4.56s call     tests/detect/test_paralog_class.py::test_the_shipped_mucoromycota_classifier_carries_p1
+0.24s call     tests/detect/test_paralog_class.py::test_a_p1_locus_is_withheld_and_reported
+0.23s call     tests/detect/test_paralog_class.py::test_load_classifier_reads_paralog_classes_from_the_manifest
+0.23s call     tests/detect/test_paralog_class.py::test_a_mat_protein_is_not_a_paralog
+0.23s call     tests/detect/test_paralog_class.py::test_combined_verdicts_keep_the_best_paralog_score
+0.23s call     tests/detect/test_paralog_class.py::test_the_report_carries_paralog_scores
+0.21s call     tests/detect/test_paralog_class.py::test_the_build_makes_paralog_hmms_from_curated_sources
+0.20s call     tests/detect/test_paralog_class.py::test_a_paralog_source_without_provenance_is_refused
+0.19s call     tests/detect/test_paralog_class.py::test_without_paralog_classes_the_verdict_is_unchanged
+0.13s call     tests/detect/test_polish_strong_tier.py::test_the_cli_default_and_zero
+0.06s call     tests/detect/test_genetic_code.py::test_exonerate_gets_the_ncbi_string_for_a_code_it_does_not_have
+0.05s call     tests/test_submit_binned_panel_script.py::test_large_genomes_go_to_their_own_bin
+0.04s call     tests/detect/test_btbA_does_not_vote.py::test_btbA_is_non_informative_in_the_curated_roster
+0.04s call     tests/detect/test_btbA_does_not_vote.py::test_btbA_belongs_to_both_idiomorphs
+99 passed in 158.30s (0:02:38)
+shard 6 exit 0 wall 355 s

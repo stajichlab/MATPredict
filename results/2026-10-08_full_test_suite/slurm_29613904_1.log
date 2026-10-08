@@ -1,0 +1,21 @@
+shard 1: 15 files on gpu12
+........................................................................ [ 50%]
+........................................................................ [100%]
+============================= slowest 15 durations =============================
+79.40s call     tests/detect/test_holdout.py::test_the_subject_record_is_always_withheld
+4.15s call     tests/detect/test_holdout.py::test_radius_widens_monotonically
+1.78s call     tests/detect/test_holdout.py::test_withheld_records_leave_the_query_set
+0.90s call     tests/detect/test_holdout.py::test_holding_out_everything_leaves_no_queries
+0.84s call     tests/detect/test_holdout.py::test_unknown_record_is_an_error_not_a_silent_no_op
+0.83s call     tests/detect/test_holdout.py::test_species_radius_catches_the_other_idiomorph_of_the_same_species
+0.83s call     tests/detect/test_holdout.py::test_candidates_are_not_holdout_subjects
+0.41s call     tests/detect/test_suppress.py::test_the_cli_filters_a_panel_list
+0.08s setup    tests/db/test_backfill_gff.py::test_find_records_missing_proteins_faa_skips_records_that_already_have_one
+0.04s call     tests/detect/test_family_registry_idiomorph_margin.py::test_the_real_mucoromycota_locus_declares_a_margin
+0.01s call     tests/report/test_detect_html.py::test_missing_pdf_engine_keeps_the_html
+0.01s call     tests/detect/test_pipeline.py::test_pipeline_output_feeds_the_report_writers_directly
+0.01s call     tests/report/test_detect_html.py::test_report_written_next_to_the_yaml
+
+(2 durations < 0.005s hidden.  Use -vv to show these durations.)
+144 passed in 232.50s (0:03:52)
+shard 1 exit 0 wall 429 s

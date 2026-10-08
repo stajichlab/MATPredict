@@ -1,0 +1,329 @@
+shard 2: 15 files on gpu12
+.........................................FFFFFFF........................ [ 35%]
+........................................................................ [ 70%]
+............................................................             [100%]
+=================================== FAILURES ===================================
+________________ test_build_hmm_is_byte_identical_across_calls _________________
+
+tmp_path = PosixPath('/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_build_hmm_is_byte_identic0')
+
+    def test_build_hmm_is_byte_identical_across_calls(tmp_path):
+        seqs = {r["id"]: r["sequence"] for r in _rows() if r["gene"] == "sexP"}
+>       a = _hmm_bytes(seqs, "sexP", tmp_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/detect/test_classifier_build_deterministic.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/detect/test_classifier_build_deterministic.py:58: in _hmm_bytes
+    hmm, _ = build_hmm(seqs, name, work)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/MATPredict/detect/classifier_build.py:197: in build_hmm
+    aln = _mafft(seqs, workdir, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+seqs = {'sexP_Aaa_0': 'MKDQIHRLTVSFNRYIKRKPVHTPSKRLPIYGLTFSFKQEETRIFIEPSNICIKHKVIKDMIDSKNEIINLANSDFYIVKNDIFSAKQLYADERIPSSETTL...SEIDCSSWSHQDNMLQPSTEDSFIADDRITFLSKKVFNHSMLDLSGFQDCPNPTVPDIPNNELEEVCIIISDLLPNSTIEDKFIDLQFWDSFQCANISQDFLSESMTGNQVQ', ...}
+workdir = PosixPath('/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_build_hmm_is_byte_identic0')
+tag = 'sexP'
+
+    def _mafft(seqs: dict[str, str], workdir: Path, tag: str) -> Path:
+        fa, aln = workdir / f"{tag}.faa", workdir / f"{tag}.afa"
+        write_fasta(fa, _sorted(seqs))
+        mafft = shutil.which("mafft")
+        if mafft is None:
+>           raise RuntimeError("mafft not found on PATH (it is in the pixi environment)")
+E           RuntimeError: mafft not found on PATH (it is in the pixi environment)
+
+src/MATPredict/detect/classifier_build.py:175: RuntimeError
+___________________ test_input_order_does_not_change_the_hmm ___________________
+
+tmp_path = PosixPath('/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_input_order_does_not_chan0')
+
+    def test_input_order_does_not_change_the_hmm(tmp_path):
+        seqs = {r["id"]: r["sequence"] for r in _rows() if r["gene"] == "sexM"}
+        rev = dict(reversed(list(seqs.items())))
+>       assert _hmm_bytes(seqs, "sexM", tmp_path) == _hmm_bytes(rev, "sexM", tmp_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/detect/test_classifier_build_deterministic.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/detect/test_classifier_build_deterministic.py:58: in _hmm_bytes
+    hmm, _ = build_hmm(seqs, name, work)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/MATPredict/detect/classifier_build.py:197: in build_hmm
+    aln = _mafft(seqs, workdir, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+seqs = {'sexM_Aaa_0': 'MSLFIFVDESITNNRSPSSNEEIGSHQADHTKEKTPQPKNAFVLYRQEKQKGYPLSKTKLLSKCFSKIAAEMWRRDDKEVPMVYHRLAEEEKLRHLAKHQAY...SNEQRMYYHKLAEEEKLRHLAKHPGMKQCPKRQSLAHVIKNEYQVNMDTTPIVEEMDNQMAFVHRNVGFVEFSALCPPSSMVGDLQIFPEGTNLDKTSLVDYEKYLPLSIMS', ...}
+workdir = PosixPath('/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_input_order_does_not_chan0')
+tag = 'sexM'
+
+    def _mafft(seqs: dict[str, str], workdir: Path, tag: str) -> Path:
+        fa, aln = workdir / f"{tag}.faa", workdir / f"{tag}.afa"
+        write_fasta(fa, _sorted(seqs))
+        mafft = shutil.which("mafft")
+        if mafft is None:
+>           raise RuntimeError("mafft not found on PATH (it is in the pixi environment)")
+E           RuntimeError: mafft not found on PATH (it is in the pixi environment)
+
+src/MATPredict/detect/classifier_build.py:175: RuntimeError
+______________ test_the_hmm_carries_no_build_time_or_command_line ______________
+
+tmp_path = PosixPath('/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_the_hmm_carries_no_build_0')
+
+    def test_the_hmm_carries_no_build_time_or_command_line(tmp_path):
+        seqs = {r["id"]: r["sequence"] for r in _rows() if r["gene"] == "sexP"}
+>       text = _hmm_bytes(seqs, "sexP", tmp_path).decode()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/detect/test_classifier_build_deterministic.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/detect/test_classifier_build_deterministic.py:58: in _hmm_bytes
+    hmm, _ = build_hmm(seqs, name, work)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/MATPredict/detect/classifier_build.py:197: in build_hmm
+    aln = _mafft(seqs, workdir, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+seqs = {'sexP_Aaa_0': 'MKDQIHRLTVSFNRYIKRKPVHTPSKRLPIYGLTFSFKQEETRIFIEPSNICIKHKVIKDMIDSKNEIINLANSDFYIVKNDIFSAKQLYADERIPSSETTL...SEIDCSSWSHQDNMLQPSTEDSFIADDRITFLSKKVFNHSMLDLSGFQDCPNPTVPDIPNNELEEVCIIISDLLPNSTIEDKFIDLQFWDSFQCANISQDFLSESMTGNQVQ', ...}
+workdir = PosixPath('/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_the_hmm_carries_no_build_0')
+tag = 'sexP'
+
+    def _mafft(seqs: dict[str, str], workdir: Path, tag: str) -> Path:
+        fa, aln = workdir / f"{tag}.faa", workdir / f"{tag}.afa"
+        write_fasta(fa, _sorted(seqs))
+        mafft = shutil.which("mafft")
+        if mafft is None:
+>           raise RuntimeError("mafft not found on PATH (it is in the pixi environment)")
+E           RuntimeError: mafft not found on PATH (it is in the pixi environment)
+
+src/MATPredict/detect/classifier_build.py:175: RuntimeError
+_______________________ test_mafft_runs_single_threaded ________________________
+
+tmp_path = PosixPath('/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_mafft_runs_single_threade0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9ee2e01e00>
+
+    def test_mafft_runs_single_threaded(tmp_path, monkeypatch):
+        from MATPredict.detect import classifier_build as cb
+        seen = []
+        real = subprocess.run
+    
+        def spy(cmd, *a, **kw):
+            seen.append(list(cmd))
+            return real(cmd, *a, **kw)
+    
+        monkeypatch.setattr(cb.subprocess, "run", spy)
+>       cb._mafft({"x": SEXP, "y": SEXM}, tmp_path, "t")
+
+tests/detect/test_classifier_build_deterministic.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+seqs = {'x': 'MKDQIHRSTVSFNRYIKPKPVHKPSKRLPIYGLTFSFKQEETRIFIEPSNICIKAKEILDMIDSKNEFINLANSDFYIQKNDIFSALQLYADERIPSSETTLTFTAINLNS...MWRRESNEVRMYYHRLAEEEKLRHLAKHPGYKYCPKRQSLAHVDKNEYQVLADTTPIVGEMDNQMAFVHRNVSFDEVSPSSPPSSMVQDLQIFPEGTNLDALSLVDYEFYLLLSIMS'}
+workdir = PosixPath('/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_mafft_runs_single_threade0')
+tag = 't'
+
+    def _mafft(seqs: dict[str, str], workdir: Path, tag: str) -> Path:
+        fa, aln = workdir / f"{tag}.faa", workdir / f"{tag}.afa"
+        write_fasta(fa, _sorted(seqs))
+        mafft = shutil.which("mafft")
+        if mafft is None:
+>           raise RuntimeError("mafft not found on PATH (it is in the pixi environment)")
+E           RuntimeError: mafft not found on PATH (it is in the pixi environment)
+
+src/MATPredict/detect/classifier_build.py:175: RuntimeError
+____________ test_two_builds_are_byte_identical_and_score_the_same _____________
+
+tmp_path = PosixPath('/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_two_builds_are_byte_ident0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9ee2e01f30>
+
+    def test_two_builds_are_byte_identical_and_score_the_same(tmp_path, monkeypatch):
+        rows = _rows()
+>       m1, o1 = _build(tmp_path / "a", monkeypatch, rows)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/detect/test_classifier_build_deterministic.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/detect/test_classifier_build_deterministic.py:107: in _build
+    return cb.build(DB, "Mucoromycota:MAT", out), out
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/MATPredict/detect/classifier_build.py:486: in build
+    hmm, aln = build_hmm(seqs, gene, work)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/MATPredict/detect/classifier_build.py:197: in build_hmm
+    aln = _mafft(seqs, workdir, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+seqs = {'sexP_Aaa_0': 'MKDQIHRLTVSFNRYIKRKPVHTPSKRLPIYGLTFSFKQEETRIFIEPSNICIKHKVIKDMIDSKNEIINLANSDFYIVKNDIFSAKQLYADERIPSSETTL...SEIDCSSWSHQDNMLQPSTEDSFIADDRITFLSKKVFNHSMLDLSGFQDCPNPTVPDIPNNELEEVCIIISDLLPNSTIEDKFIDLQFWDSFQCANISQDFLSESMTGNQVQ', ...}
+workdir = PosixPath('/scratch/jstajich/29613908/tmpxneg3hez'), tag = 'sexP'
+
+    def _mafft(seqs: dict[str, str], workdir: Path, tag: str) -> Path:
+        fa, aln = workdir / f"{tag}.faa", workdir / f"{tag}.afa"
+        write_fasta(fa, _sorted(seqs))
+        mafft = shutil.which("mafft")
+        if mafft is None:
+>           raise RuntimeError("mafft not found on PATH (it is in the pixi environment)")
+E           RuntimeError: mafft not found on PATH (it is in the pixi environment)
+
+src/MATPredict/detect/classifier_build.py:175: RuntimeError
+________ test_the_manifest_records_versions_options_and_input_checksum _________
+
+tmp_path = PosixPath('/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_the_manifest_records_vers0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9ee3108170>
+
+    def test_the_manifest_records_versions_options_and_input_checksum(tmp_path, monkeypatch):
+        from MATPredict.detect import classifier_build as cb
+>       m, _ = _build(tmp_path, monkeypatch, _rows())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/detect/test_classifier_build_deterministic.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/detect/test_classifier_build_deterministic.py:107: in _build
+    return cb.build(DB, "Mucoromycota:MAT", out), out
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/MATPredict/detect/classifier_build.py:486: in build
+    hmm, aln = build_hmm(seqs, gene, work)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/MATPredict/detect/classifier_build.py:197: in build_hmm
+    aln = _mafft(seqs, workdir, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+seqs = {'sexP_Aaa_0': 'MKDQIHRLTVSFNRYIKRKPVHTPSKRLPIYGLTFSFKQEETRIFIEPSNICIKHKVIKDMIDSKNEIINLANSDFYIVKNDIFSAKQLYADERIPSSETTL...SEIDCSSWSHQDNMLQPSTEDSFIADDRITFLSKKVFNHSMLDLSGFQDCPNPTVPDIPNNELEEVCIIISDLLPNSTIEDKFIDLQFWDSFQCANISQDFLSESMTGNQVQ', ...}
+workdir = PosixPath('/scratch/jstajich/29613908/tmpgnlckfuu'), tag = 'sexP'
+
+    def _mafft(seqs: dict[str, str], workdir: Path, tag: str) -> Path:
+        fa, aln = workdir / f"{tag}.faa", workdir / f"{tag}.afa"
+        write_fasta(fa, _sorted(seqs))
+        mafft = shutil.which("mafft")
+        if mafft is None:
+>           raise RuntimeError("mafft not found on PATH (it is in the pixi environment)")
+E           RuntimeError: mafft not found on PATH (it is in the pixi environment)
+
+src/MATPredict/detect/classifier_build.py:175: RuntimeError
+______________ test_builds_in_fresh_processes_are_byte_identical _______________
+
+tmp_path = PosixPath('/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_builds_in_fresh_processes0')
+
+    def test_builds_in_fresh_processes_are_byte_identical(tmp_path):
+        """Two separate Python processes build the same HMM bytes."""
+        seqs = {r["id"]: r["sequence"] for r in _rows() if r["gene"] == "sexP"}
+        fa = tmp_path / "in.faa"
+        fa.write_text("".join(f">{k}\n{v}\n" for k, v in seqs.items()))
+        code = (
+            "import sys, io, pathlib, hashlib\n"
+            "from MATPredict.detect.classifier_build import read_fasta, build_hmm\n"
+            "p = pathlib.Path(sys.argv[1])\n"
+            "hmm, _ = build_hmm(read_fasta(p), 'sexP', p.parent)\n"
+            "b = io.BytesIO(); hmm.write(b)\n"
+            "print(hashlib.sha256(b.getvalue()).hexdigest())\n")
+        env_path = str(REPO / "src")
+        import os
+        env = dict(os.environ, PYTHONPATH=env_path + os.pathsep + os.environ.get("PYTHONPATH", ""))
+>       outs = [subprocess.run([sys.executable, "-c", code, str(fa)], capture_output=True, text=True,
+                               env=env, check=True).stdout.strip() for _ in range(2)]
+
+tests/detect/test_classifier_build_deterministic.py:152: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/bigdata/stajichlab/jstajich/projects/MATPredict/.claude/worktrees/run-e9060da/.pixi/envs/test/bin/python', '-c', "...()).hexdigest())\n", '/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_builds_in_fresh_processes0/in.faa'],)
+kwargs = {'text': True, 'env': {'HYDRA_LAUNCHER_EXTRA_ARGS': '--external-launcher', 'SLURM_JOB_GROUP': 'stajichlab', 'NoDefaultCurrentDirectoryInExePath': '1', 'CONDA_SHLVL': '0', ...}, 'stdout': -1, 'stderr': -1}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/bigdata/stajichlab/jstajich/projects/MATPredict/.claude/worktrees/run-e9060da/.pixi/envs/test/bin/python', '-c', "import sys, io, pathlib, hashlib\nfrom MATPredict.detect.classifier_build import read_fasta, build_hmm\np = pathlib.Path(sys.argv[1])\nhmm, _ = build_hmm(read_fasta(p), 'sexP', p.parent)\nb = io.BytesIO(); hmm.write(b)\nprint(hashlib.sha256(b.getvalue()).hexdigest())\n", '/scratch/jstajich/29613908/pytest-of-jstajich/pytest-0/test_builds_in_fresh_processes0/in.faa']' returned non-zero exit status 1.
+
+.pixi/envs/test/lib/python3.13/subprocess.py:577: CalledProcessError
+============================= slowest 15 durations =============================
+106.17s call     tests/report/test_report_html.py::test_pdf_render_with_installed_engine
+75.41s call     tests/db/test_schema.py::test_every_accepted_record_gene_name_is_declared_by_its_family
+0.88s call     tests/detect/test_search.py::test_real_colliding_gene_names_are_attributed_to_the_right_family
+0.13s call     tests/detect/test_classifier_build_deterministic.py::test_builds_in_fresh_processes_are_byte_identical
+0.09s call     tests/db/test_build_duckdb.py::test_build_loads_all_records
+0.08s call     tests/detect/test_family_registry.py::test_available_phyla_agrees_with_the_families_actually_loaded
+0.06s call     tests/db/test_build_duckdb.py::test_locus_idiomorph_gets_one_row_per_idiomorph_value
+0.06s call     tests/db/test_build_duckdb.py::test_accepted_record_with_generated_files_gets_real_paths
+0.06s call     tests/db/test_build_duckdb.py::test_candidate_record_gets_null_paths_even_with_files_present
+0.06s call     tests/db/test_build_duckdb.py::test_accepted_record_without_generated_files_gets_null_paths
+0.06s call     tests/db/test_build_duckdb.py::test_order_or_family_is_the_order_directory_not_the_record_id
+0.06s call     tests/db/test_build_duckdb.py::test_order_or_family_is_null_for_a_candidate
+0.05s call     tests/report/test_report_html.py::test_cli_writes_report_next_to_the_run
+0.05s call     tests/detect/test_search.py::test_real_colliding_Z_gene_is_attributed_to_aalpha_not_abeta
+0.05s call     tests/report/test_report_html.py::test_cli_rejects_a_file_that_is_not_a_detection_report
+=========================== short test summary info ============================
+FAILED tests/detect/test_classifier_build_deterministic.py::test_build_hmm_is_byte_identical_across_calls
+FAILED tests/detect/test_classifier_build_deterministic.py::test_input_order_does_not_change_the_hmm
+FAILED tests/detect/test_classifier_build_deterministic.py::test_the_hmm_carries_no_build_time_or_command_line
+FAILED tests/detect/test_classifier_build_deterministic.py::test_mafft_runs_single_threaded
+FAILED tests/detect/test_classifier_build_deterministic.py::test_two_builds_are_byte_identical_and_score_the_same
+FAILED tests/detect/test_classifier_build_deterministic.py::test_the_manifest_records_versions_options_and_input_checksum
+FAILED tests/detect/test_classifier_build_deterministic.py::test_builds_in_fresh_processes_are_byte_identical
+7 failed, 197 passed in 321.88s (0:05:21)

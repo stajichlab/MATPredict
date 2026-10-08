@@ -1,0 +1,32 @@
+shard 5: 15 files on gpu12
+........................................................................ [ 41%]
+........................................................................ [ 83%]
+............................                                             [100%]
+=============================== warnings summary ===============================
+tests/db/test_synteny.py::test_draw_synteny_invokes_clinker_with_resolved_gbk_paths_and_csvs
+tests/db/test_synteny.py::test_draw_synteny_generates_gene_functions_and_colour_map_csvs
+tests/db/test_synteny.py::test_draw_synteny_ignores_candidate_records
+tests/db/test_synteny.py::test_draw_synteny_raises_clinker_error_on_nonzero_returncode
+tests/db/test_synteny.py::test_draw_synteny_does_not_warn_when_all_resolved_records_have_cds_features
+  /bigdata/stajichlab/jstajich/projects/MATPredict/.claude/worktrees/run-e9060da/.pixi/envs/test/lib/python3.13/site-packages/Bio/SeqIO/InsdcIO.py:404: BiopythonWarning: Feature qualifier key 'present_in_idiomorphs' is longer than maximum length specified by standard (20 characters).
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 15 durations =============================
+77.03s call     tests/detect/test_gene_aliases.py::test_the_reference_fasta_emits_one_protein_per_distinct_sequence
+2.68s call     tests/detect/test_idiomorph_classifier.py::test_the_build_training_set_is_curated_records_plus_the_recorded_extra
+1.43s call     tests/test_run_detection_batch_script.py::test_script_passes_phylum_through_and_does_not_prebuild_reference
+0.43s call     tests/detect/test_idiomorph_classifier.py::test_an_unmodelled_hit_below_the_noise_floor_does_not_cap_the_call
+0.22s call     tests/detect/test_idiomorph_classifier.py::test_without_a_classifier_the_model_scores_decide
+0.22s call     tests/detect/test_idiomorph_classifier.py::test_each_gene_position_is_classified_on_its_own_protein
+0.22s call     tests/detect/test_idiomorph_classifier.py::test_a_model_based_verdict_says_so
+0.22s call     tests/detect/test_idiomorph_classifier.py::test_the_report_carries_the_classifier_verdict
+0.22s call     tests/detect/test_idiomorph_classifier.py::test_a_decisive_verdict_makes_the_pair_agree
+0.22s call     tests/detect/test_idiomorph_classifier.py::test_a_verdict_changes_only_hits_at_the_scored_gene
+0.21s call     tests/detect/test_idiomorph_classifier.py::test_below_min_margin_the_call_is_undetermined_and_no_hit_changes
+0.21s call     tests/detect/test_idiomorph_classifier.py::test_the_classifier_decides_on_the_modelled_protein
+0.21s call     tests/detect/test_idiomorph_classifier.py::test_a_fragment_verdict_keeps_the_min_margin
+0.21s call     tests/detect/test_idiomorph_classifier.py::test_with_no_core_model_the_classifier_scores_the_hsp_fragment
+0.21s call     tests/detect/test_idiomorph_classifier.py::test_a_fragment_call_without_flank_support_is_withheld_by_the_mat_gene_gate
+172 passed, 5 warnings in 232.50s (0:03:52)
+shard 5 exit 0 wall 429 s

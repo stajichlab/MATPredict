@@ -1,0 +1,9 @@
+/bigdata/stajichlab/jstajich/projects/MATPredict/.claude/worktrees/run-e9060da/.pixi/envs/test/bin/mafft
+........                                                                 [100%]
+============================= slowest 5 durations ==============================
+6.66s call     tests/detect/test_classifier_build_deterministic.py::test_two_builds_are_byte_identical_and_score_the_same
+3.34s call     tests/detect/test_classifier_build_deterministic.py::test_the_manifest_records_versions_options_and_input_checksum
+1.21s call     tests/detect/test_classifier_build_deterministic.py::test_build_hmm_is_byte_identical_across_calls
+1.15s call     tests/detect/test_classifier_build_deterministic.py::test_builds_in_fresh_processes_are_byte_identical
+0.76s call     tests/detect/test_classifier_build_deterministic.py::test_input_order_does_not_change_the_hmm
+8 passed in 14.05s

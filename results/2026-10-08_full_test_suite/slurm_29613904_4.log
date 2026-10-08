@@ -1,0 +1,26 @@
+shard 4: 15 files on gpu12
+........................................................................ [ 69%]
+...............................                                          [100%]
+=============================== warnings summary ===============================
+tests/db/test_draw.py::test_draw_locus_produces_a_real_nonempty_png
+tests/db/test_draw.py::test_draw_locus_svg_output_is_well_formed
+  /bigdata/stajichlab/jstajich/projects/MATPredict/.claude/worktrees/run-e9060da/.pixi/envs/test/lib/python3.13/site-packages/Bio/SeqIO/InsdcIO.py:404: BiopythonWarning: Feature qualifier key 'present_in_idiomorphs' is longer than maximum length specified by standard (20 characters).
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 15 durations =============================
+76.62s call     tests/detect/test_integration_real_record.py::test_pipeline_recovers_real_alocus_record
+0.92s call     tests/detect/test_reference_fasta_searchable.py::test_every_mucoromycota_roster_gene_now_has_a_reference
+0.54s call     tests/db/test_draw.py::test_draw_locus_produces_a_real_nonempty_png
+0.08s call     tests/db/test_draw.py::test_draw_locus_svg_output_is_well_formed
+0.05s call     tests/detect/test_integration_real_record.py::test_real_db_record_family_index_is_unambiguous
+0.05s call     tests/db/test_draw.py::test_draw_locus_draws_every_gene_even_when_names_repeat
+0.04s call     tests/detect/test_optional_genes.py::test_the_curated_mucoromycota_btba_is_marked_optional
+0.04s call     tests/detect/test_split_locus.py::test_every_curated_family_gets_the_default_rule
+0.01s call     tests/detect/test_split_locus.py::test_the_pipeline_reports_a_split_locus_at_low
+0.01s call     tests/detect/test_rollout_aggregate.py::test_aggregate_reports_tallies_confidence_and_surfaces_not_detected_reasons
+0.01s call     tests/detect/test_below_fraction_floor_reported.py::test_the_report_carries_the_floor_entry
+
+(4 durations < 0.005s hidden.  Use -vv to show these durations.)
+103 passed, 2 warnings in 215.86s (0:03:35)
+shard 4 exit 0 wall 413 s

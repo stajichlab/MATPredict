@@ -294,8 +294,9 @@ sequence for each idiomorph of the same species or lineage.
    that `matpredict detect` has typed. A reference from the same lineage works
    better than one from another species: the Fola MAT1-2 locus differs from
    the GenBank *F. oxysporum* record at 0.9% of its positions, and the
-   panel built from Fola genomes agreed with more strains (see below). A ready
-   panel is in [panels/fusarium_oxysporum_fola/](panels/fusarium_oxysporum_fola/).
+   panel built from Fola genomes agreed with more strains (see below). Ready
+   panels: [panels/fusarium_oxysporum_fola/](panels/fusarium_oxysporum_fola/) and
+   [panels/aspergillus_fumigatus/](panels/aspergillus_fumigatus/) (A1163 and Af293 locus segments from the database).
 2. Run one strain:
 
    ```bash
@@ -316,6 +317,7 @@ sequence for each idiomorph of the same species or lineage.
 |---|---|
 | `--idiomorph NAME=FASTA` | One idiomorph reference. Repeat for each idiomorph; at least two. `NAME` is free text and appears in the output. |
 | `--k K` | k-mer length. Default 31. A shorter k tolerates more differences from the reference but gives more shared k-mers. |
+| `--min-unique-run N` | Keep an idiomorph-unique k-mer only if it lies in a run of N consecutive unique positions of its locus. Drops k-mers made unique by SNPs in shared flanks, which match any strain with that flank allele. Default 100; 0 keeps all. |
 | `--reads FILE...` | FASTQ files of one strain. Plain, `.gz` and `.zst` are read directly (`.zst` needs `zstd`). |
 | `--sample NAME` | Name of the strain in the output. Default: the first file name up to the first dot. |
 | `--samples TSV` | Many strains: columns `sample`, `reads`. |
@@ -349,6 +351,7 @@ the minor idiomorph has less than a quarter of the depth of the major one.
 
 - 147 of 148 strains agree with a samtools breadth call (the one difference has no signal in either method). With the GenBank panel, 145 of 148.
 - Simulated mixes of two strains (3 pairs): `both` is called from a 10% minor MAT1-2 share in 3 of 3 pairs, from 5% in 2 of 3, and from a 20% minor MAT1-1 share in 3 of 3. `trace_MAT1-2` also appears in pure MAT1-1 strains (background), so it is not evidence of a minor idiomorph.
+- *A. fumigatus* (304 assemblies, 331 read sets): reads agree with an assembly BLAST truth in 293 of 296 strains (99.0%); `detect` on the assemblies agrees in 288 of 297 and reports a single idiomorph for all 8 assemblies that hold both. Seven of those 8 are `both` from reads.
 - Speed: about 1.5 minutes for 8 million reads on one CPU (Python).
 - A reference that differs from the strain at about one position in 40 gives `none`; at one in 60 it is called correctly.
 

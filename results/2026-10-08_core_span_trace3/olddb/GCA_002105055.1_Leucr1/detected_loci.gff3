@@ -1,0 +1,5 @@
+##gff-version 3
+##sequence-region MCGR01000028.1 145579 160941
+MCGR01000028.1	MATPredict	MAT_locus	145579	160941	.	.	.	ID=Basidiomycota_bLocus_0;family=Basidiomycota:bLocus;confidence=high;idiomorph=undetermined;fragmented=false;core_start=145636;core_end=147187;beyond_core_bp=13811;ambiguous_with=Basidiomycota:HD,Basidiomycota:Aalpha;reference_records=327079_sy62_bLocus_b1,76777_atcc-44340_bLocus_b2
+MCGR01000028.1	MATPredict	gene	145636	145797	.	-	.	ID=Basidiomycota_bLocus_0.gene0;Parent=Basidiomycota_bLocus_0;Name=bW;role=core_MAT;present=true;identity=46.3;reference_record=76777_atcc-44340_bLocus_b2;method=exonerate_refine;status=polished_single
+MCGR01000028.1	MATPredict	gene	147083	147187	.	+	.	ID=Basidiomycota_bLocus_0.gene1;Parent=Basidiomycota_bLocus_0;Name=bE;role=core_MAT;present=true;identity=48.57;reference_record=327079_sy62_bLocus_b1;method=exonerate_refine;status=polished_single

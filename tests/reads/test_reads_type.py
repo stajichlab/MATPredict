@@ -188,3 +188,42 @@ def test_cli_writes_tsv(tmp_path):
 def test_cli_rejects_bad_idiomorph_spec(tmp_path):
     from MATPredict.__main__ import main
     assert main(["reads-type", "--idiomorph", "oops", "--reads", "x.fq", "--out", str(tmp_path / "o.tsv")]) == 1
+
+
+def _snp_every(seq: str, step: int, offset: int) -> str:
+    out = list(seq)
+    for i in range(offset, len(out), step):
+        out[i] = "A" if out[i] != "A" else "C"
+    return "".join(out)
+
+
+def test_flank_snps_are_not_idiomorph_unique_with_min_run():
+    """Two loci whose flanks differ by a SNP every 60 bp: SNP-spanning flank k-mers must not count as idiomorph-specific."""
+    flank_l_b = _snp_every(FLANK_L, 60, 10)
+    flank_r_b = _snp_every(FLANK_R, 60, 10)
+    mat2_b = flank_l_b + MAT2[len(FLANK_L):-len(FLANK_R)] + flank_r_b
+    plain = Panel.from_sequences({"MAT1-1": MAT1, "MAT1-2": mat2_b}, k=K, min_run=0)
+    runs = Panel.from_sequences({"MAT1-1": MAT1, "MAT1-2": mat2_b}, k=K, min_run=100)
+    flank_snp_kmers = canonical_kmers(FLANK_L, K) ^ canonical_kmers(flank_l_b, K)
+    assert plain.unique["MAT1-1"] & flank_snp_kmers          # without the filter, SNP flank k-mers leak in
+    assert not (runs.unique["MAT1-1"] & flank_snp_kmers)      # with it they are dropped
+    assert len(runs.unique["MAT1-1"]) > 1500                  # the real 2-kb idiomorph core is kept
+
+
+def test_min_run_removes_background_in_a_strain_with_the_other_flank_haplotype(tmp_path):
+    """A MAT1-2 strain whose flank matches locus A at the SNP positions must not show MAT1-1 breadth."""
+    mat2_b = _snp_every(FLANK_L, 60, 10) + MAT2[len(FLANK_L):-len(FLANK_R)] + _snp_every(FLANK_R, 60, 10)
+    strain = FLANK_L + MAT2[len(FLANK_L):-len(FLANK_R)] + FLANK_R   # carries locus A's flank alleles
+    fq = tmp_path / "r.fq"
+    _write_fastq(fq, _reads(strain, 30, seed=3))
+    panel_plain = Panel.from_sequences({"MAT1-1": MAT1, "MAT1-2": mat2_b}, k=K, min_run=0)
+    panel_runs = Panel.from_sequences({"MAT1-1": MAT1, "MAT1-2": mat2_b}, k=K, min_run=100)
+    assert type_reads(panel_plain, [fq]).breadth["MAT1-1"] > 0.05
+    assert type_reads(panel_runs, [fq]).breadth["MAT1-1"] < 0.01
+
+
+def test_cli_min_unique_run_option_parses():
+    from MATPredict.__main__ import build_parser
+    args = build_parser().parse_args(["reads-type", "--idiomorph", "A=a.fa", "--idiomorph", "B=b.fa", "--reads", "x.fq",
+                                      "--out", "o.tsv", "--min-unique-run", "150"])
+    assert args.min_unique_run == 150

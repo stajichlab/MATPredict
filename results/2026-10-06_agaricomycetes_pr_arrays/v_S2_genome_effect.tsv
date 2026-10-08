@@ -1,0 +1,5 @@
+rule	arrays	genomes_new_first_call	genomes_extra_call
+S2 all uncovered flagged arrays	627	245	221
+S2b size >= 2	289	178	83
+S2c flagged + precursor homology	156	103	43
+S2d size >= 2 AND Hx	123	89	28

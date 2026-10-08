@@ -1,0 +1,7 @@
+set	loci_or_count	genomes
+loci_all.tsv.gz rows (all scanned genomes with >=1 locus)	17129	1847
+genomes scanned (agari_genomes.tsv scan==True)		1853
+qpass BUSCO>=70 & N50>=20kb only (no contig limit)	12576	1292
+qpass final (+ contigs<=5000): loci	12518	1287
+qpass final: genomes in scan / species	1287	705
+not qpass	4611	560

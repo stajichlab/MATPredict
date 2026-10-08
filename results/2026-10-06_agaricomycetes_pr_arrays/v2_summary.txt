@@ -1,0 +1,82 @@
+Hx (tblastn E<=1 within 10 kb): observed arrays 764 expected by chance 419.7
+
+== v_uncovered_chance.tsv
+                   set  uncovered_arrays  flagged  expected_by_chance               chance_share  excess_flagged
+                   ALL              8418      627               230.4           0.37 (0.32-0.43)           397.0
+            Agaricales              4658      463               122.1           0.26 (0.23-0.30)           341.0
+             Boletales              1143       80                27.6           0.34 (0.26-0.49)            52.0
+           Polyporales               774       40                22.1           0.55 (0.35-0.94)            18.0
+        Cantharellales               515        5                19.3          3.85 (1.24-18.88)           -14.0
+            Russulales               685       36                18.9           0.53 (0.36-0.80)            17.0
+       Hymenochaetales               333        2                 9.8 4.89 (1.79-10981691189.75)            -8.0
+          other orders               259        1                 9.5 9.47 (2.64-13002976789.73)            -8.0
+                size 1              7277      338               169.3           0.50 (0.42-0.60)           169.0
+              size >=2              1141      289                61.1           0.21 (0.18-0.26)           228.0
+              size >=3               292      149                25.3           0.17 (0.14-0.21)           124.0
+one genome per species              8418      627               230.4           0.37 (0.32-0.43)           397.0
+
+== v_uncovered_flag_and_Hx_chance.tsv
+                       set  observed  expected_by_chance             chance_share
+       flagged AND Hx, ALL       156                11.4         0.07 (0.03-0.10)
+flagged AND Hx, Agaricales       139                 9.2         0.07 (0.02-0.09)
+ flagged AND Hx, Boletales         9                 0.5         0.05 (0.02-0.14)
+flagged AND Hx, Russulales         2                 0.5 0.23 (0.12-390192156.79)
+  flagged AND Hx, size >=2       123                 8.9         0.07 (0.02-0.10)
+
+old shortcut (locus-level order chance share x uncovered flagged arrays) = 85; array-level expected among uncovered = 230; observed 627
+
+receptor identity of the withheld-below-floor locus in uncovered flagged arrays: n 437, median 66.7, share >=50 94%, >=60 75%
+receptor identity of called unverified PR calls: n 944, median 62.0, share >=50 84%, >=60 61%
+called unverified: calls with receptor+caax only (no curated pheromone): 195 of 944
+uncovered flagged arrays with a floor-withheld locus >=50% identity and size>=2: 225  >=50% any size: 410
+
+== v_STE20_strata.tsv
+                         strata  informative_strata  flagged_near  flagged_total  unflagged_near  unflagged_total  MH_OR       p
+                         genome                1003           550           1628             147             6117   23.9 0.0e+00
+            genome x array size                 598           171            815              59             2997   11.0 0.0e+00
+genome x contig-length quartile                1111           500           1491             123             4200   23.1 0.0e+00
+genome x size x length quartile                 537           148            684              42             1881   13.4 0.0e+00
+
+== v_STE20_by_size.tsv
+array_size     group  arrays  near_STE20_250kb  near_pct  expected_genome_null
+         1   flagged     627               119      19.0                   3.1
+         1 unflagged    6911               228       3.3                  40.0
+         2   flagged     453               138      30.5                   2.4
+         2 unflagged     705                71      10.1                   4.3
+         3   flagged     294               137      46.6                   2.0
+         3 unflagged      93                19      20.4                   0.6
+        4+   flagged     257               156      60.7                   2.1
+        4+ unflagged      54                10      18.5                   0.5
+genomes with a flagged array within 250 kb of STE20: 532 of 1287 (41%)
+  flagged, covered by a call: 1005 arrays, near STE20 250 kb 429 (42.7%)
+  flagged, uncovered: 626 arrays, near STE20 250 kb 121 (19.3%)
+  flagged, uncovered, size>=2: 289 arrays, near STE20 250 kb 100 (34.6%)
+  flagged, uncovered, size 1: 337 arrays, near STE20 250 kb 21 (6.2%)
+  unflagged uncovered: 7752, near STE20 324 (4.2%)
+
+== v2_order_organisation.tsv
+          order  genomes  species  STE3_loci_per_genome_median q1_q3  max         pct_ge5_loci arrays_per_genome pct_genomes_array_ge2 pct_genomes_flagged_array flagged_arrays_per_genome pct_genomes_with_PR_call
+     Agaricales      676      313                         10.0  8-12   40  97.19 (95.31-98.62)  7.74 (7.11-8.33)   90.68 (85.19-94.76)       88.61 (81.62-93.36)          1.53 (1.34-1.72)      62.57 (48.99-74.33)
+      Boletales      182      143                          7.0   6-9   27  96.70 (93.82-98.94)  6.60 (6.11-7.18)   87.91 (82.61-92.66)       48.90 (39.53-58.06)          0.75 (0.56-0.96)      26.92 (18.49-35.71)
+    Polyporales      175      107                          8.0  7-10   23  96.57 (93.83-98.94)  5.51 (5.22-5.84)   96.00 (92.77-98.50)       92.57 (87.58-96.39)          1.30 (1.17-1.43)      88.57 (82.17-93.60)
+ Cantharellales       77       14                          7.0  6-10   22 89.61 (61.11-100.00) 7.92 (6.19-11.97)   45.45 (24.00-79.41)       85.71 (67.39-93.88)          1.30 (0.83-1.50)      87.01 (67.74-95.08)
+     Russulales       76       60                          9.0  6-11  136  90.79 (83.33-97.30) 9.42 (6.96-12.78)   71.05 (58.44-82.43)       56.58 (44.29-68.36)          0.86 (0.61-1.13)      34.21 (21.43-46.84)
+Hymenochaetales       47       29                          6.0   5-7   48 89.36 (76.00-100.00)  7.36 (5.93-9.36)   34.04 (17.07-50.00)        12.77 (4.08-25.71)          0.28 (0.08-0.61)       10.64 (2.56-23.68)
+ Auriculariales       14        8                          6.0   5-8    9  78.57 (46.14-95.24)  4.57 (3.67-5.50)  85.71 (58.33-100.00)      85.71 (58.33-100.00)          0.93 (0.60-1.15)     85.71 (58.33-100.00)
+   other orders       40       31                          8.0  7-11   29  90.00 (81.40-97.50)  7.58 (6.53-9.05)   82.50 (66.67-95.49)       72.50 (55.56-85.72)          1.10 (0.77-1.44)      72.50 (57.58-86.05)
+            ALL     1287      705                          9.0  7-11  136  95.49 (93.73-96.92)  7.33 (6.91-7.76)   84.77 (80.22-88.90)       78.17 (72.79-82.39)          1.27 (1.15-1.41)      59.52 (51.67-66.82)
+
+genomes with at least one array of >=3 loci: 595 of 1287
+
+== v2_array_sizes_by_order.tsv
+          order  arrays  singleton  size2  size3  size4plus  max  span_kb_median_ge2  flagged_pct_size1  flagged_pct_size2plus
+     Agaricales    5232       4079    734    251        168    7                19.4                9.3                   56.9
+      Boletales    1201        996    169     29          7    5                18.3                5.2                   41.0
+    Polyporales     964        756     81     42         85    8                32.6                8.1                   79.8
+ Cantharellales     610        562     37      8          3    6                10.4               14.2                   41.7
+     Russulales     716        574     75     37         30   10                23.5                4.5                   27.5
+Hymenochaetales     346        301     31      6          8   10                17.1                1.0                   22.2
+ Auriculariales      64         52      4      7          1    4                25.9                1.9                  100.0
+   other orders     303        252     33      9          9    6                16.9               10.3                   35.3
+            ALL    9436       7572   1164    389        311   10                20.2                8.3                   53.9
+done

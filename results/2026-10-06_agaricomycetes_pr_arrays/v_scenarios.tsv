@@ -1,0 +1,9 @@
+scenario	n	note
+S0 current PR calls	1039	944 unverified, 95 other evidence
+S1 one call per array	1028	1039 -> 1028
+S2 add every uncovered CAAX-flagged array	627	in 466 genomes; expected flagged by chance among all uncovered arrays 230 (within-contig null); excess 397
+S2b add uncovered flagged arrays with >=2 loci	289	chance for size>=2 uncovered: 61
+S2c add uncovered flagged arrays with precursor homology (Hx<=10kb)	156	flag AND tblastn precursor homology
+S4 unverified calls in an array with precursor homology	414	of 944
+S5 unverified calls whose array is a single locus	284	of 944
+S6 unverified calls in arrays of >=2 loci	651	of 944

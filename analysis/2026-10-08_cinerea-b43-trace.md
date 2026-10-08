@@ -50,6 +50,23 @@ Results (`results/2026-10-08_core_span_panel/` and `results/2026-10-08_core_span
 
 Open: (a) `core_span` for withheld loci needs gene coordinates added to `suppressed_loci` in the report (a pipeline-output change, not done). (b) Which of the 10 loci with half their span outside their genes are noise and which hold real unmodelled genes.
 
+### Hit tally in the stretches beyond the core (11 loci with 10 kb or more beyond; curator asked, 2026-10-08)
+Method (`scripts` in `results/2026-10-08_core_span_panel/tally.py`, job 29637408; files on branch `core-span`): for each locus, the run's own `_reference.faa` was run through tblastn (detect's settings, the genome's genetic code) over the contig window; hits lying wholly inside a stretch outside the core are counted as strong (e-value < 1e-3) or weak (>= 1e-3), and the best hit is listed. Hits that straddle the core boundary belong to the core genes and are not counted. (My first version counted overlapping hits and overstated the strong hits next to the core; that file is kept as `tally_newdb_overlap_criterion.tsv`.) 14 stretches of 1 kb or more.
+
+| Group | Loci | Beyond the core | What lies in the extra stretch |
+|---|---|---|---|
+| Noise only | GCA_000715385.1 (Rhizoctonia solani) PR (left 16.1 kb), GCA_001542265.1 redHD LNKU01000002.1 (left 14.2 kb, right 3.4 kb), GCA_023273805.1 MAT CP096880.1 (right 16.9 kb), Stehi1 HD (left 11.7 kb) | 4 loci, 62.3 kb | 0 strong hits in all 5 stretches (22 to 421 weak hits each; best e-value 1e-3 to 7e-3). The span edge is a weak hit (e-value 1e-3 to 7e-3). |
+| Nearly noise | Leucr1 bLocus (right 13.8 kb) | 13.8 kb | 2 strong hits, both from one bE query at the span end (e-value 4e-6, 30% identity over 80 aa); 419 weak hits. |
+| Real hits, same family | PR loci: ASM209295v1 NCVV01000007.1 (right 43.5 kb), Gabo G3 CM035310.1 (left 13.7 kb, right 20.4 kb), Trametes versicolor NW_007360328.1 (right 40.4 kb), Heterobasidion irregulare NW_009258203.1 (left 10.6 kb) | 4 loci, 128.6 kb | 152, 7 and 135, 111 and 178 strong hits; the best are PR receptor queries (e-values 1.5e-55, 9.9e-95, 5e-142, 0; Heterobasidion 74% identity over 291 aa). These look like further receptor genes in a receptor array. |
+| Real hits, other family | Balpha JAGVSI010000976.1 (left 17.4 kb, right 20.8 kb); HD NW_006763290.1 (right 23.5 kb) | 2 loci, 61.7 kb | 38, 69 and 35 strong hits, best e-values 1e-24, 1e-21, 5e-15, all from PR (receptor) queries: genuine hits of another family inside this family's span. |
+
+What it means:
+- The curator's lean towards trimming is supported for 5 of 11 loci (4 noise-only plus Leucr1), 76 kb of extra span in total, where trimming to the core would remove only weak hits. With the two earlier traced loci (T48-F, Mixia) that is 7 loci with noise-defined spans.
+- Trimming everything to the core would be wrong for the other 6 loci: in 4 PR loci the extra stretch holds strong hits of the locus's own family (receptor genes that the gene list does not include), and in 2 loci (Balpha, HD) it holds strong hits of another family. In the 4 PR loci, trimming would cut real receptors out of a receptor array; whether a PR "locus" should include them is a curation question (the 2026-10-06 handoff notes that B-locus receptors sit in one array and that array span does not identify a B locus).
+- So the data point to a rule on hit quality, not on the core: build the reported span from hits with e-value below a floor (strong hits), so a stretch carried only by weak hits is dropped and a stretch with real hits is kept. With a floor of 1e-3 the 4 noise-only loci would be trimmed, and Leucr1 would not (its edge hit is 4e-6); a floor of 1e-5 would trim Leucr1 too. I have not tested any floor on the regression panel, so the number is open.
+
+Limits: 11 loci from one 33-genome panel; "strong" is my cut-off (e < 1e-3), and a strong hit shows similarity to a curated protein, not that a gene is real (non-mating STE3 receptors also hit); tblastn at e-value 10 on the run's query set approximates detect's hit table, whose boundary hits matched in every locus where I checked the edge (in all 16 stretches, including two under 1 kb that are not in the table, a tblastn hit lay exactly at the span edge); I did not tally the 36 loci with less than 10 kb beyond.
+
 ## Curator decisions
 Ruled 2026-10-08 (J. Stajich): option 3, a report-only `core span` (built, see the update above). Options considered:
 1. Keep the curation (the old gene-6 entry was wrong and the four peptides are real) and accept span noise from short queries as a known property. Cost: reported spans of called loci can include a 20-kb or larger stretch for no biological reason (T48-F).

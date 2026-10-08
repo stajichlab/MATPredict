@@ -184,6 +184,9 @@ def write_detection_gff3(
             )
             if multi_segment:
                 attrs += f";locus_group={locus_id}"
+            core = core_span(r)
+            if core is not None and contig == r.contig:
+                attrs += f";core_start={core['start']};core_end={core['end']};beyond_core_bp={core['beyond_core_bp']}"
             if r.ambiguous_with:
                 attrs += ";ambiguous_with=" + ",".join(_family_label(k) for k in r.ambiguous_with)
             if r.reference_records:
@@ -280,12 +283,27 @@ def write_detection_gff3(
             out_path.with_suffix(".fasta").write_text("\n".join(fasta_lines) + "\n")
 
 
+def core_span(r: DetectionResult) -> dict | None:
+    """Extent of the locus's own gene models on its contig, and how far the reported span goes beyond it.
+
+    Report only. The cluster span (`start`/`end`) is built from every hit of every family, so a weak hit from another
+    family's short query can stretch it without adding a gene (analysis/2026-10-08_cinerea-b43-trace.md). This is the
+    span of the genes the locus actually lists, with no threshold. None when the locus has no gene model on its contig."""
+    own = [g for g in r.gene_evidence if g.contig == r.contig]
+    if not own:
+        return None
+    start, end = min(g.start for g in own), max(g.end for g in own)
+    return {"start": start, "end": end, "beyond_core_bp": (r.end - r.start + 1) - (end - start + 1)}
+
+
 def _result_doc(r: DetectionResult) -> dict:
     return {
         "family": _family_label(r.family_key),
         "contig": r.contig,
         "start": r.start,
         "end": r.end,
+        # Extent of this locus's own genes and how much of start-end lies outside it (report only).
+        "core_span": core_span(r),
         "confidence": r.confidence,
         "idiomorph": r.idiomorph,
         # Cross-lineage class (B9, 2026-10-01): MAT1-1 / MAT1-2 / unassigned,

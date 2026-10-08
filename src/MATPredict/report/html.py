@@ -479,6 +479,12 @@ def _locus_card(i: int, call: dict, show_family: bool) -> str:
         ("Nearest contig end", size(min(edge)) if edge else "–"),
         ("Region (samtools)", f'<code class="region">{e(region)}</code>'),
     ]
+    core = call.get("core_span")
+    if core:
+        beyond = core.get("beyond_core_bp") or 0
+        note = (f' · <span class="warn-text">the span runs {size(beyond)} beyond these genes</span>' if beyond > 0 else "")
+        facts.insert(1, ("Own genes", location(call.get("contig"), core.get("start"), core.get("end"))
+                         + f" · {size((core.get('end') or 0) - (core.get('start') or 0) + 1)}{note}"))
     if call.get("detection_pass") and call.get("detection_pass") != "strict":
         facts.append(("Detection pass", e(call.get("detection_pass"))))
     if call.get("idiomorph_class") and call.get("idiomorph_class") != call.get("idiomorph"):

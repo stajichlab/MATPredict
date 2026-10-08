@@ -6,6 +6,13 @@ release completed.
 
 ## [Unreleased]
 
+### Added
+- `core_span` on every called locus (report only; calls and clustering are unchanged): the extent of the locus's own
+  gene models on its contig and `beyond_core_bp`, how much of `start`-`end` lies outside them. The cluster span is built
+  from the hits of every family, so one weak hit from another family's short query can stretch a locus (T48-F: a called HD
+  locus grows from 12.3 kb to 35.2 kb; see `analysis/2026-10-08_cinerea-b43-trace.md`). Written to `detection_report.yaml`,
+  to the `MAT_locus` line of the GFF3 (`core_start`, `core_end`, `beyond_core_bp`) and to the HTML report ("Own genes").
+
 ### Fixed
 - PDF report: gene-evidence tables no longer run past their card. In print, header, number and status cells may wrap, and
   table cells break long names (for example `fungal_mating_type_pheromone`). Found on real campaign reports (Serpula

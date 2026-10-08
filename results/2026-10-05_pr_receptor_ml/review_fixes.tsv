@@ -1,0 +1,7 @@
+model	n_pos	n_neg	AUC	AP	sens95	AUC_ci_genome	dAUC_vs_rule_ci_genome	AUC_ci_species	dAUC_vs_rule_ci_species	AUC_ci_order	dAUC_vs_rule_ci_order	flagged_mating	flagged_other
+rule_caax10	20	64	0.8	0.695	0.6	0.658-0.909	0.000 to 0.000	0.692-0.913	0.000 to 0.000	0.714-0.929	0.000 to 0.000		
+CAAX_or_flank	20	64	0.977	0.87	1.0	0.957-1.000	0.070 to 0.309	0.962-1.000	0.067 to 0.300	0.956-1.000	0.032 to 0.250	20.0	3.0
+ESM150_plus_CAAX_fixed	20	64	0.605	0.558	0.5	0.396-0.772	-0.351 to -0.074	0.390-0.778	-0.385 to -0.086	0.409-0.866	-0.341 to -0.059		
+ESM150_plus_CAAX_first_version	20	64	0.712	0.61	0.5	0.520-0.861	-0.195 to 0.025	0.540-0.907	-0.191 to 0.047	0.574-0.960	-0.145 to 0.021		
+LR_flank	20	64	0.957	0.808	0.8	0.918-1.000	0.030 to 0.324	0.907-1.000	-0.001 to 0.300	0.899-1.000	-0.024 to 0.280		
+LR_all	20	64	0.974	0.863	0.85	0.946-0.998	0.061 to 0.318	0.944-1.000	0.047 to 0.294	0.943-1.000	0.018 to 0.269		

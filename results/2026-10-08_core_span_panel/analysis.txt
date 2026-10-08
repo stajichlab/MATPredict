@@ -1,0 +1,34 @@
+genomes with a report: new 33 old 33
+called loci: new db 47 | old db 47
+new db: loci 47, with core_span 47, beyond>0: 37, >=1 kb: 23, >=10 kb: 11, max 43506, median 948
+   loci with beyond >= 10 kb: 11 (first 12 listed)
+    PR NCVV01000007.1 265115 324252 core 265115 280746 beyond 43506
+    PR NW_007360328.1 1556459 1618028 core 1556459 1577612 beyond 40416
+    Balpha JAGVSI010000976.1 2232 63709 core 19591 42884 beyond 38184
+    PR CM035310.1 2164994 2239678 core 2178649 2219249 beyond 34084
+    HD NW_006763290.1 5087662 5137760 core 5087662 5114260 beyond 23500
+    redHD LNKU01000002.1 1240101 1260475 core 1254301 1257071 beyond 17604
+    MAT CP096880.1 1935834 1981717 core 1935834 1964852 beyond 16865
+    PR AZST01000319.1 6051 24636 core 22135 24615 beyond 16105
+    bLocus MCGR01000028.1 145579 160941 core 145636 147187 beyond 13811
+    HD NW_006763131.1 1677723 1710705 core 1689470 1710705 beyond 11747
+    PR NW_009258203.1 825885 849398 core 836440 849398 beyond 10555
+old db: loci 47, with core_span 47, beyond>0: 37, >=1 kb: 23, >=10 kb: 11, max 43506, median 948
+   loci with beyond >= 10 kb: 11 (first 12 listed)
+    PR NCVV01000007.1 265115 324252 core 265115 280746 beyond 43506
+    PR NW_007360328.1 1556459 1618028 core 1556459 1577612 beyond 40416
+    Balpha JAGVSI010000976.1 2232 63709 core 19591 42884 beyond 38184
+    PR CM035310.1 2164994 2239678 core 2178649 2219249 beyond 34084
+    HD NW_006763290.1 5087662 5137760 core 5087662 5114260 beyond 23500
+    redHD LNKU01000002.1 1240101 1260475 core 1254301 1257071 beyond 17604
+    MAT CP096880.1 1935834 1981717 core 1935834 1964852 beyond 16865
+    PR AZST01000319.1 6051 24636 core 22135 24615 beyond 16105
+    bLocus MCGR01000028.1 145579 160941 core 145636 147187 beyond 13811
+    HD NW_006763131.1 1677723 1710705 core 1689470 1710705 beyond 11747
+    PR NW_009258203.1 825885 849398 core 836440 849398 beyond 10555
+
+loci present in both databases at the same contig and family (1:1 matches only):
+ span and core identical: 44 | span moved, core unchanged: 0 | span moved and core moved: 1 | span same, core moved: 0
+   rows listed: first 25 of 1
+   span moved, core moved GCF_000182895.1_CC3 PR NW_003307535.1 span (1719114, 1738930) -> (1719114, 1740166) core 1719114 1737857 -> 1719114 1737600
+loci present in only one database: 0 []

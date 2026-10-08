@@ -3,7 +3,7 @@
 Curation of 2026-09-25 (commits 81ea22a, ca619b6), measured by re-running the
 pilot genomes from frozen worktree `run-d689647`. Comparisons:
 `results/2026-09-25_{pezizomycetes,pichiomycetes}_d689647/compare_vs_2026-09-24.txt`
-(script `results/compare_panels.py`).
+(script `results/misc/compare_panels.py`).
 
 ## What changed in the database
 

@@ -1,0 +1,49 @@
+run:
+  sample: Bd-JEL423
+  organism: Batrachochytrium dendrobatidis JEL423
+  taxid: 109871
+  phylum: Chytridiomycota
+  matpredict_version: 0.6.1
+  database:
+    root: /app/db
+    content_sha256: 3f2a9c41d07be5aa0c1e9d4f6b2a7781e3d05c6b9a1f4e2d8c7b6a5f4e3d2c1b
+    records: 150
+  taxonomy_source: local NCBI taxonomy snapshot 2026-10-01
+  genome:
+    file: Bd-JEL423.fna
+    sha256: 9d1e4c0b7a2f3e5d6c8b9a0f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6b7a8f9e0d
+    contigs: 812
+    length_bp: 48213377
+    n50: 1203321
+  proteins: null
+  parameters:
+    phylum: null
+    exhaustive: false
+    genetic_code: null
+    min_hits: 2
+    require_core_role: true
+    max_polished_clusters_per_family: 6
+    polish_strong_identity: 50.0
+  started: '2026-10-07T14:03:11Z'
+  wall_seconds: 96
+routing_mode: not_searched
+routing_error: null
+not_searched_reason: no curated MAT family covers phylum Chytridiomycota; run with
+  --exhaustive to search every family anyway
+genetic_code: 1
+genetic_code_error: null
+taxonomy_source: local NCBI taxonomy snapshot 2026-10-01
+suppressed_unpolished: 0
+suppressed_flank_carried: 0
+suppressed_mat_gene_gate: 0
+suppressed_paralog_class: 0
+suppressed_loci: []
+assembly_gap_at_locus: []
+zygosity: null
+two_idiomorphs: []
+receptor_arrays_note: 'Report only: receptor arrays occur for mating and non-mating
+  receptors alike.'
+receptor_arrays: []
+families_attempted: []
+detected: []
+not_detected: []

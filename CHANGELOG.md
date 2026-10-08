@@ -17,6 +17,26 @@ release completed.
   them (2 of 2,722). Calibrated on Dothideomycetes; see `analysis/2026-10-05_dothideomycetes-full-run.md`.
 
 ### Added
+- `matpredict report genome --run DIR [--pdf FILE]`: a self-contained HTML report of one `detect` run (no network,
+  no external files), printable to PDF from a browser or written with `--pdf` (WeasyPrint if installed, else headless
+  Chrome/Chromium). It leads with the result in plain words (mating type and confidence; or "no call", "not searched",
+  "two idiomorphs: needs review"), then one card per called locus: a gene-order figure (inline SVG; role, model status,
+  strand, exons, alternate model, called-locus bracket, contig end), the idiomorph evidence and the gene table; then
+  what was searched, withheld candidate loci, provenance and a glossary. Light and dark on screen, light in print.
+  Revised after an independent web/data-design review (`analysis/2026-10-07_report-design-review.md`).
+- `detection_report.yaml` gains a `run` block (first key): sample, organism, taxid, phylum, MATPredict version,
+  database content SHA-256 and record count, taxonomy source, genome file name, SHA-256, contigs, length and N50,
+  parameters, start time and wall time (`detect.provenance`). Additive; reports without it still render.
+  `detect` gains `--sample` and `--organism` (shown in the report; routing still uses `--taxid`).
+- `detect` writes `report.html` in `--out-dir` by default (curator's choice 2026-10-07: on by default, opt out).
+  `--no-html` or `MATPREDICT_HTML=0` turns it off; `--pdf` adds `report.pdf`. A report or PDF error is logged and
+  never fails the run. The batch scripts (`run_clade_panel.slurm`, `run_polish_ab.slurm`, `zygo_regression.py`,
+  `run_holdout_benchmark.py`) set `MATPREDICT_HTML=0`: an environment variable rather than the flag, because they may
+  run an older frozen worktree that would reject `--no-html`. `batch_runner` (in-process) writes no report.
+- WeasyPrint (69.x, conda-forge) joins the pixi environment, `environment.yml` and so the Docker image, so `--pdf`
+  works everywhere MATPredict is installed: 25 packages, 10.3 MB download (Pango, Cairo, HarfBuzz, fonts). Chosen
+  over a headless Chromium in the image (about 300 MB). No locked version of any existing package changed. The
+  Docker CI smoke test renders a PDF with no network.
 - Report-only cassette fields on the receptor arrays (stacked on the arrays entry below; assessment
   `analysis/2026-10-06_b-locus-clustering.md`, option 1). Per array, per PR call and in `loci.tsv`:
   `receptor_cassette_loci` (loci with 2 or more strict-CAAX ORFs within 5 kb), `receptor_cassette_class` (`none`, `B`, or `C` when 2 or

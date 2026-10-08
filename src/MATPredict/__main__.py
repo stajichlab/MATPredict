@@ -7,6 +7,8 @@ import sys
 from MATPredict import __version__, logger
 from MATPredict.db.cli import register_subcommands
 from MATPredict.detect.cli import register_subcommands as register_detect_subcommands
+from MATPredict.reads.cli import register_subcommands as register_reads_subcommands
+from MATPredict.report.cli import register_subcommands as register_report_subcommands
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -17,6 +19,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
     register_subcommands(subparsers)
     register_detect_subcommands(subparsers)
+    register_reads_subcommands(subparsers)
+    register_report_subcommands(subparsers)
     return parser
 
 

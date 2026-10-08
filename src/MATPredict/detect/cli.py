@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -15,7 +16,8 @@ from MATPredict.detect.pipeline import (
 )
 from MATPredict.detect.family_registry import available_phyla, load_all_families, route
 from MATPredict.detect.reference_fasta import build_reference_fasta
-from MATPredict.detect.report import write_detection_gff3, write_detection_report
+from MATPredict.detect.provenance import RunClock, run_block
+from MATPredict.detect.report import _taxonomy_source, write_detection_gff3, write_detection_report
 from MATPredict.detect.rollout_aggregate import aggregate_reports, write_rollout_summary
 from MATPredict.detect.scope_audit import audit_scope, record_taxids_by_family
 from MATPredict.detect.suppress import default_suppress_paths, filter_rows, load_suppress_list
@@ -29,6 +31,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     config = MatpredictConfig.from_env(repo_root=Path.cwd())
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+    clock = RunClock()
 
     # Route FIRST, then build the reference FASTA from the routed families
     # only. The order matters: the reference FASTA is the tblastn query set, so
@@ -67,7 +70,9 @@ def _cmd_detect(args: argparse.Namespace) -> int:
             not_searched_reason=not_searched_reason(routing),
         )
         write_detection_gff3(outcome, out_dir / "detected_loci.gff3")
-        write_detection_report(outcome, out_dir / "detection_report.yaml")
+        write_detection_report(outcome, out_dir / "detection_report.yaml",
+                               run=_run_doc(args, config, routing, clock))
+        _write_html_report(args, out_dir)
         print(f"not searched -> {out_dir}: {outcome.not_searched_reason}")
         return 0
     exclude_record_ids = frozenset(
@@ -103,7 +108,9 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     # FASTA holds every referenced contig's FULL sequence, which is large.
     gff3_kwargs = {"genome_fasta": Path(args.genome)} if args.emit_cds_fasta else {}
     write_detection_gff3(outcome, out_dir / "detected_loci.gff3", **gff3_kwargs)
-    write_detection_report(outcome, out_dir / "detection_report.yaml")
+    write_detection_report(outcome, out_dir / "detection_report.yaml",
+                           run=_run_doc(args, config, routing, clock))
+    _write_html_report(args, out_dir)
     print(
         f"detected {len(outcome.results)} candidate locus/loci "
         f"({len(outcome.families_attempted)} families attempted, "
@@ -115,6 +122,65 @@ def _cmd_detect(args: argparse.Namespace) -> int:
             f"not detected\t{entry.family_key.phylum}:{entry.family_key.locus_name}\t{entry.reason}"
         )
     return 0
+
+
+def html_report_enabled(args) -> bool:
+    """`--html`/`--no-html` when given; otherwise on, unless `$MATPREDICT_HTML` is 0/false/no/off.
+
+    The variable exists for batch scripts: they may run `detect` from an older
+    frozen worktree that would reject an unknown `--no-html` flag, while an
+    unknown environment variable is simply ignored."""
+    flag = getattr(args, "html", None)
+    if flag is not None:
+        return bool(flag)
+    return os.environ.get("MATPREDICT_HTML", "1").strip().lower() not in ("0", "false", "no", "off")
+
+
+def _write_html_report(args, out_dir: Path) -> None:
+    """The readable report next to the YAML. Never fails the run: the YAML and GFF3 are the results; a report
+    error (or a missing PDF engine) is logged and the run still exits 0."""
+    if not (html_report_enabled(args) or getattr(args, "pdf", False)):
+        return
+    from MATPredict.report.cli import write_run_report
+    try:
+        for path in write_run_report(out_dir):
+            print(f"report -> {path}")
+    except Exception as exc:  # noqa: BLE001 - a report must never cost the detection result
+        logger.warning("report not written (%s: %s); the detection results are complete",
+                       type(exc).__name__, exc)
+        return
+    if getattr(args, "pdf", False):
+        try:
+            for path in write_run_report(out_dir, pdf=True)[1:]:
+                print(f"pdf -> {path}")
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("PDF not written (%s: %s); report.html is complete", type(exc).__name__, exc)
+
+
+def _run_doc(args, config, routing, clock: RunClock) -> dict:
+    """The report's `run` block (`detect.provenance`) for this invocation."""
+    return run_block(
+        clock=clock,
+        genome=Path(args.genome) if args.genome else None,
+        proteins=Path(args.proteins) if args.proteins else None,
+        db_root=config.db_root,
+        taxonomy_source=_taxonomy_source(),
+        sample=getattr(args, "sample", None),
+        organism=getattr(args, "organism", None),
+        taxid=args.taxid,
+        phylum=getattr(routing, "phylum", None),
+        parameters={
+            "phylum": args.phylum,
+            "exhaustive": getattr(args, "exhaustive", False),
+            "genetic_code": _resolve_genetic_code(args),
+            "exclude_records": args.exclude_records or None,
+            "min_hits": args.min_hits,
+            "min_identity": args.min_identity,
+            "require_core_role": args.require_core_role,
+            "max_polished_clusters_per_family": _polish_cap_from_args(args),
+            "polish_strong_identity": _polish_strong_identity_from_args(args),
+        },
+    )
 
 
 def _polish_cap_from_args(args) -> int | None:
@@ -304,6 +370,15 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
               "held-out test rather than a self-consistency check. See "
               "MATPredict.detect.holdout for choosing a set by taxonomic radius."))
     detect.add_argument("--taxid", required=False, type=int)
+    detect.add_argument("--html", action=argparse.BooleanOptionalAction, default=None,
+                        help="Write report.html in --out-dir (default: on; $MATPREDICT_HTML=0 turns the default off)")
+    detect.add_argument("--pdf", action="store_true",
+                        help="Also write report.pdf (needs WeasyPrint or Chrome/Chromium; off by default)")
+    detect.add_argument("--sample", required=False,
+                        help="Sample name for the report (default: the genome file name up to the first dot)")
+    detect.add_argument("--organism", required=False,
+                        help="Organism name for the report, e.g. 'Fusarium oxysporum f. sp. lactucae'. "
+                             "Shown as given; routing still uses --taxid")
     detect.add_argument("--out-dir", required=False)
     detect.add_argument("--evidence-diagnostics", required=False)
     # Defaults are read from `EvidenceFloor` itself, never restated here: a

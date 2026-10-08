@@ -258,6 +258,9 @@ matpredict detect --genome GENOME [--proteins PROTEINS] [--taxid TAXID]
 | `--no-require-core-role` | Allow polishing of clusters without a core MAT gene hit |
 | `--exclude-records IDS` | Withhold curated records (comma-separated) for leave-one-out tests |
 | `--evidence-diagnostics FILE` | Write per-hit evidence as JSON lines |
+| `--html` / `--no-html` | Write `report.html` (default: on). `MATPREDICT_HTML=0` turns the default off; the batch scripts set it |
+| `--pdf` | Also write `report.pdf` (WeasyPrint, in the pixi environment and the image; off by default). A report or PDF error is logged and never fails the run |
+| `--sample` / `--organism` | Names shown in the report and recorded in the `run` block |
 | `--emit-cds-fasta` | Add CDS features with translations to the GFF3, and write `detected_loci.fasta` (full sequence of every contig with a call; can be large) |
 
 **Outputs** (in `--out-dir`):
@@ -267,10 +270,25 @@ matpredict detect --genome GENOME [--proteins PROTEINS] [--taxid TAXID]
 | `detection_report.yaml` | Routing mode, genetic code, detected loci (family, contig, coordinates, idiomorph, confidence, `locus_class`, genes found and missing, classifier scores and margin, gene evidence), withheld loci with the reason, zygosity and two-idiomorph flags, families not detected |
 | `detected_loci.gff3` | One gene feature per found or missing gene at each locus |
 | `detected_loci.fasta` | Only with `--emit-cds-fasta` |
+| `report.html` | Readable report (see `matpredict report genome`); not with `--no-html` |
+| `report.pdf` | Only with `--pdf` |
 
 **Routing modes** (`routing_mode` in the report): `lineage` (taxid matched a
 family scope), `phylum_fallback`, `explicit_phylum` (`--phylum`),
 `exhaustive`, `not_searched`.
+
+### `matpredict report genome`
+
+```
+matpredict report genome --run OUT_DIR [--out report.html] [--pdf report.pdf] [--sample NAME]
+```
+
+`detect` writes this report itself by default; use this command to re-render a run (for example one made before
+the report existed, or with `--pdf`). Writes a self-contained HTML report of one `detect` run (default `OUT_DIR/report.html`): the result in plain words,
+a gene-order figure and evidence table per called locus, what was searched, withheld candidates and provenance. Open it
+in any browser; "Save as PDF" prints it. `--pdf` writes the PDF directly with WeasyPrint (part of the pixi environment,
+`environment.yml` and the Docker image), or, where WeasyPrint is missing, a headless Chrome or Chromium on PATH. `detect --sample` and `--organism` set the names the report
+shows.
 
 ### `matpredict detect` helper commands
 
@@ -280,6 +298,89 @@ family scope), `phylum_fallback`, `explicit_phylum` (`--phylum`),
 | `matpredict detect suppress-filter --list FILE` | Remove suppressed genomes from an `ASMID<TAB>...` list |
 | `matpredict detect audit-scope` | Check every record's taxid against its family's `taxonomic_scope` |
 | `matpredict detect benchmark` | Leave-one-out sensitivity/specificity benchmark |
+
+### `matpredict reads-type`
+
+Call the MAT idiomorph of a strain from raw reads, with no assembly. It counts
+k-mers that occur in only one idiomorph reference. It needs a reference
+sequence for each idiomorph of the same species or lineage.
+
+**Steps**
+
+1. Get one FASTA per idiomorph (two or more). Use the idiomorph sequence with
+   a little shared flank on both ends, from a GenBank record or from a genome
+   that `matpredict detect` has typed. A reference from the same lineage works
+   better than one from another species: the Fola MAT1-2 locus differs from
+   the GenBank *F. oxysporum* record at 0.9% of its positions, and the
+   panel built from Fola genomes agreed with more strains (see below). Ready
+   panels: [panels/fusarium_oxysporum_fola/](panels/fusarium_oxysporum_fola/) and
+   [panels/aspergillus_fumigatus/](panels/aspergillus_fumigatus/) (A1163 and Af293 locus segments from the database).
+2. Run one strain:
+
+   ```bash
+   matpredict reads-type \
+     --idiomorph MAT1-1=panels/fusarium_oxysporum_fola/MAT1-1.fasta \
+     --idiomorph MAT1-2=panels/fusarium_oxysporum_fola/MAT1-2.fasta \
+     --reads strain_R1.fastq.gz strain_R2.fastq.gz --sample strain \
+     --max-reads 8000000 --out strain.mat.tsv
+   ```
+
+3. Run many strains: give a TSV with columns `sample` and `reads` (files
+   separated by commas), and use `--samples` in place of `--reads`.
+4. Read the output (one row per strain) as described below.
+
+**Options**
+
+| Option | Meaning |
+|---|---|
+| `--idiomorph NAME=FASTA` | One idiomorph reference. Repeat for each idiomorph; at least two. `NAME` is free text and appears in the output. |
+| `--k K` | k-mer length. Default 31. A shorter k tolerates more differences from the reference but gives more shared k-mers. |
+| `--min-unique-run N` | Keep an idiomorph-unique k-mer only if it lies in a run of N consecutive unique positions of its locus. Drops k-mers made unique by SNPs in shared flanks, which match any strain with that flank allele. Default 100; 0 keeps all. |
+| `--reads FILE...` | FASTQ files of one strain. Plain, `.gz` and `.zst` are read directly (`.zst` needs `zstd`). |
+| `--sample NAME` | Name of the strain in the output. Default: the first file name up to the first dot. |
+| `--samples TSV` | Many strains: columns `sample`, `reads`. |
+| `--max-reads N` | Use only the first N reads. Files are read in the order given, so with R1 and R2 the cap uses R1 first. Default: all reads. |
+| `--out FILE` | Output TSV. |
+
+**Output columns:** `sample`, `call`, `<NAME>_breadth` (fraction of the
+idiomorph's unique k-mers seen), `<NAME>_depth` (mean count of those k-mers),
+`reads_used`, `shared_depth` (mean count of the k-mers that both idiomorphs
+share; a single-copy depth control), `flags`.
+
+**Calls**
+
+| Call | Meaning |
+|---|---|
+| `<NAME>` | One idiomorph is present and the others are not. |
+| `both` | Two or more idiomorphs are present: a homothallic strain, a diploid or heterokaryon, or a mixed sample. Read the depths. |
+| `none` | The shared flank k-mers are covered, but no idiomorph is. The panel may lack this strain's allele. |
+| `low_depth` | The shared control depth is below 1, so no call is made. The sample may also be from a different species. |
+
+An idiomorph is present when its depth is at least 0.10 of `shared_depth` and
+its breadth is at least 0.50 of the breadth that its depth predicts
+(`1 - exp(-depth)`). These cut-offs are set in `src/MATPredict/reads/typing.py`.
+
+**Flags:** `trace_<NAME>` means some k-mers of an idiomorph were seen but not
+enough to call it. `idiomorph_depth_ratio_below_0.25` on a `both` call means
+the minor idiomorph has less than a quarter of the depth of the major one.
+
+**What was measured** (Fola, *F. oxysporum* f. sp. *lactucae*; details in
+[analysis/2026-10-06_fola-reads-type.md](analysis/2026-10-06_fola-reads-type.md)):
+
+- 147 of 148 strains agree with a samtools breadth call (the one difference has no signal in either method). With the GenBank panel, 145 of 148.
+- Simulated mixes of two strains (3 pairs): `both` is called from a 10% minor MAT1-2 share in 3 of 3 pairs, from 5% in 2 of 3, and from a 20% minor MAT1-1 share in 3 of 3. `trace_MAT1-2` also appears in pure MAT1-1 strains (background), so it is not evidence of a minor idiomorph.
+- *A. fumigatus* (304 assemblies, 331 read sets): reads agree with an assembly BLAST truth in 293 of 296 strains (99.0%); `detect` on the assemblies agrees in 288 of 297 and reports a single idiomorph for all 8 assemblies that hold both. Seven of those 8 are `both` from reads ([report](analysis/2026-10-07_afum-reads-and-assembly.md)).
+- Speed: about 1.5 minutes for 8 million reads on one CPU (Python).
+- A reference that differs from the strain at about one position in 40 gives `none`; at one in 60 it is called correctly.
+
+**Not part of the subcommand yet** (scripts, tested on a few strains only):
+[scripts/build_blastx_tiers.py](scripts/build_blastx_tiers.py) (protein
+references by taxonomic distance, for DIAMOND blastx of reads),
+[scripts/recruit_pairs.py](scripts/recruit_pairs.py) (collect read pairs for a
+local assembly), [scripts/simulate_mixes.sh](scripts/simulate_mixes.sh) (mixed
+samples) and [scripts/compare_reads_type.py](scripts/compare_reads_type.py). Figure scripts for the two reports are in [scripts/figures/](scripts/figures/); outputs are in [analysis/figures/](analysis/figures/).
+A protein search works with references from the same genus and fails with
+distant ones; see the analysis note.
 
 ### Batch runs on SLURM
 

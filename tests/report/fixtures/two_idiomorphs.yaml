@@ -1,0 +1,238 @@
+run:
+  sample: RS-114
+  organism: Rhizopus stolonifer
+  taxid: 4846
+  phylum: Mucoromycota
+  matpredict_version: 0.6.1
+  database:
+    root: /app/db
+    content_sha256: 3f2a9c41d07be5aa0c1e9d4f6b2a7781e3d05c6b9a1f4e2d8c7b6a5f4e3d2c1b
+    records: 150
+  taxonomy_source: local NCBI taxonomy snapshot 2026-10-01
+  genome:
+    file: RS-114.fna
+    sha256: 9d1e4c0b7a2f3e5d6c8b9a0f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6b7a8f9e0d
+    contigs: 812
+    length_bp: 48213377
+    n50: 1203321
+  proteins: null
+  parameters:
+    phylum: null
+    exhaustive: false
+    genetic_code: null
+    min_hits: 2
+    require_core_role: true
+    max_polished_clusters_per_family: 6
+    polish_strong_identity: 50.0
+  started: '2026-10-07T14:03:11Z'
+  wall_seconds: 96
+routing_mode: lineage
+routing_error: null
+not_searched_reason: null
+genetic_code: 1
+genetic_code_error: null
+taxonomy_source: local NCBI taxonomy snapshot 2026-10-01
+suppressed_unpolished: 0
+suppressed_flank_carried: 0
+suppressed_mat_gene_gate: 0
+suppressed_paralog_class: 0
+suppressed_loci: []
+assembly_gap_at_locus: []
+zygosity: null
+two_idiomorphs:
+- family: Mucoromycota:MAT
+  arrangement: unlinked
+  plus_call:
+    idiomorph: Plus
+    contig: scaffold_12
+    start: 50100
+    end: 56300
+    confidence: high
+    locus_class: mat_locus
+    classifier_input: polished_model
+    margin: 210.0
+    flanks: []
+  minus_call:
+    idiomorph: Minus
+    contig: scaffold_88
+    start: 1200
+    end: 1980
+    confidence: low
+    locus_class: idiomorph_gene_only
+    classifier_input: hsp_fragment
+    margin: 12.0
+    flanks: []
+  evidence:
+    distance_bp: null
+    gc_plus_contig: 38.1
+    gc_minus_contig: 46.9
+    gc_difference_pct: 8.8
+    weak_calls:
+    - Minus
+    shared_flanks: []
+  possible_causes: []
+  supported_causes:
+  - duplication
+  - mixed_culture_or_heterokaryon
+  not_assessed:
+  - read depth
+receptor_arrays_note: 'Report only: receptor arrays occur for mating and non-mating
+  receptors alike.'
+receptor_arrays: []
+families_attempted:
+- Mucoromycota:MAT
+detected:
+- family: Mucoromycota:MAT
+  contig: scaffold_12
+  start: 50100
+  end: 56300
+  confidence: high
+  idiomorph: Plus
+  idiomorph_class: null
+  idiomorph_candidates:
+  - idiomorph: Plus
+    score: 300.0
+  detection_pass: strict
+  locus_class: mat_locus
+  idiomorph_unmodelled: false
+  verification: null
+  merged_from: []
+  subloci: []
+  polished_genes: 3
+  distinct_intervals: 3
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: null
+  idiomorph_classifier: null
+  idiomorph_resolutions: []
+  ambiguous_with: []
+  genes_found:
+  - tptA
+  - sexP
+  - rnhA
+  genes_missing: []
+  genes_not_searchable: []
+  fragmented: false
+  reference_records:
+  - rec
+  segments:
+  - contig: scaffold_12
+    start: 50100
+    end: 56300
+    contig_edge_distance: 210455
+  gene_evidence:
+  - gene: tptA
+    role: flanking_conserved
+    contig: scaffold_12
+    start: 50100
+    end: 51800
+    strand: +
+    identity: 91.0
+    coverage: null
+    reference_record: rec
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 50100
+      end: 51800
+    evalue: 1.0e-50
+    bitscore: 300.0
+  - gene: sexP
+    role: core_MAT
+    contig: scaffold_12
+    start: 53210
+    end: 53900
+    strand: +
+    identity: 88.4
+    coverage: null
+    reference_record: rec
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 53210
+      end: 53900
+    evalue: 1.0e-50
+    bitscore: 300.0
+  - gene: rnhA
+    role: flanking_conserved
+    contig: scaffold_12
+    start: 55020
+    end: 56300
+    strand: '-'
+    identity: 93.2
+    coverage: null
+    reference_record: rec
+    method: exonerate_refine
+    status: polished_agree
+    alternate_model: null
+    exons:
+    - start: 55020
+      end: 56300
+    evalue: 1.0e-50
+    bitscore: 300.0
+- family: Mucoromycota:MAT
+  contig: scaffold_88
+  start: 1200
+  end: 1980
+  confidence: low
+  idiomorph: Minus
+  idiomorph_class: null
+  idiomorph_candidates:
+  - idiomorph: Minus
+    score: 300.0
+  detection_pass: strict
+  locus_class: idiomorph_gene_only
+  idiomorph_unmodelled: false
+  verification: null
+  merged_from: []
+  subloci: []
+  polished_genes: 1
+  distinct_intervals: 1
+  span_exceeds_plausible_bound: false
+  idiomorph_margin: null
+  idiomorph_classifier: null
+  idiomorph_resolutions: []
+  ambiguous_with: []
+  genes_found:
+  - sexM
+  genes_missing: []
+  genes_not_searchable: []
+  fragmented: false
+  reference_records:
+  - rec
+  segments:
+  - contig: scaffold_88
+    start: 1200
+    end: 1980
+    contig_edge_distance: 1199
+  gene_evidence:
+  - gene: sexM
+    role: core_MAT
+    contig: scaffold_88
+    start: 1200
+    end: 1980
+    strand: '-'
+    identity: 71.3
+    coverage: null
+    reference_record: rec
+    method: exonerate_refine
+    status: polished_disagree
+    alternate_model:
+      contig: scaffold_88
+      start: 1150
+      end: 1980
+      strand: '-'
+      exons:
+      - start: 1150
+        end: 1500
+      - start: 1560
+        end: 1980
+      identity: 69.0
+      method: miniprot_refine
+    exons:
+    - start: 1200
+      end: 1980
+    evalue: 1.0e-50
+    bitscore: 300.0
+not_detected: []

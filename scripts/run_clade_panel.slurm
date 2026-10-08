@@ -160,6 +160,9 @@ mv "$WORK/panel.kept.tsv" "$WORK/panel.tsv"
 # genomes ran `exhaustive` at ~30 min each). The cache dir is pinned so every
 # job shares it regardless of where it was submitted from.
 export MATPREDICT_CACHE_DIR="${MATPREDICT_CACHE_DIR:-$REPO/.matpredict_cache}"
+# No per-genome report.html in batch runs (the YAML is the result; set MATPREDICT_HTML=1 to keep it).
+# An env var, not --no-html: an older frozen worktree would reject the flag and ignores the variable.
+export MATPREDICT_HTML="${MATPREDICT_HTML:-0}"
 cut -f2 "$WORK/panel.tsv" | sort -u | "$PY" -c '
 import sys, time
 from MATPredict.db.taxonomy import (default_genetic_code, default_lineage_phylum_name,

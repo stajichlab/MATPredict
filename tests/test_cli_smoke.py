@@ -387,7 +387,7 @@ def _stub_detect_cli(monkeypatch, tmp_path, recorded):
         detect_cli, "build_reference_fasta", lambda db_root, out, family_keys=None, **kwargs: out
     )
     monkeypatch.setattr(detect_cli, "run_pipeline", lambda **kwargs: DetectionOutcome(results=[]))
-    monkeypatch.setattr(detect_cli, "write_detection_report", lambda outcome, path: None)
+    monkeypatch.setattr(detect_cli, "write_detection_report", lambda outcome, path, run=None: None)
 
     def fake_write_gff3(outcome, out_path, **kwargs):
         recorded.append(kwargs)
@@ -491,7 +491,7 @@ def test_cmd_detect_restricts_the_reference_fasta_to_the_routed_families(monkeyp
     monkeypatch.setattr(detect_cli, "build_reference_fasta", fake_build)
     monkeypatch.setattr(detect_cli, "run_pipeline", fake_run_pipeline)
     monkeypatch.setattr(detect_cli, "write_detection_gff3", lambda *a, **k: None)
-    monkeypatch.setattr(detect_cli, "write_detection_report", lambda outcome, path: None)
+    monkeypatch.setattr(detect_cli, "write_detection_report", lambda outcome, path, run=None: None)
 
     args = SimpleNamespace(
         genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"),

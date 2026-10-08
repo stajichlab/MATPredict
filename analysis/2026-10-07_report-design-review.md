@@ -1,5 +1,5 @@
 # Per-genome HTML/PDF report (`matpredict report genome`): build and design review
-Status: open (implemented on branch `report-genome`; awaiting curator review)
+Status: decided (PR #48; design questions 1-3 settled 2026-10-07)
 
 ## Question
 Can one `detect` run be turned into a report that a biologist reads in five seconds and a curator can audit, that
@@ -81,7 +81,8 @@ What the report now does:
 ## Curator decisions
 Decided 2026-10-07: (1) `detect` writes report.html by default, opt out with `--no-html` / `MATPREDICT_HTML=0`
 (set in the batch scripts). (2) PDF engine: WeasyPrint in the pixi environment and image (25 packages, 10.3 MB
-download, against about 300 MB for chrome-headless-shell 154 and its libraries); revisit if insufficient. Open: (3) Withheld loci collapsed (current) or hidden by default?
+download, against about 300 MB for chrome-headless-shell 154 and its libraries); revisit if insufficient. (3) Withheld loci: kept as now (curator 2026-10-07): an always-visible section with count, explanation and
+reasons; the table collapsed on screen and expanded in print/PDF.
 
 ## Files
 - Code: `src/MATPredict/report/`, `src/MATPredict/detect/provenance.py`; tests `tests/report/`,

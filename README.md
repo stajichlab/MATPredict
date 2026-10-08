@@ -351,7 +351,7 @@ the minor idiomorph has less than a quarter of the depth of the major one.
 
 - 147 of 148 strains agree with a samtools breadth call (the one difference has no signal in either method). With the GenBank panel, 145 of 148.
 - Simulated mixes of two strains (3 pairs): `both` is called from a 10% minor MAT1-2 share in 3 of 3 pairs, from 5% in 2 of 3, and from a 20% minor MAT1-1 share in 3 of 3. `trace_MAT1-2` also appears in pure MAT1-1 strains (background), so it is not evidence of a minor idiomorph.
-- *A. fumigatus* (304 assemblies, 331 read sets): reads agree with an assembly BLAST truth in 293 of 296 strains (99.0%); `detect` on the assemblies agrees in 288 of 297 and reports a single idiomorph for all 8 assemblies that hold both. Seven of those 8 are `both` from reads.
+- *A. fumigatus* (304 assemblies, 331 read sets): reads agree with an assembly BLAST truth in 293 of 296 strains (99.0%); `detect` on the assemblies agrees in 288 of 297 and reports a single idiomorph for all 8 assemblies that hold both. Seven of those 8 are `both` from reads ([report](analysis/2026-10-07_afum-reads-and-assembly.md)).
 - Speed: about 1.5 minutes for 8 million reads on one CPU (Python).
 - A reference that differs from the strain at about one position in 40 gives `none`; at one in 60 it is called correctly.
 

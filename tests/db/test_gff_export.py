@@ -553,6 +553,20 @@ def test_gene_class_index_lookup_is_case_sensitive():
     assert index[("OTHER", "APN2")] == "sla2_homolog"
 
 
+def test_gene_class_index_resolves_a_roster_gene_alias():
+    # A record may deposit an alias of a roster gene (order.yml `aliases:`, e.g. the
+    # C. cinerea B43 record's rcb1 for pheromone_receptor); it has the roster gene's
+    # class. A canonical name is never overwritten by an alias.
+    order = {"loci": [{"locus_name": "PR", "genes": [
+        {"name": "pheromone_receptor", "gene_class": "pheromone_receptor", "aliases": ["rcb1", "pheromone_B43"]},
+        {"name": "pheromone_B43", "gene_class": "pheromone_precursor"},
+    ]}]}
+    index = build_gene_class_index(order)
+
+    assert index[("PR", "rcb1")] == "pheromone_receptor"
+    assert index[("PR", "pheromone_B43")] == "pheromone_precursor"
+
+
 def test_resolve_gene_classes_maps_gene_index_to_class():
     record = _join_record([_gene(0, "APN2", 1, 9)])
 

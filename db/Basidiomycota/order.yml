@@ -85,12 +85,13 @@ loci:
     # CAAX-dependent, unverified) were lost. No Boletales PR record exists yet.
     taxonomic_scope: [5338, 5303, 452342, 68889]  # Agaricales, Polyporales, Russulales, Boletales (orders)
     # 25 kb per the curator's Agaricales upper bound. Measured largest
-    # intra-locus gene gap in the one curated PR record: 3,186 bp (n=1).
+    # intra-locus gene gap in the one curated PR record: 3,186 bp (n=1); 2,636 bp
+    # after the 2026-10-06 addition of phb1.1 between rcb1 and the next gene.
     # The 2026-09-27 records' largest gap is 9,913 bp (Grifola frondosa).
     max_cluster_gap_bp: 25000
     # Gene names must match the names used by this family's curated records
-    # exactly -- detect/search.py:_attribute drops any hit whose curated gene
-    # name is not declared here. The specific names below are the real names in
+    # exactly (or be listed as an alias of a roster gene) -- detect/search.py:_attribute
+    # drops any hit whose curated gene name is not declared here. The specific names below are the real names in
     # db/Basidiomycota/Agaricales/5346_a43-b43-okayama-7_PR_B43. A bare
     # `pheromone` entry was removed: no curated protein anywhere in db/ carries
     # that name, so it was permanently unsatisfiable and permanently blocked
@@ -99,11 +100,21 @@ loci:
     # (db/Basidiomycota/Agaricales/5346_a43-b43-okayama-7_PR_B43/metadata.yaml), whose
     # definition_note documents pheromone_B43/pheromone_B44/fungal_mating_type_pheromone
     # as the pheromone (precursor) genes and pheromone_receptor as the 7TM receptor.
+    # 2026-10-06 (curate-cinerea-b43): the C. cinerea B43 record names its genes by
+    # the literature's group nomenclature (Riquelme et al. 2005: rcb1/2/3 receptors,
+    # phbG.N pheromones). Those names are ALIASES of the existing roster genes, so
+    # the roster, the required core and the scoring are unchanged: every receptor
+    # (rcb1, rcb2, rcb3 and the extra STE3 receptor ste3_extra_unassigned) is
+    # `pheromone_receptor`; the pheromones new to the record (phb1.1, phb2.1, phb2.3,
+    # phb3.1, phb3.3) are `fungal_mating_type_pheromone`; the record's former
+    # `pheromone_B44` gene is now `phb2_B44-like` and stays the canonical
+    # `pheromone_B44` (a legacy roster label: the gene is a B43-locus gene 70%
+    # identical to the published Phb2.2 B44, not evidence of a B44 haplotype).
     genes:
-      - {name: pheromone_receptor, role: core_MAT, gene_class: pheromone_receptor}
+      - {name: pheromone_receptor, role: core_MAT, gene_class: pheromone_receptor, aliases: [rcb1, rcb2, rcb3, ste3_extra_unassigned]}
       - {name: pheromone_B43, role: core_MAT, gene_class: pheromone_precursor}
-      - {name: pheromone_B44, role: core_MAT, gene_class: pheromone_precursor}
-      - {name: fungal_mating_type_pheromone, role: core_MAT, gene_class: pheromone_precursor}
+      - {name: pheromone_B44, role: core_MAT, gene_class: pheromone_precursor, aliases: [phb2_B44-like]}
+      - {name: fungal_mating_type_pheromone, role: core_MAT, gene_class: pheromone_precursor, aliases: [phb1.1, phb2.1, phb2.3, phb3.1, phb3.3]}
       # Found only by the strict-CAAX scan below, never by homology; optional,
       # so its absence costs nothing.
       - {name: caax_precursor, role: core_MAT, gene_class: pheromone_precursor, optional: true}

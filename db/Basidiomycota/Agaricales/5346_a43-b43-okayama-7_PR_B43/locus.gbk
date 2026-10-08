@@ -1,4 +1,4 @@
-LOCUS       JAAGWA010000010.       20706 bp    DNA              UNK 01-JAN-1980
+LOCUS       JAAGWA010000010.       21549 bp    DNA              UNK 01-JAN-1980
 DEFINITION  5346_a43-b43-okayama-7_PR_B43 core locus segment 0
             (JAAGWA010000010.1).
 ACCESSION   5346_a43-b43-okayama-7_PR_B43.segment0
@@ -9,10 +9,10 @@ SOURCE      .
             .
 FEATURES             Location/Qualifiers
      gene            complement(1..2612)
-                     /gene="pheromone_receptor"
+                     /gene="rcb1"
                      /role="core_MAT"
      CDS             complement(1..2612)
-                     /gene="pheromone_receptor"
+                     /gene="rcb1"
                      /role="core_MAT"
                      /translation="MAASSDPTYPLYSVFSFIGFILVCIPFWWHIQAWNAGTCAFMIWT
                      ALSCLIGFINSLVWKGNALNPAPVWCDISSKIMIGVSIGIPAATLCISRRLYCITSSPS
@@ -27,10 +27,10 @@ FEATURES             Location/Qualifiers
                      "
                      /gene_class="pheromone_receptor"
      gene            complement(5798..6523)
-                     /gene="pheromone_B44"
+                     /gene="phb2_B44-like"
                      /role="core_MAT"
      CDS             complement(5798..6523)
-                     /gene="pheromone_B44"
+                     /gene="phb2_B44-like"
                      /role="core_MAT"
                      /translation="MDSFTTLTAQSVFDELNLDVQDDVSHHFGFPSEEEAATEVPADQE
                      RPGDGRKAMGAFCVIV"
@@ -45,10 +45,10 @@ FEATURES             Location/Qualifiers
                      PRNFERPGSGKLSAFCIIA"
                      /gene_class="pheromone_precursor"
      gene            complement(11171..13284)
-                     /gene="pheromone_receptor"
+                     /gene="rcb2"
                      /role="core_MAT"
      CDS             complement(11171..13284)
-                     /gene="pheromone_receptor"
+                     /gene="rcb2"
                      /role="core_MAT"
                      /translation="MTALHPEFAPVAIIACLSLLLPLPWHWRARNVATLSMIFWLFVSN
                      LIYAVNALIWGDNVKIVAQVWCDITTKLIIGANFGLPAACFCISMHLEKVASLRNAQSS
@@ -61,10 +61,10 @@ FEATURES             Location/Qualifiers
                      PTSPRPLTYPSHEAAMRGLDAESQRQ"
                      /gene_class="pheromone_receptor"
      gene            complement(13490..15124)
-                     /gene="pheromone_receptor"
+                     /gene="ste3_extra_unassigned"
                      /role="core_MAT"
      CDS             complement(13490..15124)
-                     /gene="pheromone_receptor"
+                     /gene="ste3_extra_unassigned"
                      /role="core_MAT"
                      /translation="MHAELPVASFISAALVLVPIPWHWKARNVPTLSLCIWLFVLNVIN
                      GVGSIVWAGNTRLVVPAWCDIATKLMIGGNLAIPTSLIALCVQLERLASARDGRLGVLG
@@ -75,10 +75,10 @@ FEATURES             Location/Qualifiers
                      EVQVSVVRHCDQSPSYSVPCPTYYYMDSSSDEPGRSRVSLPTCYSASSTYLPSTLGH"
                      /gene_class="pheromone_receptor"
      gene            15801..17793
-                     /gene="pheromone_receptor"
+                     /gene="rcb3"
                      /role="core_MAT"
      CDS             15801..17793
-                     /gene="pheromone_receptor"
+                     /gene="rcb3"
                      /role="core_MAT"
                      /translation="MSSRLSFDDPTYPAFPIFAFIGFVLVLIPLPWHLQAWNSGTCLYM
                      IWTAIGCLNLFINSLIWHGNAIDWAPVWCDISTRLVVGISVAIPAASLCINRRLYKIAS
@@ -89,15 +89,14 @@ FEATURES             Location/Qualifiers
                      YMPRSVDTACPVQSEKPSNFTRTLSISSNSSSSTKVASSFRLDDIKLSTSPCMQDTFPS
                      SPTSMTIHCDDSVRNCKL"
                      /gene_class="pheromone_receptor"
-     gene            18817..19240
-                     /gene="fungal_mating_type_pheromone"
+     gene            18765..18983
+                     /gene="phb3.1"
                      /role="core_MAT"
-     CDS             18817..19240
-                     /gene="fungal_mating_type_pheromone"
+     CDS             18765..18983
+                     /gene="phb3.1"
                      /role="core_MAT"
-                     /translation="MDASVSTPIYPRPLKVKVARFFQSKRPSPPKSLTESLPTSRDEVG
-                     EARLGSALSRSADRIPHMAVASSYTTEYSVQRSTDGEPETSLYRFDSLHLRSRRHDTPF
-                     VISILFMSALFIVSSIPSL"
+                     /translation="MSDLFASLDLFLSSTEDNGCVCFDTNLSATTESQGCEILSKQASI
+                     STQELDGVLADFERRSGGGASWFCTIA"
                      /gene_class="pheromone_precursor"
      gene            20033..20706
                      /gene="fungal_mating_type_pheromone"
@@ -107,6 +106,42 @@ FEATURES             Location/Qualifiers
                      /role="core_MAT"
                      /translation="MCDTFNTLTLNAYAEDPTPRLSNSTTNEITSTAPSDHTSLTLEEL
                      IDLPVDHERRTAGSSGQTWFCVIA"
+                     /gene_class="pheromone_precursor"
+     gene            3007..3162
+                     /gene="phb1.1"
+                     /role="core_MAT"
+     CDS             3007..3162
+                     /gene="phb1.1"
+                     /role="core_MAT"
+                     /translation="MDDLTVILNLSELPPEFTAMMNSSPEFPSNTTDVPIDEDTPYRPV
+                     TACVIS"
+                     /gene_class="pheromone_precursor"
+     gene            7789..7950
+                     /gene="phb2.3"
+                     /role="core_MAT"
+     CDS             7789..7950
+                     /gene="phb2.3"
+                     /role="core_MAT"
+                     /translation="MDSFSSLDAFVVDEELLQLAIDIPQPIPGQDQQPPINEERPGAGT
+                     MGAFCIIN"
+                     /gene_class="pheromone_precursor"
+     gene            complement(10240..10425)
+                     /gene="phb2.1"
+                     /role="core_MAT"
+     CDS             complement(10240..10425)
+                     /gene="phb2.1"
+                     /role="core_MAT"
+                     /translation="MDNFSTIDLAALCDELDFVQDVEALMASSTMGDAFVAGEDGPPAN
+                     HERPGAGVNRAFCVIA"
+                     /gene_class="pheromone_precursor"
+     gene            21123..21549
+                     /gene="phb3.3"
+                     /role="core_MAT"
+     CDS             join(21123..21185,21266..21316,21406..21549)
+                     /gene="phb3.3"
+                     /role="core_MAT"
+                     /translation="MDSPLIPLDRVVLVLPDQMIDTDSSSFDECLLEFRLAVSSDERIA
+                     ILDKQRLGIKAQAEMQAAGKNEERRTVNKPIKQSTLCPII"
                      /gene_class="pheromone_precursor"
 ORIGIN
         1 gtcctattgt tacatcacac cggaaacact tcaatctatg accaaaatcg attcaagtat
@@ -454,5 +489,19 @@ ORIGIN
     20521 ccctttgatc acgaaacgct ctatgtacga ttcttacgat gtaacgtcaa tcgcaacgtt
     20581 gaccgatgct cgctgtatcc acaatacaaa agtccctgta ctcgtagact agaaaatagc
     20641 ctcagatatg taccgctatt tgctctgtgt tccatgacca cattgtcaat ttgtctttga
-    20701 cccttc
+    20701 cccttctcaa ggcgcccagg tgtaagtctc gtacccagac gttgcctgcc gggagcctcc
+    20761 aaaaaagcgc tggggacgag gctaaggcgg tgcacagtct taagcattct cagtcaaact
+    20821 gtccctagcc catgtcgcgt catccatgaa ataccaagta cgattgataa ttaaggcgac
+    20881 cttctgcata aatatgacat tgaatgtatt tcctaacctt cccgagttct cgctcattca
+    20941 tcatcgaaag gccaactttc ggacaagctt tattcgcgga ccattcgacc tatgtacggg
+    21001 tacgggacaa gtctaagcca tcctcatggt acactgcctt tgtctccgaa acgtgaatct
+    21061 gaatcgcatt ctatccacca gggagtttag agcgccgttc cgtaattgat agaaagactc
+    21121 ggatggactc accattgatt ccactggacc gagttgtcct cgttcttcct gaccaaatga
+    21181 tcgatgtcta gcactggagg caaaggtaag tcgatggggc tcatctattg ctctccctgc
+    21241 tggctcaaag gcggcgagct cgtagacgga ctcgtctagt tttgacgagt gtcttcttga
+    21301 gtttagactg gcagtggtat acatgaggcg cagatcgcca tagagattaa gattagctca
+    21361 cactgcaagg actgagttgg cgtagatctt ggtcaagatg acgagagctc cgacgaaagg
+    21421 atagccatcc ttgacaaaca acgccttgga ataaaagctc aagctgagat gcaagcggca
+    21481 gggaagaacg aagaacgtcg tacagtaaat aagccgataa agcagagcac gctgtgtccc
+    21541 atcatataa
 //

@@ -125,3 +125,24 @@ def test_cli_option_defaults_to_the_flank_carried_floor_and_parses():
     base = ["detect", "--genome", "g.fa", "--out-dir", "o"]
     assert p.parse_args(base).supported_min_bitscore == DEFAULT_FLANK_CARRIED_MIN_BITSCORE == 39.0
     assert p.parse_args(base + ["--supported-min-bitscore", "50"]).supported_min_bitscore == 50.0
+
+
+def test_a_merged_call_keeps_a_supported_span_that_covers_its_merged_genes():
+    """Found by the containment check on the 34-genome panel: after locus_merge a gene added by a member fell outside the span."""
+    from MATPredict.detect.locus_merge import merge_overlapping
+    from MATPredict.detect.pipeline import DetectionResult, GeneEvidence
+    a, b = FamilyKey("Basidiomycota", "Balpha"), FamilyKey("Basidiomycota", "Bbeta")
+
+    def call(key, gene, g0, g1, sup):
+        ev = GeneEvidence(gene, "core_MAT", "c1", g0, g1, "+", 80.0, 90.0, "rec", "exonerate_refine")
+        return DetectionResult(family_key=key, contig="c1", start=1000, end=30000, confidence="high", idiomorph="undetermined",
+                               ambiguous_with=[], genes_found=[gene], genes_missing=[], fragmented=False, gene_evidence=[ev],
+                               supported_span={"start": sup[0], "end": sup[1], "min_bitscore": 39.0, "beyond_supported_bp": 30001 - (sup[1] - sup[0] + 1)})
+
+    merged = merge_overlapping([call(a, "bap", 1000, 5000, (1000, 5000)), call(b, "bbp", 20000, 30000, (20000, 30000))],
+                               {a: ("B", False), b: ("B", False)})
+    (m,) = merged
+    assert m.merged_from                                              # these two did merge (identical cluster spans)
+    assert m.supported_span["start"] == 1000 and m.supported_span["end"] == 30000
+    assert m.supported_span["beyond_supported_bp"] == 0
+    assert all(m.supported_span["start"] <= e.start and e.end <= m.supported_span["end"] for e in m.gene_evidence)

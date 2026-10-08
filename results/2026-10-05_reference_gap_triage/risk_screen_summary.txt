@@ -1,0 +1,89 @@
+
+## Ascomycota: 19415 genomes
+assembly good: 18166 genomes, called 16515 (90.9%), not called 1651
+assembly poor: 1240 genomes, called 799 (64.4%), not called 441
+assembly no stats: 9 genomes, called 0 (0.0%), not called 9
+
+Not called, by order (orders with 20 or more genomes): genomes | not called | not called with a good assembly | % of good-assembly genomes not called | routing
+| order | genomes | not called | not called, good assembly | % good-assembly not called | % fallback |
+|---|---|---|---|---|---|
+| Saccharomycetales | 2307 | 293 | 250 | 11.4% | 1% |
+| Dipodascales | 398 | 284 | 224 | 67.1% | 87% |
+| Pichiales | 579 | 195 | 178 | 34.4% | 99% |
+| Xylariales | 257 | 184 | 177 | 71.4% | 0% |
+| Pleosporales | 1012 | 150 | 144 | 14.3% | 0% |
+| Serinales | 2368 | 103 | 76 | 3.4% | 0% |
+| Chaetothyriales | 223 | 73 | 63 | 30.0% | 0% |
+| Orbiliales | 67 | 61 | 60 | 95.2% | 100% |
+| Mycosphaerellales | 411 | 62 | 48 | 12.7% | 0% |
+| Amphisphaeriales | 98 | 46 | 44 | 45.8% | 0% |
+| Botryosphaeriales | 807 | 49 | 42 | 5.3% | 0% |
+| Microascales | 164 | 47 | 42 | 26.8% | 0% |
+| Hypocreales | 3535 | 80 | 33 | 1.0% | 0% |
+| Ascoideales | 80 | 32 | 30 | 41.1% | 100% |
+| Magnaporthales | 544 | 30 | 24 | 4.9% | 0% |
+| Pezizales | 172 | 35 | 21 | 13.5% | 0% |
+
+Total not called in good assemblies: 1651 of 18166 good-assembly genomes
+
+Loci: confidence {'high': 13740, 'medium': 7112, 'low': 159}; locus class {'mat_locus': 14657, 'partial_locus': 1531, 'idiomorph_gene_only': 4466, 'homothallic_candidate': 357}
+Genomes whose every call is low confidence, partial or gene only: 3171; called through the phylum fallback: 811
+
+## Basidiomycota: 3270 genomes
+assembly good: 2621 genomes, called 2404 (91.7%), not called 217
+assembly poor: 649 genomes, called 578 (89.1%), not called 71
+
+Not called, by order (orders with 20 or more genomes): genomes | not called | not called with a good assembly | % of good-assembly genomes not called | routing
+| order | genomes | not called | not called, good assembly | % good-assembly not called | % fallback |
+|---|---|---|---|---|---|
+| Trichosporonales | 127 | 67 | 64 | 51.6% | 100% |
+| Microbotryales | 38 | 30 | 30 | 78.9% | 100% |
+| Filobasidiales | 41 | 22 | 22 | 53.7% | 100% |
+| Cystofilobasidiales | 42 | 21 | 20 | 50.0% | 100% |
+| Tremellales | 342 | 15 | 10 | 3.0% | 0% |
+| Cantharellales | 99 | 9 | 7 | 9.1% | 100% |
+| Boletales | 509 | 26 | 4 | 2.2% | 0% |
+| Russulales | 92 | 5 | 4 | 5.3% | 0% |
+| Pucciniales | 129 | 22 | 3 | 3.3% | 0% |
+| Agaricales | 824 | 10 | 2 | 0.3% | 0% |
+| Polyporales | 198 | 1 | 1 | 0.6% | 0% |
+| Auriculariales | 20 | 1 | 1 | 5.0% | 100% |
+| Sporidiobolales | 253 | 1 | 0 | 0.0% | 0% |
+| Ustilaginales | 127 | 0 | 0 | 0.0% | 0% |
+| Hymenochaetales | 55 | 2 | 0 | 0.0% | 100% |
+| Tilletiales | 67 | 2 | 0 | 0.0% | 100% |
+
+Total not called in good assemblies: 217 of 2621 good-assembly genomes
+
+Loci: confidence {'high': 3813, 'medium': 2077, 'low': 10}; locus class {'idiomorph_gene_only': 2955, 'mat_locus': 2721, 'partial_locus': 224}
+Genomes whose every call is low confidence, partial or gene only: 895; called through the phylum fallback: 456
+
+## Idiomorph skew within species (Ascomycota:MAT, species with 10 or more single-idiomorph genomes; minority share 15% or less, two-sided binomial p < 1e-4 against 1:1)
+species screened: 133; flagged: 29; genomes in flagged species: 1546
+| species | order | MAT1-1 | MAT1-2 | both |
+|---|---|---|---|---|
+| Fusarium asiaticum | Hypocreales | 257 | 0 | 0 |
+| Parastagonospora nodorum | Pleosporales | 173 | 0 | 0 |
+| Botryosphaeria dothidea | Botryosphaeriales | 140 | 0 | 0 |
+| Fusarium graminearum | Hypocreales | 135 | 0 | 0 |
+| Penicillium commune | Eurotiales | 0 | 65 | 0 |
+| Pyrenophora tritici-repentis | Pleosporales | 64 | 0 | 0 |
+| Botrytis cinerea | Helotiales | 62 | 0 | 0 |
+| Verticillium dahliae | Glomerellales | 5 | 54 | 0 |
+| Microsporum canis | Onygenales | 52 | 0 | 0 |
+| Trichophyton indotineae | Onygenales | 0 | 44 | 0 |
+| Trichophyton concentricum | Onygenales | 44 | 0 | 0 |
+| Calonectria ilicicola | Hypocreales | 40 | 0 | 0 |
+| Sclerotinia sclerotiorum | Helotiales | 0 | 35 | 1 |
+| Colletotrichum lupini | Glomerellales | 0 | 32 | 0 |
+| Colletotrichum acutatum | Glomerellales | 0 | 31 | 0 |
+| Colletotrichum nymphaeae | Glomerellales | 0 | 30 | 0 |
+| Schizothecium sp. GE-2024h | Sordariales | 29 | 1 | 0 |
+| Colletotrichum fioriniae | Glomerellales | 0 | 27 | 0 |
+| Colletotrichum siamense | Glomerellales | 0 | 26 | 0 |
+| Colletotrichum fructicola | Glomerellales | 0 | 26 | 0 |
+| Trichophyton interdigitale | Onygenales | 0 | 23 | 0 |
+| Verticillium nonalfalfae | Glomerellales | 0 | 23 | 0 |
+| Colletotrichum gloeosporioides | Glomerellales | 0 | 21 | 0 |
+| Colletotrichum graminicola | Glomerellales | 0 | 21 | 0 |
+| Podospora tetraspora | Sordariales | 21 | 0 | 1 |

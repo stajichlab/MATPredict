@@ -1,0 +1,14 @@
+Rescue test: deposited MAT proteins vs uncalled good-assembly genomes (core hit >= 35% identity over >= 50% of the query; flank within 30 kb)
+| order | uncalled genomes | with a core hit | core hit and a flank (rescue candidates) | median best identity of candidates | called controls | control core hit | control concordant with the call |
+|---|---|---|---|---|---|---|---|
+| Pichiales | 178 | 168 | 9 | 42.9 | 30 | 12 | 12 |
+| Dipodascales | 224 | 64 | 63 | 37.3 | 30 | 5 | 0 |
+| Chaetothyriales | 63 | 30 | 2 | 45.7 | 30 | 18 | 17 |
+| Microascales | 42 | 30 | 11 | 92.0 | 30 | 20 | 20 |
+
+Candidates by family and deposit:
+  Pichiales: Pichiaceae 9 (Kphaffii_FR839631, Ohpoly_AJ617305)
+  Dipodascales: Dipodascaceae 35 (Ohpoly_AJ617305);  28 (Ylip_AJ617307)
+  Chaetothyriales: Herpotrichiellaceae 2 (Edermat_MH341450)
+  Microascales: Ceratocystidaceae 11 (Cfim_switched_KF033903, Cfim_unswitched_KF033902)
+errors: 0

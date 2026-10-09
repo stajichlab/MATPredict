@@ -1,0 +1,52 @@
+genomes per floor: {30: 34, 33: 34, 36: 34, 39: 34, 50: 34} | earlier core-span run: 33
+
+1. CALL IDENTITY (cluster span, calls, genes, merged_from, withheld loci)
+   floor 30 vs earlier run: 33 common genomes, 0 with any difference []
+   floor 33 vs earlier run: 33 common genomes, 0 with any difference []
+   floor 36 vs earlier run: 33 common genomes, 0 with any difference []
+   floor 39 vs earlier run: 33 common genomes, 0 with any difference []
+   floor 50 vs earlier run: 33 common genomes, 0 with any difference []
+   floor 30 vs floor 33: 0 genomes differ in anything but supported_span
+   floor 33 vs floor 36: 0 genomes differ in anything but supported_span
+   floor 36 vs floor 39: 0 genomes differ in anything but supported_span
+   floor 39 vs floor 50: 0 genomes differ in anything but supported_span
+
+2. GENE CONTAINMENT (every reported gene on the locus contig lies inside core, supported and cluster span)
+   floor 30: 160 genes checked, 0 outside
+   floor 33: 160 genes checked, 0 outside
+   floor 36: 160 genes checked, 0 outside
+   floor 39: 160 genes checked, 0 outside
+   floor 50: 160 genes checked, 0 outside
+
+3. SWEEP over called loci
+   floor 30: loci 49; beyond_supported > 0: 17, >= 1 kb: 12, >= 10 kb: 7, total 143070 bp, max 25119 | for comparison beyond_core: > 0 39, >= 10 kb 12, total 349107 bp
+   floor 33: loci 49; beyond_supported > 0: 20, >= 1 kb: 13, >= 10 kb: 7, total 145750 bp, max 25125 | for comparison beyond_core: > 0 39, >= 10 kb 12, total 349107 bp
+   floor 36: loci 49; beyond_supported > 0: 21, >= 1 kb: 13, >= 10 kb: 7, total 146434 bp, max 25125 | for comparison beyond_core: > 0 39, >= 10 kb 12, total 349107 bp
+   floor 39: loci 49; beyond_supported > 0: 23, >= 1 kb: 15, >= 10 kb: 9, total 183153 bp, max 25247 | for comparison beyond_core: > 0 39, >= 10 kb 12, total 349107 bp
+   floor 50: loci 49; beyond_supported > 0: 25, >= 1 kb: 16, >= 10 kb: 9, total 186156 bp, max 25247 | for comparison beyond_core: > 0 39, >= 10 kb 12, total 349107 bp
+
+4. THE 14 HAND-TALLIED STRETCHES (noise-only should be dropped; strong OWN-family hits kept; other-family hits dropped by design)
+   floor 30: {'own_kept': 7, 'own_lost': 1, 'other_kept': 1, 'other_dropped': 0, 'noise_dropped': 5, 'noise_kept': 0}
+       OWN-family strong hit LOST GCA_002105055.1_Le bLocus right 349360_cbs-131475_bLocus|bE 4.0e-06 aa 80
+   floor 33: {'own_kept': 7, 'own_lost': 1, 'other_kept': 1, 'other_dropped': 0, 'noise_dropped': 5, 'noise_kept': 0}
+       OWN-family strong hit LOST GCA_002105055.1_Le bLocus right 349360_cbs-131475_bLocus|bE 4.0e-06 aa 80
+   floor 36: {'own_kept': 7, 'own_lost': 1, 'other_kept': 1, 'other_dropped': 0, 'noise_dropped': 5, 'noise_kept': 0}
+       OWN-family strong hit LOST GCA_002105055.1_Le bLocus right 349360_cbs-131475_bLocus|bE 4.0e-06 aa 80
+   floor 39: {'own_kept': 6, 'own_lost': 2, 'other_kept': 0, 'other_dropped': 1, 'noise_dropped': 5, 'noise_kept': 0}
+       OWN-family strong hit LOST GCA_002105055.1_Le bLocus right 349360_cbs-131475_bLocus|bE 4.0e-06 aa 80
+       OWN-family strong hit LOST GCA_002900995.3_Ga PR left 1|fungal_mating_type_pheromone 5.3e-08 aa 46
+   floor 50: {'own_kept': 6, 'own_lost': 2, 'other_kept': 0, 'other_dropped': 1, 'noise_dropped': 5, 'noise_kept': 0}
+       OWN-family strong hit LOST GCA_002105055.1_Le bLocus right 349360_cbs-131475_bLocus|bE 4.0e-06 aa 80
+       OWN-family strong hit LOST GCA_002900995.3_Ga PR left 1|fungal_mating_type_pheromone 5.3e-08 aa 46
+
+5. NAMED CASES at floor 39
+   GCA_982397435.1_T48-F HD floor 30: cluster 118043-153196, core 118043-130301, supported 118043-130301 (beyond supported 22895)
+   GCA_982397435.1_T48-F HD floor 33: cluster 118043-153196, core 118043-130301, supported 118043-130301 (beyond supported 22895)
+   GCA_982397435.1_T48-F HD floor 36: cluster 118043-153196, core 118043-130301, supported 118043-130301 (beyond supported 22895)
+   GCA_982397435.1_T48-F HD floor 39: cluster 118043-153196, core 118043-130301, supported 118043-130301 (beyond supported 22895)
+   GCA_982397435.1_T48-F HD floor 50: cluster 118043-153196, core 118043-130301, supported 118043-130301 (beyond supported 22895)
+   GCA_002105055.1_Leucr1 bLocus floor 30: cluster 145579-160941, core 145636-147187, supported 145579-147340 (beyond supported 13601)
+   GCA_002105055.1_Leucr1 bLocus floor 33: cluster 145579-160941, core 145636-147187, supported 145579-147340 (beyond supported 13601)
+   GCA_002105055.1_Leucr1 bLocus floor 36: cluster 145579-160941, core 145636-147187, supported 145579-147223 (beyond supported 13718)
+   GCA_002105055.1_Leucr1 bLocus floor 39: cluster 145579-160941, core 145636-147187, supported 145579-147223 (beyond supported 13718)
+   GCA_002105055.1_Leucr1 bLocus floor 50: cluster 145579-160941, core 145636-147187, supported 145579-147223 (beyond supported 13718)

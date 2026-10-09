@@ -651,8 +651,8 @@ def _select_requested_gene(
     database legitimately holds more than one reference protein for the same
     gene, each producing its own alignment -- the spec (Stage 2) requires
     selecting one per gene per tool by a named, tool-appropriate score, which
-    is `_feature_score`'s raw per-tool alignment score. Ties keep the tool's
-    own output order, so selection is deterministic.
+    is `_feature_score`'s raw per-tool alignment score. An exact tie goes to the lower
+    reference record id (the tool's own order among equal scores is not guaranteed), so selection is deterministic.
     """
     best: tuple[_AlignmentRecord, str, FamilyKey, str] | None = None
     best_score = None
@@ -667,7 +667,11 @@ def _select_requested_gene(
         if attribution is None:
             continue
         family_key, role = attribution
-        if best_score is None or record.score > best_score:
+        # An exact tie in score goes to the lower reference record id, not to whichever alignment the tool listed first: the
+        # tool's order among equal scores is not guaranteed, and the record named in the model (and in `reference_records`)
+        # flipped between runs of the same code on Leppa1 (two curated references tie exactly there).
+        if (best_score is None or record.score > best_score
+                or (record.score == best_score and record_id < best[1])):
             best = (record, record_id, family_key, role)
             best_score = record.score
     return best

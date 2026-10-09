@@ -23,6 +23,10 @@ release completed.
   to the `MAT_locus` line of the GFF3 (`core_start`, `core_end`, `beyond_core_bp`) and to the HTML report ("Own genes").
 
 ### Fixed
+- When two curated reference records tie exactly in alignment score for one gene, the polisher now names the one with the lower
+  record id instead of whichever alignment the tool listed first (the tool's order among equal scores is not guaranteed). Found on
+  Leppa1, where one gene model was attributed to the A1163 record in most runs and to the Af293 record in some. Affects only the
+  record named in a model and in `reference_records`; calls, spans and gene sets are unchanged.
 - PDF report: gene-evidence tables no longer run past their card. In print, header, number and status cells may wrap, and
   table cells break long names (for example `fungal_mating_type_pheromone`). Found on real campaign reports (Serpula
   lacrymans, 78 px past the card). New layout test `tests/report/test_report_layout.py` checks every fixture, including one

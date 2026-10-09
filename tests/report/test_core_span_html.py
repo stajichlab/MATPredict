@@ -40,14 +40,14 @@ def _text_sup(supported) -> str:
 
 
 def test_a_span_beyond_its_supported_extent_is_shown_with_the_floor():
-    # T48-F-like: 22,895 bp of the span carried only by hits below 39 bits
-    text = _text_sup({"start": 118043, "end": 130301, "min_bitscore": 39.0, "beyond_supported_bp": 22895})
+    # T48-F-like: 22,895 bp of the span carried only by hits below 33 bits
+    text = _text_sup({"start": 118043, "end": 130301, "min_bitscore": 33.0, "beyond_supported_bp": 22895})
     assert "Supported span" in text and "118,043" in text and "130,301" in text
-    assert "22.9 kb" in text and "39 bits" in text
+    assert "22.9 kb" in text and "33 bits" in text
 
 
 def test_a_fully_supported_span_is_not_called_out():
-    text = _text_sup({"start": 100, "end": 200, "min_bitscore": 39.0, "beyond_supported_bp": 0})
+    text = _text_sup({"start": 100, "end": 200, "min_bitscore": 33.0, "beyond_supported_bp": 0})
     assert "Supported span" not in text
 
 

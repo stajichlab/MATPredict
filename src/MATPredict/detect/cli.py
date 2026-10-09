@@ -464,7 +464,7 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
         "--supported-min-bitscore", type=float, default=DEFAULT_SUPPORTED_MIN_BITSCORE,
         help="Bitscore floor for the report-only `supported_span`: a locus's own hits at or above it, plus its "
              "modelled genes, define the supported extent; weaker hits do not. Does not change calls or the cluster "
-             f"span. Default: {DEFAULT_SUPPORTED_MIN_BITSCORE:g} (the flank-carried floor).",
+             f"span. Default: {DEFAULT_SUPPORTED_MIN_BITSCORE:g}.",
     )
     detect.add_argument(
         "--polish-strong-identity", type=float, default=DEFAULT_POLISH_STRONG_IDENTITY,

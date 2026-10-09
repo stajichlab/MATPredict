@@ -5,11 +5,15 @@ a locus without adding a gene (T48-F: a called HD locus of 12.3 kb reported as 3
 e-value 4.1; analysis/2026-10-08_cinerea-b43-trace.md). Trimming to the modelled genes would also drop real,
 unmodelled receptor genes (6 of 11 loci with 10 kb or more beyond their genes), so this keeps own-family hits at or
 above a bitscore floor. A bitscore, not an e-value: an e-value depends on genome size, and the flank-carried rule
-already moved to a bitscore floor for that reason (curator, 2026-09-27).
+already moved to a bitscore floor for that reason (curator, 2026-09-27). The default is not the flank-carried number: see below.
 """
 from __future__ import annotations
 
-DEFAULT_SUPPORTED_MIN_BITSCORE = 39.0   # the flank-carried floor (family_registry.DEFAULT_FLANK_CARRIED_MIN_BITSCORE)
+# 33 bits: the middle of the 30-36 bit plateau on the 34-genome Basidiomycota panel, where it keeps a real 46-aa pheromone hit (38 bits)
+# that the flank-carried floor of 39 drops, and still drops all five noise-only stretches (their best hits were 25-31 bits). On the
+# Ascomycota and Mucoromycota panels 33 and 39 give the same result. A separate number from the flank-carried floor, which has a
+# different purpose. results/2026-10-08_supported_span*/ and analysis/2026-10-08_cinerea-b43-trace.md.
+DEFAULT_SUPPORTED_MIN_BITSCORE = 33.0
 
 
 def supported_span(clusters, family_key, contig, evidence, span_start: int, span_end: int,

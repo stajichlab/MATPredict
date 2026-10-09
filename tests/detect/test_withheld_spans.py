@@ -47,4 +47,4 @@ def test_a_withheld_locus_reports_its_core_and_supported_spans(tmp_path):
     (row,) = [s for s in yaml.safe_load(out.read_text())["suppressed_loci"] if s["withheld_reason"] == BELOW_FRACTION_FLOOR]
     assert (row["start"], row["end"]) == (1000, 28100)                                      # cluster span, as before
     assert row["core_span"] == {"start": 1000, "end": 4000, "beyond_core_bp": 24100}
-    assert row["supported_span"] == {"start": 1000, "end": 20300, "min_bitscore": 39.0, "beyond_supported_bp": 7800}
+    assert row["supported_span"] == {"start": 1000, "end": 20300, "min_bitscore": 33.0, "beyond_supported_bp": 7800}

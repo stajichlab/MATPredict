@@ -58,7 +58,7 @@ def test_a_weak_hit_stretches_the_cluster_span_but_not_the_supported_span(tmp_pa
     outcome = _run(tmp_path, [STRONG, WEAK])
     (r,) = outcome.results
     assert (r.start, r.end) == (1000, 28100)                       # cluster span, unchanged behaviour
-    assert r.supported_span == {"start": 1000, "end": 20300, "min_bitscore": 39.0, "beyond_supported_bp": 7800}
+    assert r.supported_span == {"start": 1000, "end": 20300, "min_bitscore": 33.0, "beyond_supported_bp": 7800}
 
 
 def test_the_floor_is_a_parameter(tmp_path):
@@ -81,7 +81,7 @@ def test_the_report_and_gff3_carry_the_supported_span(tmp_path):
     y = tmp_path / "r.yaml"; g = tmp_path / "r.gff3"
     write_detection_report(outcome, y); write_detection_gff3(outcome, g)
     locus = yaml.safe_load(y.read_text())["detected"][0]
-    assert locus["supported_span"] == {"start": 1000, "end": 20300, "min_bitscore": 39.0, "beyond_supported_bp": 7800}
+    assert locus["supported_span"] == {"start": 1000, "end": 20300, "min_bitscore": 33.0, "beyond_supported_bp": 7800}
     assert (locus["start"], locus["end"]) == (1000, 28100) and locus["core_span"]["end"] == 4000
     line = next(l for l in g.read_text().splitlines() if "\tMAT_locus\t" in l)
     attrs = dict(kv.split("=", 1) for kv in line.split("\t")[8].split(";") if "=" in kv)
@@ -118,12 +118,13 @@ def test_a_strong_hit_of_another_family_stretches_the_cluster_but_is_not_support
     assert r.supported_span["end"] == 4000 and r.supported_span["beyond_supported_bp"] == 16300
 
 
-def test_cli_option_defaults_to_the_flank_carried_floor_and_parses():
+def test_cli_option_defaults_to_33_bits_and_parses():
+    """33: the middle of the 30-36 bit plateau on the 34-genome Basidiomycota panel (keeps a real 46-aa pheromone hit that 39 drops;
+    drops the five noise-only stretches); no difference on the Ascomycota and Mucoromycota panels. Curator-confirmed 2026-10-08."""
     from MATPredict.__main__ import build_parser
-    from MATPredict.detect.family_registry import DEFAULT_FLANK_CARRIED_MIN_BITSCORE
     p = build_parser()
     base = ["detect", "--genome", "g.fa", "--out-dir", "o"]
-    assert p.parse_args(base).supported_min_bitscore == DEFAULT_FLANK_CARRIED_MIN_BITSCORE == 39.0
+    assert p.parse_args(base).supported_min_bitscore == 33.0
     assert p.parse_args(base + ["--supported-min-bitscore", "50"]).supported_min_bitscore == 50.0
 
 

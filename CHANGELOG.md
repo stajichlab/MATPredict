@@ -25,11 +25,12 @@ release completed.
 ### Fixed
 - When two curated reference records tie exactly in alignment score for one gene, the polisher now takes the one with the higher
   identity, then the lower record id, instead of whichever alignment the tool listed first (the tool's order among equal scores is not guaranteed). Found on
-  Leppa1, where one gene model was attributed to the A1163 record in most runs and to the Af293 record in some. Where the two tied
+  Leppa1, where one gene model was attributed to the A1163 record in most runs and to the Af293 record in some. Where the tied
   alignments differ in coordinates or identity, the reported model, and scores computed from it (idiomorph classifier scores),
-  change too: seen in 2 of 144 panel genomes (Mucoromycota ASM2413939v1: a gene model 24,889-25,143 at 27.06% identity became
-  24,895-25,140 at 31.71%; ASM53491v1: a withheld locus's classifier score 36.8 became 39.4). No call, cluster span, gene set or
-  merged_from changed on the 144 genomes, but a score near a threshold could change a call.
+  change too. On the 110 Ascomycota and Mucoromycota panel genomes, 8 reports differ from the old order-dependent output: 2 called
+  loci (Leppa1: the record named; ASM2413939v1: a gene model 24,889-25,143 at 27.06% identity became 24,895-25,140 at 31.71%) and
+  6 withheld loci (gene-model boundaries shifted by 6-36 bp; classifier scores changed, for example 36.8 to 39.4 and 67.3 to 64.4).
+  No call, cluster span, gene set or merged_from changed on the 144 panel genomes, but a score near a threshold could change a call.
 - PDF report: gene-evidence tables no longer run past their card. In print, header, number and status cells may wrap, and
   table cells break long names (for example `fungal_mating_type_pheromone`). Found on real campaign reports (Serpula
   lacrymans, 78 px past the card). New layout test `tests/report/test_report_layout.py` checks every fixture, including one

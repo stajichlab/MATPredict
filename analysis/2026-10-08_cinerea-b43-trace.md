@@ -67,6 +67,29 @@ What it means:
 
 Limits: 11 loci from one 33-genome panel; "strong" is my cut-off (e < 1e-3), and a strong hit shows similarity to a curated protein, not that a gene is real (non-mating STE3 receptors also hit); tblastn at e-value 10 on the run's query set approximates detect's hit table, whose boundary hits matched in every locus where I checked the edge (in all 16 stretches, including two under 1 kb that are not in the table, a tblastn hit lay exactly at the span edge); I did not tally the 36 loci with less than 10 kb beyond.
 
+## Update: `supported_span` prototype, and which review claims were checked (curator asked, 2026-10-08)
+An independent review (Opus, read-only) advised against trimming to the core and for a second, report-only span built from the modelled genes plus own-family hits above a bitscore floor. I built that as `supported_span` on branch `core-span` (code, tests, results). Calls, clustering and the cluster span are unchanged. Floor option: `--supported-min-bitscore` (default 39, the flank-carried floor, kept for now).
+
+What was checked, and how:
+| Claim from the review | Status |
+|---|---|
+| `locus_merge` compares each result's own `start`/`end`, so trimming the span before the merge would split merged A/B calls | **Verified by running it.** Two B-locus calls with identical spans merge (1 call); the same calls with disjoint supported spans do not (2 calls), and a 2 kb overlap of 15 kb does not either. `supported_span` is a separate field and leaves `start`/`end` alone, so it cannot do this. |
+| Report-only changes cannot change calls | **Verified by 0 differences**: 33 genomes, five floors against the earlier run of the same database (family, contig, span, confidence, idiomorph, class, genes, merged_from, withheld loci), and 0 differences between floors. |
+| Reported genes must lie inside the span | **Checked: 160 of 160 inside at every floor.** The first run found 5 outside: a real bug of mine (the supported span was stale after `locus_merge` added genes). Fixed test-first by taking the union of the members' supported spans; re-run. |
+| A weak hit from another family can bridge a family's own hits across more than the cluster gap (a membership effect that report-only fields do not touch) | **Measured as a proxy, not proven.** Over the three v0.6.0 campaigns, 290 of 27,822 called loci (1.0%; not merged calls) have their own genes further apart than the family's cluster gap: Ascomycota MAT 90, Basidiomycota PR 83, Ascomycota MTL 40. This cannot say whether the bridge is another family's hit or an own-family hit that was not reported. |
+| The polish window, rescue acceptance and the gene-count gate depend on the cluster span or membership | **Not tested.** Only the polish window use (`_padded_window` uses `cluster.start/end`) was confirmed by reading the code. These matter only if clustering or the cluster span is changed; `supported_span` changes neither. |
+| An e-value floor depends on genome size, a bitscore floor is the existing precedent | **Precedent confirmed in `flank_carried.py` (curator ruling 2026-09-27); the genome-size dependence was not re-measured here.** |
+
+Results (34 genomes: the 33-genome Basidiomycota panel plus T48-F; 49 called loci; floors 30, 33, 36, 39 and 50 bits; `results/2026-10-08_supported_span/`):
+- **Sweep.** Loci with any span beyond the supported extent: 17, 20, 21, 23, 25 (floors 30, 33, 36, 39, 50); 7 loci with 10 kb or more beyond up to floor 36, 9 at 39 and 50. Total span beyond the supported extent: 143, 146, 146, 183 and 186 kb, against 349 kb beyond the core. So the supported span keeps about half of the extra span that the core span would cut, and it is nearly flat from 30 to 36 bits and steps up at 39.
+- **The 14 hand-tallied stretches** (from the previous tally; this check uses the same 11 loci the idea came from, so it is not independent). Noise-only stretches: 5 of 5 dropped at every floor. Strong own-family hits kept: 7 of 8 at floors 30 to 36, 6 of 8 at 39 and 50. Lost at every floor: the Leucr1 `bE` hit (29 bits, 30% identity over 80 aa; doubtful). Lost only from 39: a Gabo G3 PR pheromone hit (46 aa, 48% identity, 38 bits). Short real genes cannot reach high bitscores, so a floor of 39 can drop them; 30 to 36 keeps it. The noise stretches' best hits were 25 to 31 bits.
+- **T48-F** (the case that started this): cluster 118,043-153,196; core and supported 118,043-130,301 at every floor, so the 22.9 kb carried by one weak hit is dropped. **Leucr1 bLocus:** cluster 145,579-160,941; supported 145,579-147,340 / 147,223 (floor 30 / 39): the 13.7 kb stretch is dropped.
+- All other-family strong hits (receptor hits inside HD and Balpha spans) are excluded from the supported span by design.
+
+Limits: 49 called loci from one panel; the 14-stretch check shares its loci with the idea; the floor is chosen on very few short genes (one pheromone); withheld loci have no `supported_span` (no gene coordinates in the report); no check on Ascomycota or Mucoromycota genomes; the bridging number is a proxy.
+
+Recommendation (for the curator): keep `supported_span` report-only; consider lowering the default floor from 39 to about 33 (plateau 30 to 36), which keeps the short pheromone and still drops all five noise stretches. Test the chosen floor on Ascomycota and Mucoromycota panels before it becomes the default. Changing clustering or the reported `start`/`end` is not supported by this evidence and could change calls (merge, polish window).
+
 ## Curator decisions
 Ruled 2026-10-08 (J. Stajich): option 3, a report-only `core span` (built, see the update above). Options considered:
 1. Keep the curation (the old gene-6 entry was wrong and the four peptides are real) and accept span noise from short queries as a known property. Cost: reported spans of called loci can include a 20-kb or larger stretch for no biological reason (T48-F).

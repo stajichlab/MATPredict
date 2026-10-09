@@ -1,0 +1,19 @@
+scope	D_kb	genomes_with_both	flagged_near	flagged_total	unflagged_near	unflagged_total	MH_odds_ratio	MH_species_boot_lo	MH_species_boot_hi	CMH_p	perm_p	mean_perm_flagged_near	note
+ALL qpass genomes	250.0	1003.0	550.0	1628.0	147.0	6117.0	23.86	17.56	33.08	0.0	0.0002	163.1	
+ALL qpass genomes	100.0	1003.0	497.0	1628.0	101.0	6117.0	22.41	16.45	32.69	0.0	0.0002	140.7	
+ALL qpass genomes	500.0	1003.0	570.0	1628.0	181.0	6117.0	21.23	15.97	29.01	0.0	0.0002	173.5	
+one genome per species	250.0	514.0	290.0	857.0	102.0	3296.0	19.46	14.81	26.92	0.0	0.0002	89.3	
+Agaricales	250.0	597.0	280.0	1033.0	88.0	3757.0	20.36	13.79	33.77	0.0	0.0005	86.3	
+Boletales	250.0	89.0	26.0	136.0	10.0	498.0	10.66	4.37	29.6	2.8794189255165747e-11	0.0005	9.5	
+Polyporales	250.0	161.0	136.0	224.0	15.0	664.0	85.79	42.71	282.11	0.0	0.0005	37.7	
+Cantharellales	250.0	66.0	56.0	100.0	8.0	429.0	39.16	12.53	81.42	0.0	0.0005	13.9	
+Russulales	250.0	43.0	22.0	65.0	16.0	429.0	8.84	3.78	24.75	2.99873459397304e-11	0.0005	6.9	
+Hymenochaetales	250.0	6.0	5.0	13.0	2.0	106.0	14.94	3.7	56.46	1.932610891652864e-06	0.0015	0.9	
+Auriculariales													cannot unpack non-iterable numpy.float64 object
+all except Agaricales	250.0	406.0	270.0	595.0	59.0	2360.0	28.91	19.42	43.42	0.0	0.0005	76.2	
+all except Boletales	250.0	914.0	524.0	1492.0	137.0	5619.0	25.34	19.03	35.38	0.0	0.0005	153.3	
+all except Polyporales	250.0	842.0	414.0	1404.0	132.0	5453.0	19.32	13.63	27.01	0.0	0.0005	124.8	
+all except Cantharellales	250.0	937.0	494.0	1528.0	139.0	5688.0	22.8	16.93	31.85	0.0	0.0005	148.4	
+all except Russulales	250.0	960.0	528.0	1563.0	131.0	5688.0	25.78	19.28	37.12	0.0	0.0005	156.1	
+all except Hymenochaetales	250.0	997.0	545.0	1615.0	145.0	6011.0	24.02	17.97	33.8	0.0	0.0005	161.8	
+all except Auriculariales	250.0	991.0	538.0	1615.0	146.0	6073.0	23.33	17.09	32.4	0.0	0.0005	159.7	

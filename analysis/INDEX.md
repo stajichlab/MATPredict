@@ -71,6 +71,10 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 ## Reads-only typing
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
-| 10-07 | [Per-genome HTML/PDF report: design review](2026-10-07_report-design-review.md) | open | 3 review rounds; round 1 6 P0, round 2 1 P0; Chrome and WeasyPrint PDFs; 30 tests |
 | 10-06 | [Fola reads-type](2026-10-06_fola-reads-type.md) | open | 147/148 agree with samtools breadth using a Fola-derived panel (145/148 with GenBank); 50a locus assembled (MAT1-2) |
 | 10-07 | [A. fumigatus reads and assembly](2026-10-07_afum-reads-and-assembly.md) | open | reads 293/296 vs assembly BLAST truth; `detect` 288/297, one idiomorph reported for all 8 assemblies holding both |
+
+## Reports and tooling
+| Date | Report | Status | Key numbers |
+|---|---|---|---|
+| 10-07 | [Per-genome HTML/PDF report: design review](2026-10-07_report-design-review.md) | decided; PR #48 | 3 review rounds; round 1 6 P0, round 2 1 P0; Chrome and WeasyPrint PDFs; 30 tests |

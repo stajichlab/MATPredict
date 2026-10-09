@@ -183,6 +183,11 @@ def build_gene_class_index(order_doc: dict) -> dict[tuple[str, str], str]:
             gene_class = gene.get("gene_class")
             if gene_class:
                 index[(locus_name, gene["name"])] = gene_class
+                # A roster gene's aliases (db/<phylum>/order.yml `aliases:`) are
+                # declared names of the same gene: a record that deposits an alias
+                # (the C. cinerea B43 record's rcb1/rcb2/rcb3) has the same class.
+                for alias in gene.get("aliases") or []:
+                    index.setdefault((locus_name, alias), gene_class)
     return index
 
 

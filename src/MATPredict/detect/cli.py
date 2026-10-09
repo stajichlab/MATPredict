@@ -25,9 +25,31 @@ from MATPredict.detect.suppress import default_suppress_paths, filter_rows, load
 _ROLLOUT_REPORT_FILENAME = "detection_report.yaml"
 
 
+_COMPRESSION_MAGIC = ((b"\x1f\x8b", "gzip"), (b"\x28\xb5\x2f\xfd", "zstd"))
+
+
+def _refuse_compressed_genome(genome: str) -> None:
+    """`detect` reads plain FASTA. A compressed file would otherwise surface minutes later as a BLAST or
+    index error, so say what is wrong and what to do. Recognised by the first bytes, not the file name."""
+    path = Path(genome)
+    try:
+        with open(path, "rb") as fh:
+            head = fh.read(4)
+    except OSError:
+        return  # missing or unreadable: the later stages report that
+    for magic, kind in _COMPRESSION_MAGIC:
+        if head.startswith(magic):
+            tool = "zcat" if kind == "gzip" else "zstd -dc"
+            raise ValueError(
+                f"{path.name} is {kind}-compressed; `matpredict detect` reads plain FASTA. "
+                f"Decompress it first, for example `{tool} {path} > genome.fna` "
+                "(into $SCRATCH on a SLURM node), then pass that file as --genome.")
+
+
 def _cmd_detect(args: argparse.Namespace) -> int:
     if not args.genome or not args.out_dir:
         raise ValueError("--genome and --out-dir are required for `matpredict detect`")
+    _refuse_compressed_genome(args.genome)
     config = MatpredictConfig.from_env(repo_root=Path.cwd())
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)

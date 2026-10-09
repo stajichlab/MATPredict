@@ -1,0 +1,39 @@
+species
+Coprinopsis cinerea          3
+Grifola frondosa             3
+Heterobasidion irregulare    3
+Russula nobilis              1
+Schizophyllum commune        2
+Trametes versicolor          2
+dtype: int64
+null casA among uncalled loci: 12.6 obs 273 ; among called: 9.5 obs 828
+null casA uncalled, size>=2 arrays:
+ obs 211 exp 8.6
+STE20<=250kb size>=2 flagged, not cassette 456 34.9
+STE20<=250kb size>=2 flagged, cassette 548 49.6
+STE20<=250kb size>=2 unflagged 852 11.6
+STE20<=250kb size1 flagged not cassette 464 16.4
+STE20<=250kb size1 cassette 163 25.8
+cassette A uncalled arrays 200 genomes 189 genomes with no call at all 125
+A uncalled >=2 loci arrays 138 genomes 134 genomes with no call at all 100
+C uncalled arrays 60 genomes 57 genomes with no call at all 52
+C or (A and >=2 loci) arrays 141 genomes 137 genomes with no call at all 102
+cassetteA B vs other (6 genomes) [[np.int64(4), np.int64(2)], [np.int64(0), np.int64(25)]] SignificanceResult(statistic=inf, pvalue=np.float64(0.00047672016526299066))
+independent-label genomes only [[np.int64(2), np.int64(0)], [np.int64(0), np.int64(9)]] SignificanceResult(statistic=inf, pvalue=np.float64(0.018181818181818184))
+                  genomes  ge1  exactly1
+order                                   
+Agaricales            676  391       325
+Amylocorticiales        8    1         1
+Atheliales              3    2         1
+Auriculariales         14   11        10
+Boletales             182   45        38
+Cantharellales         77    2         2
+Corticiales             4    1         1
+Geastrales              1    1         1
+Gloeophyllales          3    2         2
+Hymenochaetales        47    2         2
+Jaapiales               1    1         1
+Polyporales           175  126       117
+Russulales             76   24        20
+Sebacinales             3    3         3
+Thelephorales           5    1         1

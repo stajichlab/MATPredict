@@ -398,7 +398,7 @@ class DetectionResult:
     receptor_array: dict | None = None
     """PR calls only: the receptor array this call sits in (`receptor_arrays`):
     `receptor_array_id`, `receptor_array_size`, `receptor_array_members`, `receptor_array_support` and its
-    reasons. A report-only flag, set after every call decision; None for any
+    reasons, and the descriptive `receptor_cassette_*` fields. A report-only flag, set after every call decision; None for any
     other family. Never read by a rule."""
 
 

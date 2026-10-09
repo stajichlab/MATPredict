@@ -23,10 +23,13 @@ release completed.
   to the `MAT_locus` line of the GFF3 (`core_start`, `core_end`, `beyond_core_bp`) and to the HTML report ("Own genes").
 
 ### Fixed
-- When two curated reference records tie exactly in alignment score for one gene, the polisher now names the one with the lower
+- When two curated reference records tie exactly in alignment score for one gene, the polisher now takes the one with the lower
   record id instead of whichever alignment the tool listed first (the tool's order among equal scores is not guaranteed). Found on
-  Leppa1, where one gene model was attributed to the A1163 record in most runs and to the Af293 record in some. Affects only the
-  record named in a model and in `reference_records`; calls, spans and gene sets are unchanged.
+  Leppa1, where one gene model was attributed to the A1163 record in most runs and to the Af293 record in some. Where the two tied
+  alignments differ in coordinates or identity, the reported model, and scores computed from it (idiomorph classifier scores),
+  change too: seen in 2 of 144 panel genomes (Mucoromycota ASM2413939v1: a gene model 24,889-25,143 at 27.06% identity became
+  24,895-25,140 at 31.71%; ASM53491v1: a withheld locus's classifier score 36.8 became 39.4). No call, cluster span, gene set or
+  merged_from changed on the 144 genomes, but a score near a threshold could change a call.
 - PDF report: gene-evidence tables no longer run past their card. In print, header, number and status cells may wrap, and
   table cells break long names (for example `fungal_mating_type_pheromone`). Found on real campaign reports (Serpula
   lacrymans, 78 px past the card). New layout test `tests/report/test_report_layout.py` checks every fixture, including one

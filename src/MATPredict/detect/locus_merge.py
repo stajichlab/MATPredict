@@ -120,6 +120,15 @@ def _components(members: list[int], results: list, min_overlap: float,
     return out
 
 
+def _merged_supported_span(calls: list, contig: str, start: int, end: int) -> dict | None:
+    own = [r.supported_span for r in calls if r.supported_span and r.contig == contig]
+    if not own:
+        return None
+    lo, hi = min(sp["start"] for sp in own), max(sp["end"] for sp in own)
+    return {"start": lo, "end": hi, "min_bitscore": own[0]["min_bitscore"],
+            "beyond_supported_bp": (end - start + 1) - (hi - lo + 1)}
+
+
 def _merge(calls: list, groups: dict) -> object:
     def rank(r):
         generic = groups[r.family_key][1]
@@ -172,10 +181,14 @@ def _merge(calls: list, groups: dict) -> object:
                 reasons.append(v["reason"])
         verification = {"status": "unverified", "reason": "; ".join(reasons),
                         "merged_from": unverified}
+    start, end = min(r.start for r in calls), max(r.end for r in calls)
     return replace(
         primary,
-        start=min(r.start for r in calls),
-        end=max(r.end for r in calls),
+        start=start,
+        end=end,
+        # Report-only supported span: union of the members' supported extents on the primary contig, so it still covers
+        # every gene the merge brought in; `beyond_supported_bp` is recomputed against the merged span.
+        supported_span=_merged_supported_span(calls, primary.contig, start, end),
         confidence=confidence,
         verification=verification,
         idiomorph=idiomorph,

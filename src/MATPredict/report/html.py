@@ -479,6 +479,19 @@ def _locus_card(i: int, call: dict, show_family: bool) -> str:
         ("Nearest contig end", size(min(edge)) if edge else "–"),
         ("Region (samtools)", f'<code class="region">{e(region)}</code>'),
     ]
+    core = call.get("core_span")
+    if core:
+        beyond = core.get("beyond_core_bp") or 0
+        note = (f' · <span class="warn-text">the span runs {size(beyond)} beyond these genes</span>' if beyond > 0 else "")
+        facts.insert(1, ("Own genes", location(call.get("contig"), core.get("start"), core.get("end"))
+                         + f" · {size((core.get('end') or 0) - (core.get('start') or 0) + 1)}{note}"))
+    sup = call.get("supported_span")
+    if sup and (sup.get("beyond_supported_bp") or 0) > 0:
+        floor = sup.get("min_bitscore")
+        facts.insert(2 if core else 1, ("Supported span", location(call.get("contig"), sup.get("start"), sup.get("end"))
+                     + f" · {size((sup.get('end') or 0) - (sup.get('start') or 0) + 1)}"
+                     f' · <span class="warn-text">{size(sup["beyond_supported_bp"])} of the reported span rests only on '
+                     f'hits below {floor:g} bits</span>'))
     if call.get("detection_pass") and call.get("detection_pass") != "strict":
         facts.append(("Detection pass", e(call.get("detection_pass"))))
     if call.get("idiomorph_class") and call.get("idiomorph_class") != call.get("idiomorph"):

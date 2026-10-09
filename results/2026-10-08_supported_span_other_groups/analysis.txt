@@ -1,0 +1,26 @@
+reports: {'base': 110, 'floor33': 110, 'floor39': 110}
+
+1. CALL IDENTITY against current main (calls, cluster spans, genes, merged_from, withheld loci)
+   floor33: 110 common genomes, 0 with any difference []
+   floor39: 110 common genomes, 0 with any difference []
+
+--- floor33 ---
+Ascomycota: called 26; with core/supported span 26/26; genes checked 127, outside supported span 0; core not inside supported 0
+   beyond_core       >0:   20  >=1kb:    4  >=10kb:    3  total     65.2 kb  max 24.9 kb
+   beyond_supported  >0:    7  >=1kb:    4  >=10kb:    3  total     62.9 kb  max 24.9 kb
+   withheld loci 1072: with core_span 1072, beyond_core >=10kb 306; with supported_span 1072, beyond_supported >=10kb 304
+Mucoromycota: called 52; with core/supported span 52/52; genes checked 221, outside supported span 0; core not inside supported 0
+   beyond_core       >0:   39  >=1kb:   11  >=10kb:    6  total    147.1 kb  max 41.2 kb
+   beyond_supported  >0:    9  >=1kb:    5  >=10kb:    5  total     95.3 kb  max 41.2 kb
+   withheld loci 959: with core_span 959, beyond_core >=10kb 72; with supported_span 959, beyond_supported >=10kb 59
+   called loci with >= 10 kb beyond the supported span (all phyla): 8
+
+--- floor39 ---
+Ascomycota: called 26; with core/supported span 26/26; genes checked 127, outside supported span 0; core not inside supported 0
+   beyond_core       >0:   20  >=1kb:    4  >=10kb:    3  total     65.2 kb  max 24.9 kb
+   beyond_supported  >0:    9  >=1kb:    4  >=10kb:    3  total     62.9 kb  max 24.9 kb
+   withheld loci 1072: with core_span 1072, beyond_core >=10kb 306; with supported_span 1072, beyond_supported >=10kb 305
+Mucoromycota: called 52; with core/supported span 52/52; genes checked 221, outside supported span 0; core not inside supported 0
+   beyond_core       >0:   39  >=1kb:   11  >=10kb:    6  total    147.1 kb  max 41.2 kb
+   beyond_supported  >0:    9  >=1kb:    5  >=10kb:    5  total     95.3 kb  max 41.2 kb
+   withheld loci 959: with core_span 959, beyond_core >=10kb 72; with supported_span 959, beyond_supported >=10kb 64

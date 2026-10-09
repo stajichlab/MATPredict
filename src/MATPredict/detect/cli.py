@@ -9,6 +9,7 @@ from pathlib import Path
 from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
+from MATPredict.detect.supported_span import DEFAULT_SUPPORTED_MIN_BITSCORE
 from MATPredict.detect.pipeline import (
     DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DEFAULT_POLISH_STRONG_IDENTITY, DetectionOutcome,
     EvidenceFloor,
@@ -122,6 +123,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         exclude_record_ids=exclude_record_ids,
         max_polished_clusters_per_family=_polish_cap_from_args(args),
         polish_strong_identity=_polish_strong_identity_from_args(args),
+        supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
 
     # `genome_fasta` is passed ONLY when asked for: it is what makes
@@ -201,6 +203,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "require_core_role": args.require_core_role,
             "max_polished_clusters_per_family": _polish_cap_from_args(args),
             "polish_strong_identity": _polish_strong_identity_from_args(args),
+            "supported_min_bitscore": getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
         },
     )
 
@@ -456,6 +459,12 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "polishing by distinct genes, then best identity, then hit count. "
              f"Default: {DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY} (curator's ruling "
              "2026-09-26; measured -45%% compute, 4 of 613 calls lost). 0 = no cap.",
+    )
+    detect.add_argument(
+        "--supported-min-bitscore", type=float, default=DEFAULT_SUPPORTED_MIN_BITSCORE,
+        help="Bitscore floor for the report-only `supported_span`: a locus's own hits at or above it, plus its "
+             "modelled genes, define the supported extent; weaker hits do not. Does not change calls or the cluster "
+             f"span. Default: {DEFAULT_SUPPORTED_MIN_BITSCORE:g}.",
     )
     detect.add_argument(
         "--polish-strong-identity", type=float, default=DEFAULT_POLISH_STRONG_IDENTITY,

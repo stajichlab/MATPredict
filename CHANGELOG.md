@@ -6,7 +6,31 @@ release completed.
 
 ## [Unreleased]
 
+### Added
+- `supported_span` on every called locus (report only; calls, clustering and the cluster span are unchanged): the extent of the
+  locus's modelled genes plus its own hits at or above a bitscore floor (`--supported-min-bitscore`, default 33), with `beyond_supported_bp`. A strong hit of another family, or a weak hit of any family, that chains into the cluster
+  stretches the cluster span but not this one; real own-family hits are kept (unlike `core_span`). In `detection_report.yaml`, on
+  the GFF3 `MAT_locus` line (`supported_start`, `supported_end`, `beyond_supported_bp`) and in the HTML report ("Supported span",
+  shown when the reported span rests partly on weaker hits). For a merged A/B call it is the union of the members'. Validation:
+  `results/2026-10-08_supported_span/` (0 call differences on 34 genomes at five floors; every reported gene inside the span).
+- `core_span` and `supported_span` also on every withheld locus in `suppressed_loci`, so span changes can be judged on withheld loci
+  (`results/2026-10-08_supported_span_withheld/`: of 89 genome/family/contig keys whose cluster span changed with a curation edit,
+  86 kept the same supported span).
+- `core_span` on every called locus (report only; calls and clustering are unchanged): the extent of the locus's own
+  gene models on its contig and `beyond_core_bp`, how much of `start`-`end` lies outside them. The cluster span is built
+  from the hits of every family, so one weak hit from another family's short query can stretch a locus (T48-F: a called HD
+  locus grows from 12.3 kb to 35.2 kb; see `analysis/2026-10-08_cinerea-b43-trace.md`). Written to `detection_report.yaml`,
+  to the `MAT_locus` line of the GFF3 (`core_start`, `core_end`, `beyond_core_bp`) and to the HTML report ("Own genes").
+
 ### Fixed
+- When two curated reference records tie exactly in alignment score for one gene, the polisher now takes the one with the higher
+  identity, then the lower record id, instead of whichever alignment the tool listed first (the tool's order among equal scores is not guaranteed). Found on
+  Leppa1, where one gene model was attributed to the A1163 record in most runs and to the Af293 record in some. Where the tied
+  alignments differ in coordinates or identity, the reported model, and scores computed from it (idiomorph classifier scores),
+  change too. On the 110 Ascomycota and Mucoromycota panel genomes, 8 reports differ from the old order-dependent output: 2 called
+  loci (Leppa1: the record named; ASM2413939v1: a gene model 24,889-25,143 at 27.06% identity became 24,895-25,140 at 31.71%) and
+  6 withheld loci (gene-model boundaries shifted by 6-36 bp; classifier scores changed, for example 36.8 to 39.4 and 67.3 to 64.4).
+  No call, cluster span, gene set or merged_from changed on the 144 panel genomes, but a score near a threshold could change a call.
 - PDF report: gene-evidence tables no longer run past their card. In print, header, number and status cells may wrap, and
   table cells break long names (for example `fungal_mating_type_pheromone`). Found on real campaign reports (Serpula
   lacrymans, 78 px past the card). New layout test `tests/report/test_report_layout.py` checks every fixture, including one

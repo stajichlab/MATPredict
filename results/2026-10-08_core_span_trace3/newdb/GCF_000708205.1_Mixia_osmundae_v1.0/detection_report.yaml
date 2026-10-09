@@ -1,0 +1,3326 @@
+run:
+  sample: GCF_000708205
+  organism: null
+  taxid: 764103
+  phylum: Basidiomycota
+  matpredict_version: 0.1.0
+  database:
+    root: /bigdata/stajichlab/jstajich/projects/MATPredict/.claude/worktrees/core-span/db
+    content_sha256: f8d7593deb8656e4e857160427a2134c06765a3741fd33a812e0f453097ea4bc
+    records: 163
+  taxonomy_source: NCBI E-utilities
+  genome:
+    file: GCF_000708205.1_Mixia_osmundae_v1.0.fna
+    sha256: 5708dd3f79b4939e44e2ecbca93de0af8cb940af74a8113d2178e82b42c184dd
+    contigs: 25
+    length_bp: 13589625
+    n50: 1194905
+  proteins: null
+  parameters:
+    phylum: null
+    exhaustive: false
+    genetic_code: null
+    exclude_records: null
+    min_hits: 2
+    min_identity: null
+    require_core_role: true
+    max_polished_clusters_per_family: 6
+    polish_strong_identity: 50.0
+  started: '2026-10-08T16:52:22Z'
+  wall_seconds: 545
+routing_mode: phylum_fallback
+routing_error: null
+not_searched_reason: null
+genetic_code: 1
+genetic_code_error: null
+taxonomy_source: NCBI E-utilities
+suppressed_unpolished: 304
+suppressed_flank_carried: 0
+suppressed_mat_gene_gate: 0
+suppressed_paralog_class: 0
+suppressed_loci:
+- family: Basidiomycota:aLocus
+  contig: NW_014575557.1
+  start: 20987
+  end: 32005
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - rba1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575557.1
+  start: 20987
+  end: 32005
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575557.1
+  start: 20987
+  end: 32005
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575557.1
+  start: 150659
+  end: 186561
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575557.1
+  start: 150659
+  end: 186561
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575557.1
+  start: 150659
+  end: 186561
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2_a
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575557.1
+  start: 234369
+  end: 277763
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Balpha
+  contig: NW_014575557.1
+  start: 234369
+  end: 277763
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bar3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575557.1
+  start: 234369
+  end: 277763
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575557.1
+  start: 234369
+  end: 277763
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - STE3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575557.1
+  start: 234369
+  end: 277763
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbr2
+  - bbp2_b
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575557.1
+  start: 324810
+  end: 334727
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - rba1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575557.1
+  start: 324810
+  end: 334727
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575557.1
+  start: 324810
+  end: 334727
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575557.1
+  start: 395640
+  end: 416812
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Z
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575557.1
+  start: 457544
+  end: 501005
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575557.1
+  start: 457544
+  end: 501005
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575557.1
+  start: 457544
+  end: 501005
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Y
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575557.1
+  start: 457544
+  end: 501005
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575557.1
+  start: 662249
+  end: 686435
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575557.1
+  start: 662249
+  end: 686435
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575557.1
+  start: 662249
+  end: 686435
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575557.1
+  start: 729282
+  end: 739702
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Y
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575557.1
+  start: 729282
+  end: 739702
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575557.1
+  start: 810867
+  end: 826941
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575557.1
+  start: 810867
+  end: 826941
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575557.1
+  start: 810867
+  end: 826941
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575559.1
+  start: 7981
+  end: 8127
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575559.1
+  start: 33879
+  end: 51400
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575559.1
+  start: 78272
+  end: 116665
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575559.1
+  start: 442592
+  end: 442687
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575559.1
+  start: 473942
+  end: 498311
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  - MIP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575559.1
+  start: 473942
+  end: 498311
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575559.1
+  start: 527179
+  end: 527313
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575559.1
+  start: 597145
+  end: 603002
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575559.1
+  start: 634054
+  end: 634143
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575559.1
+  start: 835303
+  end: 835638
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - rba1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575559.1
+  start: 940644
+  end: 998019
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  - MIP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575559.1
+  start: 940644
+  end: 998019
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575559.1
+  start: 940644
+  end: 998019
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575559.1
+  start: 940644
+  end: 998019
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575559.1
+  start: 1148908
+  end: 1149087
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575556.1
+  start: 28429
+  end: 41652
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575556.1
+  start: 82479
+  end: 82775
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575556.1
+  start: 197022
+  end: 247765
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Balpha
+  contig: NW_014575556.1
+  start: 197022
+  end: 247765
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bap3-3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575556.1
+  start: 197022
+  end: 247765
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - STE3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575556.1
+  start: 197022
+  end: 247765
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575556.1
+  start: 197022
+  end: 247765
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-5
+  - bbp2_b
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575556.1
+  start: 286190
+  end: 314879
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575556.1
+  start: 286190
+  end: 314879
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575556.1
+  start: 286190
+  end: 314879
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575556.1
+  start: 363271
+  end: 371689
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575556.1
+  start: 408343
+  end: 424271
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575556.1
+  start: 452720
+  end: 576529
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575556.1
+  start: 452720
+  end: 576529
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - mfa1
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575556.1
+  start: 452720
+  end: 576529
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575556.1
+  start: 452720
+  end: 576529
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575556.1
+  start: 626145
+  end: 632757
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575556.1
+  start: 673791
+  end: 680321
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Y
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575556.1
+  start: 673791
+  end: 680321
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575556.1
+  start: 745319
+  end: 745549
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575563.1
+  start: 64682
+  end: 74764
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 64682
+  end: 74764
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 221128
+  end: 237069
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 300955
+  end: 319447
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 519834
+  end: 520466
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575563.1
+  start: 569376
+  end: 606037
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575563.1
+  start: 700576
+  end: 723049
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 700576
+  end: 723049
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575563.1
+  start: 700576
+  end: 723049
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575563.1
+  start: 811238
+  end: 848404
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - HD1
+  - beta_fg
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575563.1
+  start: 811310
+  end: 848404
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 895442
+  end: 1057125
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575563.1
+  start: 895442
+  end: 1057125
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  - caax_precursor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575563.1
+  start: 895442
+  end: 1057125
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - SXI1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575563.1
+  start: 1096033
+  end: 1121335
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  - HD2
+  - MIP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575563.1
+  start: 1096033
+  end: 1121335
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Y
+  - Z
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 1096033
+  end: 1121335
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575563.1
+  start: 1096033
+  end: 1121335
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575563.1
+  start: 1096033
+  end: 1121335
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575563.1
+  start: 1096033
+  end: 1121335
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - SXI1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 1171461
+  end: 1247416
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575563.1
+  start: 1274877
+  end: 1326585
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - mfa1
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575563.1
+  start: 1274877
+  end: 1326585
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Y
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 1274877
+  end: 1326585
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575563.1
+  start: 1274877
+  end: 1326585
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MIP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 1404431
+  end: 1404568
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575563.1
+  start: 1437777
+  end: 1438026
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 1437777
+  end: 1438026
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575563.1
+  start: 1484205
+  end: 1484525
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 1605861
+  end: 1641711
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575563.1
+  start: 1673492
+  end: 1674671
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575563.1
+  start: 1712939
+  end: 1747344
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - HD2
+  - MIP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 1712939
+  end: 1747344
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575563.1
+  start: 1712939
+  end: 1747344
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 1804875
+  end: 1805117
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 1912830
+  end: 1941141
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575563.1
+  start: 2016998
+  end: 2069010
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 2016998
+  end: 2069010
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575563.1
+  start: 2016998
+  end: 2069010
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - RPL39
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575563.1
+  start: 2169865
+  end: 2207572
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - mfa1
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 2169865
+  end: 2207572
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575563.1
+  start: 2169865
+  end: 2207572
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_B43
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575563.1
+  start: 2234630
+  end: 2314820
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  - MIP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575563.1
+  start: 2234630
+  end: 2314820
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575563.1
+  start: 2234630
+  end: 2314820
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575563.1
+  start: 2234630
+  end: 2314820
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575563.1
+  start: 2234630
+  end: 2314820
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-8
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 22996
+  end: 34297
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575560.1
+  start: 66108
+  end: 69116
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MFalpha
+  - STE3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 125150
+  end: 131584
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 158127
+  end: 217632
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575560.1
+  start: 265556
+  end: 265684
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 299563
+  end: 361460
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575560.1
+  start: 299563
+  end: 361460
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Z
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575560.1
+  start: 299563
+  end: 361460
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575560.1
+  start: 299563
+  end: 361460
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-8
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575560.1
+  start: 429070
+  end: 474805
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575560.1
+  start: 429070
+  end: 474805
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Z
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 429070
+  end: 474805
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575560.1
+  start: 517741
+  end: 537530
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575560.1
+  start: 517741
+  end: 537530
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575560.1
+  start: 625494
+  end: 636237
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 625494
+  end: 636237
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575560.1
+  start: 728443
+  end: 744581
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  - beta_fg
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 799650
+  end: 799778
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 840005
+  end: 840181
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575560.1
+  start: 904588
+  end: 950459
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 904588
+  end: 950459
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Balpha
+  contig: NW_014575560.1
+  start: 1010306
+  end: 1017640
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bar3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575560.1
+  start: 1010306
+  end: 1017640
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 1043658
+  end: 1043780
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 1100828
+  end: 1157249
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575560.1
+  start: 1100828
+  end: 1157249
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Z
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575560.1
+  start: 1100828
+  end: 1157249
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575560.1
+  start: 1236505
+  end: 1256046
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - rba1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575560.1
+  start: 1236505
+  end: 1256046
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575560.1
+  start: 1236505
+  end: 1256046
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - MFalpha
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575553.1
+  start: 40464
+  end: 53971
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575553.1
+  start: 40464
+  end: 53971
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575553.1
+  start: 106061
+  end: 237792
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575553.1
+  start: 106061
+  end: 237792
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  - pheromone_B44
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575553.1
+  start: 106061
+  end: 237792
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Z
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575553.1
+  start: 106061
+  end: 237792
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575553.1
+  start: 106061
+  end: 237792
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MIP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575553.1
+  start: 292474
+  end: 362369
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575553.1
+  start: 292474
+  end: 362369
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575553.1
+  start: 292474
+  end: 362369
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575553.1
+  start: 397410
+  end: 444570
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575562.1
+  start: 34323
+  end: 50045
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Balpha
+  contig: NW_014575562.1
+  start: 101124
+  end: 113273
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bap3-3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575562.1
+  start: 101124
+  end: 113273
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575562.1
+  start: 265006
+  end: 306724
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  - MIP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575562.1
+  start: 368663
+  end: 378393
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575562.1
+  start: 421204
+  end: 438896
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575562.1
+  start: 474319
+  end: 497977
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575562.1
+  start: 528750
+  end: 570658
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575562.1
+  start: 528750
+  end: 570658
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575562.1
+  start: 528750
+  end: 570658
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575562.1
+  start: 608582
+  end: 617549
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575562.1
+  start: 661816
+  end: 675094
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  - caax_precursor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575562.1
+  start: 769577
+  end: 769771
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Balpha
+  contig: NW_014575562.1
+  start: 837877
+  end: 866710
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bap3-3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575562.1
+  start: 837877
+  end: 866710
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575562.1
+  start: 837877
+  end: 866710
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - mfa1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575562.1
+  start: 893125
+  end: 893397
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Z
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575562.1
+  start: 974659
+  end: 974778
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575562.1
+  start: 1093961
+  end: 1128822
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575562.1
+  start: 1093961
+  end: 1128822
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575562.1
+  start: 1093961
+  end: 1128822
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575562.1
+  start: 1258333
+  end: 1291840
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575562.1
+  start: 1323632
+  end: 1323757
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575554.1
+  start: 37270
+  end: 44593
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575554.1
+  start: 84854
+  end: 87189
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575554.1
+  start: 130542
+  end: 155343
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575554.1
+  start: 306280
+  end: 388446
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  - MIP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575554.1
+  start: 306280
+  end: 388446
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575554.1
+  start: 306280
+  end: 388446
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575554.1
+  start: 306280
+  end: 388446
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575554.1
+  start: 306280
+  end: 388446
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-8
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575554.1
+  start: 429609
+  end: 431547
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575551.1
+  start: 28586
+  end: 68975
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575551.1
+  start: 28586
+  end: 68975
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575551.1
+  start: 28586
+  end: 68975
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575551.1
+  start: 28586
+  end: 68975
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575551.1
+  start: 28586
+  end: 68975
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - MIP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575551.1
+  start: 185829
+  end: 201752
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Balpha
+  contig: NW_014575551.1
+  start: 270770
+  end: 270907
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bap3-3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575551.1
+  start: 309423
+  end: 356757
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575551.1
+  start: 309423
+  end: 356757
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575551.1
+  start: 309423
+  end: 356757
+  idiomorph: a
+  polished_genes: 0
+  genes_found:
+  - MFa
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575551.1
+  start: 309423
+  end: 356757
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-2
+  - bbp2_a
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575555.1
+  start: 11725
+  end: 27537
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575555.1
+  start: 111587
+  end: 175490
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575555.1
+  start: 111587
+  end: 175490
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575555.1
+  start: 211488
+  end: 277789
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575555.1
+  start: 211488
+  end: 277789
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Z
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575555.1
+  start: 211488
+  end: 277789
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575555.1
+  start: 211488
+  end: 277789
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - STE3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575555.1
+  start: 211488
+  end: 277789
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575555.1
+  start: 211488
+  end: 277789
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-8
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575555.1
+  start: 375237
+  end: 413963
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575555.1
+  start: 447547
+  end: 547483
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575555.1
+  start: 447547
+  end: 547483
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - mfa1
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575555.1
+  start: 447547
+  end: 547483
+  idiomorph: a
+  polished_genes: 0
+  genes_found:
+  - FAO1
+  - SXI2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575555.1
+  start: 447547
+  end: 547483
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Y
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575555.1
+  start: 447547
+  end: 547483
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575555.1
+  start: 608371
+  end: 608631
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Z
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575558.1
+  start: 10130
+  end: 14917
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 10130
+  end: 14917
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 78699
+  end: 78875
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575558.1
+  start: 117125
+  end: 135429
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - mfa1
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 117125
+  end: 135429
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575558.1
+  start: 188886
+  end: 206576
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 188886
+  end: 206576
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575558.1
+  start: 188886
+  end: 206576
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575558.1
+  start: 188886
+  end: 206576
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575558.1
+  start: 273931
+  end: 274101
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575558.1
+  start: 472594
+  end: 496776
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - mfa1
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575558.1
+  start: 472594
+  end: 496776
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Z
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 472594
+  end: 496776
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 529870
+  end: 529986
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575558.1
+  start: 557462
+  end: 569692
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 557462
+  end: 569692
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575558.1
+  start: 609120
+  end: 620295
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 670742
+  end: 670834
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575558.1
+  start: 714371
+  end: 742492
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575558.1
+  start: 714371
+  end: 742492
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575558.1
+  start: 714371
+  end: 742492
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2_b
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 774724
+  end: 774903
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 806535
+  end: 810919
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 891187
+  end: 891438
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 1006487
+  end: 1016255
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575558.1
+  start: 1041579
+  end: 1043570
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575550.1
+  start: 16302
+  end: 40350
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575550.1
+  start: 71199
+  end: 94580
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575550.1
+  start: 232611
+  end: 286550
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575550.1
+  start: 232611
+  end: 286550
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Z
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575550.1
+  start: 232611
+  end: 286550
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575550.1
+  start: 232611
+  end: 286550
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - PAN6
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575550.1
+  start: 232611
+  end: 286550
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575552.1
+  start: 123040
+  end: 129429
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575552.1
+  start: 171729
+  end: 171932
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575552.1
+  start: 228483
+  end: 228599
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Balpha
+  contig: NW_014575552.1
+  start: 263526
+  end: 283962
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bap3-3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575552.1
+  start: 263526
+  end: 283962
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575552.1
+  start: 263526
+  end: 283962
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575552.1
+  start: 375187
+  end: 377674
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Y
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575552.1
+  start: 405289
+  end: 405429
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575547.1
+  start: 3005
+  end: 9617
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575547.1
+  start: 50651
+  end: 57181
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Y
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575547.1
+  start: 50651
+  end: 57181
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575547.1
+  start: 122179
+  end: 122409
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Aalpha
+  contig: NW_014575548.1
+  start: 2756
+  end: 31158
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - Y
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575548.1
+  start: 2756
+  end: 31158
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575548.1
+  start: 2756
+  end: 31158
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - SXI1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575548.1
+  start: 63321
+  end: 149190
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575548.1
+  start: 63321
+  end: 149190
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575561.1
+  start: 100900
+  end: 123375
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Balpha
+  contig: NW_014575561.1
+  start: 199140
+  end: 244014
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bap3-3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575561.1
+  start: 199140
+  end: 244014
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575561.1
+  start: 199140
+  end: 244014
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575561.1
+  start: 199140
+  end: 244014
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575561.1
+  start: 274907
+  end: 295738
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575561.1
+  start: 327777
+  end: 340445
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575561.1
+  start: 394891
+  end: 416441
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575561.1
+  start: 461469
+  end: 461630
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575561.1
+  start: 498414
+  end: 540546
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575561.1
+  start: 498414
+  end: 540546
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575561.1
+  start: 498414
+  end: 540546
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575561.1
+  start: 689134
+  end: 718295
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575561.1
+  start: 689134
+  end: 718295
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bE
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575561.1
+  start: 756935
+  end: 757108
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575561.1
+  start: 797572
+  end: 888729
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_B44
+  - fungal_mating_type_pheromone
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575561.1
+  start: 797572
+  end: 888729
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575561.1
+  start: 797572
+  end: 888729
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575561.1
+  start: 963427
+  end: 1020461
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  - MIP1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575561.1
+  start: 963427
+  end: 1020461
+  idiomorph: alpha
+  polished_genes: 0
+  genes_found:
+  - FAO1
+  - SXI1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575561.1
+  start: 963427
+  end: 1020461
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575561.1
+  start: 963427
+  end: 1020461
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575561.1
+  start: 963427
+  end: 1020461
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-6
+  - bbp2-8
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575561.1
+  start: 1089770
+  end: 1106247
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575561.1
+  start: 1089770
+  end: 1106247
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575561.1
+  start: 1089770
+  end: 1106247
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - STE3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575561.1
+  start: 1136864
+  end: 1145576
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:HD
+  contig: NW_014575561.1
+  start: 1176085
+  end: 1180184
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - HD2
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575561.1
+  start: 1286663
+  end: 1305568
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Balpha
+  contig: NW_014575549.1
+  start: 87355
+  end: 87486
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bar3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575549.1
+  start: 120143
+  end: 150683
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575549.1
+  start: 120143
+  end: 150683
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:MAT
+  contig: NW_014575549.1
+  start: 120143
+  end: 150683
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - STE3
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575549.1
+  start: 120143
+  end: 150683
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pheromone_receptor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:aLocus
+  contig: NW_014575541.1
+  start: 2011
+  end: 2109
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - pra1
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:bLocus
+  contig: NW_014575543.1
+  start: 705
+  end: 1061
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bW
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575557.1
+  start: 234369
+  end: 277763
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbr2
+  - bbp2_b
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575556.1
+  start: 197022
+  end: 247765
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-5
+  - bbp2_b
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575563.1
+  start: 1171461
+  end: 1247416
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-6
+  - bbp2-8
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575563.1
+  start: 2130872
+  end: 2138788
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-5
+  - bbp2_b
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575560.1
+  start: 158127
+  end: 217632
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-2
+  - bbp2-6
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575562.1
+  start: 34323
+  end: 50045
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - pheromone_receptor
+  - caax_precursor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575551.1
+  start: 309423
+  end: 356757
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-2
+  - bbp2_a
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575561.1
+  start: 24900
+  end: 30117
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - pheromone_receptor
+  - caax_precursor
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:Bbeta
+  contig: NW_014575561.1
+  start: 963427
+  end: 1020461
+  idiomorph: undetermined
+  polished_genes: 0
+  genes_found:
+  - bbp2-6
+  - bbp2-8
+  withheld_reason: modelled_gene_bar
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575562.1
+  start: 34323
+  end: 50045
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - pheromone_receptor
+  - caax_precursor
+  withheld_reason: below_fraction_floor
+  fraction_found: 0.25
+  floor: 0.5
+  best_identity: 22.892
+  idiomorph_classifier: null
+- family: Basidiomycota:PR
+  contig: NW_014575561.1
+  start: 24900
+  end: 30117
+  idiomorph: undetermined
+  polished_genes: 1
+  genes_found:
+  - pheromone_receptor
+  - caax_precursor
+  withheld_reason: below_fraction_floor
+  fraction_found: 0.25
+  floor: 0.5
+  best_identity: 30.0
+  idiomorph_classifier: null
+assembly_gap_at_locus: []
+zygosity: null
+two_idiomorphs: []
+receptor_arrays_note: 'Receptor arrays occur for both mating and non-mating STE3-like
+  receptors (the study found arrays holding paralogs beside the mating receptors in
+  Coprinopsis cinerea and Schizophyllum commune), so array membership does not establish
+  that a locus is a mating receptor. receptor_array_support is a flag on the evidence
+  behind an array; it never changes a call, its confidence or its verification label.
+  receptor_cassette_* fields describe pheromone-precursor cassette structure (2 or
+  more strict-CAAX ORFs within 5 kb of a receptor locus; class C when that many of
+  those ORFs also carry tblastn precursor homology). They are descriptive only: the
+  CAAX scan is also what admits a PR call, so cassettes are circular as confirmation;
+  own-species curated precursors are a self-hit for class C; tandem receptors may
+  be merged into one locus. They never change a call, tier, label, confidence or count.'
+receptor_arrays:
+- receptor_array_id: Basidiomycota:PR:NW_014575557.1:236785-237912
+  family: Basidiomycota:PR
+  contig: NW_014575557.1
+  start: 236785
+  end: 237912
+  receptor_array_size: 1
+  receptor_array_members:
+  - 236785-237912:+
+  strict_caax_orfs: 0
+  precursor_homology_hits: 1
+  receptor_array_support: supported
+  receptor_array_support_reasons:
+  - precursor_homology
+  receptor_cassette_loci: 0
+  receptor_cassette_class: none
+  receptor_cassette_members: []
+  receptor_cassette_max_caax_orfs: 0
+  calls: 0
+families_attempted:
+- Basidiomycota:HD
+- Basidiomycota:PR
+- Basidiomycota:MAT
+- Basidiomycota:Aalpha
+- Basidiomycota:Abeta
+- Basidiomycota:Balpha
+- Basidiomycota:Bbeta
+- Basidiomycota:aLocus
+- Basidiomycota:bLocus
+detected: []
+not_detected:
+- family: Basidiomycota:HD
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+  best_fraction_found: 1.0
+  genes_found:
+  - HD1
+  - beta_fg
+  genes_missing:
+  - HD2
+  genes_not_searchable: []
+- family: Basidiomycota:PR
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+  best_fraction_found: 0.5
+  genes_found:
+  - pheromone_receptor
+  - fungal_mating_type_pheromone
+  genes_missing:
+  - pheromone_B43
+  - pheromone_B44
+  genes_not_searchable: []
+- family: Basidiomycota:MAT
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+  best_fraction_found: 0.5
+  genes_found:
+  - STE3
+  genes_missing:
+  - FAO1
+  - PAN6
+  genes_not_searchable:
+  - MFa
+  - MFalpha
+  - RPL39
+- family: Basidiomycota:Aalpha
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+  best_fraction_found: 1.0
+  genes_found:
+  - Z
+  genes_missing:
+  - Y
+  genes_not_searchable: []
+- family: Basidiomycota:Abeta
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+  best_fraction_found: 0.0
+  genes_found: []
+  genes_missing:
+  - Y
+  - Z
+  genes_not_searchable: []
+- family: Basidiomycota:Balpha
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+  best_fraction_found: 0.5
+  genes_found:
+  - bar3
+  genes_missing:
+  - bap3-3
+  genes_not_searchable:
+  - bap3-1
+- family: Basidiomycota:Bbeta
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+  best_fraction_found: 0.25
+  genes_found:
+  - bbp2_a
+  genes_missing:
+  - bbr2
+  - bbp2-1
+  - bbp2-2
+  - bbp2-5
+  - bbp2-6
+  - bbp2-8
+  - bbp2_b
+  genes_not_searchable: []
+- family: Basidiomycota:aLocus
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+  best_fraction_found: 0.6666666666666666
+  genes_found:
+  - rba1
+  genes_missing:
+  - pra1
+  genes_not_searchable:
+  - mfa1
+- family: Basidiomycota:bLocus
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+  best_fraction_found: 1.0
+  genes_found:
+  - bE
+  - bW
+  genes_missing: []
+  genes_not_searchable: []

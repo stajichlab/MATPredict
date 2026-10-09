@@ -1,0 +1,8 @@
+Identity-first tie-break (higher identity, then lower record id) against the original order-dependent code, Ascomycota + Mucoromycota panel (110 genomes).
+8 reports differ (no call, cluster span, gene set, merged_from or withheld-locus list changes):
+  called loci changed (2):   Leppa1 (the record named: A1163 in 12 of 12 repeats; the order-dependent default-33 run had flipped to Af293)
+                             ASM2413939v1 (gene model 24,889-25,143 at 27.06% identity, record ubc21 -> 24,895-25,140 at 31.71%, record ai-2023a)
+  withheld loci changed (6): ASM53491v1 (classifier score 36.8 -> 39.4), LicCorB2541-1.0, ASM2362993v1, ASM3704209v1 (gene-model start 36 bp later),
+                             ASM5971429v1 (classifier Minus 67.3 -> 64.4; model end 30 bp earlier), SRR12240182_bin.18 MAG (model end 6 bp earlier)
+Against the lower-id-only rule: 5 reports differ (all withheld loci; the same small boundary shifts). ASM2413939v1 and ASM53491v1 are identical under both rules.
+Basidiomycota panel (34): identical in every field under all three code versions.

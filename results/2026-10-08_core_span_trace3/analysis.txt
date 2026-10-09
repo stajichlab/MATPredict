@@ -1,0 +1,11 @@
+called loci: new db 2 | old db 2
+new db: loci 2, with core_span 2, beyond>0: 2, >=1 kb: 2, >=10 kb: 1, max 13811, median 7733.5
+    PR NW_024467210.1 944758 957137 core 946372 957095 beyond 1656
+    bLocus MCGR01000028.1 145579 160941 core 145636 147187 beyond 13811
+old db: loci 2, with core_span 2, beyond>0: 2, >=1 kb: 2, >=10 kb: 1, max 13811, median 7733.5
+    PR NW_024467210.1 944758 957137 core 946372 957095 beyond 1656
+    bLocus MCGR01000028.1 145579 160941 core 145636 147187 beyond 13811
+
+loci present in both databases at the same contig and family (1:1 matches only):
+ span and core identical: 2 | span moved, core unchanged: 0 | span moved and core moved: 0 | span same, core moved: 0
+loci present in only one database: 0 []

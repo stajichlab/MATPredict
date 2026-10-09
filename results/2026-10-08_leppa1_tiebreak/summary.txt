@@ -1,0 +1,7 @@
+Leppa1 (GCA_001692735.1) reference_record tie, repeated runs on one genome (one gene model, 58,355-60,583, exonerate_refine, 59.6% identity):
+  current main (run-f4f35ea):                         a1163 in 16 of 16 runs  (plus 1 baseline run in the 110-genome panel: a1163)
+  core-span code, default floor 33 (run-supported4):  a1163 in 15 of 16 runs, af293 in 1 (new_run2); plus af293 in the 110-genome run
+  floors 33 and 39 earlier (run-supported3):          a1163 in all runs
+Fisher exact, two-sided: clean repeats 1/16 vs 0/16 p = 1.00; with the 110-genome run 2/17 vs 0/17 p = 0.48.
+Same coordinates, same identity, same method: the gene is attributed to either of two curated references that tie exactly. No span field,
+call, cluster span, gene set or merged_from differs. Not fixed here.

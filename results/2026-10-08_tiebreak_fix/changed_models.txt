@@ -1,0 +1,15 @@
+Genomes whose report differs after the tie-break fix, compared across five runs of the same panel (main base, floor 33, floor 39, default 33, TIEBREAK FIX).
+All four earlier runs agree with each other in both genomes; only the fix run differs.
+
+GCA_024139395.1_ASM2413939v1  Mucoromycota:MAT VCJI01001366.1 21890-30893 (called, medium)
+  earlier runs (4 of 4): gene model 24,889-25,143  identity 27.06  record ubc21     exonerate_refine
+  tie-break fix:         gene model 24,895-25,140  identity 31.71  record ai-2023a  exonerate_refine
+  (cluster span, genes found, confidence, idiomorph: unchanged)
+
+GCA_000534915.1_ASM53491v1  Mucoromycota:MAT BAVE01000005.1 717604-795135 (withheld: mat_gene_gate)
+  earlier runs (4 of 4): best_score 36.8, classifier scores {Minus 36.8, Plus 14.4}
+  tie-break fix:         best_score 39.4, classifier scores {Minus 39.4, Plus 16.0}
+  (still withheld for the same reason; the score is computed from the modelled protein)
+
+GCA_001692735.1_Leppa1: the intended case. Earlier default-33 run named the Af293 record (a flip); the fix names A1163 in 16 of 16 repeats,
+the record current main named in 16 of 16 earlier repeats.

@@ -88,7 +88,23 @@ Results (34 genomes: the 33-genome Basidiomycota panel plus T48-F; 49 called loc
 
 Limits: 49 called loci from one panel; the 14-stretch check shares its loci with the idea; the floor is chosen on very few short genes (one pheromone); withheld loci have no `supported_span` (no gene coordinates in the report); no check on Ascomycota or Mucoromycota genomes; the bridging number is a proxy.
 
-Recommendation (for the curator): keep `supported_span` report-only; consider lowering the default floor from 39 to about 33 (plateau 30 to 36), which keeps the short pheromone and still drops all five noise stretches. Test the chosen floor on Ascomycota and Mucoromycota panels before it becomes the default. Changing clustering or the reported `start`/`end` is not supported by this evidence and could change calls (merge, polish window).
+Recommendation (for the curator): keep `supported_span` report-only; consider lowering the default floor from 39 to about 33 (plateau 30 to 36), which keeps the short pheromone and still drops all five noise stretches. The Ascomycota and Mucoromycota panels were then tested (next update): the floor makes no difference there. Changing clustering or the reported `start`/`end` is not supported by this evidence and could change calls (merge, polish window).
+
+## Update: other groups, and withheld loci (curator asked, 2026-10-08)
+Code: branch `core-span` (draft PR #59): `supported_span` and `core_span` now also on withheld loci. Full suite: 1,170 passed.
+
+**Other groups** (Ascomycota 30 + Mucoromycota 80 regression-panel genomes; baseline = current `main`; supported_span code at floors 33 and 39; `results/2026-10-08_supported_span_other_groups/`):
+- 0 call differences on all 110 genomes at both floors (family, contig, cluster span, confidence, idiomorph, class, genes, merged_from, withheld loci). Every reported gene inside its supported span; the core always inside the supported span.
+- Ascomycota (26 called loci): extra span beyond the core 65.2 kb (20 loci), beyond the supported span 62.9 kb: the supported span changes little, because few loci have noise stretches. Mucoromycota (52 called loci): 147.1 kb beyond the core in 39 loci, 95.3 kb beyond the supported span in 9: the supported span keeps the extra stretches that hold hits and drops the rest.
+- The 8 called loci with 10 kb or more beyond the supported span (3 Ascomycota, 5 Mucoromycota; 10 to 41 kb): tblastn of the run's query set over the dropped stretches finds 0 strong hits (e < 1e-3) in all 8, with 37 to 241 weak hits each (best e-value 2e-3 to 2e-2). So the part dropped is noise-level hits only.
+- Floor 33 and floor 39 give the same totals on called loci in these groups (extra span 62.9 and 95.3 kb at both); only withheld-locus counts differ slightly (beyond-supported >= 10 kb: Ascomycota 304 at 33 and 305 at 39, Mucoromycota 59 and 64). Floor 39 also has 0 strong hits in the dropped stretches. The floor choice therefore matters in the Basidiomycota set (the short pheromone), not here.
+
+**Withheld loci, old versus new database** (the question this note started from; Basidiomycota panel + T48-F, 34 genomes, new code at floor 33, old = the database before the C. cinerea record, new = current; `results/2026-10-08_supported_span_withheld/`):
+- 4,021 withheld loci under the new database and 3,995 under the old. Matched one-to-one: 1,625; 1,590 identical in span, supported and core.
+- At the genome/family/contig level (2,205 keys in both databases, 2,185 with the same number of loci): **89 keys had a changed cluster span, and in 86 (97%) the supported span and the core span did not change.** So the span changes of the 164-locus regression are almost entirely noise stretching the cluster span. The 3 exceptions are real changes (a strong own-family hit now extends the locus; example: Fomme1 PR NW_006760402.1, 1,111,569-1,121,523 to 1,111,569-1,141,382, with the supported span moving the same way). 3 more keys changed their supported span although the cluster span did not (gene-set changes). 20 keys have a different number of loci and 24 keys exist in only one database (22 loci only in the new, 4 only in the old); these were not compared.
+- The curated record change therefore does what it should (the gene set changes a few loci) and the cluster-span noise it exposes is separable with `supported_span`.
+
+Limits: 34 and 110 genomes from the fixed regression panels, not a random sample; the old database is the one before the record change plus whatever else changed between those trees (db diff not isolated); the hit tallies use tblastn on the run's query set as an approximation of detect's hit table; the 164 and 89 are counted differently (different matching), so they are not the same number.
 
 ## Curator decisions
 Ruled 2026-10-08 (J. Stajich): option 3, a report-only `core span` (built, see the update above). Options considered:

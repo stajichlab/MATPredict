@@ -498,6 +498,10 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path, run: dict 
                 "idiomorph": r.idiomorph,
                 "polished_genes": r.polished_genes,
                 "genes_found": list(r.genes_found),
+                # Where this withheld locus's own genes lie, and how far its span runs beyond them (report only;
+                # the same fields as on a called locus, so a span change can be judged on withheld loci too).
+                "core_span": core_span(r),
+                "supported_span": r.supported_span,
                 "withheld_reason": r.withheld_reason,
                 **(r.withheld_detail or {}),
                 # The classifier verdict (or null), so a withheld locus's

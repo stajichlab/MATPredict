@@ -1,0 +1,16 @@
+withheld loci: new db 4021 | old db 3995
+1:1 matched withheld loci: 1625
+   1590  span same, supported same, core same
+     33  span moved, supported same, core same
+      1  span moved, supported moved, core moved
+      1  span same, supported moved, core moved
+
+withheld loci whose cluster span moved: 34; of those supported_span unchanged: 33 (97%)
+   supported moved: GCF_000271605.1_Fomme1 Basidiomycota:PR NW_006760402.1 span (1111569, 1121523) -> (1111569, 1141382) supported (1111569, 1121523) -> (1111569, 1141382)
+loci present in only one database: 24
+
+--- key level (genome, family, contig): compare the SET of spans, so contigs with several loci are included ---
+keys in both databases: 2205; with the same number of loci: 2185; different number of loci: 20; present in only one: 24
+keys (same count) whose cluster spans changed: 89; supported spans unchanged in 86 (97%); core spans unchanged in 86
+keys (same count) whose supported spans changed although cluster spans did not: 3
+loci in only one database or in keys with a different count: {'only in new db': 22, 'only in old db': 4, 'loci in keys with a different count (new minus old)': 8}

@@ -629,6 +629,22 @@ def _feature_score(fields: list[str]) -> float:
         return 0.0
 
 
+def _record_identity(record: "_AlignmentRecord") -> float:
+    """The alignment's own identity as a percentage, 0.0 when absent: exonerate's `identity <pct>` on the gene line, miniprot's
+    `Identity=<fraction>` on the mRNA line. Used only to break an exact score tie between alignments of ONE tool."""
+    for part in record.feature[8].split(" ; "):
+        if part.startswith("identity "):
+            try:
+                return float(part.split(" ")[1])
+            except ValueError:
+                return 0.0
+    attrs = _gff3_attrs(record.feature[8])
+    try:
+        return float(attrs["Identity"]) * 100 if "Identity" in attrs else 0.0
+    except ValueError:
+        return 0.0
+
+
 def _select_requested_gene(
     records: list[_AlignmentRecord],
     gene_name: str,
@@ -651,11 +667,13 @@ def _select_requested_gene(
     database legitimately holds more than one reference protein for the same
     gene, each producing its own alignment -- the spec (Stage 2) requires
     selecting one per gene per tool by a named, tool-appropriate score, which
-    is `_feature_score`'s raw per-tool alignment score. An exact tie goes to the lower
-    reference record id (the tool's own order among equal scores is not guaranteed), so selection is deterministic.
+    is `_feature_score`'s raw per-tool alignment score. An exact tie goes to the higher
+    identity, then to the lower reference record id (the tool's own order among equal scores is not guaranteed), so selection is
+    deterministic.
     """
     best: tuple[_AlignmentRecord, str, FamilyKey, str] | None = None
     best_score = None
+    best_identity = 0.0
     for record in records:
         try:
             record_id, matched_gene = _parse_reference_header(record.query_id)
@@ -667,13 +685,16 @@ def _select_requested_gene(
         if attribution is None:
             continue
         family_key, role = attribution
-        # An exact tie in score goes to the lower reference record id, not to whichever alignment the tool listed first: the
-        # tool's order among equal scores is not guaranteed, and the record named in the model (and in `reference_records`)
-        # flipped between runs of the same code on Leppa1 (two curated references tie exactly there).
+        # An exact tie in score is broken by the higher identity, then by the lower reference record id, never by whichever
+        # alignment the tool listed first: the tool's order among equal scores is not guaranteed, and the record named in the
+        # model (and in `reference_records`) flipped between runs of the same code on Leppa1 (two curated references tie there).
+        identity = _record_identity(record)
         if (best_score is None or record.score > best_score
-                or (record.score == best_score and record_id < best[1])):
+                or (record.score == best_score
+                    and (identity > best_identity or (identity == best_identity and record_id < best[1])))):
             best = (record, record_id, family_key, role)
             best_score = record.score
+            best_identity = identity
     return best
 
 

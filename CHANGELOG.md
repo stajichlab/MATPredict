@@ -23,8 +23,8 @@ release completed.
   to the `MAT_locus` line of the GFF3 (`core_start`, `core_end`, `beyond_core_bp`) and to the HTML report ("Own genes").
 
 ### Fixed
-- When two curated reference records tie exactly in alignment score for one gene, the polisher now takes the one with the lower
-  record id instead of whichever alignment the tool listed first (the tool's order among equal scores is not guaranteed). Found on
+- When two curated reference records tie exactly in alignment score for one gene, the polisher now takes the one with the higher
+  identity, then the lower record id, instead of whichever alignment the tool listed first (the tool's order among equal scores is not guaranteed). Found on
   Leppa1, where one gene model was attributed to the A1163 record in most runs and to the Af293 record in some. Where the two tied
   alignments differ in coordinates or identity, the reported model, and scores computed from it (idiomorph classifier scores),
   change too: seen in 2 of 144 panel genomes (Mucoromycota ASM2413939v1: a gene model 24,889-25,143 at 27.06% identity became

@@ -7,6 +7,13 @@ release completed.
 ## [Unreleased]
 
 ### Added
+- `supported_span` on every called locus (report only; calls, clustering and the cluster span are unchanged): the extent of the
+  locus's modelled genes plus its own hits at or above a bitscore floor (`--supported-min-bitscore`, default 39, the flank-carried
+  floor), with `beyond_supported_bp`. A strong hit of another family, or a weak hit of any family, that chains into the cluster
+  stretches the cluster span but not this one; real own-family hits are kept (unlike `core_span`). In `detection_report.yaml`, on
+  the GFF3 `MAT_locus` line (`supported_start`, `supported_end`, `beyond_supported_bp`) and in the HTML report ("Supported span",
+  shown when the reported span rests partly on weaker hits). For a merged A/B call it is the union of the members'. Validation:
+  `results/2026-10-08_supported_span/` (0 call differences on 34 genomes at five floors; every reported gene inside the span).
 - `core_span` on every called locus (report only; calls and clustering are unchanged): the extent of the locus's own
   gene models on its contig and `beyond_core_bp`, how much of `start`-`end` lies outside them. The cluster span is built
   from the hits of every family, so one weak hit from another family's short query can stretch a locus (T48-F: a called HD

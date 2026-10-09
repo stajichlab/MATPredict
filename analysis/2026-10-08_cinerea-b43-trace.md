@@ -88,7 +88,7 @@ Results (34 genomes: the 33-genome Basidiomycota panel plus T48-F; 49 called loc
 
 Limits: 49 called loci from one panel; the 14-stretch check shares its loci with the idea; the floor is chosen on very few short genes (one pheromone); withheld loci have no `supported_span` (no gene coordinates in the report); no check on Ascomycota or Mucoromycota genomes; the bridging number is a proxy.
 
-Recommendation (for the curator): keep `supported_span` report-only; consider lowering the default floor from 39 to about 33 (plateau 30 to 36), which keeps the short pheromone and still drops all five noise stretches. The Ascomycota and Mucoromycota panels were then tested (next update): the floor makes no difference there. Changing clustering or the reported `start`/`end` is not supported by this evidence and could change calls (merge, polish window).
+Recommendation (for the curator): keep `supported_span` report-only; consider lowering the default floor from 39 to about 33 (plateau 30 to 36), which keeps the short pheromone and still drops all five noise stretches. The Ascomycota and Mucoromycota panels were then tested (next update): the floor makes no difference there. Ruled and applied: default 33 (see the last update). Changing clustering or the reported `start`/`end` is not supported by this evidence and could change calls (merge, polish window).
 
 ## Update: other groups, and withheld loci (curator asked, 2026-10-08)
 Code: branch `core-span` (draft PR #59): `supported_span` and `core_span` now also on withheld loci. Full suite: 1,170 passed.
@@ -105,6 +105,16 @@ Code: branch `core-span` (draft PR #59): `supported_span` and `core_span` now al
 - The curated record change therefore does what it should (the gene set changes a few loci) and the cluster-span noise it exposes is separable with `supported_span`.
 
 Limits: 34 and 110 genomes from the fixed regression panels, not a random sample; the old database is the one before the record change plus whatever else changed between those trees (db diff not isolated); the hit tallies use tblastn on the run's query set as an approximation of detect's hit table; the 164 and 89 are counted differently (different matching), so they are not the same number.
+
+## Update: default floor set to 33 and re-tested (curator ruled 2026-10-08)
+`--supported-min-bitscore` now defaults to 33 (was 39; test first, then the one-line change; branch `core-span`, draft PR #59). Re-run with no flag from a fresh frozen tree (`results/2026-10-08_supported_span_default33/`):
+- **Calls unchanged:** 0 differences against current `main` on the 110 Ascomycota and Mucoromycota genomes, and 0 differences against the earlier new-code run on the 34 Basidiomycota genomes (family, contig, cluster span, confidence, idiomorph, class, genes, merged_from, withheld loci). The reports record a floor of 33 in every locus.
+- **Spans identical to the explicit 33-bit runs** in every field except one gene's `reference_record` in Leppa1 (below): 34 of 34 Basidiomycota reports and 109 of 110 others. (A first comparison against a floor-33 run made before withheld loci had the new fields differed only in those new fields.)
+- **Containment:** 160 and 348 reported genes, 0 outside the supported span.
+- **Full suite:** 1,170 passed, 0 failed.
+- The effect of 33 against 39 is as measured before: same totals on Ascomycota and Mucoromycota called loci; on the Basidiomycota panel 33 keeps the 46-aa Gabo G3 pheromone hit (38 bits) that 39 drops, and still drops the five noise-only stretches.
+
+**A separate finding: an unstable `reference_record` on an exact tie.** In Leppa1 (GCA_001692735.1) one gene model (58,355-60,583, `exonerate_refine`, 59.6% identity) is attributed to the A1163 or to the Af293 curated record in different runs of the same code: current `main` 0 of 17 runs chose Af293, the new code 2 of 17 (1 of 16 clean repeats). Same coordinates, same identity: two curated references tie exactly (the A1163 remnant and the Af293 MAT1-2-1 share their C-terminal region). Nothing in a call, span or gene set changed; only the record named for that gene and `reference_records`. The numbers do not show that my change is involved (clean repeats 1/16 against 0/16, Fisher p = 1.00; 2/17 against 0/17, p = 0.48), and it does not touch hit ordering, but I cannot rule it out. A deterministic tie-break (for example, the lower record id) would remove it; that changes reported records for tied hits, so it needs a ruling and is not done. `results/2026-10-08_leppa1_tiebreak/`.
 
 ## Curator decisions
 Ruled 2026-10-08 (J. Stajich): option 3, a report-only `core span` (built, see the update above). Options considered:

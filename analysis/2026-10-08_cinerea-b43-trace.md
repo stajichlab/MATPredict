@@ -124,7 +124,15 @@ Limits: 34 and 110 genomes from the fixed regression panels, not a random sample
 - Leppa1: 16 of 16 repeats name the A1163 record, the record current `main` named in 16 of 16 repeats (the new default-33 code had flipped in 2 of 17 runs before the fix).
 - Calls, cluster spans, genes found, merged_from and withheld loci: 0 differences on all 144 genomes against the earlier default-33 run. The 34 Basidiomycota reports are identical in every field.
 - **But the fix is not only a record-name change.** In 2 of the 110 Ascomycota/Mucoromycota genomes it picks a different, equally scored alignment than the tool happened to list first in all four earlier runs: ASM2413939v1 (called Mucoromycota MAT locus) has one gene model change from 24,889-25,143 at 27.06% identity (record `ubc21`) to 24,895-25,140 at 31.71% (`ai-2023a`); ASM53491v1 has a withheld locus's idiomorph-classifier score change from 36.8 to 39.4 (still withheld for the same reason). The classifier scores the modelled protein, so any tie that changes the model can change scores. No call changed on these genomes, but a score near a threshold could change a call. (I first wrote that only the record name changes; that was wrong and is corrected in the CHANGELOG.)
-- The rule is arbitrary but deterministic. In the one non-Leppa1 case a rule of "higher identity first, then lower record id" would pick the same alignment (31.71 > 27.06); I have no case that separates the two rules, so the lower-id rule stays unless the curator prefers identity first.
+- The rule is arbitrary but deterministic; the curator then ruled for identity first (next update).
+
+## Update: tie-break key changed to identity first (curator ruled 2026-10-08)
+An exact score tie between reference records now goes to the **higher identity**, then to the lower record id (both tools; test first: `tests/detect/test_polish_tiebreak.py`, 2 red then green; full suite 1,175 passed).
+Real runs (fresh frozen tree; `results/2026-10-08_tiebreak_identity/`):
+- 0 differences in calls, cluster spans, genes found, merged_from and withheld-locus lists on all 144 genomes against both the order-dependent code and the lower-id-only rule. The 34 Basidiomycota reports are identical in every field under all three.
+- Leppa1: A1163 in 12 of 12 repeats (the record `main` named in 16 of 16 earlier repeats).
+- 8 of the 110 Ascomycota/Mucoromycota reports differ from the order-dependent code: 2 called loci (Leppa1's record; the ASM2413939v1 model, 27.06% to 31.71% identity) and 6 withheld loci (gene-model boundaries move by 6 to 36 bp; classifier scores change, for example 36.8 to 39.4 and 67.3 to 64.4). Against the lower-id rule 5 reports differ, all withheld loci with the same small shifts; the two cases found earlier (ASM2413939v1, ASM53491v1) are identical under both rules, as predicted.
+- Neither rule is shown to be more correct; identity first is the more principled key, and one classifier score goes down with it (Minus 67.3 to 64.4 on a withheld locus), so a score near a threshold could still move a call.
 
 ## Curator decisions
 Ruled 2026-10-08 (J. Stajich): option 3, a report-only `core span` (built, see the update above). Options considered:

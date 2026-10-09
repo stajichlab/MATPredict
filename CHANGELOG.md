@@ -14,6 +14,9 @@ release completed.
   the GFF3 `MAT_locus` line (`supported_start`, `supported_end`, `beyond_supported_bp`) and in the HTML report ("Supported span",
   shown when the reported span rests partly on weaker hits). For a merged A/B call it is the union of the members'. Validation:
   `results/2026-10-08_supported_span/` (0 call differences on 34 genomes at five floors; every reported gene inside the span).
+- `core_span` and `supported_span` also on every withheld locus in `suppressed_loci`, so span changes can be judged on withheld loci
+  (`results/2026-10-08_supported_span_withheld/`: of 89 genome/family/contig keys whose cluster span changed with a curation edit,
+  86 kept the same supported span).
 - `core_span` on every called locus (report only; calls and clustering are unchanged): the extent of the locus's own
   gene models on its contig and `beyond_core_bp`, how much of `start`-`end` lies outside them. The cluster span is built
   from the hits of every family, so one weak hit from another family's short query can stretch a locus (T48-F: a called HD

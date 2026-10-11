@@ -1,0 +1,200 @@
+record_id: 27337_vdls-17_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 27337
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Glomerellales;f__Plectosphaerellaceae;g__Verticillium;s__Verticillium_dahliae
+  lineage_resolved_date: '2026-10-11'
+organism:
+  species: Verticillium dahliae
+  strain:
+    name: VdLs.17
+    known: true
+    culture_collection_ids:
+    - VdLs.17
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  assembly_accession: GCF_000150675.1
+  assembly_accession_basis: sequence_link
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: SLA2(+)->MAT1-2-1(+)->APN2(-)->COX13(+)
+    definition_note: Genome-derived MAT1-2 locus of Verticillium dahliae VdLs.17 (RefSeq
+      GCF_000150675.1, scaffold NW_009276925.1), curated 2026-10-11 from the RefSeq
+      GFF (gene models and XP protein accessions as annotated). Canonical Pezizomycotina
+      arrangement SLA2 -> MAT1-2-1 -> APN2 -> COX13. The HMG-box gene VDAG_02444 (XP_009651392.1,
+      232 aa) contains the published TV103 MAT1-2-1 protein (BAH66364.1, 156 aa; Usami
+      et al. 2009) at 100% identity over all 156 aa; the RefSeq model is extended
+      at the N terminus by 76 aa relative to the TV103 deposit, which is a gene-model
+      difference, not a sequence difference in the shared region. The RefSeq annotation
+      also places an uncharacterized gene (VDAG_02443, XP_009651391.1, minus strand)
+      between SLA2 and MAT1-2-1; it is not in the MAT vocabulary of order.yml and
+      is not recorded. V. dahliae JR2 (GCA_000400815.2, CP009079.1:3830361-3865909)
+      gave the same SLA2-MAT1-2-1-APN2-COX13 arrangement and a MAT1-2 call in a matpredict
+      detect run (not recorded here). Short et al. 2014 (PMID 25383550) report that
+      the sequenced V. dahliae strain contains only MAT1-2-1; the passage does not
+      name the strain.
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NW_009276925.1
+        seq_region: NW_009276925.1
+      start: 344484
+      end: 362194
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: SLA2
+  protein_accession: ncbi_protein:XP_009651390.1
+  role: flanking_conserved
+  present: true
+  locus_tag: VDAG_02442
+  segment_index: 0
+  start: 344484
+  end: 347944
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 344484
+    end: 344515
+  - start: 344572
+    end: 344659
+  - start: 344790
+    end: 347678
+  - start: 347858
+    end: 347944
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:XP_009651392.1
+  role: core_MAT
+  present: true
+  locus_tag: VDAG_02444
+  segment_index: 0
+  start: 355923
+  end: 356721
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 355923
+    end: 356110
+  - start: 356163
+    end: 356464
+  - start: 356513
+    end: 356721
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: APN2
+  protein_accession: ncbi_protein:XP_009651393.1
+  role: flanking_conserved
+  present: true
+  locus_tag: VDAG_02445
+  segment_index: 0
+  start: 358800
+  end: 360817
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 360793
+    end: 360817
+  - start: 360732
+    end: 360744
+  - start: 360631
+    end: 360676
+  - start: 360442
+    end: 360574
+  - start: 359008
+    end: 360387
+  - start: 358800
+    end: 358855
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: COX13
+  protein_accession: ncbi_protein:XP_009651394.1
+  role: flanking_conserved
+  present: true
+  locus_tag: VDAG_02446
+  segment_index: 0
+  start: 361345
+  end: 362194
+  strand: +
+  order_in_locus: 3
+  exons:
+  - start: 361345
+    end: 361538
+  - start: 361762
+    end: 361921
+  - start: 361987
+    end: 361994
+  - start: 362155
+    end: 362194
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: 'Genome-derived: SLA2, an HMG-box gene, APN2 and COX13 in
+      the conserved order in the VdLs.17 reference assembly (Klosterman et al. 2011),
+      with domain and ortholog evidence for the HMG gene (below).'
+    citations: &id001
+    - pmid: '21829347'
+      doi: 10.1371/journal.ppat.1002137
+  boundaries:
+    tier: 2
+    experimental_method: Coordinates are the RefSeq gene models of the four genes;
+      the core segment runs from the first base of SLA2 to the last base of COX13.
+      No idiomorph endpoints are published for this strain.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: The HMG-box gene VDAG_02444 contains the experimentally characterised
+      TV103 MAT1-2-1 protein (BAH66364.1) at 100% identity over 156 aa; no MAT1-1-1
+      alpha-box gene is present in this locus (Usami et al. 2009).
+    citations:
+    - pmid: null
+      doi: 10.1007/s10327-009-0197-6
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NW_009276925.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: 21829347|27337|MAT|MAT1-2|VdLs.17
+  reviewed_by: J. Stajich
+  reviewed_date: '2026-10-11'
+model_provenance: null

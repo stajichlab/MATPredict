@@ -11,7 +11,7 @@ Consumer project: `/bigdata/stajichlab/shared/projects/KassonLab/Verticillium/nf
 | `db/Ascomycota/Glomerellales/27337_tv103_MAT_MAT1-2` (AB505214.1) | accepted, committed, signed off by J. Stajich |
 | `.../27337_nbrc6119_MAT_MAT1-1` (AB505215.1) | accepted, committed, signed off |
 | `.../27337_vdls-17_MAT_MAT1-2` (RefSeq GCF_000150675.1, genome-derived) | accepted, committed, signed off |
-| 8 records in `db/candidates/Ascomycota/` (F. fulva 2, P. chrysogenum 2, E. crustaceum 2, F. sacchari 2) | validated, status `needs_review`, NOT accepted, NOT committed |
+| 8 records in `db/candidates/Ascomycota/` (F. fulva 2, P. chrysogenum 2, P. kewense 2 (syn. Eupenicillium crustaceum), F. sacchari 2) | validated, status `needs_review`, NOT accepted, NOT committed |
 | `db/candidates/Ascomycota/1301609_fen-198_MAT_combined` | pre-existing, untouched |
 
 Effect on the four Verticillium genomes: MAT calls unchanged (MD4 MAT1-1, WVU/S13/S32 MAT1-2). Core hit identity rose from 34-50% to 94.8-100%. Withheld loci rose by 3 to 5 per genome.

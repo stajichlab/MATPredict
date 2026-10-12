@@ -128,6 +128,12 @@ loci:
       # MAT1-2-4 is Sclerotinia/Leotiomycete-specific (curator, 2026-09-19;
       # doi:10.1016/j.funbio.2016.06.007, PMID 27567717).
       - {name: MAT1-2-4, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
+      # MAT1-2-3 added to the vocabulary by the curator, J. Stajich, 2026-10-12. Source: the
+      # Fusarium sacchari MAT1-2 deposit JF776855.1 carries a partial MAT1-2-3 CDS
+      # (2870..3644; Martin et al. 2011, Fungal Genet Biol 48:731-740, PMID 21453780).
+      # Optional: not every Pezizomycotina MAT1-2 locus has it. No accepted record
+      # declares it yet.
+      - {name: MAT1-2-3, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
       # MAT1-1-4 (Coccidioides posadasii RMSCC1040, ABS19621.1) is a Coccidioides-
       # specific captured MAT1-1-idiomorph gene (Fraser et al. 2007; Mandel et al. 2007).
       - {name: MAT1-1-4, role: core_MAT, present_in_idiomorphs: ["MAT1-1"], optional: true}

@@ -290,6 +290,24 @@ in any browser; "Save as PDF" prints it. `--pdf` writes the PDF directly with We
 `environment.yml` and the Docker image), or, where WeasyPrint is missing, a headless Chrome or Chromium on PATH. `detect --sample` and `--organism` set the names the report
 shows.
 
+### `matpredict report table` and `matpredict report summary`
+
+```
+matpredict report table --runs RUNS_DIR --out-dir TABLES [--samples sheet.csv --samples-key ASMID]
+matpredict report summary --table-dir TABLES --by COLUMN
+```
+
+`report table` reads a directory of `detect --out-dir` folders and writes `genomes.tsv` (one row per genome: assembly
+stats, runtime, routing, number of loci, idiomorphs, `two_idiomorphs`, `homothallic_candidate`, withheld count) and `loci.tsv`
+(one row per called locus: contig, span, family, idiomorph, confidence, locus class, core and supported spans, genes).
+A folder with no report gets a row with status `failed`, `skipped` or `no_report` and the reason. With `--samples`, the
+sheet's columns join on the folder name and a sheet row with no folder gets status `not_run`.
+
+`report summary` groups `genomes.tsv` by any column (for example `PHYLUM` from the sample sheet) and writes
+`summary_by_COLUMN.tsv` and `.md`: genomes, searched, called, recovery (called / searched), high-confidence calls, not
+searched, failed, not run, genomes with both idiomorphs, homothallic candidates and idiomorph counts. A genome with one
+idiomorph is not shown to be heterothallic; `both_idiomorphs` and `homothallic_candidate` are signals, not verdicts.
+
 ### `matpredict detect` helper commands
 
 | Command | Purpose |

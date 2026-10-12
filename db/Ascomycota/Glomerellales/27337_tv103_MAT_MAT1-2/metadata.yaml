@@ -1,0 +1,99 @@
+record_id: 27337_tv103_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 27337
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Glomerellales;f__Plectosphaerellaceae;g__Verticillium;s__Verticillium_dahliae
+  lineage_resolved_date: '2026-10-11'
+organism:
+  species: Verticillium dahliae
+  strain:
+    name: TV103
+    known: true
+    culture_collection_ids:
+    - TV103
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-2-1(+)
+    definition_note: Usami et al. 2009 (doi 10.1007/s10327-009-0197-6) deposit AB505214.1.
+      Strain TV103 (Table 1 isolate no. 1; Solanum lycopersicum, Tokyo, Japan; MAT1-2).
+      misc_feature MAT1-2 idiomorph 1965..5929. Only the MAT1-2-1 gene is annotated;
+      flanking genes (a DNA lyase homolog, APN2-like) are shown in the paper's Fig.
+      2 but not annotated on the deposit.
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AB505214.1
+        seq_region: AB505214.1
+      start: 1965
+      end: 5929
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:BAH66364.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5277
+  end: 5795
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 5277
+    end: 5538
+  - start: 5587
+    end: 5795
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Cloned and sequenced idiomorph from V. dahliae (Usami et
+      al. 2009, J Gen Plant Pathol 75:422-427; GenBank AB505214.1)
+    citations: &id001
+    - pmid: null
+      doi: 10.1007/s10327-009-0197-6
+  boundaries:
+    tier: 2
+    experimental_method: Idiomorph span is the authors' own GenBank misc_feature;
+      flanking genes are not annotated on the deposit.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Deposit is labelled with the idiomorph by the authors; MAT1-1-1
+      (alpha box) or MAT1-2-1 (HMG box).
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AB505214.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-literature-search
+  proposal_dedupe_key: usami2009|27337|MAT|MAT1-2
+  reviewed_by: J. Stajich
+  reviewed_date: '2026-10-11'
+model_provenance: null

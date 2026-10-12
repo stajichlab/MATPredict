@@ -37,6 +37,9 @@ release completed.
   real campaign report.
 - `detect --genome` on a gzip or zstd file now stops at once with a message that says to decompress it (it used to fail
   minutes later with a BLAST or index error). Recognised by the first bytes, not the file name.
+- `matpredict report table` writes `genomes.tsv` and `loci.tsv` from a directory of detect runs (optional sample-sheet join,
+  rows for failed, skipped and never-run genomes). `matpredict report summary` groups the table by any column: recovery,
+  idiomorph counts, both-idiomorph and homothallic-candidate signals.
 
 ### Changed
 - The polish cap now has an identity tier. With the default cap of 6 per family, every admitted cluster whose best

@@ -1,0 +1,21 @@
+--- kthread.c
++++ kthread.c
+@@ -129,6 +129,18 @@
+ 
+ void kt_pipeline(int n_threads, void *(*func)(void*, int, void*), void *shared_data, int n_steps)
+ {
++#ifdef __EMSCRIPTEN__
++	/* WebAssembly build: no pthreads. Run the pipeline serially with one worker,
++	 * which is the schedule the native code follows for -t 1 (same calls, same order). */
++	int step = 0;
++	void *data = 0;
++	(void)n_threads;
++	while (step < n_steps) {
++		data = func(shared_data, step, step? data : 0);
++		step = (step == n_steps - 1 || data)? (step + 1) % n_steps : n_steps;
++	}
++	return;
++#endif
+ 	ktp_t aux;
+ 	pthread_t *tid;
+ 	int i;

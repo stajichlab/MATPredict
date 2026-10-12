@@ -1,0 +1,11 @@
+#!/bin/sh
+# Stand-in for pkg-config, so exonerate's configure finds glib-lite (see README.md).
+# Usage: pkg-config [--cflags|--libs|--modversion|--exists] glib-2.0
+HERE="$(cd "$(dirname "$0")" && pwd)"
+case "$1" in
+  --exists) exit 0 ;;
+  --modversion) echo "2.82.0" ;;
+  --cflags) echo "-I$HERE" ;;
+  --libs) echo "-L$HERE -lglib-lite -lm" ;;
+  *) exit 1 ;;
+esac

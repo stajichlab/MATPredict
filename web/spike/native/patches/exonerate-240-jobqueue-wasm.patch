@@ -1,0 +1,36 @@
+--- a/src/general/jobqueue.c
++++ b/src/general/jobqueue.c
+@@ -72,8 +72,10 @@
+     jq->thread = g_new0(pthread_t, thread_total);
+     jq->pq_set = PQueueSet_create();
+     jq->pq = PQueue_create(jq->pq_set, JobQueue_Task_compare, NULL);
++#ifndef __EMSCRIPTEN__ /* WebAssembly build: no threads; jobs run in JobQueue_submit */
+     for(i = 0; i < thread_total; i++)
+         pthread_create(&jq->thread[i], NULL, JobQueue_thread_func, jq);
++#endif
+ #endif /* USE_PTHREADS */
+     return jq;
+     }
+@@ -98,6 +100,11 @@
+ 
+ void JobQueue_submit(JobQueue *jq, JobQueue_Func job_func,
+                      gpointer job_data, gint priority){
++#ifdef __EMSCRIPTEN__ /* WebAssembly build: no threads, so run the job now */
++    (void)jq; (void)priority;
++    job_func(job_data);
++    return;
++#endif
+ #ifdef USE_PTHREADS
+     register JobQueue_Task *task;
+     g_assert(jq);
+@@ -114,6 +121,10 @@
+  */
+ 
+ void JobQueue_complete(JobQueue *jq){
++#ifdef __EMSCRIPTEN__ /* jobs already ran in JobQueue_submit; there are no threads to join */
++    (void)jq;
++    return;
++#endif
+ #ifdef USE_PTHREADS
+     register gint i, job_total;
+     do { /* wait for job queue to empty */

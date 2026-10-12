@@ -1,0 +1,3 @@
+#!/bin/sh
+# Stand-in for ranlib during the wasm bootstrap: the bootstrapper calls plain "ranlib".
+exec emranlib "$@"

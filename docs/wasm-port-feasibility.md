@@ -234,3 +234,18 @@ against the code. The review found the default-argument binding of the runner,
 the network fallbacks, the taxonkit and zstd misattribution, the `__init__`
 metadata import, and the unrealistic full-panel parity plan. The spot checks
 for those findings were done against the source before this revision.
+
+## Phase 2 status (miniprot)
+
+miniprot 0.18-r281 builds to WebAssembly and matches the native output on all 468
+curated reference proteins against a test target (`web/spike/native/README.md`).
+Two findings change the plan:
+
+- A pthread-based pipeline fails silently without pthreads. The mapping stage never
+  runs and nothing reports it. Any other upstream tool that uses `pthread_create`
+  needs the same check. The fix is a serial path under `__EMSCRIPTEN__`
+  (`web/spike/native/patches/`).
+- Only `-O1` works. `-O2` and `-O3` fail at run time, which points to undefined
+  behaviour that wasm32 exposes (a 32-bit `size_t` shift and misaligned 64-bit
+  accesses in the custom allocator). This is open. Expect the same kind of problem
+  in exonerate, and budget for it.

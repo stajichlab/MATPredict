@@ -2,7 +2,7 @@
 # Build miniprot 0.18-r281 (commit 671db24) to WebAssembly with Emscripten.
 #
 # Usage: build_miniprot_wasm.sh <miniprot-source-dir> <output-dir>
-#   OPT=-O1 (default). -O2 and -O3 build but fail at run time (see README.md).
+#   OPT=-O2 (default). -O1 and -O3 give identical output on the same tests (see README.md).
 #   EXTRA_EMCC adds flags, e.g. EXTRA_EMCC="-g -fsanitize=undefined" (word-split).
 # Assumes emsdk is activated: source ~/emsdk/emsdk_env.sh
 set -euo pipefail
@@ -10,7 +10,7 @@ set -euo pipefail
 SRC_DIR="$(cd "$1" && pwd)"
 OUT_DIR="$2"
 HERE="$(cd "$(dirname "$0")" && pwd)"
-PATCH="$HERE/patches/miniprot-r281-kthread-serial.patch"
+PATCH="$HERE/patches/miniprot-r281-wasm.patch"
 
 # Work on a scratch copy so the patch never touches the upstream checkout.
 WORK="$(mktemp -d)"
@@ -29,7 +29,7 @@ SOURCES=(align.c bseq.c chain.c format.c hit.c index.c kalloc.c kthread.c main.c
 # _mm_insert_epi16, which Emscripten's emmintrin.h does not declare.
 # shellcheck disable=SC2086
 cd "$WORK"
-emcc "${OPT:--O1}" ${EXTRA_EMCC:-} -std=c99 -msse4.1 -msimd128 \
+emcc "${OPT:--O2}" ${EXTRA_EMCC:-} -std=c99 -msse4.1 -msimd128 \
   -Wno-unused-but-set-variable -Wno-unused-variable \
   "${SOURCES[@]}" \
   -o "$OUT_DIR/miniprot.mjs" \

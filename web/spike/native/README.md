@@ -47,19 +47,19 @@ The index statistics match native exactly at every optimisation level tried
    give identical results in WASM and on x86 (`sse_diff_test.c`, 24 of 24 lines).
    `-msse2` fails to compile under Emscripten, so the build uses `-msse4.1`, which
    selects the code path the x86 SSE4.1 build also uses.
-3. **`-O2` and `-O3` fail. Open.** Symptoms: at `-O3`, heap corruption aborts inside
-   `realloc` in `kseq_read`. At `-O2`, the run exits with a trap and produces only the
-   header. `-O1` and `-O0` are correct on the tests above. UBSan at `-O2` reports:
-   - misaligned 8-byte loads and stores in `sketch.c:57` and `misc.c:5`. The custom
-     allocator returns 8-byte-aligned blocks, which native x86 tolerates;
-   - a shift exponent of 32 for `size_t` at `ntseq.c:8` (the line is a macro
-     expansion, so the source is not yet located). This is a 32-bit `size_t` issue,
-     and it is the likeliest cause of the optimised-build failure.
-
-   `-fno-strict-aliasing` does not fix it. Emscripten AddressSanitizer did not finish
-   in a reasonable time. **Ship `-O1` for now.** Investigate the shift and the alignment
-   before moving to a higher level.
-4. **Harness limits.** Arguments not present in `inputDir` are ignored, so an input
+3. **`-O2` and `-O3` failed. Fixed.** The cause was `kroundup64` (`kseq.h`, `mppriv.h`).
+   Its last step is `x |= x >> 32`. For a 32-bit `size_t`, as on wasm32, that shift is
+   undefined. `kseq_read` calls the macro on `seq->seq.m` while growing its buffer, so
+   the optimised build computed a bad size and corrupted the heap. The patch skips the
+   `>>32` step when `size_t` is 4 bytes. After the fix, `-O1`, `-O2` and `-O3` all match
+   native on the 468-query set. UBSan at `-O2` no longer reports the shift.
+   The AddressSanitizer route was abandoned: it did not finish in a reasonable time.
+4. **Misaligned 8-byte accesses. Open, benign here.** UBSan still reports 8-byte loads and
+   stores on addresses that are only 4-byte aligned, in `align.c`, `sketch.c` and `misc.c`.
+   The custom allocator's blocks are not 8-byte aligned for every use. Native x86 tolerates
+   this, and WASM accesses are not trapped for it, so output matches. It is still undefined
+   behaviour in C. Fixing it means changing the allocator's alignment, which is not done.
+5. **Harness limits.** Arguments not present in `inputDir` are ignored, so an input
    filename typo fails with `ERROR during mapping`, not with a clear message.
 
 ## Not done

@@ -245,7 +245,9 @@ Two findings change the plan:
   runs and nothing reports it. Any other upstream tool that uses `pthread_create`
   needs the same check. The fix is a serial path under `__EMSCRIPTEN__`
   (`web/spike/native/patches/`).
-- Only `-O1` works. `-O2` and `-O3` fail at run time, which points to undefined
-  behaviour that wasm32 exposes (a 32-bit `size_t` shift and misaligned 64-bit
-  accesses in the custom allocator). This is open. Expect the same kind of problem
-  in exonerate, and budget for it.
+- `-O2` and `-O3` failed because of undefined behaviour that wasm32 exposes. The cause
+  was a 32-bit `size_t` shift in `kroundup64`, which `kseq_read` uses while growing its
+  buffer. Fixed with a width check in the patch. All of `-O1`, `-O2` and `-O3` now match
+  native. Misaligned 8-byte accesses from the custom allocator remain as benign undefined
+  behaviour. Exonerate will likely need the same kind of check: look for shifts and
+  alignment assumptions that depend on `size_t` width.

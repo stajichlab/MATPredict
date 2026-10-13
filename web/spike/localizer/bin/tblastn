@@ -1,33 +1,72 @@
 #!/usr/bin/env python3
-"""Stand-in for tblastn: protein query vs translated genome, using MMseqs2 (translated search).
+"""Stand-in for tblastn: protein query vs translated genome, using MMseqs2's module steps.
 
-Writes the pipeline's 11-column outfmt (search.py _TBLASTN_OUTFMT). Minus-strand hits have
-sstart > send and a negative sframe, as in BLAST+. The gencode option is ignored (standard code).
+`mmseqs search` is a shell workflow (execvp), which cannot run in WebAssembly, so this calls the
+steps it would run, with the arguments captured from a real run (createdb, createdb --dbtype 2,
+extractorfs, prefilter, align, offsetalignment, convertalis). Writes the pipeline's 11-column
+outfmt (search.py _TBLASTN_OUTFMT). Minus-strand hits have sstart > send and a negative sframe.
+
+MMSEQS_CMD selects the binary, as a shell-words list: e.g. "mmseqs" (native) or
+"node /path/to/mmseqs-stk.js" (WebAssembly). The gencode option is ignored (standard code).
 """
-import os, subprocess, sys, tempfile
+import os, shlex, subprocess, sys, tempfile
 args = sys.argv[1:]
 query = args[args.index("-query") + 1]
 db = args[args.index("-db") + 1]
-S = os.environ.get("MMSEQS_S", "7.5")
-E = os.environ.get("MMSEQS_E", "10")
-MAX = os.environ.get("MMSEQS_MAX", "5000")
+CMD = shlex.split(os.environ.get("MMSEQS_CMD", "mmseqs"))
+THREADS = os.environ.get("MMSEQS_THREADS", "1")
+
+
+def mm(*a):
+    subprocess.run(CMD + list(a), check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
 with tempfile.TemporaryDirectory() as tmp:
-    qdb, tdb = os.path.join(tmp, "q"), os.path.join(tmp, "t")
-    res, work = os.path.join(tmp, "res"), os.path.join(tmp, "work")
-    def run(*a):
-        subprocess.run(["mmseqs", *a], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    run("createdb", query, qdb)
-    run("createdb", db + ".fa", tdb, "--dbtype", "2")
-    run("search", qdb, tdb, res, work, "--search-type", "2", "-s", S, "-e", E, "--max-seqs", MAX)
-    conv = os.path.join(tmp, "conv.tsv")
-    run("convertalis", qdb, tdb, res, conv, "--format-output",
-        "query,target,pident,alnlen,qlen,qstart,qend,tstart,tend,evalue,bits")
-    out = sys.stdout
+    p = lambda name: os.path.join(tmp, name)
+    q, t, res = p("q"), p("t"), p("res")
+    work = os.path.join(tmp, "work")
+    os.makedirs(os.path.join(work, "search"), exist_ok=True)
+    orfs, pref, aln = p("t_orfs_aa"), os.path.join(work, "search", "pref_0"), p("aln")
+    conv = p("conv.tsv")
+    # Step arguments as captured from `mmseqs search -s 7.5 -e 10 --max-seqs 5000 --search-type 2`.
+    mm("createdb", query, q)
+    mm("createdb", db + ".fa", t, "--dbtype", "2")
+    mm("extractorfs", t, orfs, "--min-length", "30", "--max-length", "32734", "--max-gaps", "2147483647",
+       "--contig-start-mode", "2", "--contig-end-mode", "2", "--orf-start-mode", "1",
+       "--forward-frames", "1,2,3", "--reverse-frames", "1,2,3", "--translation-table", "1",
+       "--translate", "1", "--use-all-table-starts", "0", "--id-offset", "0", "--create-lookup", "0",
+       "--threads", THREADS, "--compressed", "0", "-v", "3")
+    mm("prefilter", q, orfs, pref,
+       "--sub-mat", "b64:YWE6Ymxvc3VtNjIub3V0LG51Y2w6bnVjbGVvdGlkZS5vdXQ=",
+       "--seed-sub-mat", "b64:YWE6VlRNTDgwLm91dCxudWNsOm51Y2xlb3RpZGUub3V0",
+       "-k", "0", "--target-search-mode", "0", "--k-score", "seq:2147483647,prof:2147483647",
+       "--alph-size", "aa:21,nucl:5", "--max-seq-len", "65535", "--max-seqs", os.environ.get("MMSEQS_MAX", "5000"),
+       "--split", "0", "--split-mode", "2", "--split-memory-limit", "0", "-c", "0", "--cov-mode", "0",
+       "--comp-bias-corr", "1", "--comp-bias-corr-scale", "1", "--diag-score", "1",
+       "--exact-kmer-matching", "0", "--mask", "1", "--mask-prob", "0.9", "--mask-lower-case", "0",
+       "--mask-n-repeat", "0", "--min-ungapped-score", "15", "--add-self-matches", "0",
+       "--spaced-kmer-mode", "1", "--db-load-mode", "0", "--pca", "substitution:1.100,context:1.400",
+       "--pcb", "substitution:4.100,context:5.800", "--threads", THREADS, "--compressed", "0", "-v", "3",
+       "-s", os.environ.get("MMSEQS_S", "7.5"))
+    mm("align", q, orfs, pref, aln,
+       "--sub-mat", "b64:YWE6Ymxvc3VtNjIub3V0LG51Y2w6bnVjbGVvdGlkZS5vdXQ=", "-a", "0", "--alignment-mode", "2",
+       "--alignment-output-mode", "0", "--wrapped-scoring", "0", "-e", os.environ.get("MMSEQS_E", "10"),
+       "--min-seq-id", "0", "--min-aln-len", "0", "--seq-id-mode", "0", "--alt-ali", "0", "-c", "0",
+       "--cov-mode", "0", "--max-seq-len", "65535", "--comp-bias-corr", "1", "--comp-bias-corr-scale", "1",
+       "--max-rejected", "2147483647", "--max-accept", "2147483647", "--add-self-matches", "0",
+       "--db-load-mode", "0", "--pca", "substitution:1.100,context:1.400", "--pcb", "substitution:4.100,context:5.800",
+       "--score-bias", "0", "--realign", "0", "--realign-score-bias", "-0.2", "--realign-max-seqs", "2147483647",
+       "--corr-score-weight", "0", "--gap-open", "aa:11,nucl:5", "--gap-extend", "aa:1,nucl:2", "--zdrop", "40",
+       "--threads", THREADS, "--compressed", "0", "-v", "3")
+    mm("offsetalignment", q, q, t, orfs, aln, res, "--chain-alignments", "0", "--merge-query", "1",
+       "--search-type", "2", "--threads", THREADS, "--compressed", "0", "--db-load-mode", "0", "-v", "3")
+    mm("convertalis", q, t, res, conv, "--format-output",
+       "query,target,pident,alnlen,qlen,qstart,qend,tstart,tend,evalue,bits")
     with open(conv) as fh:
         for line in fh:
-            q, t, pid, alnlen, qlen, qs, qe, ts, te, ev, bits = line.rstrip("\n").split("\t")
+            qn, tn, pid, alnlen, qlen, qs, qe, ts, te, ev, bits = line.rstrip("\n").split("\t")
             qlen = int(qlen)
             qcov = 100.0 * (int(qe) - int(qs) + 1) / qlen
             sframe = 1 if int(ts) < int(te) else -1
-            out.write("\t".join([q, t, pid, alnlen, str(qlen), f"{qcov:.3f}", ev, bits,
-                                 ts, te, str(sframe)]) + "\n")
+            sys.stdout.write("\t".join([qn, tn, pid, alnlen, str(qlen), f"{qcov:.3f}", ev, bits,
+                                        ts, te, str(sframe)]) + "\n")

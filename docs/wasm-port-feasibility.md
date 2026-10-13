@@ -275,3 +275,16 @@ WebAssembly path for MMseqs2 (`web/spike/native/mmseqs2/`):
 - Two source fixes were needed in the patch: a deprecated link flag (`-sRELOCATABLE=1`) and an
   explicit cast in `Fwbw.cpp`. The second is a compiler-version issue, not a logic change.
 - Build status: in progress. Runtime (threads, memory mapping, output parity) is untested.
+
+### MMseqs2 threading (decision and future work)
+
+- **Decision (2026-10-12): build MMseqs2 for WebAssembly without threads.** Accepted for the
+  current spike. Single-threaded search is slower, but it avoids shared memory, so the page
+  needs no cross-origin isolation headers and runs in Node and in a browser.
+- **Current blocker for the unthreaded build:** the link still requests shared memory, because one
+  linked object is compiled with atomics. With `-pthread` the mismatch moves to the Rust standard
+  library object. Rustc's `-C target-feature=-atomics` did not clear it. Not yet identified which
+  object carries the atomics feature.
+- **Future optimization:** a threaded build needs shared memory at runtime, so the deployment must
+  serve cross-origin isolation headers (or accept a Node-only runtime). Decide this before
+  measuring multi-threaded speed.

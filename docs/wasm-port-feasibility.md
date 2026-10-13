@@ -288,3 +288,13 @@ WebAssembly path for MMseqs2 (`web/spike/native/mmseqs2/`):
 - **Future optimization:** a threaded build needs shared memory at runtime, so the deployment must
   serve cross-origin isolation headers (or accept a Node-only runtime). Decide this before
   measuring multi-threaded speed.
+
+### MMseqs2 WebAssembly build: result (2026-10-12)
+
+- Builds unthreaded from a clean clone with zero errors (`web/spike/native/mmseqs2/`).
+- Translated search matches a native build of the same commit on the test input (2418/2418
+  lines after sort).
+- The threaded build is still blocked (the Rust std object lacks atomics). The unthreaded build
+  needs no shared memory, so the browser needs no cross-origin isolation headers.
+- Not yet done: wiring the localizer to the module calls (instead of `mmseqs search`), and the
+  detect comparison with the new localizer.

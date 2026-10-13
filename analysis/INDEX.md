@@ -46,6 +46,8 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | 10-05 | [Dothideomycetes: SLA2 not beside the MAT locus](2026-10-05_dothideomycetes-sla2.md) | open | SLA2 in all 200 sampled genomes but inside the locus in 14% (80% in Sordariomycetes); Cladosporiales exception |
 | 10-05 | [Dothideomycetes: full run with the curated records](2026-10-05_dothideomycetes-full-run.md) | open (polish cap) | 89.4% to 89.8% called; Parastagonospora 178:4 to 91:91 MAT1-1:MAT1-2; 15 calls lost to the cap, all return with it off |
 | 10-12 | [Verticillium and proposed records: the five call changes](2026-10-12_verticillium-records-call-changes.md) | open | 7-variant ablation on 5 genomes; Aureobasidium MAT1-2-1 repaired (454 bp, 3 stops -> 459 bp, 0 stops); Bertia third-locus call from TV103 or VdLs.17 on a 1.66-point margin, unresolved |
+| 10-12 | [tblastn-fast as localize engine](2026-10-12_tblastn-fast-engine.md) | open | 4.7x faster search; 41/44 truth placements both modes; 86.6% of strong best hits kept; panel: 2 calls lost (both weak-evidence Basidiomycota), 0 idiomorph changes |
+
 
 ## Validation and held-out sets
 | Date | Report | Status | Key numbers |

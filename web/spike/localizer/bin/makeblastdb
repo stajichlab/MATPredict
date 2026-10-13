@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+"""Stand-in for makeblastdb: the pipeline only needs the genome FASTA behind the prefix."""
+import shutil, sys
+args = sys.argv[1:]
+src = args[args.index("-in") + 1]
+prefix = args[args.index("-out") + 1]
+shutil.copy(src, prefix + ".fa")

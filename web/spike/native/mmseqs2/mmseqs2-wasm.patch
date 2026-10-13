@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 04dc1df..dcafe2c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -251,7 +251,7 @@ corrosion_import_crate(
+ )
+ include_directories(lib/block-aligner/c)
+ if(EMSCRIPTEN)
+-    corrosion_add_target_local_rustflags(block_aligner_c "-Clink-args=--no-entry -sRELOCATABLE=1")
++    corrosion_add_target_local_rustflags(block_aligner_c "-Clink-args=--no-entry")
+ endif()
+ 
+ if (USE_SYSTEM_ZSTD)
+diff --git a/src/alignment/Fwbw.cpp b/src/alignment/Fwbw.cpp
+index f2fd6b2..4e97a39 100644
+--- a/src/alignment/Fwbw.cpp
++++ b/src/alignment/Fwbw.cpp
+@@ -603,7 +603,7 @@ void FwBwAligner::forward() {
+ 
+     //Calculate max_zm
+     for (size_t i = 0; i < VECSIZE_FLOAT; ++i) {
+-        max_zm = std::max(max_zm, vMax_zm[i]);
++        max_zm = std::max(max_zm, static_cast<float>(vMax_zm[i]));
+     }
+     vMax_zm = simdf32_set(max_zm);
+ 
+@@ -939,7 +939,7 @@ void FwBwAligner::computeProbabilityMatrix() {
+ 
+     // Calculate the maximum probability
+     for (size_t k = 0; k < VECSIZE_FLOAT; ++k) {
+-        maxP = std::max(maxP, vMaxP[k]);
++        maxP = std::max(maxP, static_cast<float>(vMaxP[k]));
+     }
+ 
+ }

@@ -251,3 +251,27 @@ Two findings change the plan:
   native. Misaligned 8-byte accesses from the custom allocator remain as benign undefined
   behaviour. Exonerate will likely need the same kind of check: look for shifts and
   alignment assumptions that depend on `size_t` width.
+
+## Localizer options (tblastn replacement)
+
+Measured against native BLAST+ 2.17.0 `tblastn` on `testset/MAT_loci3.fasta` (see
+`web/spike/localizer/README.md`):
+
+- **miniprot as localizer: not viable.** HSP recall 3.2%; 19% of strong queries found.
+  Its gene-model seeding misses divergent MAT homologues, and denser sampling did not help.
+- **MMseqs2 (translated search): viable as localizer.** At `-s 7.5 -e 10`, 99.5% of strong
+  queries are found and 86.8% of HSPs. Its bit scores run about 5% below BLAST+, and it misses
+  57% of 20-50-bit HSPs. End-to-end, `detect` returns the same locus on the test input, with
+  different withheld candidates.
+- **exonerate protein2dna (exhaustive): not usable here.** Stalled on native and WebAssembly runs.
+- **protein2genome is the wrong model for localization** (introns and splicing). protein2dna is
+  the analogue of tblastn.
+
+WebAssembly path for MMseqs2 (`web/spike/native/mmseqs2/`):
+
+- Upstream has an Emscripten branch (`MMSEQS_ARCH` with `simd128`, Rust `simd_wasm` for the
+  block aligner). It is not exercised in upstream CI as far as the repo shows.
+- Needs rustup's wasm32 toolchain: Homebrew's Rust has no wasm32 standard library.
+- Two source fixes were needed in the patch: a deprecated link flag (`-sRELOCATABLE=1`) and an
+  explicit cast in `Fwbw.cpp`. The second is a compiler-version issue, not a logic change.
+- Build status: in progress. Runtime (threads, memory mapping, output parity) is untested.

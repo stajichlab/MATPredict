@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+"""Stand-in for tblastn: protein query vs translated genome, using MMseqs2 (translated search).
+
+Writes the pipeline's 11-column outfmt (search.py _TBLASTN_OUTFMT). Minus-strand hits have
+sstart > send and a negative sframe, as in BLAST+. The gencode option is ignored (standard code).
+"""
+import os, subprocess, sys, tempfile
+args = sys.argv[1:]
+query = args[args.index("-query") + 1]
+db = args[args.index("-db") + 1]
+S = os.environ.get("MMSEQS_S", "7.5")
+E = os.environ.get("MMSEQS_E", "10")
+MAX = os.environ.get("MMSEQS_MAX", "5000")
+with tempfile.TemporaryDirectory() as tmp:
+    qdb, tdb = os.path.join(tmp, "q"), os.path.join(tmp, "t")
+    res, work = os.path.join(tmp, "res"), os.path.join(tmp, "work")
+    def run(*a):
+        subprocess.run(["mmseqs", *a], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    run("createdb", query, qdb)
+    run("createdb", db + ".fa", tdb, "--dbtype", "2")
+    run("search", qdb, tdb, res, work, "--search-type", "2", "-s", S, "-e", E, "--max-seqs", MAX)
+    conv = os.path.join(tmp, "conv.tsv")
+    run("convertalis", qdb, tdb, res, conv, "--format-output",
+        "query,target,pident,alnlen,qlen,qstart,qend,tstart,tend,evalue,bits")
+    out = sys.stdout
+    with open(conv) as fh:
+        for line in fh:
+            q, t, pid, alnlen, qlen, qs, qe, ts, te, ev, bits = line.rstrip("\n").split("\t")
+            qlen = int(qlen)
+            qcov = 100.0 * (int(qe) - int(qs) + 1) / qlen
+            sframe = 1 if int(ts) < int(te) else -1
+            out.write("\t".join([q, t, pid, alnlen, str(qlen), f"{qcov:.3f}", ev, bits,
+                                 ts, te, str(sframe)]) + "\n")

@@ -299,6 +299,31 @@ def test_search_localize_normalizes_minus_strand_and_batches_one_call(tmp_path):
     assert len(tblastn_calls) == 1
 
 
+def _localize_cmd(tmp_path, **kw):
+    seen = []
+
+    def runner(cmd, **kwargs):
+        seen.append(cmd)
+        return fake_tblastn_runner(cmd, **kwargs)
+
+    search_localize(tmp_path / "g.fa", [], tmp_path / "ref.faa", {}, runner=runner, **kw)
+    return next(c for c in seen if c[0] == "tblastn")
+
+
+def test_search_localize_default_task_adds_no_task_flag(tmp_path):
+    assert "-task" not in _localize_cmd(tmp_path)
+
+
+def test_search_localize_passes_tblastn_fast_task(tmp_path):
+    cmd = _localize_cmd(tmp_path, task="tblastn-fast")
+    assert cmd[cmd.index("-task") + 1] == "tblastn-fast"
+
+
+def test_search_localize_rejects_unknown_task(tmp_path):
+    with pytest.raises(ValueError, match="unknown tblastn task"):
+        _localize_cmd(tmp_path, task="blastx")
+
+
 def test_search_localize_raises_on_nonzero_returncode(tmp_path):
     def failing_runner(cmd, **kwargs):
         if cmd[0] == "makeblastdb":

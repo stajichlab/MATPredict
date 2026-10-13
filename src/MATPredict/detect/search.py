@@ -427,6 +427,15 @@ def _gencode_args(genetic_code: int | None, flag: str) -> list[str]:
     return [flag, str(int(genetic_code))]
 
 
+#: `tblastn -task` values `search_localize` accepts. `tblastn` is BLAST's own
+#: default; `tblastn-fast` (BLAST >= 2.12) trades sensitivity for speed.
+LOCALIZE_TASKS = ("tblastn", "tblastn-fast")
+
+#: The task a run uses when the caller names none. Experiment: see
+#: analysis/tblastn_fast/ for the measured speed and sensitivity trade-off.
+DEFAULT_LOCALIZE_TASK = "tblastn"
+
+
 def search_localize(
     genome_fasta: Path,
     families: list[Family],
@@ -434,6 +443,7 @@ def search_localize(
     record_families: dict[str, FamilyKey],
     runner: Callable = subprocess.run,
     genetic_code: int | None = None,
+    task: str | None = None,
 ) -> list[SearchHit]:
     """Genome-wide tblastn localization -- one blastdb build and one
     tblastn call cover every routed family's genes (core_MAT and
@@ -442,7 +452,14 @@ def search_localize(
 
     `-seg no` disables low-complexity filtering so short, simple
     pheromone-precursor queries are not suppressed.
+
+    `task` is the `tblastn -task` value (`LOCALIZE_TASKS`); None means
+    `DEFAULT_LOCALIZE_TASK`. The default task adds no flag, so its command line
+    is unchanged.
     """
+    task = DEFAULT_LOCALIZE_TASK if task is None else task
+    if task not in LOCALIZE_TASKS:
+        raise ValueError(f"unknown tblastn task {task!r}; expected one of {LOCALIZE_TASKS}")
     roles_by_family = _roles_by_family(families)
 
     with tempfile.TemporaryDirectory() as tmp_dir_name:
@@ -453,7 +470,7 @@ def search_localize(
         cmd = [
             "tblastn", "-query", str(reference_fasta), "-db", str(db_prefix),
             "-seg", "no", "-outfmt", _TBLASTN_OUTFMT,
-        ] + _gencode_args(genetic_code, "-db_gencode")
+        ] + (["-task", task] if task != "tblastn" else []) + _gencode_args(genetic_code, "-db_gencode")
         result = _run_checked(runner, cmd)
 
         hits: list[SearchHit] = []

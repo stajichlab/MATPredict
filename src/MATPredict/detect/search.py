@@ -433,7 +433,7 @@ LOCALIZE_TASKS = ("tblastn", "tblastn-fast")
 
 #: The task a run uses when the caller names none. Experiment: see
 #: analysis/tblastn_fast/ for the measured speed and sensitivity trade-off.
-DEFAULT_LOCALIZE_TASK = "tblastn"
+DEFAULT_LOCALIZE_TASK = "tblastn-fast"
 
 
 def search_localize(

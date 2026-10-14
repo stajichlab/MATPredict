@@ -2544,11 +2544,15 @@ def run_pipeline(
                 continue
             clf = load_classifier(family.idiomorph_classifier, family)
             gene_idiomorph = classifier_genes(family)
+            # The verdict scores the WINNERS of resolved pairs only: a set-aside
+            # gene's protein says nothing about this locus's idiomorph.
+            set_aside = {e.loser for e in idiomorph_events_by_cluster.get(id(cluster), ())}
             # One entry per scored model: (gene, span, protein).
             scored_models = []
             frameshift_corrected = False
             for (cluster_id, key, gene), outcome in polish_by.items():
-                if cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph:
+                if (cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph
+                        or gene in set_aside):
                     continue
                 for model in (outcome.miniprot_model, outcome.exonerate_model):
                     if model is None:
@@ -2565,11 +2569,11 @@ def run_pipeline(
                 # No core protein was modelled: score the tblastn HSP
                 # translations instead (curator's ruling 2026-09-27), rather
                 # than letting an identity comparison of short hits decide.
-                # Superseded hits are scored too -- the verdict must see both
-                # halves of the pair. `min_margin` still applies.
+                # Superseded (set-aside) hits are not scored: winners only.
+                # `min_margin` still applies.
                 for h in cluster.hits:
                     if (h.family_key != family.key or h.gene_name not in gene_idiomorph
-                            or h.method != "tblastn_genome"):
+                            or h.method != "tblastn_genome" or h.superseded_by is not None):
                         continue
                     span = types.SimpleNamespace(
                         contig=h.contig, start=h.start, end=h.end, strand=h.strand, exons=())

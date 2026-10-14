@@ -1,0 +1,83 @@
+# Build the browser page's WebAssembly bundle and publish it to GitHub Pages.
+#
+# Runs only on version tags (v*) and on manual dispatch, so routine development pushes never change the
+# live page. Setup, once per repository: Settings -> Pages -> Build and deployment -> Source: GitHub Actions.
+name: Deploy browser page
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deployment at a time; a newer one waits rather than cancelling a deploy in progress.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: System packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential cmake patch autoconf automake \
+            libtool bison flex pkg-config xz-utils bzip2 unzip zlib1g-dev
+
+      # emsdk, Rust and the Pyodide build environment are the slow part; cache them keyed on the pinned
+      # setup script, so a version bump there rebuilds them and nothing else does.
+      - name: Cache toolchains
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/emsdk
+            ~/emsdk-3.1.58
+            ~/pyhmmer-tools
+            ~/.cargo
+            ~/.rustup
+          key: toolchains-${{ runner.os }}-${{ hashFiles('web/spike/ci/setup-toolchains.sh') }}
+
+      - name: Install toolchains
+        run: |
+          echo "PYHMMER_TOOLS=$HOME/pyhmmer-tools" >> "$GITHUB_ENV"
+          bash web/spike/ci/setup-toolchains.sh
+
+      - name: Build WebAssembly bundle
+        run: bash web/spike/browser/build-bundle.sh "$RUNNER_TEMP/work" "$RUNNER_TEMP/bundle"
+
+      - name: Install the page's JavaScript dependency
+        run: npm ci --prefix web/spike
+
+      - name: Assemble the site
+        run: bash web/spike/page/build-site.sh "$RUNNER_TEMP/bundle" "$RUNNER_TEMP/site"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+
+  deploy:
+    needs: bundle
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

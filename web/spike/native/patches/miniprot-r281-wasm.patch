@@ -24,7 +24,19 @@
  #ifdef __cplusplus
 --- kthread.c
 +++ kthread.c
-@@ -129,6 +129,18 @@
+@@ -53,6 +53,11 @@
+ 
+ void kt_for(int n_threads, void (*func)(void*,long,int), void *data, long n)
+ {
++#ifdef __EMSCRIPTEN__
++	/* WebAssembly build: no pthreads, so run the loop serially (no worker threads). */
++	{ long j; for (j = 0; j < n; ++j) func(data, j, 0); }
++	return;
++#endif
+ 	if (n_threads > 1) {
+ 		int i;
+ 		kt_for_t t;
+@@ -129,6 +134,18 @@
  
  void kt_pipeline(int n_threads, void *(*func)(void*, int, void*), void *shared_data, int n_steps)
  {

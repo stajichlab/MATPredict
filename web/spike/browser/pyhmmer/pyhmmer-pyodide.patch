@@ -162,3 +162,24 @@ diff --color -ru -x b pristine/pyhmmer-0.12.3/vendor/easel/esl_stopwatch.c pyhmm
  
  #include "easel.h"
  #include "esl_stopwatch.h"
+diff --color -ru -x b pristine/pyhmmer-0.12.3/vendor/hmmer/src/impl_sse/p7_oprofile.c pyhmmer-0.12.3/vendor/hmmer/src/impl_sse/p7_oprofile.c
+--- pristine/pyhmmer-0.12.3/vendor/hmmer/src/impl_sse/p7_oprofile.c	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/vendor/hmmer/src/impl_sse/p7_oprofile.c	2026-10-13 22:30:34
+@@ -669,7 +669,7 @@
+   uint8_t b;
+ 
+   sc  = -1.0f * roundf(om->scale_b * sc);                          /* ugh. sc is now an integer cost represented in a float...           */
+-  b   = (sc > 255 - om->bias_b) ? 255 : (uint8_t) sc + om->bias_b; /* and now we cast, saturate, and bias it to an unsigned char cost... */
++  b   = (sc > 255 - om->bias_b) ? 255 : (uint8_t) ((int) sc + (int) om->bias_b); /* cast, saturate, and bias it: negative costs wrap mod 256 (defined via int) */
+   return b;
+ }
+  
+@@ -685,7 +685,7 @@
+   uint8_t b;
+ 
+   sc  = -1.0f * roundf(om->scale_b * sc);       /* ugh. sc is now an integer cost represented in a float...    */
+-  b   = (sc > 255.) ? 255 : (uint8_t) sc;	/* and now we cast and saturate it to an unsigned char cost... */
++  b   = (sc > 255.) ? 255 : (uint8_t) (int) sc;	/* cast via int: negative values wrap mod 256, as on x86, without undefined behaviour */
+   return b;
+ }
+  

@@ -20,7 +20,7 @@ const LOC_DIR = process.env.LOCALIZER_DIR ?? join(home, "web/spike/localizer");
 const BRIDGE_DIR = process.env.BRIDGE_DIR ?? join(home, "web/spike/browser/python");
 
 const py = await loadPyodide();
-await py.loadPackage(["biopython", "pyyaml", "jsonschema", "zstandard", "requests"]);
+await py.loadPackage(["biopython", "pyyaml", "jsonschema", "zstandard", "requests", "micropip"]);
 
 // Mount the database and genome in Pyodide's filesystem (in a browser these come from fetch/upload).
 function mount(src, dst) {
@@ -38,6 +38,10 @@ py.FS.mkdirTree("/out");
 
 // Package and bridge files into Pyodide.
 py.FS.writeFile("/tmp/matpredict.whl", readFileSync(WHEEL));
+const PYHMMER_WHL = process.env.PYHMMER_WHL ?? join(home, "web/spike/browser/pyhmmer/pyhmmer-0.12.3-cp312-cp312-pyodide_2024_0_wasm32.whl");
+py.FS.writeFile("/" + basename(PYHMMER_WHL), readFileSync(PYHMMER_WHL));
+py.FS.mkdirTree("/psutil_stub");
+py.FS.writeFile("/psutil_stub/psutil.py", readFileSync(join(home, "web/spike/browser/pyhmmer/psutil.py")));
 py.FS.mkdirTree("/browser");
 for (const f of ["localizer.py"]) py.FS.writeFile(`/browser/${f}`, readFileSync(join(LOC_DIR, f)));
 py.FS.writeFile("/browser/bridge.py", readFileSync(join(BRIDGE_DIR, "bridge.py")));
@@ -46,7 +50,7 @@ py.FS.writeFile("/browser/bridge.py", readFileSync(join(BRIDGE_DIR, "bridge.py")
 const factories = {
   mmseqs: (await import(pathToFileURL(join(WASM_DIR, "mmseqs-repro/build/src/mmseqs-mem.js")).href)).default,
   exonerate: (await import(pathToFileURL(join(WASM_DIR, "exo-wasm/src/program/exonerate-mem")).href)).default,
-  miniprot: (await import(pathToFileURL(join(WASM_DIR, "miniprot-mem/miniprot.mjs")).href)).default,
+  miniprot: (await import(pathToFileURL(join(WASM_DIR, "miniprot-mem2/miniprot.mjs")).href)).default,
 };
 const host = new ToolHost({ pyFS: py.FS, factories });
 globalThis.js_run = (argvJson) => host.run(JSON.parse(argvJson)).then((r) => JSON.stringify(r));
@@ -55,6 +59,9 @@ const result = await py.runPythonAsync(`
 import os, sys, zipfile, argparse, traceback
 os.environ["MATPREDICT_DB_ROOT"] = "/db"
 zipfile.ZipFile("/tmp/matpredict.whl").extractall("/site_pkgs")
+sys.path.insert(0, "/psutil_stub")
+import micropip
+await micropip.install("emfs:/${basename(PYHMMER_WHL)}", deps=False)
 sys.path[:0] = ["/site_pkgs", "/browser"]
 import bridge  # installs the subprocess routing before any MATPredict import
 from MATPredict.detect import cli as detect_cli

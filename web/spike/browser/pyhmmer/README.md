@@ -11,7 +11,23 @@ pyhmmer 0.12.3 (the version MATPredict pins) built for Pyodide 0.27.7 (CPython 3
 - Flags: `CFLAGS=-I<shim>` (x86intrin.h stand-in), `LDFLAGS=-sWASM_BIGINT`.
 - Result: builds `pyhmmer-0.12.3-cp312-cp312-pyodide_2024_0_wasm32.whl`.
 
-## Status (update 2026-10-13)
+## Status (2026-10-13): fixed
+
+Root cause of the MSV difference: `biased_byteify()` and `unbiased_byteify()` in
+`hmmer/src/impl_sse/p7_oprofile.c` cast a negative float to `uint8_t`. That is undefined behaviour.
+x86 wraps modulo 256, so `(uint8_t)(-5) + 19` gives 14, the correct value. WebAssembly saturates to 0,
+so every favourable emission became the bias value (19). The fix converts through `int`, which is
+defined and gives the same result as x86 (`patch: p7_oprofile.c`).
+
+Result: the WebAssembly build matches the x86 SSE reference on all 25 classifier hits (identical scores,
+the arm64 NEON wheel differs by 0.001 on one score). Phycomyces browser run with the classifier: the
+locus, GFF and suppressed loci match the native run that uses the same MMseqs2 localizer; the only
+difference is `idiomorph_margin` in the seventh significant digit (floating-point variation).
+
+Also fixed in miniprot (`kt_for` serial under Emscripten): miniprot's default 4 threads created
+pthreads, which the WebAssembly build does not have, so polish models were silently missing.
+
+## Status (2026-10-13, earlier)
 
 - Step 1 (cause found): liblibhmmer and liblibeasel call each other through Pyodide's dynamic-link
   proxy. Easel's `esl_index_t` is int64, so many of these calls pass 64-bit values, which JavaScript

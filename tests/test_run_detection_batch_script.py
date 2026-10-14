@@ -20,7 +20,10 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
 from pathlib import Path
+
+import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -221,6 +224,7 @@ def _run_wrapper(tmp_path: Path, args: list[str]):
     return completed, argv
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="runs the SLURM wrapper via /usr/bin/bash (Linux only); runs on HPCC")
 def test_slurm_wrapper_forwards_scope_and_floor_flags(tmp_path):
     completed, argv = _run_wrapper(
         tmp_path,
@@ -240,6 +244,7 @@ def test_slurm_wrapper_forwards_scope_and_floor_flags(tmp_path):
     ]
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="runs the SLURM wrapper via /usr/bin/bash (Linux only); runs on HPCC")
 def test_slurm_wrapper_keeps_the_three_positional_form_working(tmp_path):
     """Existing invocations must not break."""
     completed, argv = _run_wrapper(tmp_path, ["batch.json", "db", "out"])
@@ -250,6 +255,7 @@ def test_slurm_wrapper_keeps_the_three_positional_form_working(tmp_path):
     ]
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="runs the SLURM wrapper via /usr/bin/bash (Linux only); runs on HPCC")
 def test_slurm_wrapper_logs_the_scope_it_ran_with(tmp_path):
     """Whether the query set was narrowed changes what the run's negatives
     mean, and the sbatch command line is not recorded in the job log. The log
@@ -263,6 +269,7 @@ def test_slurm_wrapper_logs_the_scope_it_ran_with(tmp_path):
     assert "phylum=<none>" in unscoped.stdout
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="runs the SLURM wrapper via /usr/bin/bash (Linux only); runs on HPCC")
 def test_slurm_wrapper_logs_the_scope_for_the_equals_spelling(tmp_path):
     scoped, argv = _run_wrapper(
         tmp_path, ["batch.json", "db", "out", "--phylum=Mucoromycota"]
@@ -271,6 +278,7 @@ def test_slurm_wrapper_logs_the_scope_for_the_equals_spelling(tmp_path):
     assert argv[-1] == "--phylum=Mucoromycota"
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="runs the SLURM wrapper via /usr/bin/bash (Linux only); runs on HPCC")
 def test_slurm_wrapper_still_rejects_missing_positionals(tmp_path):
     completed, argv = _run_wrapper(tmp_path, ["batch.json", "db"])
     assert completed.returncode == 1

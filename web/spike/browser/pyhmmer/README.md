@@ -38,10 +38,18 @@ Ruled out (WebAssembly results identical to x86):
 - evalue parameters (`params.py`: MSV, Viterbi and Forward values identical)
 - optimisation level (the `-O0` build gives the same result)
 
-Still to test:
-- our patches one at a time (the `cpuid` stand-in, the SSE header change, the stopwatch replacements);
-- the static linking: each extension has its own copy of Easel and HMMER, so shared state
-  (lookup tables, initialised globals) may differ between modules.
+Patch tests (`run-variants.sh`), each compared with the same filter-variant test:
+- revert the SSE header change: still 0 default hits (F1=1 gives 3);
+- revert the stopwatch replacements: still 0 default hits;
+- revert the `cpuid` stand-in: does not compile, so the original cannot be restored as a test;
+- `cpuid` stand-in reporting SSE and SSE4.1 features: still 0 default hits.
+So none of the patches is the cause.
+
+Remaining suspects: the static copies of Easel and HMMER. The search runs inside one
+extension, so duplication is unlikely to matter for the search itself, which makes it a weaker
+candidate. The most likely remaining cause is code-level: a difference in how the emulated SSE
+code runs as a whole, not any single intrinsic. Next step: a generic (non-SIMD) MSV path, or
+per-stage score dumps from both builds, to locate the first differing value.
 
 ## Status (earlier)
 

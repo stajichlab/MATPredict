@@ -17,7 +17,10 @@ mkdir -p "$WORK" && cd "$WORK"
 TOOLS="${PYHMMER_TOOLS:-$HOME/wasm-build/pyhmmer}"
 [ -e pb312 ] || ln -s "$TOOLS/pb312" pb312
 [ -e .pyodide-xbuildenv-0.27.3 ] || ln -s "$TOOLS/.pyodide-xbuildenv-0.27.3" .pyodide-xbuildenv-0.27.3
-[ -f pyhmmer-0.12.3.tar.gz ] || python3 -m pip download --no-binary :all: --no-deps "pyhmmer==0.12.3" -d . -q
+# Download with the Python 3.12 toolchain, not whatever python3 is first on PATH (the system 3.9 pip
+# stalled on retries here). An already-present sdist is reused.
+PY_DL="$TOOLS/pb312/bin/python3"; [ -x "$PY_DL" ] || PY_DL=python3
+[ -f pyhmmer-0.12.3.tar.gz ] || "$PY_DL" -m pip download --no-binary :all: --no-deps "pyhmmer==0.12.3" -d . -q
 rm -rf pyhmmer-0.12.3 && tar xzf pyhmmer-0.12.3.tar.gz
 patch -p0 -i "$HERE/pyhmmer-pyodide.patch" > /dev/null
 source "$HOME/emsdk-3.1.58/emsdk_env.sh" > /dev/null 2>&1

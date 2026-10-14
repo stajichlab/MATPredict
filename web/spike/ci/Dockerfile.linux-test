@@ -1,0 +1,12 @@
+# Linux test of the whole bundle build, as GitHub Actions will run it (ubuntu-24.04).
+# Build:  docker build -f web/spike/ci/Dockerfile.linux-test -t matpredict-bundle web/spike/ci
+# Run:    docker run --rm -v "$PWD":/src:ro -v "$PWD/.bundle-test":/out matpredict-bundle
+FROM ubuntu:24.04
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYHMMER_TOOLS=/root/pyhmmer-tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      build-essential cmake git curl ca-certificates patch autoconf automake libtool \
+      bison flex pkg-config xz-utils bzip2 unzip zlib1g-dev python3.12 python3.12-venv \
+      nodejs npm && rm -rf /var/lib/apt/lists/*
+WORKDIR /work
+CMD ["bash", "-c", "bash /src/web/spike/ci/setup-toolchains.sh && bash /src/web/spike/browser/build-bundle.sh /work/build /out"]

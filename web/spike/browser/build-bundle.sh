@@ -3,8 +3,9 @@
 #   miniprot   - gene-model polish (modular in-memory module)
 #   mmseqs     - translated search for the localizer (modular in-memory module)
 #   pyhmmer    - Pyodide wheel for the Mucoromycota classifier
-# exonerate is built by web/spike/native/exonerate/build-exo-wasm.sh (it needs the native shim tree);
-# see its README. Usage: build-bundle.sh <work-dir> <bundle-dir>
+#   exonerate  - protein-to-genome refinement (modular in-memory module), pinned source
+#   losat      - tblastn localizer as a WASI command (run in memory by the page)
+# Usage: build-bundle.sh <work-dir> <bundle-dir>
 set -eo pipefail
 WORK="$1"; BUNDLE="$2"
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -26,5 +27,15 @@ cp "$WORK/mmseqs/build/src/mmseqs-mem.js" "$WORK/mmseqs/build/src/mmseqs-mem.was
 # pyhmmer: Pyodide wheel.
 bash "$HERE/pyhmmer/build-pyhmmer-wasm.sh" "$WORK/pyhmmer" > "$WORK/pyhmmer.log" 2>&1
 cp "$WORK/pyhmmer/dist/"*.whl "$BUNDLE/"
+
+# exonerate: pinned 2.4.0 source against glib-lite, modular in-memory module.
+bash "$REPO/web/spike/native/exonerate/build-exonerate-wasm.sh" "$WORK/exonerate" > "$WORK/exonerate.log" 2>&1
+mkdir -p "$BUNDLE/exonerate"
+cp "$WORK/exonerate/out/exonerate-mem.js" "$WORK/exonerate/out/exonerate.wasm" "$BUNDLE/exonerate/"
+
+# LOSAT: pinned commit, WASI build (wasm32-wasip1).
+bash "$REPO/web/spike/native/losat/build-losat-wasi.sh" "$WORK/losat" > "$WORK/losat.log" 2>&1
+mkdir -p "$BUNDLE/losat"
+cp "$WORK/losat/LOSAT/LOSAT/target/wasm32-wasip1/release/LOSAT.wasm" "$BUNDLE/losat/"
 
 ls -la "$BUNDLE"

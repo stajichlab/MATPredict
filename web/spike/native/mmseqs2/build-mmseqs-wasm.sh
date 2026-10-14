@@ -10,8 +10,8 @@ mkdir -p "$WORK" && cd "$WORK"
 [ -d MMseqs2 ] || git clone -q https://github.com/soedinglab/MMseqs2.git
 git -C MMseqs2 checkout -q "$PINNED"
 git -C MMseqs2 apply "$HERE/mmseqs2-wasm.patch"
-# Rust must come from rustup: Homebrew's rustc has no wasm32 standard library.
-export PATH="$HOME/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$PATH"
+# Rust must come from rustup: a distro or Homebrew rustc has no wasm32 standard library.
+# (ci/setup-toolchains.sh installs it and the wasm32-unknown-emscripten target.)
 source ~/emsdk/emsdk_env.sh >/dev/null 2>&1
 rm -rf build && mkdir build && cd build
 # OpenMP off: upstream's serial mode (no -fopenmp, so no atomics; ips4o uses its serial sort).

@@ -5,16 +5,18 @@
 #
 # Notes:
 #  - The crate is in the LOSAT/ subdirectory of the repository (Cargo.toml lives there).
-#  - Needs the wasm32-wasip1 standard library in the rustup toolchain: rustup target add wasm32-wasip1.
-#  - rustup's rust-lld loads libLLVM.dylib from its own lib directory; the build needs that directory on
-#    DYLD_FALLBACK_LIBRARY_PATH on this machine.
+#  - Needs the wasm32-wasip1 standard library in the rustup toolchain (ci/setup-toolchains.sh installs it).
+#  - On macOS, rustup's rust-lld loads libLLVM.dylib from the toolchain lib directory (handled below).
 set -eo pipefail
 WORK="$1"
 mkdir -p "$WORK" && cd "$WORK"
-[ -d LOSAT ] || git clone -q --depth 1 https://github.com/satoshikawato/LOSAT.git LOSAT
+# Pinned: the commit the browser build was tested against (PR #183 merge).
+[ -d LOSAT ] || git clone -q https://github.com/satoshikawato/LOSAT.git LOSAT
+git -C LOSAT checkout -q 730b778eeea784e2a76df8f1c3a4e5f69ef14c5d
 cd LOSAT/LOSAT
-TC="$HOME/.rustup/toolchains/stable-aarch64-apple-darwin"
-"/opt/homebrew/opt/rustup/bin/rustup" target add wasm32-wasip1 --toolchain stable-aarch64-apple-darwin > /dev/null 2>&1 || true
-PATH="$TC/bin:$PATH" DYLD_FALLBACK_LIBRARY_PATH="$TC/lib" cargo build --release --target wasm32-wasip1 --no-default-features
-PATH="$TC/bin:$PATH" cargo build --release
+rustup target add wasm32-wasip1 > /dev/null 2>&1 || true
+# macOS only: rustup's rust-lld loads libLLVM.dylib from the toolchain lib directory.
+if [ "$(uname)" = Darwin ]; then export DYLD_FALLBACK_LIBRARY_PATH="$(rustc --print sysroot)/lib"; fi
+cargo build --release --target wasm32-wasip1 --no-default-features
+cargo build --release
 ls -la target/wasm32-wasip1/release/LOSAT.wasm target/release/LOSAT

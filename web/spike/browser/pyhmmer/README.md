@@ -24,6 +24,25 @@ pyhmmer 0.12.3 (the version MATPredict pins) built for Pyodide 0.27.7 (CPython 3
   the byte-score profile construction (`p7_oprofile`) and the MSV filter's own arithmetic.
 - `filter-variants.py` runs the default and loosened filter settings in Pyodide.
 
+## MSV filter investigation (2026-10-13)
+
+Reference points (3 curated sequences, `sexM.hmm`):
+- native arm64 pyhmmer (NEON): default filters 3 hits; with `F1=1` 3 hits.
+- x86_64 pyhmmer 0.12.3 under Rosetta (SSE): default filters 3 hits.
+- WebAssembly static build: default 0 hits; `F1=1` 3 hits; `F2=1`, `F3=1`, `bias_filter=False` still 0.
+  So only the MSV stage (`F1`) differs, and the WebAssembly MSV p-value or score is wrong.
+
+Ruled out (WebAssembly results identical to x86):
+- unsigned and signed SIMD intrinsics used by `msvfilter.c` (`sse_epu8_test.c`, `sse_msv_test.c`)
+- exp, log, rounding functions (`math_test.c` in the scratch tree, `rounding_test.c`)
+- evalue parameters (`params.py`: MSV, Viterbi and Forward values identical)
+- optimisation level (the `-O0` build gives the same result)
+
+Still to test:
+- our patches one at a time (the `cpuid` stand-in, the SSE header change, the stopwatch replacements);
+- the static linking: each extension has its own copy of Easel and HMMER, so shared state
+  (lookup tables, initialised globals) may differ between modules.
+
 ## Status (earlier)
 
 - Imports, HMM reading, sequence reading and `Pipeline` creation work in Pyodide.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build MMseqs2 (translated search for the localizer) for WebAssembly, unthreaded. Spike only.
 # Usage: build-mmseqs-wasm.sh <work-dir>
-# Result: <work-dir>/build/src/mmseqs-stk.js (+ .wasm). Run it with node (NODERAWFS, so it sees host files).
+# Result: <work-dir>/build/src/mmseqs-mem.js (+ .wasm), a modular in-memory-filesystem module.
 set -eo pipefail
 WORK="$1"
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -18,9 +18,10 @@ rm -rf build && mkdir build && cd build
 emcmake cmake "$WORK/MMseqs2" -DCMAKE_BUILD_TYPE=Release -DHAVE_TESTS=0 -DREQUIRE_OPENMP=0 \
   -DRust_CARGO_TARGET=wasm32-unknown-emscripten
 emmake make -k -j8 mmseqs
-# Relink with the runtime settings the extractorfs step needs: an 8 MB stack (its Orf/TranslateNucl
-# objects are ~42 KB each) and memory growth. NODERAWFS lets Node read host files.
+# Relink as a modular, in-memory-filesystem module for the browser host: no NODERAWFS (the host
+# copies files in and out), an 8 MB stack for extractorfs (its Orf/TranslateNucl objects are ~42 KB
+# each), and memory growth.
 cd src
 LINK=$(cat CMakeFiles/mmseqs.dir/link.txt)
-eval "${LINK/-o mmseqs.js/-o mmseqs-stk.js} -sNODERAWFS=1 -sEXIT_RUNTIME=1 -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=4GB -sSTACK_SIZE=8MB"
-ls -la mmseqs-stk.js mmseqs-stk.wasm
+eval "${LINK/-o mmseqs.js/-o mmseqs-mem.js} -sEXIT_RUNTIME=1 -sALLOW_MEMORY_GROWTH=1 -sMAXIMUM_MEMORY=4GB -sSTACK_SIZE=8MB -sMODULARIZE=1 -sEXPORT_NAME=createMmseqs -sINVOKE_RUN=0 -sEXPORTED_RUNTIME_METHODS=callMain,FS -sENVIRONMENT=web,node"
+ls -la mmseqs-mem.js mmseqs-mem.wasm

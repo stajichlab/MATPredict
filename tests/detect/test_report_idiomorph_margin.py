@@ -56,4 +56,6 @@ def test_the_margin_and_both_members_reach_the_report():
         "basis": "first_pass_identity",
         "winner_model_score": None,
         "loser_model_score": None,
+        "winner_hmm_score": None,
+        "loser_hmm_score": None,
     }]

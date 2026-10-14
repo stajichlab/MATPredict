@@ -200,7 +200,9 @@ def write_detection_gff3(
 
         primary_id = segment_ids.get(r.contig, locus_id)
 
-        for gene_index, evidence in enumerate(r.gene_evidence):
+        # The losing half of a resolved pair is recorded in the YAML (lost_to), not written as a gene.
+        shown_genes = [e for e in r.gene_evidence if not getattr(e, "lost_to", None)]
+        for gene_index, evidence in enumerate(shown_genes):
             parent_id = segment_ids.get(evidence.contig, primary_id)
             gene_attrs = (
                 f"ID={locus_id}.gene{gene_index};Parent={parent_id};Name={evidence.gene_name}"
@@ -397,6 +399,8 @@ def _result_doc(r: DetectionResult) -> dict:
                 "loser_coverage": res.loser_coverage,
                 "basis": res.basis,
                 "winner_model_score": res.winner_model_score,
+                "winner_hmm_score": res.winner_hmm_score,
+                "loser_hmm_score": res.loser_hmm_score,
                 "loser_model_score": res.loser_model_score,
             }
             for res in r.idiomorph_resolutions
@@ -431,6 +435,7 @@ def _result_doc(r: DetectionResult) -> dict:
                 "status": e.status,
                 "alternate_model": e.alternate_model,
                 **({"frameshifts": e.frameshifts} if getattr(e, "frameshifts", 0) else {}),
+                **({"lost_to": e.lost_to} if getattr(e, "lost_to", None) else {}),
                 "exons": [{"start": s, "end": end} for s, end in e.exons] if e.exons else None,
                 "evalue": e.evalue,
                 "bitscore": e.bitscore,

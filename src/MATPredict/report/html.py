@@ -50,7 +50,12 @@ METHOD = {
     "caax_scan": "motif scan (CAAX)",
 }
 
-BASIS = {"first_pass_identity": "higher identity"}
+BASIS = {
+    "first_pass_identity": "higher identity",
+    "hmm_bitscore": "profile bitscore of its own idiomorph",
+    "model_score_exonerate": "exonerate model score",
+    "model_score_miniprot": "miniprot model score",
+}
 CLF_INPUT = {"polished_model": "gene model", "hsp_fragment": "hit fragment"}
 
 WITHHELD = {
@@ -340,6 +345,9 @@ def _gene_rows(call: dict) -> str:
         cls = ""
         if g.get("gene") in ign:
             role_txt += '<span class="sub">other idiomorph, not counted</span>'
+            cls = ' class="ignored"'
+        if g.get("lost_to"):
+            role_txt += f'<span class="sub">lost to {e(g["lost_to"])}, not counted</span>'
             cls = ' class="ignored"'
         cov = f'<span class="sub">cov {one(g.get("coverage"))}%</span>' if g.get("coverage") is not None else ""
         bits = (f'<span class="sub nowrap">{float(g["bitscore"]):,.0f} bits</span>'

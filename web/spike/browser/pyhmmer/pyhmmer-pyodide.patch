@@ -17,6 +17,30 @@ diff --color -ru -x b pristine/pyhmmer-0.12.3/pyproject.toml pyhmmer-0.12.3/pypr
  editable.rebuild = true
  editable.verbose = false
  sdist.exclude = [
+diff --color -ru -x b pristine/pyhmmer-0.12.3/src/easel/CMakeLists.txt pyhmmer-0.12.3/src/easel/CMakeLists.txt
+--- pristine/pyhmmer-0.12.3/src/easel/CMakeLists.txt	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/src/easel/CMakeLists.txt	2026-10-13 11:04:40
+@@ -292,7 +292,7 @@
+ 
+ # --- Build libeasel with copied/patched sources -------------------------------
+ 
+-add_library(libeasel ${EASEL_PATCHED_SOURCES})
++add_library(libeasel STATIC ${EASEL_PATCHED_SOURCES})
+ target_include_directories(libeasel PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+ target_include_directories(libeasel PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+ 
+diff --color -ru -x b pristine/pyhmmer-0.12.3/src/hmmer/CMakeLists.txt pyhmmer-0.12.3/src/hmmer/CMakeLists.txt
+--- pristine/pyhmmer-0.12.3/src/hmmer/CMakeLists.txt	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/src/hmmer/CMakeLists.txt	2026-10-13 11:04:40
+@@ -215,7 +215,7 @@
+ 
+ # --- Build libhmmer with copied/patched sources -------------------------------
+ 
+-add_library(libhmmer ${HMMER_SOURCES} ${HMMER_HEADERS})
++add_library(libhmmer STATIC ${HMMER_SOURCES} ${HMMER_HEADERS})
+ target_link_libraries(libhmmer PUBLIC libeasel)
+ target_include_directories(libhmmer PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+ target_include_directories(libhmmer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 diff --color -ru -x b pristine/pyhmmer-0.12.3/src/pyhmmer/platform/CMakeLists.txt pyhmmer-0.12.3/src/pyhmmer/platform/CMakeLists.txt
 --- pristine/pyhmmer-0.12.3/src/pyhmmer/platform/CMakeLists.txt	2022-11-09 04:37:21
 +++ pyhmmer-0.12.3/src/pyhmmer/platform/CMakeLists.txt	2026-10-13 10:44:28

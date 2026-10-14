@@ -11,7 +11,20 @@ pyhmmer 0.12.3 (the version MATPredict pins) built for Pyodide 0.27.7 (CPython 3
 - Flags: `CFLAGS=-I<shim>` (x86intrin.h stand-in), `LDFLAGS=-sWASM_BIGINT`.
 - Result: builds `pyhmmer-0.12.3-cp312-cp312-pyodide_2024_0_wasm32.whl`.
 
-## Status
+## Status (update 2026-10-13)
+
+- Step 1 (cause found): liblibhmmer and liblibeasel call each other through Pyodide's dynamic-link
+  proxy. Easel's `esl_index_t` is int64, so many of these calls pass 64-bit values, which JavaScript
+  cannot convert without BigInt. The search then fails with `type incompatibility`.
+- Step 2 (done): Easel and HMMER are built as static libraries (CMake `STATIC`), so there are no
+  cross-library calls. The search now runs to completion in Pyodide.
+- New blocker: the MSV filter (`F1`) rejects sequences in WebAssembly that native keeps. With
+  `F1=1` the WebAssembly hits match native to six decimals. Ruled out: unsigned byte SIMD intrinsics
+  (`sse_epu8_test.c`, identical to x86) and exp/log math (`math_test.c`, identical). Not yet checked:
+  the byte-score profile construction (`p7_oprofile`) and the MSV filter's own arithmetic.
+- `filter-variants.py` runs the default and loosened filter settings in Pyodide.
+
+## Status (earlier)
 
 - Imports, HMM reading, sequence reading and `Pipeline` creation work in Pyodide.
 - `Pipeline.search_hmm` fails with `TypeError: type incompatibility when transforming from/to JS`.

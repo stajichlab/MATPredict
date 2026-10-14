@@ -9,9 +9,11 @@ import { readFileSync, readdirSync, statSync, mkdirSync, writeFileSync } from "n
 import { join, basename, dirname } from "node:path";
 import { pathToFileURL } from "node:url";
 import { ToolHost } from "./host/tool-host.mjs";
+import { runWasiCommand, WORK_DIR } from "./host/wasi-runner.mjs";
 
 const [genome, outDir, ...rest] = process.argv.slice(2);
 const phylum = rest[rest.indexOf("--phylum") + 1] ?? "Ascomycota";
+const ENGINE = process.env.ENGINE ?? "losat";  // tblastn engine: "losat" or "mmseqs"
 const home = "/Users/jstajich/projects/MATPredict";
 const WHEEL = process.env.WHEEL ?? join(home, "web/spike/dist/matpredict-0.6.1-py3-none-any.whl");
 const DB_DIR = process.env.DB_DIR ?? join(home, "db");
@@ -52,7 +54,9 @@ const factories = {
   exonerate: (await import(pathToFileURL(join(WASM_DIR, "exo-wasm/src/program/exonerate-mem")).href)).default,
   miniprot: (await import(pathToFileURL(join(WASM_DIR, "miniprot-mem2/miniprot.mjs")).href)).default,
 };
-const host = new ToolHost({ pyFS: py.FS, factories });
+const LOSAT_WASM = process.env.LOSAT_WASM ?? join(process.env.HOME, "wasm-build/losat/LOSAT/target/wasm32-wasip1/release/LOSAT.wasm");
+const wasiTools = { losat: await WebAssembly.compile(readFileSync(LOSAT_WASM)) };
+const host = new ToolHost({ pyFS: py.FS, factories, wasiTools, wasiRunner: { runWasiCommand, WORK_DIR } });
 globalThis.js_run = (argvJson) => host.run(JSON.parse(argvJson)).then((r) => JSON.stringify(r));
 
 const result = await py.runPythonAsync(`
@@ -64,6 +68,7 @@ import micropip
 await micropip.install("emfs:/${basename(PYHMMER_WHL)}", deps=False)
 sys.path[:0] = ["/site_pkgs", "/browser"]
 import bridge  # installs the subprocess routing before any MATPredict import
+bridge.ENGINE = "${ENGINE}"
 from MATPredict.detect import cli as detect_cli
 parser = argparse.ArgumentParser(prog="matpredict")
 subs = parser.add_subparsers(dest="cmd")

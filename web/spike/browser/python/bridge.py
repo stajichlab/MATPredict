@@ -21,6 +21,9 @@ from pyodide.ffi import run_sync  # blocks this Python call until the promise se
 import localizer
 
 
+ENGINE = "losat"  # set by the page or harness: "losat" or "mmseqs"
+
+
 class CompletedProcess:
     def __init__(self, args, returncode, stdout, stderr):
         self.args = args
@@ -36,7 +39,7 @@ def _host(argv):
 
 def _run_argv(argv, check):
     """Runner for the localizer: raises CalledProcessError like subprocess.run(check=True)."""
-    done = _host(argv) if argv[0] == "mmseqs" else _unsupported(argv)
+    done = _host(argv) if argv[0] in ("mmseqs", "losat") else _unsupported(argv)
     if check and done.returncode != 0:
         raise subprocess.CalledProcessError(done.returncode, argv, output=done.stdout, stderr=done.stderr)
     return done
@@ -54,9 +57,13 @@ def run(args, *popenargs, input=None, capture_output=False, text=False, check=Fa
         localizer.makeblastdb(argv[1:])
         done = CompletedProcess(argv, 0, "", "")
     elif name == "tblastn":
-        out = localizer.tblastn(argv[1:], ["mmseqs"], lambda a: _run_argv(a, True))
+        # Engine chosen once per run: LOSAT (default, WASI) or MMseqs2 (translated search).
+        if ENGINE == "losat":
+            out = localizer.losat_tblastn(argv[1:], lambda a: _run_argv(a, True))
+        else:
+            out = localizer.tblastn(argv[1:], ["mmseqs"], lambda a: _run_argv(a, True))
         done = CompletedProcess(argv, 0, out, "")
-    elif name in ("miniprot", "exonerate", "mmseqs"):
+    elif name in ("miniprot", "exonerate", "mmseqs", "losat"):
         done = _host(argv)
     else:
         done = _unsupported(argv)

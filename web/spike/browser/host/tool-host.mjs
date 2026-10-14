@@ -9,14 +9,17 @@
 // returning a module-creating factory, so the same host works in Node and in a browser.
 
 export class ToolHost {
-  constructor({ pyFS, factories }) {
+  constructor({ pyFS, factories, wasiTools = {}, wasiRunner = null }) {
     this.pyFS = pyFS;
     this.factories = factories; // { mmseqs: createMmseqs, exonerate: createExonerate, ... }
+    this.wasiTools = wasiTools; // { losat: compiled WebAssembly.Module } for WASI commands
+    this.wasiRunner = wasiRunner; // { runWasiCommand, WORK_DIR } from wasi-runner.mjs
   }
 
   // argv[0] is the tool name, the rest are its arguments (as subprocess would receive them).
   async run(argv) {
     const [tool, ...args] = argv;
+    if (this.wasiTools && this.wasiTools[tool]) return this.runWasi(tool, args);
     const factory = this.factories[tool];
     if (!factory) return { returncode: 127, stdout: "", stderr: `no WebAssembly tool named ${tool}` };
 
@@ -37,6 +40,25 @@ export class ToolHost {
     }
     for (const root of roots) this.copyTree(mod.FS, this.pyFS, root, { onlyNewer: true });
     return { returncode, stdout: out.join("\n") + (out.length ? "\n" : ""), stderr: err.join("\n") };
+  }
+
+  // WASI command (for example LOSAT). Absolute path arguments are copied into the WASI work directory
+  // under their base names, and the arguments are rewritten to match.
+  async runWasi(tool, args) {
+    const { runWasiCommand, WORK_DIR } = this.wasiRunner;
+    const inputs = new Map();
+    const rewritten = args.map((a) => {
+      if (typeof a !== "string" || !a.startsWith("/")) return a;
+      const name = a.slice(a.lastIndexOf("/") + 1);
+      try {
+        inputs.set(name, this.pyFS.readFile(a, { encoding: "binary" }));
+      } catch {
+        return a; // not a file in the Python filesystem (for example an output path); leave it alone
+      }
+      return `${WORK_DIR}/${name}`;
+    });
+    const res = await runWasiCommand(this.wasiTools[tool], [tool, ...rewritten], inputs);
+    return { returncode: res.returncode, stdout: res.stdout, stderr: res.stderr };
   }
 
   // Directories the call can read or write: the parent of every absolute path argument.

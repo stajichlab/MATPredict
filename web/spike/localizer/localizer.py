@@ -75,3 +75,37 @@ def tblastn(argv, mmseqs, run, threads="1", max_seqs="5000", s="7.5", e="10"):
                 lines.append("\t".join([qn, tn, pid, alnlen, str(qlen), f"{qcov:.3f}", ev, bits,
                                         ts, te, str(sframe)]))
         return "".join(line + "\n" for line in lines)
+
+
+def losat_tblastn(argv, run, losat=("losat",)):
+    """Run LOSAT's tblastn (protein query vs genome FASTA) and return the pipeline's 11-column outfmt.
+
+    LOSAT takes the genome as -subject, so no database is built: the subject is the makeblastdb copy
+    (<db>.fa). `run` takes an argv list and returns an object with .stdout. LOSAT's 12 columns are
+    converted here: query length from the query FASTA, coverage from the query range, sframe from the
+    subject order (sstart > send is a minus-strand hit, as in BLAST+).
+    """
+    query = argv[argv.index("-query") + 1]
+    db = argv[argv.index("-db") + 1]
+    qlen = {}
+    name = None
+    with open(query) as fh:
+        for line in fh:
+            line = line.strip()
+            if line.startswith(">"):
+                name = line[1:].split()[0]
+                qlen[name] = 0
+            elif line:
+                qlen[name] += len(line)
+    res = run(list(losat) + ["tblastn", "-query", query, "-subject", db + ".fa", "-task", "tblastn",
+                             "-outfmt", "6", "-seg", "no", "-num_threads", "1"])
+    lines = []
+    for line in res.stdout.splitlines():
+        f = line.split("\t")
+        q, sub, pid, length = f[0], f[1], f[2], f[3]
+        qs, qe, ss, se, ev, bits = int(f[6]), int(f[7]), int(f[8]), int(f[9]), f[10], f[11]
+        ql = qlen[q]
+        qcov = 100.0 * (max(qs, qe) - min(qs, qe) + 1) / ql
+        sframe = 1 if ss < se else -1
+        lines.append("\t".join([q, sub, pid, length, str(ql), f"{qcov:.3f}", ev, bits, str(ss), str(se), str(sframe)]))
+    return "".join(line + "\n" for line in lines)

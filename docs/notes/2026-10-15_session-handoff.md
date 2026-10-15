@@ -66,3 +66,36 @@ panel rather than picked by eye:
 
 Evidence needed: for MAT genes (where helixer undercalls), homology should win; for flanking genes, helixer's
 ends may be better. Check against NCBI annotation on the panel genomes.
+
+## Decision rule: refinements from the quiz (2026-10-15)
+
+Settled before any panel run, so the rule is not tuned against the panel:
+
+- **Silence is not contradiction.** A tool not reaching a model's end (for example miniprot stopping at the
+  polished boundary) is no evidence against the extension. Contradiction means an explicit conflict: an
+  intron, a stop codon, or a frame change inside the proposed extension.
+- **Missing helixer models are not evidence against homology.** Helixer undercalls MAT genes (sexP is absorbed
+  into sexM). Homology keeps a gene when helixer has no model for it.
+- **One window policy, fixed in advance.** The window is the locus ±5 kb, merged per contig, for every locus.
+  No per-gene or per-run choice of window (in particular not by ORF length, which biases results upward).
+- **The metric is fixed before scoring** (below).
+
+## Metric (pre-registered; to be applied to the panel, not yet run)
+
+Reference: the NCBI annotation of the same assembly (PHYBLDRAFT and equivalents). NCBI is a prediction, so
+agreement is evidence, not ground truth. Each result is reported with that caveat.
+
+1. **Gene match.** A pipeline or helixer model matches an NCBI gene when both are on the same strand and
+   the overlap is at least 50% of the longer of the two.
+2. **Boundary agreement.** For a matched pair, the 5′ and 3′ differences are compared with NCBI, in bp, strand-aware.
+   A boundary agrees when the difference is within 30 bp (ten codons; a tolerance chosen before the run).
+3. **Strata.** Every count is reported separately for core MAT genes (`role core_MAT`) and flanking genes
+   (`flanking_conserved`, `flanking_variable`). The rules are judged per stratum.
+4. **Per-rule score.** For each rule, count the genes where the rule's chosen boundary agrees with NCBI, and the
+   genes where it changes a boundary away from NCBI. Compare against the baseline (keep the homology boundary).
+5. **Undercalling (recall).** Fraction of NCBI MAT genes with any helixer model overlapping them.
+6. **Report, do not hide.** Counts (n) with every number. With nine genomes the MAT strata are small (one to
+   three genes per genome), so results are descriptive; no significance claim is made from them.
+
+A rule is adopted only if it beats the baseline on the flanking stratum without losing MAT agreement. The
+MAT stratum is the guard against helixer's undercalling.

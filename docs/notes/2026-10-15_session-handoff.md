@@ -99,3 +99,43 @@ agreement is evidence, not ground truth. Each result is reported with that cavea
 
 A rule is adopted only if it beats the baseline on the flanking stratum without losing MAT agreement. The
 MAT stratum is the guard against helixer's undercalling.
+
+## Handoff at sign-off (2026-10-15, end of session)
+
+### Running now (HPCC)
+- **Metric array, job 29979104**, eight tasks, one per panel genome (manifest:
+  `/bigdata/stajichlab/jstajich/projects/metric/manifest.tsv`). Each task runs detect where its genome has no
+  output yet (the two swapped-in genomes and the six panel genomes are re-detected into `metric/detect/`), then
+  helixer-lite on the locus windows, writing `metric/helixer/<name>.tsv`. Logs: `metric/logs/`.
+- It was still running when this note was written. **Not yet scored.**
+- When it finishes: `python3 scripts/panel_helixer_metric.py score --run NAME DETECTED HELIXER_TSV NCBI_GFF`
+  for each genome (paths in the manifest), from the `mat-tracks` checkout (`/bigdata/.../projects/mat-tracks`,
+  an archive of `annotation-tracks` at `c1a89f4`).
+
+### Panel (eight genomes with NCBI annotation)
+- Kept: Phycomyces `GCF_001638985.1`, Rhizopus `GCF_000149305.1`, Muco sp. 1006Ph `GCA_000401635.1`,
+  *Fusarium* CS3005 `GCA_000599445.1`, *Aspergillus* A1163 `GCA_000150145.1`, *Ustilago bromivora* `GCA_900080155.1`.
+- Swapped in (RefSeq, annotated, checksums verified): *Mucor mucedo* NRRL 3635 `GCF_025094135.1` (replaces
+  *M. circinelloides* `GCA_001276145.1`, which has no NCBI annotation and no RefSeq exists for that species);
+  *Saccharomyces cerevisiae* S288C `GCF_000146045.2_R64` (replaces `GCA_000151485.1`, no annotation).
+- Excluded: *Malassezia globosa* `GCA_001264795.1` (no NCBI annotation).
+
+### Metric status
+- Pre-registered in the metric section above. Implemented in `scripts/panel_helixer_metric.py` (commit `c1a89f4`).
+- Tested end to end on Phycomyces locus only: core MAT 1/1 (helixer and pipeline within 30 bp); flanking helixer
+  matches 2/2 but boundaries within 30 bp 0/2. Descriptive; not a result.
+
+### Decisions still open
+1. Merge PR #69 (`annotation-tracks`). It holds the track model, the window runner, the metric script and this note.
+2. The helixer rule. Choose only after the metric is scored, on the flank stratum without losing core-MAT
+   agreement. Coded as its own PR.
+3. Redeploy Pages so the #67 downloads go live (manual run from `main`, or tag `v0.6.3`).
+4. Cache the WebAssembly bundle in CI, keyed on pinned tool versions (about 20 min per run without it).
+5. Delete the finished branches: `wasm-spike`, `release-v0.6.2`, `page-downloads`, `docker-single-trigger`,
+   `parallel-polish` (all merged).
+
+### Known issues carried forward
+- SSH to `lb-clust-1` dropped several long commands this session. Keep HPCC commands short; `git fetch` on the
+  cluster was the slow step, so sources are sent as `git archive` instead.
+- Malassezia has no NCBI annotation, so it cannot be scored.
+- `tests/db` still fails at collection (not investigated).

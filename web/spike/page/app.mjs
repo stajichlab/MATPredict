@@ -5,6 +5,7 @@ import { ToolHost } from "../browser/host/tool-host.mjs";
 import { runWasiCommand, WORK_DIR } from "../browser/host/wasi-runner.mjs";
 import createMiniprot from "./_assets/bundle/miniprot/miniprot.mjs";
 import { locusFasta, locusGenbank } from "./genbank.mjs";
+import { locusProteinsFasta } from "./proteins.mjs";
 
 const ASSETS = "./_assets";
 const $ = (id) => document.getElementById(id);
@@ -210,6 +211,16 @@ function renderResults(res, genomeText) {
     row.append(blobLink(locusGenbank(l, seq, flank), "text/plain", `${l.id}.flank${flank}.gbk`));
     box.appendChild(row);
   }
+  // Predicted proteins of each locus's genes (set-aside genes excluded), translated from the gene models.
+  res.detected.forEach((d, i) => {
+    const label = loci[i]?.id ?? `locus${i + 1}`;
+    const text = locusProteinsFasta(d, contigs.get(d.contig) || "", label);
+    if (!text) return;
+    const row = document.createElement("p");
+    row.className = "dl-row";
+    row.append(`${label} proteins: `, blobLink(text, "text/plain", `${label}.proteins.faa`));
+    box.appendChild(row);
+  });
   $("sequence").innerHTML = loci.map((l) => `<div class="muted">${esc(l.id)} · ${esc(l.contig)}:${l.start}–${l.end} (locus in highlight)</div>${sequenceHtml(l, contigs.get(l.contig) || "", flank)}`).join("\n\n");
   $("report").srcdoc = res.html;
   const dl = (id, text, type, name) => {

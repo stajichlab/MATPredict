@@ -37,3 +37,32 @@
 - The NCBI e-mail warning on HPCC (`MATPREDICT_NCBI_EMAIL` is not set). Runs still complete.
 - The Ascomycota panel representatives (*Fusarium*, *Aspergillus*) are not confirmed MAT1-1/MAT1-2 pairs.
 - The pair rule (profile bitscore) overrides the 2026-09-26 curator ruling; the curator has not signed off.
+
+## helixer-lite on locus windows (2026-10-15, later)
+
+- Goal changed: helixer-lite runs only on windows around the loci the search found, to propose better gene
+  models, not to annotate the genome. `detect/helixer_windows.py` widens each locus by ±5 kb, merges overlapping
+  windows per contig, runs helixer-lite once on the windows, and maps coordinates back. Predictions are a track;
+  they do not change calls.
+- Phycomyces, whole genome (HPCC): 34 min 38 s, 3.9 GB peak, 17,037 gene lines. The window run takes 9.3 s.
+- Phycomyces locus window (laptop, ±5 kb): 7 models. Polished vs helixer-lite 3′/5′ (bp, on the gene's strand):
+  - algA: 3′ +189, complete ORF
+  - tptA: 3′ +648, 5′ +12, complete ORF
+  - sexM: 5′ 0, 3′ +3, complete ORF
+  - rnhA: 3′ +2107, complete ORF (NCBI PHYBLDRAFT_80075 ends at 3991627; helixer 3991273)
+- **Undercalling:** set-aside sexP (3985731–3985973) has no helixer model; it lies inside the sexM model.
+- **Window sensitivity:** the ±5 kb window and the 33 kb window disagree on the ends (algA 3′, rnhA 5′). The window
+  policy must be fixed and recorded before any model is accepted or compared across runs.
+
+## Decision question (not yet decided)
+
+Which model to keep when homology (polished) and helixer-lite disagree. Candidate rules, to be tested on the
+panel rather than picked by eye:
+
+1. Keep homology boundaries where exonerate and miniprot agree; report helixer's extension separately.
+2. Extend a homology end to helixer's ATG or stop only when the extension is a complete ORF on the same strand
+   and the other tool (miniprot) does not contradict it.
+3. Never let helixer remove or replace a homology gene; it can only add or extend, and each change is recorded.
+
+Evidence needed: for MAT genes (where helixer undercalls), homology should win; for flanking genes, helixer's
+ends may be better. Check against NCBI annotation on the panel genomes.

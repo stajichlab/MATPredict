@@ -69,8 +69,11 @@ def _with_orf(gene: TrackGene, contig_seq: str) -> TrackGene:
                         "stop_codon": stop, "complete_orf": complete})
 
 
-def from_helixer_gff3(path: Path, sequences: dict[str, str]) -> Track:
-    """Gene models from helixer-lite's GFF3 (gene, mRNA and CDS lines; exons taken from CDS)."""
+def from_helixer_gff3(path: Path, sequences: dict[str, str], window_offsets: bool = False) -> Track:
+    """Gene models from helixer-lite's GFF3 (gene, mRNA and CDS lines; exons taken from CDS).
+
+    With window_offsets, the sequence names are windows written as ``contig:start-end`` (the FASTA headers
+    of helixer_windows); coordinates are shifted by start-1 and the contig is the part before the colon."""
     genes: dict[str, dict] = {}
     mrna_parent: dict[str, str] = {}
     for line in Path(path).read_text().splitlines():
@@ -80,6 +83,11 @@ def from_helixer_gff3(path: Path, sequences: dict[str, str]) -> Track:
         if len(f) < 9:
             continue
         contig, kind, start, end, strand, attrs = f[0], f[2], int(f[3]), int(f[4]), f[6], f[8]
+        if window_offsets:
+            m = re.match(r"^(.*):(\d+)-(\d+)$", contig)
+            if m:
+                contig, offset = m.group(1), int(m.group(2)) - 1
+                start, end = start + offset, end + offset
         ident = re.search(r"ID=([^;]+)", attrs)
         parent = re.search(r"Parent=([^;]+)", attrs)
         if kind == "gene" and ident:

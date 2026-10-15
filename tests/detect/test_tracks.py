@@ -84,3 +84,26 @@ def test_summary_reports_other_strand_as_disagreeing_without_extension():
     other = Track("helixer", (TrackGene("h", "c1", 220, 280, "-", ((220, 280),), "helixer"),))
     (row,) = summary(ev, other)
     assert row.strand_agrees is False and (row.extends_5p, row.extends_3p) == (0, 0)
+
+
+def test_helixer_window_coordinates_map_back_to_the_genome(tmp_path: Path):
+    from MATPredict.detect.tracks import from_helixer_gff3
+    # window c1:101-(100+len) in genome coordinates: window-relative 1..len maps to 101..100+len
+    gff = tmp_path / "w.gff3"
+    last = len(CDS)
+    gff.write_text(
+        "##gff-version 3\n"
+        f"c1:101-{100 + last}\tHelixer\tgene\t1\t{last}\t.\t+\t.\tID=w1\n"
+        f"c1:101-{100 + last}\tHelixer\tmRNA\t1\t{last}\t.\t+\t.\tID=w1.t;Parent=w1\n"
+        f"c1:101-{100 + last}\tHelixer\tCDS\t1\t{last}\t.\t+\t0\tID=w1.c;Parent=w1.t\n"
+    )
+    (g,) = from_helixer_gff3(gff, {"c1": CONTIG}, window_offsets=True).genes
+    assert (g.contig, g.start, g.end) == ("c1", 101, 100 + last)
+    assert g.complete_orf is True
+
+
+def test_merged_windows_join_overlapping_loci_and_clip():
+    from MATPredict.detect.helixer_windows import merged_windows
+    spans = [("c1", 10_000, 10_500), ("c1", 12_000, 12_300), ("c2", 100, 200)]
+    out = merged_windows(spans, flank=5_000, contig_lengths={"c1": 30_000, "c2": 8_000})
+    assert out == [("c1", 5_000, 17_300), ("c2", 1, 5_200)]

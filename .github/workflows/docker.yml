@@ -1,12 +1,10 @@
 name: docker
 
 # Release images: ghcr.io/stajichlab/matpredict:<version> and :latest.
-# A v* tag or a published release builds and pushes; a pull request that touches
-# the image inputs builds and smoke-tests without pushing; workflow_dispatch
-# builds and pushes on demand.
+# A published release builds and pushes (a tag alone does not, so one release
+# builds once); a pull request that touches the image inputs builds and
+# smoke-tests without pushing; workflow_dispatch builds and pushes on demand.
 on:
-  push:
-    tags: ["v*"]
   release:
     types: [published]
   workflow_dispatch:

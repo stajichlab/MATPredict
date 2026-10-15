@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+"""Command-line stand-in for makeblastdb. Logic lives in ../localizer.py."""
+import os, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import localizer
+localizer.makeblastdb(sys.argv[1:])

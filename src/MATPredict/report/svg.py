@@ -199,6 +199,8 @@ def locus_svg(call: dict, contig: str, fig_id: str, label: str) -> str:
 
     for g, lane in zip(genes, lanes):
         rc, sc = role_class(g.get("role")), status_class(g)
+        # The losing half of a resolved pair (`lost_to`) is drawn muted and non-bold.
+        lost = bool(g.get("lost_to"))
         h = CORE_H if rc == "r-core" else GENE_H
         mid = TRACK_TOP + lane * (LANE_H + LABEL_H) + LABEL_H + CORE_H / 2
         top = mid - h / 2
@@ -206,7 +208,9 @@ def locus_svg(call: dict, contig: str, fig_id: str, label: str) -> str:
         minus = g.get("strand") == "-"
         tip = min(8.0, max(3.0, (x1 - x0) * 0.3))
         fill, stroke = ROLE_FILL[rc], ROLE_STROKE[rc]
-        if sc == "s-hit":
+        if lost:
+            paint = f'fill="{MUTED}" fill-opacity="0.2" stroke="{MUTED}" stroke-width="1" stroke-dasharray="2 2"'
+        elif sc == "s-hit":
             paint = f'fill="{stroke}" fill-opacity="0.3" stroke="{stroke}" stroke-width="1.5" stroke-dasharray="3 2"'
         elif sc == "s-disagree":
             paint = f'fill="{fill}" stroke="{INK}" stroke-width="1.5" stroke-dasharray="4 2"'
@@ -239,8 +243,12 @@ def locus_svg(call: dict, contig: str, fig_id: str, label: str) -> str:
             lx, anchor = min(x1, WIDTH - 2.0), "end"
         style = (f'fill="{INK_2}" font-style="italic"' if sc == "s-hit"
                  else f'fill="{INK}" font-weight="{700 if rc == "r-core" else 600}"')
+        label = escape(str(g["gene"]))
+        if lost:
+            style = f'fill="{MUTED}" font-weight="400"'
+            label += f" (lost to {escape(str(g['lost_to']))})"
         parts.append(f'<text class="gene-label" x="{lx:.1f}" y="{top - 4:.1f}" text-anchor="{anchor}" '
-                     f'font-size="12" {FONT} {style}>{escape(str(g["gene"]))}</text>')
+                     f'font-size="12" {FONT} {style}>{label}</text>')
         alt = g.get("alternate_model")
         if sc == "s-disagree" and alt and alt.get("contig") == contig:
             ay = top + h + 3

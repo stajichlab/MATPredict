@@ -225,6 +225,25 @@ def score_proteins(clf: IdiomorphClassifier, proteins: list[str]) -> dict[str, f
                         proteins)
 
 
+def own_profile_scores(clf: IdiomorphClassifier, gene_idiomorph: dict[str, str],
+                       proteins_by_gene: dict[str, list[str]]) -> dict[str, float]:
+    """Each gene's best bit score against ITS OWN idiomorph's profile.
+
+    The statistic for a sexM/sexP-style pair: a gene's modelled proteins are
+    scored against the one profile of the idiomorph that gene belongs to, and
+    the best score is kept. Genes with no protein or no profile are absent.
+    """
+    out: dict[str, float] = {}
+    for gene, proteins in proteins_by_gene.items():
+        idiom = gene_idiomorph.get(gene)
+        proteins = [p for p in proteins if p]
+        if idiom is None or idiom not in clf.models or not proteins:
+            continue
+        _, hmm = clf.models[idiom]
+        out[gene] = _best_scores({idiom: hmm}, proteins)[idiom]
+    return out
+
+
 def classify(clf: IdiomorphClassifier, proteins: list[str], genes: list[str] | None = None,
              classifier_input: str = "model") -> ClassifierVerdict | None:
     """The idiomorph `proteins` belong to, or None when there is nothing to

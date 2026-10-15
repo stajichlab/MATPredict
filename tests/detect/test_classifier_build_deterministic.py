@@ -61,6 +61,7 @@ def _hmm_bytes(seqs, name, work):
     return buf.getvalue()
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="needs mafft from the pixi env (linux-64 only); runs on HPCC")
 def test_build_hmm_is_byte_identical_across_calls(tmp_path):
     seqs = {r["id"]: r["sequence"] for r in _rows() if r["gene"] == "sexP"}
     a = _hmm_bytes(seqs, "sexP", tmp_path)
@@ -68,12 +69,14 @@ def test_build_hmm_is_byte_identical_across_calls(tmp_path):
     assert a == b
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="needs mafft from the pixi env (linux-64 only); runs on HPCC")
 def test_input_order_does_not_change_the_hmm(tmp_path):
     seqs = {r["id"]: r["sequence"] for r in _rows() if r["gene"] == "sexM"}
     rev = dict(reversed(list(seqs.items())))
     assert _hmm_bytes(seqs, "sexM", tmp_path) == _hmm_bytes(rev, "sexM", tmp_path)
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="needs mafft from the pixi env (linux-64 only); runs on HPCC")
 def test_the_hmm_carries_no_build_time_or_command_line(tmp_path):
     seqs = {r["id"]: r["sequence"] for r in _rows() if r["gene"] == "sexP"}
     text = _hmm_bytes(seqs, "sexP", tmp_path).decode()
@@ -82,6 +85,7 @@ def test_the_hmm_carries_no_build_time_or_command_line(tmp_path):
     assert date.split(None, 1)[1].strip() == "Thu Jan  1 00:00:00 1970"
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="needs mafft from the pixi env (linux-64 only); runs on HPCC")
 def test_mafft_runs_single_threaded(tmp_path, monkeypatch):
     from MATPredict.detect import classifier_build as cb
     seen = []
@@ -107,6 +111,7 @@ def _build(tmp_path, monkeypatch, rows):
     return cb.build(DB, "Mucoromycota:MAT", out), out
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="needs mafft from the pixi env (linux-64 only); runs on HPCC")
 def test_two_builds_are_byte_identical_and_score_the_same(tmp_path, monkeypatch):
     rows = _rows()
     m1, o1 = _build(tmp_path / "a", monkeypatch, rows)
@@ -120,6 +125,7 @@ def test_two_builds_are_byte_identical_and_score_the_same(tmp_path, monkeypatch)
     assert m1["training_sha256"] == m2["training_sha256"]
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="needs mafft from the pixi env (linux-64 only); runs on HPCC")
 def test_the_manifest_records_versions_options_and_input_checksum(tmp_path, monkeypatch):
     from MATPredict.detect import classifier_build as cb
     m, _ = _build(tmp_path, monkeypatch, _rows())
@@ -134,6 +140,7 @@ def test_the_manifest_records_versions_options_and_input_checksum(tmp_path, monk
     assert m["training_sha256"] == expect
 
 
+@pytest.mark.skipif(sys.platform == "darwin", reason="needs mafft from the pixi env (linux-64 only); runs on HPCC")
 def test_builds_in_fresh_processes_are_byte_identical(tmp_path):
     """Two separate Python processes build the same HMM bytes."""
     seqs = {r["id"]: r["sequence"] for r in _rows() if r["gene"] == "sexP"}

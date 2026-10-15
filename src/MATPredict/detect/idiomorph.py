@@ -70,6 +70,10 @@ class IdiomorphResolution:
     basis: str = "first_pass_identity"
     winner_model_score: float | None = None
     loser_model_score: float | None = None
+    #: `hmm_bitscore`: each gene's own profile bitscore decided it
+    #: (`resolve_idiomorph_by_hmm`). The two HMM scores are recorded.
+    winner_hmm_score: float | None = None
+    loser_hmm_score: float | None = None
 
     @property
     def margin(self) -> float:
@@ -721,6 +725,64 @@ def resolve_idiomorph_by_models(
         for h in hits
     ]
     return resolved, events
+
+
+def resolve_idiomorph_by_hmm(
+    hits: list[SearchHit],
+    family: Family,
+    models: dict[str, dict[str, PolishModel | None]],
+    hmm_scores: dict[str, float],
+    min_overlap_fraction: float = DEFAULT_MIN_OVERLAP_FRACTION,
+) -> tuple[list[SearchHit], list[IdiomorphResolution]]:
+    """Re-decide each overlapping mutually exclusive pair on its PROFILE bitscores.
+
+    `hmm_scores[gene]` is that gene's best bit score against its own idiomorph's
+    profile (`classifier.own_profile_scores`). Higher score wins, with the same
+    overlap rule and bookkeeping as `resolve_idiomorph_by_models`. A pair with a
+    missing score, an exact tie, or no shared model window is left as the first
+    pass left it, with no event.
+    """
+    events: list[IdiomorphResolution] = []
+    superseded: dict[int, str | None] = {}
+    for gene_a, gene_b in _mutually_exclusive_pairs(family, hits):
+        sa, sb = hmm_scores.get(gene_a), hmm_scores.get(gene_b)
+        if sa is None or sb is None or sa == sb:
+            continue
+        ma, mb = _shared_models(models, gene_a, gene_b)
+        if ma is None:
+            continue
+        overlap = _model_span_overlap(ma, mb)
+        if overlap < min_overlap_fraction:
+            continue
+        win_gene, lose_gene, win_score, lose_score = (
+            (gene_a, gene_b, sa, sb) if sa > sb else (gene_b, gene_a, sb, sa))
+        win, lose = (ma, mb) if ma.gene_name == win_gene else (mb, ma)
+        for h in hits:
+            if h.gene_name == lose_gene and _span_overlaps(h, lose):
+                superseded[id(h)] = win_gene
+            elif h.gene_name == win_gene and h.superseded_by == lose_gene:
+                superseded[id(h)] = None
+        events.append(IdiomorphResolution(
+            contig=win.contig, winner=win_gene, loser=lose_gene,
+            winner_identity=win.identity, loser_identity=lose.identity,
+            overlap_fraction=overlap, basis="hmm_bitscore",
+            winner_hmm_score=win_score, loser_hmm_score=lose_score,
+        ))
+    resolved = [
+        dataclasses.replace(h, superseded_by=superseded[id(h)]) if id(h) in superseded else h
+        for h in hits
+    ]
+    return resolved, events
+
+
+def _shared_models(models, gene_a: str, gene_b: str):
+    """The first tool with a model for BOTH genes, as (model_a, model_b), else (None, None)."""
+    for tool in ("miniprot", "exonerate"):
+        ma = (models.get(gene_a) or {}).get(tool)
+        mb = (models.get(gene_b) or {}).get(tool)
+        if ma is not None and mb is not None:
+            return ma, mb
+    return None, None
 
 
 def _span_overlaps(hit: SearchHit, model: PolishModel) -> bool:

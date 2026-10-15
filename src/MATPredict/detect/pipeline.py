@@ -116,6 +116,7 @@ from MATPredict.detect.idiomorph import (
     assign_idiomorph,
     classify_locus,
     evidenced_idiomorphs,
+    resolve_idiomorph_by_hmm,
     resolve_idiomorph_by_models,
     resolve_idiomorph_overlaps,
 )
@@ -154,6 +155,7 @@ from MATPredict.detect.classifier import (
     classify as classify_idiomorph,
     combine_verdicts,
     load_classifier,
+    own_profile_scores,
 )
 from MATPredict.detect.zygosity import genome_zygosity, load_zygosity_rules
 
@@ -189,6 +191,10 @@ class GeneEvidence:
     #: Frameshifts in the canonical exonerate model (0 = none); reported only
     #: when > 0, so reports of frameshift-free genes are unchanged.
     frameshifts: int = 0
+    #: Set on the LOSING half of a resolved sexM/sexP-style pair: the winning
+    #: gene's name. The loser stays in the record, marked, so the decision is
+    #: auditable; the locus figure and gene table show only the winner.
+    lost_to: str | None = None
     # (contig/start/end/strand/exons/identity/method), populated only when
     # status == polish.STATUS_DISAGREE, else None.
     exons: tuple[tuple[int, int], ...] | None = None
@@ -738,6 +744,23 @@ DEFAULT_POLISH_STRONG_IDENTITY = 50.0
 _DIAGNOSTICS_CANDIDATE_FLOOR = EvidenceFloor(
     min_hits=1, min_identity=None, require_core_role=False
 )
+
+
+def _own_profile_scores_for(family, models, genome_fasta, genetic_code, cache):
+    """Each pair gene's best bitscore against its own idiomorph's profile, over
+    the proteins of its modelled genes. None when the family has no classifier."""
+    if not family.idiomorph_classifier:
+        return None
+    clf = load_classifier(family.idiomorph_classifier, family)
+    if clf is None:
+        return None
+    gene_idiomorph = classifier_genes(family)
+    proteins = {
+        gene: [_translate_model(genome_fasta, m, genetic_code or 1, cache)
+               for m in per_tool.values() if m is not None]
+        for gene, per_tool in models.items() if gene in gene_idiomorph
+    }
+    return own_profile_scores(clf, gene_idiomorph, proteins)
 
 
 def _translate_model(genome_fasta: Path, model, genetic_code: int, cache: dict) -> str:
@@ -1349,6 +1372,8 @@ def _write_idiomorph_diagnostics(
         "loser_coverage": resolution.loser_coverage,
         "basis": resolution.basis,
         "winner_model_score": resolution.winner_model_score,
+        "winner_hmm_score": resolution.winner_hmm_score,
+        "loser_hmm_score": resolution.loser_hmm_score,
         "loser_model_score": resolution.loser_model_score,
     })
 
@@ -1716,8 +1741,12 @@ def _gene_evidence(
     member_clusters: list[GeneCluster],
     family_key: FamilyKey,
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome],
+    lost_to: dict[tuple[int, str], str] | None = None,
 ) -> list[GeneEvidence]:
     """Report-ready per-gene evidence for ONE family across its own clusters.
+
+    `lost_to` maps (id(cluster), gene_name) to the winning gene's name for each
+    losing half of a resolved pair; those entries are marked, not dropped.
 
     Per gene, the canonical `PolishOutcome.canonical` model wins when that gene
     was polished in that cluster; a `STATUS_UNPOLISHED` gene (canonical is None)
@@ -1872,6 +1901,9 @@ def _gene_evidence(
             best[(id(cluster), gene_name)] = evidence
     # `gene_name` is part of the sort key so two entries that happen to share a
     # contig and a start coordinate still order deterministically.
+    for key, winner in (lost_to or {}).items():
+        if key in best:
+            best[key] = replace(best[key], lost_to=winner)
     return sorted(best.values(), key=lambda e: (e.contig, e.start, e.end, e.gene_name))
 
 
@@ -2453,6 +2485,7 @@ def run_pipeline(
 
     #: (cluster, family, gene) whose polished model LOST a model-based decision.
     model_losers: set[tuple[int, FamilyKey, str]] = set()
+    pair_seq_cache: dict[str, object] = {}
     # Decide each sexM/sexP-style pair on its two MODELS, for the families that
     # ask for it. Runs after the post-polish pass so the tblastn-identity rule
     # cannot overwrite the model verdict. The first-pass event for the same
@@ -2469,9 +2502,15 @@ def run_pipeline(
                 for (cluster_id, key, gene), outcome in polish_by.items()
                 if cluster_id == id(cluster) and key == family.key
             }
-            resolved_own, own_events = resolve_idiomorph_by_models(
-                own, family, models, min_overlap_fraction=idiomorph_overlap_fraction
-            )
+            hmm_scores = _own_profile_scores_for(family, models, genome_fasta, genetic_code, pair_seq_cache)
+            if hmm_scores is not None:
+                resolved_own, own_events = resolve_idiomorph_by_hmm(
+                    own, family, models, hmm_scores, min_overlap_fraction=idiomorph_overlap_fraction
+                )
+            else:
+                resolved_own, own_events = resolve_idiomorph_by_models(
+                    own, family, models, min_overlap_fraction=idiomorph_overlap_fraction
+                )
             if not own_events:
                 continue
             model_losers.update((id(cluster), family.key, e.loser) for e in own_events)
@@ -2505,11 +2544,15 @@ def run_pipeline(
                 continue
             clf = load_classifier(family.idiomorph_classifier, family)
             gene_idiomorph = classifier_genes(family)
+            # The verdict scores the WINNERS of resolved pairs only: a set-aside
+            # gene's protein says nothing about this locus's idiomorph.
+            set_aside = {e.loser for e in idiomorph_events_by_cluster.get(id(cluster), ())}
             # One entry per scored model: (gene, span, protein).
             scored_models = []
             frameshift_corrected = False
             for (cluster_id, key, gene), outcome in polish_by.items():
-                if cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph:
+                if (cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph
+                        or gene in set_aside):
                     continue
                 for model in (outcome.miniprot_model, outcome.exonerate_model):
                     if model is None:
@@ -2526,11 +2569,11 @@ def run_pipeline(
                 # No core protein was modelled: score the tblastn HSP
                 # translations instead (curator's ruling 2026-09-27), rather
                 # than letting an identity comparison of short hits decide.
-                # Superseded hits are scored too -- the verdict must see both
-                # halves of the pair. `min_margin` still applies.
+                # Superseded (set-aside) hits are not scored: winners only.
+                # `min_margin` still applies.
                 for h in cluster.hits:
                     if (h.family_key != family.key or h.gene_name not in gene_idiomorph
-                            or h.method != "tblastn_genome"):
+                            or h.method != "tblastn_genome" or h.superseded_by is not None):
                         continue
                     span = types.SimpleNamespace(
                         contig=h.contig, start=h.start, end=h.end, strand=h.strand, exons=())
@@ -2704,7 +2747,13 @@ def run_pipeline(
             family, score.genes_found,
             [h for c in member_clusters for h in _own_live_hits(c, family.key)],
         )
-        evidence = _gene_evidence(member_clusters, score.family_key, polish_by)
+        # The losing half of each resolved pair, from the same events that decided
+        # it, so the figure can show only the winner.
+        lost_to = {
+            (id(c), e.loser): e.winner
+            for c in member_clusters for e in idiomorph_events_by_cluster.get(id(c), ())
+        }
+        evidence = _gene_evidence(member_clusters, score.family_key, polish_by, lost_to=lost_to)
         identities: dict[str, float | None] = {}
         for e in evidence:
             if e.identity is not None:

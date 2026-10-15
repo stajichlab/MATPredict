@@ -1,0 +1,57 @@
+--- kseq.h
++++ kseq.h
+@@ -95,7 +95,8 @@
+ #endif
+ 
+ #ifndef kroundup64
+-#define kroundup64(x) (--(x), (x)|=(x)>>1, (x)|=(x)>>2, (x)|=(x)>>4, (x)|=(x)>>8, (x)|=(x)>>16, (x)|=(x)>>32, ++(x))
++/* The >>32 step is undefined for a 32-bit size_t (wasm32); skip it there. */
++#define kroundup64(x) (--(x), (x)|=(x)>>1, (x)|=(x)>>2, (x)|=(x)>>4, (x)|=(x)>>8, (x)|=(x)>>16, (sizeof(x) > 4? (x)|=(x)>>32 : 0), ++(x))
+ #endif
+ 
+ #define __KS_GETUNTIL(SCOPE, __read) \
+--- mppriv.h
++++ mppriv.h
+@@ -17,7 +17,8 @@
+ #define MP_PARENT_TMP_PRI (-2)
+ 
+ #ifndef kroundup64
+-#define kroundup64(x) (--(x), (x)|=(x)>>1, (x)|=(x)>>2, (x)|=(x)>>4, (x)|=(x)>>8, (x)|=(x)>>16, (x)|=(x)>>32, ++(x))
++/* The >>32 step is undefined for a 32-bit size_t (wasm32); skip it there. */
++#define kroundup64(x) (--(x), (x)|=(x)>>1, (x)|=(x)>>2, (x)|=(x)>>4, (x)|=(x)>>8, (x)|=(x)>>16, (sizeof(x) > 4? (x)|=(x)>>32 : 0), ++(x))
+ #endif
+ 
+ #ifdef __cplusplus
+--- kthread.c
++++ kthread.c
+@@ -53,6 +53,11 @@
+ 
+ void kt_for(int n_threads, void (*func)(void*,long,int), void *data, long n)
+ {
++#ifdef __EMSCRIPTEN__
++	/* WebAssembly build: no pthreads, so run the loop serially (no worker threads). */
++	{ long j; for (j = 0; j < n; ++j) func(data, j, 0); }
++	return;
++#endif
+ 	if (n_threads > 1) {
+ 		int i;
+ 		kt_for_t t;
+@@ -129,6 +134,18 @@
+ 
+ void kt_pipeline(int n_threads, void *(*func)(void*, int, void*), void *shared_data, int n_steps)
+ {
++#ifdef __EMSCRIPTEN__
++	/* WebAssembly build: no pthreads. Run the pipeline serially with one worker,
++	 * which is the schedule the native code follows for -t 1 (same calls, same order). */
++	int step = 0;
++	void *data = 0;
++	(void)n_threads;
++	while (step < n_steps) {
++		data = func(shared_data, step, step? data : 0);
++		step = (step == n_steps - 1 || data)? (step + 1) % n_steps : n_steps;
++	}
++	return;
++#endif
+ 	ktp_t aux;
+ 	pthread_t *tid;
+ 	int i;

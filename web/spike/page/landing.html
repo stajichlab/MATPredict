@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATPredict</title>
+<meta name="description" content="MATPredict finds fungal mating-type loci. The browser version runs the detection pipeline on your genome on your own computer.">
+<style>
+  :root { --fg: #1d1d1f; --muted: #6e6e73; --bg: #ffffff; --line: #d2d2d7; --accent: #0b6bcb; --warn-bg: rgba(199,119,0,0.12); --warn: #8a5300; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --fg: #f5f5f7; --muted: #a1a1a6; --bg: #1c1c1e; --line: #3a3a3c; --accent: #4da3ff; --warn-bg: rgba(255,170,60,0.12); --warn: #ffb866; }
+  }
+  :root[data-theme="dark"] { --fg: #f5f5f7; --muted: #a1a1a6; --bg: #1c1c1e; --line: #3a3a3c; --accent: #4da3ff; --warn-bg: rgba(255,170,60,0.12); --warn: #ffb866; }
+  body { margin: 0; padding: 16px; font: 16px/1.55 system-ui, sans-serif; color: var(--fg); background: var(--bg); }
+  main { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 2rem; margin: 24px 0 4px; }
+  h2 { font-size: 1.2rem; margin: 32px 0 8px; }
+  .lede { font-size: 1.15rem; color: var(--muted); margin: 0 0 20px; }
+  .cta { display: inline-block; background: var(--accent); color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; margin: 8px 8px 8px 0; }
+  .cta.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .notice { border: 1px solid var(--warn); background: var(--warn-bg); color: var(--fg); border-radius: 8px; padding: 12px 14px; margin: 20px 0; }
+  ul { padding-left: 20px; }
+  li { margin: 6px 0; }
+  .muted { color: var(--muted); font-size: 0.92rem; }
+  a { color: var(--accent); }
+  code { font: 14px ui-monospace, monospace; }
+  footer { margin: 40px 0 24px; border-top: 1px solid var(--line); padding-top: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>MATPredict</h1>
+  <p class="lede">Find the mating-type (MAT) locus in a fungal genome, with the genes that flank it.</p>
+
+  <p>
+    <a class="cta" href="page/index.html">Open the browser tool</a>
+    <a class="cta secondary" href="https://github.com/stajichlab/MATPredict">Source on GitHub</a>
+  </p>
+
+  <div class="notice">
+    <strong>Experimental.</strong> The browser tool is a spike. It runs the same detection logic as the command-line
+    MATPredict, but the browser version has not yet been checked on every platform or against the full benchmark.
+    For published results, use the command-line tool.
+  </div>
+
+  <h2>What it does</h2>
+  <ul>
+    <li>Takes a genome assembly in FASTA format (<code>.fa</code>, <code>.fasta</code>, <code>.fna</code>), plain or gzipped.</li>
+    <li>Finds the MAT locus, the idiomorph (for example MAT1-1 or MAT1-2, or Plus and Minus in Mucoromycota), and the flanking genes.</li>
+    <li>Shows a results table, a figure of the locus with its flanks, the sequence with the locus highlighted, and the full report to download.</li>
+  </ul>
+
+  <h2>Your genome stays on your computer</h2>
+  <p>
+    The analysis runs in your browser. The genome is not uploaded to any server. The first visit downloads
+    about 35 MB of tools and reference data, which the browser then caches. Results are only as good as the
+    assembly you provide.
+  </p>
+
+  <h2>Requirements</h2>
+  <ul>
+    <li>A recent desktop browser: Chrome, Edge, Firefox, or Safari. Large genomes need several gigabytes of free memory.</li>
+    <li>JavaScript enabled. The tool does not work from a file opened on disk; use this website.</li>
+  </ul>
+
+  <h2>Command line and other tools</h2>
+  <p>
+    MATPredict is also a Python package with a command-line interface, for batch runs and reproducible analyses.
+    See the <a href="https://github.com/stajichlab/MATPredict">repository</a> for installation and documentation.
+  </p>
+
+  <footer class="muted">
+    <p>
+      The browser tool uses third-party software under their own licences, including MMseqs2 and exonerate (GPL),
+      miniprot, LOSAT, HMMER and pyhmmer. Source for each pinned version is in the repository.
+      Python runs with <a href="https://pyodide.org">Pyodide</a>.
+    </p>
+    <p>Version <span id="version">this build</span> · <a href="https://github.com/stajichlab/MATPredict/releases">Releases</a></p>
+  </footer>
+</main>
+</body>
+</html>

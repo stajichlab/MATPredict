@@ -1,0 +1,185 @@
+diff --color -ru -x b pristine/pyhmmer-0.12.3/pyproject.toml pyhmmer-0.12.3/pyproject.toml
+--- pristine/pyhmmer-0.12.3/pyproject.toml	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/pyproject.toml	2026-10-13 10:42:06
+@@ -1,6 +1,6 @@
+ 
+ [build-system]
+-requires = ["scikit-build-core >=0.11", "cython >=3.0"]
++requires = ["scikit-build-core >=0.11", "cython >=3.0.10,<3.1"]
+ build-backend = "scikit_build_core.build"
+ 
+ [project]
+@@ -59,7 +59,6 @@
+ 
+ [tool.scikit-build]
+ build-dir = "build/{build_type}"
+-wheel.py-api = "cp312"
+ editable.rebuild = true
+ editable.verbose = false
+ sdist.exclude = [
+diff --color -ru -x b pristine/pyhmmer-0.12.3/src/easel/CMakeLists.txt pyhmmer-0.12.3/src/easel/CMakeLists.txt
+--- pristine/pyhmmer-0.12.3/src/easel/CMakeLists.txt	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/src/easel/CMakeLists.txt	2026-10-13 11:04:40
+@@ -292,7 +292,7 @@
+ 
+ # --- Build libeasel with copied/patched sources -------------------------------
+ 
+-add_library(libeasel ${EASEL_PATCHED_SOURCES})
++add_library(libeasel STATIC ${EASEL_PATCHED_SOURCES})
+ target_include_directories(libeasel PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+ target_include_directories(libeasel PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+ 
+diff --color -ru -x b pristine/pyhmmer-0.12.3/src/hmmer/CMakeLists.txt pyhmmer-0.12.3/src/hmmer/CMakeLists.txt
+--- pristine/pyhmmer-0.12.3/src/hmmer/CMakeLists.txt	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/src/hmmer/CMakeLists.txt	2026-10-13 11:04:40
+@@ -215,7 +215,7 @@
+ 
+ # --- Build libhmmer with copied/patched sources -------------------------------
+ 
+-add_library(libhmmer ${HMMER_SOURCES} ${HMMER_HEADERS})
++add_library(libhmmer STATIC ${HMMER_SOURCES} ${HMMER_HEADERS})
+ target_link_libraries(libhmmer PUBLIC libeasel)
+ target_include_directories(libhmmer PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+ target_include_directories(libhmmer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+diff --color -ru -x b pristine/pyhmmer-0.12.3/src/pyhmmer/platform/CMakeLists.txt pyhmmer-0.12.3/src/pyhmmer/platform/CMakeLists.txt
+--- pristine/pyhmmer-0.12.3/src/pyhmmer/platform/CMakeLists.txt	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/src/pyhmmer/platform/CMakeLists.txt	2026-10-13 10:44:28
+@@ -2,7 +2,7 @@
+ 
+ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+     cython_extension(win32  LINKS libeasel)
+-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
++elseif((CMAKE_SYSTEM_NAME STREQUAL "Linux") OR (CMAKE_SYSTEM_NAME STREQUAL "Emscripten"))
+     cython_extension(linux  LINKS libeasel)
+ elseif((CMAKE_SYSTEM_NAME STREQUAL "Darwin") OR (CMAKE_SYSTEM_NAME MATCHES ".*BSD"))
+     cython_extension(bsd    LINKS libeasel)
+diff --color -ru -x b pristine/pyhmmer-0.12.3/src/pyhmmer/platform/__init__.pxd pyhmmer-0.12.3/src/pyhmmer/platform/__init__.pxd
+--- pristine/pyhmmer-0.12.3/src/pyhmmer/platform/__init__.pxd	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/src/pyhmmer/platform/__init__.pxd	2026-10-13 10:44:28
+@@ -1,15 +1,15 @@
+-if TARGET_SYSTEM == "Linux":
+-    from .linux cimport (
+-        _LinuxReader as _FileobjReader,
+-        _LinuxWriter as _FileobjWriter,
+-    )
+-elif TARGET_SYSTEM == "Windows":
+-    from .win32 cimport (
+-        _Win32SynchronizedReader as _FileobjReader, 
+-        _Win32SynchronizedWriter as _FileobjWriter
+-    )
+-elif TARGET_SYSTEM == "Darwin" or TARGET_SYSTEM.endswith("BSD"):
+-    from .bsd cimport (
+-        _BSDReader as _FileobjReader, 
+-        _BSDWriter as _FileobjWriter
+-    )
++if TARGET_SYSTEM == "Linux" or TARGET_SYSTEM == "Emscripten":
++    from .linux cimport (
++        _LinuxReader as _FileobjReader,
++        _LinuxWriter as _FileobjWriter,
++    )
++elif TARGET_SYSTEM == "Windows":
++    from .win32 cimport (
++        _Win32SynchronizedReader as _FileobjReader, 
++        _Win32SynchronizedWriter as _FileobjWriter
++    )
++elif TARGET_SYSTEM == "Darwin" or TARGET_SYSTEM.endswith("BSD"):
++    from .bsd cimport (
++        _BSDReader as _FileobjReader, 
++        _BSDWriter as _FileobjWriter
++    )
+diff --color -ru -x b pristine/pyhmmer-0.12.3/vendor/easel/esl_cpu.c pyhmmer-0.12.3/vendor/easel/esl_cpu.c
+--- pristine/pyhmmer-0.12.3/vendor/easel/esl_cpu.c	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/vendor/easel/esl_cpu.c	2026-10-13 10:27:32
+@@ -201,7 +201,10 @@
+ static void 
+ cpu_run_id(uint32_t eax, uint32_t ecx, uint32_t *abcd)
+ {
+-#if defined(_MSC_VER)
++#if defined(__EMSCRIPTEN__)
++  /* WebAssembly has no cpuid: report no optional features (SIMD code is compiled in). */
++  (void) eax; (void) ecx; abcd[0] = abcd[1] = abcd[2] = abcd[3] = 0;
++#elif defined(_MSC_VER)
+   __cpuidex(abcd, eax, ecx);
+ #else
+   uint32_t ebx = 0;
+diff --color -ru -x b pristine/pyhmmer-0.12.3/vendor/easel/esl_sse.c pyhmmer-0.12.3/vendor/easel/esl_sse.c
+--- pristine/pyhmmer-0.12.3/vendor/easel/esl_sse.c	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/vendor/easel/esl_sse.c	2026-10-13 10:29:31
+@@ -37,7 +37,11 @@
+ #include <math.h>
+ #include <float.h>
+ 
++#if defined(__EMSCRIPTEN__)
++#include <smmintrin.h>  /* SSE2..SSE4.1, mapped to WebAssembly SIMD by Emscripten */
++#else
+ #include <x86intrin.h>
++#endif
+ 
+ #include "easel.h"
+ #include "esl_sse.h"
+diff --color -ru -x b pristine/pyhmmer-0.12.3/vendor/easel/esl_sse.h pyhmmer-0.12.3/vendor/easel/esl_sse.h
+--- pristine/pyhmmer-0.12.3/vendor/easel/esl_sse.h	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/vendor/easel/esl_sse.h	2026-10-13 10:32:08
+@@ -22,7 +22,11 @@
+ #include "easel.h"
+ 
+ #include <stdio.h>
+-#include <x86intrin.h>	
++#if defined(__EMSCRIPTEN__)
++#include <smmintrin.h>
++#else
++#include <x86intrin.h>
++#endif
+ 
+ 
+ /*****************************************************************
+diff --color -ru -x b pristine/pyhmmer-0.12.3/vendor/easel/esl_stopwatch.c pyhmmer-0.12.3/vendor/easel/esl_stopwatch.c
+--- pristine/pyhmmer-0.12.3/vendor/easel/esl_stopwatch.c	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/vendor/easel/esl_stopwatch.c	2026-10-13 10:54:15
+@@ -8,6 +8,25 @@
+  *     http://creativecommons.org/licenses/by/3.0/deed.en_US
+  */
+ #include <esl_config.h>
++#if defined(__EMSCRIPTEN__)
++/* Pyodide's C library has no times(). Stand in with clock(): CPU time only, used for timing
++ * output, never for results. */
++#include <sys/times.h>
++#include <time.h>
++static clock_t esl_emscripten_times(struct tms *buf) {
++  clock_t c = clock();
++  if (buf) { buf->tms_utime = c; buf->tms_stime = 0; buf->tms_cutime = 0; buf->tms_cstime = 0; }
++  return c;
++}
++#define times esl_emscripten_times
++/* time(): wall-clock seconds are not needed for results; this avoids a 64-bit host import. */
++static time_t esl_emscripten_time(time_t *t) {
++  time_t v = (time_t)(clock() / CLOCKS_PER_SEC);
++  if (t) *t = v;
++  return v;
++}
++#define time esl_emscripten_time
++#endif
+ 
+ #include "easel.h"
+ #include "esl_stopwatch.h"
+diff --color -ru -x b pristine/pyhmmer-0.12.3/vendor/hmmer/src/impl_sse/p7_oprofile.c pyhmmer-0.12.3/vendor/hmmer/src/impl_sse/p7_oprofile.c
+--- pristine/pyhmmer-0.12.3/vendor/hmmer/src/impl_sse/p7_oprofile.c	2022-11-09 04:37:21
++++ pyhmmer-0.12.3/vendor/hmmer/src/impl_sse/p7_oprofile.c	2026-10-13 22:30:34
+@@ -669,7 +669,7 @@
+   uint8_t b;
+ 
+   sc  = -1.0f * roundf(om->scale_b * sc);                          /* ugh. sc is now an integer cost represented in a float...           */
+-  b   = (sc > 255 - om->bias_b) ? 255 : (uint8_t) sc + om->bias_b; /* and now we cast, saturate, and bias it to an unsigned char cost... */
++  b   = (sc > 255 - om->bias_b) ? 255 : (uint8_t) ((int) sc + (int) om->bias_b); /* cast, saturate, and bias it: negative costs wrap mod 256 (defined via int) */
+   return b;
+ }
+  
+@@ -685,7 +685,7 @@
+   uint8_t b;
+ 
+   sc  = -1.0f * roundf(om->scale_b * sc);       /* ugh. sc is now an integer cost represented in a float...    */
+-  b   = (sc > 255.) ? 255 : (uint8_t) sc;	/* and now we cast and saturate it to an unsigned char cost... */
++  b   = (sc > 255.) ? 255 : (uint8_t) (int) sc;	/* cast via int: negative values wrap mod 256, as on x86, without undefined behaviour */
+   return b;
+ }
+  

@@ -118,7 +118,7 @@ def _run(tmp_path, stray=False, core_models=True, flank_identity=90.0, rnhA_bits
         identity = 35.0 if roles[gene_name] == "core_MAT" else flank_identity
         m = _model(gene_name, "c1", *spans[gene_name], identity=identity, family_key=KEY,
                    role=roles[gene_name], method=method)
-        # The model scores say sexM; the protein the locus encodes is sexP.
+        # The model scores say sexM; the profile bitscores say sexP, and the profile decides.
         return dataclasses.replace(m, score={"sexM": 300.0, "sexP": 150.0}.get(gene_name, 500.0))
 
     return run_pipeline(
@@ -151,7 +151,9 @@ def test_a_decisive_verdict_makes_the_pair_agree(tmp_path):
     (r,) = _run(tmp_path).results
     assert "sexP" in r.genes_found and "sexM" not in r.genes_found
     (e,) = [e for e in r.idiomorph_resolutions if {e.winner, e.loser} == {"sexM", "sexP"}]
-    assert (e.winner, e.loser, e.basis) == ("sexP", "sexM", "hmm_classifier")
+    # The pair is decided on each gene's own profile bitscore, before the verdict runs.
+    assert (e.winner, e.loser, e.basis) == ("sexP", "sexM", "hmm_bitscore")
+    assert e.winner_hmm_score > e.loser_hmm_score
     assert r.polished_genes == 3          # sexP, tptA, rnhA -- the loser never counts
 
 
@@ -160,7 +162,8 @@ def test_below_min_margin_the_call_is_undetermined_and_no_hit_changes(tmp_path):
     assert r.idiomorph == "undetermined"
     assert r.idiomorph_classifier["idiomorph"] == "undetermined"
     assert set(r.idiomorph_classifier["scores"]) == {"Plus", "Minus"}
-    assert "sexM" in r.genes_found        # the model-pair decision's winner stands
+    # The pair is decided on the profile bitscores, independent of the verdict's margin.
+    assert "sexP" in r.genes_found and "sexM" not in r.genes_found
 
 
 def test_a_roster_that_names_a_missing_hmm_is_an_error(tmp_path):

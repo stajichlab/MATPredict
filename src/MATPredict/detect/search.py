@@ -66,6 +66,7 @@ from __future__ import annotations
 import re
 import subprocess
 import tempfile
+import threading
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -486,15 +487,28 @@ def search_localize(
 #: Genome FASTA offset indexes, keyed by path, with the (size, mtime_ns) the
 #: index was built from. Bounded, because a batch run walks many genomes and an
 #: unbounded cache would hold an open file handle for every one of them.
-_GENOME_INDEX_CACHE: dict[Path, tuple[tuple[int, int], object]] = {}
+#: Held per THREAD: the polishing calls run on a thread pool, and a
+#: `SeqIO.index` must not be shared across threads (one thread could close an
+#: index another is reading). Each thread keeps at most _GENOME_INDEX_CACHE_MAX.
+_GENOME_INDEX_LOCAL = threading.local()
 _GENOME_INDEX_CACHE_MAX = 2
 
 
+def _genome_index_cache() -> dict[Path, tuple[tuple[int, int], object]]:
+    """This thread's index cache (created on first use)."""
+    cache = getattr(_GENOME_INDEX_LOCAL, "cache", None)
+    if cache is None:
+        cache = _GENOME_INDEX_LOCAL.cache = {}
+    return cache
+
+
 def clear_genome_index_cache() -> None:
-    """Drop every cached genome index, closing each handle. For tests, and for
-    any caller that wants to release handles deterministically."""
-    while _GENOME_INDEX_CACHE:
-        _, (_, index) = _GENOME_INDEX_CACHE.popitem()
+    """Drop this thread's cached genome indexes, closing each handle. For tests,
+    and for any caller that wants to release handles deterministically. Indexes
+    held by other pool threads are released when those threads next use the cache."""
+    cache = _genome_index_cache()
+    while cache:
+        _, (_, index) = cache.popitem()
         index.close()
 
 
@@ -514,26 +528,26 @@ def _genome_index(genome_fasta: Path):
     into scratch and can reuse a path. The cache is bounded and evicts by
     closing, because each entry holds an open file handle.
 
-    Not thread-safe, and deliberately so: `SeqIO.index` objects are not either,
-    and nothing in this package runs polishing concurrently within a process
-    (batch concurrency is separate processes).
+    One cache per thread (see `_genome_index_cache`): the polishing calls run
+    concurrently, and an index is only ever used by the thread that built it.
     """
+    cache = _genome_index_cache()
     stamp_source = genome_fasta.stat()
     stamp = (stamp_source.st_size, stamp_source.st_mtime_ns)
-    cached = _GENOME_INDEX_CACHE.get(genome_fasta)
+    cached = cache.get(genome_fasta)
     if cached is not None:
         if cached[0] == stamp:
             return cached[1]
         # Same path, different bytes: drop the stale index before rebuilding.
-        del _GENOME_INDEX_CACHE[genome_fasta]
+        del cache[genome_fasta]
         cached[1].close()
-    while len(_GENOME_INDEX_CACHE) >= _GENOME_INDEX_CACHE_MAX:
+    while len(cache) >= _GENOME_INDEX_CACHE_MAX:
         # Oldest first: dicts preserve insertion order, so this is FIFO.
-        oldest = next(iter(_GENOME_INDEX_CACHE))
-        _, evicted = _GENOME_INDEX_CACHE.pop(oldest)
+        oldest = next(iter(cache))
+        _, evicted = cache.pop(oldest)
         evicted.close()
     index = SeqIO.index(str(genome_fasta), "fasta")
-    _GENOME_INDEX_CACHE[genome_fasta] = (stamp, index)
+    cache[genome_fasta] = (stamp, index)
     return index
 
 

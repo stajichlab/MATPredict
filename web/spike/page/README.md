@@ -5,6 +5,18 @@ A standalone page that runs `matpredict detect` on an uploaded genome. Python ru
 in-memory filesystem), MMseqs2 (Emscripten, unthreaded), LOSAT (WASI, `browser_wasi_shim`). The
 Python bridge (`../browser/python/bridge.py`) routes subprocess calls to them. Nothing is uploaded.
 
+## Publishing to GitHub Pages
+
+The site is built and deployed by `.github/workflows/pages.yml`, not by hand.
+
+- **Releases:** merge to `main`, then push a version tag from `main`:
+  `git tag vX.Y.Z && git push origin vX.Y.Z`. The tag must point at a commit that contains `pages.yml`.
+- **Previews from a branch:** `gh workflow run pages.yml --ref <branch>`, or pick the branch in Actions → "Deploy browser page" → Run workflow. Manual runs only work once `pages.yml` is on `main`.
+- **Environment rules:** the `github-pages` environment (Settings → Environments) must allow each ref that deploys. Allow `main`, the tag pattern `v*`, and a preview branch only while you need it. Avoid wildcard branch rules, since any branch could then replace the live page.
+- **Pages source:** Settings → Pages → Build and deployment → Source: GitHub Actions. This is already set.
+
+Build the site locally with `page/build-site.sh <bundle-dir> <site-dir>` (`PYTHON` overrides the Python 3.12 interpreter used to build the wheel).
+
 ## Build and run
 
     bash ../browser/build-bundle.sh <work-dir> <bundle-dir>   # WebAssembly tools + pyhmmer wheel
@@ -12,7 +24,7 @@ Python bridge (`../browser/python/bridge.py`) routes subprocess calls to them. N
     python3 -m http.server 8000 --directory ..                 # serve web/spike (the page imports ../browser, ../localizer)
     open http://localhost:8000/page/index.html
 
-`_assets/` is generated and not committed. Serve from `web/spike/` (not `page/`) so the page can import
+`_assets/` is generated and not committed. `build-site.sh` is the Pages equivalent: it copies everything into a self-contained tree with no symlinks. Serve from `web/spike/` (not `page/`) so the page can import
 the shared host and bridge modules.
 
 ## Output

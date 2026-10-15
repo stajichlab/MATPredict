@@ -20,24 +20,29 @@ cp "$SPIKE/localizer/localizer.py" "$SITE/localizer/"
 cp -RL "$SPIKE/node_modules/@bjorn3/browser_wasi_shim/." "$SITE/node_modules/@bjorn3/browser_wasi_shim/"
 
 # WebAssembly tools and the pyhmmer wheel, copied (not linked) from the bundle.
-cp -RL "$BUNDLE/miniprot" "$BUNDLE/mmseqs" "$BUNDLE/exonerate" "$BUNDLE/losat" "$SITE/page/_assets/"
-cp -L "$BUNDLE"/pyhmmer-*.whl "$SITE/page/_assets/"
+# The page requests these from _assets/bundle/ (see app.mjs and index.html).
+mkdir -p "$SITE/page/_assets/bundle"
+cp -RL "$BUNDLE/miniprot" "$BUNDLE/mmseqs" "$BUNDLE/exonerate" "$BUNDLE/losat" "$SITE/page/_assets/bundle/"
+cp -L "$BUNDLE"/pyhmmer-*.whl "$SITE/page/_assets/bundle/"
 
 # The curated database, copied from the checkout.
 cp -RL "$REPO/db" "$SITE/page/_assets/db"
 
 # A MATPredict wheel built from this checkout, so the site runs the code it was deployed from.
+# MATPredict needs Python 3.11+ to build; PYTHON overrides the default interpreter.
+PYTHON="${PYTHON:-python3.12}"
+command -v "$PYTHON" > /dev/null || PYTHON=python3
 WHEEL_DIR="$(mktemp -d)"
-python3 -m pip wheel --no-deps -q -w "$WHEEL_DIR" "$REPO"
+"$PYTHON" -m pip wheel --no-deps -q -w "$WHEEL_DIR" "$REPO"
 cp "$WHEEL_DIR"/matpredict-*.whl "$SITE/page/_assets/matpredict.whl"
 
 # The database manifest the page mounts, and the pyhmmer wheel's name.
-python3 - "$SITE/page/_assets" <<'PY'
+"$PYTHON" - "$SITE/page/_assets" <<'PY'
 import json, os, sys
 assets = sys.argv[1]
 db = os.path.join(assets, "db")
 files = sorted(os.path.relpath(os.path.join(r, n), db) for r, _, names in os.walk(db) for n in names)
-wheels = sorted(n for n in os.listdir(assets) if n.startswith("pyhmmer-") and n.endswith(".whl"))
+wheels = sorted(n for n in os.listdir(os.path.join(assets, "bundle")) if n.startswith("pyhmmer-") and n.endswith(".whl"))
 assert wheels, "no pyhmmer wheel in the bundle"
 json.dump({"db": files, "pyhmmerWheel": wheels[0]}, open(os.path.join(assets, "db-manifest.json"), "w"), indent=1)
 print(f"manifest: {len(files)} database files, {wheels[0]}")

@@ -139,3 +139,11 @@ MAT stratum is the guard against helixer's undercalling.
   cluster was the slow step, so sources are sent as `git archive` instead.
 - Malassezia has no NCBI annotation, so it cannot be scored.
 - `tests/db` still fails at collection (not investigated).
+
+### Correction (end of session)
+- Metric array 29979104 finished, but two of its eight outputs were empty: `mucor_mucedo` and
+  `saccharomyces_r64`. detect could not resolve their phylum (no taxid), so it searched nothing and helixer
+  had no windows. The other six have real output (7 to 36 helixer models).
+- Fix submitted: `metric/fix.slurm` reruns detect with `--phylum Mucoromycota` (Mucor) and `--phylum
+  Ascomycota` (R64), then the helixer stage, writing to `metric/detect/<name>/` and `metric/helixer/<name>.tsv`.
+- Check: `wc -l metric/helixer/*.tsv` should be above 1 for all eight genomes before scoring.

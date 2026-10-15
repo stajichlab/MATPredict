@@ -8,7 +8,9 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 PINNED=564f40d   # upstream master commit used for this build
 mkdir -p "$WORK" && cd "$WORK"
 [ -d MMseqs2 ] || git clone -q https://github.com/soedinglab/MMseqs2.git
-git -C MMseqs2 checkout -q "$PINNED"
+# Reset to the pinned commit first, so a reused work directory (already patched) builds the same tree.
+git -C MMseqs2 checkout -q -f "$PINNED"
+git -C MMseqs2 reset -q --hard "$PINNED"
 git -C MMseqs2 apply "$HERE/mmseqs2-wasm.patch"
 # Rust must come from rustup: a distro or Homebrew rustc has no wasm32 standard library.
 # (ci/setup-toolchains.sh installs it and the wasm32-unknown-emscripten target.)

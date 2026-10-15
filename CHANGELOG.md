@@ -6,6 +6,10 @@ release completed.
 
 ## [Unreleased]
 
+## [0.6.2] — 2026-10-15 — `v0.6.2`
+
+Browser version (GitHub Pages), a profile-bitscore rule for sexM/sexP-style pairs, and a winners-only locus verdict. See the entries below and the pull request.
+
 ### Added
 - `supported_span` on every called locus (report only; calls, clustering and the cluster span are unchanged): the extent of the
   locus's modelled genes plus its own hits at or above a bitscore floor (`--supported-min-bitscore`, default 33), with `beyond_supported_bp`. A strong hit of another family, or a weak hit of any family, that chains into the cluster

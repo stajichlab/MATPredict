@@ -23,7 +23,7 @@ mkdir -p "$WORK" && cd "$WORK"
 mkdir -p glib-native glib-wasm
 cp "$GLIB/glib.h" "$GLIB/glib-lite.c" "$GLIB/pkg-config" glib-native/
 cp "$GLIB/glib.h" "$GLIB/glib-lite.c" "$GLIB/pkg-config" glib-wasm/
-(cd glib-native && clang -O2 -c glib-lite.c -o glib-lite.o && ar rcs libglib-lite.a glib-lite.o)
+(cd glib-native && cc -O2 -c glib-lite.c -o glib-lite.o && ar rcs libglib-lite.a glib-lite.o)
 source "$HOME/emsdk/emsdk_env.sh" > /dev/null 2>&1
 (cd glib-wasm && emcc -O2 -c glib-lite.c -o glib-lite.o && emar rcs libglib-lite.a glib-lite.o)
 

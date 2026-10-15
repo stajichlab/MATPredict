@@ -8,6 +8,8 @@
 # Usage: build-bundle.sh <work-dir> <bundle-dir>
 set -eo pipefail
 WORK="$1"; BUNDLE="$2"
+# rustup installs cargo under ~/.cargo; the steps below run in child shells, so load it here.
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(cd "$HERE/../../.." && pwd)"
 mkdir -p "$WORK" "$BUNDLE"

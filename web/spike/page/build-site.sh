@@ -48,11 +48,9 @@ json.dump({"db": files, "pyhmmerWheel": wheels[0]}, open(os.path.join(assets, "d
 print(f"manifest: {len(files)} database files, {wheels[0]}")
 PY
 
-# Pages root redirects to the page; .nojekyll keeps underscore directories (_assets) from being dropped.
-cat > "$SITE/index.html" <<'HTML'
-<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=page/index.html">
-<a href="page/index.html">MATPredict browser page</a>
-HTML
+# .nojekyll keeps underscore directories (_assets) from being dropped by Pages.
+# The site root is the landing page; it links to the tool at page/index.html.
+cp "$HERE/landing.html" "$SITE/index.html"
 touch "$SITE/.nojekyll"
 rm -rf "$WHEEL_DIR"
 du -sh "$SITE"

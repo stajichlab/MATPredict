@@ -4,6 +4,8 @@ import { loadPyodide } from "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodi
 import { ToolHost } from "../browser/host/tool-host.mjs";
 import { runWasiCommand, WORK_DIR } from "../browser/host/wasi-runner.mjs";
 import createMiniprot from "./_assets/bundle/miniprot/miniprot.mjs";
+import { locusFasta, locusGenbank } from "./genbank.mjs";
+import { locusProteinsFasta } from "./proteins.mjs";
 
 const ASSETS = "./_assets";
 const $ = (id) => document.getElementById(id);
@@ -114,9 +116,11 @@ function parseLoci(gff) {
     if (f.length < 9) continue;
     const attrs = Object.fromEntries(f[8].split(";").map((kv) => kv.split("=")));
     if (f[2] === "MAT_locus") {
-      loci.set(attrs.ID, { id: attrs.ID, contig: f[0], start: +f[3], end: +f[4], family: attrs.family, genes: [] });
+      loci.set(attrs.ID, { id: attrs.ID, contig: f[0], start: +f[3], end: +f[4], family: attrs.family,
+        idiomorph: attrs.idiomorph, confidence: attrs.confidence, genes: [] });
     } else if (f[2] === "gene" && attrs.present === "true") {
-      genes.push({ parent: attrs.Parent, name: attrs.Name, role: attrs.role, start: +f[3], end: +f[4], strand: f[6], identity: attrs.identity });
+      genes.push({ parent: attrs.Parent, name: attrs.Name, role: attrs.role, start: +f[3], end: +f[4], strand: f[6],
+        identity: attrs.identity, method: attrs.method, status: attrs.status });
     }
   }
   for (const g of genes) if (loci.has(g.parent)) loci.get(g.parent).genes.push(g);
@@ -145,6 +149,7 @@ function locusSvg(locus, flank, contigLength) {
 }
 
 // Flanking sequence, 60 per line with 1-based coordinates; the locus bases are highlighted.
+// Shown inside a collapsed block; the downloads are the primary way to use it.
 function sequenceHtml(locus, seq, flank) {
   const w0 = Math.max(1, locus.start - flank);
   const w1 = Math.min(seq.length, locus.end + flank);
@@ -187,6 +192,35 @@ function renderResults(res, genomeText) {
   const loci = parseLoci(res.gff);
   const flank = +$("flank").value;
   $("figure").innerHTML = loci.map((l) => locusSvg(l, flank, (contigs.get(l.contig) || "").length)).join("");
+  // Downloads per locus: the locus with its flanks as FASTA, and as an annotated GenBank record.
+  const blobLink = (text, type, name) => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([text], { type }));
+    a.download = name;
+    a.textContent = name;
+    return a;
+  };
+  const box = $("locus-downloads");
+  box.innerHTML = "";
+  for (const l of loci) {
+    const seq = contigs.get(l.contig) || "";
+    const row = document.createElement("p");
+    row.className = "dl-row";
+    row.append(`${l.id} (${l.contig}, ${flank.toLocaleString()} bp flank): `);
+    row.append(blobLink(locusFasta(l, seq, flank), "text/plain", `${l.id}.flank${flank}.fna`), " · ");
+    row.append(blobLink(locusGenbank(l, seq, flank), "text/plain", `${l.id}.flank${flank}.gbk`));
+    box.appendChild(row);
+  }
+  // Predicted proteins of each locus's genes (set-aside genes excluded), translated from the gene models.
+  res.detected.forEach((d, i) => {
+    const label = loci[i]?.id ?? `locus${i + 1}`;
+    const text = locusProteinsFasta(d, contigs.get(d.contig) || "", label);
+    if (!text) return;
+    const row = document.createElement("p");
+    row.className = "dl-row";
+    row.append(`${label} proteins: `, blobLink(text, "text/plain", `${label}.proteins.faa`));
+    box.appendChild(row);
+  });
   $("sequence").innerHTML = loci.map((l) => `<div class="muted">${esc(l.id)} · ${esc(l.contig)}:${l.start}–${l.end} (locus in highlight)</div>${sequenceHtml(l, contigs.get(l.contig) || "", flank)}`).join("\n\n");
   $("report").srcdoc = res.html;
   const dl = (id, text, type, name) => {

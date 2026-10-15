@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV PYHMMER_TOOLS=/root/pyhmmer-tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
       build-essential cmake git curl ca-certificates patch autoconf automake libtool \
-      bison flex pkg-config xz-utils bzip2 unzip zlib1g-dev python3.12 python3.12-venv \
+      bison flex pkg-config xz-utils bzip2 unzip zlib1g-dev python3.12 python3.12-venv python3.12-dev \
       nodejs npm && rm -rf /var/lib/apt/lists/*
 WORKDIR /work
 CMD ["bash", "-c", "bash /src/web/spike/ci/setup-toolchains.sh && bash /src/web/spike/browser/build-bundle.sh /work/build /out"]

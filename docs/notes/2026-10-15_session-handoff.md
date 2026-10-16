@@ -147,3 +147,29 @@ MAT stratum is the guard against helixer's undercalling.
 - Fix submitted: `metric/fix.slurm` reruns detect with `--phylum Mucoromycota` (Mucor) and `--phylum
   Ascomycota` (R64), then the helixer stage, writing to `metric/detect/<name>/` and `metric/helixer/<name>.tsv`.
 - Check: `wc -l metric/helixer/*.tsv` should be above 1 for all eight genomes before scoring.
+
+### Metric results (scored 2026-10-15, eight genomes; descriptive, not a decision)
+Scored with `scripts/panel_helixer_metric.py score` against each genome's NCBI annotation (HPCC job 29979577 for
+the two repaired genomes; the other six from array 29979104).
+
+| stratum | NCBI genes | pipeline within 30 bp | helixer matched | helixer within 30 bp (of matched) |
+|---|---|---|---|---|
+| core MAT | 17 | 15/17 | 15/17 | 13/15 |
+| flank | 18 | 6/18 | 17/18 | 9/17 |
+
+- Core MAT: homology boundaries agree more often than helixer's where both match. Helixer misses 2 of 17
+  core genes (aspergillus 1 of 2, ustilago 1 of 4).
+- Flank: helixer's ends agree with NCBI more often than homology's (9/17 against 6/18), and helixer matches
+  almost every flank gene. This is the direction the rule hypothesis predicted.
+- Helixer also models NCBI genes the pipeline does not search for (unmodelled stratum: 12/16 in R64, 18/27 in
+  Rhizopus, 8/8 in *Mucor mucedo*). That reflects the pipeline's roster, not the predictor.
+
+Caveats, to state with these numbers:
+- NCBI is a prediction, not truth. Agreement is evidence only.
+- Small n: 17 core and 18 flank genes across eight genomes. No significance is claimed.
+- Denominators differ slightly: the helixer boundary figure is over matched genes; the pipeline figure is over all NCBI genes.
+- Malassezia is excluded (no NCBI annotation).
+- The flank result depends on the ±5 kb window policy; the window was fixed in advance and not varied.
+
+Next: decide the rule (the flank-only helixer rule looks consistent with these counts, and leaves core MAT on
+homology). That decision is yours. It is not adopted in code.

@@ -20,6 +20,11 @@ import argparse
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
+from types import SimpleNamespace
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from MATPredict.detect.helixer_rule import REFINED, refine_gene  # noqa: E402
+from MATPredict.detect.tracks import Track, TrackGene  # noqa: E402
 
 TOL_BP = 30
 MIN_RECIPROCAL = 0.5
@@ -42,17 +47,29 @@ def read_detected_genes(path: Path):
     return genes, spans
 
 
-def read_ncbi_genes(path: Path):
-    out = []
+def read_ncbi_genes(path: Path, extent: str = "gene"):
+    """(contig, start, end, strand, name) per NCBI gene. `extent` "gene" is the gene feature; "cds" is the span of
+    the gene's CDS features (min start, max end over its transcripts), which excludes UTRs and is the like-for-like
+    comparison for coding models. Genes with no CDS are dropped under "cds"."""
+    genes, mrna_parent, cds = {}, {}, {}
     for line in path.read_text().splitlines():
         if not line or line.startswith("#"):
             continue
         f = line.split("\t")
-        if len(f) < 9 or f[2] != "gene":
+        if len(f) < 9:
             continue
         attrs = dict(kv.split("=", 1) for kv in f[8].split(";") if "=" in kv)
-        out.append((f[0], int(f[3]), int(f[4]), f[6], attrs.get("Name", attrs.get("ID", "?"))))
-    return out
+        if f[2] == "gene":
+            genes[attrs.get("ID", "?")] = (f[0], int(f[3]), int(f[4]), f[6], attrs.get("Name", attrs.get("ID", "?")))
+        elif f[2] in ("mRNA", "transcript") and "Parent" in attrs:
+            mrna_parent[attrs["ID"]] = attrs["Parent"]
+        elif f[2] == "CDS" and "Parent" in attrs:
+            gid = mrna_parent.get(attrs["Parent"], attrs["Parent"])
+            lo, hi = cds.get(gid, (10 ** 12, 0))
+            cds[gid] = (min(lo, int(f[3])), max(hi, int(f[4])))
+    if extent == "gene":
+        return list(genes.values())
+    return [(c, cds[g][0], cds[g][1], st, n) for g, (c, _, _, st, n) in genes.items() if g in cds]
 
 
 def match(a, b) -> int:
@@ -88,7 +105,6 @@ def stratum(role: str) -> str:
 
 
 def run_helixer(args) -> None:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
     from Bio import SeqIO
     from MATPredict.detect.helixer_windows import run_helixer_windows
 
@@ -102,9 +118,9 @@ def run_helixer(args) -> None:
     track = run_helixer_windows(spans, seqs, lengths, flank=5000, lineage="fungi", cpus=args.cpus,
                                 binary=[args.helixerlite])
     with open(args.out, "w") as fh:
-        fh.write("contig\tstart\tend\tstrand\tname\n")
+        fh.write("contig\tstart\tend\tstrand\tname\tcomplete_orf\n")
         for g in track.genes:
-            fh.write(f"{g.contig}\t{g.start}\t{g.end}\t{g.strand}\t{g.name}\n")
+            fh.write(f"{g.contig}\t{g.start}\t{g.end}\t{g.strand}\t{g.name}\t{g.complete_orf}\n")
     print(f"helixer: {len(track.genes)} models in {len(spans)} locus span(s) -> {args.out}")
 
 
@@ -116,12 +132,25 @@ def read_helixer(path: Path):
     return out
 
 
-def score_one(name, detected, helixer_tsv, ncbi_gff):
+def read_helixer_orf(path: Path) -> dict:
+    """name -> complete_orf (True/False), or None when the table predates the column."""
+    out = {}
+    for line in path.read_text().splitlines()[1:]:
+        f = line.split("\t")
+        out[f[4]] = {"True": True, "False": False}.get(f[5]) if len(f) > 5 else None
+    return out
+
+
+def score_one(name, detected, helixer_tsv, ncbi_gff, extent="gene"):
     ours, spans = read_detected_genes(Path(detected))
     ours_t = [(g[0], g[1], g[2], g[3], g[4]) for g in ours]
     role_of = {(g[0], g[1], g[2], g[3]): g[5] for g in ours}
     hx = read_helixer(Path(helixer_tsv))
-    ncbi = read_ncbi_genes(Path(ncbi_gff))
+    orf = read_helixer_orf(Path(helixer_tsv))
+    hx_track = Track("helixer", tuple(
+        TrackGene(name=h[4], contig=h[0], start=h[1], end=h[2], strand=h[3], exons=((h[1], h[2]),),
+                  source="helixer", complete_orf=orf.get(h[4])) for h in hx))
+    ncbi = read_ncbi_genes(Path(ncbi_gff), extent)
 
     counts = defaultdict(Counter)
     ours_in_ncbi = set()
@@ -139,6 +168,17 @@ def score_one(name, detected, helixer_tsv, ncbi_gff):
         ours_in_ncbi.add((o[0], o[1], o[2], o[3]))
         if within(n, o):
             counts[st]["pipeline_bounded"] += 1
+        if st == "flank":
+            r = refine_gene(SimpleNamespace(gene_name=o[4], role=role_of[(o[0], o[1], o[2], o[3])],
+                                            contig=o[0], start=o[1], end=o[2], strand=o[3]), hx_track)
+            rule_model = (o[0], r.start, r.end, o[3])
+            counts[st]["rule_bounded"] += within(n, rule_model)
+            if r.action == REFINED:
+                counts[st]["rule_changed"] += 1
+                if within(n, o) and not within(n, rule_model):
+                    counts[st]["rule_lost"] += 1
+                if within(n, rule_model) and not within(n, o):
+                    counts[st]["rule_gained"] += 1
         h = best(n, hx)
         if h is not None:
             counts[st]["helixer_matched"] += 1
@@ -156,13 +196,17 @@ def score_one(name, detected, helixer_tsv, ncbi_gff):
         hm = f"{c['helixer_matched']}/{n}" if n else f"{c['helixer_matched']}"
         hb = f"{c['helixer_bounded']}/{c['helixer_matched']}" if c["helixer_matched"] and st != "unmodelled" else "-"
         print(f"   {st:10s} {n:6d} {pb:>13s} {hm:>11s} {hb:>11s}")
+    f = counts["flank"]
+    if f["ncbi"]:
+        print(f"   flank rule: bounded {f['rule_bounded']}/{f['ncbi']} (baseline {f['pipeline_bounded']}/{f['ncbi']}); "
+              f"changed {f['rule_changed']}, gained {f['rule_gained']}, lost {f['rule_lost']}")
     print(f"   helixer models matching no NCBI gene (window extras): {unmatched_hx}")
     return counts
 
 
 def run_score(args) -> None:
     for name, detected, helixer_tsv, ncbi_gff in args.run:
-        score_one(name, detected, helixer_tsv, ncbi_gff)
+        score_one(name, detected, helixer_tsv, ncbi_gff, args.ncbi_extent)
 
 
 def main(argv=None) -> None:
@@ -175,6 +219,8 @@ def main(argv=None) -> None:
     h.add_argument("--helixerlite", required=True)
     h.add_argument("--cpus", type=int, default=4)
     s = sub.add_parser("score")
+    s.add_argument("--ncbi-extent", choices=["gene", "cds"], default="gene",
+                   help="compare with the NCBI gene feature (default) or the span of its CDS features")
     s.add_argument("--run", nargs=4, metavar=("NAME", "DETECTED", "HELIXER_TSV", "NCBI_GFF"),
                    action="append", required=True)
     args = p.parse_args(argv)

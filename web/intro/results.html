@@ -25,6 +25,10 @@
     <th data-k="name">Taxon</th><th class="n" data-k="n">Genomes</th><th class="n" data-k="rate">Called</th><th>Alleles among called genomes (count, share)</th><th class="n" data-k="two">Two alleles</th>
   </tr></thead><tbody></tbody></table></div>
   <p class="muted" id="foot"></p>
+  <h2>Download per-genome tables</h2>
+  <p>One row per genome: lineage, call, alleles, locus types, number of loci, best confidence, and each locus as <code>contig:start-end|allele|confidence|locus class</code>. Tab-separated.</p>
+  <ul id="dl"></ul>
+  <p><button id="dlview">Download genomes in the current view</button> <span class="muted" id="dlmsg"></span></p>
   <p class="muted">Rows with no value at a rank (for example Mucoromycotina family, which the input tables do not carry) are grouped under “(none)”. Genus and species come from the genome's recorded species name; unrecognised names are “(unassigned)”.
   “Two alleles” means two distinct idiomorphs were called in one genome: homothallism, silent mating cassettes, a hybrid or mixed assembly, or a paralog. It is a flag, not a ruling. Allele names are as reported per lineage and are not merged.
   A call is detection, not proof; genome counts reflect uneven strain sampling.</p>
@@ -80,6 +84,28 @@ function render() {
     return `<tr class="${drill.trim()}" data-name="${x.name.replace(/"/g, "&quot;")}"><td>${x.name}</td><td class="n">${fmt(x.n)}</td><td class="n">${pct(x.c, x.n)}</td><td>${al || '<span class="muted">none</span>'}${x.undet ? ` <span class="muted">· undetermined ${fmt(x.undet)}</span>` : ""}</td><td class="n">${x.two ? fmt(x.two) : ""}</td></tr>`;
   }).join("");
 }
+const GTAB = {}; // dataset id -> parsed rows (loaded on demand)
+$("dl").innerHTML = Object.entries(summary.datasets).filter(([, d]) => d.genome_table).map(([id, d]) =>
+  `<li><a href="${d.genome_table}" download>${d.label}</a> <span class="muted">· ${fmt(d.genomes)} genomes</span></li>`).join("");
+$("dlview").onclick = async () => {
+  $("dlmsg").textContent = "Preparing…";
+  const want = Object.entries(summary.datasets).filter(([, d]) => d.genome_table && st.ds.has(d.source === "BFD" ? "BFD" : "ZyGoLife"));
+  let head = null; const out = [];
+  for (const [id, d] of want) {
+    const lines = (await (await fetch(d.genome_table)).text()).trimEnd().split("\n");
+    head = lines[0]; const cols = head.split("\t");
+    for (const ln of lines.slice(1)) {
+      const f = ln.split("\t"), row = Object.fromEntries(cols.map((c, i) => [c, f[i] || ""]));
+      if (Object.entries(st.filt).some(([k, v]) => (row[k] || "(none)") !== v)) continue;
+      if (st.q && !(row[st.rank] || "(none)").toLowerCase().includes(st.q)) continue;
+      out.push(ln);
+    }
+  }
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([[head, ...out].join("\n") + "\n"], { type: "text/tab-separated-values" }));
+  a.download = "matpredict_genomes_view.tsv"; a.click();
+  $("dlmsg").textContent = `${fmt(out.length)} genomes`;
+};
 $("tbl").tBodies[0].addEventListener("click", e => {
   const tr = e.target.closest("tr"); if (!tr || st.rank === "species") return;
   st.filt[st.rank] = tr.dataset.name;

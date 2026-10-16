@@ -1629,9 +1629,26 @@ def _window_padding(
 _POLISH_POOL = None
 
 
+class _InlineExecutor:
+    """Runs each submitted call at once, in the caller's thread, and returns a finished Future.
+
+    Used when there is one worker: Pyodide (the browser build) cannot start a thread, so a
+    ThreadPoolExecutor would fail on its first submit. Results and exceptions come back through
+    Future.result() exactly as with a pool, so the callers do not change."""
+
+    def submit(self, fn, /, *args, **kwargs):
+        import concurrent.futures
+        future = concurrent.futures.Future()
+        try:
+            future.set_result(fn(*args, **kwargs))
+        except BaseException as exc:  # noqa: BLE001 - re-raised by future.result(), as a pool would
+            future.set_exception(exc)
+        return future
+
+
 def _polish_executor():
     """The shared pool for the polishing calls. Workers default to min(4, CPUs);
-    MATPREDICT_POLISH_WORKERS overrides (1 reproduces the serial order)."""
+    MATPREDICT_POLISH_WORKERS overrides (1 runs the calls inline, in the serial order)."""
     global _POLISH_POOL
     if _POLISH_POOL is None:
         import concurrent.futures
@@ -1640,7 +1657,8 @@ def _polish_executor():
         # Pyodide (the browser build) is single-threaded and runs subprocess waits through run_sync.
         default = 1 if sys.platform == "emscripten" else min(4, os.cpu_count() or 1)
         workers = int(os.environ.get("MATPREDICT_POLISH_WORKERS", "0")) or default
-        _POLISH_POOL = concurrent.futures.ThreadPoolExecutor(max_workers=workers, thread_name_prefix="polish")
+        _POLISH_POOL = (_InlineExecutor() if workers == 1 else
+                        concurrent.futures.ThreadPoolExecutor(max_workers=workers, thread_name_prefix="polish"))
     return _POLISH_POOL
 
 

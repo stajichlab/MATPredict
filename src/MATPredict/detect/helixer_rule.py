@@ -14,6 +14,13 @@ genes, where it also undercalls. So:
 * The rule never removes or adds a gene and never changes a call. It returns the refined model beside the
   original, with the action and the reason, so the change is recorded and the original stays in the report.
 
+**Query check.** Given the curated query protein, the homology protein and a way to translate a helixer model,
+the extension is kept only when helixer's protein is better explained by the query than the homology protein
+is: its local-alignment score against the query (BLOSUM62) must exceed the homology protein's by at least
+`MIN_SCORE_GAIN`. An extension whose extra residues do not align to the query, or that replaces aligned
+residues with unaligned ones, is not evidence of a better model and the homology model stays. Without the
+three inputs the rule runs unverified (`Refinement.verified` False).
+
 ``complete_orf`` None means unknown (an older helixer table without the column) and does not block the rule;
 only an explicit False does.
 """
@@ -24,6 +31,9 @@ from dataclasses import dataclass
 from MATPredict.detect.tracks import Track, TrackGene
 
 MIN_RECIPROCAL = 0.5
+#: Raw BLOSUM62 local-alignment score helixer's protein must add over the homology protein (about three
+#: identical residues). Fixed before the panel was scored with it.
+MIN_SCORE_GAIN = 10.0
 
 KEPT = "kept"
 REFINED = "refined"
@@ -44,6 +54,8 @@ class Refinement:
     helixer_gene: str | None = None
     delta_5p: int = 0  # bp the reported end moved from the homology end, on the gene's strand; + is outward
     delta_3p: int = 0
+    verified: bool = False  # True when the query check ran
+    score_gain: float | None = None  # helixer protein's query score minus the homology protein's
 
 
 def is_flanking(role: str | None) -> bool:
@@ -72,8 +84,32 @@ def _deltas(strand: str, start: int, end: int, new_start: int, new_end: int) -> 
     return new_end - end, start - new_start
 
 
-def refine_gene(gene, helixer: Track) -> Refinement:
-    """Apply the rule to one homology gene. `gene` needs gene_name, role, contig, start, end and strand."""
+_ALIGNER = None
+
+
+def query_score(query: str, protein: str) -> float:
+    """Best local-alignment score (BLOSUM62, gap open -11, extend -1) of `protein` against `query`."""
+    global _ALIGNER
+    from Bio import Align
+    from Bio.Align import substitution_matrices
+
+    if _ALIGNER is None:
+        a = Align.PairwiseAligner()
+        a.mode = "local"
+        a.substitution_matrix = substitution_matrices.load("BLOSUM62")
+        a.open_gap_score, a.extend_gap_score = -11, -1
+        _ALIGNER = a
+    q, p = query.replace("*", "").upper(), protein.replace("*", "").upper()
+    return float(_ALIGNER.score(q, p)) if q and p else 0.0
+
+
+def refine_gene(gene, helixer: Track, *, query: str | None = None, homology_protein: str | None = None,
+                helixer_protein=None) -> Refinement:
+    """Apply the rule to one homology gene. `gene` needs gene_name, role, contig, start, end and strand.
+
+    `query` is the curated reference protein, `homology_protein` the translation of the homology model, and
+    `helixer_protein` a function from a helixer TrackGene to its protein. With all three the extension is
+    checked against the query (see the module docstring)."""
     def kept(reason: str, hx: TrackGene | None = None) -> Refinement:
         return Refinement(gene.gene_name, gene.role, gene.contig, gene.strand, KEPT, reason,
                           gene.start, gene.end, gene.start, gene.end, hx.name if hx else None)
@@ -88,9 +124,17 @@ def refine_gene(gene, helixer: Track) -> Refinement:
     start, end = min(gene.start, hx.start), max(gene.end, hx.end)
     if (start, end) == (gene.start, gene.end):
         return kept("ends_agree" if (hx.start, hx.end) == (gene.start, gene.end) else "helixer_not_longer", hx)
+    verified, gain = False, None
+    if query and homology_protein and helixer_protein is not None:
+        verified = True
+        gain = query_score(query, helixer_protein(hx)) - query_score(query, homology_protein)
+        if gain < MIN_SCORE_GAIN:
+            return Refinement(gene.gene_name, gene.role, gene.contig, gene.strand, KEPT,
+                              "extension_not_supported_by_query", gene.start, gene.end, gene.start, gene.end,
+                              hx.name, verified=True, score_gain=gain)
     d5, d3 = _deltas(gene.strand, gene.start, gene.end, start, end)
     return Refinement(gene.gene_name, gene.role, gene.contig, gene.strand, REFINED, "helixer_extension",
-                      start, end, gene.start, gene.end, hx.name, d5, d3)
+                      start, end, gene.start, gene.end, hx.name, d5, d3, verified, gain)
 
 
 def refine_genes(genes, helixer: Track) -> list[Refinement]:

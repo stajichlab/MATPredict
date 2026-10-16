@@ -25,7 +25,6 @@ import yaml
 from Bio import SeqIO
 from Bio.Seq import Seq
 
-from MATPredict.detect import tracks as T
 from MATPredict.detect.classifier_build import score
 
 MIN_MARGIN = 25.0       # provisional: the Mucoromycota classifier's min_margin
@@ -40,6 +39,15 @@ def load_hmms(d: Path):
         with pyhmmer.plan7.HMMFile(str(d / f"{gene}.hmm")) as fh:
             out[gene] = fh.read()
     return out
+
+
+_COMP = str.maketrans("ACGTNacgtn", "TGCANtgcan")
+
+
+def coding_sequence(exons, strand: str, contig_seq: str) -> str:
+    """The spliced coding sequence of a model, reverse-complemented on the minus strand."""
+    dna = "".join(contig_seq[a - 1:b] for a, b in sorted(exons))
+    return dna.translate(_COMP)[::-1] if strand == "-" else dna
 
 
 def modelled(g): return g["status"] in ("polished_agree", "polished_single", "polished_disagree")
@@ -69,9 +77,9 @@ def proteins(entry, seq: str) -> list[str]:
     strand = entry["strand"]
     if entry.get("exons"):
         ex = tuple(sorted((int(x["start"]), int(x["end"])) for x in entry["exons"]))
-        dna = T.coding_sequence(ex, strand, seq)
+        dna = coding_sequence(ex, strand, seq)
         return [str(Seq(dna[: len(dna) // 3 * 3]).translate()).replace("*", "")]
-    dna = T.coding_sequence(((int(entry["start"]), int(entry["end"])),), strand, seq)
+    dna = coding_sequence(((int(entry["start"]), int(entry["end"])),), strand, seq)
     return [str(Seq(dna[f:][: (len(dna) - f) // 3 * 3]).translate()).replace("*", "X") for f in range(3)]
 
 

@@ -62,3 +62,22 @@ rule for families with a classifier, replacing the 2026-09-26 model-score rule. 
 agree on 6 of 8 pair decisions in five Mucoromycota genomes; the 2 that differ (Mucor sp. 1006Ph and
 *M. circinelloides*, identical numbers: profile 76 against 57 for sexM, model score 129 against 101 for sexP) are
 low-identity pairs. Families without a classifier keep the model-score rule.
+
+## Held-out test (pre-registered 2026-10-16, before any of these genomes is run)
+
+Genomes (RefSeq, NCBI-annotated, none in the 8-genome panel): *Neurospora crassa* OR74A `GCF_000182925.2_NC12`,
+*Aspergillus nidulans* FGSC A4 `GCF_000011425.1_ASM1142v1`, *Aspergillus niger* CBS 513.88 `GCF_000002855.4_ASM285v2`.
+The curated database holds records from the same strains (`5141_74-ors-a`, `162425_fgsc-a4`); each is excluded
+from the search with `--exclude-records` so the query protein for every gene comes from another strain or species.
+
+Pipeline unchanged: detect (phylum Ascomycota), helixer-lite on the locus ±5 kb windows (fungi lineage), the
+rule with the query check, scored against the NCBI annotation with the panel metric (50% reciprocal match, 30 bp
+tolerance, strata core MAT / flank).
+
+Pass criteria, fixed now: (1) core MAT agreement is unchanged by the rule (true by construction; reported);
+(2) on flank genes the rule gains more genes than it loses (gained minus lost is above zero) and loses none that
+homology had right and helixer's extension moves more than 30 bp from NCBI without query support (the query check
+should prevent this; any loss is read gene by gene); (3) no more than one extension in three is rejected by the query
+check on genes where the extension ends within 30 bp of NCBI. With three genomes the counts are descriptive; no
+significance is claimed. Performance is recorded for each stage: detect wall time and peak memory, helixer-lite
+window wall time and peak memory, and the rule check wall time.

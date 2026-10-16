@@ -22,7 +22,7 @@ def hx(start, end, strand="+", contig="c1", complete=True, name="h1"):
 
 def test_flank_gene_takes_helixer_ends_plus_strand():
     r = refine_gene(G("SLA2", "flanking_conserved", "c1", 1000, 2000, "+"), Track("helixer", (hx(950, 2100),)))
-    assert (r.action, r.start, r.end) == (REFINED, 950, 2100)
+    assert (r.action, r.reason, r.start, r.end) == (REFINED, "helixer_extension", 950, 2100)
     assert (r.original_start, r.original_end) == (1000, 2000)
     assert (r.delta_5p, r.delta_3p) == (50, 100)   # both ends grew
     assert r.helixer_gene == "h1"
@@ -33,9 +33,17 @@ def test_deltas_follow_the_gene_strand():
     assert (r.delta_5p, r.delta_3p) == (10, 100)   # on - the 5' end is the right-hand end
 
 
-def test_helixer_can_shorten_a_flank_model():
+def test_helixer_never_shortens_a_flank_model():
     r = refine_gene(G("SLA2", "flanking_conserved", "c1", 1000, 2000, "+"), Track("helixer", (hx(1030, 1990),)))
-    assert r.action == REFINED and (r.delta_5p, r.delta_3p) == (-30, -10)
+    assert (r.action, r.reason, r.start, r.end) == (KEPT, "helixer_not_longer", 1000, 2000)
+
+
+def test_each_end_moves_on_its_own():
+    # helixer reaches 80 bp further at the 5' end but stops 40 bp short at the 3' end: only the 5' end moves
+    r = refine_gene(G("SLA2", "flanking_conserved", "c1", 1000, 2000, "+"), Track("helixer", (hx(920, 1960),)))
+    assert (r.action, r.start, r.end, r.delta_5p, r.delta_3p) == (REFINED, 920, 2000, 80, 0)
+    r = refine_gene(G("SLA2", "flanking_conserved", "c1", 1000, 2000, "-"), Track("helixer", (hx(920, 1960, "-"),)))
+    assert (r.start, r.end, r.delta_5p, r.delta_3p) == (920, 2000, 0, 80)   # on - the low end is the 3' end
 
 
 def test_core_mat_keeps_homology_even_when_helixer_disagrees():

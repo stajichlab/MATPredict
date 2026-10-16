@@ -4,9 +4,11 @@ Decided from the panel metric (docs/notes/2026-10-15_session-handoff.md, "Metric
 ends agree with the NCBI annotation more often than homology's on flanking genes, and less often on core MAT
 genes, where it also undercalls. So:
 
-* A **flanking** gene (role ``flanking_*``) takes helixer-lite's ends when a helixer model matches it (same
-  contig and strand, overlap at least half the longer of the two) and that model is not known to be an
-  incomplete ORF.
+* A **flanking** gene (role ``flanking_*``) is **extended** to helixer-lite's ends when a helixer model matches
+  it (same contig and strand, overlap at least half the longer of the two) and that model is not known to be
+  an incomplete ORF. Each end is taken on its own and only ever moves outward: where helixer stops short of
+  the homology end, the homology end stays. Shortening is not allowed until a larger gene set (Aspergillus,
+  Neurospora) has been tested; a first version that also shortened lost agreement on Aspergillus.
 * Every other gene (``core_MAT`` and the rest) keeps its homology model. A missing helixer model is no
   evidence against homology; silence is not contradiction.
 * The rule never removes or adds a gene and never changes a call. It returns the refined model beside the
@@ -83,11 +85,12 @@ def refine_gene(gene, helixer: Track) -> Refinement:
         return kept("no_helixer_model")
     if hx.complete_orf is False:
         return kept("helixer_orf_incomplete", hx)
-    if (hx.start, hx.end) == (gene.start, gene.end):
-        return kept("ends_agree", hx)
-    d5, d3 = _deltas(gene.strand, gene.start, gene.end, hx.start, hx.end)
-    return Refinement(gene.gene_name, gene.role, gene.contig, gene.strand, REFINED, "helixer_ends",
-                      hx.start, hx.end, gene.start, gene.end, hx.name, d5, d3)
+    start, end = min(gene.start, hx.start), max(gene.end, hx.end)
+    if (start, end) == (gene.start, gene.end):
+        return kept("ends_agree" if (hx.start, hx.end) == (gene.start, gene.end) else "helixer_not_longer", hx)
+    d5, d3 = _deltas(gene.strand, gene.start, gene.end, start, end)
+    return Refinement(gene.gene_name, gene.role, gene.contig, gene.strand, REFINED, "helixer_extension",
+                      start, end, gene.start, gene.end, hx.name, d5, d3)
 
 
 def refine_genes(genes, helixer: Track) -> list[Refinement]:

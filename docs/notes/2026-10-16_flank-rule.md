@@ -102,7 +102,7 @@ Flank genes within 30 bp of NCBI (CDS extent):
 | both | 27 | 10 | 21 | 19 | 9 | 0 |
 
 (Unverified, both sets: 13 gained, 2 lost; the two losses are on the panel and are removed by the query check.)
-With the gene extent the held-out set is 1/9 → 5/9 (query-checked: 4 gained, 0 lost) and the panel 6/18 → 10/18.
+With the gene extent the held-out set is 0/9 → 3/9 (query-checked: 3 gained, 0 lost) and the panel 6/18 → 10/18.
 
 Pre-registered criteria: (1) core MAT unchanged: yes, by construction. (2) gained minus lost above zero and nothing
 lost: 4 gained, 0 lost on the held-out genes. (3) at most one in three within-30-bp extensions rejected by the

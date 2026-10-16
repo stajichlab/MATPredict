@@ -37,6 +37,7 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 ## Ascomycota (incl. Serinales, Dothideomycetes)
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
+| 10-16 | [Alpha-box and HMG-box profiles; Parastagonospora re-check; where wrong labels come from](2026-10-16_ascomycota-core-profiles.md) | open | profiles agree with 199/200 and 198/200 single-gene controls; Parastagonospora records run confirmed 91/91; 99 of 104 non-Parastagonospora disagreements won by MAT1-1-2 (HMG-like); dropping MAT1-1-2/-3 from the vote: agreement 685 to 871, 0 lost |
 | 10-16 | [Ascomycota MAT1-1-1 and MAT1-2-1 ambiguity](2026-10-16_ascomycota-core-gene-ambiguity.md) | open | 4,883 of 12,628 loci carry both core genes; 204 labels disagree with the higher bitscore (87 known Parastagonospora, 58 ties, 59 small gaps); lists in results/2026-10-16_ascomycota_core_ambiguity |
 | 09-26 | [Flank-carried rule](2026-09-26_flank-carried-rule.md) | decided | 39-bit floor: real 7/8, noise 0/52 |
 | 09-26 | [Polish cap](2026-09-26_polish-cap.md) | decided | compute 135.3->74.6 h |

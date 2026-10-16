@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Held-out test of the Ascomycota idiomorph call and the alpha-box / HMG-box profiles, one record and radius.
+"""Held-out test of the locus and idiomorph call (any phylum) and, for Ascomycota MAT, the alpha/HMG profiles; one record and radius.
 
     run_asco_holdout.py run --manifest testset/holdout/ascomycota_holdout.tsv --db db --record RID --radius order \
         --library DIR --work DIR --out row.json
@@ -79,8 +79,15 @@ def run(a) -> int:
     work = Path(a.work) / a.record / a.radius
     work.mkdir(parents=True, exist_ok=True)
     asm = next(Path(a.library).glob(f"{r['assembly']}_*.fa.gz"), None)
-    out = dict(record_id=a.record, radius=a.radius, subphylum=r["subphylum"], family=r["family"], system=r["system"],
-               expected=r["idiomorphs"], species=r["species"], withheld=len(drop))
+    fam_key = f"{r['phylum']}:{r['family']}"
+    out = dict(record_id=a.record, radius=a.radius, phylum=r["phylum"], subphylum=r["subphylum"], family=fam_key,
+               system=r["system"], expected=r["idiomorphs"], species=r["species"], withheld=len(drop))
+    out["ref_family_left"] = int(r[f"{a.radius}_same_family_left"])
+    out["ref_idiomorph_left"] = int(r[f"{a.radius}_same_idiomorph_left"])
+    out["classifier_leak"] = fam_key == "Mucoromycota:MAT"  # prebuilt idiomorph classifier saw every record
+    if out["ref_family_left"] == 0:  # nothing of this family is left to search with: a database gap, not a miss
+        out["status"] = "no_reference_family"
+        Path(a.out).write_text(json.dumps(out)); return 0
     if asm is None:
         out["status"] = "no_genome_in_library"
         Path(a.out).write_text(json.dumps(out)); return 0
@@ -95,11 +102,25 @@ def run(a) -> int:
     if p.returncode != 0:
         out.update(status="detect_error", stderr=p.stderr[-300:]); Path(a.out).write_text(json.dumps(out)); return 0
     doc = yaml.safe_load((det / "detection_report.yaml").read_text())
-    loci = [c for c in doc.get("detected") or [] if c.get("family") == "Ascomycota:MAT"]
+    from MATPredict.detect.family_registry import FamilyKey, load_all_families
+    fam = next((f for f in load_all_families(a.db) if f.key == FamilyKey(r["phylum"], r["family"])), None)
+    out["enum_family"] = bool(fam and fam.vocabulary_type == "enum")
+    out["routing_mode"] = doc.get("routing_mode")
+    out["all_loci_families"] = sorted({c.get("family") for c in doc.get("detected") or []})
+    loci = [c for c in doc.get("detected") or [] if c.get("family") == fam_key]
+    spans = json.loads(r.get("truth_spans") or "{}")
+    contigs = {rec.id for rec in SeqIO.parse(str(fna), "fasta")} if spans else set()
+    comparable = {k: v for k, v in spans.items() if k in contigs}
+    out["truth_comparable"] = bool(comparable)
+    out["found_at_truth"] = (any(c["contig"] in comparable and c["start"] <= comparable[c["contig"]][1]
+                                 and c["end"] >= comparable[c["contig"]][0] for c in loci) if comparable else None)
     out["loci"] = [dict(contig=c["contig"], start=c["start"], end=c["end"], idiomorph=c["idiomorph"],
                         confidence=c["confidence"], locus_class=c["locus_class"], genes=c["genes_found"])
                    for c in loci]
     out["pipeline_labels"] = sorted({c["idiomorph"] for c in loci})
+    if fam_key != "Ascomycota:MAT":
+        out["status"] = "ok"
+        Path(a.out).write_text(json.dumps(out, default=str, indent=1)); return 0
     hmms, n = build_profiles(a.db, drop, work)
     out["profile_training"] = n
     if hmms is None:
@@ -139,15 +160,38 @@ def run(a) -> int:
 
 def summarize(a) -> int:
     rows = [json.loads(Path(p).read_text()) for p in a.rows]
-    print(f"{'record':36s} {'radius':7s} {'system':13s} {'expected':14s} {'wh':>3s} loci  pipeline        profile")
-    for r in sorted(rows, key=lambda x: (x["record_id"], ["genus", "family", "order"].index(x["radius"]))):
-        exp = set(r["expected"].split("|"))
-        pl = ",".join(r.get("pipeline_labels") or []) or "-"
-        pf = ",".join(p["profile_call"] for p in r.get("profile") or []) or r["status"]
-        ok_p = (bool(exp & set(r.get("pipeline_labels") or [])) if r["system"] != "homothallic"
-                else bool(exp & set(r.get("pipeline_labels") or [])))
-        print(f"{r['record_id']:36s} {r['radius']:7s} {r['system']:13s} {r['expected']:14s} {r['withheld']:3d} "
-              f"{len(r.get('loci') or []):4d}  {pl:15s}  {pf}  {'' if r['status']=='ok' else r['status']}")
+    order = ["genus", "family", "order"]
+    print(f"{'record':34s} {'rad':6s} {'system':13s} {'expected':12s} {'wh':>3s} loci at-truth pipeline            profile")
+    tally = {}
+    for r in sorted(rows, key=lambda x: (x.get("phylum", ""), x["family"], x["record_id"], order.index(x["radius"]))):
+        exp = set(r["expected"].split("|")) - {""}
+        labels = r.get("pipeline_labels") or []
+        found = bool(r.get("loci"))
+        if r["status"] in ("detect_error", "no_genome_in_library", "no_reference_family"):
+            verdict = r["status"]
+        elif not found:
+            verdict = "no_locus"
+        elif not r.get("enum_family"):
+            verdict = "locus_found"
+        elif exp & set(labels):
+            verdict = "correct"
+        elif labels and set(labels) <= {"undetermined"}:
+            verdict = "undetermined"
+        else:
+            verdict = "wrong"
+        if verdict in ("no_locus", "wrong") and r.get("enum_family") and r.get("ref_idiomorph_left") == 0:
+            verdict = "no_reference_idiomorph"
+        r["verdict"] = verdict
+        pf = ",".join(p["profile_call"] for p in r.get("profile") or []) or "-"
+        at = {None: "n/a", True: "yes", False: "NO"}[r.get("found_at_truth")]
+        print(f"{r['record_id'][:34]:34s} {r['radius']:6s} {r['system'][:13]:13s} {r['expected'][:12]:12s} {r['withheld']:3d} "
+              f"{len(r.get('loci') or []):4d} {at:5s}   {','.join(labels)[:16] or '-':16s} {verdict:14s} {pf}")
+    print()
+    for key in sorted({(r.get("phylum", ""), r.get("subphylum", ""), r["family"], r["radius"]) for r in rows}):
+        sel = [r for r in rows if (r.get("phylum", ""), r.get("subphylum", ""), r["family"], r["radius"]) == key]
+        from collections import Counter as C
+        c = C(r["verdict"] for r in sel)
+        print(f"{key[2]:24s} {key[1]:18s} {key[3]:6s} n={len(sel):3d} {dict(c)}")
     return 0
 
 

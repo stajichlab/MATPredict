@@ -30,7 +30,8 @@
     "direct": 106,
     "unrecorded": 35,
     "not_searched": 58
-   }
+   },
+   "genome_table": "data/genomes_bfd_asco.tsv"
   },
   "bfd_basidio": {
    "label": "BFD Basidiomycota",
@@ -56,7 +57,8 @@
    "routing": {
     "lineage": 2607,
     "phylum_fallback": 663
-   }
+   },
+   "genome_table": "data/genomes_bfd_basidio.tsv"
   },
   "bfd_mucoro": {
    "label": "BFD Mucoromycotina",
@@ -79,7 +81,8 @@
     "called": 256,
     "uncalled": 33
    },
-   "routing": {}
+   "routing": {},
+   "genome_table": "data/genomes_bfd_mucoro.tsv"
   },
   "zygolife_lcg": {
    "label": "ZyGoLife LCG (held out)",
@@ -102,7 +105,8 @@
     "uncalled": 73,
     "called": 548
    },
-   "routing": {}
+   "routing": {},
+   "genome_table": "data/genomes_zygolife_lcg.tsv"
   },
   "zygolife_jena": {
    "label": "ZyGoLife Jena (held out)",
@@ -124,7 +128,8 @@
     "called": 61,
     "uncalled": 3
    },
-   "routing": {}
+   "routing": {},
+   "genome_table": "data/genomes_zygolife_jena.tsv"
   }
  },
  "generated": "2026-10-16"

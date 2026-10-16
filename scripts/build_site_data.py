@@ -7,6 +7,7 @@ Inputs are tables already under results/ (nothing is recomputed):
   BFD Mucoromycotina  results/2026-10-03_mucoromycotina_mat/calls.tsv   (source BFD)
   ZyGoLife (LCG, Jena held-out sets, Mucoromycotina)  same calls.tsv, source LCG / JENA
 
+Also writes one per-genome table per dataset, genomes_<dataset>.tsv (git-ignored; built with the site).
 Writes web/intro/data/taxa.json (one row per dataset x lineage x species, with genome counts and allele
 counts) and summary.json (per-dataset totals, locus classes, confidence). Python standard library only.
 
@@ -82,6 +83,24 @@ def loci_by_genome(rows, genome_col="genome"):
     return out
 
 
+GENOME_COLS = ["dataset", "genome", "species", "phylum", "class", "order", "family", "genus", "status", "call", "alleles",
+               "locus_types", "n_loci", "best_confidence", "loci"]
+_CONF = {"high": 3, "medium": 2, "low": 1}
+
+
+def genome_row(ds_id, genome, species, phylum, cls, order, family, status, called, alleles, types, loci):
+    """loci: list of (contig, start, end, idiomorph, confidence, locus_class). One row per genome."""
+    if not called:
+        call = status if status not in ("called", "") else "uncalled"
+    elif not alleles:
+        call = "undetermined"
+    else:
+        call = "+".join(sorted(alleles))
+    best = max((l[4] for l in loci), key=lambda c: _CONF.get(c, 0), default="")
+    return [ds_id, genome, species, phylum, cls, order, family, genus_of(species), status, call, ",".join(sorted(alleles)),
+            ",".join(sorted(set(types))), len(loci), best, ";".join(f"{c}:{a}-{b}|{i or 'undetermined'}|{cf}|{lc}" for c, a, b, i, cf, lc in loci)]
+
+
 def strip_family(f):
     return f.split(":", 1)[-1]
 
@@ -93,6 +112,7 @@ def main():
     os.makedirs(out, exist_ok=True)
 
     agg = Agg()
+    grows = defaultdict(list)
     summary = {"datasets": {}, "generated": datetime.date.today().isoformat()}
 
     def dataset(ds_id, label, phylum, source, code, n_genomes):
@@ -112,6 +132,9 @@ def main():
         alleles = {l["idiomorph"] for l in ls if l["idiomorph"] not in ("", "undetermined")}
         key = ("BFD", "Ascomycota", clean(g["class_"]), clean(g["order"]), clean(g["family"]), genus_of(g["species"]), species_of(g["species"]))
         agg.add(key, called, alleles, ["MAT locus"] if called else [])
+        grows["bfd_asco"].append(genome_row("bfd_asco", g["genome"], g["species"], "Ascomycota", clean(g["class_"]), clean(g["order"]), clean(g["family"]),
+                                            g["status"], called, alleles, ["MAT locus"] if called else [],
+                                            [(l["contig"], l["start"], l["end"], l["idiomorph"], l["confidence"], l["locus_class"]) for l in ls]))
         s["status"][g["status"]] += 1
         s["routing"][g["routing"] or "unrecorded"] += 1
         for l in ls:
@@ -130,6 +153,9 @@ def main():
         types = [strip_family(l["family_called"]) for l in ls]
         key = ("BFD", "Basidiomycota", clean(g["class_"]), clean(g["order"]), clean(g["family"]), genus_of(g["species"]), species_of(g["species"]))
         agg.add(key, called, alleles, types)
+        grows["bfd_basidio"].append(genome_row("bfd_basidio", g["genome"], g["species"], "Basidiomycota", clean(g["class_"]), clean(g["order"]), clean(g["family"]),
+                                               g["status"], called, alleles, types,
+                                               [(l["contig"], l["start"], l["end"], l["idiomorph"], l["confidence"], l["locus_class"]) for l in ls]))
         s["status"][g["status"]] += 1
         s["routing"][g["routing"] or "unrecorded"] += 1
         for l in ls:
@@ -160,6 +186,9 @@ def main():
         name = ls[0]["name"]
         key = (source, phylum, "Mucoromycotina", order, "", genus_of(name), species_of(name), src)
         agg.add(key, called, alleles, ["sexP/sexM MAT locus"] if called else [])
+        grows[ds_id].append(genome_row(ds_id, genome, name, phylum, "Mucoromycotina", order, "", "called" if called else "uncalled", called, alleles,
+                                       ["sexP/sexM MAT locus"] if called else [],
+                                       [(l["contig"], l["locus_start"], l["locus_end"], l["idiomorph"], l["confidence"], l["locus_class"]) for l in loc]))
         s["status"]["called" if called else "uncalled"] += 1
         for l in loc:
             s["loci"] += 1
@@ -185,6 +214,12 @@ def main():
             "strings": strings, "rows": rows}
     with open(os.path.join(out, "taxa.json"), "w") as fh:
         json.dump(taxa, fh, separators=(",", ":"))
+    for ds_id, grs in grows.items():
+        with open(os.path.join(out, f"genomes_{ds_id}.tsv"), "w", newline="") as fh:
+            w = csv.writer(fh, delimiter="\t", lineterminator="\n")
+            w.writerow(GENOME_COLS)
+            w.writerows(sorted(grs, key=lambda r: r[1]))
+        summary["datasets"][ds_id]["genome_table"] = f"data/genomes_{ds_id}.tsv"
     for ds in summary["datasets"].values():
         for k in ("locus_class", "confidence", "status", "routing"):
             ds[k] = dict(ds[k])

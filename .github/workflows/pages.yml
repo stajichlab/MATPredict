@@ -62,6 +62,7 @@ jobs:
       - name: Install the page's JavaScript dependency
         run: npm ci --prefix web/spike
 
+      # build-site.sh regenerates web/intro/data from the committed tables under results/ (standard library only).
       - name: Assemble the site
         run: bash web/spike/page/build-site.sh "$RUNNER_TEMP/bundle" "$RUNNER_TEMP/site"
 

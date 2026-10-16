@@ -62,7 +62,7 @@ def helixer_track(genome: Path, spans, gff: Path, exe: str, cpus: int, seqs, len
     return T.from_helixer_gff3(gff, seqs, window_offsets=True)
 
 
-def check_one(name, genome, detect_dir, ncbi_gff, hx_gff, queries, exe, cpus, totals) -> None:
+def check_one(name, genome, detect_dir, ncbi_gff, hx_gff, queries, exe, cpus, totals, extent="gene") -> None:
     doc = yaml.safe_load((Path(detect_dir) / "detection_report.yaml").read_text())
     spans = locus_spans(doc)
     seqs, lens = {}, {}
@@ -72,7 +72,7 @@ def check_one(name, genome, detect_dir, ncbi_gff, hx_gff, queries, exe, cpus, to
         if r.id in wanted:
             seqs[r.id] = str(r.seq).upper()
     track = helixer_track(Path(genome), spans, Path(hx_gff), exe, cpus, seqs, lens)
-    ncbi = pm.read_ncbi_genes(Path(ncbi_gff))
+    ncbi = pm.read_ncbi_genes(Path(ncbi_gff), extent)
     print(f"== {name}")
     for call in doc.get("detected") or []:
         for g in call.get("gene_evidence") or []:
@@ -114,6 +114,8 @@ def main(argv=None) -> None:
     p.add_argument("--db-root", required=True)
     p.add_argument("--helixerlite", required=True)
     p.add_argument("--cpus", type=int, default=4)
+    p.add_argument("--ncbi-extent", choices=["gene", "cds"], default="gene",
+                   help="compare with the NCBI gene feature (default) or the span of its CDS features")
     p.add_argument("--run", nargs=5, action="append", required=True,
                    metavar=("NAME", "GENOME_FNA", "DETECT_DIR", "NCBI_GFF", "HELIXER_GFF"))
     a = p.parse_args(argv)
@@ -121,7 +123,7 @@ def main(argv=None) -> None:
     totals = {k: {"n": 0, "bounded": 0, "changed": 0, "gained": 0, "lost": 0}
               for k in ("baseline", "unverified", "verified")}
     for name, genome, detect_dir, ncbi, hx in a.run:
-        check_one(name, genome, detect_dir, ncbi, hx, queries, a.helixerlite, a.cpus, totals)
+        check_one(name, genome, detect_dir, ncbi, hx, queries, a.helixerlite, a.cpus, totals, a.ncbi_extent)
     print("\nflank genes matching NCBI, ends within 30 bp:")
     for k, t in totals.items():
         extra = "" if k == "baseline" else f"  changed {t['changed']}, gained {t['gained']}, lost {t['lost']}"

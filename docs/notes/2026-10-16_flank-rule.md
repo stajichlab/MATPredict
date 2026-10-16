@@ -81,3 +81,48 @@ should prevent this; any loss is read gene by gene); (3) no more than one extens
 check on genes where the extension ends within 30 bp of NCBI. With three genomes the counts are descriptive; no
 significance is claimed. Performance is recorded for each stage: detect wall time and peak memory, helixer-lite
 window wall time and peak memory, and the rule check wall time.
+
+## Held-out result (2026-10-16; criteria above were fixed before the run)
+
+*N. crassa* OR74A, *A. nidulans* FGSC A4 and *A. niger* CBS 513.88, with the strain's own curated records excluded from
+the search. `scripts/panel_rule_check.py`, scores in `scripts/panel_helixer_metric.py`.
+
+**Metric correction made after the first held-out look.** In these annotations the NCBI gene feature includes
+UTRs (N. crassa: 256 to 568 bp 5′ and up to 429 bp 3′ beyond the CDS), while the pipeline and helixer models are
+coding-only, so the gene-span comparison penalised correct models. Both scripts now take `--ncbi-extent cds`
+(the span of the gene's CDS features). It applies equally to homology, helixer and the rule. The panel was rescored
+the same way. Both versions are shown; the CDS extent is the like-for-like comparison and is the one to read.
+
+Flank genes within 30 bp of NCBI (CDS extent):
+
+| set | n | homology | rule, unverified | rule, query-checked | gained | lost |
+|---|---|---|---|---|---|---|
+| panel (8 genomes) | 18 | 8 | 15 | 13 | 5 | 0 |
+| held-out | 9 | 2 | 6 | 6 | 4 | 0 |
+| both | 27 | 10 | 21 | 19 | 9 | 0 |
+
+(Unverified, both sets: 13 gained, 2 lost; the two losses are on the panel and are removed by the query check.)
+With the gene extent the held-out set is 1/9 → 5/9 (query-checked: 4 gained, 0 lost) and the panel 6/18 → 10/18.
+
+Pre-registered criteria: (1) core MAT unchanged: yes, by construction. (2) gained minus lost above zero and nothing
+lost: 4 gained, 0 lost on the held-out genes. (3) at most one in three within-30-bp extensions rejected by the
+query check: 0 of 4 rejected. All three met.
+
+**Core MAT is a different story with the self-records out.** Held-out core genes (CDS extent): homology within 30 bp
+1 of 3 matched (nidulans 1/2, niger 0/1; N. crassa MAT1-1-1, -1-2 and -1-3 were only short tblastn fragments of
+105, 321 and 117 bp, none matching an NCBI gene), helixer matched 3 of 3 and within 30 bp 2 of 3 (nidulans 2/2).
+On the panel homology was better on core (15 of 17 against 13 of 15). The panel includes genomes whose own record is
+in the database (A1163), which flatters homology. The rule still leaves core on homology (curator's decision), but
+this is evidence to revisit with a held-out core test, n = 3 here.
+
+**Performance** (one genome each, wall time, peak memory):
+
+| genome | detect | helixer-lite on the locus windows | rule check |
+|---|---|---|---|
+| N. crassa | 496 s, 0.31 GB | 25 s, 1.0 GB | 16 s |
+| A. nidulans | 316 s, 0.31 GB | 75 s, 0.96 GB | 23 s |
+| A. niger | 600 s, 0.31 GB | 139 s, 0.83 GB | 30 s |
+
+Detect is single-threaded (CPU time equals wall time). helixer-lite on the windows adds 5 to 25% to detect (CPU time
+18 to 26 s; most of the wall time is model loading), against 34 min and 3.9 GB for the whole Phycomyces genome. The
+rule check includes a second helixer run (no cache) and takes 16 to 30 s.

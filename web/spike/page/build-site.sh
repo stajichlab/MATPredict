@@ -49,13 +49,8 @@ print(f"manifest: {len(files)} database files, {wheels[0]}")
 PY
 
 # .nojekyll keeps underscore directories (_assets) from being dropped by Pages.
-# The site root is the landing page (web/intro); it links to the tool at page/index.html.
-# The landing page and results explorer live in web/intro; their data is regenerated from results/ first.
-INTRO="$REPO/web/intro"
-"$PYTHON" "$REPO/scripts/build_site_data.py" --out "$INTRO/data"
-cp "$INTRO/landing.html" "$SITE/index.html"
-cp "$INTRO/results.html" "$INTRO/site.css" "$INTRO/charts.js" "$SITE/"
-cp -R "$INTRO/data" "$SITE/data"
+# The site root is the landing page; it links to the tool at page/index.html.
+cp "$HERE/landing.html" "$SITE/index.html"
 touch "$SITE/.nojekyll"
 rm -rf "$WHEEL_DIR"
 du -sh "$SITE"

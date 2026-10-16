@@ -54,3 +54,11 @@ The query check removes both losses and keeps 4 of 7 gains. It rejects 12 extens
 cannot confirm because they only add the stop codon or UTR-side residues, so the query check is conservative
 about extensions that are probably right. Aspergillus's query is its own genome's curated record, so its
 agreement is partly self-consistent.
+
+## Pair rule decision (2026-10-16)
+
+The profile-bitscore rule (pyhmmer, each gene against its own idiomorph's profile) stays as the sexM/sexP pair
+rule for families with a classifier, replacing the 2026-09-26 model-score rule. Basis: the old and new rules
+agree on 6 of 8 pair decisions in five Mucoromycota genomes; the 2 that differ (Mucor sp. 1006Ph and
+*M. circinelloides*, identical numbers: profile 76 against 57 for sexM, model score 129 against 101 for sexP) are
+low-identity pairs. Families without a classifier keep the model-score rule.

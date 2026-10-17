@@ -37,6 +37,7 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 ## Ascomycota (incl. Serinales, Dothideomycetes)
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
+| 10-18 | [Triage of uncalled genomes in ten lineage-routed orders](2026-10-18_uncalled-triage.md) | open | 754 uncalled genomes: 63 (8%) have a MAT-like gene linked to the flanks, 37 strongly (Microascales 17, Pleosporales 9); Xylariales 0 of 184, supporting the known absence; controls show the method fails in Pezizales and questions 11 of 12 called Xylariales |
 | 10-16 | [Alpha-box and HMG-box profiles; Parastagonospora re-check; where wrong labels come from](2026-10-16_ascomycota-core-profiles.md) | open | profiles agree with 199/200 and 198/200 single-gene controls; Parastagonospora records run confirmed 91/91; 99 of 104 non-Parastagonospora disagreements won by MAT1-1-2 (HMG-like); the vote fix must also stop optional genes superseding a core hit (replay: profile agreement 669 to 822; a vote-only change 669 to 684) |
 | 10-16 | [Ascomycota MAT1-1-1 and MAT1-2-1 ambiguity](2026-10-16_ascomycota-core-gene-ambiguity.md) | open | 4,883 of 12,628 loci carry both core genes; 204 labels disagree with the higher bitscore (87 known Parastagonospora, 58 ties, 59 small gaps); lists in results/2026-10-16_ascomycota_core_ambiguity |
 | 09-26 | [Flank-carried rule](2026-09-26_flank-carried-rule.md) | decided | 39-bit floor: real 7/8, noise 0/52 |

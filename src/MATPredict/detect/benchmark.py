@@ -582,7 +582,11 @@ def score_self_consistency(
             result_doc = results_by_family.get(family_label)
             evidence_by_name = _gene_evidence_by_name(result_doc) if result_doc else {}
 
-            present_genes = [g for g in record_doc.get("genes", []) if g.get("present")]
+            # A gene with a `status` (remnant|pseudogene) is not a functional gene the
+            # pipeline is expected to find, so it is not in the expected set.
+            present_genes = [
+                g for g in record_doc.get("genes", []) if g.get("present") and not g.get("status")
+            ]
             if not present_genes:
                 continue
 

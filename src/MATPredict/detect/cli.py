@@ -12,7 +12,7 @@ from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect.partial_core import DEFAULT_PARTIAL_CORE_POLICY, PARTIAL_CORE_POLICIES
 from MATPredict.detect.supported_span import DEFAULT_SUPPORTED_MIN_BITSCORE
 from MATPredict.detect.pipeline import (
-    DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DEFAULT_POLISH_STRONG_IDENTITY, DetectionOutcome,
+    DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DEFAULT_POLISH_CORE_PAIR, DEFAULT_POLISH_STRONG_IDENTITY, DetectionOutcome,
     EvidenceFloor,
     not_searched_reason, run_pipeline,
 )
@@ -126,6 +126,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         exclude_record_ids=exclude_record_ids,
         max_polished_clusters_per_family=_polish_cap_from_args(args),
         polish_strong_identity=_polish_strong_identity_from_args(args),
+        polish_core_pair=getattr(args, "polish_core_pair", DEFAULT_POLISH_CORE_PAIR),
         partial_core_policy=_partial_core_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
@@ -253,6 +254,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "require_core_role": args.require_core_role,
             "max_polished_clusters_per_family": _polish_cap_from_args(args),
             "polish_strong_identity": _polish_strong_identity_from_args(args),
+            "polish_core_pair": getattr(args, "polish_core_pair", DEFAULT_POLISH_CORE_PAIR),
             "partial_core_policy": _partial_core_policy_from_args(args),
             "supported_min_bitscore": getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
         },
@@ -539,6 +541,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "the usual rank. Stops a true locus that hits few genes at high identity "
              "being outranked by noise that hits more genes at low identity. "
              f"Default: {DEFAULT_POLISH_STRONG_IDENTITY:g}. 0 = the plain cap.",
+    )
+    detect.add_argument(
+        "--polish-core-pair", action=argparse.BooleanOptionalAction, default=DEFAULT_POLISH_CORE_PAIR,
+        help="Also polish every admitted cluster with two distinct live core genes of one idiomorph "
+             "(e.g. MTLA1 + MTLA2) whatever its rank, on top of the cap (it takes no slot). The property is the cluster's own, so adding "
+             "families that admit more clusters cannot push such a cluster out of the cap. "
+             "Default: on. --no-polish-core-pair restores the earlier behaviour.",
     )
     detect.add_argument(
         "--partial-core-policy", choices=PARTIAL_CORE_POLICIES, default=DEFAULT_PARTIAL_CORE_POLICY,

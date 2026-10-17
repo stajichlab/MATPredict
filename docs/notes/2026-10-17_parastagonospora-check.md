@@ -67,7 +67,7 @@ Records run, 182 loci (one locus per genome, all `mat_locus`, all `high`):
 | one genome per clone cluster | 122 | 60 | 62 | - | 0.93 |
 | WA, one per cluster | 94 | 46 | 48 | - | 0.92 |
 
-The 186 form 126 clusters; 40 genomes are non-singletons (largest clusters 14, 12, 8, 8, 5). No cluster contains both labels, so clonality is
+The 186 form 126 clusters: 105 singletons and 21 multi-member clusters holding 81 genomes (largest 14, 12, 8, 8, 5). No cluster contains both labels, so clonality is
 label-consistent, matches Jones et al. (single-mating-type clonal groups), and does not inflate the 1:1 (it holds after clone-correction, 60:62). Duplicates: Sn79 is in the set twice
 (GCA_002267025.1 NDSU, GCA_051013865.1 ANU, same BioSample SAMN07500996, mash distance about 0, both MAT1-2); SN15 sits in a cluster of 8. Strain names are otherwise unique (185 of 186).
 The 1:1 is a population-level result; the *P. avenae* and non-WA subsets are too small to test.

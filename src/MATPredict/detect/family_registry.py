@@ -212,6 +212,12 @@ class Family:
     0.1-2 identity points. Off by default: no other family has been shown to
     need it, and it costs one extra polish per resolved pair.
     """
+    idiomorph_companions: dict[str, list[str]] = field(default_factory=dict)
+    """idiomorph -> genes whose intact presence marks that idiomorph as really present
+    (`idiomorph_companions:` in order.yml; curator 2026-10-18). Read only by the
+    partial-coverage rule's companion-gene veto (`partial_core`): it will not flip a
+    call away from an idiomorph whose companion gene is intact in the locus. Empty
+    means no veto."""
     idiomorph_classifier: dict | None = None
     """Profile-HMM idiomorph classifier for this family (`detect.classifier`),
     or None. Keys: `type` ("hmm"), `dir` (resolved to an absolute path by the
@@ -408,6 +414,8 @@ def load_all_families(db_root: Path) -> list[Family]:
                     ),
                     fallback_searchable=locus.get("fallback_searchable", True),
                     idiomorph_classes=dict(locus.get("idiomorph_class") or {}),
+                    idiomorph_companions={k: list(v) for k, v in
+                                          (locus.get("idiomorph_companions") or {}).items()},
                     model_idiomorph_alternatives=locus.get(
                         "model_idiomorph_alternatives", False,
                     ),

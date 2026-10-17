@@ -493,3 +493,28 @@ def test_extract_translated_gene_multi_exon_matches_validate_transcript_assembly
     # translation would produce -- proving the fix actually changed behavior.
     naive = _extract_translated_gene(fasta_path, "ctg1", exons[0][0], exons[-1][1], "+", None)
     assert naive != actual
+
+
+def test_score_self_consistency_leaves_a_status_gene_out_of_the_expected_set(tmp_path):
+    """A gene with `status` (remnant|pseudogene) is not a functional gene the pipeline
+    is expected to find: g2 is `present: true` with a protein but is a remnant, so its
+    absence from the report must not count as a miss (without the status filter this
+    scores 0.5)."""
+    genes = [dict(g) for g in _TWO_GENES]
+    genes[1]["status"] = "remnant"
+    _write_curated_db(tmp_path, genes=genes)
+    genome_id = f"{_CURATED_TAXID}_TESTACC.1"
+    report_path = _write_rollout_report(
+        tmp_path, genome_id, [{"gene": "g1", "contig": "ctg1", "start": 1, "end": 9, "strand": "+"}],
+    )
+    fasta_path = _write_genome_fasta(tmp_path, "genome.fa", "ctg1", _ROLLOUT_NUC)
+    ncbi = _fake_ncbi({"CURATED1.1": _ROLLOUT_PROTEIN_FASTA}, tmp_path)
+
+    scored, _matches = score_self_consistency(
+        report_paths=[report_path], db_root=tmp_path,
+        genome_fasta_paths={genome_id: fasta_path}, ncbi=ncbi,
+        manifest_path=_missing_manifest(tmp_path),
+    )
+
+    assert len(scored) == 1
+    assert scored[0].sensitivity == 1.0

@@ -1,0 +1,205 @@
+record_id: 5158_cbs114723_MAT_switched
+record_version: 1
+taxonomy:
+  taxid: 5158
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Microascales;f__Ceratocystidaceae;g__Ceratocystis;s__Ceratocystis_fimbriata
+  lineage_resolved_date: '2026-10-17'
+organism:
+  species: Ceratocystis fimbriata
+  strain:
+    name: CBS114723
+    known: true
+    culture_collection_ids:
+    - CBS 114723
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: unisexual_switching
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: COX13<-APN2->SLA2 ... MAT1-1-1<-MAT1-1-2
+    definition_note: 'SWITCHED state of the C. fimbriata mating locus (GenBank KF033903.1,
+      clone ''switched'', 42,835 bp). Genes annotated by the depositors: MAT1-1-1
+      and MAT1-1-2 only. MAT1-2-1 and MAT1-2-7 are ABSENT because a 3,581 bp region
+      (the whole of MAT1-2-1, per Wilken et al. 2014) was deleted during uni-directional
+      mating-type switching; 46,416 - 42,835 = 3,581 bp, the length of the unswitched
+      deposit minus this one. The isolate is self-sterile (MAT1-1 only) in this state.
+      Both this deposit and the unswitched deposit KF033902.1 are labelled isolate
+      CBS114723 (epitype culture), differing by clone name. KEPT AS A DRAFT (needs_review), NOT ACCEPTED, (curator ruling 2026-10-17: stays a candidate): scripts/find_record_assemblies.py verifies this record on GCA_000389695.3 (Cfim3.0, CBS 114723; contig APWK03000076.1:59345-88553, 99.88%, 100% of the core segment) by its mechanical rule, but that assembly carries the UNSWITCHED locus (the deleted region corresponds to APWK03000076.1 ~81,476-84,795, which the switched deposit does not align to), so it cannot confirm the switched state, and a self-call of this record against it would find both idiomorphs, not MAT1-1 only.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KF033903.1
+        seq_region: KF033903.1
+      start: 7064
+      end: 32710
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: COX13
+  protein_accession: ncbi_protein:AHV84696.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 7064
+  end: 8000
+  strand: '-'
+  exons:
+  - start: 7841
+    end: 8000
+  - start: 7719
+    end: 7740
+  - start: 7268
+    end: 7435
+  - start: 7064
+    end: 7109
+  codon_start: 1
+  transl_table: 1
+  gene_index: 0
+  order_in_locus: 0
+- name: APN2
+  protein_accession: ncbi_protein:AHV84697.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8854
+  end: 10730
+  strand: +
+  exons:
+  - start: 8854
+    end: 8983
+  - start: 9071
+    end: 10114
+  - start: 10501
+    end: 10730
+  codon_start: 1
+  transl_table: 1
+  gene_index: 1
+  order_in_locus: 1
+- name: SLA2
+  protein_accession: ncbi_protein:AHV84698.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 16042
+  end: 19659
+  strand: +
+  exons:
+  - start: 16042
+    end: 16202
+  - start: 16315
+    end: 16799
+  - start: 17168
+    end: 19659
+  codon_start: 1
+  transl_table: 1
+  gene_index: 2
+  order_in_locus: 2
+- name: MAT1-1-1
+  protein_accession: ncbi_protein:AHV84693.2
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 27087
+  end: 29023
+  strand: '-'
+  exons:
+  - start: 28084
+    end: 29023
+  - start: 27087
+    end: 28018
+  codon_start: 1
+  transl_table: 1
+  gene_index: 3
+  order_in_locus: 3
+- name: MAT1-1-2
+  protein_accession: ncbi_protein:AHV84694.2
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 31080
+  end: 32710
+  strand: '-'
+  exons:
+  - start: 32536
+    end: 32710
+  - start: 31696
+    end: 32471
+  - start: 31535
+    end: 31627
+  - start: 31411
+    end: 31467
+  - start: 31080
+    end: 31322
+  codon_start: 1
+  transl_table: 1
+  gene_index: 4
+  order_in_locus: 4
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Sanger and 454 sequencing of the mating-type locus of C.
+      fimbriata CBS114723 and of self-sterile (switched) offspring, deposited as GenBank
+      KF033903 by the describing authors (Wilken et al. 2014, PLoS ONE 9:e92180)
+    citations: &id001
+    - pmid: '24651494'
+      doi: 10.1371/journal.pone.0092180
+  boundaries:
+    tier: 1
+    experimental_method: gene models annotated by the depositors on KF033903.1; coordinates
+      are those of the deposit
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of MAT1-1-1 and MAT1-1-2 and absence of MAT1-2-1
+      in the switched locus after the 3,581 bp deletion (Wilken et al. 2014)
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: KF033903.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 10.1371/journal.pone.0092180|5158|MAT|switched|KF033903.1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

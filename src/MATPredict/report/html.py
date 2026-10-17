@@ -316,6 +316,11 @@ def _flags(call: dict) -> list[tuple[str, str]]:
     sl = call.get("split_locus")
     if sl:
         out.append(("info", "Locus split into parts: " + str(sl if isinstance(sl, str) else sl.get("status", "see the YAML report"))))
+    ss = call.get("strong_single_gene")
+    if ss:
+        out.append(("info", f"Reported on one gene alone: {ss.get('core_gene')} at {ss.get('core_identity')}% identity "
+                            f"covering {ss.get('core_coverage')}% of its reference, with no flanking gene or second modelled gene. "
+                            "Low confidence by rule."))
     if call.get("receptor_array_id"):
         out.append(("info", f"Part of pheromone-receptor array {call['receptor_array_id']} "
                             f"({plural(int(call.get('receptor_array_size') or 0), 'locus', 'loci')}, "

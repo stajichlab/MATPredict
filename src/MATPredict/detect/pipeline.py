@@ -105,8 +105,10 @@ from MATPredict.detect.family_registry import (
     route,
 )
 from MATPredict.detect import confidence_cap, partial_core
+from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
+    LOCUS_CLASS_IDIOMORPH_ONLY,
     LOCUS_CLASS_PARTIAL,
     apply_partial_locus,
     idiomorph_candidates,
@@ -398,6 +400,12 @@ class DetectionResult:
     end, the family's flanks on other contigs. Carries the core gene, its
     contig and edge distance, the flanks and all contigs involved. Such a call
     is `partial_locus` at `low`. None otherwise."""
+    strong_single_gene: dict | None = None
+    """Set when the call was made by the strong-single-gene rule (`strong_single_gene`,
+    `--strong-single-gene-policy on`; curator's decision 2026-10-17): one modelled,
+    near-full-length core gene at >= 85% identity, nothing else in its cluster, in a
+    family with no other report. Such a call is `idiomorph_gene_only` at `low`. None
+    otherwise."""
     merged_from: list[dict] = field(default_factory=list)
     """When several families of one roster `merge_group` called the same
     locus, the members folded into this call: each member's family,
@@ -763,6 +771,19 @@ DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY = 6
 #: no longer holds: a genome with more than N strong clusters polishes all of them.
 DEFAULT_POLISH_STRONG_IDENTITY = 50.0
 
+#: Every admitted cluster that carries two distinct live REQUIRED core_MAT genes of ONE idiomorph
+#: (two non-optional genes whose `present_in_idiomorphs` is that single idiomorph, e.g. MTLA1 +
+#: MTLA2 or MATA1 + MATA2; never the optional accessory genes MAT1-1-2, MAT1-1-3 ... of `MAT`) is polished whatever its rank, ON TOP of the cap's selection (it takes no slot, so nothing the
+#: plain cap polishes is dropped; the first, slot-taking version lost two real MTL alpha calls in a
+#: 1,505-genome sample). Why: the rank counts distinct genes of ANY role and ranks identity second, so a
+#: small real cluster is outranked by whatever else a genome admits, and how many others are
+#: admitted depends on how many families are searched (seven Komagataella genomes with a real
+#: two-gene MTL cluster on a 2.1-2.3 kb contig lost it once nine families were searched: 18-24
+#: MTL clusters were admitted instead of 15-18, analysis/2026-10-17_polish-cap-fix.md). The
+#: property is the cluster's own, so no other family's clusters can push it out. Pass
+#: `polish_core_pair=False` (`--no-polish-core-pair`) for the earlier behaviour.
+DEFAULT_POLISH_CORE_PAIR = True
+
 #: The permissive floor the evidence diagnostics enumerate candidates with:
 #: every family with >=1 own hit in the cluster, of any gene, any role, any
 #: identity. This is the retired `_families_with_a_foothold` behavior, and it
@@ -930,8 +951,47 @@ def _best_identity(cluster, family_key) -> float:
     return max((h.identity for h in cluster.hits if h.family_key == family_key), default=0.0)
 
 
+def core_idiomorph_genes(families) -> dict[FamilyKey, dict[str, str]]:
+    """`{family key: {core_MAT gene name: its single idiomorph}}`, the genes
+    `has_core_pair` counts. Only a REQUIRED core gene counts: an `optional: true` one
+    (the accessory MAT1-1-2, MAT1-1-3, MAT1-2-10 ... of the Pezizomycotina `MAT` family)
+    is left out, as is a gene that names no idiomorph or several. So only a family whose
+    roster requires two or more core genes of one idiomorph (MTL A, MATsc, MATyl, ...)
+    can have a pair at all; where one gene defines the idiomorph (`MAT`), none."""
+    out: dict[FamilyKey, dict[str, str]] = {}
+    for family in families:
+        genes = {}
+        for g in family.genes:
+            if not isinstance(g, dict) or g.get("role") != "core_MAT" or g.get("optional"):
+                continue
+            idioms = g.get("present_in_idiomorphs") or []
+            if len(idioms) == 1:
+                genes[g["name"]] = idioms[0]
+        if genes:
+            out[family.key] = genes
+    return out
+
+
+def has_core_pair(cluster, family_key, core_genes) -> bool:
+    """True when `cluster` has at least two distinct live (non-superseded) core_MAT
+    genes of this family that belong to the same single idiomorph. A property of
+    the cluster alone: it does not depend on any other cluster or family."""
+    genes = core_genes.get(family_key)
+    if not genes:
+        return False
+    seen: dict[str, set[str]] = {}
+    for h in cluster.hits:
+        if h.family_key != family_key or h.superseded_by is not None or h.role != "core_MAT":
+            continue
+        idiom = genes.get(h.gene_name)
+        if idiom is not None:
+            seen.setdefault(idiom, set()).add(h.gene_name)
+    return any(len(v) >= 2 for v in seen.values())
+
+
 def select_polish_clusters(by_family, cap: int, strong,
-                           strong_identity: float | None = None) -> set[tuple[int, FamilyKey]]:
+                           strong_identity: float | None = None,
+                           core_genes: dict | None = None) -> set[tuple[int, FamilyKey]]:
     """The (cluster, family) pairs allowed to be polished.
 
     Without `strong_identity` (None): the top `cap` of each family in
@@ -943,7 +1003,12 @@ def select_polish_clusters(by_family, cap: int, strong,
     all of them; one with fewer polishes exactly `cap` (or all, if it has fewer
     admitted). The strong tier is ordered by the same rank, and the top-up keeps
     the strong-fragment (V3) preference, so with no strong cluster this is the
-    plain cap."""
+    plain cap.
+
+    With `core_genes` (from `core_idiomorph_genes`): a cluster with two distinct live
+    required core genes of one idiomorph (`has_core_pair`) is polished whatever its rank
+    or identity, IN ADDITION to the selection above: it takes no slot, so nothing the
+    plain cap would polish is dropped. The cap is exceeded only by such clusters."""
     chosen = set()
     for key, members in by_family.items():
         ranked = rank_for_polish(members, key, strong)
@@ -954,6 +1019,12 @@ def select_polish_clusters(by_family, cap: int, strong,
             tier_ids = {id(c) for c in tier}
             rest = [c for c in ranked if id(c) not in tier_ids]
             picked = tier + rest[:max(0, cap - len(tier))]
+        if core_genes:
+            # Added on top, never in place of: a pair cluster takes no slot, so no cluster
+            # the plain cap polishes is dropped for it (the first version took slots and
+            # lost two real MTL alpha calls in 1,505 genomes).
+            picked = picked + [c for c in ranked if has_core_pair(c, key, core_genes)
+                               and not any(c is q for q in picked)]
         chosen.update((id(c), key) for c in picked)
     return chosen
 
@@ -2032,7 +2103,7 @@ def _segments_for(
 
 
 def _split_locus_calls(results, clusters, families, build, *, searchable_genes,
-                       contig_lengths) -> list[DetectionResult]:
+                       contig_lengths, skip=frozenset()) -> list[DetectionResult]:
     """The split-locus calls for families with no reported call (`split_locus`).
 
     For each such family, every cluster holding one of its core hits is built
@@ -2055,6 +2126,8 @@ def _split_locus_calls(results, clusters, families, build, *, searchable_genes,
         roles = {g["name"]: g["role"] for g in family.genes}
         best = None
         for cluster in clusters:
+            if (id(cluster), family.key) in skip:
+                continue
             if not any(h.role == "core_MAT" for h in _own_live_hits(cluster, family.key)):
                 continue
             scores = score_cluster(cluster, families, searchable_genes=searchable_genes)
@@ -2074,6 +2147,69 @@ def _split_locus_calls(results, clusters, families, build, *, searchable_genes,
             calls.append(replace(
                 candidate, confidence="low", locus_class=LOCUS_CLASS_PARTIAL,
                 split_locus=info, withheld_reason=None,
+            ))
+    return calls
+
+
+def _strong_single_admits(cluster, families, params) -> list[Family]:
+    """Families with a lone core hit at or above the strong-single identity gate in
+    this cluster: admitted to polish only (`strong_single_gene`), never counted by
+    the floor, the relaxed pass or the diagnostics."""
+    out = []
+    for family in families:
+        if any(h.role == "core_MAT" and h.identity is not None
+               and h.identity >= params.min_core_identity
+               for h in _own_live_hits(cluster, family.key)):
+            out.append(family)
+    return out
+
+
+def _strong_single_gene_calls(results, clusters, families, build, *, searchable_genes,
+                              params, only) -> list[DetectionResult]:
+    """The strong-single-gene calls for families with no reported call.
+
+    Every cluster with a live core hit of an unreported family is built exactly as a
+    normal call would be (`build` is `_build`, so the idiomorph comes from the
+    classifier on the modelled core protein) and tested; the best qualifying
+    candidate PER IDIOMORPH is kept, so two opposite loci are both reported. A
+    cluster inside a locus already reported (any family) is skipped."""
+    reported_keys = {r.family_key for r in results}
+    reported_spans = [
+        (seg.contig, seg.start, seg.end)
+        for r in results for seg in (r.segments or [LocusSegment(r.contig, r.start, r.end)])
+    ]
+    calls = []
+    for family in families:
+        if family.key in reported_keys:
+            continue
+        best: dict[str, tuple[DetectionResult, dict]] = {}
+        for cluster in clusters:
+            if (id(cluster), family.key) not in only:
+                continue
+            live = _own_live_hits(cluster, family.key)
+            if not any(h.role == "core_MAT" for h in live):
+                continue
+            if any(c == cluster.contig and cluster.start <= e and cluster.end >= s
+                   for c, s, e in reported_spans):
+                continue
+            scores = score_cluster(cluster, families, searchable_genes=searchable_genes)
+            score = next((s for s in scores if s.family_key == family.key), None)
+            if score is None:
+                continue
+            candidate = build(score, [cluster], scores, False)
+            info = ssg.evaluate_strong_single_gene(candidate, params=params)
+            if info is None:
+                continue
+            info["cluster_identity"] = round(max(
+                (h.identity for h in cluster.hits
+                 if h.family_key == family.key and h.identity is not None), default=0.0), 3)
+            kept = best.get(candidate.idiomorph)
+            if kept is None or info["core_identity"] > kept[1]["core_identity"]:
+                best[candidate.idiomorph] = (candidate, info)
+        for candidate, info in best.values():
+            calls.append(replace(
+                candidate, confidence="low", locus_class=LOCUS_CLASS_IDIOMORPH_ONLY,
+                strong_single_gene=info, withheld_reason=None,
             ))
     return calls
 
@@ -2117,6 +2253,7 @@ def run_pipeline(
     #: at or above this percentage, even past the cap (the tier above the cap).
     #: None = the plain cap. See `DEFAULT_POLISH_STRONG_IDENTITY`.
     polish_strong_identity: float | None = DEFAULT_POLISH_STRONG_IDENTITY,
+    polish_core_pair: bool = DEFAULT_POLISH_CORE_PAIR,
     #: `off` (default) or `coverage_profile`: a PARTIAL-coverage core hit does not beat a
     #: full-length core gene of the other idiomorph unless the profiles disagree
     #: (`partial_core`). Independent of `idiomorph_policy`.
@@ -2125,6 +2262,12 @@ def run_pipeline(
     #: core hit is a contig-edge partial or a weak-identity hit with no flank gene
     #: (`confidence_cap`). Changes confidence only, never the locus or the idiomorph.
     confidence_cap_policy: str = confidence_cap.DEFAULT_CONFIDENCE_CAP_POLICY,
+    #: `off` (default) or `on`: a lone modelled core gene at >= 85% identity, near
+    #: full length, in a family with no other report is a low-confidence
+    #: `idiomorph_gene_only` locus (`strong_single_gene`). Independent of the two
+    #: policies above.
+    strong_single_gene_policy: str = ssg.DEFAULT_STRONG_SINGLE_GENE_POLICY,
+    strong_single_gene_params: ssg.StrongSingleGeneParams = ssg.DEFAULT_STRONG_SINGLE_GENE,
     #: Curated records withheld from THIS run, for leave-one-out recall. The
     #: caller must build `reference_fasta` with the same set (see
     #: `reference_fasta.build_reference_fasta`); this parameter additionally
@@ -2378,6 +2521,34 @@ def run_pipeline(
     # the same scoping the retired second-pass tracking set used, now carrying a
     # per-gene outcome instead of a per-family boolean.
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] = {}
+
+    # Strong-single-gene admissions (policy `on`): (cluster, family) pairs the evidence
+    # floor does not admit, that the strict loop would drop without building (fraction
+    # found below the floor and not ambiguous), and whose core hit reaches the identity
+    # gate. They are polished on their localized genes only (no rescue, so the cluster's
+    # hits do not change) and then kept out of every other pass, so a genome's other
+    # results are exactly those of `off`; only `_strong_single_gene_calls` reads them.
+    ssg_only: set[tuple[int, FamilyKey]] = set()
+    if strong_single_gene_policy == ssg.POLICY_ON:
+        for cluster in clusters:
+            floor_keys = {f.key for f in _families_meeting_evidence_floor(cluster, families, evidence_floor)}
+            extra = [f for f in _strong_single_admits(cluster, families, strong_single_gene_params)
+                     if f.key not in floor_keys]
+            if not extra:
+                continue
+            scores = score_cluster(cluster, families, searchable_genes=searchable_genes)
+            if is_ambiguous(scores, floor=ambiguity_floor):
+                continue
+            for f in extra:
+                sc = next((x for x in scores if x.family_key == f.key), None)
+                if sc is not None and sc.fraction_found < ambiguity_floor:
+                    ssg_only.add((id(cluster), f.key))
+
+    def _admitted_for_polish(cluster):
+        """The evidence floor's families, plus the strong-single-gene pairs."""
+        admitted = _families_meeting_evidence_floor(cluster, families, evidence_floor)
+        return admitted + [f for f in families if (id(cluster), f.key) in ssg_only]
+
     # Per-family polish cap: decide up front which (cluster, family) pairs
     # may be polished, ranking each family's admitted clusters before any
     # polishing. Everything else stays admitted (diagnostics say so) but is
@@ -2393,10 +2564,12 @@ def run_pipeline(
         # the same cap. Families without a classifier keep the plain rank.
         strong = strong_fragment_scores(by_family, families, genome_fasta=genome_fasta,
                                         genetic_code=genetic_code)
-        polish_allowed = select_polish_clusters(by_family, max_polished_clusters_per_family, strong,
-                                                polish_strong_identity)
+        polish_allowed = select_polish_clusters(
+            by_family, max_polished_clusters_per_family, strong, polish_strong_identity,
+            core_idiomorph_genes(families) if polish_core_pair else None)
+        polish_allowed |= ssg_only  # never competes for, nor consumes, the cap
     for cluster in clusters:
-        admitted_families = _families_meeting_evidence_floor(cluster, families, evidence_floor)
+        admitted_families = _admitted_for_polish(cluster)
         capped_keys = set()
         if polish_allowed is not None:
             capped_keys = {f.key for f in admitted_families if (id(cluster), f.key) not in polish_allowed}
@@ -2480,6 +2653,8 @@ def run_pipeline(
             # a failed rescue leaves the gene genuinely missing rather than
             # "unpolished" (see below).
             rescue_genes = _missing_core_genes(cluster, family) - localized_genes
+            if (id(cluster), family.key) in ssg_only:
+                rescue_genes = set()
             # Cut 1 of the polish-cost work: a rescue for a gene belonging to
             # the idiomorph this cluster is NOT cannot succeed, so do not pay
             # 0.9 s to find that out. Narrows only on unambiguous evidence;
@@ -2872,7 +3047,14 @@ def run_pipeline(
                                type(exc).__name__, exc)
                 return None
 
-        return partial_core.evaluate(vote, stats, profile_scores)
+        companions = family.idiomorph_companions
+        wanted = {g for genes in companions.values() for g in genes}
+        companion_stats = [
+            partial_core.CoreStat(e.gene_name, "", e.coverage, e.bitscore, None)
+            for e in evidence if e.gene_name in wanted and not e.lost_to and e.status in modelled
+        ]
+        return partial_core.evaluate(vote, stats, profile_scores, companions=companions,
+                                     companion_stats=companion_stats)
 
     def _confidence_cap_stats(family, called, evidence):
         """The called allele's core genes (any status, not `lost_to`) as `confidence_cap.CapStat`s."""
@@ -3178,6 +3360,8 @@ def run_pipeline(
             previous = best_attempt.get(score.family_key)
             if previous is None or score.fraction_found > previous.fraction_found:
                 best_attempt[score.family_key] = score
+            if (id(cluster), score.family_key) in ssg_only:
+                continue  # what `off` does with it (unpolished, below the floor); see ssg_only
             if score.fraction_found < ambiguity_floor and not ambiguous:
                 if _modelled_gene_names([cluster], score.family_key, polish_by, model_losers):
                     below_floor.append((score, cluster, scores))
@@ -3295,7 +3479,7 @@ def run_pipeline(
     # `partial_locus` at `low` instead of being withheld. See `split_locus`.
     split_calls = _split_locus_calls(
         results, clusters, families, _build,
-        searchable_genes=searchable_genes, contig_lengths=contig_lengths,
+        searchable_genes=searchable_genes, contig_lengths=contig_lengths, skip=ssg_only,
     )
     # A split-locus call is never judged by the MAT-gene gate (it requires
     # roster flanks by construction), but a known paralog is never a MAT gene:
@@ -3314,6 +3498,32 @@ def run_pipeline(
                 for c in split_calls
             )
         ]
+
+    # Curator's decision 2026-10-17 (policy `on` only): a family still unreported
+    # whose cluster holds one lone, modelled, near-full-length core gene at >= 85%
+    # identity is reported as `idiomorph_gene_only` at `low`. After the split-locus
+    # pass, so nothing already reported is touched. See `strong_single_gene`.
+    if strong_single_gene_policy == ssg.POLICY_ON:
+        strong_calls = _strong_single_gene_calls(
+            results, clusters, families, _build,
+            searchable_genes=searchable_genes, params=strong_single_gene_params, only=ssg_only,
+        )
+        # The MAT-gene gate applies in full: the call has no roster flank to fall
+        # back on, so the classifier must have scored the modelled protein.
+        strong_calls, strong_gated = apply_mat_gene_gate(strong_calls, classifier_specs)
+        suppressed = suppressed + strong_gated
+        if strong_calls:
+            logger.info("reported %d strong single-gene locus/loci", len(strong_calls))
+            results = results + strong_calls
+            suppressed = [
+                s for s in suppressed
+                if not any(
+                    s.family_key == c.family_key and s.contig == c.strong_single_gene["core_contig"]
+                    and s.start <= c.strong_single_gene["core_end"]
+                    and s.end >= c.strong_single_gene["core_start"]
+                    for c in strong_calls
+                )
+            ]
 
     floor_withheld = []
     for score, cluster, scores in below_floor:
@@ -3540,6 +3750,9 @@ def _two_idiomorph_statements(results, families, genome_fasta, genetic_code) -> 
     from MATPredict.detect.two_idiomorphs import calls_from_results, two_idiomorph_statements
 
     enabled = {_family_label(f.key) for f in families if f.two_idiomorphs_report}
+    # A family whose calls include strong single-gene loci is checked too: two
+    # opposite lone genes are flagged, never resolved (curator, 2026-10-17).
+    enabled |= {_family_label(r.family_key) for r in results if r.strong_single_gene}
     if not enabled:
         return []
     calls = [c for c in calls_from_results(results) if c["family"] in enabled]

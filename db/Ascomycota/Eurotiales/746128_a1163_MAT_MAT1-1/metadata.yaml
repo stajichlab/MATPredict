@@ -1,5 +1,5 @@
 record_id: 746128_a1163_MAT_MAT1-1
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 746128
   lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Eurotiomycetes;o__Eurotiales;f__Aspergillaceae;g__Aspergillus;s__Aspergillus_fumigatus
@@ -34,7 +34,8 @@ locus:
       it directly and found it is a DEGENERATE 3'' REMNANT of MAT1-2-1: its C-terminal
       ~100 residues are nearly identical to the Af293 MAT1-2-1 protein XP_754989.2,
       while the HMG-box-encoding 5'' part is absent/frameshifted. It is recorded here
-      as present core_MAT under the name MAT1-2-1 so the remnant is not lost, following
+      as core_MAT under the name MAT1-2-1 with status: remnant (a model is recorded,
+      present: true, so the remnant is not lost), following
       the precedent of the MAT1-1-2 remnant retained in the Cytospora mali MAT1-2
       record in this database. This remnant is consistent with the HMG-gene fragment
       reported in the A. fumigatus MAT1-1 locus in the secondary literature, but the
@@ -80,6 +81,8 @@ genes:
   protein_accession: ncbi_protein:EDP53119.1
   role: core_MAT
   present: true
+  status: remnant
+  remnant_note: 'degenerate 3'' remnant (EDP53119.1, 250 aa vs 322 aa in Af293 XP_754989.2); HMG-box 5'' part absent or frameshifted'
   locus_tag: AFUB_042890
   segment_index: 0
   start: 2521591

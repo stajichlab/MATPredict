@@ -133,11 +133,13 @@ def build(db_root: Path, out_path: Path) -> None:
             con.execute(
                 """
                 INSERT INTO locus_gene (record_id, gene_index, segment_index, name, protein_accession,
-                    role, present, locus_tag, start_pos, end_pos, strand, order_in_locus)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    role, present, status, remnant_note, locus_tag, start_pos, end_pos, strand,
+                    order_in_locus)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 [record["record_id"], gene["gene_index"], gene.get("segment_index"), gene["name"],
-                 gene.get("protein_accession"), gene["role"], gene["present"], gene.get("locus_tag"),
+                 gene.get("protein_accession"), gene["role"], gene["present"], gene.get("status"), gene.get("remnant_note"),
+                 gene.get("locus_tag"),
                  gene.get("start"), gene.get("end"), gene.get("strand"), gene.get("order_in_locus")],
             )
 

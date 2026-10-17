@@ -1,5 +1,5 @@
 record_id: 107463_unknown-1_MAT_MAT1-2
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 107463
   lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Lecanoromycetes;o__Teloschistales;f__Teloschistaceae;g__Xanthoria;s__Xanthoria_parietina
@@ -93,6 +93,8 @@ genes:
   protein_accession: ncbi_protein:CAI59774.2
   role: core_MAT
   present: true
+  status: pseudogene
+  remnant_note: 'CDS interrupted by a stop codon at the start of the HMG box; CAI59774.2 is 104 aa'
   locus_tag: null
   segment_index: 0
   start: 3368

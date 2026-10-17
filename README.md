@@ -427,6 +427,14 @@ and the database come from the same commit.
 | `build-duckdb [--out FILE]` | Build the DuckDB query cache from the record files |
 | `release` | Stamp a database release on all records |
 
+`validate` calls `taxonkit` for the taxonomy check. Login nodes may cap a process at about 1 GB (the curator's report; I could
+not see the cap from a session). taxonkit alone peaks at about 0.85 GB (measured 2026-10-18), so Python, the NCBI client and
+taxonkit together can exceed 1 GB, and a kill (`taxonkit exited -9`) was seen once on a login node. The whole `validate` peaks at
+about 0.95 GB and takes about 30 s in a 2 GB job (measured on the `short` partition). Run it on a compute node:
+`sbatch -p short scripts/curate_db_validate.slurm PHYLUM RECORD_ID` (`highclock` and `exfab` also work) (set `REPO` to the checkout and
+`PY` to a Python with the dependencies and taxonkit on its PATH). A taxonkit failure is reported as an error and leaves
+`taxonomy_current` unset; it is never written as false.
+
 ### Configuration
 
 MATPredict looks up NCBI taxonomy (for `--taxid` routing and the genetic code)

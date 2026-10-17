@@ -54,7 +54,7 @@ PY
 INTRO="$REPO/web/intro"
 "$PYTHON" "$REPO/scripts/build_site_data.py" --out "$INTRO/data"
 cp "$INTRO/landing.html" "$SITE/index.html"
-cp "$INTRO/results.html" "$INTRO/site.css" "$INTRO/charts.js" "$SITE/"
+cp "$INTRO/results.html" "$INTRO/site.css" "$INTRO/charts.js" "$INTRO/theme.js" "$SITE/"
 cp -R "$INTRO/data" "$SITE/data"
 touch "$SITE/.nojekyll"
 rm -rf "$WHEEL_DIR"

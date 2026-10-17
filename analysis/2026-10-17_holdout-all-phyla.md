@@ -30,9 +30,9 @@ Descriptive: the sets are small and no significance is claimed. A record's own m
   records the profile call is correct at every radius (18/18). The three homothallic records are consistent with
   either idiomorph at genus radius and come back undetermined at family and order radius for the two Xanthoria
   genomes (their near references are withheld).
-- **Order radius is where it fails, as expected.** With the whole order withheld, Mucorales loci (6 records) are not
-  found with the 1 to 2 references of another order that remain (Umbelopsidales, found when Mucorales references
-  stay); Serinales `MTL` loci are not found with one reference left (5 of 6). Pezizomycotina `MAT` has references
+- **Order radius is where it fails, as expected.** With the whole order withheld, 5 of 7 Mucorales records are not
+  found (the 2 Phycomyces records are, for a reason I have not checked) with the 1 to 2 references of another order that remain;
+  both Umbelopsidales records are found when Mucorales references stay; Serinales `MTL` loci are not found with one reference left (5 of 6). Pezizomycotina `MAT` has references
   across many orders and is 9/9 even then.
 - **Misses at every radius:** *Taphrina deformans* `PM` (2 references left, both Pneumocystis). Basidiomycota `aLocus`
   is found at genus radius but never when the taxonomic family is withheld (0/8).

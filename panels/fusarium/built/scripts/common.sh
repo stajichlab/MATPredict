@@ -17,9 +17,9 @@ fetch() {
     f=${run}_$1.fastq.gz
     if [ ! -s $f ] || [ "$(md5sum $f | cut -d' ' -f1)" != "$3" ]; then
       rm -f $f $f.aria2
-      for try in 1 2 3 4; do
-        aria2c -q -x 8 -s 8 -k 4M --retry-wait=5 --max-tries=5 -o $f https://$2 && break
-        echo "retry $try $f"; sleep 5
+      for try in $(seq 1 15); do
+        aria2c -q -x 4 -s 4 -k 4M --retry-wait=5 --max-tries=5 -o $f https://$2 && break
+        echo "retry $try $f"; rm -f $f $f.aria2; sleep $((20 + RANDOM % 60))
       done
     fi
     [ "$(md5sum $f | cut -d' ' -f1)" == "$3" ] && echo "md5 ok $f" || { echo "MD5 FAIL $f"; return 1; }

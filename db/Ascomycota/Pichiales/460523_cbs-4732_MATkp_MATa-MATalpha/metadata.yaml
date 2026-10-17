@@ -1,0 +1,204 @@
+record_id: 460523_cbs-4732_MATkp_MATa-MATalpha
+record_version: 1
+taxonomy:
+  taxid: 460523
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Pichiales;f__Pichiaceae;g__Ogataea;s__Ogataea_polymorpha
+  lineage_resolved_date: '2026-10-18'
+organism:
+  species: Ogataea polymorpha
+  strain:
+    name: CBS 4732
+    known: true
+    culture_collection_ids:
+    - CBS 4732
+    - NRRL Y-5445
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATkp
+  idiomorphs:
+  - MATa
+  - MATalpha
+  system: pseudohomothallic
+locus:
+  assembly_accession: null
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: DIC1->MATalpha2->MATalpha1->MATa1->SLA2
+    definition_note: 'OGATAEA RECORD, OUT OF SCOPE OF THE MATkp FAMILY (taxonomic_scope
+      is genus Komagataella only; the curator keeps the scope there pending a decision).
+      Locus deposit AJ617305.1 (6,239 bp, "Pichia angusta MAT locus", strain CBS 4732;
+      Butler et al. 2004, PMID 14745027, whose abstract reports MATalpha2, MATalpha1
+      and MATa1 adjacent to each other on one chromosome in P. angusta). Genes of
+      the deposit: yol077C (partial, outside, not recorded), dic1 CAE84416.1 complement(1278..2141),
+      matalpha2 CAE84417.1 join(3263..3555,3586..3784), matalpha1 CAE84418.1 3790..4377,
+      mata1 CAE84419.1 4359..4904 (overlaps matalpha1 by 19 bp), sla2 CAE84420.1 complement(4917..>6239),
+      5-prime partial (440 aa). TAXON AND STRAIN: the deposit calls the organism Ogataea
+      angusta (taxid 870730), but NCBI Taxonomy lists CBS 4732 and NRRL Y-5445 among
+      the names of Ogataea polymorpha (taxid 460523; type-material names), and lists
+      CBS 7073 / NRRL Y-2214 for O. angusta; the record therefore uses 460523 and
+      keeps the deposit label here. B10 ANCHOR NOT MET (assembly_accession null):
+      the 4,962 bp of AJ617305.1 from dic1 to the end are 100.000% identical over
+      their full length to GCF_001664045.1 (Hanpo2, NW_017264700.1:899712-904673;
+      a second 1,864 bp copy at 920077-921939 at 99.95%), to GCA_000787595.2 (BY4329,
+      DF933571.1 and DF933585.1, 100%, contig break between DIC1/alpha cassette and
+      a1/SLA2) and to GCA_019207825.1 (99.8-100%), but those assemblies are of NCYC
+      495 leu1.1 (BioSample SAMN00726693), BY4329 and an unnamed isolate, and no source
+      I could open states that any of them is CBS 4732 (NCYC 495 is not among the
+      CBS 4732 names in NCBI Taxonomy), so no strain match could be verified. LAYOUT:
+      in the deposit, and in Hanpo2, the five genes lie within about 5 kb: SLA2, a1,
+      alpha1, alpha2, DIC1 on the strand opposite to the deposit. A second SLA2 +
+      a1 copy lies about 19 kb away in Hanpo2 (a1 fragment 920426-920593, SLA2 920791-922557,
+      the 1,864 bp repeat above); it is not part of this record. This agrees in outline
+      with two MAT loci about 18 kb apart that switch by inversion (Maekawa and Kaneko
+      2014, PMID 25412462, abstract; Hanson et al. 2014, PMID 25349420, abstract);
+      how the contiguous arrangement of the deposit maps onto MAT1 (alpha1, alpha2)
+      and MAT2 (a1) was not reconciled here. MATa2: NOT in the deposit and NOT recorded
+      as absent. Checked 2026-10-18: tblastn of the Komagataella, K. lactis, C. albicans,
+      D. hansenii, C. lusitaniae, Geotrichum and Yarrowia MATa2 proteins at E 1e-5
+      gives no hit in the Hanpo2, DL-1, BY4329 and GCA_019207825.1 cassette regions;
+      at E 10 and with the 7-protein MATa2 profile on six-frame ORFs there are weak
+      candidates (see record 1005962_dl-1_MATkp_MATa-MATalpha), so the question whether
+      a divergent MATa2 exists is UNRESOLVED and depends on the tblastn cut-off. GENETIC
+      CODE: standard (NCBI Taxonomy code 1). gene_class is not set on the record;
+      the family-level classes apply (MATalpha1 alpha_box: Pfam PF04769 50.1 bits,
+      GA 28.1; MATa1 homeodomain PF00046 56.6 bits). Gene models are the depositors
+      (annotation); no RNA evidence examined.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AJ617305.1
+        seq_region: AJ617305.1
+      start: 1278
+      end: 6239
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: dic1
+  protein_accession: ncbi_protein:CAE84416.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1278
+  end: 2141
+  strand: '-'
+  order_in_locus: 0
+- gene_index: 1
+  name: MATalpha2
+  protein_accession: ncbi_protein:CAE84417.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3263
+  end: 3784
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 3263
+    end: 3555
+  - start: 3586
+    end: 3784
+- gene_index: 2
+  name: MATalpha1
+  protein_accession: ncbi_protein:CAE84418.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3790
+  end: 4377
+  strand: +
+  order_in_locus: 2
+- gene_index: 3
+  name: MATa1
+  protein_accession: ncbi_protein:CAE84419.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4359
+  end: 4904
+  strand: +
+  order_in_locus: 3
+- gene_index: 4
+  name: sla2
+  protein_accession: ncbi_protein:CAE84420.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4917
+  end: 6239
+  strand: '-'
+  order_in_locus: 4
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: cloning and sequencing of the P. angusta MAT locus (AJ617305.1);
+      two MAT loci and inversion-based switching in H. polymorpha (O. polymorpha)
+      by genetic and molecular analysis
+    citations:
+    - pmid: '14745027'
+      doi: 10.1073/pnas.0304170101
+    - pmid: '25412462'
+      doi: 10.1371/journal.pgen.1004796
+    - pmid: '25349420'
+      doi: 10.1073/pnas.1416014111
+  boundaries:
+    tier: 2
+    experimental_method: depositor annotation of AJ617305.1; sla2 is 5-prime partial
+      at the end of the sequence; gene extents are annotation-derived
+    citations:
+    - pmid: '14745027'
+      doi: 10.1073/pnas.0304170101
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'functional assay in H. polymorpha: MAT1-encoded alpha1 specifies
+      alpha cell identity, MAT1 alpha2 and MAT2 a1 are essential for meiosis (abstract
+      of PMID 25412462)'
+    citations:
+    - pmid: '25412462'
+      doi: 10.1371/journal.pgen.1004796
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AJ617305.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 14745027|460523|MATkp|MATa-MATalpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

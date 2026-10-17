@@ -76,3 +76,19 @@ def test_mata2_profile_builds_reproducibly(tmp_path):
     assert outs[0]["training_sha256"] == committed["training_sha256"]
     if outs[0]["tool_versions"] == committed["tool_versions"]:
         assert outs[0]["hmm_sha256"] == committed["hmm_sha256"]
+
+
+# ---- Ogataea records are present but out of scope (curator, 2026-10-18)
+def test_matkp_scope_stays_komagataella_with_ogataea_records_present():
+    fam = _family()
+    assert list(fam.taxonomic_scope) == [460517]  # NOT widened to Ogataea 461281 or Pichiaceae 1156497
+    ids = {p.name for p in (DB / "Ascomycota" / "Pichiales").iterdir() if p.is_dir()}
+    ogataea = {i for i in ids if i.startswith(("460523_", "1005962_"))}
+    assert ogataea == {"460523_cbs-4732_MATkp_MATa-MATalpha", "1005962_dl-1_MATkp_MATa-MATalpha"}
+    for rid in ogataea:
+        rec = yaml.safe_load((DB / "Ascomycota" / "Pichiales" / rid / "metadata.yaml").read_text())
+        assert rec["mating_type"]["locus_name"] == "MATkp"
+        assert rec["mating_type"]["system"] == "pseudohomothallic"
+        assert rec["validation"]["status"] == "accepted"
+        names = {g["name"] for g in rec["genes"]}
+        assert "MATa2" not in names  # not recorded as present or as absent: the MATa2 question is unresolved

@@ -448,6 +448,12 @@ loci:
     # MATsc MATA1 (52) then MTLA1 (37-41); MATa2 hits only MTLA2 (38 bits, C. albicans). The
     # architecture (two cassettes in one chromosome, flip/flop) matches neither MATsc (three
     # cassettes HML/MAT/HMR, HO switching) nor MTL (PAP1/OBP1/PIK1 inside the idiomorph).
+    # OGATAEA RECORDS PRESENT BUT OUT OF SCOPE (curator, 2026-10-18): the family holds two Ogataea records
+    # (460523_cbs-4732_MATkp_MATa-MATalpha from deposit AJ617305.1, 1005962_dl-1_MATkp_MATa-MATalpha from the
+    # O. parapolymorpha DL-1 reference genome) although taxonomic_scope stays the genus Komagataella; they are
+    # reference proteins for the family and are NOT routed to Ogataea genomes pending a curator decision on
+    # widening the scope or a separate family. Ogataea records carry no MATa2 gene: a divergent MATa2 candidate
+    # next to the second MATa1 copy of DL-1 is unresolved (see the record notes), so MATa2 is not recorded as absent.
     # CURATOR DECISION 2026-10-18 (relayed): `two_idiomorphs_report` stays OFF and the records carry
     # `mating_type.system: pseudohomothallic` (S. pombe precedent). Reason: K. phaffii switches mating
     # type by inversion of the region between two cassettes, so BOTH cassettes (MATa and MATalpha) are

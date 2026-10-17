@@ -1,0 +1,209 @@
+record_id: 1005962_dl-1_MATkp_MATa-MATalpha
+record_version: 1
+taxonomy:
+  taxid: 1005962
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Pichiales;f__Pichiaceae;g__Ogataea;s__Ogataea_parapolymorpha
+  lineage_resolved_date: '2026-10-18'
+organism:
+  species: Ogataea parapolymorpha
+  strain:
+    name: DL-1
+    known: true
+    culture_collection_ids:
+    - DL-1
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATkp
+  idiomorphs:
+  - MATa
+  - MATalpha
+  system: pseudohomothallic
+locus:
+  assembly_accession: GCF_000187245.1
+  assembly_accession_basis: sequence_link
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: SLA2->MATa1->MATalpha1->MATalpha2->DIC1
+    definition_note: 'OGATAEA RECORD, OUT OF SCOPE OF THE MATkp FAMILY (taxonomic_scope
+      is genus Komagataella only; scope unchanged pending a curator decision). MAT
+      cassette of O. parapolymorpha DL-1, chromosome V (NC_027862.1:422526-429249,
+      assembly GCF_000187245.1 "Hansenula_2", RefSeq annotation HPODL_*; the strain
+      is the "H. polymorpha DL-1" of the literature, the species name follows NCBI
+      Taxonomy, strain taxid 871575). Same-strain by construction (the sequence is
+      the assembly). Layout on the plus strand: eIF1/SUI1 (HPODL_04013), SLA2 HPODL_04014
+      (+) 422526-425585, MATa1 HPODL_04015 (-) 425598-426161, MATalpha1 (-) 426149-426721,
+      MATalpha2 HPODL_05244 (-) four exons 426737-427503, DIC1 HPODL_04016 (+) three
+      exons 428280-429249. MATalpha1 IS NOT ANNOTATED in RefSeq: its model was derived
+      here from the O. polymorpha deposit protein CAE84418.1 (89% identity by exonerate):
+      an open reading frame of 190 aa (ATG at 426721, stop ending at 426149, MFLAFFVIARVG...QECSS*)
+      with the alpha box (Pfam PF04769 49.6 bits, GA 28.1); it overlaps the start
+      of the MATa1 CDS by 13 bp, as the deposit does; protein_accession is null and
+      the protein is derived from the coordinates. The RefSeq MATalpha2 (222 aa, four
+      exons) and DIC1 (294 aa, three exons) extend the deposit proteins (173 and 287
+      aa) at the amino end by exons I could not check; the deposit-like core of MATalpha2
+      (exons 426737-426935 and 426966-427297) is contained in the RefSeq model. SECOND
+      COPY: about 19 kb away a second MATa1 (HPODL_04024 (+) 444647-445219) and a
+      truncated SLA2 (HPODL_04025 (-) 445232-446728) lie in an inverted repeat of
+      the SLA2/MATa1 end of this cassette (BLAST of the deposit AJ617305.1: 94% over
+      1,882 bp); the second copy is not part of this record. MATa2 NOT RECORDED AS
+      ABSENT: tblastn at E 1e-5 of seven MATa2 proteins (Komagataella, K. lactis,
+      C. albicans, D. hansenii, C. lusitaniae, Geotrichum, Yarrowia) gives no hit
+      in 415000-455000, but at E 10 the Komagataella MATa2 aligns twice at E 0.009
+      (444128-444202 and 444238-444363) just upstream of the second MATa1, and two
+      overlapping ORFs on the minus strand (443765-444202 and 444043-444387; 146 and
+      115 aa) score 14.0 and 18.1 bits with the 7-protein Saccharomycotina MATa2 profile
+      (E 1e-3 and 5e-5) and align to the HMG-box start (RPxNxF...) and helix 2 of
+      MATa2 proteins; the same weak ORF pair occurs in Hanpo2 (profile 18.1 and 15.4
+      bits). This may be a divergent, split or degenerate MATa2 next to MAT2 a1, or
+      an unrelated HMG-like ORF; it was not resolved and is not recorded as a gene.
+      Whether MATa2 is truly absent in Ogataea depends on the tblastn cut-off and
+      is UNRESOLVED. LITERATURE: two MAT loci about 18 kb apart that switch by inversion
+      in H. polymorpha (Maekawa and Kaneko 2014, PMID 25412462, abstract) and the
+      19 kb invertible region (Hanson et al. 2014, PMID 25349420, abstract); that
+      DL-1 itself switches was not verified. GENETIC CODE: standard (NCBI Taxonomy
+      code 1 for 1005962 and 871575).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NC_027862.1
+        seq_region: NC_027862.1
+      start: 422526
+      end: 429249
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: sla2
+  protein_accession: ncbi_protein:XP_013934269.1
+  role: flanking_conserved
+  present: true
+  locus_tag: HPODL_04014
+  segment_index: 0
+  start: 422526
+  end: 425585
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MATa1
+  protein_accession: ncbi_protein:XP_013934270.1
+  role: core_MAT
+  present: true
+  locus_tag: HPODL_04015
+  segment_index: 0
+  start: 425598
+  end: 426161
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: MATalpha1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 426149
+  end: 426721
+  strand: '-'
+  order_in_locus: 2
+- gene_index: 3
+  name: MATalpha2
+  protein_accession: ncbi_protein:XP_013934271.1
+  role: core_MAT
+  present: true
+  locus_tag: HPODL_05244
+  segment_index: 0
+  start: 426737
+  end: 427503
+  strand: '-'
+  order_in_locus: 3
+  exons:
+  - start: 427478
+    end: 427503
+  - start: 427330
+    end: 427441
+  - start: 426966
+    end: 427297
+  - start: 426737
+    end: 426935
+- gene_index: 4
+  name: dic1
+  protein_accession: ncbi_protein:XP_013934272.1
+  role: flanking_conserved
+  present: true
+  locus_tag: HPODL_04016
+  segment_index: 0
+  start: 428280
+  end: 429249
+  strand: +
+  order_in_locus: 4
+  exons:
+  - start: 428280
+    end: 428329
+  - start: 428378
+    end: 428391
+  - start: 428429
+    end: 429249
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: two MAT loci and inversion-based switching in H. polymorpha
+      (O. polymorpha) by genetic and molecular analysis; the DL-1 cassette itself
+      is a genome annotation
+    citations:
+    - pmid: '25412462'
+      doi: 10.1371/journal.pgen.1004796
+    - pmid: '25349420'
+      doi: 10.1073/pnas.1416014111
+  boundaries:
+    tier: 2
+    experimental_method: RefSeq genome annotation of DL-1 (GCF_000187245.1) for SLA2,
+      MATa1, MATalpha2, DIC1; MATalpha1 derived here by alignment of the O. polymorpha
+      deposit protein; gene extents are annotation-derived
+    citations:
+    - pmid: '25412462'
+      doi: 10.1371/journal.pgen.1004796
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'functional assay in H. polymorpha: MAT1-encoded alpha1 specifies
+      alpha cell identity, MAT1 alpha2 and MAT2 a1 are essential for meiosis (abstract
+      of PMID 25412462); gene identity by homology'
+    citations:
+    - pmid: '25412462'
+      doi: 10.1371/journal.pgen.1004796
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NC_027862.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 25412462|1005962|MATkp|MATa-MATalpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -27,3 +27,13 @@ The freeze's `DNA/*.scaffolds.fa` links all dangle (the target `Assembly/unscaff
 
 - Cap: 50 runs per species (decided 2026-10-17). `fusarium/selected.tsv` is the rank <= 50 set (960 runs); the earlier 150-cap set is `selected_extended.tsv`. `cryptococcus/selected.tsv` (312 runs) was already capped at 50.
 - Reads are not kept on /bigdata. `fetch_type.slurm` downloads one run into `$SCRATCH`, types it against a species panel, keeps only the result TSV and deletes the reads. It is syntax-checked only, and panels for Cryptococcus and Fusarium do not exist yet (Coccidioides panels are in `panels/coccidioides/`).
+
+## Coccidioides pilot result (24 strains, 12 per species)
+
+Per strain, `matpredict detect` on the assembly versus `reads-type` (first 8M reads) on each panel; table in `coccidioides/pilot/comparison.tsv`.
+
+- `detect` called every strain: 12 MAT1-1 and 12 MAT1-2, 22 of 24 with high confidence.
+- immitis panel (`panels/coccidioides/immitis_*`): 23 of 24 reads calls agree with `detect`, in both species (12 of 12 *C. posadasii*, 11 of 12 *C. immitis*). The exception is CA10, `low_depth` with 0.46x MAT1-1 depth.
+- posadasii panel: 0 of 24 called, all `low_depth`. Its MAT1-1 (EF512013) and MAT1-2 (EF472258) records are separate deposits with no shared flank, so the shared-depth control is 0. The idiomorph depths are right (they match `detect`); the panel needs a shared region added before it is usable.
+- The two relabelled strains behave as their corrected species: both are called correctly by the immitis panel, B3476 (relabelled *immitis*) is typed MAT1-1 and 485B-1_L_OLD_CPA0023 (relabelled *posadasii*) MAT1-2, in agreement with `detect`.
+- Noise: every strain also carries a `trace_` flag for the other idiomorph, often at a substantial depth (e.g. MAT1-1 55x vs MAT1-2 42x in B11343, a MAT1-2 strain), because the immitis panel includes flanking sequence that is not identical between strains. The calls are right, but the panel should be trimmed to the idiomorph-specific region.

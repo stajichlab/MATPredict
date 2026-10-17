@@ -78,17 +78,35 @@ def test_mata2_profile_builds_reproducibly(tmp_path):
         assert outs[0]["hmm_sha256"] == committed["hmm_sha256"]
 
 
-# ---- Ogataea records are present but out of scope (curator, 2026-10-18)
-def test_matkp_scope_stays_komagataella_with_ogataea_records_present():
-    fam = _family()
-    assert list(fam.taxonomic_scope) == [460517]  # NOT widened to Ogataea 461281 or Pichiaceae 1156497
+# ---- Ogataea lives in its own scope-only family MATog (curator, 2026-10-18)
+def _og():
+    return next(f for f in load_all_families(DB) if f.key == FamilyKey("Ascomycota", "MATog"))
+
+
+def test_matkp_scope_stays_komagataella_and_holds_no_ogataea_record():
+    assert list(_family().taxonomic_scope) == [460517]  # NOT widened to Ogataea 461281 or Pichiaceae 1156497
     ids = {p.name for p in (DB / "Ascomycota" / "Pichiales").iterdir() if p.is_dir()}
-    ogataea = {i for i in ids if i.startswith(("460523_", "1005962_"))}
-    assert ogataea == {"460523_cbs-4732_MATkp_MATa-MATalpha", "1005962_dl-1_MATkp_MATa-MATalpha"}
-    for rid in ogataea:
+    assert not any("MATkp" in i and i.startswith(("460523_", "1005962_")) for i in ids)
+
+
+def test_matog_family_declaration():
+    fam = _og()
+    assert list(fam.taxonomic_scope) == [461281]  # genus Ogataea (taxonkit-verified)
+    assert fam.fallback_searchable is False
+    assert fam.two_idiomorphs_report is False
+    assert set(fam.idiomorph_classes.values()) == {"unassigned"}
+    genes = {g["name"]: g for g in fam.genes}
+    assert genes["MATa2"].get("optional") is True and genes["MATa2"].get("gene_class") is None
+    assert genes["MATalpha1"]["gene_class"] == "alpha_box"
+    assert genes["MATa1"].get("gene_class") is None and genes["MATalpha2"].get("gene_class") is None
+    assert set(genes) == {"MATa1", "MATa2", "MATalpha1", "MATalpha2", "sla2", "dic1"}
+
+
+def test_matog_records():
+    ids = {"460523_cbs-4732_MATog_MATa-MATalpha", "1005962_dl-1_MATog_MATa-MATalpha"}
+    for rid in ids:
         rec = yaml.safe_load((DB / "Ascomycota" / "Pichiales" / rid / "metadata.yaml").read_text())
-        assert rec["mating_type"]["locus_name"] == "MATkp"
+        assert rec["mating_type"]["locus_name"] == "MATog"
         assert rec["mating_type"]["system"] == "pseudohomothallic"
         assert rec["validation"]["status"] == "accepted"
-        names = {g["name"] for g in rec["genes"]}
-        assert "MATa2" not in names  # not recorded as present or as absent: the MATa2 question is unresolved
+        assert "MATa2" not in {g["name"] for g in rec["genes"]}  # not recorded as present or absent (unresolved)

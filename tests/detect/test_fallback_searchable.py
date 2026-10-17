@@ -51,7 +51,7 @@ def test_exhaustive_still_searches_everything():
 def test_shipped_roster_flags_the_scope_only_families():
     flagged = {f.key.locus_name for f in load_all_families(DB) if not f.fallback_searchable}
     # MATkp (Komagataella) added 2026-10-17: scope-only like the four Basidiomycota families.
-    assert flagged == {"redPR", "redHD", "rustHD", "wallMAT", "MATkp"}
+    assert flagged == {"redPR", "redHD", "rustHD", "wallMAT", "MATkp", "MATog"}
 
 
 def test_pr_scope_includes_boletales():

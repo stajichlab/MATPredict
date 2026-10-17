@@ -448,12 +448,8 @@ loci:
     # MATsc MATA1 (52) then MTLA1 (37-41); MATa2 hits only MTLA2 (38 bits, C. albicans). The
     # architecture (two cassettes in one chromosome, flip/flop) matches neither MATsc (three
     # cassettes HML/MAT/HMR, HO switching) nor MTL (PAP1/OBP1/PIK1 inside the idiomorph).
-    # OGATAEA RECORDS PRESENT BUT OUT OF SCOPE (curator, 2026-10-18): the family holds two Ogataea records
-    # (460523_cbs-4732_MATkp_MATa-MATalpha from deposit AJ617305.1, 1005962_dl-1_MATkp_MATa-MATalpha from the
-    # O. parapolymorpha DL-1 reference genome) although taxonomic_scope stays the genus Komagataella; they are
-    # reference proteins for the family and are NOT routed to Ogataea genomes pending a curator decision on
-    # widening the scope or a separate family. Ogataea records carry no MATa2 gene: a divergent MATa2 candidate
-    # next to the second MATa1 copy of DL-1 is unresolved (see the record notes), so MATa2 is not recorded as absent.
+    # OGATAEA IS NOT IN THIS FAMILY (curator, 2026-10-18): the two Ogataea records first placed here were moved
+    # to the separate scope-only family `MATog`; MATkp keeps taxonomic_scope [460517] and holds only Komagataella.
     # CURATOR DECISION 2026-10-18 (relayed): `two_idiomorphs_report` stays OFF and the records carry
     # `mating_type.system: pseudohomothallic` (S. pombe precedent). Reason: K. phaffii switches mating
     # type by inversion of the region between two cassettes, so BOTH cassettes (MATa and MATalpha) are
@@ -524,4 +520,49 @@ loci:
       - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
       # dic1: mitochondrial dicarboxylate carrier, the other flank (also one copy per cassette).
       # No gene_class exists for it; optional for the same contig-edge reason.
+      - {name: dic1, role: flanking_conserved, optional: true}
+  - locus_name: "MATog"
+    vocabulary_type: "enum"
+    # NEW FAMILY, curator decision 2026-10-18: Ogataea records moved out of MATkp into their own scope-only family.
+    # Records: 460523_cbs-4732_MATog_MATa-MATalpha (deposit AJ617305.1) and 1005962_dl-1_MATog_MATa-MATalpha
+    # (O. parapolymorpha DL-1). Same architecture as MATkp (flip/flop inversion between two MAT loci, SLA2 and DIC1
+    # flanks; Hanson et al. 2014, PMID 25349420; Maekawa and Kaneko 2014, PMID 25412462, abstracts), but only
+    # a1, alpha1 and alpha2 are known: in the references the cassette genes SLA2, a1, alpha1, alpha2 and DIC1 lie
+    # within about 5 kb, with a second SLA2 + a1 copy about 19 kb away. Komagataella proteins match them at only
+    # 31-54% identity (docs/notes/2026-10-18_komagataella-mata-analysis.md, section 10), hence a separate family.
+    # Both idiomorphs are present in every genome because the species switches mating type (as for MATkp:
+    # two_idiomorphs_report stays off, records are pseudohomothallic).
+    idiomorph_values: ["MATa", "MATalpha"]
+    # idiomorph_class unset (unassigned), as for MATkp and MATdc.
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    # Genus Ogataea, taxid 461281, verified with taxonkit (name2taxid and lineage, rank genus, ...Pichiales;
+    # Pichiaceae; Ogataea) on 2026-10-18. SCOPE-ONLY (fallback_searchable false) with a GENUS scope: Ogataea
+    # genomes (112 in the v0.6.0 campaign) route to this family by lineage and no other genome is searched with
+    # it. Chosen because the curator asked for a scope-only family for the genus; the effect on the 112 genomes is
+    # in the analysis note (section 12). Disjoint from MATkp (460517), MATsc, MTL, MATyl and MATdc.
+    taxonomic_scope: [461281]
+    fallback_searchable: false
+    # SLA2 and DIC1 flank the cassette within about 5 kb in the references; the second SLA2 + a1 copy is 19 kb away.
+    flank_carried_window_bp: 20000
+    genes:
+      # MATa1: homeodomain (Pfam PF00046 56.6 bits on the deposit protein, GA 22.9); no class (the schema has none).
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      # MATa2 OPTIONAL AND UNRESOLVED (curator, 2026-10-18). No record carries MATa2 and none records it as absent.
+      # tblastn at E 1e-5 of seven MATa2 proteins finds nothing in the Ogataea cassette regions, but at E 10 the
+      # Komagataella MATa2 aligns twice (E 0.009) at O. parapolymorpha DL-1 NC_027862.1:444128-444363, next to the
+      # second MATa1 copy (444647-445219), and two overlapping minus-strand ORFs there (443765-444202, 146 aa, and
+      # 444043-444387, 115 aa) score 14.0 and 18.1 bits with the 7-protein Saccharomycotina MATa2 profile (E 1e-3 and
+      # 5e-5) and align to the HMG-box start and helix 2; a similar ORF pair is in the O. polymorpha Hanpo2 assembly
+      # (15.4 and 18.1 bits). It may be a divergent or split MATa2 or an unrelated HMG-like ORF. No gene_class: the
+      # evidence that would justify HMG_box here is weaker than for Komagataella MATa2. Declared so that a future record
+      # can carry it; with no reference protein it is not searched.
+      - {name: MATa2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATa"]}
+      # MATalpha1: alpha_box by Pfam PF04769 (50.1 bits on the deposit protein, 49.6 on the DL-1 ORF, GA 28.1), the same
+      # evidence bar as MATkp (curator, 2026-10-18).
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
+      # MATalpha2: homeodomain (PF00046 32.3 bits on the deposit protein); no class.
+      - {name: MATalpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      # sla2: sla2_homolog by precedent (MATsc/MATyl/MATkp); the curator did not separately rule on this family.
+      # Optional so that contigs ending inside the cassette are not demoted.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
       - {name: dic1, role: flanking_conserved, optional: true}

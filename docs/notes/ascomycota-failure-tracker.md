@@ -31,3 +31,23 @@ independently re-run here.
 | optional-gene policy and paired campaign | `optional-gene-policy` (PR #89, draft) | waiting on the campaign; Sl8 interaction reported there |
 | Dipodascales: guard, scope-only families, records, Pichiales deep dive | `dipodascales-curation` | held until the single-gene rule is built and evaluated; no idiomorph_class for MATdc until a Dipodascales profile exists; Orbiliales losses accepted |
 | deferred | | trace of the other uncalled Pleosporales (after the single-gene rule is evaluated); Dipodascales-specific profile; Lipomycetales/Blastobotrys/Sugiyamaella families (52 and 20 genomes lose calls to the guard) |
+
+## If the session ends (state as of 2026-10-18, late)
+
+Cluster jobs keep running without the session; agents may not. Work in flight and where it lands:
+
+| item | cluster state | output location |
+|---|---|---|
+| optional-gene paired campaign (PR #89, draft) | array 30031368, 557 of 941 tasks complete, 58 running | `/bigdata/stajichlab/jstajich/projects/optgene_runs` (core_first and legacy) |
+| re-run of the 63 linked triage genomes on current main | array 30034651, queued | `/bigdata/stajichlab/jstajich/projects/main-now/out/<genome>/detection_report.yaml`; list in `main-now/linked63.tsv` |
+| single-gene rule | `sgr-eval` running | branch `single-gene-rule`, worktree `MATPredict-sgr` |
+| polish-cap fix | `cap-sample`, `cap-panel` running | branch `polish-cap-fix`, worktree `MATPredict-cap` |
+| general confidence cap | branch has code | branch `confidence-cap`, worktree `MATPredict-conf` |
+| Komagataella and P. nodorum records | `kom-tests` running | branches `komagataella-curation`, `pnodorum-flanks` |
+| remnant status step 1 and step 2 | `rem-s1` running | branches `remnant-status-step1`, `remnant-status-step2` |
+| curate-db validate wrapper (2 GB) | done | PR #99 |
+| Ceratocystis | done | draft PR #98 (merge recommended by its agent) |
+| Dipodascales guard, records, Pichiales deep dive | done | branch `dipodascales-curation` (no PR; held until the single-gene rule is evaluated) |
+| flip review | done | branch `flip-review` (no PR) |
+
+Every branch pushed so far holds its work up to its last commit. Uncommitted work in a worktree is not on the remote.

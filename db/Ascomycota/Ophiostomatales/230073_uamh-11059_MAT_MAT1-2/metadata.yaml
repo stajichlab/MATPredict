@@ -1,5 +1,5 @@
 record_id: 230073_uamh-11059_MAT_MAT1-2
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 230073
   lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Ophiostomatales;f__Ophiostomataceae;g__Ophiostoma;s__Ophiostoma_montium
@@ -29,7 +29,7 @@ locus:
       idiomorph contains a TRUNCATED MAT1-1-1 remnant (alpha-box domain deleted, gene_index
       1 below) immediately upstream of the functional MAT1-2-1 gene, attributed to
       an ancient unequal recombination event. The truncated gene is included here
-      as present:true with role core_MAT (it has a real annotated CDS in GenBank,
+      as present:true with status: remnant and role core_MAT (it has a real annotated CDS in GenBank,
       AGH03258.1) but is almost certainly non-functional as a transcription factor
       per the paper''s analysis -- this is a genuine biological finding to preserve
       in the record, not a data-quality issue with this curation.
@@ -63,6 +63,8 @@ genes:
   protein_accession: ncbi_protein:AGH03258.1
   role: core_MAT
   present: true
+  status: remnant
+  remnant_note: 'alpha-box domain deleted (Tsui et al. 2013); AGH03258.1 is 224 aa against 353 aa for a full MAT1-1-1'
   locus_tag: null
   segment_index: 0
   start: 1678

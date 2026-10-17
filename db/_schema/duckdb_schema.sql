@@ -68,6 +68,8 @@ CREATE TABLE locus_gene (
     protein_accession TEXT,            -- namespaced: ncbi_protein:... | uniprotkb:...
     role TEXT NOT NULL,
     present BOOLEAN NOT NULL,
+    status TEXT,                       -- remnant | pseudogene | NULL (intact)
+    remnant_note TEXT,
     locus_tag TEXT,
     start_pos INTEGER,
     end_pos INTEGER,

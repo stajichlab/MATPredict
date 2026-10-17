@@ -67,6 +67,9 @@ def _cmd_validate(args: argparse.Namespace) -> int:
 
     result = validate_record(record, ncbi=ncbi, uniprot=uniprot)
     record["validation"].update(result)
+    if result.get("taxonomy_error"):
+        # taxonkit could not run, so taxonomy_current is unset (null), not false: say so, do not leave it silent
+        print(f"taxonomy check not run: {result['taxonomy_error']}")
 
     # A curated gene whose name is not declared by its locus in order.yml is silently
     # dropped by detect.search._attribute, so it can never be found in any genome. Report

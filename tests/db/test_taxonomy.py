@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
-from MATPredict.db.taxonomy import resolve_lineage
+import pytest
+
+from MATPredict.db.taxonomy import TaxonkitError, resolve_lineage
 
 
 def _fake_runner_current(cmd, **kwargs):
@@ -43,3 +45,34 @@ def test_the_transport_outlasts_a_burst_of_rate_limiting(monkeypatch):
     monkeypatch.setattr(requests, "get", lambda url, **kw: R(next(codes)))
     monkeypatch.setattr(taxonomy.time, "sleep", lambda s: None)
     assert taxonomy._default_transport("https://example.org/t") == "ok"
+
+
+def test_the_taxid_is_sent_newline_terminated():
+    seen = {}
+
+    def runner(cmd, **kwargs):
+        seen.update(kwargs)
+        return SimpleNamespace(returncode=0, stdout="5158\tk__;p__Ascomycota\n", stderr="")
+
+    resolve_lineage(5158, runner=runner)
+    assert seen["input"] == "5158\n"
+
+
+def test_a_taxonkit_failure_is_an_error_not_an_out_of_date_taxid():
+    def failing(cmd, **kwargs):
+        return SimpleNamespace(returncode=1, stdout="", stderr="[ERRO] taxdump not found")
+
+    with pytest.raises(TaxonkitError, match="taxdump not found"):
+        resolve_lineage(5158, runner=failing)
+
+    def silent(cmd, **kwargs):
+        return SimpleNamespace(returncode=0, stdout="", stderr="")
+
+    with pytest.raises(TaxonkitError):
+        resolve_lineage(5158, runner=silent)
+
+    def missing(cmd, **kwargs):
+        raise FileNotFoundError("taxonkit")
+
+    with pytest.raises(TaxonkitError, match="not on PATH"):
+        resolve_lineage(5158, runner=missing)

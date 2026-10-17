@@ -83,7 +83,7 @@ def loci_by_genome(rows, genome_col="genome"):
     return out
 
 
-GENOME_COLS = ["dataset", "genome", "species", "phylum", "class", "order", "family", "genus", "status", "call", "alleles",
+GENOME_COLS = ["dataset", "genome", "species", "species_recorded", "phylum", "class", "order", "family", "genus", "status", "call", "alleles",
                "locus_types", "n_loci", "best_confidence", "loci"]
 _CONF = {"high": 3, "medium": 2, "low": 1}
 
@@ -97,7 +97,7 @@ def genome_row(ds_id, genome, species, phylum, cls, order, family, status, calle
     else:
         call = "+".join(sorted(alleles))
     best = max((l[4] for l in loci), key=lambda c: _CONF.get(c, 0), default="")
-    return [ds_id, genome, species, phylum, cls, order, family, genus_of(species), status, call, ",".join(sorted(alleles)),
+    return [ds_id, genome, species_of(species), species, phylum, cls, order, family, genus_of(species), status, call, ",".join(sorted(alleles)),
             ",".join(sorted(set(types))), len(loci), best, ";".join(f"{c}:{a}-{b}|{i or 'undetermined'}|{cf}|{lc}" for c, a, b, i, cf, lc in loci)]
 
 

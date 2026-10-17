@@ -1,9 +1,10 @@
 // Tiny SVG chart helpers (no dependencies). Bars start at zero.
-export const COLORS = ["var(--c1)","var(--c2)","var(--c3)","var(--c4)","var(--c5)","var(--c6)","var(--c7)","var(--c8)"];
+export const COLORS = [1, 2, 3, 4, 5, 6].map(i => `var(--c${i})`);
 export const fmt = n => n.toLocaleString("en-US");
 export const pct = (a, b, d = 1) => b ? (100 * a / b).toFixed(d) + "%" : "n/a";
-const NEUTRAL = { "other allele": "var(--c8)", "other single allele": "var(--c8)", "two alleles": "#8c8c91", "undetermined": "var(--c5)", "uncalled": "var(--line)" };
-export const colorFor = (c, j) => NEUTRAL[c] || COLORS[j % 6];
+const SEMANTIC = { "undetermined": "undet", "two alleles": "two", "other allele": "other", "other single allele": "other", "uncalled": "uncalled" };
+export const colorFor = (c, j) => SEMANTIC[c] ? `var(--${SEMANTIC[c]})` : COLORS[j % COLORS.length];
+const labelFor = (c, j) => SEMANTIC[c] ? `var(--${SEMANTIC[c]}t)` : `var(--c${(j % COLORS.length) + 1}t)`;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 export async function loadData() {
@@ -43,8 +44,8 @@ export function stacked(el, items, cats, { labelw = 190, rh = 30 } = {}) {
     cats.forEach((c, j) => {
       const v = it.parts[c] || 0; if (!v || !tot) return;
       const w = bw * v / tot;
-      s += `<rect x="${x}" y="${y + 3}" width="${w}" height="20" fill="${colorFor(c, j)}"><title>${esc(it.label)} — ${esc(c)}: ${fmt(v)} (${pct(v, tot)})</title></rect>`;
-      if (w > 34) s += `<text x="${x + w / 2}" y="${y + 17}" text-anchor="middle" style="fill:#fff;font-size:11px">${(100 * v / tot).toFixed(0)}%</text>`;
+      s += `<rect x="${x}" y="${y + 3}" width="${w}" height="20" fill="${colorFor(c, j)}" stroke="var(--bg)" stroke-width="1.5"><title>${esc(it.label)} — ${esc(c)}: ${fmt(v)} (${pct(v, tot)})</title></rect>`;
+      if (w > 34) s += `<text x="${x + w / 2}" y="${y + 17}" text-anchor="middle" style="fill:${labelFor(c, j)};font-size:11px">${(100 * v / tot).toFixed(0)}%</text>`;
       x += w;
     });
     s += `<text x="${labelw + bw + 8}" y="${y + 17}" class="m">${fmt(tot)}</text>`;
@@ -53,5 +54,5 @@ export function stacked(el, items, cats, { labelw = 190, rh = 30 } = {}) {
 }
 
 export function legend(el, cats) {
-  el.innerHTML = cats.map((c, j) => `<span><i style="background:${colorFor(c, j)}"></i>${esc(c)}</span>`).join("");
+  el.innerHTML = cats.map((c, j) => `<span><i style="background:${colorFor(c, j)};${c === "uncalled" ? "border:1px solid var(--muted)" : ""}"></i>${esc(c)}</span>`).join("");
 }

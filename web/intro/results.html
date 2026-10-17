@@ -6,9 +6,10 @@
 <title>MATPredict results by taxon</title>
 <meta name="description" content="MAT calls and allele frequencies by phylum, class, order, family, genus and species for BFD and ZyGoLife genomes.">
 <link rel="stylesheet" href="site.css">
+<script src="theme.js"></script>
 </head>
 <body>
-<nav><b>MATPredict</b><a href="index.html">Overview</a><a href="results.html">Explore taxa</a><a href="page/index.html">Browser tool</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a></nav>
+<nav><b>MATPredict</b><a href="index.html">Overview</a><a href="results.html">Explore taxa</a><a href="page/index.html">Browser tool</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
 <main>
   <h1>Results by taxon</h1>
   <p class="lede">How many genomes got a MAT call, and which alleles were found, at every rank. Click a row to drill into that taxon.</p>
@@ -25,6 +26,10 @@
     <th data-k="name">Taxon</th><th class="n" data-k="n">Genomes</th><th class="n" data-k="rate">Called</th><th>Alleles among called genomes (count, share)</th><th class="n" data-k="two">Two alleles</th>
   </tr></thead><tbody></tbody></table></div>
   <p class="muted" id="foot"></p>
+  <h2>Locus maps for this view</h2>
+  <p>Gene map of every called locus among the genomes in the current view, with the contig accession linked to NCBI (genomes with GenBank or RefSeq contigs; lab scaffold names are shown as text). Pick a taxon in the table, then press the button; clicking a species row opens its maps directly.</p>
+  <p><button id="showloci">Show locus maps for the current view</button> <span class="muted" id="locimsg"></span></p>
+  <div id="lociout"></div>
   <h2>Download per-genome tables</h2>
   <p>One row per genome: lineage, call, alleles, locus types, number of loci, best confidence, and each locus as <code>contig:start-end|allele|confidence|locus class</code>. Tab-separated.</p>
   <ul id="dl"></ul>
@@ -35,6 +40,7 @@
 </main>
 <script type="module">
 import { loadData, stacked, legend, fmt, pct, COLORS } from "./charts.js";
+import { loadShard, renderCards } from "./locus-view.js";
 const { rows, summary } = await loadData();
 const RANKS = ["phylum", "class", "order", "family", "genus", "species"];
 const DS = { BFD: "BFD", ZyGoLife: "ZyGoLife (LCG, Jena held out)" };
@@ -80,35 +86,52 @@ function render() {
 
   $("tbl").tBodies[0].innerHTML = shown.map(x => {
     const al = Object.entries(x.al).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([a, v]) => `${a} ${fmt(v)} (${pct(v, x.c, 0)})`).join(" · ");
-    const drill = st.rank !== "species" ? " click" : "";
+    const drill = " click";
     return `<tr class="${drill.trim()}" data-name="${x.name.replace(/"/g, "&quot;")}"><td>${x.name}</td><td class="n">${fmt(x.n)}</td><td class="n">${pct(x.c, x.n)}</td><td>${al || '<span class="muted">none</span>'}${x.undet ? ` <span class="muted">· undetermined ${fmt(x.undet)}</span>` : ""}</td><td class="n">${x.two ? fmt(x.two) : ""}</td></tr>`;
   }).join("");
 }
-const GTAB = {}; // dataset id -> parsed rows (loaded on demand)
+const GTAB = {};   // dataset id -> parsed genome rows (loaded on demand)
+const SHARDS = {}; // dataset id -> {genome: [loci]}
 $("dl").innerHTML = Object.entries(summary.datasets).filter(([, d]) => d.genome_table).map(([id, d]) =>
   `<li><a href="${d.genome_table}" download>${d.label}</a> <span class="muted">· ${fmt(d.genomes)} genomes</span></li>`).join("");
-$("dlview").onclick = async () => {
-  $("dlmsg").textContent = "Preparing…";
-  const want = Object.entries(summary.datasets).filter(([, d]) => d.genome_table && st.ds.has(d.source === "BFD" ? "BFD" : "ZyGoLife"));
-  let head = null; const out = [];
-  for (const [id, d] of want) {
-    const lines = (await (await fetch(d.genome_table)).text()).trimEnd().split("\n");
-    head = lines[0]; const cols = head.split("\t");
-    for (const ln of lines.slice(1)) {
-      const f = ln.split("\t"), row = Object.fromEntries(cols.map((c, i) => [c, f[i] || ""]));
-      if (Object.entries(st.filt).some(([k, v]) => (row[k] || "(none)") !== v)) continue;
-      if (st.q && !(row[st.rank] || "(none)").toLowerCase().includes(st.q)) continue;
-      out.push(ln);
+async function viewGenomes() { // genome rows of the selected datasets that match the current filter and search
+  const out = [];
+  for (const [id, d] of Object.entries(summary.datasets)) {
+    if (!d.genome_table || !st.ds.has(d.source === "BFD" ? "BFD" : "ZyGoLife")) continue;
+    if (!GTAB[id]) {
+      const lines = (await (await fetch(d.genome_table)).text()).trimEnd().split("\n"), cols = lines[0].split("\t");
+      GTAB[id] = { head: lines[0], rows: lines.slice(1).map(ln => { const f = ln.split("\t"); return { raw: ln, ...Object.fromEntries(cols.map((c, i) => [c, f[i] || ""])) }; }) };
+    }
+    for (const r of GTAB[id].rows) {
+      if (Object.entries(st.filt).some(([k, v]) => (r[k] || "(none)") !== v)) continue;
+      if (st.q && !(r[st.rank] || "(none)").toLowerCase().includes(st.q)) continue;
+      out.push({ ...r, dataset: id });
     }
   }
+  return out;
+}
+$("dlview").onclick = async () => {
+  $("dlmsg").textContent = "Preparing…";
+  const rows = await viewGenomes(), head = Object.values(GTAB)[0]?.head || "";
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([[head, ...out].join("\n") + "\n"], { type: "text/tab-separated-values" }));
+  a.href = URL.createObjectURL(new Blob([[head, ...rows.map(r => r.raw)].join("\n") + "\n"], { type: "text/tab-separated-values" }));
   a.download = "matpredict_genomes_view.tsv"; a.click();
-  $("dlmsg").textContent = `${fmt(out.length)} genomes`;
+  $("dlmsg").textContent = `${fmt(rows.length)} genomes`;
 };
+async function showLoci() {
+  $("locimsg").textContent = "Loading…";
+  try {
+    const genomes = await viewGenomes();
+    for (const id of new Set(genomes.map(g => g.dataset))) SHARDS[id] ??= await loadShard(`data/loci_${id}.json.gz`);
+    renderCards($("lociout"), genomes, SHARDS);
+    $("locimsg").textContent = "";
+  } catch (e) { $("locimsg").textContent = "Could not load locus data: " + e.message; }
+}
+$("showloci").onclick = showLoci;
 $("tbl").tBodies[0].addEventListener("click", e => {
-  const tr = e.target.closest("tr"); if (!tr || st.rank === "species") return;
+  const tr = e.target.closest("tr"); if (!tr) return;
   st.filt[st.rank] = tr.dataset.name;
+  if (st.rank === "species") { st.q = ""; $("q").value = ""; render(); showLoci(); $("showloci").scrollIntoView({ behavior: "smooth" }); return; }
   st.rank = RANKS[RANKS.indexOf(st.rank) + 1]; $("rank").value = st.rank; $("q").value = ""; st.q = ""; render();
 });
 render();

@@ -10,3 +10,6 @@ Static HTML and JavaScript with no dependencies; the browser tool itself lives i
 - Preview: `python3 -m http.server --directory web/intro` and open `landing.html` (the landing page links to the
   tool at `page/index.html`, which exists only in the assembled site).
 - Numbers in the benchmark and raw-reads tables of `landing.html` are written by hand from `analysis/` notes; update them with the notes.
+
+- Themes: `theme.js` (loaded in `<head>`) applies the saved choice (`localStorage`, key `matpredict-theme`) before first paint; Auto follows the system. Colours are tokens in `site.css` (light, dark, paper, neuromancer). Chart colours c1-c6 plus semantic `undet`, `two`, `other`, `uncalled`; `charts.js` only references the tokens. The tool page (`web/spike/page/index.html`) has its own styling and does not use these themes yet.
+- Locus maps: `data/loci_<dataset>.json.gz` (committed, about 1.6 MB for all 27.8k loci) hold each detected locus with its gene models, extracted from the campaigns' `reports_all.tar.zst` by `scripts/build_locus_shards.py` (needs PyYAML and `zstd`; rerun when a campaign changes). `locus-view.js` draws them in the explorer and links contig accessions to NCBI nuccore.

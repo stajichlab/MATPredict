@@ -55,3 +55,19 @@ def test_too_far_apart_is_not_one_locus(real_db_root):
     far = _cluster(_hit(fam, "MATB", "core_MAT", 1000, 1500),
                    _hit(fam, "MATA", "core_MAT", 1000 + 60000, 61900, "-"))
     assert classify_locus(far, fam, full_length_models=frozenset({"MATA", "MATB"})) != LOCUS_CLASS_HOMOTHALLIC
+
+
+def test_gene_classes_and_flags_declared_in_order_yml(real_db_root):
+    """Curator 2026-10-18: HMG_box on Geotrichum MATA and Yarrowia mata2, alpha_box on MATB,
+    mata1/matb1/matb2 unset (no homeodomain class; matb evidence below the bar),
+    two_idiomorphs_report on for MATdc only, idiomorph_class unassigned for both."""
+    fams = {f.key.locus_name: f for f in load_all_families(real_db_root) if f.key.phylum == "Ascomycota"}
+    cls = lambda f: {g["name"]: g.get("gene_class") for g in f.genes}
+    assert cls(fams["MATdc"])["MATA"] == "HMG_box" and cls(fams["MATdc"])["MATB"] == "alpha_box"
+    yl = cls(fams["MATyl"])
+    assert yl["mata2"] == "HMG_box"
+    assert yl["mata1"] is None and yl["matb1"] is None and yl["matb2"] is None
+    assert fams["MATdc"].two_idiomorphs_report is True
+    assert not getattr(fams["MATyl"], "two_idiomorphs_report", False)
+    for name in ("MATdc", "MATyl"):
+        assert set(fams[name].idiomorph_classes.values()) == {"unassigned"}

@@ -15,3 +15,19 @@ independently re-run here.
 | F6 | Xylariales 71% uncalled | known absence (Robinson and Natvig 2019: no canonical MAT in 35 Xylariales); synteny work found an empty or rearranged flank block in NC1011 | expected biology, now shown: 0 of 184 uncalled Xylariales genomes carry a MAT-like domain next to the flanks (analysis/2026-10-18_uncalled-triage.md); 11 of 12 called Xylariales controls also show none, so some Xylariales calls may rest on a non-MAT HMG protein (unchecked) | inspect the called Xylariales genomes |
 | F7 | held-out misses | Taphrina deformans `PM` missed at every radius; S. cerevisiae HMRa and K. lactis MATa called as the active locus; Serinales `MTL` 1 of 6 and Mucorales 2 of 7 at order radius; N. crassa MAT1-1-1 only a short fragment with its own records excluded | open | each needs a reference or a scoring decision |
 | F8 | PR hygiene | #71 (tracks, GenBank input) and #76 (profiles) were stacked and merged into branches that had already gone to main; #71's content is still not on main; #76 is re-opened as #86 | #71 content re-opened as #88; #76 re-opened as #86; branches `botrytis-mislabels` and `parastagonospora-check` on the remote are empty: the two earlier agents committed their notes in the main checkout, so those commits landed on `uncalled-triage` (7c166fc, 453c0d4, 2363a9f) | merge #86 and #88; decide what to do with the empty branches |
+
+## Work started 2026-10-18 (curator confirmed the decisions; every branch is a draft or notes, nothing merged)
+
+| work | branch | decisions it follows |
+|---|---|---|
+| single strong core gene rule | `single-gene-rule` (draft PR) | `idiomorph_gene_only` at low confidence, identity gate 85, off by default, two opposite loci both reported and flagged through `two_idiomorphs_report`; split-locus limits unchanged |
+| Komagataella MATa (CBS 7435) and MATalpha (GS115) records | `komagataella-curation` | same-strain assembly anchored; the eight Komagataella test genomes stay out of the records |
+| P. nodorum flank records | `pnodorum-flanks` | split-locus limits unchanged |
+| polish-cap fix | `polish-cap-fix` (draft PR) | its own PR and campaign; does not hold the Dipodascales guard |
+| review of the 45 unverified flips; margin calibration | `flip-review` | default stays off until done; both-strong loci stay `undetermined`; the four genera checked here |
+| general confidence cap (partial winner) plus weak-identity criterion | `confidence-cap` (draft PR) | separate follow-up after #95, with a campaign |
+| remnant status paper | `remnant-status` | revisit after #95 (merged) |
+| Ceratocystis: decisions, re-validate, recall test, draft PR | `ceratocystis-curation` | switched record stays `needs_review`; neutral labels; the 11 held-out genomes no longer test recall |
+| optional-gene policy and paired campaign | `optional-gene-policy` (PR #89, draft) | waiting on the campaign; Sl8 interaction reported there |
+| Dipodascales: guard, scope-only families, records, Pichiales deep dive | `dipodascales-curation` | held until the single-gene rule is built and evaluated; no idiomorph_class for MATdc until a Dipodascales profile exists; Orbiliales losses accepted |
+| deferred | | trace of the other uncalled Pleosporales (after the single-gene rule is evaluated); Dipodascales-specific profile; Lipomycetales/Blastobotrys/Sugiyamaella families (52 and 20 genomes lose calls to the guard) |

@@ -232,3 +232,17 @@ def test_every_gene_class_used_in_order_yml_is_a_member_of_the_schema_enum():
                         f"{order_path.name}:{locus['locus_name']}:{gene['name']} -> {gene_class}"
                     )
     assert offenders == [], f"gene_class values outside the schema enum: {offenders}"
+
+
+@pytest.mark.parametrize("system", ["heterothallic", "homothallic", "pseudohomothallic", "unisexual_switching"])
+def test_mating_system_enum_accepts_known_values(system):
+    record = copy.deepcopy(VALID_RECORD)
+    record["mating_type"]["system"] = system
+    assert schema.validate_metadata(record) == []
+
+
+def test_mating_system_enum_rejects_unknown_value():
+    record = copy.deepcopy(VALID_RECORD)
+    record["mating_type"]["system"] = "unisexual"
+    errors = schema.validate_metadata(record)
+    assert errors and any("system" in e for e in errors)

@@ -1,0 +1,24 @@
+# DRAFT candidate, NOT validated against db/_schema, NOT approved. Prepared 2026-10-17 (dipodascales-refs).
+# Gene coordinates are tblastn hit spans of the AJ617306/AJ617307 proteins on the assembly (100% identity, full length);
+# CDS boundaries/introns must be confirmed with miniprot before this becomes a record.
+record_id: 4952_22301-5_MATyl_B
+record_version: 1
+taxonomy: {taxid: 4952, lineage: "k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Dipodascomycetes;o__Dipodascales;g__Yarrowia;s__Yarrowia_lipolytica"}
+organism: {species: Yarrowia lipolytica, strain: {name: "22301-5", known: true, differs_from_sequenced: false}}
+mating_type: {locus_name: MATyl, idiomorphs: [B], system: heterothallic}
+locus:
+  assembly_accession: GCA_023272835.1
+  assembly_location: {contig: CP096873.1, start: 1023801, end: 1031608}   # apn2 .. sla2 span
+  coordinate_provenance: blast_hit_span   # not published_explicit
+  core: {completeness: complete, reference_orientation: "apn2->matb2->matb1->sla2 (plus-strand order on CP096873.1)"}
+  segments:
+    - {sequence_source: {type: insdc_nucleotide, accession: AJ617307.1}, note: "deposit holds only matb2 + matb1 (3,353 bp, Butler et al. 2004 PMID 14745027); no flanks"}
+genes:
+  - {name: apn2,  protein_accession: "ncbi_protein:CAE84424.1 (MATA-locus copy, 99-100%)", role: flanking_conserved, start: 1023801, end: 1025036, strand: "+"}
+  - {name: matb2, protein_accession: "ncbi_protein:CAE84425.1", role: core_MAT, start: 1025297, end: 1026397, strand: "+"}
+  - {name: matb1, protein_accession: "ncbi_protein:CAE84426.1", role: core_MAT, start: 1027400, end: 1028305, strand: "+"}
+  - {name: sla2,  protein_accession: "ncbi_protein:CAE84421.1 (MATA-locus copy, 99.8%)", role: flanking_conserved, start: 1028450, end: 1031608, strand: "-"}
+evidence:
+  locus_existence: {tier: 1, citations: [{pmid: "14745027"}, {pmid: "18461384", note: "MATB idiomorph functional, cassette replacement"}, {pmid: "32105315", note: "MATA<->MATB switching by recombination, mating"}]}
+  strain_mating_type: {tier: 2, note: "22301-5 stated MATB in Zali et al. 2025 (bioRxiv 10.1101/2025.03.24.645116; NAR Genom Bioinform lqaf175 per web search, not verified); sequence agrees (100% to AJ617307). Same locus is 100% identical in CLIB122 (GCF_000002525.2, NC_006069.1:979564-987371), the RefSeq reference genome."}
+validation: {status: draft}

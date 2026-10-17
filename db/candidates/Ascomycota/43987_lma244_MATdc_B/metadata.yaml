@@ -1,0 +1,19 @@
+# DRAFT candidate, NOT validated, NOT approved. Prepared 2026-10-17 (dipodascales-refs).
+record_id: 43987_lma244_MATdc_B
+record_version: 1
+taxonomy: {taxid: 43987, lineage: "k__Fungi;p__Ascomycota;c__Dipodascomycetes;o__Dipodascales;f__Dipodascaceae;g__Geotrichum;s__Geotrichum_candidum"}
+organism: {species: Geotrichum candidum, strain: {name: LMA-244, known: true, differs_from_sequenced: true, note: "deposit HF558449.1 is strain CBS 615.84, which is not in the BFD library; LMA-244 protein is 96.8% identical"}}
+mating_type: {locus_name: MATdc, idiomorphs: [B], system: heterothallic_probable}
+locus:
+  assembly_accession: GCA_013365045.1
+  assembly_location: {contig: QQZM01000017.1, start: 282113, end: 286546}
+  coordinate_provenance: blast_hit_span
+  core: {completeness: partial}
+  segments:
+    - {sequence_source: {type: insdc_nucleotide, accession: HF558449.1}, note: "1,020 bp CDS only, CBS 615.84, unpublished"}
+genes:
+  - {name: sla2, role: flanking_conserved, start: 282113, end: 285301, strand: "+"}
+  - {name: MATB, protein_accession: "ncbi_protein:CCO73813.1", role: core_MAT, start: 285536, end: 286546, strand: "-", note: "alpha1-like by position and by 35-40% hits to Ogataea matalpha1 -- domain NOT checked (PF04769 test needed)"}
+evidence:
+  locus_existence: {tier: 3, note: "deposit annotated as mating type protein only; no paper found."}
+validation: {status: draft}

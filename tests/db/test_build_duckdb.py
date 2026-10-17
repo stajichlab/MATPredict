@@ -189,6 +189,6 @@ def test_unisexual_switching_system_is_stored(tmp_path):
     out_path = tmp_path / "matpredict.duckdb"
     build(db_root=tmp_path, out_path=out_path)
     con = duckdb.connect(str(out_path))
-    row = con.execute("SELECT mating_system FROM record WHERE record_id = ?", [record["record_id"]]).fetchone()
+    row = con.execute("SELECT mating_system FROM locus_record WHERE record_id = ?", [record["record_id"]]).fetchone()
     con.close()
     assert row == ("unisexual_switching",)

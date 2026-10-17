@@ -18,8 +18,12 @@ mkdir -p "$out"
 [[ -s $out/$run.$pfx.tsv ]] && { echo "skip $run"; exit 0; }
 work=$(mktemp -d "$SCRATCH/fetch_type.$run.XXXXXX"); trap 'rm -rf "$work"' EXIT
 bash "$dl" "$tsv" "$work/reads" "$run" || { echo "FAIL download $run" >&2; exit 1; }
-printf 'sample\treads\n%s\t%s,%s\n' "$run" "$work/reads/$run/${run}_1.fastq.gz" "$work/reads/$run/${run}_2.fastq.gz" > "$work/samples.tsv"
+# Keep every Nth read pair (about 8M pairs): old SRA FASTQs are position-sorted, so the FIRST N reads can all come from one chromosome.
+rc=$(awk -F'\t' 'NR==1{for(i=1;i<=NF;i++)if($i=="read_count")c=i} NR>1&&$1==r{print $c}' r="$run" "$tsv")
+step=$(( (${rc:-0} + 7999999) / 8000000 )); [[ $step -lt 1 ]] && step=1
+for m in 1 2; do zcat "$work/reads/$run/${run}_$m.fastq.gz" | awk -v s=$step 'NR%4==1{k=((NR-1)/4)%s==0} k' | gzip > "$work/sub_$m.fastq.gz"; done
+printf 'sample\treads\n%s\t%s,%s\n' "$run" "$work/sub_1.fastq.gz" "$work/sub_2.fastq.gz" > "$work/samples.tsv"
 idio=(); for n in ${IDIOMORPHS:-MAT1-1 MAT1-2}; do idio+=(--idiomorph "$n=$pdir/${pfx}_$n.fasta"); done
 python -m MATPredict reads-type "${idio[@]}" \
-  --samples "$work/samples.tsv" --max-reads 8000000 --out "$work/$run.$pfx.tsv" || { echo "FAIL type $run" >&2; exit 1; }
+  --samples "$work/samples.tsv" --out "$work/$run.$pfx.tsv" || { echo "FAIL type $run" >&2; exit 1; }
 mv "$work/$run.$pfx.tsv" "$out/$run.$pfx.tsv"   # result only; the trap removes the reads

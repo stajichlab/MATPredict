@@ -160,6 +160,12 @@ def run(a) -> int:
 
 def summarize(a) -> int:
     rows = [json.loads(Path(p).read_text()) for p in a.rows]
+    if a.manifest:  # recompute the reference counts from the current manifest (same phylum and family only)
+        man = {m["record_id"]: m for m in csv.DictReader(open(a.manifest), delimiter="\t")}
+        for r in rows:
+            m = man[r["record_id"]]
+            r["ref_family_left"] = int(m[f"{r['radius']}_same_family_left"])
+            r["ref_idiomorph_left"] = int(m[f"{r['radius']}_same_idiomorph_left"])
     order = ["genus", "family", "order"]
     print(f"{'record':34s} {'rad':6s} {'system':13s} {'expected':12s} {'wh':>3s} loci at-truth pipeline            profile")
     tally = {}
@@ -170,7 +176,7 @@ def summarize(a) -> int:
         if r["status"] in ("detect_error", "no_genome_in_library", "no_reference_family"):
             verdict = r["status"]
         elif not found:
-            verdict = "no_locus"
+            verdict = "no_reference_family" if r.get("ref_family_left") == 0 else "no_locus"
         elif not r.get("enum_family"):
             verdict = "locus_found"
         elif exp & set(labels):
@@ -203,6 +209,7 @@ def main(argv=None):
     r.add_argument("--record", required=True); r.add_argument("--radius", required=True)
     r.add_argument("--library", required=True); r.add_argument("--work", required=True); r.add_argument("--out", required=True)
     s = sub.add_parser("summarize"); s.add_argument("rows", nargs="+")
+    s.add_argument("--manifest", help="recompute the references-left counts from this manifest")
     a = ap.parse_args(argv)
     return run(a) if a.cmd == "run" else summarize(a)
 

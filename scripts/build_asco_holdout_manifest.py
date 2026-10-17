@@ -60,10 +60,11 @@ def main(argv=None) -> int:
             drop = records_to_withhold(a.db, rid, Radius(radius))
             rest = [x for k, x in recs.items() if k not in drop]
             r[f"{radius}_withheld"] = len(drop)
-            r[f"{radius}_same_family_left"] = sum(x["family"] == r["family"] for x in rest)
+            r[f"{radius}_same_family_left"] = sum(x["family"] == r["family"] and x["phylum"] == r["phylum"] for x in rest)
             mine = set(r["idiomorphs"].split("|"))
             r[f"{radius}_same_idiomorph_left"] = sum(
-                x["family"] == r["family"] and bool(mine & set(x["idiomorphs"].split("|"))) for x in rest)
+                x["family"] == r["family"] and x["phylum"] == r["phylum"]
+                and bool(mine & set(x["idiomorphs"].split("|"))) for x in rest)
         r["testable"] = bool(r["assembly"])
         rows.append(r)
     fields = ["record_id", "phylum", "subphylum", "order", "species", "family", "system", "idiomorphs", "taxid", "assembly",

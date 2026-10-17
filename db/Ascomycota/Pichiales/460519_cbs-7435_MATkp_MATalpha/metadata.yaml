@@ -1,0 +1,180 @@
+record_id: 460519_cbs-7435_MATkp_MATalpha
+record_version: 1
+taxonomy:
+  taxid: 460519
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Pichiales;f__Pichiaceae;g__Komagataella;s__Komagataella_phaffii
+  lineage_resolved_date: '2026-10-18'
+organism:
+  species: Komagataella phaffii
+  strain:
+    name: CBS 7435
+    known: true
+    culture_collection_ids:
+    - CBS 7435
+    - NRRL Y-11430
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATkp
+  idiomorphs:
+  - MATalpha
+  system: pseudohomothallic
+locus:
+  assembly_accession: GCA_900235035.2
+  assembly_accession_basis: strain_match_verified
+  assembly_location:
+    contig: LT962479.2
+    start: 136012
+    end: 141828
+    identity: 100.0
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: SLA2->MATalpha1->MATalpha2->DIC1
+    definition_note: 'MATalpha cassette of K. phaffii CBS 7435, chromosome 4 (FR839631.1:135891-141707,
+      Kuberl et al. 2011 genome, PMID 21575661; gene models CCA40250.1 SLA2-1, CCA40251.1
+      MATalpha1, SCV12330.1 MATalpha2, CCA40252.1 DIC1-2). This is locus 2, 135 kb
+      from the MATa cassette (record 460519_cbs-7435_MATkp_MATa) in the same chromosome;
+      K. phaffii switches mating type by inversion of the region between them (Hanson
+      et al. 2014, PMID 25349420; Heistinger et al. 2018, PMID 29061733). Added 2026-10-18
+      on the curator decision so that MATalpha1 is searchable (the GS115 MATalpha
+      record carries a frameshifted MATalpha1). ANCHOR (curator rule B10): strain
+      label CBS 7435 on both assemblies; blastn of FR839631.1:135890-141707 (5,818
+      bp) against LT962479.2 (GCA_900235035.2): 100.000% over 5,818/5,818 bp at LT962479.2:136011-141828
+      (2026-10-18; the record segment 135891-141707 maps to 136012-141828). GENE MODELS:
+      MATalpha1 (190 aa) and SLA2/DIC1 are single exon; MATalpha2 (173 aa) has one
+      57 bp intron after an 11 bp first exon (exons 140525-140535 and 139957-140467
+      on the minus strand): read through, the ATG is blocked by a stop after four
+      codons, the spliced ORF is open, keeps a homeodomain (PF00046) and hits MATalpha2
+      of S. cerevisiae by phmmer; the same models are annotated in the independent
+      2022 annotation of LT962479.2 (CAH2450441.1, CAH2450442.1). No RNA-seq was examined.
+      GENETIC CODE: standard (NCBI Taxonomy code 1). STRAIN LABEL: CBS 7435 = NRRL
+      Y-11430 per PMID 36520709 and PMID 31654411. NOT VERIFIED: the Kuberl 2011 full
+      text. MATalpha1 carries the alpha box (Pfam PF04769 37.5 bits, GA 28.1); the
+      idiomorph_class of this family is unassigned pending the curator.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: FR839631.1
+        seq_region: FR839631.1
+      start: 135891
+      end: 141707
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: sla2
+  protein_accession: ncbi_protein:CCA40250.1
+  role: flanking_conserved
+  present: true
+  locus_tag: PP7435_CHR4-0072
+  segment_index: 0
+  start: 135891
+  end: 139025
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MATalpha1
+  protein_accession: ncbi_protein:CCA40251.1
+  role: core_MAT
+  present: true
+  locus_tag: PP7435_CHR4-0073
+  segment_index: 0
+  start: 139129
+  end: 139701
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: MATalpha2
+  protein_accession: ncbi_protein:SCV12330.1
+  role: core_MAT
+  present: true
+  locus_tag: PP7435_CHR4-1158
+  segment_index: 0
+  start: 139957
+  end: 140535
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 140525
+    end: 140535
+  - start: 139957
+    end: 140467
+- gene_index: 3
+  name: dic1
+  protein_accession: ncbi_protein:CCA40252.1
+  role: flanking_conserved
+  present: true
+  locus_tag: PP7435_CHR4-0074
+  segment_index: 0
+  start: 140790
+  end: 141707
+  strand: '-'
+  order_in_locus: 3
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: both MAT cassettes and the inversion-based switching between
+      them shown by PCR/sequence analysis of both orientations and induction of switching;
+      functional dissection of the MAT genes by deletion and mating assays in a K.
+      phaffii type-strain background (CBS 2612, 99% identical at both loci to CBS
+      7435)
+    citations:
+    - pmid: '25349420'
+      doi: 10.1073/pnas.1416014111
+    - pmid: '29061733'
+      doi: 10.1128/MCB.00398-17
+  boundaries:
+    tier: 2
+    experimental_method: genome annotation of CBS 7435 (FR839631.1, and the independent
+      2022 annotation of LT962479.2); gene extents are annotation-derived, not experimentally
+      delimited
+    citations:
+    - pmid: '21575661'
+      doi: 10.1016/j.jbiotec.2011.04.014
+    - pmid: '27388471'
+      doi: 10.1093/femsyr/fow051
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'functional assay: Matalpha1 is essential for diploid formation
+      in alpha-type cells and Matalpha2 for sporulation in heterothallic strains of
+      stable mating type; MATalpha identity of the genes by homology to the Saccharomycotina
+      MATalpha1/MATalpha2'
+    citations:
+    - pmid: '29061733'
+      doi: 10.1128/MCB.00398-17
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: FR839631.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 25349420|460519|MATkp|MATalpha|cbs7435
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

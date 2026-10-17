@@ -465,13 +465,15 @@ loci:
     # SLA2 sits outside the idiomorph at both cassettes (3.1 kb from MATa1/MATalpha1), like MATsc/MATyl.
     flank_carried_window_bp: 20000
     genes:
-      # No gene_class on the four core genes: the evidence bar in order.schema.yaml forbids an
-      # implementer from inferring one. Evidence for the curator: MATalpha1 alpha box (PF04769
+      # gene_class only on MATalpha1 (curator, 2026-10-18); the other core genes stay unset. Evidence: MATalpha1 alpha box (PF04769
       # above GA), MATa1 and MATalpha2 homeodomain (PF00046: 51.7 and 27.0 bits, GA 22.9), MATa2
       # HMG-like (weak). See the note.
       - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
       - {name: MATa2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
-      - {name: MATalpha1, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      # CURATOR DECISION 2026-10-18 (relayed): gene_class on the ALPHA gene only. MATalpha1 is
+      # alpha_box: Pfam MATalpha_HMGbox PF04769 37.5 bits (GA 28.1, E 3e-13) and curator MAT1-1-1 30.5 bits
+      # (E 7e-11), measured 2026-10-17. MATa genes stay unset (see docs/notes/2026-10-18_komagataella-mata-analysis.md).
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
       - {name: MATalpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
       # sla2: same gene as the other families' SLA2/sla2; sla2_homolog by the curator's
       # 2026-09-19 ruling as applied in MATsc/MATyl (the curator did not separately rule on this

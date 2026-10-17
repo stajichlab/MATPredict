@@ -7,6 +7,12 @@ release completed.
 ## [Unreleased]
 
 ### Fixed
+- The genes shown for a locus (GFF3, the figure, the track report) no longer include a gene of the called idiomorph marked as having lost a pair. A loss was recorded
+  by gene name from every resolution event of the locus, although resolution happens per group of overlapping hits, so one weak hit elsewhere (in *Xylaria bambusicola*
+  GCA_033171785.1, MAT1-1-5 beating a 15 kb-distant MAT1-2-1 hit) hid the polished MAT1-2-1 model. `lost_to_for_call` keeps only events whose winner belongs to
+  the called idiomorph and whose loser does not. Calls, confidence, loci and gene models are unchanged. On 166 curated loci all reports are identical apart from
+  `lost_to`; it changes in 37 records, and every one of the 71 changed labels is a called-idiomorph gene that was hidden and is now shown (one winner label changed).
+  `idiomorph_resolutions` entries now carry `winner_span` and `loser_span`, where each verdict applies.
 - Polish alignments are capped at a 5 kb intron (`miniprot -G`, `exonerate --maxintron`; `MATPREDICT_MAX_INTRON_BP` overrides). With no limit miniprot
   could join a weak gene to distant exons for a few extra points of score: in *Xylaria bambusicola* (GCA_033171785.1) the MAT1-2-1 model was 8.3 kb, with
   5.5 kb and 2.3 kb "introns" that held APN2 and COX13; it is now the 331 bp HMG fragment. The 609 introns in the curated records have a median of 58 bp and a

@@ -111,6 +111,7 @@ from MATPredict.detect.idiomorph import (
     idiomorph_candidates,
     idiomorph_margin_from_vote,
     is_partial_strength,
+    lost_to_for_call,
     DEFAULT_MIN_OVERLAP_FRACTION,
     IdiomorphResolution,
     assign_idiomorph,
@@ -2689,6 +2690,8 @@ def run_pipeline(
                         overlap_fraction=1.0, basis="hmm_classifier",
                         winner_model_score=pos.scores[gene_idiomorph[winner]],
                         loser_model_score=pos.scores[gene_idiomorph[loser]],
+                        winner_span=(min(h.start for h in at), max(h.end for h in at)),
+                        loser_span=(min(h.start for h in at), max(h.end for h in at)),
                     ))
                     model_losers.discard((id(cluster), family.key, winner))
                     model_losers.add((id(cluster), family.key, loser))
@@ -2797,8 +2800,9 @@ def run_pipeline(
         # The losing half of each resolved pair, from the same events that decided
         # it, so the figure can show only the winner.
         lost_to = {
-            (id(c), e.loser): e.winner
-            for c in member_clusters for e in idiomorph_events_by_cluster.get(id(c), ())
+            (id(c), loser): winner
+            for c in member_clusters
+            for loser, winner in lost_to_for_call(family, called_idiomorph, idiomorph_events_by_cluster.get(id(c), ())).items()
         }
         evidence = _gene_evidence(member_clusters, score.family_key, polish_by, lost_to=lost_to)
         identities: dict[str, float | None] = {}

@@ -4,24 +4,24 @@
 :root { --fg:#1d1d1f; --muted:#5f5f66; --bg:#fff; --card:#f2f2f5; --line:#c9c9d0; --accent:#0b5fb5; --accent-text:#fff; --warn-bg:rgba(199,119,0,.12); --warn:#8a5300;
   --font:system-ui,sans-serif; --mono:ui-monospace,monospace; --glow:none;
   --c1:#0a5da8; --c1t:#fff; --c2:#f0a000; --c2t:#111; --c3:#0f8a5f; --c3t:#fff; --c4:#c2418c; --c4t:#fff; --c5:#4fb3e8; --c5t:#111; --c6:#e8d44d; --c6t:#111;
-  --undet:#8b1111; --undett:#fff; --two:#6a3fb0; --twot:#fff; --other:#6b6b73; --othert:#fff; --uncalled:#e4e4ea; --uncalledt:#333; }
+  --undet:#8b1111; --undett:#fff; --two:#6a3fb0; --twot:#fff; --other:#6b6b73; --othert:#fff; --uncalled:#e4e4ea; --uncalledt:#333;  --locus:#fff3c4; --gene:#2a7f62; --gene-missing:#b0b0b5; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme]) { color-scheme:dark; --fg:#f2f2f4; --muted:#a8a8b0; --bg:#17171a; --card:#26262b; --line:#3d3d44; --accent:#5aa9ff; --accent-text:#08121f; --warn-bg:rgba(255,170,60,.12); --warn:#ffb866;
   --c1:#4c9be8; --c1t:#08121f; --c2:#f5b335; --c2t:#111; --c3:#2fc596; --c3t:#08121f; --c4:#e46fb5; --c4t:#111; --c5:#8fd0f5; --c5t:#111; --c6:#ece06a; --c6t:#111;
-  --undet:#e5484d; --undett:#fff; --two:#a07df0; --twot:#111; --other:#85858d; --othert:#111; --uncalled:#34343a; --uncalledt:#ddd; } }
+  --undet:#e5484d; --undett:#fff; --two:#a07df0; --twot:#111; --other:#85858d; --othert:#111; --uncalled:#34343a; --uncalledt:#ddd;  --locus:#4a4220; --gene:#5fd0a4; --gene-missing:#5a5a5f; } }
 :root[data-theme="dark"] { color-scheme:dark; --fg:#f2f2f4; --muted:#a8a8b0; --bg:#17171a; --card:#26262b; --line:#3d3d44; --accent:#5aa9ff; --accent-text:#08121f; --warn-bg:rgba(255,170,60,.12); --warn:#ffb866;
   --c1:#4c9be8; --c1t:#08121f; --c2:#f5b335; --c2t:#111; --c3:#2fc596; --c3t:#08121f; --c4:#e46fb5; --c4t:#111; --c5:#8fd0f5; --c5t:#111; --c6:#ece06a; --c6t:#111;
-  --undet:#e5484d; --undett:#fff; --two:#a07df0; --twot:#111; --other:#85858d; --othert:#111; --uncalled:#34343a; --uncalledt:#ddd; }
+  --undet:#e5484d; --undett:#fff; --two:#a07df0; --twot:#111; --other:#85858d; --othert:#111; --uncalled:#34343a; --uncalledt:#ddd;  --locus:#4a4220; --gene:#5fd0a4; --gene-missing:#5a5a5f; }
 :root[data-theme="light"] { color-scheme:light; }
 /* paper: warm cream stock, serif text, ink-like colours */
 :root[data-theme="paper"] { color-scheme:light; --fg:#2b2418; --muted:#6d614c; --bg:#f4ecd8; --card:#eadfc3; --line:#cdbf9b; --accent:#8a3b12; --accent-text:#fff8e8; --warn-bg:rgba(138,59,18,.10); --warn:#8a3b12;
   --font:Georgia,"Iowan Old Style","Palatino Linotype",serif;
   --c1:#1f4e79; --c1t:#fff8e8; --c2:#c9781a; --c2t:#201808; --c3:#3b7a3f; --c3t:#fff8e8; --c4:#8e3b6e; --c4t:#fff8e8; --c5:#3a8fa0; --c5t:#10202a; --c6:#c4ab2e; --c6t:#201808;
-  --undet:#6e1414; --undett:#fff8e8; --two:#5b3f8a; --twot:#fff8e8; --other:#7d7260; --othert:#fff8e8; --uncalled:#ddd0ae; --uncalledt:#4a3f2a; }
+  --undet:#6e1414; --undett:#fff8e8; --two:#5b3f8a; --twot:#fff8e8; --other:#7d7260; --othert:#fff8e8; --uncalled:#ddd0ae; --uncalledt:#4a3f2a;  --locus:#e6d49a; --gene:#3b7a3f; --gene-missing:#a89e84; }
 /* neuromancer: black glass, phosphor green text, neon categories, monospace */
 :root[data-theme="neuromancer"] { color-scheme:dark; --fg:#33ff8c; --muted:#1fb866; --bg:#030806; --card:#0a1a12; --line:#146b3e; --accent:#00e5ff; --accent-text:#001418; --warn-bg:rgba(255,43,214,.10); --warn:#ff2bd6;
   --font:ui-monospace,"SF Mono",Menlo,Consolas,monospace; --glow:0 0 6px rgba(51,255,140,.45);
   --c1:#00e5ff; --c1t:#001418; --c2:#ff2bd6; --c2t:#14000f; --c3:#a6ff00; --c3t:#101800; --c4:#ffb000; --c4t:#1a1000; --c5:#7c5cff; --c5t:#fff; --c6:#ff7a45; --c6t:#1a0800;
-  --undet:#ff1744; --undett:#fff; --two:#c8a2ff; --twot:#10001a; --other:#4d7a62; --othert:#fff; --uncalled:#0f2a1c; --uncalledt:#33ff8c; }
+  --undet:#ff1744; --undett:#fff; --two:#c8a2ff; --twot:#10001a; --other:#4d7a62; --othert:#fff; --uncalled:#0f2a1c; --uncalledt:#33ff8c;  --locus:#2b0f33; --gene:#00e5ff; --gene-missing:#2c5a44; }
 * { box-sizing: border-box; }
 body { margin:0; padding:0 16px; font:16px/1.55 var(--font); color:var(--fg); background:var(--bg); }
 nav { max-width:960px; margin:0 auto; padding:14px 0; display:flex; gap:18px; flex-wrap:wrap; align-items:baseline; border-bottom:1px solid var(--line); }

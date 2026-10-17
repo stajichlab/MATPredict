@@ -9,8 +9,9 @@ The stated mating type is the submitter's free text and unverified. It is indepe
 not ground truth, so a disagreement is something to read, not an error by assumption.
 
 ## Coverage
-Of the 19,415 Ascomycota genomes in the v0.6.0 campaign, 19,353 have a BioSample and 17,698 were fetched; 339 (1.9%)
-carry a mating-type attribute (`mating_type`, `mating-type`, `mating type`). `samp_mat_type` is the MIxS sample
+Of the 19,415 Ascomycota genomes in the v0.6.0 campaign, 19,363 map to a BioSample in the assembly summaries, and
+E-utilities returned a record for 17,697 of them (the other 1,666 came back empty and were not investigated, so the
+truth set may be missing some); 339 of the 17,697 (1.9%) carry a mating-type attribute (`mating_type`, `mating-type`, `mating type`). `samp_mat_type` is the MIxS sample
 material type (values such as `solid` and `petroleum`) and is excluded. After normalisation 296 genomes remain:
 MAT1-2 103, MAT1-1 100, MATa 58, MATalpha 8, homothallic or diploid 27. 43 values are not a mating type.
 None of the 296 is a curated record's assembly or strain, so none is in the database.

@@ -51,7 +51,7 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 ## Validation and held-out sets
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
-| 10-17 | [A mating-type truth set from BioSample](2026-10-17_biosample-truth-set.md) | open | 339 of 17,698 BioSamples state a mating type; 296 usable, 203 Pezizomycotina MAT1-1/MAT1-2; v0.6.0 agrees on 178 (88%), 17 Botrytis genomes disagree |
+| 10-17 | [A mating-type truth set from BioSample](2026-10-17_biosample-truth-set.md) | open | 339 of 17,697 BioSamples state a mating type; 296 usable, 203 Pezizomycotina MAT1-1/MAT1-2; v0.6.0 agrees on 178 (88%), 17 Botrytis genomes disagree |
 | 10-17 | [Held-out test across Ascomycota, Basidiomycota, Mucoromycota](2026-10-17_holdout-all-phyla.md) | decided (descriptive); open: larger heterothallic truth | Pezizomycotina MAT 27/27 at genus, family and order radius (profiles 18/18 on heterothallic); Zygo 23 23/23; at order radius 5 of 7 Mucorales records and 5 of 6 Serinales MTL records are not found; Taphrina PM missed |
 | 09-28 | [MAT-gene gate and validation](2026-09-28_mat-gene-gate-and-validation.md) | decided | typing 0/540 wrong; gate 96/108 vs 9/189 |
 | 09-28 | [Held-out sets](2026-09-28_heldout-sets.md) | superseded by 10-01 rerun | Jena 61/64; LCG 536/621 (clean 449/533); Zygo saturated |

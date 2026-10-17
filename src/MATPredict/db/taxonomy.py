@@ -42,7 +42,11 @@ def resolve_lineage(taxid: int, runner: Callable = subprocess.run) -> TaxonomyRe
     returncode = getattr(proc, "returncode", 0)
     stderr = (getattr(proc, "stderr", "") or "").strip()
     if returncode != 0:
-        raise TaxonkitError(f"taxonkit exited {returncode}: {stderr[:300]}")
+        hint = ""
+        if returncode in (-9, 137):  # SIGKILL as Python reports it, or as a shell does
+            hint = (" (taxonkit was killed, possibly by a login-node memory cap of about 1 GB; run `curate-db validate` on a "
+                    "compute node (2 GB is enough), e.g. scripts/curate_db_validate.slurm)")
+        raise TaxonkitError(f"taxonkit exited {returncode}: {stderr[:300]}{hint}")
     if not proc.stdout.strip():
         raise TaxonkitError(f"taxonkit printed nothing for taxid {taxid}" + (f": {stderr[:300]}" if stderr else ""))
     line = proc.stdout.strip().split("\n")[0]

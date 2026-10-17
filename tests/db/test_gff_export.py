@@ -650,3 +650,52 @@ def test_write_genbank_omits_gene_class_when_no_mapping_is_passed(tmp_path):
 
     _, cds = _only_cds(out_path)
     assert "gene_class" not in cds.qualifiers
+
+
+# --- gene `status` (remnant|pseudogene) ---------------------------------------
+
+
+def _status_record() -> dict:
+    record = {**RECORD, "genes": [dict(g) for g in RECORD["genes"]]}
+    record["genes"][1]["status"] = "remnant"  # tptA: a model is recorded (present: true)
+    record["genes"][2]["status"] = "remnant"  # sexM: present: false, no model
+    return record
+
+
+def test_write_gff3_marks_a_status_gene_pseudo_and_still_skips_present_false(tmp_path):
+    out_path = tmp_path / "locus.gff3"
+    write_gff3(_status_record(), out_path)
+    lines = out_path.read_text().splitlines()
+    tpta = next(l for l in lines if "Name=tptA" in l)
+    sexp = next(l for l in lines if "Name=sexP" in l)
+    assert "pseudo=true;status=remnant" in tpta
+    assert "pseudo" not in sexp
+    assert not any("sexM" in l for l in lines)
+
+
+def test_write_genbank_writes_pseudo_on_a_status_gene_only(tmp_path):
+    out_path = tmp_path / "locus.gbk"
+    write_genbank(_status_record(), sequences={0: "MKTAYIAKQRQ", 1: "GATTACAGATTACA"}, out_path=out_path)
+    text = out_path.read_text()
+    assert "/pseudo\n" in text
+    assert "sexM" not in text
+    seq_record = next(SeqIO.parse(out_path, "genbank"))
+    by_gene = {}
+    for feature in seq_record.features:
+        by_gene.setdefault(feature.qualifiers["gene"][0], []).append(feature)
+    assert by_gene["tptA"], "the status gene keeps its features"
+    for feature in by_gene["tptA"]:
+        assert "pseudo" in feature.qualifiers
+        assert feature.qualifiers["status"] == ["remnant"]
+    for feature in by_gene["sexP"]:
+        assert "pseudo" not in feature.qualifiers
+
+
+def test_write_proteins_fasta_omits_a_status_gene(tmp_path):
+    """Step 2: a remnant/pseudogene protein is not a search reference."""
+    record = _status_record()
+    out_path = tmp_path / "proteins.faa"
+    write_proteins_fasta(record, sequences={0: "MKTAYIAKQRQ", 1: "GATTACAGATTACA"}, out_path=out_path)
+    content = out_path.read_text()
+    assert "name=sexP" in content
+    assert "name=tptA" not in content  # status: remnant, present: true, has a sequence

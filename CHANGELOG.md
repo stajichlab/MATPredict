@@ -6,6 +6,11 @@ release completed.
 
 ## [Unreleased]
 
+### Added
+- Optional gene-level `status: remnant|pseudogene` (and `remnant_note`) in the metadata schema; absent means intact. Metadata only: no detection output changes. `validate_gene_status`
+  checks it against `present` (no model recorded vs a model recorded); the DuckDB `locus_gene` table gets `status` and `remnant_note` columns; `locus.gff3`/`locus.gbk` writers mark a status
+  gene `/pseudo`; the self-consistency benchmark leaves such genes out of the expected set. Seven records are labelled (decision paper `docs/notes/2026-10-17_remnant-status.md`, option B step 1).
+
 ### Fixed
 - The genes shown for a locus (GFF3, the figure, the track report) no longer include a gene of the called idiomorph marked as having lost a pair. A loss was recorded
   by gene name from every resolution event of the locus, although resolution happens per group of overlapping hits, so one weak hit elsewhere (in *Xylaria bambusicola*

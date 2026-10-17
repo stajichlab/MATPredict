@@ -89,6 +89,46 @@ def validate_gene_vocabulary(record: dict, order_doc: dict) -> list[str]:
     return errors
 
 
+def validate_gene_status(record: dict) -> list[str]:
+    """Check the semantics of the optional gene-level `status` (`remnant|pseudogene`).
+
+    `status` says what a recorded gene IS; it is orthogonal to `present`:
+
+    * `status` + `present: false`  -- no model is recorded: no coordinates and no
+      protein (a remnant known only from prose or from a genome comparison).
+    * `status` + `present: true`   -- a model IS recorded: a protein accession or
+      coordinates must be given, or the status describes nothing.
+    * `remnant_note` without a `status` is an orphan note.
+
+    The enum itself (and the rejection of `partial`) is the JSON schema's job;
+    `status` is never for assembly or annotation truncation (that is
+    `locus.core.completeness`). Returns one message per problem.
+    """
+    errors: list[str] = []
+    for gene in record.get("genes", []):
+        label = f"gene '{gene.get('name')}' (gene_index {gene.get('gene_index')})"
+        status = gene.get("status")
+        if status is None:
+            if gene.get("remnant_note"):
+                errors.append(f"{label} has a remnant_note but no status")
+            continue
+        has_model = bool(gene.get("protein_accession")) or (
+            gene.get("start") is not None and gene.get("end") is not None
+        )
+        if gene.get("present", True):
+            if not has_model:
+                errors.append(
+                    f"{label} has status '{status}' and present: true but records no model "
+                    "(no protein_accession and no start/end); a gene with no model is present: false"
+                )
+        elif has_model:
+            errors.append(
+                f"{label} has status '{status}' and present: false but records a model "
+                "(protein_accession or coordinates); present: false means no model is recorded"
+            )
+    return errors
+
+
 def validate_idiomorphs(record: dict, order_doc: dict) -> list[str]:
     """Cross-check mating_type.idiomorphs against the matching locus's enum/pattern in order.yml."""
     locus_name = record["mating_type"]["locus_name"]

@@ -82,7 +82,7 @@ def _call(tmp_path, monkeypatch, idiomorph_policy, partial_policy):
         genome_fasta=tmp_path / "genome.fa", proteome_fasta=None, taxid=None, db_root=tmp_path,
         reference_fasta=tmp_path / "reference.faa", search_localize=lambda *a, **k: hits,
         polish_with_exonerate=polish("exonerate_refine"), polish_with_miniprot=polish("miniprot_refine"),
-        idiomorph_policy=idiomorph_policy, partial_core_policy=partial_policy)
+        min_polished_genes=0, idiomorph_policy=idiomorph_policy, partial_core_policy=partial_policy)
     assert len(outcome.results) == 1
     return outcome.results[0].idiomorph
 

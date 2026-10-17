@@ -712,6 +712,49 @@ def _select_requested_gene(
     return best
 
 
+_GENE_QUERIES: dict[tuple[str, int, int], dict[str, list[tuple[str, str]]]] = {}
+_GENE_QUERIES_LOCK = threading.Lock()
+
+
+def _gene_query_records(reference_fasta: Path) -> dict[str, list[tuple[str, str]]]:
+    """`{gene_name: [(fasta header, sequence), ...]}` for a reference FASTA, in file order.
+
+    Cached per (path, mtime, size): the same file serves every polish call of a run. A header that is
+    not `{record_id}|gene{N}|{gene_name}` is left out, as `_select_requested_gene` would discard it."""
+    st = Path(reference_fasta).stat()
+    key = (str(reference_fasta), st.st_mtime_ns, st.st_size)
+    with _GENE_QUERIES_LOCK:
+        cached = _GENE_QUERIES.get(key)
+    if cached is not None:
+        return cached
+    by_gene: dict[str, list[tuple[str, str]]] = {}
+    for rec in SeqIO.parse(str(reference_fasta), "fasta"):
+        try:
+            _, gene = _parse_reference_header(rec.id)
+        except ValueError:
+            continue
+        by_gene.setdefault(gene, []).append((rec.description, str(rec.seq)))
+    with _GENE_QUERIES_LOCK:
+        if len(_GENE_QUERIES) > 8:
+            _GENE_QUERIES.clear()
+        _GENE_QUERIES[key] = by_gene
+    return by_gene
+
+
+def _write_gene_query(reference_fasta: Path, gene_name: str, tmp_dir: Path) -> Path | None:
+    """FASTA of only the reference proteins named `gene_name` (every family and record), or None if there are none.
+
+    exonerate aligns each query on its own, and `_select_requested_gene` discards every alignment whose query is
+    a different gene, so aligning the whole reference set only adds work: each call costs about the same per
+    query protein, and a run's reference set holds dozens of genes."""
+    records = _gene_query_records(reference_fasta).get(gene_name)
+    if not records:
+        return None
+    path = tmp_dir / f"query.{re.sub(r'[^A-Za-z0-9_.-]', '_', gene_name)}.faa"
+    path.write_text("".join(f">{header}\n{seq}\n" for header, seq in records))
+    return path
+
+
 def polish_with_exonerate(
     genome_fasta: Path,
     family: Family,
@@ -787,12 +830,20 @@ def polish_with_exonerate(
 
     with tempfile.TemporaryDirectory() as tmp_dir_name:
         tmp_dir = Path(tmp_dir_name)
+        # Only this gene's reference proteins are aligned (see `_write_gene_query`); with none, no alignment
+        # could be selected, so exonerate is not run.
+        try:
+            query_fasta = _write_gene_query(reference_fasta, gene_name, tmp_dir)
+        except OSError:
+            query_fasta = reference_fasta  # unreadable reference: leave the failure to exonerate, as before
+        if query_fasta is None:
+            return None
         target_fasta = _extract_window(genome_fasta, window, tmp_dir)
         offset = win_start - 1
 
         base_cmd = [
             "exonerate", "--model", "protein2genome",
-            "--query", str(reference_fasta), "--target", str(target_fasta),
+            "--query", str(query_fasta), "--target", str(target_fasta),
         ] + gencode_args
         tail = ["--showtargetgff", "yes", "--showalignment", "no"]
         result = _run_checked(

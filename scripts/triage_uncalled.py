@@ -30,7 +30,8 @@ from pathlib import Path
 
 STRONG, WEAK = 100.0, 40.0      # profile bits: strong, and the floor under which a hit is not MAT-like
 MIN_ID, MIN_COV = 0.30, 0.40    # miniprot identity and query coverage for a flank gene
-MIN_AA = 30                     # shortest six-frame segment searched
+MIN_AA = 30                     # shortest six-frame sequence searched
+CHUNK_AA, OVERLAP_AA = 90_000, 1_000
 LINK_BP = 30_000
 CORE = {"MAT1-1-1": "MAT1-1", "MAT1-2-1": "MAT1-2"}
 FLANKS = {"SLA2", "APN2", "COX13", "sla2", "apn2", "cox13"}
@@ -100,44 +101,60 @@ def open_genome(path: Path):
 
 
 def sixframe_hits(genome: dict, profiles: dict, keep: int = 6) -> list[dict]:
-    """Best segment per profile and contig-region: (gene, contig, start, end, strand, aa, alpha, hmg, own)."""
+    """Best profile domains over the six frames: (gene, contig, start, end, strand, aa, alpha, hmg, own).
+
+    One translated sequence per contig, strand and frame (stops written as X), so the search runs over a few
+    sequences, not millions of stop-to-stop segments; domain envelopes give the position."""
     import pyhmmer
     from Bio.Seq import Seq
     alphabet = pyhmmer.easel.Alphabet.amino()
-    segs, meta = [], {}
+    seqs, meta = [], {}
     for contig, seq in genome.items():
         for strand in "+-":
             dna = seq if strand == "+" else seq.translate(_COMP)[::-1]
             for f in range(3):
-                prot = str(Seq(dna[f:][: (len(dna) - f) // 3 * 3]).translate())
-                pos = 0
-                for piece in prot.split("*"):
-                    if len(piece) >= MIN_AA:
-                        a0, a1 = f + 3 * pos, f + 3 * (pos + len(piece))
-                        name = f"s{len(segs)}"
-                        if strand == "+":
-                            lo, hi = a0 + 1, a1
-                        else:
-                            lo, hi = len(dna) - a1 + 1, len(dna) - a0
-                        segs.append(pyhmmer.easel.TextSequence(name=name.encode(), sequence=piece.replace("X", "A")).digitize(alphabet))
-                        meta[name] = (contig, lo, hi, strand, len(piece))
-                    pos += len(piece) + 1
-    block = pyhmmer.easel.DigitalSequenceBlock(alphabet, segs)
+                prot = str(Seq(dna[f:][: (len(dna) - f) // 3 * 3]).translate()).replace("*", "X")
+                if len(prot) < MIN_AA:
+                    continue
+                for off in range(0, len(prot), CHUNK_AA - OVERLAP_AA):   # HMMER caps a target at 100,000 residues
+                    chunk = prot[off:off + CHUNK_AA]
+                    if len(chunk) < MIN_AA:
+                        break
+                    name = f"s{len(seqs)}"
+                    seqs.append(pyhmmer.easel.TextSequence(name=name.encode(), sequence=chunk).digitize(alphabet))
+                    meta[name] = (contig, strand, f, len(dna), off)
+                    if off + CHUNK_AA >= len(prot):
+                        break
+    block = pyhmmer.easel.DigitalSequenceBlock(alphabet, seqs)
     pipe = pyhmmer.plan7.Pipeline(alphabet, Z=1, E=1e9, domE=1e9, bias_filter=False, F1=1.0, F2=1.0, F3=1.0)
-    best: dict[str, dict] = {}
+    domains = []
     for gene, hmm in profiles.items():
         for hit in pipe.search_hmm(hmm, block):
             name = hit.name.decode() if isinstance(hit.name, bytes) else hit.name
-            sc = best.setdefault(name, {"MAT1-1-1": 0.0, "MAT1-2-1": 0.0})
-            sc[gene] = max(sc[gene], float(hit.score))
+            contig, strand, f, dna_len, off = meta[name]
+            for d in hit.domains:
+                if d.score < WEAK:
+                    continue
+                a0, a1 = f + 3 * (off + d.env_from - 1), f + 3 * (off + d.env_to)
+                lo, hi = (a0 + 1, a1) if strand == "+" else (dna_len - a1 + 1, dna_len - a0)
+                domains.append(dict(profile=gene, contig=contig, strand=strand, start=lo, end=hi,
+                                    score=float(d.score)))
+    # merge domains of the two profiles that overlap on one contig and strand, keeping both scores
+    domains.sort(key=lambda r: (r["contig"], r["strand"], r["start"]))
     rows = []
-    for name, sc in best.items():
-        contig, lo, hi, strand, aa = meta[name]
-        gene = "MAT1-1-1" if sc["MAT1-1-1"] >= sc["MAT1-2-1"] else "MAT1-2-1"
-        own = sc[gene]
-        if own >= WEAK:
-            rows.append(dict(gene=gene, contig=contig, start=lo, end=hi, strand=strand, aa=aa,
-                             alpha=round(sc["MAT1-1-1"], 1), hmg=round(sc["MAT1-2-1"], 1), own=round(own, 1)))
+    for d in domains:
+        for r in rows:
+            if r["contig"] == d["contig"] and r["strand"] == d["strand"] and d["start"] <= r["end"] and d["end"] >= r["start"]:
+                r["start"], r["end"] = min(r["start"], d["start"]), max(r["end"], d["end"])
+                r["alpha" if d["profile"] == "MAT1-1-1" else "hmg"] = max(r["alpha" if d["profile"] == "MAT1-1-1" else "hmg"], round(d["score"], 1))
+                break
+        else:
+            rows.append(dict(contig=d["contig"], strand=d["strand"], start=d["start"], end=d["end"], aa=(d["end"] - d["start"] + 1) // 3,
+                             alpha=round(d["score"], 1) if d["profile"] == "MAT1-1-1" else 0.0,
+                             hmg=round(d["score"], 1) if d["profile"] == "MAT1-2-1" else 0.0))
+    for r in rows:
+        r["gene"] = "MAT1-1-1" if r["alpha"] >= r["hmg"] else "MAT1-2-1"
+        r["own"] = max(r["alpha"], r["hmg"])
     return sorted(rows, key=lambda r: -r["own"])[:keep * 4]
 
 

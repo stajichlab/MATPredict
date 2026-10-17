@@ -1,0 +1,64 @@
+genomes with both reports: 9410 fix: 8913 ctl: 497
+
+== fix: 8913 genomes; loci legacy 9321 core_first 9468; genomes with a label/loci change 473; with any label/conf/class change 2704
+  label ('(absent)', 'MAT1-2') 202
+  label ('MAT1-1', 'MAT1-2') 177
+  label ('MAT1-2', '(absent)') 71
+  label ('MAT1-1', 'undetermined') 46
+  label ('(absent)', 'MAT1-1') 18
+  label ('MAT1-1', '(absent)') 2
+  conf ('high', 'medium') 1426
+  conf ('class:mat_locus', 'class:homothallic_candidate') 730
+  conf ('medium', 'high') 165
+  conf ('class:partial_locus', 'class:mat_locus') 59
+  conf ('low', 'medium') 8
+  conf ('class:partial_locus', 'class:homothallic_candidate') 2
+  genomes by order: [('Hypocreales', 110), ('Diaporthales', 105), ('Mycosphaerellales', 70), ('Sordariales', 39), ('Eurotiales', 34), ('Onygenales', 15), ('Lipomycetales', 11), ('Dipodascales', 10), ('Ophiostomatales', 8), ('Xylariales', 7), ('Phaffomycetales', 6), ('Helotiales', 6), ('Teloschistales', 6), ('Coniochaetales', 5), ('Pleosporales', 5)]
+  genomes by genus: [('Fusarium', 47), ('Cryphonectria', 45), ('Diaporthe', 38), ('Neurospora', 24), ('Aspergillus', 22), ('Cordyceps', 17), ('Cercospora', 13), ('Friedmanniomyces', 11), ('Fulvia', 11), ('Microsporum', 11), ('Lipomyces', 9), ('Podospora', 8), ('Trichoderma', 7), ('Sporothrix', 7), ('Hortaea', 7), ('Hypocrella', 6), ('Cytospora', 6), ('Coniochaeta', 5), ('Elasticomyces', 5), ('Tolypocladium', 5)]
+
+== ctl: 497 genomes; loci legacy 504 core_first 514; genomes with a label/loci change 11; with any label/conf/class change 11
+  label ('(absent)', 'MAT1-2') 10
+  label ('MAT1-1', 'MAT1-2') 1
+  genomes by order: [('Magnaporthales', 7), ('Botryosphaeriales', 1), ('Mycosphaerellales', 1), ('Sordariales', 1), ('Microascales', 1)]
+  genomes by genus: [('Pyricularia', 7), ('Phyllosticta', 1), ('Sphaerulina', 1), ('Lasiosphaeris', 1), ('Ceratocystis', 1)]
+control loci differing in any column except policy: 55
+
+truth rows with stated MAT1-1/MAT1-2: 203
+ in run set: 144 (others: v0.6.0 label, unchanged by construction)
+  before {'agree': 178, 'wrong': 21, 'none': 4}
+  after {'agree': 150, 'wrong': 23, 'none': 4, 'mixed': 1, 'undetermined': 25}
+  flip ('GCA_015148665.1_ASM1514866v1', 'Botrytis cinerea', 'MAT1-1', 'MAT1-1', 'mixed')
+  flip ('GCA_014849305.1_ASM1484930v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014849395.1_ASM1484939v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014849675.1_ASM1484967v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014849805.1_ASM1484980v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014849965.1_ASM1484996v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850005.1_ASM1485000v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850035.1_ASM1485003v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850075.1_ASM1485007v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850105.1_ASM1485010v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850175.1_ASM1485017v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850235.1_ASM1485023v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850295.1_ASM1485029v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850445.1_ASM1485044v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850595.1_ASM1485059v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850675.1_ASM1485067v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850705.1_ASM1485070v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850755.1_ASM1485075v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850805.1_ASM1485080v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850825.1_ASM1485082v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850845.1_ASM1485084v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014850905.1_ASM1485090v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014851205.1_ASM1485120v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014851265.1_ASM1485126v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_014851385.1_ASM1485138v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_047678165.1_ASM4767816v1', 'Cryphonectria parasitica', 'MAT1-1', 'MAT1-1', 'undetermined')
+  flip ('GCA_003012965.1_ASM301296v1', 'Juglanconis oblonga', 'MAT1-1', 'MAT1-1', 'MAT1-2')
+  flip ('GCA_003012995.1_ASM301299v1', 'Juglanconis oblonga', 'MAT1-1', 'MAT1-1', 'MAT1-2')
+
+Parastagonospora genomes: 186 in run set: 109
+  legacy with records: 109 {('MAT1-2', 'one'): 3, ('MAT1-1', 'both_core_genes'): 17, ('MAT1-2', 'both_core_genes'): 88, ('MAT1-1', 'one'): 1}
+  core_first with records: 109 {('MAT1-2', 'one'): 3, ('MAT1-1', 'both_core_genes'): 17, ('MAT1-2', 'both_core_genes'): 88, ('MAT1-1', 'one'): 1}
+profile legacy {'scored': 607, 'agree': 444}
+profile core_first {'scored': 604, 'agree': 522}
+v0.6.0 vs legacy-on-main {'v6': 9812, 'in_legacy': 7875, 'same_label': 7789}

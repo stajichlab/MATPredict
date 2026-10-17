@@ -127,8 +127,13 @@ def validate_record(
     }
 
     taxid = record["taxonomy"]["taxid"]
-    tax_result = taxonomy.resolve_lineage(taxid, runner=taxonomy_runner)
-    result["taxonomy_current"] = tax_result.is_current
+    try:
+        tax_result = taxonomy.resolve_lineage(taxid, runner=taxonomy_runner)
+        result["taxonomy_current"] = tax_result.is_current
+    except taxonomy.TaxonkitError as exc:
+        # taxonkit could not run: leave the flag unset and say why, rather than report the taxid as out of date
+        result["taxonomy_current"] = None
+        result["taxonomy_error"] = str(exc)
 
     coordinate_provenance = record["locus"]["coordinate_provenance"]
     if coordinate_provenance == "not_available":

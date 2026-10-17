@@ -37,6 +37,7 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 ## Ascomycota (incl. Serinales, Dothideomycetes)
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
+| 10-16 | [Alpha-box and HMG-box profiles; Parastagonospora re-check; where wrong labels come from](2026-10-16_ascomycota-core-profiles.md) | open | profiles agree with 199/200 and 198/200 single-gene controls; Parastagonospora records run confirmed 91/91; 99 of 104 non-Parastagonospora disagreements won by MAT1-1-2 (HMG-like); the vote fix must also stop optional genes superseding a core hit (replay: profile agreement 669 to 822; a vote-only change 669 to 684) |
 | 10-16 | [Ascomycota MAT1-1-1 and MAT1-2-1 ambiguity](2026-10-16_ascomycota-core-gene-ambiguity.md) | open | 4,883 of 12,628 loci carry both core genes; 204 labels disagree with the higher bitscore (87 known Parastagonospora, 58 ties, 59 small gaps); lists in results/2026-10-16_ascomycota_core_ambiguity |
 | 09-26 | [Flank-carried rule](2026-09-26_flank-carried-rule.md) | decided | 39-bit floor: real 7/8, noise 0/52 |
 | 09-26 | [Polish cap](2026-09-26_polish-cap.md) | decided | compute 135.3->74.6 h |
@@ -51,6 +52,7 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 ## Validation and held-out sets
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
+| 10-17 | [BioSample truth set under withheld-record held-out runs](2026-10-17_biosample-truth-holdout.md) | decided (descriptive) | 203 Pezizomycotina: pipeline 178 correct at genus radius and 169 at order radius; 21 wrong at genus (17 Botrytis); profiles 194 of 199 correct, correct on all 17 Botrytis; order-radius misses are Cryphonectria |
 | 10-17 | [A mating-type truth set from BioSample](2026-10-17_biosample-truth-set.md) | open | 339 of 17,697 BioSamples state a mating type; 296 usable, 203 Pezizomycotina MAT1-1/MAT1-2; v0.6.0 agrees on 178 (88%), 17 Botrytis genomes disagree |
 | 10-17 | [Held-out test across Ascomycota, Basidiomycota, Mucoromycota](2026-10-17_holdout-all-phyla.md) | decided (descriptive); open: larger heterothallic truth | Pezizomycotina MAT 27/27 at genus, family and order radius (profiles 18/18 on heterothallic); Zygo 23 23/23; at order radius 5 of 7 Mucorales records and 5 of 6 Serinales MTL records are not found; Taphrina PM missed |
 | 09-28 | [MAT-gene gate and validation](2026-09-28_mat-gene-gate-and-validation.md) | decided | typing 0/540 wrong; gate 96/108 vs 9/189 |

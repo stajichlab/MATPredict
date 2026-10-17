@@ -604,6 +604,57 @@ def _withheld(doc: dict) -> str:
 </section>'''
 
 
+_TRACK_TITLE = {"helixer": "helixer-lite", "genbank": "GenBank annotation"}
+
+
+def _track_end(v) -> str:
+    """An end offset in bp: '=' when 0, signed otherwise (positive: the model reaches further out)."""
+    return "=" if not v else f"{v:+,}"
+
+
+def _track_table(name: str, rows: list[dict], tol: int) -> str:
+    body = []
+    for r in rows:
+        m = r.get("model")
+        if not m:
+            body.append(f'<tr class="missing"><th scope="row">{e(r["gene"])}</th>'
+                        '<td colspan="5">no model in this track</td></tr>')
+            continue
+        orf = {True: "complete", False: "incomplete", None: "–"}[m.get("other_complete_orf")]
+        ends = "agree" if m["ends_agree"] else "differ"
+        body.append(
+            f'<tr><th scope="row">{e(r["gene"])}</th><td>{e(m["other_gene"])}</td>'
+            f'<td class="num">{_track_end(m["extends_5p"])}</td><td class="num">{_track_end(m["extends_3p"])}</td>'
+            f'<td>{orf}</td><td>{ends}</td></tr>')
+    n = sum(1 for r in rows if r.get("model"))
+    agree = sum(1 for r in rows if r.get("model") and r["model"]["ends_agree"])
+    return (
+        f'<h4>{e(_TRACK_TITLE.get(name, name))}</h4>'
+        f'<p class="small">{n} of {len(rows)} homology gene models have a model here; {agree} have both ends '
+        f'within {tol} bp. 5′ and 3′: bp the model reaches past the homology model at that end, on the gene\'s '
+        'strand (negative: shorter).</p>'
+        '<div class="table-wrap"><table class="compact"><thead><tr><th>homology gene</th><th>model</th>'
+        '<th class="num">5′</th><th class="num">3′</th><th>ORF</th><th>ends</th></tr></thead>'
+        f'<tbody>{"".join(body)}</tbody></table></div>')
+
+
+def _tracks_section(tracks: dict | None) -> str:
+    """Gene-model tracks next to the homology models (tracks.yaml). Report only: calls are unchanged."""
+    if not tracks:
+        return ""
+    tol = tracks.get("end_tolerance_bp", 30)
+    parts = [_track_table(name, rows, tol) for name, rows in (tracks.get("summaries") or {}).items()]
+    counts = ", ".join(f"{_TRACK_TITLE.get(n, n)} {s['n_models']}" for n, s in (tracks.get("sources") or {}).items()
+                       if n != "evidence")
+    notes = "".join(f'<p class="warn-text small">{e(n)}</p>' for n in tracks.get("notes") or [])
+    return (
+        '\n<section class="card" id="tracks" aria-labelledby="tracks-h">\n'
+        '  <h2 id="tracks-h">Gene-model tracks</h2>\n'
+        f'  <p class="small">Other gene models on the locus windows (each locus ±{num(tracks.get("flank_bp"))} bp): '
+        f'{e(counts)}. They are shown beside the homology models and never change a call.</p>\n'
+        f'  {notes}{"".join(parts)}\n</section>')
+
+
 def _glossary(has_calls: bool) -> str:
     items = []
     if has_calls:
@@ -682,7 +733,7 @@ def _provenance(doc: dict, files: list[str]) -> str:
 
 def render_genome_report(doc: dict, *, sample: str | None = None, sample_from_folder: bool = False,
                          files: list[str] | None = None, print_mode: bool = False,
-                         generated: str | None = None) -> str:
+                         generated: str | None = None, tracks: dict | None = None) -> str:
     """The full HTML page for one `detection_report.yaml` document.
 
     `print_mode` opens every collapsed section (PDF engines print a closed
@@ -720,6 +771,7 @@ def render_genome_report(doc: dict, *, sample: str | None = None, sample_from_fo
   {f'<h2 class="section-h">Called loci <span class="count">{len(calls)}</span></h2>' if calls else ""}
   {loci_html}
   {_search_summary(doc)}
+  {_tracks_section(tracks)}
   {_withheld(doc)}
   {_provenance(doc, files or [])}
   {_glossary(bool(calls))}

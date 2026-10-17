@@ -104,7 +104,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import partial_core
+from MATPredict.detect import confidence_cap, partial_core
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
     LOCUS_CLASS_PARTIAL,
@@ -368,6 +368,11 @@ class DetectionResult:
     triggered or was stopped by its contig-edge guard: the winning and the other
     idiomorph's core genes with their reference coverage, the profile scores, the
     decision (`flipped`, `undetermined`, `kept_edge_artefact`) and the reasons."""
+    confidence_cap: dict | None = None
+    """Set only when `--confidence-cap-policy` lowered this call from `high` to
+    `medium` (`confidence_cap`): which criterion fired (`partial_edge`,
+    `weak_identity`), the best core gene and its coverage / identity / edge
+    distance, and the thresholds. Absent when the policy is off or did nothing."""
     idiomorph_classifier: dict | None = None
     """The profile-HMM classifier's verdict on this locus's modelled core
     proteins (`classifier.ClassifierVerdict.as_report`), or None when the
@@ -2116,6 +2121,10 @@ def run_pipeline(
     #: full-length core gene of the other idiomorph unless the profiles disagree
     #: (`partial_core`). Independent of `idiomorph_policy`.
     partial_core_policy: str = partial_core.DEFAULT_PARTIAL_CORE_POLICY,
+    #: `off` (default), `partial_weak` or `weak_only`: cap `high` at `medium` for a call whose best
+    #: core hit is a contig-edge partial or a weak-identity hit with no flank gene
+    #: (`confidence_cap`). Changes confidence only, never the locus or the idiomorph.
+    confidence_cap_policy: str = confidence_cap.DEFAULT_CONFIDENCE_CAP_POLICY,
     #: Curated records withheld from THIS run, for leave-one-out recall. The
     #: caller must build `reference_fasta` with the same set (see
     #: `reference_fasta.build_reference_fasta`); this parameter additionally
@@ -2357,6 +2366,7 @@ def run_pipeline(
     # contig_edge_distance purely because of an unrelated family elsewhere in
     # the genome. It is read before polishing because the polish window is
     # clamped to the contig's real end.
+    confidence_cap.check_policy(confidence_cap_policy)
     contig_lengths = _contig_lengths(genome_fasta)
 
     # Stage 2/3 -- polish. `polish_by` is keyed by
@@ -2864,6 +2874,21 @@ def run_pipeline(
 
         return partial_core.evaluate(vote, stats, profile_scores)
 
+    def _confidence_cap_stats(family, called, evidence):
+        """The called allele's core genes (any status, not `lost_to`) as `confidence_cap.CapStat`s."""
+        pin = {g["name"]: set(g.get("present_in_idiomorphs") or ()) for g in family.genes}
+        stats = []
+        for e in evidence:
+            if e.role != "core_MAT" or e.lost_to:
+                continue
+            allowed = pin.get(e.gene_name)
+            if allowed and called != "undetermined" and called not in allowed:
+                continue
+            length = contig_lengths.get(e.contig)
+            edge = min(e.start - 1, length - e.end) if length else None
+            stats.append(confidence_cap.CapStat(e.gene_name, e.coverage, e.identity, e.bitscore, edge))
+        return stats
+
     def _build(
         score: FamilyScore,
         member_clusters: list[GeneCluster],
@@ -3041,6 +3066,18 @@ def run_pipeline(
             # them.
             if locus_class == LOCUS_CLASS_MAT:
                 locus_class = LOCUS_CLASS_PARTIAL
+        final_confidence = cap_at_medium(tier) if partial_strength else tier
+        # Confidence cap (`confidence_cap`, off by default): last, so it sees the tier every other rule
+        # left. It only lowers `high`; a call the narrower caps above already put at `medium` is untouched.
+        cap_note = None
+        if confidence_cap_policy != confidence_cap.POLICY_OFF and final_confidence == "high":
+            cap = confidence_cap.evaluate(
+                final_confidence, _confidence_cap_stats(family, called_idiomorph, evidence),
+                sum(1 for e in evidence if e.role in ("flanking_conserved", "flanking_variable")),
+                policy=confidence_cap_policy,
+            )
+            if cap is not None:
+                cap_note, final_confidence = cap.note, "medium"
         return DetectionResult(
             polished_genes=polished_genes,
             caax_dependent=caax_dependent,
@@ -3055,7 +3092,8 @@ def run_pipeline(
             # `homothallic_candidate` that only tied the floor keeps its class
             # (it is a statement about which genes are present) but must not
             # keep `high` (that is a statement about how sure we are).
-            confidence=cap_at_medium(tier) if partial_strength else tier,
+            confidence=final_confidence,
+            confidence_cap=cap_note,
             idiomorph=called_idiomorph,
             idiomorph_candidates=own_vote,
             idiomorph_vote_note=vote_note,

@@ -1126,6 +1126,7 @@ def _relaxed_results(
     classifier_verdicts: dict[tuple[int, FamilyKey], ClassifierVerdict] | None = None,
     supported_min_bitscore: float = DEFAULT_SUPPORTED_MIN_BITSCORE,
     record_lengths: dict[tuple[str, str], int] | None = None,
+    partial_core_decide: Callable | None = None,
 ) -> list[DetectionResult]:
     """Sub-floor clusters admitted on gene COUNT rather than gene fraction.
 
@@ -1176,6 +1177,24 @@ def _relaxed_results(
             evidence = _gene_evidence([cluster], score.family_key, polish_by or {}, record_lengths=record_lengths)
             segments = _segments_for([cluster], contig_lengths or {}, evidence)
             verdict = (classifier_verdicts or {}).get((id(cluster), score.family_key))
+            called = (verdict.idiomorph if verdict is not None else
+                      assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key)))
+            cands = (
+                [{"idiomorph": k, "score": round(v, 1), "basis": "hmm_classifier"}
+                 for k, v in sorted(verdict.scores.items(), key=lambda kv: (-kv[1], kv[0]))]
+                if verdict is not None else
+                idiomorph_candidates(family, score.genes_found, _own_live_hits(cluster, family.key))
+            )
+            # Partial-coverage rule (`partial_core`), as in the strict path.
+            vote_note = None
+            if partial_core_decide is not None and verdict is None and called != "undetermined":
+                decision = partial_core_decide(family, [cluster], evidence, cands)
+                if decision is not None:
+                    vote_note = decision.note
+                    if decision.decision == partial_core.DECISION_FLIPPED:
+                        called = decision.idiomorph
+                    elif decision.decision == partial_core.DECISION_UNDETERMINED:
+                        called = "undetermined"
             results.append(DetectionResult(
                 family_key=score.family_key,
                 contig=segments[0].contig,
@@ -1192,14 +1211,9 @@ def _relaxed_results(
                 # The HMM classifier decides where it ran on this cluster, as
                 # in the strict path; before 2026-09-28 relaxed calls ignored
                 # it (found measuring review finding F1).
-                idiomorph=(verdict.idiomorph if verdict is not None else
-                           assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key))),
-                idiomorph_candidates=(
-                    [{"idiomorph": k, "score": round(v, 1), "basis": "hmm_classifier"}
-                     for k, v in sorted(verdict.scores.items(), key=lambda kv: (-kv[1], kv[0]))]
-                    if verdict is not None else
-                    idiomorph_candidates(family, score.genes_found, _own_live_hits(cluster, family.key))
-                ),
+                idiomorph=called,
+                idiomorph_candidates=cands,
+                idiomorph_vote_note=vote_note,
                 idiomorph_margin=round(verdict.margin, 6) if verdict is not None else None,
                 idiomorph_classifier=verdict.as_report() if verdict is not None else None,
                 ambiguous_with=[],
@@ -3204,6 +3218,8 @@ def run_pipeline(
             clusters, families,
             supported_min_bitscore=supported_min_bitscore,
             record_lengths=record_protein_lengths,
+            partial_core_decide=(
+                _partial_core_decision if partial_core_policy == partial_core.POLICY_COVERAGE_PROFILE else None),
             searchable_genes=searchable_genes,
             evidence_floor=evidence_floor,
             ambiguity_floor=ambiguity_floor,

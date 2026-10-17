@@ -126,9 +126,11 @@ ORDER = (
 KEY = pipeline_module.FamilyKey("P", "MAT")
 
 
-def _write_records(tmp_path):
+def _write_records(tmp_path, extra_genes=0):
     (tmp_path / "P").mkdir(exist_ok=True)
-    (tmp_path / "P" / "order.yml").write_text(ORDER)
+    # extra roster genes that are never found push the locus under the fraction floor (relaxed pass)
+    (tmp_path / "P" / "order.yml").write_text(ORDER + "".join(
+        f"      - {{name: X{i}, role: flanking_conserved}}\n" for i in range(extra_genes)))
     for rid, gene, idiom, aa in (("rec11", "MAT1-1-1", "MAT1-1", 353), ("rec12", "MAT1-2-1", "MAT1-2", 376)):
         d = tmp_path / "P" / "Fam" / rid
         d.mkdir(parents=True, exist_ok=True)
@@ -147,8 +149,8 @@ def _model(gene, rid, start, aa, method):
 
 
 def _run(tmp_path, monkeypatch, *, policy, a_start=3000, a_aa=214, a_gene_bits=416.0,
-         h_aa=376, profiles=(125.0, 221.0), contig_len=20000):
-    _write_records(tmp_path)
+         h_aa=376, profiles=(125.0, 221.0), contig_len=20000, extra_genes=0):
+    _write_records(tmp_path, extra_genes)
     (tmp_path / "genome.fa").write_text(">c1\n" + "A" * contig_len + "\n")
     monkeypatch.setattr(pipeline_module, "_translate_model", lambda *a, **k: "MKV")
     monkeypatch.setattr(pc, "load_core_profiles", lambda *a, **k: object() if profiles else None)
@@ -229,3 +231,12 @@ def test_report_carries_the_vote_note_only_when_set(tmp_path, monkeypatch):
     assert "idiomorph_vote_note" not in off
     assert on["idiomorph_vote_note"]["decision"] == "flipped"
     assert {g["gene"]: g["coverage"] for g in on["gene_evidence"]} == {"MAT1-1-1": 60.6, "MAT1-2-1": 100.0}
+
+
+def test_the_relaxed_pass_applies_the_rule_too(tmp_path, monkeypatch):
+    off = _run(tmp_path / "a" if (tmp_path / "a").mkdir() is None else None, monkeypatch, policy="off", extra_genes=6)
+    on = _run(tmp_path / "b" if (tmp_path / "b").mkdir() is None else None, monkeypatch,
+              policy="coverage_profile", extra_genes=6)
+    assert off.detection_pass == on.detection_pass == "relaxed"
+    assert off.idiomorph == "MAT1-1" and on.idiomorph == "MAT1-2"
+    assert on.idiomorph_vote_note["decision"] == "flipped" and off.idiomorph_vote_note is None

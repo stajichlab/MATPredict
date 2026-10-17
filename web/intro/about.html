@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About MATPredict</title>
+<meta name="description" content="About MATPredict, how to cite the resource and the software, data sources, licence and contact.">
+<link rel="stylesheet" href="site.css">
+<script src="theme.js"></script>
+<style>blockquote { margin:12px 0; padding:8px 14px; border-left:4px solid var(--accent); background:var(--card); border-radius:0 8px 8px 0; }
+pre { background:var(--card); padding:10px 12px; border-radius:8px; overflow-x:auto; } pre code { background:none; padding:0; } hr { border:0; border-top:1px solid var(--line); }</style>
+</head>
+<body>
+<nav><b>MATPredict</b><a href="index.html">Overview</a><a href="results.html">Explore taxa</a><a href="page/index.html">Browser tool</a><a href="about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
+<main id="content"><p class="muted">Loading…</p></main>
+<footer class="muted">Edit <code>web/intro/about.md</code> to change this page.</footer>
+<script type="module">
+import { renderMarkdown } from "./md.js";
+const el = document.getElementById("content");
+try {
+  const r = await fetch("about.md"); if (!r.ok) throw new Error("HTTP " + r.status);
+  el.innerHTML = renderMarkdown(await r.text());
+  const h1 = el.querySelector("h1"); if (h1) document.title = h1.textContent;
+} catch (e) { el.innerHTML = `<p>Could not load the About text (${e.message}). See the <a href="https://github.com/stajichlab/MATPredict#citation">README</a>.</p>`; }
+</script>
+</body>
+</html>

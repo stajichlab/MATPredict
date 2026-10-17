@@ -6,7 +6,7 @@ from pathlib import Path
 run = Path(sys.argv[1]); truth = {r["genome"]: r["stated"] for r in csv.DictReader(open(sys.argv[2]), delimiter="\t")}
 lists = {p.stem: {l.split("\t")[0] for l in p.read_text().splitlines() if l} for p in (run / "lists").glob("*.tsv")}
 rows = {}
-for f in glob.glob(str(run / "out" / "summary.*.jsonl")):
+for f in glob.glob(str(run / (sys.argv[3] if len(sys.argv) > 3 else "out") / "summary.*.jsonl")):
     for l in open(f):
         r = json.loads(l); rows[r["genome"]] = r
 print("genomes done", len(rows), "errors", sum("error" in r for r in rows.values()))
@@ -32,6 +32,8 @@ for name in ("named5", "pleo_uncalled", "pleo_called", "control_called", "uncall
     chg = [g for g in ids if changed(rows[g])]
     print(f"\n== {name}: {len(ids)}/{len(lists.get(name, ()))} done; called off: {n_off_called}")
     print(f"   genomes with loci added: {len(gen_add)} (recovered uncalled {len(gen_rec)}; extra locus in an already-called genome {len(gen_extra)}); loci added {sum(len(v) for v in adds.values())}")
+    unflag = [(g, l) for g in ids for l in adds[g] if not l["strong"]]
+    print(f"   UNFLAGGED added loci (not made by the rule): {len(unflag)} {[(g[:15], l['idiomorph'], l['confidence']) for g, l in unflag][:5]}")
     print(f"   genomes whose off loci changed/lost under on: {len(chg)} {chg[:5]}")
     n2 = sum(rows[g]['on']['two_idiomorphs'] > rows[g]['off']['two_idiomorphs'] for g in ids)
     print(f"   genomes with a new two_idiomorphs statement: {n2}")
@@ -53,4 +55,6 @@ for name in ("named5", "pleo_uncalled", "pleo_called", "control_called", "uncall
                 c["no_call" if not labs else ("agree" if labs == {t} else ("both" if len(labs) > 1 and t in labs else "DISAGREE"))] += 1
             print(f"   truth203 {tag}:", dict(c))
 tm = [(g, r["off_s"], r["on_s"]) for g, r in rows.items() if "off_s" in r]
+missing = [g for n in lists for g in lists[n] if g not in rows]
+print("\nlisted but not in results:", len(set(missing)), sorted(set(missing))[:5])
 print("\nmean off s", sum(t[1] for t in tm) / max(1, len(tm)), "mean on s", sum(t[2] for t in tm) / max(1, len(tm)))

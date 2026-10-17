@@ -7,4 +7,4 @@ export SCRATCH=${SCRATCH:-/tmp}
 L=$1
 [ -n "$SLURM_ARRAY_TASK_ID" ] && L=$(printf "%s.%02d" $1 $SLURM_ARRAY_TASK_ID)
 cd /bigdata/stajichlab/jstajich/projects/sgr
-/rhome/jstajich/.pixi/bin/pixi run --manifest-path /bigdata/stajichlab/jstajich/projects/mat-prof/pixi.toml -e test python scripts/sgr_eval_driver.py $L $2
+/rhome/jstajich/.pixi/bin/pixi run --manifest-path /bigdata/stajichlab/jstajich/projects/mat-prof/pixi.toml -e test python scripts/sgr_eval_driver.py $L $2 $3

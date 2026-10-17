@@ -78,6 +78,7 @@ def compact(report_path):
 
 def main():
     lst, out = Path(sys.argv[1]), Path(sys.argv[2])
+    old = Path(sys.argv[3]) if len(sys.argv) > 3 else None  # re-run `on` only; `off` is read from here
     scratch = Path(os.environ.get("SCRATCH") or tempfile.gettempdir())
     P = parser()
     done = set()
@@ -97,7 +98,9 @@ def main():
             op = gzip.open if fasta.endswith(".gz") else open
             with op(fasta, "rb") as fi, open(g, "wb") as fo:
                 shutil.copyfileobj(fi, fo)
-            for pol in ("off", "on"):
+            if old is not None:
+                row["off"] = compact(old / gid / "off" / "detection_report.yaml")
+            for pol in (("on",) if old is not None else ("off", "on")):
                 d = out / gid / pol
                 t0 = time.time()
                 args = P.parse_args(["detect", "--genome", str(g), "--taxid", str(taxid),

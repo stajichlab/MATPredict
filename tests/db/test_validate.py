@@ -282,3 +282,15 @@ def test_independent_translation_uses_transl_table_12_for_cug_clade_records(tmp_
 
     result = _independent_translation(record, gene, ncbi)
     assert result == "MS"  # not "ML" -- proves table 12 was actually used
+
+
+def test_a_taxonkit_failure_leaves_taxonomy_unset_with_a_reason():
+    from types import SimpleNamespace
+
+    def failing(cmd, **kwargs):
+        return SimpleNamespace(returncode=1, stdout="", stderr="[ERRO] taxdump not found")
+
+    record = {"taxonomy": {"taxid": 4837}, "locus": {"coordinate_provenance": "not_available"}, "genes": []}
+    result = validate_record(record=record, ncbi=None, uniprot=None, taxonomy_runner=failing)
+    assert result["taxonomy_current"] is None
+    assert "taxdump not found" in result["taxonomy_error"]

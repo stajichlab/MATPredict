@@ -31,7 +31,10 @@ properties:
     properties:
       locus_name: {type: string}
       idiomorphs: {type: array, items: {type: string}, minItems: 1}
-      system: {enum: [heterothallic, homothallic, pseudohomothallic]}
+      # unisexual_switching (added 2026-10-17): a unisexual species with
+      # directional mating-type switching (e.g. Ceratocystis fimbriata). Each
+      # record describes ONE state of the locus (see the record's evidence).
+      system: {enum: [heterothallic, homothallic, pseudohomothallic, unisexual_switching]}
   locus:
     type: object
     required: [coordinate_provenance, excluded_from_coordinate_benchmark]

@@ -289,3 +289,60 @@ Routing check from `families_attempted`: Saccharomycotina genomes (Pichiales, Ph
 ## Tests (final)
 
 HPCC pixi `test` env, `python -m pytest tests/db tests/detect -q`: 1,082 passed, 1 failed. The failure, `tests/detect/test_pipeline.py::test_fast_path_missing_gene_is_polished_in_the_existing_clusters_window`, asserts the call order `["exonerate", "miniprot"]` of two polishers run concurrently; it passed in the first full run of this branch (1,073 passed) and passes 5/5 locally, so it is an order-dependent flake unrelated to these changes. One failure that was mine (`test_fallback_searchable.py` pinned the flagged families to the four Basidiomycota ones) was fixed to include `MATyl` and `MATdc`. New tests: 7 in `test_family_registry.py` (guard), 3 in `test_homothallic_matdc.py`.
+
+# Round 3: Pichiales `MTL A` calls and the two Orbiliales losses (analysis only)
+
+No `src/` or `db/` change. Jobs `dipo-pich-*` (partition stajichlab: the `preempt` account was refused for my user).
+
+## 1. The nine Pichiales `MTL A` idiomorph_gene_only calls
+
+All nine are *Komagataella* (six K. phaffii, one K. kurtzmanii, two K. pastoris). Seven appear only on this branch; two (GCA_000182785.1, GCA_030567415.1, both K. pastoris) also appear on main 624048d. (The tenth new Pichiales call, Brettanomyces bruxellensis `MATsc` MATalpha, is not an MTL call and was not analysed.)
+
+| Genome | Taxon | Contig (length) | Hit span | Dist to contig start / end | Contigs / N50 / size | Identity (coverage) of K. phaffii deposit proteins on the contig | Placement in K. phaffii CBS 7435 |
+|---|---|---|---|---|---|---|---|
+| GCA_000182785.1 | K. pastoris | CABH01000012.1 (2082 bp) | 64-1954 | 63/128 | 125 / 169 kb / 9.3 Mb | MATa1 92.889% cov 100; MATa2 89.326% cov 100; SLA2-2 cov -%; DIC1 cov -% | CBS 7435 LT962479.2 4892-2845 85.106% |
+| GCA_023013455.1 | K. phaffii | JAJJTB010000045.1 (2287 bp) | 210-2097 | 209/190 | 48 / 559 kb / 9.4 Mb | MATa1 100.000% cov 100; MATa2 100.000% cov 100; SLA2-2 cov 5%; DIC1 cov -% | CBS 7435 LT962479.2 2732-5018 99.213% |
+| GCA_023013825.1 | K. phaffii | JAJJTU010000041.1 (2287 bp) | 210-2097 | 209/190 | 44 / 909 kb / 9.3 Mb | MATa1 100.000% cov 100; MATa2 100.000% cov 100; SLA2-2 cov 5%; DIC1 cov -% | CBS 7435 LT962479.2 2732-5018 99.213% |
+| GCA_023013855.1 | K. phaffii | JAJJTV010000046.1 (2287 bp) | 210-2097 | 209/190 | 47 / 525 kb / 9.3 Mb | MATa1 100.000% cov 100; MATa2 100.000% cov 100; SLA2-2 cov 5%; DIC1 cov -% | CBS 7435 LT962479.2 2732-5018 99.213% |
+| GCA_023013895.1 | K. phaffii | JAJJTX010000047.1 (2215 bp) | 119-2006 | 118/209 | 48 / 602 kb / 9.3 Mb | MATa1 100.000% cov 100; MATa2 100.000% cov 100; SLA2-2 cov 3%; DIC1 cov -% | CBS 7435 LT962479.2 4946-2732 100.000% |
+| GCA_023014715.1 | K. phaffii | JAJJUH010000040.1 (2287 bp) | 210-2097 | 209/190 | 42 / 525 kb / 9.3 Mb | MATa1 100.000% cov 100; MATa2 100.000% cov 100; SLA2-2 cov 5%; DIC1 cov -% | CBS 7435 LT962479.2 2732-5018 99.213% |
+| GCA_023014845.1 | K. phaffii | JAJJUO010000047.1 (2215 bp) | 210-2097 | 209/118 | 47 / 701 kb / 9.3 Mb | MATa1 100.000% cov 100; MATa2 100.000% cov 100; SLA2-2 cov 3%; DIC1 cov -% | CBS 7435 LT962479.2 2732-4946 100.000% |
+| GCA_030557195.1 | K. kurtzmanii | JAKTVM010000015.1 (111107 bp) | 155-2107 | 154/109000 | 36 / 591 kb / 9.2 Mb | MATa1 99.556% cov 100; MATa2 97.753% cov 100; SLA2-2 cov 4%; DIC1 cov 100% | CBS 7435 LT962479.2 140791-249721 98.016% |
+| GCA_030567415.1 | K. pastoris | JAJLSE010000039.1 (2262 bp) | 155-2045 | 154/217 | 40 / 1004 kb / 9.4 Mb | MATa1 92.889% cov 100; MATa2 89.326% cov 100; SLA2-2 cov 4%; DIC1 cov -% | CBS 7435 LT962479.2 4983-2845 85.549% |
+Method: blastn of each hit contig against CBS 7435 (GCA_900235035.2, LT962479.2) and GS115 (GCF_000027005.1, NC_012966.1); tblastn of the earlier agent's `Kphaffii_FR839631` (DIC1-1 CCA40181.1, MATa2 SCV12319.1, MATa1 CCA40182.1, SLA2-2 CCA40183.1) and `Ohpoly_AJ617305` proteins onto each contig and onto the reference regions. Note these deposit proteins are not curated records in `db/`.
+
+What the detect call matched: the `MTL` family's references `498019_b11205_MTL_A` MTLA1 (C. auris, 39-42% identity, 190-250 bp) and `5476_sc5314_MTL_A` MTLA2 (C. albicans, 33-34%, 320 bp), both `polished_single` fragments of 191-321 bp, both genes within 2 kb on the same 2.1-2.3 kb contig; no SLA2/APN2 or OBP1/PIK1/PAP1 neighbour was found by detect.
+
+What the contigs are (verified by blast): 8 of the 9 hit contigs are 2,082-2,287 bp and 99-100% identical (K. phaffii) or 85% (K. pastoris) over their whole length to CBS 7435 LT962479.2:2,732-5,018, the region between DIC1 and SLA2-2 at the start of that chromosome. There, in CBS 7435 by tblastn: DIC1-1 1,771-2,685, MATa2 3,381-2,848 (minus), MATa1 4,163-4,837, SLA2-2 7,997-4,863 (minus): the K. phaffii MATa locus, DIC1 - MATa2 - MATa1 - SLA2. The contigs carry MATa1 and MATa2 FULL LENGTH (100% coverage, 100% identity to the deposit in K. phaffii; 89-93% in K. pastoris; 98-100% in the K. kurtzmanii contig), and only the first 3-5% of SLA2-2 at the contig edge; DIC1 is outside the contig in 8 of 9. The kurtzmanii contig (111 kb) is the complete case: SLA2-2 (partial, contig start) - MATa1 - MATa2 - DIC1 (100% coverage), then 109 kb of the chromosome. The same chromosome also has the other cassette (CBS 7435 LT962479.2:136,012-141,828: SLA2-2, matalpha1/matalpha2 by Ohpoly proteins at 44-47%, DIC1) and GS115 NC_012966.1 carries the alpha configuration at the DIC1 - matalpha2 - matalpha1 - SLA2-2 site (1,646,885-1,652,702), so K. phaffii has both configurations in its genome, consistent with a switching or two-cassette arrangement. These contigs are the MATa state; I did not check the biology further.
+
+Verdicts per genome: all nine are the REAL K. phaffii-group MATa locus (MATa1 and MATa2 genes), not paralogs: the MATa1/MATa2 sequences match the deposit set at 89-100% and sit in the DIC1/SLA2 synteny of CBS 7435. "Contig-edge fragment" applies only to the flanks: the contig is a short MAT-only contig produced by assembly breaks at the repeats around the locus (distance to contig end 118-217 bp = SLA2-2 truncated), so the locus is genuine but the call is flank-poor, which is why it is `idiomorph_gene_only` and not `mat_locus`. The MTL family call is right in substance but is made by weak cross-lineage hits (33-42% to Candida references) because no Pichiaceae/Komagataella MAT record exists.
+
+### Why seven are branch-only
+
+Not the guard's family narrowing itself and not a family-specific suppression: a polish-cap artefact. Same genome, same taxid, current main versus this branch, `--evidence-diagnostics`:
+- On main the same 2-gene MTL cluster (MTLA1+MTLA2) is formed and admitted, then reported as suppressed `modelled_gene_bar` because 0 of its genes were polished (`polish_capped: true` in the diagnostics row for this cluster in 7/7 genomes; admitted MTL clusters in the genome 18-24 on main vs 15-18 on the branch, of which 12-18 vs 9-12 capped).
+- On the branch, with only MATsc and MTL searched, the cluster is within the per-family cap (`max_polished_clusters_per_family`, 6) and is polished (2 `polished_single` models), so it is reported.
+- Mechanism: clusters are formed jointly from hits of all searched families, so the number and ranking of admitted `MTL` clusters (and so who falls under the cap of 6) depends on which other families are searched. Nine families on main give 5 competing clusters on this contig (MAT 4 genes, MATsc, MATyl, MTL, MATtub), which changes the ranking. The two genomes that are also called on main are the ones where the cluster stayed within the cap.
+- So the guard changed the result only indirectly (fewer families, different cluster set); the call itself is the correct detection and the main-branch silence is a cap-induced false negative. The v0.6.0 campaign (9 families) was subject to the same artefact, which is why the Komagataella MATa locus was "uncalled" in 100+ genomes. I did not run an uncapped main to confirm (a run with a larger cap would prove it directly); evidence is the diagnostics flag.
+
+Separation from code drift: the 15-genome main re-run (previous section) shows 3 genomes (GCA_000182785.1, GCA_001719535.1, GCA_030567415.1) called on main as well as on the branch (drift since v0.6.0: v0.6.0 left them uncalled), and the other 7 only on the branch (cap artefact via family set).
+
+### Proposed rule (not implemented)
+
+Order the per-family polish cap so a cluster with two distinct core genes of one idiomorph (or any anchored cluster) is never capped out, or rank by independent evidence (gene count, best identity) before cluster position; then the result no longer depends on which families are searched. Separately, a Komagataella (Pichiaceae) MATa/MATalpha record would turn these from weak MTL cross-lineage calls into proper family calls.
+
+## 2. The two Orbiliales losses
+
+- GCA_047671915.1 (Hyalorbilia sp. HsImV27) and GCA_047716685.1 (Hyalorbilia oviparasitica ASM4771668v1), both class Orbiliomycetes, both `phylum_fallback` in v0.6.0.
+- v0.6.0 call: `Ascomycota:MATsc`, idiomorph `undetermined`, `idiomorph_gene_only`, genes MATALPHA2|MATA2, a single 321-bp hit (JBAMKL010000648.1:5,396-5,716 and JBAMJO010000854.1:10,847-11,167).
+- Now: routing `phylum_fallback`, families searched `MAT` and `MATtub` only; no call. The same genomes on main (9 families) still give the MATsc call.
+- Cause: the guard (`MATsc` is declared Saccharomycotina, so it is no longer searched on an Orbiliomycetes genome). Not the scope-only change (MATsc is not scope-only) and not code drift (main reproduces the call). A Pezizomycotina class still gets the `MAT`/`MATtub` fallback: 4 other Orbiliales genomes (Dactylellina cionopaga, Arthrobotrys iridis, two Hyalorbilia) keep their `MAT` calls, including a second H. oviparasitica genome (GCA_047716655.1, MAT1-2-1|APN2|COX13).
+- Verdict: the lost calls were a single 321-bp cross-lineage HMG-like fragment found by a Saccharomycetaceae family in a filamentous fungus; no flank gene; I read them as spurious, not real MAT loci (unverified: the fragments were not inspected further). Neither of the two genomes gets a `MAT` call now, as before.
+
+## 3. Questions for the curator
+
+1. Accept the nine Komagataella calls as real (MATa1/MATa2) and curate a K. phaffii MATa (and MATalpha) record so they route to a proper Pichiaceae/Komagataella family instead of weak MTL fallback hits? CBS 7435 LT962479.2:2,732-5,018 and the DIC1-MATa2-MATa1-SLA2-2 layout are the obvious source (the deposit `FR839631` is not yet in `db/`).
+2. Fix the polish cap so that the result does not depend on which other families are searched (rank by evidence or exempt two-core-gene clusters)? This affects every family and needs the single-gene rule evaluation the curator already wants before the guard merges.
+3. Should a call made only by weak cross-lineage hits (33-42%) on a contig-edge fragment be `high` confidence? These nine are `high` with `idiomorph_gene_only`; consider a lower tier until a same-genus record exists.
+4. The kurtzmanii contig carries the whole MATa locus with SLA2 and DIC1 flanks yet is `idiomorph_gene_only` with no flank gene because the flank references (SLA2/DIC1 of the Serinales MTL records) do not match: a Komagataella record would fix that too.
+5. Not verified: that the CBS 7435 and GS115 regions are the two mating-type configurations (layout from tblastn only; annotation and literature not checked); that K. pastoris at 85-93% identity is the same locus rather than a diverged copy (synteny supports it); and the uncapped-main confirmation of the cap explanation.

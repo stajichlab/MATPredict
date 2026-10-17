@@ -545,7 +545,7 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     detect.add_argument(
         "--polish-core-pair", action=argparse.BooleanOptionalAction, default=DEFAULT_POLISH_CORE_PAIR,
         help="Also polish every admitted cluster with two distinct live core genes of one idiomorph "
-             "(e.g. MTLA1 + MTLA2) whatever its rank (a slot of the cap). The property is the cluster's own, so adding "
+             "(e.g. MTLA1 + MTLA2) whatever its rank, on top of the cap (it takes no slot). The property is the cluster's own, so adding "
              "families that admit more clusters cannot push such a cluster out of the cap. "
              "Default: on. --no-polish-core-pair restores the earlier behaviour.",
     )

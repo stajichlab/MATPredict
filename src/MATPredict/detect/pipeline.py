@@ -760,9 +760,9 @@ DEFAULT_POLISH_STRONG_IDENTITY = 50.0
 
 #: Every admitted cluster that carries two distinct live REQUIRED core_MAT genes of ONE idiomorph
 #: (two non-optional genes whose `present_in_idiomorphs` is that single idiomorph, e.g. MTLA1 +
-#: MTLA2 or MATA1 + MATA2; never the optional accessory genes MAT1-1-2, MAT1-1-3 ... of `MAT`) is polished whatever its rank, in the same tier as the strong-identity
-#: clusters: it takes a slot from the weakest ranked cluster, and the cap is exceeded only when
-#: more than N clusters qualify. Why: the rank counts distinct genes of ANY role and ranks identity second, so a
+#: MTLA2 or MATA1 + MATA2; never the optional accessory genes MAT1-1-2, MAT1-1-3 ... of `MAT`) is polished whatever its rank, ON TOP of the cap's selection (it takes no slot, so nothing the
+#: plain cap polishes is dropped; the first, slot-taking version lost two real MTL alpha calls in a
+#: 1,505-genome sample). Why: the rank counts distinct genes of ANY role and ranks identity second, so a
 #: small real cluster is outranked by whatever else a genome admits, and how many others are
 #: admitted depends on how many families are searched (seven Komagataella genomes with a real
 #: two-gene MTL cluster on a 2.1-2.3 kb contig lost it once nine families were searched: 18-24
@@ -993,22 +993,25 @@ def select_polish_clusters(by_family, cap: int, strong,
     plain cap.
 
     With `core_genes` (from `core_idiomorph_genes`): a cluster with two distinct live
-    core genes of one idiomorph (`has_core_pair`) joins the same tier whatever its
-    identity, and is polished exactly like a strong-identity cluster (a slot of the cap,
-    more than the cap only when more than `cap` clusters qualify). If
-    `strong_identity` is None the tier holds only these clusters."""
+    required core genes of one idiomorph (`has_core_pair`) is polished whatever its rank
+    or identity, IN ADDITION to the selection above: it takes no slot, so nothing the
+    plain cap would polish is dropped. The cap is exceeded only by such clusters."""
     chosen = set()
     for key, members in by_family.items():
         ranked = rank_for_polish(members, key, strong)
-        if strong_identity is None and not core_genes:
+        if strong_identity is None:
             picked = ranked[:cap]
         else:
-            tier = [c for c in ranked
-                    if (strong_identity is not None and _best_identity(c, key) >= strong_identity)
-                    or (core_genes and has_core_pair(c, key, core_genes))]
+            tier = [c for c in ranked if _best_identity(c, key) >= strong_identity]
             tier_ids = {id(c) for c in tier}
             rest = [c for c in ranked if id(c) not in tier_ids]
             picked = tier + rest[:max(0, cap - len(tier))]
+        if core_genes:
+            # Added on top, never in place of: a pair cluster takes no slot, so no cluster
+            # the plain cap polishes is dropped for it (the first version took slots and
+            # lost two real MTL alpha calls in 1,505 genomes).
+            picked = picked + [c for c in ranked if has_core_pair(c, key, core_genes)
+                               and not any(c is q for q in picked)]
         chosen.update((id(c), key) for c in picked)
     return chosen
 

@@ -79,7 +79,9 @@ def test_a_capped_out_pair_cluster_is_now_polished():
     assert (id(true), KEY) not in select_polish_clusters({KEY: members}, 6, {}, None)   # the failure
     selected = select_polish_clusters({KEY: members}, 6, {}, None, CORE)
     assert (id(true), KEY) in selected
-    assert len(selected) == 6                       # the pair takes the place of the weakest, same work
+    plain = select_polish_clusters({KEY: members}, 6, {}, None)
+    assert plain <= selected                        # nothing the plain cap polishes is dropped
+    assert len(selected) == 7                       # the pair is one extra, on top
 
 
 def test_unrelated_clusters_are_unchanged():
@@ -94,7 +96,8 @@ def test_it_composes_with_the_identity_tier():
     members = _noise(8) + [strong, pair]
     selected = select_polish_clusters({KEY: members}, 6, {}, 50.0, CORE)
     assert {(id(strong), KEY), (id(pair), KEY)} <= selected
-    assert len(selected) == 6
+    assert select_polish_clusters({KEY: members}, 6, {}, 50.0) <= selected
+    assert len(selected) == 7
 
 
 def test_with_many_extra_families_the_selection_of_a_family_does_not_change():
@@ -109,8 +112,10 @@ def test_with_many_extra_families_the_selection_of_a_family_does_not_change():
 
 def test_more_pair_clusters_than_the_cap_are_all_polished():
     pairs = [_cluster(["mfa1", "pra1"]) for _ in range(8)]
-    selected = select_polish_clusters({KEY: pairs + _noise(4)}, 6, {}, None, CORE)
-    assert selected == {(id(c), KEY) for c in pairs}
+    members = pairs + _noise(4)
+    selected = select_polish_clusters({KEY: members}, 6, {}, None, CORE)
+    assert {(id(c), KEY) for c in pairs} <= selected
+    assert select_polish_clusters({KEY: members}, 6, {}, None) <= selected
 
 
 # --- through the pipeline ---------------------------------------------------
@@ -158,7 +163,7 @@ def _run(tmp_path, **kw):
 def test_the_pipeline_polishes_the_capped_out_pair_by_default(tmp_path):
     polished, capped = _run(tmp_path, max_polished_clusters_per_family=2, polish_strong_identity=None)
     assert "true" in polished and not capped["true"]
-    assert len(polished) == 2                      # the pair takes a slot from the weakest ranked cluster
+    assert len(polished) == 3                      # cap 2 plus the pair, on top
 
 
 def test_the_flag_off_restores_the_earlier_cap(tmp_path):

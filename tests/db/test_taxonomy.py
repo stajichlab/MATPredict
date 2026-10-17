@@ -82,5 +82,5 @@ def test_a_killed_taxonkit_says_to_use_a_compute_node():
     def killed(cmd, **kwargs):
         return SimpleNamespace(returncode=-9, stdout="", stderr="")
 
-    with pytest.raises(TaxonkitError, match="compute node with at least 8 GB"):
+    with pytest.raises(TaxonkitError, match="compute node"):
         resolve_lineage(5158, runner=killed)

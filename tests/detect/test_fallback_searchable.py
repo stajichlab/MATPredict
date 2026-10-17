@@ -48,9 +48,11 @@ def test_exhaustive_still_searches_everything():
     assert names(d) == ["HD", "PR", "redPR"]
 
 
-def test_shipped_roster_flags_the_four_lineage_families():
+def test_shipped_roster_flags_the_scope_only_families():
+    """The four Basidiomycota lineage families (curator 2026-10-01) plus the Ascomycota
+    Yarrowia `MATyl` and Geotrichum `MATdc` (curator 2026-10-17)."""
     flagged = {f.key.locus_name for f in load_all_families(DB) if not f.fallback_searchable}
-    assert flagged == {"redPR", "redHD", "rustHD", "wallMAT"}
+    assert flagged == {"redPR", "redHD", "rustHD", "wallMAT", "MATyl", "MATdc"}
 
 
 def test_pr_scope_includes_boletales():

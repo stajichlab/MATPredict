@@ -1,0 +1,170 @@
+record_id: 4952_clib122_MATyl_B
+record_version: 1
+taxonomy:
+  taxid: 4952
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Dipodascomycetes;o__Dipodascales;f__Dipodascales_incertae_sedis;g__Yarrowia;s__Yarrowia_lipolytica
+  lineage_resolved_date: '2026-10-17'
+organism:
+  species: Yarrowia lipolytica
+  strain:
+    name: CLIB122
+    known: true
+    culture_collection_ids:
+    - CLIB122
+    - E150
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATyl
+  idiomorphs:
+  - B
+  system: heterothallic
+locus:
+  assembly_accession: GCF_000002525.2
+  assembly_accession_basis: strain_match_verified
+  assembly_location:
+    contig: NC_006069.1
+    start: 979054
+    end: 987371
+    identity: 100.0
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: apn2->matb2->matb1->sla2
+    definition_note: 'MATB idiomorph of Yarrowia lipolytica, taken from the RefSeq
+      annotation of the CLIB122 reference genome (GCF_000002525.2, chromosome C, NC_006069.1;
+      YALI0_C07436g apn2, YALI0_C07458g matb2, YALI0_C07480g matb1, YALI0_C07502g
+      sla2). Same-strain assembly match: the Butler et al. 2004 MATB deposit AJ617307.1
+      (3,353 bp, matb2 CAE84425.1, matb1 CAE84426.1; PMID 14745027) is 3353/3353 nucleotides
+      identical to NC_006069.1:980802-984154 (local alignment, 2026-10-17), and CAE84425.1/CAE84426.1
+      are identical to the RefSeq proteins XP_501556.1/XP_501557.1. The architecture
+      is the mirror of the MATA record (4952_w29_MATyl_A): apn2 and sla2 flank the
+      idiomorph, which here carries matb2 (367 aa) and matb1 (302 aa) instead of mata1/mata2.
+      The MATB idiomorph was shown functional in a MATA background by cassette replacement
+      (Rosas-Quijano et al. 2008, PMID 18461384) and MATA<->MATB switching with mating
+      was shown by Han et al. 2020 (PMID 32105315). No protein domain is established
+      for matb1/matb2 (curator ruling 2026-10-01 leaves idiomorph_class unassigned).
+      The RefSeq apn2 protein (XP_501555.1, 582 aa) is longer at its N-terminus than
+      the MATA-record apn2 (CAE84424.1, 412 aa; contained in it). The deposit AJ617307.1
+      carries strain "W29" in its source feature (so does the MATA deposit AJ617306.1). Checked 2026-10-17: three W29 assemblies (GCA_001307795.1, GCF_001761485.1, GCA_003054345.1) all carry MATA (99.7% to AJ617306.1, no hit to AJ617307.1), while the CLIB122 and 22301-5 genomes carry AJ617307.1 at 100% over its full length. The W29 label on AJ617307.1 therefore does not identify the source strain of the MATB allele (Butler et al. 2004 full text could not be read, so the actual source strain is unverified). The allele label B rests on the sequence (identical to the CLIB122 MATB locus) and on the functional papers, not on the strain name. The
+      strain 22301-5 draft (GCA_023272835.1, CP096873.1:1023801-1031608, 100% to AJ617307.1)
+      is corroboration only and is not used as evidence in this record.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: CR382129.1
+        seq_region: CR382129.1
+      start: 979054
+      end: 987371
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: apn2
+  protein_accession: ncbi_protein:XP_501555.1
+  role: flanking_conserved
+  present: true
+  locus_tag: YALI0_C07436g
+  segment_index: 0
+  start: 979054
+  end: 980802
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: matb2
+  protein_accession: ncbi_protein:XP_501556.1
+  role: core_MAT
+  present: true
+  locus_tag: YALI0_C07458g
+  segment_index: 0
+  start: 981060
+  end: 982163
+  strand: +
+  order_in_locus: 1
+- gene_index: 2
+  name: matb1
+  protein_accession: ncbi_protein:XP_501557.1
+  role: core_MAT
+  present: true
+  locus_tag: YALI0_C07480g
+  segment_index: 0
+  start: 983163
+  end: 984071
+  strand: +
+  order_in_locus: 2
+- gene_index: 3
+  name: sla2
+  protein_accession: ncbi_protein:XP_501558.1
+  role: flanking_conserved
+  present: true
+  locus_tag: YALI0_C07502g
+  segment_index: 0
+  start: 984210
+  end: 987371
+  strand: '-'
+  order_in_locus: 3
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: molecular cloning and sequencing of the MATB locus (AJ617307.1);
+      functional analysis of the MATB idiomorph by cassette replacement; MATA<->MATB
+      switching and mating
+    citations:
+    - pmid: '14745027'
+      doi: 10.1073/pnas.0304170101
+    - pmid: '18461384'
+      doi: 10.1007/s00284-008-9162-4
+    - pmid: '32105315'
+      doi: 10.1093/femsyr/foaa011
+  boundaries:
+    tier: 2
+    experimental_method: RefSeq genome annotation of the CLIB122 reference assembly
+      (GCF_000002525.2); matb2/matb1 CDS verified 100% identical to the AJ617307.1
+      deposit; apn2/sla2 extents are annotation-derived, not experimentally delimited
+    citations:
+    - pmid: '14745027'
+      doi: 10.1073/pnas.0304170101
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'functional assay: the MATB idiomorph confers the B mating
+      type when replacing MATA at the native locus'
+    citations:
+    - pmid: '18461384'
+      doi: 10.1007/s00284-008-9162-4
+    - pmid: '32105315'
+      doi: 10.1093/femsyr/foaa011
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: CR382129.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: false
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 14745027|4952|MATyl|B
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

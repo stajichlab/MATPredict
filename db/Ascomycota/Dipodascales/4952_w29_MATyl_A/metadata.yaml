@@ -2,8 +2,8 @@ record_id: 4952_w29_MATyl_A
 record_version: 1
 taxonomy:
   taxid: 4952
-  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Saccharomycetales;f__Dipodascaceae;g__Yarrowia;s__Yarrowia_lipolytica
-  lineage_resolved_date: '2026-09-16'
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Dipodascomycetes;o__Dipodascales;f__Dipodascales_incertae_sedis;g__Yarrowia;s__Yarrowia_lipolytica
+  lineage_resolved_date: '2026-10-17'
 organism:
   species: Yarrowia lipolytica
   strain:
@@ -41,13 +41,7 @@ locus:
       of mating-type gene") and mata2 (291 aa, HMG-box) were functionally dissected
       by subcloning in the original characterization paper. Given this architectural
       distinctness, a new locus_name ("MATyl") was added rather than reusing "MATsc".
-      Only the MATA idiomorph is represented here (this GenBank record, AJ617306.1,
-      strain W29); the opposite MATB idiomorph exists (shown functionally complete
-      by cassette-replacement experiments in Butler et al. 2004 and more recently
-      given a full reference sequence by a 2025 haplotype-resolved genome project
-      referenced in the source literature synthesis for this database) but was not
-      independently verified against a fetchable GenBank/DDBJ accession in this pass
-      -- a candidate MATB record is left as a follow-up. The apn2 CDS on this record
+      Only the MATA idiomorph is represented here (this GenBank record, AJ617306.1, labelled strain W29); the opposite MATB idiomorph is the separate record 4952_clib122_MATyl_B (added 2026-10-17). STRAIN LABEL CHECK 2026-10-17: AJ617306.1 is 99.74% identical over its full 8,174 bp to the W29 assemblies GCA_001307795.1 (LJBI01000003.1), GCF_001761485.1 (NC_090772.1) and GCA_003054345.1 (CP028450.1), and none of the three has a hit to the MATB deposit AJ617307.1, so the W29 label is consistent with this record. The earlier lineage in this record said o__Saccharomycetales/f__Dipodascaceae; it was updated to the current NCBI lineage (Dipodascales incertae sedis). The apn2 CDS on this record
       is annotated as extending beyond the deposited fragment (">8174"), so it is
       truncated at the sequence boundary; completeness is "partial" for this reason.
 

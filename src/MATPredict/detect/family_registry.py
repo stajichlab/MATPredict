@@ -175,6 +175,22 @@ class Family:
     any basidiomycete STE3 and name a foreign lineage's alleles. `exhaustive`
     (an explicit operator request) still searches it. Absent means True.
     """
+    fallback_subphylum: int | None = None
+    """NCBI taxid of the subphylum this family belongs to, used only by the
+    phylum-fallback subphylum guard in `route()`.
+
+    Curation data. Curator's ruling 2026-10-17: on a phylum fallback a family
+    is searched only if it belongs to the genome's own subphylum, so the
+    Pezizomycotina `MAT`/`MATtub` and Taphrinomycotina `PM` families are no
+    longer searched on Saccharomycotina genomes (34 of 113 called Dipodascales
+    genomes in the v0.6.0 campaign carried a call from such a family, far from
+    SLA2). Declared per family rather than computed from `taxonomic_scope`,
+    because scope taxids are of mixed rank (a class, a genus, four species) and
+    resolving their lineages would need a lookup per family on every run. The
+    genome's subphylum is read from the lineage routing already fetched, by
+    intersecting it with the declared values, so there is no hard-coded table.
+    Absent means the family is not restricted.
+    """
     homothallic_screen: bool = True
     """May this family's calls be labelled `homothallic_candidate`?
 
@@ -413,6 +429,7 @@ def load_all_families(db_root: Path) -> list[Family]:
                         "homothallic_screen", doc.get("homothallic_screen", True),
                     ),
                     fallback_searchable=locus.get("fallback_searchable", True),
+                    fallback_subphylum=locus.get("fallback_subphylum"),
                     idiomorph_classes=dict(locus.get("idiomorph_class") or {}),
                     idiomorph_companions={k: list(v) for k, v in
                                           (locus.get("idiomorph_companions") or {}).items()},
@@ -626,7 +643,10 @@ def route(
        existed, an audit found 50 of 61 curated records fell through to rule 5.
     4. **Phylum fallback**: nothing above matched, but the query taxon's own
        phylum is known and the database has families for it. Only that phylum's
-       families are searched. A MAT locus family curated in Basidiomycota
+       families are searched, and of those only the ones that belong to the
+       genome's own subphylum (`fallback_subphylum`, curator ruling 2026-10-17;
+       a Saccharomycotina genome is never searched against the Pezizomycotina
+       `MAT` family). A MAT locus family curated in Basidiomycota
        cannot be the answer for an Ascomycota genome, so searching it is pure
        cost: it makes the run slower AND adds cross-phylum candidates for the
        polish stage to grind through. A live case -- taxid 294748, lineage
@@ -720,6 +740,18 @@ def route(
         # outside their scope (curator ruling 2026-10-01).
         in_phylum = [f for f in families
                      if f.key.phylum == query_phylum and f.fallback_searchable]
+        # Subphylum guard (curator ruling 2026-10-17). The genome's subphylum is
+        # whichever DECLARED `fallback_subphylum` appears in its lineage. A genome
+        # in none of them (unclassified, or the lineage lookup failed) is not
+        # restricted, exactly as before. A family that declares nothing is never
+        # restricted.
+        declared = {f.fallback_subphylum for f in in_phylum
+                    if f.fallback_subphylum is not None}
+        genome_subphylum = declared & ancestors
+        if genome_subphylum:
+            in_phylum = [f for f in in_phylum
+                         if f.fallback_subphylum is None
+                         or f.fallback_subphylum in genome_subphylum]
         if in_phylum:
             return RoutingDecision(
                 families=in_phylum, routing_mode="phylum_fallback", phylum=query_phylum,

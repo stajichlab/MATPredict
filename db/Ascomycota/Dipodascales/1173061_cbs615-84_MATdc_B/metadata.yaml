@@ -1,0 +1,99 @@
+record_id: 1173061_cbs615-84_MATdc_B
+record_version: 1
+taxonomy:
+  taxid: 1173061
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Dipodascomycetes;o__Dipodascales;f__Dipodascaceae;g__Geotrichum;s__Geotrichum_candidum
+  lineage_resolved_date: '2026-10-17'
+organism:
+  species: Geotrichum candidum
+  strain:
+    name: CBS 615.84
+    known: true
+    culture_collection_ids:
+    - CBS 615.84
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATdc
+  idiomorphs:
+  - B
+  system: heterothallic
+locus:
+  assembly_accession: null
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: MATB
+    definition_note: 'EVIDENCE TIER 3 (curator-approved 2026-10-17) and DEPOSIT-ONLY:
+      the only evidence is the unpublished GenBank deposit HF558449.1 (Galactomyces
+      candidum MATB gene for mating type protein MatB, strain CBS 615.84, 1,020 bp,
+      CCO73813.1; INRA/MICALIS submission 07-NOV-2012, journal Unpublished), annotated
+      only as "mating type protein". No paper was found, and no genome assembly of
+      strain CBS 615.84 was found in the local library (so no flank and no assembly
+      anchor in this record; excluded from the coordinate benchmark). Corroboration,
+      not evidence: G. candidum LMA-244 (GCA_013365045.1) carries a protein 96.8%
+      identical beside its SLA2 (QQZM01000017.1:285536-286546 by tblastn, 97% identity),
+      left deliberately uncurated so it stays a held-out test genome. The alpha1-like
+      character is by position and weak homology (35-40% to Ogataea matalpha1); no
+      Pfam run. The system "heterothallic" is NOT verified (see the MATdc A record).
+      OPEN CURATOR QUESTION: whether A/B here are homologous to Yarrowia MATA/MATB
+      is not established.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: HF558449.1
+        seq_region: HF558449.1
+      start: 1
+      end: 1020
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MATB
+  protein_accession: ncbi_protein:CCO73813.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 1020
+  strand: +
+  order_in_locus: 0
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: unpublished GenBank deposit HF558449.1 (annotated mating
+      type protein MatB, no paper)
+    citations: []
+  boundaries:
+    tier: 3
+    experimental_method: CDS span of the unpublished deposit; no flanking sequence
+    citations: []
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: depositor's gene name MATB only; no functional or phylogenetic
+      evidence for the A/B labels
+    citations: []
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: HF558449.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: HF558449.1|1173061|MATdc|B
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -1,0 +1,291 @@
+family: Ascomycota:MAT
+kind: gene-identity profiles (alpha box vs HMG box); not referenced by order.yml
+builder: scripts/build_asco_core_hmms.py
+deterministic: true
+pyhmmer_version: 0.12.3
+tool_versions:
+  pyhmmer: 0.12.3
+  hmmer: HMMER3/f [3.4 | Aug 2023]
+  mafft: v7.526 (2024/Apr/26)
+mafft_options:
+- --localpair
+- --maxiterate
+- '1000'
+- --quiet
+- --thread
+- '1'
+hmm_builder_seed: 42
+training_sha256: 831485c10b913dcc37eb97555d1c75e320cd64a9153eb54852f7b03ec078c050
+notes: curated records only, 2026-10-16
+warnings: []
+genes:
+  MAT1-1-1:
+    idiomorph: MAT1-1
+    n_sequences: 22
+    n_unique: 22
+    pairwise_identity_min_median_max:
+    - 8.1
+    - 21.6
+    - 99.7
+    genera:
+    - Aspergillus
+    - Bipolaris
+    - Botrytis
+    - Coccidioides
+    - Fusarium
+    - Neurospora
+    - Ophiostoma
+    - Parastagonospora
+    - Plenodomus
+    - Polycauliona
+    - Pseudocercospora
+    - Sclerotinia
+    - Verticillium
+    - Xanthoria
+    - Zymoseptoria
+    sha256: 7ab888f7df6fb261c119c897451f8480b4c9b067c97d315b804acc1a05630f08
+  MAT1-2-1:
+    idiomorph: MAT1-2
+    n_sequences: 26
+    n_unique: 26
+    pairwise_identity_min_median_max:
+    - 12.7
+    - 25.8
+    - 100.0
+    genera:
+    - Aspergillus
+    - Bipolaris
+    - Cladonia
+    - Coccidioides
+    - Cytospora
+    - Dufourea
+    - Fusarium
+    - Neurospora
+    - Ophiostoma
+    - Parastagonospora
+    - Plenodomus
+    - Polycauliona
+    - Pseudocercospora
+    - Sclerotinia
+    - Verticillium
+    - Xanthoria
+    - Zymoseptoria
+    sha256: e6a673b62f268d74215611705a5f69e88daa4b30c0226e8cfa0ce0a876428d90
+leave_one_genus_out:
+  n_testable: 48
+  n_correct: 47
+  worst_correct_margin: 1.4
+  failures:
+  - id: REF|230073_uamh-11059_MAT_MAT1-2|gene1|MAT1-1-1
+    genus: Ophiostoma
+    gene: MAT1-1-1
+    truth: MAT1-1
+    own_score: 0.0
+    other_score: 0.0
+    margin: 0.0
+    correct: false
+    untestable_gene: false
+  all_margins_sorted:
+  - 0.0
+  - 1.4
+  - 49.0
+  - 112.6
+  - 117.0
+  - 132.3
+  - 137.2
+  - 139.0
+  - 139.5
+  - 139.7
+training:
+- id: REF|1047171_ipo323_MAT_MAT1-1|gene0|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Zymoseptoria
+  source: curated_record
+- id: REF|1301501_voucher-215_MAT_MAT1-1|gene1|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Polycauliona
+  source: curated_record
+- id: REF|13684_sn435pl98_MAT_MAT1-1|gene0|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Parastagonospora
+  source: curated_record
+- id: REF|162425_fgsc-a4_MAT_combined|gene1|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Aspergillus
+  source: curated_record
+- id: REF|1873960_unknown-1_MAT_MAT1-1|gene0|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Pseudocercospora
+  source: curated_record
+- id: REF|199306_rmscc1040_MAT_MAT1-1|gene3|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Coccidioides
+  source: curated_record
+- id: REF|230073_uamh-11059_MAT_MAT1-2|gene1|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Ophiostoma
+  source: curated_record
+- id: REF|230073_uamh-1363_MAT_MAT1-1|gene1|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Ophiostoma
+  source: curated_record
+- id: REF|27337_nbrc6119_MAT_MAT1-1|gene0|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Verticillium
+  source: curated_record
+- id: REF|28548_6cwm-g27_MAT_MAT1-1|gene2|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Sclerotinia
+  source: curated_record
+- id: REF|2903220_liq80xsp_MAT_combined|gene2|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Xanthoria
+  source: curated_record
+- id: REF|2903222_liq146xsp_MAT_combined|gene2|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Xanthoria
+  source: curated_record
+- id: REF|40559_sas56_MAT_MAT1-1|gene1|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Botrytis
+  source: curated_record
+- id: REF|5016_c5_MAT_MAT1-1|gene0|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Bipolaris
+  source: curated_record
+- id: REF|5022_unknown-1_MAT_MAT1-1|gene0|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Plenodomus
+  source: curated_record
+- id: REF|5127_mo44_MAT_MAT1-1|gene2|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Fusarium
+  source: curated_record
+- id: REF|5141_74-ors-a_MAT_MAT1-1|gene2|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Neurospora
+  source: curated_record
+- id: REF|5180_44ba1_MAT_combined|gene1|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Sclerotinia
+  source: curated_record
+- id: REF|5501_h538-4_MAT_MAT1-1|gene2|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Coccidioides
+  source: curated_record
+- id: REF|5518_3639_MAT_combined|gene2|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Fusarium
+  source: curated_record
+- id: REF|59765_880621a-1_MAT_MAT1-1|gene0|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Fusarium
+  source: curated_record
+- id: REF|746128_a1163_MAT_MAT1-1|gene3|MAT1-1-1
+  gene: MAT1-1-1
+  genus: Aspergillus
+  source: curated_record
+- id: REF|1047171_ipo94269_MAT_MAT1-2|gene1|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Zymoseptoria
+  source: curated_record
+- id: REF|107463_unknown-1_MAT_MAT1-2|gene1|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Xanthoria
+  source: curated_record
+- id: REF|115814_voucher-101_MAT_MAT1-2|gene0|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Dufourea
+  source: curated_record
+- id: REF|1301501_voucher-267_MAT_MAT1-2|gene1|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Polycauliona
+  source: curated_record
+- id: REF|13684_sn436ga98_MAT_MAT1-2|gene0|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Parastagonospora
+  source: curated_record
+- id: REF|162425_fgsc-a4_MAT_combined|gene4|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Aspergillus
+  source: curated_record
+- id: REF|1873960_unknown-2_MAT_MAT1-2|gene1|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Pseudocercospora
+  source: curated_record
+- id: REF|199306_silveira_MAT_MAT1-2|gene0|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Coccidioides
+  source: curated_record
+- id: REF|230073_uamh-11059_MAT_MAT1-2|gene2|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Ophiostoma
+  source: curated_record
+- id: REF|27337_tv103_MAT_MAT1-2|gene0|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Verticillium
+  source: curated_record
+- id: REF|27337_vdls-17_MAT_MAT1-2|gene1|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Verticillium
+  source: curated_record
+- id: REF|27339_unknown-1_MAT_MAT1-2|gene1|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Cladonia
+  source: curated_record
+- id: REF|28548_06cwm-g22_MAT_combined|gene2|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Sclerotinia
+  source: curated_record
+- id: REF|2903220_liq80xsp_MAT_combined|gene1|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Xanthoria
+  source: curated_record
+- id: REF|2903222_liq146xsp_MAT_combined|gene1|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Xanthoria
+  source: curated_record
+- id: REF|5016_c4_MAT_MAT1-2|gene0|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Bipolaris
+  source: curated_record
+- id: REF|5022_unknown-2_MAT_MAT1-2|gene0|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Plenodomus
+  source: curated_record
+- id: REF|5127_mo45_MAT_MAT1-2|gene0|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Fusarium
+  source: curated_record
+- id: REF|5141_unknown-1_MAT_MAT1-2|gene0|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Neurospora
+  source: curated_record
+- id: REF|5180_44ba1_MAT_combined|gene3|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Sclerotinia
+  source: curated_record
+- id: REF|5501_rs_MAT_MAT1-2|gene2|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Coccidioides
+  source: curated_record
+- id: REF|5518_3639_MAT_combined|gene3|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Fusarium
+  source: curated_record
+- id: REF|578113_sxlc146_MAT_MAT1-2|gene1|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Cytospora
+  source: curated_record
+- id: REF|61372_suf959_MAT_MAT1-2|gene0|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Fusarium
+  source: curated_record
+- id: REF|746128_a1163_MAT_MAT1-1|gene2|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Aspergillus
+  source: curated_record
+- id: REF|746128_af293_MAT_MAT1-2|gene2|MAT1-2-1
+  gene: MAT1-2-1
+  genus: Aspergillus
+  source: curated_record

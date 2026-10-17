@@ -100,8 +100,8 @@ Re-run flag off vs on on those 54 genomes with the current code and db (the curr
 
 By genus (49 notes over the `on` runs of all 243 genomes): Botrytis 31 flipped to MAT1-2 (the 17 above plus 14 other Botrytis assemblies),
 Ophiostoma 5, Sclerotinia 4, and one each of Botryotinia, Leptographium, Sporothrix, Intubia, Stromatinia -> MAT1-2; Monilinia -> MAT1-1; Polytolypa and
-Calogaya `undetermined`; Aspergillus fumigatus edge-guarded. Profile margin of the 46 flips: 25-50 bits 1 (Monilinia, 40.5), 50-90 bits 6,
->= 90 bits 39; both `undetermined` have |margin| < 15. A 50-bit margin would turn Monilinia into `undetermined`; 70 bits would also do so for
+Calogaya `undetermined`; Aspergillus fumigatus edge-guarded. Profile margin of the 46 flips: 25-50 bits 1 (Monilinia, 40.5), 50-90 bits 5,
+>= 90 bits 40; both `undetermined` have |margin| < 15. A 50-bit margin would turn Monilinia into `undetermined`; 70 bits would also do so for
 Stromatinia (66).
 
 **These campaign flips have no truth.** They are not in the BioSample truth set, so 44 of the 45 flips are unverified as correct or wrong; the

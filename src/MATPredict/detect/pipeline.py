@@ -2035,7 +2035,7 @@ def _segments_for(
 
 
 def _split_locus_calls(results, clusters, families, build, *, searchable_genes,
-                       contig_lengths) -> list[DetectionResult]:
+                       contig_lengths, skip=frozenset()) -> list[DetectionResult]:
     """The split-locus calls for families with no reported call (`split_locus`).
 
     For each such family, every cluster holding one of its core hits is built
@@ -2058,6 +2058,8 @@ def _split_locus_calls(results, clusters, families, build, *, searchable_genes,
         roles = {g["name"]: g["role"] for g in family.genes}
         best = None
         for cluster in clusters:
+            if (id(cluster), family.key) in skip:
+                continue
             if not any(h.role == "core_MAT" for h in _own_live_hits(cluster, family.key)):
                 continue
             scores = score_cluster(cluster, families, searchable_genes=searchable_genes)
@@ -2095,7 +2097,7 @@ def _strong_single_admits(cluster, families, params) -> list[Family]:
 
 
 def _strong_single_gene_calls(results, clusters, families, build, *, searchable_genes,
-                              params) -> list[DetectionResult]:
+                              params, only) -> list[DetectionResult]:
     """The strong-single-gene calls for families with no reported call.
 
     Every cluster with a live core hit of an unreported family is built exactly as a
@@ -2114,6 +2116,8 @@ def _strong_single_gene_calls(results, clusters, families, build, *, searchable_
             continue
         best: dict[str, tuple[DetectionResult, dict]] = {}
         for cluster in clusters:
+            if (id(cluster), family.key) not in only:
+                continue
             live = _own_live_hits(cluster, family.key)
             if not any(h.role == "core_MAT" for h in live):
                 continue
@@ -2444,15 +2448,32 @@ def run_pipeline(
     # per-gene outcome instead of a per-family boolean.
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome] = {}
 
+    # Strong-single-gene admissions (policy `on`): (cluster, family) pairs the evidence
+    # floor does not admit, that the strict loop would drop without building (fraction
+    # found below the floor and not ambiguous), and whose core hit reaches the identity
+    # gate. They are polished on their localized genes only (no rescue, so the cluster's
+    # hits do not change) and then kept out of every other pass, so a genome's other
+    # results are exactly those of `off`; only `_strong_single_gene_calls` reads them.
+    ssg_only: set[tuple[int, FamilyKey]] = set()
+    if strong_single_gene_policy == ssg.POLICY_ON:
+        for cluster in clusters:
+            floor_keys = {f.key for f in _families_meeting_evidence_floor(cluster, families, evidence_floor)}
+            extra = [f for f in _strong_single_admits(cluster, families, strong_single_gene_params)
+                     if f.key not in floor_keys]
+            if not extra:
+                continue
+            scores = score_cluster(cluster, families, searchable_genes=searchable_genes)
+            if is_ambiguous(scores, floor=ambiguity_floor):
+                continue
+            for f in extra:
+                sc = next((x for x in scores if x.family_key == f.key), None)
+                if sc is not None and sc.fraction_found < ambiguity_floor:
+                    ssg_only.add((id(cluster), f.key))
+
     def _admitted_for_polish(cluster):
-        """The evidence floor's families, plus (policy on) the families with a lone
-        strong core hit here, which the floor alone would not polish."""
+        """The evidence floor's families, plus the strong-single-gene pairs."""
         admitted = _families_meeting_evidence_floor(cluster, families, evidence_floor)
-        if strong_single_gene_policy == ssg.POLICY_ON:
-            have = {f.key for f in admitted}
-            admitted = admitted + [f for f in _strong_single_admits(
-                cluster, families, strong_single_gene_params) if f.key not in have]
-        return admitted
+        return admitted + [f for f in families if (id(cluster), f.key) in ssg_only]
 
     # Per-family polish cap: decide up front which (cluster, family) pairs
     # may be polished, ranking each family's admitted clusters before any
@@ -2462,7 +2483,7 @@ def run_pipeline(
     if max_polished_clusters_per_family is not None:
         by_family: dict[FamilyKey, list[GeneCluster]] = {}
         for cluster in clusters:
-            for family in _admitted_for_polish(cluster):
+            for family in _families_meeting_evidence_floor(cluster, families, evidence_floor):
                 by_family.setdefault(family.key, []).append(cluster)
         # V3 (curator's ruling 2026-09-30): clusters whose unmodelled fragment
         # already scores at or above the classifier gate rank first, inside
@@ -2471,6 +2492,7 @@ def run_pipeline(
                                         genetic_code=genetic_code)
         polish_allowed = select_polish_clusters(by_family, max_polished_clusters_per_family, strong,
                                                 polish_strong_identity)
+        polish_allowed |= ssg_only  # never competes for, nor consumes, the cap
     for cluster in clusters:
         admitted_families = _admitted_for_polish(cluster)
         capped_keys = set()
@@ -2556,6 +2578,8 @@ def run_pipeline(
             # a failed rescue leaves the gene genuinely missing rather than
             # "unpolished" (see below).
             rescue_genes = _missing_core_genes(cluster, family) - localized_genes
+            if (id(cluster), family.key) in ssg_only:
+                rescue_genes = set()
             # Cut 1 of the polish-cost work: a rescue for a gene belonging to
             # the idiomorph this cluster is NOT cannot succeed, so do not pay
             # 0.9 s to find that out. Narrows only on unambiguous evidence;
@@ -3226,6 +3250,8 @@ def run_pipeline(
             previous = best_attempt.get(score.family_key)
             if previous is None or score.fraction_found > previous.fraction_found:
                 best_attempt[score.family_key] = score
+            if (id(cluster), score.family_key) in ssg_only:
+                continue  # what `off` does with it (unpolished, below the floor); see ssg_only
             if score.fraction_found < ambiguity_floor and not ambiguous:
                 if _modelled_gene_names([cluster], score.family_key, polish_by, model_losers):
                     below_floor.append((score, cluster, scores))
@@ -3343,7 +3369,7 @@ def run_pipeline(
     # `partial_locus` at `low` instead of being withheld. See `split_locus`.
     split_calls = _split_locus_calls(
         results, clusters, families, _build,
-        searchable_genes=searchable_genes, contig_lengths=contig_lengths,
+        searchable_genes=searchable_genes, contig_lengths=contig_lengths, skip=ssg_only,
     )
     # A split-locus call is never judged by the MAT-gene gate (it requires
     # roster flanks by construction), but a known paralog is never a MAT gene:
@@ -3370,7 +3396,7 @@ def run_pipeline(
     if strong_single_gene_policy == ssg.POLICY_ON:
         strong_calls = _strong_single_gene_calls(
             results, clusters, families, _build,
-            searchable_genes=searchable_genes, params=strong_single_gene_params,
+            searchable_genes=searchable_genes, params=strong_single_gene_params, only=ssg_only,
         )
         # The MAT-gene gate applies in full: the call has no roster flank to fall
         # back on, so the classifier must have scored the modelled protein.

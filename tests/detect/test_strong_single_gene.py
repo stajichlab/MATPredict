@@ -247,3 +247,16 @@ def test_evaluate_unit():
     assert evaluate_strong_single_gene(_candidate(extra=[lost])) is not None
     assert evaluate_strong_single_gene(
         _candidate(identity=80.0), params=StrongSingleGeneParams(min_core_identity=80.0)) is not None
+
+
+def test_on_never_changes_a_result_the_rule_did_not_make(tmp_path):
+    # core + one flank: admitted by the ordinary floor; the rule must leave it as `off` has it
+    hits = [_hit("MAT1-2-1", "c1", 10000, 99.0), _hit("APN2", "c1", 12000, 90.0, "flanking_conserved", aa=100),
+            _hit("MAT1-1-1", "c2", 12000, 99.0)]
+    models = {"MAT1-2-1": (99.0, REF_AA), "MAT1-1-1": (99.0, REF_AA), "APN2": (90.0, 100)}
+    off = _run(tmp_path, hits, models=models, policy="off")
+    on = _run(tmp_path, hits, models=models, policy="on")
+    sig = lambda o: sorted((r.contig, r.start, r.end, r.idiomorph, r.confidence, r.locus_class) for r in o.results)
+    extra = [r for r in on.results if r.strong_single_gene is None]
+    assert sorted((r.contig, r.start, r.end, r.idiomorph, r.confidence, r.locus_class) for r in extra) == sig(off)
+    assert [(n.family_key, n.reason) for n in on.not_detected] == [(n.family_key, n.reason) for n in off.not_detected]

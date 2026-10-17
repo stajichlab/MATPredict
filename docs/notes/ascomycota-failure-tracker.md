@@ -51,3 +51,23 @@ Cluster jobs keep running without the session; agents may not. Work in flight an
 | flip review | done | branch `flip-review` (no PR) |
 
 Every branch pushed so far holds its work up to its last commit. Uncommitted work in a worktree is not on the remote.
+
+## Revisit list (decisions deferred on purpose, 2026-10-18)
+
+Each item says what was decided now, what triggers the revisit, and what data to bring.
+
+| item | decided now | revisit when | bring |
+|---|---|---|---|
+| partial-core rule profile margin | stays 25 bits (borrowed from Mucoromycota, never calibrated) | the companion-gene veto's results are in (branch `companion-gene-veto`) | the flip-review margins: only two loci fall at 25-70 bits (Monilinia 40.5 wrong, Stromatinia 66 right); S. nivalis is wrong at 83 while Stromatinia (66) and Sporothrix (89) are right; the reviewer proposed 50 with about 40% confidence from four wrong calls in one clade; check what the veto leaves at 25-70 bits and test more clades (docs/notes/2026-10-17_flip-review.md on `flip-review`) |
+| partial-core rule default | OFF | the veto is in and the unverified flips are re-checked | the flip review: 41 of 46 flips right; safe now only as a clade allow-list (Botrytis, Botryotinia); Ophiostomatales and Stromatinia probably right once the veto exists; not for Sclerotinia or Monilinia |
+| both-strong veto (set-aside >= 200 bits and winner >= 150) | not implemented (thresholds fitted on 49 loci) | more loci with both idiomorphs are available | whether the companion veto already covers them |
+| fused or homothallic loci (Sclerotinia, Monilinia, Polytolypa, Calogaya) | stay `undetermined` | the veto is in | whether `full_length_models` should stop excluding MAT1-1-3/MAT1-2-1 cross-matches so `homothallic_candidate` can fire (47 of 49 loci blocked by that exclusion) |
+| general confidence cap (`high` to `medium` when the winner is partial) plus weak identity | separate follow-up | `confidence-cap` evaluation is back | how many `high` calls drop and whether the dropped ones are wrong more often than right |
+| remnant status | step 1 (metadata) now; step 2 (remnant proteins leave the references) only after a measured rerun | `remnant-status-step2` measurement is back | the Afum `homothallic_candidate` label (does it clear), clades that lose their only reference |
+| single strong core gene rule | `idiomorph_gene_only`, low confidence, gate 85, off by default | the control run on called genomes is back | whether any called genome gains a locus; the 85 vs 90 trade-off |
+| Dipodascales: `idiomorph_class` for MATdc | left unset | a Dipodascales-specific profile is built from the recovered Geotrichum genomes | HMG-box and alpha-box scores of MATA and MATB against that profile |
+| Dipodascales guard | kept; merges after the single-gene rule is evaluated | the single-gene rule is evaluated | 52 Lipomycetales and 20 Dipodascales genomes that lose calls; each clade needs its own family |
+| uncalled Pleosporales trace (49 flank-carried, 32 zero-modelled) | deferred | the single-gene rule is evaluated | the genomes the rule does not recover |
+| optional-gene policy default | off (legacy) | the paired campaign (array 30031368) finishes | label changes by genus, agreement with truth, the Sl8 interaction with `core_first` |
+| Orbiliomycetes MATsc fragments (2 genomes) | guard's removal accepted without inspection | Orbiliomycetes get their own references | GCA_047671915.1 and GCA_047716685.1 |
+| B. rouxiae GCF_048999995.1 MAT1-1-1 | explained: a 33.9-bit fragment now named MAT1-2-7 (PR #98) | a second genome shows the same pattern | the locus alignment |

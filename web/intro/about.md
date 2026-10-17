@@ -9,7 +9,7 @@
 
 MATPredict finds and types the mating-type (MAT) locus in fungal genome assemblies and, where a good reference panel
 exists, in raw reads. This site summarises how it works, how it performs, and which MAT alleles it finds across the
-public BFD fungal genomes and the ZyGoLife Mucoromycotina genomes.
+public [BFD](https://github.com/stajichlab/Fungi_BFD/) fungal genomes and the ZyGoLife Mucoromycotina genomes.
 
 ## How to cite
 
@@ -48,12 +48,12 @@ behind the records you rely on; each record's `metadata.yaml` in the
 
 ## Data used on this site
 
-- **BFD**: the Ascomycota, Basidiomycota and Mucoromycotina genomes of the BFD fungal genome collection, run with code v0.6.0 in October 2026.
+- **[BFD](https://github.com/stajichlab/Fungi_BFD/)**: the Ascomycota, Basidiomycota and Mucoromycotina genomes of this fungal genome collection (see also the [2026 run documentation](https://github.com/1KFG/Fungi_BFD_run2026/)), run with MATPredict v0.6.0 in October 2026.
 - **ZyGoLife**: the LCG and Jena Mucoromycotina genome sets, held out from training and curation.
 - Numbers on the landing page and the explorer come from committed result tables in the
   [results folder](https://github.com/stajichlab/MATPredict/tree/main/results); they are detection counts, not ground truth.
 
-<!-- [UPDATE] Add the BFD and ZyGoLife data citations or URLs you want shown, one bullet each. -->
+<!-- [UPDATE] Add the ZyGoLife data citation or URL, and any BFD citation you want shown, one bullet each. -->
 
 ## Source, issues and licence
 

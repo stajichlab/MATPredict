@@ -1,0 +1,114 @@
+===== MATa2 HMG-like set
+ ALL-lineage profile (7 seqs): top hits
+    Q6BNT3          262.0 2e-77     tr|Q6BNT3|Q6BNT3_DEBHA DEHA2E19140p
+    ext|Dh_MTLA2    262.0 2e-77 POS 
+    Q71U11          234.6 5e-69 POS sp|Q71U11|MATA2_CANAL Mating-type-like protein A2
+    ext|Yl_mata2    216.6 2e-63 POS 
+    ext|Geo_MATA    204.3 1e-59 POS 
+    Q9HG13          185.8 4e-54 POS sp|Q9HG13|MATA2_KLULA Mating-type protein A2
+    A0A1G4KQN4      182.5 5e-53 POS tr|A0A1G4KQN4|A0A1G4KQN4_KOMPC Mating-type protein a2
+    ext|Cl_MTLA2    138.9 1e-39 POS 
+    C5DUN6           71.0 6e-19     tr|C5DUN6|C5DUN6_ZYGRC ZYRO0C18326p
+    C5DJY3           61.8 4e-16     tr|C5DJY3|C5DJY3_LACTC KLTH0F00264p
+    A0A1Z8JKM8       47.5 9e-12     tr|A0A1Z8JKM8|A0A1Z8JKM8_PICKU Uncharacterized protein
+    A7TKB3           32.9 3e-07     tr|A7TKB3|A7TKB3_VANPO HMG box domain-containing protein
+    C5DJ67           32.2 4e-07     tr|C5DJ67|C5DJ67_LACTC KLTH0F13926p
+    A7TRA3           31.5 7e-07     tr|A7TRA3|A7TRA3_VANPO HMG box domain-containing protein
+    best non-positive: 262.0 (tr|Q6BNT3|Q6BNT3_DEBHA DEHA2E19140p)
+ LEAVE OUT Komagataella trained on 6 seqs
+     held-out Kp_MATa2   score   46.9 E 1e-11  rank 11 (non-positives above: 4)
+       best non-positive above/at E<=1000: 252.3 (tr|Q6BNT3|Q6BNT3_DEBHA DEHA2E19140p); 5th: 39.9
+ LEAVE OUT Saccharomycetaceae trained on 6 seqs
+     held-out Kl_MATA2   score   27.6 E 1e-05  rank 11 (non-positives above: 4)
+       best non-positive above/at E<=1000: 267.8 (tr|Q6BNT3|Q6BNT3_DEBHA DEHA2E19140p); 5th: 25.4
+ LEAVE OUT Serinales    trained on 4 seqs
+     held-out Ca_MTLA2   score   49.8 E 1e-12  rank 8 (non-positives above: 2)
+     held-out Dh_MTLA2   score   52.3 E 3e-13  rank 7 (non-positives above: 2)
+     held-out Cl_MTLA2   score   38.8 E 3e-09  rank 12 (non-positives above: 5)
+       best non-positive above/at E<=1000: 74.7 (tr|C5DUN6|C5DUN6_ZYGRC ZYRO0C18326p); 5th: 40.2
+ LEAVE OUT Dipodascales trained on 5 seqs
+     held-out Geo_MATA   score   43.6 E 1e-10  rank 10 (non-positives above: 4)
+     held-out Yl_mata2   score   22.4 E 3e-04  rank 11 (non-positives above: 4)
+       best non-positive above/at E<=1000: 301.8 (tr|Q6BNT3|Q6BNT3_DEBHA DEHA2E19140p); 5th: 21.3
+===== MATa1 homeodomain set
+ ALL-lineage profile (10 seqs): top hits
+    Q9HG12          185.6 4e-54 POS sp|Q9HG12|MATA1_KLULA Mating-type protein A1
+    W1QBK4          176.1 3e-51 POS tr|W1QBK4|W1QBK4_OGAPD Mating-type protein A1
+    W1QBL1          170.9 1e-49     tr|W1QBL1|W1QBL1_OGAPD Mating-type protein A1
+    F2QXQ4          167.2 2e-48 POS tr|F2QXQ4|F2QXQ4_KOMPC Mating-type protein a1
+    ext|Cl_MTLA1    155.6 6e-45 POS 
+    Q6BNT5          153.9 2e-44     tr|Q6BNT5|Q6BNT5_DEBHA DEHA2E19118p
+    ext|Dh_MTLA1    153.9 2e-44 POS 
+    Q9UW23          148.3 1e-42 POS sp|Q9UW23|MATA1_CANAL Mating-type-like protein A1
+    P0CY11          142.9 5e-41 POS sp|P0CY11|HMRA1_YEAST Silenced mating-type protein A1
+    Q708A7          130.9 2e-37 POS sp|Q708A7|MATA1_CANGA Mating-type-like protein A1
+    ext|Yl_mata1    130.0 4e-37 POS 
+    A7TFG3          106.7 6e-30 POS tr|A7TFG3|A7TFG3_VANPO HMR mating-type cassette a1 protein
+    A0A2U9R0R5       81.9 3e-22     tr|A0A2U9R0R5|A0A2U9R0R5_PICKU Homeobox domain-containing protein
+    C5DUN7           67.0 1e-17     tr|C5DUN7|C5DUN7_ZYGRC ZYRO0C18348p
+    best non-positive: 170.9 (tr|W1QBL1|W1QBL1_OGAPD Mating-type protein A1)
+ LEAVE OUT Komagataella trained on 9 seqs
+     held-out Kp_MATa1   score   86.0 E 2e-23  rank 12 (non-positives above: 2)
+       best non-positive above/at E<=1000: 192.8 (tr|W1QBL1|W1QBL1_OGAPD Mating-type protein A1); 5th: 50.7
+ LEAVE OUT Saccharomycetaceae trained on 6 seqs
+     held-out Kl_MATA1   score   75.4 E 2e-20  rank 10 (non-positives above: 3)
+     held-out Sc_HMRA1   score   72.7 E 2e-19  rank 12 (non-positives above: 3)
+     held-out Cg_MATA1   score   50.4 E 1e-12  rank 14 (non-positives above: 4)
+     held-out Vp_HMRa1   score   73.7 E 8e-20  rank 11 (non-positives above: 3)
+       best non-positive above/at E<=1000: 206.7 (tr|W1QBL1|W1QBL1_OGAPD Mating-type protein A1); 5th: 45.8
+ LEAVE OUT Serinales    trained on 7 seqs
+     held-out Ca_MTLA1   score   79.5 E 1e-21  rank 9 (non-positives above: 1)
+     held-out Dh_MTLA1   score   70.2 E 9e-19  rank 12 (non-positives above: 3)
+     held-out Cl_MTLA1   score   39.4 E 3e-09  rank 19 (non-positives above: 9)
+       best non-positive above/at E<=1000: 164.0 (tr|W1QBL1|W1QBL1_OGAPD Mating-type protein A1); 5th: 48.3
+ LEAVE OUT Ogataea      trained on 9 seqs
+     held-out Op_A1_a    score   88.0 E 3e-24  rank 11 (non-positives above: 1)
+       best non-positive above/at E<=1000: 150.3 (tr|Q6BNT5|Q6BNT5_DEBHA DEHA2E19118p); 5th: 54.7
+ LEAVE OUT Dipodascales trained on 9 seqs
+     held-out Yl_mata1   score   42.9 E 3e-10  rank 19 (non-positives above: 9)
+       best non-positive above/at E<=1000: 196.1 (tr|W1QBL1|W1QBL1_OGAPD Mating-type protein A1); 5th: 51.9
+===== comparison profiles over the same proteins (rank in pool of 72k)
+ profile HMG_box n hits E<=1000: 89
+     Kp_MATa2   rank 86 score 13.6 E 3e-01
+     Kl_MATA2   no hit E<=1000
+     Ca_MTLA2   no hit E<=1000
+     Dh_MTLA2   no hit E<=1000
+     Cl_MTLA2   no hit E<=1000
+     Geo_MATA   no hit E<=1000
+     Yl_mata2   no hit E<=1000
+     Kp_MATa1   no hit E<=1000
+     Kl_MATA1   no hit E<=1000
+     Yl_mata1   no hit E<=1000
+ profile HMG_box_2 n hits E<=1000: 78
+     Kp_MATa2   no hit E<=1000
+     Kl_MATA2   no hit E<=1000
+     Ca_MTLA2   no hit E<=1000
+     Dh_MTLA2   no hit E<=1000
+     Cl_MTLA2   no hit E<=1000
+     Geo_MATA   no hit E<=1000
+     Yl_mata2   no hit E<=1000
+     Kp_MATa1   no hit E<=1000
+     Kl_MATA1   no hit E<=1000
+     Yl_mata1   no hit E<=1000
+ profile Homeodomain n hits E<=1000: 79
+     Kp_MATa2   no hit E<=1000
+     Kl_MATA2   no hit E<=1000
+     Ca_MTLA2   no hit E<=1000
+     Dh_MTLA2   no hit E<=1000
+     Cl_MTLA2   no hit E<=1000
+     Geo_MATA   no hit E<=1000
+     Yl_mata2   no hit E<=1000
+     Kp_MATa1   rank 36 score 51.7 E 2e-13
+     Kl_MATA1   rank 30 score 56.3 E 8e-15
+     Yl_mata1   rank 50 score 34.0 E 8e-08
+ profile MAT1-2-1 n hits E<=1000: 53
+     Kp_MATa2   no hit E<=1000
+     Kl_MATA2   no hit E<=1000
+     Ca_MTLA2   no hit E<=1000
+     Dh_MTLA2   no hit E<=1000
+     Cl_MTLA2   no hit E<=1000
+     Geo_MATA   rank 21 score 39.9 E 2e-09
+     Yl_mata2   no hit E<=1000
+     Kp_MATa1   no hit E<=1000
+     Kl_MATA1   no hit E<=1000
+     Yl_mata1   no hit E<=1000

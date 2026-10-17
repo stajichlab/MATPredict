@@ -2862,7 +2862,14 @@ def run_pipeline(
                                type(exc).__name__, exc)
                 return None
 
-        return partial_core.evaluate(vote, stats, profile_scores)
+        companions = family.idiomorph_companions
+        wanted = {g for genes in companions.values() for g in genes}
+        companion_stats = [
+            partial_core.CoreStat(e.gene_name, "", e.coverage, e.bitscore, None)
+            for e in evidence if e.gene_name in wanted and not e.lost_to and e.status in modelled
+        ]
+        return partial_core.evaluate(vote, stats, profile_scores, companions=companions,
+                                     companion_stats=companion_stats)
 
     def _build(
         score: FamilyScore,

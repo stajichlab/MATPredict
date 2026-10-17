@@ -6,6 +6,11 @@ loci:
     # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
     # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
     idiomorph_class: {MAT1-1: MAT1-1, MAT1-2: MAT1-2}
+    # Companion-gene veto for --partial-core-policy (curator 2026-10-18). MAT1-1-5 is a
+    # Leotiomycete MAT1-1 gene (flip review 2026-10-17: Monilinia, Sclerotinia nivalis/sativa
+    # carry it intact beside a full MAT1-2-1). Only MAT1-1 is declared; no companion is
+    # guessed for other clades or for MAT1-2 (MAT1-2-10 was not part of the review).
+    idiomorph_companions: {MAT1-1: [MAT1-1-5]}
     taxonomic_scope: [716546]  # leotiomyceta -- live-confirmed via NCBI esummary
     # Flank-carried window (curator's ruling 2026-09-26; results/
     # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the

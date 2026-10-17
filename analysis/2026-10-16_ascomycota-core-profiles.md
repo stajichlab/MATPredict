@@ -37,14 +37,24 @@ gene: MAT1-1-3 in the 87 Pleosporales (the HMG gene named MAT1-1-3), and MAT1-1-
 example 142 bits at 37.5% identity against a real MAT1-2-1 at 55.8 bits and 44%). MAT1-1-2 carries an HMG-like
 domain, so an HMG-box protein hits it.
 
-`replay_vote.py` replays the vote from the reports (it reproduces the campaign label in 12,534 of 12,628 loci) with
-accessory genes removed from the vote:
-| vote over | loci whose label changes | profile-scored loci agreeing with the profile |
+**Correction (2026-10-17).** `replay_vote.py` let every gene vote. The pipeline first resolves overlapping mutually
+exclusive pairs (`idiomorph_resolutions`): the loser is superseded and does not vote. In the 87 Pleosporales loci
+MAT1-1-3 won `first_pass_identity` against the real HMG gene MAT1-2-1 (41.07% against 40.0%), so the report's candidate
+list holds only MAT1-1 (45.4 bits) even though MAT1-2-1 (55.1 bits) is in the gene evidence. The same is true of 30 of
+the 59 small-gap loci (117 of the 204 in all). A vote that ignores accessory genes does nothing for these unless the
+resolution step changes too. The earlier table (288 labels changed, agreement with the profile 685 to 871) is
+superseded. `replay_vote_faithful.py` replays with supersession (it reproduces the campaign label in 12,341 of
+12,628 loci, so it is itself approximate):
+
+| rule | labels changed | agreement with the profile (scored loci) |
 |---|---|---|
-| all genes (campaign) | – | 685 of 974 |
-| without MAT1-1-2 | 135 (128 to MAT1-2) | 793 (108 gained, 0 lost) |
-| without MAT1-1-2 and MAT1-1-3 | 288 (242 to MAT1-2, 45 to undetermined) | 871 (186 gained, 0 lost) |
-| core genes only | 305 | 872 (187 gained, 0 lost) |
+| campaign, losers excluded (A) | – | 669 of 963 |
+| A, and optional genes removed from the vote (B) | 89 | 684 of 962 |
+| B, and optional genes cannot supersede a core hit (C) | 273 (266 MAT1-1 to MAT1-2) | 822 of 974 |
+
+Optional genes are those marked `optional: true` in `order.yml` (MAT1-1-2, -3, -4, -5, MAT1-2-3, -4, -10, and others).
+The vote change alone (B) moves 15 loci toward the profile; the resolution change (C) moves 153. The fix has to be in
+`resolve_idiomorph_overlaps` (skip a pair when either gene is optional) as well as in the candidate vote.
 
 ## Caveats
 - The scored set is the ambiguous list plus controls (974 loci), not the whole campaign, so the 0-lost figure is
@@ -55,6 +65,6 @@ accessory genes removed from the vote:
   that there is no evidence.
 
 ## Open
-- Make MAT1-1-2 and MAT1-1-3 (and the other accessory genes) non-voting for the idiomorph call, or vote only when no
-  core gene is found. Requires a replay on the whole campaign and a curator decision.
+- Stop optional genes from superseding a core hit in `resolve_idiomorph_overlaps` and from voting when a core gene has
+  a hit (variant C). Requires a replay on the whole campaign with the real pipeline and a curator decision.
 - Whether to activate the profiles as a classifier for Ascomycota (`idiomorph_classifier` in `order.yml`).

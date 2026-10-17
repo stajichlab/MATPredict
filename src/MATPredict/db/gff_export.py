@@ -41,13 +41,19 @@ def write_gff3(record: dict, out_path: Path) -> None:
 
 
 def write_proteins_fasta(record: dict, sequences: dict[int, str], out_path: Path) -> None:
-    """Write one FASTA entry per present gene with a sequence available.
+    """Write one FASTA entry per present, intact gene with a sequence available.
+
+    A gene with a `status` (remnant|pseudogene) is omitted: this file is what
+    `reference_fasta.build_reference_fasta` and `pipeline._curated_protein_lengths`
+    read, so a remnant protein must not be a search reference, and its truncated
+    length must not read as a "full length" reference to the coverage rule. The
+    record's `metadata.yaml` still carries the gene and its protein accession.
 
     Header convention: >{record_id}|gene_index={gene_index}|name={name}|role={role}
     """
     lines = []
     for gene in record["genes"]:
-        if not gene.get("present", True) or gene["gene_index"] not in sequences:
+        if not gene.get("present", True) or gene.get("status") or gene["gene_index"] not in sequences:
             continue
         header = f">{record['record_id']}|gene_index={gene['gene_index']}|name={gene['name']}|role={gene['role']}"
         lines.append(header)

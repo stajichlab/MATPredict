@@ -39,8 +39,9 @@ Changes: [CHANGELOG.md](CHANGELOG.md).
    in a standard format with figures and tables. Report uncalled genomes with a
    reason, and two idiomorphs in one genome as a flag for review.
 5. **Synteny.** Visualize the synteny of MAT regions across sets of species.
-6. **Scale.** Run on thousands of genomes (for example the full BFD fungal
-   genome collection) on a SLURM cluster.
+6. **Scale.** Run on thousands of genomes (for example the full [BFD](https://github.com/stajichlab/Fungi_BFD/) fungal
+   genome collection; its 2026 run is documented at
+   <https://github.com/1KFG/Fungi_BFD_run2026/>) on a SLURM cluster.
 
 ## Workflow
 

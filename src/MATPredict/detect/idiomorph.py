@@ -89,6 +89,30 @@ class IdiomorphResolution:
         return self.winner_identity - self.loser_identity
 
 
+#: Policy for genes marked `optional: true` in the roster (MAT1-1-2, MAT1-1-3,
+#: MAT1-2-3, ...). `legacy` treats every gene alike. `core_first` keeps an
+#: accessory gene from overriding a core one: it cannot supersede (or be
+#: superseded by) its mutually exclusive partner, and it votes only when no core
+#: gene has a live hit. Motivation: an
+#: HMG-like protein cross-hits the MAT1-1-2/-3 references, and in v0.6.0 that
+#: superseded the real HMG gene MAT1-2-1 at 87 Parastagonospora loci.
+#: `legacy` is the default so nothing changes unless asked.
+IDIOMORPH_POLICY_LEGACY = "legacy"
+IDIOMORPH_POLICY_CORE_FIRST = "core_first"
+IDIOMORPH_POLICIES = (IDIOMORPH_POLICY_LEGACY, IDIOMORPH_POLICY_CORE_FIRST)
+DEFAULT_IDIOMORPH_POLICY = IDIOMORPH_POLICY_LEGACY
+
+
+def _check_policy(policy: str) -> str:
+    if policy not in IDIOMORPH_POLICIES:
+        raise ValueError(f"unknown idiomorph policy {policy!r}; expected one of {IDIOMORPH_POLICIES}")
+    return policy
+
+
+def _is_optional(family: Family, gene_name: str) -> bool:
+    return any(g["name"] == gene_name and g.get("optional", False) for g in family.genes)
+
+
 def _informative(gene: dict) -> bool:
     """Does this gene's presence say anything about WHICH idiomorph?
 
@@ -112,6 +136,7 @@ def idiomorph_candidates(
     family: Family,
     genes_found: list[str],
     hits: list[SearchHit] | None = None,
+    policy: str = DEFAULT_IDIOMORPH_POLICY,
 ) -> list[dict]:
     """Each idiomorph this cluster has evidence for, with its best score,
     strongest first.
@@ -126,7 +151,12 @@ def idiomorph_candidates(
     recorded -- a polished model carries no BLAST statistics of its own.
     Bitscore rather than identity because identity is blind here: every one of
     the S288C cassette hits is at or near 100%.
+
+    With `policy="core_first"`, genes marked `optional` are ignored whenever
+    any core (non-optional) informative gene has a live hit; a locus whose
+    only hits are optional genes still votes on them.
     """
+    _check_policy(policy)
     if family.vocabulary_type != "enum" or not hits:
         return []
     informative = {
@@ -134,15 +164,32 @@ def idiomorph_candidates(
         for g in family.genes
         if _informative(g) and g.get("present_in_idiomorphs")
     }
-    best: dict[str, float] = {}
-    for hit in hits:
-        if hit.superseded_by is not None:
-            continue
-        for idiomorph in informative.get(hit.gene_name, ()):
-            score = hit.bitscore if hit.bitscore is not None else hit.identity
-            if score is None:
+    optional = {g["name"] for g in family.genes if g.get("optional", False)}
+
+    def _scores(skip_optional: bool) -> dict[str, float]:
+        out: dict[str, float] = {}
+        for hit in hits:
+            if hit.superseded_by is not None:
                 continue
-            best[idiomorph] = max(best.get(idiomorph, float("-inf")), float(score))
+            if skip_optional and hit.gene_name in optional:
+                continue
+            for idiomorph in informative.get(hit.gene_name, ()):
+                score = hit.bitscore if hit.bitscore is not None else hit.identity
+                if score is None:
+                    continue
+                out[idiomorph] = max(out.get(idiomorph, float("-inf")), float(score))
+        return out
+
+    best = _scores(False)
+    if policy == IDIOMORPH_POLICY_CORE_FIRST and optional:
+        # Optional genes are accessory evidence: they vote only when no core
+        # informative gene has a live hit at all. (Read per idiomorph, an
+        # accessory gene of one idiomorph could still outvote a core hit of the
+        # other, which is the Parastagonospora failure; so the test is on the
+        # whole locus. This is also what the 2026-10-16 replay measured.)
+        core = _scores(True)
+        if core:
+            best = core
     return [
         {"idiomorph": name, "score": score}
         for name, score in sorted(best.items(), key=lambda kv: (-kv[1], kv[0]))
@@ -178,6 +225,7 @@ def assign_idiomorph(
     family: Family,
     genes_found: list[str],
     hits: list[SearchHit] | None = None,
+    policy: str = DEFAULT_IDIOMORPH_POLICY,
 ) -> str:
     """Which idiomorph this cluster carries, or `undetermined`.
 
@@ -193,7 +241,7 @@ def assign_idiomorph(
     if family.vocabulary_type != "enum":
         return "undetermined"  # pattern (multiallelic) families: allele number isn't callable by homology alone
 
-    ranked = idiomorph_candidates(family, genes_found, hits)
+    ranked = idiomorph_candidates(family, genes_found, hits, policy)
     if ranked:
         if len(ranked) == 1 or ranked[0]["score"] > ranked[1]["score"]:
             return ranked[0]["idiomorph"]
@@ -618,6 +666,7 @@ def resolve_idiomorph_overlaps(
     hits: list[SearchHit],
     family: Family,
     min_overlap_fraction: float = DEFAULT_MIN_OVERLAP_FRACTION,
+    policy: str = DEFAULT_IDIOMORPH_POLICY,
 ) -> tuple[list[SearchHit], list[IdiomorphResolution]]:
     """Collapse pairs of mutually exclusive idiomorph genes that hit one gene.
 
@@ -634,10 +683,19 @@ def resolve_idiomorph_overlaps(
     An exact identity tie is left unresolved. There is nothing to choose
     between the two, the choice would flip on floating-point noise, and
     reporting the locus as `undetermined` is the honest outcome.
+
+    With `policy="core_first"` a pair in which EITHER gene is `optional` is
+    not resolved at all: an accessory gene can neither supersede a core hit
+    nor be superseded, so both stay live and the (policy-aware) vote decides.
     """
+    _check_policy(policy)
     superseded: dict[int, str] = {}
     events: list[IdiomorphResolution] = []
     for gene_a, gene_b in _mutually_exclusive_pairs(family, hits):
+        if policy == IDIOMORPH_POLICY_CORE_FIRST and (
+            _is_optional(family, gene_a) or _is_optional(family, gene_b)
+        ):
+            continue
         a_hits = [h for h in hits if h.gene_name == gene_a]
         b_hits = [h for h in hits if h.gene_name == gene_b]
         for group_a, group_b in _overlap_groups(a_hits, b_hits, min_overlap_fraction):

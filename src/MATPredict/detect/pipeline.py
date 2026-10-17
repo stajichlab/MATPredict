@@ -109,6 +109,7 @@ from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
     LOCUS_CLASS_PARTIAL,
     apply_partial_locus,
+    DEFAULT_IDIOMORPH_POLICY,
     idiomorph_candidates,
     idiomorph_margin_from_vote,
     is_partial_strength,
@@ -1126,6 +1127,7 @@ def _relaxed_results(
     model_losers: frozenset[tuple[int, FamilyKey, str]] | set = frozenset(),
     classifier_verdicts: dict[tuple[int, FamilyKey], ClassifierVerdict] | None = None,
     supported_min_bitscore: float = DEFAULT_SUPPORTED_MIN_BITSCORE,
+    idiomorph_policy: str = DEFAULT_IDIOMORPH_POLICY,
     record_lengths: dict[tuple[str, str], int] | None = None,
     partial_core_decide: Callable | None = None,
 ) -> list[DetectionResult]:
@@ -1179,12 +1181,14 @@ def _relaxed_results(
             segments = _segments_for([cluster], contig_lengths or {}, evidence)
             verdict = (classifier_verdicts or {}).get((id(cluster), score.family_key))
             called = (verdict.idiomorph if verdict is not None else
-                      assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key)))
+                      assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key),
+                                       idiomorph_policy))
             cands = (
                 [{"idiomorph": k, "score": round(v, 1), "basis": "hmm_classifier"}
                  for k, v in sorted(verdict.scores.items(), key=lambda kv: (-kv[1], kv[0]))]
                 if verdict is not None else
-                idiomorph_candidates(family, score.genes_found, _own_live_hits(cluster, family.key))
+                idiomorph_candidates(family, score.genes_found, _own_live_hits(cluster, family.key),
+                                     idiomorph_policy)
             )
             # Partial-coverage rule (`partial_core`), as in the strict path.
             vote_note = None
@@ -2112,6 +2116,11 @@ def run_pipeline(
     #: at or above this percentage, even past the cap (the tier above the cap).
     #: None = the plain cap. See `DEFAULT_POLISH_STRONG_IDENTITY`.
     polish_strong_identity: float | None = DEFAULT_POLISH_STRONG_IDENTITY,
+    #: How `optional` roster genes take part in idiomorph resolution and the
+    #: vote: "legacy" (every gene alike, the default) or "core_first" (an
+    #: accessory gene cannot supersede a core hit and votes only when no core
+    #: gene has a hit). See `idiomorph.IDIOMORPH_POLICIES`.
+    idiomorph_policy: str = DEFAULT_IDIOMORPH_POLICY,
     #: `off` (default) or `coverage_profile`: a PARTIAL-coverage core hit does not beat a
     #: full-length core gene of the other idiomorph unless the profiles disagree
     #: (`partial_core`). Independent of `idiomorph_policy`.
@@ -2304,7 +2313,8 @@ def run_pipeline(
             if len(own) < 2:
                 continue
             resolved_own, own_events = resolve_idiomorph_overlaps(
-                own, family, min_overlap_fraction=idiomorph_overlap_fraction
+                own, family, min_overlap_fraction=idiomorph_overlap_fraction,
+                policy=idiomorph_policy,
             )
             if not own_events:
                 continue
@@ -2561,7 +2571,8 @@ def run_pipeline(
             if len(own) < 2:
                 continue
             resolved_own, own_events = resolve_idiomorph_overlaps(
-                own, family, min_overlap_fraction=idiomorph_overlap_fraction
+                own, family, min_overlap_fraction=idiomorph_overlap_fraction,
+                policy=idiomorph_policy,
             )
             # A pair the first pass already resolved comes back unchanged.
             # Recording it again reported every such event twice.
@@ -2883,6 +2894,7 @@ def run_pipeline(
         called_idiomorph = verdict.idiomorph if verdict is not None else assign_idiomorph(
             family, score.genes_found,
             [h for c in member_clusters for h in _own_live_hits(c, family.key)],
+            idiomorph_policy,
         )
         # The losing half of each resolved pair, from the same events that decided
         # it, so the figure can show only the winner.
@@ -2898,6 +2910,7 @@ def run_pipeline(
         own_vote = idiomorph_candidates(
             family, score.genes_found,
             [h for c in member_clusters for h in _own_live_hits(c, family.key)],
+            idiomorph_policy,
         )
         # Partial-coverage rule (`partial_core`, off by default). Decided here,
         # before the tier and class, so every later step sees the call it makes.
@@ -3232,6 +3245,7 @@ def run_pipeline(
             on_relaxed_call=_record_relaxed,
             model_losers=model_losers,
             classifier_verdicts=classifier_verdicts,
+            idiomorph_policy=idiomorph_policy,
         )
         results, relaxed_withheld, relaxed_by_bar, relaxed_by_flank, relaxed_by_gate = _withhold(relaxed)
         suppressed += relaxed_withheld

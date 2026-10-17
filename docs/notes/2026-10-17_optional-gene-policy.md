@@ -55,3 +55,31 @@ Candidate refinement (not implemented): apply only part (a), or let optional gen
 - Profile agreement uses v0.6.0 scored.tsv profile calls keyed by (genome, contig, start); they were not rescored on the new reports.
 - Parastagonospora "expected" is not defined by a record; I report call and presence of both core genes.
 - HTML and diagnostics off; the 28 taxid-less genomes were not run; legacy and core_first ran concurrently so wall times are comparable but not isolated.
+
+# Follow-up: `resolution_only` (part (a) of core_first only)
+
+Curator's decision after the first comparison: `core_first` is not merged as is. Third policy value `--idiomorph-policy resolution_only`: a pair in which either gene is `optional` is not resolved; the vote is exactly the legacy vote (optional genes keep voting). Unit tests in tests/detect/test_idiomorph_policy.py (Parastagonospora pattern: both stay live and the vote decides; Cryphonectria pattern: strong optional MAT1-1-2 with weak core hits still calls MAT1-1 under legacy and resolution_only, but undetermined under core_first). tests/detect: 966 passed locally, including the four-combination partial-core test.
+
+## Run
+Code = branch merged with current main (includes PR #95; `--partial-core-policy` off), legacy vs resolution_only as parallel processes per genome. Sets: (1) the 473 genomes that changed under core_first (470 run), (2) the 497 controls, (3) the 203 BioSample truth genomes, (4) 300 random genomes (seed 1) with `uncalled` status and lineage/phylum_fallback routing in v0.6.0, i.e. no locus (298 run). 1,429 of 1,430 genomes complete in both policies (one task was still running at harvest; 2 set-4 genomes and the dropped taxid-less ones excluded). All rc=0.
+
+| set | genomes | loci legacy / res_only | genomes with label or loci change |
+|---|---|---|---|
+| 1 changed under core_first | 470 | 601 / 746 | 272 |
+| 2 controls | 497 | 504 / 514 | 10 (all a locus gained) |
+| 3 BioSample truth | 203 | 200 / 200 | 0 (20 with confidence/class changes) |
+| 4 no locus in v0.6.0 | 298 | 14 / 78 | 65 (64 gain a MAT1-2 locus) |
+
+Truth (203, stated MAT1-1/MAT1-2): legacy 178 agree / 21 wrong / 4 no locus; resolution_only identical, genome by genome. Cryphonectria parasitica (25), Juglanconis oblonga (2) and Botrytis Sl8 are unchanged from legacy. Not worse anywhere; also not better anywhere.
+
+Label/loci changes over all sets (labels at matched coordinates): loci gained 292 (2 more genomes already had loci), lost 73, MAT1-1 -> MAT1-2 only 20 in set 1 (core_first: 177 in the full fix set), MAT1-1 -> undetermined 0. Gained loci by genus: Fulvia 22, Fusarium 20, Cordyceps 15, Cercospora 13, Komagataella 13, Pyricularia 10, Hortaea 10, Friedmanniomyces 9, Sporothrix 8, Aspergillus 8. Of 292 gained, 267 carry MAT1-2-1 + MAT1-1-3 (the Pyricularia pattern); 207 of the 227 gains in genomes also run under core_first were gained there too, so resolution_only keeps the useful part of core_first. Controls: Pyricularia 7, Ceratocystis, Lasiosphaeris, Phyllosticta (same 10 as before).
+
+Caveat on the gains: 198 of the 292 gained loci have class `idiomorph_gene_only` (MAT1-2-1 + MAT1-1-3 hits and no flanking gene), medium confidence, 44 are high/mat_locus. Pyricularia oryzae MAT1-2 is plausible; 13 Komagataella (Pichiales) and Xylaria/Geotrichum/Saccharomycopsis gains in set 4 are not truth-checked and could be HMG-box proteins cross-hitting MAT1-2-1 rather than MAT loci. Set 4: 65 of 298 genomes (22%) gain one locus: the policy matters most among genomes with no locus, and that is also where false positives would live.
+
+Lost loci (73): 68 are partial_locus MAT1-2-1 + flank loci (Aspergillus 13, Neurospora, Neosartorya...); 72 of 73 are in genomes that still have a locus in resolution_only (e.g. on another contig), only 2 coincide with a gained locus within 30 kb. I did not trace the mechanism (candidates: polish-cap rank or the better-supported cluster displacing a partial one).
+
+Confidence: set 1 high->medium 12, medium->high 14, low->medium 7; mat_locus -> homothallic_candidate 55, partial_locus -> mat_locus 50. Truth set: high->medium 17, medium->high 3, mat_locus -> homothallic_candidate 16 (no label change).
+
+Parastagonospora: no change (18 in these sets, 17 MAT1-1 with both core genes; the 109-genome run earlier showed legacy already right on main). Alpha/HMG profile agreement (v0.6.0 scored.tsv, not independent: profiles score MAT1-1-1/MAT1-2-1 only): legacy 57/154, resolution_only 55/151 on loci present in both; these sets are enriched for contested loci, so the rates are not comparable with the earlier 73% / 86%.
+
+Unverified: whether the gained loci are real; the cause of the 73 lost; one genome not finished; resolution_only on Basidiomycota; interaction with `--partial-core-policy coverage_profile` beyond the unit test.

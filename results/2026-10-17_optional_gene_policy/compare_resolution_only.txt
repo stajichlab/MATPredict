@@ -1,0 +1,44 @@
+genomes with both reports: 1429
+
+== set1 473 changed under core_first: 470 run; loci legacy 601 res 746; genomes with label/loci change 272; any change 372
+  label ('absent', 'MAT1-2') 185
+  label ('MAT1-2', 'absent') 70
+  label ('absent', 'MAT1-1') 31
+  label ('MAT1-1', 'MAT1-2') 20
+  label ('MAT1-1', 'absent') 2
+  label ('MAT1-2', 'MAT1-1') 1
+  label ('absent', 'undetermined') 1
+  conf/class ('class:mat_locus', 'class:homothallic_candidate') 55
+  conf/class ('class:partial_locus', 'class:mat_locus') 50
+  conf/class ('medium', 'high') 14
+  conf/class ('high', 'medium') 12
+  conf/class ('low', 'medium') 7
+  conf/class ('class:partial_locus', 'class:homothallic_candidate') 1
+  genera: [('Fulvia', 22), ('Aspergillus', 21), ('Fusarium', 17), ('Cordyceps', 15), ('Cercospora', 13), ('Hortaea', 11), ('Lipomyces', 10), ('Friedmanniomyces', 9), ('Neurospora', 8), ('Sporothrix', 8), ('Podospora', 8), ('Hypocrella', 6)]
+
+== set2 497 controls: 497 run; loci legacy 504 res 514; genomes with label/loci change 10; any change 10
+  label ('absent', 'MAT1-2') 10
+  genera: [('Pyricularia', 7), ('Ceratocystis', 1), ('Lasiosphaeris', 1), ('Phyllosticta', 1)]
+
+== set3 203 truth: 203 run; loci legacy 200 res 200; genomes with label/loci change 0; any change 20
+  conf/class ('high', 'medium') 17
+  conf/class ('class:mat_locus', 'class:homothallic_candidate') 16
+  conf/class ('medium', 'high') 3
+  genera: []
+
+== set4 ~300 no-locus-in-v0.6.0: 298 run; loci legacy 14 res 78; genomes with label/loci change 65; any change 65
+  label ('absent', 'MAT1-2') 65
+  label ('MAT1-2', 'absent') 1
+  genera: [('Komagataella', 13), ('Xylaria', 5), ('Geotrichum', 5), ('Fusarium', 4), ('Pyricularia', 2), ('Hortaea', 2), ('Sphaerulina', 2), ('Blastobotrys', 2), ('Colletotrichum', 2), ('Saccharomycopsis', 2), ('Nemania', 2), ('Diplodia', 1)]
+
+truth: {'legacy': {'agree': 178, 'wrong': 21, 'none': 4}, 'resolution_only': {'agree': 178, 'wrong': 21, 'none': 4}}
+
+Parastagonospora run: 18
+  legacy {('MAT1-1', 'both'): 17, ('MAT1-1', 'one'): 1}
+  resolution_only {('MAT1-1', 'both'): 17, ('MAT1-1', 'one'): 1}
+profile legacy {'scored': 154, 'agree': 57}
+profile resolution_only {'scored': 151, 'agree': 55}
+
+loci gained overall: 292 with MAT1-2-1+MAT1-1-3 genes: 267
+gained by genus: [('Fulvia', 22), ('Fusarium', 20), ('Cordyceps', 15), ('Cercospora', 13), ('Komagataella', 13), ('Pyricularia', 10), ('Hortaea', 10), ('Friedmanniomyces', 9), ('Sporothrix', 8), ('Aspergillus', 8)]
+loci lost: 73

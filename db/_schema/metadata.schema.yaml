@@ -136,7 +136,7 @@ properties:
       type: object
       required: [tier, citations]
       properties:
-        tier: {type: integer, enum: [1, 2]}
+        tier: {type: integer, enum: [1, 2, 3]}  # 3 = unpublished annotated deposit, no paper (added 2026-10-17, Geotrichum)
         experimental_method: {type: [string, "null"]}
         citations:
           type: array

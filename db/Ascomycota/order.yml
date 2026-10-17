@@ -283,9 +283,15 @@ loci:
     # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
     # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
     # Unmapped by ruling: MATA (MATA1, MATA2) / MATB (MATB1, MATB2) per Han et al. 2020,
-    # FEMS Yeast Res 20:foaa011, which gives no protein domains. Only A is curated.
+    # FEMS Yeast Res 20:foaa011, which gives no protein domains. A and B are both curated
+    # (B added 2026-10-17: 4952_clib122_MATyl_B).
     idiomorph_class: {A: unassigned, B: unassigned}
-    taxonomic_scope: [4952]
+    # CURATOR DECISION, J. Stajich, 2026-10-17: scope extended from Yarrowia lipolytica
+    # (4952) to the genus Yarrowia (4951; verified live via NCBI Taxonomy esummary,
+    # rank genus), because Y. yakushimensis CBS 10253 carries the MATB idiomorph at the
+    # SLA2 site (82% matb2). Strict superset: the 4952 records stay covered.
+    # The sibling Geotrichum family `MATdc` (scope 43987) is disjoint from this one.
+    taxonomic_scope: [4951]
     # Flank-carried window (curator's ruling 2026-09-26; results/
     # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
     # idiomorph, and real loci were found up to 9.9 kb from the flank span.
@@ -293,6 +299,14 @@ loci:
     genes:
       - {name: mata1, role: core_MAT, present_in_idiomorphs: ["A"]}
       - {name: mata2, role: core_MAT, present_in_idiomorphs: ["A"]}
+      # MATB idiomorph genes, Butler et al. 2004 (PMID 14745027; GenBank AJ617307.1
+      # matb2 CAE84425.1, matb1 CAE84426.1) and the CLIB122 RefSeq annotation
+      # (YALI0_C07458g / YALI0_C07480g). Added 2026-10-17 by curator decision. Roles
+      # mirror mata1/mata2: both core_MAT, restricted to idiomorph B. Same lowercase
+      # naming as the A genes. No gene_class: no protein domain is established (see
+      # idiomorph_class above).
+      - {name: matb2, role: core_MAT, present_in_idiomorphs: ["B"]}
+      - {name: matb1, role: core_MAT, present_in_idiomorphs: ["B"]}
       # sla2/apn2 here are the same genes as Ascomycota:MAT's SLA2/APN2 under this
       # family's own lowercase names, and take the same classes by the same 2026-09-19
       # curator ruling recorded on those entries above (curator described APN2 as "class
@@ -303,6 +317,34 @@ loci:
       # lowercase spellings.
       - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog}
       - {name: apn2, role: flanking_conserved, gene_class: apn2_homolog}
+  - locus_name: "MATdc"
+    vocabulary_type: "enum"
+    # A = the HMG-box-like protein (Geotrichum MATA, HF558448.1) and B = the alpha1-like
+    # protein (Geotrichum MATB, HF558449.1), by position at SLA2 and by weak homology
+    # (A hits Y. lipolytica mata2 at 29%; B hits Ogataea matalpha1 at 35-40%). Domain
+    # content has NOT been checked with Pfam. OPEN CURATOR QUESTION (2026-10-17): the
+    # labels A/B are the depositors' MATA/MATB; whether they are homologous to Yarrowia's
+    # MATA/MATB idiomorphs (family `MATyl`) is NOT established and is not asserted here.
+    idiomorph_values: ["A", "B"]
+    idiomorph_class: {A: unassigned, B: unassigned}
+    # CURATOR DECISION, J. Stajich, 2026-10-17: Geotrichum gets its own family, scoped
+    # to the genus Geotrichum (43987; verified live via NCBI Taxonomy, rank genus,
+    # lineage ...Dipodascales; Dipodascaceae). Deliberately NOT the order Dipodascales
+    # (3243772): route() returns every family whose scope intersects the lineage, so an
+    # order-wide scope would make Yarrowia genomes match both MATyl and MATdc and be
+    # reported twice (the Serinales problem described under `MTL`).
+    taxonomic_scope: [43987]
+    flank_carried_window_bp: 20000
+    genes:
+      # MATA/MATB: names exactly as the depositor annotated them (HF558448.1 gene MATA,
+      # HF558449.1 gene MATB). Unpublished deposits (INRA/Casaregola lab, Nov 2012).
+      - {name: MATA, role: core_MAT, present_in_idiomorphs: ["A"]}
+      - {name: MATB, role: core_MAT, present_in_idiomorphs: ["B"]}
+      # sla2 is the anchor: in G. candidum CLIB 918 the order is SLA2 -> MATA -> APC5
+      # (CCBN010000002.1), MATA 2.0 kb from SLA2. apn2 is NOT adjacent there (a diverged
+      # copy is on another contig), so it is declared optional.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog}
+      - {name: apn2, role: flanking_conserved, gene_class: apn2_homolog, optional: true}
   - locus_name: "MTL"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "alpha"]

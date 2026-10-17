@@ -9,6 +9,7 @@ from pathlib import Path
 from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
+from MATPredict.detect.partial_core import DEFAULT_PARTIAL_CORE_POLICY, PARTIAL_CORE_POLICIES
 from MATPredict.detect.supported_span import DEFAULT_SUPPORTED_MIN_BITSCORE
 from MATPredict.detect.pipeline import (
     DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DEFAULT_POLISH_STRONG_IDENTITY, DetectionOutcome,
@@ -125,6 +126,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         exclude_record_ids=exclude_record_ids,
         max_polished_clusters_per_family=_polish_cap_from_args(args),
         polish_strong_identity=_polish_strong_identity_from_args(args),
+        partial_core_policy=_partial_core_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
 
@@ -251,6 +253,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "require_core_role": args.require_core_role,
             "max_polished_clusters_per_family": _polish_cap_from_args(args),
             "polish_strong_identity": _polish_strong_identity_from_args(args),
+            "partial_core_policy": _partial_core_policy_from_args(args),
             "supported_min_bitscore": getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
         },
     )
@@ -263,6 +266,12 @@ def _polish_cap_from_args(args) -> int | None:
     cap = getattr(args, "max_polished_clusters_per_family",
                   DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY)
     return None if cap is None or cap <= 0 else cap
+
+
+def _partial_core_policy_from_args(args) -> str:
+    """The partial-coverage vote policy for this run; an args object without the
+    attribute (a test double) gets the default, `off`."""
+    return getattr(args, "partial_core_policy", DEFAULT_PARTIAL_CORE_POLICY)
 
 
 def _polish_strong_identity_from_args(args) -> float | None:
@@ -530,6 +539,14 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "the usual rank. Stops a true locus that hits few genes at high identity "
              "being outranked by noise that hits more genes at low identity. "
              f"Default: {DEFAULT_POLISH_STRONG_IDENTITY:g}. 0 = the plain cap.",
+    )
+    detect.add_argument(
+        "--partial-core-policy", choices=PARTIAL_CORE_POLICIES, default=DEFAULT_PARTIAL_CORE_POLICY,
+        help="off: the best-bitscore idiomorph vote stands (default). coverage_profile: a core hit "
+             "that covers < 80%% of its reference does not beat a full-length (>= 90%%) core gene of the "
+             "other idiomorph when the alpha-box/HMG-box profiles agree; where they disagree or are "
+             "unavailable the call is `undetermined` (see `idiomorph_vote_note`). A partial hit near "
+             "a contig end is treated as truncation and the vote is kept. Independent of --idiomorph-policy.",
     )
     detect.add_argument(
         "--exhaustive", action="store_true",

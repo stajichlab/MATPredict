@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATPredict</title>
+<meta name="description" content="MATPredict finds and types fungal mating-type loci in genome assemblies and raw reads. Method, gating, and results across BFD and ZyGoLife genomes.">
+<link rel="stylesheet" href="site.css">
+<script src="theme.js"></script>
+</head>
+<body>
+<nav><b>MATPredict</b><a href="#how">How it works</a><a href="#gates">Gating</a><a href="#results">Results</a><a href="#reads">Raw reads</a><a href="results.html">Explore taxa</a><a href="page/index.html">Browser tool</a><a href="about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
+<main>
+  <h1>MATPredict</h1>
+  <p class="lede">Find and type the mating-type (MAT) locus in a fungal genome, with the genes that flank it, from an assembly or from raw reads.</p>
+  <p><a class="cta" href="page/index.html">Run MATPredict in Browser</a><a class="cta secondary" href="results.html">Explore results by taxon</a></p>
+
+  <div class="notice"><strong>Experimental.</strong> The browser tool is a spike: same detection logic as the command-line tool, not yet checked on every platform or against the full benchmark.
+  Counts below describe committed campaign runs (code v0.6.0, October 2026). A call is detection, not proof: most clades have no curated reference yet, so an uncalled genome is a reference gap until shown otherwise.</div>
+
+  <div class="cards" id="cards"></div>
+
+  <h2 id="how">How it works</h2>
+  <p>Every reference record in the database traces to a publication or a validated deposit. MATPredict searches a genome with the reference proteins of the MAT genes and their conserved flank genes, builds gene models at the best hits, and decides whether the result is a real MAT locus.</p>
+  <ol class="steps">
+    <li><b>Route.</b> The NCBI taxid selects the curated families for that lineage. With no match the genome falls back to the whole phylum, or is reported as not searched.</li>
+    <li><b>Search.</b> Translated search (tblastn on a genome, diamond on a proteome) with the core MAT genes plus flank genes (for example APN2, SLA2, COX13 in Pezizomycotina; tptA, rnhA, algA, glrA in Mucorales).</li>
+    <li><b>Cluster.</b> Hits become candidate loci per contig, using lineage-specific gap rules.</li>
+    <li><b>Polish.</b> exonerate or miniprot builds gene models in a window around each candidate (at most 6 loci per family).</li>
+    <li><b>Gate.</b> A candidate must pass the checks below, or it is withheld and the reason is recorded.</li>
+    <li><b>Type.</b> The idiomorph comes from gene content (for example MAT1-1-1 versus MAT1-2-1) or, in Mucoromycota, from a profile-HMM classifier (sexP = Plus, sexM = Minus). Each call gets a margin and a confidence tier.</li>
+  </ol>
+  <p class="muted">Output per genome: <code>detection_report.yaml</code> (calls, evidence, withheld loci, reason for any uncalled genome, two-idiomorph flag), <code>detected_loci.gff3</code> and optional FASTA.</p>
+
+  <h2 id="gates">Gating and confidence</h2>
+  <p>The gates trade recall for precision. Each is a decision recorded in the project's <a href="https://github.com/stajichlab/MATPredict/tree/main/analysis">analysis notes</a> with the test that set it.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Gate</th><th>What it does</th></tr>
+    <tr><td>Modelled-gene bar</td><td>The best cluster must carry a minimum number of polished gene models. Clusters below it are withheld (for example "carried 1 modelled gene, below the 2 required").</td></tr>
+    <tr><td>MAT-gene gate</td><td>A locus needs a MAT gene typed by the classifier at or above its bit-score floor (about 100 bits), or at least two flank genes modelled at 40% or more. Fragments need flanks. Removes paralog look-alikes.</td></tr>
+    <tr><td>Flank-carried rule</td><td>A call that rests only on flank hits needs a core-gene hit above a bit-score floor (39 bits); this removed 52 of 52 known artefacts in the audit while keeping 7 of 8 real loci.</td></tr>
+    <tr><td>Paralog class</td><td>When a family has several real gene copies, paralogs are separated from the MAT copy and withheld or reported as such.</td></tr>
+    <tr><td>CAAX check (Basidiomycota)</td><td>Pheromone-receptor calls that depend on a strict CAAX motif scan are labelled <code>unverified</code>. They are counted but kept apart from verified calls.</td></tr>
+    <tr><td>Typing margin</td><td>The margin between the best and the runner-up idiomorph is reported with every call. The Mucoromycota classifier applies a margin floor (25 bits) and a score floor, and unresolved cases are reported as <code>undetermined</code>.</td></tr>
+    <tr><td>Confidence tier</td><td><b>high</b>: all expected core genes found, plus at least one flank gene in the same cluster (families without flank genes need all core genes in a consistent order). <b>medium</b>: some but not all expected genes, a core gene found only by the relaxed second pass, or flanks without a confirmed core gene; also a high call that fails the modelled-gene bar. <b>low</b>: a single gene hit with nothing else nearby.</td></tr>
+    <tr><td>Locus class</td><td><code>mat_locus</code> (genes plus expected flank structure), <code>partial_locus</code>, <code>idiomorph_gene_only</code>, <code>homothallic_candidate</code> (both idiomorphs at one locus).</td></tr>
+    <tr><td>Two idiomorphs</td><td>Both idiomorphs in one genome is flagged for review. It can mean homothallism, silent mating cassettes (Saccharomycotina), a hybrid or mixed assembly, not only a true two-allele genome.</td></tr>
+  </table></div>
+
+  <h2 id="results">Results across BFD and ZyGoLife</h2>
+  <p>Five datasets, one pipeline version. BFD genomes are the public fungal genome collection (<a href="https://github.com/stajichlab/Fungi_BFD/" target="_blank" rel="noopener">Fungi_BFD</a>, <a href="https://github.com/1KFG/Fungi_BFD_run2026/" target="_blank" rel="noopener">2026 run</a>); ZyGoLife LCG and Jena are Mucoromycotina sets that were held out from training and curation.</p>
+
+  <h3>Genomes with a MAT call</h3>
+  <div class="chart" id="ch-calls"></div>
+
+  <h3>Confidence of each locus</h3>
+  <div class="chart" id="ch-conf"></div><div class="legend" id="lg-conf"></div>
+
+  <h3>What kind of locus was found</h3>
+  <div class="chart" id="ch-class"></div><div class="legend" id="lg-class"></div>
+
+  <h3>Which MAT alleles, and how often</h3>
+  <p class="muted">Share of called genomes by allele, as the pipeline names it. Allele names differ by lineage (MAT1-1/MAT1-2, MATa/MATalpha, Plus/Minus, and others) and are not merged here. Basidiomycota calls are mostly the locus type (HD, PR) with the allele undetermined; see the <a href="results.html">explorer</a> for locus types.</p>
+  <div class="chart" id="ch-allele"></div><div class="legend" id="lg-allele"></div>
+
+  <h3>Call rate by Ascomycota class</h3>
+  <div class="chart" id="ch-asco"></div>
+  <h3>Call rate by Basidiomycota order</h3>
+  <div class="chart" id="ch-basidio"></div>
+  <p class="muted">Classes and orders with 50 or more genomes. Low rates mark clades without their own curated record (phylum fallback), such as Orbiliomycetes and Dipodascomycetes, rather than clades without a MAT locus. Family, genus and species breakdowns, with allele frequencies, are in the <a href="results.html">explorer</a>.</p>
+
+  <h3>Performance on benchmarks</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Test</th><th class="n">n</th><th>Result</th><th>Note</th></tr>
+    <tr><td>Zygo 23 (Mucorales, held out)</td><td class="n">23</td><td>23/23 locus, 23/23 idiomorph</td><td>Saturated; no longer separates rules. <a href="https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-09-28_heldout-sets.md">notes</a></td></tr>
+    <tr><td>ZyGoLife Jena (held out)</td><td class="n">64</td><td>61 called</td><td>Scaffold and contig input gave the same call in 63/63.</td></tr>
+    <tr><td>ZyGoLife LCG (held out)</td><td class="n">621</td><td>548 called (88%)</td><td>Strains with curator labels: see held-out notes for tiers and disputed labels.</td></tr>
+    <tr><td>Classifier typing (Mucoromycota)</td><td class="n">540</td><td>0 wrong</td><td>Full-protein score of 100 bits or more separated MAT genes from paralogs (96/108 vs 9/189).</td></tr>
+    <tr><td>Regression panels (v0.6.0)</td><td class="n">166 + 23</td><td>0 changed loci</td><td>Gate before every campaign.</td></tr>
+    <tr><td><i>A. fumigatus</i> assemblies, <code>detect</code></td><td class="n">297</td><td>288 agree (97.0%)</td><td>Truth = BLAST of idiomorph regions. Reports one idiomorph for the 8 assemblies holding both.</td></tr>
+  </table></div>
+  <p class="muted">Truth tables for BFD genomes do not exist, so BFD results are recovery (call) rates, not accuracy. Several thresholds were tuned on small panels; the notes say which.</p>
+
+  <h2 id="reads">Typing from raw reads</h2>
+  <p>When a good reference panel exists for a species, <code>matpredict reads-type</code> calls the idiomorph of a strain from its reads, with no assembly. It counts k-mers (k = 31) found in only one idiomorph reference, uses the k-mers shared by both flanks as a single-copy depth control, and calls one idiomorph, <code>both</code>, <code>none</code> or <code>low_depth</code>.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Dataset</th><th class="n">Strains</th><th>Agreement</th><th>Status</th></tr>
+    <tr><td><i>Fusarium oxysporum</i> f. sp. <i>lactucae</i> (Fola)</td><td class="n">148</td><td>147/148 (99.3%) with a samtools breadth call; the miss has no signal in either method. Simulated mixes: both idiomorphs called from a 10% minor share in 3/3 pairs.</td><td><span class="tag done">done</span></td></tr>
+    <tr><td><i>Aspergillus fumigatus</i></td><td class="n">331 read sets</td><td>293/296 (99.0%) against assembly BLAST truth; <code>detect</code> on assemblies 288/297. Seven of eight assemblies holding both idiomorphs are <code>both</code> from reads.</td><td><span class="tag done">done</span></td></tr>
+    <tr><td><i>Verticillium</i></td><td class="n">—</td><td>Reference records curated; read-typing results to be added here.</td><td><span class="tag plan">to add</span></td></tr>
+    <tr><td><i>Coccidioides immitis</i>, <i>C. posadasii</i></td><td class="n">—</td><td>Reference records exist; panel and read sets to be chosen.</td><td><span class="tag plan">planned</span></td></tr>
+    <tr><td><i>Cryptococcus</i></td><td class="n">—</td><td>Panel design for a large, rearranged locus to be worked out.</td><td><span class="tag plan">planned</span></td></tr>
+    <tr><td>Other <i>Fusarium</i> species, including <i>F. graminearum</i> (many public read sets)</td><td class="n">—</td><td>Some read sets need downloading from SRA.</td><td><span class="tag plan">planned</span></td></tr>
+  </table></div>
+  <p class="muted">Caveats: cut-offs (50% breadth fraction, 100-base unique-run filter) were set after seeing the Fola and <i>A. fumigatus</i> results, so those numbers are consistency checks, not independent tests. A reference that differs from the strain at about one base in 40 gives <code>none</code>. Details: <a href="https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-10-06_fola-reads-type.md">Fola</a>, <a href="https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-10-07_afum-reads-and-assembly.md"><i>A. fumigatus</i></a>.</p>
+
+  <h3>From reads to a full locus: map, assemble, extend, process</h3>
+  <p>K-mer typing says which idiomorph is present. To recover the locus itself from reads, the same panel seeds an assembly (tested on eight <i>A. fumigatus</i> strains; the steps are scripts, not yet a subcommand):</p>
+  <ol class="steps">
+    <li><b>Map.</b> Map reads to the curated locus segments of each idiomorph (minimap2, short-read mode).</li>
+    <li><b>Assemble.</b> Assemble read pairs whose mate maps (SPAdes, careful mode).</li>
+    <li><b>Extend.</b> Map the contigs back to the reference and repeat for up to four rounds, so the locus grows into the flank genes.</li>
+    <li><b>Process.</b> Place the genes with a protein search on the read contigs, and run <code>detect</code> on them for the standard report. Running <code>detect</code> on read contigs is the next step, not yet done.</li>
+  </ol>
+</main>
+<footer class="muted">
+  Cite: Stajich JE. Kingdom-wide Mating Type Locus Exploration. https://github.com/stajichlab/MATPredict (<a href="about.html">more on citing</a>) ·
+  MATPredict · <a href="https://github.com/stajichlab/MATPredict">source</a> · <a href="https://github.com/stajichlab/MATPredict/blob/main/CHANGELOG.md">changelog</a> · data regenerated by <code>scripts/build_site_data.py</code> from committed tables under <code>results/</code>.
+  Site data built <span id="built"></span>.
+</footer>
+<script type="module">
+import { loadData, hbar, stacked, legend, fmt, pct } from "./charts.js";
+const { rows, summary } = await loadData();
+const D = summary.datasets, ids = Object.keys(D);
+document.getElementById("built").textContent = summary.generated;
+
+const tot = ids.reduce((a, k) => a + D[k].genomes, 0), called = ids.reduce((a, k) => a + (D[k].status.called || 0), 0), loci = ids.reduce((a, k) => a + D[k].loci, 0);
+document.getElementById("cards").innerHTML = [[fmt(tot), "genomes searched"], [pct(called, tot), "with a MAT call"], [fmt(loci), "loci called"], [String(ids.length), "datasets"]]
+  .map(([v, l]) => `<div class="card"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+
+hbar(document.getElementById("ch-calls"), ids.map(k => ({ label: D[k].label, value: (D[k].status.called || 0) / D[k].genomes, max: 1, note: `${pct(D[k].status.called || 0, D[k].genomes)}  (${fmt(D[k].status.called || 0)} of ${fmt(D[k].genomes)})` })), { max: 1 });
+
+const confs = ["high", "medium", "low"];
+stacked(document.getElementById("ch-conf"), ids.map(k => ({ label: D[k].label, parts: D[k].confidence })), confs); legend(document.getElementById("lg-conf"), confs);
+const classes = ["mat_locus", "partial_locus", "idiomorph_gene_only", "homothallic_candidate"];
+stacked(document.getElementById("ch-class"), ids.map(k => ({ label: D[k].label, parts: D[k].locus_class })), classes); legend(document.getElementById("lg-class"), classes);
+
+// allele composition per dataset (called genomes): top single alleles, two-allele genomes, undetermined
+const per = {};
+for (const r of rows) {
+  const key = r.dataset === "ZyGoLife" ? "ZyGoLife (LCG + Jena)" : `BFD ${r.phylum === "Mucoromycota" ? "Mucoromycotina" : r.phylum}`;
+  const p = per[key] ??= { n: 0, parts: {}, two: 0, undet: 0 };
+  p.n += r.called; p.two += r.two; p.undet += r.undet;
+  for (const [a, v] of Object.entries(r.alleles)) if (!a.startsWith("two:")) p.parts[a] = (p.parts[a] || 0) + v;
+}
+const catset = ["MAT1-1", "MAT1-2", "Plus", "Minus", "MATalpha", "MATa"];
+const cats = [...catset, "other single allele", "two alleles", "undetermined"];
+const items = Object.entries(per).map(([label, p]) => {
+  const parts = {}; let other = 0;
+  for (const [a, v] of Object.entries(p.parts)) catset.includes(a) ? parts[a] = v : other += v;
+  return { label, total: p.n, parts: { ...parts, "other single allele": other, "two alleles": p.two, undetermined: p.undet } };
+});
+stacked(document.getElementById("ch-allele"), items, cats); legend(document.getElementById("lg-allele"), cats);
+
+function byRank(ds, rank, minN) {
+  const m = {};
+  for (const r of rows) if (r.dataset === "BFD" && r.phylum === ds && r[rank]) { const g = m[r[rank]] ??= { n: 0, c: 0 }; g.n += r.n; g.c += r.called; }
+  return Object.entries(m).filter(([, g]) => g.n >= minN).sort((a, b) => b[1].n - a[1].n).slice(0, 18)
+    .map(([k, g]) => ({ label: k, value: g.c / g.n, max: 1, note: `${pct(g.c, g.n)}  (n=${fmt(g.n)})` }));
+}
+hbar(document.getElementById("ch-asco"), byRank("Ascomycota", "class", 50), { max: 1 });
+hbar(document.getElementById("ch-basidio"), byRank("Basidiomycota", "order", 50), { max: 1 });
+</script>
+</body>
+</html>

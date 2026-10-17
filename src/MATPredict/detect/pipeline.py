@@ -1626,6 +1626,42 @@ def _window_padding(
     return int((protein_aa or 0) * 3 * protein_length_multiple) + max_intron_bp
 
 
+_POLISH_POOL = None
+
+
+class _InlineExecutor:
+    """Runs each submitted call at once, in the caller's thread, and returns a finished Future.
+
+    Used when there is one worker: Pyodide (the browser build) cannot start a thread, so a
+    ThreadPoolExecutor would fail on its first submit. Results and exceptions come back through
+    Future.result() exactly as with a pool, so the callers do not change."""
+
+    def submit(self, fn, /, *args, **kwargs):
+        import concurrent.futures
+        future = concurrent.futures.Future()
+        try:
+            future.set_result(fn(*args, **kwargs))
+        except BaseException as exc:  # noqa: BLE001 - re-raised by future.result(), as a pool would
+            future.set_exception(exc)
+        return future
+
+
+def _polish_executor():
+    """The shared pool for the polishing calls. Workers default to min(4, CPUs);
+    MATPREDICT_POLISH_WORKERS overrides (1 runs the calls inline, in the serial order)."""
+    global _POLISH_POOL
+    if _POLISH_POOL is None:
+        import concurrent.futures
+        import os
+        import sys
+        # Pyodide (the browser build) is single-threaded and runs subprocess waits through run_sync.
+        default = 1 if sys.platform == "emscripten" else min(4, os.cpu_count() or 1)
+        workers = int(os.environ.get("MATPREDICT_POLISH_WORKERS", "0")) or default
+        _POLISH_POOL = (_InlineExecutor() if workers == 1 else
+                        concurrent.futures.ThreadPoolExecutor(max_workers=workers, thread_name_prefix="polish"))
+    return _POLISH_POOL
+
+
 def _padded_window(
     cluster: GeneCluster, padding: int, contig_lengths: dict[str, int]
 ) -> tuple[str, int, int]:
@@ -2403,8 +2439,13 @@ def run_pipeline(
                     run_id=run_id, genome_id=genome_id,
                 )
 
+            # The external calls are independent (each has its own gene, window and temp
+            # directory), so they run concurrently. The windows depend only on the cluster's
+            # span, so they are fixed before any call. Classification and bookkeeping below
+            # stay in gene order, exactly as the serial loop did.
+            pool = _polish_executor()
+            tasks = []
             for gene_name in sorted(localized_genes | rescue_genes):
-                rescue = gene_name not in localized_genes
                 padding = _window_padding(
                     protein_lengths.get((family.key, gene_name)),
                     protein_length_multiple=window_protein_length_multiple,
@@ -2418,19 +2459,25 @@ def run_pipeline(
                 # flanks, where exonerate was ~90% of runtime and a 60-genome
                 # ablation gave identical genotypes on miniprot alone.
                 # `classify` then records a `polished_single` model.
-                if polish_mode.get((family.key, gene_name)) == "miniprot":
-                    exonerate_model = None
-                else:
-                    exonerate_model = polish_with_exonerate(
+                exo_future = None
+                if polish_mode.get((family.key, gene_name)) != "miniprot":
+                    exo_future = pool.submit(
+                        polish_with_exonerate,
                         genome_fasta=genome_fasta, family=family, gene_name=gene_name,
                         reference_fasta=reference_fasta, record_families=record_families,
                         window=window, genetic_code=genetic_code,
                     )
-                miniprot_model = polish_with_miniprot(
+                mini_future = pool.submit(
+                    polish_with_miniprot,
                     genome_fasta=genome_fasta, family=family, gene_name=gene_name,
                     reference_fasta=reference_fasta, record_families=record_families,
                     window=window, genetic_code=genetic_code,
                 )
+                tasks.append((gene_name, window, exo_future, mini_future))
+            for gene_name, window, exo_future, mini_future in tasks:
+                rescue = gene_name not in localized_genes
+                exonerate_model = exo_future.result() if exo_future is not None else None
+                miniprot_model = mini_future.result()
                 outcome = classify(
                     _own_model(exonerate_model, family.key, gene_name, window[0]),
                     _own_model(miniprot_model, family.key, gene_name, window[0]),

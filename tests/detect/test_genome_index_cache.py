@@ -95,4 +95,4 @@ def test_the_cache_does_not_grow_without_bound(tmp_path, monkeypatch):
         genomes.append(path)
     for path in genomes:
         _extract_window(path, ("c1", 1, 20), tmp_path)
-    assert len(search_module._GENOME_INDEX_CACHE) <= search_module._GENOME_INDEX_CACHE_MAX
+    assert len(search_module._genome_index_cache()) <= search_module._GENOME_INDEX_CACHE_MAX

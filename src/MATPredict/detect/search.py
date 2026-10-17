@@ -66,6 +66,7 @@ from __future__ import annotations
 import re
 import subprocess
 import tempfile
+import threading
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -486,15 +487,28 @@ def search_localize(
 #: Genome FASTA offset indexes, keyed by path, with the (size, mtime_ns) the
 #: index was built from. Bounded, because a batch run walks many genomes and an
 #: unbounded cache would hold an open file handle for every one of them.
-_GENOME_INDEX_CACHE: dict[Path, tuple[tuple[int, int], object]] = {}
+#: Held per THREAD: the polishing calls run on a thread pool, and a
+#: `SeqIO.index` must not be shared across threads (one thread could close an
+#: index another is reading). Each thread keeps at most _GENOME_INDEX_CACHE_MAX.
+_GENOME_INDEX_LOCAL = threading.local()
 _GENOME_INDEX_CACHE_MAX = 2
 
 
+def _genome_index_cache() -> dict[Path, tuple[tuple[int, int], object]]:
+    """This thread's index cache (created on first use)."""
+    cache = getattr(_GENOME_INDEX_LOCAL, "cache", None)
+    if cache is None:
+        cache = _GENOME_INDEX_LOCAL.cache = {}
+    return cache
+
+
 def clear_genome_index_cache() -> None:
-    """Drop every cached genome index, closing each handle. For tests, and for
-    any caller that wants to release handles deterministically."""
-    while _GENOME_INDEX_CACHE:
-        _, (_, index) = _GENOME_INDEX_CACHE.popitem()
+    """Drop this thread's cached genome indexes, closing each handle. For tests,
+    and for any caller that wants to release handles deterministically. Indexes
+    held by other pool threads are released when those threads next use the cache."""
+    cache = _genome_index_cache()
+    while cache:
+        _, (_, index) = cache.popitem()
         index.close()
 
 
@@ -514,26 +528,26 @@ def _genome_index(genome_fasta: Path):
     into scratch and can reuse a path. The cache is bounded and evicts by
     closing, because each entry holds an open file handle.
 
-    Not thread-safe, and deliberately so: `SeqIO.index` objects are not either,
-    and nothing in this package runs polishing concurrently within a process
-    (batch concurrency is separate processes).
+    One cache per thread (see `_genome_index_cache`): the polishing calls run
+    concurrently, and an index is only ever used by the thread that built it.
     """
+    cache = _genome_index_cache()
     stamp_source = genome_fasta.stat()
     stamp = (stamp_source.st_size, stamp_source.st_mtime_ns)
-    cached = _GENOME_INDEX_CACHE.get(genome_fasta)
+    cached = cache.get(genome_fasta)
     if cached is not None:
         if cached[0] == stamp:
             return cached[1]
         # Same path, different bytes: drop the stale index before rebuilding.
-        del _GENOME_INDEX_CACHE[genome_fasta]
+        del cache[genome_fasta]
         cached[1].close()
-    while len(_GENOME_INDEX_CACHE) >= _GENOME_INDEX_CACHE_MAX:
+    while len(cache) >= _GENOME_INDEX_CACHE_MAX:
         # Oldest first: dicts preserve insertion order, so this is FIFO.
-        oldest = next(iter(_GENOME_INDEX_CACHE))
-        _, evicted = _GENOME_INDEX_CACHE.pop(oldest)
+        oldest = next(iter(cache))
+        _, evicted = cache.pop(oldest)
         evicted.close()
     index = SeqIO.index(str(genome_fasta), "fasta")
-    _GENOME_INDEX_CACHE[genome_fasta] = (stamp, index)
+    cache[genome_fasta] = (stamp, index)
     return index
 
 
@@ -698,6 +712,49 @@ def _select_requested_gene(
     return best
 
 
+_GENE_QUERIES: dict[tuple[str, int, int], dict[str, list[tuple[str, str]]]] = {}
+_GENE_QUERIES_LOCK = threading.Lock()
+
+
+def _gene_query_records(reference_fasta: Path) -> dict[str, list[tuple[str, str]]]:
+    """`{gene_name: [(fasta header, sequence), ...]}` for a reference FASTA, in file order.
+
+    Cached per (path, mtime, size): the same file serves every polish call of a run. A header that is
+    not `{record_id}|gene{N}|{gene_name}` is left out, as `_select_requested_gene` would discard it."""
+    st = Path(reference_fasta).stat()
+    key = (str(reference_fasta), st.st_mtime_ns, st.st_size)
+    with _GENE_QUERIES_LOCK:
+        cached = _GENE_QUERIES.get(key)
+    if cached is not None:
+        return cached
+    by_gene: dict[str, list[tuple[str, str]]] = {}
+    for rec in SeqIO.parse(str(reference_fasta), "fasta"):
+        try:
+            _, gene = _parse_reference_header(rec.id)
+        except ValueError:
+            continue
+        by_gene.setdefault(gene, []).append((rec.description, str(rec.seq)))
+    with _GENE_QUERIES_LOCK:
+        if len(_GENE_QUERIES) > 8:
+            _GENE_QUERIES.clear()
+        _GENE_QUERIES[key] = by_gene
+    return by_gene
+
+
+def _write_gene_query(reference_fasta: Path, gene_name: str, tmp_dir: Path) -> Path | None:
+    """FASTA of only the reference proteins named `gene_name` (every family and record), or None if there are none.
+
+    exonerate aligns each query on its own, and `_select_requested_gene` discards every alignment whose query is
+    a different gene, so aligning the whole reference set only adds work: each call costs about the same per
+    query protein, and a run's reference set holds dozens of genes."""
+    records = _gene_query_records(reference_fasta).get(gene_name)
+    if not records:
+        return None
+    path = tmp_dir / f"query.{re.sub(r'[^A-Za-z0-9_.-]', '_', gene_name)}.faa"
+    path.write_text("".join(f">{header}\n{seq}\n" for header, seq in records))
+    return path
+
+
 def polish_with_exonerate(
     genome_fasta: Path,
     family: Family,
@@ -773,12 +830,20 @@ def polish_with_exonerate(
 
     with tempfile.TemporaryDirectory() as tmp_dir_name:
         tmp_dir = Path(tmp_dir_name)
+        # Only this gene's reference proteins are aligned (see `_write_gene_query`); with none, no alignment
+        # could be selected, so exonerate is not run.
+        try:
+            query_fasta = _write_gene_query(reference_fasta, gene_name, tmp_dir)
+        except OSError:
+            query_fasta = reference_fasta  # unreadable reference: leave the failure to exonerate, as before
+        if query_fasta is None:
+            return None
         target_fasta = _extract_window(genome_fasta, window, tmp_dir)
         offset = win_start - 1
 
         base_cmd = [
             "exonerate", "--model", "protein2genome",
-            "--query", str(reference_fasta), "--target", str(target_fasta),
+            "--query", str(query_fasta), "--target", str(target_fasta),
         ] + gencode_args
         tail = ["--showtargetgff", "yes", "--showalignment", "no"]
         result = _run_checked(

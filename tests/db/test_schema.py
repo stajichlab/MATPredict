@@ -322,3 +322,21 @@ def test_every_accepted_record_validates_against_the_schema_and_gene_status_rule
         for error in schema.validate_metadata(record) + schema.validate_gene_status(record):
             failures.append(f"{meta_path}: {error}")
     assert failures == []
+
+
+def test_no_status_gene_protein_is_in_a_proteins_faa_reference_file():
+    """Step 2: proteins.faa is what detect reads as the reference set, so it must not
+    carry a protein for a gene whose metadata says remnant|pseudogene."""
+    failures = []
+    for meta_path, _order in _accepted_records():
+        record = yaml.safe_load(meta_path.read_text())
+        flagged = {g["gene_index"] for g in record["genes"] if g.get("status")}
+        faa = meta_path.parent / "proteins.faa"
+        if not flagged or not faa.exists():
+            continue
+        for line in faa.read_text().splitlines():
+            if line.startswith(">"):
+                fields = dict(p.split("=", 1) for p in line.split("|")[1:] if "=" in p)
+                if int(fields["gene_index"]) in flagged:
+                    failures.append(f"{faa}: {line}")
+    assert failures == []

@@ -689,3 +689,13 @@ def test_write_genbank_writes_pseudo_on_a_status_gene_only(tmp_path):
         assert feature.qualifiers["status"] == ["remnant"]
     for feature in by_gene["sexP"]:
         assert "pseudo" not in feature.qualifiers
+
+
+def test_write_proteins_fasta_omits_a_status_gene(tmp_path):
+    """Step 2: a remnant/pseudogene protein is not a search reference."""
+    record = _status_record()
+    out_path = tmp_path / "proteins.faa"
+    write_proteins_fasta(record, sequences={0: "MKTAYIAKQRQ", 1: "GATTACAGATTACA"}, out_path=out_path)
+    content = out_path.read_text()
+    assert "name=sexP" in content
+    assert "name=tptA" not in content  # status: remnant, present: true, has a sequence

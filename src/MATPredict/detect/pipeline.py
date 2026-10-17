@@ -758,6 +758,19 @@ DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY = 6
 #: no longer holds: a genome with more than N strong clusters polishes all of them.
 DEFAULT_POLISH_STRONG_IDENTITY = 50.0
 
+#: Every admitted cluster that carries two distinct live core_MAT genes of ONE idiomorph
+#: (two genes whose `present_in_idiomorphs` is that single idiomorph, e.g. MTLA1 + MTLA2, or
+#: MAT1-1-1 + MAT1-1-2) is polished whatever its rank, in the same tier as the strong-identity
+#: clusters: it takes a slot from the weakest ranked cluster, and the cap is exceeded only when
+#: more than N clusters qualify. Why: the rank counts distinct genes of ANY role and ranks identity second, so a
+#: small real cluster is outranked by whatever else a genome admits, and how many others are
+#: admitted depends on how many families are searched (seven Komagataella genomes with a real
+#: two-gene MTL cluster on a 2.1-2.3 kb contig lost it once nine families were searched: 18-24
+#: MTL clusters were admitted instead of 15-18, analysis/2026-10-17_polish-cap-fix.md). The
+#: property is the cluster's own, so no other family's clusters can push it out. Pass
+#: `polish_core_pair=False` (`--no-polish-core-pair`) for the earlier behaviour.
+DEFAULT_POLISH_CORE_PAIR = True
+
 #: The permissive floor the evidence diagnostics enumerate candidates with:
 #: every family with >=1 own hit in the cluster, of any gene, any role, any
 #: identity. This is the retired `_families_with_a_foothold` behavior, and it
@@ -925,8 +938,43 @@ def _best_identity(cluster, family_key) -> float:
     return max((h.identity for h in cluster.hits if h.family_key == family_key), default=0.0)
 
 
+def core_idiomorph_genes(families) -> dict[FamilyKey, dict[str, str]]:
+    """`{family key: {core_MAT gene name: its single idiomorph}}`, the genes
+    `has_core_pair` counts. A gene that names no idiomorph or several is left out."""
+    out: dict[FamilyKey, dict[str, str]] = {}
+    for family in families:
+        genes = {}
+        for g in family.genes:
+            if not isinstance(g, dict) or g.get("role") != "core_MAT":
+                continue
+            idioms = g.get("present_in_idiomorphs") or []
+            if len(idioms) == 1:
+                genes[g["name"]] = idioms[0]
+        if genes:
+            out[family.key] = genes
+    return out
+
+
+def has_core_pair(cluster, family_key, core_genes) -> bool:
+    """True when `cluster` has at least two distinct live (non-superseded) core_MAT
+    genes of this family that belong to the same single idiomorph. A property of
+    the cluster alone: it does not depend on any other cluster or family."""
+    genes = core_genes.get(family_key)
+    if not genes:
+        return False
+    seen: dict[str, set[str]] = {}
+    for h in cluster.hits:
+        if h.family_key != family_key or h.superseded_by is not None or h.role != "core_MAT":
+            continue
+        idiom = genes.get(h.gene_name)
+        if idiom is not None:
+            seen.setdefault(idiom, set()).add(h.gene_name)
+    return any(len(v) >= 2 for v in seen.values())
+
+
 def select_polish_clusters(by_family, cap: int, strong,
-                           strong_identity: float | None = None) -> set[tuple[int, FamilyKey]]:
+                           strong_identity: float | None = None,
+                           core_genes: dict | None = None) -> set[tuple[int, FamilyKey]]:
     """The (cluster, family) pairs allowed to be polished.
 
     Without `strong_identity` (None): the top `cap` of each family in
@@ -938,14 +986,22 @@ def select_polish_clusters(by_family, cap: int, strong,
     all of them; one with fewer polishes exactly `cap` (or all, if it has fewer
     admitted). The strong tier is ordered by the same rank, and the top-up keeps
     the strong-fragment (V3) preference, so with no strong cluster this is the
-    plain cap."""
+    plain cap.
+
+    With `core_genes` (from `core_idiomorph_genes`): a cluster with two distinct live
+    core genes of one idiomorph (`has_core_pair`) joins the same tier whatever its
+    identity, and is polished exactly like a strong-identity cluster (a slot of the cap,
+    more than the cap only when more than `cap` clusters qualify). If
+    `strong_identity` is None the tier holds only these clusters."""
     chosen = set()
     for key, members in by_family.items():
         ranked = rank_for_polish(members, key, strong)
-        if strong_identity is None:
+        if strong_identity is None and not core_genes:
             picked = ranked[:cap]
         else:
-            tier = [c for c in ranked if _best_identity(c, key) >= strong_identity]
+            tier = [c for c in ranked
+                    if (strong_identity is not None and _best_identity(c, key) >= strong_identity)
+                    or (core_genes and has_core_pair(c, key, core_genes))]
             tier_ids = {id(c) for c in tier}
             rest = [c for c in ranked if id(c) not in tier_ids]
             picked = tier + rest[:max(0, cap - len(tier))]
@@ -2112,6 +2168,7 @@ def run_pipeline(
     #: at or above this percentage, even past the cap (the tier above the cap).
     #: None = the plain cap. See `DEFAULT_POLISH_STRONG_IDENTITY`.
     polish_strong_identity: float | None = DEFAULT_POLISH_STRONG_IDENTITY,
+    polish_core_pair: bool = DEFAULT_POLISH_CORE_PAIR,
     #: `off` (default) or `coverage_profile`: a PARTIAL-coverage core hit does not beat a
     #: full-length core gene of the other idiomorph unless the profiles disagree
     #: (`partial_core`). Independent of `idiomorph_policy`.
@@ -2383,8 +2440,9 @@ def run_pipeline(
         # the same cap. Families without a classifier keep the plain rank.
         strong = strong_fragment_scores(by_family, families, genome_fasta=genome_fasta,
                                         genetic_code=genetic_code)
-        polish_allowed = select_polish_clusters(by_family, max_polished_clusters_per_family, strong,
-                                                polish_strong_identity)
+        polish_allowed = select_polish_clusters(
+            by_family, max_polished_clusters_per_family, strong, polish_strong_identity,
+            core_idiomorph_genes(families) if polish_core_pair else None)
     for cluster in clusters:
         admitted_families = _families_meeting_evidence_floor(cluster, families, evidence_floor)
         capped_keys = set()

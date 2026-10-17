@@ -1,0 +1,204 @@
+record_id: 460519_gs115_MATkp_MATalpha
+record_version: 1
+taxonomy:
+  taxid: 460519
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Pichiales;f__Pichiaceae;g__Komagataella;s__Komagataella_phaffii
+  lineage_resolved_date: '2026-10-17'
+organism:
+  species: Komagataella phaffii
+  strain:
+    name: GS115
+    known: true
+    culture_collection_ids:
+    - GS115
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATkp
+  idiomorphs:
+  - MATalpha
+  system: pseudohomothallic
+locus:
+  assembly_accession: GCF_000027005.1
+  assembly_accession_basis: sequence_link
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: DIC1->MATalpha2->MATalpha1->SLA2
+    definition_note: 'MATalpha cassette of K. phaffii GS115, chromosome 4 (NC_012966.1:1646885-1652702,
+      identical to FN392322; assembly GCF_000027005.1, De Schutter et al. 2009, PMID
+      19465926). The assembly carries only this cassette: blastn of the CBS 7435 MATa
+      cassette (FR839631.1:1665-7892) against NC_012966.1 hits only the SLA2 and DIC1
+      repeat copies at this locus, no MATa1/MATa2. WHY MODELS ARE NOT THE REFSEQ ONES:
+      the GS115 annotation is truncated here: PAS_chr4_0878 XP_002494327.1 ("Silenced
+      copy of ALPHA2 at HML", 1648150-1648635, 161 aa, no intron) and PAS_chr4_1001
+      XP_002494328.1 (1649153-1649464, 103 aa) cover only parts of MATalpha2 (173
+      aa, with a 57 bp intron) and MATalpha1 (190 aa). The cassette is 100.000% identical
+      over 2,701 bp (global alignment of NC_012966.1:1646500-1652800 against FR839631.1:139100-141800)
+      and 99.98% over the whole 5,818 bp segment (blastn) to the CBS 7435 MATalpha
+      cassette (FR839631.1:135890-141707), so the MATalpha2 model was transferred
+      by alignment and its protein is the CBS 7435 protein SCV12330.1 (protein_accession
+      names it, and validation re-translates the GS115 coordinates against it). MATalpha2
+      exons NC_012966.1:1648057-1648067 (11 bp, ATGATTTCTCA) and 1648125-1648635;
+      intron 1648068-1648124, 57 bp, GTAAGT...CATTAG (GT-AG). Support for the intron
+      (no RNA read was examined by me): the identical model is annotated in CBS 7435
+      (two annotations); read through, the ATG at the 11 bp exon is blocked by a stop
+      codon after four codons (MISQ*; stops again at codons 12 and 18), while the
+      spliced ORF is open for 173 aa, has no internal stop, keeps a homeodomain (PF00046,
+      27.0 bits, GA 22.9) and hits MATalpha2 of S. cerevisiae (65.6 bits), Z. rouxii
+      (63.4) and Candida MTLalpha2 (59.3) by phmmer. MATALPHA1 IS FRAMESHIFTED IN
+      GS115 (curator question). Global alignment of the GS115 MATalpha1 region (NC_012966.1:1648891-1649464)
+      to the CBS 7435 CDS (573 bp, 190 aa, CCA40251.1) shows ONE extra base in GS115,
+      an A in "GAAACT[A]CCTCG" at NC_012966.1:1649032 (codon about 47); the rest is
+      identical. The GS115 translation from the ATG therefore stops after about 50
+      aa (26% of CCA40251.1) and the GS115 RefSeq ORF PAS_chr4_1001 / XP_002494328.1
+      (103 aa, 1649153-1649464) is the downstream C-terminal remainder in the shifted
+      frame. The GS115 allele (probe of 41 bp around the site) is present in GCF_000027005.1
+      and in one other assembly of the 188 Komagataella genomes of the campaign library
+      (GCA_029632965.1, labelled K. pastoris), while the CBS 7435 allele is present
+      in GCA_900235035.2 and 7 others, so it is not unique to one assembly; whether
+      it is a true GS115 lesion or a shared assembly artefact was NOT checked (no
+      reads). Because the proteins of this record feed the detection references, MATalpha1
+      is recorded as present: false, with no coordinates and no protein, like the
+      other remnant genes in the database, so that no truncated 50-aa fragment is
+      searched as MATalpha1. The intact allele is in CBS 7435 (FR839631.1:139129-139701,
+      minus strand) and is not in the database as a curated record. DIC1 and SLA2
+      are XP_002494326.1 (PAS_chr4_0877) and XP_002494329.1 (PAS_chr4_0879). ORIENTATION:
+      the GS115 chromosome-4 sequence is reverse-complemented relative to CBS 7435
+      (this cassette lies 126 kb from the end of NC_012966.1, i.e. locus 2); the layout
+      DIC1, MATalpha2, MATalpha1, SLA2 is on the plus strand here, SLA2, MATalpha1,
+      MATalpha2, DIC1 on the plus strand of FR839631.1. The other cassette (locus
+      1, which carries MATa in CBS 7435) is not in this assembly (NOT VERIFIED whether
+      it is absent from the strain or only from the assembly; the chromosome end is
+      unfinished per the assembly comment). GENETIC CODE: standard (NCBI Taxonomy
+      code 1 for taxid 644223 and 460519). STRAIN: GS115 is a his4 derivative of the
+      NRRL Y-11430 (CBS 7435) lineage: PMID 31654411 compares Y-11430 (CBS7435), GS115
+      and X-33 and reports that X-33 shares nearly all mutations and a defective HIS4
+      with GS115; PMID 38443579 and PMID 36520709 call NRRL Y-11430 / CBS7435 the
+      strain from which all commonly used hosts derive; Cregg et al. 1985 (PMID 3915774)
+      describe the his4 auxotrophic host (the abstract does not name GS115 or the
+      mutagen). NOT VERIFIED: that GS115 was made by chemical mutagenesis of Y-11430
+      (not stated in any text I could open).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NC_012966.1
+        seq_region: NC_012966.1
+      start: 1646885
+      end: 1652702
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: dic1
+  protein_accession: ncbi_protein:XP_002494326.1
+  role: flanking_conserved
+  present: true
+  locus_tag: PAS_chr4_0877
+  segment_index: 0
+  start: 1646885
+  end: 1647802
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MATalpha2
+  protein_accession: ncbi_protein:SCV12330.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1648057
+  end: 1648635
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 1648057
+    end: 1648067
+  - start: 1648125
+    end: 1648635
+- gene_index: 2
+  name: MATalpha1
+  protein_accession: null
+  role: core_MAT
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+- gene_index: 3
+  name: sla2
+  protein_accession: ncbi_protein:XP_002494329.1
+  role: flanking_conserved
+  present: true
+  locus_tag: PAS_chr4_0879
+  segment_index: 0
+  start: 1649568
+  end: 1652702
+  strand: '-'
+  order_in_locus: 3
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: both MAT cassettes and the inversion-based switching between
+      them shown by PCR/sequence analysis of both orientations and induction of switching;
+      functional dissection of the MAT genes by deletion and mating assays in a K.
+      phaffii type-strain background (CBS 2612, 99% identical at both loci to CBS
+      7435)
+    citations:
+    - pmid: '25349420'
+      doi: 10.1073/pnas.1416014111
+    - pmid: '29061733'
+      doi: 10.1128/MCB.00398-17
+  boundaries:
+    tier: 2
+    experimental_method: coordinates transferred by alignment from the CBS 7435 annotation
+      (100% identical sequence) onto the GS115 assembly; the GS115 RefSeq models are
+      truncated here and are not used; gene extents are annotation-derived, not experimentally
+      delimited
+    citations:
+    - pmid: '19465926'
+      doi: 10.1038/nbt.1544
+    - pmid: '27388471'
+      doi: 10.1093/femsyr/fow051
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'functional assay: Matalpha1 is essential for diploid formation
+      in alpha-type cells and Matalpha2 for sporulation in heterothallic strains of
+      stable mating type; MATalpha identity of the genes by homology to the Saccharomycotina
+      MATalpha1/MATalpha2'
+    citations:
+    - pmid: '29061733'
+      doi: 10.1128/MCB.00398-17
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NC_012966.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 25349420|460519|MATkp|MATalpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

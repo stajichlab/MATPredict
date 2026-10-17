@@ -425,3 +425,60 @@ loci:
       # adjacent withheld core locus in 69 of 81 no-call Pezizales genomes.
       - {name: SLA2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
       - {name: APN2, role: flanking_conserved, gene_class: apn2_homolog, optional: true}
+  - locus_name: "MATkp"
+    vocabulary_type: "enum"
+    # NEW FAMILY, proposed 2026-10-17 from the curator's Komagataella decision (see
+    # docs/notes/2026-10-17_komagataella-curation.md); NOT YET RATIFIED by the curator, who is asked
+    # whether this should instead be an extension of MATsc or MTL (the note gives the protein
+    # evidence for each). Komagataella (Pichiales, Pichiaceae) is outside Saccharomycetaceae
+    # (`MATsc`, 4893) and outside Serinales (`MTL`, 2916678), so no existing family routes it.
+    #
+    # WHAT IS HERE. K. phaffii carries two complete MAT cassettes on chromosome 4, ~135 kb apart,
+    # flanked by an inverted repeat; inversion of the region between them swaps which cassette
+    # sits beside the telomere and is repressed (Hanson, Byrne & Wolfe 2014, PMID 25349420;
+    # Heistinger et al. 2018, PMID 29061733). One cassette carries MATa1 + MATa2, the other
+    # MATalpha1 + MATalpha2; each is flanked by SLA2 and DIC1 (layout DIC1, MATa2, MATa1, SLA2 and
+    # DIC1, MATalpha2, MATalpha1, SLA2 in the same orientation). Gene names are those of the
+    # CBS 7435 annotation (FR839631.1 / LT962479.2).
+    #
+    # HOMOLOGY (measured 2026-10-17, phmmer against every curated protein in db/Ascomycota): all
+    # four genes are homologous to BOTH the MATsc and the MTL genes, so protein evidence cannot
+    # place the genus in either family: MATalpha1 is closest to MTLalpha1 (65 bits) then MATALPHA1
+    # (41); MATalpha2 hits MATALPHA2/alpha2 (59-66) and MTLalpha2 (58-59) equally; MATa1 hits
+    # MATsc MATA1 (52) then MTLA1 (37-41); MATa2 hits only MTLA2 (38 bits, C. albicans). The
+    # architecture (two cassettes in one chromosome, flip/flop) matches neither MATsc (three
+    # cassettes HML/MAT/HMR, HO switching) nor MTL (PAP1/OBP1/PIK1 inside the idiomorph).
+    idiomorph_values: ["MATa", "MATalpha"]
+    # idiomorph_class left `unassigned`: report-only and not mine to assign. MATalpha -> MAT1-1 is
+    # strongly supported (MATalpha1 hits Pfam MATalpha_HMGbox PF04769, 37.5 bits, GA 28.1, and the
+    # curator MAT1-1-1 profile, E 7e-11); MATa -> MAT1-2 is weakly supported (MATa2 hits Pfam
+    # HMG_box PF00505 only below GA, 13.6 bits vs 25.4, and not the curator MAT1-2-1 profile).
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    # Genus Komagataella (460517; verified live via NCBI Taxonomy efetch, rank genus, lineage
+    # ...Pichiales; Pichiaceae). Deliberately the genus and not Pichiales/Pichiaceae: only
+    # Komagataella is curated. Ogataea (Pichiaceae) has the same inversion system (Hanson 2014)
+    # but no record here. Disjoint from 4893, 2916678 and 4951/4952, so nothing is reported twice.
+    taxonomic_scope: [460517]
+    # CURATOR DECISION to follow (as for MATyl/MATdc on branch dipodascales-curation): scope-only,
+    # never searched on a phylum fallback.
+    fallback_searchable: false
+    # SLA2 sits outside the idiomorph at both cassettes (3.1 kb from MATa1/MATalpha1), like MATsc/MATyl.
+    flank_carried_window_bp: 20000
+    genes:
+      # No gene_class on the four core genes: the evidence bar in order.schema.yaml forbids an
+      # implementer from inferring one. Evidence for the curator: MATalpha1 alpha box (PF04769
+      # above GA), MATa1 and MATalpha2 homeodomain (PF00046: 51.7 and 27.0 bits, GA 22.9), MATa2
+      # HMG-like (weak). See the note.
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      - {name: MATa2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      - {name: MATalpha1, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      - {name: MATalpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      # sla2: same gene as the other families' SLA2/sla2; sla2_homolog by the curator's
+      # 2026-09-19 ruling as applied in MATsc/MATyl (the curator did not separately rule on this
+      # family). Optional: contigs that end inside the cassette (2.1 kb contigs in 9 genomes carry
+      # MATa1/MATa2 and 3-5% of SLA2) must not be demoted. SLA2 is duplicated (one copy per
+      # cassette, 99.97% identical), so it is a flank, not a discriminator.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      # dic1: mitochondrial dicarboxylate carrier, the other flank (also one copy per cassette).
+      # No gene_class exists for it; optional for the same contig-edge reason.
+      - {name: dic1, role: flanking_conserved, optional: true}

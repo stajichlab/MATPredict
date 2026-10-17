@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p batch -c 2 --mem 16G -t 12:00:00
+#SBATCH -p batch -c 2 --mem 8G -t 12:00:00
 # usage: sbatch -J sgr-X [--array=0-19%20] sgr_eval.sbatch LISTPREFIX OUT   (chunk files LISTPREFIX.NN)
 cd /bigdata/stajichlab/jstajich/projects/sgr
 export PYTHONPATH=/bigdata/stajichlab/jstajich/projects/sgr/src

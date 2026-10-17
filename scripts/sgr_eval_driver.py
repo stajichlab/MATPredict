@@ -80,10 +80,15 @@ def main():
     lst, out = Path(sys.argv[1]), Path(sys.argv[2])
     scratch = Path(os.environ.get("SCRATCH") or tempfile.gettempdir())
     P = parser()
+    done = set()
+    for f in out.glob("summary.*.jsonl"):
+        done |= {json.loads(l)["genome"] for l in f.read_text().splitlines() if l.strip()}
     for line in lst.read_text().splitlines():
         if not line.strip():
             continue
         gid, taxid, fasta = line.split("\t")[:3]
+        if gid in done:
+            continue
         CACHE.clear()
         row = {"genome": gid}
         tmp = Path(tempfile.mkdtemp(dir=scratch, prefix="sgr_"))

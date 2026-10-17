@@ -390,6 +390,9 @@ def _result_doc(r: DetectionResult) -> dict:
         **({"confidence_ignored_genes": list(r.confidence_ignored_genes)}
            if getattr(r, "confidence_ignored_genes", None) else {}),
         **({"split_locus": r.split_locus} if getattr(r, "split_locus", None) else {}),
+        # Set only by `--strong-single-gene-policy on` (curator's decision 2026-10-17): a lone,
+        # modelled, near-full-length core gene; the call is `idiomorph_gene_only` at `low`.
+        **({"strong_single_gene": r.strong_single_gene} if getattr(r, "strong_single_gene", None) else {}),
         "idiomorph_resolutions": [
             {
                 "contig": res.contig,

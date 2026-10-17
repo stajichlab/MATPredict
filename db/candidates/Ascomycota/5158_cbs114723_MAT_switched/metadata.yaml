@@ -30,7 +30,7 @@ locus:
       mating-type switching; 46,416 - 42,835 = 3,581 bp, the length of the unswitched
       deposit minus this one. The isolate is self-sterile (MAT1-1 only) in this state.
       Both this deposit and the unswitched deposit KF033902.1 are labelled isolate
-      CBS114723 (epitype culture), differing by clone name. KEPT AS A DRAFT (needs_review), NOT ACCEPTED, pending a curator ruling: scripts/find_record_assemblies.py verifies this record on GCA_000389695.3 (Cfim3.0, CBS 114723; contig APWK03000076.1:59345-88553, 99.88%, 100% of the core segment) by its mechanical rule, but that assembly carries the UNSWITCHED locus (the deleted region corresponds to APWK03000076.1 ~81,476-84,795, which the switched deposit does not align to), so it cannot confirm the switched state, and a self-call of this record against it would find both idiomorphs, not MAT1-1 only.'
+      CBS114723 (epitype culture), differing by clone name. KEPT AS A DRAFT (needs_review), NOT ACCEPTED, (curator ruling 2026-10-17: stays a candidate): scripts/find_record_assemblies.py verifies this record on GCA_000389695.3 (Cfim3.0, CBS 114723; contig APWK03000076.1:59345-88553, 99.88%, 100% of the core segment) by its mechanical rule, but that assembly carries the UNSWITCHED locus (the deleted region corresponds to APWK03000076.1 ~81,476-84,795, which the switched deposit does not align to), so it cannot confirm the switched state, and a self-call of this record against it would find both idiomorphs, not MAT1-1 only.'
     segments:
     - segment_index: 0
       sequence_source:

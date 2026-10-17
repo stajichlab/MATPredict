@@ -63,16 +63,27 @@ The other BFD genomes were not blasted against the deposits for this purpose (th
   `needs_review` (the schema has no `draft` status; needs_review is what existing drafts use). Reason: it passes the B10 rule
   mechanically, but the assembly carries the unswitched allele, so a self-call against it would see both idiomorphs, not MAT1-1.
 * `MAT1-2-7` added to the Ascomycota MAT vocabulary in order.yml (core_MAT, MAT1-2, optional). APC5 omitted (not in vocabulary).
-* validate: all 7 and 5 proteins match their records' own CDS translations at 100%/100%. `taxonomy_current` came back false
-  because taxonkit given a taxid with no trailing newline returns nothing in this environment (pre-existing; `taxonkit` on 5158
-  gives Microascales/Ceratocystidaceae/Ceratocystis), so I set it true by hand.
+* validate: all 7 and 5 proteins match their records' own CDS translations at 100%/100%. `taxonomy_current` was first set by hand
+  (the pre-PR-93 taxonkit call returned nothing). After merging main (PR #93: taxonkit failures are explicit errors) I re-ran
+  `curate-db validate` on both records: on the login node it reported `taxonkit exited -9` (killed, no flag written); in a Slurm job
+  (`cerato-validate`, 8 GB) the check passes and sets `taxonomy_current: true` for both. The value now comes from the check.
 * Record ids use `5158_cbs114723_MAT_unswitched|switched` (no existing convention for a state; question for the curator).
 
-## 5. Held-out genomes, before (main db) and after (this db)
+## 4b. Curator rulings of 2026-10-17 (applied here)
 
-`detect --taxid T`, MATPREDICT_HTML=0, jobs `cerato-detect` (30031408). Taxids from NCBI Assembly. The 11 genomes are
-not all C. fimbriata: 5 are C. fimbriata, 1 Huntiella omanensis, 4 Berkeleyomyces rouxiae (taxid 2035830), 1 C. atlantica.
-On current main they are **already called** (the 2026-10-05 "uncalled" status is stale), by other families' records.
+1. The switched record stays in db/candidates as `needs_review` (not accepted).
+2. The switching state stays in the record id (`..._MAT_unswitched`, `..._MAT_switched`).
+3. Report labels stay neutral (MAT1-1 / MAT1-2); switching is mentioned only in record notes, no report text.
+4. `idiomorphs: [MAT1-1, MAT1-2]` for the unswitched record.
+5. MAT1-2-7 stays in the shared MAT vocabulary, `optional: true`.
+6. The 11 genomes are scored on gene recovery and confidence only.
+
+## 5. The 11 held-out genomes: NOT a recall test
+
+**All 11 were already called on current main before the new record existed. The 2026-10-05 "uncalled" status is stale, so these genomes
+no longer test whether the new records recover anything.** They are scored only on gene recovery and confidence. Table: `detect --taxid
+<own taxid>`, MATPREDICT_HTML=0, main db (origin/main after PR #93) vs this branch's db, same merged code. Taxa: 5 C. fimbriata,
+1 Huntiella omanensis, 4 Berkeleyomyces rouxiae, 1 C. atlantica.
 
 | held-out genome (taxon) | before (main db) | after (new db) |
 |---|---|---|
@@ -88,15 +99,36 @@ On current main they are **already called** (the 2026-10-05 "uncalled" status is
 | GCA_048999915.1_ASM4899991v1 (Berkeleyomyces rouxiae) | mat, MAT1-1, medium; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13, MAT1-1-2, MAT1-1-3 | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13, MAT1-1-2, MAT1-1-3 |
 | GCF_048999995.1_ASM4899999v1 (Berkeleyomyces rouxiae) | mat, MAT1-2, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13, MAT1-1-3 | mat, MAT1-2, high; found MAT1-2-1, APN2, SLA2, COX13, MAT1-1-3, MAT1-2-7; missing MAT1-1-1 |
 
-Reading: the new record is a reference_record in every "after" call. Idiomorph labels do not change where a call existed before.
-Confidence rises medium to high in 5 genomes, MAT1-2-7 is found in 6. Huntiella omanensis goes from no call to a partial MAT1-2
-locus built on SLA2 and a 42%-identity MAT1-2-7 hit, MAT1-2-1 missing; that label rests on the gene name of the 42% hit and is weak.
-GCF_048999995.1 (B. rouxiae) loses MAT1-1-1 in the after run (found before). Most "found" gene lists include MAT1-1-1 and MAT1-2-1 together
-yet the idiomorph is a single label; the report does not say "unisexual". Not a recall measurement: before/after differ in whether
-a call exists at all for only one genome, because main already calls the rest.
+Reading: labels never change where a call existed; confidence rises medium to high in 5 genomes; MAT1-2-7 is found in 6; Huntiella
+omanensis goes from no call to a weak partial MAT1-2 call (SLA2 + a ~42%-identity MAT1-2-7 hit, MAT1-2-1 missing; the label
+rests on that gene name). GCF_048999995.1 (B. rouxiae) loses MAT1-1-1 in the after run, which is a regression to explain.
+Several genomes carry MAT1-1-1 and MAT1-2-1 under one idiomorph label.
 
-## 6. Tests
+## 6. Recall test on uncalled Microascales outside the 11
 
-HPCC pixi env, `pytest tests/db tests/detect --continue-on-collection-errors`: this branch 31 failed, 1035 passed, 2 errors;
-clean origin/main 31 failed, 1029 passed, 2 errors (same failures: tests/detect/test_idiomorph_classifier.py, test_paralog_class.py;
-collection errors tests/db/test_draw.py, test_synteny.py need pygenomeviz). The +6 passes are the new schema/duckdb tests.
+Source: results/2026-10-18_uncalled_triage on origin/uncalled-triage (47 uncalled Microascales; 19 with a MAT-like gene linked to
+the flanks; 17 strong). Removing the 11 held-out genomes and the records' own assembly GCA_000389695.3 leaves **9 genomes (all 9 strong-linked)**,
+not 17: eight of the 17 strong ones were Ceratocystidaceae genomes in the held-out list. The 9 are 8 Scedosporium apiospermum
+(Microascaceae) and 1 Thielaviopsis ethacetica (Ceratocystidaceae). The 19-linked list adds no further genome.
+
+**All 9 are already called on current main, with high confidence, and the call is identical after the new record.** The triage's
+"uncalled" status for them is also stale. So there is no uncalled Microascales genome left to give a recall measurement; the new
+records change nothing for them (no gain, no loss, and note Scedosporium is a different family from Ceratocystis).
+
+| held-out genome (taxon) | before (main db) | after (new db) |
+|---|---|---|
+| GCA_001599055.1_JCM_6961_assembly_v001 (Thielaviopsis ethacetica) | mat, MAT1-1, high; found MAT1-1-1, APN2, SLA2, COX13 | mat, MAT1-1, high; found MAT1-1-1, APN2, SLA2, COX13 |
+| GCA_002158515.1_SaHDO1_v1 (Scedosporium apiospermum) | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 |
+| GCA_040285505.1_ASM4028550v1 (Scedosporium apiospermum) | mat, MAT1-1, high; found MAT1-1-1, APN2, SLA2; missing COX13 | mat, MAT1-1, high; found MAT1-1-1, APN2, SLA2; missing COX13 |
+| GCA_052249755.1_ASM5224975v1 (Scedosporium apiospermum) | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 |
+| GCA_058095615.1_UMB_ScApio477_1.0 (Scedosporium apiospermum) | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 |
+| GCA_058095685.1_UMB_ScApio478_1.0 (Scedosporium apiospermum) | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 |
+| GCA_058131905.1_UMB_ScApio476_1.0 (Scedosporium apiospermum) | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 |
+| GCA_982397395.1_T61-F (Scedosporium apiospermum) | mat, MAT1-1, high; found MAT1-1-1, APN2, SLA2, COX13 | mat, MAT1-1, high; found MAT1-1-1, APN2, SLA2, COX13 |
+| GCF_000732125.1_ScApio1.0 (Scedosporium apiospermum) | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 |
+
+## 7. Tests
+
+HPCC pixi env, `pytest tests/db tests/detect --continue-on-collection-errors`, after merging origin/main: this branch 31 failed, 1078 passed,
+4 skipped, 2 errors; clean origin/main 31 failed, 1072 passed, 4 skipped, 2 errors. Same failures (classifier/paralog tests); the 2 errors
+are tests/db/test_draw.py and test_synteny.py (pygenomeviz not installed). The +6 passes are the new schema/duckdb tests.

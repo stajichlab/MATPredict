@@ -17,7 +17,7 @@
     <label>Rank <select id="rank"><option>phylum</option><option>class</option><option>order</option><option>family</option><option>genus</option><option>species</option></select></label>
     <label>Search <input id="q" type="search" placeholder="taxon name"></label>
     <label>Min genomes <input id="minn" type="number" min="1" value="1" style="width:5em"></label>
-    <button id="reset">Reset</button>
+    <button id="up" title="Back out of the last taxon you clicked into">◀ Up one level</button> <button id="reset">Reset</button>
   </div>
   <div class="controls" id="dsbox"></div>
   <p id="crumb" class="muted"></p>
@@ -52,7 +52,23 @@ $("dsbox").addEventListener("change", e => { const k = e.target.dataset.ds; e.ta
 $("rank").onchange = e => { st.rank = e.target.value; render(); };
 $("q").oninput = e => { st.q = e.target.value.toLowerCase(); render(); };
 $("minn").oninput = e => { st.minn = +e.target.value || 1; render(); };
-$("reset").onclick = () => { st.filt = {}; st.rank = "phylum"; $("rank").value = "phylum"; $("q").value = ""; render(); };
+// Navigation. The view (rank and the taxa clicked into) lives in the URL hash, so the browser's Back button and
+// copied links work, and every step above is reachable from the breadcrumb or "Up one level".
+const hashFor = () => "#" + new URLSearchParams([["rank", st.rank], ...Object.entries(st.filt)]).toString();
+function applyHash() {
+  const p = new URLSearchParams(location.hash.slice(1)), filt = {};
+  for (const r of RANKS) if (p.has(r)) filt[r] = p.get(r);
+  st.filt = filt; st.rank = RANKS.includes(p.get("rank")) ? p.get("rank") : "phylum"; st.q = ""; $("q").value = ""; $("rank").value = st.rank;
+}
+function go(filt, rank) {          // move to a view; clears the locus maps, which belong to the previous one
+  st.filt = filt; st.rank = rank; st.q = ""; $("q").value = ""; $("rank").value = rank;
+  $("lociout").innerHTML = ""; $("locimsg").textContent = "";
+  history.pushState(null, "", hashFor()); render();
+}
+const upFilt = n => Object.fromEntries(Object.entries(st.filt).slice(0, n));   // the first n clicked-into taxa
+$("reset").onclick = () => go({}, "phylum");
+$("up").onclick = () => { const e = Object.entries(st.filt); if (e.length) go(upFilt(e.length - 1), e[e.length - 1][0]); };
+addEventListener("popstate", () => { applyHash(); $("lociout").innerHTML = ""; render(); });
 document.querySelectorAll("th[data-k]").forEach(th => th.onclick = () => { const k = th.dataset.k; st.dir = st.sort === k ? -st.dir : (k === "name" ? 1 : -1); st.sort = k; render(); });
 
 function render() {
@@ -69,7 +85,12 @@ function render() {
   list.forEach(x => x.rate = x.n ? x.c / x.n : 0);
   list.sort((a, b) => st.sort === "name" ? st.dir * a.name.localeCompare(b.name) : st.dir * (a[st.sort] - b[st.sort]));
   const shown = list.slice(0, 400);
-  $("crumb").innerHTML = Object.keys(st.filt).length ? "Within: " + Object.entries(st.filt).map(([k, v]) => `${k} <b>${v}</b>`).join(" › ") : "All taxa";
+  const trail = Object.entries(st.filt);
+  $("crumb").innerHTML = trail.length ? "Within: " + [`<a href="#" data-n="0">All taxa</a>`, ...trail.map(([k, v], i) =>
+    i === trail.length - 1 ? `${k} <b>${v.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</b>` : `<a href="#" data-n="${i + 1}">${k} <b>${v.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</b></a>`)].join(" › ")
+    : "All taxa";
+  $("up").disabled = !trail.length;
+  if (location.hash !== hashFor()) history.replaceState(null, "", hashFor());
   $("foot").textContent = `${fmt(list.length)} ${st.rank} groups${list.length > shown.length ? " (first 400 shown; narrow the search)" : ""}; ${fmt(list.reduce((a, x) => a + x.n, 0))} genomes.`;
 
   // chart: top 15 by genomes, called-genome composition
@@ -128,12 +149,19 @@ async function showLoci() {
   } catch (e) { $("locimsg").textContent = "Could not load locus data: " + e.message; }
 }
 $("showloci").onclick = showLoci;
+$("crumb").addEventListener("click", e => {   // a breadcrumb step: keep the first n taxa, show the rank below the n-th
+  const a = e.target.closest("a[data-n]"); if (!a) return;
+  e.preventDefault();
+  const n = +a.dataset.n, keep = Object.entries(st.filt).slice(0, n);
+  go(Object.fromEntries(keep), n ? RANKS[Math.min(RANKS.length - 1, RANKS.indexOf(keep[n - 1][0]) + 1)] : "phylum");
+});
 $("tbl").tBodies[0].addEventListener("click", e => {
   const tr = e.target.closest("tr"); if (!tr) return;
-  st.filt[st.rank] = tr.dataset.name;
-  if (st.rank === "species") { st.q = ""; $("q").value = ""; render(); showLoci(); $("showloci").scrollIntoView({ behavior: "smooth" }); return; }
-  st.rank = RANKS[RANKS.indexOf(st.rank) + 1]; $("rank").value = st.rank; $("q").value = ""; st.q = ""; render();
+  const filt = { ...st.filt, [st.rank]: tr.dataset.name };
+  if (st.rank === "species") { go(filt, "species"); showLoci(); $("showloci").scrollIntoView({ behavior: "smooth" }); return; }
+  go(filt, RANKS[RANKS.indexOf(st.rank) + 1]);
 });
+applyHash();
 render();
 </script>
 </body>

@@ -2811,7 +2811,7 @@ def run_pipeline(
 
     core_profile_cache: dict = {}
 
-    def _partial_core_decision(family, member_clusters, evidence):
+    def _partial_core_decision(family, member_clusters, evidence, vote):
         """`partial_core.evaluate` on this result's own evidence and models."""
         optional = {g["name"] for g in family.genes if g.get("optional", False)}
         core = {g: i for g, i in classifier_genes(family).items() if g not in optional}
@@ -2823,9 +2823,6 @@ def run_pipeline(
             length = contig_lengths.get(e.contig)
             edge = min(e.start - 1, length - e.end) if length else None
             stats.append(partial_core.CoreStat(e.gene_name, core[e.gene_name], e.coverage, e.bitscore, edge))
-        vote = idiomorph_candidates(
-            family, [e.gene_name for e in evidence],
-            [h for c in member_clusters for h in _own_live_hits(c, family.key)])
 
         def profile_scores(genes):
             try:
@@ -2878,12 +2875,18 @@ def run_pipeline(
         }
         evidence = _gene_evidence(member_clusters, score.family_key, polish_by, lost_to=lost_to,
                                   record_lengths=record_protein_lengths)
+        # The bitscore vote, computed once: the partial-coverage rule below reads it and
+        # it is what the report carries as `idiomorph_candidates`.
+        own_vote = idiomorph_candidates(
+            family, score.genes_found,
+            [h for c in member_clusters for h in _own_live_hits(c, family.key)],
+        )
         # Partial-coverage rule (`partial_core`, off by default). Decided here,
         # before the tier and class, so every later step sees the call it makes.
         vote_note = None
         if (partial_core_policy == partial_core.POLICY_COVERAGE_PROFILE and verdict is None
                 and called_idiomorph != "undetermined"):
-            decision = _partial_core_decision(family, member_clusters, evidence)
+            decision = _partial_core_decision(family, member_clusters, evidence, own_vote)
             if decision is not None:
                 vote_note = decision.note
                 if decision.decision == partial_core.DECISION_FLIPPED:
@@ -2955,10 +2958,6 @@ def run_pipeline(
         # (no idiomorph-restricted gene found), so nothing that used to be
         # reported is lost. Each resolution's own margin is unchanged and still
         # carried per event in `idiomorph_resolutions`.
-        own_vote = idiomorph_candidates(
-            family, score.genes_found,
-            [h for c in member_clusters for h in _own_live_hits(c, family.key)],
-        )
         idiomorph_margin = idiomorph_margin_from_vote(own_vote)
         if rule_changed_call:
             idiomorph_margin = None  # the vote's margin describes the idiomorph this rule set aside

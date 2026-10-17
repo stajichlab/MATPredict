@@ -18,7 +18,7 @@ at most 15 tasks. Genome ids and taxids: `pcv` job lists and `assembly_summary_G
 | Ophiostomatales (all in the campaign) | 126 | 1 | *Leptographium procerum* GCA_000806385.1: the MAT1-2 locus start moves 836 -> 1436 (same call, genes, end) |
 | Teloschistales (all in the campaign, incl. Xanthoria) | 88 | 2 | *Flavoplaca citrina* and *F.* cf. *flavocitrina*: a 102-bp, 14%-coverage, 27.7-bit MAT1-2-1 "hit" 4 kb past SLA2, built on the 107463 protein, disappears; MAT1-1 / medium / `mat_locus` unchanged |
 | Botrytis | 34 | 0 | all identical |
-| BioSample truth set (203 with a stated MAT1-1/MAT1-2, plus Botrytis T4 and B05.10 counted in the Botrytis row) | 203 | 0 | no model in any of them was built on a remnant protein |
+| BioSample truth set (203 genomes with a stated MAT1-1/MAT1-2, the Botrytis ones among them also in the Botrytis row) | 203 | 0 | no model in any of them was built on a remnant protein |
 
 No call (idiomorph, confidence) changed anywhere. 12 more loci changed only the reference record of a model (see below).
 
@@ -75,5 +75,5 @@ None found. Two caveats: (1) an Ophiostomatales MAT1-1-1 now has a 711-aa denomi
 none of the 126 genomes changed call, but the 711-aa record is worth a look; (2) the *Leptographium* locus start shifts by 600 bp (a weak remnant-protein hit no longer extends the cluster).
 
 ## Not verified
-Species/genus held-out for uamh-11059 and 107463 on their own genomes (no assemblies); the truth set was not scored against stated types (no call changed); the 417 non-sampled *A. fumigatus* MAT1-2 genomes were not run;
+Species/genus held-out for uamh-11059 and 107463 on their own genomes (no assemblies); the truth set was not scored against stated types (no call changed); the 206 other *A. fumigatus* genomes (of 416) were not run;
 `coverage_profile` was not run on the truth set.

@@ -58,8 +58,19 @@ def test_core_idiomorph_genes_reads_single_idiomorph_core_genes_only():
         {"name": "both", "role": "core_MAT", "present_in_idiomorphs": ["A", "alpha"]},
         {"name": "none", "role": "core_MAT"},
         {"name": "flank", "role": "flanking_conserved", "present_in_idiomorphs": ["A"]},
+        {"name": "accessory", "role": "core_MAT", "present_in_idiomorphs": ["A"], "optional": True},
     ])
-    assert core_idiomorph_genes([family]) == {KEY: {"A1": "A"}}
+    assert core_idiomorph_genes([family]) == {KEY: {"A1": "A"}}   # optional genes never make a pair
+
+
+def test_an_accessory_gene_pair_is_not_a_pair():
+    """Pezizomycotina `MAT`: MAT1-1-1 is required, MAT1-1-2/-3 are optional. 1,800 such 30-40% clusters
+    in 576 sampled genomes were polished for no call when they counted."""
+    family = types.SimpleNamespace(key=KEY, genes=[
+        {"name": "MAT1-1-1", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-1"]},
+        {"name": "MAT1-1-3", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-1"], "optional": True},
+    ])
+    assert not has_core_pair(_cluster(["MAT1-1-1", "MAT1-1-3"]), KEY, core_idiomorph_genes([family]))
 
 
 def test_a_capped_out_pair_cluster_is_now_polished():

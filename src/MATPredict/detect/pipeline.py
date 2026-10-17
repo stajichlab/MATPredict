@@ -758,9 +758,9 @@ DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY = 6
 #: no longer holds: a genome with more than N strong clusters polishes all of them.
 DEFAULT_POLISH_STRONG_IDENTITY = 50.0
 
-#: Every admitted cluster that carries two distinct live core_MAT genes of ONE idiomorph
-#: (two genes whose `present_in_idiomorphs` is that single idiomorph, e.g. MTLA1 + MTLA2, or
-#: MAT1-1-1 + MAT1-1-2) is polished whatever its rank, in the same tier as the strong-identity
+#: Every admitted cluster that carries two distinct live REQUIRED core_MAT genes of ONE idiomorph
+#: (two non-optional genes whose `present_in_idiomorphs` is that single idiomorph, e.g. MTLA1 +
+#: MTLA2 or MATA1 + MATA2; never the optional accessory genes MAT1-1-2, MAT1-1-3 ... of `MAT`) is polished whatever its rank, in the same tier as the strong-identity
 #: clusters: it takes a slot from the weakest ranked cluster, and the cap is exceeded only when
 #: more than N clusters qualify. Why: the rank counts distinct genes of ANY role and ranks identity second, so a
 #: small real cluster is outranked by whatever else a genome admits, and how many others are
@@ -940,12 +940,16 @@ def _best_identity(cluster, family_key) -> float:
 
 def core_idiomorph_genes(families) -> dict[FamilyKey, dict[str, str]]:
     """`{family key: {core_MAT gene name: its single idiomorph}}`, the genes
-    `has_core_pair` counts. A gene that names no idiomorph or several is left out."""
+    `has_core_pair` counts. Only a REQUIRED core gene counts: an `optional: true` one
+    (the accessory MAT1-1-2, MAT1-1-3, MAT1-2-10 ... of the Pezizomycotina `MAT` family)
+    is left out, as is a gene that names no idiomorph or several. So only a family whose
+    roster requires two or more core genes of one idiomorph (MTL A, MATsc, MATyl, ...)
+    can have a pair at all; where one gene defines the idiomorph (`MAT`), none."""
     out: dict[FamilyKey, dict[str, str]] = {}
     for family in families:
         genes = {}
         for g in family.genes:
-            if not isinstance(g, dict) or g.get("role") != "core_MAT":
+            if not isinstance(g, dict) or g.get("role") != "core_MAT" or g.get("optional"):
                 continue
             idioms = g.get("present_in_idiomorphs") or []
             if len(idioms) == 1:

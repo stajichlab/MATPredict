@@ -405,6 +405,9 @@ def _result_doc(r: DetectionResult) -> dict:
                 "winner_hmm_score": res.winner_hmm_score,
                 "loser_hmm_score": res.loser_hmm_score,
                 "loser_model_score": res.loser_model_score,
+                # Where the verdict applies; written only when known.
+                **({"winner_span": list(res.winner_span)} if getattr(res, "winner_span", None) else {}),
+                **({"loser_span": list(res.loser_span)} if getattr(res, "loser_span", None) else {}),
             }
             for res in r.idiomorph_resolutions
         ],

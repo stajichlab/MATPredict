@@ -382,6 +382,9 @@ def _result_doc(r: DetectionResult) -> dict:
         # it decided `idiomorph`; `undetermined` means its margin fell below
         # the family's `min_margin`.
         "idiomorph_classifier": r.idiomorph_classifier,
+        # The partial-coverage rule's reasoning (`--partial-core-policy`), written only when it
+        # triggered or its contig-edge guard stopped it.
+        **({"idiomorph_vote_note": r.idiomorph_vote_note} if getattr(r, "idiomorph_vote_note", None) else {}),
         # Other-allele cross-hits the confidence tier did not count (curator's
         # ruling 2026-09-27). Written only when non-empty.
         **({"confidence_ignored_genes": list(r.confidence_ignored_genes)}

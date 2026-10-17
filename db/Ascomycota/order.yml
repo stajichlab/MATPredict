@@ -448,6 +448,12 @@ loci:
     # MATsc MATA1 (52) then MTLA1 (37-41); MATa2 hits only MTLA2 (38 bits, C. albicans). The
     # architecture (two cassettes in one chromosome, flip/flop) matches neither MATsc (three
     # cassettes HML/MAT/HMR, HO switching) nor MTL (PAP1/OBP1/PIK1 inside the idiomorph).
+    # CURATOR DECISION 2026-10-18 (relayed): `two_idiomorphs_report` stays OFF and the records carry
+    # `mating_type.system: pseudohomothallic` (S. pombe precedent). Reason: K. phaffii switches mating
+    # type by inversion of the region between two cassettes, so BOTH cassettes (MATa and MATalpha) are
+    # present in every haploid genome; seeing both idiomorphs is the normal state, not an anomaly, and
+    # a genome-level "two idiomorphs" statement or a homothallic_candidate label would say nothing new
+    # (the two cassettes are ~135 kb apart and are reported as two separate calls).
     idiomorph_values: ["MATa", "MATalpha"]
     # idiomorph_class left `unassigned`: report-only and not mine to assign. MATalpha -> MAT1-1 is
     # strongly supported (MATalpha1 hits Pfam MATalpha_HMGbox PF04769, 37.5 bits, GA 28.1, and the

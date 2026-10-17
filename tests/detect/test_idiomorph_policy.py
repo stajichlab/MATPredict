@@ -25,6 +25,7 @@ FAM = Family(
     [
         {"name": "MAT1-1-1", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-1"]},
         {"name": "MAT1-2-1", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-2"]},
+        {"name": "MAT1-1-2", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-1"], "optional": True},
         {"name": "MAT1-1-3", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-1"], "optional": True},
         {"name": "MAT1-2-3", "role": "core_MAT", "present_in_idiomorphs": ["MAT1-2"], "optional": True},
         {"name": "SLA2", "role": "flanking_conserved", "optional": True},
@@ -95,3 +96,28 @@ def test_vote_ignores_optional_when_a_core_gene_has_a_hit():
 def test_unknown_policy_is_rejected():
     with pytest.raises(ValueError):
         resolve_idiomorph_overlaps([], FAM, policy="bogus")
+
+
+def test_resolution_only_keeps_both_live_and_the_vote_decides():
+    # Parastagonospora pattern: legacy supersedes MAT1-2-1; resolution_only keeps both live.
+    hits = [_hit("MAT1-1-3", 100, 400, 41.07, 60.0), _hit("MAT1-2-1", 110, 410, 40.0, 58.0)]
+    call, resolved = _call(hits, "resolution_only")
+    assert all(h.superseded_by is None for h in resolved)
+    # The vote is the legacy vote (optional genes keep voting): higher bitscore wins.
+    assert call == "MAT1-1"
+    hits = [_hit("MAT1-1-3", 100, 400, 41.07, 50.0), _hit("MAT1-2-1", 110, 410, 40.0, 58.0)]
+    assert _call(hits, "resolution_only")[0] == "MAT1-2"
+    # legacy supersedes MAT1-2-1 on identity here, so the vote has MAT1-1 only
+    assert _call(hits, "legacy")[0] == "MAT1-1"
+
+
+def test_cryphonectria_pattern_strong_optional_with_weak_core_still_calls_mat11():
+    # Strong optional MAT1-1-2 (142 bits), weak core MAT1-1-1 and MAT1-2-1 tied at 55.8.
+    hits = [
+        _hit("MAT1-1-2", 100, 900, 60.0, 142.0),
+        _hit("MAT1-1-1", 2000, 2300, 30.0, 55.8),
+        _hit("MAT1-2-1", 5000, 5300, 30.0, 55.8),
+    ]
+    assert _call(hits, "legacy")[0] == "MAT1-1"
+    assert _call(hits, "resolution_only")[0] == "MAT1-1"
+    assert _call(hits, "core_first")[0] == "undetermined"  # why core_first was rejected

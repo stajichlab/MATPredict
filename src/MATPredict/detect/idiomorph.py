@@ -99,7 +99,10 @@ class IdiomorphResolution:
 #: `legacy` is the default so nothing changes unless asked.
 IDIOMORPH_POLICY_LEGACY = "legacy"
 IDIOMORPH_POLICY_CORE_FIRST = "core_first"
-IDIOMORPH_POLICIES = (IDIOMORPH_POLICY_LEGACY, IDIOMORPH_POLICY_CORE_FIRST)
+#: Part (a) of `core_first` only: pairs with an optional gene are not resolved,
+#: the vote is left exactly as in `legacy` (optional genes keep voting).
+IDIOMORPH_POLICY_RESOLUTION_ONLY = "resolution_only"
+IDIOMORPH_POLICIES = (IDIOMORPH_POLICY_LEGACY, IDIOMORPH_POLICY_CORE_FIRST, IDIOMORPH_POLICY_RESOLUTION_ONLY)
 DEFAULT_IDIOMORPH_POLICY = IDIOMORPH_POLICY_LEGACY
 
 
@@ -684,7 +687,7 @@ def resolve_idiomorph_overlaps(
     between the two, the choice would flip on floating-point noise, and
     reporting the locus as `undetermined` is the honest outcome.
 
-    With `policy="core_first"` a pair in which EITHER gene is `optional` is
+    With `policy="core_first"` or `"resolution_only"` a pair in which EITHER gene is `optional` is
     not resolved at all: an accessory gene can neither supersede a core hit
     nor be superseded, so both stay live and the (policy-aware) vote decides.
     """
@@ -692,7 +695,7 @@ def resolve_idiomorph_overlaps(
     superseded: dict[int, str] = {}
     events: list[IdiomorphResolution] = []
     for gene_a, gene_b in _mutually_exclusive_pairs(family, hits):
-        if policy == IDIOMORPH_POLICY_CORE_FIRST and (
+        if policy in (IDIOMORPH_POLICY_CORE_FIRST, IDIOMORPH_POLICY_RESOLUTION_ONLY) and (
             _is_optional(family, gene_a) or _is_optional(family, gene_b)
         ):
             continue

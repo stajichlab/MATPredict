@@ -554,7 +554,8 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
         help="How roster genes marked `optional` (MAT1-1-2, MAT1-1-3, ...) take part in "
              "idiomorph resolution and the vote. legacy: like any gene (default). "
              "core_first: an optional gene cannot supersede a core hit, and votes only "
-             "when no core gene has a hit. Independent of --partial-core-policy.",
+             "when no core gene has a hit. resolution_only: only the first half (a pair "
+             "with an optional gene is not resolved); the vote is as in legacy. Independent of --partial-core-policy.",
     )
     detect.add_argument(
         "--partial-core-policy", choices=PARTIAL_CORE_POLICIES, default=DEFAULT_PARTIAL_CORE_POLICY,

@@ -7,10 +7,11 @@ from pathlib import Path
 import yaml
 
 from MATPredict import logger
+from MATPredict.detect.track_report import load_tracks
 from MATPredict.report.html import render_genome_report
 
 REPORT_YAML = "detection_report.yaml"
-_LISTED_OUTPUTS = ("detection_report.yaml", "detected_loci.gff3", "detected_loci.fasta")
+_LISTED_OUTPUTS = ("detection_report.yaml", "detected_loci.gff3", "detected_loci.fasta", "tracks.yaml")
 
 
 def register_subcommands(subparsers) -> None:
@@ -63,7 +64,7 @@ def write_run_report(run_dir: Path, pdf: bool = False) -> list[Path]:
     doc, run_dir = load_report(Path(run_dir))
     sample, from_folder = sample_name(doc, run_dir, None)
     files = [f for f in _LISTED_OUTPUTS if (run_dir / f).exists()]
-    kw = {"sample": sample, "sample_from_folder": from_folder, "files": files}
+    kw = {"sample": sample, "sample_from_folder": from_folder, "files": files, "tracks": load_tracks(run_dir)}
     html_path = run_dir / "report.html"
     html_path.write_text(render_genome_report(doc, **kw), encoding="utf-8")
     written = [html_path]
@@ -79,7 +80,7 @@ def _cmd_report_genome(args: argparse.Namespace) -> int:
     sample, from_folder = sample_name(doc, run_dir, args.sample)
     files = [f for f in _LISTED_OUTPUTS if (run_dir / f).exists()]
     out = Path(args.out) if args.out else run_dir / "report.html"
-    kw = {"sample": sample, "sample_from_folder": from_folder, "files": files}
+    kw = {"sample": sample, "sample_from_folder": from_folder, "files": files, "tracks": load_tracks(run_dir)}
     out.write_text(render_genome_report(doc, **kw), encoding="utf-8")
     print(f"report -> {out}")
     if args.pdf:

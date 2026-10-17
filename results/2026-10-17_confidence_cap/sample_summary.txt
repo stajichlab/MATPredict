@@ -1,0 +1,13 @@
+1200 genomes with a partial_weak run, 344 of them also with an off run; 0 missing; paired genomes that differ in something other than confidence/confidence_cap: []
+12 loci carry a confidence_cap note; 0 of them are not at medium
+high loci in the sample (off): 919; weighted high loci: 13774
+dropped loci: 12 raw, weighted 145; genomes affected: 11, weighted 136
+criteria: {'partial_edge': 5, 'weak_identity': 5, 'partial_edge+weak_identity': 2}
+family: {'Ascomycota:MAT': 3, 'Ascomycota:MTL': 8, 'Ascomycota:MATsc': 1}
+locus_class: {'mat_locus': 3, 'idiomorph_gene_only': 9}
+order (raw/weighted): [('Pichiales', 4, 70), ('Ascoideales', 2, 19), ('Sporopachydermiales', 2, 2), ('Mycosphaerellales', 1, 17), ('Pleosporales', 1, 18), ('Trypetheliales', 1, 2), ('Saccharomycetales', 1, 18)]
+drops vs v0.6.0 replay: {'v0.6.0 high, replay PE=True WK=False': 4, 'v0.6.0 medium, replay PE=True WK=False': 1, 'v0.6.0 high, replay PE=False WK=True': 4, 'v0.6.0 high, replay PE=True WK=True': 1, 'no matching locus in v0.6.0 report': 2}
+dropped loci in truth genomes: 0 []
+estimated dropped loci over all called genomes: 145 +- 47 (SE, stratified)
+estimated high loci (off) over all called genomes: 13774 +- 284 (SE, stratified)
+estimated genomes with a drop over all called genomes: 136 +- 44 (SE, stratified)

@@ -101,19 +101,43 @@ no longer test whether the new records recover anything.** They are scored only 
 
 Reading: labels never change where a call existed; confidence rises medium to high in 5 genomes; MAT1-2-7 is found in 6; Huntiella
 omanensis goes from no call to a weak partial MAT1-2 call (SLA2 + a ~42%-identity MAT1-2-7 hit, MAT1-2-1 missing; the label
-rests on that gene name). GCF_048999995.1 (B. rouxiae) loses MAT1-1-1 in the after run, which is a regression to explain.
-Several genomes carry MAT1-1-1 and MAT1-2-1 under one idiomorph label.
+rests on that gene name). Several genomes carry MAT1-1-1 and MAT1-2-1 under one idiomorph label. GCF_048999995.1 loses MAT1-1-1: see 5b.
 
-## 6. Recall test on uncalled Microascales outside the 11
+### 5b. Why GCF_048999995.1 (Berkeleyomyces rouxiae) loses MAT1-1-1
 
-Source: results/2026-10-18_uncalled_triage on origin/uncalled-triage (47 uncalled Microascales; 19 with a MAT-like gene linked to
-the flanks; 17 strong). Removing the 11 held-out genomes and the records' own assembly GCA_000389695.3 leaves **9 genomes (all 9 strong-linked)**,
-not 17: eight of the 17 strong ones were Ceratocystidaceae genomes in the held-out list. The 9 are 8 Scedosporium apiospermum
-(Microascaceae) and 1 Thielaviopsis ethacetica (Ceratocystidaceae). The 19-linked list adds no further genome.
+Five runs of this genome (`--taxid 2035830 --evidence-diagnostics`, same merged code, jobs cerato-inv): main db; branch db; branch db
+with `--max-polished-clusters-per-family 0`; main db plus only the MAT1-2-7 vocabulary entry (= branch with the new record removed);
+branch db with the old order.yml (new record, no vocabulary entry).
 
-**All 9 are already called on current main, with high confidence, and the call is identical after the new record.** The triage's
-"uncalled" status for them is also stale. So there is no uncalled Microascales genome left to give a recall measurement; the new
-records change nothing for them (no gain, no loss, and note Scedosporium is a different family from Ceratocystis).
+| run | MAT1-1-1 in genes_found | MAT1-2-7 |
+|---|---|---|
+| main | yes | no |
+| branch | **no** | yes |
+| branch, uncapped | no | yes |
+| main + vocabulary entry only | yes | no |
+| branch, record without the vocabulary entry | yes | no |
+
+* **Not the polish cap.** Uncapped gives the same call; the `polish_scope` event shows 7 polish pairs attempted on the branch (6 on main),
+  nothing dropped.
+* **Cause: the two changes together.** The vocabulary entry alone changes nothing; the record alone (its MAT1-2-7 gene dropped as out of
+  vocabulary) changes nothing; with both, the new record's MAT1-2-7 protein hits NW_027396493.1:1157712-1158366 at 62.1% identity, 100%
+  coverage (bitscore 218), and the evidence log gains an `idiomorph_resolution` row where MAT1-2-7 (60.2%) beats MAT1-1-1 (32.1%) at
+  100% overlap.
+* **The lost "MAT1-1-1" was a weak fragment, identical in both runs:** 1157973-1158140, 32.1% identity, 18% coverage, bitscore 33.9
+  (floor 33.0), from the ipo323 MAT1-1-1 reference, lying inside the region that is a MAT1-2-7 homolog, on a locus the call labels MAT1-2
+  (HMG gene MAT1-2-1 present; MAT1-1-1 had already lost an identity resolution to MAT1-2-1 on main, 33.3 vs 37.4). On the evidence this
+  is the gene being named correctly, not a lost real MAT1-1-1. Not checked: a manual alignment of the region or a look at the annotation
+  of that genome.
+* The polish-cap fix would not cover this, since the cap is not involved.
+* Recommendation (not a merge): the change is acceptable as it is; the curator may prefer to confirm by eye first.
+
+## 6. Recall test
+
+**No recall test is currently possible**: every genome that could have tested the new record (the 11 held-out genomes, and the 9 other
+strong-linked uncalled Microascales in results/2026-10-18_uncalled_triage on origin/uncalled-triage: 8 Scedosporium apiospermum and 1
+Thielaviopsis ethacetica) is already called on current main, with high confidence, and the call is identical after the new record
+(table below, the 9 genomes). This will be re-opened if the re-run of the 63 triage-linked genomes on current main finds uncalled
+Microascales genomes.
 
 | held-out genome (taxon) | before (main db) | after (new db) |
 |---|---|---|
@@ -126,6 +150,7 @@ records change nothing for them (no gain, no loss, and note Scedosporium is a di
 | GCA_058131905.1_UMB_ScApio476_1.0 (Scedosporium apiospermum) | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 |
 | GCA_982397395.1_T61-F (Scedosporium apiospermum) | mat, MAT1-1, high; found MAT1-1-1, APN2, SLA2, COX13 | mat, MAT1-1, high; found MAT1-1-1, APN2, SLA2, COX13 |
 | GCF_000732125.1_ScApio1.0 (Scedosporium apiospermum) | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 | mat, MAT1-1, high; found MAT1-1-1, MAT1-2-1, APN2, SLA2, COX13 |
+
 
 ## 7. Tests
 

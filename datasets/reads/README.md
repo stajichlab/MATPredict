@@ -39,3 +39,7 @@ Per strain, `matpredict detect` on the assembly versus `reads-type` (first 8M re
 - Noise: every strain also carries a `trace_` flag for the other idiomorph, often at a substantial depth (e.g. MAT1-1 55x vs MAT1-2 42x in B11343, a MAT1-2 strain), because the immitis panel includes flanking sequence that is not identical between strains. The calls are right, but the panel should be trimmed to the idiomorph-specific region.
 
 Note on subsampling: old SRA FASTQs (2012-13 HiSeq) are position-sorted, so the first N reads can all come from one chromosome. `fetch_type.slurm` therefore keeps every Nth read pair (about 8M pairs, N from the manifest's `read_count`) rather than using `--max-reads`. The Coccidioides pilot used the first 8M reads of unsorted centre files and was fine.
+
+### Trimmed panel (`panels/coccidioides/cocci2_*`), same 24 strains
+
+`coccidioides/pilot/comparison_cocci2.tsv`: 23 of 24 reads calls agree with `detect` (CA10 is the exception, `low_depth`, with 0x depth on every panel, including the shared flank, so its read set does not carry the locus at all; possible read/assembly mix-up, not checked). The wrong idiomorph now reads 0.00-0.15x in every strain (it was up to 100% of the true depth with the untrimmed panel).

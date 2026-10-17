@@ -432,3 +432,105 @@ def test_a_clean_route_has_no_routing_error():
     result = route(999999, families, lineage_taxids_resolver=lambda _t: [4751],
                    phylum_name_resolver=lambda _t: "Ascomycota")
     assert result.routing_error is None
+
+
+# --- subphylum guard on the phylum fallback (curator ruling 2026-10-17) -----------------
+
+PEZ, SACCH, TAPH = 147538, 147537, 451866
+
+
+def _sub(name, scope, subphylum, **kw):
+    fam = _family("Ascomycota", name, scope)
+    import dataclasses
+    return dataclasses.replace(fam, fallback_subphylum=subphylum, **kw)
+
+
+def _asco():
+    return [
+        _sub("MAT", [716546], PEZ),
+        _sub("MATtub", [147549], PEZ),
+        _sub("PM", [4896], TAPH),
+        _sub("MATsc", [4893], SACCH),
+        _sub("MATyl", [4951], SACCH, fallback_searchable=False),
+        _family("Ascomycota", "UNDECLARED", [1]),
+    ]
+
+
+def _fallback(lineage, families=None):
+    return route(
+        999999, families or _asco(),
+        lineage_taxids_resolver=lambda _t: lineage,
+        phylum_name_resolver=lambda _t: "Ascomycota",
+    )
+
+
+def test_a_saccharomycotina_genome_with_no_family_is_not_searched_against_pezizomycotina_mat():
+    result = _fallback([4751, 4890, SACCH, 3239873])
+    names = [f.key.locus_name for f in result.families]
+    assert result.routing_mode == "phylum_fallback"
+    assert "MAT" not in names and "MATtub" not in names and "PM" not in names
+    # the yeast family stays; the scope-only family never joins a fallback; a family
+    # that declares no subphylum is not restricted
+    assert names == ["MATsc", "UNDECLARED"]
+
+
+def test_an_orbiliomycetes_genome_still_gets_the_pezizomycotina_fallback():
+    result = _fallback([4751, 4890, PEZ, 147538 + 1000])
+    names = [f.key.locus_name for f in result.families]
+    assert names == ["MAT", "MATtub", "UNDECLARED"]
+
+
+def test_a_taphrinomycotina_genome_gets_only_taphrinomycotina_families():
+    names = [f.key.locus_name for f in _fallback([4751, 4890, TAPH]).families]
+    assert names == ["PM", "UNDECLARED"]
+
+
+def test_a_genome_in_no_declared_subphylum_is_not_restricted():
+    """Unclassified Ascomycota (no subphylum in the lineage) keeps the old fallback."""
+    names = [f.key.locus_name for f in _fallback([4751, 4890]).families]
+    assert names == ["MAT", "MATtub", "PM", "MATsc", "UNDECLARED"]
+
+
+def test_a_failed_lineage_lookup_leaves_the_fallback_unrestricted_and_recorded():
+    def boom(_t):
+        raise RuntimeError("down")
+    result = route(999999, _asco(), lineage_taxids_resolver=boom,
+                   phylum_name_resolver=lambda _t: "Ascomycota")
+    assert [f.key.locus_name for f in result.families] == [
+        "MAT", "MATtub", "PM", "MATsc", "UNDECLARED"]
+    assert "lineage lookup failed" in result.routing_error
+
+
+def test_explicit_phylum_is_unchanged_by_the_guard():
+    result = route(None, _asco(), phylum="Ascomycota")
+    assert result.routing_mode == "explicit_phylum"
+    assert [f.key.locus_name for f in result.families] == [
+        "MAT", "MATtub", "PM", "MATsc", "UNDECLARED"]
+
+
+def test_the_real_order_yml_guard(real_db_root):
+    fams = load_all_families(real_db_root)
+    asco = {f.key.locus_name: f for f in fams if f.key.phylum == "Ascomycota"}
+    assert asco["MAT"].fallback_subphylum == PEZ and asco["MATtub"].fallback_subphylum == PEZ
+    assert asco["PM"].fallback_subphylum == TAPH
+    for name in ("MATsc", "MATyl", "MATdc", "MTL"):
+        assert asco[name].fallback_subphylum == SACCH, name
+    for name in ("MATyl", "MATdc"):
+        assert asco[name].fallback_searchable is False, name
+        assert asco[name].taxonomic_scope in ([4951], [43987])
+    # a Dipodascales genome outside Yarrowia/Geotrichum (Magnusiomyces, 1095182)
+    result = route(
+        1095182, fams,
+        lineage_taxids_resolver=lambda _t: [4751, 4890, SACCH, 3243772],
+        phylum_name_resolver=lambda _t: "Ascomycota",
+    )
+    names = {f.key.locus_name for f in result.families}
+    assert result.routing_mode == "phylum_fallback"
+    assert not names & {"MAT", "MATtub", "PM", "mat1", "mat2", "mat3", "MATyl", "MATdc"}
+    # a Yarrowia genome routes directly to MATyl only
+    result = route(
+        4952, fams,
+        lineage_taxids_resolver=lambda _t: [4751, SACCH, 4951, 4952],
+        phylum_name_resolver=lambda _t: "Ascomycota",
+    )
+    assert [f.key.locus_name for f in result.families] == ["MATyl"]

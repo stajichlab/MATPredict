@@ -86,6 +86,10 @@ properties:
         # OPTIONAL (curator ruling 2026-10-01). false = scope-only family: never
         # searched in phylum fallback or an explicit-phylum run. Absent = true.
         fallback_searchable: {type: boolean}
+        # OPTIONAL (curator ruling 2026-10-17). NCBI taxid of the family's subphylum;
+        # on a phylum fallback a family is searched only if it matches the genome's
+        # subphylum (read from its lineage). Absent = not restricted.
+        fallback_subphylum: {type: integer}
         # OPTIONAL. Polish both genes of an overlapping mutually exclusive
         # pair and decide it on the two models (curator's ruling 2026-09-26,
         # Mucoromycota sexM/sexP). Absent means false.

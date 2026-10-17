@@ -2,7 +2,7 @@ record_id: 4952_clib122_MATyl_B
 record_version: 1
 taxonomy:
   taxid: 4952
-  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Dipodascomycetes;o__Dipodascales;f__Dipodascaceae;g__Yarrowia;s__Yarrowia_lipolytica
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Dipodascomycetes;o__Dipodascales;f__Dipodascales_incertae_sedis;g__Yarrowia;s__Yarrowia_lipolytica
   lineage_resolved_date: '2026-10-17'
 organism:
   species: Yarrowia lipolytica
@@ -46,8 +46,7 @@ locus:
       for matb1/matb2 (curator ruling 2026-10-01 leaves idiomorph_class unassigned).
       The RefSeq apn2 protein (XP_501555.1, 582 aa) is longer at its N-terminus than
       the MATA-record apn2 (CAE84424.1, 412 aa; contained in it). The deposit AJ617307.1
-      carries strain "W29" in its source feature although W29 is a MATA strain; the
-      sequence, not that label, is the evidence here (unresolved discrepancy). The
+      carries strain "W29" in its source feature (so does the MATA deposit AJ617306.1). Checked 2026-10-17: three W29 assemblies (GCA_001307795.1, GCF_001761485.1, GCA_003054345.1) all carry MATA (99.7% to AJ617306.1, no hit to AJ617307.1), while the CLIB122 and 22301-5 genomes carry AJ617307.1 at 100% over its full length. The W29 label on AJ617307.1 therefore does not identify the source strain of the MATB allele (Butler et al. 2004 full text could not be read, so the actual source strain is unverified). The allele label B rests on the sequence (identical to the CLIB122 MATB locus) and on the functional papers, not on the strain name. The
       strain 22301-5 draft (GCA_023272835.1, CP096873.1:1023801-1031608, 100% to AJ617307.1)
       is corroboration only and is not used as evidence in this record.'
     segments:

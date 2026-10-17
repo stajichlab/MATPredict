@@ -1,0 +1,160 @@
+record_id: 13684_sn15_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 13684
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Dothideomycetes;o__Pleosporales;f__Phaeosphaeriaceae;g__Parastagonospora;s__Parastagonospora_nodorum
+  lineage_resolved_date: '2026-10-17'
+organism:
+  species: Parastagonospora nodorum
+  strain:
+    name: SN15
+    known: true
+    culture_collection_ids:
+    - SN15
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  assembly_accession: GCF_000146915.1
+  assembly_accession_basis: sequence_link
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MAT1-1-1(+)->APN2(-)->COX13(+)
+    definition_note: Genome-derived MAT1-1 locus of Parastagonospora nodorum SN15
+      (RefSeq GCF_000146915.1 = Broad assembly ASM14691v2, scaffold NW_001884549.1),
+      curated 2026-10-17 from the RefSeq GFF (CDS coordinates and XP protein accessions
+      as annotated). MAT1-1-1 (SNOG_00375, XP_001791062.1, 344 aa) is identical (100%
+      over 344 aa) to the SN435PL98 MAT1-1-1 protein AAO31740.1 of the curated deposit
+      record 13684_sn435pl98_MAT_MAT1-1 (Bennett et al. 2003); SN15 is MAT1-1 (Syme
+      et al. 2013, G3, doi 10.1534/g3.112.004994; not independently verified here).
+      APN2 (SNOG_00377, XP_001791064.1) and COX13 (SNOG_00378, XP_001791065.1) follow
+      MAT1-1-1 on the same scaffold, identified by blastp against the A. fumigatus
+      Af293 records (APN2 50.6%, COX13 48.2% identity); SNOG_00377 is annotated 5'-partial
+      (end_range). Two small uncharacterised genes lie between MAT1-1-1 and APN2 and
+      are not recorded. SLA2 is NOT recorded here. The SN15 SLA2 ortholog (SNOG_00689,
+      XP_001791366.1, 74.2% identity to Af293 SLA2) lies on the same scaffold 690
+      kb from MAT1-1-1 (1,557,598-1,563,291), so it is not a flank of the locus in
+      this genome; the roster still declares SLA2 for other lineages.
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NW_001884549.1
+        seq_region: NW_001884549.1
+      start: 865888
+      end: 873147
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:XP_001791062.1
+  role: core_MAT
+  present: true
+  locus_tag: SNOG_00375
+  segment_index: 0
+  start: 865888
+  end: 866977
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 865888
+    end: 866107
+  - start: 866163
+    end: 866977
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: APN2
+  protein_accession: ncbi_protein:XP_001791064.1
+  role: flanking_conserved
+  present: true
+  locus_tag: SNOG_00377
+  segment_index: 0
+  start: 870264
+  end: 872218
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 872002
+    end: 872218
+  - start: 870264
+    end: 871954
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: COX13
+  protein_accession: ncbi_protein:XP_001791065.1
+  role: flanking_conserved
+  present: true
+  locus_tag: SNOG_00378
+  segment_index: 0
+  start: 872537
+  end: 873147
+  strand: +
+  order_in_locus: 2
+  exons:
+  - start: 872537
+    end: 872757
+  - start: 872884
+    end: 873043
+  - start: 873103
+    end: 873147
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: 'Genome-derived: an alpha-box MAT1-1-1 gene identical to
+      the experimentally typed SN435PL98 MAT1-1-1 (Bennett et al. 2003), followed
+      by APN2 and COX13 in the conserved order, in the SN15 reference assembly.'
+    citations: &id001
+    - pmid: '12948511'
+      doi: 10.1016/s1087-1845(03)00062-8
+  boundaries:
+    tier: 2
+    experimental_method: Coordinates are the RefSeq CDS coordinates of the three genes;
+      the core segment runs from the first base of MAT1-1-1 to the last CDS base of
+      COX13. No idiomorph endpoints are asserted.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: Idiomorph from MAT gene content (alpha-box MAT1-1-1) and
+      100% protein identity to the typed SN435PL98 MAT1-1-1 (Bennett et al. 2003).
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NW_001884549.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-flank-curation
+  proposal_dedupe_key: 12948511|13684|MAT|MAT1-1|SN15
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Curator decision 2026-10-17: add P. nodorum flank references (APN2, COX13) so Parastagonospora flanks match their own species. Curated by Claude on the pnodorum-flanks branch; curator sign-off on this record is pending (reviewed_by left null). validate was first run without taxonkit on PATH (taxonomy_current null); re-run with the pixi env bin on PATH gave taxonomy_current true.'
+model_provenance: null

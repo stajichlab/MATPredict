@@ -427,6 +427,11 @@ and the database come from the same commit.
 | `build-duckdb [--out FILE]` | Build the DuckDB query cache from the record files |
 | `release` | Stamp a database release on all records |
 
+`validate` calls `taxonkit` for the taxonomy check. Measured on 2026-10-18, taxonkit peaks at about 0.9 GB and ran on a
+login node and in a 2 GB job, but a kill (`taxonkit exited -9`) was seen once on a shared login node. To be safe, run
+`validate` on a compute node with at least 8 GB: `sbatch scripts/curate_db_validate.slurm PHYLUM RECORD_ID` (set `REPO` to
+the checkout). A taxonkit failure is reported as an error and leaves `taxonomy_current` unset; it is never written as false.
+
 ### Configuration
 
 MATPredict looks up NCBI taxonomy (for `--taxid` routing and the genetic code)

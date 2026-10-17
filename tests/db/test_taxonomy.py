@@ -76,3 +76,11 @@ def test_a_taxonkit_failure_is_an_error_not_an_out_of_date_taxid():
 
     with pytest.raises(TaxonkitError, match="not on PATH"):
         resolve_lineage(5158, runner=missing)
+
+
+def test_a_killed_taxonkit_says_to_use_a_compute_node():
+    def killed(cmd, **kwargs):
+        return SimpleNamespace(returncode=-9, stdout="", stderr="")
+
+    with pytest.raises(TaxonkitError, match="compute node with at least 8 GB"):
+        resolve_lineage(5158, runner=killed)

@@ -9,6 +9,11 @@ from pathlib import Path
 from typing import Callable
 
 
+class TaxonkitError(RuntimeError):
+    """taxonkit could not run or failed. Distinct from a taxid that resolved to an empty lineage (not current):
+    folding the two together reported 'taxonomy not current' for a broken taxdump or PATH."""
+
+
 @dataclass(frozen=True)
 class TaxonomyResult:
     """Result of resolving a taxid's lineage via taxonkit."""
@@ -19,14 +24,32 @@ class TaxonomyResult:
 
 
 def resolve_lineage(taxid: int, runner: Callable = subprocess.run) -> TaxonomyResult:
-    """Resolve a taxid to its full lineage string via `taxonkit reformat`."""
-    proc = runner(
-        ["taxonkit", "reformat", "-I", "1", "-f", "k__{k};p__{p};c__{c};o__{o};f__{f};g__{g};s__{s}"],
-        input=str(taxid),
-        capture_output=True,
-        text=True,
-    )
-    line = proc.stdout.strip().split("\n")[0] if proc.stdout.strip() else f"{taxid}\t"
+    """Resolve a taxid to its full lineage string via `taxonkit reformat`.
+
+    A taxid taxonkit does not resolve gives an empty lineage and `is_current` False. A taxonkit that cannot run
+    (not installed, no taxdump, non-zero exit) raises `TaxonkitError` with its stderr, so a broken environment is
+    not mistaken for an out-of-date taxid. The taxid is sent newline-terminated, as taxonkit's line reader expects.
+    """
+    try:
+        proc = runner(
+            ["taxonkit", "reformat", "-I", "1", "-f", "k__{k};p__{p};c__{c};o__{o};f__{f};g__{g};s__{s}"],
+            input=f"{taxid}\n",
+            capture_output=True,
+            text=True,
+        )
+    except FileNotFoundError as exc:
+        raise TaxonkitError("taxonkit is not on PATH") from exc
+    returncode = getattr(proc, "returncode", 0)
+    stderr = (getattr(proc, "stderr", "") or "").strip()
+    if returncode != 0:
+        hint = ""
+        if returncode in (-9, 137):  # SIGKILL as Python reports it, or as a shell does
+            hint = (" (taxonkit was killed, possibly by a login-node memory cap of about 1 GB; run `curate-db validate` on a "
+                    "compute node (2 GB is enough), e.g. scripts/curate_db_validate.slurm)")
+        raise TaxonkitError(f"taxonkit exited {returncode}: {stderr[:300]}{hint}")
+    if not proc.stdout.strip():
+        raise TaxonkitError(f"taxonkit printed nothing for taxid {taxid}" + (f": {stderr[:300]}" if stderr else ""))
+    line = proc.stdout.strip().split("\n")[0]
     _, _, lineage = line.partition("\t")
     is_current = bool(lineage.strip())
     return TaxonomyResult(taxid=taxid, lineage=lineage, is_current=is_current)

@@ -65,6 +65,12 @@ def convert_genbank(gbk_path: Path, out_dir: Path) -> ConvertedGenome:
     contigs = []
     proteins: list[str] = []
     for record in SeqIO.parse(str(gbk_path), "genbank"):
+        try:
+            str(record.seq[:1])
+        except Exception as exc:  # Bio raises UndefinedSequenceError for a record with no ORIGIN section
+            raise ValueError(
+                f"{gbk_path}: record {record.id} has no sequence (no ORIGIN section); `detect` needs the "
+                f"genome sequence, so give the genome FASTA as --genome and this file as --annotation") from exc
         contigs.append(record)
         for index, feature in enumerate(record.features):
             if feature.type != "CDS":

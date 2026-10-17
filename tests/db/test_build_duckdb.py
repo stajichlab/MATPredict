@@ -177,3 +177,37 @@ def test_candidate_record_gets_null_paths_even_with_files_present(tmp_path):
     con.close()
 
     assert row == (None, None, None)
+
+
+def test_unisexual_switching_system_is_stored(tmp_path):
+    record = copy.deepcopy(RECORD)
+    record["record_id"] = "5522_test_MAT_unswitched"
+    record["mating_type"] = {"locus_name": "MAT", "idiomorphs": ["Plus"], "system": "unisexual_switching"}
+    record_dir = tmp_path / "Mucoromycota" / "Mucorales" / record["record_id"]
+    record_dir.mkdir(parents=True)
+    (record_dir / "metadata.yaml").write_text(yaml.safe_dump(record))
+    out_path = tmp_path / "matpredict.duckdb"
+    build(db_root=tmp_path, out_path=out_path)
+    con = duckdb.connect(str(out_path))
+    row = con.execute("SELECT mating_system FROM locus_record WHERE record_id = ?", [record["record_id"]]).fetchone()
+    con.close()
+    assert row == ("unisexual_switching",)
+
+
+def test_locus_gene_carries_status_and_remnant_note(tmp_path):
+    record = copy.deepcopy(RECORD)
+    record["genes"].append({
+        "gene_index": 1, "name": "sexM", "protein_accession": None, "role": "core_MAT",
+        "present": False, "status": "remnant", "remnant_note": "5'-truncated copy",
+    })
+    record_dir = tmp_path / "Mucoromycota" / "Mucorales" / record["record_id"]
+    record_dir.mkdir(parents=True)
+    (record_dir / "metadata.yaml").write_text(yaml.safe_dump(record))
+    out_path = tmp_path / "matpredict.duckdb"
+    build(db_root=tmp_path, out_path=out_path)
+    con = duckdb.connect(str(out_path))
+    rows = con.execute(
+        "SELECT name, status, remnant_note FROM locus_gene ORDER BY gene_index"
+    ).fetchall()
+    con.close()
+    assert rows == [("sexP", None, None), ("sexM", "remnant", "5'-truncated copy")]

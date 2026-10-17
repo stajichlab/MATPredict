@@ -232,3 +232,123 @@ def test_every_gene_class_used_in_order_yml_is_a_member_of_the_schema_enum():
                         f"{order_path.name}:{locus['locus_name']}:{gene['name']} -> {gene_class}"
                     )
     assert offenders == [], f"gene_class values outside the schema enum: {offenders}"
+
+
+@pytest.mark.parametrize("system", ["heterothallic", "homothallic", "pseudohomothallic", "unisexual_switching"])
+def test_mating_system_enum_accepts_known_values(system):
+    record = copy.deepcopy(VALID_RECORD)
+    record["mating_type"]["system"] = system
+    assert schema.validate_metadata(record) == []
+
+
+def test_mating_system_enum_rejects_unknown_value():
+    record = copy.deepcopy(VALID_RECORD)
+    record["mating_type"]["system"] = "unisexual"
+    errors = schema.validate_metadata(record)
+    assert errors and any("system" in e for e in errors)
+# --- gene-level `status` (remnant|pseudogene) ---------------------------------
+
+
+def _with_gene(**fields):
+    record = copy.deepcopy(VALID_RECORD)
+    record["genes"][0].update(fields)
+    return record
+
+
+@pytest.mark.parametrize("status", ["remnant", "pseudogene"])
+def test_schema_accepts_gene_status(status):
+    assert schema.validate_metadata(_with_gene(status=status, remnant_note="x")) == []
+
+
+@pytest.mark.parametrize("status", ["partial", "intact", "Remnant", "", None])
+def test_schema_rejects_other_gene_status_values_and_partial(status):
+    assert schema.validate_metadata(_with_gene(status=status)) != []
+
+
+def test_status_is_optional_and_absent_means_intact():
+    assert "status" not in VALID_RECORD["genes"][0]
+    assert schema.validate_metadata(VALID_RECORD) == []
+    assert schema.validate_gene_status(VALID_RECORD) == []
+
+
+def test_validate_gene_status_present_false_with_no_model_is_valid():
+    gene = dict(protein_accession=None, present=False, status="remnant", start=None, end=None)
+    assert schema.validate_gene_status(_with_gene(**gene)) == []
+
+
+def test_validate_gene_status_present_false_with_a_model_is_flagged():
+    errors = schema.validate_gene_status(_with_gene(present=False, status="remnant"))
+    assert len(errors) == 1 and "present: false" in errors[0]
+
+
+def test_validate_gene_status_present_true_with_a_model_is_valid():
+    assert schema.validate_gene_status(_with_gene(status="pseudogene")) == []
+
+
+def test_validate_gene_status_present_true_without_a_model_is_flagged():
+    errors = schema.validate_gene_status(_with_gene(status="remnant", protein_accession=None))
+    assert len(errors) == 1 and "records no model" in errors[0]
+
+
+def test_validate_gene_status_flags_an_orphan_remnant_note():
+    errors = schema.validate_gene_status(_with_gene(remnant_note="truncated"))
+    assert len(errors) == 1 and "no status" in errors[0]
+
+
+# Records migrated to carry a gene `status` (decision paper
+# docs/notes/2026-10-17_remnant-status.md, option B step 1): (record_id, gene, status, present).
+# sxlc146 MAT1-1-2 is deliberately absent: its 391-aa protein is full length against
+# Diaporthales references (397, 406 aa), so it is not labelled.
+MIGRATED_STATUS_GENES = [
+    ("40559_sas405_MAT_MAT1-2", "MAT1-1-1", "remnant", False),
+    ("28548_06cwm-g22_MAT_combined", "MAT1-1-1", "remnant", False),
+    ("1708542_exf-10342_wallMAT_v2", "HMG", "remnant", False),
+    ("746128_a1163_MAT_MAT1-1", "MAT1-2-1", "remnant", True),
+    ("230073_uamh-11059_MAT_MAT1-2", "MAT1-1-1", "remnant", True),
+    ("107463_unknown-1_MAT_MAT1-2", "MAT1-2-1", "pseudogene", True),
+]
+
+
+def test_migrated_records_carry_the_gene_status_flag():
+    records = {}
+    for meta_path, _order in _accepted_records():
+        record = yaml.safe_load(meta_path.read_text())
+        records[record["record_id"]] = record
+    for record_id, gene_name, status, present in MIGRATED_STATUS_GENES:
+        genes = [g for g in records[record_id]["genes"] if g["name"] == gene_name]
+        assert len(genes) == 1, record_id
+        assert genes[0].get("status") == status, record_id
+        assert genes[0]["present"] is present, record_id
+        assert records[record_id]["record_version"] >= 2, record_id
+    # exactly these genes carry a status, nothing else in the database
+    flagged = {
+        (rid, g["name"]) for rid, r in records.items() for g in r["genes"] if g.get("status")
+    }
+    assert flagged == {(rid, gene) for rid, gene, _s, _p in MIGRATED_STATUS_GENES}
+
+
+def test_every_accepted_record_validates_against_the_schema_and_gene_status_rules():
+    failures = []
+    for meta_path, _order in _accepted_records():
+        record = yaml.safe_load(meta_path.read_text())
+        for error in schema.validate_metadata(record) + schema.validate_gene_status(record):
+            failures.append(f"{meta_path}: {error}")
+    assert failures == []
+
+
+def test_no_status_gene_protein_is_in_a_proteins_faa_reference_file():
+    """Step 2: proteins.faa is what detect reads as the reference set, so it must not
+    carry a protein for a gene whose metadata says remnant|pseudogene."""
+    failures = []
+    for meta_path, _order in _accepted_records():
+        record = yaml.safe_load(meta_path.read_text())
+        flagged = {g["gene_index"] for g in record["genes"] if g.get("status")}
+        faa = meta_path.parent / "proteins.faa"
+        if not flagged or not faa.exists():
+            continue
+        for line in faa.read_text().splitlines():
+            if line.startswith(">"):
+                fields = dict(p.split("=", 1) for p in line.split("|")[1:] if "=" in p)
+                if int(fields["gene_index"]) in flagged:
+                    failures.append(f"{faa}: {line}")
+    assert failures == []

@@ -23,6 +23,14 @@ properties:
         idiomorph_class:
           type: object
           additionalProperties: {enum: [MAT1-1, MAT1-2, unassigned]}
+        # OPTIONAL (curator 2026-10-18): idiomorph label -> genes of this locus whose
+        # intact presence (modelled, >= 90% of reference) marks that idiomorph as really
+        # present. The partial-coverage rule (`--partial-core-policy`) will not flip a
+        # call away from an idiomorph with an intact companion; it reports `undetermined`.
+        # Absent = no veto. Declare only where a clade has been reviewed.
+        idiomorph_companions:
+          type: object
+          additionalProperties: {type: array, items: {type: string}, minItems: 1}
         idiomorph_pattern: {type: string}
         # OPTIONAL. How far apart (bp) two tblastn hits of this locus may be and
         # still be clustered as one candidate locus. ABSENT MEANS 25000: that was

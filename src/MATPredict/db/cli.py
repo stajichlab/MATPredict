@@ -16,7 +16,7 @@ from MATPredict.db.build_duckdb import build as build_duckdb
 from MATPredict.db.curate import accept_candidate, propose_candidate, reject_candidate
 from MATPredict.db.http_cache import CachedFetcher
 from MATPredict.db.ncbi_client import NcbiClient
-from MATPredict.db.schema import validate_gene_vocabulary
+from MATPredict.db.schema import validate_gene_status, validate_gene_vocabulary
 from MATPredict.db.uniprot_client import UniprotClient
 from MATPredict.db.validate import _client_for, _independent_translation, validate_record
 
@@ -67,6 +67,9 @@ def _cmd_validate(args: argparse.Namespace) -> int:
 
     result = validate_record(record, ncbi=ncbi, uniprot=uniprot)
     record["validation"].update(result)
+    if result.get("taxonomy_error"):
+        # taxonkit could not run, so taxonomy_current is unset (null), not false: say so, do not leave it silent
+        print(f"taxonomy check not run: {result['taxonomy_error']}")
 
     # A curated gene whose name is not declared by its locus in order.yml is silently
     # dropped by detect.search._attribute, so it can never be found in any genome. Report
@@ -85,6 +88,10 @@ def _cmd_validate(args: argparse.Namespace) -> int:
         vocabulary_errors = validate_gene_vocabulary(record, order_doc)
         for error in vocabulary_errors:
             print(f"gene-vocabulary error: {error}")
+    status_errors = validate_gene_status(record)
+    for error in status_errors:
+        print(f"gene-status error: {error}")
+    vocabulary_errors = vocabulary_errors + status_errors
 
     # A re-validation that reveals a problem must downgrade the record's status so it gets
     # re-reviewed, unless it was explicitly rejected already (never silently un-reject).

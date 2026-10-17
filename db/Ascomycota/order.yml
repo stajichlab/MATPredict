@@ -6,6 +6,11 @@ loci:
     # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
     # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
     idiomorph_class: {MAT1-1: MAT1-1, MAT1-2: MAT1-2}
+    # Companion-gene veto for --partial-core-policy (curator 2026-10-18). MAT1-1-5 is a
+    # Leotiomycete MAT1-1 gene (flip review 2026-10-17: Monilinia, Sclerotinia nivalis/sativa
+    # carry it intact beside a full MAT1-2-1). Only MAT1-1 is declared; no companion is
+    # guessed for other clades or for MAT1-2 (MAT1-2-10 was not part of the review).
+    idiomorph_companions: {MAT1-1: [MAT1-1-5]}
     taxonomic_scope: [716546]  # leotiomyceta -- live-confirmed via NCBI esummary
     # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
     fallback_subphylum: 147538  # Pezizomycotina
@@ -136,6 +141,10 @@ loci:
       # Optional: not every Pezizomycotina MAT1-2 locus has it. No accepted record
       # declares it yet.
       - {name: MAT1-2-3, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
+      # MAT1-2-7 added to the vocabulary 2026-10-17. Source: the Ceratocystis fimbriata
+      # unswitched mating-locus deposit KF033902.1 (clone of CBS114723; Wilken et al. 2014,
+      # PMID 24651494) annotates a /gene="MAT1-2-7" CDS (WOK41352.1) between MAT1-1-1 and MAT1-2-1.
+      - {name: MAT1-2-7, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
       # MAT1-1-4 (Coccidioides posadasii RMSCC1040, ABS19621.1) is a Coccidioides-
       # specific captured MAT1-1-idiomorph gene (Fraser et al. 2007; Mandel et al. 2007).
       - {name: MAT1-1-4, role: core_MAT, present_in_idiomorphs: ["MAT1-1"], optional: true}

@@ -1,0 +1,196 @@
+record_id: 40559_sas405_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 40559
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Leotiomycetes;o__Helotiales;f__Sclerotiniaceae;g__Botrytis;s__Botrytis_cinerea
+  lineage_resolved_date: '2026-09-17'
+organism:
+  species: Botrytis cinerea
+  strain:
+    name: SAS405
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-2-1(-)->MAT1-2-10(+)
+    definition_note: 'The MAT1-2 idiomorph of Botrytis cinerea (teleomorph Botryotinia
+      fuckeliana), from the classical mating tester strain SAS405, deposited as GenBank
+      KF944386.1 (4,501 bp). The GenBank source feature carries /note="type: MAT1-2"
+      and /strain="SAS405". Gene identities, CDS coordinates, strands, exon structures
+      and protein accessions below were read directly off that primary GenBank record
+      by the curator via NCBI efetch on 2026-10-17: MAT1-2-1 (AHX22634.1, HMG-domain
+      containing protein, 3 exons, minus strand, complement(join(423..898,954..1327,1378..1658)))
+      and the gene deposited as MAT1-2-4 (AHX22635.1, 3 exons, plus strand, join(2404..2594,2644..2882,2931..3115)).
+      The second gene is recorded here under the name MAT1-2-10, the name this database''s
+      Ascomycota order.yml declares for it (MAT1-2-4 in order.yml names a distinct
+      Eurotiomycete gene); Abate et al. 2018 (PMID 29767553) use MAT1-2-10 for the
+      Sclerotiniaceae MAT1-2 gene pair partner of MAT1-2-1. The curator did not verify
+      the renaming paper (Wilken et al. 2017) in PubMed; the equivalence rests on
+      order.yml''s own comment and on the deposit''s product annotation. This is the
+      companion of the MAT1-1 record 40559_sas56_MAT_MAT1-1 (KF944385.1).
+
+      EVIDENCE CAVEAT. As for the KF944385.1 record, the GenBank REFERENCE block lists
+      De Miccolis Angelini, Rotolo, Pollastro and Faretra, "Molecular analysis of
+      the mating type (MAT1) locus in the heterothallic ascomycete Botryotinia fuckeliana
+      (Botrytis cinerea)", JOURNAL "Unpublished", plus a 2013 direct submission (Bari).
+      No primary paper is cited here: tier 2 on all axes. Published support is Abate
+      et al. 2018 (Phytopathology 108:1315-1325), whose abstract states that the Monilinia
+      MAT1 idiomorphs are flanked by APN2 and SLA2, resemble those of Botrytis cinerea
+      and other Sclerotiniaceae, with MAT1-2 containing MAT1-2-1 (HMG-box) and MAT1-2-10,
+      and that small fragments of the opposite idiomorph (dMAT1-1-1, dMAT1-2-1) lie
+      close to the flanks; that is a comparative statement about Monilinia, not an
+      experiment on B. cinerea. Wilson et al. 2023 (PLOS ONE 18:e0292619) is cited
+      for the Leotiomycete-wide survey; the curator read only its abstract.
+
+      MAT1-1-1 REMNANT (truncated, NOT a functional alpha-box gene). KF944386.1 carries,
+      unannotated, a 5''-truncated copy of MAT1-1-1 at about nt 3267..3960 (plus strand,
+      downstream of MAT1-2-10). miniprot of AHX22632.1 (the KF944385.1 MAT1-1-1 protein)
+      against KF944386.1 aligns reference residues 140-353 only (214 of 353 aa, 61%)
+      at 96.3% identity; the N-terminal 139 residues, including the alpha-box region,
+      are absent. It is recorded below as gene_index 2, MAT1-1-1, present: false,
+      with no coordinates and no protein, so that it contributes no sequence to search
+      and is not counted as a MAT1-1-1 gene; the span above is documented here only.
+      This is the same remnant that, in MAT1-2 genomes lacking this record, out-voted
+      the real MAT1-2-1 in v0.6.0 (see docs/notes/2026-10-17_botrytis-curation.md).
+      It parallels the dMAT1-1-1 fragments Abate et al. 2018 describe in Monilinia
+      MAT1-2.
+
+      completeness is "partial": KF944386.1 annotates only the two MAT1-2 genes. APN2
+      and SLA2 flank this locus in the Sclerotiniaceae but are not features on this
+      record, so no flanking coordinates are asserted. No same-strain genome assembly
+      of SAS405 was found; the record rests on the deposit alone. No assembly locus
+      tags are given (B05.10 is MAT1-1 and has no MAT1-2 genes).
+
+      '
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KF944386.1
+        seq_region: KF944386.1
+      start: 423
+      end: 3115
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AHX22634.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 423
+  end: 1658
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 1378
+    end: 1658
+  - start: 954
+    end: 1327
+  - start: 423
+    end: 898
+- gene_index: 1
+  name: MAT1-2-10
+  protein_accession: ncbi_protein:AHX22635.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2404
+  end: 3115
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 2404
+    end: 2594
+  - start: 2644
+    end: 2882
+  - start: 2931
+    end: 3115
+- gene_index: 2
+  name: MAT1-1-1
+  protein_accession: null
+  role: core_MAT
+  present: false
+  locus_tag: null
+  segment_index: null
+  start: null
+  end: null
+  strand: null
+  order_in_locus: null
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: 'Targeted sequencing of the MAT1-2 idiomorph of tester strain
+      SAS405, deposited as GenBank KF944386.1; the accompanying manuscript is listed
+      on the record as "Unpublished". Published descriptions of the B. cinerea/Sclerotiniaceae
+      MAT1-2 architecture (Abate et al. 2018, abstract read; Wilson et al. 2023, abstract
+      read) are comparative/homology-based. Tier 2.
+
+      '
+    citations:
+    - &id001
+      pmid: '29767553'
+      doi: 10.1094/PHYTO-03-18-0074-R
+    - pmid: '37824487'
+      doi: 10.1371/journal.pone.0292619
+  boundaries:
+    tier: 2
+    experimental_method: 'Coordinates and exon structures are the CDS features of
+      GenBank KF944386.1 as read by the curator via NCBI efetch on 2026-10-17; protein
+      accessions AHX22634.1 and AHX22635.1 are the deposit''s own. Tier 2: unpublished
+      direct submission, no flank-to-flank experiment; only the MAT1-2-1/MAT1-2-10
+      block is asserted. The unannotated MAT1-1-1 remnant (about 3267..3960) lies
+      outside the asserted segment.
+
+      '
+    citations:
+    - *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: 'MAT1-2 assignment rests on the HMG-box identity of MAT1-2-1
+      annotated on the primary record and the submitter''s own /note="type: MAT1-2"
+      and /strain="SAS405" qualifiers, with Abate et al. 2018 (MAT1-2 = MAT1-2-1 plus
+      MAT1-2-10 in Sclerotiniaceae). No experimental mating-phenotype evidence is
+      claimed for this strain. Tier 2.
+
+      '
+    citations:
+    - *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: KF944386.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-curation-agent
+  proposal_dedupe_key: KF944386.1|40559|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

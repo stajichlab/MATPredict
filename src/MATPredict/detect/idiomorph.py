@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import dataclasses
+from collections.abc import Iterable
 from dataclasses import dataclass
 
 from MATPredict.detect.clustering import GeneCluster
@@ -74,6 +75,10 @@ class IdiomorphResolution:
     #: (`resolve_idiomorph_by_hmm`). The two HMM scores are recorded.
     winner_hmm_score: float | None = None
     loser_hmm_score: float | None = None
+    #: Where the verdict applies: the winning gene's span and the losing group's (or losing model's) span on `contig`.
+    #: A gene can win at one place and lose at another (a weak far hit), so "lost" belongs to a place, not to a gene name.
+    winner_span: tuple[int, int] | None = None
+    loser_span: tuple[int, int] | None = None
 
     @property
     def margin(self) -> float:
@@ -284,6 +289,30 @@ def _idiomorphs_of(family: Family, gene_name: str) -> frozenset[str]:
         if gene["name"] == gene_name:
             return frozenset(gene.get("present_in_idiomorphs") or ())
     return frozenset()
+
+
+def lost_to_for_call(
+    family: Family, called_idiomorph: str | None, events: Iterable[IdiomorphResolution]
+) -> dict[str, str]:
+    """`{losing gene name: winning gene name}` for the resolutions that agree with the locus call.
+
+    Used to show only the winning idiomorph's genes. Resolution happens per group of overlapping hits, so the
+    events of one locus can disagree with each other: in Xylaria bambusicola (GCA_033171785.1) MAT1-2-1 beat
+    MAT1-1-1, MAT1-1-2 and MAT1-1-3 where its model sits, but a weak hit 15 kb away was won by MAT1-1-5, and
+    keying the loss by gene name marked the polished MAT1-2-1 model as lost to MAT1-1-5, which dropped the
+    locus's strongest MAT gene from the GFF and the figure. An event counts only when its winner belongs to the
+    called idiomorph and its loser does not; when the call is not a single idiomorph, or a gene names no
+    idiomorph, every event counts, as before. Later events override earlier ones for the same loser.
+    """
+    decided = bool(called_idiomorph) and called_idiomorph != "undetermined"
+    lost: dict[str, str] = {}
+    for e in events:
+        if decided:
+            winner_of, loser_of = _idiomorphs_of(family, e.winner), _idiomorphs_of(family, e.loser)
+            if winner_of and loser_of and not (called_idiomorph in winner_of and called_idiomorph not in loser_of):
+                continue
+        lost[e.loser] = e.winner
+    return lost
 
 
 def _mutually_exclusive(family: Family, gene_a: str, gene_b: str) -> bool:
@@ -697,6 +726,8 @@ def resolve_idiomorph_overlaps(
                 overlap_fraction=_overlap_fraction(winner, loser),
                 winner_coverage=winner.coverage,
                 loser_coverage=loser.coverage,
+                winner_span=(winner.start, winner.end),
+                loser_span=(min(h.start for h in losing_group), max(h.end for h in losing_group)),
             ))
     resolved = [
         dataclasses.replace(h, superseded_by=superseded[id(h)]) if id(h) in superseded else h
@@ -777,6 +808,7 @@ def resolve_idiomorph_by_models(
             winner_identity=win.identity, loser_identity=lose.identity,
             overlap_fraction=overlap, basis=basis,
             winner_model_score=win.score, loser_model_score=lose.score,
+            winner_span=(win.start, win.end), loser_span=(lose.start, lose.end),
         ))
     resolved = [
         dataclasses.replace(h, superseded_by=superseded[id(h)]) if id(h) in superseded else h
@@ -825,6 +857,7 @@ def resolve_idiomorph_by_hmm(
             winner_identity=win.identity, loser_identity=lose.identity,
             overlap_fraction=overlap, basis="hmm_bitscore",
             winner_hmm_score=win_score, loser_hmm_score=lose_score,
+            winner_span=(win.start, win.end), loser_span=(lose.start, lose.end),
         ))
     resolved = [
         dataclasses.replace(h, superseded_by=superseded[id(h)]) if id(h) in superseded else h

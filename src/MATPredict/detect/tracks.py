@@ -117,7 +117,13 @@ def from_genbank(path: Path, sequences: dict[str, str] | None = None) -> Track:
 
     out = []
     for rec in SeqIO.parse(str(path), "genbank"):
-        seq = str(rec.seq).upper() if sequences is None else sequences.get(rec.id, str(rec.seq)).upper()
+        if sequences is not None and rec.id in sequences:
+            seq = sequences[rec.id].upper()
+        else:
+            try:
+                seq = str(rec.seq).upper()
+            except Exception:  # a record with no ORIGIN and no genome sequence to read it from
+                continue
         for feat in rec.features:
             if feat.type != "CDS":
                 continue

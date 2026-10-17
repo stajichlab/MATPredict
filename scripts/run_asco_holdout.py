@@ -75,7 +75,9 @@ def run(a) -> int:
 
     rows = {r["record_id"]: r for r in csv.DictReader(open(a.manifest), delimiter="\t")}
     r = rows[a.record]
-    drop = set(records_to_withhold(a.db, a.record, Radius(a.radius)))
+    pre = r.get(f"{a.radius}_drop")  # a manifest row may carry its own drop list (genomes that are not records)
+    drop = set(pre.split(",")) - {""} if pre is not None and f"{a.radius}_drop" in r else \
+        set(records_to_withhold(a.db, a.record, Radius(a.radius)))
     work = Path(a.work) / a.record / a.radius
     work.mkdir(parents=True, exist_ok=True)
     asm = next(Path(a.library).glob(f"{r['assembly']}_*.fa.gz"), None)

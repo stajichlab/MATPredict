@@ -104,6 +104,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
+from MATPredict.detect import partial_core
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
     LOCUS_CLASS_PARTIAL,
@@ -112,6 +113,7 @@ from MATPredict.detect.idiomorph import (
     idiomorph_candidates,
     idiomorph_margin_from_vote,
     is_partial_strength,
+    lost_to_for_call,
     DEFAULT_MIN_OVERLAP_FRACTION,
     IdiomorphResolution,
     assign_idiomorph,
@@ -362,6 +364,11 @@ class DetectionResult:
     its idiomorph rests on unmodelled hits. Such a call is kept only when the
     core hits lie inside the flank span, and is then capped at `low` and
     classed `partial_locus`. See `flank_carried`."""
+    idiomorph_vote_note: dict | None = None
+    """Set only when the partial-coverage rule (`partial_core`, `--partial-core-policy`)
+    triggered or was stopped by its contig-edge guard: the winning and the other
+    idiomorph's core genes with their reference coverage, the profile scores, the
+    decision (`flipped`, `undetermined`, `kept_edge_artefact`) and the reasons."""
     idiomorph_classifier: dict | None = None
     """The profile-HMM classifier's verdict on this locus's modelled core
     proteins (`classifier.ClassifierVerdict.as_report`), or None when the
@@ -544,6 +551,23 @@ def full_length_models(
         if aa >= min_coverage * reference:
             out.add(gene_name)
     return frozenset(out)
+
+
+def model_reference_coverage(model, reference_aa: int | None) -> float | None:
+    """Percent of its reference protein a polished model covers: translated
+    model length (sum of exon lengths / 3) over the reference protein length
+    (`model.reference_record_id`'s protein for this gene), capped at 100.
+
+    This is a LENGTH ratio, the same one `full_length_models` applies, not the
+    aligned query span: exonerate and miniprot model only what aligned, so a
+    5'-truncated remnant gives a short model, but a model with an internal
+    insertion would read slightly high. None when the reference length or the
+    exons are unknown.
+    """
+    if not reference_aa or not getattr(model, "exons", None):
+        return None
+    aa = sum(e.end - e.start + 1 for e in model.exons) // 3
+    return round(min(100.0, 100.0 * aa / reference_aa), 1)
 
 
 def _curated_protein_lengths(
@@ -1104,6 +1128,8 @@ def _relaxed_results(
     classifier_verdicts: dict[tuple[int, FamilyKey], ClassifierVerdict] | None = None,
     supported_min_bitscore: float = DEFAULT_SUPPORTED_MIN_BITSCORE,
     idiomorph_policy: str = DEFAULT_IDIOMORPH_POLICY,
+    record_lengths: dict[tuple[str, str], int] | None = None,
+    partial_core_decide: Callable | None = None,
 ) -> list[DetectionResult]:
     """Sub-floor clusters admitted on gene COUNT rather than gene fraction.
 
@@ -1151,9 +1177,29 @@ def _relaxed_results(
             # behind them, which made a genuine homothallic locus -- both
             # idiomorphs present, as documented for Syzygites -- impossible to
             # tell from two unrelated spurious HMG hits tens of kb apart.
-            evidence = _gene_evidence([cluster], score.family_key, polish_by or {})
+            evidence = _gene_evidence([cluster], score.family_key, polish_by or {}, record_lengths=record_lengths)
             segments = _segments_for([cluster], contig_lengths or {}, evidence)
             verdict = (classifier_verdicts or {}).get((id(cluster), score.family_key))
+            called = (verdict.idiomorph if verdict is not None else
+                      assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key),
+                                       idiomorph_policy))
+            cands = (
+                [{"idiomorph": k, "score": round(v, 1), "basis": "hmm_classifier"}
+                 for k, v in sorted(verdict.scores.items(), key=lambda kv: (-kv[1], kv[0]))]
+                if verdict is not None else
+                idiomorph_candidates(family, score.genes_found, _own_live_hits(cluster, family.key),
+                                     idiomorph_policy)
+            )
+            # Partial-coverage rule (`partial_core`), as in the strict path.
+            vote_note = None
+            if partial_core_decide is not None and verdict is None and called != "undetermined":
+                decision = partial_core_decide(family, [cluster], evidence, cands)
+                if decision is not None:
+                    vote_note = decision.note
+                    if decision.decision == partial_core.DECISION_FLIPPED:
+                        called = decision.idiomorph
+                    elif decision.decision == partial_core.DECISION_UNDETERMINED:
+                        called = "undetermined"
             results.append(DetectionResult(
                 family_key=score.family_key,
                 contig=segments[0].contig,
@@ -1170,16 +1216,9 @@ def _relaxed_results(
                 # The HMM classifier decides where it ran on this cluster, as
                 # in the strict path; before 2026-09-28 relaxed calls ignored
                 # it (found measuring review finding F1).
-                idiomorph=(verdict.idiomorph if verdict is not None else
-                           assign_idiomorph(family, score.genes_found, _own_live_hits(cluster, family.key),
-                                            idiomorph_policy)),
-                idiomorph_candidates=(
-                    [{"idiomorph": k, "score": round(v, 1), "basis": "hmm_classifier"}
-                     for k, v in sorted(verdict.scores.items(), key=lambda kv: (-kv[1], kv[0]))]
-                    if verdict is not None else
-                    idiomorph_candidates(family, score.genes_found, _own_live_hits(cluster, family.key),
-                                         idiomorph_policy)
-                ),
+                idiomorph=called,
+                idiomorph_candidates=cands,
+                idiomorph_vote_note=vote_note,
                 idiomorph_margin=round(verdict.margin, 6) if verdict is not None else None,
                 idiomorph_classifier=verdict.as_report() if verdict is not None else None,
                 ambiguous_with=[],
@@ -1782,8 +1821,13 @@ def _gene_evidence(
     family_key: FamilyKey,
     polish_by: dict[tuple[int, FamilyKey, str], PolishOutcome],
     lost_to: dict[tuple[int, str], str] | None = None,
+    record_lengths: dict[tuple[str, str], int] | None = None,
 ) -> list[GeneEvidence]:
     """Report-ready per-gene evidence for ONE family across its own clusters.
+
+    `record_lengths` ((record_id, gene) -> reference aa) fills `coverage` for a
+    polished model (`model_reference_coverage`); without it, or for a raw hit
+    that keeps its own search coverage, nothing changes.
 
     `lost_to` maps (id(cluster), gene_name) to the winning gene's name for each
     losing half of a resolved pair; those entries are marked, not dropped.
@@ -1894,7 +1938,9 @@ def _gene_evidence(
                 evidence = GeneEvidence(
                     gene_name=model.gene_name, role=model.role, contig=model.contig,
                     start=model.start, end=model.end, strand=model.strand,
-                    identity=model.identity, coverage=None,
+                    identity=model.identity,
+                    coverage=model_reference_coverage(
+                        model, (record_lengths or {}).get((model.reference_record_id, model.gene_name))),
                     reference_record_id=model.reference_record_id, method=model.method,
                     status=outcome.status, alternate_model=alternate,
                     frameshifts=getattr(model, "frameshifts", 0),
@@ -2075,6 +2121,10 @@ def run_pipeline(
     #: accessory gene cannot supersede a core hit and votes only when no core
     #: gene has a hit). See `idiomorph.IDIOMORPH_POLICIES`.
     idiomorph_policy: str = DEFAULT_IDIOMORPH_POLICY,
+    #: `off` (default) or `coverage_profile`: a PARTIAL-coverage core hit does not beat a
+    #: full-length core gene of the other idiomorph unless the profiles disagree
+    #: (`partial_core`). Independent of `idiomorph_policy`.
+    partial_core_policy: str = partial_core.DEFAULT_PARTIAL_CORE_POLICY,
     #: Curated records withheld from THIS run, for leave-one-out recall. The
     #: caller must build `reference_fasta` with the same set (see
     #: `reference_fasta.build_reference_fasta`); this parameter additionally
@@ -2700,6 +2750,8 @@ def run_pipeline(
                         overlap_fraction=1.0, basis="hmm_classifier",
                         winner_model_score=pos.scores[gene_idiomorph[winner]],
                         loser_model_score=pos.scores[gene_idiomorph[loser]],
+                        winner_span=(min(h.start for h in at), max(h.end for h in at)),
+                        loser_span=(min(h.start for h in at), max(h.end for h in at)),
                     ))
                     model_losers.discard((id(cluster), family.key, winner))
                     model_losers.add((id(cluster), family.key, loser))
@@ -2785,6 +2837,44 @@ def run_pipeline(
     ) -> int:
         return len(_modelled_gene_names(member_clusters, family_key, polish_by, model_losers))
 
+    core_profile_cache: dict = {}
+
+    def _partial_core_decision(family, member_clusters, evidence, vote):
+        """`partial_core.evaluate` on this result's own evidence and models."""
+        optional = {g["name"] for g in family.genes if g.get("optional", False)}
+        core = {g: i for g, i in classifier_genes(family).items() if g not in optional}
+        modelled = (STATUS_AGREE, STATUS_DISAGREE, STATUS_SINGLE)
+        stats = []
+        for e in evidence:
+            if e.gene_name not in core or e.lost_to or e.status not in modelled:
+                continue
+            length = contig_lengths.get(e.contig)
+            edge = min(e.start - 1, length - e.end) if length else None
+            stats.append(partial_core.CoreStat(e.gene_name, core[e.gene_name], e.coverage, e.bitscore, edge))
+
+        def profile_scores(genes):
+            try:
+                if family.key not in core_profile_cache:
+                    core_profile_cache[family.key] = partial_core.load_core_profiles(db_root, family)
+                clf = core_profile_cache[family.key]
+                if clf is None:
+                    return None
+                proteins: dict[str, list[str]] = {}
+                for gene in genes:
+                    for c in member_clusters:
+                        outcome = polish_by.get((id(c), family.key, gene))
+                        for model in ((outcome.miniprot_model, outcome.exonerate_model) if outcome else ()):
+                            if model is not None:
+                                proteins.setdefault(gene, []).append(_translate_model(
+                                    genome_fasta, model, genetic_code or 1, contig_seq_cache))
+                return own_profile_scores(clf, {g: core[g] for g in genes}, proteins)
+            except Exception as exc:  # noqa: BLE001 - profiles confirm; they must not crash a run
+                logger.warning("partial-core profile scoring failed (%s: %s); treated as unavailable",
+                               type(exc).__name__, exc)
+                return None
+
+        return partial_core.evaluate(vote, stats, profile_scores)
+
     def _build(
         score: FamilyScore,
         member_clusters: list[GeneCluster],
@@ -2809,10 +2899,31 @@ def run_pipeline(
         # The losing half of each resolved pair, from the same events that decided
         # it, so the figure can show only the winner.
         lost_to = {
-            (id(c), e.loser): e.winner
-            for c in member_clusters for e in idiomorph_events_by_cluster.get(id(c), ())
+            (id(c), loser): winner
+            for c in member_clusters
+            for loser, winner in lost_to_for_call(family, called_idiomorph, idiomorph_events_by_cluster.get(id(c), ())).items()
         }
-        evidence = _gene_evidence(member_clusters, score.family_key, polish_by, lost_to=lost_to)
+        evidence = _gene_evidence(member_clusters, score.family_key, polish_by, lost_to=lost_to,
+                                  record_lengths=record_protein_lengths)
+        # The bitscore vote, computed once: the partial-coverage rule below reads it and
+        # it is what the report carries as `idiomorph_candidates`.
+        own_vote = idiomorph_candidates(
+            family, score.genes_found,
+            [h for c in member_clusters for h in _own_live_hits(c, family.key)],
+            idiomorph_policy,
+        )
+        # Partial-coverage rule (`partial_core`, off by default). Decided here,
+        # before the tier and class, so every later step sees the call it makes.
+        vote_note = None
+        if (partial_core_policy == partial_core.POLICY_COVERAGE_PROFILE and verdict is None
+                and called_idiomorph != "undetermined"):
+            decision = _partial_core_decision(family, member_clusters, evidence, own_vote)
+            if decision is not None:
+                vote_note = decision.note
+                if decision.decision == partial_core.DECISION_FLIPPED:
+                    called_idiomorph = decision.idiomorph
+                elif decision.decision == partial_core.DECISION_UNDETERMINED:
+                    called_idiomorph = "undetermined"
         identities: dict[str, float | None] = {}
         for e in evidence:
             if e.identity is not None:
@@ -2851,6 +2962,10 @@ def run_pipeline(
             fragmented=fragmented,
             ignore_genes=tier_ignored,
         )
+        rule_changed_call = vote_note is not None and vote_note["decision"] in (
+            partial_core.DECISION_FLIPPED, partial_core.DECISION_UNDETERMINED)
+        if rule_changed_call:
+            tier = cap_at_medium(tier)  # a call that overrode the bitscore vote is never `high` (provisional)
         # The idiomorph calls behind this result, and the narrowest of them.
         # A thin margin does NOT withhold the call -- refusing would cost real
         # detections, and the rule is 23/23 correct on the ground-truth set
@@ -2874,13 +2989,10 @@ def run_pipeline(
         # (no idiomorph-restricted gene found), so nothing that used to be
         # reported is lost. Each resolution's own margin is unchanged and still
         # carried per event in `idiomorph_resolutions`.
-        own_vote = idiomorph_candidates(
-            family, score.genes_found,
-            [h for c in member_clusters for h in _own_live_hits(c, family.key)],
-            idiomorph_policy,
-        )
         idiomorph_margin = idiomorph_margin_from_vote(own_vote)
-        if idiomorph_margin is None and own_resolutions:
+        if rule_changed_call:
+            idiomorph_margin = None  # the vote's margin describes the idiomorph this rule set aside
+        elif idiomorph_margin is None and own_resolutions:
             idiomorph_margin = min(e.margin for e in own_resolutions)
         # Where the family has a profile-HMM classifier and a protein was
         # modelled, the classifier decides and its bit-score margin is THE
@@ -2959,6 +3071,7 @@ def run_pipeline(
             confidence=cap_at_medium(tier) if partial_strength else tier,
             idiomorph=called_idiomorph,
             idiomorph_candidates=own_vote,
+            idiomorph_vote_note=vote_note,
             confidence_ignored_genes=sorted(tier_ignored),
             idiomorph_classifier=verdict.as_report() if verdict is not None else None,
             ambiguous_with=(
@@ -3121,6 +3234,9 @@ def run_pipeline(
         relaxed = _relaxed_results(
             clusters, families,
             supported_min_bitscore=supported_min_bitscore,
+            record_lengths=record_protein_lengths,
+            partial_core_decide=(
+                _partial_core_decision if partial_core_policy == partial_core.POLICY_COVERAGE_PROFILE else None),
             searchable_genes=searchable_genes,
             evidence_floor=evidence_floor,
             ambiguity_floor=ambiguity_floor,

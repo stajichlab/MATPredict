@@ -9,6 +9,9 @@ from pathlib import Path
 from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
+from MATPredict.detect.strong_single_gene import (
+    DEFAULT_STRONG_SINGLE_GENE_POLICY, STRONG_SINGLE_GENE_POLICIES,
+)
 from MATPredict.detect.partial_core import DEFAULT_PARTIAL_CORE_POLICY, PARTIAL_CORE_POLICIES
 from MATPredict.detect.supported_span import DEFAULT_SUPPORTED_MIN_BITSCORE
 from MATPredict.detect.pipeline import (
@@ -127,6 +130,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         max_polished_clusters_per_family=_polish_cap_from_args(args),
         polish_strong_identity=_polish_strong_identity_from_args(args),
         partial_core_policy=_partial_core_policy_from_args(args),
+        strong_single_gene_policy=_strong_single_gene_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
 
@@ -254,6 +258,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "max_polished_clusters_per_family": _polish_cap_from_args(args),
             "polish_strong_identity": _polish_strong_identity_from_args(args),
             "partial_core_policy": _partial_core_policy_from_args(args),
+            "strong_single_gene_policy": _strong_single_gene_policy_from_args(args),
             "supported_min_bitscore": getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
         },
     )
@@ -272,6 +277,12 @@ def _partial_core_policy_from_args(args) -> str:
     """The partial-coverage vote policy for this run; an args object without the
     attribute (a test double) gets the default, `off`."""
     return getattr(args, "partial_core_policy", DEFAULT_PARTIAL_CORE_POLICY)
+
+
+def _strong_single_gene_policy_from_args(args) -> str:
+    """The strong-single-gene policy for this run; an args object without the
+    attribute (a test double) gets the default, `off`."""
+    return getattr(args, "strong_single_gene_policy", DEFAULT_STRONG_SINGLE_GENE_POLICY)
 
 
 def _polish_strong_identity_from_args(args) -> float | None:
@@ -547,6 +558,15 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "other idiomorph when the alpha-box/HMG-box profiles agree; where they disagree or are "
              "unavailable the call is `undetermined` (see `idiomorph_vote_note`). A partial hit near "
              "a contig end is treated as truncation and the vote is kept. Independent of --idiomorph-policy.",
+    )
+    detect.add_argument(
+        "--strong-single-gene-policy", choices=STRONG_SINGLE_GENE_POLICIES,
+        default=DEFAULT_STRONG_SINGLE_GENE_POLICY,
+        help="off: a lone core gene with no flank and no second modelled gene is withheld (default). "
+             "on: in a family with no other report, one modelled core gene at >= 85%% identity covering "
+             ">= 90%% of its reference is reported as `idiomorph_gene_only`, confidence `low`, flagged "
+             "`strong_single_gene`; two such loci of opposite idiomorph are both reported and the genome "
+             "gets a `two_idiomorphs` statement. Independent of --idiomorph-policy and --partial-core-policy.",
     )
     detect.add_argument(
         "--exhaustive", action="store_true",

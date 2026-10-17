@@ -127,3 +127,22 @@ See the final report; the same list: (1) new `MATkp` vs extension of `MATsc`/`MT
 - Küberl 2011, De Schutter 2009, Valli 2016 full texts (not read; only abstracts), Hanson 2014 and Feng 2020 abstracts only (Heistinger 2018 full text was read). That the Valli 2016 curation specifically supports these gene models was not checked.
 - `homothallic` status of CBS 7435 and GS115 specifically (papers cover the species and CBS 2612).
 - Claim that the idiomorph MATa maps to MAT1-2 / HMG box.
+
+## Addendum, 2026-10-18 (curator follow-up)
+
+- Decisions applied: `MATkp` accepted as its own scope-only family; a CBS 7435 MATalpha record added (`460519_cbs-7435_MATkp_MATalpha`, FR839631.1:135891-141707, anchor LT962479.2:136012-141828 at 100.000% over 5,818 bp, all four genes 100%/100%, `taxonomy_current: true` on a compute node); GS115 MATalpha1 kept `present: false` (extra A at NC_012966.1:1649032; the `status: pseudogene` label waits for PR #101); `idiomorph_class` kept `unassigned`; `gene_class: alpha_box` set on MATalpha1 only (Pfam PF04769 37.5 bits, GA 28.1; curator MAT1-1-1 30.5), MATa genes unset. `origin/main` merged into the branch (clean).
+- Strain evidence added: the UniProt organism line of the CBS 7435 proteins reads "Komagataella phaffii (strain ATCC 76273 / CBS 7435 / CECT 11047 / NRRL Y-11430 / Wegner 21-1)" (rest.uniprot.org, 2026-10-17), an openable source for CBS 7435 = NRRL Y-11430.
+- Detection rerun with the three records (10 runs, `work/det2` on the HPCC; `--taxid` own, `MATPREDICT_HTML=0`):
+
+| Genome | Exclusion | After (3 records) |
+|---|---|---|
+| CBS 7435 GCA_900235035.2 | none | MATkp MATa 1771-7997 high [MATa1, MATa2, sla2, dic1]; MATkp MATalpha 136012-141828 high [MATalpha1, MATalpha2, sla2, dic1] |
+| CBS 7435 | CBS MATa record | MATalpha cassette called (MATalpha1, MATalpha2, sla2, dic1); the MATa cassette is not (no other MATa reference) |
+| CBS 7435 | CBS MATalpha record | MATa called; MATalpha called from the GS115 record (MATalpha2, sla2, dic1; no MATalpha1: the GS115 record has none) |
+| CBS 7435 | both CBS records | MATalpha called from GS115 (MATalpha2, sla2, dic1); MATa not called |
+| GS115 GCF_000027005.1 | none or GS115 record | MATkp MATalpha 1646885-1652702 high [MATalpha1, MATalpha2, sla2, dic1] (the recall gap of the first run is closed: the CBS 7435 MATalpha1 finds the frameshifted GS115 copy) |
+| GCA_001708105.1 (K. pastoris) | none | MATalpha 1438280-1444097 and MATa 1569316-1575518, both high, all four genes |
+| GCA_023213065.1 (K. ulmi) | none | MATalpha 1439297-1445114 and MATa 1569573-1575776, both high, all four genes |
+| GCA_023013455.1, GCA_030557195.1 | none | MATa high (unchanged from the first run) |
+
+- The MATa-gene analysis is in `2026-10-18_komagataella-mata-analysis.md`.

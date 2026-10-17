@@ -146,3 +146,4 @@ See the final report; the same list: (1) new `MATkp` vs extension of `MATsc`/`MT
 | GCA_023013455.1, GCA_030557195.1 | none | MATa high (unchanged from the first run) |
 
 - The MATa-gene analysis is in `2026-10-18_komagataella-mata-analysis.md`.
+- Tests after the merge and the third record: `tests/db` + `tests/detect` 1116 passed, 4 skipped, 1 failed in the full run. The failure, `tests/detect/test_pipeline.py::test_fast_path_missing_gene_is_polished_in_the_existing_clusters_window`, is intermittent and is not caused by this branch: it fails in about 1 of 3 runs on an unmodified `origin/main` checkout as well (it uses a temporary db root), and passes when run alone. Not investigated further.

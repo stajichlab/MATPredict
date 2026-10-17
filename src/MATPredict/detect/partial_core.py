@@ -60,6 +60,8 @@ CORE_PROFILE_SUBDIR = "classifiers/MAT_core"
 DECISION_FLIPPED = "flipped"
 DECISION_UNDETERMINED = "undetermined"
 DECISION_KEPT_EDGE = "kept_edge_artefact"
+#: A decision of `undetermined` because the set-aside idiomorph's companion gene is intact.
+REASON_COMPANION = "companion_intact"
 
 
 def check_policy(policy: str) -> str:
@@ -91,6 +93,8 @@ def evaluate(
     stats: list[CoreStat],
     profile_scores: Callable[[list[str]], dict[str, float] | None] | None,
     *,
+    companions: dict[str, list[str]] | None = None,
+    companion_stats: list[CoreStat] | None = None,
     partial: float = PARTIAL_COVERAGE,
     full: float = FULL_COVERAGE,
     edge_bp: int = EDGE_BP,
@@ -133,6 +137,21 @@ def evaluate(
                     reason=(f"{w.gene} covers {w.coverage:.0f}% of its reference but lies {w.edge_distance} bp "
                             f"from a contig end: treated as truncation by the assembly, vote kept ({winner})"))
         return VoteDecision(DECISION_KEPT_EDGE, None, note)
+    # COMPANION-GENE VETO (curator 2026-10-18). The call would move away from `winner`; if a
+    # companion gene declared for `winner` (family `idiomorph_companions`) is intact in the
+    # locus (modelled, >= `full` coverage) the locus holds both idiomorphs, so it is
+    # `undetermined` rather than flipped. Read from the gene evidence, not from the vote
+    # (the companions are usually `optional` genes, which `core_first` keeps out of the vote).
+    intact = [s for s in (companion_stats or []) if s.gene in (companions or {}).get(winner, ())
+              and s.coverage is not None and s.coverage >= full]
+    if intact:
+        c = max(intact, key=lambda s: (s.coverage, s.bitscore or 0.0))
+        note.update(decision=DECISION_UNDETERMINED, veto=REASON_COMPANION, companion_gene=c.gene,
+                    companion_coverage=c.coverage, profile=None,
+                    reason=(f"coverage rule: {w.gene} is partial ({w.coverage:.0f}%) and {o.gene} is full length "
+                            f"({o.coverage:.0f}%) -> {other}; but companion gene {c.gene} intact "
+                            f"({c.coverage:.0f}% of its reference), so the locus holds both idiomorphs: undetermined"))
+        return VoteDecision(DECISION_UNDETERMINED, None, note)
     scores = profile_scores([w.gene, o.gene]) if profile_scores is not None else None
     if not scores or w.gene not in scores or o.gene not in scores:
         note.update(decision=DECISION_UNDETERMINED, profile=None,

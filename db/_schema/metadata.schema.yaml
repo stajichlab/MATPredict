@@ -94,6 +94,18 @@ properties:
         protein_accession: {type: [string, "null"], pattern: "^(ncbi_protein|uniprotkb):.+"}
         role: {enum: [core_MAT, flanking_conserved, flanking_variable]}
         present: {type: boolean}
+        # status: what the recorded gene IS. Absent means intact (a gene model that
+        # encodes a functional protein). Orthogonal to `present`: `present` says whether
+        # the record carries a gene model with sequence; `status` says what that gene is.
+        #   remnant     a truncated or degenerate copy of an idiomorph's gene, typically
+        #               the cross-idiomorph copy left in the other idiomorph
+        #               (SAS405 MAT1-1-1, A1163 MAT1-2-1). Not a functional gene.
+        #   pseudogene  a gene with its own coding sequence disabled (stop, frameshift,
+        #               annotated pseudogene): atcc11807 glrA/rnhA, 107463 MAT1-2-1.
+        # Not for annotation or assembly truncation (use locus.core.completeness).
+        status: {enum: [remnant, pseudogene]}
+        # remnant_note: optional, one sentence of evidence (span, % of reference).
+        remnant_note: {type: string}
         locus_tag: {type: [string, "null"]}
         segment_index: {type: [integer, "null"]}
         start: {type: [integer, "null"]}

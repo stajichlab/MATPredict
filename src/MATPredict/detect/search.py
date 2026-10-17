@@ -63,6 +63,7 @@ window) has been removed now that this two-stage approach fully replaces it.
 """
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import tempfile
@@ -712,6 +713,21 @@ def _select_requested_gene(
     return best
 
 
+#: Longest intron, in bp, that a polish alignment may span. Neither aligner is told a limit otherwise
+#: (miniprot defaults to 200 kb), so a low-scoring gene could be joined to distant exons for a few more
+#: points of score. In Xylaria bambusicola (GCA_033171785.1) that gave a MAT1-2-1 model of 8.3 kb whose 5.5 kb
+#: and 2.3 kb "introns" held APN2 and COX13. The 609 introns in the curated records have a median of 58 bp and a
+#: maximum of 517 bp, so 5 kb is ten times the largest known one; 2 kb would also have fixed that case.
+#: `MATPREDICT_MAX_INTRON_BP` overrides it for a run.
+MAX_INTRON_BP = 5_000
+
+
+def _max_intron_bp(max_intron: int | None = None) -> int:
+    if max_intron is not None:
+        return int(max_intron)
+    return int(os.environ.get("MATPREDICT_MAX_INTRON_BP", "0")) or MAX_INTRON_BP
+
+
 _GENE_QUERIES: dict[tuple[str, int, int], dict[str, list[tuple[str, str]]]] = {}
 _GENE_QUERIES_LOCK = threading.Lock()
 
@@ -764,6 +780,7 @@ def polish_with_exonerate(
     window: tuple[str, int, int],
     runner: Callable = subprocess.run,
     genetic_code: int | None = None,
+    max_intron: int | None = None,
 ) -> "PolishModel | None":
     """Refine one gene's model with `exonerate --refine region` against its window.
 
@@ -844,6 +861,7 @@ def polish_with_exonerate(
         base_cmd = [
             "exonerate", "--model", "protein2genome",
             "--query", str(query_fasta), "--target", str(target_fasta),
+            "--maxintron", str(_max_intron_bp(max_intron)),
         ] + gencode_args
         tail = ["--showtargetgff", "yes", "--showalignment", "no"]
         result = _run_checked(
@@ -939,6 +957,7 @@ def polish_with_miniprot(
     window: tuple[str, int, int],
     runner: Callable = subprocess.run,
     genetic_code: int | None = None,
+    max_intron: int | None = None,
 ) -> "PolishModel | None":
     """Refine one gene's model with `miniprot --gff` against its window.
 
@@ -986,7 +1005,7 @@ def polish_with_miniprot(
         target_fasta = _extract_window(genome_fasta, window, tmp_dir)
         offset = win_start - 1
 
-        cmd = (["miniprot"] + _gencode_args(genetic_code, "-T")
+        cmd = (["miniprot"] + _gencode_args(genetic_code, "-T") + ["-G", str(_max_intron_bp(max_intron))]
                + ["--gff", str(target_fasta), str(reference_fasta)])
         # A signal death here would abort the whole genome exactly as the
         # exonerate crash did. There is no `--refine` to drop, so there is

@@ -127,24 +127,42 @@ function parseLoci(gff) {
   return [...loci.values()];
 }
 
-// SVG track: locus shaded, genes as arrows, coordinates along the top.
+// SVG gene map: the locus shaded, genes as arrows placed in lanes so that neither arrows nor their labels overlap,
+// coordinates along the bottom. Colours follow the gene's role; a gene that was only a search hit is dashed.
+const ROLE_FILL = { core_MAT: "var(--c1, #0a5da8)", flanking_conserved: "var(--c3, #0f8a5f)", flanking_variable: "var(--c5, #4fb3e8)" };
 function locusSvg(locus, flank, contigLength) {
   const w0 = Math.max(1, locus.start - flank);
-  const w1 = Math.min(contigLength, locus.end + flank);
-  const W = 900, pad = 16, H = 120;
+  const w1 = Math.min(contigLength || locus.end + flank, locus.end + flank);
+  const W = 900, pad = 16, top = 10, laneH = 34, fs = 12;
   const x = (p) => pad + ((p - w0) / Math.max(1, w1 - w0)) * (W - 2 * pad);
+  const lanes = [];
+  const placed = [...locus.genes].sort((a, b) => a.start - b.start).map((g) => {
+    const label = `${g.name}${g.strand === "-" ? " ←" : " →"}`;
+    const x0 = x(Math.max(w0, g.start)), x1 = x(Math.min(w1, g.end)), need = Math.max(x1, x0 + label.length * 7 + 8);
+    let lane = lanes.findIndex((end) => end < x0);
+    if (lane < 0) { lane = lanes.length; lanes.push(0); }
+    lanes[lane] = need + 6;
+    return { g, label, x0, x1, lane };
+  });
+  const axisY = top + Math.max(1, lanes.length) * laneH + 8, H = axisY + 26;
   const parts = [];
-  parts.push(`<rect x="${x(locus.start)}" y="30" width="${Math.max(2, x(locus.end) - x(locus.start))}" height="60" style="fill:var(--locus)"/>`);
-  parts.push(`<line x1="${pad}" x2="${W - pad}" y1="60" y2="60" style="stroke:var(--muted)" stroke-width="1"/>`);
-  for (const g of locus.genes) {
-    const gx = x(g.start), gw = Math.max(3, x(g.end) - x(g.start));
-    const dir = g.strand === "-" ? -1 : 1;
-    const cy = 60, h = 14;
-    parts.push(`<rect x="${gx}" y="${cy - h / 2}" width="${gw}" height="${h}" style="fill:var(--gene)" opacity="0.85"/>`);
-    parts.push(`<text x="${gx + gw / 2}" y="${cy - 12}" text-anchor="middle" font-size="11" style="fill:var(--fg)">${esc(g.name)}${dir < 0 ? " ←" : " →"}</text>`);
+  parts.push(`<rect x="${x(Math.max(w0, locus.start))}" y="${top - 4}" width="${Math.max(2, x(Math.min(w1, locus.end)) - x(Math.max(w0, locus.start)))}" height="${axisY - top + 4}" style="fill:var(--locus)"/>`);
+  for (const { g, label, x0, x1, lane } of placed) {
+    const y = top + lane * laneH + 15, h = 14, w = Math.max(3, x1 - x0), hd = Math.min(8, w);
+    const pts = g.strand === "-"
+      ? `${x0 + hd},${y} ${x0 + w},${y} ${x0 + w},${y + h} ${x0 + hd},${y + h} ${x0},${y + h / 2}`
+      : `${x0},${y} ${x0 + w - hd},${y} ${x0 + w},${y + h / 2} ${x0 + w - hd},${y + h} ${x0},${y + h}`;
+    const fill = ROLE_FILL[g.role] || "var(--gene)";
+    const solid = /^polished/.test(g.status || "polished");
+    parts.push(`<polygon points="${pts}" style="fill:${solid ? fill : "none"};stroke:${fill}" stroke-width="${solid ? 0 : 1.5}"${solid ? "" : ' stroke-dasharray="3 2"'}><title>${esc(g.name)} ${g.start.toLocaleString()}–${g.end.toLocaleString()} (${esc(g.strand)}) ${esc(g.role || "")} ${esc(g.status || "")}</title></polygon>`);
+    parts.push(`<text x="${x0}" y="${y - 4}" font-size="${fs}" style="fill:var(--fg)">${esc(label)}</text>`);
   }
-  parts.push(`<text x="${pad}" y="${H - 6}" font-size="11" style="fill:var(--muted)">${w0.toLocaleString()}</text>`);
-  parts.push(`<text x="${W - pad}" y="${H - 6}" font-size="11" style="fill:var(--muted)" text-anchor="end">${w1.toLocaleString()}</text>`);
+  parts.push(`<line x1="${pad}" x2="${W - pad}" y1="${axisY}" y2="${axisY}" style="stroke:var(--muted)" stroke-width="1"/>`);
+  parts.push(`<text x="${pad}" y="${axisY + 16}" font-size="11" style="fill:var(--muted)">${w0.toLocaleString()}</text>`);
+  parts.push(`<text x="${W - pad}" y="${axisY + 16}" font-size="11" style="fill:var(--muted)" text-anchor="end">${w1.toLocaleString()}</text>`);
+  const span = Math.max(1, w1 - w0), tick = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000].find((t) => (W - 2 * pad) * t / span >= 60) || 50000;
+  const tw = (W - 2 * pad) * tick / span;
+  parts.push(`<line x1="${W / 2 - tw / 2}" x2="${W / 2 + tw / 2}" y1="${axisY + 12}" y2="${axisY + 12}" style="stroke:var(--fg)" stroke-width="2"/><text x="${W / 2}" y="${axisY + 24}" font-size="10" text-anchor="middle" style="fill:var(--muted)">${tick >= 1000 ? tick / 1000 + " kb" : tick + " bp"}</text>`);
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Locus ${esc(locus.id)} on ${esc(locus.contig)}">${parts.join("")}</svg>`;
 }
 
@@ -191,7 +209,8 @@ function renderResults(res, genomeText) {
   const contigs = parseFasta(genomeText);
   const loci = parseLoci(res.gff);
   const flank = +$("flank").value;
-  $("figure").innerHTML = loci.map((l) => locusSvg(l, flank, (contigs.get(l.contig) || "").length)).join("");
+  const zoom = +$("zoom").value || 1;
+  $("figure").innerHTML = loci.map((l) => `<div class="muted">${esc(l.id)} · ${esc(l.contig)}:${l.start.toLocaleString()}–${l.end.toLocaleString()}</div><div class="fig-scroll"><div style="width:${zoom * 100}%">${locusSvg(l, flank, (contigs.get(l.contig) || "").length)}</div></div>`).join("");
   // Downloads per locus: the locus with its flanks as FASTA, and as an annotated GenBank record.
   const blobLink = (text, type, name) => {
     const a = document.createElement("a");
@@ -222,11 +241,14 @@ function renderResults(res, genomeText) {
     box.appendChild(row);
   });
   $("sequence").innerHTML = loci.map((l) => `<div class="muted">${esc(l.id)} · ${esc(l.contig)}:${l.start}–${l.end} (locus in highlight)</div>${sequenceHtml(l, contigs.get(l.contig) || "", flank)}`).join("\n\n");
-  $("report").srcdoc = res.html;
-  const dl = (id, text, type, name) => {
-    const url = URL.createObjectURL(new Blob([text], { type }));
-    $(id).href = url; $(id).download = name;
-  };
+  // The report is loaded from a blob URL, not srcdoc: its own links (#locus-0, ...) then stay inside the report.
+  // In a srcdoc frame they resolve against this page and load index.html into the frame.
+  const blobUrl = (text, type) => URL.createObjectURL(new Blob([text], { type }));
+  if (window.reportUrl) URL.revokeObjectURL(window.reportUrl);
+  window.reportUrl = blobUrl(res.html, "text/html");
+  $("report").src = window.reportUrl;
+  $("open-html").href = window.reportUrl;
+  const dl = (id, text, type, name) => { $(id).href = blobUrl(text, type); $(id).download = name; };
   dl("dl-gff", res.gff, "text/plain", "detected_loci.gff3");
   dl("dl-html", res.html, "text/html", "report.html");
 }
@@ -249,9 +271,9 @@ $("genome").addEventListener("change", async (e) => {
     log(`genome ${file.name} (${(file.size / 1e6).toFixed(2)} MB${genome.gzipped ? `, decompressed to ${(genome.bytes.length / 1e6).toFixed(2)} MB` : ""})`);
   }
 });
-$("flank").addEventListener("change", () => {
-  if (window.lastResult) renderResults(window.lastResult, genome.text);
-});
+for (const id of ["flank", "zoom"]) {
+  $(id).addEventListener("change", () => { if (window.lastResult) renderResults(window.lastResult, genome.text); });
+}
 
 $("run").addEventListener("click", async () => {
   $("run").disabled = true;

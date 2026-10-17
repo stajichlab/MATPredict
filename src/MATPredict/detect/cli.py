@@ -9,6 +9,7 @@ from pathlib import Path
 from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
+from MATPredict.detect.partial_core import DEFAULT_PARTIAL_CORE_POLICY, PARTIAL_CORE_POLICIES
 from MATPredict.detect.supported_span import DEFAULT_SUPPORTED_MIN_BITSCORE
 from MATPredict.detect.pipeline import (
     DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DEFAULT_POLISH_STRONG_IDENTITY, DetectionOutcome,
@@ -16,6 +17,7 @@ from MATPredict.detect.pipeline import (
     not_searched_reason, run_pipeline,
 )
 from MATPredict.detect.family_registry import available_phyla, load_all_families, route
+from MATPredict.detect.genbank_input import is_genbank, prepare_genbank_input
 from MATPredict.detect.reference_fasta import build_reference_fasta
 from MATPredict.detect.provenance import RunClock, run_block
 from MATPredict.detect.report import _taxonomy_source, write_detection_gff3, write_detection_report
@@ -55,6 +57,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     clock = RunClock()
+    _use_genbank_genome(args, out_dir)
 
     # Route FIRST, then build the reference FASTA from the routed families
     # only. The order matters: the reference FASTA is the tblastn query set, so
@@ -123,6 +126,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         exclude_record_ids=exclude_record_ids,
         max_polished_clusters_per_family=_polish_cap_from_args(args),
         polish_strong_identity=_polish_strong_identity_from_args(args),
+        partial_core_policy=_partial_core_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
 
@@ -134,6 +138,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     write_detection_gff3(outcome, out_dir / "detected_loci.gff3", **gff3_kwargs)
     write_detection_report(outcome, out_dir / "detection_report.yaml",
                            run=_run_doc(args, config, routing, clock))
+    _write_tracks(args, out_dir)
     _write_html_report(args, out_dir)
     print(
         f"detected {len(outcome.results)} candidate locus/loci "
@@ -146,6 +151,50 @@ def _cmd_detect(args: argparse.Namespace) -> int:
             f"not detected\t{entry.family_key.phylum}:{entry.family_key.locus_name}\t{entry.reason}"
         )
     return 0
+
+
+def _use_genbank_genome(args, out_dir: Path) -> None:
+    """When --genome is a GenBank file, run on what it holds: its sequence is the genome, its CDS proteins
+    are the gene calls (the proteome route, unless --proteins was given), and the file is the annotation
+    track in the report. A GenBank file given as --annotation is left as it is."""
+    if not is_genbank(args.genome):
+        return
+    gb = prepare_genbank_input(args.genome, out_dir / "_genbank")
+    print(f"GenBank input {gb.source.name}: {gb.converted.contigs} contig(s), "
+          f"{gb.converted.proteins} CDS protein(s) -> {out_dir / '_genbank'}")
+    args.annotation = getattr(args, "annotation", None) or str(gb.source)
+    args.genome = str(gb.converted.genome_fasta)
+    if not getattr(args, "proteins", None):
+        args.proteins = str(gb.converted.proteome_fasta)
+
+
+def _helixerlite_command(args) -> list[str] | None:
+    exe = getattr(args, "helixerlite", None) or os.environ.get("MATPREDICT_HELIXERLITE")
+    return [exe] if exe else None
+
+
+def _write_tracks(args, out_dir: Path) -> None:
+    """tracks.yaml: helixer-lite on the locus windows and/or the GenBank annotation, compared with the
+    homology models. Report only. Never fails the run, for the same reason the HTML report cannot."""
+    helixer = _helixerlite_command(args)
+    annotation = getattr(args, "annotation", None)
+    if helixer is None and not annotation:
+        return
+    from MATPredict.detect.track_report import TRACKS_YAML, build_tracks_doc, write_tracks
+    from MATPredict.report.cli import load_report
+    try:
+        doc, _ = load_report(out_dir)
+        tracks = build_tracks_doc(
+            doc, Path(args.genome), helixer_cmd=helixer,
+            helixer_lineage=getattr(args, "helixer_lineage", "fungi"),
+            helixer_cpus=getattr(args, "helixer_cpus", 4),
+            genbank=Path(annotation) if annotation else None)
+        if tracks is not None:
+            write_tracks(out_dir / TRACKS_YAML, tracks)
+            print(f"tracks -> {out_dir / TRACKS_YAML}")
+    except Exception as exc:  # noqa: BLE001 - tracks are report-only; the detection result stands
+        logger.warning("tracks not written (%s: %s); the detection results are complete",
+                       type(exc).__name__, exc)
 
 
 def html_report_enabled(args) -> bool:
@@ -198,11 +247,13 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "exhaustive": getattr(args, "exhaustive", False),
             "genetic_code": _resolve_genetic_code(args),
             "exclude_records": args.exclude_records or None,
+            "annotation": Path(args.annotation).name if getattr(args, "annotation", None) else None,
             "min_hits": args.min_hits,
             "min_identity": args.min_identity,
             "require_core_role": args.require_core_role,
             "max_polished_clusters_per_family": _polish_cap_from_args(args),
             "polish_strong_identity": _polish_strong_identity_from_args(args),
+            "partial_core_policy": _partial_core_policy_from_args(args),
             "supported_min_bitscore": getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
         },
     )
@@ -215,6 +266,12 @@ def _polish_cap_from_args(args) -> int | None:
     cap = getattr(args, "max_polished_clusters_per_family",
                   DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY)
     return None if cap is None or cap <= 0 else cap
+
+
+def _partial_core_policy_from_args(args) -> str:
+    """The partial-coverage vote policy for this run; an args object without the
+    attribute (a test double) gets the default, `off`."""
+    return getattr(args, "partial_core_policy", DEFAULT_PARTIAL_CORE_POLICY)
 
 
 def _polish_strong_identity_from_args(args) -> float | None:
@@ -405,6 +462,15 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
                         help="Organism name for the report, e.g. 'Fusarium oxysporum f. sp. lactucae'. "
                              "Shown as given; routing still uses --taxid")
     detect.add_argument("--out-dir", required=False)
+    detect.add_argument("--annotation", required=False,
+                        help="GenBank annotation of the genome, shown as a gene-model track in the report. "
+                             "A GenBank file given as --genome is used the same way, and its CDS proteins "
+                             "also serve as the gene calls.")
+    detect.add_argument("--helixerlite", required=False,
+                        help="helixer-lite executable (default: $MATPREDICT_HELIXERLITE). When set, it runs "
+                             "on the locus windows only and its models are a report track; calls are unchanged.")
+    detect.add_argument("--helixer-lineage", default="fungi", help="helixer-lite lineage (default: fungi)")
+    detect.add_argument("--helixer-cpus", type=int, default=4, help="CPUs for helixer-lite (default: 4)")
     detect.add_argument("--evidence-diagnostics", required=False)
     # Defaults are read from `EvidenceFloor` itself, never restated here: a
     # hard-coded CLI default would silently re-impose the old permissive floor
@@ -473,6 +539,14 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "the usual rank. Stops a true locus that hits few genes at high identity "
              "being outranked by noise that hits more genes at low identity. "
              f"Default: {DEFAULT_POLISH_STRONG_IDENTITY:g}. 0 = the plain cap.",
+    )
+    detect.add_argument(
+        "--partial-core-policy", choices=PARTIAL_CORE_POLICIES, default=DEFAULT_PARTIAL_CORE_POLICY,
+        help="off: the best-bitscore idiomorph vote stands (default). coverage_profile: a core hit "
+             "that covers < 80%% of its reference does not beat a full-length (>= 90%%) core gene of the "
+             "other idiomorph when the alpha-box/HMG-box profiles agree; where they disagree or are "
+             "unavailable the call is `undetermined` (see `idiomorph_vote_note`). A partial hit near "
+             "a contig end is treated as truncation and the vote is kept. Independent of --idiomorph-policy.",
     )
     detect.add_argument(
         "--exhaustive", action="store_true",

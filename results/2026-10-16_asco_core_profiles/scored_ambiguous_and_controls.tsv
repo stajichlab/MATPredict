@@ -1,0 +1,975 @@
+genome	contig	start	groups	label	confidence	locus_class	bitscore_winner	alpha_on_alpha	alpha_on_hmg	hmg_on_hmg	hmg_on_alpha	profile_call	profile_margin	alpha_modelled	hmg_modelled
+GCA_000151595.1_BD_ATCC18188_V1	GG749411.1	402764	control_alpha_only	MAT1-1	high	mat_locus		240.5	5.7			MAT1-1	234.9	True	False
+GCA_000223725.2_ASM22372v2	AFIT01000898.1	247492	control_alpha_only	MAT1-1	medium	partial_locus		74.4	0.0			MAT1-1	74.4	True	False
+GCA_000444155.1_Clmac_v1	KE598623.1	1097390	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	127.6	4.6	6.6	0.0	MAT1-1	121.1	True	True
+GCA_000482085.2_C_metacorallifera_KoLRI002260_v2	KI911111.1	340942	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	127.6	4.6	8.7	0.0	MAT1-1	119.0	True	True
+GCA_000504385.2_ASM50438v2	AWYE02000938.1	68855	control_alpha_only	MAT1-1	medium	partial_locus		115.8	0.0			MAT1-1	115.8	True	False
+GCA_000599445.1_CS3005v1	CM002652.1	3001438	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_000616945.1_Tric_rubr_MR1459_V1	KK209939.1	58495	control_alpha_only	MAT1-1	high	mat_locus		266.5	5.5			MAT1-1	260.9	True	False
+GCA_000633045.1_AspAngSh2	AUZU01000031.1	35464	control_alpha_only	MAT1-1	high	mat_locus		285.0	9.2			MAT1-1	275.8	True	False
+GCA_000734105.1_Mo1836.3	JMKC01005139.1	7366	control_hmg_only	MAT1-2	medium	partial_locus				158.3	9.5	MAT1-2	-148.8	False	True
+GCA_000734235.1_MoHB12	JMJS01001883.1	28373	control_hmg_only	MAT1-2	high	mat_locus				158.3	9.5	MAT1-2	-148.8	False	True
+GCA_000734605.1_ASM73460v1	JMQY01004493.1	5162	control_hmg_only	MAT1-2	medium	partial_locus				158.3	9.5	MAT1-2	-148.8	False	True
+GCA_000800515.1_ASM80051v1	JTGJ01000021.1	136726	control_hmg_only	MAT1-2	medium	mat_locus				171.7	2.3	MAT1-2	-169.4	False	True
+GCA_000800745.1_ASM80074v1	JUJX01000015.1	206940	both_modelled_gap_lt20,both_weak,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	61.5	0.0	96.1	7.1	MAT1-2	-34.6	True	True
+GCA_000812895.1_ASM81289v1	JWJB01010092.1	14153	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	39.9	0.0	159.2	0.5	MAT1-2	-119.4	True	True
+GCA_000813685.1_ASM81368v1	JSSU01000778.1	582	both_modelled_gap_lt20	MAT1-2	medium	idiomorph_gene_only	MAT1-2	71.8	0.0	119.1	1.7	MAT1-2	-47.3	True	True
+GCA_000835395.1_Exop_side_CBS121828_V1	KN846952.1	5044847	control_alpha_only	MAT1-1	high	mat_locus		164.0	5.6			MAT1-1	158.4	True	False
+GCA_000966855.1_ASM96685v1	JWIW01000006.1	297076	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	196.6	6.3	146.5	5.9	MAT1-1	50.1	True	True
+GCA_001006365.1_UCDDA912v1.0	LCUC01000388.1	6304	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	53.9	0.0	91.2	3.6	MAT1-2	-37.4	True	False
+GCA_001014755.1_ASM101475v1	LDEV01003578.1	19342	control_hmg_only	MAT1-1	medium	partial_locus				248.9	14.4	MAT1-2	-234.5	False	True
+GCA_001270345.1_ASM127034v1	KQ434358.1	205040	control_hmg_only	MAT1-2	high	mat_locus				133.9	5.8	MAT1-2	-128.1	False	True
+GCA_001307885.1_ASM130788v1	LHTN01002441.1	20608	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_001447215.1_ASM144721v1	LJJS01001757.1	334595	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	64.7	0.0	141.8	2.5	MAT1-2	-77.1	True	True
+GCA_001455505.1_ASM145550v1	LDEF01000076.1	21238	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	0.0	0.0	148.8	2.3	MAT1-2	-148.8	True	True
+GCA_001465935.1_ASM146593v1	LNKV01000077.1	15	control_hmg_only	MAT1-2	high	mat_locus				191.6	3.9	MAT1-2	-187.7	False	True
+GCA_001483325.1_ASM148332v1	LCZG01000045.1	27661	control_alpha_only	MAT1-1	medium	partial_locus		169.2	13.8			MAT1-1	155.4	True	False
+GCA_001510565.1_ASM151056v1	LNGL01000024.1	379889	both_modelled_gap_lt20	MAT1-2	medium	mat_locus	MAT1-2	45.9	0.0	147.7	0.0	MAT1-2	-101.8	True	True
+GCA_001563115.1_CNYM01	JEMN01001513.1	68689	control_hmg_only	MAT1-2	medium	partial_locus				138.1	21.2	MAT1-2	-116.9	False	True
+GCA_001572075.1_ASM157207v1	JOOL01000651.1	14299	control_alpha_only	MAT1-1	high	mat_locus		172.0	11.0			MAT1-1	161.0	True	False
+GCA_001604925.1_ASM160492v1	LOEO01000513.1	18228	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	128.5	0.0	134.4	6.1	undetermined	-6.0	True	True
+GCA_001630405.1_ASM163040v1	LWAD01000283.1	1001	both_modelled_gap_lt20,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	61.0	0.0	93.5	4.2	MAT1-2	-32.5	True	True
+GCA_001644525.1_Stasp1	KV441706.1	1437170	both_weak	MAT1-2	high	mat_locus	MAT1-2	0.0	0.0	145.4	9.3	MAT1-2	-145.4	False	True
+GCA_001660795.1_Cfu_V1.2	LSHF01000073.1	29224	control_hmg_only	MAT1-2	high	mat_locus				147.3	4.7	MAT1-2	-142.6	False	True
+GCA_001680665.1_ASM168066v1	MADX01003884.1	79	control_alpha_only	MAT1-1	medium	idiomorph_gene_only		176.3	14.8			MAT1-1	161.6	True	False
+GCA_001696825.1_ASM169682v1	LSHC01000436.1	421435	control_alpha_only	MAT1-1	high	mat_locus		166.6	0.0			MAT1-1	166.6	True	False
+GCA_001702395.2_DHEL01v2	MAVT02000101.1	17689	both_modelled_gap_lt20,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	58.6	0.2	91.4	3.4	MAT1-2	-32.8	True	True
+GCA_001721665.1_ASM172166v1	MDJU01000095.1	48354	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	220.0	8.3	51.3	0.0	MAT1-1	168.7	True	True
+GCA_001723215.1_ASM172321v1	MEGT01000074.1	49953	control_alpha_only	MAT1-1	high	mat_locus		91.3	0.0			MAT1-1	91.3	True	False
+GCA_001748405.1_ParaphomaB479_1.0	BCLK01000203.1	219142	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	151.2	0.0	55.1	0.0	MAT1-1	96.1	True	True
+GCA_001750005.1_ASM175000v1	KV784179.1	2249029	control_alpha_only	MAT1-1	high	mat_locus		128.6	8.9			MAT1-1	119.7	True	False
+GCA_001835465.2_ASM183546v2	LQCH02000033.1	2145552	control_both_clear	MAT1-1	medium	mat_locus	MAT1-1	197.9	7.5	50.7	0.0	MAT1-1	147.2	True	True
+GCA_001908125.1_ASM190812v1	MNBE01000277.1	234844	both_weak	MAT1-1	high	mat_locus	MAT1-1	72.5	0.0	0.0	0.0	MAT1-1	72.5	True	False
+GCA_001938055.1_ASM193805v1	MLJV01000087.1	4552	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	0.0	0.0	146.5	0.7	MAT1-2	-146.5	True	True
+GCA_002018275.1_ASM201827v1	MJMS01000061.1	16602	control_alpha_only	MAT1-1	medium	partial_locus		168.0	13.8			MAT1-1	154.3	True	False
+GCA_002081935.3_Kretzschmaria_deusta_v3	MLHU03000095.1	81638	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	12.4	27.5	91.9	8.0	MAT1-2	-79.5	False	True
+GCA_002162505.1_ASM216250v1	NGKG01000040.1	62123	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	56.8	0.0	218.6	3.3	MAT1-2	-161.8	True	True
+GCA_002225475.1_ASM222547v1	NMQP01000056.1	88522	control_alpha_only	MAT1-1	medium	mat_locus		92.0	0.0			MAT1-1	92.0	True	False
+GCA_002233915.1_Fogla_G14	NJCM01000513.1	279731	control_hmg_only	MAT1-2	high	mat_locus				230.1	6.3	MAT1-2	-223.7	False	True
+GCA_002234115.1_Folil_Fol39	NJCF01000450.1	25702	control_hmg_only	MAT1-2	high	mat_locus				229.7	6.2	MAT1-2	-223.5	False	True
+GCA_002236925.2_GUA2.long	NCLD02002331.1	790939	control_alpha_only	MAT1-1	medium	partial_locus		168.8	7.0			MAT1-1	161.8	True	False
+GCA_002242795.1_ASM224279v1	NIXA01000030.1	110099	control_alpha_only	MAT1-1	high	mat_locus		234.4	5.5			MAT1-1	228.9	True	False
+GCA_002242985.1_ASM224298v1	LLKF01000500.1	19389	control_hmg_only	MAT1-2	high	mat_locus				192.0	3.5	MAT1-2	-188.5	False	True
+GCA_002249805.1_ASM224980v1	LECP01000663.1	123191	control_hmg_only	MAT1-2	high	mat_locus				136.4	17.1	MAT1-2	-119.3	False	True
+GCA_002267005.1_ASM226700v1	CP022800.1	1608920	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_002267025.1_ASM226702v1	CP022852.1	1592601	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_002267045.1_ASM226704v1	CP022829.1	1808176	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_002270565.1_ASM227056v1	NQMI01000076.1	20203	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	56.8	0.0	102.8	5.4	MAT1-2	-46.0	True	False
+GCA_002276285.1_Lprolificans_pilon	NLAX01000004.1	1406599	control_alpha_only	MAT1-1	high	mat_locus		184.5	12.2			MAT1-1	172.3	True	False
+GCA_002352725.1_FGRA07	NQOC01000005.1	478232	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_002368475.1_ASM236847v1	MQOO01000008.1	1330639	control_hmg_only	MAT1-2	high	mat_locus				158.3	9.5	MAT1-2	-148.8	False	True
+GCA_002382855.1_ASM238285v1	NPFK01000118.1	54687	control_alpha_only	MAT1-1	medium	mat_locus		197.5	7.6			MAT1-1	189.9	True	False
+GCA_002456175.2_ASM245617v2	NWUH02000265.1	18436	control_hmg_only	MAT1-2	medium	mat_locus				273.3	13.1	MAT1-2	-260.3	False	True
+GCA_002591845.1_ASM259184v1	NIBF01003337.1	25351	control_hmg_only	MAT1-2	high	mat_locus				172.9	1.2	MAT1-2	-171.7	False	True
+GCA_002742155.1_ASM274215v1	MANW01000542.1	692	both_modelled_gap_lt20	MAT1-2	medium	idiomorph_gene_only	MAT1-2	71.8	0.0	119.1	1.7	MAT1-2	-47.3	True	True
+GCA_002742195.1_ASM274219v1	MANX01000741.1	599	both_modelled_gap_lt20	MAT1-2	medium	idiomorph_gene_only	MAT1-2	71.8	0.0	119.1	1.7	MAT1-2	-47.3	True	True
+GCA_002742205.1_ASM274220v1	MANY01000729.1	3493	both_modelled_gap_lt20	MAT1-2	medium	idiomorph_gene_only	MAT1-2	71.8	0.0	119.1	1.7	MAT1-2	-47.3	True	True
+GCA_002742215.1_ASM274221v1	MANZ01000777.1	1071	both_modelled_gap_lt20	MAT1-2	medium	idiomorph_gene_only	MAT1-2	71.8	0.0	119.1	1.7	MAT1-2	-47.3	True	True
+GCA_002742255.2_ASM274225v2	MAOA02000032.1	1452894	both_modelled_gap_lt20	MAT1-2	medium	mat_locus	MAT1-2	71.8	0.0	119.1	1.7	MAT1-2	-47.3	True	True
+GCA_002749855.1_ASM274985v1	PCZV01000009.1	67610	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	284.1	6.3	73.4	0.5	MAT1-1	210.7	True	True
+GCA_002777955.1_ASM277795v1	PCDF01000036.1	136045	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	80.2	0.0	144.5	1.9	MAT1-2	-64.3	True	True
+GCA_002785985.1_ASM278598v1	NHNU01000001.1	1997195	control_alpha_only	MAT1-1	high	mat_locus		207.2	8.5			MAT1-1	198.7	True	False
+GCA_002924795.1_ASM292479v1	PJXW01000012.1	2554	control_hmg_only	MAT1-2	high	mat_locus				156.9	9.5	MAT1-2	-147.4	False	True
+GCA_002925815.1_ASM292581v1	MJMR01000099.1	16992	control_alpha_only	MAT1-1	high	mat_locus		170.5	17.4			MAT1-1	153.1	True	False
+GCA_002927005.1_ASM292700v1	PIJX01000045.1	121695	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	285.6	6.7	72.0	0.0	MAT1-1	213.6	True	True
+GCA_002975635.1_ASM297563v1	PORD01000509.1	16433	control_alpha_only	MAT1-1	high	mat_locus		125.4	0.0			MAT1-1	125.4	True	False
+GCA_003012965.1_ASM301296v1	MUZH01004068.1	5102	label_disagrees,neither_modelled_label_disagrees,both_weak	MAT1-1	medium	mat_locus	MAT1-2	33.0	0.0	72.3	2.2	MAT1-2	-39.2	False	False
+GCA_003049395.1_ASM304939v1	PYSP01000496.1	189	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	69.8	0.0	153.3	1.8	MAT1-2	-83.6	True	True
+GCA_003138005.1_ASM313800v1	QAGJ01000003.1	313984	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	310.0	9.3	7.4	0.0	MAT1-1	302.6	True	True
+GCA_003206295.1_ASM320629v1	QGQS01004758.1	364	control_alpha_only	MAT1-1	medium	idiomorph_gene_only		238.9	6.3			MAT1-1	232.5	True	False
+GCA_003313175.1_ASM331317v1	QOHM01000005.1	2812330	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	5.4	0.0	225.9	1.4	MAT1-2	-220.5	True	True
+GCA_003497825.1_ASM349782v1	QVWQ01000014.1	315988	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_003497845.1_ASM349784v1	QVWL01000151.1	9331	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_003497895.1_ASM349789v1	QVWI01000096.1	64942	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_003497905.1_ASM349790v1	QVWH01000100.1	23456	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_003497945.1_ASM349794v1	QVWF01000045.1	28276	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_003498025.1_ASM349802v1	QVWM01000149.1	9331	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_003498045.1_ASM349804v1	QVWC01000021.1	29652	control_alpha_only	MAT1-1	high	mat_locus		163.1	2.4			MAT1-1	160.7	True	False
+GCA_003502635.1_ASM350263v1	QVWP01000161.1	10639	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_003503085.1_ASM350308v1	QVWG01000007.1	24341	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_003615215.1_Fp_A8_v1	MRDB01000054.1	273751	control_hmg_only	MAT1-2	high	mat_locus				233.3	8.1	MAT1-2	-225.2	False	True
+GCA_003689325.1_ASM368932v1	QWWN01000141.1	36482	control_hmg_only	MAT1-2	high	mat_locus				159.1	12.9	MAT1-2	-146.2	False	True
+GCA_003690405.1_ASM369040v1	QWXY01000421.1	11752	control_hmg_only	MAT1-2	high	mat_locus				159.1	12.9	MAT1-2	-146.2	False	True
+GCA_003690505.1_ASM369050v1	QWXM01000324.1	14618	control_alpha_only	MAT1-1	high	mat_locus		193.2	7.2			MAT1-1	186.0	True	False
+GCA_003691035.1_ASM369103v1	QWZA01000008.1	141143	control_alpha_only	MAT1-1	high	mat_locus		197.3	7.3			MAT1-1	190.0	True	False
+GCA_003705035.1_ASM370503v1	RBCA01000057.1	59189	control_hmg_only	MAT1-2	high	mat_locus				230.3	6.3	MAT1-2	-223.9	False	True
+GCA_003795275.1_ASM379527v1	LJZO01000094.1	15497	control_hmg_only	MAT1-1	medium	mat_locus				221.7	11.4	MAT1-2	-210.3	False	True
+GCA_003795295.1_ASM379529v1	LKEB01000039.1	297908	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	77.3	0.0	93.2	1.4	undetermined	-15.9	True	True
+GCA_003945665.1_ASM394566v1	QEPI01000018.1	1814550	control_hmg_only	MAT1-2	high	mat_locus				160.5	2.1	MAT1-2	-158.4	False	True
+GCA_003953585.1_ASM395358v1	RAXE01000129.1	6675	control_alpha_only	MAT1-1	high	mat_locus		297.3	8.7			MAT1-1	288.6	True	False
+GCA_003953735.1_ASM395373v1	RAXO01000605.1	18410	control_hmg_only	MAT1-2	medium	mat_locus				272.9	12.1	MAT1-2	-260.8	False	True
+GCA_003988895.1_ASM398889v1	QYAO01000258.1	3911	both_modelled_gap_lt20	MAT1-1	medium	idiomorph_gene_only	MAT1-1	79.9	0.0	59.3	0.2	undetermined	20.5	True	True
+GCA_003992365.1_ASM399236v1	RZIQ01000003.1	143669	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	161.6	1.8	169.6	15.6	undetermined	-8.0	True	True
+GCA_004009835.2_ASM400983v2	RIBY02001951.1	5015	control_hmg_only	MAT1-2	high	mat_locus				156.9	1.8	MAT1-2	-155.1	False	True
+GCA_004016155.1_ASM401615v1	QERB01000100.1	31008	control_hmg_only	MAT1-2	high	mat_locus				157.0	1.2	MAT1-2	-155.8	False	True
+GCA_004367465.1_FIESC_28_NRRL_66322_ITEM_1616	QGDX01000243.1	97041	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	2.4	0.0	225.4	1.3	MAT1-2	-223.1	True	True
+GCA_004368095.1_ASM436809v1	SIHR01000091.1	238566	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	341.8	14.2	93.1	0.9	MAT1-1	248.7	True	True
+GCA_004522655.2_ASM452265v2	SNSC02000017.1	183758	control_hmg_only	MAT1-2	medium	mat_locus				162.2	16.1	MAT1-2	-146.2	False	True
+GCA_004634305.1_ASM463430v1	SJDO01000096.1	43895	control_hmg_only	MAT1-2	medium	mat_locus				138.2	3.7	MAT1-2	-134.6	False	True
+GCA_004916875.1_ASM491687v1	PQXL01000191.1	32490	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	305.4	0.2	5.1	0.0	MAT1-1	300.3	True	True
+GCA_004917425.1_ASM491742v1	QZAZ01000101.1	32227	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	105.1	0.0	60.5	6.9	MAT1-1	44.6	True	True
+GCA_004917615.1_ASM491761v1	QZAY01000210.1	24442	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	106.6	0.0	60.5	6.9	MAT1-1	46.0	True	True
+GCA_004918245.1_ASM491824v1	QZBX01000004.1	53304	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	105.9	0.0	58.2	5.3	MAT1-1	47.8	True	True
+GCA_005059845.1_ASM505984v1	NAJN01000249.1	6350	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	182.5	15.8	MAT1-2	-112.5	True	True
+GCA_005059855.1_ASM505985v1	NAJP01000098.1	45	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	194.1	9.7	124.6	1.6	MAT1-1	69.5	True	True
+GCA_005059855.1_ASM505985v1	NAJP01000143.1	47717	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	54.1	0.0	168.7	4.7	MAT1-2	-114.5	True	True
+GCA_006111635.1_ASM611163v1	VATJ01000052.1	150381	control_hmg_only	MAT1-2	high	mat_locus				199.6	17.0	MAT1-2	-182.6	False	True
+GCA_006523535.1_ASM652353v1	VICK01000087.1	53972	control_alpha_only	MAT1-1	high	mat_locus		125.4	0.0			MAT1-1	125.4	True	False
+GCA_007388115.1_STR0027621	SMZL01000010.1	200	both_modelled_gap_lt20	MAT1-1	medium	idiomorph_gene_only	MAT1-1	93.8	0.0	106.6	1.2	undetermined	-12.7	True	True
+GCA_007388125.1_STR0027631	SMZM01000055.1	179	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	93.8	0.0	119.7	0.9	MAT1-2	-25.9	True	True
+GCA_007388135.1_STR0027633	SMZN01000064.1	2	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	93.8	0.0	119.7	0.9	MAT1-2	-25.9	True	True
+GCA_007825325.1_CFIA_Lcer_EG2017	QGMG01000066.1	1069	control_alpha_only	MAT1-1	medium	partial_locus		150.0	0.0			MAT1-1	150.0	True	False
+GCA_008079295.1_ASM807929v1	VOPK01000082.1	339544	control_alpha_only	MAT1-1	high	mat_locus		145.9	0.0			MAT1-1	145.9	True	False
+GCA_009297485.1_ASM929748v1	WGOP01000011.1	608645	control_hmg_only	MAT1-2	high	mat_locus				229.8	6.3	MAT1-2	-223.5	False	True
+GCA_009297735.1_ASM929773v1	WGPD01000021.1	88287	control_hmg_only	MAT1-2	high	mat_locus				229.7	6.2	MAT1-2	-223.5	False	True
+GCA_009298205.1_ASM929820v1	WGPY01000033.1	61604	control_hmg_only	MAT1-2	high	mat_locus				230.1	6.3	MAT1-2	-223.8	False	True
+GCA_009298295.1_ASM929829v1	WGQD01000005.1	133624	control_hmg_only	MAT1-2	high	mat_locus				230.3	6.3	MAT1-2	-223.9	False	True
+GCA_009617505.1_Faus151	VSSV01000111.1	85910	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.9	7.7	243.1	0.8	MAT1-1	57.8	True	True
+GCA_009685035.1_AoryTK13_1.0	BIYR01000047.1	279360	control_hmg_only	MAT1-2	medium	mat_locus				273.3	13.1	MAT1-2	-260.3	False	True
+GCA_009687365.1_AoryTK63_1.0	BJAP01000072.1	447999	control_hmg_only	MAT1-2	medium	mat_locus				273.3	13.1	MAT1-2	-260.3	False	True
+GCA_009687685.1_AoryTK79_1.0	BJBF01000072.1	448045	control_hmg_only	MAT1-2	medium	mat_locus				273.3	13.1	MAT1-2	-260.3	False	True
+GCA_009707825.1_HZAU_CMZSB_2.1	VFEO01000020.1	78854	control_alpha_only	MAT1-1	high	mat_locus		160.9	0.0			MAT1-1	160.9	True	False
+GCA_009732865.1_Chalo1	ML769339.1	1446648	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	83.9	0.6	146.8	10.6	MAT1-2	-62.8	True	True
+GCA_009769425.1_ASM976942v1	WNWS01000168.1	24497	control_hmg_only	MAT1-2	high	mat_locus				159.1	12.9	MAT1-2	-146.2	False	True
+GCA_009801905.1_ASM980190v1	RAJP01000017.1	670602	control_hmg_only	MAT1-2	high	mat_locus				257.3	4.3	MAT1-2	-252.9	False	True
+GCA_009802535.1_ASM980253v1	RAKQ01000024.1	184496	control_hmg_only	MAT1-2	high	mat_locus				272.6	0.1	MAT1-2	-272.5	False	True
+GCA_009802545.1_ASM980254v1	RAKS01000032.1	232440	control_hmg_only	MAT1-2	high	mat_locus				257.3	4.3	MAT1-2	-252.9	False	True
+GCA_009804285.1_ASM980428v1	RAMI01000558.1	17857	control_hmg_only	MAT1-2	high	mat_locus				269.2	0.0	MAT1-2	-269.2	False	True
+GCA_009804825.1_ASM980482v1	RAOB01000274.1	1057	label_disagrees	MAT1-1	high	mat_locus	MAT1-2	206.3	0.0	249.8	4.6	MAT1-2	-43.6	True	True
+GCA_009804845.1_ASM980484v1	RAOC01000368.1	839	label_disagrees	MAT1-1	high	mat_locus	MAT1-2	212.0	0.0	251.0	4.5	MAT1-2	-39.0	True	True
+GCA_009804955.1_ASM980495v1	RAOD01000074.1	226051	label_disagrees	MAT1-1	high	mat_locus	MAT1-2	36.8	0.0	251.0	4.5	MAT1-2	-214.2	True	True
+GCA_009804975.1_ASM980497v1	RAOE01000400.1	38	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	213.0	0.0	250.5	4.3	MAT1-2	-37.4	True	True
+GCA_009805085.1_ASM980508v1	RAOJ01000044.1	210324	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	213.0	0.0	250.5	4.3	MAT1-2	-37.4	True	True
+GCA_009805105.1_ASM980510v1	RAOI01000063.1	182241	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	213.0	0.0	250.5	4.3	MAT1-2	-37.4	True	True
+GCA_009805155.1_ASM980515v1	RAOL01000052.1	209756	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	213.0	0.0	250.5	4.3	MAT1-2	-37.4	True	True
+GCA_009805225.1_ASM980522v1	RAOM01000015.1	77943	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	213.0	0.0	250.5	4.3	MAT1-2	-37.4	True	True
+GCA_009805365.1_ASM980536v1	RAOP01000020.1	77853	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	213.0	0.0	250.5	4.3	MAT1-2	-37.4	True	True
+GCA_009812425.1_ASM981242v1	VTSV01000131.1	8470	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	248.0	5.7	69.6	0.5	MAT1-1	178.4	True	True
+GCA_010015745.1_Setho1	ML978161.1	305554	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	114.5	1.2	134.0	4.4	undetermined	-19.5	True	True
+GCA_010015785.1_Sacpr1	ML978713.1	619813	both_weak	MAT1-2	medium	mat_locus	MAT1-2	6.1	32.4	119.9	1.8	MAT1-2	-113.8	False	True
+GCA_010015875.1_ASM1001587v1	ML974154.1	731418	control_hmg_only	MAT1-2	high	mat_locus				159.4	2.8	MAT1-2	-156.7	False	True
+GCA_010093685.1_Ophdi1	MU006242.1	366790	both_modelled_gap_lt20,both_weak	MAT1-1	medium	mat_locus	MAT1-1	82.3	0.0	87.8	5.8	undetermined	-5.5	True	True
+GCA_010093925.1_Zoprh1	ML994713.1	91831	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	167.5	0.0	74.0	0.0	MAT1-1	93.5	True	True
+GCA_010356995.1_Tribi1	ML996703.1	464826	control_alpha_only	MAT1-1	high	mat_locus		176.8	3.6			MAT1-1	173.1	True	False
+GCA_010723975.1_ASM1072397v1	BLKD01000034.1	230969	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	353.3	11.3	75.5	0.7	MAT1-1	277.8	True	True
+GCA_010883275.1_PUFH_ExopDerm_1.0	WXYG01002045.1	315746	control_hmg_only	MAT1-2	high	mat_locus				162.6	5.3	MAT1-2	-157.2	False	True
+GCA_011032825.1_Masph1	JAADJZ010000024.1	360890	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	136.3	0.0	73.2	0.5	MAT1-1	63.1	True	True
+GCA_011032855.1_ASM1103285v1	WESG01000015.1	403378	control_hmg_only	MAT1-2	high	mat_locus				230.1	6.3	MAT1-2	-223.8	False	True
+GCA_011032955.1_ASM1103295v1	WNXL01000125.1	14216	control_hmg_only	MAT1-2	high	mat_locus				169.3	1.8	MAT1-2	-167.5	False	True
+GCA_011033005.1_ASM1103300v1	WNXI01000184.1	14229	control_hmg_only	MAT1-2	high	mat_locus				169.3	1.8	MAT1-2	-167.5	False	True
+GCA_011033555.1_ASM1103355v1	WESP01000049.1	57808	control_hmg_only	MAT1-2	medium	partial_locus				228.2	6.2	MAT1-2	-222.0	False	True
+GCA_011036455.1_ASM1103645v1	WEYM01000427.1	230484	control_hmg_only	MAT1-2	high	mat_locus				230.3	6.3	MAT1-2	-223.9	False	True
+GCA_011316055.1_ASM1131605v1	WOFN01000031.1	127806	control_alpha_only	MAT1-1	high	mat_locus		176.4	6.8			MAT1-1	169.6	True	False
+GCA_011317545.1_ASM1131754v1	WUJK01000004.1	1038434	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	67.8	0.0	85.4	6.0	undetermined	-17.6	True	True
+GCA_012596185.1_EtKY19-1	JAAGOI010006138.1	47238	control_hmg_only	MAT1-2	high	mat_locus				158.3	9.5	MAT1-2	-148.8	False	True
+GCA_012650125.1_ASM1265012v1	JAAUVK010000718.1	2230	both_modelled_gap_lt20	MAT1-2	medium	idiomorph_gene_only	MAT1-2	71.8	0.0	119.1	1.7	MAT1-2	-47.3	True	True
+GCA_012897275.1_ASM1289727v1	CP051024.1	1717968	control_hmg_only	MAT1-2	medium	mat_locus				273.3	13.1	MAT1-2	-260.3	False	True
+GCA_012922935.1_ASM1292293v1	VCMT01000276.1	45708	control_hmg_only	MAT1-2	high	mat_locus				158.3	9.5	MAT1-2	-148.8	False	True
+GCA_012959185.1_ASM1295918v1	JABCRB010000018.1	477127	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_013009365.1_ASM1300936v1	JABENJ010000094.1	341189	control_both_clear	MAT1-1	medium	mat_locus	MAT1-1	197.9	7.5	50.7	0.0	MAT1-1	147.2	True	True
+GCA_013306215.1_ASM1330621v1	VCRM01000085.1	91859	control_alpha_only	MAT1-1	medium	partial_locus		336.5	12.0			MAT1-1	324.6	True	False
+GCA_013364905.1_ASM1336490v1	WNXA01000001.1	4870311	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	43.3	0.0	96.3	3.5	MAT1-2	-53.0	True	False
+GCA_013406985.1_ASM1340698v1	VTGD01000112.1	51896	control_hmg_only	MAT1-2	high	mat_locus				150.3	1.0	MAT1-2	-149.2	False	True
+GCA_013436235.1_ASM1343623v1	JABVZD010000134.1	79142	control_alpha_only	MAT1-1	high	mat_locus		297.4	7.4			MAT1-1	289.9	True	False
+GCA_014183095.1_ASM1418309v1	JACCPH010000036.1	136566	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	80.2	0.0	144.5	1.9	MAT1-2	-64.3	True	True
+GCA_014324575.1_ASM1432457v1	WXUM01000045.1	717537	control_hmg_only	MAT1-2	high	mat_locus				229.7	6.2	MAT1-2	-223.5	False	True
+GCA_014595575.1_ASM1459557v1	JABDHN010000005.1	127670	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	137.1	0.0	174.7	18.1	MAT1-2	-37.6	True	True
+GCA_014621405.1_ASM1462140v1	JAANBC010000004.1	7954	control_hmg_only	MAT1-2	medium	partial_locus				169.0	3.8	MAT1-2	-165.2	False	True
+GCA_014705275.1_ASM1470527v1	JABGMM010000816.1	7818	control_hmg_only	MAT1-2	high	mat_locus				133.3	21.7	MAT1-2	-111.6	False	True
+GCA_014849245.1_ASM1484924v1	JACWQY010000499.1	3862	control_hmg_only	MAT1-2	medium	partial_locus				132.6	0.0	MAT1-2	-132.6	False	True
+GCA_014849305.1_ASM1484930v1	JACWQT010000274.1	1375	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849345.1_ASM1484934v1	JACWQS010000379.1	11966	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849395.1_ASM1484939v1	JACWQR010000296.1	3862	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849415.1_ASM1484941v1	JACWQP010000115.1	49941	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849585.1_ASM1484958v1	JACWRJ010000421.1	13955	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849635.1_ASM1484963v1	JACWRI010000347.1	114	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849655.1_ASM1484965v1	JACWRH010000460.1	12039	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849665.1_ASM1484966v1	JACWRG010000302.1	1415	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849675.1_ASM1484967v1	JACWRF010000173.1	2425	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849715.1_ASM1484971v1	JACWRD010000252.1	2185	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849805.1_ASM1484980v1	JACWRW010000102.1	15481	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849905.1_ASM1484990v1	JACWRT010000156.1	70809	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849915.1_ASM1484991v1	JACWRS010000566.1	91	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849945.1_ASM1484994v1	JACWRR010000130.1	99122	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014849965.1_ASM1484996v1	JACWRO010000339.1	31125	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850005.1_ASM1485000v1	JACWRN010000631.1	91	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850035.1_ASM1485003v1	JACWRM010000422.1	5686	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850075.1_ASM1485007v1	JACWTP010000464.1	2225	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850105.1_ASM1485010v1	JACWTO010000458.1	2901	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850165.1_ASM1485016v1	JACWTJ010000021.1	24134	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850175.1_ASM1485017v1	JACWTK010000466.1	2795	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850235.1_ASM1485023v1	JACWTH010000353.1	2803	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850265.1_ASM1485026v1	JACWTF010000249.1	1356	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850295.1_ASM1485029v1	JACWTE010000285.1	38933	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850415.1_ASM1485041v1	JACWSY010000635.1	1327	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850425.1_ASM1485042v1	JACWSX010000265.1	41651	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850445.1_ASM1485044v1	JACWSW010000251.1	4350	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850485.1_ASM1485048v1	JACWSV010000194.1	21128	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850595.1_ASM1485059v1	JACWSP010000393.1	201	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850675.1_ASM1485067v1	JACWSM010000235.1	24394	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850695.1_ASM1485069v1	JACWSK010000318.1	24382	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850705.1_ASM1485070v1	JACWSI010000499.1	295	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850755.1_ASM1485075v1	JACWSH010000497.1	2269	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850805.1_ASM1485080v1	JACWSF010000253.1	38938	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850825.1_ASM1485082v1	JACWSC010000333.1	33082	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850845.1_ASM1485084v1	JACWSE010000360.1	2718	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014850905.1_ASM1485090v1	JACWRZ010000199.1	39093	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014851075.1_ASM1485107v1	JACWUH010000472.1	12677	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014851085.1_ASM1485108v1	JACWUF010000390.1	1884	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014851205.1_ASM1485120v1	JACWTY010000277.1	38935	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014851265.1_ASM1485126v1	JACWTU010000271.1	11709	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014851345.1_ASM1485134v1	JACWTS010000155.1	2107	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014851385.1_ASM1485138v1	JACWTZ010000406.1	3862	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_014872965.1_ASM1487296v1	JADAZQ010000019.1	296996	control_hmg_only	MAT1-2	high	mat_locus				146.5	5.1	MAT1-2	-141.4	False	True
+GCA_014872975.1_ASM1487297v1	JADAZS010000010.1	437768	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	48.3	0.0	91.0	3.5	MAT1-2	-42.6	True	False
+GCA_014872985.1_ASM1487298v1	JADAZP010000055.1	104493	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	40.2	0.0	26.7	7.0	undetermined	13.5	True	False
+GCA_014872995.1_ASM1487299v1	JADAZR010000020.1	607195	label_disagrees	MAT1-1	high	mat_locus	MAT1-2	39.2	0.0	101.0	4.4	MAT1-2	-61.8	True	True
+GCA_014873005.1_ASM1487300v1	JADAZO010000025.1	831657	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	40.2	0.0	26.7	7.0	undetermined	13.5	True	False
+GCA_014898485.2_BOTSQU_2	RCTC02000002.1	4053332	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	306.9	0.0	5.7	0.0	MAT1-1	301.2	True	True
+GCA_015147975.1_ASM1514797v1	JACVFK010000321.1	15977	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	308.8	0.1	0.0	0.0	MAT1-1	308.8	True	True
+GCA_015148665.1_ASM1514866v1	JACVFO010000750.1	11297	control_hmg_only	MAT1-1	medium	mat_locus				0.0	0.0	undetermined	0.0	False	True
+GCA_015148805.1_ASM1514880v1	JACVFW010000325.1	11244	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	124.3	0.0	219.5	2.9	MAT1-2	-95.3	True	True
+GCA_015148845.1_ASM1514884v1	JACVFY010000299.1	15957	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	126.1	0.0	223.5	2.6	MAT1-2	-97.5	True	True
+GCA_015148905.1_ASM1514890v1	JACVGA010000339.1	15977	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	124.2	0.0	219.5	2.9	MAT1-2	-95.4	True	True
+GCA_015148935.1_ASM1514893v1	JACVGC010000151.1	42218	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	123.5	0.0	219.5	2.9	MAT1-2	-96.0	True	True
+GCA_015148965.1_ASM1514896v1	JACVGE010000125.1	7120	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	308.8	0.1	0.0	0.0	MAT1-1	308.8	True	True
+GCA_015148975.1_ASM1514897v1	JACVGF010000113.1	11260	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	308.8	0.1	0.0	0.0	MAT1-1	308.8	True	True
+GCA_015251385.1_ASM1525138v1	JADGIM010000001.1	804328	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	106.6	0.0	59.7	6.6	MAT1-1	46.9	True	True
+GCA_015295725.1_ASM1529572v1	JADCRF010000841.1	2	control_alpha_only	MAT1-1	medium	partial_locus		156.2	12.5			MAT1-1	143.7	True	False
+GCA_015586415.1_ASM1558641v1	JADBGT010000014.1	232777	control_hmg_only	MAT1-2	high	mat_locus				161.5	0.8	MAT1-2	-160.7	False	True
+GCA_015678955.1_ASM1567895v1	CP064903.1	1946235	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	17.8	0.3	29.6	1.6	undetermined	-11.8	False	False
+GCA_016097315.1_Al_Kewell_delta_SCD1_JD202.9	JADWQH010000004.1	1971218	control_alpha_only	MAT1-1	high	mat_locus		176.6	0.0			MAT1-1	176.6	True	False
+GCA_016163825.1_USDA_NRF0995b_v1	WILI01000053.1	78143	control_hmg_only	MAT1-2	high	mat_locus				229.7	6.2	MAT1-2	-223.5	False	True
+GCA_016166285.1_USDA_BRIP63546a_v1	WIMU01000010.1	698497	control_hmg_only	MAT1-2	high	mat_locus				229.7	6.2	MAT1-2	-223.5	False	True
+GCA_016803955.1_ASM1680395v1	CP049927.1	4462042	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	201.7	7.4	91.6	0.0	MAT1-1	110.0	True	True
+GCA_016807825.1_ASM1680782v1	JADGFZ010000008.1	615884	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	74.6	0.0	175.8	19.3	MAT1-2	-101.2	True	True
+GCA_016808025.1_ASM1680802v1	JACEER010000106.1	58980	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	282.7	7.4	0.0	0.0	MAT1-1	282.7	True	True
+GCA_016808195.1_ASM1680819v1	JAEQMF010000012.1	1119875	both_modelled_gap_lt20,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	68.9	0.0	44.8	3.3	undetermined	24.1	True	True
+GCA_016859255.1_ASM1685925v1	JACAAM010000006.1	1512342	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	60.4	0.0	92.2	3.9	MAT1-2	-31.8	True	True
+GCA_016906325.1_ASM1690632v1	RKRL01000009.1	34796	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	12.3	0.0	194.5	0.7	MAT1-2	-182.2	True	True
+GCA_017354895.1_ASM1735489v1	CP071493.1	7191701	control_both_clear	MAT1-1	medium	mat_locus	MAT1-1	160.3	0.0	30.8	5.2	MAT1-1	129.5	True	True
+GCA_017580825.2_ASM1758082v2	JAGFJS020000015.1	120842	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	157.7	2.2	210.6	21.6	MAT1-2	-52.9	True	True
+GCA_017656605.1_ASM1765660v1	JAGDUN010000012.1	426533	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	241.0	0.9	MAT1-1	59.3	True	True
+GCA_017656675.1_ASM1765667v1	JAGDUQ010000031.1	9700	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	299.9	7.6	244.9	0.9	MAT1-1	55.0	True	True
+GCA_017656785.1_ASM1765678v1	JAGDUU010000005.1	296770	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	7.7	243.1	0.8	MAT1-1	58.5	True	True
+GCA_017656825.1_ASM1765682v1	JAGDUW010000031.1	264780	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	244.5	0.9	MAT1-1	57.0	True	True
+GCA_017656845.1_ASM1765684v1	JAGDUY010000015.1	203819	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_017656955.1_ASM1765695v1	JAGDVC010000005.1	220430	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.9	7.7	243.1	0.8	MAT1-1	57.8	True	True
+GCA_017656985.1_ASM1765698v1	JAGDVF010000010.1	249413	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.4	3.9	242.9	0.8	MAT1-1	57.5	True	True
+GCA_017657035.1_ASM1765703v1	JAGDVG010000017.1	350143	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.9	7.7	243.1	0.8	MAT1-1	57.8	True	True
+GCA_017657105.1_ASM1765710v1	JAGDVL010000010.1	1001618	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.8	5.2	245.0	0.9	MAT1-1	55.9	True	True
+GCA_017657115.1_ASM1765711v1	JAGDVK010000040.1	101929	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.8	5.2	245.0	0.9	MAT1-1	55.9	True	True
+GCA_017657125.1_ASM1765712v1	JAGFNX010000132.1	32787	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	163.2	0.0	36.6	0.0	MAT1-1	126.6	True	True
+GCA_018219485.1_ASM1821948v1	JADPXC010000051.1	207	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018219515.1_ASM1821951v1	JADPWQ010000011.1	476197	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018219525.1_ASM1821952v1	JADPWN010000012.1	245410	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018219555.1_ASM1821955v1	JADPWP010000035.1	85842	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018219765.1_ASM1821976v1	JADPXA010000028.1	112190	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018345475.1_ASM1834547v1	JADPNH010000043.1	246410	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018345545.1_ASM1834554v1	JADPNK010000009.1	1166784	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018345585.1_ASM1834558v1	JADPNL010000016.1	1724364	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018345615.1_ASM1834561v1	JADPNN010000030.1	9691	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018345725.1_ASM1834572v1	JADPNT010000003.1	2974065	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018345835.1_ASM1834583v1	JADPNX010000112.1	682	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018345865.1_ASM1834586v1	JADPNY010000010.1	244682	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018345995.1_ASM1834599v1	JADPOH010000002.1	2843036	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346005.1_ASM1834600v1	JADPOG010000023.1	2978643	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346165.1_ASM1834616v1	JADPOQ010000005.1	2934540	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346265.1_ASM1834626v1	JADPOU010000005.1	258553	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346325.1_ASM1834632v1	JADPOZ010000011.1	301982	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346355.1_ASM1834635v1	JADPOX010000030.1	251927	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346455.1_ASM1834645v1	JADPPC010000022.1	245607	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346485.1_ASM1834648v1	JADPPF010000038.1	2626795	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346505.1_ASM1834650v1	JADPPD010000034.1	2492896	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346565.1_ASM1834656v1	JADPPI010000020.1	5463310	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346625.1_ASM1834662v1	JADPPK010000004.1	2914113	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346685.1_ASM1834668v1	JADPPQ010000007.1	2274267	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346695.1_ASM1834669v1	JADPPR010000005.1	250102	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018346705.1_ASM1834670v1	JADPPO010000029.1	2989636	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_018360475.1_CSU_LM469_v1	SRQQ01000016.1	34032	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	156.6	0.0	88.9	2.4	MAT1-1	67.7	True	True
+GCA_018360525.1_CSU_Clav50_v1	SRQD01000659.1	3	control_hmg_only	MAT1-2	medium	partial_locus				158.9	0.8	MAT1-2	-158.1	False	True
+GCA_018360855.1_CSU_LM4_v1	SRRF01000007.1	12919	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	156.6	0.0	88.9	2.4	MAT1-1	67.7	True	True
+GCA_018360975.1_CSU_LM28_v1	SRRC01000006.1	76353	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	156.6	0.0	86.2	2.6	MAT1-1	70.4	True	True
+GCA_018992025.1_ASM1899202v1	JABUKV010000016.1	52471	control_hmg_only	MAT1-2	high	mat_locus				142.1	5.5	MAT1-2	-136.6	False	True
+GCA_019009935.1_ASM1900993v1	JABUKY010000280.1	465	control_hmg_only	MAT1-2	medium	partial_locus				142.1	5.5	MAT1-2	-136.6	False	True
+GCA_019022785.1_UFMT_Lindgomycetaceae_A73	JAFHBV010000536.1	8621	control_alpha_only	MAT1-1	medium	partial_locus		89.3	0.0			MAT1-1	89.3	True	False
+GCA_019054775.1_ASM1905477v1	JAHKOB010000020.1	352191	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	2.3	0.0	227.2	1.3	MAT1-2	-224.9	True	True
+GCA_019054855.1_ASM1905485v1	JAHKOF010000028.1	275544	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	5.4	0.0	224.7	1.4	MAT1-2	-219.3	True	True
+GCA_019055045.1_ASM1905504v1	JAHKOL010000023.1	308800	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	5.4	0.0	224.7	1.4	MAT1-2	-219.3	True	True
+GCA_019189255.1_ASM1918925v1	JAHAOX010000008.1	570713	control_alpha_only	MAT1-1	high	mat_locus		129.7	9.3			MAT1-1	120.4	True	False
+GCA_019189355.1_ASM1918935v1	JAHAPC010000013.1	11734	control_alpha_only	MAT1-1	high	mat_locus		129.7	9.3			MAT1-1	120.4	True	False
+GCA_019395255.1_ASM1939525v1	JAHXJL010000071.1	430025	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	117.7	0.0	225.9	2.6	MAT1-2	-108.2	True	True
+GCA_019677095.1_ASM1967709v1	JAHRBU010000002.1	691936	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	78.3	1.0	165.4	18.3	MAT1-2	-87.2	True	True
+GCA_019775635.1_ASM1977563v1	JACWFN010000008.1	686561	control_hmg_only	MAT1-2	high	mat_locus				159.9	2.9	MAT1-2	-156.9	False	True
+GCA_019775845.1_ASM1977584v1	JADQAV010000008.1	359190	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	146.7	0.0	101.0	11.4	MAT1-1	45.7	True	True
+GCA_019804555.1_ASM1980455v1	JAETFU010000116.1	59869	control_alpha_only	MAT1-1	high	mat_locus		129.5	9.3			MAT1-1	120.2	True	False
+GCA_019923975.1_ASM1992397v1	JAHFWY010000019.1	83218	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	182.3	0.0	33.6	7.0	MAT1-1	148.7	True	True
+GCA_019924015.1_ASM1992401v1	JAHFWZ010000010.1	84298	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	158.9	0.7	171.1	18.8	undetermined	-12.3	True	True
+GCA_019924295.1_ASM1992429v1	JAHFXI010000721.1	3	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	135.0	1.4	171.1	18.8	MAT1-2	-36.1	True	True
+GCA_019925215.1_ASM1992521v1	JAHFYS010000234.1	4209	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	159.1	0.0	171.1	18.8	undetermined	-12.1	True	True
+GCA_019925475.1_ASM1992547v1	JADHKN010000076.1	7512	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	1.1	0.0	172.8	1.5	MAT1-2	-171.7	True	True
+GCA_019976475.1_ASM1997647v1	JAFBMQ010000002.1	799201	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	247.3	5.0	55.7	0.1	MAT1-1	191.5	True	True
+GCA_020002325.1_ASM2000232v1	JAGKRY010000139.1	7313	control_hmg_only	MAT1-2	high	mat_locus				113.3	5.1	MAT1-2	-108.1	False	True
+GCA_020137435.1_ASM2013743v1	JAATNU010000349.1	3242	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	3.9	0.0	207.9	0.9	MAT1-2	-204.0	True	True
+GCA_020137715.1_BUMICRO_TalaroTrachy_1.1	JACGXQ010000015.1	1664936	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	172.9	8.8	174.3	14.8	undetermined	-1.4	True	True
+GCA_020457885.1_ASM2045788v1	JADAXM010000098.1	35596	control_hmg_only	MAT1-2	high	mat_locus				133.3	21.7	MAT1-2	-111.6	False	True
+GCA_020458275.1_ASM2045827v1	JADAXQ010000044.1	69454	control_hmg_only	MAT1-2	high	mat_locus				133.3	21.7	MAT1-2	-111.6	False	True
+GCA_020498765.1_ASM2049876v1	JAIBPQ010000163.1	186	control_alpha_only	MAT1-1	high	mat_locus		371.8	11.7			MAT1-1	360.0	True	False
+GCA_020499245.1_ASM2049924v1	JAIBQI010001807.1	1	control_hmg_only	MAT1-2	medium	partial_locus				90.2	2.2	MAT1-2	-88.0	False	True
+GCA_020499825.1_ASM2049982v1	JAIBSH010000004.1	215614	control_hmg_only	MAT1-2	medium	mat_locus				376.5	11.1	MAT1-2	-365.5	False	True
+GCA_020499905.1_ASM2049990v1	JAIBRK010000020.1	177860	control_hmg_only	MAT1-2	medium	mat_locus				376.5	11.1	MAT1-2	-365.5	False	True
+GCA_020501355.1_ASM2050135v1	JAIBUQ010000395.1	15275	control_hmg_only	MAT1-2	high	mat_locus				89.0	1.3	MAT1-2	-87.7	False	True
+GCA_020501425.1_ASM2050142v1	JAIBUT010000054.1	93841	control_hmg_only	MAT1-2	medium	mat_locus				372.8	8.9	MAT1-2	-363.9	False	True
+GCA_020502105.1_ASM2050210v1	JAIBWB010000049.1	99391	control_hmg_only	MAT1-2	medium	mat_locus				372.8	8.9	MAT1-2	-363.9	False	True
+GCA_020502995.1_ASM2050299v1	JAIBXI010000032.1	72604	control_hmg_only	MAT1-2	medium	mat_locus				376.5	11.1	MAT1-2	-365.5	False	True
+GCA_020503905.1_ASM2050390v1	JAIBZB010000029.1	103016	control_hmg_only	MAT1-2	medium	mat_locus				322.5	7.9	MAT1-2	-314.6	False	True
+GCA_020568055.1_ASM2056805v1	JAIRGC010000002.1	447950	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020568095.1_ASM2056809v1	JAIRGD010000004.1	629850	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020568205.1_ASM2056820v1	JAIRGE010000012.1	573633	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020568415.1_ASM2056841v1	JAIRDV010000001.1	1592792	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020568465.1_ASM2056846v1	JAIRDW010000001.1	679940	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020568705.1_ASM2056870v1	JAIRGF010000001.1	1531548	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020568775.1_ASM2056877v1	JAIRGG010000006.1	529750	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020569285.1_ASM2056928v1	JAIREC010000002.1	447986	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020569485.1_ASM2056948v1	JAIRGI010000006.1	560862	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020569495.1_ASM2056949v1	JAIRED010000001.1	1646623	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020569685.1_ASM2056968v1	JAIRGK010000009.1	447852	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020569895.1_ASM2056989v1	JAIRGL010000016.1	447940	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020569945.1_ASM2056994v1	JAIREF010000003.1	817450	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020570015.1_ASM2057001v1	JAIREG010000002.1	1632261	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020570045.1_ASM2057004v1	JAIREI010000005.1	860982	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020570345.1_ASM2057034v1	JAIRGM010000011.1	432856	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020570355.1_ASM2057035v1	JAIREH010000008.1	447729	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020570405.1_ASM2057040v1	JAIREJ010000001.1	1643378	control_alpha_only	MAT1-1	high	mat_locus		163.1	2.4			MAT1-1	160.7	True	False
+GCA_020570525.1_ASM2057052v1	JAIREK010000004.1	447841	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020570685.1_ASM2057068v1	JAIRGQ010000007.1	447904	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020570735.1_ASM2057073v1	JAIRGR010000004.1	447861	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020571265.1_ASM2057126v1	JAIREM010000004.1	860631	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020571295.1_ASM2057129v1	JAIRGU010000001.1	1312006	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020571575.1_ASM2057157v1	JAIRGV010000011.1	467370	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020571605.1_ASM2057160v1	JAIRGW010000003.1	447855	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020571815.1_ASM2057181v1	JAIRGX010000017.1	448291	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020571885.1_ASM2057188v1	JAIRGY010000030.1	308240	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020571895.1_ASM2057189v1	JAIREP010000006.1	447860	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020571965.1_ASM2057196v1	JAIRGZ010000005.1	447863	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020572075.1_ASM2057207v1	JAIRHA010000002.1	447860	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020572205.1_ASM2057220v1	JAIREQ010000001.1	98849	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020572315.1_ASM2057231v1	JAIRHB010000001.1	448330	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020572345.1_ASM2057234v1	JAIRHD010000005.1	861212	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020572395.1_ASM2057239v1	JAIRHG010000005.1	533784	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020572985.1_ASM2057298v1	JAIRER010000001.1	1544749	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020573285.1_ASM2057328v1	JAIRHL010000001.1	1527326	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020573315.1_ASM2057331v1	JAIRHM010000020.1	573800	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020573325.1_ASM2057332v1	JAIRET010000001.1	1710382	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020573495.1_ASM2057349v1	JAIRHN010000001.1	1472726	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020573595.1_ASM2057359v1	JAIRHO010000005.1	892039	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020573765.1_ASM2057376v1	JAIREV010000001.1	1522685	control_alpha_only	MAT1-1	high	mat_locus		163.1	2.4			MAT1-1	160.7	True	False
+GCA_020573915.1_ASM2057391v1	JAIRHR010000003.1	764245	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020574145.1_ASM2057414v1	JAIREW010000001.1	1812006	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020574265.1_ASM2057426v1	JAIREY010000025.1	427004	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020574345.1_ASM2057434v1	JAIREZ010000001.1	1794523	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020574375.1_ASM2057437v1	JAIRFA010000001.1	773821	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020574715.1_ASM2057471v1	JAIRFC010000003.1	448422	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020575035.1_ASM2057503v1	JAIRFE010000001.1	1908598	control_alpha_only	MAT1-1	high	mat_locus		163.1	2.4			MAT1-1	160.7	True	False
+GCA_020575105.1_ASM2057510v1	JAIRID010000001.1	868603	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020575195.1_ASM2057519v1	JAIRIE010000001.1	597339	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020575285.1_ASM2057528v1	JAIRIF010000003.1	706653	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020575355.1_ASM2057535v1	JAIRIH010000013.1	494685	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020575375.1_ASM2057537v1	JAIRIG010000001.1	520775	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020575405.1_ASM2057540v1	JAIRII010000003.1	1715356	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020575445.1_ASM2057544v1	JAIRIJ010000004.1	563236	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020575775.1_ASM2057577v1	JAIRIN010000002.1	437577	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020575955.1_ASM2057595v1	JAIRIO010000005.1	448427	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020575975.1_ASM2057597v1	JAIRFF010000010.1	337348	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020576185.1_ASM2057618v1	JAIRIQ010000030.1	99013	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020576195.1_ASM2057619v1	JAIRFG010000002.1	810041	control_alpha_only	MAT1-1	high	mat_locus		163.1	2.4			MAT1-1	160.7	True	False
+GCA_020578205.1_ASM2057820v1	JAIRFS010000007.1	608427	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020578375.1_ASM2057837v1	JAIRFT010000014.1	449311	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020578445.1_ASM2057844v1	JAIRIU010000014.1	98989	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020578515.1_ASM2057851v1	JAIRIV010000001.1	1857411	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020578615.1_ASM2057861v1	JAIRIX010000001.1	651866	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020579815.1_ASM2057981v1	JAIRIZ010000001.1	738618	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020579825.1_ASM2057982v1	JAIRIY010000014.1	439947	control_alpha_only	MAT1-1	high	mat_locus		163.1	2.4			MAT1-1	160.7	True	False
+GCA_020579835.1_ASM2057983v1	JAIRJA010000001.1	1812008	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020580075.1_ASM2058007v1	JAIRJC010000003.1	599139	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020580085.1_ASM2058008v1	JAIRJD010000001.1	775875	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020580115.1_ASM2058011v1	JAIRFV010000001.1	841357	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020580145.1_ASM2058014v1	JAIRJE010000001.1	1586654	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020580305.1_ASM2058030v1	JAIRJG010000001.1	1584428	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020580665.1_ASM2058066v1	JAIRFY010000001.1	1795467	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020580695.1_ASM2058069v1	JAIRJK010000012.1	434365	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020580775.1_ASM2058077v1	JAIRJL010000021.1	307443	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020580905.1_ASM2058090v1	JAIRFZ010000011.1	505301	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020581155.1_ASM2058115v1	JAIRJN010000012.1	65777	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020581165.1_ASM2058116v1	JAIRJO010000008.1	316056	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020581275.1_ASM2058127v1	JAIRJP010000002.1	775101	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_020975995.1_ASM2097599v1	JAAIIQ010000299.1	88169	control_hmg_only	MAT1-2	high	mat_locus				229.7	6.2	MAT1-2	-223.5	False	True
+GCA_021117315.1_ASM2111731v1	CP088214.1	1541027	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	47.9	0.0	136.1	1.0	MAT1-2	-88.2	False	True
+GCA_021188095.1_ASM2118809v1	JAJLLZ010000002.1	6048452	both_modelled_gap_lt20,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	63.7	0.0	94.0	4.3	MAT1-2	-30.3	True	True
+GCA_021272945.2_ASM2127294v2	JAJSPL020000012.1	177286	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	77.2	0.0	95.9	2.2	undetermined	-18.7	True	True
+GCA_021399435.1_DiaPMI573_1	JAJTUP010000070.1	201544	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	55.7	0.0	85.7	3.2	MAT1-2	-30.0	True	False
+GCA_021436935.1_ASM2143693v1	JAJAEB010000019.1	340526	control_hmg_only	MAT1-2	medium	mat_locus				296.7	13.1	MAT1-2	-283.6	False	True
+GCA_022086465.1_ASM2208646v1	JAJNGR010000039.1	274591	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	47.9	0.0	136.1	1.0	MAT1-2	-88.2	False	True
+GCA_022344145.1_ASM2234414v1	JAJBLE010000012.1	700690	control_alpha_only	MAT1-1	high	mat_locus		166.6	0.0			MAT1-1	166.6	True	False
+GCA_022345385.1_ASM2234538v1	JAJAUU010000095.1	10190	control_alpha_only	MAT1-1	high	mat_locus		164.1	0.0			MAT1-1	164.1	True	False
+GCA_022345705.2_ASM2234570v2	JAJDMY020001099.1	5400	control_alpha_only	MAT1-1	high	mat_locus		151.0	0.0			MAT1-1	151.0	True	False
+GCA_022392925.1_ASM2239292v1	JAKRGK010000001.1	2234722	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	18.7	2.7	171.2	1.9	MAT1-2	-152.6	True	True
+GCA_022496955.1_KdCBS826_1	MU386804.1	92362	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	12.2	27.2	92.1	8.0	MAT1-2	-80.0	False	True
+GCA_022560015.1_ASM2256001v1	JAFISB010000038.1	142641	control_alpha_only	MAT1-1	high	mat_locus		148.5	0.0			MAT1-1	148.5	True	False
+GCA_022570775.2_ASM2257077v2	JAKOOP020000008.1	1324422	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	44.6	0.0	98.4	4.2	MAT1-2	-53.8	True	False
+GCA_022570805.2_ASM2257080v2	JAKNSF020000001.1	1337996	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	44.6	0.0	98.4	4.2	MAT1-2	-53.8	True	False
+GCA_022578495.1_Nemani1	MU392172.1	48705	control_hmg_only	MAT1-2	high	mat_locus				38.1	0.0	MAT1-2	-38.1	False	True
+GCA_022578905.1_XylarbFL1030	MU398210.1	103871	control_hmg_only	MAT1-1	medium	mat_locus				46.0	0.0	MAT1-2	-46.0	False	True
+GCA_022664585.2_ASM2266458v2	JAKWBI020000083.1	72785	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	38.5	2.5	37.1	0.0	undetermined	1.4	False	False
+GCA_022758125.1_B1	JACVNF010000010.1	34607	control_hmg_only	MAT1-2	high	mat_locus				152.4	3.7	MAT1-2	-148.7	False	True
+GCA_022813285.1_ASM2281328v1	JAKLMT010000004.1	275003	control_alpha_only	MAT1-1	high	mat_locus		292.9	8.2			MAT1-1	284.7	True	False
+GCA_022813965.1_ASM2281396v1	JALDZS010000421.1	3	control_alpha_only	MAT1-1	medium	partial_locus		187.8	0.0			MAT1-1	187.8	True	False
+GCA_022814125.1_ASM2281412v1	JALDZL010000079.1	69203	control_alpha_only	MAT1-1	medium	mat_locus		162.4	5.0			MAT1-1	157.4	True	False
+GCA_022814295.1_ASM2281429v1	JALDZD010000447.1	3048	control_hmg_only	MAT1-2	high	mat_locus				150.5	19.2	MAT1-2	-131.3	False	True
+GCA_022814315.1_ASM2281431v1	JALDZC010000325.1	17541	control_alpha_only	MAT1-1	medium	partial_locus		195.5	0.0			MAT1-1	195.5	True	False
+GCA_022814335.1_ASM2281433v1	JALDZB010000149.1	1364	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	174.8	0.0	13.5	0.0	MAT1-1	161.3	True	True
+GCA_022829195.1_ASM2282919v1	JAFIMR010000022.1	580982	both_weak	MAT1-2	high	mat_locus	MAT1-2	0.0	0.0	101.0	10.1	MAT1-2	-101.0	False	True
+GCA_022829225.1_ASM2282922v1	JAFIMQ010000008.1	145574	both_weak	MAT1-2	high	mat_locus	MAT1-2	0.0	0.0	101.0	10.1	MAT1-2	-101.0	False	True
+GCA_022829825.1_ASM2282982v1	JALAZL010000050.1	73381	control_alpha_only	MAT1-1	high	mat_locus		281.2	7.5			MAT1-1	273.7	True	False
+GCA_022829835.1_ASM2282983v1	JALAZJ010000022.1	65484	control_hmg_only	MAT1-2	high	mat_locus				268.2	10.7	MAT1-2	-257.5	False	True
+GCA_022830425.1_ASM2283042v1	JALBAE010000023.1	118352	control_hmg_only	MAT1-2	high	mat_locus				268.2	10.7	MAT1-2	-257.5	False	True
+GCA_022830625.1_ASM2283062v1	JALBAD010000008.1	118327	control_hmg_only	MAT1-2	high	mat_locus				268.2	10.7	MAT1-2	-257.5	False	True
+GCA_022830775.1_ASM2283077v1	JALBAO010000010.1	241880	control_alpha_only	MAT1-1	medium	partial_locus		281.2	7.5			MAT1-1	273.7	True	False
+GCA_022830915.1_ASM2283091v1	JALBAR010000006.1	173162	control_hmg_only	MAT1-2	high	mat_locus				268.2	10.7	MAT1-2	-257.5	False	True
+GCA_022832055.1_ASM2283205v1	JALBCH010000041.1	73367	control_alpha_only	MAT1-1	high	mat_locus		281.2	7.5			MAT1-1	273.7	True	False
+GCA_023065495.1_ASM2306549v1	JAIWKL010000002.1	439772	control_hmg_only	MAT1-2	medium	mat_locus				58.0	0.0	MAT1-2	-58.0	False	True
+GCA_023079225.1_ASM2307922v1	JAJMVA010000001.1	782445	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	149.9	0.0	84.2	0.0	MAT1-1	65.8	True	True
+GCA_023079325.1_ASM2307932v1	JALBUZ010000003.1	588583	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	145.5	3.0	59.2	7.2	MAT1-1	86.2	True	True
+GCA_023087165.1_ASM2308716v1	JAJMYG010000009.1	332260	control_alpha_only	MAT1-1	high	mat_locus		147.8	0.0			MAT1-1	147.8	True	False
+GCA_023134515.1_ASM2313451v1	JAKJLS010000175.1	35667	control_alpha_only	MAT1-1	high	mat_locus		285.0	9.2			MAT1-1	275.8	True	False
+GCA_023137795.1_ASM2313779v1	JAKJMJ010000091.1	3456	control_alpha_only	MAT1-1	high	mat_locus		285.0	9.2			MAT1-1	275.8	True	False
+GCA_023137865.1_ASM2313786v1	JAKJMF010000121.1	68321	control_hmg_only	MAT1-2	high	mat_locus				245.3	12.6	MAT1-2	-232.7	False	True
+GCA_023159155.1_Kredeu1	JAJNNX010000006.1	1009382	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	12.2	27.2	92.1	8.0	MAT1-2	-80.0	False	True
+GCA_023168115.2_PurlilIFM63780_1.0	BQKX01000003.1	4211721	control_hmg_only	MAT1-2	high	mat_locus				167.9	4.3	MAT1-2	-163.6	False	True
+GCA_023383405.1_ASM2338340v1	JAKWJL010000021.1	762336	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	153.3	0.0	26.6	2.3	MAT1-1	126.8	True	True
+GCA_023522825.1_DampeI2T2	JAMFTM010000001.1	954100	both_modelled_gap_lt20,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	61.0	0.0	93.1	4.2	MAT1-2	-32.1	True	True
+GCA_023566075.1_ASM2356607v1	JAMDEP010000002.1	495740	control_alpha_only	MAT1-1	high	mat_locus		158.1	0.0			MAT1-1	158.1	True	False
+GCA_023618385.1_ASM2361838v1	JAMAAB010000009.1	715962	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	283.2	7.4	31.8	0.0	MAT1-1	251.4	True	True
+GCA_023619295.1_ASM2361929v1	JALZZK010000004.1	30024	control_alpha_only	MAT1-1	high	mat_locus		301.3	9.6			MAT1-1	291.7	True	False
+GCA_023619735.1_ASM2361973v1	JALZYP010000002.1	843684	control_hmg_only	MAT1-2	medium	mat_locus				295.2	13.1	MAT1-2	-282.1	False	True
+GCA_023619815.1_ASM2361981v1	JALZYL010000041.1	212537	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	248.0	5.7	69.6	0.5	MAT1-1	178.4	True	True
+GCA_023621105.1_ASM2362110v1	JALZWX010000100.1	55402	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	234.6	11.7	4.6	0.0	MAT1-1	230.1	True	True
+GCA_023621115.1_ASM2362111v1	JALZWW010000106.1	31046	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	234.6	11.7	4.6	0.0	MAT1-1	230.1	True	True
+GCA_023624835.1_ASM2362483v1	JAMABO010000018.1	111415	control_hmg_only	MAT1-2	high	mat_locus				117.4	4.2	MAT1-2	-113.1	False	True
+GCA_023624935.1_ASM2362493v1	JAMABJ010000004.1	748287	control_hmg_only	MAT1-2	medium	mat_locus				296.7	13.1	MAT1-2	-283.6	False	True
+GCA_023625215.1_ASM2362521v1	JAMAAX010000001.1	2884012	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	309.4	9.7	7.4	0.0	MAT1-1	302.0	True	True
+GCA_023625295.1_ASM2362529v1	JAMAAR010000005.1	374233	control_hmg_only	MAT1-2	medium	mat_locus				295.8	12.7	MAT1-2	-283.1	False	True
+GCA_023625875.1_ASM2362587v1	JAMAFX010000224.1	20474	control_alpha_only	MAT1-1	medium	mat_locus		218.0	8.3			MAT1-1	209.7	True	False
+GCA_023625895.1_ASM2362589v1	JAMAFZ010000022.1	2377	control_alpha_only	MAT1-1	high	mat_locus		194.5	8.8			MAT1-1	185.7	True	False
+GCA_023627535.1_ASM2362753v1	JAMAHN010000039.1	49930	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	245.6	4.9	57.5	0.4	MAT1-1	188.1	True	True
+GCA_023646075.1_KEW_Xste	JALAIK010000068.1	23952	control_alpha_only	MAT1-1	high	mat_locus		259.5	0.0			MAT1-1	259.5	True	False
+GCA_023653575.1_ASM2365357v1	JAMKBE010000088.1	37298	control_hmg_only	MAT1-2	medium	mat_locus				53.8	0.0	MAT1-2	-53.8	False	True
+GCA_024184665.2_ASM2418466v2	JAMKPW020000033.1	312292	control_alpha_only	MAT1-1	high	mat_locus		159.4	0.0			MAT1-1	159.4	True	False
+GCA_024195545.1_ASM2419554v1	SWBK01000049.1	81346	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	177.2	1.7	161.1	9.1	undetermined	16.0	True	True
+GCA_024195555.1_ASM2419555v1	SWBJ01000128.1	4107	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	177.2	1.7	167.5	8.5	undetermined	9.7	True	True
+GCA_024195585.1_ASM2419558v1	SWBL01000059.1	93196	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	177.2	1.7	161.1	9.1	undetermined	16.0	True	True
+GCA_024244335.1_ASM2424433v1	SWAY01000005.1	223921	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	121.2	0.0	162.2	19.0	MAT1-2	-41.0	True	True
+GCA_024449045.1_ASM2444904v1	JAMZNN010000006.1	1670262	control_alpha_only	MAT1-1	high	mat_locus		242.9	4.6			MAT1-1	238.3	True	False
+GCA_024584535.1_ASM2458453v1	CP077954.1	5540011	control_hmg_only	MAT1-2	high	mat_locus				140.5	4.8	MAT1-2	-135.7	False	True
+GCA_024667655.1_ASM2466765v1	JANAXJ010000043.1	23298	control_alpha_only	MAT1-1	high	mat_locus		297.3	8.7			MAT1-1	288.6	True	False
+GCA_024667775.1_ASM2466777v1	JANAXK010000164.1	24225	control_hmg_only	MAT1-2	medium	mat_locus				273.5	13.1	MAT1-2	-260.4	False	True
+GCA_024678725.1_ASM2467872v1	JANBAC010000164.1	23223	control_alpha_only	MAT1-1	high	mat_locus		297.3	8.7			MAT1-1	288.6	True	False
+GCA_024760975.1_ASM2476097v1	JAHCBL010000060.1	86323	control_alpha_only	MAT1-1	high	mat_locus		155.1	11.8			MAT1-1	143.3	True	False
+GCA_024761105.1_ASM2476110v1	JAHCBS010000017.1	39774	control_alpha_only	MAT1-1	high	mat_locus		155.5	11.7			MAT1-1	143.8	True	False
+GCA_024761195.1_ASM2476119v1	JAHCBV010000123.1	24547	control_alpha_only	MAT1-1	high	mat_locus		155.5	11.7			MAT1-1	143.8	True	False
+GCA_024761295.1_ASM2476129v1	JAHCCB010000005.1	50541	control_alpha_only	MAT1-1	high	mat_locus		155.5	11.7			MAT1-1	143.8	True	False
+GCA_024761585.1_ASM2476158v1	JAHCBW010000088.1	10108	control_alpha_only	MAT1-1	high	mat_locus		154.1	14.0			MAT1-1	140.1	True	False
+GCA_024761675.1_ASM2476167v1	JAHCCS010000002.1	67	control_alpha_only	MAT1-1	high	mat_locus		154.1	14.0			MAT1-1	140.1	True	False
+GCA_024761865.1_ASM2476186v1	JAHCCW010000065.1	47791	control_hmg_only	MAT1-2	high	mat_locus				158.5	2.7	MAT1-2	-155.7	False	True
+GCA_024761965.1_ASM2476196v1	JAHCTV010001496.1	300	control_alpha_only	MAT1-1	medium	partial_locus		155.1	11.8			MAT1-1	143.3	True	False
+GCA_024762005.1_ASM2476200v1	JAHCTY010003910.1	6	control_hmg_only	MAT1-2	medium	partial_locus				161.2	2.7	MAT1-2	-158.5	False	True
+GCA_024867555.1_ASM2486755v1	JAJATR010000033.1	119555	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	43.3	0.0	99.4	4.6	MAT1-2	-56.1	True	False
+GCA_025215805.1_ASM2521580v1	JAMSCR010000021.1	197264	control_hmg_only	MAT1-2	high	mat_locus				230.1	6.3	MAT1-2	-223.8	False	True
+GCA_025216205.1_ASM2521620v1	JAMSDJ010000029.1	197264	control_hmg_only	MAT1-2	high	mat_locus				230.1	6.3	MAT1-2	-223.8	False	True
+GCA_025216245.1_ASM2521624v1	JAMSDQ010000050.1	59185	control_hmg_only	MAT1-2	high	mat_locus				230.1	6.3	MAT1-2	-223.8	False	True
+GCA_025216445.1_ASM2521644v1	JAMSDZ010000046.1	191744	control_hmg_only	MAT1-2	high	mat_locus				229.8	6.3	MAT1-2	-223.5	False	True
+GCA_025388405.1_ASM2538840v1	JANBXC010000002.1	840190	control_alpha_only	MAT1-1	high	mat_locus		168.7	0.0			MAT1-1	168.7	True	False
+GCA_025427435.1_ASM2542743v1	JAODHN010000298.1	3	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_025427445.1_ASM2542744v1	JAODHJ010000006.1	3000218	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_025428875.1_ASM2542887v1	JANVBC010000043.1	97155	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_025589915.1_ASM2558991v1	JANFQU010000126.1	30203	control_alpha_only	MAT1-1	high	mat_locus		129.2	9.4			MAT1-1	119.9	True	False
+GCA_025604605.1_ASM2560460v1	MWOJ01000006.1	127670	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	137.1	0.0	174.7	18.1	MAT1-2	-37.6	True	True
+GCA_025742385.1_Cglycines_Pg-21	JAMXII010000004.1	300147	control_hmg_only	MAT1-2	high	mat_locus				56.4	6.1	MAT1-2	-50.3	False	True
+GCA_025766005.1_ASM2576600v1	JAMFML010000042.1	143568	control_alpha_only	MAT1-1	medium	partial_locus		352.9	9.4			MAT1-1	343.5	True	False
+GCA_025768355.1_ASM2576835v1	JAMFOL010000011.1	785227	control_alpha_only	MAT1-1	high	mat_locus		86.9	0.0			MAT1-1	86.9	True	False
+GCA_025769515.1_ASM2576951v1	JAMFNA010000007.1	1305311	control_hmg_only	MAT1-2	high	mat_locus				242.5	12.6	MAT1-2	-229.8	False	True
+GCA_025802115.2_ASM2580211v2	JAOYNC020059261.1	22395	control_hmg_only	MAT1-2	high	mat_locus				252.3	17.3	MAT1-2	-235.1	False	True
+GCA_026013035.2_NU30_1.0	BSBH01000017.1	137478	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	209.4	7.6	170.7	17.6	MAT1-1	38.6	True	True
+GCA_026054615.1_ASM2605461v1	JAPETX010000099.1	850	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	85.1	0.0	205.8	5.9	MAT1-2	-120.7	True	True
+GCA_026119375.1_ASM2611937v1	JANLCB010000020.1	1388897	control_alpha_only	MAT1-1	high	mat_locus		159.6	0.0			MAT1-1	159.6	True	False
+GCA_026319425.1_ASM2631942v1	JAIOTX010000116.1	53815	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	310.0	9.3	7.4	0.0	MAT1-1	302.6	True	True
+GCA_026652265.1_CGRA20	JALBEZ010000103.1	92486	control_hmg_only	MAT1-2	high	mat_locus				127.3	15.8	MAT1-2	-111.5	False	True
+GCA_026653375.1_CGRA10	JALJQA010000622.1	4345	control_hmg_only	MAT1-2	high	mat_locus				127.3	15.8	MAT1-2	-111.5	False	True
+GCA_027406105.1_ASM2740610v1	JANVYF010000007.1	1094851	control_hmg_only	MAT1-2	high	mat_locus				136.1	1.8	MAT1-2	-134.3	False	True
+GCA_027406245.1_ASM2740624v1	JANVYL010000008.1	931526	control_hmg_only	MAT1-2	high	mat_locus				135.5	1.8	MAT1-2	-133.7	False	True
+GCA_027406265.1_ASM2740626v1	JANVYM010000008.1	971927	control_hmg_only	MAT1-2	high	mat_locus				136.5	1.8	MAT1-2	-134.7	False	True
+GCA_027569045.1_ASM2756904v1	JAPDEJ010000006.1	1123916	control_alpha_only	MAT1-1	high	mat_locus		281.5	8.1			MAT1-1	273.4	True	False
+GCA_027569145.1_ASM2756914v1	JAPDEN010000017.1	36507	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	288.2	6.6	22.7	0.0	MAT1-1	265.5	True	True
+GCA_027569675.1_ASM2756967v1	JAPDKR010000024.1	175622	control_hmg_only	MAT1-2	high	mat_locus				170.2	1.5	MAT1-2	-168.7	False	True
+GCA_027595895.1_Xylaria_curta_enz	JAPDGR010002485.1	94	control_hmg_only	MAT1-2	medium	partial_locus				95.9	6.0	MAT1-2	-89.9	False	True
+GCA_027923365.1_ZspHim3_assembly01	BPUN01000004.1	334486	control_alpha_only	MAT1-1	high	mat_locus		159.4	0.0			MAT1-1	159.4	True	False
+GCA_027923745.1_AnigIFM50267_1.0	BROU01000043.1	192862	control_alpha_only	MAT1-1	high	mat_locus		284.9	9.1			MAT1-1	275.8	True	False
+GCA_027946455.1_ASM2794645v1	JAPEUY010000004.1	388318	control_alpha_only	MAT1-1	high	mat_locus		161.5	0.0			MAT1-1	161.5	True	False
+GCA_027946515.1_ASM2794651v1	JAPEVB010000006.1	885288	label_disagrees,neither_modelled_label_disagrees,both_weak	MAT1-1	medium	mat_locus	MAT1-2	22.0	0.0	73.7	5.4	MAT1-2	-51.6	False	False
+GCA_027946535.1_ASM2794653v1	JAPEVA010000001.1	705518	control_alpha_only	MAT1-1	high	mat_locus		163.6	0.0			MAT1-1	163.6	True	False
+GCA_028028335.1_ASM2802833v1	JAJGCC010000001.1	872793	control_alpha_only	MAT1-1	high	mat_locus		127.7	3.5			MAT1-1	124.2	True	False
+GCA_028752205.1_ASM2875220v1	CP084977.1	1400981	control_hmg_only	MAT1-2	medium	mat_locus				375.8	12.2	MAT1-2	-363.6	False	True
+GCA_028828335.1_ASM2882833v1	JAQJAN010000002.1	1362706	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	121.4	7.1	147.1	20.1	MAT1-2	-25.7	True	True
+GCA_028828415.1_ASM2882841v1	JAPHMX010000003.1	752401	control_hmg_only	MAT1-2	high	mat_locus				145.6	3.2	MAT1-2	-142.4	False	True
+GCA_028828875.1_ASM2882887v1	JAQJZR010000004.1	3414590	control_hmg_only	MAT1-2	high	mat_locus				161.6	10.6	MAT1-2	-151.0	False	True
+GCA_028828955.1_ASM2882895v1	JAQJZU010000007.1	249555	control_hmg_only	MAT1-2	high	mat_locus				161.5	0.8	MAT1-2	-160.7	False	True
+GCA_029001865.1_ASM2900186v1	JAPFGN010000008.1	2417675	label_disagrees,neither_modelled_label_disagrees,both_weak	MAT1-1	medium	mat_locus	MAT1-2	22.0	0.0	73.7	5.4	MAT1-2	-51.6	False	False
+GCA_029001875.1_ASM2900187v1	JAPFGO010000006.1	899481	label_disagrees,neither_modelled_label_disagrees,both_weak	MAT1-1	medium	mat_locus	MAT1-2	22.0	0.0	73.7	5.4	MAT1-2	-51.6	False	False
+GCA_029001885.1_ASM2900188v1	JAPFGM010000008.1	2459410	label_disagrees,neither_modelled_label_disagrees,both_weak	MAT1-1	medium	mat_locus	MAT1-2	22.0	0.0	73.7	5.4	MAT1-2	-51.6	False	False
+GCA_029531795.1_NWAFU_SnTB1_1.0	JAPEIS010000016.1	576846	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	157.9	0.0	241.6	2.1	MAT1-2	-83.7	True	True
+GCA_029606215.1_ASM2960621v1	JAPVCA010000078.1	1438528	control_hmg_only	MAT1-2	high	mat_locus				183.7	10.3	MAT1-2	-173.4	False	True
+GCA_029606225.1_ASM2960622v1	JAPVCC010000019.1	2333483	control_alpha_only	MAT1-1	medium	mat_locus		248.7	7.7			MAT1-1	241.0	True	False
+GCA_029635245.1_ASM2963524v1	CP098260.1	6469017	control_hmg_only	MAT1-2	high	mat_locus				256.7	8.7	MAT1-2	-247.9	False	True
+GCA_029641185.1_ASM2964118v1	JAPWGK010000005.1	67259	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	49.3	0.0	163.8	5.0	MAT1-2	-114.5	True	True
+GCA_029891365.1_ASM2989136v1	CP123358.1	2610396	control_alpha_only	MAT1-1	high	mat_locus		166.6	0.0			MAT1-1	166.6	True	False
+GCA_030015485.1_ASM3001548v1	VDMI01000003.1	4302094	control_alpha_only	MAT1-1	high	mat_locus		268.6	9.4			MAT1-1	259.2	True	False
+GCA_030062325.1_Pva_DTO45G8_1	JAROPG010000013.1	210456	control_alpha_only	MAT1-1	medium	mat_locus		241.4	6.5			MAT1-1	235.0	True	False
+GCA_030278935.1_ASM3027893v1	JARFTM010000215.1	10299	control_hmg_only	MAT1-2	high	mat_locus				168.2	2.6	MAT1-2	-165.6	False	True
+GCA_030370815.1_UoG_IMP.RR3A14-1_1.0	JAQYUB010001361.1	25718	control_hmg_only	MAT1-2	medium	partial_locus				146.3	3.4	MAT1-2	-142.9	False	True
+GCA_030370825.1_UoG_IR.ND1BC16-2_1.0	JAQYTZ010000143.1	109420	control_hmg_only	MAT1-2	medium	partial_locus				160.8	0.0	MAT1-2	-160.8	False	True
+GCA_030371095.1_UoG_IMP.ND3A16-1_1.0	JAQYUJ010000773.1	29846	control_hmg_only	MAT1-2	medium	partial_locus				146.3	3.4	MAT1-2	-142.9	False	True
+GCA_030406945.1_ASM3040694v1	JAPERQ010000131.1	45808	control_hmg_only	MAT1-2	high	mat_locus				153.8	4.9	MAT1-2	-148.9	False	True
+GCA_030411825.1_ASM3041182v1	JASUXS010000026.1	107004	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	54.1	0.0	168.7	4.7	MAT1-2	-114.5	True	True
+GCA_030411825.1_ASM3041182v1	JASUXS010000112.1	62413	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	186.9	8.5	120.2	0.9	MAT1-1	66.7	True	True
+GCA_030411835.1_ASM3041183v1	JASUXR010000036.1	277877	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	54.1	0.0	168.7	4.7	MAT1-2	-114.5	True	True
+GCA_030411835.1_ASM3041183v1	JASUXR010000104.1	62569	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	186.9	8.5	120.2	0.9	MAT1-1	66.7	True	True
+GCA_030411845.1_ASM3041184v1	JASUXV010000033.1	923	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	54.1	0.0	168.7	4.7	MAT1-2	-114.5	True	True
+GCA_030411855.1_ASM3041185v1	JASUXU010000052.1	106819	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	54.1	0.0	168.7	4.7	MAT1-2	-114.5	True	True
+GCA_030411855.1_ASM3041185v1	JASUXU010000105.1	28499	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	186.9	8.5	120.2	0.9	MAT1-1	66.7	True	True
+GCA_030411865.1_ASM3041186v1	JASUXT010000030.1	47263	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	54.1	0.0	168.7	4.7	MAT1-2	-114.5	True	True
+GCA_030411865.1_ASM3041186v1	JASUXT010000047.1	131482	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	194.1	9.7	124.6	1.6	MAT1-1	69.5	True	True
+GCA_030412055.1_ASM3041205v1	JASUXW010028936.1	152868	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	168.7	4.8	MAT1-2	-98.8	True	True
+GCA_030549205.1_Apibac1	JAUKTV010000001.1	158968	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	12.0	0.0	144.5	0.0	MAT1-2	-132.5	True	True
+GCA_030549205.1_Apibac1	JAUKTV010000011.1	391674	control_both_clear	MAT1-1	medium	mat_locus	MAT1-1	158.7	0.0	34.0	0.2	MAT1-1	124.6	True	True
+GCA_030553175.1_ASM3055317v1	JAUJKS010000018.1	160115	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	168.7	4.8	MAT1-2	-98.8	True	True
+GCA_030553185.1_ASM3055318v1	JAUJKW010000010.1	304418	both_modelled_gap_lt20	MAT1-2	medium	idiomorph_gene_only	MAT1-2	54.1	0.0	168.7	4.7	MAT1-2	-114.5	True	True
+GCA_030553195.1_ASM3055319v1	JAUJKT010000041.1	57707	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	168.7	4.8	MAT1-2	-98.8	True	True
+GCA_030553205.1_ASM3055320v1	JAUJKV010000030.1	87192	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	168.7	4.8	MAT1-2	-98.8	True	True
+GCA_030553215.1_ASM3055321v1	JAUJKU010000292.1	3572	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	163.2	4.8	MAT1-2	-93.3	True	True
+GCA_030553275.1_ASM3055327v1	JAUJKY010000065.1	83013	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	168.7	4.8	MAT1-2	-98.8	True	True
+GCA_030553285.1_ASM3055328v1	JAUJKZ010000054.1	136108	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	168.7	4.8	MAT1-2	-98.8	True	True
+GCA_030553295.1_ASM3055329v1	JAUJLA010000111.1	75410	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	168.7	4.8	MAT1-2	-98.8	True	True
+GCA_030553325.1_ASM3055332v1	JAUJLB010000095.1	136912	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	54.1	0.0	168.7	4.7	MAT1-2	-114.5	True	True
+GCA_030553335.1_ASM3055333v1	JAUJLC010000045.1	8750	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	70.1	0.0	169.0	2.8	MAT1-2	-98.9	True	True
+GCA_030553385.1_ASM3055338v1	JAUJLD010000039.1	131631	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	168.7	4.8	MAT1-2	-98.8	True	True
+GCA_030553405.1_ASM3055340v1	JAUJLF010000027.1	277825	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	54.1	0.0	168.7	4.7	MAT1-2	-114.5	True	True
+GCA_030553405.1_ASM3055340v1	JAUJLF010000106.1	62558	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	186.9	8.5	120.2	0.9	MAT1-1	66.7	True	True
+GCA_030553415.1_ASM3055341v1	JAUJLE010000022.1	169029	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	54.1	0.0	168.7	4.7	MAT1-2	-114.5	True	True
+GCA_030553415.1_ASM3055341v1	JAUJLE010000071.1	59611	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	168.7	4.8	MAT1-2	-98.8	True	True
+GCA_030553435.1_ASM3055343v1	JAUJLG010000147.1	32811	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	58.4	0.0	168.0	3.9	MAT1-2	-109.6	True	True
+GCA_030553445.1_ASM3055344v1	JAUJLI010000037.1	130493	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	54.1	0.0	168.7	4.7	MAT1-2	-114.5	True	True
+GCA_030553445.1_ASM3055344v1	JAUJLI010000210.1	25838	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.9	0.0	168.7	4.8	MAT1-2	-98.8	True	True
+GCA_030553495.1_ASM3055349v1	JAUJLJ010000057.1	19621	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	70.1	0.0	162.0	2.4	MAT1-2	-91.9	True	True
+GCA_030560845.1_ASM3056084v1	JAKTWB010000025.1	1513	control_hmg_only	MAT1-2	medium	partial_locus				83.4	3.0	MAT1-2	-80.4	False	True
+GCA_030564805.1_ASM3056480v1	JAJMAE010000006.1	24012	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	37.0	1.7	100.7	2.4	MAT1-2	-63.7	True	True
+GCA_030564845.1_ASM3056484v1	JAJMAF010000018.1	5123	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	39.3	2.2	100.9	3.7	MAT1-2	-61.6	True	True
+GCA_030568255.1_ASM3056825v1	JAJLTQ010000008.1	248464	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	40.4	3.1	102.1	4.1	MAT1-2	-61.7	True	True
+GCA_030568335.1_ASM3056833v1	JAJLTR010000025.1	53438	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	40.4	3.1	102.1	4.1	MAT1-2	-61.7	True	True
+GCA_030719115.1_ASM3071911v1	JASDAK010000023.1	181582	control_hmg_only	MAT1-2	high	mat_locus				214.3	0.0	MAT1-2	-214.3	False	True
+GCA_030772015.1_ASM3077201v1	JAPHBI010000988.1	5115	control_alpha_only	MAT1-1	high	mat_locus		176.2	6.8			MAT1-1	169.4	True	False
+GCA_030772915.1_ASM3077291v1	JAPHDH010000376.1	84861	control_alpha_only	MAT1-1	high	mat_locus		176.4	6.8			MAT1-1	169.6	True	False
+GCA_030779005.1_ASM3077900v1	JAPFTM010000104.1	124947	control_hmg_only	MAT1-2	high	mat_locus				152.4	3.7	MAT1-2	-148.7	False	True
+GCA_030779905.1_ASM3077990v1	JAPFVE010000350.1	109051	control_alpha_only	MAT1-1	high	mat_locus		173.3	6.8			MAT1-1	166.5	True	False
+GCA_030780285.1_ASM3078028v1	JAPFUV010000057.1	5616	control_alpha_only	MAT1-1	high	mat_locus		176.9	6.8			MAT1-1	170.1	True	False
+GCA_030780405.1_ASM3078040v1	JAPFUQ010000475.1	1306	control_hmg_only	MAT1-2	medium	partial_locus				148.2	2.8	MAT1-2	-145.4	False	True
+GCA_030780725.1_ASM3078072v1	JAPFTW010000127.1	68519	control_hmg_only	MAT1-2	high	mat_locus				152.4	3.7	MAT1-2	-148.7	False	True
+GCA_030781685.1_ASM3078168v1	JARJPI010000141.1	148320	control_alpha_only	MAT1-1	high	mat_locus		173.3	6.7			MAT1-1	166.6	True	False
+GCA_030782225.1_ASM3078222v1	JARJQF010000034.1	47276	control_alpha_only	MAT1-1	high	mat_locus		175.8	6.8			MAT1-1	169.0	True	False
+GCA_030782645.1_ASM3078264v1	JARJPO010000026.1	52830	control_alpha_only	MAT1-1	high	mat_locus		176.5	6.8			MAT1-1	169.7	True	False
+GCA_030782985.1_ASM3078298v1	JARJRP010000132.1	5642	control_alpha_only	MAT1-1	high	mat_locus		176.4	6.8			MAT1-1	169.6	True	False
+GCA_030783605.1_ASM3078360v1	JARJQZ010000102.1	237161	control_hmg_only	MAT1-2	high	mat_locus				147.6	3.1	MAT1-2	-144.5	False	True
+GCA_030784555.1_ASM3078455v1	JARJSG010000006.1	5864	control_alpha_only	MAT1-1	high	mat_locus		182.8	14.4			MAT1-1	168.4	True	False
+GCA_030786985.1_ASM3078698v1	JARJUD010000046.1	137058	control_alpha_only	MAT1-1	high	mat_locus		182.8	14.4			MAT1-1	168.4	True	False
+GCA_030787055.1_ASM3078705v1	JARJTZ010000164.1	127313	control_hmg_only	MAT1-2	high	mat_locus				152.9	3.7	MAT1-2	-149.2	False	True
+GCA_030788085.1_ASM3078808v1	JARJTD010000184.1	164894	control_alpha_only	MAT1-1	high	mat_locus		173.3	6.8			MAT1-1	166.5	True	False
+GCA_030789185.1_ASM3078918v1	JARJVE010000213.1	135415	control_alpha_only	MAT1-1	high	mat_locus		173.3	6.8			MAT1-1	166.5	True	False
+GCA_030789445.1_ASM3078944v1	JARJUS010000011.1	31802	control_alpha_only	MAT1-1	high	mat_locus		182.8	14.4			MAT1-1	168.4	True	False
+GCA_030926145.1_ASM3092614v1	JAUJKX010000177.1	60370	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	69.1	0.0	168.7	4.6	MAT1-2	-99.6	True	True
+GCA_031010245.1_EIMB_APul_16_1.0	JARSDV010000005.1	1071502	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	2.9	0.0	60.2	7.0	MAT1-2	-57.2	True	True
+GCA_031142775.1_ASM3114277v1	JAVBIV010000002.1	1313320	label_disagrees,neither_modelled_label_disagrees	MAT1-1	low	partial_locus	MAT1-2	11.9	18.2	19.6	11.0	undetermined	-7.6	False	False
+GCA_031205075.2_Bcin_M3a_2.1	JARWBL020000001.1	771670	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	308.8	0.1	0.0	0.0	MAT1-1	308.8	True	True
+GCA_032197365.1_ASM3219736v1	JATABW010000063.1	51233	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	308.8	0.1	0.0	0.0	MAT1-1	308.8	True	True
+GCA_032197525.1_ASM3219752v1	JAUDPW010000006.1	439553	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	311.0	0.1	0.0	0.0	MAT1-1	311.0	True	True
+GCA_032197585.1_ASM3219758v1	JAUDPU010000008.1	493396	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	308.8	0.1	0.0	0.0	MAT1-1	308.8	True	True
+GCA_032354635.1_ASM3235463v1	JARJPW010000018.1	365	control_alpha_only	MAT1-1	medium	partial_locus		176.1	6.6			MAT1-1	169.5	True	False
+GCA_032718785.1_CFS_SNCL1c_1.0	JASIRY010000016.1	597812	control_hmg_only	MAT1-2	high	mat_locus				96.7	2.7	MAT1-2	-94.0	False	True
+GCA_032988195.1_ASM3298819v1	JANTQE010000023.1	529528	control_hmg_only	MAT1-2	medium	partial_locus				196.3	15.9	MAT1-2	-180.4	False	True
+GCA_033117895.1_ASM3311789v1	JAWDJX010000020.1	138270	control_hmg_only	MAT1-2	medium	partial_locus				168.5	6.2	MAT1-2	-162.3	False	True
+GCA_033119285.1_ASM3311928v1	JAWDJV010009534.1	21265	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	150.2	11.0	114.2	0.0	MAT1-1	36.0	True	True
+GCA_033296685.1_Corin1	MU854371.1	45131	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	39.3	0.0	137.3	0.0	MAT1-2	-98.0	True	True
+GCA_033296705.1_Chale1	MU857159.1	6668	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	11.1	0.0	144.5	0.0	MAT1-2	-133.4	True	True
+GCA_033439685.1_Apope1	JAUEDM010000001.1	7799569	control_hmg_only	MAT1-2	high	mat_locus				114.3	3.5	MAT1-2	-110.8	False	True
+GCA_033439705.1_Cersc1	JAUEPO010000001.1	6338160	control_both_clear	MAT1-1	medium	mat_locus	MAT1-1	162.4	0.0	147.3	7.8	undetermined	15.1	True	True
+GCA_033632065.1_ASM3363206v1	JANHGT010000019.1	27195	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	283.6	6.2	11.6	0.0	MAT1-1	272.0	True	True
+GCA_033675295.1_ASM3367529v1	JAUTXU010000019.1	16791	both_modelled_gap_lt20	MAT1-2	medium	idiomorph_gene_only	MAT1-2	107.7	0.0	43.9	2.2	MAT1-1	63.8	True	True
+GCA_033675295.1_ASM3367529v1	JAUTXU010000067.1	88525	both_modelled_gap_lt20	MAT1-2	medium	idiomorph_gene_only	MAT1-2	74.4	2.5	49.5	1.1	undetermined	24.9	True	True
+GCA_033816765.1_ASM3381676v1	CM066298.1	629789	control_alpha_only	MAT1-1	medium	partial_locus		169.0	7.0			MAT1-1	161.9	True	False
+GCA_033955225.1_ASM3395522v1	JAWMWM010000002.1	5311366	control_alpha_only	MAT1-1	high	mat_locus		147.8	0.0			MAT1-1	147.8	True	False
+GCA_034642025.1_ASM3464202v1	JAWNGH010000009.1	592413	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	285.6	6.7	72.0	0.0	MAT1-1	213.6	True	True
+GCA_035927975.1_ASM3592797v1	JAVRRR010000320.1	6586	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	70.1	0.0	162.0	2.4	MAT1-2	-91.9	True	True
+GCA_036010245.1_ASM3601024v1	JAXLPO010000009.1	1081422	control_alpha_only	MAT1-1	high	mat_locus		149.6	6.9			MAT1-1	142.7	True	False
+GCA_036320675.1_ASM3632067v1	JAVRQV010000014.1	740884	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	78.5	0.0	56.3	3.3	undetermined	22.2	True	True
+GCA_036320705.1_ASM3632070v1	JAVRQQ010000130.1	48130	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	142.1	3.4	57.8	3.2	MAT1-1	84.3	True	True
+GCA_036418965.1_ASM3641896v1	JASGXD010000001.1	905518	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	145.5	3.0	59.2	7.2	MAT1-1	86.2	True	True
+GCA_036429605.1_ASM3642960v1	CM071591.1	4334422	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	199.5	8.2	36.0	1.5	MAT1-1	163.5	True	True
+GCA_037039555.1_ASM3703955v1	JACKZE010000001.1	753673	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	126.1	0.0	223.5	2.6	MAT1-2	-97.5	True	True
+GCA_037040395.1_ASM3704039v1	JAXQGV010000179.1	664147	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	135.7	0.0	174.9	18.7	MAT1-2	-39.2	True	True
+GCA_037040795.1_ASM3704079v1	JAXQHG010000720.1	63413	control_alpha_only	MAT1-1	medium	mat_locus		187.1	6.6			MAT1-1	180.5	True	False
+GCA_037042135.1_ASM3704213v1	JAXQJW010000137.1	210079	control_hmg_only	MAT1-2	high	mat_locus				155.8	9.9	MAT1-2	-145.9	False	True
+GCA_037042735.1_ASM3704273v1	JAXQKC010000081.1	72815	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	74.8	0.0	175.8	19.3	MAT1-2	-101.0	True	True
+GCA_037042825.2_F190_NP_v2	JAJSLT020000012.1	532689	control_hmg_only	MAT1-2	high	mat_locus				157.4	2.0	MAT1-2	-155.4	False	True
+GCA_037044025.1_ASM3704402v1	JAWLTA010000027.1	306782	control_hmg_only	MAT1-2	high	mat_locus				234.0	7.8	MAT1-2	-226.2	False	True
+GCA_037127345.1_ASM3712734v1	JBAFXH010000185.1	26357	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	243.5	4.7	57.5	0.4	MAT1-1	186.0	True	True
+GCA_037213105.1_ASM3721310v1	CP147678.1	3014444	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	299.1	4.0	245.5	1.1	MAT1-1	53.6	True	True
+GCA_038088425.1_ASM3808842v1	JBBWSG010000016.1	551481	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	34.8	0.0	95.4	2.9	MAT1-2	-60.6	False	False
+GCA_038088465.1_ASM3808846v1	JBBWSH010000009.1	64353	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	34.8	0.0	95.4	2.9	MAT1-2	-60.6	False	False
+GCA_038088495.1_ASM3808849v1	JBBWSI010000069.1	254618	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	34.8	0.0	93.7	3.7	MAT1-2	-58.9	False	False
+GCA_038088505.1_ASM3808850v1	JBBWSJ010000021.1	519361	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	34.8	0.0	93.2	2.9	MAT1-2	-58.4	False	False
+GCA_038381135.1_Phcapit2	JBBWBY010000011.1	1590441	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	128.5	0.0	134.4	6.1	undetermined	-6.0	True	True
+GCA_038381155.1_Phcap1	JBBWCE010000009.1	283173	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	128.5	0.0	134.4	6.1	undetermined	-6.0	True	True
+GCA_038381175.1_Phycapi2	JBBWSD010000011.1	212005	both_modelled_gap_lt20	MAT1-2	medium	mat_locus	MAT1-2	128.5	0.0	126.0	6.5	undetermined	2.5	True	True
+GCA_038381195.1_Pcapi1	JBBWRZ010000008.1	286386	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	128.5	0.0	126.0	6.5	undetermined	2.5	True	True
+GCA_038406795.1_ASM3840679v1	JAWWXZ010000247.1	4137	both_modelled_gap_lt20	MAT1-2	medium	idiomorph_gene_only	MAT1-2	71.6	0.0	119.8	0.0	MAT1-2	-48.2	True	True
+GCA_038497385.1_Lipotetr1	MU969277.1	286634	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	40.4	3.1	102.1	4.1	MAT1-2	-61.7	True	True
+GCA_038497395.1_Lipokono1	MU971340.1	257291	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	39.3	2.3	99.0	3.2	MAT1-2	-59.7	True	True
+GCA_038497425.1_Liptetra1	MU968990.1	215332	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	40.4	3.1	102.1	4.1	MAT1-2	-61.7	True	True
+GCA_039267495.1_ASM3926749v1	JBAWIP010000509.1	2	control_hmg_only	MAT1-2	medium	partial_locus				273.3	13.1	MAT1-2	-260.3	False	True
+GCA_039700045.1_ASM3970004v1	JARUPO010000002.1	602048	both_modelled_gap_lt20	MAT1-2	medium	mat_locus	MAT1-2	237.7	7.3	251.0	14.8	undetermined	-13.3	True	True
+GCA_039834425.1_ASM3983442v1	CP156236.1	2942228	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	153.5	0.0	248.1	0.3	MAT1-2	-94.6	True	True
+GCA_039834605.1_ASM3983460v1	CP156380.1	2938889	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	153.5	0.0	248.0	0.3	MAT1-2	-94.5	True	True
+GCA_039880775.1_ASM3988077v1	JBCEDN010000003.1	3822763	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	42.4	0.0	99.4	4.6	MAT1-2	-56.9	True	False
+GCA_039880785.1_ASM3988078v1	JBDOCZ010000114.1	7708	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	234.6	11.7	4.6	0.0	MAT1-1	230.1	True	True
+GCA_040112755.1_ASM4011275v1	JBAWJD010000184.1	228934	both_modelled_gap_lt20	MAT1-1	medium	idiomorph_gene_only	MAT1-1	72.4	0.0	62.6	0.3	undetermined	9.8	True	True
+GCA_040113025.1_ASM4011302v1	JBCJFB010000109.1	50340	control_hmg_only	MAT1-2	medium	mat_locus				145.5	10.0	MAT1-2	-135.5	False	True
+GCA_040113465.1_ASM4011346v1	JAYEBA010000006.1	928952	control_hmg_only	MAT1-2	high	mat_locus				234.0	7.8	MAT1-2	-226.2	False	True
+GCA_040114255.1_W20	JAXCEZ010010260.1	1232	control_alpha_only	MAT1-1	medium	partial_locus		166.9	6.9			MAT1-1	159.9	True	False
+GCA_040114375.1_W12	JAXCFF010012197.1	1232	control_alpha_only	MAT1-1	medium	partial_locus		166.9	6.9			MAT1-1	159.9	True	False
+GCA_040114415.1_W13	JAXCFG010005964.1	1232	control_alpha_only	MAT1-1	medium	partial_locus		166.9	6.9			MAT1-1	159.9	True	False
+GCA_040209005.1_ASM4020900v1	JBDLYM010000006.1	426301	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	54.4	0.0	96.0	2.8	MAT1-2	-41.6	True	False
+GCA_040209035.1_ASM4020903v1	JBDLYO010000068.1	190439	both_modelled_gap_lt20,both_weak,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	54.4	0.0	100.4	3.9	MAT1-2	-46.0	True	True
+GCA_040209105.1_ASM4020910v1	JBDLYR010000008.1	948186	label_disagrees	MAT1-1	high	mat_locus	MAT1-2	61.3	0.0	93.5	3.7	MAT1-2	-32.2	True	True
+GCA_040209115.1_ASM4020911v1	JBDLYS010000062.1	56637	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	50.4	0.0	100.5	3.8	MAT1-2	-50.1	True	False
+GCA_040209125.1_ASM4020912v1	JBDLYT010000223.1	31998	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	50.4	0.0	100.5	3.8	MAT1-2	-50.1	True	False
+GCA_040285355.2_ASM4028535v2	JBCHKC020000022.1	2042308	control_alpha_only	MAT1-1	high	mat_locus		297.4	7.3			MAT1-1	290.1	True	False
+GCA_040333115.2_ASM4033311v2	JBEBNF020000006.1	1693740	control_alpha_only	MAT1-1	medium	mat_locus		201.4	8.8			MAT1-1	192.6	True	False
+GCA_040333125.2_ASM4033312v2	JBEBNE020000003.1	1947325	control_hmg_only	MAT1-2	medium	partial_locus				39.0	7.3	MAT1-2	-31.6	False	True
+GCA_040437585.1_ASM4043758v1	JAWDIF010000353.1	7114	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	271.2	0.4	222.1	1.2	MAT1-1	49.0	True	True
+GCA_040437665.1_ASM4043766v1	JAVAIY010000007.1	1013409	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	67.8	0.0	85.4	6.0	undetermined	-17.6	True	True
+GCA_040571525.1_BcPgIs_1	JARGYR010000045.1	109459	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	308.8	0.1	0.0	0.0	MAT1-1	308.8	True	True
+GCA_040583505.1_KAS5506_v1	JAERNG010000002.1	970633	both_weak	MAT1-2	high	mat_locus	MAT1-2	0.0	3.0	122.2	5.5	MAT1-2	-122.2	False	True
+GCA_040583575.1_KAS5477_v1	JAERNL010000011.1	753730	both_weak	MAT1-2	high	mat_locus	MAT1-2	0.0	3.0	122.2	5.5	MAT1-2	-122.2	False	True
+GCA_040583605.1_KAS5470_v1	JAERNN010000008.1	933493	both_weak	MAT1-2	high	mat_locus	MAT1-2	0.0	3.0	122.5	5.3	MAT1-2	-122.5	False	True
+GCA_040583645.1_KAS5449_v1	JAERNP010000004.1	1912659	both_weak	MAT1-2	high	mat_locus	MAT1-2	0.0	3.0	122.2	5.5	MAT1-2	-122.2	False	True
+GCA_040583725.1_DET2105_v1	JAEROX010000010.1	944606	both_weak	MAT1-2	high	mat_locus	MAT1-2	0.0	3.0	122.2	5.5	MAT1-2	-122.2	False	True
+GCA_040955005.1_glClaStel2_p1.1	JBECUK010000047.1	407592	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	165.0	1.1	12.3	0.0	MAT1-1	152.7	True	True
+GCA_040955425.1_UONBcin_4	JBBMGC010000122.1	97706	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	308.8	0.1	0.0	0.0	MAT1-1	308.8	True	True
+GCA_040955605.1_ASM4095560v1	JBFNXT010000009.1	349210	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	57.3	0.0	92.2	2.8	MAT1-2	-34.9	True	False
+GCA_040955895.1_ASM4095589v1	JAWPPL010000065.1	29369	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	38.3	0.0	218.6	3.3	MAT1-2	-180.3	True	True
+GCA_041146515.1_Phcapi1	JBBVUR010000009.1	286808	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	128.5	0.0	134.4	6.1	undetermined	-6.0	True	True
+GCA_041380495.1_ASM4138049v1	JAZEUK010000280.1	303421	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_041682785.1_ASM4168278v1	JBCFBV010000014.1	2262854	control_alpha_only	MAT1-1	medium	partial_locus		336.5	12.0			MAT1-1	324.6	True	False
+GCA_041684195.1_ASM4168419v1	JBEUPT010000003.1	2428484	control_hmg_only	MAT1-2	high	mat_locus				310.4	13.0	MAT1-2	-297.4	False	True
+GCA_041684635.1_ASM4168463v1	JBCFXV010000047.1	864144	control_alpha_only	MAT1-1	medium	partial_locus		336.5	12.0			MAT1-1	324.6	True	False
+GCA_041956425.1_Humhy1	MU989041.1	11747	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	16.2	0.0	158.6	1.5	MAT1-2	-142.4	True	True
+GCA_041956735.1_Aurpu1	MU983842.1	2353705	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	106.6	0.0	59.7	6.6	MAT1-1	46.9	True	True
+GCA_042370655.1_Acrst1	MU993787.1	2692142	control_hmg_only	MAT1-2	high	mat_locus				158.3	4.3	MAT1-2	-154.0	False	True
+GCA_042608425.1_ASM4260842v1	JACXRX010000270.1	427423	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	161.6	1.8	169.8	15.8	undetermined	-8.2	True	True
+GCA_042609225.1_ASM4260922v1	JARWHQ010001239.1	440	control_alpha_only	MAT1-1	medium	partial_locus		295.7	7.4			MAT1-1	288.3	True	False
+GCA_043174505.1_ASM4317450v1	JANACR010000028.1	103898	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043174585.1_ASM4317458v1	JANACO010000023.1	99280	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043174825.1_ASM4317482v1	JANABS010000021.1	872138	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043175355.1_ASM4317535v1	JAMZYN010000026.1	689926	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043175875.1_ASM4317587v1	JAMZWX010000024.1	101242	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043176165.1_ASM4317616v1	JAMZWI010000025.1	101263	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043176255.1_ASM4317625v1	JAMZWB010000028.1	101245	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043176325.1_ASM4317632v1	JAMZVX010000035.1	99381	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043176525.1_ASM4317652v1	JAMZUY010000024.1	695126	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043176735.1_ASM4317673v1	JAMZUI010000027.1	101246	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043252385.1_ASM4325238v1	JANACQ010000046.1	697163	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043252505.1_ASM4325250v1	JANACK010000038.1	99380	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043252525.1_ASM4325252v1	JANACM010000031.1	101163	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043252865.1_ASM4325286v1	JANABZ010000023.1	101272	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043253045.1_ASM4325304v1	JANABM010000090.1	244841	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043253225.1_ASM4325322v1	JANABI010000030.1	103891	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043253365.1_ASM4325336v1	JANABB010000026.1	101258	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043253505.1_ASM4325350v1	JANAAX010000037.1	101243	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043253545.1_ASM4325354v1	JANAAY010000034.1	101261	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043253585.1_ASM4325358v1	JANAAV010000037.1	1684040	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043253665.1_ASM4325366v1	JANAAT010000026.1	101281	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043253785.1_ASM4325378v1	JANAAN010000017.1	101259	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043253885.1_ASM4325388v1	JANAAM010000044.1	692304	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043253905.1_ASM4325390v1	JANAAL010000042.1	101171	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043254125.1_ASM4325412v1	JANAAD010000038.1	9791	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043254135.1_ASM4325413v1	JANAAE010000034.1	2992202	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043254325.1_ASM4325432v1	JAMZZY010000030.1	1526869	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043254505.1_ASM4325450v1	JAMZZT010000037.1	99444	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043254525.1_ASM4325452v1	JAMZZR010000035.1	101322	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043254805.1_ASM4325480v1	JAMZZG010000030.1	1831821	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043254825.1_ASM4325482v1	JAMZZH010000021.1	701346	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043255045.1_ASM4325504v1	JAMZYY010000035.1	1048977	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043255305.1_ASM4325530v1	JAMZYP010000043.1	101249	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043255315.1_ASM4325531v1	JAMZYS010000020.1	2651544	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043255565.1_ASM4325556v1	JAMZYI010000021.1	691953	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043255585.1_ASM4325558v1	JAMZYC010000031.1	695120	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043255725.1_ASM4325572v1	JAMZXX010000035.1	101263	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043255865.1_ASM4325586v1	JAMZXT010000020.1	1976925	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043255965.1_ASM4325596v1	JAMZXM010000024.1	99375	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043256085.1_ASM4325608v1	JAMZXJ010000021.1	101247	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043256235.1_ASM4325623v1	JAMZWQ010000024.1	1977574	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043256285.1_ASM4325628v1	JAMZWT010000039.1	99378	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043256425.1_ASM4325642v1	JAMZWM010000030.1	3052516	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043256465.1_ASM4325646v1	JAMZWJ010000028.1	1393719	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043256745.1_ASM4325674v1	JAMZVV010000033.1	1396280	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043256785.1_ASM4325678v1	JAMZVW010000040.1	101274	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043257005.1_ASM4325700v1	JAMZVQ010000025.1	1414624	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043257085.1_ASM4325708v1	JAMZVN010000022.1	101248	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043257145.1_ASM4325714v1	JAMZVM010000024.1	101238	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043257305.1_ASM4325730v1	JAMZVC010000043.1	1396709	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043257485.1_ASM4325748v1	JAMZUX010000026.1	99375	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043257745.1_ASM4325774v1	JAMZUJ010000033.1	101250	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043257925.1_ASM4325792v1	JAMZUD010000020.1	1977726	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043257945.1_ASM4325794v1	JAMZUA010000023.1	101263	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.3	7.6	245.6	1.0	MAT1-1	54.7	True	True
+GCA_043520055.1_SNSB_TDis_M0355157_1	JBGRPS010000042.1	515520	control_alpha_only	MAT1-1	high	mat_locus		181.1	14.3			MAT1-1	166.8	True	False
+GCA_043640725.1_ASM4364072v1	JBBYIC010000004.1	7439492	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	44.6	0.0	98.4	4.2	MAT1-2	-53.8	True	False
+GCA_043874435.1_ASM4387443v1	JBHILK010000270.1	651326	both_modelled_gap_lt20,both_weak,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	61.5	0.0	96.1	7.1	MAT1-2	-34.6	True	True
+GCA_043875055.1_ASM4387505v1	JBHZER010000051.1	1815158	both_modelled_gap_lt20,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	61.0	0.0	94.0	4.3	MAT1-2	-33.0	True	True
+GCA_043875075.1_ASM4387507v1	JBHZEQ010000030.1	6372263	both_modelled_gap_lt20,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	61.0	0.0	94.0	4.3	MAT1-2	-33.0	True	True
+GCA_043884225.1_ASM4388422v1	JBEVBQ010000032.1	124308	control_alpha_only	MAT1-1	medium	mat_locus		242.4	6.7			MAT1-1	235.7	True	False
+GCA_044048685.1_Aspamy1	JBFXLS010000126.1	1224	control_hmg_only	MAT1-2	medium	partial_locus				293.9	11.1	MAT1-2	-282.8	False	True
+GCA_045514765.1_ASM4551476v1	JAVFKK010000015.1	523127	control_hmg_only	MAT1-2	high	mat_locus				135.7	1.8	MAT1-2	-133.9	False	True
+GCA_045682565.1_ASM4568256v1	JBBXNA010000133.1	35999	control_hmg_only	MAT1-2	high	mat_locus				139.3	21.2	MAT1-2	-118.2	False	True
+GCA_046127885.1_ASM4612788v1	JBJJMV010000002.1	3103504	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	0.0	0.0	248.0	0.3	MAT1-2	-248.0	True	True
+GCA_046563485.1_ASM4656348v1	JBEJUQ010000019.1	188185	control_alpha_only	MAT1-1	high	mat_locus		145.6	0.0			MAT1-1	145.6	True	False
+GCA_047372755.1_ASM4737275v1	JBLIQS010000017.1	345713	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_047496425.1_ASM4749642v1	JBLBGN010000032.1	76363	control_hmg_only	MAT1-2	medium	mat_locus				266.6	10.9	MAT1-2	-255.7	False	True
+GCA_047665195.1_ASM4766519v1	JBCAVV010000002.1	544886	control_alpha_only	MAT1-1	high	mat_locus		156.2	0.0			MAT1-1	156.2	True	False
+GCA_047665365.1_ASM4766536v1	JBBXZJ010000235.1	2875	control_hmg_only	MAT1-2	high	mat_locus				53.8	0.0	MAT1-2	-53.8	False	True
+GCA_047666295.1_ASM4766629v1	JBCAWA010000231.1	2745	control_hmg_only	MAT1-2	high	mat_locus				53.8	0.0	MAT1-2	-53.8	False	True
+GCA_047666545.1_ASM4766654v1	JBCLXC010000162.1	36886	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047667155.1_ASM4766715v1	JBCLXM010000002.1	37195	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047668985.1_ASM4766898v1	JBKJDD010000003.1	357977	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047671215.1_ASM4767121v1	JBKJEA010000007.1	357993	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047678165.1_ASM4767816v1	JBLJXB010000042.1	2995188	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	27.5	1.8	32.3	4.3	undetermined	-4.8	False	False
+GCA_047715575.1_Aspvar1	PS010137.1	162901	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	310.7	10.3	13.0	0.0	MAT1-1	297.7	True	True
+GCA_047715765.1_Aspaura1	PS012693.1	450182	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	315.5	14.5	295.1	14.7	undetermined	20.5	True	True
+GCA_047716445.1_ASM4771644v1	JBJYSS010000137.1	44116	control_hmg_only	MAT1-2	high	mat_locus				157.9	2.5	MAT1-2	-155.4	False	True
+GCA_047717105.1_ASM4771710v1	JBBYBF010000027.1	209096	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047717125.1_ASM4771712v1	JBBYBE010000323.1	21858	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047717145.1_ASM4771714v1	JBBYBH010000082.1	105976	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047717325.1_ASM4771732v1	JBBYBO010000021.1	36808	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047724395.1_ASM4772439v1	JBBYCF010000226.1	2794	control_hmg_only	MAT1-2	high	mat_locus				53.8	0.0	MAT1-2	-53.8	False	True
+GCA_047727795.1_ASM4772779v1	JBBYCW010000145.1	50138	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047728335.1_ASM4772833v1	JBBYDU010000227.1	50079	control_hmg_only	MAT1-2	high	mat_locus				53.8	0.0	MAT1-2	-53.8	False	True
+GCA_047728795.1_ASM4772879v1	JBBYEU010000320.1	9739	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047728825.1_ASM4772882v1	JBBYES010000224.1	2536	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047838065.1_ASM4783806v1	JBCIMH010000143.1	50135	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047839305.1_ASM4783930v1	JBCIMU010000217.1	2723	control_hmg_only	MAT1-2	high	mat_locus				53.8	0.0	MAT1-2	-53.8	False	True
+GCA_047839345.1_ASM4783934v1	JBCIMS010000217.1	2720	control_hmg_only	MAT1-2	high	mat_locus				53.8	0.0	MAT1-2	-53.8	False	True
+GCA_047839365.1_ASM4783936v1	JBCIMY010000002.1	357966	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047839845.1_ASM4783984v1	JBCINM010000079.1	22582	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047840645.1_ASM4784064v1	JBCIOX010000100.1	125657	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047840785.1_ASM4784078v1	JBCIPG010000137.1	8310	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047841345.1_ASM4784134v1	JBCIQG010000164.1	36793	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047841405.1_ASM4784140v1	JBCIQK010000240.1	7663	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047841445.1_ASM4784144v1	JBCIQI010000171.1	36888	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047842385.1_ASM4784238v1	JBCIRW010000080.1	112515	control_hmg_only	MAT1-2	high	mat_locus				53.8	0.0	MAT1-2	-53.8	False	True
+GCA_047844605.1_ASM4784460v1	JBCISN010000163.1	36903	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_047844705.1_ASM4784470v1	JBCISQ010000076.1	101531	control_alpha_only	MAT1-1	high	mat_locus		154.8	0.0			MAT1-1	154.8	True	False
+GCA_048565125.1_Aspflo1	PS017162.1	83778	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	284.9	6.0	100.5	0.0	MAT1-1	184.4	True	True
+GCA_048593495.1_ASM4859349v1	JBLZWQ010000006.1	900119	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	157.7	2.2	210.6	21.6	MAT1-2	-52.9	True	True
+GCA_048934345.1_ASM4893434v1	JBLKOE010000022.1	263788	both_weak	MAT1-1	high	mat_locus	MAT1-1	141.2	0.0	1.3	0.0	MAT1-1	139.8	True	False
+GCA_049852295.1_ASM4985229v1	JBMUMT010000005.1	1538577	control_alpha_only	MAT1-1	high	mat_locus		148.5	3.4			MAT1-1	145.0	True	False
+GCA_049862995.1_ASM4986299v1	JBMISF010000031.1	99939	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	283.7	6.2	47.9	0.0	MAT1-1	235.8	True	True
+GCA_049920735.1_ASM4992073v1	JBLTED010000006.1	777223	label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	44.4	0.0	89.2	2.7	MAT1-2	-44.9	True	False
+GCA_049996195.1_ASM4999619v1	JBAWTO010000003.1	621398	control_alpha_only	MAT1-1	high	mat_locus		167.0	10.7			MAT1-1	156.3	True	False
+GCA_049996255.1_ASM4999625v1	JBAWTR010000014.1	792433	both_modelled_gap_lt20	MAT1-2	medium	mat_locus	MAT1-2	84.2	0.0	67.8	1.4	undetermined	16.4	True	True
+GCA_049996335.1_ASM4999633v1	JBAWTV010000015.1	2413693	control_hmg_only	MAT1-2	high	mat_locus				183.9	12.9	MAT1-2	-171.0	False	True
+GCA_050613645.1_ASM5061364v1	JBBHLU010000058.1	737216	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	141.8	15.2	143.4	3.3	undetermined	-1.7	True	True
+GCA_050613675.1_ASM5061367v1	JBBHLW010000122.1	557266	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	7.8	0.0	139.6	2.6	MAT1-2	-131.8	True	True
+GCA_050657215.1_Pchart_ICMP12878_1	JAYFEW010000015.1	2113548	control_hmg_only	MAT1-2	high	mat_locus				131.7	1.7	MAT1-2	-130.0	False	True
+GCA_050705275.1_ASM5070527v1	JBNANA010000202.1	8023	both_weak	MAT1-2	medium	idiomorph_gene_only	MAT1-2	14.4	43.7	68.9	13.3	MAT1-2	-54.5	False	True
+GCA_050705475.1_ASM5070547v1	JBNAMW010000344.1	1559	both_weak	MAT1-2	medium	idiomorph_gene_only	MAT1-2	14.4	43.7	68.9	13.3	MAT1-2	-54.5	False	True
+GCA_050706085.1_ASM5070608v1	JBNAQF010000123.1	97096	both_weak	MAT1-2	medium	idiomorph_gene_only	MAT1-2	14.4	43.7	68.9	13.3	MAT1-2	-54.5	False	True
+GCA_050706595.1_ASM5070659v1	JBNAPV010000504.1	9	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	92.7	0.0	160.0	9.2	MAT1-2	-67.3	True	True
+GCA_050706605.1_ASM5070660v1	JBNAPU010000346.1	1601	both_weak	MAT1-2	medium	idiomorph_gene_only	MAT1-2	14.4	43.7	68.9	13.3	MAT1-2	-54.5	False	True
+GCA_050706955.1_ASM5070695v1	JBNAPK010000014.1	299229	both_weak	MAT1-2	medium	idiomorph_gene_only	MAT1-2	15.7	23.1	68.9	13.3	MAT1-2	-53.2	False	True
+GCA_050708055.1_ASM5070805v1	JBNAOH010000016.1	43399	both_weak	MAT1-2	medium	idiomorph_gene_only	MAT1-2	15.7	23.1	68.9	13.3	MAT1-2	-53.2	False	True
+GCA_050709205.1_ASM5070920v1	JBNAQX010000018.1	9892	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	74.0	0.0	163.0	8.1	MAT1-2	-89.0	True	True
+GCA_050709295.1_ASM5070929v1	JBNAQW010000120.1	59611	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	155.0	0.0	82.6	17.9	MAT1-1	72.4	True	True
+GCA_050709335.1_ASM5070933v1	JBNAQV010000174.1	19626	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	75.9	0.0	162.3	8.1	MAT1-2	-86.4	True	True
+GCA_050709455.2_ASM5070945v2	JBNAQR020000001.1	2096902	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	67.1	0.0	159.8	9.5	MAT1-2	-92.7	True	True
+GCA_050709575.1_ASM5070957v1	JBNAQN010000150.1	5278	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	100.0	0.0	160.2	9.8	MAT1-2	-60.2	True	True
+GCA_050709835.1_ASM5070983v1	JBNAPR010000958.1	775	both_weak	MAT1-2	medium	idiomorph_gene_only	MAT1-2	14.4	43.7	68.9	13.3	MAT1-2	-54.5	False	True
+GCA_050753405.2_ASM5075340v2	JBNAQP020000001.1	3468057	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	77.5	0.0	160.2	9.8	MAT1-2	-82.7	True	True
+GCA_050947315.1_ASM5094731v1	JBNVYJ010000004.1	941166	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	45.1	0.0	170.8	18.6	MAT1-2	-125.7	True	True
+GCA_051013865.1_ASM5101386v1	CP039668.1	1801179	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	0.0	0.0	45.3	3.6	MAT1-2	-45.3	False	False
+GCA_051257935.1_ASM5125793v1	JBNOXU010000008.1	1595364	control_alpha_only	MAT1-1	high	mat_locus		242.3	14.7			MAT1-1	227.6	True	False
+GCA_051311975.2_ASM5131197v2	JBOGCK020000001.1	468239	control_alpha_only	MAT1-1	high	mat_locus		173.7	0.0			MAT1-1	173.7	True	False
+GCA_051397355.1_GA10_6-scaf	JBPPOE010000037.1	8860	control_alpha_only	MAT1-1	high	mat_locus		296.7	8.1			MAT1-1	288.6	True	False
+GCA_051397455.1_GA10_8	JBPPOB010000016.1	196744	control_alpha_only	MAT1-1	high	mat_locus		296.7	8.1			MAT1-1	288.6	True	False
+GCA_051397675.1_GA10_10	JBPPOP010000029.1	394411	control_alpha_only	MAT1-1	high	mat_locus		296.7	8.1			MAT1-1	288.6	True	False
+GCA_051527285.1_YNP42	JBHJEG010000245.1	405974	control_alpha_only	MAT1-1	high	mat_locus		182.9	8.0			MAT1-1	174.9	True	False
+GCA_051527375.1_YNP39	JBHJEC010000017.1	440072	control_hmg_only	MAT1-2	high	mat_locus				157.4	3.8	MAT1-2	-153.6	False	True
+GCA_051527555.1_YNP2	JBHJDT010000489.1	37184	control_hmg_only	MAT1-2	high	mat_locus				149.6	3.4	MAT1-2	-146.2	False	True
+GCA_051529015.1_YNP65	JBHJFC010000243.1	141560	control_alpha_only	MAT1-1	high	mat_locus		179.4	16.9			MAT1-1	162.5	True	False
+GCA_051529135.1_YNP60	JBHJEX010000238.1	22950	control_alpha_only	MAT1-1	high	mat_locus		183.9	5.9			MAT1-1	178.0	True	False
+GCA_051529195.1_YNP58	JBHJEU010000017.1	304140	control_alpha_only	MAT1-1	high	mat_locus		185.4	7.2			MAT1-1	178.2	True	False
+GCA_051941345.1_KEW_Xasp2	JAVEBC010000010.1	26084	control_hmg_only	MAT1-2	high	mat_locus				302.9	12.1	MAT1-2	-290.8	False	True
+GCA_051941785.1_KEW_Sevi	JAVEBX010000135.1	630	control_hmg_only	MAT1-2	high	mat_locus				96.6	3.9	MAT1-2	-92.6	False	True
+GCA_051942735.1_ASM5194273v1	JBOKGB010000040.1	156974	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.9	7.7	243.1	0.8	MAT1-1	57.8	True	True
+GCA_051942775.1_ASM5194277v1	JBPPNM010000009.1	801607	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	74.6	0.0	175.8	19.3	MAT1-2	-101.2	True	True
+GCA_051943735.2_ASM5194373v2	JBOISS020000146.1	35514	control_hmg_only	MAT1-2	medium	mat_locus				234.6	6.4	MAT1-2	-228.2	False	True
+GCA_052058685.1_ASM5205868v1	JBLLRP010000118.1	619242	control_hmg_only	MAT1-2	high	mat_locus				229.5	5.6	MAT1-2	-223.9	False	True
+GCA_052059055.1_KEW_Lesu	JAVECI010000633.1	338	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	157.0	0.8	191.1	18.4	MAT1-2	-34.1	True	True
+GCA_052323905.1_ASM5232390v1	JBFLFG010000020.1	158089	control_alpha_only	MAT1-1	high	mat_locus		154.8	5.4			MAT1-1	149.4	True	False
+GCA_052569665.1_ASM5256966v1	JBIPBT010000022.1	58316	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	123.8	0.0	219.5	2.9	MAT1-2	-95.8	True	True
+GCA_052570225.1_ASM5257022v1	JBIPCG010000032.1	157935	control_hmg_only	MAT1-2	high	mat_locus				203.6	0.0	MAT1-2	-203.6	False	True
+GCA_052570285.1_ASM5257028v1	JBIPCE010000025.1	158772	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	235.8	7.5	36.9	0.0	MAT1-1	198.9	True	True
+GCA_052570365.1_ASM5257036v1	JBIPCC010000022.1	120189	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	238.8	7.6	38.9	0.0	MAT1-1	200.0	True	True
+GCA_052570615.1_ASM5257061v1	JBIQGC010000001.1	246275	control_hmg_only	MAT1-2	high	mat_locus				202.4	4.1	MAT1-2	-198.3	False	True
+GCA_052815365.1_ASM5281536v1	JBPVRE010000049.1	23338	control_alpha_only	MAT1-1	high	mat_locus		297.3	8.7			MAT1-1	288.6	True	False
+GCA_052862785.1_ASM5286278v1	JBRERT010000015.1	846096	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	304.4	0.3	7.3	0.0	MAT1-1	297.1	True	True
+GCA_053455415.1_ASM5345541v1	JBDKYH010000016.1	121039	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	124.2	0.0	219.5	2.9	MAT1-2	-95.4	True	True
+GCA_053477865.1_ASM5347786v1	JBNORT010000001.1	461776	control_alpha_only	MAT1-1	medium	mat_locus		187.2	0.5			MAT1-1	186.7	True	False
+GCA_053895165.1_ASM5389516v1	JBPSEA010000010.1	35	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_053895245.1_ASM5389524v1	JBPSEE010000002.1	2955506	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	297.3	3.9	242.9	0.8	MAT1-1	54.4	True	True
+GCA_054126475.1_MMB71	JBDFRR010000017.1	278539	control_alpha_only	MAT1-1	medium	mat_locus		229.1	2.5			MAT1-1	226.6	True	False
+GCA_054126635.1_ASM5412663v1	JBDFRI010000017.1	275553	control_alpha_only	MAT1-1	medium	mat_locus		229.1	2.5			MAT1-1	226.6	True	False
+GCA_054127785.1_ASM5412778v1	JBHFHQ010000001.1	2007857	control_hmg_only	MAT1-2	high	mat_locus				173.1	2.9	MAT1-2	-170.2	False	True
+GCA_054274235.1_ASM5427423v1	JBHKFG010000345.1	22034	control_hmg_only	MAT1-2	high	mat_locus				180.1	1.1	MAT1-2	-179.0	False	True
+GCA_054274275.1_ASM5427427v1	JBHKFF010001221.1	141745	control_hmg_only	MAT1-2	high	mat_locus				180.3	0.5	MAT1-2	-179.8	False	True
+GCA_054643255.1_ASM5464325v1	JBTMZR010000007.1	809413	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	135.7	0.0	174.9	18.7	MAT1-2	-39.2	True	True
+GCA_054858455.1_ASM5485845v1	JBTHVY010000004.1	169250	control_hmg_only	MAT1-2	high	mat_locus				139.3	21.2	MAT1-2	-118.2	False	True
+GCA_054948865.1_ASM5494886v1	JBTYLR010000008.1	1435334	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	139.3	2.2	126.4	24.5	undetermined	12.9	True	True
+GCA_055471805.1_NJAU_Apal_1.0	JBHIKX010000018.1	93312	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	134.0	1.5	176.7	15.5	MAT1-2	-42.8	True	True
+GCA_055474405.1_ASM5547440v1	JBBEXB010000045.1	25509	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	15.7	0.0	36.4	0.0	undetermined	-20.7	False	False
+GCA_055681515.1_ASM5568151v1	JBTTHE010000005.1	124359	control_hmg_only	MAT1-2	high	mat_locus				229.7	6.2	MAT1-2	-223.5	False	True
+GCA_055689535.1_ASM5568953v1	CM146046.1	1208285	control_hmg_only	MAT1-2	high	mat_locus				158.3	9.5	MAT1-2	-148.8	False	True
+GCA_055697915.1_ASM5569791v1	CM146693.1	1199288	control_hmg_only	MAT1-2	high	mat_locus				158.3	9.5	MAT1-2	-148.8	False	True
+GCA_055769695.1_ASM5576969v1	JARXRW010000022.1	14085	control_alpha_only	MAT1-1	high	mat_locus		166.6	0.0			MAT1-1	166.6	True	False
+GCA_055774965.1_FR_269_3	JBPAYJ010000091.1	77759	control_alpha_only	MAT1-1	medium	partial_locus		166.9	6.9			MAT1-1	159.9	True	False
+GCA_055944385.1_NAU_DlYC_2.1	CM148436.1	6407999	both_modelled_gap_lt20,both_weak,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	61.5	0.0	96.1	7.1	MAT1-2	-34.6	True	True
+GCA_056149075.1_ASM5614907v1	JBTYJP010000009.1	785024	control_alpha_only	MAT1-1	high	mat_locus		188.0	6.5			MAT1-1	181.5	True	False
+GCA_056153085.1_ASM5615308v1	JBUYVQ010000002.1	1416983	control_hmg_only	MAT1-2	medium	mat_locus				58.0	0.0	MAT1-2	-58.0	False	True
+GCA_056222255.1_ASM5622225v1	JBISKD010000004.1	1619519	control_hmg_only	MAT1-2	medium	mat_locus				235.2	6.0	MAT1-2	-229.1	False	True
+GCA_056248015.1_Pb192	JBVBSP010000002.1	6890468	control_hmg_only	MAT1-2	medium	mat_locus				230.4	11.7	MAT1-2	-218.8	False	True
+GCA_056320525.1_ASM5632052v1	JBHFPA010000085.1	38887	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	227.0	7.7	53.4	4.0	MAT1-1	173.6	True	True
+GCA_056506365.1_ASM5650636v1	JBPGOA010000066.1	352863	both_modelled_gap_lt20,label_disagrees	undetermined	medium	mat_locus	MAT1-2	128.5	0.0	134.4	6.1	undetermined	-6.0	True	True
+GCA_056776735.1_ASM5677673v1	JBWCEU010000001.1	7118361	both_modelled_gap_lt20	MAT1-2	medium	mat_locus	MAT1-2	41.3	0.0	140.5	0.0	MAT1-2	-99.2	True	True
+GCA_056824665.1_ASM5682466v1	JBMNDY010000005.1	302118	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	70.1	0.0	123.9	6.7	MAT1-2	-53.8	True	True
+GCA_057662125.1_ASM5766212v1	JBYIXG010000001.1	649852	control_hmg_only	MAT1-2	high	mat_locus				180.1	1.1	MAT1-2	-179.0	False	True
+GCA_057674085.1_ASM5767408v1	JBWZKT010000095.1	17088	control_hmg_only	MAT1-2	high	mat_locus				159.5	3.8	MAT1-2	-155.7	False	True
+GCA_057674825.1_ASM5767482v1	JBWZLY010000240.1	16218	control_hmg_only	MAT1-2	high	mat_locus				165.6	1.9	MAT1-2	-163.7	False	True
+GCA_057924395.1_ASM5792439v1	JBXWBA010000060.1	295809	control_hmg_only	MAT1-2	high	mat_locus				133.3	21.7	MAT1-2	-111.6	False	True
+GCA_057924535.1_ASM5792453v1	JBXWAW010000020.1	594454	control_hmg_only	MAT1-2	high	mat_locus				138.1	21.2	MAT1-2	-116.9	False	True
+GCA_057929515.1_ASM5792951v1	JBXTYN010000023.1	477085	control_both_clear	MAT1-2	high	mat_locus	MAT1-2	153.9	0.0	248.0	0.3	MAT1-2	-94.1	True	True
+GCA_057978465.1_Crustfungi9_Epicoc	JBYJWE010000028.1	129659	control_alpha_only	MAT1-1	high	mat_locus		116.1	0.0			MAT1-1	116.1	True	False
+GCA_058095755.1_UMB_ScBoyd479_1.0	JBWVTG010000014.1	531028	control_alpha_only	MAT1-1	high	mat_locus		189.4	11.4			MAT1-1	178.0	True	False
+GCA_058130335.1_ASM5813033v1	JBYVZO010000004.1	70004	control_hmg_only	MAT1-2	high	mat_locus				128.3	12.0	MAT1-2	-116.3	False	True
+GCA_058168915.1_ASM5816891v1	JBXXUH010000015.1	220263	control_alpha_only	MAT1-1	medium	mat_locus		229.1	2.5			MAT1-1	226.6	True	False
+GCA_058169225.1_ASM5816922v1	JBXXTT010000014.1	277992	control_alpha_only	MAT1-1	medium	mat_locus		229.1	2.5			MAT1-1	226.6	True	False
+GCA_058169345.1_ASM5816934v1	JBXXTN010000017.1	220259	control_alpha_only	MAT1-1	medium	mat_locus		229.1	2.5			MAT1-1	226.6	True	False
+GCA_058169465.1_ASM5816946v1	JBXXTH010000020.1	220262	control_alpha_only	MAT1-1	medium	mat_locus		229.1	2.5			MAT1-1	226.6	True	False
+GCA_058169675.1_ASM5816967v1	JBXXSX010000019.1	277894	control_alpha_only	MAT1-1	medium	mat_locus		229.1	2.5			MAT1-1	226.6	True	False
+GCA_058218615.1_ASM5821861v1	JBSKJC010000021.1	389070	control_hmg_only	MAT1-2	medium	mat_locus				376.5	11.1	MAT1-2	-365.5	False	True
+GCA_058219135.1_ASM5821913v1	JBISTQ010000085.1	72506	control_alpha_only	MAT1-1	high	mat_locus		240.9	5.0			MAT1-1	236.0	True	False
+GCA_058224505.1_ASM5822450v1	JBYVDZ010000028.1	76533	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	113.0	7.8	143.4	3.3	MAT1-2	-30.4	True	True
+GCA_058969415.1_ASM5896941v1	JBYUJD010000050.1	327456	both_modelled_gap_lt20	MAT1-1	medium	idiomorph_gene_only	MAT1-1	133.9	0.0	76.5	19.4	MAT1-1	57.3	True	True
+GCA_058969955.1_ASM5896995v1	JBKIAT010000011.1	72866	control_alpha_only	MAT1-1	high	mat_locus		240.9	5.0			MAT1-1	236.0	True	False
+GCA_059056005.1_AspCandMKA05_1	CM180701.1	4717848	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	248.0	5.7	69.6	0.5	MAT1-1	178.4	True	True
+GCA_059058505.1_ASM5905850v1	JBZWKL010000134.1	56866	control_alpha_only	MAT1-1	medium	partial_locus		175.5	3.6			MAT1-1	171.8	True	False
+GCA_059058745.1_ASM5905874v1	JBSXNE010000308.1	3669	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	157.9	0.0	241.2	1.8	MAT1-2	-83.3	True	True
+GCA_059329155.1_NRL_VPCI_MKD52	JBXBAN010000014.1	533731	control_alpha_only	MAT1-1	high	mat_locus		233.6	3.1			MAT1-1	230.5	True	False
+GCA_059330735.1_OKI18v1	CM181410.1	1146475	control_hmg_only	MAT1-2	high	mat_locus				158.3	9.5	MAT1-2	-148.8	False	True
+GCA_059336435.1_ASM5933643v1	JCAIPC010000004.1	2731684	control_alpha_only	MAT1-1	high	mat_locus		166.3	0.0			MAT1-1	166.3	True	False
+GCA_059492065.1_EIMB_Clin_390-3_1.0	CM183334.1	2346394	control_hmg_only	MAT1-2	high	mat_locus				123.9	15.0	MAT1-2	-108.9	False	True
+GCA_059631705.1_ASM5963170v1	JAMBQF010000012.1	791624	control_alpha_only	MAT1-1	high	mat_locus		159.9	6.6			MAT1-1	153.4	True	False
+GCA_059794175.1_ASM5979417v1	JBLZSD010000145.1	517	control_alpha_only	MAT1-1	high	mat_locus		207.8	9.9			MAT1-1	198.0	True	False
+GCA_060154425.1_ASM6015442v1	JCBAJG010000058.1	75805	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	128.9	0.0	51.2	0.0	MAT1-1	77.7	True	True
+GCA_060229465.1_ASM6022946v1	JCAOYC010000010.1	1475793	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	150.3	8.8	146.1	5.0	undetermined	4.2	True	True
+GCA_060308545.1_ASM6030854v1	JBNNXX010001010.1	2288	control_hmg_only	MAT1-2	high	mat_locus				191.7	11.7	MAT1-2	-180.0	False	True
+GCA_060309145.1_ASM6030914v1	JCBPQY010000155.1	30841	control_hmg_only	MAT1-2	high	mat_locus				120.7	17.1	MAT1-2	-103.6	False	True
+GCA_060354775.1_ASM6035477v1	JBPKLL010000031.1	224492	control_hmg_only	MAT1-2	high	mat_locus				214.3	0.0	MAT1-2	-214.3	False	True
+GCA_060370275.1_ASM6037027v1	JCAFID010000007.1	933129	control_hmg_only	MAT1-2	medium	mat_locus				372.8	8.9	MAT1-2	-363.9	False	True
+GCA_900073075.1_CML3066.v2	LT222054.1	3002301	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	243.4	1.1	MAT1-1	58.1	True	True
+GCA_900163765.1_Atubseq	FUKH01000032.1	258842	control_alpha_only	MAT1-1	high	mat_locus		288.4	9.6			MAT1-1	278.8	True	False
+GCA_900492705.2_MDC_Fg1	UIHA02000096.1	583913	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.2	1.1	MAT1-1	56.3	True	True
+GCA_900538235.1_JN3_Genome_assembly	UNSE01000007.1	547005	control_hmg_only	MAT1-2	medium	mat_locus				53.0	2.1	MAT1-2	-50.8	False	True
+GCA_902141235.2_C_solani_1703	CABFOC020000014.1	1086457	control_hmg_only	MAT1-2	high	mat_locus				174.4	2.0	MAT1-2	-172.3	False	True
+GCA_902712905.1_Pcrustosum_CAL64_v2	CACTHZ020000378.1	111931	control_alpha_only	MAT1-1	high	mat_locus		128.6	8.9			MAT1-1	119.7	True	False
+GCA_903819115.1_AWRI4621	CAIJCR010000001.1	2428458	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	88.9	0.0	61.1	6.8	MAT1-1	27.8	True	True
+GCA_905332055.1_MDC_FgU1	CAJOAW010000087.1	18388	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	301.5	3.9	245.5	1.1	MAT1-1	56.0	True	True
+GCA_935751715.1_ERR7738209_bin.119_149_154_merged	CAKXZJ010000255.1	145222	control_alpha_only	MAT1-1	high	mat_locus		52.2	0.0			MAT1-1	52.2	True	False
+GCA_937857105.1_SRR13685129_bin.54_CONCOCT_v1.1_MAG	CAKZWY010000669.1	26246	control_hmg_only	MAT1-2	medium	partial_locus				261.0	9.7	MAT1-2	-251.3	False	True
+GCA_947623385.2_glClaSqua9.2	OX392382.1	1220586	control_hmg_only	MAT1-2	high	mat_locus				243.1	12.0	MAT1-2	-231.1	False	True
+GCA_963971245.1_glClaNorv1.1	OZ020202.1	1118777	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	146.5	6.9	7.1	0.0	MAT1-1	139.4	True	True
+GCA_964211815.1_grSimLame1.1	OZ124167.1	880436	control_alpha_only	MAT1-1	high	mat_locus		165.1	6.7			MAT1-1	158.3	True	False
+GCA_964254615.1_public_SRR14722121_metabat2_bin.4	CAXUWP010001397.1	969	both_modelled_gap_lt20	MAT1-1	medium	idiomorph_gene_only	MAT1-1	127.6	4.6	7.7	0.0	MAT1-1	119.9	True	True
+GCA_964254655.1_public_SRR14722101_metabat2_bin.2	CAXUWX010001887.1	156	both_modelled_gap_lt20	MAT1-1	medium	idiomorph_gene_only	MAT1-1	146.4	6.1	5.8	0.0	MAT1-1	140.5	True	True
+GCA_964254795.1_public_SRR14722032_metabat2_bin.2	CAXUUP010000527.1	427	control_alpha_only	MAT1-1	medium	mat_locus		181.6	0.0			MAT1-1	181.6	True	False
+GCA_964254805.1_public_SRR14722109_metabat2_bin.1	CAXUVW010000034.1	12689	control_alpha_only	MAT1-1	medium	mat_locus		174.8	0.0			MAT1-1	174.8	True	False
+GCA_964254875.1_public_SRR14722292_metabat2_bin.5	CAXUUJ010000078.1	46857	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	158.1	3.8	9.3	0.0	MAT1-1	148.7	True	True
+GCA_964254915.1_public_SRR14722289_concoct_bin.0	CAXUWF010000019.1	44270	control_hmg_only	MAT1-2	high	mat_locus				182.2	9.6	MAT1-2	-172.6	False	True
+GCA_964256735.1_public_SRR14721942_metabat2_bin.2	CAXVCE010000002.1	866	control_alpha_only	MAT1-1	medium	mat_locus		178.4	0.0			MAT1-1	178.4	True	False
+GCA_964256915.1_public_SRR14722312_concoct_bin.10	CAXVCR010000190.1	2068	control_alpha_only	MAT1-1	high	mat_locus		162.4	0.0			MAT1-1	162.4	True	False
+GCA_964256975.1_public_SRR1531569_concoct_bin.26	CAXVCV010000876.1	7	control_alpha_only	MAT1-1	high	mat_locus		108.0	0.0			MAT1-1	108.0	True	False
+GCA_964257175.1_public_SRR14722028_metabat2_bin.1	CAXVEN010000023.1	25443	control_alpha_only	MAT1-1	medium	mat_locus		174.8	0.0			MAT1-1	174.8	True	False
+GCA_964257275.1_public_SRR14721970_metabat2_bin.1	CAXVEL010000015.1	61297	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	141.6	0.0	148.3	14.2	undetermined	-6.7	True	True
+GCA_964257305.1_public_SRR14721979_metabat2_bin.1	CAXVEX010000005.1	29580	control_hmg_only	MAT1-2	high	mat_locus				187.9	9.7	MAT1-2	-178.2	False	True
+GCA_964257465.1_public_SRR14722004_metabat2_bin.1	CAXVFK010000003.1	3	control_hmg_only	MAT1-2	medium	partial_locus				7.2	0.0	undetermined	-7.2	False	True
+GCA_964257655.1_public_SRR14721947_metabat2_bin.6	CAXVFR010000098.1	3812	control_alpha_only	MAT1-1	medium	mat_locus		174.1	0.0			MAT1-1	174.1	True	False
+GCA_965240495.1_gyLeoLubr2.1	OZ251265.1	4928715	both_modelled_gap_lt20	MAT1-1	medium	idiomorph_gene_only	MAT1-1	58.4	0.0	49.2	2.8	undetermined	9.2	True	True
+GCA_966192485.1_RS040_annot_assembly	CBIHHB010000023.1	429190	control_hmg_only	MAT1-2	high	mat_locus				139.5	3.3	MAT1-2	-136.2	False	True
+GCA_966192795.1_CS339_annot_assembly	CBIHHI010000023.1	2655472	control_alpha_only	MAT1-1	high	mat_locus		166.6	0.0			MAT1-1	166.6	True	False
+GCA_966192815.1_CS152_annot_assembly	CBIHHL010000025.1	2672566	control_alpha_only	MAT1-1	high	mat_locus		166.3	0.0			MAT1-1	166.3	True	False
+GCA_966193015.1_CS371_annot_assembly	CBIHHD010000222.1	257283	control_alpha_only	MAT1-1	high	mat_locus		81.9	0.0			MAT1-1	81.9	True	False
+GCA_966194885.1_CS057_annot_assembly	CBIHIG010000023.1	2661769	control_hmg_only	MAT1-2	medium	mat_locus				139.5	3.3	MAT1-2	-136.2	False	True
+GCA_976913895.1_gdRamVize2.1	OZ320849.1	1983721	control_alpha_only	MAT1-1	medium	partial_locus		118.7	0.0			MAT1-1	118.7	True	False
+GCA_977013665.2_LaRA1-scaf.v2	CDRNIE020000152.1	1388001	control_alpha_only	MAT1-1	high	mat_locus		145.9	0.0			MAT1-1	145.9	True	False
+GCA_982397235.1_T59-F	CEVXIG010000032.1	78286	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	283.6	6.2	20.1	0.0	MAT1-1	263.5	True	True
+GCA_982436675.1_hwer_EXF-2000	CEWDDR020000034.1	167518	control_alpha_only	MAT1-1	high	mat_locus		154.1	14.0			MAT1-1	140.1	True	False
+GCF_000002715.2_ASM271v1	NW_001517097.1	266912	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	284.5	9.3	27.1	0.0	MAT1-1	257.4	True	True
+GCF_000011425.1_ASM1142v1	NC_066259.1	1138242	control_hmg_only	MAT1-2	high	mat_locus				310.4	13.0	MAT1-2	-297.4	False	True
+GCF_000143535.2_ASM14353v4	NC_037310.1	808684	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	308.8	0.1	0.0	0.0	MAT1-1	308.8	True	True
+GCF_000149585.1_ASM14958v1	NW_001813982.1	4108229	control_alpha_only	MAT1-1	high	mat_locus		2.9	0.0			undetermined	2.9	True	False
+GCF_000149615.1_ASM14961v1	NT_165936.1	873199	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	283.8	6.1	11.6	0.0	MAT1-1	272.2	True	True
+GCF_000585565.1_Capr_epim_CBS_606_96_V1	NW_006912908.1	349659	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	164.0	3.7	161.2	4.8	undetermined	2.8	True	True
+GCF_000585585.1_Capr_coro_CBS_617_96_V1	NW_006912899.1	1107990	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	131.9	0.0	165.8	2.2	MAT1-2	-33.9	True	True
+GCF_000600275.1_Eurhe1	NW_024467318.1	409767	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	234.6	11.7	4.6	0.0	MAT1-1	230.1	True	True
+GCF_000835555.1_Rhin_mack_CBS_650_93_V1	NW_013550601.1	2442222	control_alpha_only	MAT1-1	high	mat_locus		90.0	0.0			MAT1-1	90.0	True	False
+GCF_000961545.1_S_schenckii_v1	NW_015971139.1	1660857	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	150.8	5.0	79.2	4.2	MAT1-1	71.5	True	True
+GCF_001500285.1_Phisc1	NW_017263627.1	47287	both_modelled_gap_lt20	MAT1-2	medium	idiomorph_gene_only	MAT1-2	100.6	0.0	56.6	4.0	MAT1-1	44.0	True	True
+GCF_001890805.1_Aspgl1	NW_019170508.1	107	control_hmg_only	MAT1-2	medium	idiomorph_gene_only				248.9	14.2	MAT1-2	-234.6	False	True
+GCF_003184585.1_Aspsac1	NW_020290627.1	455839	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	269.4	7.3	51.9	0.0	MAT1-1	217.4	True	True
+GCF_003184865.1_Asphom1	NW_020291914.1	46769	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	273.1	9.3	44.9	0.0	MAT1-1	228.2	True	True
+GCF_010015735.1_Aaoar1	NW_022983474.1	3801780	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	141.9	0.0	67.2	0.3	MAT1-1	74.7	True	True
+GCF_010093815.1_Psehy1	NW_022985557.1	78653	control_alpha_only	MAT1-1	medium	mat_locus		94.0	0.0			MAT1-1	94.0	True	False
+GCF_011692745.1_ASM1169274v1	NW_022983865.1	4302095	control_alpha_only	MAT1-1	high	mat_locus		268.6	9.4			MAT1-1	259.2	True	False
+GCF_014898535.1_ASM1489853v1	NW_024066248.1	217523	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	304.2	0.3	3.6	0.0	MAT1-1	300.6	True	True
+GCF_016097325.1_ASM1609732v1	NW_025763372.1	4684967	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	246.3	5.2	77.5	1.0	MAT1-1	168.8	True	True
+GCF_019321695.1_ASM1932169v1	NW_025408550.1	5572635	both_modelled_gap_lt20,label_disagrees	MAT1-1	high	mat_locus	MAT1-2	62.1	0.0	91.8	3.7	MAT1-2	-29.6	True	True
+GCF_020726465.1_Chagl1	NW_027117333.1	4047687	control_both_clear	MAT1-1	medium	mat_locus	MAT1-1	149.9	0.0	79.6	7.5	MAT1-1	70.3	True	True
+GCF_022829205.1_ASM2282920v1	NW_026055128.1	595608	both_weak	MAT1-2	high	mat_locus	MAT1-2	0.0	0.0	101.0	10.1	MAT1-2	-101.0	False	True
+GCF_023758085.1_ASM2375808v1	NW_026056802.1	50187	control_alpha_only	MAT1-1	high	mat_locus		151.0	0.0			MAT1-1	151.0	True	False
+GCF_026229845.1_ASM2622984v1	NW_026517022.1	1826110	label_disagrees,neither_modelled_label_disagrees	MAT1-1	medium	mat_locus	MAT1-2	46.1	0.0	89.1	3.7	MAT1-2	-43.0	False	False
+GCF_028827735.1_ASM2882773v1	NW_026643082.1	1217753	both_modelled_gap_lt20	MAT1-1	high	mat_locus	MAT1-1	71.6	0.0	125.7	4.1	MAT1-2	-54.1	True	True
+GCF_028827825.1_ASM2882782v1	NW_026643096.1	3808837	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	136.2	1.4	137.3	15.9	undetermined	-1.1	True	True
+GCF_028828155.1_ASM2882815v1	NW_026643156.1	1703165	both_weak	MAT1-1	high	mat_locus	MAT1-1	72.5	0.0	0.0	0.0	MAT1-1	72.5	True	False
+GCF_029532465.1_Liptet1	NW_026611597.1	1158352	both_modelled_gap_lt20	MAT1-2	high	mat_locus	MAT1-2	40.4	3.1	102.1	4.1	MAT1-2	-61.7	True	True
+GCF_030549165.1_Lasmin1	NW_026848227.1	628952	both_modelled_gap_lt20	MAT1-1	medium	idiomorph_gene_only	MAT1-1	78.4	2.5	124.0	2.8	MAT1-2	-45.5	True	True
+GCF_030913485.1_Colgo1	NW_026851290.1	41059	control_hmg_only	MAT1-2	high	mat_locus				133.3	21.7	MAT1-2	-111.6	False	True
+GCF_038021145.1_Pcitr2	NW_027117291.1	214826	control_alpha_only	MAT1-1	high	mat_locus		160.1	0.0			MAT1-1	160.1	True	False
+GCF_038381095.1_Phycap1	NW_027117448.1	1565513	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	128.5	0.0	123.4	6.5	undetermined	5.1	True	True
+GCF_038497645.1_Lipchi1	NW_027117455.1	207171	both_modelled_gap_lt20	MAT1-1	medium	mat_locus	MAT1-1	40.2	2.9	107.2	6.1	MAT1-2	-66.9	True	True
+GCF_041956635.1_Thela1	NW_027192356.1	2000451	control_alpha_only	MAT1-1	high	mat_locus		197.1	2.1			MAT1-1	194.9	True	False
+GCF_044049455.1_Aspluc1	NW_027263572.1	282544	control_both_clear	MAT1-1	high	mat_locus	MAT1-1	300.9	9.5	19.5	0.0	MAT1-1	281.5	True	True

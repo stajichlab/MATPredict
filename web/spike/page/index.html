@@ -26,12 +26,15 @@
   summary { cursor: pointer; color: var(--accent); }
   .dl-row { margin: 6px 0; font-size: 0.92rem; }
   .warn { border: 1px solid var(--warn); background: var(--warn-bg); border-radius: 8px; padding: 10px 12px; margin-top: 12px; }
+  .fig-scroll { overflow-x: auto; margin-bottom: 8px; }
+  .fig-scroll svg { display: block; width: 100%; height: auto; }
+  label + select { margin-right: 14px; }
   iframe { width: 100%; height: 560px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
   @media (max-width: 600px) { th, td { padding: 4px; } }
 </style>
 </head>
 <body>
-<nav><b>MATPredict</b><a href="../index.html">Overview</a><a href="../results.html">Explore taxa</a><a href="index.html">Browser tool</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
+<nav><b>MATPredict</b><a href="../index.html">Overview</a><a href="../results.html">Explore taxa</a><a href="index.html">Browser tool</a><a href="../about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
 <main>
   <h1>MATPredict in the browser</h1>
   <p class="muted">Upload a fungal genome (FASTA). The detection pipeline runs in this page: Python in Pyodide, the search tools as WebAssembly. Nothing is uploaded to a server.</p>
@@ -70,7 +73,10 @@
     <h2>Locus and flanking sequence</h2>
     <div class="panel">
       <label for="flank">Flank (bp each side)</label>
-      <select id="flank"><option>1000</option><option selected>3000</option><option>10000</option></select>
+      <select id="flank"><option>0</option><option>500</option><option>1000</option><option selected>3000</option><option>10000</option></select>
+      <label for="zoom">Zoom</label>
+      <select id="zoom"><option value="1" selected>Fit width</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option></select>
+      <span class="muted">Zoom scrolls sideways; hover a gene for its coordinates.</span>
       <div id="figure"></div>
       <div id="locus-downloads"></div>
       <details>
@@ -81,7 +87,7 @@
 
     <h2>Report</h2>
     <iframe id="report" title="MATPredict report"></iframe>
-    <p class="muted">Downloads: <a href="#" id="dl-gff">detected_loci.gff3</a> · <a href="#" id="dl-html">report.html</a></p>
+    <p class="muted"><a href="#" id="open-html" target="_blank" rel="noopener">Open report in a new tab</a> · Downloads: <a href="#" id="dl-gff">detected_loci.gff3</a> · <a href="#" id="dl-html">report.html</a></p>
   </section>
 </main>
 

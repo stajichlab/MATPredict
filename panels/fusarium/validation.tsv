@@ -1,0 +1,57 @@
+run	strain	species	expected	panel	call	outcome	MAT1-1_breadth	MAT1-2_breadth	MAT1-1_depth	MAT1-2_depth	reads_used	shared_depth	flags	truth_basis	note
+ERR11748137	PH-1	Fusarium graminearum	both	graminearum	both	PASS	0.9973	1.0000	7.25	7.22	2404229	11.63	-	same-strain RefSeq genome GCF_000240135.3 (homothallic; both genes in locus)	
+ERR1755747	FgraminearumPH-1	Fusarium graminearum	both	graminearum	both	PASS	0.9306	0.8967	2.81	2.78	1895533	2.93	-	same-strain RefSeq genome GCF_000240135.3	
+SRR12259889	CS3096	Fusarium pseudograminearum	MAT1-1	pseudograminearum	MAT1-1	PASS	0.9372	0.0000	3.09	0.00	2290381	3.36	-	same-strain RefSeq genome GCF_000303195.2	
+SRR12259889	CS3096	Fusarium pseudograminearum	MAT1-1	graminearum	low_depth	NO_CALL	0.1950	0.0868	0.63	0.34	2290381	0.01	-	cross-species (does the Fg panel type Fps?)	cross-species: Fg panel does not type F. pseudograminearum
+SRR13023856	DAOMC 252244	Fusarium poae	MAT1-2	poae	MAT1-2	PASS	0.0000	0.9895	0.00	4.46	1963168	6.02	-	same-strain RefSeq genome GCF_019609905.1	
+SRR38451037	Fol007	Fusarium oxysporum f. sp. lycopersici	MAT1-1	fola	MAT1-1	PASS	0.8972	0.0632	4.59	0.46	1663658	2.42	trace_MAT1-2	same-strain assembly GCA_060702595.1	
+ERR655305	A3/5	Fusarium venenatum	MAT1-1	sambucinum	low_depth	NO_CALL	0.3013	0.0007	0.93	0.00	1979507	0.34	-	same-strain RefSeq genome GCF_900007375.1 (cross-species)	cross-species: F. venenatum MAT1-1 shares only ~30% of sambucinum panel k-mers; no venenatum MAT1-2 reference found, so no venenatum panel
+SRR12778054	FS66	Fusarium sacchari	MAT1-2	sacchari	MAT1-2	PASS	0.0000	1.0000	0.00	6.64	2489355	5.76	-	same-strain assembly GCA_017165645.1 (panel source)	
+ERR1288718	CML3066_illumina	Fusarium graminearum	both	graminearum	both	PASS	0.9268	0.9217	5.98	6.50	2682394	5.15	-	species-level: homothallic (PH-1 genome; asiaticum/boothii/gerlachii/meridionale assemblies all both)	
+SRR1609157	ITEM 10027	Fusarium verticillioides	MAT1-1	verticillioides	MAT1-1	PASS	0.9754	0.0000	6.96	0.00	3063203	9.65	-	same-strain assembly GCA_031360185.1	
+SRR14117445	F31	Fusarium musae	MAT1-1	verticillioides	MAT1-1	PASS	0.8483	0.0047	4.41	0.01	2504335	3.96	trace_MAT1-2	same-strain assembly GCA_019915245.1 (cross-species)	cross-species: F. musae typed by the Fv panel
+SRR1702060	CS3270	Fusarium pseudograminearum	MAT1-1	pseudograminearum	MAT1-1	PASS	0.8545	0.0000	2.23	0.00	2340710	2.22	-	same-strain assembly GCA_000974265.2	
+SRR1702061	RBG5266	Fusarium pseudograminearum	MAT1-2	pseudograminearum	MAT1-2	PASS	0.0000	0.9558	0.00	3.69	3306298	3.06	-	same-strain assembly GCA_001703955.2	
+SRR27384772	NRRL 29169	Fusarium graminearum	both	graminearum	both	PASS	0.8402	0.8819	3.36	2.77	1389950	3.85	-	species-level homothallic	
+SRR22266401	Fp22-2	Fusarium pseudograminearum	MAT1-1	pseudograminearum	MAT1-1	PASS	0.9530	0.0000	3.23	0.00	1483079	3.79	-	same-strain assembly GCA_024752415.1	
+SRR30921468	336336	Fusarium culmorum	MAT1-1	culmorum	MAT1-1	PASS	0.9235	0.0000	3.38	0.00	1287158	2.48	-	same-strain assembly GCA_052570695.1 (panel source)	
+SRR30921469	309752	Fusarium culmorum	MAT1-2	culmorum	MAT1-2	PASS	0.0000	0.9588	0.00	3.51	1308735	5.13	-	same-strain assembly GCA_052570705.1 (panel source)	
+SRR24907644	36102	Fusarium odoratissimum	MAT1-2	fola	MAT1-2	PASS	0.0280	0.6263	0.03	1.99	2408034	1.78	trace_MAT1-1	same-strain assembly GCA_040822265.1	
+SRR18652388	CNO1	Fusarium sacchari	MAT1-1	sacchari	MAT1-1	PASS	0.9048	0.0000	3.04	0.00	1467841	2.24	-	same-strain assembly GCA_048414715.1 (panel source)	
+SRR21444571	CF00175	Fusarium falciforme	MAT1-2	solani	low_depth	NO_CALL	0.0871	0.1741	0.28	0.57	1367832	0.51	-	same-strain assembly GCA_027945395.1 (cross-species within FSSC)	cross-species within FSSC: solani panel does not type this falciforme MAT1-2 allele
+SRR33409544	ET-2022-34	Fusarium boothii	both	graminearum	both	PASS	0.6132	0.6456	2.01	2.31	1315565	1.33	-	same-strain assembly GCA_052058405.1 (both genes at one locus)	
+SRR30921470	270555	Fusarium culmorum	MAT1-2	culmorum	MAT1-2	PASS	0.0000	0.8609	0.00	2.76	1280043	1.65	-	same-strain assembly GCA_052570715.1 (held out)	
+SRR30921470	270555	Fusarium culmorum	MAT1-2	pseudograminearum	low_depth	NO_CALL	0.0034	0.3564	0.01	1.12	1280043	0.62	-	cross-species	cross-species: Fps panel does not type F. culmorum MAT1-2
+SRR305305	Fo47	Fusarium oxysporum	MAT1-2	fola	MAT1-2	PASS	0.0000	0.7023	0.00	1.91	1642623	1.68	-	same-strain assembly GCA_013085055.1	
+SRR34113842	Fp023	Fusarium poae	MAT1-2	poae	MAT1-2	PASS	0.0000	0.9077	0.00	2.45	1089411	3.25	-	same-strain assembly GCA_061603755.1	
+SRR35777317	FvLNF15-11	Fusarium verticillioides	MAT1-2	verticillioides	MAT1-2	PASS	0.0000	0.8577	0.00	1.94	1313694	2.05	-	same-strain assembly GCA_053843395.1 (panel source)	
+SRR38916350	31866	Fusarium proliferatum	MAT1-2	proliferatum	MAT1-2	PASS	0.0000	0.6470	0.00	2.29	1412260	1.35	-	same-strain assembly GCA_059629275.1 (held out)	
+SRR37009983	PB09	Fusarium sacchari	MAT1-1	sacchari	MAT1-1	PASS	0.3255	0.0104	1.01	0.02	1341685	1.86	trace_MAT1-2	same-strain assembly GCA_054858035.1 (held out; different MAT1-1 allele)	held out; carries the second MAT1-1 allele of F. sacchari (assembly GCA_054858035.1, 54% aa identity MAT1-1-1 to F. fujikuroi query); typed with breadth 0.33 only
+SRR21444571	CF00175	Fusarium falciforme	MAT1-2	falciforme	MAT1-2	PASS	0.0008	0.8373	0.01	2.50	1367832	2.84	trace_MAT1-1	same-strain assembly GCA_027945395.1 (MAT1-2 allele cluster; not the panel source strain)	
+SRR9694936	MRL8996	Fusarium oxysporum	MAT1-1	fola	MAT1-1	PASS	0.5077	0.0199	0.82	0.03	945963	1.19	trace_MAT1-2	same-strain assembly GCA_009746015.2	
+SRR31408079	FPI024	Fusarium proliferatum	MAT1-2	proliferatum	low_depth	NO_CALL	0.1392	0.0000	1.22	0.00	2109692	0.91	-	same-strain assembly GCA_058129285.1 (held out)	UNRESOLVED CONFLICT: assembly GCA_058129285.1 (FPI024) is MAT1-2 but these reads carry MAT1-1-like k-mers at shared depth <1 (likely run/assembly mismatch or a divergent MAT1-1 allele); no call possible at ~0.9x
+SRR31408079	FPI024	Fusarium proliferatum	MAT1-2	fujikuroi	low_depth	NO_CALL	0.1449	0.0000	1.26	0.00	2109692	0.81	-	cross-species	same run as above; cross-species panel
+SRR3139042	4287	Fusarium oxysporum f. sp. lycopersici	MAT1-1	fola	MAT1-1	PASS	0.8792	0.0565	3.25	0.12	4000000	2.90	trace_MAT1-2	same-strain RefSeq genome GCF_000149955.1	Fol4287 is MAT1-1 in RefSeq GCF_000149955.1 (MAT1-1-1/-2/-3 genes at NC_030993.1:3023257-3028476) and in these reads; the brief said MAT1-2
+SRR31486791	Indo-1	Fusarium odoratissimum	MAT1-1	fola	MAT1-1	PASS	0.6165	0.0688	2.32	0.26	2221371	1.37	trace_MAT1-2	same-strain assembly GCA_040822295.1	
+SRR11075369	FL72_t3	Fusarium circinatum	MAT1-2	circinatum	MAT1-2	PASS	0.0000	0.9334	0.00	5.72	2070475	7.35	-	same-strain assembly GCA_019364515.1 (not panel source)	
+SRR11075370	FK870_A2	Fusarium circinatum	MAT1-2	circinatum	MAT1-2	PASS	0.0000	0.8870	0.00	3.27	1456597	3.60	-	same-strain assembly GCA_019364535.1 (not panel source)	
+SRR18919701	CMWF389	Fusarium temperatum	MAT1-2	circinatum	MAT1-2	PASS	0.0024	0.5939	0.00	1.54	1643121	1.12	trace_MAT1-1	same-strain assembly GCA_001513835.1 (cross-species)	cross-species: F. temperatum typed by the circinatum panel
+SRR12534414	IMI 392277	Fusarium xylarioides	MAT1-1	xylarioides	MAT1-1	PASS	0.8402	0.0430	2.32	0.04	674469	2.74	trace_MAT1-2	same-strain assembly GCA_018296265.1 (panel source)	
+SRR12534413	IMI 392254	Fusarium xylarioides	MAT1-2	xylarioides	MAT1-2	PASS	0.0000	0.8568	0.00	2.80	678445	2.76	-	same-strain assembly GCA_018296245.1 (held out)	
+SRR14342055	F8_4S_4P	Fusarium annulatum	MAT1-2	proliferatum	MAT1-2	PASS	0.0002	0.6670	0.00	2.69	1703616	3.73	trace_MAT1-1	same-strain assembly GCA_019189625.1 (cross-species)	cross-species: F. annulatum typed by the proliferatum panel
+SRR24907611	C135	Fusarium tardichlamydosporum	MAT1-2	fola	MAT1-2	PASS	0.0276	0.5765	0.04	1.76	1850282	1.22	trace_MAT1-1	same-strain assembly GCA_040822145.1 (cross-species within FOSC)	
+SRR21444564	A02	Fusarium falciforme	MAT1-1	falciforme	MAT1-1	PASS	0.8805	0.0028	2.98	0.01	1634531	2.12	trace_MAT1-2	same-strain assembly GCA_027945505.1 (same allele cluster as panel source)	
+SRR30789996	UASB	Fusarium falciforme	MAT1-1	falciforme	MAT1-1	PASS	0.7188	0.0024	2.29	0.01	1616520	1.85	trace_MAT1-2	same-strain assembly GCA_051403455.1 (different MAT1-1 allele, held out)	held out; MAT1-1 allele lineage different from panel source
+SRR30298281	SVA13	Fusarium cerealis	MAT1-1	pseudograminearum	MAT1-1	PASS	0.5591	0.0016	2.39	0.01	1705399	1.81	trace_MAT1-2	same-strain assembly GCA_054574715.1 (cross-species)	cross-species: F. cerealis MAT1-1 typed by Fps panel (breadth 0.56)
+SRR30298281	SVA13	Fusarium cerealis	MAT1-1	culmorum	MAT1-1	PASS	0.7416	0.0024	3.20	0.02	1705399	3.72	trace_MAT1-2	same-strain assembly GCA_054574715.1 (cross-species)	cross-species: F. cerealis MAT1-1 typed by culmorum panel
+SRR33409541	ET-2022-49	Fusarium aethiopicum	both	graminearum	both	PASS	0.6507	0.6344	2.58	2.40	1565711	1.56	-	same-strain assembly GCA_053895145.1 (both genes at one locus)	
+SRR27307211	cuttings	Fusarium veterinarium	MAT1-2	fola	MAT1-2	PASS	0.0000	0.6718	0.00	1.89	1213409	2.62	-	same-strain assembly GCA_041380375.1 (cross-species within FOSC)	
+SRR24907613	C058	Fusarium purpurascens	MAT1-1	fola	MAT1-1	PASS	0.6226	0.0621	2.19	0.26	1850107	3.01	trace_MAT1-2	same-strain assembly GCA_040822135.1 (cross-species within FOSC)	
+SRR35559997	Cherokee5	Fusarium solani	MAT1-2	solani	MAT1-2	PASS	0.0050	0.9504	0.01	3.89	1944101	5.67	trace_MAT1-1	same-strain assembly GCA_054370135.1 (MAT1-2 allele of the falciforme cluster)	
+SRR35559997	Cherokee5	Fusarium solani	MAT1-2	falciforme	low_depth	NO_CALL	0.0044	0.2124	0.01	0.88	1944101	0.56	-	same-strain assembly GCA_054370135.1	Cherokee5 MAT1-2 is typed by the solani panel but not by the falciforme panel
+SRR26434560	GXUF-1	Fusarium sacchari	MAT1-2	sacchari	MAT1-2	PASS	0.0000	0.7519	0.00	3.01	1920092	3.46	-	same-strain assembly GCA_033675115.1 (held out)	
+SRR38916347	66442	Fusarium proliferatum	MAT1-2	proliferatum	MAT1-2	PASS	0.0000	0.8769	0.00	3.32	1665427	3.07	-	same-strain assembly GCA_059629185.1 (panel source)	
+SRR38916349	31915	Fusarium proliferatum	MAT1-1	proliferatum	MAT1-1	PASS	0.7688	0.0000	2.59	0.00	1720484	2.60	-	same-strain assembly GCA_059629245.1 (held out)	
+SRR6820386	BRIP53590	Fusarium verticillioides	MAT1-1	verticillioides	MAT1-1	PASS	0.8944	0.0047	2.42	0.01	1345728	4.19	trace_MAT1-2	same-strain assembly GCA_003316995.2 (held out)	
+SRR6820387	BRIP14953	Fusarium verticillioides	MAT1-2	verticillioides	MAT1-2	PASS	0.0000	0.8056	0.00	1.97	1348638	1.99	-	same-strain assembly GCA_003316975.2 (held out)	
+SRR7142072	IISc-1	Fusarium solani	MAT1-1	solani	low_depth	NO_CALL	0.0493	0.0000	0.11	0.00	1520512	0.06	-	same-strain assembly GCA_013168735.1	IISc-1 carries a MAT1-1 allele lineage absent from the solani panel (shared depth 0.06: flanks diverge too)

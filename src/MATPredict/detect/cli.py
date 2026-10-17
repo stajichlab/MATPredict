@@ -9,6 +9,7 @@ from pathlib import Path
 from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
+from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CONFIDENCE_CAP_POLICY
 from MATPredict.detect.partial_core import DEFAULT_PARTIAL_CORE_POLICY, PARTIAL_CORE_POLICIES
 from MATPredict.detect.supported_span import DEFAULT_SUPPORTED_MIN_BITSCORE
 from MATPredict.detect.pipeline import (
@@ -127,6 +128,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         max_polished_clusters_per_family=_polish_cap_from_args(args),
         polish_strong_identity=_polish_strong_identity_from_args(args),
         partial_core_policy=_partial_core_policy_from_args(args),
+        confidence_cap_policy=_confidence_cap_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
 
@@ -254,6 +256,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "max_polished_clusters_per_family": _polish_cap_from_args(args),
             "polish_strong_identity": _polish_strong_identity_from_args(args),
             "partial_core_policy": _partial_core_policy_from_args(args),
+            "confidence_cap_policy": _confidence_cap_policy_from_args(args),
             "supported_min_bitscore": getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
         },
     )
@@ -272,6 +275,12 @@ def _partial_core_policy_from_args(args) -> str:
     """The partial-coverage vote policy for this run; an args object without the
     attribute (a test double) gets the default, `off`."""
     return getattr(args, "partial_core_policy", DEFAULT_PARTIAL_CORE_POLICY)
+
+
+def _confidence_cap_policy_from_args(args) -> str:
+    """The confidence-cap policy for this run; an args object without the attribute
+    (a test double) gets the default, `off`."""
+    return getattr(args, "confidence_cap_policy", DEFAULT_CONFIDENCE_CAP_POLICY)
 
 
 def _polish_strong_identity_from_args(args) -> float | None:
@@ -547,6 +556,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "other idiomorph when the alpha-box/HMG-box profiles agree; where they disagree or are "
              "unavailable the call is `undetermined` (see `idiomorph_vote_note`). A partial hit near "
              "a contig end is treated as truncation and the vote is kept. Independent of --idiomorph-policy.",
+    )
+    detect.add_argument(
+        "--confidence-cap-policy", choices=CONFIDENCE_CAP_POLICIES, default=DEFAULT_CONFIDENCE_CAP_POLICY,
+        help="off: no extra cap (default). partial_weak: a `high` call drops to `medium` when its best core "
+             "hit is a contig-edge partial (< 80%% of its reference, within 500 bp of a contig end, no "
+             "full-length core gene) or a weak hit (< 45%% identity) with no flank gene. weak_only: the second "
+             "criterion alone. Changes confidence only; the reason is written as `confidence_cap`.",
     )
     detect.add_argument(
         "--exhaustive", action="store_true",

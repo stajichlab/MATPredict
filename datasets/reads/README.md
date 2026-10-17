@@ -22,3 +22,8 @@ Species corrections (`coccidioides_pangenome/CORRECTIONS.md`, 2026-09-21), shown
 Counts: 558 read sets (383 *C. posadasii*, 175 *C. immitis*), about 1.23 TB of gzipped FASTQ. 529 have a row in the assembly freeze (`species.csv`); 29 do not.
 The freeze's `DNA/*.scaffolds.fa` links all dangle (the target `Assembly/unscaffolded_annotation/` no longer exists), so `manifest.tsv` takes `assembly` from `Assembly/asm/AAFTF/<strain>.sorted.fasta` instead: 503 of 558 strains have one, and the dangling freeze path is kept in `freeze_assembly_link`. This is the unscaffolded assembly that fed the annotation; I did not check that it is byte-identical to what the freeze once pointed at.
 `TX13` is labelled *Fusarium solani* in `samples.csv`; it is dropped (decided 2026-10-17).
+
+## SRA datasets: cap and data handling
+
+- Cap: 50 runs per species (decided 2026-10-17). `fusarium/selected.tsv` is the rank <= 50 set (960 runs); the earlier 150-cap set is `selected_extended.tsv`. `cryptococcus/selected.tsv` (312 runs) was already capped at 50.
+- Reads are not kept on /bigdata. `fetch_type.slurm` downloads one run into `$SCRATCH`, types it against a species panel, keeps only the result TSV and deletes the reads. It is syntax-checked only, and panels for Cryptococcus and Fusarium do not exist yet (Coccidioides panels are in `panels/coccidioides/`).

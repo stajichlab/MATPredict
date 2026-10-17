@@ -6,6 +6,14 @@ release completed.
 
 ## [Unreleased]
 
+### Fixed
+- Polish alignments are capped at a 5 kb intron (`miniprot -G`, `exonerate --maxintron`; `MATPREDICT_MAX_INTRON_BP` overrides). With no limit miniprot
+  could join a weak gene to distant exons for a few extra points of score: in *Xylaria bambusicola* (GCA_033171785.1) the MAT1-2-1 model was 8.3 kb, with
+  5.5 kb and 2.3 kb "introns" that held APN2 and COX13; it is now the 331 bp HMG fragment. The 609 introns in the curated records have a median of 58 bp and a
+  maximum of 517 bp. On the 166 curated loci (leave-one-out) 163 reports are identical; the others change a model or a withheld span (one Basidiomycota
+  pheromone receptor goes from a 19.6 kb exonerate model to a 1.2 kb one). The campaign counts above, 38 Ascomycota and 20 Basidiomycota loci whose core
+  model swallows a flank gene, will change on a re-run.
+
 ## [0.6.2] — 2026-10-15 — `v0.6.2`
 
 Browser version (GitHub Pages), a profile-bitscore rule for sexM/sexP-style pairs, and a winners-only locus verdict. See the entries below and the pull request.

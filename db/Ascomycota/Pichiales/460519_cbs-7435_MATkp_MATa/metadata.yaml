@@ -1,5 +1,5 @@
 record_id: 460519_cbs-7435_MATkp_MATa
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 460519
   lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Pichiales;f__Pichiaceae;g__Komagataella;s__Komagataella_phaffii
@@ -63,7 +63,20 @@ locus:
       deposit history rest on the NCBI records and the two papers above. The idiomorph
       names MATa1/MATa2/MATalpha1/MATalpha2 are the annotation names; idiomorph_class
       and gene classes for this family are unassigned pending the curator (order.yml,
-      MATkp).'
+      MATkp). RECORD VERSION 2, 2026-10-18: gene_class HMG_box is declared for MATa2 in order.yml
+      by curator decision, accepting structural, iterative and alignment evidence as the bar;
+      the evidence is weak and is stated here. Pfam HMG_box scores MATa2 13.6 bits (GA 25.4)
+      and the curator MAT1-2-1 profile finds nothing; a single search finds only C. albicans
+      MTLA2 (38 bits) and jackhmmer reaches HMG-box proteins (Ixr1, Abf2, Rox1) and
+      Pezizomycotina MAT1-2-1 only after iterating; AlphaFold models of Komagataella, K. lactis
+      and C. albicans MATa2 show one three-helix core of about 80 residues and Foldseek top
+      hits are all HMG boxes at E 0.02-0.65; the alignment to Nhp6a, SRY, Ixr1 and Aspergillus
+      MAT1-2-1 matches the box start and the helix-2 S/K..S..W motif. A 7-protein
+      Saccharomycotina MATa2 profile recovers held-out lineages with thin margins over the
+      best background HMG protein (deterministic build, held-out vs background: Komagataella
+      43.9 vs 37.7 bits, K. lactis 26.7 vs 25.4, Yarrowia mata2 22.4 vs 21.3, Clavispora 39.5 vs
+      41.3, i.e. below it). Details: docs/notes/2026-10-18_komagataella-mata-analysis.md. MATa1
+      is a homeodomain protein (PF00046 51.7 bits) and has no class (the schema has none).'
     segments:
     - segment_index: 0
       sequence_source:

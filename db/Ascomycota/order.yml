@@ -465,11 +465,40 @@ loci:
     # SLA2 sits outside the idiomorph at both cassettes (3.1 kb from MATa1/MATalpha1), like MATsc/MATyl.
     flank_carried_window_bp: 20000
     genes:
-      # gene_class only on MATalpha1 (curator, 2026-10-18); the other core genes stay unset. Evidence: MATalpha1 alpha box (PF04769
-      # above GA), MATa1 and MATalpha2 homeodomain (PF00046: 51.7 and 27.0 bits, GA 22.9), MATa2
-      # HMG-like (weak). See the note.
+      # gene_class on MATalpha1 (alpha_box) and MATa2 (HMG_box) only (curator, 2026-10-18); MATa1 and
+      # MATalpha2 (both homeodomain) stay unset because the schema has no homeodomain class.
+      # MATa1: homeodomain PF00046 51.7 bits (GA 22.9); MATalpha2: PF00046 27.0 bits.
       - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
-      - {name: MATa2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      # MATa2 gene_class HMG_box -- CURATOR DECISION 2026-10-18 (relayed): the structural, iterative
+      # and alignment evidence is accepted as the bar. THE EVIDENCE IS WEAK AND IS RECORDED AS SUCH
+      # (full tables: docs/notes/2026-10-18_komagataella-mata-analysis.md):
+      #  1. NO STANDING PROFILE SEES IT. Pfam HMG_box PF00505 scores Komagataella MATa2 13.6 bits
+      #     (GA 25.4) and finds nothing in the MATa2 of K. lactis, C. albicans, D. hansenii,
+      #     C. lusitaniae, Geotrichum or Yarrowia; HMG_box_2 and HMG_box_5 find nothing; the curator
+      #     MAT1-2-1 profile finds nothing (Geotrichum MATA 39.9 bits excepted). InterPro lists no
+      #     entry for Kp, K. lactis or C. albicans MATa2.
+      #  2. ITERATION. A single search from Kp MATa2 finds only C. albicans MTLA2 (38 bits) among the
+      #     MATa2 proteins; jackhmmer (6 iterations, not converged) then reaches the HMG-box proteins
+      #     of every yeast tested (Ixr1, Abf2, Rox1, Hmo1, Rfg1, ...) and Pezizomycotina MAT1-2-1
+      #     (70-128 bits). Per-iteration entry points were not recorded.
+      #  3. STRUCTURE. AlphaFold models of Kp, K. lactis and C. albicans MATa2 each have one ~80-residue
+      #     three-helix core in long disordered termini (helices by a crude C-alpha distance rule,
+      #     not DSSP). Foldseek (PDB100) top hits are all HMG boxes (HMGB1/2, SOX, LEF1) at only
+      #     E 0.02-0.65, individually borderline.
+      #  4. ALIGNMENT. MAFFT alignment to Nhp6a, SRY, Ixr1 and Aspergillus MAT1-2-1 lines up the
+      #     HMG-box start (RPxNxFI vs KRPMNAF / KRPSSAY) and the helix-2 S/K..S..W motif; the box is
+      #     ~75 residues and lacks the helix-3 Y..HRP motif. Orthologue core identity 18-43%.
+      #  5. A 7-protein Saccharomycotina MATa2 profile (db/Ascomycota/classifiers/MATa2_saccharomycotina,
+      #     supporting evidence only, NOT referenced here) recovers held-out lineages by
+      #     leave-one-lineage-out, with THIN or negative margins over the best genuine HMG-box
+      #     protein in the pool (deterministic build; held-out vs best background, bits):
+      #     Komagataella 43.9 vs 37.7, K. lactis 26.7 vs 25.4, Yarrowia mata2 22.4 vs 21.3,
+      #     Candida 50.2 vs 41.3, Debaryomyces 56.7 vs 41.3, Clavispora 39.5 vs 41.3 (BELOW the
+      #     background), Geotrichum MATA 43.9 vs 21.3. An earlier exploratory build gave 46.9 vs
+      #     39.9 (Komagataella) and 27.6 vs 25.4 (K. lactis).
+      #  MATa2 identity as an a2-family protein rests on annotation and these homology data, not on a
+      #  published domain annotation.
+      - {name: MATa2, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["MATa"]}
       # CURATOR DECISION 2026-10-18 (relayed): gene_class on the ALPHA gene only. MATalpha1 is
       # alpha_box: Pfam MATalpha_HMGbox PF04769 37.5 bits (GA 28.1, E 3e-13) and curator MAT1-1-1 30.5 bits
       # (E 7e-11), measured 2026-10-17. MATa genes stay unset (see docs/notes/2026-10-18_komagataella-mata-analysis.md).

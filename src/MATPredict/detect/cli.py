@@ -9,6 +9,7 @@ from pathlib import Path
 from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
+from MATPredict.detect.idiomorph import DEFAULT_IDIOMORPH_POLICY, IDIOMORPH_POLICIES
 from MATPredict.detect.supported_span import DEFAULT_SUPPORTED_MIN_BITSCORE
 from MATPredict.detect.pipeline import (
     DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DEFAULT_POLISH_STRONG_IDENTITY, DetectionOutcome,
@@ -123,6 +124,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         exclude_record_ids=exclude_record_ids,
         max_polished_clusters_per_family=_polish_cap_from_args(args),
         polish_strong_identity=_polish_strong_identity_from_args(args),
+        idiomorph_policy=_idiomorph_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
 
@@ -203,6 +205,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "require_core_role": args.require_core_role,
             "max_polished_clusters_per_family": _polish_cap_from_args(args),
             "polish_strong_identity": _polish_strong_identity_from_args(args),
+            "idiomorph_policy": _idiomorph_policy_from_args(args),
             "supported_min_bitscore": getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
         },
     )
@@ -215,6 +218,12 @@ def _polish_cap_from_args(args) -> int | None:
     cap = getattr(args, "max_polished_clusters_per_family",
                   DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY)
     return None if cap is None or cap <= 0 else cap
+
+
+def _idiomorph_policy_from_args(args) -> str:
+    """The optional-gene policy for this run; an args object without the
+    attribute (a test double) gets the default, `legacy`."""
+    return getattr(args, "idiomorph_policy", DEFAULT_IDIOMORPH_POLICY)
 
 
 def _polish_strong_identity_from_args(args) -> float | None:
@@ -473,6 +482,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "the usual rank. Stops a true locus that hits few genes at high identity "
              "being outranked by noise that hits more genes at low identity. "
              f"Default: {DEFAULT_POLISH_STRONG_IDENTITY:g}. 0 = the plain cap.",
+    )
+    detect.add_argument(
+        "--idiomorph-policy", choices=IDIOMORPH_POLICIES, default=DEFAULT_IDIOMORPH_POLICY,
+        help="How roster genes marked `optional` (MAT1-1-2, MAT1-1-3, ...) take part in "
+             "idiomorph resolution and the vote. legacy: like any gene (default). "
+             "core_first: an optional gene cannot supersede a core hit, and votes only "
+             "when no core gene has a hit.",
     )
     detect.add_argument(
         "--exhaustive", action="store_true",

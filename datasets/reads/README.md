@@ -43,3 +43,19 @@ Note on subsampling: old SRA FASTQs (2012-13 HiSeq) are position-sorted, so the 
 ### Trimmed panel (`panels/coccidioides/cocci2_*`), same 24 strains
 
 `coccidioides/pilot/comparison_cocci2.tsv`: 23 of 24 reads calls agree with `detect` (CA10 is the exception, `low_depth`, with 0x depth on every panel, including the shared flank, so its read set does not carry the locus at all; possible read/assembly mix-up, not checked). The wrong idiomorph now reads 0.00-0.15x in every strain (it was up to 100% of the true depth with the untrimmed panel).
+
+## Coccidioides full run (558 strains, `cocci2` panel)
+
+Table: `coccidioides/results/cocci2_reads_vs_detect.tsv` (reads call, triage, depths, and the `detect` call and confidence for the 503 strains with an assembly). Reads: first 8M reads per strain; `detect` v0.6.x main (21d7bfb) on the AAFTF assemblies. All 1,116 jobs completed.
+
+| reads call | *C. immitis* | *C. posadasii* |
+|---|---|---|
+| MAT1-1 | 78 | 189 |
+| MAT1-2 | 95 | 184 |
+| both | 1 | 3 |
+| low_depth (omit) | 1 | 7 |
+
+- 546 strains typed to one idiomorph, 4 `both`, 8 `low_depth`. The `low_depth` strains have little or no shared-flank depth (0.0 to 7.3x) and are omitted as low coverage (CA10 is one).
+- Of the 495 typed strains that also have a `detect` result, 487 agree. The 8 that differ: 5 where `detect` found no locus in the assembly (the reads call MAT1-1 or MAT1-2 at shared depth 1.1 to 4.0x), 3 where `detect` called both idiomorphs in the assembly while the reads show one (NM_0071, TX7 and a third). Not traced.
+- The 4 `both` reads calls are not checked against a second source. Whether they are mixed samples, heterokaryons or panel cross-talk is open.
+- 55 strains have no assembly, so they have a reads call only.

@@ -1,5 +1,5 @@
 record_id: 40559_sas405_MAT_MAT1-2
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 40559
   lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Leotiomycetes;o__Helotiales;f__Sclerotiniaceae;g__Botrytis;s__Botrytis_cinerea
@@ -56,9 +56,9 @@ locus:
       downstream of MAT1-2-10). miniprot of AHX22632.1 (the KF944385.1 MAT1-1-1 protein)
       against KF944386.1 aligns reference residues 140-353 only (214 of 353 aa, 61%)
       at 96.3% identity; the N-terminal 139 residues, including the alpha-box region,
-      are absent. It is recorded below as gene_index 2, MAT1-1-1, present: false,
-      with no coordinates and no protein, so that it contributes no sequence to search
-      and is not counted as a MAT1-1-1 gene; the span above is documented here only.
+      are absent. It is recorded below as gene_index 2, MAT1-1-1, status: remnant
+      and present: false (no model is recorded: no coordinates and no protein), so that it
+      contributes no sequence to search and is not counted as a MAT1-1-1 gene; the span above is documented here only.
       This is the same remnant that, in MAT1-2 genomes lacking this record, out-voted
       the real MAT1-2-1 in v0.6.0 (see docs/notes/2026-10-17_botrytis-curation.md).
       It parallels the dMAT1-1-1 fragments Abate et al. 2018 describe in Monilinia
@@ -124,6 +124,8 @@ genes:
   protein_accession: null
   role: core_MAT
   present: false
+  status: remnant
+  remnant_note: '5''-truncated copy at about nt 3267-3960 of KF944386.1; aligns reference residues 140-353 (61%) of the MAT1-1-1 protein; alpha box absent; no model recorded'
   locus_tag: null
   segment_index: null
   start: null

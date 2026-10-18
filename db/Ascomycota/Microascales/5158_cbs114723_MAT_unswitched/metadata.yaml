@@ -1,0 +1,263 @@
+record_id: 5158_cbs114723_MAT_unswitched
+record_version: 1
+taxonomy:
+  taxid: 5158
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Microascales;f__Ceratocystidaceae;g__Ceratocystis;s__Ceratocystis_fimbriata
+  lineage_resolved_date: '2026-10-17'
+organism:
+  species: Ceratocystis fimbriata
+  strain:
+    name: CBS114723
+    known: true
+    culture_collection_ids:
+    - CBS 114723
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  - MAT1-2
+  system: unisexual_switching
+locus:
+  assembly_accession: GCA_000389695.3
+  assembly_accession_basis: strain_match_verified
+  assembly_location:
+    contig: APWK03000076.1
+    start: 59345
+    end: 88276
+    identity: 99.9
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: COX13<-APN2->SLA2 ... MAT1-1-1<-MAT1-2-7<-MAT1-2-1->MAT1-1-2<-
+    definition_note: 'UNSWITCHED state of the C. fimbriata mating locus (GenBank KF033902.1,
+      clone ''unswitched'', 46,416 bp). Genes annotated by the depositors: MAT1-1-1,
+      MAT1-2-7, MAT1-2-1 and MAT1-1-2 in an atypical single-locus organisation (Wilken
+      et al. 2014). Both idiomorph gene sets are present in one genome and the isolate
+      is self-fertile (unisexual); this state can switch to the self-sterile MAT1-1
+      state by deletion of a 3,581 bp region carrying MAT1-2-1 (and MAT1-2-7), see
+      the record 5158_cbs114723_MAT_switched. Flanking genes COX13, APN2 and SLA2
+      are named from the depositors'' product annotations (cytochrome c oxidase subunit
+      VIa, DNA lyase, cytoskeleton assembly control protein); APC5 (putative anaphase-promoting
+      complex protein, 12,578-15,226) lies between APN2 and SLA2 and is omitted because
+      it is not in the order.yml vocabulary.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KF033902.1
+        seq_region: KF033902.1
+      start: 7064
+      end: 36014
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- name: COX13
+  protein_accession: ncbi_protein:AHV84690.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 7064
+  end: 8000
+  strand: '-'
+  exons:
+  - start: 7841
+    end: 8000
+  - start: 7719
+    end: 7740
+  - start: 7268
+    end: 7435
+  - start: 7064
+    end: 7109
+  codon_start: 1
+  transl_table: 1
+  gene_index: 0
+  order_in_locus: 0
+- name: APN2
+  protein_accession: ncbi_protein:AHV84683.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8854
+  end: 10730
+  strand: +
+  exons:
+  - start: 8854
+    end: 8983
+  - start: 9071
+    end: 10114
+  - start: 10501
+    end: 10730
+  codon_start: 1
+  transl_table: 1
+  gene_index: 1
+  order_in_locus: 1
+- name: SLA2
+  protein_accession: ncbi_protein:AHV84684.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 16042
+  end: 19659
+  strand: +
+  exons:
+  - start: 16042
+    end: 16202
+  - start: 16315
+    end: 16799
+  - start: 17168
+    end: 19659
+  codon_start: 1
+  transl_table: 1
+  gene_index: 2
+  order_in_locus: 2
+- name: MAT1-1-1
+  protein_accession: ncbi_protein:AHV84685.2
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 27087
+  end: 29023
+  strand: '-'
+  exons:
+  - start: 28084
+    end: 29023
+  - start: 27087
+    end: 28018
+  codon_start: 1
+  transl_table: 1
+  gene_index: 3
+  order_in_locus: 3
+- name: MAT1-2-7
+  protein_accession: ncbi_protein:WOK41352.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 29231
+  end: 29883
+  strand: '-'
+  exons:
+  - start: 29778
+    end: 29883
+  - start: 29231
+    end: 29727
+  codon_start: 1
+  transl_table: 1
+  gene_index: 4
+  order_in_locus: 4
+- name: MAT1-2-1
+  protein_accession: ncbi_protein:AHV84686.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 30431
+  end: 32100
+  strand: +
+  exons:
+  - start: 30431
+    end: 31379
+  - start: 31446
+    end: 31515
+  - start: 31572
+    end: 31870
+  - start: 31922
+    end: 32100
+  codon_start: 1
+  transl_table: 1
+  gene_index: 5
+  order_in_locus: 5
+- name: MAT1-1-2
+  protein_accession: ncbi_protein:AHV84687.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 34661
+  end: 36014
+  strand: '-'
+  exons:
+  - start: 35277
+    end: 36014
+  - start: 35116
+    end: 35208
+  - start: 34992
+    end: 35048
+  - start: 34661
+    end: 34903
+  codon_start: 1
+  transl_table: 1
+  gene_index: 6
+  order_in_locus: 6
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Sanger and 454 sequencing of the mating-type locus of C.
+      fimbriata CBS114723 and of self-sterile (switched) offspring, deposited as GenBank
+      KF033902 by the describing authors (Wilken et al. 2014, PLoS ONE 9:e92180)
+    citations: &id001
+    - pmid: '24651494'
+      doi: 10.1371/journal.pone.0092180
+  boundaries:
+    tier: 1
+    experimental_method: gene models annotated by the depositors on KF033902.1; coordinates
+      are those of the deposit
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: presence of MAT1-1-1, MAT1-1-2 and MAT1-2-1 (plus MAT1-2-7)
+      in the unswitched locus (Wilken et al. 2014); both idiomorph gene sets in one
+      genome, self-fertile
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: KF033902.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 5
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 6
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-published-deposit-ingest
+  proposal_dedupe_key: 10.1371/journal.pone.0092180|5158|MAT|unswitched|KF033902.1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

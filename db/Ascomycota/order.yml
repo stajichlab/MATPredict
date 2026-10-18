@@ -6,7 +6,14 @@ loci:
     # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
     # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
     idiomorph_class: {MAT1-1: MAT1-1, MAT1-2: MAT1-2}
+    # Companion-gene veto for --partial-core-policy (curator 2026-10-18). MAT1-1-5 is a
+    # Leotiomycete MAT1-1 gene (flip review 2026-10-17: Monilinia, Sclerotinia nivalis/sativa
+    # carry it intact beside a full MAT1-2-1). Only MAT1-1 is declared; no companion is
+    # guessed for other clades or for MAT1-2 (MAT1-2-10 was not part of the review).
+    idiomorph_companions: {MAT1-1: [MAT1-1-5]}
     taxonomic_scope: [716546]  # leotiomyceta -- live-confirmed via NCBI esummary
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 147538  # Pezizomycotina
     # Flank-carried window (curator's ruling 2026-09-26; results/
     # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
     # idiomorph, and real loci were found up to 9.9 kb from the flank span.
@@ -134,6 +141,10 @@ loci:
       # Optional: not every Pezizomycotina MAT1-2 locus has it. No accepted record
       # declares it yet.
       - {name: MAT1-2-3, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
+      # MAT1-2-7 added to the vocabulary 2026-10-17. Source: the Ceratocystis fimbriata
+      # unswitched mating-locus deposit KF033902.1 (clone of CBS114723; Wilken et al. 2014,
+      # PMID 24651494) annotates a /gene="MAT1-2-7" CDS (WOK41352.1) between MAT1-1-1 and MAT1-2-1.
+      - {name: MAT1-2-7, role: core_MAT, present_in_idiomorphs: ["MAT1-2"], optional: true}
       # MAT1-1-4 (Coccidioides posadasii RMSCC1040, ABS19621.1) is a Coccidioides-
       # specific captured MAT1-1-idiomorph gene (Fraser et al. 2007; Mandel et al. 2007).
       - {name: MAT1-1-4, role: core_MAT, present_in_idiomorphs: ["MAT1-1"], optional: true}
@@ -160,6 +171,8 @@ loci:
     # M -> MAT1-2 (Mc carries an HMG box). P unassigned: Pc vs alpha-box homology not settled.
     idiomorph_class: {M: MAT1-2, P: unassigned}
     taxonomic_scope: [451866]
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 451866  # Taphrinomycotina
     genes:
       - {name: matMc, role: core_MAT, present_in_idiomorphs: ["M"]}
       - {name: matMi, role: core_MAT, present_in_idiomorphs: ["M"]}
@@ -173,6 +186,8 @@ loci:
     # M -> MAT1-2 (Mc carries an HMG box). P unassigned: Pc vs alpha-box homology not settled.
     idiomorph_class: {M: MAT1-2, P: unassigned}
     taxonomic_scope: [4895]
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 451866  # Taphrinomycotina
     genes:
       - {name: mat1-Mc, role: core_MAT, present_in_idiomorphs: ["M"]}
       - {name: mat1-Mi, role: core_MAT, present_in_idiomorphs: ["M"]}
@@ -186,6 +201,8 @@ loci:
     # P unassigned: Pc vs alpha-box homology not settled.
     idiomorph_class: {P: unassigned}
     taxonomic_scope: [4896]
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 451866  # Taphrinomycotina
     genes:
       - {name: matPc, role: core_MAT, present_in_idiomorphs: ["P"]}
       - {name: matPi, role: core_MAT, present_in_idiomorphs: ["P"]}
@@ -197,6 +214,8 @@ loci:
     # M -> MAT1-2 (Mc carries an HMG box).
     idiomorph_class: {M: MAT1-2}
     taxonomic_scope: [4896]
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 451866  # Taphrinomycotina
     genes:
       - {name: matMc, role: core_MAT, present_in_idiomorphs: ["M"]}
       - {name: matMi, role: core_MAT, present_in_idiomorphs: ["M"]}
@@ -208,6 +227,8 @@ loci:
     # MATalpha1 carries the alpha box; MATa by convention (S. cerevisiae lost its HMG gene).
     idiomorph_class: {MATalpha: MAT1-1, MATa: MAT1-2}
     taxonomic_scope: [4893]
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 147537  # Saccharomycotina
     # Flank-carried window (curator's ruling 2026-09-26): sla2/cha1 sit OUTSIDE
     # the idiomorph, like SLA2/APN2/COX13. Set by analogy with the audited
     # SLA2/APN2 families (results/2026-09-26_flank_rule_ascomycota/NOTE.md);
@@ -283,16 +304,65 @@ loci:
     # CURATOR RULING, J. Stajich, 2026-10-01 (B9): report-only cross-lineage class
     # (MAT1-1 = alpha-box idiomorph, MAT1-2 = HMG idiomorph); labels unchanged.
     # Unmapped by ruling: MATA (MATA1, MATA2) / MATB (MATB1, MATB2) per Han et al. 2020,
-    # FEMS Yeast Res 20:foaa011, which gives no protein domains. Only A is curated.
+    # FEMS Yeast Res 20:foaa011, which gives no protein domains. A and B are both curated
+    # (B added 2026-10-17: 4952_clib122_MATyl_B).
     idiomorph_class: {A: unassigned, B: unassigned}
-    taxonomic_scope: [4952]
+    # CURATOR DECISION, J. Stajich, 2026-10-17: scope extended from Yarrowia lipolytica
+    # (4952) to the genus Yarrowia (4951; verified live via NCBI Taxonomy esummary,
+    # rank genus), because Y. yakushimensis CBS 10253 carries the MATB idiomorph at the
+    # SLA2 site (82% matb2). Strict superset: the 4952 records stay covered.
+    # The sibling Geotrichum family `MATdc` (scope 43987) is disjoint from this one.
+    taxonomic_scope: [4951]
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 147537  # Saccharomycotina
+    # CURATOR DECISION, J. Stajich, 2026-10-17: scope-only family (never searched on a
+    # phylum fallback).
+    fallback_searchable: false
+    # A/B HMM RESULT (2026-10-17; scores in docs/notes/2026-10-17_dipodascales-curation.md):
+    # no Yarrowia protein hits Pfam HMG_box (PF00505), HMG_box_2 (PF09011) or the curator
+    # HMG-box profile MAT1-2-1 at E<=10, so the HMG box of mata2 reported in the literature is
+    # NOT confirmed by these profiles (too diverged). matb1 has a weak MATalpha_HMGbox
+    # (PF04769) hit (14.4 bits, E 5.8e-6, below the GA of 28.1). By phmmer mata2 is
+    # similar to Geotrichum MATA (HMG-like; 42 bits) and matb1 to Geotrichum MATB
+    # (alpha-box-like; 26 bits). Labels A/B therefore line up across the two genera.
+    # GENE CLASS EVIDENCE (2026-10-18; thin margins stated, nothing here is a strong score):
+    #  Yarrowia mata2: no hit to Pfam HMG_box PF00505, HMG_box_2 PF09011 or the curator
+    #   MAT1-2-1 profile at E<=10. phmmer to Geotrichum MATA 42 bits (E 2e-14), the
+    #   strongest link; Geotrichum MATA scores 39.4 bits on the curator HMG profile
+    #   (E 1.8e-13). Komagataella analysis: Pfam HMG_box scores Komagataella MATa2 only
+    #   13.6 bits (GA 25.4); a 7-protein Saccharomycotina MATa2 profile recovers every
+    #   held-out lineage at 22-52 bits but with THIN margins over the best background HMG
+    #   protein (Komagataella 46.9 vs 39.9, K. lactis 27.6 vs 25.4, Yarrowia mata2 22.4
+    #   vs 21.3 = the thinnest); AlphaFold/Foldseek give HMG-box structures as the top
+    #   hits only at E 0.02-0.65.
+    #  Yarrowia mata1: homeodomain-like (34.0 bits, per the Komagataella analysis) -> no class.
+    #  Yarrowia matb1: Pfam MATalpha_HMGbox 14.4 bits (GA 28.1) and phmmer to Geotrichum MATB
+    #   26 bits (E 2e-9); matb2: nothing. Below the bar -> no class (an open question).
+    # `idiomorph_class` stays unassigned for MATyl and MATdc by curator decision 2026-10-18.
     # Flank-carried window (curator's ruling 2026-09-26; results/
     # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
     # idiomorph, and real loci were found up to 9.9 kb from the flank span.
     flank_carried_window_bp: 20000
     genes:
+      # gene_class (curator decision 2026-10-18, after the Komagataella MATa analysis,
+      # origin/komagataella-curation docs/notes/2026-10-18_komagataella-mata-analysis.md):
+      # the structural + iterative-search + alignment evidence is accepted as the bar for
+      # `HMG_box` on the divergent yeast MATa2-type genes, so mata2 is HMG_box. Evidence
+      # and its thin margins are written out in the `GENE CLASS EVIDENCE` block below.
+      # mata1 is left UNSET on purpose: that analysis found it homeodomain-like (Pfam
+      # PF00046 34.0 bits, GA 22.9) and the schema has no homeodomain class.
+      # matb1/matb2 are left UNSET: the only domain evidence here is below Pfam GA (see
+      # block below) and does not meet the bar that was accepted for mata2.
       - {name: mata1, role: core_MAT, present_in_idiomorphs: ["A"]}
-      - {name: mata2, role: core_MAT, present_in_idiomorphs: ["A"]}
+      - {name: mata2, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["A"]}
+      # MATB idiomorph genes, Butler et al. 2004 (PMID 14745027; GenBank AJ617307.1
+      # matb2 CAE84425.1, matb1 CAE84426.1) and the CLIB122 RefSeq annotation
+      # (YALI0_C07458g / YALI0_C07480g). Added 2026-10-17 by curator decision. Roles
+      # mirror mata1/mata2: both core_MAT, restricted to idiomorph B. Same lowercase
+      # naming as the A genes. No gene_class: no protein domain is established (see
+      # idiomorph_class above).
+      - {name: matb2, role: core_MAT, present_in_idiomorphs: ["B"]}
+      - {name: matb1, role: core_MAT, present_in_idiomorphs: ["B"]}
       # sla2/apn2 here are the same genes as Ascomycota:MAT's SLA2/APN2 under this
       # family's own lowercase names, and take the same classes by the same 2026-09-19
       # curator ruling recorded on those entries above (curator described APN2 as "class
@@ -303,6 +373,66 @@ loci:
       # lowercase spellings.
       - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog}
       - {name: apn2, role: flanking_conserved, gene_class: apn2_homolog}
+  - locus_name: "MATdc"
+    vocabulary_type: "enum"
+    # A = the HMG-box-like protein (Geotrichum MATA, HF558448.1) and B = the alpha1-like
+    # protein (Geotrichum MATB, HF558449.1), by position at SLA2 and by weak homology
+    # (A hits Y. lipolytica mata2 at 29%; B hits Ogataea matalpha1 at 35-40%). Domain
+    # content: see the HMM result below. The labels A/B are the depositors' MATA/MATB.
+    #
+    # A/B HOMOLOGY WITH `MATyl` (measured 2026-10-17, pyhmmer 0.12.3, HMMER 3.4 profiles;
+    # scores in docs/notes/2026-10-17_dipodascales-curation.md):
+    #   Geotrichum MATA: curator HMG-box profile MAT1-2-1 107-196 (bits 39.4, E 1.8e-13);
+    #     Pfam HMG_box PF00505 and HMG_box_2 PF09011: no hit at E<=10.
+    #   Geotrichum MATB: Pfam MATalpha_HMGbox PF04769 (alpha-box; bits 34.9, GA 28.1) and the
+    #     curator alpha-box profile MAT1-1-1 (bits 22.6, E 2.7e-8).
+    #   phmmer across genera: Geotrichum MATA <-> Yarrowia mata2 (42 bits, E 2e-14);
+    #     Geotrichum MATB <-> Yarrowia matb1 (26 bits, E 2e-9); MATA/mata2 and MATB/matb1 do
+    #     NOT hit each other across the A/B divide; matb2 and mata1 hit nothing.
+    # So A = HMG-box-like and B = alpha-box-like here, and the labels line up with Yarrowia
+    # A (mata2) and B (matb1) by sequence similarity. `idiomorph_class` is left `unassigned`
+    # pending the curator's decision (A -> MAT1-2, B -> MAT1-1 would be the mapping).
+    idiomorph_values: ["A", "B"]
+    idiomorph_class: {A: unassigned, B: unassigned}
+    # CURATOR DECISION, J. Stajich, 2026-10-17: scope-only family (never searched on a
+    # phylum fallback, so it cannot fire on genera outside Geotrichum).
+    fallback_searchable: false
+    # CURATOR DECISION, J. Stajich, 2026-10-17: Geotrichum gets its own family, scoped
+    # to the genus Geotrichum (43987; verified live via NCBI Taxonomy, rank genus,
+    # lineage ...Dipodascales; Dipodascaceae). Deliberately NOT the order Dipodascales
+    # (3243772): route() returns every family whose scope intersects the lineage, so an
+    # order-wide scope would make Yarrowia genomes match both MATyl and MATdc and be
+    # reported twice (the Serinales problem described under `MTL`).
+    taxonomic_scope: [43987]
+    # CURATOR DECISION (2026-10-18 relay): genome-level two-idiomorph statement ON for MATdc.
+    two_idiomorphs_report: true
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 147537  # Saccharomycotina
+    flank_carried_window_bp: 20000
+    genes:
+      # MATA/MATB: names exactly as the depositor annotated them (HF558448.1 gene MATA,
+      # HF558449.1 gene MATB). Unpublished deposits (INRA/Casaregola lab, Nov 2012).
+      # gene_class (curator request 2026-10-17, homothallic_candidate rule; evidence bar
+      # confirmed 2026-10-18): MATA = HMG_box, MATB = alpha_box. Geotrichum MATA: curator
+      # HMG profile 39.4 bits (E 1.8e-13) but Pfam HMG_box does NOT hit (the Komagataella
+      # analysis reports 39.9 bits for the same pair; the 0.5-bit difference is unexplained); phmmer to Yarrowia
+      # mata2 42 bits (E 2e-14). Geotrichum MATB: Pfam MATalpha_HMGbox 34.9 bits (GA 28.1)
+      # and curator alpha profile 22.6 bits (E 2.7e-8). MATA's class rests on the accepted
+      # structural/iterative bar for divergent yeast MATa2-type HMG boxes; margins are thin
+      # for the Saccharomycotina MATa2 profile (see the MATyl GENE CLASS EVIDENCE block).
+      # MATA is HMG-box like and MATB alpha-box like by profile (see the A/B HOMOLOGY note above), so a
+      # locus holding both as full-length, non-overlapping models within 25 kb is labelled
+      # `homothallic_candidate` by the existing different-domains path in
+      # detect.idiomorph.classify_locus (pattern: G. ghanense GCA_022023575.1,
+      # JAKKCX010000006.1, MATB ~1.653 Mb and MATA ~1.669 Mb, 16 kb apart). Unvalidated
+      # as a biological claim: no sexual state is documented for this species.
+      - {name: MATA, role: core_MAT, gene_class: HMG_box, present_in_idiomorphs: ["A"]}
+      - {name: MATB, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["B"]}
+      # sla2 is the anchor: in G. candidum CLIB 918 the order is SLA2 -> MATA -> APC5
+      # (CCBN010000002.1), MATA 2.0 kb from SLA2. apn2 is NOT adjacent there (a diverged
+      # copy is on another contig), so it is declared optional.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog}
+      - {name: apn2, role: flanking_conserved, gene_class: apn2_homolog, optional: true}
   - locus_name: "MTL"
     vocabulary_type: "enum"
     idiomorph_values: ["A", "alpha"]
@@ -334,6 +464,8 @@ loci:
     # Disjoint from 4893 (Saccharomycetaceae) and 4952 (Yarrowia), so this
     # introduces no new multi-family ambiguity.
     taxonomic_scope: [2916678]  # Serinales (order) -- the CUG-Ser1 / CTG clade
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 147537  # Saccharomycotina
     # Flank-carried window (curator's ruling 2026-09-26): PAP1/OBP1/PIK1 sit
     # INSIDE the idiomorph, so a core hit must lie within 3 kb of them.
     flank_carried_window_bp: 3000
@@ -391,6 +523,8 @@ loci:
     # the canonical APN2/SLA2/COX13 set used by "MAT", per
     # db/candidates/Ascomycota/39416_mel206_MAT_MAT1-1/metadata.yaml's definition_note.
     taxonomic_scope: [147549, 39416, 57749, 752769, 55307]
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 147538  # Pezizomycotina
     # Flank-carried window (curator's ruling 2026-09-26; results/
     # 2026-09-26_flank_rule_ascomycota/NOTE.md): the flanks sit OUTSIDE the
     # idiomorph, and real loci were found up to 9.9 kb from the flank span.

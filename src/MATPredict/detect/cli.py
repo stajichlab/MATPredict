@@ -9,10 +9,14 @@ from pathlib import Path
 from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
+from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CONFIDENCE_CAP_POLICY
+from MATPredict.detect.strong_single_gene import (
+    DEFAULT_STRONG_SINGLE_GENE_POLICY, STRONG_SINGLE_GENE_POLICIES,
+)
 from MATPredict.detect.partial_core import DEFAULT_PARTIAL_CORE_POLICY, PARTIAL_CORE_POLICIES
 from MATPredict.detect.supported_span import DEFAULT_SUPPORTED_MIN_BITSCORE
 from MATPredict.detect.pipeline import (
-    DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DEFAULT_POLISH_STRONG_IDENTITY, DetectionOutcome,
+    DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DEFAULT_POLISH_CORE_PAIR, DEFAULT_POLISH_STRONG_IDENTITY, DetectionOutcome,
     EvidenceFloor,
     not_searched_reason, run_pipeline,
 )
@@ -126,7 +130,10 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         exclude_record_ids=exclude_record_ids,
         max_polished_clusters_per_family=_polish_cap_from_args(args),
         polish_strong_identity=_polish_strong_identity_from_args(args),
+        polish_core_pair=getattr(args, "polish_core_pair", DEFAULT_POLISH_CORE_PAIR),
         partial_core_policy=_partial_core_policy_from_args(args),
+        confidence_cap_policy=_confidence_cap_policy_from_args(args),
+        strong_single_gene_policy=_strong_single_gene_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
 
@@ -253,7 +260,10 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "require_core_role": args.require_core_role,
             "max_polished_clusters_per_family": _polish_cap_from_args(args),
             "polish_strong_identity": _polish_strong_identity_from_args(args),
+            "polish_core_pair": getattr(args, "polish_core_pair", DEFAULT_POLISH_CORE_PAIR),
             "partial_core_policy": _partial_core_policy_from_args(args),
+            "confidence_cap_policy": _confidence_cap_policy_from_args(args),
+            "strong_single_gene_policy": _strong_single_gene_policy_from_args(args),
             "supported_min_bitscore": getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
         },
     )
@@ -272,6 +282,16 @@ def _partial_core_policy_from_args(args) -> str:
     """The partial-coverage vote policy for this run; an args object without the
     attribute (a test double) gets the default, `off`."""
     return getattr(args, "partial_core_policy", DEFAULT_PARTIAL_CORE_POLICY)
+
+
+def _confidence_cap_policy_from_args(args) -> str:
+    """The confidence-cap policy for this run; an args object without the attribute
+    (a test double) gets the default, `off`."""
+    return getattr(args, "confidence_cap_policy", DEFAULT_CONFIDENCE_CAP_POLICY)
+def _strong_single_gene_policy_from_args(args) -> str:
+    """The strong-single-gene policy for this run; an args object without the
+    attribute (a test double) gets the default, `off`."""
+    return getattr(args, "strong_single_gene_policy", DEFAULT_STRONG_SINGLE_GENE_POLICY)
 
 
 def _polish_strong_identity_from_args(args) -> float | None:
@@ -541,12 +561,35 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              f"Default: {DEFAULT_POLISH_STRONG_IDENTITY:g}. 0 = the plain cap.",
     )
     detect.add_argument(
+        "--polish-core-pair", action=argparse.BooleanOptionalAction, default=DEFAULT_POLISH_CORE_PAIR,
+        help="Also polish every admitted cluster with two distinct live core genes of one idiomorph "
+             "(e.g. MTLA1 + MTLA2) whatever its rank, on top of the cap (it takes no slot). The property is the cluster's own, so adding "
+             "families that admit more clusters cannot push such a cluster out of the cap. "
+             "Default: on. --no-polish-core-pair restores the earlier behaviour.",
+    )
+    detect.add_argument(
         "--partial-core-policy", choices=PARTIAL_CORE_POLICIES, default=DEFAULT_PARTIAL_CORE_POLICY,
         help="off: the best-bitscore idiomorph vote stands (default). coverage_profile: a core hit "
              "that covers < 80%% of its reference does not beat a full-length (>= 90%%) core gene of the "
              "other idiomorph when the alpha-box/HMG-box profiles agree; where they disagree or are "
              "unavailable the call is `undetermined` (see `idiomorph_vote_note`). A partial hit near "
              "a contig end is treated as truncation and the vote is kept. Independent of --idiomorph-policy.",
+    )
+    detect.add_argument(
+        "--confidence-cap-policy", choices=CONFIDENCE_CAP_POLICIES, default=DEFAULT_CONFIDENCE_CAP_POLICY,
+        help="off: no extra cap (default). partial_weak: a `high` call drops to `medium` when its best core "
+             "hit is a contig-edge partial (< 80%% of its reference, within 500 bp of a contig end, no "
+             "full-length core gene) or a weak hit (< 45%% identity) with no flank gene. weak_only: the second "
+             "criterion alone. Changes confidence only; the reason is written as `confidence_cap`.",
+    )
+    detect.add_argument(
+        "--strong-single-gene-policy", choices=STRONG_SINGLE_GENE_POLICIES,
+        default=DEFAULT_STRONG_SINGLE_GENE_POLICY,
+        help="off: a lone core gene with no flank and no second modelled gene is withheld (default). "
+             "on: in a family with no other report, one modelled core gene at >= 85%% identity covering "
+             ">= 90%% of its reference is reported as `idiomorph_gene_only`, confidence `low`, flagged "
+             "`strong_single_gene`; two such loci of opposite idiomorph are both reported and the genome "
+             "gets a `two_idiomorphs` statement. Independent of --idiomorph-policy and --partial-core-policy.",
     )
     detect.add_argument(
         "--exhaustive", action="store_true",

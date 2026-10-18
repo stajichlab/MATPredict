@@ -28,6 +28,9 @@ def write_gff3(record: dict, out_path: Path) -> None:
         segment = segments[gene["segment_index"]]
         seq_region = segment["sequence_source"]["seq_region"]
         attrs = f"ID={record['record_id']}.gene{gene['gene_index']};Name={gene['name']};role={gene['role']}"
+        if gene.get("status"):
+            # a remnant or pseudogene: GFF3's own `pseudo` attribute plus the vocabulary term
+            attrs += f";pseudo=true;status={gene['status']}"
         lines.append(
             "\t".join([
                 seq_region, "MATPredict", "gene", str(gene["start"]), str(gene["end"]),
@@ -38,13 +41,19 @@ def write_gff3(record: dict, out_path: Path) -> None:
 
 
 def write_proteins_fasta(record: dict, sequences: dict[int, str], out_path: Path) -> None:
-    """Write one FASTA entry per present gene with a sequence available.
+    """Write one FASTA entry per present, intact gene with a sequence available.
+
+    A gene with a `status` (remnant|pseudogene) is omitted: this file is what
+    `reference_fasta.build_reference_fasta` and `pipeline._curated_protein_lengths`
+    read, so a remnant protein must not be a search reference, and its truncated
+    length must not read as a "full length" reference to the coverage rule. The
+    record's `metadata.yaml` still carries the gene and its protein accession.
 
     Header convention: >{record_id}|gene_index={gene_index}|name={name}|role={role}
     """
     lines = []
     for gene in record["genes"]:
-        if not gene.get("present", True) or gene["gene_index"] not in sequences:
+        if not gene.get("present", True) or gene.get("status") or gene["gene_index"] not in sequences:
             continue
         header = f">{record['record_id']}|gene_index={gene['gene_index']}|name={gene['name']}|role={gene['role']}"
         lines.append(header)
@@ -358,8 +367,13 @@ def write_genbank(
             strand = 1 if gene.get("strand") != "-" else -1
             location = FeatureLocation(local_start, local_end, strand=strand)
 
+            # GenBank convention: `/pseudo` (a valueless qualifier) marks a gene that is not
+            # functional; `status` (remnant|pseudogene) says which, so it is also written.
+            pseudo_qualifiers = (
+                {"pseudo": [None], "status": [gene["status"]]} if gene.get("status") else {}
+            )
             gene_feature = SeqFeature(location, type="gene", qualifiers={
-                "gene": [gene["name"]], "role": [gene["role"]],
+                "gene": [gene["name"]], "role": [gene["role"]], **pseudo_qualifiers,
             })
             seq_record.features.append(gene_feature)
 
@@ -369,6 +383,7 @@ def write_genbank(
                     "gene": [gene["name"]], "role": [gene["role"]],
                     "translation": [translation],
                 }
+                qualifiers.update(pseudo_qualifiers)
                 gene_class = (gene_classes or {}).get(gene["gene_index"])
                 if gene_class:
                     qualifiers["gene_class"] = [gene_class]

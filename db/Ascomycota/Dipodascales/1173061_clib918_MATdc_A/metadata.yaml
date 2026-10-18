@@ -1,0 +1,124 @@
+record_id: 1173061_clib918_MATdc_A
+record_version: 1
+taxonomy:
+  taxid: 1173061
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Dipodascomycetes;o__Dipodascales;f__Dipodascaceae;g__Geotrichum;s__Geotrichum_candidum
+  lineage_resolved_date: '2026-10-17'
+organism:
+  species: Geotrichum candidum
+  strain:
+    name: CLIB 918
+    known: true
+    culture_collection_ids:
+    - CLIB 918
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATdc
+  idiomorphs:
+  - A
+  system: heterothallic
+locus:
+  assembly_accession: GCA_001402995.1
+  assembly_accession_basis: strain_match_verified
+  assembly_location:
+    contig: CCBN010000002.1
+    start: 579055
+    end: 585066
+    identity: 100.0
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sla2->MATA
+    definition_note: 'EVIDENCE TIER 3 (curator-approved 2026-10-17): the only evidence
+      is an unpublished GenBank deposit, HF558448.1 (Galactomyces candidum MATA gene
+      for mating type protein MATA, strain CLIB 918, 846 bp, CCO73812.1; INRA/MICALIS
+      submission 07-NOV-2012, title "Specialization of the cheese isolates of the
+      species Geotrichum", journal Unpublished), annotated only as "mating type protein";
+      no paper was found. Corroboration: in the strain''s own assembly GCA_001402995.1
+      (CIRM-Levures INRA annotation) the deposit CDS is CCBN010000002.1:584221-585066
+      (CDO51888.1, "mating type protein MATA", 100% identical, same protein), 2.0
+      kb from SLA2 (CDO51887.1, 579055-582249), order SLA2 -> MATA -> APC5. mating_type.system
+      "heterothallic" is NOT verified (the schema has no "unknown"): a review snippet
+      calls G. candidum self-fertile, while in a tblastn screen MATA-like and MATB-like
+      proteins fell in different genomes. HMG-box content is NOT verified (the protein
+      hits Y. lipolytica mata2 at 29%; no Pfam run). APN2 was not found beside SLA2
+      at tblastn threshold, so apn2 is not part of this record. OPEN CURATOR QUESTION:
+      whether idiomorph labels A/B here are homologous to Yarrowia MATA/MATB (family
+      MATyl) is not established; MATdc is a separate family and no homology is asserted.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: CCBN010000002.1
+        seq_region: CCBN010000002.1
+      start: 579055
+      end: 585066
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: sla2
+  protein_accession: ncbi_protein:CDO51887.1
+  role: flanking_conserved
+  present: true
+  locus_tag: BN980_GECA02s02540g
+  segment_index: 0
+  start: 579055
+  end: 582249
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MATA
+  protein_accession: ncbi_protein:CCO73812.1
+  role: core_MAT
+  present: true
+  locus_tag: BN980_GECA02s02545g
+  segment_index: 0
+  start: 584221
+  end: 585066
+  strand: +
+  order_in_locus: 1
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: unpublished GenBank deposit HF558448.1 (annotated mating
+      type protein MATA, no paper); position beside SLA2 in the strain's assembly
+    citations: []
+  boundaries:
+    tier: 3
+    experimental_method: CDS of the unpublished deposit, matched 100% to the strain's
+      own assembly and its INRA genome annotation (CDO51888.1); sla2 extent from that
+      annotation
+    citations: []
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: depositor's gene name MATA only; no functional or phylogenetic
+      evidence for the A/B labels
+    citations: []
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: CCBN010000002.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: HF558448.1|1173061|MATdc|A
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

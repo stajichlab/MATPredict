@@ -12,7 +12,7 @@ CREATE TABLE locus_record (
     strain_known BOOLEAN,
     locus_name TEXT NOT NULL,          -- MAT | HD | PR
     idiomorph_key TEXT NOT NULL,       -- path-safe form; full list is in locus_idiomorph
-    mating_system TEXT,                -- heterothallic | homothallic | pseudohomothallic
+    mating_system TEXT,                -- heterothallic | homothallic | pseudohomothallic | unisexual_switching
     phylum TEXT NOT NULL,              -- derived from lineage at build time
     order_or_family TEXT,              -- derived from directory path at build time
     record_version INTEGER NOT NULL,
@@ -68,6 +68,8 @@ CREATE TABLE locus_gene (
     protein_accession TEXT,            -- namespaced: ncbi_protein:... | uniprotkb:...
     role TEXT NOT NULL,
     present BOOLEAN NOT NULL,
+    status TEXT,                       -- remnant | pseudogene | NULL (intact)
+    remnant_note TEXT,
     locus_tag TEXT,
     start_pos INTEGER,
     end_pos INTEGER,

@@ -385,11 +385,16 @@ def _result_doc(r: DetectionResult) -> dict:
         # The partial-coverage rule's reasoning (`--partial-core-policy`), written only when it
         # triggered or its contig-edge guard stopped it.
         **({"idiomorph_vote_note": r.idiomorph_vote_note} if getattr(r, "idiomorph_vote_note", None) else {}),
+        # `--confidence-cap-policy`: written only when it lowered this call from high to medium.
+        **({"confidence_cap": r.confidence_cap} if getattr(r, "confidence_cap", None) else {}),
         # Other-allele cross-hits the confidence tier did not count (curator's
         # ruling 2026-09-27). Written only when non-empty.
         **({"confidence_ignored_genes": list(r.confidence_ignored_genes)}
            if getattr(r, "confidence_ignored_genes", None) else {}),
         **({"split_locus": r.split_locus} if getattr(r, "split_locus", None) else {}),
+        # Set only by `--strong-single-gene-policy on` (curator's decision 2026-10-17): a lone,
+        # modelled, near-full-length core gene; the call is `idiomorph_gene_only` at `low`.
+        **({"strong_single_gene": r.strong_single_gene} if getattr(r, "strong_single_gene", None) else {}),
         "idiomorph_resolutions": [
             {
                 "contig": res.contig,

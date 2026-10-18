@@ -252,6 +252,10 @@ genes:
     protein_accession: "ncbi_protein:AAB12345.1"   # namespaced: ncbi_protein: | uniprotkb:, resolver chosen by prefix
     role: "core_MAT"            # validated against db/<Phylum>/order.yml for this locus_name
     present: true                # false = curated absence call (true negative for sub-project 6)
+    # status: remnant | pseudogene (optional; absent = intact). What the gene IS, separate from `present`:
+    # present false = no model recorded; status = a truncated/degenerate copy or disabled gene. Never for
+    # assembly/annotation truncation (that is locus.core.completeness). See docs/notes/2026-10-17_remnant-status.md.
+    remnant_note: ...            # optional one sentence of evidence
     locus_tag: null
     segment_index: 0             # which locus.core.segments entry this gene falls on
     start: 121002

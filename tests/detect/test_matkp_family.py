@@ -132,3 +132,24 @@ def test_matog_routes_only_the_polymorpha_complex():
     names = {f.key.locus_name for f in d.families}
     assert d.routing_mode == "phylum_fallback" and "MATog" not in names and "MATkp" not in names
     assert "MATog" not in {f.key.locus_name for f in route(None, fams, phylum="Ascomycota").families}
+
+
+def test_matkp_and_matog_carry_the_saccharomycotina_guard_and_route_as_before():
+    from MATPredict.detect.family_registry import route
+
+    SACCH = 147537
+    assert _family().fallback_subphylum == SACCH and _og().fallback_subphylum == SACCH
+    fams = load_all_families(DB)
+    # Komagataella (K. phaffii CBS 7435, lineage in Saccharomycotina) still routes to MATkp by scope
+    kom = [131567, 2759, 33154, 4751, 451864, 4890, 716545, SACCH, 3239874, 3243775, 1156497, 460517, 460519, 981350]
+    d = route(981350, fams, lineage_taxids_resolver=lambda t: kom, phylum_name_resolver=lambda t: "Ascomycota")
+    assert {f.key.locus_name for f in d.families} == {"MATkp"} and d.routing_mode == "lineage"
+    # a Pezizomycotina genome in phylum fallback is searched against neither (scope-only AND guarded)
+    pez = [131567, 2759, 33154, 4751, 451864, 4890, 716545, 147538, 147545, 5059]
+    d = route(5059, fams, lineage_taxids_resolver=lambda t: pez, phylum_name_resolver=lambda t: "Ascomycota")
+    names = {f.key.locus_name for f in d.families}
+    assert d.routing_mode == "phylum_fallback" and not names & {"MATkp", "MATog"}
+    # a Saccharomycotina genome outside both scopes is not searched against them in fallback either
+    sacc = [131567, 2759, 33154, 4751, 451864, 4890, 716545, SACCH, 3239874, 3243775, 1156497, 4909]
+    d = route(4909, fams, lineage_taxids_resolver=lambda t: sacc, phylum_name_resolver=lambda t: "Ascomycota")
+    assert not {f.key.locus_name for f in d.families} & {"MATkp", "MATog"}

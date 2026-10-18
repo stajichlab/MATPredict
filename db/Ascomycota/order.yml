@@ -601,6 +601,8 @@ loci:
     # Komagataella is curated. Ogataea (Pichiaceae) has the same inversion system (Hanson 2014)
     # but no record here. Disjoint from 4893, 2916678 and 4951/4952, so nothing is reported twice.
     taxonomic_scope: [460517]
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 147537  # Saccharomycotina
     # CURATOR DECISION to follow (as for MATyl/MATdc on branch dipodascales-curation): scope-only,
     # never searched on a phylum fallback.
     fallback_searchable: false
@@ -683,6 +685,8 @@ loci:
     # such calls are reported as a "locus detection" or have their confidence capped below an identity/coverage floor
     # is OPEN with the curator.
     taxonomic_scope: [460523, 870730, 1005962, 2053387]
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 147537  # Saccharomycotina
     fallback_searchable: false
     # SLA2 and DIC1 flank the cassette within about 5 kb in the references; the second SLA2 + a1 copy is 19 kb away.
     flank_carried_window_bp: 20000

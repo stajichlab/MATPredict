@@ -513,7 +513,7 @@ def test_the_real_order_yml_guard(real_db_root):
     asco = {f.key.locus_name: f for f in fams if f.key.phylum == "Ascomycota"}
     assert asco["MAT"].fallback_subphylum == PEZ and asco["MATtub"].fallback_subphylum == PEZ
     assert asco["PM"].fallback_subphylum == TAPH
-    for name in ("MATsc", "MATyl", "MATdc", "MTL"):
+    for name in ("MATsc", "MATyl", "MATdc", "MTL", "MATkp", "MATog"):
         assert asco[name].fallback_subphylum == SACCH, name
     for name in ("MATyl", "MATdc"):
         assert asco[name].fallback_searchable is False, name

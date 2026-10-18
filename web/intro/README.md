@@ -7,6 +7,7 @@ Static HTML and JavaScript with no dependencies; the browser tool itself lives i
   campaign tables under `results/` (BFD Ascomycota, Basidiomycota, Mucoromycotina; ZyGoLife LCG and Jena).
   `web/spike/page/build-site.sh` regenerates them on every Pages build; rerun by hand after new campaign results.
 - `data/genomes_<dataset>.tsv`: per-genome tables (one row per genome, loci listed). Git-ignored; written by the same script and linked from the explorer, which can also export just the genomes in its current view.
+- `data/cocci_reads.json`, `data/cocci_reads.tsv`: Coccidioides read-typing summary and compact per-strain table, written by the same script from `datasets/reads/coccidioides/results/cocci2_reads_vs_detect.tsv` and shown in the landing page's raw-reads section. Committed.
 - Preview: `python3 -m http.server --directory web/intro` and open `landing.html` (the landing page links to the
   tool at `page/index.html`, which exists only in the assembled site).
 - Numbers in the benchmark and raw-reads tables of `landing.html` are written by hand from `analysis/` notes; update them with the notes.

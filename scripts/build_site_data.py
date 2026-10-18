@@ -8,6 +8,7 @@ Inputs are tables already under results/ (nothing is recomputed):
   ZyGoLife (LCG, Jena held-out sets, Mucoromycotina)  same calls.tsv, source LCG / JENA
 
 Also writes one per-genome table per dataset, genomes_<dataset>.tsv (git-ignored; built with the site).
+Also writes cocci_reads.json and cocci_reads.tsv from datasets/reads/coccidioides/results when present.
 Writes web/intro/data/taxa.json (one row per dataset x lineage x species, with genome counts and allele
 counts) and summary.json (per-dataset totals, locus classes, confidence). Python standard library only.
 
@@ -103,6 +104,39 @@ def genome_row(ds_id, genome, species, phylum, cls, order, family, status, calle
 
 def strip_family(f):
     return f.split(":", 1)[-1]
+
+
+COCCI_READS = os.path.join(REPO, "datasets/reads/coccidioides/results/cocci2_reads_vs_detect.tsv")
+
+
+def cocci_reads(out):
+    """Coccidioides read typing (datasets/reads/coccidioides): counts per species and call, the omitted and both strains, agreement with
+    `detect`; plus a compact per-strain table. Nothing is recomputed."""
+    if not os.path.exists(COCCI_READS):
+        return
+    rows = tsv(COCCI_READS)
+    species = sorted({r["species"] for r in rows})
+    calls = ["MAT1-1", "MAT1-2", "both", "low_depth"]
+    counts = {s: {c: sum(1 for r in rows if r["species"] == s and r["reads_call"] == c) for c in calls} for s in species}
+    typed_det = [r for r in rows if r["triage"] == "typed" and r["detect_call"]]
+    agree = sum(1 for r in typed_det if r["reads_call"] == r["detect_call"])
+    summ = {
+        "panel": "cocci2", "strains": len(rows), "species": species, "counts": counts,
+        "disagree_no_locus": sum(1 for r in typed_det if r["reads_call"] != r["detect_call"] and r["detect_call"] == "not_detected"),
+        "disagree_other": sum(1 for r in typed_det if r["reads_call"] != r["detect_call"] and r["detect_call"] != "not_detected"),
+        "with_assembly": sum(1 for r in rows if r["detect_call"]), "typed_with_detect": len(typed_det), "agree_with_detect": agree,
+        "relabelled": [r["strain"] for r in rows if r["relabelled"] == "yes"],
+        "omitted": [{"strain": r["strain"], "species": r["species"], "center": r["center"], "shared_depth": float(r["shared_depth"])} for r in rows if r["triage"] == "review"],
+        "both": [{"strain": r["strain"], "species": r["species"], "MAT1-1_depth": float(r["MAT1-1_depth"]), "MAT1-2_depth": float(r["MAT1-2_depth"])} for r in rows if r["triage"] == "both"],
+        "centers": dict(sorted(Counter(r["center"] or "unknown" for r in rows).items())),
+    }
+    with open(os.path.join(out, "cocci_reads.json"), "w") as fh:
+        json.dump(summ, fh, indent=1)
+    cols = ["strain", "species", "relabelled", "center", "reads_call", "triage", "MAT1-1_depth", "MAT1-2_depth", "shared_depth", "detect_call", "detect_confidence"]
+    with open(os.path.join(out, "cocci_reads.tsv"), "w", newline="") as fh:
+        w = csv.writer(fh, delimiter="\t", lineterminator="\n")
+        w.writerow(cols)
+        w.writerows([r[c] for c in cols] for r in rows)
 
 
 def main():
@@ -225,6 +259,7 @@ def main():
             ds[k] = dict(ds[k])
     with open(os.path.join(out, "summary.json"), "w") as fh:
         json.dump(summary, fh, indent=1)
+    cocci_reads(out)
     print(f"{len(rows)} rows, {len(strings)} strings; {sum(r[8] for r in rows)} genomes")
 
 

@@ -56,6 +56,6 @@ Table: `coccidioides/results/cocci2_reads_vs_detect.tsv` (reads call, triage, de
 | low_depth (omit) | 1 | 7 |
 
 - 546 strains typed to one idiomorph, 4 `both`, 8 `low_depth`. The `low_depth` strains have little or no shared-flank depth (0.0 to 7.3x) and are omitted as low coverage (CA10 is one).
-- Of the 495 typed strains that also have a `detect` result, 487 agree. The 8 that differ: 5 where `detect` found no locus in the assembly (the reads call MAT1-1 or MAT1-2 at shared depth 1.1 to 4.0x), 3 where `detect` called both idiomorphs in the assembly while the reads show one (NM_0071, TX7 and a third). Not traced.
+- Of the 495 typed strains that also have a `detect` result, 487 agree. The 8 that differ: 6 where `detect` found no locus in the assembly (the reads call MAT1-1 or MAT1-2 at shared depth 1.1 to 4.0x), 2 where `detect` called both idiomorphs in the assembly while the reads show one (NM_0071, TX7). Not traced.
 - The 4 `both` reads calls are not checked against a second source. Whether they are mixed samples, heterokaryons or panel cross-talk is open.
 - 55 strains have no assembly, so they have a reads call only.

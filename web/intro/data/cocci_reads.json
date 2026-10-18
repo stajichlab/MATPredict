@@ -1,0 +1,116 @@
+{
+ "panel": "cocci2",
+ "strains": 558,
+ "species": [
+  "Coccidioides immitis",
+  "Coccidioides posadasii"
+ ],
+ "counts": {
+  "Coccidioides immitis": {
+   "MAT1-1": 78,
+   "MAT1-2": 95,
+   "both": 1,
+   "low_depth": 1
+  },
+  "Coccidioides posadasii": {
+   "MAT1-1": 189,
+   "MAT1-2": 184,
+   "both": 3,
+   "low_depth": 7
+  }
+ },
+ "disagree_no_locus": 6,
+ "disagree_other": 2,
+ "with_assembly": 503,
+ "typed_with_detect": 495,
+ "agree_with_detect": 487,
+ "relabelled": [
+  "B3476",
+  "485B-1_L_OLD_CPA0023"
+ ],
+ "omitted": [
+  {
+   "strain": "CA10",
+   "species": "Coccidioides immitis",
+   "center": "",
+   "shared_depth": 0.0
+  },
+  {
+   "strain": "CA12",
+   "species": "Coccidioides posadasii",
+   "center": "",
+   "shared_depth": 0.0
+  },
+  {
+   "strain": "COCPO_103716",
+   "species": "Coccidioides posadasii",
+   "center": "",
+   "shared_depth": 0.4
+  },
+  {
+   "strain": "NM_3894",
+   "species": "Coccidioides posadasii",
+   "center": "",
+   "shared_depth": 0.86
+  },
+  {
+   "strain": "NM_3957",
+   "species": "Coccidioides posadasii",
+   "center": "",
+   "shared_depth": 0.41
+  },
+  {
+   "strain": "NM_4297",
+   "species": "Coccidioides posadasii",
+   "center": "",
+   "shared_depth": 0.26
+  },
+  {
+   "strain": "NM_7898",
+   "species": "Coccidioides posadasii",
+   "center": "",
+   "shared_depth": 0.0
+  },
+  {
+   "strain": "NM_9861",
+   "species": "Coccidioides posadasii",
+   "center": "",
+   "shared_depth": 0.78
+  }
+ ],
+ "both": [
+  {
+   "strain": "UTAH_23742X205",
+   "species": "Coccidioides immitis",
+   "MAT1-1_depth": 7.04,
+   "MAT1-2_depth": 24.99
+  },
+  {
+   "strain": "409B-0_L_OLD_CPA0011",
+   "species": "Coccidioides posadasii",
+   "MAT1-1_depth": 9.47,
+   "MAT1-2_depth": 5.25
+  },
+  {
+   "strain": "409B-0_S_OLD_CPA0012",
+   "species": "Coccidioides posadasii",
+   "MAT1-1_depth": 11.87,
+   "MAT1-2_depth": 1.04
+  },
+  {
+   "strain": "FMC778",
+   "species": "Coccidioides posadasii",
+   "MAT1-1_depth": 0.62,
+   "MAT1-2_depth": 5.98
+  }
+ ],
+ "centers": {
+  "CDC": 79,
+  "NAU": 10,
+  "TGEN": 4,
+  "TGEN-NORTH": 198,
+  "UCSF": 67,
+  "UTAH": 49,
+  "unknown": 151
+ }
+}

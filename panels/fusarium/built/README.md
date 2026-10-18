@@ -1,5 +1,17 @@
 # Missing-idiomorph candidate panels for Fusarium (built from public reads, 2026-10-17/18)
 
+## Status (decided with the user, 2026-10-18)
+
+| panel | status in the PR |
+|---|---|
+| andiyazi | validated (9 of 10 other runs) |
+| avenaceum | validated on 8 of 8 runs, but only two MAT1-2 runs exist |
+| keratoplasticum | **provisional**: the MAT1-2 record was assembled from SRR37004787 (B27623) in PRJNA1391476, a clinical set whose species labels are a mixture and unchecked, and 5 of its 6 MAT1-2 validation runs come from the same project |
+| brachygibbosum | **not validated** (one MAT1-2 run no call, one MAT1-1 call at the breadth threshold) |
+
+PRJNA1391476 (61 runs) is removed from `datasets/reads/fusarium/selected.tsv` and listed in `excluded_PRJNA1391476.tsv`: each strain in it is named in its BioSample and needs a separate species check. Species that could not be built (venenatum, nygamai, euwallaceae, kuroshium), the very large runs (virguliforme, commune) and species with 1-2 runs are not attempted for now.
+
+
 For species whose public assemblies show one idiomorph only, the missing idiomorph was recovered from ENA reads of ONE strain
 (recruit, assemble, extend), then cut together with its shared flank into a two-record panel in the repo's format
 (`<species>_MAT1-1.fasta`, `<species>_MAT1-2.fasta`, one record each). Use as in `../README.md`:

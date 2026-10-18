@@ -1,0 +1,38 @@
+import sys, json
+import pandas as pd
+pd.set_option('display.width', 250); pd.set_option('display.max_columns', 40); pd.set_option('display.max_rows', 100)
+D = sys.argv[1]
+L = pd.read_csv(D + '/loci_audit_flagged.tsv', sep='\t', low_memory=False)
+G = pd.read_csv(D + '/genome_audit_verdict.tsv', sep='\t', low_memory=False)
+c = L[L.called]
+out = {}
+out['genomes_run'] = len(G)
+out['reports'] = int((G.status != 'no_report').sum())
+out['no_report'] = G[G.status == 'no_report'].genome.tolist()
+out['not_detected'] = int((G.status == 'not_detected').sum())
+out['genomes_called_single'] = int(G.primary_idiomorph.notna().sum())
+out['primary_MAT1-1'] = int((G.primary_idiomorph == 'MAT1-1').sum())
+out['primary_MAT1-2'] = int((G.primary_idiomorph == 'MAT1-2').sum())
+out['genomes_two_idiomorph_loci'] = int(G.idiomorphs_called.astype(str).str.contains(r'\+').sum())
+out['undetermined_loci'] = int((L.idiomorph == 'undetermined').sum())
+out['loci_total'] = len(L); out['loci_called'] = len(c)
+out['locus_class'] = c.locus_class.value_counts().to_dict()
+out['confidence'] = c.confidence.value_counts().to_dict()
+out['class_x_conf'] = {f'{a}|{b}': int(n) for (a, b), n in c.groupby(['locus_class', 'confidence']).size().items()}
+out['vote_vs_profile'] = c.vote_vs_profile.value_counts().to_dict()
+out['domain_support'] = c.domain_support.value_counts().to_dict()
+out['verdict_class_genomes'] = G.verdict_class.value_counts().to_dict()
+out['vote_note_loci'] = int(c.vote_note.notna().sum())
+out['own_present'] = int(c.own_present.astype(str).eq('True').sum())
+out['own_full(cov>=90, modelled)'] = int(c.own_full.astype(str).eq('True').sum())
+out['own_cov<80'] = int((c.own_cov < 80).sum())
+out['own_id<40'] = int((c.own_id < 40).sum())
+out['win_gene_optional'] = int(c.win_optional.astype(str).eq('True').sum())
+out['core_lost_to_optional_loci'] = int(c.core_lost_to_optional.astype(str).eq('True').sum())
+out['core_won_over_optional_loci'] = int(c.core_won_over_optional.astype(str).eq('True').sum())
+out['both_domains_loci'] = int(c.locus_both_domains.astype(str).eq('True').sum())
+out['wall_median_s'] = float(pd.to_numeric(G.wall, errors='coerce').median())
+out['wall_p90_s'] = float(pd.to_numeric(G.wall, errors='coerce').quantile(.9))
+out['wall_max_s'] = float(pd.to_numeric(G.wall, errors='coerce').max())
+print(json.dumps(out, indent=1, default=str))
+json.dump(out, open(D + '/tables/summary.json', 'w'), indent=1, default=str)

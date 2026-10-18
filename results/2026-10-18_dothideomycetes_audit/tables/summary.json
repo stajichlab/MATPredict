@@ -1,0 +1,62 @@
+{
+ "genomes_run": 2730,
+ "reports": 2728,
+ "no_report": [
+  "GCA_016165855.1_IBUN_P_ulei_V1",
+  "GCA_986281625.1_DAH1041FM"
+ ],
+ "not_detected": 251,
+ "genomes_called_single": 2474,
+ "primary_MAT1-1": 1402,
+ "primary_MAT1-2": 1072,
+ "genomes_two_idiomorph_loci": 47,
+ "undetermined_loci": 3,
+ "loci_total": 2595,
+ "loci_called": 2592,
+ "locus_class": {
+  "mat_locus": 2281,
+  "partial_locus": 269,
+  "idiomorph_gene_only": 42
+ },
+ "confidence": {
+  "high": 2116,
+  "medium": 473,
+  "low": 3
+ },
+ "class_x_conf": {
+  "idiomorph_gene_only|medium": 42,
+  "mat_locus|high": 2116,
+  "mat_locus|medium": 165,
+  "partial_locus|low": 3,
+  "partial_locus|medium": 266
+ },
+ "vote_vs_profile": {
+  "agree": 2445,
+  "profile_undetermined": 129,
+  "disagree": 18
+ },
+ "domain_support": {
+  "yes": 2235,
+  "no": 279,
+  "yes_but_alpha_gene_also_present": 77,
+  "not_scored": 1
+ },
+ "verdict_class_genomes": {
+  "confirmed": 1760,
+  "unverifiable": 456,
+  "conflicting": 258,
+  "no_call": 256
+ },
+ "vote_note_loci": 0,
+ "own_present": 2591,
+ "own_full(cov>=90, modelled)": 582,
+ "own_cov<80": 1995,
+ "own_id<40": 628,
+ "win_gene_optional": 5,
+ "core_lost_to_optional_loci": 65,
+ "core_won_over_optional_loci": 1475,
+ "both_domains_loci": 397,
+ "wall_median_s": 127.0,
+ "wall_p90_s": 170.0,
+ "wall_max_s": 3600.0
+}

@@ -535,12 +535,15 @@ loci:
     idiomorph_values: ["MATa", "MATalpha"]
     # idiomorph_class unset (unassigned), as for MATkp and MATdc.
     idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
-    # Genus Ogataea, taxid 461281, verified with taxonkit (name2taxid and lineage, rank genus, ...Pichiales;
-    # Pichiaceae; Ogataea) on 2026-10-18. SCOPE-ONLY (fallback_searchable false) with a GENUS scope: Ogataea
-    # genomes (112 in the v0.6.0 campaign) route to this family by lineage and no other genome is searched with
-    # it. Chosen because the curator asked for a scope-only family for the genus; the effect on the 112 genomes is
-    # in the analysis note (section 12). Disjoint from MATkp (460517), MATsc, MTL, MATyl and MATdc.
-    taxonomic_scope: [461281]
+    # SCOPE HELD BACK (curator, 2026-10-18): MATog is records plus family declaration only and routes NO genome, so
+    # Ogataea genomes behave exactly as without it (phylum_fallback, MATsc/MTL/MAT/MATyl calls), pending the
+    # leave-own-record-out analysis (docs/notes/2026-10-18_komagataella-mata-analysis.md, section 12).
+    # MECHANISM: `taxonomic_scope` is required (minItems 1, integer items, no minimum), so it holds the sentinel
+    # -461281, the negative of the intended genus taxid, which no lineage and no genome taxid contains; with
+    # `fallback_searchable: false` the family is never searched. The intended scope when released is
+    # [461281] = genus Ogataea (verified with taxonkit on 2026-10-18: name2taxid 461281, rank genus under
+    # Pichiales; Pichiaceae; Ogataea). To release: replace the sentinel by 461281.
+    taxonomic_scope: [-461281]
     fallback_searchable: false
     # SLA2 and DIC1 flank the cassette within about 5 kb in the references; the second SLA2 + a1 copy is 19 kb away.
     flank_carried_window_bp: 20000

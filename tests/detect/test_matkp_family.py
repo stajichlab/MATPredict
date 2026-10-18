@@ -91,7 +91,8 @@ def test_matkp_scope_stays_komagataella_and_holds_no_ogataea_record():
 
 def test_matog_family_declaration():
     fam = _og()
-    assert list(fam.taxonomic_scope) == [461281]  # genus Ogataea (taxonkit-verified)
+    # scope HELD BACK (curator, 2026-10-18): the sentinel -461281 matches no lineage; release = 461281 (genus Ogataea)
+    assert list(fam.taxonomic_scope) == [-461281]
     assert fam.fallback_searchable is False
     assert fam.two_idiomorphs_report is False
     assert set(fam.idiomorph_classes.values()) == {"unassigned"}
@@ -110,3 +111,16 @@ def test_matog_records():
         assert rec["mating_type"]["system"] == "pseudohomothallic"
         assert rec["validation"]["status"] == "accepted"
         assert "MATa2" not in {g["name"] for g in rec["genes"]}  # not recorded as present or absent (unresolved)
+
+
+def test_matog_routes_no_genome_until_the_scope_is_released():
+    from MATPredict.detect.family_registry import route
+
+    fams = load_all_families(DB)
+    ogataea_lineage = [131567, 2759, 33154, 4751, 451864, 4890, 716545, 147537, 3239874, 3243775, 1156497, 461281, 460523]
+    d = route(460523, fams, lineage_taxids_resolver=lambda t: ogataea_lineage,
+              phylum_name_resolver=lambda t: "Ascomycota")
+    names = {f.key.locus_name for f in d.families}
+    assert d.routing_mode == "phylum_fallback"           # as on main, before MATog existed
+    assert "MATog" not in names and "MATkp" not in names
+    assert "MATog" not in {f.key.locus_name for f in route(None, fams, phylum="Ascomycota").families}

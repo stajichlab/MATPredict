@@ -146,7 +146,7 @@ def test_synthetic_locus_on_both_strands_is_a_candidate(real_db_root, tmp_path, 
     assert note is not None, "both complete genes, on either strand, must make a candidate"
     assert note["alpha_box_gene"]["alpha_bits"] >= hm.MIN_PROFILE_BITS["alpha_box"]
     assert note["hmg_box_gene"]["hmg_bits"] >= hm.MIN_PROFILE_BITS["HMG_box"]
-    assert note["separation_bp"] == len(spacer)
+    assert note["separation_bp"] == len(spacer) + 1  # start of the later gene minus end of the earlier, as classify_locus
 
 
 def test_synthetic_hmg_fragment_and_off_locus_hmg_do_not_trigger(real_db_root, tmp_path):

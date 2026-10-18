@@ -3086,6 +3086,8 @@ def run_pipeline(
             return r
         if note is None:
             return r
+        # what the call was before this policy, so a run with the policy on also shows the legacy label
+        note["previous_locus_class"] = r.locus_class
         return replace(r, locus_class=LOCUS_CLASS_HOMOTHALLIC, homothallic_note=note)
 
     def _confidence_cap_stats(family, called, evidence):

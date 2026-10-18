@@ -1,0 +1,70 @@
+rows 255 loci 248 genomes with locus 244 uncalled genomes 7
+loci {'A2': 189, 'A1': 59}
+
+by genus: genomes(called) A1-loci A2-loci
+                       genomes=1 A1=0 A2=1
+  Rhodosporidiobolus   genomes=13 A1=3 A2=10
+  Rhodotorula          genomes=216 A1=42 A2=172
+  Sporobolomyces       genomes=21 A1=14 A2=6
+
+species with calls: 44; A1 only 10, A2 only 22, both 12
+species-level (n genomes, A1 loci, A2 loci), species with >=4 genomes or any A1:
+  Rhodotorula mucilaginosa                   genomes=125 taxids=1 A1=  6 A2=117
+  Rhodotorula toruloides                     genomes= 35 taxids=4 A1= 22 A2= 15
+  Rhodotorula kratochvilovae                 genomes= 11 taxids=1 A1=  1 A2= 10
+  Rhodotorula paludigena                     genomes=  7 taxids=1 A1=  2 A2=  5
+  Sporobolomyces pararoseus                  genomes=  5 taxids=1 A1=  3 A2=  2
+  Rhodotorula pacifica                       genomes=  4 taxids=1 A1=  2 A2=  3
+  Rhodotorula graminis                       genomes=  4 taxids=2 A1=  0 A2=  3
+  Rhodotorula glutinis                       genomes=  4 taxids=1 A1=  3 A2=  1
+  Sporobolomyces roseus                      genomes=  3 taxids=1 A1=  2 A2=  1
+  Sporobolomyces salmonicolor                genomes=  3 taxids=1 A1=  1 A2=  2
+  Rhodotorula babjevae                       genomes=  3 taxids=1 A1=  3 A2=  0
+  Rhodosporidiobolus odoratus                genomes=  2 taxids=1 A1=  1 A2=  1
+  Sporobolomyces carnicolor                  genomes=  2 taxids=1 A1=  2 A2=  0
+  Sporobolomyces phaffii                     genomes=  2 taxids=1 A1=  2 A2=  0
+  Rhodosporidiobolus fluvialis               genomes=  2 taxids=1 A1=  1 A2=  2
+  Sporobolomyces johnsonii                   genomes=  2 taxids=1 A1=  1 A2=  0
+  Rhodotorula diobovata                      genomes=  2 taxids=1 A1=  1 A2=  1
+  Sporobolomyces blumeae                     genomes=  1 taxids=1 A1=  1 A2=  0
+  Rhodotorula sp. FNED7-22                   genomes=  1 taxids=1 A1=  1 A2=  0
+  Rhodosporidiobolus sp. SP3-3_4             genomes=  1 taxids=1 A1=  1 A2=  0
+  Rhodotorula sp. HGY1                       genomes=  1 taxids=1 A1=  1 A2=  0
+  Sporobolomyces koalae                      genomes=  1 taxids=1 A1=  1 A2=  0
+  Sporobolomyces ruberrimus                  genomes=  1 taxids=1 A1=  1 A2=  0
+
+taxids with calls 48  taxid A1-only 12  A2-only 24  both 12
+
+A1: winner bits n=59 min=144 p10=222 median=435 p90=630 max=633
+    loser bits n=59 min=0 p10=72 median=89 p90=113 max=122
+    winner identity n=59 min=63 p10=73 median=99 p90=100 max=100
+    loser identity n=59 min=0 p10=29 median=34 p90=38 max=40
+    bit margin n=59 min=92 p10=154 median=352 p90=523 max=527
+
+A2: winner bits n=189 min=109 p10=197 median=299 p90=439 max=479
+    loser bits n=189 min=30 p10=73 median=92 p90=101 max=117
+    winner identity n=189 min=65 p10=73 median=74 p90=100 max=100
+    loser identity n=189 min=28 p10=31 median=35 p90=44 max=51
+    bit margin n=189 min=66 p10=124 median=207 p90=347 max=387
+calls with bit margin < 20: 0 of 248
+calls with bit margin < 50: 0 of 248
+calls with bit margin < 100: 3 of 248
+calls with bit margin < 200: 41 of 248
+calls whose winner identity < 60%: 0 Counter()
+
+nearest (winning) reference record by label:
+   ('A1', '5003_cbs-491_redPR_A1') 13
+   ('A1', '5005_cbs-483_redPR_A1') 2
+   ('A1', '5286_cbs-14_redPR_A1') 22
+   ('A1', '5535_cbs-20_redPR_A1') 5
+   ('A1', '5537_jy1105_redPR_A1') 8
+   ('A1', '86836_pycc-4818_redPR_A1') 9
+   ('A2', '29898_jj10-1_redPR_A2') 10
+   ('A2', '5003_cbs-499_redPR_A2') 4
+   ('A2', '5005_cbs-490_redPR_A2') 2
+   ('A2', '5286_nbrc-0880_redPR_A2') 27
+   ('A2', '86836_cbs-4785_redPR_A2') 13
+   ('A2', '86839_nrrl-y-7192_redPR_A2') 133
+winning-ref genus == genome genus: 233 of 248
+
+loci per genome >1: [('1495444_GCA_049863195.1_ICGEB_R_pacifica_INDKK', ['A2', 'A1']), ('33190_GCA_041531625.1_ASM4153162v1', ['A2', 'A1']), ('5286_GCA_016808315.1_ASM1680831v1', ['A2', 'A1']), ('5286_GCA_963855895.1_AIST536MM15v1', ['A1', 'A2'])]

@@ -155,3 +155,21 @@ def test_verdicts_match_run_asco_holdout_summarize(tmp_path, capsys):
     for r in ROWS:
         line = next(l for l in printed if l.startswith(r["record_id"][:34].ljust(34) + " " + r["radius"]))
         assert fpt.holdout_verdict(dict(r)) in line.split()
+
+
+def test_holdout_listing_is_limited_to_searched_families_and_shows_manifest_gaps(tmp_path):
+    man = tmp_path / "m.tsv"
+    man.write_text(
+        "record_id\tphylum\tfamily\ttestable\tgenus_same_family_left\tgenus_same_idiomorph_left\n"
+        "a\tBasidiomycota\tredPR\tTrue\t4\t2\n"
+        "b\tBasidiomycota\tredPR\tTrue\t0\t0\n"
+        "c\tBasidiomycota\tredPR\tFalse\t4\t2\n"
+        "d\tBasidiomycota\twallMAT\tTrue\t0\t0\n")
+    rows = [_row("a", "genus", "Basidiomycota:redPR", "A1", ["A1"], left=4, idio_left=2)]
+    out = fpt.summarize_holdout(rows, fpt.manifest_gaps(man), {"Basidiomycota:redPR"})
+    assert [(r["family"], r["radius"]) for r in out] == [("Basidiomycota:redPR", "genus")]
+    r = out[0]
+    assert (r["records"], r["no_assembly"], r["no_reference_not_run"], r["correct"]) == (3, 1, 1, 1)
+    # a radius with no row at all still appears, with its gaps
+    out = fpt.summarize_holdout([], fpt.manifest_gaps(man), {"Basidiomycota:wallMAT"})
+    assert out[0]["rows"] == 0 and out[0]["no_reference_not_run"] == 1

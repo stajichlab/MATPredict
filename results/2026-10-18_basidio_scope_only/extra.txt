@@ -1,0 +1,52 @@
+
+===== sporidio: 251 reports; routing_mode Counter({'lineage': 251}) routing_error 0 taxonomy_source Counter({'NCBI E-utilities': 251})
+families_attempted combos: Counter({('Basidiomycota:redPR', 'Basidiomycota:redHD'): 251})
+
+--- Basidiomycota:redHD: genus  genomes/called
+   Rhodotorula             216  213
+   Sporobolomyces           21   19
+   Rhodosporidiobolus       13   13
+   ?                         1    1
+   not called: 5
+   pair intergenic bp: n=252 min=0 p5=349 median=490 p95=870 max=1295; within 358-463: 54; <=1000: 247; 0 (overlap): 1
+   locus span bp: median=8443 min=2054 max=24429
+   multi-locus genomes: 5
+   HD2 identity: n=252 median=82.9 min=34.8 max=100.0
+   HD1 identity: n=252 median=65.5 min=32.3 max=100.0
+
+--- Basidiomycota:redPR: genus  genomes/called
+   Rhodotorula             216  211
+   Sporobolomyces           21   20
+   Rhodosporidiobolus       13   12
+   ?                         1    1
+   not called: 7
+   locus span bp: median=2589 min=1008 max=22449
+   multi-locus genomes: 4
+
+===== pucc: 131 reports; routing_mode Counter({'lineage': 131}) routing_error 0 taxonomy_source Counter({'NCBI E-utilities': 131})
+families_attempted combos: Counter({('Basidiomycota:rustHD',): 131})
+
+--- Basidiomycota:rustHD: genus  genomes/called
+   Phakopsora               51   50
+   Puccinia                 51   42
+   Melampsora                8    5
+   Cronartium                6    5
+   Hemileia                  5    0
+   Austropuccinia            5    4
+   Uromyces                  4    1
+   Endocronartium            1    0
+   not called: 24
+   pair intergenic bp: n=180 min=536 p5=549 median=1739 p95=1797 max=1797; within 358-463: 0; <=1000: 47; 0 (overlap): 0
+   locus span bp: median=2918 min=1991 max=14639
+   multi-locus genomes: 70
+   bE identity: n=180 median=55.8 min=38.0 max=100.0
+   bW identity: n=180 median=33.3 min=31.0 max=100.0
+
+===== walle: 51 reports; routing_mode Counter({'lineage': 51}) routing_error 0 taxonomy_source Counter({'NCBI E-utilities': 51})
+families_attempted combos: Counter({('Basidiomycota:wallMAT',): 51})
+
+--- Basidiomycota:wallMAT: genus  genomes/called
+   Wallemia                 51   51
+   not called: 0
+   locus span bp: median=25042 min=20922 max=25305
+   multi-locus genomes: 0

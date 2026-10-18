@@ -28,7 +28,10 @@ For each family (`Phylum:locus`), every number is a count of GENOMES unless it s
                     and `pair_incomplete` for a locus that does not carry both genes on one contig
 
 Held-out scores (`--holdout-rows`): the JSON rows `run_asco_holdout.py run` writes. With `--holdout-manifest`
-the references-left counts are recomputed from that manifest, as `run_asco_holdout.py summarize --manifest` does.
+the references-left counts are recomputed from that manifest, as `run_asco_holdout.py summarize --manifest` does,
+and the table also lists, per radius, the family's curated `records`, those with `no_assembly` (cannot be a held-out
+genome) and those `no_reference_not_run` (the radius leaves nothing of the family, so no task was run). Only families
+present in REPORTS_DIR (or named by --family) are listed.
 For each family and radius: `correct` (enum families: the record's idiomorph is among the called labels; pattern
 families: a locus of the family is found, because allele labels are not callable by homology), `wrong`,
 `undetermined`, `no_locus`, `error`, and `no_reference` (nothing of the family, or of the record's own idiomorph,
@@ -226,7 +229,22 @@ def load_holdout(paths, manifest: Path | None):
     return rows
 
 
-def summarize_holdout(rows):
+def manifest_gaps(manifest: Path):
+    """Per (family, radius) from the manifest: curated records, records with no genome assembly (cannot be a
+    held-out genome), and records for which the radius leaves no reference of the family (not run)."""
+    out: dict[tuple, Counter] = {}
+    for m in csv.DictReader(open(manifest), delimiter="\t"):
+        fam = f"{m['phylum']}:{m['family']}"
+        for col in m:
+            if col.endswith("_same_family_left"):
+                c = out.setdefault((fam, col[: -len("_same_family_left")]), Counter())
+                c["records"] += 1
+                c["no_assembly"] += m.get("testable") != "True"
+                c["no_reference_not_run"] += m.get("testable") == "True" and int(m[col]) == 0
+    return out
+
+
+def summarize_holdout(rows, gaps=None, families=None):
     out: dict[tuple, Counter] = {}
     for r in rows:
         r["verdict"] = holdout_verdict(r)
@@ -235,9 +253,20 @@ def summarize_holdout(rows):
     result = []
     for (fam, rad), c in sorted(out.items(), key=lambda kv: (kv[0][0], RADII.index(kv[0][1]) if kv[0][1] in RADII else 9)):
         tested = sum(c[k] for k in ("correct", "wrong", "undetermined", "no_locus"))
+        g = (gaps or {}).get((fam, rad), Counter())
         result.append(dict(family=fam, radius=rad, rows=sum(c.values()), tested=tested, correct=c["correct"],
                            wrong=c["wrong"], undetermined=c["undetermined"], no_locus=c["no_locus"],
-                           error=c["error"], no_reference=c["no_reference"]))
+                           error=c["error"], no_reference=c["no_reference"], records=g["records"] or "",
+                           no_assembly=g["no_assembly"] if g else "", no_reference_not_run=g["no_reference_not_run"] if g else ""))
+    seen = {(r["family"], r["radius"]) for r in result}
+    for (fam, rad), g in (gaps or {}).items():
+        if (fam, rad) not in seen:  # a radius with no row at all
+            result.append(dict(family=fam, radius=rad, rows=0, tested=0, correct=0, wrong=0, undetermined=0, no_locus=0,
+                               error=0, no_reference=0, records=g["records"], no_assembly=g["no_assembly"],
+                               no_reference_not_run=g["no_reference_not_run"]))
+    result.sort(key=lambda r: (r["family"], RADII.index(r["radius"]) if r["radius"] in RADII else 9))
+    if families is not None:
+        result = [r for r in result if r["family"] in families]
     return result
 
 
@@ -245,7 +274,8 @@ def summarize_holdout(rows):
 REPORT_COLS = ["family", "in_scope", "called", "loci", "conf_high", "conf_medium", "conf_low", "best_high", "best_medium",
                "best_low", "undetermined", "partial", "gene_only", "multi_locus", "both_alleles", "idiomorph",
                "locus_class", "arrangement"]
-HOLD_COLS = ["family", "radius", "rows", "tested", "correct", "wrong", "undetermined", "no_locus", "error", "no_reference"]
+HOLD_COLS = ["family", "radius", "rows", "tested", "correct", "wrong", "undetermined", "no_locus", "error", "no_reference",
+             "records", "no_assembly", "no_reference_not_run"]
 
 
 def write_tsv(path, cols, rows):
@@ -272,9 +302,11 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     res = summarize_reports(a.reports, set(a.family) if a.family else None)
     rows = [s.row() for _, s in sorted(res["stats"].items())]
-    hold = summarize_holdout(load_holdout(a.holdout_rows, a.holdout_manifest)) if a.holdout_rows else []
-    if a.family:
-        hold = [h for h in hold if h["family"] in set(a.family)]
+    wanted = set(a.family) if a.family else set(res["stats"])  # only the families this run searched
+    hold = []
+    if a.holdout_rows:
+        gaps = manifest_gaps(a.holdout_manifest) if a.holdout_manifest else None
+        hold = summarize_holdout(load_holdout(a.holdout_rows, a.holdout_manifest), gaps, wanted)
     head = (f"{res['genomes']} reports, {len(res['no_report'])} genome directories without a report, "
             f"{res['repeats']} repeated genome names, {res['not_searched']} reports with no family searched")
     print(head)

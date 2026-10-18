@@ -535,15 +535,20 @@ loci:
     idiomorph_values: ["MATa", "MATalpha"]
     # idiomorph_class unset (unassigned), as for MATkp and MATdc.
     idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
-    # SCOPE HELD BACK (curator, 2026-10-18): MATog is records plus family declaration only and routes NO genome, so
-    # Ogataea genomes behave exactly as without it (phylum_fallback, MATsc/MTL/MAT/MATyl calls), pending the
-    # leave-own-record-out analysis (docs/notes/2026-10-18_komagataella-mata-analysis.md, section 12).
-    # MECHANISM: `taxonomic_scope` is required (minItems 1, integer items, no minimum), so it holds the sentinel
-    # -461281, the negative of the intended genus taxid, which no lineage and no genome taxid contains; with
-    # `fallback_searchable: false` the family is never searched. The intended scope when released is
-    # [461281] = genus Ogataea (verified with taxonkit on 2026-10-18: name2taxid 461281, rank genus under
-    # Pichiales; Pichiaceae; Ogataea). To release: replace the sentinel by 461281.
-    taxonomic_scope: [-461281]
+    # SCOPE = THE POLYMORPHA COMPLEX ONLY (curator decision, 2026-10-18: complex-only, not the genus). The scope
+    # lists the species-level taxids of O. polymorpha 460523, O. angusta 870730, O. parapolymorpha 1005962 and the
+    # natural hybrid O. polymorpha x O. parapolymorpha 2053387. Verified with taxonkit under Slurm on 2026-10-18
+    # (lineage -r -t): all four are rank species under Ogataea (461281; Pichiaceae; Pichiales); the DL-1 strain
+    # 871575 (rank strain) lies under 1005962 and routes by lineage; these are all the taxids the 37 complex genomes
+    # of the v0.6.0 campaign carry (460523 x18, 870730 x11, 1005962 x6, 871575 x1, 2053387 x1). The genus 461281
+    # is NOT in the scope: Ogataea genomes outside the complex are not routed here (they stay in phylum_fallback).
+    # WHY NOT THE GENUS YET: the two records (deposit AJ617305.1, O. parapolymorpha DL-1) are from the complex; with
+    # them as the only references the other 75 Ogataea genomes match at 45-66% identity over 27-52% of the MAT
+    # proteins (leave-own-record-out analysis, docs/notes/2026-10-18_komagataella-mata-analysis.md, section 12.2).
+    # A genus scope is deferred until a record from a distant Ogataea clade exists, and the question whether
+    # such calls are reported as a "locus detection" or have their confidence capped below an identity/coverage floor
+    # is OPEN with the curator.
+    taxonomic_scope: [460523, 870730, 1005962, 2053387]
     fallback_searchable: false
     # SLA2 and DIC1 flank the cassette within about 5 kb in the references; the second SLA2 + a1 copy is 19 kb away.
     flank_carried_window_bp: 20000

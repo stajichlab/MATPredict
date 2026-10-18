@@ -91,8 +91,9 @@ def test_matkp_scope_stays_komagataella_and_holds_no_ogataea_record():
 
 def test_matog_family_declaration():
     fam = _og()
-    # scope HELD BACK (curator, 2026-10-18): the sentinel -461281 matches no lineage; release = 461281 (genus Ogataea)
-    assert list(fam.taxonomic_scope) == [-461281]
+    # COMPLEX-ONLY scope (curator, 2026-10-18): species taxids of the polymorpha complex, NOT the genus 461281
+    assert list(fam.taxonomic_scope) == [460523, 870730, 1005962, 2053387]
+    assert 461281 not in fam.taxonomic_scope
     assert fam.fallback_searchable is False
     assert fam.two_idiomorphs_report is False
     assert set(fam.idiomorph_classes.values()) == {"unassigned"}
@@ -113,14 +114,21 @@ def test_matog_records():
         assert "MATa2" not in {g["name"] for g in rec["genes"]}  # not recorded as present or absent (unresolved)
 
 
-def test_matog_routes_no_genome_until_the_scope_is_released():
+def test_matog_routes_only_the_polymorpha_complex():
     from MATPredict.detect.family_registry import route
 
     fams = load_all_families(DB)
-    ogataea_lineage = [131567, 2759, 33154, 4751, 451864, 4890, 716545, 147537, 3239874, 3243775, 1156497, 461281, 460523]
-    d = route(460523, fams, lineage_taxids_resolver=lambda t: ogataea_lineage,
+    base = [131567, 2759, 33154, 4751, 451864, 4890, 716545, 147537, 3239874, 3243775, 1156497, 461281]
+    # complex genomes (species, strain under a species, hybrid) route to MATog by lineage or directly
+    for taxid, lineage in ((460523, base + [460523]), (870730, base + [870730]),
+                           (871575, base + [1005962, 871575]), (2053387, base + [2053387])):
+        d = route(taxid, fams, lineage_taxids_resolver=lambda t, l=lineage: l,
+                  phylum_name_resolver=lambda t: "Ascomycota")
+        names = {f.key.locus_name for f in d.families}
+        assert "MATog" in names and "MATkp" not in names, taxid
+    # another Ogataea species (O. glucozyma 36023) is not routed: phylum fallback, no MATog, no MATkp
+    d = route(36023, fams, lineage_taxids_resolver=lambda t: base + [36023],
               phylum_name_resolver=lambda t: "Ascomycota")
     names = {f.key.locus_name for f in d.families}
-    assert d.routing_mode == "phylum_fallback"           # as on main, before MATog existed
-    assert "MATog" not in names and "MATkp" not in names
+    assert d.routing_mode == "phylum_fallback" and "MATog" not in names and "MATkp" not in names
     assert "MATog" not in {f.key.locus_name for f in route(None, fams, phylum="Ascomycota").families}

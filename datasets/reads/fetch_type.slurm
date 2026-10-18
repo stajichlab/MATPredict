@@ -10,8 +10,10 @@
 # Result file: <out_dir>/<run>.<panel_prefix>.tsv, one per run and panel; datasets/reads/accumulate.py merges them (rerunnable, any order, any number of workers).
 # Env: DL_STYLE=outdir_first for cryptococcus/download.sh (default tsv_first, fusarium/download.sh).
 # Env: IDIOMORPHS="MAT1-1 MAT1-2" (default) names the idiomorphs; the panel files are <panel_dir>/<panel_prefix>_<NAME>.fasta (e.g. IDIOMORPHS="MATa MATalpha" for Cryptococcus).
-# Env: source datasets/reads/coccidioides/pilot/env.sh first (or set CLONE/TOOLS the same way).
+# Env: sources datasets/reads/env.sh (CLONE, TOOLS, PYTHONPATH); override the file with ENV_SH.
 set -uo pipefail
+# Do not rely on the submit shell's environment: a task that ran with the wrong python failed with "No module named MATPredict".
+source "${ENV_SH:-/bigdata/stajichlab/jstajich/projects/MATPredict_cocci/datasets/reads/env.sh}"
 : "${SCRATCH:?SCRATCH must be set by Slurm}"
 tsv=$1; dl=$2; pdir=$3; pfx=$4; out=$5
 run=$(awk -F'\t' -v n=$((SLURM_ARRAY_TASK_ID+1)) 'NR==n{print $1}' "$tsv")

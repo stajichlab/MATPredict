@@ -1,0 +1,136 @@
+profile: MATa2_saccharomycotina
+kind: Saccharomycotina MATa2 (HMG-box-like) profile; SUPPORTING EVIDENCE ONLY
+status_statement: This profile is NOT referenced by any order.yml, vote, gate or classification
+  step and changes no call. The set of seven training proteins may be incomplete.
+  Margins over the best background HMG-box protein are thin for single divergent lineages
+  (see leave_one_lineage_out). MATa2 identity of the training proteins rests on annotation
+  and the homology evidence in docs/notes/2026-10-18_komagataella-mata-analysis.md,
+  not on a published domain annotation.
+builder: scripts/build_mata2_saccharomycotina_hmm.py
+deterministic: true
+pyhmmer_version: 0.12.3
+tool_versions:
+  pyhmmer: 0.12.3
+  hmmer: HMMER3/f [3.4 | Aug 2023]
+  mafft: v7.526 (2024/Apr/26)
+mafft_options:
+- --localpair
+- --maxiterate
+- '1000'
+- --quiet
+- --thread
+- '1'
+hmm_builder_seed: 42
+training_sha256: a76a0a494642c62d6aa736bc813d5200c67ebc0ef2168865282cb8a02e930f7a
+hmm_sha256: f6e8874afd34f136c089b79cd033b707631e6563947b99d6a515a34e4ba772c1
+n_sequences: 7
+n_unique: 7
+pairwise_identity_min_median_max:
+- 15.7
+- 22.5
+- 38.7
+leave_one_lineage_out:
+  pool: 'pool.faa: 72129 proteins, sha256 31747bd55c24b611e954dbd664ab8c35382ae2d72790003321be1abefca28766'
+  set_aside_background_ids:
+  - A0A1Z8JKM8
+  - C5DJY3
+  - C5DUN6
+  per_protein:
+    Yar_mata2:
+      lineage: Dipodascales
+      held_out_score: 22.4
+      evalue: 3e-04
+      best_background_hmg_score: 21.3
+      best_background_id: tr|W1QBH4|W1QBH4_OGAPD
+      margin: 1.1
+    Geo_MATA:
+      lineage: Dipodascales
+      held_out_score: 43.9
+      evalue: 9e-11
+      best_background_hmg_score: 21.3
+      best_background_id: tr|W1QBH4|W1QBH4_OGAPD
+      margin: 22.6
+    Kom_MATa2:
+      lineage: Komagataella
+      held_out_score: 43.9
+      evalue: 1e-10
+      best_background_hmg_score: 37.7
+      best_background_id: tr|Q6FVU9|Q6FVU9_CANGA
+      margin: 6.3
+    Klu_MATA2:
+      lineage: Saccharomycetaceae
+      held_out_score: 26.7
+      evalue: 2e-05
+      best_background_hmg_score: 25.4
+      best_background_id: tr|C5DUF0|C5DUF0_ZYGRC
+      margin: 1.3
+    Can_MTLA2:
+      lineage: Serinales
+      held_out_score: 50.2
+      evalue: 1e-12
+      best_background_hmg_score: 41.3
+      best_background_id: tr|Q6FVU9|Q6FVU9_CANGA
+      margin: 8.9
+    Deb_MTLA2:
+      lineage: Serinales
+      held_out_score: 56.7
+      evalue: 1e-14
+      best_background_hmg_score: 41.3
+      best_background_id: tr|Q6FVU9|Q6FVU9_CANGA
+      margin: 15.4
+    Cla_MTLA2:
+      lineage: Serinales
+      held_out_score: 39.5
+      evalue: 2e-09
+      best_background_hmg_score: 41.3
+      best_background_id: tr|Q6FVU9|Q6FVU9_CANGA
+      margin: -1.8
+leave_one_lineage_out_definition: 'For each lineage the profile is rebuilt without
+  it and searched against the background pool; margin = held-out score minus the best-scoring
+  pool protein that is not a training protein (exact sequence) and not in set_aside_background_ids
+  (probable unlabelled MATa2 orthologues: Z. rouxii C5DUN6, L. thermotolerans C5DJY3,
+  P. kudriavzevii A0A1Z8JKM8; locus-tag adjacency to the MATa1-type gene only, not
+  checked on the genomes).'
+training:
+- id: Can_MTLA2
+  species: Candida albicans
+  strain: SC5314
+  lineage: Serinales
+  source_accession: AAT08437.1
+  record: 5476_sc5314_MTL_A
+- id: Cla_MTLA2
+  species: Clavispora lusitaniae
+  strain: CL143
+  lineage: Serinales
+  source_accession: ACS29266.1
+  record: 36911_cl143_MTL_A
+- id: Deb_MTLA2
+  species: Debaryomyces hansenii
+  strain: CBS767
+  lineage: Serinales
+  source_accession: XP_460137.2
+  record: 4959_cbs767_MTL_A
+- id: Geo_MATA
+  species: Geotrichum candidum
+  strain: CLIB 918
+  lineage: Dipodascales
+  source_accession: CCO73812.1
+  record: 1173061_clib918_MATdc_A
+- id: Klu_MATA2
+  species: Kluyveromyces lactis
+  strain: NRRL Y-1140
+  lineage: Saccharomycetaceae
+  source_accession: XP_452338.1
+  record: 28985_nrrl-y-1140_MATsc_MATa
+- id: Kom_MATa2
+  species: Komagataella phaffii
+  strain: CBS 7435
+  lineage: Komagataella
+  source_accession: SCV12319.1
+  record: 460519_cbs-7435_MATkp_MATa
+- id: Yar_mata2
+  species: Yarrowia lipolytica
+  strain: W29
+  lineage: Dipodascales
+  source_accession: CAE84423.1
+  record: 4952_w29_MATyl_A

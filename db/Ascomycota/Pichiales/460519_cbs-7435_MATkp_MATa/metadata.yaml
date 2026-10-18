@@ -1,0 +1,201 @@
+record_id: 460519_cbs-7435_MATkp_MATa
+record_version: 2
+taxonomy:
+  taxid: 460519
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Pichiales;f__Pichiaceae;g__Komagataella;s__Komagataella_phaffii
+  lineage_resolved_date: '2026-10-17'
+organism:
+  species: Komagataella phaffii
+  strain:
+    name: CBS 7435
+    known: true
+    culture_collection_ids:
+    - CBS 7435
+    - NRRL Y-11430
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATkp
+  idiomorphs:
+  - MATa
+  system: pseudohomothallic
+locus:
+  assembly_accession: GCA_900235035.2
+  assembly_accession_basis: strain_match_verified
+  assembly_location:
+    contig: LT962479.2
+    start: 1770
+    end: 7997
+    identity: 100.0
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: DIC1->MATa2->MATa1->SLA2
+    definition_note: 'MATa cassette of K. phaffii CBS 7435, chromosome 4 (FR839631.1:1666-7892,
+      Kuberl et al. 2011 genome, PMID 21575661; gene models CCA40181.1 DIC1-1, SCV12319.1
+      MATa2, CCA40182.1 MATa1, CCA40183.1 SLA2-2). K. phaffii is homothallic and switches
+      mating type by inversion of a ~138 kb region of chromosome 4 that carries a
+      MATa cassette at one end and a MATalpha cassette at the other; the cassette
+      beside the telomere is repressed (Hanson et al. 2014, PMID 25349420; Heistinger
+      et al. 2018, PMID 29061733; Feng et al. 2020, PMID 31756769). In the CBS 7435
+      assembly this MATa cassette is the one at the chromosome-4 end (locus 1, FR839631.1
+      position 1666) and the MATalpha cassette is 135 kb away (locus 2), so the sequenced
+      cell was in the configuration with MATalpha at the active locus; mating_type.system
+      is pseudohomothallic (switching homothallism) for the species, not a property
+      of this configuration alone. ANCHOR (curator rule B10): strain label CBS 7435
+      on both assemblies (BioSample SAMEA2272267 STRAIN CBS 7435 for GCA_000223565.1,
+      which holds FR839631.1; GCA_900235035.2 assembly KP_7435-4, organism K. phaffii
+      CBS 7435), then blastn of the 6,228 bp segment FR839631.1:1665-7892 against
+      LT962479.2: 100.000% over 6,228/6,228 bp at LT962479.2:1770-7997 (2026-10-17).
+      The same segment also matches the other cassette at 99.97% over its 3.1 kb SLA2
+      repeat and 100% over a 1 kb DIC1 repeat (LT962479.2:136012-139143, 140791-141829):
+      the flanks are an inverted repeat shared by both cassettes, only the MATa1/MATa2
+      interval is idiomorph-specific. GENE MODELS: MATa2 (178 aa) and MATa1 (225 aa)
+      are single-exon in this annotation and in the independent 2022 annotation of
+      LT962479.2 (CAH2450367.1, CAH2450368.1, identical proteins). No intron was found
+      by me and no RNA-seq was re-examined. GENETIC CODE: standard (NCBI Taxonomy
+      GeneticCode 1 for taxid 460519, 981350 and 644223); every CDS here translates
+      with table 1 without an internal stop. STRAIN LABEL: CBS 7435 is stated to be
+      equivalent to NRRL Y-11430 in PMID 36520709 (Offei et al. 2022, "CBS7435 (NRRL
+      Y-11430)") and PMID 31654411 ("Y-11430 (CBS7435)"); the culture_collection_ids
+      list NRRL Y-11430 on that basis. NOT VERIFIED: the Kuberl et al. 2011 full text
+      (the J Biotechnol paper) was not readable here, so the CBS 7435 source and its
+      deposit history rest on the NCBI records and the two papers above. The idiomorph
+      names MATa1/MATa2/MATalpha1/MATalpha2 are the annotation names; idiomorph_class
+      and gene classes for this family are unassigned pending the curator (order.yml,
+      MATkp). RECORD VERSION 2, 2026-10-18: gene_class HMG_box is declared for MATa2 in order.yml
+      by curator decision, accepting structural, iterative and alignment evidence as the bar;
+      the evidence is weak and is stated here. Pfam HMG_box scores MATa2 13.6 bits (GA 25.4)
+      and the curator MAT1-2-1 profile finds nothing; a single search finds only C. albicans
+      MTLA2 (38 bits) and jackhmmer reaches HMG-box proteins (Ixr1, Abf2, Rox1) and
+      Pezizomycotina MAT1-2-1 only after iterating; AlphaFold models of Komagataella, K. lactis
+      and C. albicans MATa2 show one three-helix core of about 80 residues and Foldseek top
+      hits are all HMG boxes at E 0.02-0.65; the alignment to Nhp6a, SRY, Ixr1 and Aspergillus
+      MAT1-2-1 matches the box start and the helix-2 S/K..S..W motif. A 7-protein
+      Saccharomycotina MATa2 profile recovers held-out lineages with thin margins over the
+      best background HMG protein (deterministic build, held-out vs background: Komagataella
+      43.9 vs 37.7 bits, K. lactis 26.7 vs 25.4, Yarrowia mata2 22.4 vs 21.3, Clavispora 39.5 vs
+      41.3, i.e. below it). Details: docs/notes/2026-10-18_komagataella-mata-analysis.md. MATa1
+      is a homeodomain protein (PF00046 51.7 bits) and has no class (the schema has none).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: FR839631.1
+        seq_region: FR839631.1
+      start: 1666
+      end: 7892
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: dic1
+  protein_accession: ncbi_protein:CCA40181.1
+  role: flanking_conserved
+  present: true
+  locus_tag: PP7435_CHR4-0001
+  segment_index: 0
+  start: 1666
+  end: 2583
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MATa2
+  protein_accession: ncbi_protein:SCV12319.1
+  role: core_MAT
+  present: true
+  locus_tag: PP7435_CHR4-1037
+  segment_index: 0
+  start: 2740
+  end: 3276
+  strand: '-'
+  order_in_locus: 1
+- gene_index: 2
+  name: MATa1
+  protein_accession: ncbi_protein:CCA40182.1
+  role: core_MAT
+  present: true
+  locus_tag: PP7435_CHR4-0002
+  segment_index: 0
+  start: 4058
+  end: 4735
+  strand: +
+  order_in_locus: 2
+- gene_index: 3
+  name: sla2
+  protein_accession: ncbi_protein:CCA40183.1
+  role: flanking_conserved
+  present: true
+  locus_tag: PP7435_CHR4-0003
+  segment_index: 0
+  start: 4755
+  end: 7892
+  strand: '-'
+  order_in_locus: 3
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: both MAT cassettes and the inversion-based switching between
+      them shown by PCR/sequence analysis of both orientations and induction of switching;
+      functional dissection of the MAT genes by deletion and mating assays in a K.
+      phaffii type-strain background (CBS 2612, 99% identical at both loci to CBS
+      7435)
+    citations:
+    - pmid: '25349420'
+      doi: 10.1073/pnas.1416014111
+    - pmid: '29061733'
+      doi: 10.1128/MCB.00398-17
+  boundaries:
+    tier: 2
+    experimental_method: genome annotation of CBS 7435 (FR839631.1, curated by Valli
+      et al. 2016; and the independent 2022 annotation of LT962479.2); gene extents
+      are annotation-derived, not experimentally delimited
+    citations:
+    - pmid: '21575661'
+      doi: 10.1016/j.jbiotec.2011.04.014
+    - pmid: '27388471'
+      doi: 10.1093/femsyr/fow051
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: 'functional assay: Mata2 and Matalpha1 are essential for
+      diploid formation in a-type and alpha-type cells respectively, in heterothallic
+      strains of stable mating type (deletion of the outer repeat); MATa/MATalpha
+      identity of the genes by homology to the Saccharomycotina MATa1/MATa2/MATalpha1/MATalpha2
+      genes'
+    citations:
+    - pmid: '29061733'
+      doi: 10.1128/MCB.00398-17
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: FR839631.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 25349420|460519|MATkp|MATa
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -1,0 +1,80 @@
+=========== 1. jackhmmer iteration trace, Kp_MATa2
+ iter 6 included 87 new 87
+     new: ('A0A1G4KQN4', 260.5, 'tr|A0A1G4KQN4|A0A1G4KQN4_KOMPC Mating-type protein a2 OS=Kom')
+     new: ('Q6FN37', 131.2, 'tr|Q6FN37|Q6FN37_CANGA HMG box domain-containing protein OS=')
+     new: ('C5DGP2', 125.4, 'tr|C5DGP2|C5DGP2_LACTC KLTH0D06908p OS=Lachancea thermotoler')
+     new: ('Q6FLN7', 124.6, 'tr|Q6FLN7|Q6FLN7_CANGA HMG box domain-containing protein OS=')
+     new: ('Q02486', 123.5, 'sp|Q02486|ABF2_YEAST ARS-binding factor 2, mitochondrial OS=')
+     new: ('A0A2U9QWP5', 120.5, 'tr|A0A2U9QWP5|A0A2U9QWP5_PICKU HMG box domain-containing pro')
+     new: ('W1QK15', 119.8, 'tr|W1QK15|W1QK15_OGAPD HMG box domain-containing protein OS=')
+     new: ('C5DQQ0', 116.7, 'tr|C5DQQ0|C5DQQ0_ZYGRC ZYRO0B02068p OS=Zygosaccharomyces rou')
+ first iteration included: {'Ixr1': 6, 'Abf2': 6, 'Rox1': 6, 'Hmo1': 6, 'Rfg1': 6, 'KlMATA2': 6, 'CaMTLA2': 6}
+ phmmer (iter 1) top hits of Kp_MATa2 with E<=10:
+    A0A1G4KQN4 389.7 5e-117 tr|A0A1G4KQN4|A0A1G4KQN4_KOMPC Mating-type protein a2 OS=Kom
+    Q71U11 38.3 6e-09 sp|Q71U11|MATA2_CANAL Mating-type-like protein A2 OS=Candida
+    A0A1Z8JKM8 31.1 1e-06 tr|A0A1Z8JKM8|A0A1Z8JKM8_PICKU Uncharacterized protein OS=Pi
+    C5DUN6 29.9 2e-06 tr|C5DUN6|C5DUN6_ZYGRC ZYRO0C18326p OS=Zygosaccharomyces rou
+    Q6BNT3 29.0 4e-06 tr|Q6BNT3|Q6BNT3_DEBHA DEHA2E19140p OS=Debaryomyces hansenii
+    C5DJY3 27.2 2e-05 tr|C5DJY3|C5DJY3_LACTC KLTH0F00264p OS=Lachancea thermotoler
+    W1QBH4 15.2 8e-02 tr|W1QBH4|W1QBH4_OGAPD Uncharacterized protein OS=Ogataea pa
+    Q6BUG9 13.1 3e-01 tr|Q6BUG9|Q6BUG9_DEBHA DEHA2C10736p OS=Debaryomyces hansenii
+=========== 2. alignment, MATa2 orthologues and HMG references (region of Kp MATa2 30-130)
+   Kp_MATa2       AG-------KGLSGKKFNLS----------------THRPRNKFIISKSIFSKVIQRY----YPDLSFEE
+   Kl_MATA2       TI-----------KENT-----------------KKYTRPRNQFVLMRTLFNRRVNNHILQYYNKSKLEK
+   Ca_MTLA2       SI-----------DKMTVLS----------------SFRSRNSFIIARSILSKLLRK------NKADFKK
+   Dh_MTLA2       RK-------PTAKDKKTAIT--------------RGSFRTRNKFIIARNLLCRLVKHE-----KALSSTE
+   Cl_MTLA2       -----------------------------------KRYRSRNQFIMARQLISPFLKGV-------HNSAS
+   Geo_MATA       QA-------PPRKRKNSTED--------------KPIPRPTNSFICARSMLHKMFER------LNISTIE
+   Yl_mata2       DS---------RTNEPEYIE--------------PKVLKPRNSYILFRNATSRCSQS------IDPNSAF
+   ctl_NHP6A      ----------------------------------NAPKRALSAYMFFANENRDIVRSE----NPDITFGQ
+   ctl_SRY        SCNSKYQCETGENSKGNVQD---------------RVKRPMNAFIVWSRDQRRKMALE----NPRMRNSE
+   ctl_IXR1       S--------RIERRKQLKKQ---------------GPKRPSSAYFLFSMSIRNELLQQ----FPEAKVPE
+   Pez_MAT1-2-1_7 VS-VASHGEAVKTNKVTVTESFAPRGKPVGPLKAPKVPRPPNAFILYRQHHHPKIKEA----YPDYSNND
+
+   Kp_MATa2       -----NSKIASYLWKHRFGC--FDKYYEYLQIEESKFTSLV-TSKIDQLAFKAVPTE-------------
+   Kl_MATA2       KMFTLTSKITSELWNESSPD--LKSYFSLLATLEENWHKYTHYCSWDRNSAQTLSMEPIELSQVRPRLIS
+   Ca_MTLA2       -----VSKSVSLLWGSVDNS--FKNYFEYLSILESQWHDKK-SSNLN--PISSTRTT-------------
+   Dh_MTLA2       -----ISKVVSLVWKESNKS--LHDYFEYLSLLETYWYDKL-MSSYGNSTLQATATAAV-----------
+   Cl_MTLA2       -----RSKLVSCIWKTKTSQ--FEKYFRYLAALDSNYFEEL-------IKFRSANNAFV-----------
+   Geo_MATA       -----CSNLMSDIWKNYNDD-LFKHYFRYLSFLEACWHTSV-YPNYRYNPRKKLPSP-------------
+   Yl_mata2       -----VSRVSSYIWGSGIPNPIVRRWFKYMGFFEALYHEVD-YPEY-------IPNK-------------
+   ctl_NHP6A      -----VGKKLGEKWKALTPE--EKQPYEAKAQADKKRYESE-KELYN-----------------------
+   ctl_SRY        -----ISKQLGYQWKMLTEA--EKWPFFQEAQKLQAMHREK-YPNYKYRPRR------------------
+   ctl_IXR1       -----LSKLASARWKELTDD--QKKPFYEEFRTNWEKYRVV-RDAYE-----------------------
+   Pez_MAT1-2-1_7 -----ISVMLGKQWKDENEE--IKTQFRNLAEELKKKHAED-HPDYHYTPRKPSERKR------------
+
+   Kp_MATa2       ---------------------------------------KTTSQCTFR
+   Kl_MATA2       SLTVGAGSSVSTYTLRELLLVRKIKSRKRKTTTLTQ-DSSPTTKFKYK
+   Ca_MTLA2       ------------SELNYIELCSSIYNQSRKHPRS-----VQGNKAKFR
+   Dh_MTLA2       --------SIRLSSVPYENLCASCYNKHKQKKTLNY---DYSKSAKFR
+   Cl_MTLA2       ------GDS-------YRSMCSSSYSLKRTY-----------RDAKFK
+   Geo_MATA       ---------------------------------------KPSSCALKK
+   Yl_mata2       ---------------------------------------LPKSPKKPK
+   ctl_NHP6A      ------------------------------------------------
+   ctl_SRY        --------------------------KAKMLPKNCS--LLPADPASV-
+   ctl_IXR1       ----------------------------KTLPPK-----RPSGPFIQ-
+   Pez_MAT1-2-1_7 ------------------------RTSSRQFSKNTKPAALRDTPASMN
+
+=========== 3. ORF checks
+ MATa2 CDS translates: MTVTTFLSSSFDSVAFAMTCVSDKSYKTTA ... len 178 aa
+ upstream in-frame (5'->3', ends at the ATG): ILPCMSLRCGT*VSHSQV*WIEFTLRQLRITITIFSKIIGLIYFHIFNFISTLVGRKDRS
+ last upstream in-frame stop at aa 42 before ATG; Ms between: [] n codons between stop and ATG 41
+ stop codon: TAG
+ MATa1 translate MSGNTFREITAACLLSMILS 225 aa; stop TAA
+ MATa1 upstream last stop 39 aa before ATG; Ms in between: []
+=========== 4. tblastn of Kp MATa1/MATa2 across Komagataella genomes
+  GCA_023013455.1_ASM230 MATa1 JAJJTB010000045.1 id100.0 aln225/225 q1-225 ;; MATa2 JAJJTB010000045.1 id100.0 aln178/178 q1-178 ;; MATalpha1 - ;; MATalpha2 -
+  GCA_023013825.1_ASM230 MATa1 JAJJTU010000041.1 id100.0 aln225/225 q1-225 ;; MATa2 JAJJTU010000041.1 id100.0 aln178/178 q1-178 ;; MATalpha1 - ;; MATalpha2 -
+  GCA_023013855.1_ASM230 MATa1 JAJJTV010000046.1 id100.0 aln225/225 q1-225 ;; MATa2 JAJJTV010000046.1 id100.0 aln178/178 q1-178 ;; MATalpha1 - ;; MATalpha2 -
+  GCA_023014715.1_ASM230 MATa1 JAJJUH010000040.1 id100.0 aln225/225 q1-225 ;; MATa2 JAJJUH010000040.1 id100.0 aln178/178 q1-178 ;; MATalpha1 - ;; MATalpha2 -
+  GCA_023013895.1_ASM230 MATa1 JAJJTX010000047.1 id100.0 aln225/225 q1-225 ;; MATa2 JAJJTX010000047.1 id100.0 aln178/178 q1-178 ;; MATalpha1 - ;; MATalpha2 -
+  GCA_023014845.1_ASM230 MATa1 JAJJUO010000047.1 id100.0 aln225/225 q1-225 ;; MATa2 JAJJUO010000047.1 id100.0 aln178/178 q1-178 ;; MATalpha1 - ;; MATalpha2 -
+  GCA_030557195.1_ASM305 MATa1 JAKTVM010000015.1 id99.6 aln225/225 q1-225 ;; MATa2 JAKTVM010000015.1 id97.8 aln178/178 q1-178 ;; MATalpha1 - ;; MATalpha2 -
+  GCA_030567415.1_ASM305 MATa1 JAJLSE010000039.1 id92.9 aln225/225 q1-225 ;; MATa2 JAJLSE010000039.1 id89.3 aln178/178 q1-178 ;; MATalpha1 - ;; MATalpha2 -
+  GCA_000182785.1_ASM182 MATa1 CABH01000012.1 id92.9 aln225/225 q1-225 ;; MATa2 CABH01000012.1 id89.3 aln178/178 q1-178 ;; MATalpha1 - ;; MATalpha2 -
+  GCA_900235035.2_KP_743 MATa1 LT962479.2 id100.0 aln225/225 q1-225 ;; MATa2 LT962479.2 id100.0 aln178/178 q1-178 ;; MATalpha1 LT962479.2 id100.0 aln190/190 q1-190 ;; MATalpha2 LT962479.2 id99.4 aln170/173 q4-173
+  GCA_000223565.1_PicPas MATa1 FR839631.1 id100.0 aln225/225 q1-225 ;; MATa2 FR839631.1 id100.0 aln178/178 q1-178 ;; MATalpha1 FR839631.1 id100.0 aln190/190 q1-190 ;; MATalpha2 FR839631.1 id99.4 aln170/173 q4-173
+  GCA_001708105.1_ASM170 MATa1 CP014587.1 id92.9 aln225/225 q1-225 ;; MATa2 CP014587.1 id89.3 aln178/178 q1-178 ;; MATalpha1 CP014587.1 id86.3 aln190/190 q1-190 ;; MATalpha2 CP014587.1 id92.9 aln169/173 q4-172
+  GCA_023213065.1_ASM232 MATa1 JAKWAZ010000004.1 id94.7 aln225/225 q1-225 ;; MATa2 JAKWAZ010000004.1 id89.9 aln178/178 q1-178 ;; MATalpha1 JAKWAZ010000004.1 id87.9 aln190/190 q1-190 ;; MATalpha2 JAKWAZ010000004.1 id92.3 aln168/173 q5-172
+  GCA_900010155.1_JPS733 MATa1 FBUB01000071.1 id100.0 aln225/225 q1-225 ;; MATa2 FBUB01000071.1 id100.0 aln178/178 q1-178 ;; MATalpha1 - ;; MATalpha2 -
+  GCF_000027005.1_ASM270 MATa1 - ;; MATa2 - ;; MATalpha1 NC_012966.1 id100.0 aln143/190 q48-190 ;; MATalpha2 NC_012966.1 id99.4 aln170/173 q4-173

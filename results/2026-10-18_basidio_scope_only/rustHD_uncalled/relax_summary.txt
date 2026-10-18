@@ -1,0 +1,12 @@
+genomes 42
+baseline-uncalled genomes in this set: 24 gained a call with bar 1: 7
+called genomes with extra loci: 0 extra loci 0
+new loci total 7 by polished Counter({1: 7}) arrangement Counter({'divergent': 6, 'tandem': 1}) classes Counter({'idiomorph_gene_only': 7}) conf Counter({'medium': 6, 'high': 1})
+new loci with BOTH genes on one contig and divergent: 6 gaps [0, 696, 2045, 2167, 2167, 2204, 2265]
+{'acc': 'GCA_003057935.1_ASM305793v1', 'genus': 'Hemileia', 'group': 'target', 'n50': 3619, 'contig': 'PZQQ01032154.1', 'start': 1382, 'end': 4105, 'span': 2724, 'polished': 1, 'conf': 'medium', 'cls': 'idiomorph_gene_only', 'genes': 'bE+bW', 'arrangement': 'divergent', 'gap': 2265}
+{'acc': 'GCA_000500795.1_Endo_hark_1.0', 'genus': 'Endocronartium', 'group': 'target', 'n50': 3091, 'contig': 'AXDO01008227.1', 'start': 4, 'end': 1850, 'span': 1847, 'polished': 1, 'conf': 'medium', 'cls': 'idiomorph_gene_only', 'genes': 'bE+bW', 'arrangement': 'divergent', 'gap': 696}
+{'acc': 'GCA_004125335.1_ASM412533v1', 'genus': 'Hemileia', 'group': 'target', 'n50': 9937, 'contig': 'PHNK01003389.1', 'start': 1832, 'end': 4494, 'span': 2663, 'polished': 1, 'conf': 'medium', 'cls': 'idiomorph_gene_only', 'genes': 'bE+bW', 'arrangement': 'divergent', 'gap': 2204}
+{'acc': 'GCA_030280995.1_Hv_R1_Cat_CENPAT', 'genus': 'Hemileia', 'group': 'target', 'n50': 35997290, 'contig': 'JASXTE010000003.1', 'start': 13704885, 'end': 13707507, 'span': 2623, 'polished': 1, 'conf': 'medium', 'cls': 'idiomorph_gene_only', 'genes': 'bE+bW', 'arrangement': 'divergent', 'gap': 2167}
+{'acc': 'GCA_036250445.1_CLR1234_spades_200', 'genus': 'Hemileia', 'group': 'target', 'n50': 576, 'contig': 'JAYKUG010226926.1', 'start': 2369, 'end': 4893, 'span': 2525, 'polished': 1, 'conf': 'medium', 'cls': 'idiomorph_gene_only', 'genes': 'bE+bW', 'arrangement': 'divergent', 'gap': 2045}
+{'acc': 'GCA_054948715.1_ASM5494871v1', 'genus': 'Hemileia', 'group': 'target', 'n50': 34682380, 'contig': 'CM142961.1', 'start': 37098276, 'end': 37100898, 'span': 2623, 'polished': 1, 'conf': 'medium', 'cls': 'idiomorph_gene_only', 'genes': 'bE+bW', 'arrangement': 'divergent', 'gap': 2167}
+{'acc': 'GCA_002157015.1_ASM215701v1', 'genus': 'Melampsora', 'group': 'target', 'n50': 2803, 'contig': 'KZ132129.1', 'start': 2803, 'end': 4222, 'span': 1420, 'polished': 1, 'conf': 'high', 'cls': 'idiomorph_gene_only', 'genes': 'bE+bW', 'arrangement': 'tandem', 'gap': 0}

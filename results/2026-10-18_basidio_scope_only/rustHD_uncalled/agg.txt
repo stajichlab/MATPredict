@@ -1,0 +1,27 @@
+42 genomes
+target 18 {'E_no_hit': 2, 'B_pair_on_one_contig_fragmentary': 3, 'C_both_genes_hit_not_on_one_contig': 6, 'D_one_gene_only': 3, 'A_pair_complete_models': 4}
+uncalled_other 12 {'D_one_gene_only': 5, 'E_no_hit': 4, 'C_both_genes_hit_not_on_one_contig': 3}
+control 12 {'A_pair_complete_models': 6, 'B_pair_on_one_contig_fragmentary': 6}
+by genus/status (category):
+   ('Austropuccinia', 'uncalled') {'D': 1}
+   ('Cronartium', 'uncalled') {'D': 1}
+   ('Endocronartium', 'uncalled') {'B': 1}
+   ('Hemileia', 'uncalled') {'C': 5}
+   ('Melampsora', 'called') {'B': 1, 'A': 4}
+   ('Melampsora', 'uncalled') {'E': 1, 'C': 1, 'D': 1}
+   ('Phakopsora', 'called') {'B': 6}
+   ('Phakopsora', 'uncalled') {'E': 1}
+   ('Puccinia', 'called') {'A': 6}
+   ('Puccinia', 'uncalled') {'D': 3, 'E': 3, 'C': 3}
+   ('Uromyces', 'called') {'B': 1}
+   ('Uromyces', 'uncalled') {'D': 2, 'E': 1}
+N50 uncalled n 24 median 4929.5 min 2395 max 35997290
+N50 called n 18 median 4791105.5 min 6688 max 47183946
+Hemileia n 5 N50 median 11352 genome Mb median 471.4 contigs median 33176
+Endocronartium n 1 N50 median 4195 genome Mb median 39.8 contigs median 10136
+Uromyces n 4 N50 median 2514.5 genome Mb median 11.3 contigs median 4386.5
+Melampsora n 8 N50 median 7375.0 genome Mb median 70.05 contigs median 7506.5
+Puccinia n 15 N50 median 11069 genome Mb median 56.8 contigs median 1720
+Phakopsora n 7 N50 median 47183946 genome Mb median 1274.0 contigs median 350
+Cronartium n 1 N50 median 4062 genome Mb median 42.5 contigs median 10987
+Austropuccinia n 1 N50 median 4378 genome Mb median 85.9 contigs median 21378

@@ -25,8 +25,9 @@ for i in $(seq 0 $IT); do
   [ $i -eq $IT ] && break
   [ -s locus_$i.fa ] || break
   $AP bwa index locus_$i.fa >/dev/null 2>&1
-  $AP bwa mem -t $T locus_$i.fa $F1 $F2 2>/dev/null | $AP samtools view -F 4 -q 1 - | cut -f1 | sort -u > mapped_$i.txt
+  $AP bwa mem -t $T locus_$i.fa $F1 $F2 2>/dev/null | $AP samtools view -F 4 -q 20 - | cut -f1 | sort -u > mapped_$i.txt
   cat ids_$i.txt mapped_$i.txt | sort -u > ids_$((i+1)).txt
+  [ $(wc -l < ids_$((i+1)).txt) -gt 300000 ] && { echo "recruit set exploded (>300k pairs), stopping at iter $i"; break; }
 done
 cp locus_$i.fa $R/res/asm/$run.locus_contigs.fa; cp c_$i.fa $R/res/asm/$run.contigs_ge300.fa
 grep '>' $R/res/asm/$run.locus_contigs.fa

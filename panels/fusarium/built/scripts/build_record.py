@@ -6,6 +6,7 @@ usage: build_record.py REF.fa(idiomorph A locus window, id used as-is) REFNAME C
 Both outputs are written on the forward strand of REF; CONTIG is reverse-complemented when it aligns on the minus strand."""
 import subprocess, sys, tempfile, os, re
 FLANK, MINID, MINBLOCK = 600, 97.0, 500
+PFX = os.environ.get("CTG_PREFIX", "")
 OFFSET = int(os.environ.get("REF_OFFSET", "0"))   # 1-based start of the REF window minus 1, to report coordinates on the source contig
 def read(p):
     d = {}; n = None
@@ -34,31 +35,42 @@ H = [h for h in H if h["ss"] < h["se"]]; H.sort(key=lambda h: h["qs"])
 best = max(range(len(H) - 1), key=lambda i: H[i+1]["qs"] - H[i]["qe"]) if len(H) > 1 else None
 A, B = H[best], H[best+1]
 refA = (A["qe"] + 1, B["qs"] - 1); ctgB = (A["se"] + 1, B["ss"] - 1)
-def flank_ok(h, side):
-    """longest flank <= FLANK (counted in ref bases from the core edge) whose alignment identity >= MINID"""
-    q, s = h["qseq"], h["sseq"]
-    if side == "L": q, s = q[::-1], s[::-1]   # walk away from the core: left flank is the right end of block A
-    pos = []   # (ref bases consumed, matches so far) after each alignment column that consumes a ref base
-    n = ident = 0
-    for x, y in zip(q, s):
-        if x != "-": n += 1
-        if x == y: ident += 1
-        if x != "-": pos.append((n, ident))
-        if n >= FLANK: break
-    best = 0
-    for n in range(min(FLANK, len(pos)), 0, -25):     # longest prefix (steps of 25 bp) with identity >= MINID
-        if pos[n-1][1] / n * 100 >= MINID: best = n; break
-    return best
-# left flank is the end of block A (nearest the core), right flank is the start of block B
-lf = flank_ok(A, "L"); rf = flank_ok(B, "R")
-rf_len, lf_len = min(rf, FLANK), min(lf, FLANK)
-def cut(seq, a, b, nm, coords_offset=0):
+def conserved_edge(h, side):
+    """Walk from the core edge into block h (side 'L': block A, from its end backwards; 'R': block B, from its start).
+    The columns right next to the core are often diverged (the alignment extends a little into the idiomorph), so first find
+    the first column c0 where a 100-column window is >= MINID identical; everything before c0 stays in the core.
+    Returns (ref_bp_trimmed, ctg_bp_trimmed, flank_len): bases between the block edge and c0 on each sequence, and the
+    longest flank (<= FLANK ref bases, 25-bp steps) from c0 with identity >= MINID."""
+    q, s_ = h["qseq"], h["sseq"]
+    if side == "L": q, s_ = q[::-1], s_[::-1]
+    n = len(q)
+    match = [1 if (x == y and x != "-") else 0 for x, y in zip(q, s_)]
+    c0 = None
+    for c in range(0, n - 100):
+        if sum(match[c:c+100]) >= MINID:
+            c0 = c; break
+    if c0 is None: return 0, 0, 0
+    trim_q = sum(1 for x in q[:c0] if x != "-"); trim_s = sum(1 for y in s_[:c0] if y != "-")
+    nq = ident = 0; best = 0; steps = {}
+    for x, y, m in zip(q[c0:], s_[c0:], match[c0:]):
+        if x != "-":
+            nq += 1
+            ident += m
+            if nq <= FLANK and nq % 25 == 0 and ident / nq * 100 >= MINID: best = nq
+        else:
+            ident += 0
+        if nq >= FLANK: break
+    return trim_q, trim_s, best
+tqA, tsA, lf = conserved_edge(A, "L"); tqB, tsB, rf = conserved_edge(B, "R")
+lf_len, rf_len = min(lf, FLANK), min(rf, FLANK)
+refA = (A["qe"] - tqA + 1, B["qs"] + tqB - 1); ctgB = (A["se"] - tsA + 1, B["ss"] + tsB - 1)
+def cut(seq, a, b):
     return seq[a-1-lf_len: b+rf_len], (a - lf_len, b + rf_len)
-recA, ca = cut(rseq, *refA, refname); recB, cb = cut(cseq, *ctgB, ctgname)
+recA, ca = cut(rseq, *refA); recB, cb = cut(cseq, *ctgB)
 print(f"blocks A q{A['qs']}-{A['qe']} s{A['ss']}-{A['se']} id{A['pid']}; B q{B['qs']}-{B['qe']} s{B['ss']}-{B['se']} id{B['pid']}; minus={minus}", file=sys.stderr)
 print(f"{labA} core ref {refA} ({refA[1]-refA[0]+1} bp); {labB} core contig {ctgB} ({ctgB[1]-ctgB[0]+1} bp); flanks L{lf_len} R{rf_len}", file=sys.stderr)
 rid = refname if ":" in refname else refname
 strand = "(-)" if minus else ""
 open(outA, "w").write(f">{refname}:{ca[0]+OFFSET}-{ca[1]+OFFSET}\n{recA}\n")
-open(outB, "w").write(f">{ctgname}:{cb[0]}-{cb[1]}{strand}\n{recB}\n")
+open(outB, "w").write(f">{PFX}{ctgname}:{cb[0]}-{cb[1]}{strand}\n{recB}\n")
 print(len(recA), len(recB), file=sys.stderr)

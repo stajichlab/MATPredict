@@ -104,10 +104,11 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import confidence_cap, partial_core
+from MATPredict.detect import confidence_cap, homothallic, partial_core
 from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
+    LOCUS_CLASS_HOMOTHALLIC,
     LOCUS_CLASS_IDIOMORPH_ONLY,
     LOCUS_CLASS_PARTIAL,
     apply_partial_locus,
@@ -365,6 +366,10 @@ class DetectionResult:
     its idiomorph rests on unmodelled hits. Such a call is kept only when the
     core hits lie inside the flank span, and is then capped at `low` and
     classed `partial_locus`. See `flank_carried`."""
+    homothallic_note: dict | None = None
+    """Set only when `--homothallic-policy both_genes` re-classed this locus as a
+    `homothallic_candidate`: the complete alpha-box and HMG-box genes, their profile
+    scores, the separation and the reason. A candidate, never an assertion."""
     idiomorph_vote_note: dict | None = None
     """Set only when the partial-coverage rule (`partial_core`, `--partial-core-policy`)
     triggered or was stopped by its contig-edge guard: the winning and the other
@@ -2258,6 +2263,9 @@ def run_pipeline(
     #: full-length core gene of the other idiomorph unless the profiles disagree
     #: (`partial_core`). Independent of `idiomorph_policy`.
     partial_core_policy: str = partial_core.DEFAULT_PARTIAL_CORE_POLICY,
+    #: `off` (default) or `both_genes`: a locus holding a COMPLETE, profile-confirmed alpha-box gene and a
+    #: COMPLETE, profile-confirmed HMG-box gene is reported as `homothallic_candidate` (`homothallic`).
+    homothallic_policy: str = homothallic.DEFAULT_HOMOTHALLIC_POLICY,
     #: `off` (default), `partial_weak` or `weak_only`: cap `high` at `medium` for a call whose best
     #: core hit is a contig-edge partial or a weak-identity hit with no flank gene
     #: (`confidence_cap`). Changes confidence only, never the locus or the idiomorph.
@@ -3056,6 +3064,30 @@ def run_pipeline(
         return partial_core.evaluate(vote, stats, profile_scores, companions=companions,
                                      companion_stats=companion_stats)
 
+    def _homothallic_reclass(r):
+        """`r` re-classed `homothallic_candidate` when `homothallic.evaluate` finds both complete genes."""
+        family = families_by_key[r.family_key]
+        if (r.locus_class not in (LOCUS_CLASS_MAT, LOCUS_CLASS_PARTIAL, LOCUS_CLASS_IDIOMORPH_ONLY)
+                or not family.homothallic_screen):
+            return r
+        try:
+            if family.key not in core_profile_cache:
+                core_profile_cache[family.key] = partial_core.load_core_profiles(db_root, family)
+            clf = core_profile_cache[family.key]
+            if clf is None:
+                return r
+            note = homothallic.note_for_evidence(
+                r.gene_evidence, family, clf,
+                lambda span: _translate_model(genome_fasta, span, genetic_code or 1, contig_seq_cache),
+                family.max_homothallic_separation_bp)
+        except Exception as exc:  # noqa: BLE001 - a candidate label must never crash a run
+            logger.warning("homothallic both_genes check failed (%s: %s); locus left as called",
+                           type(exc).__name__, exc)
+            return r
+        if note is None:
+            return r
+        return replace(r, locus_class=LOCUS_CLASS_HOMOTHALLIC, homothallic_note=note)
+
     def _confidence_cap_stats(family, called, evidence):
         """The called allele's core genes (any status, not `lost_to`) as `confidence_cap.CapStat`s."""
         pin = {g["name"]: set(g.get("present_in_idiomorphs") or ()) for g in family.genes}
@@ -3524,6 +3556,12 @@ def run_pipeline(
                     for c in strong_calls
                 )
             ]
+
+    # `--homothallic-policy both_genes` (default off): re-class a reported locus whose modelled core genes include a
+    # complete alpha-box and a complete HMG-box protein, confirmed by the gene-identity profiles. Last, after every
+    # rule that builds or withholds a call, so it sees the final gene evidence; changes only the class and the note.
+    if homothallic_policy == homothallic.POLICY_BOTH_GENES:
+        results = [_homothallic_reclass(r) for r in results]
 
     floor_withheld = []
     for score, cluster, scores in below_floor:

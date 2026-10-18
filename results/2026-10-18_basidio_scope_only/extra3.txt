@@ -1,0 +1,20 @@
+Basidiomycota:redHD not called 5 assembly_gap flag 0
+  reasons {'best cluster carried N modelled gene(s), below the N required to report a locus; none of its genes could be mo': 3, 'best cluster carried N modelled gene(s), below the N required to report a locus; only N of its genes could be ': 2}
+  suppressed (n, genes) {(53, ('HD1', 'HD2')): 2, (32, ('HD1', 'HD2')): 1, (37, ('HD1', 'HD2')): 1, (70, ('HD1', 'HD2')): 1}
+Basidiomycota:redPR not called 7 assembly_gap flag 0
+  reasons {'best cluster carried N modelled gene(s), below the N required to report a locus; none of its genes could be mo': 7}
+  suppressed (n, genes) {(47, ('RibL6', 'STE3a1', 'STE3a2')): 1, (42, ('RibL6', 'STE3a1', 'STE3a2')): 1, (40, ('STE3a1', 'STE3a2')): 1, (28, ('STE3a1', 'STE3a2')): 2, (36, ('STE3a1', 'STE3a2')): 2}
+Basidiomycota:rustHD not called 24 assembly_gap flag 0
+  reasons {'best cluster carried N modelled gene(s), below the N required to report a locus; only N of its genes could be ': 7, 'best cluster carried N modelled gene(s), below the N required to report a locus; none of its genes could be mo': 17}
+  suppressed (n, genes) {(13, ('bE', 'bW')): 1, (22, ('bE', 'bW')): 1, (29, ('bE', 'bW')): 1, (20, ('bE', 'bW')): 2, (23, ('bE', 'bW')): 2, (10, ('bE', 'bW')): 2, (15, ('bE', 'bW')): 1, (2, ('bE',)): 1, (21, ('bE', 'bW')): 2, (17, ('bE', 'bW')): 1, (12, ('bE', 'bW')): 2, (16, ('bE', 'bW')): 1, (7, ('bE', 'bW')): 1, (19, ('bE', 'bW')): 1, (8, ('bE', 'bW')): 1, (14, ('bE', 'bW')): 2, (24, ('bE', 'bW')): 1, (8, ('bE',)): 1}
+GCA_921037615.3 redHD [('CAKLCE030000016.1', 73463, 76219, 'undetermined', 'high')]
+GCA_000988875.2 redHD [('LCTV02000005.1', 1256423, 1276797, 'undetermined', 'high')]
+GCA_920103745.3 redHD [('CAKKSX030000026.1', 389353, 412378, 'undetermined', 'high')]
+GCA_024748845.1 redHD [('JANBVD010000009.1', 486369, 489430, 'undetermined', 'high')]
+GCA_002917965.1 redHD [('PQDI01000056.1', 305710, 316513, 'undetermined', 'high')]
+GCA_001191645.1 rustHD [('AJIL01000034.1', 200423, 204371, 'undetermined', 'high')]
+GCF_000149925.1 rustHD [('NW_003526561.1', 405331, 409145, 'undetermined', 'high')]
+GCA_000151525.2 rustHD [('ADAS02000068.1', 214015, 217849, 'undetermined', 'high')]
+GCF_000204055.1 rustHD [('NW_006768799.1', 688206, 691498, 'undetermined', 'high')]
+GCF_000263375.1 wallMAT [('NW_006531959.1', 17219, 42260, 'v1', 'high')]
+GCA_056320075.1 wallMAT [('JBHFOR010000004.1', 327827, 351767, 'v2', 'medium')]

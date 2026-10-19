@@ -1,0 +1,10 @@
+[C5_MAT1-1-1] tblastn top: ['JARAAY010000009.1', '1518943', '1517999', '98.730', '315', '383', '71', '383', '0.0', '645']
+[C5_MAT1-1-1] blastn top: ['JARAAY010000009.1', '1519199', '1517998', '100.000', '1202', '1204', '0.0', '2220']  n_hsp=1
+[C5_MAT1-1-1] miniprot G5000: JARAAY010000009.1:1517996-1519199- Rank=1 Identity=1.0000 Positive=1.0000 Target=C5_MAT1-1-1 1 383
+[C5_MAT1-1-1] miniprot G200000: JARAAY010000009.1:1517996-1519199- Rank=1 Identity=1.0000 Positive=1.0000 Target=C5_MAT1-1-1 1 383
+[C5_MAT1-1-1] exonerate window JARAAY010000009.1:1514999-1521943: vulgar: C5_MAT1-1-1 0 383 . JARAAY010000009.1:1514999-1521943 4201 3000 - 1986 M 72 216 S 0 1 5 0 2 I 0 48 3 0 2 S 1 2 M 310 930
+[C5_MAT1-1-1] exonerate model: strand - exons 2 introns [52] protein 383 aa (ref 383) starts_M=True internal_stops=0
+[C5_MAT1-1-1] model vs record blastp: 100.000	383	1	383	1	383
+[C4_MAT1-2-1] tblastn top: None
+[C4_MAT1-2-1] blastn top: None  n_hsp=0
+[C5_MAT1-1-1] Pfam MATalpha_HMGbox PF04769.19 score=225.5 env=24-222

@@ -1,0 +1,11 @@
+[C5_MAT1-1-1] tblastn top: None
+[C5_MAT1-1-1] blastn top: None  n_hsp=0
+[C4_MAT1-2-1] tblastn top: ['NW_014024937.1', '307516', '308076', '97.861', '187', '343', '157', '343', '1.71e-108', '348']
+[C4_MAT1-2-1] blastn top: ['NW_014024937.1', '306993', '308079', '99.908', '1087', '1087', '0.0', '2002']  n_hsp=1
+[C4_MAT1-2-1] miniprot G5000: NW_014024937.1:306993-308079+ Rank=1 Identity=0.9971 Positive=0.9971 Target=C4_MAT1-2-1 1 343
+[C4_MAT1-2-1] miniprot G200000: NW_014024937.1:306993-308079+ Rank=1 Identity=0.9971 Positive=0.9971 Target=C4_MAT1-2-1 1 343
+[C4_MAT1-2-1] exonerate window NW_014024937.1:304516-311076: vulgar: C4_MAT1-2-1 0 343 . NW_014024937.1:304516-311076 2477 3561 + 1801 M 161 483 S 0 1 5 0 2 I 0 51 3 0 2 S 1 2 M 181 543
+[C4_MAT1-2-1] exonerate model: strand + exons 2 introns [55] protein 343 aa (ref 343) starts_M=True internal_stops=0
+[C4_MAT1-2-1] model vs record blastp: 99.708	343	1	343	1	343
+[C4_MAT1-2-1] Pfam HMG_box PF00505.26 score=84.7 env=131-199
+[C4_MAT1-2-1] Pfam HMG_box_2 PF09011.17 score=37.9 env=128-199

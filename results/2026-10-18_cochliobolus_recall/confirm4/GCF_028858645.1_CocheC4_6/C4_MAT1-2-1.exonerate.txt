@@ -1,0 +1,26 @@
+Command line: [exonerate --model protein2genome --refine region --maxintron 5000 --showtargetgff yes --showalignment no --showvulgar yes --bestn 1 /bigdata/stajichlab/jstajich/projects/cochl_recall/confirm/GCF_028858645.1_CocheC4_6/C4_MAT1-2-1.faa /bigdata/stajichlab/jstajich/projects/cochl_recall/confirm/GCF_028858645.1_CocheC4_6/C4_MAT1-2-1.win.fna]
+Hostname: [c21]
+vulgar: C4_MAT1-2-1 0 343 . NW_027093865.1:404133-410693 2477 3561 + 1801 M 161 483 S 0 1 5 0 2 I 0 51 3 0 2 S 1 2 M 181 543
+# --- START OF GFF DUMP ---
+#
+#
+##gff-version 2
+##source-version exonerate:protein2genome:local 2.4.0
+##date 2026-10-18
+##type DNA
+#
+#
+# seqname source feature start end score strand frame attributes
+#
+NW_027093865.1:404133-410693	exonerate:protein2genome:local	gene	2478	3561	1801	+	.	gene_id 0 ; sequence C4_MAT1-2-1 ; gene_orientation + ; identity 99.71 ; similarity 99.71
+NW_027093865.1:404133-410693	exonerate:protein2genome:local	cds	2478	2961	.	+	.	
+NW_027093865.1:404133-410693	exonerate:protein2genome:local	exon	2478	2961	.	+	.	insertions 0 ; deletions 0 ; identity 100.00 ; similarity 100.00
+NW_027093865.1:404133-410693	exonerate:protein2genome:local	splice5	2962	2963	.	+	.	intron_id 1 ; splice_site "GT"
+NW_027093865.1:404133-410693	exonerate:protein2genome:local	intron	2962	3016	.	+	.	intron_id 1
+NW_027093865.1:404133-410693	exonerate:protein2genome:local	splice3	3015	3016	.	+	.	intron_id 0 ; splice_site "AG"
+NW_027093865.1:404133-410693	exonerate:protein2genome:local	cds	3017	3561	.	+	.	
+NW_027093865.1:404133-410693	exonerate:protein2genome:local	exon	3017	3561	.	+	.	insertions 0 ; deletions 0 ; identity 99.45 ; similarity 99.45
+NW_027093865.1:404133-410693	exonerate:protein2genome:local	similarity	2478	3561	1801	+	.	alignment_id 0 ; Query C4_MAT1-2-1 ; Align 2478 1 483 ; Align 3019 163 543
+# --- END OF GFF DUMP ---
+#
+-- completed exonerate analysis

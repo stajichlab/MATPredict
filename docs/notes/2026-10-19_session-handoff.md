@@ -58,7 +58,7 @@ Three subagents were resumed after an API outage and may or may not have finishe
 | work | branch | state |
 |---|---|---|
 | homothallic-loci patch: `--homothallic-policy both_genes` (default off) so a locus with a complete alpha-box and HMG-box gene reports `homothallic_candidate`; test on the 298 conflicting Dothideomycetes genomes plus controls | `homothallic-loci-patch` (3 commits pushed) | measurements not reported yet; no PR |
-| *Cochliobolus* MAT recall diagnosis (*Bipolaris* 1 of 58 called, including the C4/C5 strains the curated records come from; audit lead: `MAT1-1-1 + SLA2` on KB445578.1 withheld at `modelled_gene_bar`) | worktree `.claude/worktrees/agent-a6705863c0977cdd3`; branch to be pushed | analysis only; no report yet |
+| *Cochliobolus* MAT recall diagnosis (*Bipolaris* 1 of 58 called, including the C4/C5 strains the curated records come from) | `cochliobolus-mat-recall` (391dc5e, pushed, no PR) | **done, analysis only** (`analysis/2026-10-18_cochliobolus-mat-recall.md`). Cause: all 101 uncalled genomes carry the MAT-box ORF but the cluster holds one gene (SLA2 is 180-290 kb away), so the 2-gene evidence floor drops it; GAP1/BGL1 sit 2.6-3.6 kb away and the C4/C5 records omit them. Gene modelling is fine. Prototype of GAP1+BGL1 as roster flanks recovers 90 of 101 but costs 24 high-to-medium changes on 94 called controls if added globally; agent recommends a Pleosporaceae-scoped roster plus Curvularia/Exserohilum records, single-gene rule as fallback. Curator has not yet decided (prototype of the scoped roster proposed) |
 | *Hemileia vastatrix* `rustHD` record (two contiguous assemblies; divergent homeodomain pair 1,957 bp apart; bar stays 2) | `hemileia-rusthd-record` (not yet on the remote) | no report yet |
 
 The *Komagataella* agent is finished (#109 merged). Cluster state: the Slurm queue held many unrelated jobs of the same account
@@ -101,7 +101,7 @@ intermittent. Neither is investigated.
 ## 7. Questions queued for the curator (not yet asked, or not answered)
 
 - Homothallic-loci patch: read the measurements, then decide whether it joins the clean run.
-- *Cochliobolus*: which remedy (modelling fix, anchored relaxation of the modelled-gene bar, single-gene rule, more records).
+- *Cochliobolus*: whether to prototype the Pleosporaceae-scoped GAP1/BGL1 roster (needs a design for scoping a roster addition to one taxon).
 - Dothideomycetes audit's 8 open questions (note, final section): homothallic handling, *Botryosphaeria dothidea* status, a real
   held-out truth set.
 - `MATog`: "locus detection" label versus a confidence cap; a distant-*Ogataea* record.

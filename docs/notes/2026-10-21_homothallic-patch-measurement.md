@@ -52,3 +52,26 @@ complete is not established here (the 23-of-26 and 24-of-29 curated-length basis
 Default stays off, and it should not join the clean run as is. Options: (a) require the alpha gene to be full-length against the roster (remnant status, `remnant-status-step2`
 removes remnant proteins from references) and re-measure; (b) raise the alpha floor above ~125 bits, which also drops the other 28 true candidates' margin
 (min 116, median 189) so needs the distribution by set first; (c) leave the policy off and keep `undetermined`.
+
+## Length floor changed to 190 aa (2026-10-21) and the remnant check (design, not yet implemented)
+
+`MIN_PROTEIN_AA` is now 190 (commit d785fa5); the 3,181-genome re-run is in `runs_out/runs190` on the HPCC (array 30213034), results pending.
+
+### What separates the *Botrytis* false positives (measured on the 68 re-classed loci of the 200 aa run, `tables/alpha_hmg_coverage.tsv`)
+
+The detection report already stores, per core gene, the identity and the **coverage of its best reference gene** (`gene_evidence[].identity`, `.coverage`).
+The *Botrytis* `MAT1-1-1` model is 209 aa, **92% identical to a curated *B. cinerea* `MAT1-1-1` but covers only 62% of it**: a truncated copy of a known gene, which is what F3 describes.
+
+- **Coverage alone cannot be the gate.** 60 of the 68 loci cover under 90% and 55 under 70%. The divergent groups (*Didymella*, *Phaeosphaeria*, *Lizonia*, *Boeremia*) cover 56-62% at 50-62% identity because
+  the references are from other genera, so low coverage there says nothing about completeness.
+- **Identity plus coverage does separate them.** Rule: alpha-gene identity >= 85% and coverage < 80% -> not complete, no candidate. It flags 32 of the 68 loci:
+  **29 *Botrytis*** (the 16 truth-set MAT1-2 genomes and 13 more with the identical 209 aa model, not in the truth set) and **3 *Sclerotinia* (*S. nivalis* x2, *S. sativa*; 219 aa, 94.9% identity, 65% coverage)**,
+  the fused loci the flip review says stay `undetermined`. Thresholds 85/80 versus 90/90 give 32 versus 31 flagged; the result is not sensitive in that range.
+- **Kept (36):** *S. minor* (330 aa, 98.5% coverage, truth: homothallic or diploid), `KEW_Xsp1`/`KEW_Xsp2` (352 aa, 100%), and the divergent genera with no close reference.
+
+Limits: the threshold is fitted on this set and the false positives are one lineage; a divergent remnant with no close reference would not be caught (it is indistinguishable from a divergent gene by this evidence).
+The rule also relies on the reference roster containing a full-length same-clade gene, which it does for *Botrytis* because of the new MAT1-1 record.
+
+### Implementation plan
+Pass `identity` and `coverage` from the gene evidence into `CoreModel` (optional, default none = unchanged behaviour for existing tests), add `REMNANT_MIN_IDENTITY = 85`, `REMNANT_MAX_COVERAGE = 80`
+to `homothallic.py`, test on both sides, then re-measure on `runs190` (expect: *Botrytis* 29 -> 0, *Sclerotinia* nivalis/sativa 3 -> 0, *S. minor* and `KEW_Xsp` kept, *Pyrenophora* recovered).

@@ -90,5 +90,26 @@ to `homothallic.py`, test on both sides, then re-measure on `runs190` (expect: *
 Of 2,563 Dothideomycetes loci in both this run and the 10-18 audit run, none differ in idiomorph, confidence or genes (32 audit loci are missing because their genomes had not finished).
 Open: 59 of the 62 *Pyrenophora* are loci where `MAT1-2-1` lost the idiomorph vote to `MAT1-1-3`; they are now labelled `homothallic_candidate` with idiomorph MAT1-1.
 
-### Remnant check (commit 9deb233, tests 26b14e6; 20 homothallic tests pass on the HPCC)
-Implemented as designed. Re-run on all 3,181 genomes with the check: array 30218629, output `runs190r`; results not yet analyzed.
+### Remnant check, final run (`tables190r/`, `patched190r_reports.tar.zst`; code 9deb233, 26b14e6; 20 homothallic tests pass on the HPCC)
+
+Full re-run, 190 aa floor plus the remnant check: 3,181 of 3,183 genomes (array 30218629, all 128 tasks completed). Two genomes have no report: `GCA_986281625.1_DAH1041FM` (empty FASTA, cannot run) and
+`GCA_016165855.1_IBUN_P_ulei_V1` (hit the 3,600 s per-genome timeout; also missing in the earlier runs).
+
+| | 200 aa | 190 aa | 190 aa + remnant check |
+|---|---|---|---|
+| re-classed loci | 68 | 131 | **99** |
+| conflicting genomes recovered (of 298) | 29 | 92 | **92** |
+| *Pyrenophora* | 0 of 62 | 62 | 62 |
+| truth-set false positives (*Botrytis* MAT1-2) | 16 | 16 | **0** |
+| truth-set candidates | 17 | 17 | 1 (*S. minor*, stated homothallic or diploid: correct) |
+| controls re-classed (1,430 heterothallic Dothideomycetes, 40 *A. fumigatus*, 15 *Neurospora*/*Sordaria*, 47 two-locus) | 0 | 0 | 0 |
+| holdout | 2 of 74 | 2 | 2 (`KEW_Xsp1`, `KEW_Xsp2`) |
+
+- The check removed exactly the predicted loci: 32 removed, 0 added, the other 99 identical in idiomorph, confidence and protein length. The 32 are 29 *Botrytis* (209 aa; 16 truth-set MAT1-2 plus 13 outside the truth set) and 3
+  *Sclerotinia* (*S. nivalis* x2, *S. sativa*; 219 aa).
+- All 2,595 Dothideomycetes loci match the 10-18 audit run in idiomorph, confidence, legacy class and genes: the patch changes only the locus class.
+- Flip-review loci re-classed: 3 (Polytolypa, *Monilinia vaccinii-corymbosi*, `GCA_002162485.1`); the *Sclerotinia* fused loci stay as they were.
+
+Caveats. The 85/80 thresholds were chosen after seeing the *Botrytis* result, so the clean outcome is partly fitted: the held-out test is the next genus where a truncated copy of a known gene occurs, and nothing tests that
+yet. *Aureobasidium* (0 of 119) is not recovered and cannot be by a length gate. Whether the 59 *Pyrenophora* loci in which `MAT1-2-1` lost to `MAT1-1-3` should be labelled `homothallic_candidate`, and with idiomorph MAT1-1,
+is a curator call. The remnant check covers the alpha gene only; an HMG remnant was not measured.

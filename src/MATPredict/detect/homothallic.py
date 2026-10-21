@@ -27,7 +27,7 @@ CALIBRATION (curated records only, no BFD genome; results/2026-10-18_homothallic
   MAT1-1-1 on the alpha profile, leave-one-genus-out, 22 records: 102.4 to 263.4 bits (cross score <= 18).
   MAT1-2-1 on the HMG profile, leave-one-genus-out, 26 records: 120.5 to 291.5 bits (cross score <= 15).
   Curated MAT1-1-3 (HMG-containing, MAT1-1 idiomorph; 4 proteins, 162-324 aa) on the HMG profile: 98.0, 100.9, 100.9, 51.2.
-  So MIN_PROFILE_BITS = {alpha: 100, HMG: 110}.  Length floor 200 aa: 23 of 26 curated MAT1-1-1 are >= 296 aa and 24 of 29 MAT1-2-1 are
+  So MIN_PROFILE_BITS = {alpha: 100, HMG: 110}.  Length floor 190 aa (was 200; see docs/notes/2026-10-21_homothallic-patch-measurement.md, the Pyrenophora MAT1-1-1 models are 196 aa): 23 of 26 curated MAT1-1-1 are >= 296 aa and 24 of 29 MAT1-2-1 are
   >= 223 aa; the shorter ones are partial deposits.
 All of these are PROVISIONAL, like the other curator-tunable thresholds.
 """
@@ -46,8 +46,8 @@ MIN_PROFILE_BITS = {"alpha_box": 100.0, "HMG_box": 110.0}
 PROFILE_MIN_MARGIN = 25.0
 #: Longest stop-free stretch of the translated model over its coding length.
 MIN_ORF_FRACTION = 0.9
-#: Complete ORF at least this long (aa).
-MIN_PROTEIN_AA = 200
+#: Complete ORF at least this long (aa); provisional, lowered from 200 on the 2026-10-21 measurement.
+MIN_PROTEIN_AA = 190
 MODELLED_STATUSES = ("polished_agree", "polished_single", "polished_disagree")
 
 

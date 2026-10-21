@@ -170,3 +170,11 @@ def test_synthetic_hmg_fragment_and_off_locus_hmg_do_not_trigger(real_db_root, t
     assert hm.note_for_evidence(fragment, family, clf, translate, family.max_homothallic_separation_bp) is None
     off_locus = [_evidence("MAT1-1-1", "c1", 1, a_end, "+"), _evidence("MAT1-2-1", "c1", far_start, far_end, "+")]
     assert hm.note_for_evidence(off_locus, family, clf, translate, family.max_homothallic_separation_bp) is None
+
+
+def test_length_floor_is_190_aa():
+    assert hm.MIN_PROTEIN_AA == 190
+    ok = _m("MAT1-1-1", 1000, 2200, aa=196, cds=196, **ALPHA)      # Pyrenophora-sized MAT1-1-1
+    short = _m("MAT1-1-1", 1000, 2200, aa=189, cds=189, **ALPHA)
+    assert evaluate([ok, _m("MAT1-2-1", 3000, 4100, **HMG)], 20_000) is not None
+    assert evaluate([short, _m("MAT1-2-1", 3000, 4100, **HMG)], 20_000) is None

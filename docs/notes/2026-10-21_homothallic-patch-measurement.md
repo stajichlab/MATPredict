@@ -55,7 +55,7 @@ removes remnant proteins from references) and re-measure; (b) raise the alpha fl
 
 ## Length floor changed to 190 aa (2026-10-21) and the remnant check (design, not yet implemented)
 
-`MIN_PROTEIN_AA` is now 190 (commit d785fa5); the 3,181-genome re-run is in `runs_out/runs190` on the HPCC (array 30213034), results pending.
+`MIN_PROTEIN_AA` is now 190 (commit d785fa5); the 3,181-genome re-run is in `runs_out/runs190` on the HPCC (array 30213034), results below.
 
 ### What separates the *Botrytis* false positives (measured on the 68 re-classed loci of the 200 aa run, `tables/alpha_hmg_coverage.tsv`)
 
@@ -75,3 +75,20 @@ The rule also relies on the reference roster containing a full-length same-clade
 ### Implementation plan
 Pass `identity` and `coverage` from the gene evidence into `CoreModel` (optional, default none = unchanged behaviour for existing tests), add `REMNANT_MIN_IDENTITY = 85`, `REMNANT_MAX_COVERAGE = 80`
 to `homothallic.py`, test on both sides, then re-measure on `runs190` (expect: *Botrytis* 29 -> 0, *Sclerotinia* nivalis/sativa 3 -> 0, *S. minor* and `KEW_Xsp` kept, *Pyrenophora* recovered).
+
+### 190 aa run (3,149 of 3,181 genomes at the time of analysis; `tables190/`, `patched190_reports.tar.zst`)
+
+| | 200 aa | 190 aa |
+|---|---|---|
+| re-classed loci | 68 | 131 |
+| conflicting genomes recovered (of 298) | 29 | 92 |
+| *Pyrenophora* | 0 of 62 | 62 of 62 |
+| *Aureobasidium* | 0 of 119 | 0 of 119 (100-125 aa fragments) |
+| controls re-classed (1,430 heterothallic Dothideomycetes, 40 *A. fumigatus*, 15 *Neurospora*/*Sordaria*, 47 two-locus) | 0 | 0 |
+| truth-set false positives (*Botrytis* MAT1-2) | 16 | 16 |
+
+Of 2,563 Dothideomycetes loci in both this run and the 10-18 audit run, none differ in idiomorph, confidence or genes (32 audit loci are missing because their genomes had not finished).
+Open: 59 of the 62 *Pyrenophora* are loci where `MAT1-2-1` lost the idiomorph vote to `MAT1-1-3`; they are now labelled `homothallic_candidate` with idiomorph MAT1-1.
+
+### Remnant check (commit 9deb233, tests 26b14e6; 20 homothallic tests pass on the HPCC)
+Implemented as designed. Re-run on all 3,181 genomes with the check: array 30218629, output `runs190r`; results not yet analyzed.

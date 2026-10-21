@@ -1,8 +1,7 @@
 # `--homothallic-policy both_genes`: measurement (2026-10-21)
 
 Patched run: 3,181 genomes (sets in `results/2026-10-18_homothallic_patch/sets.tsv`), `--partial-core-policy coverage_profile`, otherwise defaults.
-Re-run locally from the committed reports with `compare_patch.py` and `analyze_patch.py` (outputs in `tables/`). Not run: the
-legacy-cause breakdown (needs a table of per-genome failing gates that is not in the repo; `why_not.py` needs the HPCC).
+Re-run locally from the committed reports with `compare_patch.py` and `analyze_patch.py` (outputs in `tables/`). `why_not.py` had already been run on the HPCC (6,792 core models, `why_not.tsv`); section 'Why the 298 are not recovered' uses it.
 
 ## Result
 
@@ -23,6 +22,30 @@ call heterothallic *B. cinerea* homothallic.
 
 Other re-classed sets: flip-review 35 of 48 loci (the fused-locus verdicts: Polytolypa, Monilinia, S. nivalis, S. sativa re-classed; Calogaya not);
 holdout 2 of 74 (`KEW_Xsp1`, `KEW_Xsp2`, both genes strong at 360-393 bits, 3,354 bp apart; not judged here).
+
+## Why the 298 are not recovered (`why_not.tsv`, first failing gate per modelled core gene)
+
+Across the 298 conflicting genomes: `short` 548 models, `polish_status` 425 (optional genes, not modelled), `ok` 152, `profile_floor` 2. The gate that blocks them is the
+**200 aa length floor** (`MIN_PROTEIN_AA`), not the profile gates.
+
+- ***Pyrenophora* (62 genomes):** `MAT1-2-1` is ok (median 236 aa); `MAT1-1-1` is `short` at median **196 aa**, with 204 bits on the alpha profile. Four residues under the floor.
+- ***Aureobasidium* (119):** both models are fragments: `MAT1-1-1` median 124 aa (158 bits alpha), `MAT1-2-1` median 103 aa (159 bits HMG). Length 100-125 aa; either a
+  real remnant or a modelling failure, not distinguishable here.
+
+Sensitivity (protein-level estimate from `why_not.tsv`, not a pipeline re-run: loci with an alpha model and an HMG model that pass the profile floors, margin 25 and the ORF fraction;
+ignores separation and `lost_to`):
+
+| length floor (aa) | loci with both genes | of the 298 conflicting | *Botrytis* MAT1-2 false positives |
+|---|---|---|---|
+| 200 (current) | 69 | 30 | 16 |
+| 190 | 132 | 93 | 16 |
+| 150 | 134 | 94 | 16 |
+| 120 | 168 | 107 | 16 |
+| 100 | 245 | 168 | 16 |
+
+A floor of 190 recovers the *Pyrenophora* set (+63) with no new *Botrytis* false positives, but the *Botrytis* false positives are the same 16 at every floor, so the floor
+does not fix them. Below 150 the gain is *Aureobasidium* fragments, which a length-based gate cannot tell from remnants. Whether a 196 aa *P. tritici-repentis* `MAT1-1-1` is
+complete is not established here (the 23-of-26 and 24-of-29 curated-length basis for the 200 aa floor is in `homothallic.py`).
 
 ## Decision for the curator
 

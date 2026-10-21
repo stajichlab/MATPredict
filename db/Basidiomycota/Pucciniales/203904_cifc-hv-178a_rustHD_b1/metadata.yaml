@@ -1,0 +1,144 @@
+record_id: 203904_cifc-hv-178a_rustHD_b1
+record_version: 1
+taxonomy:
+  taxid: 203904
+  lineage: k__Fungi;p__Basidiomycota;sc__Pucciniomycotina;c__Pucciniomycetes;o__Pucciniales;f__Zaghouaniaceae;g__Hemileia;s__Hemileia_vastatrix
+  lineage_resolved_date: '2026-10-18'
+organism:
+  species: Hemileia vastatrix
+  strain:
+    name: CIFC Hv 178a
+    known: true
+    culture_collection_ids:
+    - CIFC Hv 178a
+    differs_from_sequenced: false
+mating_type:
+  locus_name: rustHD
+  idiomorphs:
+  - b1
+  system: heterothallic
+locus:
+  assembly_accession: GCA_054948715.1
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: bW<-|->bE
+    definition_note: 'Hemileia vastatrix CIFC Hv 178a (coffee leaf rust), b mating-type
+      HD pair on chromosome 3 (CM142961.1), divergently transcribed, 551 bp between
+      the two start codons: bW (HD1-type, minus strand, 494 aa, one intron of 94 bp)
+      and bE (HD2-type, plus strand, 511 aa, two introns of 67 and 68 bp). TIER 2:
+      genome-derived. The public assembly GCA_054948715.1 (Tobias, Edwards and Batista,
+      University of Sydney, PRJNA851215, unpublished pseudophased assembly) has no
+      gene annotation at this locus and no locus-specific deposit exists. The two
+      models were built here with Augustus (species model cryptococcus_neoformans_neoformans_JEC21,
+      no extrinsic hints) on the region and are complete ORFs: ATG start, stop codon,
+      GT..AG introns, no internal stop. bE/bW identity is INFERRED, not shown: the
+      Puccinia and Melampsora references align only 16-17% of bE by tblastn (homeodomain
+      only). It rests on (i) a divergent HD pair 551 bp apart (rust records: 538-640
+      bp), (ii) the architecture of the rust records (bW two exons, bE three exons),
+      (iii) the Pfam signature (bW Homeobox_KN, bE Homeodomain) and (iv) the local
+      alignment score of each model to the four rust records (bW 157-171 against bW
+      references and at most 102 against bE references; bE 151-241 against bE references
+      and at most 110 against bW references), identity 25-32% over the aligned region.
+      The H. vastatrix isolate Hv_R1 Cat CENPAT (GCA_030280995.1) carries the same
+      pair with 99.2% (bW) and 100% (bE) identical proteins and the same 551 bp spacing,
+      but with the two genes in the mirrored order (bE minus, bW plus); that isolate
+      is not an independent allele and is not recorded.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: CM142961.1
+        seq_region: CM142961.1
+      start: 37097829
+      end: 37101629
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: bW
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 37097829
+  end: 37099407
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 37098632
+    end: 37099407
+  - start: 37097829
+    end: 37098537
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: bE
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 37099959
+  end: 37101629
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 37099959
+    end: 37100642
+  - start: 37100710
+    end: 37101225
+  - start: 37101294
+    end: 37101629
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: TIER 2 (genome-derived). No locus-specific deposit and no
+      depositor annotation exist for this locus. The genes are ab initio Augustus
+      models on the public assembly, identified as the b HD1/HD2 pair by their divergent
+      arrangement, rust-like exon structure, Pfam homeodomain signatures and alignment
+      to the four rust b records; identity to those records is low (25-32% over the
+      aligned region) and the assignment is inferred.
+    citations: &id001
+    - doi: 10.1534/g3.116.032797
+      pmid: '27913634'
+  boundaries:
+    tier: 2
+    experimental_method: record segment spans the two Augustus models on CM142961.1
+      (start codon of bW to stop codon of bE, stop codons included); intron positions
+      are not supported by transcript evidence
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: allele label b1 is a pattern placeholder, not the allele
+      name of any published rust b allele (the H. vastatrix b alleles are not catalogued);
+      alleles are not callable by homology (pattern vocabulary)
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: CM142961.1
+  sequence_match:
+    status: not_applicable
+    per_gene: []
+    notes: 'No protein accession, so the validator has nothing to compare (not_applicable, not set to pass). Checked
+      separately: build-gff re-derived both proteins from NCBI by translating the recorded exon coordinates on CM142961.1,
+      and they equal the Augustus models exactly (bW 494 aa, bE 511 aa, no internal stop, stop codon included).'
+  taxonomy_current: true
+curation:
+  proposed_by: claude-curation-hemileia-rusthd
+  proposal_dedupe_key: GCA_054948715.1|203904|rustHD|b1|cifc-hv-178a
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-10-18 on curator instruction (Hemileia rustHD record; the
+    two-modelled-genes bar stays at 2). Source assembly GCA_054948715.1 chosen over
+    GCA_030280995.1: chromosome-scale (31 contigs, N50 35 Mb) with an INSDC chromosome
+    accession that NCBI serves, against 794 contigs.'
+model_provenance: null

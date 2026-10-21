@@ -48,6 +48,12 @@ PROFILE_MIN_MARGIN = 25.0
 MIN_ORF_FRACTION = 0.9
 #: Complete ORF at least this long (aa); provisional, lowered from 200 on the 2026-10-21 measurement.
 MIN_PROTEIN_AA = 190
+#: Remnant check (alpha gene only): a model at least this identical (%) to its best reference gene but covering less than
+#: MAX_REMNANT_COVERAGE (%) of it is a truncated copy of a known gene, not a complete one. Coverage alone is no gate: genes of clades
+#: with no close reference cover 55-65% at 50-65% identity. Measured on the 2026-10-21 patched run: flags the 29 Botrytis loci
+#: (a 209 aa copy, 92% identical, 62% coverage) and 3 Sclerotinia fused loci. PROVISIONAL.
+REMNANT_MIN_IDENTITY = 85.0
+REMNANT_MAX_COVERAGE = 80.0
 MODELLED_STATUSES = ("polished_agree", "polished_single", "polished_disagree")
 
 
@@ -66,6 +72,16 @@ class CoreModel:
     scores: dict[str, float] = field(default_factory=dict)
     """Best bits on each gene-class profile, keyed `alpha_box` / `HMG_box`."""
     lost_to: str | None = None
+    identity: float | None = None
+    """Identity (%) to the best reference gene (None when unknown: the remnant check is then skipped)."""
+    coverage: float | None = None
+    """Share (%) of that reference gene the model covers."""
+
+
+def is_remnant(m: CoreModel) -> bool:
+    """A truncated copy of a known gene: close to its reference but covering little of it."""
+    return (m.identity is not None and m.coverage is not None
+            and m.identity >= REMNANT_MIN_IDENTITY and m.coverage < REMNANT_MAX_COVERAGE)
 
 
 def confirmed_class(m: CoreModel) -> str | None:
@@ -81,7 +97,7 @@ def confirmed_class(m: CoreModel) -> str | None:
 
 def evaluate(models: list[CoreModel], max_separation_bp: int) -> dict | None:
     """The note of a both-genes candidate, or None. Picks the pair with the highest summed profile score."""
-    alpha = [m for m in models if confirmed_class(m) == "alpha_box"]
+    alpha = [m for m in models if confirmed_class(m) == "alpha_box" and not is_remnant(m)]
     hmg = [m for m in models if confirmed_class(m) == "HMG_box"]
     best = None
     for a in alpha:
@@ -137,5 +153,6 @@ def note_for_evidence(evidence, family, clf, translate, max_separation_bp: int) 
         models.append(CoreModel(
             gene=e.gene_name, contig=e.contig, start=e.start, end=e.end, protein_aa=len(protein),
             cds_aa=sum(b - a + 1 for a, b in e.exons) // 3,
-            scores={class_of[i]: v for i, v in scores.items() if class_of.get(i)}, lost_to=e.lost_to))
+            scores={class_of[i]: v for i, v in scores.items() if class_of.get(i)}, lost_to=e.lost_to,
+            identity=getattr(e, "identity", None), coverage=getattr(e, "coverage", None)))
     return evaluate(models, max_separation_bp)

@@ -178,3 +178,57 @@ def test_length_floor_is_190_aa():
     short = _m("MAT1-1-1", 1000, 2200, aa=189, cds=189, **ALPHA)
     assert evaluate([ok, _m("MAT1-2-1", 3000, 4100, **HMG)], 20_000) is not None
     assert evaluate([short, _m("MAT1-2-1", 3000, 4100, **HMG)], 20_000) is None
+
+
+def _alpha(identity, coverage):
+    m = _m("MAT1-1-1", 1000, 2200, **ALPHA)
+    m.identity, m.coverage = identity, coverage
+    return m
+
+
+def test_truncated_copy_of_a_known_gene_is_a_remnant_not_a_candidate():
+    hmg = _m("MAT1-2-1", 3000, 4100, **HMG)
+    assert evaluate([_alpha(92.2, 62.0), hmg], 20_000) is None      # Botrytis: close to the reference, 62% of it
+
+
+def test_divergent_gene_with_low_coverage_is_kept():
+    hmg = _m("MAT1-2-1", 3000, 4100, **HMG)
+    assert evaluate([_alpha(62.4, 58.0), hmg], 20_000) is not None  # Didymella: no close reference, coverage says nothing
+
+
+def test_full_length_close_gene_and_unknown_evidence_are_kept():
+    hmg = _m("MAT1-2-1", 3000, 4100, **HMG)
+    assert evaluate([_alpha(96.4, 98.5), hmg], 20_000) is not None  # S. minor
+    assert evaluate([_alpha(None, None), hmg], 20_000) is not None
+
+
+def test_remnant_thresholds_are_85_identity_and_80_coverage():
+    from MATPredict.detect.homothallic import is_remnant
+
+    assert is_remnant(_alpha(85.0, 79.9)) and not is_remnant(_alpha(84.9, 50.0)) and not is_remnant(_alpha(95.0, 80.0))
+
+
+def test_note_for_evidence_passes_identity_and_coverage():
+    import types
+
+    from MATPredict.detect.homothallic import note_for_evidence
+
+    class FakeFamily:
+        genes = [{"name": "MAT1-1-1", "gene_class": "alpha_box"}, {"name": "MAT1-2-1", "gene_class": "HMG_box"}]
+
+    clf = types.SimpleNamespace(models={0: ("MAT1-1-1", None), 1: ("MAT1-2-1", None)})
+    import MATPredict.detect.classifier as c
+    scores = {"p_a": {0: 180.0, 1: 3.0}, "p_h": {0: 4.0, 1: 170.0}}
+    orig = c.score_proteins
+    c.score_proteins = lambda _clf, prots: scores[prots[0]]
+    try:
+        def ev(gene, start, end, ident, cov):
+            return types.SimpleNamespace(role="core_MAT", status="polished_agree", gene_name=gene, contig="c1", start=start,
+                                         end=end, strand="+", exons=[(start, end)], lost_to=None, identity=ident, coverage=cov)
+        a, h = ev("MAT1-1-1", 1000, 1000 + 3 * 300 - 1, 92.0, 62.0), ev("MAT1-2-1", 3000, 3000 + 3 * 300 - 1, 99.0, 100.0)
+        translate = lambda span: "p_a" if span.start == 1000 else "p_h"
+        assert note_for_evidence([a, h], FakeFamily, clf, translate, 20_000) is None
+        a.identity, a.coverage = 60.0, 58.0
+        assert note_for_evidence([a, h], FakeFamily, clf, translate, 20_000) is not None
+    finally:
+        c.score_proteins = orig

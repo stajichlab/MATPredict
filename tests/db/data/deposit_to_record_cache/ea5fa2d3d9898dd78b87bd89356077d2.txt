@@ -1,0 +1,52 @@
+LOCUS       ABC70320                 366 aa            linear   PLN 26-JAN-2006
+DEFINITION  MAT1-1-1 [Ascochyta rabiei].
+ACCESSION   ABC70320
+VERSION     ABC70320.1
+DBSOURCE    accession DQ341313.1
+KEYWORDS    .
+SOURCE      Ascochyta rabiei (Didymella rabiei)
+  ORGANISM  Ascochyta rabiei
+            Eukaryota; Fungi; Dikarya; Ascomycota; Pezizomycotina;
+            Dothideomycetes; Pleosporomycetidae; Pleosporales; Pleosporineae;
+            Didymellaceae; Ascochyta.
+REFERENCE   1  (residues 1 to 366)
+  AUTHORS   Barve,M.P., Arie,T., Salimath,S.S., Muehlbauer,F.J. and Peever,T.L.
+  TITLE     Cloning and characterization of the mating type (MAT) locus from
+            Ascochyta rabiei (teleomorph: Didymella rabiei) and a MAT phylogeny
+            of legume-associated Ascochyta spp
+  JOURNAL   Fungal Genet. Biol. 39 (2), 151-167 (2003)
+   PUBMED   12781674
+REFERENCE   2  (residues 1 to 366)
+  AUTHORS   Barve,M.P., Arie,T., Salimath,S.S., Muehlbauer,F.J. and Peever,T.L.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (23-DEC-2005) Plant Pathology, Washington State
+            University, Johnson Hall 345, Pullman, WA 99163, USA
+COMMENT     Method: conceptual translation supplied by author.
+FEATURES             Location/Qualifiers
+     source          1..366
+                     /organism="Ascochyta rabiei"
+                     /strain="ATCC 76502"
+                     /db_xref="ATCC:76502"
+                     /db_xref="taxon:5454"
+                     /note="submitted as anamorph"
+     Protein         1..366
+                     /product="MAT1-1-1"
+                     /name="mating type protein"
+     Region          43..228
+                     /region_name="MATalpha_HMGbox"
+                     /note="Mating-type protein MAT alpha 1 HMG-box; pfam04769"
+                     /db_xref="CDD:398438"
+     CDS             1..366
+                     /gene="MAT1-1-1"
+                     /coded_by="join(DQ341313.1:1315..1558,
+                     DQ341313.1:1611..2467)"
+ORIGIN      
+        1 mpskiqthtm tfprdptsae ialflstrsg dqmmqlvqsi rapaaqatlt asllfvppti
+       61 vtqsappeka rkglnafvgf rcyyiciptf kpwpmkklsn pmgvmwesdp nkplwslmtk
+      121 awsvirdqig kdkapldqff giixpylnip spetyleryg wkfitdeegt ptlsresapp
+      181 adtfcagiad malsvediin ycqsmgyaqa ymsdvdatsp tflaqsrsqf agkstvksqt
+      241 plassthngr laarhkrrak rqtardteva pllqqhixna hntdgmntty qdnsdlghse
+      301 paqfyddlad flinnvgqdq qahtsattal avagdpmipg wtdltafrlg adenatlpsf
+      361 dlhcyd
+//
+

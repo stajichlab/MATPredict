@@ -83,7 +83,7 @@ with open(f"{out}/pilot_list.tsv", "w") as fl, open(f"{out}/pilot_meta.tsv", "w"
 # Mucoromycotina: the separate path (detect --phylum Mucoromycota --emit-cds-fasta, no taxid): 15 BFD + 5 LCG + 5 Jena
 kept = {l.split("\t")[0] for l in open(m_kept)}
 rows = list(csv.DictReader(open(m_inputs), delimiter="\t"))
-bfd = [r for r in rows if r["source"] == "BFD" and r["id"] in kept]; lcg = [r for r in rows if r["source"] == "LCG"]; jena = [r for r in rows if r["source"] == "Jena"]
+bfd = [r for r in rows if r["source"] == "BFD" and r["id"] in kept]; lcg = [r for r in rows if r["source"] == "LCG"]; jena = [r for r in rows if r["source"] == "JENA"]
 mrows = []
 for pool, k in ((bfd, 15), (lcg, 5), (jena, 5)):
     pool = sorted(pool, key=lambda r: r["id"]); rng.shuffle(pool); mrows += pool[:k]

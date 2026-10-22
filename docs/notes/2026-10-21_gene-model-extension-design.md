@@ -340,7 +340,7 @@ Accepted: 145 rows, **123 exact or within 5 aa (85%), 15 undershoots, 0 overshoo
 | flagged | 17 | 4 |
 | not flagged | 15 | 108 |
 Precision 0.81, **recall 0.53**; the not-flagged rows are 108 of 123 right (88%); 4 flagged-but-correct extensions would be held back (4 of 21 flagged).
-Why recall is limited: the reference and the target often differ in intron number or position (13 rows in which the reference has no intron after the edge but the deposited gene has one; the reference never over-predicts an intron that the target lacks except in 4 rows), so reference structure is a partial proxy. 45 of the 189 rows (24%) have a best reference **without** exon info and fail more often (16 undershoots, 22 correct).
+Why recall is limited: the reference and the target often differ in intron number or position (across the 144 rows the reference under-predicts the number of introns after the edge in 19 rows (13 rows 0 vs 1, 4 rows 1 vs 3, 2 rows 2 vs 3) and over-predicts in only 2 rows (2 vs 1); 123 rows agree), so reference structure is a partial proxy. 45 of the 189 rows (24%) have a best reference **without** exon info and fail more often (16 undershoots, 22 correct).
 
 **Combined with the length-range rule of section 11:**
 | accepted set | rows | exact or within 5 aa | undershoot | overshoot > 5 aa |

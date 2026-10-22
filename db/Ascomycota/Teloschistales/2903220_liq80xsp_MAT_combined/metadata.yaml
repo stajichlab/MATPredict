@@ -1,5 +1,5 @@
 record_id: 2903220_liq80xsp_MAT_combined
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 2903220
   lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Lecanoromycetes;o__Teloschistales;f__Teloschistaceae;g__Xanthoria;s__Xanthoria_sp_1_TBL-2021
@@ -60,7 +60,7 @@ locus:
       kb of genomic sequence). The curator confirmed the span begins with ATG and
       ends with an in-frame-terminal stop codon on the stated strand, but cannot rule
       out that Augustus fused MAT1-1-1 with a neighbouring ORF or over-called intron
-      structure. The MAT1-2-1 span (1155 bp) is unremarkable. Treat the MAT1-1-1 boundaries
+      structure. The published MAT1-2-1 span (1155 bp) reads two introns as coding; the gene''s 3-exon model is in curation.notes (2026-10-22). Treat the MAT1-1-1 boundaries
       as the paper''s gene prediction, not as a validated CDS.
 
 
@@ -164,6 +164,15 @@ genes:
   end: 48625
   strand: '-'
   order_in_locus: 1
+  exons:
+  - start: 48477
+    end: 48625
+  - start: 48193
+    end: 48425
+  - start: 47471
+    end: 48141
+  codon_start: 1
+  transl_table: 1
 - gene_index: 2
   name: MAT1-1-1
   protein_accession: null
@@ -262,4 +271,40 @@ curation:
   proposal_dedupe_key: 38686438|2903220|MAT|combined
   reviewed_by: null
   reviewed_date: null
+  notes: 'record_version 1 -> 2, 2026-10-22 (curator ruling, J. Stajich): MAT1-2-1 is
+    corrected from the published single-exon model to a 3-exon model: the depositor''s
+    introns with the published start codon; no other gene changes.
+
+
+    MAT1-2-1 exons, in transcript order: 48477-48625, 48193-48425, 47471-48141 (minus
+    strand, JALAIM010000088.1), 1053 bp, 350 aa (MASNMQLAEH...), ATG start, TAG stop,
+    no internal stop (table 1), two 51-bp GT..AG introns (48426-48476 and 48142-48192).
+    protein_accession is null, so proteins.faa holds the translation of these exons.
+    locus.coordinate_provenance (published_explicit) no longer describes this gene''s
+    exons: the start and end are the paper''s, the introns are the depositor''s.
+
+
+    Depositor model: INSDC KAI4264608.1 (locus_tag L6R42_000313, ''hypothetical protein'',
+    HMG-box), CDS complement(join(47471..48141,48193..48425,48477..48613)), 346 aa.
+    It has the same introns but starts at the second ATG (48613), 4 codons later; the
+    stored 350 aa are MASN followed by KAI4264608.1 exactly. The stored start (48625)
+    is the first ATG after an in-frame TGA 15 codons upstream (48668-48670). The extended
+    start is kept because the Teloschistaceae MAT1-2-1 deposits carry the same 4-5 residue
+    prefix before the MQLAEH motif: Dufourea flammea CAI59780.2 MATSN|MQLAEH (the protein
+    of 115814_voucher-101_MAT_MAT1-2), Polycauliona polycarpa CAI59768.2 MAVPN|MQLAEH
+    (1301501_voucher-267_MAT_MAT1-2), and Xanthoria parietina CAI59774.2 (partial, 104
+    aa) MAVSN|LPLADR, where the motif position is Leu so the prefix Met is the only
+    start. Local BLOSUM62 (gap open -11, extend -1): the 350-aa model scores 1408 against
+    115814 and 1270 against 1301501, the depositor''s 346-aa model 1398 and 1264.
+
+
+    Replaced model (White et al. 2024, Supplementary Table S1): a single exon 47471-48625
+    (-), 1155 bp, 384 aa, MASNMQLAEH..., which reads both introns as coding (17 aa each,
+    in frame, no stop); it scores 1351 against 115814, with 347 of 384 residues aligned.
+
+
+    Verified 2026-10-22 by Claude Code (branch curation-corrections): NCBI efetch of
+    JALAIM010000088.1, KAI4264608.1, CAI59780.2, CAI59768.2 and CAI59774.2; Biopython
+    translation of the three models and of the deposit CDS; Biopython PairwiseAligner
+    for the scores.'
 model_provenance: null

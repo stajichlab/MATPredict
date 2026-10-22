@@ -1,5 +1,5 @@
 record_id: 498019_b11243_MTL_A
-record_version: 2
+record_version: 3
 taxonomy:
   taxid: 498019
   lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Metschnikowiaceae;g__Candidozyma;s__Candidozyma_auris
@@ -21,17 +21,18 @@ locus:
   coordinate_provenance: curator_derived
   excluded_from_coordinate_benchmark: true
   core:
-    completeness: partial
+    completeness: complete
     reference_orientation: PAP1->OBP1->PIK1->MTLA2->MTLA1
     definition_note: 'Candidozyma auris B11243 (clade IV) MTLa, GenBank assembly GCA_003014415.1,
       annotated by the depositors as ''mating_type_MTLa2'' (PSK75931.1, 152 aa) and
       ''mating_type_MTLa1'' (PSK75932.1, 99 aa). Gene order PAP1 (PSK75928.1) - OBP1
       (PSK75929.1) - PIK1 (PSK75930.1) - MTLa2 - MTLa1, the C. lusitaniae arrangement.
-      completeness is PARTIAL: the MTLa1 model is a single 99-aa exon with its homeodomain
-      at residues 46-92, against 166 aa and residues 99-154 in the three-exon models
-      of clade I strains (e.g. B11205 WZC25182.1) -- its 5'' exons are missing from
-      this annotation. It still carries the homeodomain, which is what the search
-      needs.
+      MTLa1 is recorded as the full-length three-exon model (15538-15669, 15718-16020,
+      16094-16159; 166 aa, the structure of the clade I models, e.g. B11205 WZC25182.1),
+      curator ruling 2026-10-22: the depositors'' MTLa1 (PSK75932.1) is a single 99-aa
+      exon that starts at a CTG inside exon 2 and reads into intron 2, so it lacks the
+      5'' exons; see curation.notes. completeness is complete (curator ruling 2026-10-22):
+      MTLa2 and the full-length MTLa1 are both modelled, with the PAP1-OBP1-PIK1 flanks.
 
 
       record_version bump, 2026-09-25 (curator ruling): PAP1 (PSK75928.1), OBP1 (PSK75929.1),
@@ -46,7 +47,7 @@ locus:
         accession: PYGM01000086.1
         seq_region: PYGM01000086.1
       start: 8313
-      end: 16044
+      end: 16159
       contig_edge_distance: null
   extended_flank: []
 genes:
@@ -105,16 +106,24 @@ genes:
     end: 15461
 - gene_index: 1
   name: MTLA1
-  protein_accession: ncbi_protein:PSK75932.1
+  protein_accession: null
   role: core_MAT
   present: true
   locus_tag: CJJ07_005605
   segment_index: 0
-  start: 15745
-  end: 16044
+  start: 15538
+  end: 16159
   strand: +
   order_in_locus: 4
   transl_table: 12
+  exons:
+  - start: 15538
+    end: 15669
+  - start: 15718
+    end: 16020
+  - start: 16094
+    end: 16159
+  codon_start: 1
 evidence:
   locus_existence:
     tier: 2
@@ -134,8 +143,10 @@ evidence:
       doi: 10.1038/s41467-018-07779-6
   boundaries:
     tier: 2
-    experimental_method: 'Record segment spans the curated MTL genes, from the assembly''s
-      own GFF. TIER 2 (genome-derived, admitted under the curator''s 2026-09-24 ruling).
+    experimental_method: 'Record segment spans the curated MTL genes: its start (8313,
+      PAP1) is from the assembly''s own GFF; its end (16159) is the stop codon of the
+      curator-derived full-length MTLA1 (2026-10-22), which ends past the depositors''
+      99-aa model (16044). TIER 2 (genome-derived, admitted under the curator''s 2026-09-24 ruling).
       The protein is the depositors'' own gene model in the Munoz et al. 2018 C. auris
       genome annotation, not a locus-specific study. Validated 2026-09-25 (results/2026-09-25_cauris_mtl/):
       MTLa1 carries a homeodomain (Pfam PF00046, i-E=1.3e-14); MTLa2 has no Pfam HMG_box
@@ -185,11 +196,10 @@ validation:
       percent_identity: 100.0
       coverage: 100.0
       status: pass
-    - gene_index: 1
-      percent_identity: 98.99
-      coverage: 100.0
-      status: pass
-    notes: ''
+    notes: 'MTLA1 (gene_index 1) has no protein_accession since 2026-10-22, so it
+      has no per_gene entry (the removed 98.99% entry compared the old 99-aa model with
+      PSK75932.1). Its 166-aa protein is the independent translation (table 12) of the
+      recorded exons, verified in curation.notes.'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search
@@ -199,5 +209,34 @@ curation:
   notes: 'Curated because the pilot called 0 of 17 C. auris genomes: the MTLa1+MTLa2
     cluster is found at ~47% identity to the nearest curated reference, but exonerate
     and miniprot cannot model genes that divergent (verified on B8441 with relaxed
-    thresholds). All CDS use translation table 12.'
+    thresholds). All CDS use translation table 12.
+
+
+    record_version 2 -> 3, 2026-10-22 (curator ruling, J. Stajich; issue #122): MTLA1
+    is replaced by the full-length three-exon model. The depositors'' model PSK75932.1
+    (CJJ07_005605, PYGM01000086.1:15745-16044 +, 99 aa) is 5''-truncated: it starts
+    at a CTG inside exon 2 (codon 54 of the full model, Ser in table 12, given as Met)
+    and reads through the second intron to a stop at 16042-16044, so its last 7 aa
+    (VCENCLI) are intron sequence. The full model, exons 15538-15669, 15718-16020,
+    16094-16159 (+), 501 bp, encodes 166 aa from an ATG to a TGA stop with no internal
+    stop (table 12); its introns are 48 bp (GTGAGT..AG) and 73 bp (GTATGT..AG). Exon
+    lengths (132, 303, 66) and intron total (121 bp) equal those of the clade I record
+    498019_b11205_MTL_A (WZC25182.1), and 162 of 166 residues are identical to WZC25182.1,
+    including Ser at all four CTG codons (positions 16, 23, 54, 103), which supports
+    table 12. miniprot 0.18-r281 (-T 12) and exonerate 2.4.0 (protein2genome, --geneticcode
+    12, --refine region) with WZC25182.1 on the whole contig both give these three
+    exons (identity 97.59%). protein_accession is now null, so proteins.faa holds the
+    translation of the exons; locus_tag still names the deposit gene. The segment
+    end moves from 16044 to 16159 so that it contains the gene. The gene does not overlap MTLA2 (ends 15461; 76 bp
+    gap). Its third exon overlaps the 3'' end of the convergent minus-strand gene PSK75933.1
+    (CJJ07_004263, 16108-18495) by 52 bp; the clade I genome has the same 52-bp overlap
+    (WZC25182.1 and WZC25181.1 on CP060341.1), so the overlap is conserved, not a
+    modelling artefact. definition_note, evidence.boundaries and validation.sequence_match
+    were updated in place to match, and locus.core.completeness changed from partial
+    to complete (curator ruling 2026-10-22).
+
+    Verified 2026-10-22 by Claude Code (claude-opus-5-5, branch curation-corrections):
+    NCBI efetch of PYGM01000086.1, CP060341.1:190001-200000, WZC25182.1 and PSK75932.1;
+    Biopython translation (tables 1 and 12) and global alignment to WZC25182.1; miniprot
+    and exonerate on a compute node.'
 model_provenance: null

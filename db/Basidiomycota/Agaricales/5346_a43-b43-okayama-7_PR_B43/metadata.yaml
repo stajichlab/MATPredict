@@ -459,5 +459,27 @@ curation:
 
     Exons added 2026-10-22 for rcb1, phb2_B44-like, rcb2, ste3_extra_unassigned, rcb3 and fungal_mating_type_pheromone: their start/end are the deposit gene span on JAAGWA010000010.1 (the gene and mRNA features, so they include UTRs) and the exons are the coding sequence only (the CDS of KAG2006176.1, KAG2006179.1, KAG2006185.1, KAG2006186.1, KAG2006187.1 and KAG2006189.1, ATG to stop codon), so they lie inside start/end. Coordinates and translation re-derived from the NCBI nucleotide and protein records (E-utilities efetch) on 2026-10-22.
 
+    Notes added 2026-10-22 (curator ruling, J. Stajich; notes only: no coordinate,
+    exon or protein change and no record_version bump). phb1.1, phb2.1, phb2.3 and
+    phb3.1 (genes 8, 10, 9, 6) are curator-derived ORFs, not the depositor''s models:
+    for each, and for phb3.3, proteins.faa holds the translation of the recorded span (or
+    exons) from its first base, with the stop omitted. The depositor''s annotation of GCA_016772295.1
+    overlaps each of the four with a different model: phb1.1, deposit KAG2006177.1
+    (CC2G_002515), join(1809160..1809311,1809367..1809370), a 2-exon model whose 55-bp
+    GT..AG intron splits the last sense codon (Ser 51) and whose 51 aa equal the record''s single-exon
+    1809160-1809315 protein; phb2.3, deposit KAG2006181.1 (CC2G_002518), join(1813964..1814113,1814165..1814341),
+    108 aa, read in a different frame from the record''s 53 aa; phb3.1, deposit KAG2006188.1 (CC2G_002524),
+    join(1824970..1825186,1825239..1825393), 123 aa, a different frame (the misread
+    replaced in change (2)); phb2.1, two alternative deposit CDS of CC2G_002520, KAG2006184.1 (101
+    aa) complement(join(1816094..1816325,1816387..1816460)) and KAG2006183.1 (76 aa)
+    complement(join(1816111..1816200,1816259..1816325,1816387..1816460)), both in
+    a different frame from the record''s 61 aa. The record''s models are kept: they
+    match the published pheromone deposits (change (4) above; phb1.1 49 of 51 aa).
+
+    Verified 2026-10-22 by Claude Code (claude-opus-5-5, branch curation-corrections):
+    NCBI efetch of JAAGWA010000010.1 (1,800,001-1,830,000 and its feature table) and
+    of the five deposit proteins; Biopython translation of the recorded spans compared
+    with proteins.faa and of the deposit CDS compared with the deposit proteins.
+
     '
 model_provenance: null

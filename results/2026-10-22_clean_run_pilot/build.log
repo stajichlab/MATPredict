@@ -1,0 +1,26 @@
+usable genomes: 22682 Counter({'Ascomycota': 19412, 'Basidiomycota': 3270})
+
+pilot genomes (Ascomycota + Basidiomycota, detect-per-genome path): 569 | Mucoromycotina path: 25 | total 594
+by phylum: {'Ascomycota': 462, 'Basidiomycota': 107}  by size bin: {'small': 557, 'large': 12}
+by v0.6.0 status: {'called': 403, 'uncalled': 155, 'no_report': 1, 'failed': 10}
+strata (a genome can belong to several):
+  base_ascomycota_by_class                             228
+  base_basidiomycota_by_class                          87
+  problem_cochliobolus_clade                           40
+  problem_sclerotiniaceae_remnant_fused_loci           30
+  problem_pyrenophora_homothallic_candidates           25
+  problem_aureobasidium_fragment_models                25
+  problem_hypocreales_three_exon_MAT1-1-1              25
+  problem_dipodascales_lipomycetales_guard             25
+  problem_xylariales_absent_MAT                        15
+  large_genome_basidiomycota                           10
+  problem_ceratocystis                                 10
+  problem_alternaria                                   10
+  problem_fusarium                                     10
+  problem_komagataella                                 8
+  problem_ogataea                                      8
+  problem_parastagonospora                             5
+  problem_hemileia_rustHD                              5
+  problem_puccinia_rustHD                              5
+Ascomycota classes covered: 30  of 30; Basidiomycota classes: 20
+multi-stratum genomes: 2

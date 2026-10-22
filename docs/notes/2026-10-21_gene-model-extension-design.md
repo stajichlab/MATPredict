@@ -201,6 +201,24 @@ Revised answer after the review: for the **3' end of a clean, non-frameshift, fu
 
 ---
 
+### 5b. Can miniprot be made to place non-canonical splice sites? (tested 2026-10-21, miniprot 0.18-r281)
+
+Yes, through four controls, **measured on the *P. tritici-repentis* Ptr134 `MAT1-1-1` locus** (a 3 kb window; query: the curated *Bipolaris* C5 `MAT1-1-1`; the intron is GC-AG, transcript-sense `GCGA...CCAG`, 53 bp) **[M, `results/2026-10-21_gene_model_extension/miniprot_splice_tests/`]**:
+
+| setting | result |
+|---|---|
+| default (`-j 1`, general model) | 1 exon, 293 aa, **5 internal stops** (the intron is coded as CDS) |
+| `-j 2` (vertebrate/insect) | same as default |
+| `-j 0` (no splice model), or `-C 0` (ignore splice signals), or `-C 0.3` | 2 exons, 276 aa, 0 stops, but the intron boundary is **2 bp off** (`GA..GC`) |
+| `-J 15` (intron-open penalty 29 -> 15) or `-F 50` (frameshift/stop penalty 23 -> 50) | 2 exons, 282 aa, 0 stops, a **different, canonical GT-AG** 35 bp intron |
+| **`--spsc FILE`** scoring the junction (score 14) | **2 exons, 276 aa, 0 stops, intron exactly exonerate's: `GC..AG`, 53 bp, 1397174-1397226** |
+
+- The manual says the general model "slightly prefers" `G|GC...YAG|` and `|AT...AC|`, so GC-AG and AT-AC are not forbidden; the default failure here is the surrounding-sequence penalty plus the stop-codon cost, not the dinucleotide alone.
+- `--spsc` is a TAB file: `contig  offset  strand  D|A  score`. **Offset convention, found empirically (only this combination worked among 12 tried):** with the forward-strand intron at 1-based `[a, b]` in the target, the **acceptor offset is `a-1`** and the **donor offset is `b`** (0-based junction coordinates on the forward strand) for a minus-strand gene; **both** sites must be scored (donor-only and acceptor-only change nothing). The plus-strand convention was not tested and must be checked before use.
+- `--spsc` also raises `-J` and `--J2` by 10 unless set, scores outside the file get `--spsc0` (-7), and scores are capped at `--spsc-max` (14). So **a splice-site table is a way to inject a clade-specific splice model into miniprot deterministically**: score every candidate donor (GT, GC, AT...) and acceptor (AG, AC) in the window from a position-weight matrix trained on that clade's introns.
+- **Limits of this test:** one locus, one query, the junction was given by the answer (an oracle). It shows the mechanism works, not that a trained splice-score table would find the right junction without knowing it. The test of that is stage 3b: score all candidate sites with a clade PWM, run miniprot with `--spsc`, and compare with the deposited CDS of the curated records and with exonerate. Cost: one extra miniprot call per gene, the window is already cut.
+- `-j 0`/`-C 0` alone are not a fix: they remove the penalty everywhere and shifted this intron by 2 bp, which is a frame-compatible but wrong boundary.
+
 ## 6. Where the problem comes from
 
 Mostly **design** (exonerate is always canonical, then tested with a vacuous completeness definition), amplified by exonerate's local-alignment edge; the reference is a minor factor (above); miniprot helps (clean and longer in about 1,000 rows per gene) but is itself edge-limited (628 of 1,349 `MAT1-1-1` alternates end >= 30 aa before a stop), cannot place GC-AG introns, and is much more reference-sensitive than exonerate (single-reference miniprot models of one locus range 82-396 aa), so the pipeline's all-reference selection is doing real work.
@@ -222,6 +240,15 @@ Splits: leave-one-genus-out is the minimum, but the data are clonal (2,756 genom
 **A learned chooser is not warranted.** Four candidates, fewer than ten informative features, and tens of independent lineages: a logistic regression would overfit lineage identity (genus is collinear with GC, reference distance and extension class). Minimum viable evaluation: the hand rule, the curated-record holdout (n about 55) and about 100 lineage-balanced annotated or RNA-supported loci.
 
 Cheaper and more valuable, ranked: (i) fix the `cds_blocks` handling and re-measure; (ii) add **verified C-terminal-complete proteins from well-supported genera** (*Pyrenophora*, *Alternaria*, *Ascochyta*/*Didymella*, where miniprot independently ends in a stop in 205 loci) to the roster as new clade references, reducing reference divergence at the source at no run-time cost (curator promotion only, never automatic, and not used to evaluate themselves); (iii) a per-order profile-HMM completeness instrument; (iv) splice-site PWMs after (i)-(iii).
+
+### 7b. Planned: an intron and splice-site census of `MAT1-1-1` / `MAT1-2-1` (requested by the curator, not started)
+
+Question: how many `MAT1-1-1` genes have introns, what is their splice-site contingent (GT-AG, GC-AG, AT-AC, other), and **does this explain where typical gene predictors fail on MAT genes**? Design:
+1. **Intron counts and classes per gene and per clade** from (a) the deposited CDS of the 26 + 29 curated records (independent of the pipeline), (b) the exonerate canonical models in the 3,181 reports (already partly counted: 93.4% GT-AG, 3.3% GC-AG, 1.3% TA-AG over 2,785 models; *Pyrenophora* 40.8% GC-AG; *Aureobasidium* 16% TA donors, which do not occur in nature and so mark mis-placed introns, **[V]**), (c) later, RNA-supported annotations.
+2. **A reference distribution:** the same classes over all introns of annotated genomes of the same clades, to test whether MAT genes are enriched in non-canonical or short introns (the `MAT1-1-1` intron of *P. tritici-repentis* is 53-56 bp and GC-AG in all 76 models).
+3. **Predictor concordance by splice class:** for each intron class, the fraction recovered exactly by exonerate, by miniprot (default and `--spsc`), and by a typical ab initio/annotation predictor (AUGUSTUS and Helixer where run, and the genome's own annotation where it exists), measured against the curated CDS. The result answers whether non-canonical introns and short introns are *why* MAT genes are hard.
+4. Report per lineage cluster (the data are clonal), with n per class; short introns (< 60 bp) and GC-AG counts are small, so state the counts.
+This census also supplies the position-weight matrices for stage 3b.
 
 ---
 

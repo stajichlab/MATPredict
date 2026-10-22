@@ -445,7 +445,8 @@ def test_two_gene_deposit_with_a_loosely_named_other_gene_needs_a_human(tmp_path
                                    "                     /protein_id=\"XXX00002.1\"\nORIGIN")
     res = _run(cache, _empty_db(tmp_path))
     assert res.verdict == gen.NEEDS_HUMAN
-    assert any(r.startswith("other_idiomorph:") and "XXX00002.1" in r and "MAT1-2" in r
+    assert any(r.startswith("other_idiomorph:") and "XXX00002.1" in r
+               and "other idiomorph's core gene (MAT1-2-1)" in r
                for r in res.reasons("needs_human"))
 
 
@@ -610,22 +611,27 @@ def test_in_batch_candidates_are_not_called_curated(tmp_path):
     assert "curated" not in second[12]
 
 
-def test_in_batch_candidates_never_change_unknown_slugs(tmp_path):
+def test_unknown_slugs_count_db_and_batch_records(tmp_path):
+    """Two strain-less isolates of one taxid in one run get unknown-1 / unknown-2 (db rule, v1 behaviour)."""
     cache = _copy_cache(tmp_path)
     _without_strain(cache)
     db = _empty_db(tmp_path)
+    assert _run(cache, db).facts["record_id"] == "5454_unknown-1_MAT_MAT1-1"
     batch = gen.new_index("batch")
     gen.add_record_to_index(batch, {"record_id": "5454_unknown-1_MAT_MAT1-2", "taxonomy": {"taxid": 5454}})
     res = _run(cache, db, batch_index=batch)
-    assert res.facts["record_id"] == "5454_unknown-1_MAT_MAT1-1"
+    assert res.facts["record_id"] == "5454_unknown-2_MAT_MAT1-1"
     assert res.verdict != gen.NEEDS_HUMAN
-    # a curated db/ record does advance the counter (the spec rule)
+    # a curated db/ record advances the counter the same way
     rec = yaml.safe_load(yaml.safe_dump(res.record))
     rec["record_id"] = "5454_unknown-1_MAT_MAT1-2"
     rec["genes"][0]["protein_accession"] = "ncbi_protein:ZZZ00009.1"
     rec["locus"]["core"]["segments"][0]["sequence_source"].update(accession="ZZ999998.1", seq_region="ZZ999998.1")
     _write_record(db, rec)
     assert _run(cache, db).facts["record_id"] == "5454_unknown-2_MAT_MAT1-1"
+    both = gen.new_index("batch")
+    gen.add_record_to_index(both, {"record_id": "5454_unknown-2_MAT_MAT1-2", "taxonomy": {"taxid": 5454}})
+    assert _run(cache, db, batch_index=both).facts["record_id"] == "5454_unknown-3_MAT_MAT1-1"
 
 
 def test_other_idiomorph_accessory_gene_is_held_with_its_own_reason(tmp_path):
@@ -646,3 +652,148 @@ def test_a_locus_note_on_a_neighbouring_orf_is_not_a_gene_name(tmp_path):
                                    "                     /protein_id=\"XXX00005.1\"\nORIGIN")
     res = _run(cache, _empty_db(tmp_path))
     assert not any(r.startswith("other_idiomorph:") for r in res.reasons("needs_human") + res.reasons("caveat"))
+
+
+# --------------------------------------------------------------------------- second review (2026-10-22)
+
+
+def _add_feature(cache: Path, text: str) -> None:
+    _edit_genbank(cache, "ORIGIN", text + "ORIGIN")
+
+
+def test_jgi_style_mating_type_protein_2_is_the_other_idiomorph(tmp_path):
+    """KAF2691513.1 layout, but intact: /product="mating type protein 2" beside MAT1-1-1."""
+    cache = _copy_cache(tmp_path)
+    _add_feature(cache, '     CDS             2600..2900\n                     /product="mating type protein 2"\n'
+                        '                     /protein_id="XXX00006.1"\n')
+    res = _run(cache, _empty_db(tmp_path))
+    assert res.verdict == gen.NEEDS_HUMAN
+    assert any("core gene" in r and "XXX00006.1" in r for r in res.reasons("needs_human"))
+    assert gen.loose_hits({"product": ["mating type protein 1-2"]}) == {("2", "core")}  # no digit-only double hit
+
+
+@pytest.mark.parametrize("product", ["mating type protein 2", "MAT1-2-1 mating-type protein"])
+def test_a_partial_other_idiomorph_neighbour_needs_a_human(tmp_path, product):
+    """KAF2691514.1 (loose name, < and >) and KAF2625949.1 (roster name, 3'-partial; v1 held it):
+    a partial neighbour may be a truncated copy or an incomplete gene model -> held, own reason."""
+    cache = _copy_cache(tmp_path)
+    _add_feature(cache, '     CDS             complement(join(<2600..2700,2760..>2900))\n'
+                        f'                     /product="{product}"\n'
+                        '                     /protein_id="XXX00007.1"\n')
+    res = _run(cache, _empty_db(tmp_path))
+    assert res.verdict == gen.NEEDS_HUMAN
+    assert any(r.startswith("other_idiomorph:") and "XXX00007.1" in r and "partial (< or >)" in r
+               for r in res.reasons("needs_human"))
+
+
+def test_a_pseudo_other_idiomorph_neighbour_is_a_remnant_caveat(tmp_path):
+    cache = _copy_cache(tmp_path)
+    _add_feature(cache, '     CDS             2600..2900\n                     /product="mating type protein 2"\n'
+                        '                     /pseudo\n')
+    res = _run(cache, _empty_db(tmp_path))
+    assert res.verdict == gen.CAVEAT
+    assert any(r.startswith("other_idiomorph:") and "pseudo/truncated" in r for r in res.reasons("caveat"))
+
+
+def test_a_misc_feature_similar_to_the_other_gene_is_a_remnant_caveat(tmp_path):
+    cache = _copy_cache(tmp_path)
+    _add_feature(cache, '     misc_feature    2600..2775\n                     /note="similar to MAT1-2-1"\n')
+    res = _run(cache, _empty_db(tmp_path))
+    assert res.verdict == gen.CAVEAT
+    assert any("misc_feature" in r and "similar to MAT1-2-1" in r for r in res.reasons("caveat"))
+
+
+def test_a_gene_feature_without_cds_needs_a_human(tmp_path):
+    cache = _copy_cache(tmp_path)
+    _add_feature(cache, '     gene            2600..2900\n                     /gene="MAT1-2-1"\n')
+    res = _run(cache, _empty_db(tmp_path))
+    assert res.verdict == gen.NEEDS_HUMAN
+    assert any("gene feature named for the other idiomorph" in r and "no CDS" in r
+               for r in res.reasons("needs_human"))
+
+
+def test_a_gene_feature_with_its_cds_is_counted_once(tmp_path):
+    cache = _copy_cache(tmp_path)
+    _add_feature(cache, '     gene            2600..2900\n                     /gene="MAT1-2-1 L"\n'
+                        '     CDS             2600..2900\n                     /gene="MAT1-2-1 L"\n'
+                        '                     /protein_id="XXX00008.1"\n')
+    res = _run(cache, _empty_db(tmp_path))
+    (r,) = [r for r in res.reasons("needs_human") if r.startswith("other_idiomorph:")]
+    assert "XXX00008.1" in r and "no CDS" not in r
+
+
+def test_a_fragment_note_does_not_downgrade_an_intact_other_gene(tmp_path):
+    """Review v2b P17."""
+    cache = _copy_cache(tmp_path)
+    _add_feature(cache, '     CDS             2600..2900\n                     /gene="MAT1-2-1"\n'
+                        '                     /note="sequence fragment amplified with primers MAT2-F/R"\n'
+                        '                     /protein_id="XXX00009.1"\n')
+    res = _run(cache, _empty_db(tmp_path))
+    assert res.verdict == gen.NEEDS_HUMAN
+    assert any("intact CDS" in r and "XXX00009.1" in r for r in res.reasons("needs_human"))
+
+
+def test_only_assembly_accessions_are_kept_out_of_the_nucleotide_index():
+    index = gen.new_index("db")
+    gen.add_record_to_index(index, {
+        "record_id": "1_x_MAT_MAT1-1", "taxonomy": {"taxid": 1},
+        "locus": {"core": {"segments": [
+            {"segment_index": 0, "sequence_source": {"type": "insdc_nucleotide", "accession": "GC123456.1",
+                                                     "seq_region": "GC123456.1"}},
+            {"segment_index": 1, "sequence_source": {"type": "assembly", "accession": "GCA_000000001.1",
+                                                     "seq_region": "JAAA01000001.1"}},
+            {"segment_index": 2, "sequence_source": {"type": "assembly", "accession": "GCF_000000002.1",
+                                                     "seq_region": "NW_000001.1"}}]}}})
+    assert set(index["nucleotides"]) == {"GC123456", "JAAA01000001", "NW_000001"}
+
+
+def test_a_nucleotide_shared_with_a_batch_candidate_is_held_like_a_db_one(tmp_path):
+    db = _empty_db(tmp_path)
+    rec = _run(_CACHE, db).record
+    other = _model_record(rec, "5454_cbs-3_MAT_MAT1-2", name="MAT1-2-1", protein_accession="ncbi_protein:ZZZ0001.1")
+    other["taxonomy"]["taxid"] = 5454
+    batch = gen.new_index("batch")
+    gen.add_record_to_index(batch, other)
+    res = _run(_CACHE, db, batch_index=batch)
+    assert res.verdict == gen.NEEDS_HUMAN
+    assert any(r.startswith("batch_nucleotide:") and "in-batch candidate" in r for r in res.reasons("needs_human"))
+
+
+def test_null_strand_inference():
+    assert gen._infer_strand({"name": "MAT1-2-1", "strand": None,
+                              "exons": [{"start": 2000, "end": 2400}, {"start": 1000, "end": 1500}]}, None) == "-"
+    assert gen._infer_strand({"name": "MAT1-2-1", "strand": None, "exons": []}, "SLA2->MAT1-2-1(-)->APN2") == "-"
+    # the (-) belongs to APN2, not to the gene
+    assert gen._infer_strand({"name": "MAT1-2-1", "strand": None, "exons": []}, "SLA2->MAT1-2-1->APN2(-)") is None
+
+
+def _compare(models, **kw):
+    index = gen.new_index("db")
+    index["models"] = models
+    args = dict(protein="P1.1", nuc="AB000001.1", name="MAT1-2-1", taxid=1, slug="s1", strain_known=True,
+                species="A b", codon_start=1, aa=0)
+    args.update(kw)
+    return gen.compare_with_curated([index], **args)
+
+
+def _model(**kw):
+    m = {"record_id": "1_s1_MAT_MAT1-2", "source": "db", "gene": "MAT1-2-1", "taxid": 1, "strain_slug": "s1",
+         "species_names": {"A b"}, "protein": "P1.1", "nucleotide": "AB000001.1", "seq_accs": {"AB000001"},
+         "start": 1000, "end": 2400, "strand": None, "exons": [], "codon_start": 1}
+    m.update(kw)
+    return m
+
+
+def test_minus_strand_identical_model_with_unknown_strand_is_a_duplicate():
+    """Review v2b item 7: descending exons (strand inferred '-') and a strand that cannot be inferred."""
+    dep = [(2000, 2400), (1000, 1500)]  # transcript order on the minus strand
+    descending = gen._infer_strand({"name": "MAT1-2-1", "strand": None,
+                                    "exons": [{"start": 2000, "end": 2400}, {"start": 1000, "end": 1500}]}, None)
+    conflicts, identical, _ = _compare([_model(exons=dep, strand=descending)], exons=dep, strand="-")
+    assert conflicts == [] and [h["note"] for h in identical] == ["same model"]
+    # unknown strand (ascending, no orientation): ordered by the deposit's strand, strand not compared
+    conflicts, identical, _ = _compare([_model(exons=sorted(dep), strand=None)], exons=dep, strand="-")
+    assert conflicts == [] and len(identical) == 1
+    # a known, different strand is a conflict
+    conflicts, _, _ = _compare([_model(exons=sorted(dep), strand="+")], exons=dep, strand="-")
+    assert conflicts and "strand + vs -" in conflicts[0]["difference"]

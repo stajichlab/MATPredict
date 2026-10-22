@@ -236,6 +236,8 @@ _LOOSE_MAT = [
     re.compile(r"mating[\s-]*type\s*(?:protein\s*)?(?:gene\s*)?1\s*-\s*([12])(?:\s*-\s*(\d+))?", flags=re.I),
     # MAT-2, MAT2 (older spelling of the idiomorph's core gene)
     re.compile(r"\bMAT\s*[-_]?\s*([12])\b(?!\s*-)()", flags=re.I),
+    # JGI style "mating type protein 2" (digit only; no "1-")
+    re.compile(r"mating[\s-]*type\s*(?:protein\s*)?(?:gene\s*)?([12])\b(?!\s*-)()", flags=re.I),
 ]
 _LOOSE_QUALIFIERS = ("gene", "product", "note", "standard_name", "gene_synonym")
 
@@ -272,9 +274,42 @@ def feature_label(x) -> str:
     return f"{pid or x.type} {x.location} ({', '.join(bits)})"
 
 
-def is_remnant(qualifiers: dict) -> bool:
-    text = " ".join(qualifiers.get("note", []) + qualifiers.get("product", []))
-    return "pseudo" in qualifiers or "pseudogene" in qualifiers or bool(_REMNANT_WORDS.search(text))
+# In /note only explicit remnant words count: "fragment" there usually describes how the
+# sequence was obtained ("PCR fragment amplified with ..."), not the gene (review v2b, P17).
+_REMNANT_NOTE_WORDS = re.compile(r"truncat|pseudo|remnant|disrupted", flags=re.I)
+
+
+def neighbour_state(feature) -> str:
+    """intact | remnant | partial for a neighbouring other-idiomorph CDS.
+
+    partial (< or > end, not marked as a remnant) is held like intact (NEEDS_HUMAN), with
+    its own reason: a truncated copy and an incomplete gene model cannot be told apart from
+    the annotation, and treating it as a remnant would write a two-gene deposit as a
+    single-idiomorph record (review v2b item 2, kept on the safe side).
+    """
+    if is_remnant(feature):
+        return "remnant"
+    return "partial" if is_partial(feature.location) else "intact"
+
+
+def is_partial(location) -> bool:
+    """True when either end of any part is fuzzy (< or >)."""
+    return any(isinstance(pos, (BeforePosition, AfterPosition))
+               for part in location.parts for pos in (part.start, part.end))
+
+
+def is_remnant(feature) -> bool:
+    """A neighbouring feature is marked as a remnant/truncated copy, not an intact gene.
+
+    /pseudo or /pseudogene, remnant words in /product, or explicit remnant words (not
+    "fragment") in /note. A partial (< or >) location is NOT read as a remnant here: in
+    genome annotations it usually marks an incomplete gene model (KAF2625949.1, 3'-partial
+    MAT1-2-1 beside KAF2625950.1, which v1 held as a two-gene deposit); see `neighbour_state`.
+    """
+    q = feature.qualifiers
+    return ("pseudo" in q or "pseudogene" in q
+            or bool(_REMNANT_WORDS.search(" ".join(q.get("product", []))))
+            or bool(_REMNANT_NOTE_WORDS.search(" ".join(q.get("note", [])))))
 
 
 def lineage_string(lineage_ex: list[dict], self_node: dict) -> tuple[str, dict[str, str], list[str]]:
@@ -332,8 +367,11 @@ def load_holds(path: Path | None, builtin: bool = True, known_orders: set[str] |
         return holds
     import csv
     with open(path) as fh:
-        rows = csv.DictReader((line for line in fh if not line.startswith("#")), delimiter="\t")
-        for n, row in enumerate(rows, start=2):
+        numbered = [(i, line) for i, line in enumerate(fh, start=1) if not line.startswith("#")]
+        line_numbers = [i for i, _ in numbered]
+        rows = csv.DictReader((line for _, line in numbered), delimiter="\t")
+        for k, row in enumerate(rows, start=1):
+            n = line_numbers[k]  # the file's own line number (comment lines counted)
             rule = {k: (row.get(k) or "").strip() for k in ("protein", "order", "gene", "reason")}
             if not (rule["protein"] or rule["order"] or rule["gene"]):
                 raise ValueError(f"{path} row {n}: a hold rule needs a protein, order or gene")
@@ -459,7 +497,7 @@ def add_record_to_index(index: dict, doc: dict) -> None:
     for seg in core.get("segments") or []:
         src = seg.get("sequence_source") or {}
         # an assembly-typed segment names the assembly in `accession` and the contig in `seq_region`
-        accs = {a for a in (src.get("accession"), src.get("seq_region")) if a and not a.startswith("GC")}
+        accs = {a for a in (src.get("accession"), src.get("seq_region")) if a and not a.startswith(("GCA_", "GCF_"))}
         for a in sorted(accs):
             index["nucleotides"].setdefault(a.split(".")[0], []).append(rid)
         seg_accs[seg.get("segment_index")] = {a.split(".")[0] for a in accs}
@@ -869,30 +907,55 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         res.add("own_status", "needs_human",
                 f"the deposit marks this CDS as pseudo/truncated/remnant: '{own_text.strip()}'")
     other_named = []  # (gene, protein_id, is_remnant)
-    loose_other = []  # (label, is_remnant, core|accessory): other-idiomorph features, any spelling
+    # (label, state, core|accessory) for other-idiomorph features in any spelling;
+    # state: intact | remnant | no_cds (a gene feature with no CDS, so intactness is unknown)
+    loose_other = []
     other_digit = "2" if idiomorph == "MAT1-1" else "1"
     seen_locations = set()
+    all_cds = [x for x in gb.features if x.type == "CDS"]
+
+    def gene_has_cds(g) -> bool:
+        g_lo, g_hi = int(g.location.start), int(g.location.end)
+        keys = {k: (g.qualifiers.get(k) or [None])[0] for k in ("gene", "locus_tag")}
+        for c in all_cds:
+            if int(c.location.end) <= g_lo or int(c.location.start) >= g_hi:
+                continue
+            if not any(keys.values()) or any(v and (c.qualifiers.get(k) or [None])[0] == v
+                                             for k, v in keys.items()):
+                return True
+        return False
+
     for x in gb.features:
-        if x is cds:
+        if x is cds or x.type not in ("CDS", "gene", "misc_feature"):
             continue
-        pseudo_gene = x.type == "gene" and ("pseudo" in x.qualifiers or "pseudogene" in x.qualifiers)
-        if x.type != "CDS" and not pseudo_gene:
-            continue
+        if x.type == "gene" and gene_has_cds(x):
+            continue  # its CDS is examined itself
         n = normalise_gene_name((x.qualifiers.get("gene") or [None])[0]) or \
             gene_name_from_product((x.qualifiers.get("product") or [None])[0])
         if x.type == "CDS" and n:
-            other_named.append((n, (x.qualifiers.get("protein_id") or ["-"])[0], is_remnant(x.qualifiers)))
+            other_named.append((n, (x.qualifiers.get("protein_id") or ["-"])[0], neighbour_state(x)))
             seen_locations.add(str(x.location))
             continue
         kinds = {kind for digit, kind in loose_hits(x.qualifiers) if digit == other_digit}
-        if kinds and str(x.location) not in seen_locations:
-            seen_locations.add(str(x.location))
-            kind = "core" if "core" in kinds else "accessory"
-            loose_other.append((feature_label(x), is_remnant(x.qualifiers) or pseudo_gene, kind))
+        if not kinds or str(x.location) in seen_locations:
+            continue
+        seen_locations.add(str(x.location))
+        if x.type == "misc_feature" or is_remnant(x):
+            state = "remnant"  # a misc_feature ("similar to MAT1-2-1") is at most a fragment
+        elif x.type == "gene":
+            state = "no_cds"
+        else:
+            state = neighbour_state(x)
+        loose_other.append((feature_label(x), state, "core" if "core" in kinds else "accessory"))
     f["other_mat_cds"] = other_named
     f["other_mat_loose"] = loose_other
-    intact_other = [p for n, p, rem in other_named if n != name and not rem]
-    remnant_other = [p for n, p, rem in other_named if n != name and rem]
+    intact_other = [p for n, p, st in other_named if n != name and st == "intact"]
+    partial_other = [p for n, p, st in other_named if n != name and st == "partial"]
+    remnant_other = [p for n, p, st in other_named if n != name and st == "remnant"]
+    if partial_other:
+        res.add("other_idiomorph", "needs_human",
+                f"the deposit also carries a partial (< or >) CDS of the other idiomorph's gene "
+                f"({partial_other}): a truncated copy or an incomplete gene model; a curator decides")
     if intact_other:
         res.add("other_idiomorph", "needs_human",
                 f"the deposit also carries an intact CDS of the other idiomorph's gene ({intact_other}) "
@@ -901,9 +964,20 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         res.add("other_idiomorph", "caveat",
                 f"the deposit also carries a pseudo/truncated CDS of the other idiomorph's gene "
                 f"({remnant_other}); not recorded (a curator may record it as status: remnant)")
-    intact_core = [label for label, rem, kind in loose_other if not rem and kind == "core"]
-    intact_accessory = [label for label, rem, kind in loose_other if not rem and kind == "accessory"]
-    remnant_loose = [label for label, rem, _ in loose_other if rem]
+    intact_core = [label for label, state, kind in loose_other if state == "intact" and kind == "core"]
+    intact_accessory = [label for label, state, kind in loose_other if state == "intact" and kind == "accessory"]
+    no_cds = [label for label, state, _ in loose_other if state == "no_cds"]
+    partial_loose = [label for label, state, _ in loose_other if state == "partial"]
+    if partial_loose:
+        res.add("other_idiomorph", "needs_human",
+                f"the deposit also carries a partial (< or >) CDS named for the other idiomorph "
+                f"(MAT1-{other_digit}): {partial_loose}: a truncated copy or an incomplete gene model; "
+                f"a curator decides")
+    remnant_loose = [label for label, state, _ in loose_other if state == "remnant"]
+    if no_cds:  # safe side: a gene feature without a CDS may be an unannotated intact gene
+        res.add("other_idiomorph", "needs_human",
+                f"the deposit also carries a gene feature named for the other idiomorph (MAT1-{other_digit}) "
+                f"with no CDS, so whether it is intact is unknown: {no_cds}; a curator decides")
     if intact_core:
         res.add("other_idiomorph", "needs_human",
                 f"the deposit also carries an intact CDS of the other idiomorph's core gene "
@@ -1044,7 +1118,11 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
             return res
     else:
         n = 1
-        existing = db_index["record_ids"]
+        # the db rule (identifiers.slugify_strain): collision-free among the taxid's existing
+        # slugs, which here include candidates proposed earlier in this run, so two strain-less
+        # isolates of one taxid get unknown-1 / unknown-2 (as v1 and the db do). A strain-less
+        # record_id therefore depends on batch order and on earlier verdicts.
+        existing = db_index["record_ids"] | batch_index["record_ids"]
         while any(r.startswith(f"{taxid}_unknown-{n}_") for r in existing):
             n += 1
         slug = f"unknown-{n}"
@@ -1095,7 +1173,10 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
                 f"nucleotide {nuc} is already a segment of {db_index['nucleotides'][nuc.split('.')[0]]}")
         return res
     if nuc.split(".")[0] in batch_index["nucleotides"]:
-        res.add("batch_nucleotide", "caveat",
+        # same rule as for db/: a nucleotide record is the segment of at most one record of
+        # this kind; two deposits on one accession (opposite idiomorphs the scan missed, or a
+        # second gene model) are held, the earlier candidate is not written over
+        res.add("batch_nucleotide", "needs_human",
                 f"nucleotide {nuc} is also the segment of in-batch candidate(s) "
                 f"{batch_index['nucleotides'][nuc.split('.')[0]]} (not written)")
     same = sorted(set(db_index["taxids"].get(taxid, [])) | set(db_index["species"].get(species, [])))

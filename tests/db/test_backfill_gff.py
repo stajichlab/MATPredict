@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
+import pytest
 import yaml
 
 from MATPredict.db.cli import build_gff_for_record, find_records_missing_proteins_faa
@@ -107,7 +108,7 @@ def test_build_gff_for_record_derives_sequence_from_coordinates_when_no_accessio
 
     monkeypatch.setattr(
         "MATPredict.db.cli._independent_translation",
-        lambda record, gene, ncbi: "MSEQ",
+        lambda record, gene, ncbi, **kwargs: "MSEQ",
     )
 
     build_gff_for_record(db_root, "Ascomycota", "Teloschistales", "111_a_MAT_combined", ncbi=MagicMock(), uniprot=MagicMock())
@@ -121,9 +122,13 @@ def test_build_gff_for_record_skips_gene_when_translation_returns_none(tmp_path,
     db_root = tmp_path / "db"
     _write_record_with_coordinates_no_accession(db_root, "Ascomycota", "Teloschistales", "222_b_MAT_combined")
 
-    monkeypatch.setattr("MATPredict.db.cli._independent_translation", lambda record, gene, ncbi: None)
+    monkeypatch.setattr("MATPredict.db.cli._independent_translation", lambda record, gene, ncbi, **kwargs: None)
 
-    build_gff_for_record(db_root, "Ascomycota", "Teloschistales", "222_b_MAT_combined", ncbi=MagicMock(), uniprot=MagicMock())
+    # A gene with coordinates that yields no protein is no longer dropped silently (#121).
+    with pytest.warns(UserWarning, match=r"gene_index 0 \(G1\)"):
+        build_gff_for_record(
+            db_root, "Ascomycota", "Teloschistales", "222_b_MAT_combined", ncbi=MagicMock(), uniprot=MagicMock(),
+        )
 
     faa_text = (db_root / "Ascomycota" / "Teloschistales" / "222_b_MAT_combined" / "proteins.faa").read_text()
     assert faa_text.strip() == ""
@@ -347,7 +352,7 @@ def test_build_gff_for_record_writes_gene_class_from_order_yml(tmp_path, monkeyp
     record_dir = _write_record_with_locus_and_order_yml(
         db_root, "Ascomycota", "Teloschistales", "333_c_MAT_MAT1-1", "apn2_homolog"
     )
-    monkeypatch.setattr("MATPredict.db.cli._independent_translation", lambda record, gene, ncbi: "MSEQ")
+    monkeypatch.setattr("MATPredict.db.cli._independent_translation", lambda record, gene, ncbi, **kwargs: "MSEQ")
 
     build_gff_for_record(
         db_root, "Ascomycota", "Teloschistales", "333_c_MAT_MAT1-1",
@@ -365,7 +370,7 @@ def test_build_gff_for_record_tolerates_a_missing_order_yml(tmp_path, monkeypatc
     record_dir = _write_record_with_coordinates_no_accession(
         db_root, "Ascomycota", "Teloschistales", "444_d_MAT_combined"
     )
-    monkeypatch.setattr("MATPredict.db.cli._independent_translation", lambda record, gene, ncbi: "MSEQ")
+    monkeypatch.setattr("MATPredict.db.cli._independent_translation", lambda record, gene, ncbi, **kwargs: "MSEQ")
 
     build_gff_for_record(
         db_root, "Ascomycota", "Teloschistales", "444_d_MAT_combined",

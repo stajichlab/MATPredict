@@ -11,7 +11,8 @@ FEATURES             Location/Qualifiers
      gene            complement(1..2612)
                      /gene="rcb1"
                      /role="core_MAT"
-     CDS             complement(1..2612)
+     CDS             complement(join(494..1241,1293..1737,1792..1929,1987..2053,
+                     2106..2218,2270..2489))
                      /gene="rcb1"
                      /role="core_MAT"
                      /translation="MAASSDPTYPLYSVFSFIGFILVCIPFWWHIQAWNAGTCAFMIWT
@@ -29,7 +30,7 @@ FEATURES             Location/Qualifiers
      gene            complement(5798..6523)
                      /gene="phb2_B44-like"
                      /role="core_MAT"
-     CDS             complement(5798..6523)
+     CDS             complement(6231..6416)
                      /gene="phb2_B44-like"
                      /role="core_MAT"
                      /translation="MDSFTTLTAQSVFDELNLDVQDDVSHHFGFPSEEEAATEVPADQE
@@ -47,7 +48,8 @@ FEATURES             Location/Qualifiers
      gene            complement(11171..13284)
                      /gene="rcb2"
                      /role="core_MAT"
-     CDS             complement(11171..13284)
+     CDS             complement(join(11471..11945,12003..12456,12515..12652,
+                     12707..12886,12946..13153))
                      /gene="rcb2"
                      /role="core_MAT"
                      /translation="MTALHPEFAPVAIIACLSLLLPLPWHWRARNVATLSMIFWLFVSN
@@ -63,7 +65,8 @@ FEATURES             Location/Qualifiers
      gene            complement(13490..15124)
                      /gene="ste3_extra_unassigned"
                      /role="core_MAT"
-     CDS             complement(13490..15124)
+     CDS             complement(join(13614..13842,13895..14339,14390..14527,
+                     14580..14762,14822..15020))
                      /gene="ste3_extra_unassigned"
                      /role="core_MAT"
                      /translation="MHAELPVASFISAALVLVPIPWHWKARNVPTLSLCIWLFVLNVIN
@@ -77,7 +80,8 @@ FEATURES             Location/Qualifiers
      gene            15801..17793
                      /gene="rcb3"
                      /role="core_MAT"
-     CDS             15801..17793
+     CDS             join(16160..16388,16441..16553,16607..16673,16722..16859,
+                     16912..17350,17406..17673)
                      /gene="rcb3"
                      /role="core_MAT"
                      /translation="MSSRLSFDDPTYPAFPIFAFIGFVLVLIPLPWHLQAWNSGTCLYM
@@ -101,7 +105,7 @@ FEATURES             Location/Qualifiers
      gene            20033..20706
                      /gene="fungal_mating_type_pheromone"
                      /role="core_MAT"
-     CDS             20033..20706
+     CDS             20101..20310
                      /gene="fungal_mating_type_pheromone"
                      /role="core_MAT"
                      /translation="MCDTFNTLTLNAYAEDPTPRLSNSTTNEITSTAPSDHTSLTLEEL

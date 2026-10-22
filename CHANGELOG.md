@@ -15,6 +15,11 @@ release completed.
   gene `/pseudo`; the self-consistency benchmark leaves such genes out of the expected set. Seven records are labelled (decision paper `docs/notes/2026-10-17_remnant-status.md`, option B step 1).
 
 ### Fixed
+- `curate-db build-gff` no longer drops the CDS feature and `proteins.faa` entry of a gene with no `protein_accession` on an `assembly`-type segment (#121).
+  The protein of such a gene is translated from its recorded coordinates (exons, `codon_start`, `transl_table`); on an `assembly` segment the GCA_/GCF_ accession
+  cannot be fetched, so the translation is now fetched from the segment's `seq_region` contig, as the locus sequence already was. A present gene with coordinates
+  whose protein still cannot be derived now raises a `UserWarning` naming the record and gene. `validate`'s sequence cross-check is unchanged. One record was exposed
+  (`5346_a43-b43-okayama-7_PR_B43`, genes phb3.1, phb1.1, phb2.3, phb2.1, phb3.3).
 - The genes shown for a locus (GFF3, the figure, the track report) no longer include a gene of the called idiomorph marked as having lost a pair. A loss was recorded
   by gene name from every resolution event of the locus, although resolution happens per group of overlapping hits, so one weak hit elsewhere (in *Xylaria bambusicola*
   GCA_033171785.1, MAT1-1-5 beating a 15 kb-distant MAT1-2-1 hit) hid the polished MAT1-2-1 model. `lost_to_for_call` keeps only events whose winner belongs to

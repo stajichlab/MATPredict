@@ -46,7 +46,7 @@ FEATURES             Location/Qualifiers
      gene            7822..8899
                      /gene="MAT1-2-1"
                      /role="core_MAT"
-     CDS             7822..8899
+     CDS             join(7822..8000,8056..8345,8400..8899)
                      /gene="MAT1-2-1"
                      /role="core_MAT"
                      /translation="MATVPIAMKPAAESTDTLTELLWQDALRHLESTNNEVLLPINVTD

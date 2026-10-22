@@ -69,7 +69,7 @@ def _cli(monkeypatch, tmp_path, routed_to, recorded):
     )
     monkeypatch.setattr(detect_cli, "load_all_families", lambda db_root: [])
 
-    def fake_route(taxid, families, phylum=None, exhaustive=False):
+    def fake_route(taxid, families, phylum=None, exhaustive=False, scoped_roster_policy="off"):
         recorded["exhaustive"] = exhaustive
         return routed_to
 

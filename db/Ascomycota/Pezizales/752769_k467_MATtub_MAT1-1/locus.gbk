@@ -10,7 +10,7 @@ FEATURES             Location/Qualifiers
      gene            1..471
                      /gene="MAT1-1-1"
                      /role="core_MAT"
-     CDS             1..471
+     CDS             join(1..90,140..471)
                      /gene="MAT1-1-1"
                      /role="core_MAT"
                      /translation="PAVIVNGDEALARIPPSQHLRALNPYVAQRAWISKYCNGYGLTQA

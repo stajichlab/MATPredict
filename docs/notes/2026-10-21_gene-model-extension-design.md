@@ -1,11 +1,11 @@
 # Gene-model 3' extension and model assessment: design v2, blind-spot audit and evaluation plan (2026-10-21)
 
-Status: **proposal, revised after an independent adversarial review (verdict: go-with-changes). Nothing is implemented.**
+Status: **proposal; revised after an independent adversarial review (go-with-changes), then tested on held-out data. Curator decision 2026-10-22: rescue only (section 14). Nothing is implemented.**
+**Reading guide:** sections 1-8 are the design as revised after the review; sections 11-15 are measurements and decisions made after it, in order. **Where an earlier section contradicts section 14 or 15, sections 14-15 win:** the false-complete ceiling of sections 9, 12 and 12b was withdrawn after the held-out test (section 13b), and the roster-growth effect was validated on the reserved genes (section 15b).
 Tags: **[M]** measured by the author, **[V]** verified by the independent reviewer (how stated in `results/2026-10-21_gene_model_extension/design_review_2.md`),
 **[R]** read in code, **[I]** inference or recollection not tested, **[X]** not checked. The reviewer's numbers are reported as the reviewer's; the author has not re-run them.
 
-Base of the code cited: `origin/main` abf09bd **plus** the unmerged PR #117 (`homothallic.py` exists only there; its worktree is
-`.claude/worktrees/agent-a769420ca3477c529`, branch `homothallic-loci-patch`). Line numbers below refer to that combination.
+Base of the code cited: `origin/main` 2d14712, which includes #117 (`homothallic.py`, merged), #119 (roster exon structures, merged at 9ae22d2) and #120. The roster-record `record_version` bumps missed by the #119 merge are in #123, and the homothallic idiomorph follow-up is #124.
 
 Origin: PR #117 found that the 196 aa *Pyrenophora tritici-repentis* `MAT1-1-1` model ends at the edge of the exonerate alignment, not at the gene's end.
 A survey of all 3,181 patched-run reports (`results/2026-10-21_gene_model_extension/survey.tsv`) and a prototype chooser led to design v1; the review
@@ -273,6 +273,8 @@ This census also supplies the position-weight matrices for stage 3b.
 
 ## 9. Plan and acceptance criteria (pre-committed)
 
+*Superseded in part by section 14: the "wrong-promotion rate 0" and false-complete criteria below were withdrawn after the held-out test; stage 0b/0c are done (sections 11, 13) and the shadow-stage acceptance now reads as in section 14 item 5.*
+
 | stage | work | done when |
 |---|---|---|
 | 0b | **rescue test (3.4b):** withhold each curated record, align only a truncated reference (30/50/70% N-terminal), extend, compare with the deposited CDS end: rate of exact stop recovery, mean overshoot and undershoot (aa), false-extension rate on complete genes, per clade and per evidence class | the table exists before any threshold on the 30-199 aa tier is chosen; the provisional tier is justified or dropped by this table |
@@ -366,6 +368,8 @@ From each alignment edge, enumerate `GT..AG` introns of 40-400 bp that keep the 
 
 ## 12. Decision needed: how acceptance counts an early stop
 
+*Historical: decided 2026-10-21 (option 2) and withdrawn 2026-10-22 (section 14). Kept because the reasoning and the numbers are the record of why.*
+
 An extension that stops early is **never worse than not extending**: in 187 of the 189 truncated rows the extended model ends closer to the true end (2 unchanged, 0 farther); of the 48 early stops, 46 are closer (median distance to the true end 162 aa against 262 before). What it gets wrong is the **label**: a still-partial gene reported as extended or complete. Today's pipeline treats all 189 as complete (the ORF test passes vacuously), so any acceptance rule improves on the legacy.
 **Curator decision 2026-10-21: option 2 (below).** Options for the acceptance bar (section 9):
 1. **Strict:** any end error beyond 5 aa in either direction is a wrong promotion; the bar is zero. Not attainable now (best accepted set: 10 of 111 early stops); it would mean never promoting multi-intron genes.
@@ -411,9 +415,9 @@ Caveats: n is small and clustered (one order and a few genes drive every early s
 **Decided (curator, 2026-10-21): per-class ceilings (option 2 of 12b).** `complete` is allowed only when the best-hit reference has <= 2 exons **and** the length rule passes **and** the reference-intron guard is clear; the false-complete ceiling for that class is **5%**, always reported with n, the number of distinct genes and the orders covered (measured so far: 0 of 93 rows from 15 genes in 7 orders). Every extension whose best-hit reference has >= 3 exons is `provisional` and is never labelled `complete`; that class has no ceiling and is reported. The ceiling is verified on genes not used to choose the rule (new curated records or the held-out radius of the curated-record holdout) before it is called met.
 **Curation of the roster exon structures (curator, 2026-10-21):** a curator may be an Opus agent or the project curator depending on complexity. The 15 `ok` structures are confirmed by an independent Opus agent re-deriving them from NCBI; the 5 partial deposits and the 2 rows without a database protein are decided by the project curator on the agent's evidence. A separate draft PR adds only confirmed structures to the records.
 
-**Roster PR (2026-10-22):** the curator-confirmed exon structures for the 22 references are in draft PR #119 (`roster-exon-structures`): 17 verified rows plus the five *Tuber* rows (canonical GT-AG boundaries for the two `MAT1-2-1`, the deposit's for the three `MAT1-1-1`, per the curator). The guard of 11b/11d needs this PR merged to have full coverage at run time.
+**Roster PR (2026-10-22):** the curator-confirmed exon structures for the 22 references were merged as #119 (`roster-exon-structures`; the `record_version` bumps it missed are in #123): 17 verified rows plus the five *Tuber* rows (canonical GT-AG boundaries for the two `MAT1-2-1`, the deposit's for the three `MAT1-1-1`, per the curator). The guard of 11b/11d needs this PR merged to have full coverage at run time.
 
-**Merge order (curator, 2026-10-22):** roster PR #119 merges before this design PR (#118): the reference-structure guard of 11b/11d needs the full-coverage roster. A Fable agent reviews #119 before merge.
+**Merge order (curator, 2026-10-22):** roster PR #119 merged before this design PR (#118; done): the reference-structure guard of 11b/11d needs the full-coverage roster. A Fable agent reviews #119 before merge.
 
 ### 13. Stage 0c: held-out validation of the frozen rules (pre-registered 2026-10-22, before any result)
 

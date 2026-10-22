@@ -10,7 +10,7 @@ FEATURES             Location/Qualifiers
      gene            complement(770..1899)
                      /gene="MAT1-2-1"
                      /role="core_MAT"
-     CDS             complement(770..1899)
+     CDS             complement(join(770..1311,1366..1658,1718..1899))
                      /gene="MAT1-2-1"
                      /role="core_MAT"
                      /translation="MAAVTTAGFQPMTGSKDLVVELIWQHAVNHLKKTKNEIFLPVDII

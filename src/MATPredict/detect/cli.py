@@ -13,6 +13,7 @@ from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CO
 from MATPredict.detect.strong_single_gene import (
     DEFAULT_STRONG_SINGLE_GENE_POLICY, STRONG_SINGLE_GENE_POLICIES,
 )
+from MATPredict.detect.homothallic import DEFAULT_HOMOTHALLIC_POLICY, HOMOTHALLIC_POLICIES
 from MATPredict.detect.partial_core import DEFAULT_PARTIAL_CORE_POLICY, PARTIAL_CORE_POLICIES
 from MATPredict.detect.supported_span import DEFAULT_SUPPORTED_MIN_BITSCORE
 from MATPredict.detect.pipeline import (
@@ -132,6 +133,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         polish_strong_identity=_polish_strong_identity_from_args(args),
         polish_core_pair=getattr(args, "polish_core_pair", DEFAULT_POLISH_CORE_PAIR),
         partial_core_policy=_partial_core_policy_from_args(args),
+        homothallic_policy=_homothallic_policy_from_args(args),
         confidence_cap_policy=_confidence_cap_policy_from_args(args),
         strong_single_gene_policy=_strong_single_gene_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
@@ -262,6 +264,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "polish_strong_identity": _polish_strong_identity_from_args(args),
             "polish_core_pair": getattr(args, "polish_core_pair", DEFAULT_POLISH_CORE_PAIR),
             "partial_core_policy": _partial_core_policy_from_args(args),
+            "homothallic_policy": _homothallic_policy_from_args(args),
             "confidence_cap_policy": _confidence_cap_policy_from_args(args),
             "strong_single_gene_policy": _strong_single_gene_policy_from_args(args),
             "supported_min_bitscore": getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
@@ -282,6 +285,12 @@ def _partial_core_policy_from_args(args) -> str:
     """The partial-coverage vote policy for this run; an args object without the
     attribute (a test double) gets the default, `off`."""
     return getattr(args, "partial_core_policy", DEFAULT_PARTIAL_CORE_POLICY)
+
+
+def _homothallic_policy_from_args(args) -> str:
+    """The both-genes homothallic policy for this run; an args object without the attribute
+    (a test double) gets the default, `off`."""
+    return getattr(args, "homothallic_policy", DEFAULT_HOMOTHALLIC_POLICY)
 
 
 def _confidence_cap_policy_from_args(args) -> str:
@@ -574,6 +583,15 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "other idiomorph when the alpha-box/HMG-box profiles agree; where they disagree or are "
              "unavailable the call is `undetermined` (see `idiomorph_vote_note`). A partial hit near "
              "a contig end is treated as truncation and the vote is kept. Independent of --idiomorph-policy.",
+    )
+    detect.add_argument(
+        "--homothallic-policy", choices=HOMOTHALLIC_POLICIES, default=DEFAULT_HOMOTHALLIC_POLICY,
+        help="off: a locus with an alpha-box and an HMG-box gene is reported as one idiomorph unless the "
+             "reference-coverage rule of `classify_locus` passes (default). both_genes: a locus whose modelled "
+             "core genes include a COMPLETE alpha-box and a COMPLETE HMG-box protein, each confirmed by the "
+             "gene-identity profiles (not an HMG paralog or MAT1-1-3), within the family's separation limit, "
+             "is classed `homothallic_candidate` (see `homothallic_note`). A candidate, never an assertion; "
+             "the called idiomorph and the confidence are unchanged.",
     )
     detect.add_argument(
         "--confidence-cap-policy", choices=CONFIDENCE_CAP_POLICIES, default=DEFAULT_CONFIDENCE_CAP_POLICY,

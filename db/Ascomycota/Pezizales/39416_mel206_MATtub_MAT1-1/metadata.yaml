@@ -120,6 +120,13 @@ genes:
   end: 5338
   strand: '-'
   order_in_locus: 1
+  exons:
+  - start: 4933
+    end: 5338
+  - start: 4363
+    end: 4883
+  - start: 4270
+    end: 4302
 - gene_index: 2
   name: unnamed_flanking_ORF
   protein_accession: ncbi_protein:ADU56596.1

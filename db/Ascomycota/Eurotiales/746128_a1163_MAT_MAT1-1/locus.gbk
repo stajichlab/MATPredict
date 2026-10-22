@@ -38,7 +38,10 @@ FEATURES             Location/Qualifiers
      gene            complement(4202..5239)
                      /gene="MAT1-2-1"
                      /role="core_MAT"
-     CDS             complement(4202..5239)
+                     /pseudo
+                     /status="remnant"
+     CDS             complement(join(4202..4582,4690..4743,4843..4883,
+                     4963..5239))
                      /gene="MAT1-2-1"
                      /role="core_MAT"
                      /translation="MEQVVGMERVLKRRRQRKERRQDKCLSVFVLDKRTRLVQCRRLSL
@@ -46,11 +49,13 @@ FEATURES             Location/Qualifiers
                      KSFVSVNSAAGEPKKEVGYDLSQSCERKYRASSRQFSENIKPAALLDTPASMNISSDVS
                      TPAMLEGMPVGEIDFNAAFEGVPGINAIMTSNSMLENQQYHFEPNAFDLMNQVQNDYNK
                      TALYQQLSLPEGQIGENFEFTDFISDCF"
+                     /pseudo
+                     /status="remnant"
                      /gene_class="HMG_box"
      gene            5356..6513
                      /gene="MAT1-1-1"
                      /role="core_MAT"
-     CDS             5356..6513
+     CDS             join(5356..5644,5696..6513)
                      /gene="MAT1-1-1"
                      /role="core_MAT"
                      /translation="MEAAISPLERAFNTFLMTMPPEQLEELLQYLQDTKAQENNGLQLP

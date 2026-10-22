@@ -63,6 +63,21 @@ genes:
   end: 1824096
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 1823756
+    end: 1824096
+  - start: 1823385
+    end: 1823706
+  - start: 1823248
+    end: 1823335
+  - start: 1822499
+    end: 1823198
+  - start: 1822246
+    end: 1822450
+  - start: 1821995
+    end: 1822195
+  - start: 1821007
+    end: 1821942
 - gene_index: 1
   name: Y
   protein_accession: ncbi_protein:XP_003038722.1
@@ -74,6 +89,21 @@ genes:
   end: 1827456
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 1824368
+    end: 1824850
+  - start: 1824901
+    end: 1825014
+  - start: 1825065
+    end: 1825124
+  - start: 1825174
+    end: 1825764
+  - start: 1825812
+    end: 1825883
+  - start: 1825938
+    end: 1826204
+  - start: 1826254
+    end: 1827456
 evidence:
   locus_existence:
     tier: 1

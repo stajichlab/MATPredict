@@ -70,6 +70,9 @@ genes:
   end: 280555
   strand: '-'
   order_in_locus: 1
+  exons:
+  - start: 279869
+    end: 280555
 - gene_index: 2
   name: MATA2
   protein_accession: ncbi_protein:XP_452338.1
@@ -81,6 +84,9 @@ genes:
   end: 282183
   strand: +
   order_in_locus: 2
+  exons:
+  - start: 281410
+    end: 282183
 evidence:
   locus_existence:
     tier: 1

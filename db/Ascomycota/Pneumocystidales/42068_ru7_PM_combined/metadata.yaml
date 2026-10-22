@@ -65,6 +65,9 @@ genes:
   end: 211935
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 211240
+    end: 211935
 - gene_index: 1
   name: matMc
   protein_accession: ncbi_protein:XP_018229377.1
@@ -76,6 +79,9 @@ genes:
   end: 221076
   strand: '-'
   order_in_locus: 1
+  exons:
+  - start: 220321
+    end: 221076
 - gene_index: 2
   name: matMi
   protein_accession: null

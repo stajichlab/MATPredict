@@ -60,6 +60,9 @@ genes:
   end: 241688
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 241497
+    end: 241688
 - gene_index: 1
   name: bap3-1
   protein_accession: ncbi_protein:XP_003028251.1
@@ -71,6 +74,9 @@ genes:
   end: 245586
   strand: '-'
   order_in_locus: 1
+  exons:
+  - start: 245410
+    end: 245586
 - gene_index: 2
   name: bar3
   protein_accession: ncbi_protein:XP_003027970.1
@@ -82,6 +88,17 @@ genes:
   end: 248430
   strand: +
   order_in_locus: 2
+  exons:
+  - start: 246348
+    end: 246558
+  - start: 246614
+    end: 246726
+  - start: 246777
+    end: 246843
+  - start: 246892
+    end: 247029
+  - start: 247079
+    end: 248430
 evidence:
   locus_existence:
     tier: 1

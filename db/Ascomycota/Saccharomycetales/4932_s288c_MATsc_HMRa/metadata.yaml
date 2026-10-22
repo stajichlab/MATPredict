@@ -62,6 +62,9 @@ genes:
   end: 293538
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 293179
+    end: 293538
 - gene_index: 1
   name: MATA1
   protein_accession: ncbi_protein:NP_010021.1
@@ -73,6 +76,13 @@ genes:
   end: 294321
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 293835
+    end: 293939
+  - start: 293994
+    end: 294239
+  - start: 294292
+    end: 294321
 evidence:
   locus_existence:
     tier: 1

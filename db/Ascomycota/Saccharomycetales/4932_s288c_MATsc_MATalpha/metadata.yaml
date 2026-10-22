@@ -73,6 +73,9 @@ genes:
   end: 200178
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 199546
+    end: 200178
 - gene_index: 1
   name: MATALPHA1
   protein_accession: ncbi_protein:NP_009869.3
@@ -84,6 +87,9 @@ genes:
   end: 200969
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 200442
+    end: 200969
 evidence:
   locus_existence:
     tier: 1

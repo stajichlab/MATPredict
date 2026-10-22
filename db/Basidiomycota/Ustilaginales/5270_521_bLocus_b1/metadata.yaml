@@ -61,6 +61,11 @@ genes:
   end: 1691499
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 1690308
+    end: 1691499
+  - start: 1690004
+    end: 1690233
 - gene_index: 1
   name: bW
   protein_accession: ncbi_protein:XP_011386405.1
@@ -72,6 +77,11 @@ genes:
   end: 1693905
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 1691754
+    end: 1692302
+  - start: 1692574
+    end: 1693905
 evidence:
   locus_existence:
     tier: 1

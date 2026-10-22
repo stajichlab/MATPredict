@@ -64,6 +64,9 @@ genes:
   end: 216733
   strand: +
   order_in_locus: 0
+  exons:
+  - start: 216536
+    end: 216733
 - gene_index: 1
   name: bbr2
   protein_accession: ncbi_protein:XP_003028243.1
@@ -97,6 +100,9 @@ genes:
   end: 224604
   strand: '-'
   order_in_locus: 3
+  exons:
+  - start: 224353
+    end: 224604
 - gene_index: 4
   name: bbp2_b
   protein_accession: ncbi_protein:XP_003027962.1
@@ -108,6 +114,9 @@ genes:
   end: 227732
   strand: +
   order_in_locus: 4
+  exons:
+  - start: 227442
+    end: 227732
 - gene_index: 5
   name: bbp2-5
   protein_accession: ncbi_protein:XP_003027964.2
@@ -119,6 +128,9 @@ genes:
   end: 230399
   strand: +
   order_in_locus: 5
+  exons:
+  - start: 230121
+    end: 230399
 - gene_index: 6
   name: bbp2-8
   protein_accession: ncbi_protein:XP_003028248.1
@@ -130,6 +142,9 @@ genes:
   end: 232374
   strand: '-'
   order_in_locus: 6
+  exons:
+  - start: 232093
+    end: 232374
 - gene_index: 7
   name: bbp2-6
   protein_accession: ncbi_protein:XP_003027965.1
@@ -141,6 +156,9 @@ genes:
   end: 233781
   strand: +
   order_in_locus: 7
+  exons:
+  - start: 233524
+    end: 233781
 evidence:
   locus_existence:
     tier: 1

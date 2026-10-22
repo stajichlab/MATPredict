@@ -65,6 +65,15 @@ genes:
   end: 12990
   strand: '-'
   order_in_locus: 2
+  exons:
+  - start: 12532
+    end: 12990
+  - start: 12365
+    end: 12466
+  - start: 12287
+    end: 12298
+  - start: 10466
+    end: 11992
 - gene_index: 1
   name: MFa2
   protein_accession: ncbi_protein:AAN75623.1
@@ -76,6 +85,9 @@ genes:
   end: 88017
   strand: '-'
   order_in_locus: 5
+  exons:
+  - start: 87889
+    end: 88017
 - gene_index: 2
   name: MFa3
   protein_accession: ncbi_protein:AAN75622.1
@@ -87,6 +99,9 @@ genes:
   end: 98493
   strand: '-'
   order_in_locus: 7
+  exons:
+  - start: 98365
+    end: 98493
 - gene_index: 3
   name: MFa1
   protein_accession: ncbi_protein:AAN75621.1
@@ -98,6 +113,9 @@ genes:
   end: 107004
   strand: +
   order_in_locus: 8
+  exons:
+  - start: 106876
+    end: 107004
 - gene_index: 4
   name: STE3
   protein_accession: ncbi_protein:AAN75624.1
@@ -109,6 +127,15 @@ genes:
   end: 95179
   strand: +
   order_in_locus: 6
+  exons:
+  - start: 93853
+    end: 94054
+  - start: 94107
+    end: 94424
+  - start: 94484
+    end: 94907
+  - start: 94966
+    end: 95179
 - gene_index: 5
   name: UAP1
   protein_accession: ncbi_protein:AAN75606.2
@@ -142,6 +169,23 @@ genes:
   end: 26193
   strand: '-'
   order_in_locus: 3
+  exons:
+  - start: 25970
+    end: 26193
+  - start: 25657
+    end: 25900
+  - start: 24745
+    end: 25604
+  - start: 24487
+    end: 24689
+  - start: 23794
+    end: 24428
+  - start: 23276
+    end: 23740
+  - start: 22821
+    end: 23219
+  - start: 22185
+    end: 22763
 - gene_index: 8
   name: RPL39
   protein_accession: ncbi_protein:AAV98475.1
@@ -153,6 +197,15 @@ genes:
   end: 31587
   strand: '-'
   order_in_locus: 4
+  exons:
+  - start: 31585
+    end: 31587
+  - start: 31274
+    end: 31367
+  - start: 31211
+    end: 31221
+  - start: 31113
+    end: 31160
 - gene_index: 9
   name: STE20
   protein_accession: ncbi_protein:AAN75615.1
@@ -164,6 +217,23 @@ genes:
   end: 115296
   strand: +
   order_in_locus: 9
+  exons:
+  - start: 112926
+    end: 113246
+  - start: 113337
+    end: 113588
+  - start: 113641
+    end: 113976
+  - start: 114050
+    end: 114276
+  - start: 114326
+    end: 114608
+  - start: 114663
+    end: 114762
+  - start: 114831
+    end: 115165
+  - start: 115219
+    end: 115296
 - gene_index: 10
   name: NOG2
   protein_accession: ncbi_protein:AAV98479.1

@@ -66,6 +66,9 @@ genes:
   end: 31676
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 30927
+    end: 31676
 - gene_index: 1
   name: MATALPHA2
   protein_accession: ncbi_protein:XP_002554226.1
@@ -77,6 +80,11 @@ genes:
   end: 32612
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 31990
+    end: 32051
+  - start: 32348
+    end: 32612
 evidence:
   locus_existence:
     tier: 2

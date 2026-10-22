@@ -111,6 +111,15 @@ genes:
   end: 4290
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 4169
+    end: 4290
+  - start: 3999
+    end: 4123
+  - start: 3793
+    end: 3948
+  - start: 3602
+    end: 3744
 - gene_index: 1
   name: MAT1-1-2
   protein_accession: ncbi_protein:AAG42811.1
@@ -122,6 +131,17 @@ genes:
   end: 6377
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 4797
+    end: 4950
+  - start: 5003
+    end: 5713
+  - start: 5756
+    end: 5931
+  - start: 5980
+    end: 6090
+  - start: 6138
+    end: 6377
 - gene_index: 2
   name: MAT1-1-1
   protein_accession: ncbi_protein:AAG42809.1

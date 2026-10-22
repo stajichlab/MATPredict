@@ -62,6 +62,9 @@ genes:
   end: 3710
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 3354
+    end: 3710
 - gene_index: 1
   name: matPi
   protein_accession: ncbi_protein:CBB12355.1
@@ -73,6 +76,9 @@ genes:
   end: 4368
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 3889
+    end: 4368
 evidence:
   locus_existence:
     tier: 1

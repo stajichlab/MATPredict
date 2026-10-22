@@ -58,6 +58,9 @@ genes:
   end: 3770698
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 3770345
+    end: 3770698
 - gene_index: 1
   name: mat1-Pi
   protein_accession: ncbi_protein:XP_013017871.1
@@ -69,6 +72,9 @@ genes:
   end: 3771306
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 3770830
+    end: 3771306
 evidence:
   locus_existence:
     tier: 1

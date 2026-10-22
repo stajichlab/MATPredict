@@ -12,7 +12,7 @@ v0.6.0 baseline (three campaigns, all from frozen worktree `run-7c7ed99`):
 | campaign | genomes | how | wall |
 |---|---|---|---|
 | Ascomycota | 19,415 | 9 waves of about 2,158, 64-way, partition `exfab`, `GENOME_TIMEOUT 3600`; pilot of 246 first (mean 158 s/genome, max 624 s) | about 1.5 h per wave of compute, plus queueing |
-| Basidiomycota | 3,270 (3,217 under 500 Mb in 3 jobs of about 1,072, 64-way, timeout 3600; 58 at or above 500 Mb in 1 job, 32-way, timeout 14400, account `exfab`) | same worker pattern | |
+| Basidiomycota | 3,270 rows in `genomes.tsv`; the job lists total 3,275 (3 small jobs of 1,073 + 1,072 + 1,072 genomes under 500 Mb, 64-way, timeout 3600; 1 large job of 58 genomes at or above 500 Mb, 32-way, timeout 14400, account `exfab`); **the difference of 5 is unexplained (unverified)** | same worker pattern | |
 | Mucoromycotina | produced by a different table (`results/2026-10-03_mucoromycotina_mat/calls.tsv`; how it was produced is **unverified**) | | |
 `scripts/build_site_data.py` reads all three, so a replacement of the site needs all three (or an explicit decision to keep one at v0.6.0).
 

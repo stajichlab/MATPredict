@@ -67,7 +67,7 @@ Per the 2026-10-19 handoff **(reconstructed, not run)**: `.github/workflows/page
 So replacing the data means: new dated result folders, edited paths in `build_site_data.py`, rebuilt shards, edited landing numbers, a local build, and only then a tag, on the curator's explicit decision. Whether a manual dispatch can publish to a preview location is **unverified**; check before relying on it.
 
 ## 9. Decisions for the curator
-1. **Scope: decided (2026-10-22): all three campaigns.** 1b (open): also re-run the 685 held-out LCG and Jena genomes (about 35 CPU-hours at the v0.6.0 median of 183 s), which the *Mucoromycotina* held-out benchmark uses? Recommendation: yes, because they are the held-out set for the roster and classifier work and a clean run is the cheapest time to refresh them; the site does not need them.
+1. **Scope: decided (2026-10-22): all three campaigns.** **1b: decided (2026-10-22): also re-run the 685 held-out LCG and Jena genomes** (about 35 CPU-hours at the v0.6.0 median of 183 s) with the same code, as the held-out set for roster and classifier work; they stay out of training and the site.
 2. **Order:** run Ascomycota first (largest, most affected), then Basidiomycota, then *Mucoromycotina*? Recommendation: yes.
 3. **Version and tag:** tag the run commit (for example `v0.7.0-rc1`) or run from an untagged frozen commit? Recommendation: a release-candidate tag (a tag deploys the site only for `v*` tags, so choose a name that cannot be mistaken for a release: **check that the Pages workflow would not fire on it**).
 4. **Determinism check (phase 2):** yes or skip? Recommendation: yes, 200 genomes, about two hours.

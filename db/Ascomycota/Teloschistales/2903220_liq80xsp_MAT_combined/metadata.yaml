@@ -1,5 +1,5 @@
 record_id: 2903220_liq80xsp_MAT_combined
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 2903220
   lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Lecanoromycetes;o__Teloschistales;f__Teloschistaceae;g__Xanthoria;s__Xanthoria_sp_1_TBL-2021
@@ -161,9 +161,18 @@ genes:
   locus_tag: null
   segment_index: 0
   start: 47471
-  end: 48625
+  end: 48613
   strand: '-'
   order_in_locus: 1
+  exons:
+  - start: 48477
+    end: 48613
+  - start: 48193
+    end: 48425
+  - start: 47471
+    end: 48141
+  codon_start: 1
+  transl_table: 1
 - gene_index: 2
   name: MAT1-1-1
   protein_accession: null
@@ -262,4 +271,38 @@ curation:
   proposal_dedupe_key: 38686438|2903220|MAT|combined
   reviewed_by: null
   reviewed_date: null
+  notes: 'record_version 1 -> 2, 2026-10-22 (curator ruling, J. Stajich): MAT1-2-1 is
+    corrected from the published single-exon model to the depositor''s 3-exon model;
+    no other gene changes.
+
+
+    MAT1-2-1 now follows the INSDC deposit KAI4264608.1 (locus_tag L6R42_000313, ''hypothetical
+    protein'', HMG-box), CDS complement(join(47471..48141,48193..48425,48477..48613))
+    on JALAIM010000088.1: exons in transcript order 48477-48613, 48193-48425, 47471-48141
+    (minus strand), 1041 bp, 346 aa, ATG start, TAG stop, no internal stop (table 1),
+    two 51-bp GT..AG introns (48426-48476 and 48142-48192). protein_accession stays
+    null so proteins.faa carries the translation of these exons, which equals KAI4264608.1.
+    The gene''s coordinates are therefore the depositor''s, not the paper''s: locus.coordinate_provenance
+    (published_explicit) no longer describes this gene.
+
+
+    Replaced model (White et al. 2024, Supplementary Table S1): a single exon 47471-48625
+    (-), 1155 bp, 384 aa, MASNMQLAEH..., which reads both introns as coding (17 aa each,
+    in frame, no stop). Against the curated Teloschistales MAT1-2-1 of 115814_voucher-101_MAT_MAT1-2
+    (351 aa), local BLOSUM62 (gap open -11, extend -1) scores 1351 for the single-exon
+    model (347 of 384 residues aligned; the two intron read-throughs do not align) against
+    1398 for the 3-exon model (345 of 346 aligned).
+
+
+    Open point, not changed by the ruling: the deposit starts at the second ATG (48613).
+    The published model''s first ATG (48625, the first ATG after an in-frame stop) adds
+    MASN, and both curated Teloschistales MAT1-2-1 references start the same way (115814:
+    MATSNMQLAEH..., 1301501_voucher-267: MAVPNMQLAEH...). A 3-exon model starting at
+    48625 (350 aa) scores 1408 against 115814 by the same alignment, so the deposit''s
+    start may be 4 codons short.
+
+
+    Verified 2026-10-22 by Claude Code (claude-opus-5-5, branch curation-corrections):
+    NCBI efetch of JALAIM010000088.1 and KAI4264608.1, Biopython translation of both
+    models and of the deposit CDS, Biopython PairwiseAligner for the scores.'
 model_provenance: null

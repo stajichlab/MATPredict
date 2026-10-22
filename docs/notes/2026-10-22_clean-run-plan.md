@@ -13,8 +13,8 @@ v0.6.0 baseline (three campaigns, all from frozen worktree `run-7c7ed99`):
 |---|---|---|---|
 | Ascomycota | 19,415 | 9 waves of about 2,158, 64-way, partition `exfab`, `GENOME_TIMEOUT 3600`; pilot of 246 first (mean 158 s/genome, max 624 s) | about 1.5 h per wave of compute, plus queueing |
 | Basidiomycota | 3,270 rows in `genomes.tsv`; the job lists total 3,275 (3 small jobs of 1,073 + 1,072 + 1,072 genomes under 500 Mb, 64-way, timeout 3600; 1 large job of 58 genomes at or above 500 Mb, 32-way, timeout 14400, account `exfab`); **the difference of 5 is unexplained (unverified)** | same worker pattern | |
-| Mucoromycotina | produced by a different table (`results/2026-10-03_mucoromycotina_mat/calls.tsv`; how it was produced is **unverified**) | | |
-`scripts/build_site_data.py` reads all three, so a replacement of the site needs all three (or an explicit decision to keep one at v0.6.0).
+| Mucoromycotina | 974 genomes in `inputs.tsv`: **BFD Mucorales + Umbelopsidales 289 (288 after the suppress list)**, LCG 621 and Jena 64 (the last two are held-out sets, never used for training, curation or classifier builds); `detect --phylum Mucoromycota --emit-cds-fasta`, **no taxid** (LCG and Jena have none), 4-chunk Slurm array 29371553 (`run_chunk.slurm`, `chunk_{0..3}.tsv`, committed), tables from `collect.py`; 47.4 CPU-h, median 183 s per genome | |
+`scripts/build_site_data.py` reads all three (the *Mucoromycotina* part from `calls.tsv`, BFD rows only), so replacing the site's data needs all three. **Decided (curator, 2026-10-22): all three campaigns.** The *Mucoromycotina* production is documented in `results/2026-10-03_mucoromycotina_mat/NOTE.md` and its scripts are committed, so it is a small, reproducible add-on (288 BFD genomes, about 15 CPU-hours); whether to also re-run the 685 held-out LCG/Jena genomes is a separate question (section 9, decision 1b).
 
 ## 2. Gates (curator ruling 2026-10-22)
 The run starts when these are merged:
@@ -38,7 +38,7 @@ The run starts when these are merged:
 | 1 | **regression gate** (`docs/regression-check.md`): `testset/regression_panel.tsv` plus Zygo 23, baseline versus candidate, partition `exfab`; every changed call listed and judged | no unexplained change; every change in an expected category (section 6) |
 | 2 | **determinism check:** about 200 genomes run twice with the same code; diff | the noise level is known before differences are attributed to code (the handoff recorded one *Ogataea* `MATsc` start of 199 versus 349 between runs, uninvestigated) |
 | 3 | **pilot** of about 500 genomes: stratified by class like the 246-genome v0.6.0 pilot, plus the known problem clades (all 101 uncalled *Cochliobolus*/*Bipolaris*, *Pyrenophora*, *Aureobasidium*, *Botrytis*, *Hypocreales* with the *Beauveria*-type structure) | per-class runtime and timeout rate known; no systematic failure; the homothallic policy behaves as measured |
-| 4 | **waves:** Ascomycota in 9 waves of about 2,158, 64-way on `exfab`; Basidiomycota small (3 jobs) and large (1 job, 32-way); Mucoromycotina as decided; failures re-run in a separate folder | at least 99% of genomes have a report; failures listed with causes |
+| 4 | **waves:** Ascomycota in 9 waves of about 2,158, 64-way on `exfab`; Basidiomycota small (3 jobs) and large (1 job, 32-way); *Mucoromycotina* (one 4-chunk array, `run_chunk.slurm` pattern, no taxid); failures re-run in a separate folder | at least 99% of genomes have a report; failures listed with causes |
 | 5 | **diff against v0.6.0** (section 6) and curator review | every changed call explained or put on the curator's list |
 | 6 | **site** (section 8), only on the curator's decision | curator approves; tag |
 
@@ -67,8 +67,8 @@ Per the 2026-10-19 handoff **(reconstructed, not run)**: `.github/workflows/page
 So replacing the data means: new dated result folders, edited paths in `build_site_data.py`, rebuilt shards, edited landing numbers, a local build, and only then a tag, on the curator's explicit decision. Whether a manual dispatch can publish to a preview location is **unverified**; check before relying on it.
 
 ## 9. Decisions for the curator
-1. **Scope:** Ascomycota only (the 19,415 of the handoff), or all three campaigns so the site can be replaced as a whole? Recommendation: Ascomycota and Basidiomycota; keep Mucoromycotina at v0.6.0 until its production is understood.
-2. **Order:** run Ascomycota first (largest, most affected), then Basidiomycota? Recommendation: yes.
+1. **Scope: decided (2026-10-22): all three campaigns.** 1b (open): also re-run the 685 held-out LCG and Jena genomes (about 35 CPU-hours at the v0.6.0 median of 183 s), which the *Mucoromycotina* held-out benchmark uses? Recommendation: yes, because they are the held-out set for the roster and classifier work and a clean run is the cheapest time to refresh them; the site does not need them.
+2. **Order:** run Ascomycota first (largest, most affected), then Basidiomycota, then *Mucoromycotina*? Recommendation: yes.
 3. **Version and tag:** tag the run commit (for example `v0.7.0-rc1`) or run from an untagged frozen commit? Recommendation: a release-candidate tag (a tag deploys the site only for `v*` tags, so choose a name that cannot be mistaken for a release: **check that the Pages workflow would not fire on it**).
 4. **Determinism check (phase 2):** yes or skip? Recommendation: yes, 200 genomes, about two hours.
 5. **Homothallic policy outside Dothideomycetes:** apply as written, or restrict the first run to families where it was measured (Ascomycota MAT)? Recommendation: apply as written but report the count per phylum in the pilot.

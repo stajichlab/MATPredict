@@ -80,6 +80,15 @@ genes:
   end: 652
   strand: +
   order_in_locus: 0
+  exons:
+  - start: 1
+    end: 212
+  - start: 264
+    end: 337
+  - start: 407
+    end: 465
+  - start: 515
+    end: 652
 evidence:
   locus_existence:
     tier: 1
@@ -125,4 +134,5 @@ curation:
   proposal_dedupe_key: 29590201|55307|MATtub|MAT1-2|ysh1-8
   reviewed_by: null
   reviewed_date: null
+  notes: 'CDS is partial at both ends in the deposit (LC312334.1 <1..>652); no start or stop codon. Intron positions in protein coordinates are not comparable with full-length references. Exons are recorded at canonical GT-AG intron boundaries, which differ from the deposited intron positions by 1-2 bases; the joined coding sequence and the protein are identical to the deposit (curator decision 2026-10-21; verified independently against NCBI).'
 model_provenance: null

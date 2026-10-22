@@ -93,6 +93,11 @@ genes:
   end: 543
   strand: +
   order_in_locus: 0
+  exons:
+  - start: 1
+    end: 75
+  - start: 125
+    end: 543
 evidence:
   locus_existence:
     tier: 1
@@ -138,4 +143,5 @@ curation:
   proposal_dedupe_key: 29590201|55307|MATtub|MAT1-1|BSH1-11
   reviewed_by: null
   reviewed_date: null
+  notes: 'CDS is partial at both ends in the deposit (LC312365.1 <1..>543); no start or stop codon. Intron positions in protein coordinates are not comparable with full-length references. Exons follow the deposit (BBB16460.1). The deposited intron has non-canonical boundaries (TG..TA); moving it one base later gives a GT..AG intron and would change one residue (A to S at position 26), which matches the T. melanosporum MAT1-1-1 (ADU56595.1) (curator decision 2026-10-21: follow the deposit).'
 model_provenance: null

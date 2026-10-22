@@ -462,3 +462,24 @@ After the held-out validation of section 13b the curator chose **option 1**: the
 5. **Shadow mode first** (section 3.9): `legacy` stays byte-identical; the acceptance table for the shadow stage becomes: no change to any legacy call; extension lengths reproduce the survey; the disclosed rates reproduce on a fresh re-run; no extension labelled `complete`. The false-complete ceiling no longer applies because nothing extended is labelled `complete`.
 6. A better "intron after the edge" predictor remains an open research item. A feasibility check (2026-10-22, 130 genes, gene-held-out cross-validation) found cheap signals insufficient: reference-intron flag AUC 0.67; with length and splice-signal features 0.79; self-trained codon-usage coding potential 0.48 (no value); the lowest-risk 15% of rows by model risk was still 7.8% wrong (24.8% overall). The bounded experiment now under way tests whether a larger, leave-genus-out roster improves the reference guard (section 14b, when finished). Any predictor is validated on the 101 reserved genes (section 13b).
 
+### 14b. Roster-growth experiment (2026-10-22): more references with exon structures improve the guard, modestly
+
+Question: is the guard weak because the roster is thin? Method: the 55 curated references plus the 106 held-out deposited proteins (161 references, with their exon structures) against the same 140 genes (34 curated + 106 deposits), **leave-genus-out** (every reference of a gene's own genus withheld), the real exonerate with production settings, references truncated to 30/50/70/100%, rules frozen as before. Baseline: the same genes and truncations with the 55 references (genus radius for the 34; the 106 are already genus-disjoint). HPCC array 30261437. **386 truncated rows from 127 genes compared**; files in `results/2026-10-21_gene_model_extension/roster_growth/`.
+
+| | 55 references | 161 references |
+|---|---|---|
+| best-hit reference has exon info | 372 of 386 | 382 of 386 |
+| best-hit reference exon count equals the deposited gene's | 292 of 372 (78%) | 313 of 382 (82%) |
+| guard ("reference has an intron after the edge") precision / recall for a true intron after the edge | 0.79 / 0.52 | 0.77 / **0.68** |
+| AUC of the guard | 0.734 | **0.799** |
+| rule A (length rule only): wrong (early or overshoot > 5 aa) | 14.6% (CI 11-19%) | 15.5% (12-20%) |
+| **rule B (length rule + guard clear): accepted / early stops / overshoot / wrong** | 261 / 16 / 6 / **8.4%** (6-12%) | 246 / 8 / 6 / **5.7%** (3-9%) |
+| rule B genes with any wrong row (per gene) | 7 of 95 (7.4%) | 5 of 101 (5.0%) |
+| class D' (B and reference <= 2 exons) wrong | 9.6% (6-15%) | 5.9% (3-10%) |
+| class F (B and reference >= 3 exons) wrong | 4.7% (2-13%) | 5.3% (2-13%) |
+The best-hit reference came from the added deposits in 273 of 386 rows.
+
+**Reading.** More references with recorded structures help: guard recall rises from 0.52 to 0.68, early stops among rule B's accepted rows halve (16 to 8), and the wrong rate falls from 8.4% to 5.7% (per-gene 7.4% to 5.0%). **Overshoot does not improve (6 rows, the same two genes)**, and precision is unchanged, so roster growth reduces missed introns but does not remove the through-intron overshoot. The reference's exon-count agreement is still 82%, so about a fifth of best-hit references disagree with the target's structure even with 161 references.
+**Caveats.** The 106 genes are development data and the rules were frozen, but this is **not a validation**: a validation uses the 101 reserved genes with the same leave-genus-out roster; leave-genus-out does not remove same-family relatives (realistic for roster growth, but it flatters closely related clades); deposits are the depositors' annotations (some may be predictions); rows repeat across four truncations (per-gene figures given); the intervals treat rows as independent.
+**Consequence for the plan.** Under the rescue-only decision (section 14) roster growth is the **cheapest lever that measurably lowers the disclosed rates**: record exon structures for every roster reference (PR #119 and the follow-up agent branch do this for the existing 55) and **add annotated, genus-diverse references** (for example the deposits used here, after curation). The reserved 101 genes can validate that effect; whether to spend them is the curator's call.
+

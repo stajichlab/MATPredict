@@ -1,231 +1,255 @@
-# Gene-model selection and 3' extension: design, blind-spot audit and evaluation plan (2026-10-21)
+# Gene-model 3' extension and model assessment: design v2, blind-spot audit and evaluation plan (2026-10-21)
 
-Status: **proposal, nothing implemented.** This note is a design for review. It is written so that a reviewer with no
-access to the conversation can check it. Statements marked **[M]** were measured, **[R]** were read in code, **[I]** are
-inference or recollection not tested. Where I am unsure of a tool's behaviour I say so (section 8).
+Status: **proposal, revised after an independent adversarial review (verdict: go-with-changes). Nothing is implemented.**
+Tags: **[M]** measured by the author, **[V]** verified by the independent reviewer (how stated in `results/2026-10-21_gene_model_extension/design_review_2.md`),
+**[R]** read in code, **[I]** inference or recollection not tested, **[X]** not checked. The reviewer's numbers are reported as the reviewer's; the author has not re-run them.
 
-Origin: the homothallic-loci patch (PR #117, `docs/notes/2026-10-21_homothallic-patch-measurement.md`) found that the
-196 aa *Pyrenophora tritici-repentis* `MAT1-1-1` model ends at the edge of the exonerate alignment, not at the gene's end.
-A read-only review (Fable agent, 2026-10-21) then surveyed all 3,181 patched-run reports and prototyped a model chooser.
-Its report is summarised here; the prototype, survey table and null test are in
-`results/2026-10-21_gene_model_extension/`.
+Base of the code cited: `origin/main` abf09bd **plus** the unmerged PR #117 (`homothallic.py` exists only there; its worktree is
+`.claude/worktrees/agent-a769420ca3477c529`, branch `homothallic-loci-patch`). Line numbers below refer to that combination.
+
+Origin: PR #117 found that the 196 aa *Pyrenophora tritici-repentis* `MAT1-1-1` model ends at the edge of the exonerate alignment, not at the gene's end.
+A survey of all 3,181 patched-run reports (`results/2026-10-21_gene_model_extension/survey.tsv`) and a prototype chooser led to design v1; the review
+(`design_review_2.md`) then reproduced the observation and changed the design as listed in section 10.
 
 ---
 
-## 1. The problem, in one table
+## 1. The problem
 
-For each gene, the pipeline models the target with `exonerate --refine region` and `miniprot`. `polish.classify()` makes
-**exonerate canonical whenever it produced a model** (`src/MATPredict/detect/polish.py:116-118`, **[R]**), whatever its length, stops or
-agreement with miniprot. Exonerate (`protein2genome`, local) ends where its alignment to the *one best reference* ends **[R/M]**.
+For each gene, the pipeline aligns **all** curated references of that gene with `exonerate --refine region` and with `miniprot`, and keeps the highest-raw-scoring alignment per tool
+(`search.py:663-713, 763-771`, **[V]**). `polish.classify()` makes **exonerate canonical whenever it produced a model** (`polish.py:117-118`), whatever its length, stops or agreement with miniprot.
+Exonerate (`protein2genome`, local) ends where its alignment ends: the model is the alignment, with no extension to a stop or start (`search.py:908-935`; v1 cited `855-870`, which is the command setup).
 
-Survey of 3,181 reports, in-frame continuation after the canonical model's last exon **[M, `survey.tsv`]**:
+Survey, 3,181 reports, in-frame continuation after the canonical model's last exon **[M; reproduced exactly by an independent implementation on all 4,270 rows, [V]]**:
 
 | 3' state of the exonerate model | MAT1-1-1 (n=1,721) | MAT1-2-1 (n=1,781) |
 |---|---|---|
-| internal stop in the model | 142 | 350 |
+| internal stop in the model (as exons are concatenated; see below) | 142 | 350 |
 | next codon is a stop (complete) | 182 | 444 |
-| stop within 1-29 aa (edge slop only) | 281 | 82 |
+| stop within 1-29 aa (edge slop) | 281 | 82 |
 | open 30-99 aa | 184 | 47 |
 | open >= 100 aa | 924 | 855 |
 
-So 64% of `MAT1-1-1` and 51% of `MAT1-2-1` canonical models have >= 30 aa of open frame past their end. The effect is clade-structured:
-essentially all *Macrophomina*, *Botryosphaeria*, *Pyrenophora*, *Corynespora*, *Phyllosticta*, *Didymella*; about 60% of *Aureobasidium* (a further 63 have internal stops);
-*Parastagonospora*, *Zymoseptoria* and *Alternaria* are essentially complete. Of `polished_disagree` rows, 76% (`MAT1-1-1`) and 66% (`MAT1-2-1`) have an open exonerate frame:
-"disagree" is mostly "exonerate stopped early", not two competing structures.
+64% / 51% have >= 30 aa open **[V]**. Read these with three corrections:
+- the denominator includes internal-stop rows; among clean models it is 70% / 63%;
+- the rows are dominated by clonal lineages (Macrophomina 490 rows, Aureobasidium 357, Botryosphaeria 280, Alternaria 267; 223 genera): report per lineage, not per genome;
+- **the "internal stop" counts are overstated.** The report does not serialise exonerate `cds_blocks`; 198 of 3,502 canonical models (5.7%) carry frameshifts and **188 of the 492 "interrupted" models (38%) are frameshift models** whose stops come from reading through the frameshift.
+  Rebuilding the blocks by re-running exonerate on those 198 (same options, 170 reproduce the reported exons exactly), 87 of 190 become clean (46%) **[V]**. Every "interrupted" statistic in v1 must be redone with `cds_blocks`.
 
-Consequences already seen: the ORF-completeness test passes vacuously (it counts internal stops, and an edge-ended model has none); a length floor (200, then 190 aa)
-tests aligned extent, not the gene; *P. tritici-repentis* passed the 190 aa floor by 6 aa.
-
-Facts corrected during review (these were wrong in earlier notes) **[M]**:
-- The *Botrytis* remnant's in-frame stop is at **residue 10**, not 209: the 219 aa model is `LRDVDARRI*SKYFALL...`; the 209 aa protein is the stop-free stretch after it, with no M, and it is 3'-complete. It is **5'-truncated**.
-- Exonerate models never contain a stop codon (0 of 3,502 rows); miniprot alternates end with one in about 19%. "Terminal stop in the model" is not a usable test on the canonical; "the next codon is a stop" is.
-- `_translate_model` (`pipeline.py:821-880`, **[R]**) returns the longest stop-free stretch over **all three frames**, not the canonical frame, in spite of its docstring ("stopping at the first stop"). A frame error or an intron in the CDS can still produce a long "ORF".
+Other corrected facts: the *Botrytis* remnant's in-frame stop is at residue 10, the model is 5'-truncated and 3'-complete (209 aa after the stop, no M, upstream stop 18 aa before the model; 29 of 30 *Botrytis* genomes with a stop) **[V]**;
+exonerate models do not end in a stop in 0 of 3,296 non-frameshift core rows (but 2 MATA1 yeast models do); miniprot alternates end in a stop in 27% (v1 said 19%) **[V]**;
+the extended length is plausible: `MAT1-1-1` clean model + extension has median 356 aa (IQR 344-378) against curated references of median 359 (10-90%: 234-482). This tight reference-like distribution is the strongest single piece of evidence for the extensions **[V]**;
+`_translate_model` (`pipeline.py:851-880`) returns the longest stop-free stretch over **three frames**, so the existing ORF-completeness test already passes 37 stop-interrupted models via a wrong frame **[V]**.
 
 ---
 
-## 2. What "right" means: definitions
+## 2. Definitions
 
-For one target gene at one locus, a **candidate model** is a spliced CDS (list of exons, strand, frame) with its translation.
-
-| term | definition (deterministic, from sequence only unless stated) |
+| term | definition |
 |---|---|
-| `clean` | no internal in-frame stop (using the frameshift-corrected block translation when the model has `cds_blocks`, `pipeline.py:837-850`) |
-| `3'-closed` | the codon after the CDS is a stop (or the CDS ends in one) |
+| `clean` | no internal in-frame stop in the **correct reading frame** (below), using the `cds_blocks` translation for frameshift models |
+| `3'-closed` | the codon after the CDS is a stop |
 | `3'-open` | not 3'-closed, and the frame continues >= `EXT_MIN_AA` before the next stop |
 | `starts M` | first codon is a start |
-| `n_term_truncated` | no M, and an in-frame stop lies <= `NTERM_STOP_WINDOW` aa upstream with no M between that stop and the model start |
-| `complete` | clean, 3'-closed, (starts M or flagged `n_term_unknown`), aligned coverage of the best reference >= 80% |
+| `n_term_truncated` | no M and an in-frame stop within `NTERM_STOP_WINDOW` aa upstream with no M between. **Window-dependent:** it flags 4.9 / 6.1 / 6.3 / 15.7 / 17.1% of models for windows of 10 / 20 / 30 / 60 / 100 aa **[V]**, so the window must be fixed on a truth set, not guessed |
+| `complete` | clean, 3'-closed, starts M or flagged `n_term_unknown`, aligned coverage of the best reference >= 80% (profile envelope coverage once built) |
 | `partial` | clean, aligned coverage 50-80% |
-| `remnant` | clean, identity >= 85% to the best reference and aligned coverage < 80% (the existing rule, `homothallic.py`), or `n_term_truncated` with coverage < 80% |
-| `interrupted` | internal stops remain in every candidate; reported with the first-stop position and how many reference columns align *after* it |
+| `remnant` | clean, identity >= 85% to the best reference and aligned coverage < 80% (existing rule), or `n_term_truncated` with coverage < 80% |
+| `interrupted` | internal stops remain after the `cds_blocks` correction, with the first-stop position and the number of reference columns that align after it |
 
-Principle (the curator's rule, refined): **among candidates, prefer longer *clean* models that are 3'-closed and better explained by the reference; a longer model with
-internal stops is never promoted; a clean model that is a truncated copy is flagged, not called complete.** Longer-without-stops is a good ranking default but not a correctness test:
-miniprot can skip an intron (the 419 aa model with 6 stops), a clean model can be a remnant (*Botrytis*), and some stop-interrupted *Aureobasidium* models have the reference aligning across the stops
-(missed intron or frameshift rather than a pseudogene, **[M]** 79-261 reference columns after the first stop, at 31-44% identity).
+Principle, refined: a clean, 3'-closed model is preferred to a shorter one only on **evidence of the right class** (section 3.4); **a model with internal stops is never promoted;** a clean model that is a truncated copy is flagged, not called complete.
+"Longer without stops is better" is a ranking default and not a correctness test: a 419 aa miniprot model with 6 internal stops, a clean *Botrytis* remnant, and stop-interrupted *Aureobasidium* models whose reference aligns across the stops are all counterexamples.
 
 ---
 
-## 3. The algorithm: deterministic code, no model in the loop
+## 3. The algorithm (deterministic code; no model in the loop at run time)
 
-Everything below is ordinary Python run inside `detect`; no LLM is involved at run time. Inputs are the genome sequence, the candidate exons, the genetic code and the curated reference proteins already in the database.
-Every step is a pure function of those inputs, so the output is reproducible and unit-testable.
+Ordinary Python in `detect`; inputs are the genome contig, the model's exons or `cds_blocks`, the genetic code and the curated proteins in the database. All steps are pure functions of those, hence reproducible and unit-testable.
 
-### 3.1 Where it runs
+### 3.1 Where it runs, and what Phase 1 does *not* do
 
-A new module `src/MATPredict/detect/model_selection.py`. The pipeline calls it once per polished gene, right after `polish.classify()` returns a `PolishOutcome`
-(`pipeline.py` around the `_own_model` / classify calls, **[R]** lines ~2722-2726) and before `GeneEvidence` is built. It returns a `ModelAssessment`; in
-**shadow mode it only attaches the assessment to the report** and changes nothing else (section 3.6).
+New module `src/MATPredict/detect/model_selection.py`, called once per polished gene right after `polish.classify()` (`pipeline.py` ~2722-2726) and before `GeneEvidence` is built.
+
+**Phase 1 does not swap tools and does not move the 5' end.** The canonical model stays exonerate's; the new step only *assesses* it and, when the evidence allows, proposes a 3' extension of that same model. Miniprot's model is reported with an `independent_support` flag.
+(v1's chooser, as specified, made miniprot canonical in 56% of loci (`mini+ext` 1,157 of 3,147) and moved 5' ends in about 78% of those, contradicting its own statement that the 5' end is not moved. **[V]**)
+A tool swap is a separate, named, replayed policy (section 9, stage 3b).
 
 ```
-select_model(outcome: PolishOutcome, contig_seq: str, genetic_code: int,
-             references: Sequence[RefProtein], policy: ModelPolicy) -> ModelAssessment
+assess(outcome: PolishOutcome, contig_seq: str, genetic_code: int | None,
+       references: Sequence[RefProtein], neighbours: Sequence[Span]) -> ModelAssessment
 ```
 
-### 3.2 Candidate construction (pure sequence logic)
+### 3.2 Frame
 
-1. **Base candidates:** the exonerate model and the miniprot model of the `PolishOutcome` (each may be absent).
-2. **Frame.** A model's first exon does not always start on a codon boundary (the reason `_translate_model` tries three frames). The module takes the frame from the tool when it is
-   available (exonerate and miniprot both write a GFF phase; `PolishModel` does not keep it today, so Phase 1 adds `phase` to `PolishModel`, **[R]** the dataclass is `polish.py:39-67`);
-   until then it falls back to: the frame with **zero internal stops over the whole model**; ties broken by the longer stop-free stretch. If no frame is stop-free, the model is `interrupted` and is **not extended**.
-3. **3' extension** of a clean model (`extend_3p`):
-   ```
-   cds   = spliced CDS in transcript order, from the chosen frame
-   rest  = len(cds) % 3                       # leftover bases complete the next codon
-   walk downstream on the gene's strand from the 3' end of the last exon,
-        reading codons (the leftover `rest` bases first), until
-          a stop codon of `genetic_code`      -> closed, ext_aa = number of codons read
-          or EXT_MAX_BP (3,000 bp) / contig end -> unclosed, no extension claimed
-   accept when closed and ext_aa >= EXT_MIN_AA (30)
-   new last-exon end = old end + 3*ext_aa      # stop codon excluded, as exonerate does
-   ```
-   Handles both strands (reverse-complement the downstream window), partial codons at exon junctions, and non-standard genetic codes (the report's `genetic_code`).
-   Contig edge: if the walk reaches the contig end before a stop, record `contig_edge` and make no claim.
-4. **Strength of an extension.** 30-99 aa: kept as a candidate but preferred only if an independent model (miniprot, or helixer when present) ends within `EXT_AGREE_AA` (10) of the same position.
-   >= 100 aa: accepted on the open frame alone (random-ORF arithmetic: P(>= 100 sense codons in a random frame) is roughly 1-3%, P(>= 200) well under 0.1%; **[I]** GC-rich genomes are more permissive). A reviewer should check this arithmetic with the GC of the affected genomes.
-5. **Candidate set:** `exonerate`, `miniprot`, `exonerate+ext3`, `miniprot+ext3` (extension only for clean 3'-open models). **Introns are never invented by extension**: a continuation stays in the same exon, same frame. A longer spliced structure has to come from miniprot (380 clean miniprot alternates are longer by a splice jump that extension cannot reproduce, **[M]**).
+- **Exonerate, no frameshift:** frame 0 of the concatenated exons. The summed exon length is a multiple of 3 in 3,299 of 3,299 rows **[V]**; no frame search is needed or allowed.
+- **Exonerate with frameshifts:** translate the **`cds_blocks`** (the aligned blocks, which leave frameshift bases out; `pipeline.py:837-850`). `PolishModel` already carries `cds_blocks` (`polish.py`), the report does not serialise them: **carry them into the shadow output.**
+  Extension for these models starts from the **block CDS** end (the exon-concatenated CDS is 1-16 bp longer than the block CDS, so walking from it starts in the wrong frame) **[V]**.
+- **Miniprot:** the GFF phase (`PolishModel` does not keep it: add `phase: int | None`); 6.4% of miniprot alternates have a CDS length not divisible by 3 (170 of 2,650) **[V]**.
+- **No "frame with zero internal stops" search.** v1's fallback manufactures clean models from interrupted ones: of 492 exonerate canonicals with frame-0 stops, 16 have a stop-free *different* frame, in 3 of which the tool frame is certainly 0 (a spurious "rescue" that would extend 42-58 aa fragments by 7-107 aa), and 40 of 3,010 clean models are clean in two frames **[V]**.
+- A model that is not clean in its tool frame is `interrupted` and is **not extended**.
+- `genetic_code` null (6 reports): no extension, flag `genetic_code_unknown`. Only codes 1 and 12 occur in the reports (same stops); other stop sets need unit tests only **[X on real data]**.
 
-### 3.3 Scoring and choosing
+### 3.3 3' extension (an unscored, flagged step)
 
-- **One reference per target.** From the curated proteins of that gene (all clades; there are only 26 `MAT1-1-1` records, so this is cheap), the best-scoring reference of the best clean candidate is used for *all* candidates, so scores are comparable.
-  (Per-candidate references made scores incomparable in the prototype, **[M]**.)
-- **Score.** Raw BLOSUM62 local-alignment score (affine gaps), the same function the helixer rule already uses (`helixer_rule.query_score`, `MIN_SCORE_GAIN = 10.0`), which has the right semantics for "an extension must add aligned residues, not unaligned ones". The prototype used a MAFFT identical-columns surrogate; production should use the existing function.
-- **Choice:** (1) drop every candidate with internal stops; if none remain, keep the exonerate model, flag `interrupted`; (2) take the highest score; (3) scores within `TIE_TOL` (3) are ties and the **longer** wins.
-- **Not used as a gate:** alignment of the added tail to the reference. The null test shows the tail aligns only marginally better than shuffled sequence in 5 of 9 runs (Ptr ~63 identical columns vs shuffled max 56-60; **[M]** `nulltest.py`). The extension rests on the open-frame length and on independent-model agreement.
+```
+cds   = block CDS (frameshift) or spliced exons, in the tool frame, 5'->3'
+rest  = len(cds) % 3                      # leftover bases are the first bases of the next codon
+walk downstream on the gene's strand from the CDS 3' end, codon by codon (leftover first), until
+      a stop of `genetic_code`            -> closed, ext_aa = codons read
+   or EXT_MAX_BP (3000) / contig end      -> unclosed ('contig_edge'; no claim; v1's "no stop in 3000 bp" rows were all contig edges [V])
+   or the start of a neighbouring modelled CDS on the same strand (ext_overlaps_neighbour; stop there, no claim)
+new last-exon end = old end + 3*ext_aa    (stop codon excluded, as exonerate does)
+```
+Strand, multi-exon order, partial codons and stop table were independently re-implemented and agree on 4,270 of 4,270 rows **[V]** (both implementations took the report's exons as the CDS, so frameshift handling was not covered; section 3.2).
 
-### 3.4 Flags and completeness
+**Extension is not scored by BLOSUM.** A local alignment score cannot decrease when residues are appended (`score(exo+ext) >= score(exo)` always); for tails >= 100 aa, 43% gain <= 10 raw units, median per-residue gain 0.1 **[V]**. So "ties within a tolerance go to the longer" reduces to "always extend".
+v1's presentation of the extension as a scored choice is withdrawn; the decision is a rule on **evidence class** (3.4). (`TIE_TOL = 3` raw BLOSUM62 units is also effectively an exact tie, and the prototype's `round(score/3)` binning is not a tolerance; do not port either.)
 
-Computed from the chosen candidate: `terminal_stop`, `internal_stops` (positions), `starts_M`, `n_term_truncated`, `ext3_aa`, `after_stop_ref_cols`, `aligned_coverage` (reference residues inside the local alignment span / reference length; **not** the existing length ratio), `identity`, and the class
-`complete | partial | remnant | interrupted`. Expected length range per order: 10th-90th percentile of the curated records of that gene in the order (fall back to the all-clade range for orders with < 3 records). A flat 190 aa floor is wrong in both directions
-(curated *Pezizales* `MAT1-1-1` are 140-171 aa; *P. tritici-repentis* needs ~400 aa).
+### 3.4 Evidence tiers for an extension
 
-### 3.5 5' end
+The open frame is weaker evidence than v1 said. At the real genome GC, iid arithmetic gives P(open >= 100) = 0.4-1.4% and P(>= 200) <= 2e-4, but that is the **wrong null**: the open run in the other frames after a real stop is >= 100 codons in 1.4% (frame +0), 16% (+1), 5% (+2) of complete models, and in 78% (Alternaria frame +1), 19% (Pyrenophora +1); the +1/+2 shifted frames of the extension region are open >= 100 codons in 20% / 4% of all models and 22% / 32% in Aureobasidium **[V]**.
 
-Phase 1 reports only: `starts_M`, `up_to_stop` (aa to the preceding in-frame stop), `up_first_M`, and `n_term_truncated`. It does **not** move the 5' end.
-Reason: only 21% of `MAT1-1-1` canonical models start with M (median 11 aa open upstream to the first M), and an upstream intron can place the real start beyond the in-frame stop **[M/I]**. A 5' extension step is a Phase 2 candidate once a truth set (section 7) can score it.
+| ORF-only length | evidence rule |
+|---|---|
+| < 30 aa | not an extension (edge slop) |
+| 30-199 aa | **requires independent support**: miniprot's own model ends in a stop at the same codon, or tail similarity beats the nulls, or profile envelope gain, or spliced RNA reads |
+| >= 200 aa | acceptable on the open frame alone (<= 0.5% in all but one clade under the empirical null) |
 
-### 3.6 Staging: shadow mode first
+Independent support available today: miniprot's **own** stop coincides with the exonerate extension's stop in 200 of 205 rows **[V]**, but only 10% of extensions have one (Ascochyta, Aspergillus, Didymella, Alternaria, Pyrenophora, Dothistroma), and **none in Macrophomina, Botryosphaeria, Aureobasidium, Hortaea, Venturia, Phyllosticta**, the clades that dominate the extension count.
+The tail aligns better than 10 amino-acid and codon shuffles, +1/+2 frames and reversed tail in only 37% of extensions (Macrophomina 4%, Botryosphaeria 0%, Venturia 0%; Pyrenophora 94%, Didymella 100%, Alternaria 80%) (Smith-Waterman BLOSUM62, best of all curated references) **[V]**.
+So for the largest clades the extension rests on ORF length and on the plausible-total-length argument (section 1) alone. The proposal must decide **in advance** what promotes those lineages (Macrophomina, 490 rows, all open) to `complete`; this note's answer: total length inside the curated range plus a >= 200 aa open frame, flagged `ext_evidence=orf_only`, and never reported as independently confirmed.
 
-`--gene-model-policy {legacy, shadow, choose_extend}`; default `legacy` (today's behaviour byte-for-byte). `shadow` computes the assessment and writes it into a new optional `GeneEvidence.model_assessment` field and the report, and **changes no call**. Because adding the field to the report changes
-the report, a test asserts that `legacy` reports are unchanged. `choose_extend` makes the chosen model the canonical one. Each downstream consumer (section 4) is switched to the new signals by its **own** policy flag after its own replay; `choose_extend` alone does not change any vote.
+### 3.5 Guards (all new in v2)
 
-### 3.7 What code gets written (for review)
+1. **Neighbour guard:** stop at the next modelled CDS on the same strand; flag `ext_overlaps_neighbour`. 24 of 2,010 extensions (1.2%) overlap another reported gene (21 same-strand: *MAT1-1-1* into *MAT1-2-1* in *Didymella*, *Phoma*, *Elsinoe* ...); a lower bound, since non-MAT neighbours are not in the report **[V]**.
+2. **Length guard:** total protein <= 1.25 x the longest curated record of that gene; 52 (5.8%) of extended `MAT1-2-1` exceed the curated 90th percentile, and the three homothallic loci below reach 391-454 aa **[V]**.
+3. **Donor-site flag:** whether the two bases after the model end are `GT` (a 5' splice site), standard flag. Overall 4-7% (no enrichment, as expected for a model that runs out of similarity inside an exon), but **Aureobasidium 24.2% (n=194), Friedmanniomyces 39.6%, Phyllosticta 12.7%** versus Macrophomina 1.6%, Botryosphaeria 0%, Pyrenophora 0% **[V]**:
+   in about a quarter of Aureobasidium models the exonerate alignment ends where an intron begins, and an extension would read intron as codons. **Do not extend a model that ends at a `GT` donor on ORF length alone**; require independent support. This matters for Aureobasidium, the second motivating clade and the one with the weakest ORF-only evidence.
+4. **Contig-edge:** no claim when the walk reaches the contig end.
 
-- `model_selection.py`: `extend_3p`, `find_frame`, `build_candidates`, `score_candidate`, `choose`, `assess`, plus constants (`EXT_MIN_AA`, `EXT_MAX_BP`, `EXT_AGREE_AA`, `TIE_TOL`, `NTERM_STOP_WINDOW`, all provisional and in one place with the evidence they were fitted on, as `homothallic.py` does).
-- `polish.py`: add `phase` to `PolishModel` (default `None`); `search.py` parses it from the exonerate/miniprot GFF.
-- `pipeline.py`: call in shadow mode; `GeneEvidence` gains `model_assessment: dict | None = None`.
-- `report`: serialise it; `tests/detect/test_model_selection.py`: both strands, multi-exon, partial codon at a junction, contig edge, non-standard code, frameshift model, the *Botrytis* case (clean remnant stays `remnant`), the miniprot no-intron case (stops rejected), the controls (a complete gene is not extended), tie-breaking, determinism.
+### 3.6 Scoring a model (assessment, not selection)
 
----
+Computed for the canonical model and, for comparison, the miniprot model: `terminal_stop`, `internal_stops` (positions, from the correct frame), `starts_M`, `n_term_truncated`, `ext3_aa` and `ext_evidence`, `ext_overlaps_neighbour`, `donor_GT`, `aligned_coverage` (reference residues inside the local alignment span / reference length, **not** the existing length ratio), profile envelope coverage (pyhmmer against a per-gene profile built from the curated alignment: median 0.355 -> 0.603 on extension, gain >= 0.1 in 85% **[V]**), identity, and the class `complete | partial | remnant | interrupted`.
+The raw BLOSUM62 local score (`helixer_rule.query_score`) is kept as a recorded number and used **only** for the exonerate-vs-miniprot comparison in 3.7. Re-scoring with a different reference changes that comparison in 3.2%, 3.1%, 2.2% of rows for the 2nd, 3rd, 4th best reference (all tool swaps, none extension decisions) **[V]**, so the "one reference per target" concern is minor.
+Expected length range per order: 10th-90th percentile of the curated records of that gene in the order (global range for orders with < 3 records). A flat aa floor is wrong in both directions (curated *Pezizales* `MAT1-1-1` are 140-171 aa).
 
-## 4. Blind-spot audit: every test that treats the canonical model as the gene
+### 3.7 Exonerate versus miniprot: a named rule, not a silent swap
 
-Each test below reads the canonical model's translated length, ORF fraction, or the report's `coverage` (a **length ratio**, model aa / reference aa, capped at 100: `pipeline.py:573-587`, **[R]** — it *rewards* longer models regardless of alignment) or `identity`.
-The strategy is the same for all: **do not edit the thresholds; give each test the right signal (the chosen model's `aligned_coverage` and flags), switch it behind its own policy flag, and replay it.**
+Phase 1 records, never swaps: `model_ambiguity` when the two structures differ by more than a tolerance at either end, with the end and size (miniprot is longer **and clean** in about 1,000 rows per gene, and 5'-longer by >= 30 bp in 60% of clean pairs **[V]**).
+Known tool limits that a rule must respect: **miniprot places only GT-AG introns (99.8%)**; the *P. tritici-repentis* `MAT1-1-1` intron (53-56 bp, in all 76 *Pyrenophora* `MAT1-1-1` models) is **GC-AG**, so miniprot codes it as CDS, which is the "419 aa, 6 internal stops" model (v1 called this "miniprot skipping an intron"; the arithmetic checks: 1,259 bp = 588 + 53 + 615 + 3 **[V]**).
+Exonerate's own introns are 93.4% GT-AG, 3.3% GC-AG (Pyrenophora 40.8%, Fulvia 23.5%) and 1.3% TA-AG (**Aureobasidium 16% of introns have a TA donor, which does not occur in nature**, so those introns are mis-placed) **[V]**. A splice-site check is therefore a concrete deterministic improvement (stage 3b), not a hypothetical.
 
-| # | test | where | what it assumes | failure | strategy | replay that must pass before the switch |
-|---|---|---|---|---|---|---|
-| 1 | homothallic completeness | `homothallic.py:48-50,89` | ORF fraction and a flat aa floor describe completeness | passes vacuously for edge-ended models; excludes true genes (1,684 of 2,418 `short`/`orf_truncated` rows would reach >= 190 aa clean after extension, an upper bound, **[M]**); a flat floor threatens short true genes | use `complete` from the chosen model; drop the aa floor; per-order range | the 3,181-genome patched set: *Pyrenophora* and *Aureobasidium* recovered, *Botrytis* still excluded, all controls at 0 |
-| 2 | homothallic remnant check | `homothallic.py:78-84` | report `coverage` is aligned coverage | after extension coverage rises, so a true remnant is judged on the wrong number; a 5'-only truncation is invisible to it | apply to the chosen model's `aligned_coverage`; add `n_term_truncated` as a second remnant signal | *Botrytis* (29 loci) and *Sclerotinia* (3) still removed |
-| 3 | `full_length_models` | `pipeline.py:535-571`, `HOMOTHALLIC_MIN_MODEL_COVERAGE = 0.5` | length ratio >= 0.5 means full length | an edge model reads 32-60%, straddling the cutoff; median canonical `MAT1-1-1` is 189 aa vs a 359 aa median reference (~53%) **[M]** | `aligned_coverage` of the chosen model | audit sample of 50 loci changing class |
-| 4 | partial-core vote trigger | `partial_core.py:46-48,112-121` (`PARTIAL_COVERAGE 80`, `FULL_COVERAGE 90`) | a partial winner is a real partial gene | an edge model reads partial and can fire the flip; **but extension will make some winners full and turn the rule off where the flip was right** (the flip review found 41 of 46 flips correct under today's behaviour) | **highest risk.** Replay the 46 flip-review loci and the 17 Botrytis/Sclerotinia truth loci first; the profile-margin cross-check stays; no switch until the flips that were right still fire or are shown to be unneeded | flip-review: 41 of 46 right must be preserved |
-| 5 | confidence cap (#100) | `confidence_cap.py:96` | partial winner means a weak call | edge-truncated correct genes are capped | switch to chosen-model flags; the cap is off by default, so lowest urgency | the `confidence-cap` evaluation (24 high-to-medium changes on 94 controls) rerun |
-| 6 | strong single gene rule (#97) | `strong_single_gene.py:57,79` (`min_coverage = 90`) | a complete lone gene covers >= 90% | a correct edge-truncated lone gene fails the bar; the *Cochliobolus* case (101 uncalled genomes, one gene in the cluster) is where a correct extended model matters | switch to `complete`; re-run its 12-locus check (decision: after the clean run) | the 12-locus sequence check |
-| 7 | idiomorph resolution | `idiomorph.py:50-70,669-670` | winner/loser coverage from canonical models | the *Pyrenophora* `MAT1-1-3` fragment (18% coverage, 96 bp) takes the vote over `MAT1-2-1` in 59 loci | not in Phase 1. Candidate Phase 3 change: resolve on chosen-model scores; needs its own measurement | n/a for now |
-| 8 | `_translate_model` | `pipeline.py:821-880` | longest stop-free stretch = the protein | the wrong frame can win; docstring says otherwise | add a strict translator (`protein, frame, internal_stops`) used only by the new module; leave `_translate_model` alone for classifier scoring (domain scoring tolerates fragments) until a replay shows no score change | profile bit-scores unchanged on the 3,181 set |
-| 9 | helixer rule | `helixer_rule.py:2-25` | core genes keep their homology model | helixer cannot fix a core-gene edge | out of scope; revisit only with the held-out test (a decision already recorded) | n/a |
-| 10 | `mat_gene_gate` | `mat_gene_gate.py:68,87` | domain score | unaffected (alpha domain lies in the aligned part) | no change; confirm by replay | bits unchanged |
-| 11 | `two_idiomorphs` / `split_locus` / `_short_orf_genes` | `two_idiomorphs.py:58`, `split_locus.py:117`, `pipeline.py:650-700` | identity floors, reference lengths, 30 aa | not length-of-model blind | no change | n/a |
-| 12 | `report/html.py`, `track_report.py`, `scoring.py`, `benchmark.py`, `holdout.py` | — | **not audited** | unknown | assign an audit task; grep for `coverage`, `protein_aa`, `MIN_`, `orf` | — |
+### 3.8 5' end
 
-Ordering: 1 and 2 first (PR #117's follow-up, the motivating case), then 3, 8 (no vote change), then 5-6 (off by default), and **4 last and only with its replay**, because it changes calls the curator has already judged right.
+Reported only (`starts_M`, `up_to_stop`, `up_first_M`, `n_term_truncated`); not moved in Phase 1. It is the **larger residual**: 79% of models lack M, and in 76% of those an in-frame M exists upstream before the stop; miniprot is longer at the 5' end in 60% of clean pairs; for `MAT1-2-1` the problem is mostly 5' (the *P. tritici-repentis* `MAT1-2-1` exonerate alignment starts at reference residue 109 of 343, is 3'-closed, and miniprot aligns from residue 9 to 335 aa clean) **[V]**.
+"The problem is mostly 3'" holds for `MAT1-1-1` in Pleosporales and Botryosphaeriales; it does not hold in general. The `MAT1-2-1` median model is 121 aa (length ratio 31%), a worse problem than `MAT1-1-1`'s 189 aa (49%) **[V]**.
 
----
+### 3.9 Staging and the policy flag
 
-## 5. Do we need a better HMM gene model, or is extension + exonerate + splicing enough?
+`--gene-model-policy {legacy, shadow, choose_extend}`; default `legacy`. `shadow` writes a `model_assessment` into `GeneEvidence` and the report and changes no call. Risks the review raised, with the mitigation adopted:
+1. A new report field makes every replay diff light up (`detect/regression.py:134-150` compares model exons and length): give the regression harness a **whitelist mode** that ignores `model_assessment`; byte-identity of `legacy` guarantees only the old path.
+2. Shadow must use `cds_blocks` or it silently measures the wrong thing for 188 models.
+3. A three-way flag plus per-consumer flags multiplies states: cap the matrix; consumers read **one** field, `model_assessment.complete`, and are enabled together in a **named bundle**, each bundle replayed once.
+4. Shadow output is the only new evidence and will be read as validation: pre-commit an **acceptance table** (section 9) before it is opened.
 
-**Short answer: extension plus miniprot/exonerate splicing is enough for the 3' problem and should come first; a gene-finding HMM is warranted only for the residual classes it cannot touch, and we should measure those before building anything.**
-
-What each tool can and cannot do:
-
-- **The profile HMMs already shipped** (alpha-box, HMG-box, per-gene profiles used for classification) are *domain* models. They say a domain is present and where; they carry no exon/intron structure and no start or stop signals, so they cannot decide where a protein ends. Using them as the gene model would give the same edge-ended answer. Their right use here is a second opinion on completeness (domain envelope coverage) and as an evaluation instrument.
-- **Splice-aware, protein-guided gene finding** (exonerate, miniprot: already used; GeneWise with a profile; **AUGUSTUS with protein-profile extension (PPX)**; **GeMoMa** with several references at once) do carry splice-site, phase and stop/start signals. They address what extension cannot: **splice jumps** (380 clean miniprot alternates longer by a jump), **interrupted models** (142 `MAT1-1-1` and 350 `MAT1-2-1` with internal stops, where the reference aligns across the stops in some *Aureobasidium* models) and **5' starts** (79% of `MAT1-1-1` models lack M).
-- **Helixer** (deep learning, already available as helixer-lite for flank rules) is an independent opinion. It only extends flanking genes today; whether it should for core genes needs the held-out test already on the revisit list.
-
-Where the evidence points **[M/I]**: the survey says 1,108 of 1,721 `MAT1-1-1` models are 3'-open (extension fixes them), 142 have internal stops, and about 380 across both genes need a splice jump; so extension plus miniprot should resolve the large majority of `MAT1-1-1` models, but **the residual (interrupted + N-terminal + splice) is unknown until there is a truth set**.
-
-Decision rule I propose: after Phase 1 is scored on the truth set (section 7), if the residual errors are mostly **splice or N-terminal**, add one more *candidate generator* (AUGUSTUS-PPX with a clade species model, or a GeMoMa-style multi-reference consensus) to the same chooser, never as a replacement; if they are mostly **interrupted/stop** models, check frameshift repair and read evidence (section 7e) before adding a gene finder. We should **not** build our own HMM gene finder.
-
-A cheap lever to test first: exonerate's `protein2genome:bestfit` model (global in the query: it tries to place the whole reference protein), alongside multiple references per target rather than the single best. Both may remove the local-alignment edge at its source. **[I]** I recall the `bestfit` model variant from the exonerate documentation; it must be confirmed against the installed version before relying on it (section 8). The risk is the opposite error: forcing the full query across a divergent C-terminus produces spurious alignment, which the chooser's stop filter and score would have to catch.
+### 3.10 Code to be written (for review)
+`model_selection.py` (`find_frame`, `extend_3p`, `donor_flag`, `neighbour_guard`, `assess`, constants in one place with their evidence); `phase` on `PolishModel`; `cds_blocks` serialised in shadow output; `GeneEvidence.model_assessment`; `tests/detect/test_model_selection.py`:
+both strands, multi-exon, partial codon at a junction, contig edge, genetic code 12 and a synthetic non-standard stop set, a frameshift model, the *Botrytis* case (clean remnant stays `remnant`), the miniprot GC-AG case (stops rejected), complete genes not extended, a `GT`-donor model not extended on ORF length, the neighbour guard, determinism, and `legacy` reports unchanged.
 
 ---
 
-## 6. Is it an exonerate-vs-miniprot problem or a query problem?
+## 4. Blind-spot audit
 
-Mostly **design**: exonerate is always canonical, and its model is then tested with a definition of completeness it satisfies vacuously. Amplified by exonerate's local-alignment edge **[R/M]** (`search.py:855-870`: the model is the alignment, with no extension to a stop). The reference is a secondary factor: *P. tritici-repentis* aligns to *Bipolaris* C5 at 62% identity over 193 columns and the alignment edge is at reference residue 199 of 383; a closer reference would extend further, but cannot be guaranteed for new clades.
-Miniprot helps (it is longer and clean in about 1,000 rows per gene) but is also edge-limited (628 of 1,349 `MAT1-1-1` alternates still sit >= 30 aa before a stop) and can skip introns. Neither tool should be treated as the default winner; the chooser picks per locus.
-There are only 26 curated `MAT1-1-1` proteins (140-711 aa, median 359), so many clades have no close reference, which is the argument for section 7(b).
+Tests that treat the canonical model as the gene. Strategy for all: **give each the right signal and switch it behind a policy flag after a replay; do not edit thresholds.** The reviewer verified the file:line citations except where marked.
+
+| # | test | where | failure | strategy | replay that must pass |
+|---|---|---|---|---|---|
+| 1 | homothallic completeness | `homothallic.py:48-50,89` | passes vacuously for edge-ended models; the aa floor measures aligned extent; passes some stop-interrupted models through a wrong frame; 1,684 of 2,418 `short`/`orf_truncated` rows would reach >= 190 aa clean after extension (upper bound) | use `complete`; drop the aa floor; per-order range | 3,181 set: *Pyrenophora* and *Aureobasidium* recovered under the evidence tiers, *Botrytis* excluded, controls at 0; **the 3 loci (Macan1, ASM1692080v1, Decga1) whose HMG gene extends by 192-219 aa into the alpha gene on the same strand, taking separation to -317, -251, -224 bp, must be explained (the extension is itself suspect there)** |
+| 2 | homothallic remnant check | `homothallic.py:81-84` | uses the length-ratio `coverage`, which extension raises | apply to the chosen model's `aligned_coverage`; add `n_term_truncated` | *Botrytis* (29) and *Sclerotinia* (3) still removed |
+| 3 | `full_length_models`, `HOMOTHALLIC_MIN_MODEL_COVERAGE = 0.5` | `pipeline.py:539-571` | edge model reads 32-60%, straddling 0.5 | `aligned_coverage` | sample of 50 loci changing class |
+| 4 | partial-core vote trigger | `partial_core.py:48-49,112-121` | edge model reads partial and can fire a flip | **measured effect is small, not the highest risk v1 assumed:** of the 47 loci with the coverage-rule note (41 flipped, 6 undetermined), 38 of the 41 flips have a winner the extension cannot change (30 *Botrytis*, 1 *Botryotinia*, 1 *Sclerotinia*, 1 *Stromatinia* have an internal stop and are not extended; 5 *Ophiostoma* extend by 1-4 aa); of the other 3, only *Sporothrix* (22 -> 87% by length ratio) crosses 80% and would lose its flip (**1 of 41**); three `undetermined` (*Calogaya*, *Leptosphaerulina*, *Polytolypa*) would cross 90% and revert to the bitscore vote. "41 of 46 right" is dominated by *Botrytis* pseudoreplication (31 of 41), so it does not test the rule's value **[V]** | replay exactly those 47 under (a) length-ratio on the extended model, (b) `aligned_coverage` on the extended model, (c) `aligned_coverage` on the unextended model; require the 38 unchanged flips and *Sporothrix* unchanged under (b); curator adjudicates the three `undetermined`; add a negative-control set | the 47-locus replay with those expectations |
+| 5 | confidence cap | `confidence_cap.py:96` | partial winner capped | chosen-model flags (cap is off by default) | rerun the `confidence-cap` evaluation |
+| 6 | strong single gene | `strong_single_gene.py:57,79` | a correct edge-truncated lone gene fails the 90% bar; the *Cochliobolus* case | `complete` | the 12-locus check (decided to follow the clean run) |
+| 7 | ~~idiomorph resolution coverage~~ | `idiomorph.py:55` | **removed:** the recorded `winner/loser_coverage` are tblastn hit coverages decided **before polishing** (`basis: first_pass_identity`); a longer model cannot change them; `idiomorph.py:55` says coverage "is recorded but not yet used". The 59 *Pyrenophora* MAT1-1-3-over-MAT1-2-1 resolutions are counted correctly but are not fixed by this work | none | — |
+| 8 | `_translate_model` | `pipeline.py:851-880` | wrong frame can win | strict translator for the new module only; classifier scoring keeps the old function until a replay shows no change. Note `pipeline.py:2850-2870, 3050, 3081` translate **both** models for the profile classifier, so profile scores are already a max over tools; extending the protein would change them, which is **not** "no change" | profile bits unchanged on the 3,181 set |
+| 9 | helixer rule | `helixer_rule.py:2-25` | core genes keep the homology model | out of scope; held-out test pending | — |
+| 10 | `mat_gene_gate` | `:68,87` | domain score | no change | bits unchanged |
+| 11 | `two_idiomorphs`, `split_locus`, `_short_orf_genes` | `two_idiomorphs.py:58`, `split_locus.py:117`, `pipeline.py:650-700` | not length-blind | no change | — |
+| **new** | **coordinate consumers** | `homothallic.py:107-108` (separation <= 0 discarded as "one region seen twice": 99/99 reproduced, **3 of 99 flip**); `core_span`/`supported_span`/`beyond_core_bp`; `contig_edge_distance`; the 500 bp `EDGE_BP` rule `partial_core.py:51`; `locus_merge.py`; `span_exceeds_plausible_bound`; `split_locus._edge_distance` | an extended model moves spans and edges | include in every replay; the neighbour guard (3.5) is the first mitigation | the three loci above |
+| **new** | **model output and replay** | `report.py:213-214,228,446-453` (GFF `coverage=`, YAML exons), `report/svg.py:59-60,224-255`, `report/html.py:337-370`, `detect/regression.py:134-150` (exon and length diff), `track_report.py:44-68`, `tracks.py:66` | changed models show as "model changes" | whitelist mode in `regression.py` (3.9) | — |
+| **new** | **benchmark** | `benchmark.py:379-440` re-translates reported exons with `codon_start=1`, `table=1`, `to_stop=True` and scores against curated proteins | hard-codes table 1; changes benchmark and holdout identity/coverage | use as the truth-set scorer (good), after removing the table-1 assumption | — |
+| **new** | **polish window** | `pipeline.py:1731-1746` | an extension can end outside a clipped window | compute from the contig, not the window | — |
+| 12 | `scoring.py`, `holdout.py` | — | no references to `.exons` or `coverage` (grep) | none | — |
+
+Order of work: 1 and 2 (the motivating case, with the evidence tiers), then 3 and 8 (no vote change), then 5-6 (off by default), then 4 under its own replay.
 
 ---
 
-## 7. What to train or build so `MAT1-1-1` is right more often
+## 5. Is a better HMM gene model needed?
 
-(a) **A truth set of annotated proteins, built first.** Without it none of the thresholds can be set honestly (the existing 85/80 remnant thresholds were fitted after seeing *Botrytis*). Source: genomes in the BFD set that carry a gene annotation, with the `MAT1-1-1`/`MAT1-2-1` protein of the annotated gene at the locus; the pipeline's own `tracks` comparison and GenBank input (#88) and the held-out benchmark (`docs/holdout-benchmark.md`, records withheld at radii record/species/genus/family/order) already provide the machinery. Metrics: exact-protein match, length ratio, 3' and 5' end offsets, internal-stop rate, per clade. Caveat **[I]**: annotated proteins are themselves predictions (often exonerate/Augustus/Funannotate output) and can be wrong at the same edges; prefer annotations backed by RNA-seq or curated records, and say which.
+Revised answer after the review: for the **3' end of a clean, non-frameshift, fully aligned model, extension is enough.** But the residual is **not small and not mostly 3'**: frameshift models (5.7% of models), the 5' end (79% without M), and extensions with no independent evidence in the dominant clades. A gene-finder-class candidate generator is the standard answer to the **5'** problem and to splice-site errors, so it is the likely next candidate generator rather than a late option; **decide after a 5' truth set (section 7), not after the 3' extension.** Do not build an in-house gene finder.
 
-(b) **Grow the reference roster with verified full-length proteins.** After Phase 1, chosen models that are `complete`, 3'-closed, start with M and agree with an annotation or with miniprot, in clades with no close curated reference, are candidates for new tier-3 records (curated by a person, never promoted automatically). This addresses the cause (a divergent single reference) rather than the symptom.
+- **Profile HMMs already shipped** are domain models: they do not know where a protein ends. Their use here: **envelope coverage as a completeness signal** (cheap; does not discriminate real from spurious tails better than Smith-Waterman, since both are driven by the reference set).
+- **AUGUSTUS with protein-profile extension (PPX)** [R]: the most credible "better gene model" for single loci (supplies start, stop and splice signals); needs trained species parameters (shipped models exist for a handful of model fungi [I; the installed AUGUSTUS species list was not checked, AUGUSTUS was not installed in the reviewer's environment]; none for Macrophomina, Aureobasidium, Pyrenophora) and a run-time dependency. A *candidate generator*, never canonical.
+- **GeMoMa**: needs reference genomes and annotations per reference species; the database holds proteins and CDS coordinates, so a poor fit unless about 170 curated genomes are fetched. **Skip.**
+- **GeneWise with a profile**: unmaintained, behaves like exonerate. **Skip.**
+- **Helixer**: independent second opinion for 3' and 5' ends where available; not run here **[X]**; the core-gene use needs the pending held-out test.
+- **exonerate `protein2genome:bestfit`:** exists in the installed exonerate 2.4.0, "with which the entire protein is included in the alignment", **only available with exhaustive alignment (`-E yes`)**; incompatible with `--refine region` and heuristic seeding, and slow **[V]**. Result on the test loci: see section 10 / the review file (@@BESTFIT_NOTE@@).
+- **Several references** is already the status quo (all curated references of the gene are aligned): running exonerate against each reference separately closes the 3' edge in **0** of 5-19 references at each of 10 extension loci; extended totals are nearly reference-independent (Ptr 403-409 aa, Aureobasidium 360-386). So **the edge is about where homology ends, not which reference was used** **[V]**.
+- **`--refine region` vs `--refine full`:** identical for *Pyrenophora*, *P. teres* and the controls; for 3 of 4 *Aureobasidium* `MAT1-1-1`, `--refine full` gives 192-224 aa instead of 124-149 (+68-75 aa at the 3' end), so `--refine region` is part of the edge problem there. `search.py` notes `--refine full` crashes deterministically on some windows; a crash fallback chain full -> region -> none is cheap and was not in v1 **[V]**.
 
-(c) **A calibrated chooser instead of hand thresholds.** Features: internal stops, `ext3_aa`, score margin, miniprot/exonerate/helixer agreement, aligned coverage, `n_term_truncated`, GC. Label: concordance with the truth set. Start with the rule in section 3.3; fit a small interpretable model (logistic regression or a shallow tree) only if the truth set is large enough for **leave-one-genus-out** validation, and report held-out performance, not fit.
-
-(d) **Clade splice-site models** (position weight matrices for 5'/3' splice sites and branch region, trained from annotated introns of that clade) to score miniprot's splice jumps and exonerate's 53 bp introns, and to test whether a missed intron explains the stop-interrupted *Aureobasidium* models.
-
-(e) **Read evidence where it exists** (the `reads` module and the SRA-derived panels): spliced RNA-seq reads across a proposed intron settle the missed-intron and 3'-end questions directly; optional, per-genome, not a requirement.
-
-(f) **Full-length clade profile HMMs** (hmmbuild on MAFFT alignments of the extended, verified proteins per order) as a *completeness* instrument: domain-envelope coverage of the chosen model, and a check that the C-terminal region is conserved at all (the *P. tritici-repentis*/*P. teres* extensions share `...NDAFRVGADEDATLPTFDGANNA`).
+**Splice-site scoring is a concrete, small, deterministic improvement** (section 3.7): the GC-AG and TA-donor findings are the main thing a trained gene finder would add here. Do it with a position-weight check on exonerate's and miniprot's introns after the extension step is shadowed.
 
 ---
 
-## 8. Open questions and what I have not verified
+## 6. Where the problem comes from
 
-- Whether `protein2genome:bestfit` exists in the installed exonerate and what it does with a divergent C-terminus (section 5): not tested.
-- Whether exonerate and miniprot GFF phases are reliably usable as the frame (section 3.2): not read. The fallback (stop-free frame) is untested on frameshift models.
-- The random-ORF probabilities (section 3.2) are arithmetic, not measured on these genomes.
-- Only `MAT1-1-1` was prototyped; `MAT1-2-1` (350 models with internal stops, 855 open >= 100 aa) is surveyed but no chooser was run on it.
-- The prototype score is a MAFFT identical-columns surrogate, not the pipeline's BLOSUM62 score; score differences between `exonerate+ext3` and `miniprot(+ext3)` were often 1-10 points at 31-44% identity (not decisive); ties went to the longer model by design.
-- The prototype's test set (35 genomes) includes the cases the thresholds were fitted on: it demonstrates, it does not validate.
-- Extensions are open reading frames, not proven coding; no independent annotation or RNA was checked.
-- The *P. tritici-repentis* "ends `...LFA*`" in an earlier note is not reproduced by the canonical translation (which has no terminal stop); that note's wording should be ignored.
-- Items 9-12 in section 4: not audited.
-- Run-to-run noise (one *Ogataea* start coordinate, one intermittent test) is not investigated and could mask small effects in a replay.
+Mostly **design** (exonerate is always canonical, then tested with a vacuous completeness definition), amplified by exonerate's local-alignment edge; the reference is a minor factor (above); miniprot helps (clean and longer in about 1,000 rows per gene) but is itself edge-limited (628 of 1,349 `MAT1-1-1` alternates end >= 30 aa before a stop), cannot place GC-AG introns, and is much more reference-sensitive than exonerate (single-reference miniprot models of one locus range 82-396 aa), so the pipeline's all-reference selection is doing real work.
+Where miniprot reaches its own stop (all 4 *Pyrenophora* loci checked, 2 of 2 *P. teres*, 8 of 8 controls, **0 of 4 *Aureobasidium***), the motivating *Pyrenophora* clade does not need the extension to be right; *Aureobasidium* needs it most and has the least support.
 
-## 9. Plan and acceptance criteria
+---
+
+## 7. Truth set and training
+
+v1's primary truth (annotated proteins in BFD genomes) is **circular where it matters**: most annotations in this ecosystem are funannotate/Augustus/exonerate-evidence models that end at the same edges, so agreement is a coin toss and disagreement is ambiguous. Use, in order:
+1. **The 171 curated records in `db/`** (26 `MAT1-1-1`, 29 `MAT1-2-1`, plus flanks): deposited NCBI CDS with exon structure, independent of the pipeline. The existing holdout machinery (`benchmark.py`, `docs/holdout-benchmark.md`, radii record/species/genus/family/order) already withholds a record and re-detects it; **add one metric: exact protein and exon structure, and 3' and 5' end offsets, of the detected model against the deposited CDS.** n is about 55 for the two main genes; the divergence gradient is built in.
+2. RNA-seq-supported annotations only where they exist (the BFD tree has `do_annotation*` and PASA directories **[X: not opened]**); label the support (full-length cDNA/PASA vs ab initio).
+3. UniProt/RefSeq proteins with manual or transcript-supported annotation (a few dozen across Pleosporales, Sordariomycetes, Eurotiales): length class and C-terminus checks, not exon truth.
+4. Cross-species conservation of the extended C-terminus (e.g. `...NDAFRVGADEDATLPTFDGANNA` in *P. tritici-repentis* and *P. teres*): consistency, not truth.
+5. Spliced RNA reads across a donor right after the model end: direct evidence of the intron failure mode.
+
+Splits: leave-one-genus-out is the minimum, but the data are clonal (2,756 genomes, 223 genera): **weight per lineage cluster** (the BFD `do_ANI` machinery), report per clade, hold whole clades out for threshold selection (Macrophomina is a good one: largest, no independent corroboration), and fix flagging thresholds before opening the truth. Report 5' and 3' errors separately; primary harm metric: **wrong promotion rate** (a model extended or promoted that disagrees with the truth).
+
+**A learned chooser is not warranted.** Four candidates, fewer than ten informative features, and tens of independent lineages: a logistic regression would overfit lineage identity (genus is collinear with GC, reference distance and extension class). Minimum viable evaluation: the hand rule, the curated-record holdout (n about 55) and about 100 lineage-balanced annotated or RNA-supported loci.
+
+Cheaper and more valuable, ranked: (i) fix the `cds_blocks` handling and re-measure; (ii) add **verified C-terminal-complete proteins from well-supported genera** (*Pyrenophora*, *Alternaria*, *Ascochyta*/*Didymella*, where miniprot independently ends in a stop in 205 loci) to the roster as new clade references, reducing reference divergence at the source at no run-time cost (curator promotion only, never automatic, and not used to evaluate themselves); (iii) a per-order profile-HMM completeness instrument; (iv) splice-site PWMs after (i)-(iii).
+
+---
+
+## 8. Open questions, not verified
+
+- The `bestfit` result (the review file's section 5 item 3 was completed in a second pass; see the review file).
+- The donor-site proxy (3.5) and the "intron after the alignment edge" failure mode are quantified only as a proxy; no RNA or curated-record check has been run.
+- The **380 "clean miniprot alternates longer by a splice jump"** in v1 could not be reproduced by the reviewer (after extension 1,787 of 1,795 clean pairs end at the same stop); that claim is withdrawn pending evidence.
+- The 5' residual has no survey beyond the figures in 3.8; `MAT1-2-1` has no chooser or extension run beyond the survey.
+- Helixer, AUGUSTUS-PPX, GeMoMa and RNA-seq were not run; AUGUSTUS's installed species list was not checked.
+- The reviewer's measurements are the reviewer's; the author has not re-run them. The reviewer ran as a model-agent; the failure message of its first session names `claude-sonnet-5-5`, so **which model produced the review cannot be confirmed from the harness output alone**, and independent re-checks of the headline numbers by a person are recommended before they are quoted.
+- Run-to-run noise (one *Ogataea* coordinate, one intermittent test) could mask small effects in a replay.
+
+## 9. Plan and acceptance criteria (pre-committed)
 
 | stage | work | done when |
 |---|---|---|
-| 0 | truth set (7a); baseline concordance of today's canonical models by clade | a table of baseline exact-match and length-ratio rates, with the held-out split fixed in advance |
-| 1 | `model_selection.py`, `phase` on `PolishModel`, shadow mode, tests | `legacy` reports byte-identical; shadow assessments on the 3,181 set reproduce the prototype's lengths on the 35 genomes (+/- the score change) |
-| 2 | scored on the truth set | held-out clade results: fraction of models 3'-complete, exact-protein rate, and no increase in wrong promotions (a model promoted to longer that disagrees with the annotation) |
-| 3 | consumer switches in the order of section 4, one PR each, each with its replay | each replay's stated criterion; no change to complete-gene calls |
-| 4 | residual analysis; add a candidate generator only if the residual is splice/N-terminal (section 5) | a written decision |
-| 5 | roster growth (7b), splice PWMs (7d), calibrated chooser (7c) | held-out improvement |
+| 0 | holdout baseline on the curated records: exact-match and end-offset rates of today's canonical models, per clade, lineage-weighted | a table, split fixed in advance |
+| 1 | `model_selection.py` (3' extension, guards, flags, `cds_blocks`, `phase`), shadow mode, `regression.py` whitelist, tests | `legacy` byte-identical; shadow extension lengths reproduce the survey (4,270 of 4,270) on non-frameshift models and the `cds_blocks` rebuild on frameshift models |
+| 2 | shadow on the 3,181 set and the curated-record holdout | **pre-committed acceptance:** no promotion that disagrees with a curated record (wrong-promotion rate 0 on the holdout, reported with n); every extended model inside the 1.25 x curated length guard; no complete (3'-closed) model extended; per-lineage table; the three separation <= 0 loci explained |
+| 3a | consumer switches (section 4 order), one named bundle, each replayed | each replay's stated criterion; no change to complete-gene calls |
+| 3b | exonerate-vs-miniprot swap rule and splice-site check, as a **separate** policy | its own replay and curated-record result |
+| 4 | residual analysis (5', interrupted); add a candidate generator only if the residual justifies it | a written decision |
+| 5 | roster growth, per-order completeness profiles | held-out improvement |
 
-Principles carried over from earlier decisions: defaults stay unchanged until a replay is read; thresholds are provisional and recorded with the evidence they were fitted on; the curator merges PRs; a held-out test is needed before anything is called validated.
+Principles carried over: defaults stay unchanged until a replay is read; thresholds are provisional and recorded with the evidence they were fitted on; the curator merges PRs; nothing is called validated without a held-out test.
+
+## 10. Changes from v1 (summary of the review)
+
+Verdict go-with-changes. Changed: no tool swap and no 5' move in Phase 1; extension unscored with evidence tiers (ORF-only needs >= 200 aa; 30-199 aa need independent support); `cds_blocks` for frameshift models and no frame search; neighbour, length and donor-site guards; audit corrected (#7 removed, coordinate consumers, report/regression/benchmark added, base commit stated) and the partial-core fear shown to be smaller than stated; "interrupted" counts to be redone; truth set moved to the curated records first; learned chooser dropped; GC-AG and TA-donor splice findings added; the "one best reference", "380 splice jumps" and "miniprot skips an intron" statements corrected or withdrawn.
+Retained: the diagnosis, the deterministic pure-function module, shadow mode with a byte-identical `legacy`, clean and 3'-closed as hard filters, the *Botrytis* remnant as 5'-truncated, per-consumer policy flags, no in-house gene finder.

@@ -70,7 +70,7 @@ So replacing the data means: new dated result folders, edited paths in `build_si
 1. **Scope: decided (2026-10-22): all three campaigns.** **1b: decided (2026-10-22): also re-run the 685 held-out LCG and Jena genomes** (about 35 CPU-hours at the v0.6.0 median of 183 s) with the same code, as the held-out set for roster and classifier work; they stay out of training and the site.
 2. **Order:** run Ascomycota first (largest, most affected), then Basidiomycota, then *Mucoromycotina*? Recommendation: yes.
 3. **Version and tag: decided (2026-10-22): a tag that does not start with `v`** (for example `cleanrun-2026-10`), so the run's commit is pinned by name without matching the Pages workflow's `v*` trigger (verified: `.github/workflows/pages.yml` runs on `tags: ["v*"]` and on manual dispatch, so any `v` tag, including `v0.7.0-rc1`, would deploy). A real `v` tag is created only when the curator decides to replace the site.
-4. **Determinism check (phase 2):** yes or skip? Recommendation: yes, 200 genomes, about two hours.
+4. **Determinism check (phase 2): decided (2026-10-22): yes**, about 200 genomes run twice with identical code, before the pilot; the diff is the noise floor for section 6, and a cause for the *Ogataea* `MATsc` coordinate flip is looked for.
 5. **Homothallic policy outside Dothideomycetes:** apply as written, or restrict the first run to families where it was measured (Ascomycota MAT)? Recommendation: apply as written but report the count per phylum in the pilot.
 6. **If the *Cochliobolus* scoped roster does not validate** in time: run without it and re-run only the Pleosporaceae, or wait? Recommendation: run without it; a Pleosporaceae re-run is small.
 

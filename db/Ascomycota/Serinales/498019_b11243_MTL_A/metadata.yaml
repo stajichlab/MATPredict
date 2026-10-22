@@ -27,11 +27,12 @@ locus:
       annotated by the depositors as ''mating_type_MTLa2'' (PSK75931.1, 152 aa) and
       ''mating_type_MTLa1'' (PSK75932.1, 99 aa). Gene order PAP1 (PSK75928.1) - OBP1
       (PSK75929.1) - PIK1 (PSK75930.1) - MTLa2 - MTLa1, the C. lusitaniae arrangement.
-      completeness is PARTIAL: the MTLa1 model is a single 99-aa exon with its homeodomain
-      at residues 46-92, against 166 aa and residues 99-154 in the three-exon models
-      of clade I strains (e.g. B11205 WZC25182.1) -- its 5'' exons are missing from
-      this annotation. It still carries the homeodomain, which is what the search
-      needs.
+      MTLa1 is recorded as the full-length three-exon model (15538-15669, 15718-16020,
+      16094-16159; 166 aa, the structure of the clade I models, e.g. B11205 WZC25182.1),
+      curator ruling 2026-10-22: the depositors'' MTLa1 (PSK75932.1) is a single 99-aa
+      exon that starts at a CTG inside exon 2 and reads into intron 2, so it lacks the
+      5'' exons; see curation.notes. The `completeness` value was set for that truncated
+      model and is left for a separate curator ruling.
 
 
       record_version bump, 2026-09-25 (curator ruling): PAP1 (PSK75928.1), OBP1 (PSK75929.1),
@@ -142,8 +143,10 @@ evidence:
       doi: 10.1038/s41467-018-07779-6
   boundaries:
     tier: 2
-    experimental_method: 'Record segment spans the curated MTL genes, from the assembly''s
-      own GFF. TIER 2 (genome-derived, admitted under the curator''s 2026-09-24 ruling).
+    experimental_method: 'Record segment spans the curated MTL genes: its start (8313,
+      PAP1) is from the assembly''s own GFF; its end (16159) is the stop codon of the
+      curator-derived full-length MTLA1 (2026-10-22), which ends past the depositors''
+      99-aa model (16044). TIER 2 (genome-derived, admitted under the curator''s 2026-09-24 ruling).
       The protein is the depositors'' own gene model in the Munoz et al. 2018 C. auris
       genome annotation, not a locus-specific study. Validated 2026-09-25 (results/2026-09-25_cauris_mtl/):
       MTLa1 carries a homeodomain (Pfam PF00046, i-E=1.3e-14); MTLa2 has no Pfam HMG_box
@@ -193,11 +196,10 @@ validation:
       percent_identity: 100.0
       coverage: 100.0
       status: pass
-    - gene_index: 1
-      percent_identity: 98.99
-      coverage: 100.0
-      status: pass
-    notes: ''
+    notes: 'MTLA1 (gene_index 1) has no protein_accession since 2026-10-22, so it
+      has no per_gene entry (the removed 98.99% entry compared the old 99-aa model with
+      PSK75932.1). Its 166-aa protein is the independent translation (table 12) of the
+      recorded exons, verified in curation.notes.'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search
@@ -229,8 +231,9 @@ curation:
     gap). Its third exon overlaps the 3'' end of the convergent minus-strand gene PSK75933.1
     (CJJ07_004263, 16108-18495) by 52 bp; the clade I genome has the same 52-bp overlap
     (WZC25182.1 and WZC25181.1 on CP060341.1), so the overlap is conserved, not a
-    modelling artefact. definition_note''s statement that the MTLa1 model is a single
-    99-aa exon describes the replaced model.
+    modelling artefact. definition_note, evidence.boundaries and validation.sequence_match
+    were updated in place to match; locus.core.completeness is unchanged (partial)
+    pending a separate curator ruling.
 
     Verified 2026-10-22 by Claude Code (claude-opus-5-5, branch curation-corrections):
     NCBI efetch of PYGM01000086.1, CP060341.1:190001-200000, WZC25182.1 and PSK75932.1;

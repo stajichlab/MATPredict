@@ -113,3 +113,22 @@ Full re-run, 190 aa floor plus the remnant check: 3,181 of 3,183 genomes (array 
 Caveats. The 85/80 thresholds were chosen after seeing the *Botrytis* result, so the clean outcome is partly fitted: the held-out test is the next genus where a truncated copy of a known gene occurs, and nothing tests that
 yet. *Aureobasidium* (0 of 119) is not recovered and cannot be by a length gate. Whether the 59 *Pyrenophora* loci in which `MAT1-2-1` lost to `MAT1-1-3` should be labelled `homothallic_candidate`, and with idiomorph MAT1-1,
 is a curator call. The remnant check covers the alpha gene only; an HMG remnant was not measured.
+
+## Check of the *Pyrenophora tritici-repentis* candidates (62 loci, 2026-10-21)
+
+All 62 are one species, with near-identical models (`MAT1-1-1` 196 aa; `MAT1-2-1` 233-236 aa), so this is one lineage, not 62 independent observations. 59 of the 62 are loci where `MAT1-2-1` lost the
+idiomorph vote to `MAT1-1-3`; that `MAT1-1-3` is a ~96 bp fragment covering 18% of its reference (50% identity), i.e. spurious. Proteins were extracted from the reports for 4 *P. tritici-repentis* genomes (the
+distinct model variants) and 4 heterothallic *P. teres* controls (2 per idiomorph) and aligned with MAFFT to the curated *Bipolaris* C5/C4 and *Parastagonospora* records
+(`pyrenophora_alignments/`: `extract_proteins.py`, `hl_align_proteins.faa`, `hl_aln_MAT1-1-1.out.faa`, `hl_aln_MAT1-2-1.out.faa`).
+
+- **`MAT1-2-1` is complete.** *P. tritici-repentis* (236 aa) and *P. teres* (235 aa) both align from reference residue ~108 to the reference C-terminus (343); the HMG box is intact in both
+  (`PRPMNCWIIFRDAKSKELKEQHPELTVQQISTRCSELWHDLTPQEKQPWKDAAQSAKEEH`, 47.6% identity to the *Bipolaris* record over 233 columns for *P. tritici-repentis* and 47.0% for *P. teres*).
+  The first ~108 residues of the reference are not conserved in either species.
+- **`MAT1-1-1` has an intact alpha box but a short C-terminus.** *P. tritici-repentis* 196 aa (61.7-62.2% identity to *Bipolaris* C5 over 193 columns, reference residues 5-199 of 383); *P. teres* 227 aa (58.0% over 224
+  columns). The alpha-box region is shared; the two diverge at the same position (`...EDIIRVAQGK` then `LFA*` in *P. tritici-repentis*, `...EDIIGFVQGR` then `GYGMDYVHNPD...` in *P. teres*), so the *P. tritici-repentis* ORF ends ~30 aa earlier.
+  Not resolved: whether that is a real C-terminal truncation or a missed intron (the model status is `polished_disagree`: the two gene finders disagree). The 190 aa floor sits 6 aa under this model; at 200 it was excluded.
+- **Literature:** [Lepoint et al. 2010, *Phytopathology*](https://www.apsnet.org/publications/phytopathology/2010/May/Pages/100_5_474.aspx) describes *P. tritici-repentis* as homothallic with the
+  MAT1-1 and MAT1-2 coding regions side by side in one individual (about 60% of 88 strains formed pseudothecia with ascospores). I read the abstract summary only, not the full text, so the exact gene architecture is unconfirmed here.
+
+Conclusion: labelling *P. tritici-repentis* `homothallic_candidate` agrees with the literature, and `MAT1-2-1` is a complete HMG-box gene. The weak point is that the `MAT1-1-1` length rests on a model that
+differs from *P. teres* at its C-terminus. The reported idiomorph (MAT1-1) for these loci is an artefact of the vote and means nothing for a candidate; consider reporting `undetermined` or both for `homothallic_candidate` loci.

@@ -67,12 +67,15 @@ Per the 2026-10-19 handoff **(reconstructed, not run)**: `.github/workflows/page
 So replacing the data means: new dated result folders, edited paths in `build_site_data.py`, rebuilt shards, edited landing numbers, a local build, and only then a tag, on the curator's explicit decision. Whether a manual dispatch can publish to a preview location is **unverified**; check before relying on it.
 
 ## 9. Decisions for the curator
+
+**All six are now decided (2026-10-22):** (1) all three campaigns, and (1b) the 685 held-out LCG/Jena genomes included; (2) order Ascomycota, Basidiomycota, *Mucoromycotina*; (3) a non-`v` run tag; (4) the determinism check; (5) no decision needed (Ascomycota-only by construction); (6) run without the *Cochliobolus* roster if it is not ready. Their text is kept below. **Item 2's order was recommended and not separately confirmed; treat it as the working order unless the curator changes it.**
+
 1. **Scope: decided (2026-10-22): all three campaigns.** **1b: decided (2026-10-22): also re-run the 685 held-out LCG and Jena genomes** (about 35 CPU-hours at the v0.6.0 median of 183 s) with the same code, as the held-out set for roster and classifier work; they stay out of training and the site.
 2. **Order:** run Ascomycota first (largest, most affected), then Basidiomycota, then *Mucoromycotina*? Recommendation: yes.
 3. **Version and tag: decided (2026-10-22): a tag that does not start with `v`** (for example `cleanrun-2026-10`), so the run's commit is pinned by name without matching the Pages workflow's `v*` trigger (verified: `.github/workflows/pages.yml` runs on `tags: ["v*"]` and on manual dispatch, so any `v` tag, including `v0.7.0-rc1`, would deploy). A real `v` tag is created only when the curator decides to replace the site.
 4. **Determinism check (phase 2): decided (2026-10-22): yes**, about 200 genomes run twice with identical code, before the pilot; the diff is the noise floor for section 6, and a cause for the *Ogataea* `MATsc` coordinate flip is looked for.
 5. **Homothallic policy outside Dothideomycetes: resolved by the code, no decision needed.** It acts only on the Ascomycota MAT family (section 3); the pilot reports its count per class (it was measured on Dothideomycetes, 3,181 genomes), and no other phylum is affected.
-6. **If the *Cochliobolus* scoped roster does not validate** in time: run without it and re-run only the Pleosporaceae, or wait? Recommendation: run without it; a Pleosporaceae re-run is small.
+6. **If the *Cochliobolus* scoped roster is not validated when the run is ready: decided (2026-10-22): run without it** and, if it validates afterwards, re-run only the *Pleosporaceae* genomes as a separate dated folder and swap those rows in (the strong-single-gene check after the run is the other route to the same gain).
 
 ## 10. Risks
 Queue contention (shared account); timeouts on large genomes (the 14400 s class); empty or missing FASTA (for example `GCA_986281625.1_DAH1041FM` has an empty file) listed rather than retried; a database or code change during the run (the frozen worktree prevents it); the intermittent test (`tests/detect/test_pipeline.py::test_fast_path_missing_gene_is_polished_in_the_existing_clusters_window`) also fails on unmodified main and is unrelated to the run; and the unverified items above.

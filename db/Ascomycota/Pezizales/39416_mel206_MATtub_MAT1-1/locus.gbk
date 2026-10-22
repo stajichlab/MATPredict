@@ -30,7 +30,7 @@ FEATURES             Location/Qualifiers
      gene            complement(4270..5338)
                      /gene="MAT1-1-1"
                      /role="core_MAT"
-     CDS             complement(4270..5338)
+     CDS             complement(join(4270..4302,4363..4883,4933..5338))
                      /gene="MAT1-1-1"
                      /role="core_MAT"
                      /translation="MRNVTLGCALYLSDRGYILMQDRIGCIWVQHENSPIIVQPPGGVT

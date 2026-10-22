@@ -37,7 +37,7 @@ FEATURES             Location/Qualifiers
      gene            3448..4538
                      /gene="MAT1-1-1"
                      /role="core_MAT"
-     CDS             3448..4538
+     CDS             join(3448..3649,3703..4538)
                      /gene="MAT1-1-1"
                      /role="core_MAT"
                      /translation="MSDYKDQVLEALTNCSQERLNAAMENPSMMRELLEICGTELAACI
@@ -51,7 +51,7 @@ FEATURES             Location/Qualifiers
      gene            complement(5149..6013)
                      /gene="MAT1-2-1"
                      /role="core_MAT"
-     CDS             complement(5149..6013)
+     CDS             complement(join(5149..5447,5496..5758,5814..6013))
                      /gene="MAT1-2-1"
                      /role="core_MAT"
                      /translation="MSTLMLMSPASSTPCVYQTAWTSEHIDSVFQCLVPKEKQTLKFVE

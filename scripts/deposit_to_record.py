@@ -225,6 +225,58 @@ def gene_name_from_product(product: str | None) -> str | None:
     return found.pop() if len(found) == 1 else None
 
 
+# Ruling 4 (fix after review): the other idiomorph's gene is often not spelled as a roster
+# name ("MAT1-1-1 L", "MAT1-2", "MAT-2", "mating-type 1-1-1 protein", "dMAT1-1-1"). These
+# patterns only place a feature in idiomorph MAT1-1 or MAT1-2 (the digit); they never name
+# the gene. "HMG box" / "alpha box" alone are NOT used: MAT1-1-3 is an HMG-box gene of MAT1-1.
+_LOOSE_MAT = [
+    # MAT1-1-1 L, dMAT1-1-1, MAT1-2, MAT 1-2-4; group 2 = the gene number when given
+    re.compile(r"MAT\s*[-_]?\s*1\s*[-_]\s*([12])(?:\s*[-_]\s*(\d+))?", flags=re.I),
+    # mating-type 1-1-1 protein, mating type protein 1-2
+    re.compile(r"mating[\s-]*type\s*(?:protein\s*)?(?:gene\s*)?1\s*-\s*([12])(?:\s*-\s*(\d+))?", flags=re.I),
+    # MAT-2, MAT2 (older spelling of the idiomorph's core gene)
+    re.compile(r"\bMAT\s*[-_]?\s*([12])\b(?!\s*-)()", flags=re.I),
+]
+_LOOSE_QUALIFIERS = ("gene", "product", "note", "standard_name", "gene_synonym")
+
+
+def loose_hits(qualifiers: dict) -> set[tuple[str, str]]:
+    """(idiomorph digit, kind) pairs a feature's names point at, in any spelling.
+
+    digit '1' = MAT1-1, '2' = MAT1-2; kind 'core' = the idiomorph's MAT1-x-1 gene or a
+    bare idiomorph name used as a gene name (MAT1-2, MAT-2), 'accessory' = MAT1-x-n, n != 1.
+    In /note only a full gene name (MAT1-x-n, dMAT1-x-n) counts, so a note such as
+    "MAT1-1 mating-type locus" on a neighbouring ORF is not read as a gene name.
+    """
+    found = set()
+    for key in _LOOSE_QUALIFIERS:
+        for value in qualifiers.get(key) or []:
+            for i, pattern in enumerate(_LOOSE_MAT):
+                for m in pattern.finditer(value):
+                    number = m.group(2)
+                    if key == "note" and not number:
+                        continue
+                    found.add((m.group(1), "core" if not number or number == "1" else "accessory"))
+    return found
+
+
+def loose_idiomorphs(qualifiers: dict) -> set[str]:
+    """Idiomorph digits ('1' for MAT1-1, '2' for MAT1-2) a feature's names point at (any spelling)."""
+    return {digit for digit, _ in loose_hits(qualifiers)}
+
+
+def feature_label(x) -> str:
+    q = x.qualifiers
+    bits = [f"{k}={q[k][0]!r}" for k in ("gene", "product", "note") if q.get(k)]
+    pid = (q.get("protein_id") or [None])[0]
+    return f"{pid or x.type} {x.location} ({', '.join(bits)})"
+
+
+def is_remnant(qualifiers: dict) -> bool:
+    text = " ".join(qualifiers.get("note", []) + qualifiers.get("product", []))
+    return "pseudo" in qualifiers or "pseudogene" in qualifiers or bool(_REMNANT_WORDS.search(text))
+
+
 def lineage_string(lineage_ex: list[dict], self_node: dict) -> tuple[str, dict[str, str], list[str]]:
     """k__..;p__..;subphylum__..;c__..;o__..;f__..;g__..;s__.. from NCBI taxonomy ranks.
 
@@ -264,12 +316,17 @@ def species_binomial(name: str | None) -> bool:
     return bool(name) and bool(_BINOMIAL.match(name))
 
 
-def load_holds(path: Path | None, builtin: bool = True) -> list[dict]:
+def load_holds(path: Path | None, builtin: bool = True, known_orders: set[str] | None = None) -> list[dict]:
     """Hold rules: the built-in list plus a TSV with columns protein, order, gene, reason.
 
     An empty field matches anything; a rule with all of protein/order/gene empty is
     refused (it would hold every deposit). Lines starting with '#' are comments.
+    `gene` is normalised to the roster spelling (mat1-1-1 -> MAT1-1-1). A rule that can
+    match nothing -- a gene that is not a roster gene, or an order not in `known_orders`
+    (the NCBI order names used by db/, e.g. Erysiphe is NCBI Helotiales, not
+    "Erysiphales") -- is kept but warned about (UserWarning).
     """
+    import warnings
     holds = [dict(h) for h in BUILTIN_HOLDS] if builtin else []
     if path is None:
         return holds
@@ -280,10 +337,37 @@ def load_holds(path: Path | None, builtin: bool = True) -> list[dict]:
             rule = {k: (row.get(k) or "").strip() for k in ("protein", "order", "gene", "reason")}
             if not (rule["protein"] or rule["order"] or rule["gene"]):
                 raise ValueError(f"{path} row {n}: a hold rule needs a protein, order or gene")
+            if rule["gene"]:
+                norm = normalise_gene_name(rule["gene"])
+                if norm is None:
+                    warnings.warn(f"{path.name} row {n}: gene {rule['gene']!r} is not MAT1-1-1 or MAT1-2-1; "
+                                  f"this hold can match nothing", UserWarning, stacklevel=2)
+                elif norm != rule["gene"]:
+                    warnings.warn(f"{path.name} row {n}: gene {rule['gene']!r} read as {norm!r}",
+                                  UserWarning, stacklevel=2)
+                    rule["gene"] = norm
+            if rule["order"] and known_orders is not None and rule["order"] not in known_orders:
+                warnings.warn(f"{path.name} row {n}: order {rule['order']!r} is not an NCBI order name used in "
+                              f"db/; this hold may match nothing (holds match the NCBI order exactly)",
+                              UserWarning, stacklevel=2)
             if not rule["reason"]:
                 rule["reason"] = "held: listed in " + path.name
             holds.append(rule)
     return holds
+
+
+def known_orders_in_db(db_root: Path) -> set[str]:
+    """NCBI order names db/ uses: order directories and every o__ in record lineages."""
+    orders = set()
+    for meta in db_root.glob("**/metadata.yaml"):
+        doc = yaml.safe_load(meta.read_text()) or {}
+        for part in ((doc.get("taxonomy") or {}).get("lineage") or "").split(";"):
+            if part.startswith("o__") and part[3:]:
+                orders.add(part[3:])
+    for phylum in db_root.iterdir() if db_root.exists() else []:
+        if phylum.is_dir() and not phylum.name.startswith(("_", ".")) and phylum.name != "candidates":
+            orders.update(d.name for d in phylum.iterdir() if d.is_dir())
+    return orders
 
 
 def matching_holds(holds: list[dict], protein: str, order: str | None, gene: str | None) -> list[dict]:
@@ -299,6 +383,21 @@ def matching_holds(holds: list[dict], protein: str, order: str | None, gene: str
     return out
 
 
+def intron_status(donor: str, acceptor: str, length: int) -> tuple[str, str]:
+    """(status, text) for one intron. Ruling 7: GC-AG and < SHORT_INTRON_BP introns are
+    doubtful structures held for hand review; other non-GT-AG introns need a human too."""
+    if (donor, acceptor) == ("GT", "AG"):
+        status, text = "pass", ""
+    elif (donor, acceptor) == ("GC", "AG"):
+        status, text = "needs_human", " GC-AG donor: doubtful structure, held for hand review"
+    else:
+        status, text = "needs_human", " non-canonical"
+    if length < SHORT_INTRON_BP:
+        status = "needs_human"
+        text += f" shorter than {SHORT_INTRON_BP} bp: doubtful structure, held for hand review"
+    return status, text
+
+
 def aa_from_exons(exons: list[tuple[int, int]], codon_start: int = 1) -> int:
     """Residues encoded by an exon model whose last codon is the stop (the db convention)."""
     nt = sum(e - s + 1 for s, e in exons) - (codon_start - 1)
@@ -311,14 +410,32 @@ def exon_lengths(exons: list[tuple[int, int]]) -> list[int]:
 
 # --------------------------------------------------------------------------- the db
 
+def new_index(source: str) -> dict:
+    """An empty index. source 'db' = curated records in db/; 'batch' = candidates of this run (not written)."""
+    return {"source": source, "proteins": {}, "nucleotides": {}, "record_ids": set(), "taxids": {},
+            "species": {}, "models": []}
+
+
 def load_db_index(db_root: Path) -> dict:
     """Accepted and candidate records: protein accessions, nucleotide accessions, ids, taxids, species."""
-    index = {"proteins": {}, "nucleotides": {}, "record_ids": set(), "taxids": {}, "species": {},
-             "models": []}
+    index = new_index("db")
     for meta in sorted(db_root.glob("**/metadata.yaml")):
         doc = yaml.safe_load(meta.read_text()) or {}
         add_record_to_index(index, doc)
     return index
+
+
+def _infer_strand(gene: dict, orientation: str | None) -> str | None:
+    """The gene's strand; when null, from reference_orientation 'NAME(+|-)' or descending exon order."""
+    if gene.get("strand") in ("+", "-"):
+        return gene["strand"]
+    m = re.search(re.escape(gene.get("name") or "") + r"\s*\(([+-])\)", orientation or "")
+    if m:
+        return m.group(1)
+    exons = gene.get("exons") or []
+    if len(exons) > 1:
+        return "-" if exons[0]["start"] > exons[-1]["start"] else "+"
+    return None
 
 
 def add_record_to_index(index: dict, doc: dict) -> None:
@@ -329,13 +446,24 @@ def add_record_to_index(index: dict, doc: dict) -> None:
     index["record_ids"].add(rid)
     taxid = (doc.get("taxonomy") or {}).get("taxid")
     index["taxids"].setdefault(taxid, []).append(rid)
-    index["species"].setdefault((doc.get("organism") or {}).get("species"), []).append(rid)
-    seg_acc = {}
-    for seg in ((doc.get("locus") or {}).get("core") or {}).get("segments") or []:
-        acc = (seg.get("sequence_source") or {}).get("accession")
-        if acc:
-            index["nucleotides"].setdefault(acc.split(".")[0], []).append(rid)
-            seg_acc[seg.get("segment_index")] = acc
+    species_names = set()
+    if (doc.get("organism") or {}).get("species"):
+        species_names.add(doc["organism"]["species"])
+    for part in ((doc.get("taxonomy") or {}).get("lineage") or "").split(";"):
+        if part.startswith("s__") and part[3:]:
+            species_names.add(part[3:].replace("_", " "))
+    for name in species_names:
+        index["species"].setdefault(name, []).append(rid)
+    core = (doc.get("locus") or {}).get("core") or {}
+    seg_coord, seg_accs = {}, {}
+    for seg in core.get("segments") or []:
+        src = seg.get("sequence_source") or {}
+        # an assembly-typed segment names the assembly in `accession` and the contig in `seq_region`
+        accs = {a for a in (src.get("accession"), src.get("seq_region")) if a and not a.startswith("GC")}
+        for a in sorted(accs):
+            index["nucleotides"].setdefault(a.split(".")[0], []).append(rid)
+        seg_accs[seg.get("segment_index")] = {a.split(".")[0] for a in accs}
+        seg_coord[seg.get("segment_index")] = src.get("seq_region") or src.get("accession")
     parts = rid.split("_")
     strain_slug = parts[1] if len(parts) >= 4 else None
     for gene in doc.get("genes") or []:
@@ -343,14 +471,17 @@ def add_record_to_index(index: dict, doc: dict) -> None:
         if acc:
             index["proteins"].setdefault(acc.split(":", 1)[-1].split(".")[0], []).append(rid)
         name = normalise_gene_name(gene.get("name"))
-        if name is None:
-            continue
+        if name is None or gene.get("present") is False or gene.get("status"):
+            continue  # absent genes and remnant/pseudogene models are not models of the intact gene
         exons = [(int(x["start"]), int(x["end"])) for x in gene.get("exons") or []]
         index["models"].append({
-            "record_id": rid, "gene": name, "taxid": taxid, "strain_slug": strain_slug,
+            "record_id": rid, "source": index["source"], "gene": name, "taxid": taxid,
+            "strain_slug": strain_slug, "species_names": species_names,
             "protein": acc.split(":", 1)[-1] if acc else None,
-            "nucleotide": seg_acc.get(gene.get("segment_index")),
-            "start": gene.get("start"), "end": gene.get("end"), "strand": gene.get("strand"),
+            "nucleotide": seg_coord.get(gene.get("segment_index")),
+            "seq_accs": seg_accs.get(gene.get("segment_index"), set()),
+            "start": gene.get("start"), "end": gene.get("end"),
+            "strand": _infer_strand(gene, core.get("reference_orientation")),
             "exons": exons, "codon_start": int(gene.get("codon_start") or 1),
         })
 
@@ -359,48 +490,74 @@ def _transcript_order(exons: list[tuple[int, int]], strand: str | None) -> list[
     return sorted(exons, reverse=(strand == "-"))
 
 
-def compare_with_curated(db_index: dict, *, protein: str, nuc: str, name: str, taxid: int, slug: str,
-                         strain_known: bool, exons: list[tuple[int, int]], codon_start: int, strand: str,
-                         aa: int) -> tuple[list[dict], list[dict]]:
-    """Ruling 8: curated models of the same gene that this deposit describes; (conflicts, identical).
+def compare_with_curated(indexes: list[dict], *, protein: str, nuc: str, name: str, taxid: int, slug: str,
+                         strain_known: bool, species: str | None, exons: list[tuple[int, int]],
+                         codon_start: int, strand: str, aa: int) -> tuple[list[dict], list[dict], list[dict]]:
+    """Ruling 8: models of the same gene that this deposit describes -> (conflicts, identical, uncompared).
 
-    A curated model is "the same gene" when it carries the same protein accession
-    (any version), sits on the same nucleotide record over an overlapping region, or
-    belongs to the same taxid and the same (known) strain. Models are compared by
-    exon coordinates when both use the same nucleotide accession.version, otherwise
-    by the exon-length vector in transcript order (start, exon structure and length
-    all show there); the residue count is the exon arithmetic on both sides
-    (stop codon included, the db convention), with the NCBI length beside it.
+    `indexes` are the curated db/ index and, optionally, the batch index (candidates
+    of this run, never written); every hit carries its `source` ('db' or 'batch').
+    A model is "the same gene" when it carries the same protein accession (any
+    version), sits on the same nucleotide record -- the segment's accession or, for an
+    assembly-typed segment, its seq_region -- over an overlapping region, or belongs to
+    the same known strain (same slug) of the same taxid or the same species (so a
+    strain-level taxid meets its species-level sibling). Models are compared by exon
+    coordinates when both use the same accession.version, otherwise by the exon-length
+    vector in transcript order; residues are the exon arithmetic on both sides (stop
+    codon included, the db convention), with the NCBI length beside it. A model with no
+    exon list is compared by its span when the coordinates are comparable (equal span =
+    identical); otherwise it is `uncompared` (a separate, lower-severity reason).
+    A model whose strand is unknown is ordered with the deposit's strand and its strand
+    is not compared.
     """
     cds_lo, cds_hi = min(s for s, _ in exons), max(e for _, e in exons)
     dep_tx = _transcript_order(exons, strand)
     dep_aa = aa_from_exons(dep_tx, codon_start)
-    conflicts, identical, seen = [], [], set()
-    for m in db_index.get("models", []):
-        if m["gene"] != name or (m["record_id"], m["gene"]) in seen:
+    conflicts, identical, uncompared, seen = [], [], [], set()
+    for m in (m for index in indexes for m in index.get("models", [])):
+        key = (m["source"], m["record_id"], m["gene"])
+        if m["gene"] != name or key in seen:
             continue
         why = []
         if m["protein"] and m["protein"].split(".")[0] == protein.split(".")[0]:
             why.append(f"same protein {m['protein']}")
-        if m["nucleotide"] and m["nucleotide"].split(".")[0] == nuc.split(".")[0] and m["start"] and m["end"] \
+        if nuc.split(".")[0] in m["seq_accs"] and m["start"] and m["end"] \
                 and min(m["start"], m["end"]) <= cds_hi and max(m["start"], m["end"]) >= cds_lo:
             why.append(f"overlapping region of {m['nucleotide']}")
-        if strain_known and m["taxid"] == taxid and m["strain_slug"] == slug:
-            why.append(f"same taxid {taxid} and strain {slug}")
+        if strain_known and m["strain_slug"] == slug:
+            if m["taxid"] == taxid:
+                why.append(f"same taxid {taxid} and strain {slug}")
+            elif species and species in m["species_names"]:
+                why.append(f"same species {species} (taxid {m['taxid']} vs {taxid}) and strain {slug}")
         if not why:
             continue
-        seen.add((m["record_id"], m["gene"]))
+        seen.add(key)
         diffs = []
-        cur_tx = _transcript_order(m["exons"], m["strand"])
+        m_strand = m["strand"] if m["strand"] in ("+", "-") else None
+        same_coords = m["nucleotide"] == nuc
+        cur_tx = _transcript_order(m["exons"], m_strand or strand)
         cur_aa = aa_from_exons(cur_tx, m["codon_start"]) if cur_tx else None
+        hit = {"record_id": m["record_id"], "source": m["source"], "match": "; ".join(why)}
         if not cur_tx:
-            diffs.append("the curated record has no exon model to compare")
+            if same_coords and m["start"] and m["end"]:
+                if (min(m["start"], m["end"]), max(m["start"], m["end"])) != (cds_lo, cds_hi):
+                    diffs.append(f"span {m['start']}..{m['end']} vs CDS {cds_lo}..{cds_hi} "
+                                 f"(the existing record lacks exons)")
+                if m_strand and m_strand != strand:
+                    diffs.append(f"strand {m_strand} vs {strand}")
+                if not diffs:
+                    identical.append({**hit, "note": "the existing record lacks exons; its span equals the CDS span"})
+                    continue
+            else:
+                uncompared.append({**hit, "note": "the existing record lacks exons and uses other coordinates"})
+                continue
         else:
             if len(cur_tx) != len(dep_tx):
                 diffs.append(f"exon count {len(cur_tx)} vs {len(dep_tx)}")
-            if m["nucleotide"] == nuc:
-                if cur_tx[0][0 if strand == "+" else 1] != dep_tx[0][0 if strand == "+" else 1] \
-                        or m["strand"] != strand:
+            if same_coords:
+                if m_strand and m_strand != strand:
+                    diffs.append(f"strand {m_strand} vs {strand}")
+                if cur_tx[0][0 if strand == "+" else 1] != dep_tx[0][0 if strand == "+" else 1]:
                     diffs.append("start differs")
                 if sorted(cur_tx) != sorted(dep_tx):
                     diffs.append("exon coordinates differ")
@@ -410,26 +567,27 @@ def compare_with_curated(db_index: dict, *, protein: str, nuc: str, name: str, t
                 diffs.append(f"protein length {cur_aa} vs {dep_aa} aa")
             if m["codon_start"] != codon_start:
                 diffs.append(f"codon_start {m['codon_start']} vs {codon_start}")
-        hit = {"record_id": m["record_id"], "match": "; ".join(why)}
-        if not diffs:
-            identical.append(hit)
-            continue
+            if not diffs:
+                identical.append({**hit, "note": "same model"})
+                continue
         conflicts.append({
-            "protein": protein, "gene": name, "match": hit["match"], "difference": "; ".join(diffs),
+            "protein": protein, "gene": name, "source": m["source"], "match": hit["match"],
+            "difference": "; ".join(diffs),
             "existing_record_id": m["record_id"], "existing_protein": m["protein"] or "",
-            "existing_nucleotide": m["nucleotide"] or "", "existing_strand": m["strand"] or "",
-            "existing_exons": ";".join(f"{s}-{e}" for s, e in cur_tx),
+            "existing_nucleotide": m["nucleotide"] or "", "existing_strand": m_strand or "",
+            "existing_exons": ";".join(f"{s}-{e}" for s, e in cur_tx) if cur_tx else f"(span {m['start']}-{m['end']})",
             "existing_aa": "" if cur_aa is None else cur_aa,
             "deposit_nucleotide": nuc, "deposit_strand": strand,
             "deposit_exons": ";".join(f"{s}-{e}" for s, e in dep_tx),
             "deposit_aa": dep_aa, "deposit_ncbi_aa": aa,
         })
-    return conflicts, identical
+    return conflicts, identical, uncompared
 
 
-CONFLICT_COLUMNS = ["protein", "gene", "match", "difference", "existing_record_id", "existing_protein",
+CONFLICT_COLUMNS = ["protein", "gene", "source", "match", "difference", "existing_record_id", "existing_protein",
                     "existing_nucleotide", "existing_strand", "existing_exons", "existing_aa",
                     "deposit_nucleotide", "deposit_strand", "deposit_exons", "deposit_aa", "deposit_ncbi_aa"]
+SOURCE_WORDS = {"db": "curated", "batch": "in-batch candidate (not written)"}
 
 
 def route_family(db_root: Path, phylum: str, lineage_taxids: set[int], gene: str) -> list[tuple[str, dict]]:
@@ -468,7 +626,12 @@ def parse_taxonomy(xml_text: str) -> dict:
 
 def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date: str,
           mating_system: str = DEFAULT_MATING_SYSTEM, tier_policy: str = DEFAULT_TIER_POLICY,
-          holds: list[dict] | None = None) -> Result:
+          holds: list[dict] | None = None, batch_index: dict | None = None) -> Result:
+    """One deposit -> Result. `db_index` holds curated db/ records only; `batch_index`
+    (optional) the candidates proposed earlier in the same run, never written. They are
+    reported separately and never change a record_id (unknown-N counts db/ only)."""
+    if batch_index is None:
+        batch_index = new_index("batch")
     if holds is None:
         holds = load_holds(None)
     if mating_system not in MATING_SYSTEMS:
@@ -649,19 +812,8 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
     f["introns"] = [list(i) for i in introns]
     for istart, iend, donor, acceptor, length in introns:
         tag = f"intron {istart}..{iend} ({length} bp) {donor}..{acceptor}"
-        # ruling 7: GC-AG and short introns are doubtful structures, held for hand review
-        if (donor, acceptor) == ("GT", "AG"):
-            status = "pass"
-        elif (donor, acceptor) == ("GC", "AG"):
-            status = "needs_human"
-            tag += " GC-AG donor: doubtful structure, held for hand review"
-        else:
-            status = "needs_human"
-            tag += " non-canonical"
-        if length < SHORT_INTRON_BP:
-            status = "needs_human"
-            tag += f" shorter than {SHORT_INTRON_BP} bp: doubtful structure, held for hand review"
-        res.add("intron", status, tag)
+        status, extra = intron_status(donor, acceptor, length)
+        res.add("intron", status, tag + extra)
 
     # ---- gene feature span versus the CDS span
     cds_lo, cds_hi = min(e[0] for e in exons), max(e[1] for e in exons)
@@ -717,17 +869,28 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         res.add("own_status", "needs_human",
                 f"the deposit marks this CDS as pseudo/truncated/remnant: '{own_text.strip()}'")
     other_named = []  # (gene, protein_id, is_remnant)
+    loose_other = []  # (label, is_remnant, core|accessory): other-idiomorph features, any spelling
+    other_digit = "2" if idiomorph == "MAT1-1" else "1"
+    seen_locations = set()
     for x in gb.features:
-        if x.type != "CDS" or x is cds:
+        if x is cds:
+            continue
+        pseudo_gene = x.type == "gene" and ("pseudo" in x.qualifiers or "pseudogene" in x.qualifiers)
+        if x.type != "CDS" and not pseudo_gene:
             continue
         n = normalise_gene_name((x.qualifiers.get("gene") or [None])[0]) or \
             gene_name_from_product((x.qualifiers.get("product") or [None])[0])
-        if n:
-            text = " ".join((x.qualifiers.get("note") or []) + (x.qualifiers.get("product") or []))
-            remnant = ("pseudo" in x.qualifiers or "pseudogene" in x.qualifiers
-                       or bool(_REMNANT_WORDS.search(text)))
-            other_named.append((n, (x.qualifiers.get("protein_id") or ["-"])[0], remnant))
+        if x.type == "CDS" and n:
+            other_named.append((n, (x.qualifiers.get("protein_id") or ["-"])[0], is_remnant(x.qualifiers)))
+            seen_locations.add(str(x.location))
+            continue
+        kinds = {kind for digit, kind in loose_hits(x.qualifiers) if digit == other_digit}
+        if kinds and str(x.location) not in seen_locations:
+            seen_locations.add(str(x.location))
+            kind = "core" if "core" in kinds else "accessory"
+            loose_other.append((feature_label(x), is_remnant(x.qualifiers) or pseudo_gene, kind))
     f["other_mat_cds"] = other_named
+    f["other_mat_loose"] = loose_other
     intact_other = [p for n, p, rem in other_named if n != name and not rem]
     remnant_other = [p for n, p, rem in other_named if n != name and rem]
     if intact_other:
@@ -738,6 +901,25 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         res.add("other_idiomorph", "caveat",
                 f"the deposit also carries a pseudo/truncated CDS of the other idiomorph's gene "
                 f"({remnant_other}); not recorded (a curator may record it as status: remnant)")
+    intact_core = [label for label, rem, kind in loose_other if not rem and kind == "core"]
+    intact_accessory = [label for label, rem, kind in loose_other if not rem and kind == "accessory"]
+    remnant_loose = [label for label, rem, _ in loose_other if rem]
+    if intact_core:
+        res.add("other_idiomorph", "needs_human",
+                f"the deposit also carries an intact CDS of the other idiomorph's core gene "
+                f"(MAT1-{other_digit}-1), not spelled as a roster name: {intact_core}; idiomorph label and "
+                f"mating system need a curator")
+    if intact_accessory:
+        # held as well: an intact accessory gene of the other idiomorph (e.g. MAT1-1-2 beside
+        # MAT1-2-1) is the same two-idiomorph signal; the reason names the kind for the curator
+        res.add("other_idiomorph", "needs_human",
+                f"the deposit also carries an intact CDS of an accessory gene of the other idiomorph "
+                f"(MAT1-{other_digit}-n, n != 1): {intact_accessory}; idiomorph label and mating system "
+                f"need a curator")
+    if remnant_loose:
+        res.add("other_idiomorph", "caveat",
+                f"the deposit also carries a pseudo/truncated feature named for the other idiomorph "
+                f"(MAT1-{other_digit}): {remnant_loose}; not recorded (a curator may record it as status: remnant)")
     if any(n == name for n, _, _ in other_named):
         res.add("other_idiomorph", "caveat", f"another {name} CDS in the window: {other_named}")
 
@@ -872,37 +1054,56 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         res.add("record_id", "needs_human", f"record_id {record_id} does not match the schema pattern")
         return res
 
-    # ruling 8: compare with existing curated models of the same gene before anything is written
-    conflicts, identical = compare_with_curated(db_index, protein=protein, nuc=nuc, name=name, taxid=taxid,
-                                                slug=slug, strain_known=strain_name is not None,
-                                                exons=exons, codon_start=codon_start, strand=strand,
-                                                aa=len(ncbi_protein))
+    # ruling 8: compare with existing curated models (and earlier candidates of this batch)
+    conflicts, identical, uncompared = compare_with_curated(
+        [db_index, batch_index], protein=protein, nuc=nuc, name=name, taxid=taxid, slug=slug,
+        strain_known=strain_name is not None, species=species, exons=exons, codon_start=codon_start,
+        strand=strand, aa=len(ncbi_protein))
     f["conflicts"] = conflicts
     for c in conflicts:
-        res.add("conflict", "needs_human",
-                f"disagrees with curated {c['existing_record_id']} ({c['match']}): {c['difference']}; "
-                f"see the conflicts table")
+        res.add("conflict" if c["source"] == "db" else "batch_conflict", "needs_human",
+                f"disagrees with {SOURCE_WORDS[c['source']]} {c['existing_record_id']} ({c['match']}): "
+                f"{c['difference']}; see the conflicts table")
     for m in identical:
-        res.add("duplicate", "needs_human",
-                f"already curated in {m['record_id']} with the same model ({m['match']})")
+        res.add("duplicate" if m["source"] == "db" else "batch_duplicate", "needs_human",
+                f"same gene as {SOURCE_WORDS[m['source']]} {m['record_id']} ({m['match']}): {m['note']}")
+    for m in uncompared:
+        res.add("existing_no_exons", "needs_human",
+                f"same gene as {SOURCE_WORDS[m['source']]} {m['record_id']} ({m['match']}), not compared: "
+                f"{m['note']}")
 
     # ruling 5: collisions are flagged, never suffixed
     if record_id in db_index["record_ids"]:
         res.add("record_id", "needs_human", f"record_id {record_id} already exists in db/")
         return res
-    if conflicts or identical:
+    if record_id in batch_index["record_ids"]:
+        res.add("record_id", "needs_human",
+                f"record_id {record_id} is already proposed by an earlier deposit of this batch (not written)")
+        return res
+    if conflicts or identical or uncompared:
         return res
     bare = protein.split(".")[0]
     if bare in db_index["proteins"]:
         res.add("duplicate", "needs_human", f"protein {protein} already curated in {db_index['proteins'][bare]}")
         return res
+    if bare in batch_index["proteins"]:
+        res.add("batch_duplicate", "needs_human",
+                f"protein {protein} already proposed in this batch by {batch_index['proteins'][bare]} (not written)")
+        return res
     if nuc.split(".")[0] in db_index["nucleotides"]:
         res.add("duplicate", "needs_human",
                 f"nucleotide {nuc} is already a segment of {db_index['nucleotides'][nuc.split('.')[0]]}")
         return res
+    if nuc.split(".")[0] in batch_index["nucleotides"]:
+        res.add("batch_nucleotide", "caveat",
+                f"nucleotide {nuc} is also the segment of in-batch candidate(s) "
+                f"{batch_index['nucleotides'][nuc.split('.')[0]]} (not written)")
     same = sorted(set(db_index["taxids"].get(taxid, [])) | set(db_index["species"].get(species, [])))
     if same:
         res.add("same_species", "caveat", f"db/ already holds {same} for this taxid/species")
+    same_b = sorted(set(batch_index["taxids"].get(taxid, [])) | set(batch_index["species"].get(species, [])))
+    if same_b:
+        res.add("same_species", "caveat", f"this batch also proposes {same_b} for this taxid/species (not written)")
     res.add("record_id", "pass", record_id)
 
     # ---- the record
@@ -1051,13 +1252,15 @@ def main(argv: list[str] | None = None) -> int:
     db_root = args.repo / "db"
     db_index = load_db_index(db_root)
     fetcher = Fetcher(args.cache_dir, offline=args.offline)
-    holds = load_holds(args.hold_file, builtin=not args.no_builtin_holds)
+    holds = load_holds(args.hold_file, builtin=not args.no_builtin_holds, known_orders=known_orders_in_db(db_root))
+    batch_index = new_index("batch")
 
     results = []
     for protein in proteins:
         try:
             res = build(protein, fetcher, db_root, db_index, date=args.date,
-                        mating_system=args.mating_system, tier_policy=args.tier_policy, holds=holds)
+                        mating_system=args.mating_system, tier_policy=args.tier_policy, holds=holds,
+                        batch_index=batch_index)
         except Exception as exc:  # noqa: BLE001 -- one bad deposit never aborts the batch
             res = Result(protein=protein)
             res.add("exception", "needs_human", f"{type(exc).__name__}: {exc}")
@@ -1068,8 +1271,9 @@ def main(argv: list[str] | None = None) -> int:
                 d.mkdir(parents=True, exist_ok=True)
                 (d / "metadata.yaml").write_text(yaml.safe_dump(res.record, sort_keys=False, width=100))
                 res.record_dir = str(d)
-            # a later deposit of the same strain/gene must collide or conflict, with or without --out
-            add_record_to_index(db_index, res.record)
+            # a later deposit of the same strain/gene must collide or conflict, with or without
+            # --out; kept apart from db/ so messages never call a candidate "curated"
+            add_record_to_index(batch_index, res.record)
         results.append(res)
         print(f"{protein}\t{res.verdict}\t{res.facts.get('record_id', '-')}", file=sys.stderr)
 

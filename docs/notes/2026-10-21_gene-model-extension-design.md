@@ -494,3 +494,24 @@ The best-hit reference came from the added deposits in 273 of 386 rows.
 Reported regardless: overshoot counts (must not worsen: the 2 held-out overshoot genes showed it does not improve), class D'/F, per-gene figures, intervals per gene.
 **If either criterion fails**, the roster-growth lever is recorded as not validated and the curation investment is **not** recommended; the failure stays in this note.
 
+### 15b. Result (2026-10-22): the roster-growth effect replicates on the reserved genes; both pre-registered criteria are met
+
+HPCC array 30263502; 101 reserved genes (98 with a model; **288 truncated rows from 98 genes**, same genes and truncations in both configurations); leave-genus-out; rules frozen. Files: `results/2026-10-21_gene_model_extension/roster_growth_validation/`.
+
+| | 55 references (baseline) | 161 references (augmented) |
+|---|---|---|
+| best-hit reference has exon info | 278 of 288 | 286 of 288 |
+| best-hit reference exon count equals the deposited gene's | 177 of 278 (64%) | 233 of 286 (81%) |
+| guard precision / recall for a true intron after the edge | 0.74 / **0.32** | 0.74 / **0.49** |
+| guard AUC | 0.638 | 0.697 |
+| rule A (length rule only): wrong | 16.2% (12-22%) | 14.3% (10-20%) |
+| **rule B (length rule + guard clear): accepted / early / overshoot / wrong** | 170 / 17 / 5 / **12.9%** (9-19%) | 172 / **3** / 5 / **4.7%** (2-9%) |
+| rule B genes with any wrong row (per gene) | 7 of 60 (11.7%) | 5 of 81 (6.2%) |
+| class D' (B and reference <= 2 exons) wrong | 14.6% (9-22%) | 6.8% (3-13%) |
+| class F (B and reference >= 3 exons) wrong | 8.5% (3-20%) | 1.4% (0-8%) |
+The best-hit reference came from the added deposits in 239 of 288 rows.
+
+**Criteria (section 15).** (1) Rule B's wrong rate is lower with the augmented roster (4.7% against 12.9%) and the per-gene rate is not higher (6.2% against 11.7%): **met**. (2) Guard recall rises by at least 0.10 (0.32 to 0.49, +0.17) with precision unchanged (0.74 to 0.74): **met**. **The effect replicates on genes never used before.** As in the development set, overshoot does not improve (5 accepted rows in both configurations): roster growth lowers the early stops (17 to 3) but not the reading-through-an-intron overshoot.
+**Caveats.** The reserved set is more clonal than the development set (32 genera; *Phialocephala* 17 genes, *Stagonosporopsis* 8, *Didymella* 7, *Calonectria* 7), so the per-gene intervals are wide and the baseline is worse here than on the development genes (12.9% against 8.4%); leave-genus-out keeps same-family relatives in the roster (realistic for roster growth, flattering for closely related clades); the truth is the depositors' annotation, not RNA-supported; the rules were chosen on the first 34 genes and are unchanged.
+**Consequence.** Growing the roster with genus-diverse annotated references that carry exon structures is validated as the cheapest lever that lowers the disclosed early-stop rate (about 3-fold fewer early stops on the reserved genes). The untouched set is now spent; any later predictor needs new deposits.
+

@@ -233,3 +233,49 @@ def test_note_for_evidence_passes_identity_and_coverage():
         assert note_for_evidence([a, h], FakeFamily, clf, translate, 20_000) is not None
     finally:
         c.score_proteins = orig
+
+
+def _candidate_result(idiomorph="MAT1-1"):
+    from MATPredict.detect.family_registry import FamilyKey
+    from MATPredict.detect.pipeline import DetectionResult, GeneEvidence, LocusSegment
+
+    key = FamilyKey("Ascomycota", "MAT")
+    genes = [GeneEvidence("MAT1-1-1", "core_MAT", "c1", 1000, 2200, "+", 62.0, 50.0, "rec_MAT_1", "exonerate_refine"),
+             GeneEvidence("MAT1-2-1", "core_MAT", "c1", 3000, 4100, "+", 47.0, 68.0, "rec_MAT_2", "exonerate_refine")]
+    return DetectionResult(
+        family_key=key, contig="c1", start=900, end=4200, confidence="medium", idiomorph=idiomorph, ambiguous_with=[],
+        genes_found=[g.gene_name for g in genes], genes_missing=[], fragmented=False,
+        segments=[LocusSegment("c1", 900, 4200, contig_edge_distance=99)], gene_evidence=genes,
+        reference_records=["rec_MAT_1"], locus_class="mat_locus",
+    )
+
+
+def test_a_homothallic_candidate_reports_undetermined_and_keeps_the_vote_in_the_note():
+    from MATPredict.detect.pipeline import _as_homothallic_candidate
+
+    note = {"decision": "homothallic_candidate", "policy": "both_genes"}
+    r = _as_homothallic_candidate(_candidate_result("MAT1-1"), note)
+    assert r.locus_class == "homothallic_candidate"
+    assert r.idiomorph == "undetermined"
+    assert r.homothallic_note["vote_idiomorph"] == "MAT1-1"
+    assert r.homothallic_note["previous_locus_class"] == "mat_locus"
+    # nothing else about the call changes
+    base = _candidate_result("MAT1-1")
+    assert (r.confidence, r.genes_found, r.start, r.end) == (base.confidence, base.genes_found, base.start, base.end)
+
+
+def test_the_vote_winner_is_kept_whichever_idiomorph_it_was():
+    from MATPredict.detect.pipeline import _as_homothallic_candidate
+
+    for vote in ("MAT1-2", "undetermined"):
+        r = _as_homothallic_candidate(_candidate_result(vote), {"decision": "homothallic_candidate"})
+        assert r.idiomorph == "undetermined" and r.homothallic_note["vote_idiomorph"] == vote
+
+
+def test_idiomorph_class_is_none_for_an_undetermined_candidate():
+    from MATPredict.detect.pipeline import idiomorph_class_for
+
+    class Fam:
+        idiomorph_classes = {"MAT1-1": "alpha", "MAT1-2": "HMG"}
+
+    assert idiomorph_class_for(Fam(), "undetermined") is None

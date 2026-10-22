@@ -591,7 +591,8 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "core genes include a COMPLETE alpha-box and a COMPLETE HMG-box protein, each confirmed by the "
              "gene-identity profiles (not an HMG paralog or MAT1-1-3), within the family's separation limit, "
              "is classed `homothallic_candidate` (see `homothallic_note`). A candidate, never an assertion; "
-             "the called idiomorph and the confidence are unchanged.",
+             "the idiomorph is reported `undetermined` (the vote's winner is kept in the note as `vote_idiomorph`) "
+             "and the confidence is unchanged.",
     )
     detect.add_argument(
         "--confidence-cap-policy", choices=CONFIDENCE_CAP_POLICIES, default=DEFAULT_CONFIDENCE_CAP_POLICY,

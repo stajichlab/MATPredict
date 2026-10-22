@@ -328,7 +328,8 @@ def _result_doc(r: DetectionResult) -> dict:
         # `idiomorph_gene_only` call is a lone sexM or sexP with no flank: not
         # a locus, but kept on purpose as per-idiomorph HMM training material.
         # `homothallic_candidate` is both idiomorphs in one locus, the real
-        # architecture of a homothallic Mucorale.
+        # architecture of a homothallic Mucorale; its `idiomorph` is `undetermined`
+        # and the vote's winner is in `homothallic_note.vote_idiomorph`.
         "locus_class": r.locus_class,
         # True on a flank-carried call kept inside the flank span: its
         # idiomorph rests on core hits no tool could model.

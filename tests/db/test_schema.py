@@ -256,7 +256,7 @@ def test_every_gene_class_used_in_order_yml_is_a_member_of_the_schema_enum():
     assert offenders == [], f"gene_class values outside the schema enum: {offenders}"
 
 
-@pytest.mark.parametrize("system", ["heterothallic", "homothallic", "pseudohomothallic", "unisexual_switching"])
+@pytest.mark.parametrize("system", ["heterothallic", "homothallic", "pseudohomothallic", "unisexual_switching", "unknown"])
 def test_mating_system_enum_accepts_known_values(system):
     record = copy.deepcopy(VALID_RECORD)
     record["mating_type"]["system"] = system

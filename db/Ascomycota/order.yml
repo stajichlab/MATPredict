@@ -147,6 +147,10 @@ loci:
       # * min_identity 50 (search.drop_below_gene_min_identity): BGL1 is a beta-glucosidase
       #   family. Unfloored, 27.7%-identity BGL1 fragments made 8 spurious high second calls
       #   in Alternaria; every GAP1/BGL1 hit beside a real MAT gene was >= 70%.
+      #   MARGIN IS NARROW for BGL1: a full-length BGL1 paralog at 44.4-46.7% identity
+      #   (802-890 aa, another contig) is present in every one of 15 sampled recovered clade
+      #   genomes (adversarial review 2026-10-22), 3-6 points under the floor. GAP1's nearest paralog is
+      #   36.9% over 103 aa. Re-validate the floor for every new genus brought into scope.
       - {name: GAP1, role: flanking_conserved, optional: true, slot: GAP1, taxonomic_scope: [28556], min_identity: 50}
       - {name: BGL1, role: flanking_conserved, optional: true, slot: BGL1, taxonomic_scope: [28556], min_identity: 50}
       # MAT1-2-4 (A. fumigatus Af293, XP_754990.2) is a genuinely distinct gene from

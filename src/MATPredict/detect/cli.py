@@ -29,7 +29,7 @@ from MATPredict.detect.reference_fasta import build_reference_fasta
 from MATPredict.detect.provenance import RunClock, run_block
 from MATPredict.detect.report import _taxonomy_source, write_detection_gff3, write_detection_report
 from MATPredict.detect.rollout_aggregate import aggregate_reports, write_rollout_summary
-from MATPredict.detect.scope_audit import audit_scope, record_taxids_by_family
+from MATPredict.detect.scope_audit import audit_gene_scopes, audit_scope, record_taxids_by_family
 from MATPredict.detect.suppress import default_suppress_paths, filter_rows, load_suppress_list
 
 _ROLLOUT_REPORT_FILENAME = "detection_report.yaml"
@@ -272,6 +272,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "confidence_cap_policy": _confidence_cap_policy_from_args(args),
             "strong_single_gene_policy": _strong_single_gene_policy_from_args(args),
             "scoped_roster_policy": _scoped_roster_policy_from_args(args),
+            "scoped_roster": getattr(routing, "scoped_roster", None),
             "supported_min_bitscore": getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
         },
     )
@@ -400,6 +401,9 @@ def _cmd_audit_scope(args: argparse.Namespace) -> int:
         )
     if not any_uncovered:
         print("every family's own curated records are covered by its taxonomic_scope")
+    for record_id, gene, taxid, scope in audit_gene_scopes(db_root, families):
+        print(f"{record_id}: carries scoped gene {gene} but its taxid {taxid} is outside the gene's "
+              f"taxonomic_scope {scope} -- the protein is never searched")
     return 0
 
 

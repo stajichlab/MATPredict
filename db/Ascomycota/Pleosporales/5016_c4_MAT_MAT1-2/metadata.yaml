@@ -1,5 +1,5 @@
 record_id: 5016_c4_MAT_MAT1-2
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 5016
   lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Dothideomycetes;o__Pleosporales;f__Pleosporaceae;g__Bipolaris;s__Bipolaris_maydis
@@ -156,5 +156,14 @@ curation:
   reviewed_date: '2026-09-26'
   notes: 'Proposed 2026-09-26 from docs/notes/2026-09-24_mat-reference-gap-literature.md
     (Tier 2: Dothideomycetes). First Dothideomycetes references; the 2026-09-24 pilot
-    called 90/100 Dothideomycetes genomes with no record of the class. Curator J. Stajich signed off 2026-09-26.'
+    called 90/100 Dothideomycetes genomes with no record of the class. Curator J. Stajich signed off 2026-09-26.
+
+    record_version 2, 2026-10-22 (material change, prototype branch cochliobolus-scoped-roster):
+    GAP1 (AAB84002.1) and BGL1 (AAB84005.1) added as genes 1 and 2 (flanking_conserved, the
+    Pleosporaceae-scoped roster flanks of db/Ascomycota/order.yml) and the core segment
+    moved to span GAP1..BGL1 on AF027687.1 (was the MAT gene only). CDS joins translated from
+    the deposit equal the protein records (results/2026-10-22_cochliobolus_scoped_roster/).
+    NOT YET RE-REVIEWED: the sign-off above is for record_version 1; the curator must
+    review and sign off version 2 (database design spec, material change). validation.status
+    stays accepted only because the validator ties it to the record''s location under db/.'
 model_provenance: null

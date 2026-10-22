@@ -8,4 +8,14 @@ export MATPREDICT_CACHE_DIR=/bigdata/stajichlab/jstajich/projects/MATPredict/.ma
 cd $CODE
 python -c 'import MATPredict;print(MATPredict.__file__)'
 git log --oneline -1
-python -m pytest -q -p no:cacheprovider ${TESTS:-tests/db tests/detect} --no-header -rf 2>&1 | tail -30 || true
+# The pixi env carries an editable MATPredict install (mat-prof/src) that can shadow PYTHONPATH:
+# put this worktree's src first and refuse to run if another checkout is imported.
+python - ${TESTS:-tests/db tests/detect} <<'PY'
+import os, sys
+sys.path.insert(0, os.path.join(os.getcwd(), "src"))
+import MATPredict
+assert MATPredict.__file__.startswith(os.path.join(os.getcwd(), "src")), MATPredict.__file__
+print("testing", MATPredict.__file__)
+import pytest
+sys.exit(pytest.main(["-q", "-p", "no:cacheprovider", "--no-header", "-rf", *sys.argv[1:]]))
+PY

@@ -12,7 +12,7 @@ from typing import Callable
 import yaml
 
 from MATPredict.db.taxonomy import default_lineage_taxids
-from MATPredict.detect.family_registry import Family, FamilyKey
+from MATPredict.detect.family_registry import Family, FamilyKey, has_gene_scope
 
 
 def record_taxids_by_family(db_root: Path) -> dict[FamilyKey, list[int]]:
@@ -114,3 +114,34 @@ def audit_scope(
             uncovered_taxids=uncovered, recommended_scope_taxid=recommended,
         ))
     return results
+
+
+def audit_gene_scopes(
+    db_root: Path, families: list[Family],
+    lineage_taxids_resolver: Callable[[int], list[int]] = default_lineage_taxids,
+) -> list[tuple[str, str, int, list[int]]]:
+    """(record_id, gene, record taxid, gene scope) for every accepted record that
+    supplies a taxon-scoped roster gene (`family_registry.scope_roster_genes`) from
+    outside that gene's own `taxonomic_scope`. Such a protein would be in the
+    database and never searched where its record came from. Raises on a resolver
+    failure, like `audit_scope`."""
+    scopes = {(f.key, g["name"]): list(g["taxonomic_scope"]) for f in families
+              for g in f.genes if has_gene_scope(g)}
+    if not scopes:
+        return []
+    bad = []
+    for meta_path in sorted(db_root.glob("*/*/*/metadata.yaml")):
+        if meta_path.relative_to(db_root).parts[0] == "candidates":
+            continue
+        doc = yaml.safe_load(meta_path.read_text())
+        locus_name = (doc.get("mating_type") or {}).get("locus_name")
+        taxid = (doc.get("taxonomy") or {}).get("taxid")
+        key = FamilyKey(meta_path.parents[2].name, locus_name)
+        for gene in doc.get("genes") or []:
+            scope = scopes.get((key, gene.get("name")))
+            if scope is None or taxid is None:
+                continue
+            ancestors = [] if taxid in scope else lineage_taxids_resolver(taxid)
+            if not _covered(taxid, scope, ancestors):
+                bad.append((doc.get("record_id"), gene["name"], taxid, scope))
+    return bad

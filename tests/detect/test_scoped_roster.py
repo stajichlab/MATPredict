@@ -165,3 +165,38 @@ def test_a_gene_min_identity_drops_only_that_genes_weak_hits():
     assert kept == [strong_bgl1, weak_core]
     hits = [weak_core]
     assert drop_below_gene_min_identity(hits, [unscoped]) is hits, "no floor declared: untouched"
+
+
+def test_a_failed_scope_lookup_is_recorded_not_silent():
+    """A transient lookup error must not turn a policy-on run into an unmarked main run."""
+    calls = {"n": 0}
+
+    def flaky(taxid):
+        calls["n"] += 1
+        if calls["n"] > 1:  # routing's own lookup succeeds, the scope lookup fails
+            raise TimeoutError("E-utilities")
+        return _lineage(taxid)
+
+    d = route(BMAYDIS, load_all_families(Path("db")), lineage_taxids_resolver=flaky,
+              scoped_roster_policy="on")
+    mat = next(f for f in d.families if f.key == FamilyKey("Ascomycota", "MAT"))
+    assert not SCOPED & set(_names(mat))
+    assert d.scoped_roster.startswith("SKIPPED") and "TimeoutError" in d.scoped_roster
+    assert "scoped roster skipped" in d.routing_error
+
+
+def test_the_decision_says_what_scoping_did():
+    assert _routed_mat(BMAYDIS, "on")[0].scoped_roster == "on: BGL1,GAP1 searched (genome inside scope)"
+    assert _routed_mat(AUREOBASIDIUM, "on")[0].scoped_roster == "on: BGL1,GAP1 not searched (genome outside scope)"
+    assert _routed_mat(BMAYDIS, "off")[0].scoped_roster == "off: BGL1,GAP1 not searched"
+    assert _routed_mat(BMAYDIS, "off")[0].routing_error is None
+
+
+def test_records_carrying_a_scoped_gene_lie_inside_its_scope():
+    from MATPredict.detect.scope_audit import audit_gene_scopes
+    fams = load_all_families(Path("db"))
+    assert audit_gene_scopes(Path("db"), fams, lineage_taxids_resolver=_lineage) == []
+    outside = audit_gene_scopes(Path("db"), fams, lineage_taxids_resolver=lambda t: [4890, DOTHIDEALES])
+    assert sorted((r, g) for r, g, _, _ in outside) == [
+        ("5016_c4_MAT_MAT1-2", "BGL1"), ("5016_c4_MAT_MAT1-2", "GAP1"),
+        ("5016_c5_MAT_MAT1-1", "BGL1"), ("5016_c5_MAT_MAT1-1", "GAP1")]

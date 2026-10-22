@@ -358,6 +358,10 @@ class RoutingDecision:
     #: it invisibly let one taxid route three different ways in one pilot
     #: with no report saying why. None when every lookup succeeded.
     routing_error: str | None = None
+    #: What `--scoped-roster-policy` did to the routed families' taxon-scoped
+    #: roster genes (`_apply_gene_scopes`), for the report's run block. None when
+    #: no routed family declares a scoped gene.
+    scoped_roster: str | None = None
 
 
 def available_phyla(db_root: Path) -> list[str]:
@@ -677,24 +681,46 @@ def _apply_gene_scopes(
     decision: RoutingDecision, taxid: int | None,
     lineage_taxids_resolver: Callable[[int], list[int]], policy: str,
 ) -> RoutingDecision:
-    """Remove the scoped roster genes (`scope_roster_genes`) the genome is not in.
+    """Remove the scoped roster genes (`scope_roster_genes`) the genome is not in,
+    and say what was done in `RoutingDecision.scoped_roster`.
 
     The lineage is fetched only when the policy is on, a routed family has a
     scoped gene, and the route came from the taxid (`direct`, `lineage`,
-    `phylum_fallback`); it is the cached document routing already read. On an
-    operator route (`explicit_phylum`, `exhaustive`), with no taxid, or when the
-    lookup fails, every scoped gene is removed: the conservative side, which is
-    the run as it was before the gene was added."""
-    if not any(has_gene_scope(g) for f in decision.families for g in f.genes):
+    `phylum_fallback`). On a `lineage` or `phylum_fallback` route it is the
+    document routing already fetched (the default resolver caches it); a `direct`
+    route made no lookup, so this is a new one. On an operator route
+    (`explicit_phylum`, `exhaustive`) or with no taxid every scoped gene is removed.
+    A failed lookup also removes them -- the run is then the one it was before the
+    genes were added -- but never silently: `scoped_roster` says `skipped` and the
+    error is appended to `routing_error`, so the report shows it and the genome can
+    be re-run."""
+    scoped = sorted({g["name"] for f in decision.families for g in f.genes if has_gene_scope(g)})
+    if not scoped:
         return decision
+    names = ",".join(scoped)
     lineage: set[int] = set()
-    if (policy == SCOPED_ROSTER_ON and taxid is not None
-            and decision.routing_mode in ("direct", "lineage", "phylum_fallback")):
+    error = decision.routing_error
+    if policy != SCOPED_ROSTER_ON:
+        note = f"off: {names} not searched"
+    elif taxid is None or decision.routing_mode not in ("direct", "lineage", "phylum_fallback"):
+        note = f"on, but {names} not searched: {decision.routing_mode} route without a taxid lineage"
+    else:
         try:
             lineage = {taxid, *lineage_taxids_resolver(taxid)}
-        except Exception:  # noqa: BLE001 -- degrade to the unscoped roster
-            lineage = set()
-    return replace(decision, families=[scope_roster_genes(f, lineage) for f in decision.families])
+        except Exception as exc:  # noqa: BLE001 -- recorded below, never silent
+            msg = f"scoped roster skipped: lineage lookup failed: {type(exc).__name__}: {str(exc)[:160]}"
+            note = f"SKIPPED ({names} not searched): {msg}"
+            error = "; ".join(e for e in (error, msg) if e)
+        else:
+            families = [scope_roster_genes(f, lineage) for f in decision.families]
+            kept = sorted({g["name"] for f in families for g in f.genes if has_gene_scope(g)})
+            note = (f"on: {','.join(kept)} searched (genome inside scope)" if kept
+                    else f"on: {names} not searched (genome outside scope)")
+            if set(kept) != set(scoped) and kept:
+                note += f"; {','.join(sorted(set(scoped) - set(kept)))} outside scope"
+            return replace(decision, families=families, scoped_roster=note)
+    return replace(decision, families=[scope_roster_genes(f, lineage) for f in decision.families],
+                   routing_error=error, scoped_roster=note)
 
 
 def _route(

@@ -144,15 +144,16 @@ loci:
       #   denominator of fraction_found, an absent one costs nothing (scoring.score_cluster),
       #   so a Pleosporaceae call that lacks them keeps its score. Reuses the slot
       #   mechanism approved for SXI1/SXI2 (one member per slot here); not yet ruled on.
-      # * min_identity 50 (search.drop_below_gene_min_identity): BGL1 is a beta-glucosidase
+      # * min_identity (search.drop_below_gene_min_identity): GAP1 50, BGL1 60. BGL1 is a beta-glucosidase
       #   family. Unfloored, 27.7%-identity BGL1 fragments made 8 spurious high second calls
       #   in Alternaria; every GAP1/BGL1 hit beside a real MAT gene was >= 70%.
-      #   MARGIN IS NARROW for BGL1: a full-length BGL1 paralog at 44.4-46.7% identity
-      #   (802-890 aa, another contig) is present in every one of 15 sampled recovered clade
-      #   genomes (adversarial review 2026-10-22), 3-6 points under the floor. GAP1's nearest paralog is
-      #   36.9% over 103 aa. Re-validate the floor for every new genus brought into scope.
+      #   BGL1 FLOOR 60 (curator ruling 2026-10-22, raised from 50): a full-length BGL1 paralog at
+      #   44.4-46.7% identity (802-890 aa, another contig) is present in every one of 15 sampled
+      #   recovered clade genomes (adversarial review 2026-10-22); at 50 that was a 3-6 point margin,
+      #   at 60 it is 13-16 points, and every real flank hit was >= 70%. GAP1's nearest paralog is
+      #   36.9% over 103 aa (floor stays 50). Re-validate the floors for every new genus brought into scope.
       - {name: GAP1, role: flanking_conserved, optional: true, slot: GAP1, taxonomic_scope: [28556], min_identity: 50}
-      - {name: BGL1, role: flanking_conserved, optional: true, slot: BGL1, taxonomic_scope: [28556], min_identity: 50}
+      - {name: BGL1, role: flanking_conserved, optional: true, slot: BGL1, taxonomic_scope: [28556], min_identity: 60}
       # MAT1-2-4 (A. fumigatus Af293, XP_754990.2) is a genuinely distinct gene from
       # Leotiomycetes' MAT1-2-4, which was renamed MAT1-2-10 above precisely to avoid
       # this collision (Wilken et al. 2017). This entry is Eurotiomycetes-only; do not

@@ -156,12 +156,14 @@ def test_a_gene_min_identity_drops_only_that_genes_weak_hits():
     from MATPredict.detect.search import drop_below_gene_min_identity
     _, scoped = _routed_mat(BMAYDIS, "on")
     _, unscoped = _routed_mat(AUREOBASIDIUM, "on")
-    assert {g["name"]: g.get("min_identity") for g in scoped.genes if g["name"] in SCOPED} == {"GAP1": 50, "BGL1": 50}
+    assert {g["name"]: g.get("min_identity") for g in scoped.genes if g["name"] in SCOPED} == {"GAP1": 50, "BGL1": 60}
     weak_bgl1 = _hit("BGL1", "flanking_conserved", 1)
     weak_bgl1 = type(weak_bgl1)(**{**weak_bgl1.__dict__, "identity": 27.7})
     strong_bgl1 = _hit("BGL1", "flanking_conserved", 5000)
     weak_core = type(weak_bgl1)(**{**_hit("MAT1-1-1", "core_MAT", 9000).__dict__, "identity": 20.0})
-    kept = drop_below_gene_min_identity([weak_bgl1, strong_bgl1, weak_core], [scoped])
+    # the full-length BGL1 paralog present in every sampled clade genome sits at 44-47%
+    paralog_bgl1 = type(weak_bgl1)(**{**_hit("BGL1", "flanking_conserved", 7000).__dict__, "identity": 46.7})
+    kept = drop_below_gene_min_identity([weak_bgl1, strong_bgl1, paralog_bgl1, weak_core], [scoped])
     assert kept == [strong_bgl1, weak_core]
     hits = [weak_core]
     assert drop_below_gene_min_identity(hits, [unscoped]) is hits, "no floor declared: untouched"

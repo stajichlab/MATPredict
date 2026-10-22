@@ -1,0 +1,108 @@
+record_id: 746836_abts33_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 746836
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Leotiomycetes;o__Helotiales;f__Helotiaceae;g__Hymenoscyphus;s__Hymenoscyphus_fraxineus
+  lineage_resolved_date: '2026-10-22'
+organism:
+  species: Hymenoscyphus fraxineus
+  strain:
+    name: Abts_33
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  assembly_accession: null
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-2-1(+)
+    definition_note: 'Core-only record generated from GenBank JX169803.1 CDS join(JX169803.1:4403..4584,
+      JX169803.1:4635..4981,JX169803.1:5029..5648) (protein AFQ90566.1); the depositor''s
+      annotation, 3 exon(s), 382 aa. The segment is the CDS span; idiomorph boundaries
+      and flanking genes are not recorded. Nucleotide record: Hymenoscyphus pseudoalbidus
+      strain Abts_33 SLA2 (SLA2) gene, partial cds; MAT1-2-1 (MAT1-2-1) gene, complete
+      cds; and APN2 (APN2) gene, partial cds. Cited: Gross A 2012, Fungal Genet Biol.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JX169803.1
+        seq_region: JX169803.1
+      start: 4403
+      end: 5648
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AFQ90566.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4403
+  end: 5648
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 4403
+    end: 4584
+  - start: 4635
+    end: 4981
+  - start: 5029
+    end: 5648
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: MAT1-2-1 sequenced and annotated by the depositors (GenBank
+      JX169803.1 CDS join(JX169803.1:4403..4584, JX169803.1:4635..4981,JX169803.1:5029..5648)
+      (protein AFQ90566.1)).
+    citations: &id001
+    - pmid: '23036580'
+      doi: 10.1016/j.fgb.2012.08.008
+  boundaries:
+    tier: 2
+    experimental_method: CDS exon coordinates are the deposit's own annotation; no
+      idiomorph boundary is recorded.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: idiomorph MAT1-2 from the depositors' gene name MAT1-2-1
+      (HMG box roster gene).
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JX169803.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: deposit-to-record-generator
+  proposal_dedupe_key: 23036580|746836|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Generated 2026-10-22 by scripts/deposit_to_record.py v1 from NCBI E-utilities
+    (GenPept AFQ90566.1, nuccore JX169803.1, taxonomy 746836, PubMed 23036580). Independent
+    checks: the joined exons translate to AFQ90566.1 exactly; ATG start, stop codon
+    included; 2 intron(s) GT..AG, GT..AG. CURATOR-SUPPLIED, not derived: mating_type.system=heterothallic;
+    evidence tier policy cited2-uncited3 (tier 2). Strain from /strain.'
+model_provenance: null

@@ -1,0 +1,114 @@
+record_id: 182846_cbs-101121_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 182846
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Hypocreales;f__Nectriaceae;g__Calonectria;s__Calonectria_naviculata
+  lineage_resolved_date: '2026-10-22'
+organism:
+  species: Calonectria naviculata
+  strain:
+    name: CBS 101121
+    known: true
+    culture_collection_ids:
+    - CBS 101121
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  assembly_accession: null
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-1-1(+)
+    definition_note: 'Core-only record generated from GenBank BK013123.1 CDS join(BK013123.1:5733..5988,
+      BK013123.1:6038..6835,BK013123.1:6889..6953) (protein DBB25572.1); the depositor''s
+      annotation, 3 exon(s), 372 aa. The segment is the CDS span; idiomorph boundaries
+      and flanking genes are not recorded. Nucleotide record: TPA_exp: Calonectria
+      naviculata isolate CBS 101121 DNA lyase (APN2), mating type protein 1-1-3 (MAT1-1-3),
+      mating type protein 1-1-2 (MAT1-1-2), mating type protein 1-1-1 (MAT1-1-1),
+      and cytoskeleton assembly control protein (SLA2) genes, complete cds. Cited:
+      Li JQ 2020, Persoonia.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: BK013123.1
+        seq_region: BK013123.1
+      start: 5733
+      end: 6953
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:DBB25572.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5733
+  end: 6953
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 5733
+    end: 5988
+  - start: 6038
+    end: 6835
+  - start: 6889
+    end: 6953
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: MAT1-1-1 sequenced and annotated by the depositors (GenBank
+      BK013123.1 CDS join(BK013123.1:5733..5988, BK013123.1:6038..6835,BK013123.1:6889..6953)
+      (protein DBB25572.1)).
+    citations: &id001
+    - pmid: '34456375'
+      doi: 10.3767/persoonia.2020.45.06
+  boundaries:
+    tier: 2
+    experimental_method: CDS exon coordinates are the deposit's own annotation; no
+      idiomorph boundary is recorded.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: idiomorph MAT1-1 from the depositors' gene name MAT1-1-1
+      (alpha box roster gene).
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: BK013123.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: deposit-to-record-generator
+  proposal_dedupe_key: 34456375|182846|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Generated 2026-10-22 by scripts/deposit_to_record.py v1 from NCBI E-utilities
+    (GenPept DBB25572.1, nuccore BK013123.1, taxonomy 182846, PubMed 34456375). Independent
+    checks: the joined exons translate to DBB25572.1 exactly; ATG start, stop codon
+    included; 2 intron(s) GT..AG, GT..AG. CURATOR-SUPPLIED, not derived: mating_type.system=heterothallic;
+    evidence tier policy cited2-uncited3 (tier 2). Strain from /isolate. Caveats:
+    annotation_source: third-party annotation (TPA) record; keywords [''Third Party
+    Data'', ''TPA'', ''TPA:experimental''] | strain: no /strain; strain name taken
+    from /isolate ''CBS 101121'''
+model_provenance: null

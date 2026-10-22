@@ -1,0 +1,113 @@
+record_id: 124036_unknown-1_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 124036
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Microascales;f__Ceratocystidaceae;g__Berkeleyomyces;s__Berkeleyomyces_basicola
+  lineage_resolved_date: '2026-10-22'
+organism:
+  species: Berkeleyomyces basicola
+  strain:
+    name: null
+    known: false
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  assembly_accession: null
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-2-1(+)
+    definition_note: 'Core-only record generated from GenBank MH522765.1 CDS join(MH522765.1:25427..25668,
+      MH522765.1:25723..26057,MH522765.1:26110..26274, MH522765.1:26600..26661) (protein
+      AYN77762.1); the depositor''s annotation, 4 exon(s), 267 aa. The segment is
+      the CDS span; idiomorph boundaries and flanking genes are not recorded. The
+      deposit''s gene feature is 25327..26836. Nucleotide record: Berkeleyomyces basicola
+      MAT121 gene cluster, complete sequence. Cited: Nel WJ 2018, Fungal Biol.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: MH522765.1
+        seq_region: MH522765.1
+      start: 25427
+      end: 26661
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AYN77762.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 25427
+  end: 26661
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 25427
+    end: 25668
+  - start: 25723
+    end: 26057
+  - start: 26110
+    end: 26274
+  - start: 26600
+    end: 26661
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: MAT1-2-1 sequenced and annotated by the depositors (GenBank
+      MH522765.1 CDS join(MH522765.1:25427..25668, MH522765.1:25723..26057,MH522765.1:26110..26274,
+      MH522765.1:26600..26661) (protein AYN77762.1)).
+    citations: &id001
+    - pmid: '30342619'
+      doi: 10.1016/j.funbio.2018.08.006
+  boundaries:
+    tier: 2
+    experimental_method: CDS exon coordinates are the deposit's own annotation; no
+      idiomorph boundary is recorded.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: idiomorph MAT1-2 from the depositors' gene name MAT1-2-1
+      (HMG box roster gene).
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: MH522765.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: deposit-to-record-generator
+  proposal_dedupe_key: 30342619|124036|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Generated 2026-10-22 by scripts/deposit_to_record.py v1 from NCBI E-utilities
+    (GenPept AYN77762.1, nuccore MH522765.1, taxonomy 124036, PubMed 30342619). Independent
+    checks: the joined exons translate to AYN77762.1 exactly; ATG start, stop codon
+    included; 3 intron(s) GT..AG, GT..AG, GT..AG. CURATOR-SUPPLIED, not derived: mating_type.system=heterothallic;
+    evidence tier policy cited2-uncited3 (tier 2). Strain unknown in the deposit.
+    Caveats: gene_span: deposit gene feature 25327..26836 is wider than the CDS 25427..26661
+    (5'' 100 bp, 3'' 175 bp; UTRs or a gene-model span); record uses the CDS span
+    | strain: no /strain or /isolate: strain unknown'
+model_provenance: null

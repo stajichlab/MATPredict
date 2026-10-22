@@ -1,0 +1,110 @@
+record_id: 45133_cbs-16496_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 45133
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Dothideomycetes;o__Botryosphaeriales;f__Botryosphaeriaceae;g__Lasiodiplodia;s__Lasiodiplodia_theobromae
+  lineage_resolved_date: '2026-10-22'
+organism:
+  species: Lasiodiplodia theobromae
+  strain:
+    name: CBS 164.96
+    known: true
+    culture_collection_ids:
+    - CBS 164.96
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  assembly_accession: null
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-1-1(+)
+    definition_note: 'Core-only record generated from GenBank KX787889.1 CDS join(KX787889.1:16279..16573,
+      KX787889.1:16623..17800) (protein ATA58161.1); the depositor''s annotation,
+      2 exon(s), 490 aa. The segment is the CDS span; idiomorph boundaries and flanking
+      genes are not recorded. Nucleotide record: Lasiodiplodia theobromae strain CBS
+      164.96 SAICAR synthetase, mitochondrial carrier protein, complex I intermediate-associated
+      protein 30, anaphase-promoting complex subunit 5, DNA lyase, cytochrome c oxidase
+      subunit VIa, MAT1-1-4, MAT1-1-1, and putative integral membrane protein genes,
+      complete cds.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KX787889.1
+        seq_region: KX787889.1
+      start: 16279
+      end: 17800
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:ATA58161.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 16279
+  end: 17800
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 16279
+    end: 16573
+  - start: 16623
+    end: 17800
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: MAT1-1-1 sequenced and annotated by the depositors (GenBank
+      KX787889.1 CDS join(KX787889.1:16279..16573, KX787889.1:16623..17800) (protein
+      ATA58161.1)).
+    citations: &id001 []
+  boundaries:
+    tier: 3
+    experimental_method: CDS exon coordinates are the deposit's own annotation; no
+      idiomorph boundary is recorded.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: idiomorph MAT1-1 from the depositors' gene name MAT1-1-1
+      (alpha box roster gene).
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: KX787889.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: deposit-to-record-generator
+  proposal_dedupe_key: KX787889.1|45133|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Generated 2026-10-22 by scripts/deposit_to_record.py v1 from NCBI E-utilities
+    (GenPept ATA58161.1, nuccore KX787889.1, taxonomy 45133). Independent checks:
+    the joined exons translate to ATA58161.1 exactly; ATG start, stop codon included;
+    1 intron(s) GT..AG. CURATOR-SUPPLIED, not derived: mating_type.system=heterothallic;
+    evidence tier policy cited2-uncited3 (tier 3). Strain from /strain. Caveats: citations:
+    GenPept cites no PubMed article (unpublished or not linked) | gene_span: no gene
+    feature spans the CDS; record uses the CDS span | gene_name: no /gene MAT1-1-1|MAT1-2-1;
+    named from /product ''MAT1-1-1'''
+model_provenance: null

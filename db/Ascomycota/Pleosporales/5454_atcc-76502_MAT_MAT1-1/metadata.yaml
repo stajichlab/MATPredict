@@ -1,0 +1,104 @@
+record_id: 5454_atcc-76502_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 5454
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Dothideomycetes;o__Pleosporales;f__Didymellaceae;g__Ascochyta;s__Ascochyta_rabiei
+  lineage_resolved_date: '2026-10-22'
+organism:
+  species: Ascochyta rabiei
+  strain:
+    name: ATCC 76502
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  assembly_accession: null
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-1-1(+)
+    definition_note: 'Core-only record generated from GenBank DQ341313.1 CDS join(DQ341313.1:1315..1558,
+      DQ341313.1:1611..2467) (protein ABC70320.1); the depositor''s annotation, 2
+      exon(s), 366 aa. The segment is the CDS span; idiomorph boundaries and flanking
+      genes are not recorded. Nucleotide record: Didymella rabiei strain ATCC 76502
+      MAT1-1-1 (MAT1-1-1) gene, complete cds. Cited: Barve MP 2003, Fungal Genet Biol.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: DQ341313.1
+        seq_region: DQ341313.1
+      start: 1315
+      end: 2467
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:ABC70320.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1315
+  end: 2467
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 1315
+    end: 1558
+  - start: 1611
+    end: 2467
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: MAT1-1-1 sequenced and annotated by the depositors (GenBank
+      DQ341313.1 CDS join(DQ341313.1:1315..1558, DQ341313.1:1611..2467) (protein ABC70320.1)).
+    citations: &id001
+    - pmid: '12781674'
+      doi: 10.1016/s1087-1845(03)00015-x
+  boundaries:
+    tier: 2
+    experimental_method: CDS exon coordinates are the deposit's own annotation; no
+      idiomorph boundary is recorded.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: idiomorph MAT1-1 from the depositors' gene name MAT1-1-1
+      (alpha box roster gene).
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: DQ341313.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: deposit-to-record-generator
+  proposal_dedupe_key: 12781674|5454|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Generated 2026-10-22 by scripts/deposit_to_record.py v1 from NCBI E-utilities
+    (GenPept ABC70320.1, nuccore DQ341313.1, taxonomy 5454, PubMed 12781674). Independent
+    checks: the joined exons translate to ABC70320.1 exactly; ATG start, stop codon
+    included; 1 intron(s) GT..AG. CURATOR-SUPPLIED, not derived: mating_type.system=heterothallic;
+    evidence tier policy cited2-uncited3 (tier 2). Strain from /strain.'
+model_provenance: null

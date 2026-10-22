@@ -1,0 +1,108 @@
+record_id: 2795749_unknown-1_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 2795749
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Leotiomycetes;o__Helotiales;f__Drepanopezizaceae;g__Diplocarpon;s__Diplocarpon_coronariae
+  lineage_resolved_date: '2026-10-22'
+organism:
+  species: Diplocarpon coronariae
+  strain:
+    name: null
+    known: false
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  assembly_accession: null
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-1-1(+)
+    definition_note: 'Core-only record generated from GenBank MT819950.1 CDS join(MT819950.1:5087..5972,
+      MT819950.1:6034..6068) (protein QRL06102.1); the depositor''s annotation, 2
+      exon(s), 306 aa. The segment is the CDS span; idiomorph boundaries and flanking
+      genes are not recorded. Nucleotide record: Diplocarpon coronariae hypothetical
+      protein 1, MAT1-1-3, MAT1-1-5, MAT1-1-1, and hypothetical protein 2 genes, complete
+      cds. Cited: Cheng Q 2021, PLoS One.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: MT819950.1
+        seq_region: MT819950.1
+      start: 5087
+      end: 6068
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:QRL06102.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5087
+  end: 6068
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 5087
+    end: 5972
+  - start: 6034
+    end: 6068
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: MAT1-1-1 sequenced and annotated by the depositors (GenBank
+      MT819950.1 CDS join(MT819950.1:5087..5972, MT819950.1:6034..6068) (protein QRL06102.1)).
+    citations: &id001
+    - pmid: '33544779'
+      doi: 10.1371/journal.pone.0246666
+  boundaries:
+    tier: 2
+    experimental_method: CDS exon coordinates are the deposit's own annotation; no
+      idiomorph boundary is recorded.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: idiomorph MAT1-1 from the depositors' gene name MAT1-1-1
+      (alpha box roster gene).
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: MT819950.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: deposit-to-record-generator
+  proposal_dedupe_key: 33544779|2795749|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Generated 2026-10-22 by scripts/deposit_to_record.py v1 from NCBI E-utilities
+    (GenPept QRL06102.1, nuccore MT819950.1, taxonomy 2795749, PubMed 33544779). Independent
+    checks: the joined exons translate to QRL06102.1 exactly; ATG start, stop codon
+    included; 1 intron(s) GT..AG. CURATOR-SUPPLIED, not derived: mating_type.system=heterothallic;
+    evidence tier policy cited2-uncited3 (tier 2). Strain unknown in the deposit.
+    Caveats: gene_span: no gene feature spans the CDS; record uses the CDS span |
+    gene_name: no /gene MAT1-1-1|MAT1-2-1; named from /product ''MAT1-1-1'' | strain:
+    no /strain or /isolate: strain unknown'
+model_provenance: null

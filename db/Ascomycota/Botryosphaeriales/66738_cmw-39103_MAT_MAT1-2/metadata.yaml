@@ -1,0 +1,109 @@
+record_id: 66738_cmw-39103_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 66738
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Dothideomycetes;o__Botryosphaeriales;f__Botryosphaeriaceae;g__Diplodia;s__Diplodia_sapinea
+  lineage_resolved_date: '2026-10-22'
+organism:
+  species: Diplodia sapinea
+  strain:
+    name: CMW 39103
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  assembly_accession: null
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-2-1(-)
+    definition_note: 'Core-only record generated from GenBank KF551228.1 CDS complement(join(KF551228.1:16298..17279,
+      KF551228.1:17329..17516)) (protein AHA91681.1); the depositor''s annotation,
+      2 exon(s), 389 aa. The segment is the CDS span; idiomorph boundaries and flanking
+      genes are not recorded. Nucleotide record: Sphaeropsis sapinea strain CMW 39103
+      DNA lyase, cytochrome c oxidase subunit VIa (Cox-Via), anaphase-promoting complex
+      subunit 5 (APC5), complex I intermediate-associated protein 30 (CIA30), mitochondrial
+      carrier protein, SAICAR synthetase, MAT1-2-1 (MAT1-2-1), MAT1-2-5 (MAT1-2-5),
+      putative integral membrane protein, and hypothetical protein genes, complete
+      cds. Cited: Bihon W 2014, Fungal Genet Biol.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: KF551228.1
+        seq_region: KF551228.1
+      start: 16298
+      end: 17516
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:AHA91681.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 16298
+  end: 17516
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 17329
+    end: 17516
+  - start: 16298
+    end: 17279
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: MAT1-2-1 sequenced and annotated by the depositors (GenBank
+      KF551228.1 CDS complement(join(KF551228.1:16298..17279, KF551228.1:17329..17516))
+      (protein AHA91681.1)).
+    citations: &id001
+    - pmid: '24220137'
+      doi: 10.1016/j.fgb.2013.10.013
+  boundaries:
+    tier: 2
+    experimental_method: CDS exon coordinates are the deposit's own annotation; no
+      idiomorph boundary is recorded.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: idiomorph MAT1-2 from the depositors' gene name MAT1-2-1
+      (HMG box roster gene).
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: KF551228.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: deposit-to-record-generator
+  proposal_dedupe_key: 24220137|66738|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Generated 2026-10-22 by scripts/deposit_to_record.py v1 from NCBI E-utilities
+    (GenPept AHA91681.1, nuccore KF551228.1, taxonomy 66738, PubMed 24220137). Independent
+    checks: the joined exons translate to AHA91681.1 exactly; ATG start, stop codon
+    included; 1 intron(s) GT..AG. CURATOR-SUPPLIED, not derived: mating_type.system=heterothallic;
+    evidence tier policy cited2-uncited3 (tier 2). Strain from /strain.'
+model_provenance: null

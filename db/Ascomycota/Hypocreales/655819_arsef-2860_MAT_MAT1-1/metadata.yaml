@@ -1,0 +1,113 @@
+record_id: 655819_arsef-2860_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 655819
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Hypocreales;f__Cordycipitaceae;g__Beauveria;s__Beauveria_bassiana
+  lineage_resolved_date: '2026-10-22'
+organism:
+  species: Beauveria bassiana ARSEF 2860
+  strain:
+    name: ARSEF 2860
+    known: true
+    culture_collection_ids:
+    - ARSEF 2860
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: heterothallic
+locus:
+  assembly_accession: null
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-1-1(-)
+    definition_note: 'Core-only record generated from GenBank JH725176.1 CDS complement(join(JH725176.1:207253..207314,
+      JH725176.1:207375..208397,JH725176.1:208455..208740)) (protein EJP63339.1);
+      the depositor''s annotation, 3 exon(s), 456 aa. The segment is the CDS span;
+      idiomorph boundaries and flanking genes are not recorded. Nucleotide record:
+      Beauveria bassiana ARSEF 2860 unplaced genomic scaffold BBA_S00027, whole genome
+      shotgun sequence. Cited: Xiao G 2012, Sci Rep.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JH725176.1
+        seq_region: JH725176.1
+      start: 207253
+      end: 208740
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:EJP63339.1
+  role: core_MAT
+  present: true
+  locus_tag: BBA_07733
+  segment_index: 0
+  start: 207253
+  end: 208740
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 208455
+    end: 208740
+  - start: 207375
+    end: 208397
+  - start: 207253
+    end: 207314
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: MAT1-1-1 sequenced and annotated by the depositors (GenBank
+      JH725176.1 CDS complement(join(JH725176.1:207253..207314, JH725176.1:207375..208397,JH725176.1:208455..208740))
+      (protein EJP63339.1)).
+    citations: &id001
+    - pmid: '22761991'
+      doi: 10.1038/srep00483
+  boundaries:
+    tier: 2
+    experimental_method: CDS exon coordinates are the deposit's own annotation; no
+      idiomorph boundary is recorded.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: idiomorph MAT1-1 from the depositors' gene name MAT1-1-1
+      (alpha box roster gene).
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JH725176.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: deposit-to-record-generator
+  proposal_dedupe_key: 22761991|655819|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Generated 2026-10-22 by scripts/deposit_to_record.py v1 from NCBI E-utilities
+    (GenPept EJP63339.1, nuccore JH725176.1, taxonomy 655819, PubMed 22761991). Independent
+    checks: the joined exons translate to EJP63339.1 exactly; ATG start, stop codon
+    included; 2 intron(s) GT..AG, GT..AG. CURATOR-SUPPLIED, not derived: mating_type.system=heterothallic;
+    evidence tier policy cited2-uncited3 (tier 2). Strain from /strain. Caveats: gene_name:
+    no /gene MAT1-1-1|MAT1-2-1; named from /product ''Mating-type protein MAT1-1-1''
+    | annotation_source: genome-project record (WGS keyword, genome structured comment
+    or >= 200000 bp; 394139 bp): the CDS may be a pipeline gene prediction | taxid:
+    taxid 655819 has rank ''strain'' (s__ is the species-rank ancestor)'
+model_provenance: null

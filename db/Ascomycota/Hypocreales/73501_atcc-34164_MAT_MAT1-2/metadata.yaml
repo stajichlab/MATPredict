@@ -1,0 +1,111 @@
+record_id: 73501_atcc-34164_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 73501
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Sordariomycetes;o__Hypocreales;f__Cordycipitaceae;g__Cordyceps;s__Cordyceps_militaris
+  lineage_resolved_date: '2026-10-22'
+organism:
+  species: Cordyceps militaris
+  strain:
+    name: ATCC 34164
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: heterothallic
+locus:
+  assembly_accession: null
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: MAT1-2-1(+)
+    definition_note: 'Core-only record generated from GenBank CP023324.1 CDS join(CP023324.1:6366569..6366726,
+      CP023324.1:6366777..6367075,CP023324.1:6367126..6367388) (protein ATY63027.1);
+      the depositor''s annotation, 3 exon(s), 239 aa. The segment is the CDS span;
+      idiomorph boundaries and flanking genes are not recorded. Nucleotide record:
+      Cordyceps militaris strain ATCC 34164 chromosome VII, complete sequence. Cited:
+      Kramer GJ 2017, BMC Genomics.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: CP023324.1
+        seq_region: CP023324.1
+      start: 6366569
+      end: 6367388
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:ATY63027.1
+  role: core_MAT
+  present: true
+  locus_tag: A9K55_008817
+  segment_index: 0
+  start: 6366569
+  end: 6367388
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 6366569
+    end: 6366726
+  - start: 6366777
+    end: 6367075
+  - start: 6367126
+    end: 6367388
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: MAT1-2-1 sequenced and annotated by the depositors (GenBank
+      CP023324.1 CDS join(CP023324.1:6366569..6366726, CP023324.1:6366777..6367075,CP023324.1:6367126..6367388)
+      (protein ATY63027.1)).
+    citations: &id001
+    - pmid: '29178836'
+      doi: 10.1186/s12864-017-4307-0
+  boundaries:
+    tier: 2
+    experimental_method: CDS exon coordinates are the deposit's own annotation; no
+      idiomorph boundary is recorded.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: idiomorph MAT1-2 from the depositors' gene name MAT1-2-1
+      (HMG box roster gene).
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: CP023324.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: deposit-to-record-generator
+  proposal_dedupe_key: 29178836|73501|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Generated 2026-10-22 by scripts/deposit_to_record.py v1 from NCBI E-utilities
+    (GenPept ATY63027.1, nuccore CP023324.1, taxonomy 73501, PubMed 29178836). Independent
+    checks: the joined exons translate to ATY63027.1 exactly; ATG start, stop codon
+    included; 2 intron(s) GT..AG, GT..AG. CURATOR-SUPPLIED, not derived: mating_type.system=heterothallic;
+    evidence tier policy cited2-uncited3 (tier 2). Strain from /strain. Caveats: gene_name:
+    no /gene MAT1-1-1|MAT1-2-1; named from /product ''mating-type MAT1-2-1'' | annotation_source:
+    genome-project record (WGS keyword, genome structured comment or >= 200000 bp;
+    8286469 bp): the CDS may be a pipeline gene prediction'
+model_provenance: null

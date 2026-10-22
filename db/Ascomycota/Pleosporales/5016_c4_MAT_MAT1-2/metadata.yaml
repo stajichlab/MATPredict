@@ -21,20 +21,22 @@ locus:
   excluded_from_coordinate_benchmark: false
   core:
     completeness: complete
-    reference_orientation: GAP1->ORF1->MAT1-2-1->BGL1
+    reference_orientation: GAP1(-)->ORF1->MAT1-2-1(+)->BGL1(+)
     definition_note: 'Cochliobolus heterostrophus (= Bipolaris maydis, NCBI taxid
       5016) strain C4 MAT-2 locus, deposit AF027687.1 (12,449 bp). The paper calls
-      the gene MAT-2; it is the HMG-box MAT1-2-1. Curated: MAT1-2-1 (AAB84004.1).
-      Not curated: GAP1 (AAB84002.1), unknown ORF (AAB84003.1), BGL1 (AAB84005.1).
-      Idiomorph 1,171 bp per the paper.'
+      the gene MAT-2; it is the HMG-box MAT1-2-1. Curated: MAT1-2-1 (AAB84004.1);
+      GAP1 (AAB84002.1) and BGL1 (AAB84005.1) added 2026-10-22 as Pleosporaceae-scoped
+      roster flanks (prototype; db/Ascomycota/order.yml), CDS joins translated from
+      the deposit equal the protein records. Not curated: unknown ORF1 (AAB84003.1).
+      The segment spans GAP1 to BGL1. Idiomorph 1,171 bp per the paper.'
     segments:
     - segment_index: 0
       sequence_source:
         type: insdc_nucleotide
         accession: AF027687.1
         seq_region: AF027687.1
-      start: 5137
-      end: 6223
+      start: 633
+      end: 11742
       contig_edge_distance: null
   extended_flank: []
 genes:
@@ -48,12 +50,54 @@ genes:
   start: 5137
   end: 6223
   strand: +
-  order_in_locus: 0
+  order_in_locus: 1
   exons:
   - start: 5137
     end: 5620
   - start: 5676
     end: 6223
+- gene_index: 1
+  name: GAP1
+  protein_accession: ncbi_protein:AAB84002.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 633
+  end: 3006
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 2629
+    end: 3006
+  - start: 1965
+    end: 2574
+  - start: 1153
+    end: 1917
+  - start: 794
+    end: 1073
+  - start: 633
+    end: 744
+- gene_index: 2
+  name: BGL1
+  protein_accession: ncbi_protein:AAB84005.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8898
+  end: 11742
+  strand: '+'
+  order_in_locus: 2
+  exons:
+  - start: 8898
+    end: 9003
+  - start: 9072
+    end: 9449
+  - start: 9505
+    end: 9720
+  - start: 9830
+    end: 11742
 evidence:
   locus_existence:
     tier: 1
@@ -92,6 +136,14 @@ validation:
     status: pass
     per_gene:
     - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
       percent_identity: 100.0
       coverage: 100.0
       status: pass

@@ -128,6 +128,24 @@ loci:
       - {name: APN2, role: flanking_conserved, gene_class: apn2_homolog}
       - {name: SLA2, role: flanking_conserved, gene_class: sla2_homolog}
       - {name: COX13, role: flanking_conserved}
+      # GAP1 and BGL1: PROTOTYPE, Pleosporaceae only (2026-10-22; results/
+      # 2026-10-22_cochliobolus_scoped_roster/NOTE.md). In Bipolaris, Curvularia and
+      # Exserohilum the MAT gene is flanked by GAP1 (GTPase activating protein homolog)
+      # and BGL1 (beta-glucosidase homolog), median 2.6 and 3.6 kb away, while SLA2/APN2
+      # lie 180-290 kb away; the cluster held one gene and the evidence floor dropped it
+      # (analysis/2026-10-18_cochliobolus-mat-recall.md). References: the C. heterostrophus
+      # C4 (AF027687.1: AAB84002.1, AAB84005.1) and C5 (AF029913.1: AAB82943.1,
+      # AAB82946.1) deposits, Turgeon et al. 1993 (PMID 8479433).
+      # * taxonomic_scope [28556] (Pleosporaceae, NCBI): searched only there, and only
+      #   with `detect --scoped-roster-policy on` (family_registry.scope_roster_genes).
+      #   Added to the whole roster they lowered 24 of 94 Dothideomycetes controls from
+      #   high to medium.
+      # * optional + a slot of their own: a found gene adds 1 to numerator and
+      #   denominator of fraction_found, an absent one costs nothing (scoring.score_cluster),
+      #   so a Pleosporaceae call that lacks them keeps its score. Reuses the slot
+      #   mechanism approved for SXI1/SXI2 (one member per slot here); not yet ruled on.
+      - {name: GAP1, role: flanking_conserved, optional: true, slot: GAP1, taxonomic_scope: [28556]}
+      - {name: BGL1, role: flanking_conserved, optional: true, slot: BGL1, taxonomic_scope: [28556]}
       # MAT1-2-4 (A. fumigatus Af293, XP_754990.2) is a genuinely distinct gene from
       # Leotiomycetes' MAT1-2-4, which was renamed MAT1-2-10 above precisely to avoid
       # this collision (Wilken et al. 2017). This entry is Eurotiomycetes-only; do not

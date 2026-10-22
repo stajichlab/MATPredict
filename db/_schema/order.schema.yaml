@@ -214,3 +214,12 @@ properties:
               # numerator and denominator of fraction_found; absent -> no effect.
               # Curator-approved 2026-09-26 for Cryptococcus SXI1/SXI2.
               slot: {type: string}
+              # taxonomic_scope on a GENE (prototype 2026-10-22): the gene is on this
+              # roster only for a genome whose lineage reaches one of these NCBI taxids,
+              # and only with `detect --scoped-roster-policy on`; otherwise it is removed
+              # from the routed family and from the query set
+              # (detect.family_registry.scope_roster_genes).
+              taxonomic_scope:
+                type: array
+                minItems: 1
+                items: {type: integer}

@@ -21,22 +21,24 @@ locus:
   excluded_from_coordinate_benchmark: false
   core:
     completeness: complete
-    reference_orientation: GAP1->ORF1->MAT1-1-1->BGL1
+    reference_orientation: GAP1(-)->ORF1->MAT1-1-1(+)->BGL1(+)
     definition_note: 'Cochliobolus heterostrophus (= Bipolaris maydis, NCBI taxid
       5016) strain C5 MAT-1 locus, deposit AF029913.1 (12,572 bp). The paper calls
       the gene MAT-1; it is the alpha-box MAT1-1-1 ("similarity to the Neurospora
       crassa MATA ... and Saccharomyces cerevisiae MAT alpha 1 proteins"). Curated:
-      MAT1-1-1 (AAB82945.1). Not curated, as they are not roster genes: GAP1 (AAB82943.1),
-      an unknown ORF (AAB82944.1) and BGL1 (AAB82946.1), the Pleosporales flanks.
-      The deposit has no APN2 or SLA2. Idiomorph 1,297 bp per the paper.'
+      MAT1-1-1 (AAB82945.1); GAP1 (AAB82943.1) and BGL1 (AAB82946.1) added 2026-10-22
+      as Pleosporaceae-scoped roster flanks (prototype; db/Ascomycota/order.yml), CDS
+      joins translated from the deposit equal the protein records. Not curated: the
+      unknown ORF1 (AAB82944.1). The segment spans GAP1 to BGL1. The deposit has no
+      APN2 or SLA2. Idiomorph 1,297 bp per the paper.'
     segments:
     - segment_index: 0
       sequence_source:
         type: insdc_nucleotide
         accession: AF029913.1
         seq_region: AF029913.1
-      start: 5147
-      end: 6350
+      start: 633
+      end: 11866
       contig_edge_distance: null
   extended_flank: []
 genes:
@@ -50,12 +52,54 @@ genes:
   start: 5147
   end: 6350
   strand: +
-  order_in_locus: 0
+  order_in_locus: 1
   exons:
   - start: 5147
     end: 5363
   - start: 5416
     end: 6350
+- gene_index: 1
+  name: GAP1
+  protein_accession: ncbi_protein:AAB82943.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 633
+  end: 3006
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 2629
+    end: 3006
+  - start: 1965
+    end: 2574
+  - start: 1153
+    end: 1917
+  - start: 794
+    end: 1073
+  - start: 633
+    end: 744
+- gene_index: 2
+  name: BGL1
+  protein_accession: ncbi_protein:AAB82946.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 9022
+  end: 11866
+  strand: '+'
+  order_in_locus: 2
+  exons:
+  - start: 9022
+    end: 9127
+  - start: 9196
+    end: 9573
+  - start: 9629
+    end: 9844
+  - start: 9954
+    end: 11866
 evidence:
   locus_existence:
     tier: 1
@@ -94,6 +138,14 @@ validation:
     status: pass
     per_gene:
     - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
       percent_identity: 100.0
       coverage: 100.0
       status: pass

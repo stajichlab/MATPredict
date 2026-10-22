@@ -86,6 +86,17 @@ genes:
   end: 5489
   strand: '-'
   order_in_locus: 2
+  exons:
+  - start: 4698
+    end: 5489
+  - start: 4607
+    end: 4642
+  - start: 4485
+    end: 4550
+  - start: 4385
+    end: 4432
+  - start: 4281
+    end: 4328
 - gene_index: 3
   name: MAT1-1-3
   protein_accession: ncbi_protein:AGH03256.1
@@ -97,6 +108,15 @@ genes:
   end: 6797
   strand: +
   order_in_locus: 3
+  exons:
+  - start: 6074
+    end: 6198
+  - start: 6259
+    end: 6383
+  - start: 6434
+    end: 6580
+  - start: 6652
+    end: 6797
 evidence:
   locus_existence:
     tier: 1
@@ -151,4 +171,5 @@ curation:
   proposal_dedupe_key: 23450093|230073|MAT|MAT1-1
   reviewed_by: null
   reviewed_date: null
+  notes: 'MAT1-1-2 (AGH03255.1) is 3''-partial in the deposit: JX402993.1 CDS complement(join(<4281..4328,4385..4432,4485..4550,4607..4642,4698..5489)), protein 1..>330, depositor note ''stop codon not determined''; its recorded end 4281 is the last annotated base, not a stop codon. Exon structures for MAT1-1-2 and MAT1-1-3 added 2026-10-22 from the deposit''s CDS features; coordinates and translation re-derived from the NCBI nucleotide and protein records (E-utilities efetch) on 2026-10-22.'
 model_provenance: null

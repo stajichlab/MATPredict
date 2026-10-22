@@ -10,7 +10,8 @@ FEATURES             Location/Qualifiers
      gene            complement(10466..12990)
                      /gene="SXI2"
                      /role="core_MAT"
-     CDS             complement(10466..12990)
+     CDS             complement(join(10466..11992,12287..12298,12365..12466,
+                     12532..12990))
                      /gene="SXI2"
                      /role="core_MAT"
                      /translation="MGSNLDIDAMIATADRILSELSPKLSGCVMPLSLTGRRPSLDTQP
@@ -34,6 +35,7 @@ FEATURES             Location/Qualifiers
                      /gene="MFa2"
                      /role="core_MAT"
                      /translation="MDAFTAIFSTLSSSVASSTTDAPRNEEAYGSGQGPTYSCVIA"
+                     /gene_class="pheromone_precursor"
      gene            complement(98365..98493)
                      /gene="MFa3"
                      /role="core_MAT"
@@ -41,6 +43,7 @@ FEATURES             Location/Qualifiers
                      /gene="MFa3"
                      /role="core_MAT"
                      /translation="MDAFTAIFSTLSSSVASSTTDAPRNEEAYGSGQGPTYSCVIA"
+                     /gene_class="pheromone_precursor"
      gene            106876..107004
                      /gene="MFa1"
                      /role="core_MAT"
@@ -48,10 +51,11 @@ FEATURES             Location/Qualifiers
                      /gene="MFa1"
                      /role="core_MAT"
                      /translation="MDAFTAIFSTLSSSVASSTTDAPRNEEAYGSGQGPTYSCVIA"
+                     /gene_class="pheromone_precursor"
      gene            93853..95179
                      /gene="STE3"
                      /role="core_MAT"
-     CDS             93853..95179
+     CDS             join(93853..94054,94107..94424,94484..94907,94966..95179)
                      /gene="STE3"
                      /role="core_MAT"
                      /translation="MLHPDYPFWNLTALVLVLLPAPWHWRARNIATVSLVVWLTFANLC
@@ -94,7 +98,9 @@ FEATURES             Location/Qualifiers
      gene            complement(22185..26193)
                      /gene="RPO41"
                      /role="core_MAT"
-     CDS             complement(22185..26193)
+     CDS             complement(join(22185..22763,22821..23219,23276..23740,
+                     23794..24428,24487..24689,24745..25604,25657..25900,
+                     25970..26193))
                      /gene="RPO41"
                      /role="core_MAT"
                      /translation="MRIPEAKVWAMVIEGVASLGNVHSHGSSAPKWRGRAARLVEQWGE
@@ -121,7 +127,8 @@ FEATURES             Location/Qualifiers
      gene            complement(31113..31587)
                      /gene="RPL39"
                      /role="core_MAT"
-     CDS             complement(31113..31587)
+     CDS             complement(join(31113..31160,31211..31221,31274..31367,
+                     31585..31587))
                      /gene="RPL39"
                      /role="core_MAT"
                      /translation="MPSQKTFIVKQKLAKKARQNRPLPQWFRLKTDNKIQYNAKRRHWR
@@ -129,7 +136,9 @@ FEATURES             Location/Qualifiers
      gene            112926..115296
                      /gene="STE20"
                      /role="core_MAT"
-     CDS             112926..115296
+     CDS             join(112926..113246,113337..113588,113641..113976,
+                     114050..114276,114326..114608,114663..114762,
+                     114831..115165,115219..115296)
                      /gene="STE20"
                      /role="core_MAT"
                      /translation="MAFNGSSLTPSRPAPAPPGRGAKQMLNSTSPHTASALESNFSSTS

@@ -11,7 +11,7 @@ FEATURES             Location/Qualifiers
      gene            complement(1..1972)
                      /gene="HD1"
                      /role="core_MAT"
-     CDS             complement(1..1972)
+     CDS             complement(join(1..907,961..1561,1619..1952))
                      /gene="HD1"
                      /role="core_MAT"
                      /translation="MVSAGNTPSSDEDIRQQLSKFETDFFESVNNESDNGLESFATAWA
@@ -29,7 +29,8 @@ FEATURES             Location/Qualifiers
      gene            2324..5867
                      /gene="HD2"
                      /role="core_MAT"
-     CDS             2324..5867
+     CDS             join(2432..2767,2818..2931,2994..3996,4045..4693,
+                     4747..5177,5232..5345,5402..5718)
                      /gene="HD2"
                      /role="core_MAT"
                      /translation="MTFDLPEELQPFLDDITLSLSVVANSPSRVQKAAVNLQGVYRQHY

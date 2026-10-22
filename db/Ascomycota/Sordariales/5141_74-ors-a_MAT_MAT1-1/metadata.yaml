@@ -103,6 +103,15 @@ genes:
   end: 1402
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 1248
+    end: 1402
+  - start: 1062
+    end: 1192
+  - start: 763
+    end: 1008
+  - start: 265
+    end: 707
 - gene_index: 1
   name: matA-2
   protein_accession: ncbi_protein:AAC37477.1
@@ -114,6 +123,17 @@ genes:
   end: 3497
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 2151
+    end: 2255
+  - start: 2313
+    end: 3032
+  - start: 3089
+    end: 3133
+  - start: 3188
+    end: 3289
+  - start: 3348
+    end: 3497
 - gene_index: 2
   name: matA-1
   protein_accession: ncbi_protein:AAC37478.1
@@ -125,6 +145,13 @@ genes:
   end: 4924
   strand: +
   order_in_locus: 2
+  exons:
+  - start: 3924
+    end: 4086
+  - start: 4146
+    end: 4844
+  - start: 4905
+    end: 4924
 evidence:
   locus_existence:
     tier: 1

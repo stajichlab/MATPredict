@@ -36,7 +36,7 @@ FEATURES             Location/Qualifiers
      gene            complement(3385..4233)
                      /gene="mata1"
                      /role="core_MAT"
-     CDS             complement(3385..4233)
+     CDS             complement(join(3385..3621,3940..4233))
                      /gene="mata1"
                      /role="core_MAT"
                      /translation="MPSRTPTDIWRCQRLILAARKGETTCQALHEQSIEISSSLKWFEE
@@ -55,6 +55,7 @@ FEATURES             Location/Qualifiers
                      KSKKKGAKGKNKVTALQVLVGPTVGVGGRMTVSPMTAFFSNNSHVTCYDPNFVLDTPTR
                      EFLMMPLDDITLPSQGPRSDSQEQHVPRQPPDGQDYFDILDIDDFVSPYDDLTTRSFTN
                      RQLFKHATLG"
+                     /gene_class="HMG_box"
      gene            complement(5513..6751)
                      /gene="apn2"
                      /role="flanking_conserved"

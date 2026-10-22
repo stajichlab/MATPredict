@@ -60,6 +60,13 @@ genes:
   end: 1627651
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 1627298
+    end: 1627631
+  - start: 1626640
+    end: 1627240
+  - start: 1625680
+    end: 1626586
 - gene_index: 1
   name: HD2
   protein_accession: ncbi_protein:KAG2022960.1
@@ -71,6 +78,21 @@ genes:
   end: 1631546
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 1628111
+    end: 1628446
+  - start: 1628497
+    end: 1628610
+  - start: 1628673
+    end: 1629675
+  - start: 1629724
+    end: 1630372
+  - start: 1630426
+    end: 1630856
+  - start: 1630911
+    end: 1631024
+  - start: 1631081
+    end: 1631397
 evidence:
   locus_existence:
     tier: 1
@@ -123,4 +145,5 @@ curation:
   proposal_dedupe_key: 8878675|5346|HD|A43
   reviewed_by: null
   reviewed_date: null
+  notes: 'HD1 and HD2: start/end are the deposit gene span on JAAGWA010000001.1 (the gene and mRNA features, so they include UTRs); the exons added 2026-10-22 are the coding sequence only (the CDS of KAG2022959.1 and KAG2022960.1, ATG to stop codon), so they lie inside start/end. Coordinates and translation re-derived from the NCBI nucleotide and protein records (E-utilities efetch) on 2026-10-22.'
 model_provenance: null

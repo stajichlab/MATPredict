@@ -67,6 +67,13 @@ genes:
   end: 12052
   strand: +
   order_in_locus: 2
+  exons:
+  - start: 10692
+    end: 11019
+  - start: 11074
+    end: 11531
+  - start: 11621
+    end: 12052
 - gene_index: 1
   name: MFalpha3
   protein_accession: ncbi_protein:AAL58091.1
@@ -78,6 +85,9 @@ genes:
   end: 113877
   strand: '-'
   order_in_locus: 8
+  exons:
+  - start: 113761
+    end: 113877
 - gene_index: 2
   name: MFalpha2
   protein_accession: ncbi_protein:AAL58092.1
@@ -89,6 +99,9 @@ genes:
   end: 114606
   strand: +
   order_in_locus: 9
+  exons:
+  - start: 114490
+    end: 114606
 - gene_index: 3
   name: MFalpha1
   protein_accession: ncbi_protein:AAG25675.1
@@ -100,6 +113,9 @@ genes:
   end: 95918
   strand: '-'
   order_in_locus: 6
+  exons:
+  - start: 95802
+    end: 95918
 - gene_index: 4
   name: STE3
   protein_accession: ncbi_protein:AAN75724.1
@@ -111,6 +127,15 @@ genes:
   end: 71841
   strand: '-'
   order_in_locus: 4
+  exons:
+  - start: 71637
+    end: 71841
+  - start: 71257
+    end: 71574
+  - start: 70772
+    end: 71195
+  - start: 70521
+    end: 70716
 - gene_index: 5
   name: UAP1
   protein_accession: ncbi_protein:AAN75728.2
@@ -144,6 +169,25 @@ genes:
   end: 64572
   strand: +
   order_in_locus: 3
+  exons:
+  - start: 60566
+    end: 60789
+  - start: 60859
+    end: 61102
+  - start: 61155
+    end: 62014
+  - start: 62070
+    end: 62272
+  - start: 62331
+    end: 62965
+  - start: 63019
+    end: 63483
+  - start: 63540
+    end: 63938
+  - start: 63994
+    end: 64238
+  - start: 64305
+    end: 64572
 - gene_index: 8
   name: STE20
   protein_accession: ncbi_protein:AAG48305.1
@@ -155,6 +199,25 @@ genes:
   end: 77952
   strand: +
   order_in_locus: 5
+  exons:
+  - start: 75536
+    end: 75853
+  - start: 75938
+    end: 76189
+  - start: 76247
+    end: 76579
+  - start: 76627
+    end: 76865
+  - start: 76917
+    end: 77199
+  - start: 77262
+    end: 77361
+  - start: 77420
+    end: 77754
+  - start: 77815
+    end: 77883
+  - start: 77947
+    end: 77952
 - gene_index: 9
   name: RPL39
   protein_accession: ncbi_protein:AAN75719.2
@@ -166,6 +229,15 @@ genes:
   end: 108904
   strand: '-'
   order_in_locus: 7
+  exons:
+  - start: 108902
+    end: 108904
+  - start: 108568
+    end: 108661
+  - start: 108503
+    end: 108513
+  - start: 108406
+    end: 108453
 - gene_index: 10
   name: NOG2
   protein_accession: ncbi_protein:AAV98483.1

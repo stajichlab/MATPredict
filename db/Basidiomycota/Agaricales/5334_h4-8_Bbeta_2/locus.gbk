@@ -19,7 +19,8 @@ FEATURES             Location/Qualifiers
      gene            complement(1511..3818)
                      /gene="bbr2"
                      /role="core_MAT"
-     CDS             complement(1511..3818)
+     CDS             complement(join(1598..2498,2553..3006,3056..3193,
+                     3243..3309,3361..3473,3526..3742))
                      /gene="bbr2"
                      /role="core_MAT"
                      /translation="MYSNDPTYPLFPTFAFLGFVLSLVPLPWHIQAWNSGTCAYMLWTA
@@ -37,7 +38,7 @@ FEATURES             Location/Qualifiers
      gene            complement(4363..5253)
                      /gene="bbp2-1"
                      /role="core_MAT"
-     CDS             complement(4363..5253)
+     CDS             complement(join(4791..4965,5021..5103))
                      /gene="bbp2-1"
                      /role="core_MAT"
                      /translation="MDSFDDLLDFLGAGTSRPAEASARNPLGSSSASSSSASLAASTSD

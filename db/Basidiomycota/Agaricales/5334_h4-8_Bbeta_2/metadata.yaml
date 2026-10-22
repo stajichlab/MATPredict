@@ -64,6 +64,9 @@ genes:
   end: 216733
   strand: +
   order_in_locus: 0
+  exons:
+  - start: 216536
+    end: 216733
 - gene_index: 1
   name: bbr2
   protein_accession: ncbi_protein:XP_003028243.1
@@ -75,6 +78,19 @@ genes:
   end: 220353
   strand: '-'
   order_in_locus: 1
+  exons:
+  - start: 220061
+    end: 220277
+  - start: 219896
+    end: 220008
+  - start: 219778
+    end: 219844
+  - start: 219591
+    end: 219728
+  - start: 219088
+    end: 219541
+  - start: 218133
+    end: 219033
 - gene_index: 2
   name: bbp2-1
   protein_accession: ncbi_protein:XP_003028244.1
@@ -86,6 +102,11 @@ genes:
   end: 221788
   strand: '-'
   order_in_locus: 2
+  exons:
+  - start: 221556
+    end: 221638
+  - start: 221326
+    end: 221500
 - gene_index: 3
   name: bbp2_a
   protein_accession: ncbi_protein:XP_003028246.1
@@ -97,6 +118,9 @@ genes:
   end: 224604
   strand: '-'
   order_in_locus: 3
+  exons:
+  - start: 224353
+    end: 224604
 - gene_index: 4
   name: bbp2_b
   protein_accession: ncbi_protein:XP_003027962.1
@@ -108,6 +132,9 @@ genes:
   end: 227732
   strand: +
   order_in_locus: 4
+  exons:
+  - start: 227442
+    end: 227732
 - gene_index: 5
   name: bbp2-5
   protein_accession: ncbi_protein:XP_003027964.2
@@ -119,6 +146,9 @@ genes:
   end: 230399
   strand: +
   order_in_locus: 5
+  exons:
+  - start: 230121
+    end: 230399
 - gene_index: 6
   name: bbp2-8
   protein_accession: ncbi_protein:XP_003028248.1
@@ -130,6 +160,9 @@ genes:
   end: 232374
   strand: '-'
   order_in_locus: 6
+  exons:
+  - start: 232093
+    end: 232374
 - gene_index: 7
   name: bbp2-6
   protein_accession: ncbi_protein:XP_003027965.1
@@ -141,6 +174,9 @@ genes:
   end: 233781
   strand: +
   order_in_locus: 7
+  exons:
+  - start: 233524
+    end: 233781
 evidence:
   locus_existence:
     tier: 1
@@ -219,4 +255,5 @@ curation:
   proposal_dedupe_key: 10.1093/genetics/146.2.541|5334|Bbeta|2
   reviewed_by: null
   reviewed_date: null
+  notes: 'bbr2 and bbp2-1: start/end are the deposit gene span on NW_026089548.1 (the gene and mRNA features, so they include UTRs); the exons added 2026-10-22 are the coding sequence only (the CDS of XP_003028243.1 and XP_003028244.1, ATG to stop codon), so they lie inside start/end. Coordinates and translation re-derived from the NCBI nucleotide and protein records (E-utilities efetch) on 2026-10-22.'
 model_provenance: null

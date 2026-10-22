@@ -127,6 +127,28 @@ def test_record_valid_with_exon_fields():
     assert schema.validate_metadata(record) == []
 
 
+@pytest.mark.parametrize("exons", [
+    [{"start": 100, "end": 150}, {"start": 200, "end": 260}],  # exons reach both bounds
+    [{"start": 120, "end": 150}, {"start": 200, "end": 240}],  # coding exons inside a UTR-inclusive span
+])
+def test_exon_bounds_accepts_exons_within_start_end(exons):
+    assert schema.validate_exon_bounds(_with_gene(start=100, end=260, strand="+", exons=exons)) == []
+
+
+@pytest.mark.parametrize("exons", [
+    [{"start": 99, "end": 150}, {"start": 200, "end": 260}],  # before start
+    [{"start": 100, "end": 150}, {"start": 200, "end": 261}],  # past end
+])
+def test_exon_bounds_rejects_an_exon_outside_start_end(exons):
+    errors = schema.validate_exon_bounds(_with_gene(start=100, end=260, strand="+", exons=exons))
+    assert len(errors) == 1 and "outside the gene's start/end 100-260" in errors[0]
+
+
+def test_exon_bounds_rejects_an_exon_with_start_after_end():
+    errors = schema.validate_exon_bounds(_with_gene(start=100, end=260, exons=[{"start": 150, "end": 120}]))
+    assert len(errors) == 1 and "start 150 > end 120" in errors[0]
+
+
 @pytest.mark.parametrize("bad_codon_start", [0, 4])
 def test_record_rejects_invalid_codon_start(bad_codon_start):
     record = copy.deepcopy(VALID_RECORD)
@@ -331,7 +353,8 @@ def test_every_accepted_record_validates_against_the_schema_and_gene_status_rule
     failures = []
     for meta_path, _order in _accepted_records():
         record = yaml.safe_load(meta_path.read_text())
-        for error in schema.validate_metadata(record) + schema.validate_gene_status(record):
+        errors = schema.validate_metadata(record) + schema.validate_gene_status(record)
+        for error in errors + schema.validate_exon_bounds(record):
             failures.append(f"{meta_path}: {error}")
     assert failures == []
 

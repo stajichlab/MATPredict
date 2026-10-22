@@ -67,6 +67,9 @@ genes:
   end: 2114347
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 2114219
+    end: 2114347
 - gene_index: 1
   name: mat1-Mc
   protein_accession: ncbi_protein:NP_595867.1
@@ -78,6 +81,9 @@ genes:
   end: 2115027
   strand: +
   order_in_locus: 1
+  exons:
+  - start: 2114482
+    end: 2115027
 evidence:
   locus_existence:
     tier: 1

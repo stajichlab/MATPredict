@@ -10,7 +10,7 @@ FEATURES             Location/Qualifiers
      gene            complement(265..1402)
                      /gene="matA-3"
                      /role="core_MAT"
-     CDS             complement(265..1402)
+     CDS             complement(join(265..707,763..1008,1062..1192,1248..1402))
                      /gene="matA-3"
                      /role="core_MAT"
                      /translation="MSALDVDSISDIAPGLSPVTAIHYGRIQVMLFRSHLAEFAEEDLV
@@ -23,7 +23,8 @@ FEATURES             Location/Qualifiers
      gene            2151..3497
                      /gene="matA-2"
                      /role="core_MAT"
-     CDS             2151..3497
+     CDS             join(2151..2255,2313..3032,3089..3133,3188..3289,
+                     3348..3497)
                      /gene="matA-2"
                      /role="core_MAT"
                      /translation="MNLLNMQPKRSEQPAMFEENRASSQEGQDLEVMYKKLHQLQARLS
@@ -37,7 +38,7 @@ FEATURES             Location/Qualifiers
      gene            3924..4924
                      /gene="matA-1"
                      /role="core_MAT"
-     CDS             3924..4924
+     CDS             join(3924..4086,4146..4844,4905..4924)
                      /gene="matA-1"
                      /role="core_MAT"
                      /translation="MSGVDQIVKTFADLAEDDREAAMRAFSRMMRRGTEPVRRIPAAKK

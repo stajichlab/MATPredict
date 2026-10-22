@@ -24,7 +24,7 @@ The run starts when these are merged:
 **Not gating:** PR A (more exon structures plus a validator rule), PR B (the *liq* / *C. auris* / *Okayama* curation corrections), roster growth (a later release if it proceeds), and the gene-model extension (shadow mode changes no call). PR B changes two *Teloschistales* and one *Serinales* reference protein, so it rides a later release.
 
 ## 3. Run configuration
-- **Code:** a frozen worktree at a tagged commit of `main` (never edited while jobs run), recorded in the manifest (section 7). Version: `pyproject.toml` says 0.6.3, last tag v0.6.2 (**decision 3**).
+- **Code:** a frozen worktree at a commit of `main` pinned by a non-`v` tag such as `cleanrun-2026-10` (never edited while jobs run), recorded in the manifest (section 7). `pyproject.toml` says 0.6.3 (last `v` tag v0.6.2); the version is not bumped for the run (**decision 3**).
 - **Settings, passed explicitly (code defaults are unchanged):** `--partial-core-policy coverage_profile`, `--confidence-cap-policy off`, `--strong-single-gene-policy off`, `--homothallic-policy both_genes`; `--polish-core-pair` is the default (on); lineage routing from the taxid (default); no `--helixerlite`, no tracks.
   The companion-gene veto is active with the partial-core rule. `homothallic_screen` applies only to families that declare it, so the policy affects Ascomycota MAT (**unverified for other phyla**: the pilot will show).
 - **Genetic code 26 defect of v0.6.0 is fixed** (exonerate longhand code; 20 genomes had failed).
@@ -69,7 +69,7 @@ So replacing the data means: new dated result folders, edited paths in `build_si
 ## 9. Decisions for the curator
 1. **Scope: decided (2026-10-22): all three campaigns.** **1b: decided (2026-10-22): also re-run the 685 held-out LCG and Jena genomes** (about 35 CPU-hours at the v0.6.0 median of 183 s) with the same code, as the held-out set for roster and classifier work; they stay out of training and the site.
 2. **Order:** run Ascomycota first (largest, most affected), then Basidiomycota, then *Mucoromycotina*? Recommendation: yes.
-3. **Version and tag:** tag the run commit (for example `v0.7.0-rc1`) or run from an untagged frozen commit? Recommendation: a release-candidate tag (a tag deploys the site only for `v*` tags, so choose a name that cannot be mistaken for a release: **check that the Pages workflow would not fire on it**).
+3. **Version and tag: decided (2026-10-22): a tag that does not start with `v`** (for example `cleanrun-2026-10`), so the run's commit is pinned by name without matching the Pages workflow's `v*` trigger (verified: `.github/workflows/pages.yml` runs on `tags: ["v*"]` and on manual dispatch, so any `v` tag, including `v0.7.0-rc1`, would deploy). A real `v` tag is created only when the curator decides to replace the site.
 4. **Determinism check (phase 2):** yes or skip? Recommendation: yes, 200 genomes, about two hours.
 5. **Homothallic policy outside Dothideomycetes:** apply as written, or restrict the first run to families where it was measured (Ascomycota MAT)? Recommendation: apply as written but report the count per phylum in the pilot.
 6. **If the *Cochliobolus* scoped roster does not validate** in time: run without it and re-run only the Pleosporaceae, or wait? Recommendation: run without it; a Pleosporaceae re-run is small.

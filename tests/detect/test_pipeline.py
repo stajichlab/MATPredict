@@ -169,7 +169,9 @@ def test_fast_path_missing_gene_is_polished_in_the_existing_clusters_window(tmp_
     # exactly ONE batched localization call, for the partial-foothold family
     assert localize_calls == [[FAMILY.key]]
     # only the missing gene is polished, by both tools, against the same window
-    assert [c[0] for c in polish_calls] == ["exonerate", "miniprot"]
+    # Both tools run once, concurrently on the polish pool (min(4, cpu_count) threads), so
+    # the order the two fakes append in is a scheduling race: compare the set, not the order.
+    assert sorted(c[0] for c in polish_calls) == ["exonerate", "miniprot"]
     assert {c[1] for c in polish_calls} == {"mfa1"}
     # window is the existing cluster's span (300-400) padded by 2600 either side
     assert {c[2] for c in polish_calls} == {("c1", 1, 3000)}

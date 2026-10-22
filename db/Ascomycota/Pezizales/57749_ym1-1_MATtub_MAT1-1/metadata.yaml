@@ -74,7 +74,7 @@ locus:
 genes:
 - gene_index: 0
   name: MAT1-1-1
-  protein_accession: ncbi_protein:BBB16456.1
+  protein_accession: null
   role: core_MAT
   present: true
   locus_tag: null
@@ -85,9 +85,11 @@ genes:
   order_in_locus: 0
   exons:
   - start: 1
-    end: 96
-  - start: 146
+    end: 97
+  - start: 147
     end: 564
+  codon_start: 1
+  transl_table: 1
 evidence:
   locus_existence:
     tier: 1
@@ -133,5 +135,5 @@ curation:
   proposal_dedupe_key: 29590201|57749|MATtub|MAT1-1|YM1-1
   reviewed_by: null
   reviewed_date: null
-  notes: 'CDS is partial at both ends in the deposit (LC312361.1 <1..>564); no start or stop codon. Intron positions in protein coordinates are not comparable with full-length references. Exons follow the deposit (BBB16456.1). The deposited intron has non-canonical boundaries (TG..TA); moving it one base later gives a GT..AG intron and would change one residue (A to S at position 33), which matches the T. melanosporum MAT1-1-1 (ADU56595.1) (curator decision 2026-10-21: follow the deposit).'
+  notes: 'CDS is partial at both ends in the deposit (LC312361.1 <1..>564); no start or stop codon. Intron positions in protein coordinates are not comparable with full-length references. LOCAL REFERENCE CORRECTED (curator, 2026-10-22): the deposit (protein BBB16456.1) places the intron one base early with a non-canonical TG..TA boundary; the exons recorded here use the canonical GT..AG boundary, which changes one residue relative to the deposit (A to S at position 33). Basis: that residue is S in 7 of 7 independent Pezizales MAT1-1-1 submissions carrying the flanking motif NPY[VIL]AQRXWISKY (Tuber borchii PUU82705.1 and AIU38080.1; T. indicum AHE80940.1, AHE80941.1, AHE80942.1 and KAG0138538.1; T. melanosporum ADU56595.1) and A only in the 23 sequences of one submission batch (BBB164xx / LC3123xx; T. himalayense, T. indicum, T. longispinosum), including T. indicum BBB16460.1, which differs from the independent T. indicum AHE80940.1; this looks like an annotation artifact of that batch, not a species difference, and rests on conservation and the splice motif, not on cDNA. protein_accession is cleared so the protein is translated from these exons (the deposited protein is BBB16456.1). Coordinates and translation re-derived from the NCBI nucleotide record (E-utilities efetch) on 2026-10-22.'
 model_provenance: null

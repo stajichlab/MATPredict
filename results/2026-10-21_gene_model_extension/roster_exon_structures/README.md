@@ -1,0 +1,5 @@
+PROPOSED exon structures for the 22 curated MAT1-1-1 / MAT1-2-1 references whose metadata.yaml has no `exons` (derived 2026-10-21). **Nothing in db/ was changed**; a curator must confirm before any record is edited.
+Method: for each reference's `protein_accession`, the NCBI protein record's `coded_by` (15 direct from the deposit; 4 RefSeq proteins whose coded_by names an mRNA were resolved from the genomic CDS feature with the same `protein_id`); validated by CDS length = 3 x db protein (+3 if the stop is included) and by the accession matching the record's sequence source.
+status: ok (15) | partial_cds (5, Pezizales deposits incomplete at an end: intron count valid, positions in protein coordinates not) | no_protein_in_db (2: CDS derived, no db protein to cross-check; a1163 MAT1-2-1 4 exons 753 nt, uamh-11059 MAT1-1-1 1 exon 675 nt).
+Columns: exons_transcript_order are genomic 1-based spans on `accession`, listed 5'->3' in transcript order (descending for minus-strand genes), the convention used in metadata.yaml.
+Scripts: missing_refs.py (which records lack exons), derive_exons.py, derive_exons2.py (RefSeq genomic CDS).

@@ -1,0 +1,3 @@
+Validation of the roster-growth effect on the 101 reserved genes (design note section 15), 2026-10-22, HPCC array 30263502 (10 tasks: baseline and augmented, 5 chunks each).
+truth_reserved.tsv: the 101 direct-deposit genes (>= 1 kb downstream flank) not among the 106 of section 13; choose_set2.py rebuilds the lists; windows fetched with the stage0b fetch.py (reserved_windows.fa not committed).
+rescue_test5.py (genus radius; species taken from the truth table so the gene's own genus is withheld), analyze_res.py -> reserved_*_rows.tsv. The augmented references are refs_aug.faa (../roster_growth/build_aug.py).

@@ -10,7 +10,7 @@ FEATURES             Location/Qualifiers
      gene            complement(1..1496)
                      /gene="bE"
                      /role="core_MAT"
-     CDS             complement(1..1496)
+     CDS             complement(join(1..230,305..1496))
                      /gene="bE"
                      /role="core_MAT"
                      /translation="MSSDPNFSLISFLECLNEIEHEFLRDKGENYPVLVRKLRELQQKI
@@ -26,7 +26,7 @@ FEATURES             Location/Qualifiers
      gene            1751..3902
                      /gene="bW"
                      /role="core_MAT"
-     CDS             1751..3902
+     CDS             join(1751..2299,2571..3902)
                      /gene="bW"
                      /role="core_MAT"
                      /translation="MTLPPLPRISQTAPRPTCFLPLSLEGPNQQALSRKLSKLGIGSVC

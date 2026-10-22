@@ -10,7 +10,7 @@ FEATURES             Location/Qualifiers
      gene            1..1301
                      /gene="MAT1-1-5"
                      /role="core_MAT"
-     CDS             1..1301
+     CDS             join(1..280,330..877,940..966,1026..1301)
                      /gene="MAT1-1-5"
                      /role="core_MAT"
                      /translation="MKVRTRLQIRREACRRKRILLGNKHRSAREVPLNAIRTWKRDKIN

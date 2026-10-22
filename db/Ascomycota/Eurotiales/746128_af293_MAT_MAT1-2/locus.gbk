@@ -35,7 +35,8 @@ FEATURES             Location/Qualifiers
      gene            complement(6395..7296)
                      /gene="MAT1-2-4"
                      /role="core_MAT"
-     CDS             complement(6395..7296)
+     CDS             complement(join(6395..6402,6461..6535,6582..6760,
+                     6806..7296))
                      /gene="MAT1-2-4"
                      /role="core_MAT"
                      /translation="MDYERDVLLWYLGTVADDARYPPGLRNKATHIIVSFMRHRNAYRL

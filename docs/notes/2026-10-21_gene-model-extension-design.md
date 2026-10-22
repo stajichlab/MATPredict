@@ -5,6 +5,22 @@ Status: **proposal; revised after an independent adversarial review (go-with-cha
 Tags: **[M]** measured by the author, **[V]** verified by the independent reviewer (how stated in `results/2026-10-21_gene_model_extension/design_review_2.md`),
 **[R]** read in code, **[I]** inference or recollection not tested, **[X]** not checked. The reviewer's numbers are reported as the reviewer's; the author has not re-run them.
 
+## Summary (read this first)
+
+**Problem.** The pipeline models each MAT gene with exonerate (canonical) and miniprot. Exonerate's model ends where its alignment to the best reference ends, not at the gene's end: 64% of `MAT1-1-1` and 51% of `MAT1-2-1` canonical models have >= 30 aa of open reading frame past their end (concentrated in some clades), and the ORF-completeness tests pass them vacuously (section 1).
+
+**What was measured.** A deterministic in-frame 3' extension to the next stop is right 97.6% of the time when no intron follows the alignment edge, and 2 of 82 when one does (sections 11, 13b). It cannot splice, so it stops early or reads through an intron. Predicting the intron from the best-hit reference's structure works only partly (guard AUC 0.64-0.80); cheap sequence signals add little (section 14 item 6). A hand-written splice-aware extension is ambiguity-limited and not worth building (11c). `protein2genome:bestfit` is not feasible (5).
+
+**What failed.** The rules fitted on 34 curated genes did not meet their pre-registered criteria on 106 held-out genes (overshoot occurred; class false-complete 8.1% against a 5% ceiling), so the per-class `complete` ceiling was withdrawn (13b, 14).
+
+**Decision (curator, 2026-10-22).** Rescue only: an extension is reported as `extended_provisional` with its evidence and disclosed per-clade error rates and is **never labelled `complete`** (section 14). Nothing is implemented; the next step is a shadow-mode module that changes no call.
+
+**What does lower the error rate.** More references that carry exon structures: on 101 reserved genes (never used before) the early stops among accepted extensions fell from 17 to 3 and the wrong rate from 12.9% to 4.7% with 161 references instead of 55, leave-genus-out; both pre-registered criteria were met (15b). Overshoot (reading through an intron) does not improve. Exon structures for the existing 55 references are merged (#119).
+
+**Caveats that matter.** Truth for the held-out and reserved genes is the depositors' annotation, not RNA-supported; rows repeat across four truncations (genes are the unit); the reserved set is clonal (32 genera); one reviewer's model identity cannot be confirmed (section 8).
+
+**What a reviewer is asked to check.** The design of the shadow module (section 3), the rescue-only decision and its disclosed rates (14), whether the evidence tiers (3.4) and guards (3.5) are sensible, and the blind-spot audit (4). Evidence and scripts are in `results/2026-10-21_gene_model_extension/` (`survey.tsv`, `stage0b_rescue/`, `heldout/`, `roster_growth/`, `roster_growth_validation/`, `roster_exon_structures/`, `miniprot_splice_tests/`, and the two independent reviews).
+
 Base of the code cited: `origin/main` 2d14712, which includes #117 (`homothallic.py`, merged), #119 (roster exon structures, merged at 9ae22d2) and #120. The roster-record `record_version` bumps missed by the #119 merge are in #123, and the homothallic idiomorph follow-up is #124.
 
 Origin: PR #117 found that the 196 aa *Pyrenophora tritici-repentis* `MAT1-1-1` model ends at the edge of the exonerate alignment, not at the gene's end.

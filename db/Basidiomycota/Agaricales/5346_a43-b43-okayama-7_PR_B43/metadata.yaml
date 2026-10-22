@@ -88,6 +88,19 @@ genes:
   end: 1808765
   strand: '-'
   order_in_locus: 0
+  exons:
+  - start: 1808423
+    end: 1808642
+  - start: 1808259
+    end: 1808371
+  - start: 1808140
+    end: 1808206
+  - start: 1807945
+    end: 1808082
+  - start: 1807446
+    end: 1807890
+  - start: 1806647
+    end: 1807394
 - gene_index: 1
   name: phb2_B44-like
   protein_accession: ncbi_protein:KAG2006179.1
@@ -99,6 +112,9 @@ genes:
   end: 1812676
   strand: '-'
   order_in_locus: 2
+  exons:
+  - start: 1812384
+    end: 1812569
 - gene_index: 2
   name: pheromone_B43
   protein_accession: ncbi_protein:KAG2006182.1
@@ -124,6 +140,17 @@ genes:
   end: 1819437
   strand: '-'
   order_in_locus: 6
+  exons:
+  - start: 1819099
+    end: 1819306
+  - start: 1818860
+    end: 1819039
+  - start: 1818668
+    end: 1818805
+  - start: 1818156
+    end: 1818609
+  - start: 1817624
+    end: 1818098
 - gene_index: 4
   name: ste3_extra_unassigned
   protein_accession: ncbi_protein:KAG2006186.1
@@ -135,6 +162,17 @@ genes:
   end: 1821277
   strand: '-'
   order_in_locus: 7
+  exons:
+  - start: 1820975
+    end: 1821173
+  - start: 1820733
+    end: 1820915
+  - start: 1820543
+    end: 1820680
+  - start: 1820048
+    end: 1820492
+  - start: 1819767
+    end: 1819995
 - gene_index: 5
   name: rcb3
   protein_accession: ncbi_protein:KAG2006187.1
@@ -146,6 +184,19 @@ genes:
   end: 1823946
   strand: +
   order_in_locus: 8
+  exons:
+  - start: 1822313
+    end: 1822541
+  - start: 1822594
+    end: 1822706
+  - start: 1822760
+    end: 1822826
+  - start: 1822875
+    end: 1823012
+  - start: 1823065
+    end: 1823503
+  - start: 1823559
+    end: 1823826
 - gene_index: 6
   name: phb3.1
   protein_accession: null
@@ -168,6 +219,9 @@ genes:
   end: 1826859
   strand: +
   order_in_locus: 10
+  exons:
+  - start: 1826254
+    end: 1826463
 - gene_index: 8
   name: phb1.1
   protein_accession: null
@@ -402,6 +456,8 @@ curation:
     span separately from the B-locus span in the array study. Also open: the sibling
     HD record 5346_a43-b43-okayama-7_HD_A43 states the same strain and differs_from_sequenced:
     false and should be checked against its own source genome.
+
+    Exons added 2026-10-22 for rcb1, phb2_B44-like, rcb2, ste3_extra_unassigned, rcb3 and fungal_mating_type_pheromone: their start/end are the deposit gene span on JAAGWA010000010.1 (the gene and mRNA features, so they include UTRs) and the exons are the coding sequence only (the CDS of KAG2006176.1, KAG2006179.1, KAG2006185.1, KAG2006186.1, KAG2006187.1 and KAG2006189.1, ATG to stop codon), so they lie inside start/end. Coordinates and translation re-derived from the NCBI nucleotide and protein records (E-utilities efetch) on 2026-10-22.
 
     '
 model_provenance: null

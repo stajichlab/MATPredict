@@ -7,6 +7,7 @@ taxonomy 5454, PubMed summary), exactly as the generator cached them on
 """
 import importlib.util
 import shutil
+import sys
 from pathlib import Path
 
 import pytest
@@ -24,6 +25,7 @@ _ROOT = Path(__file__).resolve().parents[2]
 _CACHE = Path(__file__).parent / "data" / "deposit_to_record_cache"
 _spec = importlib.util.spec_from_file_location("deposit_to_record", _ROOT / "scripts" / "deposit_to_record.py")
 gen = importlib.util.module_from_spec(_spec)
+sys.modules["deposit_to_record"] = gen  # dataclasses resolve annotations through sys.modules
 _spec.loader.exec_module(gen)
 
 

@@ -395,7 +395,7 @@ The full roster covers every row, raises recall, and the combined acceptance rul
 | A. length-range rule only | 145 | 15 | 10.3% (6-16%) | 4 |
 | B. length rule + reference-intron guard clear | 129 | 10 | 7.8% (4-14%) | 4 |
 | C. B and ORF extension >= 200 aa only | 42 | 1 | 2.4% (0-12%) | 1 |
-| **D'. B and the best-hit reference has <= 2 exons (usable at run time)** | **93** | **0** | **0.0% (0-4%)** | **0** |
+| **D'. B and the best-hit reference has <= 2 exons (usable at run time)** | **93 (15 genes)** | **0** | **0.0% (0-4%, rows as independent)** | **0** |
 | F. B and the best-hit reference has >= 3 exons | 26 | 10 | 38.5% (22-57%) | 4 |
 
 (An earlier variant restricted to genes with <= 2 exons used the deposited gene's own exon count, which is not known at run time: that was an oracle and is not an option. The run-time proxy is the best-hit reference's exon count; reference 2 exons vs deposited 2 / 3 / 4 exons: 95 / 7 / 0; reference 3 exons: 10 / 49 / 8; reference 4 exons: 0 / 4 / 2.)
@@ -403,7 +403,7 @@ All 10 early stops among B's accepted set come from 4 genes (*Helotiales* 3, *My
 
 Cutoff options for the curator (section 12 option 2):
 1. **One global ceiling** on rule B's false-complete rate, for example <= 10% (measured 7.8%, CI 4-14%, so a 10% ceiling is not statistically distinguishable from the measurement; with n of 129 from 23 genes in 9 orders it cannot be tested more finely).
-2. **Per-class ceilings, with the reference exon count as the class (recommended):** `complete` only when rule D' holds (reference has <= 2 exons); ceiling **5%** for that class (measured 0 of 93, upper CI 4%, from 19 genes); every extension whose best-hit reference has >= 3 exons is `provisional` and never `complete` (measured 38% would be false-complete); the provisional class carries no ceiling but is reported.
+2. **Per-class ceilings, with the reference exon count as the class (recommended):** `complete` only when rule D' holds (reference has <= 2 exons); ceiling **5%** for that class (measured 0 of 93, upper CI 4%; the 93 rows come from only **15 genes in 7 orders**, so the interval treats rows as independent and is optimistic); every extension whose best-hit reference has >= 3 exons is `provisional` and never `complete` (measured 38% would be false-complete); the provisional class carries no ceiling but is reported.
 3. **Zero tolerance:** a ceiling of 0% for `complete` with rule D' (measured 0 of 93, but a zero bound cannot be verified on 93 rows: it is the observed rate, not a guarantee; the CI upper bound is 4%).
 4. **Relative bar:** the false-complete rate under the new rule must be lower than the legacy rate (100% of truncated alignments are called complete) in every order, with no ceiling number.
 Caveats: n is small and clustered (one order and a few genes drive every early stop); the thresholds and rules were chosen after seeing these genes, so the figures are fitted, not held out; the real test of any ceiling is the same measurement on genes not used here (new curated records, or the held-out radius of the curated-record holdout).

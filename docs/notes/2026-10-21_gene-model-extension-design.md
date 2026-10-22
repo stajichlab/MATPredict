@@ -290,3 +290,40 @@ Principles carried over: defaults stay unchanged until a replay is read; thresho
 
 Verdict go-with-changes. Changed: no tool swap and no 5' move in Phase 1; extension unscored with evidence tiers (ORF-only needs >= 200 aa; 30-199 aa need independent support); `cds_blocks` for frameshift models and no frame search; neighbour, length and donor-site guards; audit corrected (#7 removed, coordinate consumers, report/regression/benchmark added, base commit stated) and the partial-core fear shown to be smaller than stated; "interrupted" counts to be redone; truth set moved to the curated records first; learned chooser dropped; GC-AG and TA-donor splice findings added; the "one best reference", "380 splice jumps" and "miniprot skips an intron" statements corrected or withdrawn.
 Retained: the diagnosis, the deterministic pure-function module, shadow mode with a byte-identical `legacy`, clean and 3'-closed as hard filters, the *Botrytis* remnant as 5'-truncated, per-consumer policy flags, no in-house gene finder.
+
+---
+
+## 11. Stage 0b results: rescue test on the curated records (2026-10-21)
+
+`results/2026-10-21_gene_model_extension/stage0b_rescue/`. **Method.** For each of the 34 curated `MAT1-1-1`/`MAT1-2-1` genes with a deposited exon structure (16 + 18; 11 orders), the record (radius `record`) or its whole genus (radius `genus`) was withheld,
+every remaining reference of that gene was **truncated to its first 100/70/50/30%** (a simulated fast-evolving tail: the alignment cannot reach beyond that), and the **real** exonerate (`protein2genome --refine region`, `--maxintron 5000`, all references in one query, highest-scoring model kept, as `search.py` does) was run on the record's own ±3 kb genomic window (fetched from NCBI).
+The in-frame extension of section 3.3 was applied and its end compared with the deposited CDS end. 272 runs; a model was found in 242 (30 `none`, mostly at 30% truncation); no strand mismatches.
+**191 rows had an alignment ending >= 30 aa before the true end** (from 32 distinct genes: rows repeat across truncations and radii, so per-gene numbers are given too); an extension reached a stop in 189 of them.
+
+**Headline [M].**
+- **No overshoot.** Over all truncated rows, 0 extensions ended more than 20 aa *beyond* the deposited end (and none beyond 5 aa in the accepted set below). The feared failure (an extension running on past the true stop) did not occur on these 34 genes.
+- **Exact end recovered in 120 of 191 (63%); within 5 aa in 134 (70%); within 20 aa in 141 (74%).** All 48 remaining failures are **undershoots** (extension stopped > 20 aa short of the true end).
+- **By extension length:** >= 200 aa: 41 of 49 exact, 45 within 5 aa, 2 undershoots; 30-199 aa: 79 of 131 exact, 37 undershoots; **< 30 aa: 0 of 9 exact (all undershoot, median 84 aa short)**, consistent with not treating a < 30 aa continuation as an extension when the alignment ended far from the end.
+- **The `GT`-donor flag is almost useless here** (4 of 187 truncated extensions end at a `GT`): the alignment edge is rarely at the donor itself, so the flag of section 3.5 does not detect an intron after the edge; do not rely on it for that.
+
+**Why it fails: introns after the edge.** The extension cannot splice, so it stops at the first in-frame stop, which falls inside the next intron when one follows the edge.
+| exons in the deposited gene | genes | rows | exact or within 5 aa | undershoot |
+|---|---|---|---|---|
+| 2 (one intron) | 18 | 108 | 98 (91%) | 10 |
+| 3 | 12 | 71 | 36 (51%) | 28 |
+| 4 | 2 | 10 | 0 | 10 |
+Per gene: 2-exon genes are right in every truncation for 13 of 18 (mean per-gene fraction good 0.85); 3-exon 5 of 12 (0.56); 4-exon 0 of 2. By order, *Pezizales* 0 of 10 exact (both genes have 3-4 exons), *Helotiales* 10 of 33, *Mycosphaerellales* 14 of 24 versus *Pleosporales* 36 of 42 and *Hypocreales* 14 of 16 (small n; not a clean clade effect, confounded with exon count).
+
+**A length-range screen helps but does not fix this.** Rule tested: accept when the ORF extension is >= 200 aa, **or** 30-199 aa **and** the total protein length lies within the curated 10th-90th percentile for that gene (`MAT1-1-1` 234-482 aa, `MAT1-2-1` 176-395 aa); everything else is `provisional`.
+Accepted: 145 rows, **123 exact or within 5 aa (85%), 15 undershoots, 0 overshoots**; provisional/rejected: 44 rows, of which 33 are undershoots (75%) and 11 correct. So the screen catches 33 of 48 undershoots at the cost of 11 correct extensions held back as provisional.
+**By exon count, the accepted set is 95 of 95 exact or within 5 aa for 2-exon genes** (0 undershoot, 0 overshoot); for 3-exon genes 28 of 48 exact with 13 undershoots and 7 "other"; for 4-exon 0 of 2. The 15 accepted failures are all 3-4-exon *Helotiales* or *Mycosphaerellales* genes whose short total length still falls inside the global range.
+
+**Near-complete alignments (100% references, gap < 30 aa):** 37 rows; the extension is exact in 26 (12 of 16 genus radius, 14 of 21 record radius) and > 5 aa off in 6, so a short slop extension is right about 70% of the time.
+
+**What this changes in the design.**
+1. **The 3' extension is reliable for genes with at most one intron after the edge, and unreliable for genes with two or more.** That matches the original concern and gives it a number: for multi-intron genes a splice-aware method is needed, which is the case for a gene-finder-class candidate generator (section 5), now with a measured trigger (undershoot concentrated in >= 3-exon genes).
+2. **A deterministic guard to test next (not yet measured):** use the **reference gene's exon structure** (the curated records carry exons): map the model edge to the reference residue and flag `intron_expected_after_edge` when the reference has an intron downstream; accept an unscored extension only when none is expected, otherwise leave it `provisional`. Test it on this same table before any code.
+3. The provisional tier (30-199 aa) is **justified for 2-exon genes and not for multi-intron genes**; the total-length screen should use **per-order** ranges (global ranges let 15 undershoots through) once each order has >= 3 curated records.
+4. **No overshoot** supports reporting extensions at all (with their class), but the acceptance bar "zero wrong promotions" must be read as "zero overshoot": undershoot is a **missed end** (a partial gene reported as extended), which the curator should decide how to count.
+
+**Limits.** 34 genes in 11 orders, skewed toward well-studied taxa; rows are not independent (32 genes, 4 truncations x 2 radii); truncation is simulated by cutting the reference, so it shows whether the extension finds the right stop, **not** whether a real divergent tail would still align elsewhere in the protein; the reference used for each model was not recorded; genes with frameshift models were not special-cased; the window flanks are 3 kb (an extension never reached the window end in 189 of 191). The 85/80 and the length-range rules were chosen after seeing these genes, so the 123/145 figure is fitted, not held out.

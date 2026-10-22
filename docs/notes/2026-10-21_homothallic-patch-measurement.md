@@ -143,8 +143,9 @@ The curator asked whether helixer, tblastn/exonerate or miniprot suggest longer 
   (124-201 aa -> ~360-386). The extensions of *P. tritici-repentis* and *P. teres* share a conserved C-terminus (`...NDAFRVGADEDATLPTFDGANNA`).
 - **Miniprot agrees where it models well.** `MAT1-1-1` alternates: *P. tritici-repentis* 345 and 396 aa with no internal stops (two genomes), *P. teres* 373 aa, *Aureobasidium* 321-332 aa (one 240 aa). In two *P. tritici-repentis* genomes (Ptr134, Ptr902)
   miniprot skipped the 53 bp intron the other tools use and produced a 419 aa model with 6 internal stops: a bad model, not evidence for a longer gene.
-- **The *Botrytis* remnant is a true truncation.** The 219 aa model has an in-model stop at residue 209 and the frame ends 8 aa later; miniprot gives 215 aa at 91-95% identity. The remnant is not a modelling edge, so extension would not rescue it
-  (and the remnant check would still flag it).
+- **The *Botrytis* remnant is a 5'-truncated copy, not a 3' edge artefact.** CORRECTED 2026-10-21 (an earlier version of this note said the stop was at residue 209): the canonical 219 aa model has an in-frame stop at residue 10
+  (`LRDVDARRI*SKYFALL...`), so the 209 aa protein is the stop-free stretch after it; it starts with no M and is 3'-complete. Miniprot's 215 aa model (91-95% identity) is that same stretch, and the frame ends 8 aa past the model.
+  So the model is not under-extended at the 3' end: the gene lacks its N-terminus, which is what the remnant check (identity >= 85%, coverage < 80%) flags.
 
 Consequence. The 190/200 aa length floor is a threshold on the *aligned extent*, not on the gene: the true proteins are ~360-400 aa. The 62 *P. tritici-repentis* loci passed the 190 aa floor by 6 aa (196 aa); an extension step would make them ~400 aa and the floor irrelevant.
 The same extension probably recovers the 119 *Aureobasidium* (124-201 aa now) which the length floor currently excludes. Proposed change (not made): translate each core model on to the next in-frame stop before the completeness tests, and measure

@@ -51,7 +51,9 @@ def _assemble_transcript(ncbi: NcbiClient, accession: str, gene: dict) -> str | 
     return ncbi.fetch_nucleotide_sequence(accession, start, end, strand)
 
 
-def _independent_translation(record: dict, gene: dict, ncbi: NcbiClient | None) -> str | None:
+def _independent_translation(
+    record: dict, gene: dict, ncbi: NcbiClient | None, *, resolve_assembly: bool = False,
+) -> str | None:
     """Independently re-derive a gene's protein sequence from the record's own recorded
     genomic coordinates (single span, or a real exon/intron structure when `exons` is
     recorded), by fetching from NCBI and translating -- rather than trusting anything
@@ -65,6 +67,15 @@ def _independent_translation(record: dict, gene: dict, ncbi: NcbiClient | None) 
 
     Returns None (check not applicable) under the same conditions as before: no NCBI
     client, no fetchable segment sequence, or missing coordinate data on the gene.
+
+    `resolve_assembly` (default False): an `assembly`-type segment cites a GCA_/GCF_
+    accession that nuccore cannot fetch, but its `seq_region` is the contig the
+    coordinates are on and IS fetchable -- the same resolution
+    `gff_export._fetch_accession` already uses for the segment's nucleotide sequence.
+    `build_gff_for_record` passes True, because there this translation is the SOURCE
+    of an accession-less gene's protein and returning None silently dropped the gene's
+    CDS and protein (issue #121). `validate_record` keeps the default, so its
+    `sequence_match` results for assembly records are unchanged.
     """
     if ncbi is None:
         return None
@@ -80,7 +91,13 @@ def _independent_translation(record: dict, gene: dict, ncbi: NcbiClient | None) 
     segment = segments[segment_index]
     sequence_source = segment.get("sequence_source", {})
     accession = sequence_source.get("accession")
-    if not accession or sequence_source.get("type") != "insdc_nucleotide":
+    if resolve_assembly and sequence_source.get("type") == "assembly":
+        # The GCA_/GCF_ accession is not a nucleotide record; the coordinates are on
+        # seq_region, an individually fetchable contig (see gff_export._fetch_accession).
+        accession = sequence_source.get("seq_region")
+    elif sequence_source.get("type") != "insdc_nucleotide":
+        accession = None
+    if not accession:
         # Assembly-level accessions (GCA_/GCF_) aren't resolvable by NcbiClient yet --
         # same limitation noted above for accession_resolved. Nothing to independently
         # verify against without fetchable genomic sequence.

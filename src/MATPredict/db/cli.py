@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import time
+import warnings
 from pathlib import Path
 
 import requests
@@ -247,7 +248,10 @@ def build_gff_for_record(
     already uses to cross-check a claimed accession's sequence, reused here
     as the sequence SOURCE rather than a cross-check target. A gene with
     neither a protein_accession nor derivable coordinates is skipped, same
-    as before. The single-record CLI command and the batch backfill command
+    as before, with a UserWarning when it does have coordinates. On an
+    `assembly`-type segment the translation is fetched from the segment's
+    `seq_region` contig (issue #121: it used to return nothing there, and the
+    gene's CDS and protein were silently dropped). The single-record CLI command and the batch backfill command
     both call this so there is exactly one place this logic lives."""
     record_dir = db_root / phylum / order_or_family / record_id
     record = yaml.safe_load((record_dir / "metadata.yaml").read_text())
@@ -260,9 +264,19 @@ def build_gff_for_record(
             client, bare_accession = _client_for(gene["protein_accession"], ncbi, uniprot)
             sequences[gene["gene_index"]] = client.fetch_protein_sequence(bare_accession)
             continue
-        derived = _independent_translation(record, gene, ncbi)
+        derived = _independent_translation(record, gene, ncbi, resolve_assembly=True)
         if derived:
             sequences[gene["gene_index"]] = derived
+        elif gene.get("exons") or (gene.get("start") is not None and gene.get("end") is not None):
+            # A present gene with coordinates whose protein could not be derived gets no
+            # CDS feature and no proteins.faa entry: say so instead of dropping it silently.
+            warnings.warn(
+                f"{record_id}: gene_index {gene['gene_index']} ({gene.get('name')}) has no "
+                "protein_accession and no protein could be derived from its coordinates; "
+                "it gets no CDS feature and no proteins.faa entry",
+                UserWarning,
+                stacklevel=2,
+            )
 
     gene_classes = _resolve_gene_classes_for_record(db_root, phylum, record)
 

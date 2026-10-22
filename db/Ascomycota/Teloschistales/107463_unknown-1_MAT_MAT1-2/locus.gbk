@@ -21,12 +21,16 @@ FEATURES             Location/Qualifiers
      gene            3368..3733
                      /gene="MAT1-2-1"
                      /role="core_MAT"
+                     /pseudo
+                     /status="pseudogene"
      CDS             join(3368..3519,3571..3733)
                      /gene="MAT1-2-1"
                      /role="core_MAT"
                      /translation="MAVSNLPLADRVWNTHAWAMNHGFTDYVILDSVVTTAIGTDGIAL
                      IAERFQSMIQAPVKIEKQGPLLTRIRPVDKDGVDAKPKSNMTLKKDKVPRPPNAFILYR
                      "
+                     /pseudo
+                     /status="pseudogene"
                      /gene_class="HMG_box"
      gene            complement(5692..6588)
                      /gene="APN2"

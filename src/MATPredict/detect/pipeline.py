@@ -142,6 +142,7 @@ from MATPredict.detect.reference_fasta import searchable_genes_by_family
 from MATPredict.detect.scoring import FamilyScore, is_ambiguous, score_cluster
 from MATPredict.detect.search import (
     SearchHit,
+    drop_below_gene_min_identity,
     drop_low_quality_hits,
     polish_with_exonerate,
     polish_with_miniprot,
@@ -2430,6 +2431,9 @@ def run_pipeline(
     # evidence floor's gene count. Measured need: a 27 bp "sexM" (nine codons)
     # and a 48/51 bp sexM/sexP pair were each being reported as loci.
     hits = drop_low_quality_hits(hits)
+    # A roster gene's own identity floor (`min_identity`; none declares one outside the
+    # Pleosporaceae-scoped GAP1/BGL1 flanks, so every other run is unchanged).
+    hits = drop_below_gene_min_identity(hits, families)
     # Strict-CAAX pheromone precursors beside receptor hits, for the families
     # that ask for it (curator's ruling 2026-09-27, `detect.caax`). Added after
     # the length filter -- a 25 aa precursor is 78 bp, under it, and is found

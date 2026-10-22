@@ -149,3 +149,19 @@ def test_a_found_slot_flank_raises_the_score_and_an_absent_one_costs_nothing():
     lone = _fraction(scoped, ["MAT1-1-1", "GAP1", "BGL1"])
     assert lone.fraction_found == 0.5 and {"GAP1", "BGL1"} <= set(lone.genes_found)
     assert _fraction(scoped, ["MAT1-1-1", "APN2", "COX13", "GAP1"]).fraction_found == 0.8
+
+
+def test_a_gene_min_identity_drops_only_that_genes_weak_hits():
+    """BGL1 is a beta-glucosidase family: a 27.7% fragment made spurious high calls."""
+    from MATPredict.detect.search import drop_below_gene_min_identity
+    _, scoped = _routed_mat(BMAYDIS, "on")
+    _, unscoped = _routed_mat(AUREOBASIDIUM, "on")
+    assert {g["name"]: g.get("min_identity") for g in scoped.genes if g["name"] in SCOPED} == {"GAP1": 50, "BGL1": 50}
+    weak_bgl1 = _hit("BGL1", "flanking_conserved", 1)
+    weak_bgl1 = type(weak_bgl1)(**{**weak_bgl1.__dict__, "identity": 27.7})
+    strong_bgl1 = _hit("BGL1", "flanking_conserved", 5000)
+    weak_core = type(weak_bgl1)(**{**_hit("MAT1-1-1", "core_MAT", 9000).__dict__, "identity": 20.0})
+    kept = drop_below_gene_min_identity([weak_bgl1, strong_bgl1, weak_core], [scoped])
+    assert kept == [strong_bgl1, weak_core]
+    hits = [weak_core]
+    assert drop_below_gene_min_identity(hits, [unscoped]) is hits, "no floor declared: untouched"

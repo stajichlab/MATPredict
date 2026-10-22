@@ -223,3 +223,7 @@ properties:
                 type: array
                 minItems: 1
                 items: {type: integer}
+              # min_identity on a GENE (prototype 2026-10-22): hits of this gene under
+              # this percent identity are dropped before clustering
+              # (detect.search.drop_below_gene_min_identity). Absent = no floor.
+              min_identity: {type: number, minimum: 0, maximum: 100}

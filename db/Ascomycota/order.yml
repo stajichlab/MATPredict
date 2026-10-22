@@ -144,8 +144,11 @@ loci:
       #   denominator of fraction_found, an absent one costs nothing (scoring.score_cluster),
       #   so a Pleosporaceae call that lacks them keeps its score. Reuses the slot
       #   mechanism approved for SXI1/SXI2 (one member per slot here); not yet ruled on.
-      - {name: GAP1, role: flanking_conserved, optional: true, slot: GAP1, taxonomic_scope: [28556]}
-      - {name: BGL1, role: flanking_conserved, optional: true, slot: BGL1, taxonomic_scope: [28556]}
+      # * min_identity 50 (search.drop_below_gene_min_identity): BGL1 is a beta-glucosidase
+      #   family. Unfloored, 27.7%-identity BGL1 fragments made 8 spurious high second calls
+      #   in Alternaria; every GAP1/BGL1 hit beside a real MAT gene was >= 70%.
+      - {name: GAP1, role: flanking_conserved, optional: true, slot: GAP1, taxonomic_scope: [28556], min_identity: 50}
+      - {name: BGL1, role: flanking_conserved, optional: true, slot: BGL1, taxonomic_scope: [28556], min_identity: 50}
       # MAT1-2-4 (A. fumigatus Af293, XP_754990.2) is a genuinely distinct gene from
       # Leotiomycetes' MAT1-2-4, which was renamed MAT1-2-10 above precisely to avoid
       # this collision (Wilken et al. 2017). This entry is Eurotiomycetes-only; do not

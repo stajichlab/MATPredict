@@ -6,10 +6,15 @@ generator_pilot.tsv        the 14 pilot deposits (13 records written, 1 NEEDS_HU
 generator_dryrun_106_v2.tsv  generator v2 (curator rulings of 2026-10-22) on the same 106 deposits, offline from the
                            pilot NCBI cache, against the pre-pilot db (2d14712, the db the v1 dry run saw; the v1 run
                            reproduces byte-identically from it). No records written. Columns: v1 + species, order.
-                           Updated after the review fixes: 9 CONFIRMED / 57 CAVEAT / 40 NEEDS_HUMAN (v1 11/73/22).
-                           Candidates proposed earlier in the run are indexed apart from db/ ("in-batch candidate (not
-                           written)", reason names batch_*) and never change a record_id: every record_id equals v1's
-                           (unknown-N counts db/ records only).
+                           After the second review: 9 CONFIRMED / 56 CAVEAT / 41 NEEDS_HUMAN (v1 11/73/22).
+                           Candidates proposed earlier in the run are kept apart from db/ in messages ("in-batch
+                           candidate (not written)", reason names batch_*, `source` column in conflicts.tsv), but the
+                           unknown-N slug counts db/ AND batch record_ids (the db rule; v1 did the same): two strain-less
+                           isolates of one taxid get unknown-1 / unknown-2, so a strain-less record_id DEPENDS ON BATCH
+                           ORDER and on the verdicts of earlier deposits in the run.
+write_run_v1_vs_v2.tsv     real write runs (--out to a scratch directory, not db/) of v1 (c9f69ce) and v2 on the 106:
+                           verdict and record_id per deposit. Every record_id is identical; v2 writes 65 records, a
+                           subset of v1's 84 (e.g. Berkeleyomyces basicola 124036_unknown-1_MAT_MAT1-2 + unknown-2_MAT1-1).
 generator_dryrun_106_v2_changes.tsv  per deposit: v1 and v2 verdict, moved to NEEDS_HUMAN, and the ruling(s) that
                            cause each NEEDS_HUMAN (scripts/attribute_rulings.py)
 conflicts.tsv              ruling 8 conflicts table of that run, with a `source` column (db = curated record, batch =

@@ -483,3 +483,14 @@ The best-hit reference came from the added deposits in 273 of 386 rows.
 **Caveats.** The 106 genes are development data and the rules were frozen, but this is **not a validation**: a validation uses the 101 reserved genes with the same leave-genus-out roster; leave-genus-out does not remove same-family relatives (realistic for roster growth, but it flatters closely related clades); deposits are the depositors' annotations (some may be predictions); rows repeat across four truncations (per-gene figures given); the intervals treat rows as independent.
 **Consequence for the plan.** Under the rescue-only decision (section 14) roster growth is the **cheapest lever that measurably lowers the disclosed rates**: record exon structures for every roster reference (PR #119 and the follow-up agent branch do this for the existing 55) and **add annotated, genus-diverse references** (for example the deposits used here, after curation). The reserved 101 genes can validate that effect; whether to spend them is the curator's call.
 
+## 15. Validation of the roster-growth effect on the reserved set (pre-registered 2026-10-22, before any result)
+
+**Decision (curator, 2026-10-22):** spend the 101 reserved genes now, before investing curation effort in a larger roster.
+**Set.** The direct-deposit candidates of section 13 with >= 1,000 bp downstream flank that were **not** among the 106 selected genes (207 - 106 = 101 genes), fetched with +/-3 kb windows; same quality caveat as section 13 (depositors' annotations, not RNA-supported).
+**Configurations (identical genes, truncations, rules and settings):** (a) baseline: the 55 curated references; (b) augmented: the 161 references of section 14b (55 curated + 106 deposits with exon structures). Both **leave-genus-out** (every reference of a gene's own genus withheld, including the deposits). The real exonerate with production settings, references truncated to 30/50/70/100%, rules frozen as in section 13 (length rule, reference-intron guard, class labels).
+**Pre-registered criteria** (the effect "replicates" only if both hold):
+1. Rule B (length rule + guard clear): the wrong rate (early stop > 20 aa short, or overshoot > 5 aa) is **lower** under the augmented roster than under the baseline on the same genes, **and the per-gene wrong rate is not higher**.
+2. Guard recall for a true intron after the edge rises by **at least 0.10** (absolute) with precision not falling by more than 0.10.
+Reported regardless: overshoot counts (must not worsen: the 2 held-out overshoot genes showed it does not improve), class D'/F, per-gene figures, intervals per gene.
+**If either criterion fails**, the roster-growth lever is recorded as not validated and the curation investment is **not** recommended; the failure stays in this note.
+

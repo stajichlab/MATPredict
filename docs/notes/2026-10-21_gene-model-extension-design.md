@@ -367,8 +367,23 @@ From each alignment edge, enumerate `GT..AG` introns of 40-400 bp that keep the 
 ## 12. Decision needed: how acceptance counts an early stop
 
 An extension that stops early is **never worse than not extending**: in 187 of the 189 truncated rows the extended model ends closer to the true end (2 unchanged, 0 farther); of the 48 early stops, 46 are closer (median distance to the true end 162 aa against 262 before). What it gets wrong is the **label**: a still-partial gene reported as extended or complete. Today's pipeline treats all 189 as complete (the ORF test passes vacuously), so any acceptance rule improves on the legacy.
-Options for the acceptance bar (section 9):
+**Curator decision 2026-10-21: option 2 (below).** Options for the acceptance bar (section 9):
 1. **Strict:** any end error beyond 5 aa in either direction is a wrong promotion; the bar is zero. Not attainable now (best accepted set: 10 of 111 early stops); it would mean never promoting multi-intron genes.
 2. **Overshoot zero, early stops capped and reported separately (recommended):** zero accepted extensions more than 5 aa beyond the deposited end (measured: 0, maximum +2 aa); early stops (more than 20 aa short) are counted as a **false-complete rate**, reported per exon-count class and per order, with a ceiling the curator sets (measured on these genes: 0 of 95 for one-intron genes, 10 of 111 overall with the reference guard). Gene models never labelled `complete` unless the guard is clear.
 3. **Relative bar:** no accepted extension may end farther from the true end than the unextended model (measured: 0 of 189), and the false-complete rate must be lower than the legacy rate in every order (legacy: 100% of truncated alignments are called complete).
+
+**Decided (curator, 2026-10-21): option 2.** The acceptance table of section 9 reads: zero accepted extensions more than 5 aa beyond the deposited end; early stops (more than 20 aa short) are reported as a false-complete rate per exon-count class and per order against a ceiling the curator sets; a gene is labelled `complete` only when the reference-structure guard is clear.
+
+### 11d. Exon structures for the whole roster (curator approved 2026-10-21; a proposal table, db untouched)
+
+21 of 55 curated references had no exon structure (22 gene rows in 17 records). `results/2026-10-21_gene_model_extension/roster_exon_structures/roster_exon_structures_proposed.tsv` derives them from the NCBI protein records: **15 ok** (CDS length matches the database protein, accession matches), **5 partial_cds** (Pezizales deposits incomplete at an end; the CDS length still matches the database protein), **2 without a database protein to cross-check**. Exon counts: 1 exon x 1, 2 x 8, 3 x 10, 4 x 3. Four RefSeq proteins needed the genomic CDS feature because `coded_by` names an mRNA. **A curator must confirm before the metadata is edited.**
+Effect on the guard of section 11b, re-run with all references (`analyze4.py`): the guard can now judge **189 of 189 truncated rows (was 144 of 189)**.
+| | before (144 judged) | after (189 judged) |
+|---|---|---|
+| flagged (reference has an intron after the edge) | 21 | 42 |
+| flagged and an early stop | 17 | 31 |
+| precision / recall for early stops | 0.81 / 0.53 | **0.74 / 0.65** |
+| not flagged, correct | 108 of 123 (88%) | 130 of 147 (88%) |
+| length rule **and** guard clear: rows / correct / early stops / overshoot | 111 / 101 (91%) / 10 / 0 | **129 / 119 (92%) / 10 / 0** |
+The full roster covers every row, raises recall, and the combined acceptance rule now accepts 129 extensions at 92% correct with no overshoot, holding back 16 (4 of them correct). The same limits apply (34 genes, simulated truncation, rules fitted on these genes).
 

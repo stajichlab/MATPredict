@@ -322,8 +322,35 @@ Accepted: 145 rows, **123 exact or within 5 aa (85%), 15 undershoots, 0 overshoo
 
 **What this changes in the design.**
 1. **The 3' extension is reliable for genes with at most one intron after the edge, and unreliable for genes with two or more.** That matches the original concern and gives it a number: for multi-intron genes a splice-aware method is needed, which is the case for a gene-finder-class candidate generator (section 5), now with a measured trigger (undershoot concentrated in >= 3-exon genes).
-2. **A deterministic guard to test next (not yet measured):** use the **reference gene's exon structure** (the curated records carry exons): map the model edge to the reference residue and flag `intron_expected_after_edge` when the reference has an intron downstream; accept an unscored extension only when none is expected, otherwise leave it `provisional`. Test it on this same table before any code.
+2. **The reference-structure guard was tested (section 11b): a partial fix.** Originally proposed as follows: use the **reference gene's exon structure** (the curated records carry exons): map the model edge to the reference residue and flag `intron_expected_after_edge` when the reference has an intron downstream; accept an unscored extension only when none is expected, otherwise leave it `provisional`. Test it on this same table before any code.
 3. The provisional tier (30-199 aa) is **justified for 2-exon genes and not for multi-intron genes**; the total-length screen should use **per-order** ranges (global ranges let 15 undershoots through) once each order has >= 3 curated records.
 4. **No overshoot** supports reporting extensions at all (with their class), but the acceptance bar "zero wrong promotions" must be read as "zero overshoot": undershoot is a **missed end** (a partial gene reported as extended), which the curator should decide how to count.
 
 **Limits.** 34 genes in 11 orders, skewed toward well-studied taxa; rows are not independent (32 genes, 4 truncations x 2 radii); truncation is simulated by cutting the reference, so it shows whether the extension finds the right stop, **not** whether a real divergent tail would still align elsewhere in the protein; the reference used for each model was not recorded; genes with frameshift models were not special-cased; the window flanks are 3 kb (an extension never reached the window end in 189 of 191). The 85/80 and the length-range rules were chosen after seeing these genes, so the 123/145 figure is fitted, not held out.
+
+### 11b. The reference-structure guard (tested 2026-10-21, job 30234694)
+
+`rescue_test2.py` repeats the test and also records, per hit, the best-hit reference and where the alignment ended on it (`vulgar`), and the number of introns of the **deposited gene** lying after the model end (the oracle cause). The 242 models are identical to the first run. Reference intron positions (aa) come from the curated records' exons (`ref_introns.tsv`); only **34 of the 55 curated references carry an exon structure**. 189 truncated rows reached a stop.
+
+**Oracle (confirms the cause) [M].** Introns after the edge in the deposited gene: **0 -> 128 of 132 rows exact or within 5 aa (97%)**; 1 -> 6 of 41; 2 -> 0 of 9; 3 -> 0 of 7. Undershoot (> 20 aa short) occurs in 28 of 41 (1 intron), 9 of 9, 7 of 7 and 4 of 132 (none). An intron after the alignment edge is the cause of the failures.
+
+**Guard = the best-hit reference has >= 1 intron downstream of the alignment end** (144 rows whose reference has exon info):
+| | undershoot | fine |
+|---|---|---|
+| flagged | 17 | 4 |
+| not flagged | 15 | 108 |
+Precision 0.81, **recall 0.53**; the not-flagged rows are 108 of 123 right (88%); 4 flagged-but-correct extensions would be held back (4 of 21 flagged).
+Why recall is limited: the reference and the target often differ in intron number or position (13 rows in which the reference has no intron after the edge but the deposited gene has one; the reference never over-predicts an intron that the target lacks except in 4 rows), so reference structure is a partial proxy. 45 of the 189 rows (24%) have a best reference **without** exon info and fail more often (16 undershoots, 22 correct).
+
+**Combined with the length-range rule of section 11:**
+| accepted set | rows | exact or within 5 aa | undershoot | overshoot > 5 aa |
+|---|---|---|---|---|
+| length rule alone | 145 | 123 (85%) | 15 | 0 |
+| length rule **and** reference known with no intron after the edge | 111 | 101 (91%) | 10 | 0 |
+| length rule but guard not clear (intron after, or reference without exon info) | 34 | 22 | 5 | 0 |
+
+**Conclusions.**
+1. The guard raises acceptance precision from 85% to 91% at the cost of holding back 22 correct extensions as provisional; it is **worth having as a flag, not as a sufficient gate**: about 10% of accepted extensions in multi-intron genes would still stop early.
+2. **Record the exon structure of every reference in the roster** (cheap, no run-time cost): 21 of 55 references lack it today; with full coverage the 24% "unknown" rows become judgeable. For references from deposits without an annotated CDS, derive the structure from the pipeline's own alignment to the source locus and have a curator confirm it.
+3. The remaining early stops (an intron the reference does not predict) cannot be found from the reference alone. They need a sequence-level signal: a **splice-aware extension** (search for a donor/acceptor pair that reopens the frame), which is the same job a gene-finder-class candidate generator does, so this result is further support for adding one in stage 4 and for the miniprot `--spsc` route of section 5b. A first deterministic version to test on this same table: from the alignment edge, enumerate GT/GC donors and AG acceptors (40-300 bp apart), keep spliced continuations that stay open for >= 100 aa to a stop and land inside the curated length range, and report the **best-scoring** one with the number of competing candidates (ambiguity) rather than a single answer.
+4. Same limits as section 11 (34 genes, simulated truncation, rules fitted on these genes), plus: reference intron positions are in aa along the reference protein and the alignment end is taken from `vulgar`; the position of a phase-1 or phase-2 intron is rounded to 0.1 aa.

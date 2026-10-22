@@ -29,9 +29,16 @@ sys.modules["deposit_to_record"] = gen  # dataclasses resolve annotations throug
 _spec.loader.exec_module(gen)
 
 
-def _run(cache_dir: Path):
+def _empty_db(tmp: Path) -> Path:
+    """A db root holding only the real Ascomycota order.yml (no records to collide with)."""
+    root = tmp / "db"
+    (root / "Ascomycota").mkdir(parents=True, exist_ok=True)
+    shutil.copy(_ROOT / "db" / "Ascomycota" / "order.yml", root / "Ascomycota" / "order.yml")
+    return root
+
+
+def _run(cache_dir: Path, db_root: Path):
     fetcher = gen.Fetcher(cache_dir, offline=True)
-    db_root = _ROOT / "db"
     return gen.build("ABC70320.1", fetcher, db_root, gen.load_db_index(db_root), date="2026-10-22",
                      mating_system="heterothallic", tier_policy="cited2-uncited3")
 
@@ -46,8 +53,8 @@ def _file_starting(cache_dir: Path, prefix: str) -> Path:
     return next(p for p in cache_dir.iterdir() if p.read_text().startswith(prefix))
 
 
-def test_real_deposit_gives_a_valid_confirmed_record():
-    res = _run(_CACHE)
+def test_real_deposit_gives_a_valid_confirmed_record(tmp_path):
+    res = _run(_CACHE, _empty_db(tmp_path))
     assert res.verdict == gen.CONFIRMED, res.reasons("needs_human") + res.reasons("caveat")
     rec = res.record
     assert rec["record_id"] == "5454_atcc-76502_MAT_MAT1-1"
@@ -73,10 +80,22 @@ def test_real_deposit_gives_a_valid_confirmed_record():
     assert validate_gene_status(rec) == []
 
 
-def test_output_is_deterministic():
-    a = yaml.safe_dump(_run(_CACHE).record, sort_keys=False)
-    b = yaml.safe_dump(_run(_CACHE).record, sort_keys=False)
+def test_output_is_deterministic(tmp_path):
+    db = _empty_db(tmp_path)
+    a = yaml.safe_dump(_run(_CACHE, db).record, sort_keys=False)
+    b = yaml.safe_dump(_run(_CACHE, db).record, sort_keys=False)
     assert a == b
+
+
+def test_an_already_curated_deposit_needs_a_human(tmp_path):
+    db = _empty_db(tmp_path)
+    rec = _run(_CACHE, db).record
+    d = db / "Ascomycota" / "Pleosporales" / rec["record_id"]
+    d.mkdir(parents=True)
+    (d / "metadata.yaml").write_text(yaml.safe_dump(rec, sort_keys=False))
+    res = _run(_CACHE, db)
+    assert res.verdict == gen.NEEDS_HUMAN
+    assert any(r.startswith(("record_id:", "duplicate:")) for r in res.reasons("needs_human"))
 
 
 def test_a_protein_that_the_exons_do_not_encode_needs_a_human(tmp_path):
@@ -86,7 +105,7 @@ def test_a_protein_that_the_exons_do_not_encode_needs_a_human(tmp_path):
     seq = seq.replace("\n", "")
     mutated = seq[:20] + ("A" if seq[20] != "A" else "G") + seq[21:]
     fasta.write_text(header + "\n" + mutated + "\n")
-    res = _run(cache)
+    res = _run(cache, _empty_db(tmp_path))
     assert res.verdict == gen.NEEDS_HUMAN
     assert any(r.startswith("translation:") for r in res.reasons("needs_human"))
 
@@ -103,7 +122,7 @@ def test_a_non_canonical_intron_needs_a_human(tmp_path):
     fields[6] = block[:8] + "a" + block[9:]
     lines[i] = lines[i][:10] + " ".join(fields[1:])
     gbk.write_text("\n".join(lines))
-    res = _run(cache)
+    res = _run(cache, _empty_db(tmp_path))
     assert res.verdict == gen.NEEDS_HUMAN
     assert any("AT..AG" in r for r in res.reasons("needs_human"))
 

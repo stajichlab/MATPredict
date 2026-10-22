@@ -166,6 +166,24 @@ def drop_low_quality_hits(
     return [h for h in hits if (h.end - h.start + 1) >= min_length_bp]
 
 
+def drop_below_gene_min_identity(hits: list[SearchHit], families: list[Family]) -> list[SearchHit]:
+    """Discard hits under their roster gene's own `min_identity` (percent).
+
+    A roster gene may declare `min_identity`; absent means no floor, so a family
+    that declares none is untouched. Applied with `drop_low_quality_hits`,
+    before clustering. First use (prototype 2026-10-22): the Pleosporaceae-scoped
+    GAP1/BGL1 flanks. BGL1 is a beta-glucosidase, a large family: unfloored, a
+    27.7%-identity BGL1 fragment beside an HMG paralog and a COX13 fragment made
+    8 spurious `high` second MAT calls in Alternaria, while every GAP1/BGL1 hit
+    beside a real MAT gene was >= 70% (results/2026-10-22_cochliobolus_scoped_roster/).
+    """
+    floors = {(f.key, g["name"]): float(g["min_identity"]) for f in families
+              for g in f.genes if isinstance(g, dict) and g.get("min_identity") is not None}
+    if not floors:
+        return hits
+    return [h for h in hits if h.identity >= floors.get((h.family_key, h.gene_name), 0.0)]
+
+
 def _roles_by_family(families: list[Family]) -> dict[FamilyKey, dict[str, str]]:
     """family_key -> {gene name: role} for every attempted family.
 

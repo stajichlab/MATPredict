@@ -6,7 +6,9 @@ from pathlib import Path
 
 from MATPredict import logger
 from MATPredict.detect.family_registry import (
+    Family,
     FamilyKey,
+    has_gene_scope,
     load_all_families,
     load_record_families,
 )
@@ -21,6 +23,7 @@ def build_reference_fasta(
     out_path: Path,
     family_keys: set[FamilyKey] | None = None,
     exclude_record_ids: frozenset[str] | set[str] | None = None,
+    families: list[Family] | None = None,
 ) -> Path:
     """Rewrite every db/**/proteins.faa header to `record_id|geneN|name` and concatenate.
 
@@ -55,6 +58,12 @@ def build_reference_fasta(
     for how a set is chosen, and note that the RADIUS decides what the
     resulting number means.
 
+    A roster gene with its own `taxonomic_scope` (`family_registry.scope_roster_genes`)
+    is left out unless `families` -- the ROUTED families, already scoped to this
+    genome -- still carries it. Omitting `families` therefore leaves every scoped
+    gene out, so a caller that does not route per genome searches with the query
+    set it had before the gene was added.
+
     Omitting `family_keys` (the default) keeps the pre-existing behaviour
     byte-for-byte, including not reading any `metadata.yaml` at all -- the
     batch/rollout callers, which build one shared reference FASTA for many
@@ -75,6 +84,14 @@ def build_reference_fasta(
     excluded_by_family = {
         f.key: {g["name"] for g in f.genes
                 if isinstance(g, dict) and g.get("exclude_from_search")}
+        for f in _families
+    }
+    #: Per family, the scoped roster genes this run does NOT search: every
+    #: scoped gene of the full roster, less those `families` still carries.
+    routed_genes = {f.key: {g["name"] for g in f.genes if isinstance(g, dict)}
+                    for f in (families or [])}
+    scoped_out_by_family = {
+        f.key: {g["name"] for g in f.genes if has_gene_scope(g)} - routed_genes.get(f.key, set())
         for f in _families
     }
     lines: list[str] = []
@@ -123,6 +140,8 @@ def build_reference_fasta(
             family_key = record_families.get(m["record_id"])
             canonical = aliases_by_family.get(family_key, {}).get(m["name"], m["name"])
             if canonical in excluded_by_family.get(family_key, ()):
+                continue
+            if canonical in scoped_out_by_family.get(family_key, ()):
                 continue
             key = (m["record_id"], canonical, sequence.replace("\n", ""))
             if key in emitted:

@@ -128,6 +128,32 @@ loci:
       - {name: APN2, role: flanking_conserved, gene_class: apn2_homolog}
       - {name: SLA2, role: flanking_conserved, gene_class: sla2_homolog}
       - {name: COX13, role: flanking_conserved}
+      # GAP1 and BGL1: PROTOTYPE, Pleosporaceae only (2026-10-22; results/
+      # 2026-10-22_cochliobolus_scoped_roster/NOTE.md). In Bipolaris, Curvularia and
+      # Exserohilum the MAT gene is flanked by GAP1 (GTPase activating protein homolog)
+      # and BGL1 (beta-glucosidase homolog), median 2.6 and 3.6 kb away, while SLA2/APN2
+      # lie 180-290 kb away; the cluster held one gene and the evidence floor dropped it
+      # (analysis/2026-10-18_cochliobolus-mat-recall.md). References: the C. heterostrophus
+      # C4 (AF027687.1: AAB84002.1, AAB84005.1) and C5 (AF029913.1: AAB82943.1,
+      # AAB82946.1) deposits, Turgeon et al. 1993 (PMID 8479433).
+      # * taxonomic_scope [28556] (Pleosporaceae, NCBI): searched only there, and only
+      #   with `detect --scoped-roster-policy on` (family_registry.scope_roster_genes).
+      #   Added to the whole roster they lowered 24 of 94 Dothideomycetes controls from
+      #   high to medium.
+      # * optional + a slot of their own: a found gene adds 1 to numerator and
+      #   denominator of fraction_found, an absent one costs nothing (scoring.score_cluster),
+      #   so a Pleosporaceae call that lacks them keeps its score. Reuses the slot
+      #   mechanism approved for SXI1/SXI2 (one member per slot here); not yet ruled on.
+      # * min_identity (search.drop_below_gene_min_identity): GAP1 50, BGL1 60. BGL1 is a beta-glucosidase
+      #   family. Unfloored, 27.7%-identity BGL1 fragments made 8 spurious high second calls
+      #   in Alternaria; every GAP1/BGL1 hit beside a real MAT gene was >= 70%.
+      #   BGL1 FLOOR 60 (curator ruling 2026-10-22, raised from 50): a full-length BGL1 paralog at
+      #   44.4-46.7% identity (802-890 aa, another contig) is present in every one of 15 sampled
+      #   recovered clade genomes (adversarial review 2026-10-22); at 50 that was a 3-6 point margin,
+      #   at 60 it is 13-16 points, and every real flank hit was >= 70%. GAP1's nearest paralog is
+      #   36.9% over 103 aa (floor stays 50). Re-validate the floors for every new genus brought into scope.
+      - {name: GAP1, role: flanking_conserved, optional: true, slot: GAP1, taxonomic_scope: [28556], min_identity: 50}
+      - {name: BGL1, role: flanking_conserved, optional: true, slot: BGL1, taxonomic_scope: [28556], min_identity: 60}
       # MAT1-2-4 (A. fumigatus Af293, XP_754990.2) is a genuinely distinct gene from
       # Leotiomycetes' MAT1-2-4, which was renamed MAT1-2-10 above precisely to avoid
       # this collision (Wilken et al. 2017). This entry is Eurotiomycetes-only; do not

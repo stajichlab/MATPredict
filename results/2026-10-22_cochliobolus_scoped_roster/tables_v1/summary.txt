@@ -1,0 +1,26 @@
+variant base genomes 2716 Counter({'called': 2461, 'not_detected': 251, 'no_report': 4})
+variant proto genomes 2731 Counter({'called': 2584, 'not_detected': 144, 'no_report': 3})
+variant ssg genomes 513 Counter({'called': 406, 'not_detected': 72, 'no_report': 35})
+variant off genomes 166 Counter({'not_detected': 101, 'called': 46, 'no_report': 19})
+variant baserep genomes 139 Counter({'not_detected': 97, 'called': 24, 'no_report': 18})
+clade genomes 103 audit-uncalled 101 base-uncalled among them 101
+proto: called 90 of 101; by genus Counter({('Bipolaris', True): 57, ('Curvularia', True): 23, ('Ophiosphaerella', False): 11, ('Exserohilum', True): 10})
+proto: eval Counter({'agrees_with_scan': 86, 'no_call': 11, 'agrees_with_scan(subset)': 4})
+proto: confidence/class Counter({('medium/partial_locus',): 78, ('high/mat_locus',): 11, ('medium/partial_locus', 'medium/partial_locus'): 1})
+proto: strain truth [('GCA_000338975.1_CocheC5_3', 'MAT1-1', 'MAT:MAT1-1/medium/partial_locus/MAT1-1-1,BGL1,GAP1'), ('GCA_028891585.1_CocheC5_4m', 'MAT1-1', 'MAT:MAT1-1/medium/partial_locus/MAT1-1-1,BGL1,GAP1'), ('GCF_000354255.1_CocheC4_1', 'MAT1-2', 'MAT:MAT1-2/medium/partial_locus/MAT1-2-1,GAP1,BGL1'), ('GCF_028858645.1_CocheC4_6', 'MAT1-2', 'MAT:MAT1-2/medium/partial_locus/MAT1-2-1,BGL1,GAP1')]
+ssg: called 46 of 101; by genus Counter({('Bipolaris', True): 46, ('Curvularia', False): 23, ('Bipolaris', False): 11, ('Ophiosphaerella', False): 11, ('Exserohilum', False): 10})
+ssg: eval Counter({'no_call': 55, 'agrees_with_scan': 41, 'agrees_with_scan(subset)': 5})
+ssg: confidence/class Counter({('low/idiomorph_gene_only',): 46})
+ssg: strain truth [('GCA_000338975.1_CocheC5_3', 'MAT1-1', 'MAT:MAT1-1/low/idiomorph_gene_only/MAT1-1-1'), ('GCA_028891585.1_CocheC5_4m', 'MAT1-1', 'MAT:MAT1-1/low/idiomorph_gene_only/MAT1-1-1'), ('GCF_000354255.1_CocheC4_1', 'MAT1-2', 'MAT:MAT1-2/low/idiomorph_gene_only/MAT1-2-1'), ('GCF_028858645.1_CocheC4_6', 'MAT1-2', 'MAT:MAT1-2/low/idiomorph_gene_only/MAT1-2-1')]
+OUTSIDE scope base vs proto 2254 {'report_identical': 2235, 'missing_run': 19}
+INSIDE scope (non-clade) base vs proto 385 {'CALLS_CHANGED': 379, 'calls_identical_report_differs': 6}
+INSIDE scope clade base vs proto 92 {'CALLS_CHANGED': 91, 'calls_identical_report_differs': 1}
+control94 base vs proto 94 {'report_identical': 84, 'CALLS_CHANGED': 10}
+policy-off branch vs main 166 {'report_identical': 147, 'missing_run': 19}
+main replicate vs main 139 {'report_identical': 121, 'missing_run': 18}
+ssg vs base (its set) 513 {'report_identical': 432, 'CALLS_CHANGED': 46, 'missing_run': 35}
+control94 base vs ssg 94 {'report_identical': 94}
+changes outside Counter()
+changes inside_nonclade Counter({'GENES_OR_COORDS_ONLY': 304, 'CONFIDENCE_CHANGED': 46, 'NEW_CALL': 17, 'IDIOMORPH_SET_CHANGED': 8, 'CLASS_CHANGED': 4})
+changes inside_clade Counter({'NEW_CALL': 90, 'GENES_OR_COORDS_ONLY': 1})
+changes ssg Counter({'NEW_CALL': 46})

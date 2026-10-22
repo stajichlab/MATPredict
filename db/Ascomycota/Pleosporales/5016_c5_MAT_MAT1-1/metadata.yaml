@@ -1,5 +1,5 @@
 record_id: 5016_c5_MAT_MAT1-1
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 5016
   lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Dothideomycetes;o__Pleosporales;f__Pleosporaceae;g__Bipolaris;s__Bipolaris_maydis
@@ -21,22 +21,24 @@ locus:
   excluded_from_coordinate_benchmark: false
   core:
     completeness: complete
-    reference_orientation: GAP1->ORF1->MAT1-1-1->BGL1
+    reference_orientation: GAP1(-)->ORF1->MAT1-1-1(+)->BGL1(+)
     definition_note: 'Cochliobolus heterostrophus (= Bipolaris maydis, NCBI taxid
       5016) strain C5 MAT-1 locus, deposit AF029913.1 (12,572 bp). The paper calls
       the gene MAT-1; it is the alpha-box MAT1-1-1 ("similarity to the Neurospora
       crassa MATA ... and Saccharomyces cerevisiae MAT alpha 1 proteins"). Curated:
-      MAT1-1-1 (AAB82945.1). Not curated, as they are not roster genes: GAP1 (AAB82943.1),
-      an unknown ORF (AAB82944.1) and BGL1 (AAB82946.1), the Pleosporales flanks.
-      The deposit has no APN2 or SLA2. Idiomorph 1,297 bp per the paper.'
+      MAT1-1-1 (AAB82945.1); GAP1 (AAB82943.1) and BGL1 (AAB82946.1) added 2026-10-22
+      as Pleosporaceae-scoped roster flanks (prototype; db/Ascomycota/order.yml), CDS
+      joins translated from the deposit equal the protein records. Not curated: the
+      unknown ORF1 (AAB82944.1). The segment spans GAP1 to BGL1. The deposit has no
+      APN2 or SLA2. Idiomorph 1,297 bp per the paper.'
     segments:
     - segment_index: 0
       sequence_source:
         type: insdc_nucleotide
         accession: AF029913.1
         seq_region: AF029913.1
-      start: 5147
-      end: 6350
+      start: 633
+      end: 11866
       contig_edge_distance: null
   extended_flank: []
 genes:
@@ -50,12 +52,54 @@ genes:
   start: 5147
   end: 6350
   strand: +
-  order_in_locus: 0
+  order_in_locus: 1
   exons:
   - start: 5147
     end: 5363
   - start: 5416
     end: 6350
+- gene_index: 1
+  name: GAP1
+  protein_accession: ncbi_protein:AAB82943.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 633
+  end: 3006
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 2629
+    end: 3006
+  - start: 1965
+    end: 2574
+  - start: 1153
+    end: 1917
+  - start: 794
+    end: 1073
+  - start: 633
+    end: 744
+- gene_index: 2
+  name: BGL1
+  protein_accession: ncbi_protein:AAB82946.1
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 9022
+  end: 11866
+  strand: '+'
+  order_in_locus: 2
+  exons:
+  - start: 9022
+    end: 9127
+  - start: 9196
+    end: 9573
+  - start: 9629
+    end: 9844
+  - start: 9954
+    end: 11866
 evidence:
   locus_existence:
     tier: 1
@@ -97,6 +141,14 @@ validation:
       percent_identity: 100.0
       coverage: 100.0
       status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
     notes: ''
   taxonomy_current: true
 curation:
@@ -106,5 +158,12 @@ curation:
   reviewed_date: '2026-09-26'
   notes: 'Proposed 2026-09-26 from docs/notes/2026-09-24_mat-reference-gap-literature.md
     (Tier 2: Dothideomycetes). First Dothideomycetes references; the 2026-09-24 pilot
-    called 90/100 Dothideomycetes genomes with no record of the class. Curator J. Stajich signed off 2026-09-26.'
+    called 90/100 Dothideomycetes genomes with no record of the class. Curator J. Stajich signed off 2026-09-26.
+
+    record_version 2, 2026-10-22 (material change, prototype branch cochliobolus-scoped-roster):
+    GAP1 (AAB82943.1) and BGL1 (AAB82946.1) added as genes 1 and 2 (flanking_conserved, the
+    Pleosporaceae-scoped roster flanks of db/Ascomycota/order.yml) and the core segment
+    moved to span GAP1..BGL1 on AF029913.1 (was the MAT gene only). CDS joins translated from
+    the deposit equal the protein records (results/2026-10-22_cochliobolus_scoped_roster/).
+    Curator J. Stajich signed off record_version 2 on 2026-10-22.'
 model_provenance: null

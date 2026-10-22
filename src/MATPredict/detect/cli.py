@@ -21,13 +21,15 @@ from MATPredict.detect.pipeline import (
     EvidenceFloor,
     not_searched_reason, run_pipeline,
 )
-from MATPredict.detect.family_registry import available_phyla, load_all_families, route
+from MATPredict.detect.family_registry import (
+    DEFAULT_SCOPED_ROSTER_POLICY, SCOPED_ROSTER_POLICIES, available_phyla, load_all_families, route,
+)
 from MATPredict.detect.genbank_input import is_genbank, prepare_genbank_input
 from MATPredict.detect.reference_fasta import build_reference_fasta
 from MATPredict.detect.provenance import RunClock, run_block
 from MATPredict.detect.report import _taxonomy_source, write_detection_gff3, write_detection_report
 from MATPredict.detect.rollout_aggregate import aggregate_reports, write_rollout_summary
-from MATPredict.detect.scope_audit import audit_scope, record_taxids_by_family
+from MATPredict.detect.scope_audit import audit_gene_scopes, audit_scope, record_taxids_by_family
 from MATPredict.detect.suppress import default_suppress_paths, filter_rows, load_suppress_list
 
 _ROLLOUT_REPORT_FILENAME = "detection_report.yaml"
@@ -72,7 +74,8 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     # re-route to a different set than the query set was built for, and so the
     # taxonomy lookup happens once per run.
     routing = route(args.taxid, load_all_families(config.db_root), phylum=args.phylum,
-                    exhaustive=getattr(args, "exhaustive", False))
+                    exhaustive=getattr(args, "exhaustive", False),
+                    scoped_roster_policy=_scoped_roster_policy_from_args(args))
     # An explicitly requested phylum that matches no curated family is a usage
     # error, not a valid empty result. Left to run it would build an empty
     # reference FASTA, search nothing, and exit 0 with an empty
@@ -113,6 +116,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         config.db_root, out_dir / "_reference.faa",
         family_keys={f.key for f in routing.families},
         exclude_record_ids=exclude_record_ids,
+        families=routing.families,
     )
     evidence_floor = EvidenceFloor(
         min_hits=args.min_hits, min_identity=args.min_identity,
@@ -267,6 +271,8 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "homothallic_policy": _homothallic_policy_from_args(args),
             "confidence_cap_policy": _confidence_cap_policy_from_args(args),
             "strong_single_gene_policy": _strong_single_gene_policy_from_args(args),
+            "scoped_roster_policy": _scoped_roster_policy_from_args(args),
+            "scoped_roster": getattr(routing, "scoped_roster", None),
             "supported_min_bitscore": getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
         },
     )
@@ -301,6 +307,12 @@ def _strong_single_gene_policy_from_args(args) -> str:
     """The strong-single-gene policy for this run; an args object without the
     attribute (a test double) gets the default, `off`."""
     return getattr(args, "strong_single_gene_policy", DEFAULT_STRONG_SINGLE_GENE_POLICY)
+
+
+def _scoped_roster_policy_from_args(args) -> str:
+    """The taxon-scoped roster policy for this run; an args object without the
+    attribute (a test double) gets the default, `off`."""
+    return getattr(args, "scoped_roster_policy", DEFAULT_SCOPED_ROSTER_POLICY)
 
 
 def _polish_strong_identity_from_args(args) -> float | None:
@@ -389,6 +401,9 @@ def _cmd_audit_scope(args: argparse.Namespace) -> int:
         )
     if not any_uncovered:
         print("every family's own curated records are covered by its taxonomic_scope")
+    for record_id, gene, taxid, scope in audit_gene_scopes(db_root, families):
+        print(f"{record_id}: carries scoped gene {gene} but its taxid {taxid} is outside the gene's "
+              f"taxonomic_scope {scope} -- the protein is never searched")
     return 0
 
 
@@ -609,6 +624,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              ">= 90%% of its reference is reported as `idiomorph_gene_only`, confidence `low`, flagged "
              "`strong_single_gene`; two such loci of opposite idiomorph are both reported and the genome "
              "gets a `two_idiomorphs` statement. Independent of --idiomorph-policy and --partial-core-policy.",
+    )
+    detect.add_argument(
+        "--scoped-roster-policy", choices=SCOPED_ROSTER_POLICIES, default=DEFAULT_SCOPED_ROSTER_POLICY,
+        help="off: a roster gene that declares its own `taxonomic_scope` in order.yml is not searched "
+             "(default; the run is the one it was before such genes were added). on: it is searched, and "
+             "counts, for a genome whose lineage reaches its scope, and nowhere else (prototype: GAP1/BGL1 "
+             "as optional bonus flanks of Ascomycota MAT in Pleosporaceae).",
     )
     detect.add_argument(
         "--exhaustive", action="store_true",

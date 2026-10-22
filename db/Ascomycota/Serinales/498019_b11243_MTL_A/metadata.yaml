@@ -1,5 +1,5 @@
 record_id: 498019_b11243_MTL_A
-record_version: 2
+record_version: 3
 taxonomy:
   taxid: 498019
   lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Metschnikowiaceae;g__Candidozyma;s__Candidozyma_auris
@@ -46,7 +46,7 @@ locus:
         accession: PYGM01000086.1
         seq_region: PYGM01000086.1
       start: 8313
-      end: 16044
+      end: 16159
       contig_edge_distance: null
   extended_flank: []
 genes:
@@ -105,16 +105,24 @@ genes:
     end: 15461
 - gene_index: 1
   name: MTLA1
-  protein_accession: ncbi_protein:PSK75932.1
+  protein_accession: null
   role: core_MAT
   present: true
   locus_tag: CJJ07_005605
   segment_index: 0
-  start: 15745
-  end: 16044
+  start: 15538
+  end: 16159
   strand: +
   order_in_locus: 4
   transl_table: 12
+  exons:
+  - start: 15538
+    end: 15669
+  - start: 15718
+    end: 16020
+  - start: 16094
+    end: 16159
+  codon_start: 1
 evidence:
   locus_existence:
     tier: 2
@@ -199,5 +207,33 @@ curation:
   notes: 'Curated because the pilot called 0 of 17 C. auris genomes: the MTLa1+MTLa2
     cluster is found at ~47% identity to the nearest curated reference, but exonerate
     and miniprot cannot model genes that divergent (verified on B8441 with relaxed
-    thresholds). All CDS use translation table 12.'
+    thresholds). All CDS use translation table 12.
+
+
+    record_version 2 -> 3, 2026-10-22 (curator ruling, J. Stajich; issue #122): MTLA1
+    is replaced by the full-length three-exon model. The depositors'' model PSK75932.1
+    (CJJ07_005605, PYGM01000086.1:15745-16044 +, 99 aa) is 5''-truncated: it starts
+    at a CTG inside exon 2 (codon 54 of the full model, Ser in table 12, given as Met)
+    and reads through the second intron to a stop at 16042-16044, so its last 7 aa
+    (VCENCLI) are intron sequence. The full model, exons 15538-15669, 15718-16020,
+    16094-16159 (+), 501 bp, encodes 166 aa from an ATG to a TGA stop with no internal
+    stop (table 12); its introns are 48 bp (GTGAGT..AG) and 73 bp (GTATGT..AG). Exon
+    lengths (132, 303, 66) and intron total (121 bp) equal those of the clade I record
+    498019_b11205_MTL_A (WZC25182.1), and 162 of 166 residues are identical to WZC25182.1,
+    including Ser at all four CTG codons (positions 16, 23, 54, 103), which supports
+    table 12. miniprot 0.18-r281 (-T 12) and exonerate 2.4.0 (protein2genome, --geneticcode
+    12, --refine region) with WZC25182.1 on the whole contig both give these three
+    exons (identity 97.59%). protein_accession is now null, so proteins.faa holds the
+    translation of the exons; locus_tag still names the deposit gene. The segment
+    end moves from 16044 to 16159 so that it contains the gene. The gene does not overlap MTLA2 (ends 15461; 76 bp
+    gap). Its third exon overlaps the 3'' end of the convergent minus-strand gene PSK75933.1
+    (CJJ07_004263, 16108-18495) by 52 bp; the clade I genome has the same 52-bp overlap
+    (WZC25182.1 and WZC25181.1 on CP060341.1), so the overlap is conserved, not a
+    modelling artefact. definition_note''s statement that the MTLa1 model is a single
+    99-aa exon describes the replaced model.
+
+    Verified 2026-10-22 by Claude Code (claude-opus-5-5, branch curation-corrections):
+    NCBI efetch of PYGM01000086.1, CP060341.1:190001-200000, WZC25182.1 and PSK75932.1;
+    Biopython translation (tables 1 and 12) and global alignment to WZC25182.1; miniprot
+    and exonerate on a compute node.'
 model_provenance: null

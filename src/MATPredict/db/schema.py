@@ -129,6 +129,29 @@ def validate_gene_status(record: dict) -> list[str]:
     return errors
 
 
+def validate_exon_bounds(record: dict) -> list[str]:
+    """Check every gene's `exons` against its own `start`/`end` (the JSON schema cannot).
+
+    Each exon must have start <= end, and when the gene records start/end every exon
+    must lie inside [start, end]. Exons may be narrower than start/end: a span taken
+    from a deposit's gene feature includes UTRs, while `exons` are the coding sequence.
+    Returns one message per problem.
+    """
+    errors: list[str] = []
+    for gene in record.get("genes", []):
+        label = f"gene '{gene.get('name')}' (gene_index {gene.get('gene_index')})"
+        start, end = gene.get("start"), gene.get("end")
+        for i, exon in enumerate(gene.get("exons") or []):
+            exon_start, exon_end = exon.get("start"), exon.get("end")
+            if exon_start is None or exon_end is None:
+                continue  # a missing exon bound is the JSON schema's error
+            if exon_start > exon_end:
+                errors.append(f"{label} exon {i} has start {exon_start} > end {exon_end}")
+            if start is not None and end is not None and (exon_start < start or exon_end > end):
+                errors.append(f"{label} exon {i} {exon_start}-{exon_end} lies outside the gene's start/end {start}-{end}")
+    return errors
+
+
 def validate_idiomorphs(record: dict, order_doc: dict) -> list[str]:
     """Cross-check mating_type.idiomorphs against the matching locus's enum/pattern in order.yml."""
     locus_name = record["mating_type"]["locus_name"]

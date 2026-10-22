@@ -16,7 +16,7 @@ from MATPredict.db.build_duckdb import build as build_duckdb
 from MATPredict.db.curate import accept_candidate, propose_candidate, reject_candidate
 from MATPredict.db.http_cache import CachedFetcher
 from MATPredict.db.ncbi_client import NcbiClient
-from MATPredict.db.schema import validate_gene_status, validate_gene_vocabulary
+from MATPredict.db.schema import validate_exon_bounds, validate_gene_status, validate_gene_vocabulary
 from MATPredict.db.uniprot_client import UniprotClient
 from MATPredict.db.validate import _client_for, _independent_translation, validate_record
 
@@ -91,7 +91,10 @@ def _cmd_validate(args: argparse.Namespace) -> int:
     status_errors = validate_gene_status(record)
     for error in status_errors:
         print(f"gene-status error: {error}")
-    vocabulary_errors = vocabulary_errors + status_errors
+    exon_errors = validate_exon_bounds(record)
+    for error in exon_errors:
+        print(f"exon-bounds error: {error}")
+    vocabulary_errors = vocabulary_errors + status_errors + exon_errors
 
     # A re-validation that reveals a problem must downgrade the record's status so it gets
     # re-reviewed, unless it was explicitly rejected already (never silently un-reject).

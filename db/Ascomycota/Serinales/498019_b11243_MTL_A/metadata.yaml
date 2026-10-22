@@ -21,7 +21,7 @@ locus:
   coordinate_provenance: curator_derived
   excluded_from_coordinate_benchmark: true
   core:
-    completeness: partial
+    completeness: complete
     reference_orientation: PAP1->OBP1->PIK1->MTLA2->MTLA1
     definition_note: 'Candidozyma auris B11243 (clade IV) MTLa, GenBank assembly GCA_003014415.1,
       annotated by the depositors as ''mating_type_MTLa2'' (PSK75931.1, 152 aa) and
@@ -31,8 +31,8 @@ locus:
       16094-16159; 166 aa, the structure of the clade I models, e.g. B11205 WZC25182.1),
       curator ruling 2026-10-22: the depositors'' MTLa1 (PSK75932.1) is a single 99-aa
       exon that starts at a CTG inside exon 2 and reads into intron 2, so it lacks the
-      5'' exons; see curation.notes. The `completeness` value was set for that truncated
-      model and is left for a separate curator ruling.
+      5'' exons; see curation.notes. completeness is complete (curator ruling 2026-10-22):
+      MTLa2 and the full-length MTLa1 are both modelled, with the PAP1-OBP1-PIK1 flanks.
 
 
       record_version bump, 2026-09-25 (curator ruling): PAP1 (PSK75928.1), OBP1 (PSK75929.1),
@@ -232,8 +232,8 @@ curation:
     (CJJ07_004263, 16108-18495) by 52 bp; the clade I genome has the same 52-bp overlap
     (WZC25182.1 and WZC25181.1 on CP060341.1), so the overlap is conserved, not a
     modelling artefact. definition_note, evidence.boundaries and validation.sequence_match
-    were updated in place to match; locus.core.completeness is unchanged (partial)
-    pending a separate curator ruling.
+    were updated in place to match, and locus.core.completeness changed from partial
+    to complete (curator ruling 2026-10-22).
 
     Verified 2026-10-22 by Claude Code (claude-opus-5-5, branch curation-corrections):
     NCBI efetch of PYGM01000086.1, CP060341.1:190001-200000, WZC25182.1 and PSK75932.1;

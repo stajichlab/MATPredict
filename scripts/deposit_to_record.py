@@ -26,22 +26,48 @@ results/2026-10-21_gene_model_extension/heldout/selected.tsv), it
    * CONFIRMED             every check passed;
    * CONFIRMED_WITH_CAVEAT every blocking check passed, some informative flag is
                            set (genome-project annotation, third-party annotation,
-                           UTR in the gene feature, partial CDS, GC-AG intron, ...);
-   * NEEDS_HUMAN           a field could not be derived mechanically or a check
-                           failed; no record is written, the reasons are listed.
+                           UTR in the gene feature up to WIDE_GENE_BP, ...);
+   * NEEDS_HUMAN           a field could not be derived mechanically, a check
+                           failed, or a curator ruling holds the deposit for hand
+                           review; no record is written, the reasons are listed.
+
+Curator rulings of 2026-10-22 (generator v2):
+
+* (1)  hold list: built-in ``order Helotiales + MAT1-1-1`` (until the idiomorph
+       vote ignores short opposite-idiomorph fragments), extendable with
+       ``--hold-file``; a held deposit is NEEDS_HUMAN;
+* (2)  tier policy cited2-uncited3 (tier 2 cited, tier 3 uncited);
+* (3)  ``mating_type.system`` defaults to ``unknown`` (never guessed);
+* (4)  an intact CDS of the other idiomorph's gene in the window -> NEEDS_HUMAN;
+* (5)  record_id rule unchanged; collisions and empty slugs are flagged, never suffixed;
+* (6)  genome-project predictions and TPA records are included, flagged in the notes;
+* (7)  doubtful structures -> NEEDS_HUMAN: an intron < SHORT_INTRON_BP, a GC-AG
+       intron, a gene feature reaching more than WIDE_GENE_BP beyond the CDS on
+       either side;
+* (8)  disagreement with an existing curated record of the same gene (same
+       protein accession, an overlapping region of the same nucleotide record, or
+       the same taxid and strain) -> NEEDS_HUMAN plus a row in the conflicts TSV;
+* (9)  start/end = CDS span; the gene-feature span goes in the definition note;
+* (10) 5'- or 3'-partial CDS -> NEEDS_HUMAN;
+* (13) core-only fields: segment = CDS span, ``core.completeness: partial``,
+       ``excluded_from_coordinate_benchmark: true``, ``organism.species`` = the
+       NCBI species-rank name (a binomial; strain separate; ``sp.``/``cf.``/no
+       binomial -> NEEDS_HUMAN) and lineage ``s__`` the same name.
 
 Two values are NOT derivable from a deposit and are taken from the command line
-as curator choices, never guessed: ``--mating-system`` (a single-gene deposit
-says nothing about the breeding system) and ``--tier-policy`` (which evidence
-tier a depositor's annotation earns). Both are written into the record's
-``curation.notes`` as curator-supplied. Nothing in this script calls a model or
-uses judgement: the same inputs and cache give the same bytes.
+as curator choices, never guessed: ``--mating-system`` (default ``unknown``: a
+single-gene deposit says nothing about the breeding system) and ``--tier-policy``
+(which evidence tier a depositor's annotation earns). Both are written into the
+record's ``curation.notes``. NOTE: db/_schema/metadata.schema.yaml does not yet
+accept ``system: unknown`` (a separate PR); until it does, records generated with
+the default fail ``validate_metadata`` on that one field. Nothing in this script
+calls a model or uses judgement: the same inputs and cache give the same bytes.
 
 Run (from outside the repository, never with ``uv run`` inside it)::
 
     uv run --no-project --with biopython --with pyyaml python -I \
         scripts/deposit_to_record.py --repo <worktree> --protein EJP63339.1 \
-        --mating-system heterothallic --tier-policy cited2-uncited3 \
+        --tier-policy cited2-uncited3 \
         --date 2026-10-22 --cache-dir <cache> --out <dir> --report <prefix>
 """
 from __future__ import annotations
@@ -70,8 +96,21 @@ TOOL = "MATPredict-deposit-to-record"
 MIN_INTERVAL_S = 0.34  # <= 3 requests per second (NCBI's keyless limit)
 WINDOW_BP = 20000  # nucleotide window fetched on each side of the CDS
 SHORT_INTRON_BP = 35
+# ruling 7 (2026-10-22): a deposit gene feature reaching more than this many bp beyond
+# the CDS on either side is a doubtful (gene-model / mis-joined) structure -> NEEDS_HUMAN;
+# up to this many bp it is read as UTRs and stays a caveat.
+WIDE_GENE_BP = 1000
 GENOME_SCALE_BP = 200000  # a nucleotide record this long is a genome contig, not a locus deposit
-GENERATOR_VERSION = "1"
+GENERATOR_VERSION = "2"
+MATING_SYSTEMS = ["unknown", "heterothallic", "homothallic", "pseudohomothallic", "unisexual_switching"]
+DEFAULT_MATING_SYSTEM = "unknown"
+HELOTIALES_HOLD_REASON = ("held: Helotiales MAT1-1-1 until the idiomorph vote ignores short "
+                          "opposite-idiomorph fragments")
+# ruling 1 (2026-10-22). Each rule matches on every non-empty field among
+# protein (accession.version or bare), order (NCBI order name) and gene.
+BUILTIN_HOLDS = [{"protein": "", "order": "Helotiales", "gene": "MAT1-1-1", "reason": HELOTIALES_HOLD_REASON}]
+# ruling 13: a species-rank name is usable only if it is a plain binomial.
+_BINOMIAL = re.compile(r"^[A-Z][a-z]+(?:-[a-z]+)? [a-z]+(?:-[a-z]+)*$")
 LINEAGE_RANKS = [("k", "kingdom"), ("p", "phylum"), ("subphylum", "subphylum"), ("c", "class"),
                  ("o", "order"), ("f", "family"), ("g", "genus"), ("s", "species")]
 ROSTER_GENES = {"MAT1-1-1": "MAT1-1", "MAT1-2-1": "MAT1-2"}
@@ -83,8 +122,9 @@ NEEDS_HUMAN = "NEEDS_HUMAN"
 TIER_POLICIES = {
     # name -> (tier when the GenPept cites a PubMed article, tier when it cites none)
     "cited1-uncited3": (1, 3),
-    "cited2-uncited3": (2, 3),
+    "cited2-uncited3": (2, 3),  # curator ruling 2 (2026-10-22): the policy in use
 }
+DEFAULT_TIER_POLICY = "cited2-uncited3"
 
 
 # --------------------------------------------------------------------------- fetching
@@ -219,28 +259,177 @@ def stop_codons(table: int) -> set[str]:
     return set(CodonTable.unambiguous_dna_by_id[table].stop_codons)
 
 
+def species_binomial(name: str | None) -> bool:
+    """True for a plain 'Genus epithet' (no sp./cf./aff., no strain, no digits)."""
+    return bool(name) and bool(_BINOMIAL.match(name))
+
+
+def load_holds(path: Path | None, builtin: bool = True) -> list[dict]:
+    """Hold rules: the built-in list plus a TSV with columns protein, order, gene, reason.
+
+    An empty field matches anything; a rule with all of protein/order/gene empty is
+    refused (it would hold every deposit). Lines starting with '#' are comments.
+    """
+    holds = [dict(h) for h in BUILTIN_HOLDS] if builtin else []
+    if path is None:
+        return holds
+    import csv
+    with open(path) as fh:
+        rows = csv.DictReader((line for line in fh if not line.startswith("#")), delimiter="\t")
+        for n, row in enumerate(rows, start=2):
+            rule = {k: (row.get(k) or "").strip() for k in ("protein", "order", "gene", "reason")}
+            if not (rule["protein"] or rule["order"] or rule["gene"]):
+                raise ValueError(f"{path} row {n}: a hold rule needs a protein, order or gene")
+            if not rule["reason"]:
+                rule["reason"] = "held: listed in " + path.name
+            holds.append(rule)
+    return holds
+
+
+def matching_holds(holds: list[dict], protein: str, order: str | None, gene: str | None) -> list[dict]:
+    out = []
+    for h in holds:
+        if h["protein"] and h["protein"] not in (protein, protein.split(".")[0]):
+            continue
+        if h["order"] and h["order"] != order:
+            continue
+        if h["gene"] and h["gene"] != gene:
+            continue
+        out.append(h)
+    return out
+
+
+def aa_from_exons(exons: list[tuple[int, int]], codon_start: int = 1) -> int:
+    """Residues encoded by an exon model whose last codon is the stop (the db convention)."""
+    nt = sum(e - s + 1 for s, e in exons) - (codon_start - 1)
+    return nt // 3 - 1
+
+
+def exon_lengths(exons: list[tuple[int, int]]) -> list[int]:
+    return [e - s + 1 for s, e in exons]
+
+
 # --------------------------------------------------------------------------- the db
 
 def load_db_index(db_root: Path) -> dict:
     """Accepted and candidate records: protein accessions, nucleotide accessions, ids, taxids, species."""
-    index = {"proteins": {}, "nucleotides": {}, "record_ids": set(), "taxids": {}, "species": {}}
+    index = {"proteins": {}, "nucleotides": {}, "record_ids": set(), "taxids": {}, "species": {},
+             "models": []}
     for meta in sorted(db_root.glob("**/metadata.yaml")):
         doc = yaml.safe_load(meta.read_text()) or {}
-        rid = doc.get("record_id")
-        if not rid:
-            continue
-        index["record_ids"].add(rid)
-        index["taxids"].setdefault((doc.get("taxonomy") or {}).get("taxid"), []).append(rid)
-        index["species"].setdefault((doc.get("organism") or {}).get("species"), []).append(rid)
-        for gene in doc.get("genes") or []:
-            acc = gene.get("protein_accession")
-            if acc:
-                index["proteins"].setdefault(acc.split(":", 1)[-1].split(".")[0], []).append(rid)
-        for seg in ((doc.get("locus") or {}).get("core") or {}).get("segments") or []:
-            acc = (seg.get("sequence_source") or {}).get("accession")
-            if acc:
-                index["nucleotides"].setdefault(acc.split(".")[0], []).append(rid)
+        add_record_to_index(index, doc)
     return index
+
+
+def add_record_to_index(index: dict, doc: dict) -> None:
+    """Index one record: ids, accessions, taxid/species and its roster-gene models (ruling 8)."""
+    rid = doc.get("record_id")
+    if not rid:
+        return
+    index["record_ids"].add(rid)
+    taxid = (doc.get("taxonomy") or {}).get("taxid")
+    index["taxids"].setdefault(taxid, []).append(rid)
+    index["species"].setdefault((doc.get("organism") or {}).get("species"), []).append(rid)
+    seg_acc = {}
+    for seg in ((doc.get("locus") or {}).get("core") or {}).get("segments") or []:
+        acc = (seg.get("sequence_source") or {}).get("accession")
+        if acc:
+            index["nucleotides"].setdefault(acc.split(".")[0], []).append(rid)
+            seg_acc[seg.get("segment_index")] = acc
+    parts = rid.split("_")
+    strain_slug = parts[1] if len(parts) >= 4 else None
+    for gene in doc.get("genes") or []:
+        acc = gene.get("protein_accession")
+        if acc:
+            index["proteins"].setdefault(acc.split(":", 1)[-1].split(".")[0], []).append(rid)
+        name = normalise_gene_name(gene.get("name"))
+        if name is None:
+            continue
+        exons = [(int(x["start"]), int(x["end"])) for x in gene.get("exons") or []]
+        index["models"].append({
+            "record_id": rid, "gene": name, "taxid": taxid, "strain_slug": strain_slug,
+            "protein": acc.split(":", 1)[-1] if acc else None,
+            "nucleotide": seg_acc.get(gene.get("segment_index")),
+            "start": gene.get("start"), "end": gene.get("end"), "strand": gene.get("strand"),
+            "exons": exons, "codon_start": int(gene.get("codon_start") or 1),
+        })
+
+
+def _transcript_order(exons: list[tuple[int, int]], strand: str | None) -> list[tuple[int, int]]:
+    return sorted(exons, reverse=(strand == "-"))
+
+
+def compare_with_curated(db_index: dict, *, protein: str, nuc: str, name: str, taxid: int, slug: str,
+                         strain_known: bool, exons: list[tuple[int, int]], codon_start: int, strand: str,
+                         aa: int) -> tuple[list[dict], list[dict]]:
+    """Ruling 8: curated models of the same gene that this deposit describes; (conflicts, identical).
+
+    A curated model is "the same gene" when it carries the same protein accession
+    (any version), sits on the same nucleotide record over an overlapping region, or
+    belongs to the same taxid and the same (known) strain. Models are compared by
+    exon coordinates when both use the same nucleotide accession.version, otherwise
+    by the exon-length vector in transcript order (start, exon structure and length
+    all show there); the residue count is the exon arithmetic on both sides
+    (stop codon included, the db convention), with the NCBI length beside it.
+    """
+    cds_lo, cds_hi = min(s for s, _ in exons), max(e for _, e in exons)
+    dep_tx = _transcript_order(exons, strand)
+    dep_aa = aa_from_exons(dep_tx, codon_start)
+    conflicts, identical, seen = [], [], set()
+    for m in db_index.get("models", []):
+        if m["gene"] != name or (m["record_id"], m["gene"]) in seen:
+            continue
+        why = []
+        if m["protein"] and m["protein"].split(".")[0] == protein.split(".")[0]:
+            why.append(f"same protein {m['protein']}")
+        if m["nucleotide"] and m["nucleotide"].split(".")[0] == nuc.split(".")[0] and m["start"] and m["end"] \
+                and min(m["start"], m["end"]) <= cds_hi and max(m["start"], m["end"]) >= cds_lo:
+            why.append(f"overlapping region of {m['nucleotide']}")
+        if strain_known and m["taxid"] == taxid and m["strain_slug"] == slug:
+            why.append(f"same taxid {taxid} and strain {slug}")
+        if not why:
+            continue
+        seen.add((m["record_id"], m["gene"]))
+        diffs = []
+        cur_tx = _transcript_order(m["exons"], m["strand"])
+        cur_aa = aa_from_exons(cur_tx, m["codon_start"]) if cur_tx else None
+        if not cur_tx:
+            diffs.append("the curated record has no exon model to compare")
+        else:
+            if len(cur_tx) != len(dep_tx):
+                diffs.append(f"exon count {len(cur_tx)} vs {len(dep_tx)}")
+            if m["nucleotide"] == nuc:
+                if cur_tx[0][0 if strand == "+" else 1] != dep_tx[0][0 if strand == "+" else 1] \
+                        or m["strand"] != strand:
+                    diffs.append("start differs")
+                if sorted(cur_tx) != sorted(dep_tx):
+                    diffs.append("exon coordinates differ")
+            elif exon_lengths(cur_tx) != exon_lengths(dep_tx):
+                diffs.append(f"exon lengths {exon_lengths(cur_tx)} vs {exon_lengths(dep_tx)}")
+            if cur_aa != dep_aa:
+                diffs.append(f"protein length {cur_aa} vs {dep_aa} aa")
+            if m["codon_start"] != codon_start:
+                diffs.append(f"codon_start {m['codon_start']} vs {codon_start}")
+        hit = {"record_id": m["record_id"], "match": "; ".join(why)}
+        if not diffs:
+            identical.append(hit)
+            continue
+        conflicts.append({
+            "protein": protein, "gene": name, "match": hit["match"], "difference": "; ".join(diffs),
+            "existing_record_id": m["record_id"], "existing_protein": m["protein"] or "",
+            "existing_nucleotide": m["nucleotide"] or "", "existing_strand": m["strand"] or "",
+            "existing_exons": ";".join(f"{s}-{e}" for s, e in cur_tx),
+            "existing_aa": "" if cur_aa is None else cur_aa,
+            "deposit_nucleotide": nuc, "deposit_strand": strand,
+            "deposit_exons": ";".join(f"{s}-{e}" for s, e in dep_tx),
+            "deposit_aa": dep_aa, "deposit_ncbi_aa": aa,
+        })
+    return conflicts, identical
+
+
+CONFLICT_COLUMNS = ["protein", "gene", "match", "difference", "existing_record_id", "existing_protein",
+                    "existing_nucleotide", "existing_strand", "existing_exons", "existing_aa",
+                    "deposit_nucleotide", "deposit_strand", "deposit_exons", "deposit_aa", "deposit_ncbi_aa"]
 
 
 def route_family(db_root: Path, phylum: str, lineage_taxids: set[int], gene: str) -> list[tuple[str, dict]]:
@@ -278,7 +467,12 @@ def parse_taxonomy(xml_text: str) -> dict:
 
 
 def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date: str,
-          mating_system: str, tier_policy: str) -> Result:
+          mating_system: str = DEFAULT_MATING_SYSTEM, tier_policy: str = DEFAULT_TIER_POLICY,
+          holds: list[dict] | None = None) -> Result:
+    if holds is None:
+        holds = load_holds(None)
+    if mating_system not in MATING_SYSTEMS:
+        raise ValueError(f"mating_system {mating_system!r} not in {MATING_SYSTEMS}")
     res = Result(protein=protein)
     f = res.facts
 
@@ -426,8 +620,9 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         res.add("translation_qualifier", "needs_human", "/translation differs from the NCBI protein record")
 
     # ---- start / stop / frame
-    if partial5:
-        res.add("start", "caveat", f"5' partial CDS (<), codon_start {codon_start}")
+    if partial5:  # ruling 10: partial deposits are held for hand review
+        res.add("start", "needs_human", f"5' partial CDS (<), codon_start {codon_start}: "
+                                        "partial deposit, held for hand review")
     elif codon_start != 1:
         res.add("start", "needs_human", f"5' complete CDS with codon_start {codon_start}")
     elif cds_nt[:3] != "ATG":
@@ -435,7 +630,7 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
     else:
         res.add("start", "pass", "ATG")
     if partial3:
-        res.add("stop", "caveat", "3' partial CDS (>)")
+        res.add("stop", "needs_human", "3' partial CDS (>): partial deposit, held for hand review")
     elif not has_stop:
         res.add("stop", "needs_human", f"3' complete CDS does not end in a stop codon ({trimmed[-3:]})")
     elif len(framed) % 3:
@@ -454,15 +649,18 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
     f["introns"] = [list(i) for i in introns]
     for istart, iend, donor, acceptor, length in introns:
         tag = f"intron {istart}..{iend} ({length} bp) {donor}..{acceptor}"
+        # ruling 7: GC-AG and short introns are doubtful structures, held for hand review
         if (donor, acceptor) == ("GT", "AG"):
             status = "pass"
         elif (donor, acceptor) == ("GC", "AG"):
-            status = "caveat"
+            status = "needs_human"
+            tag += " GC-AG donor: doubtful structure, held for hand review"
         else:
             status = "needs_human"
-        if status == "pass" and length < SHORT_INTRON_BP:
-            status = "caveat"
-            tag += f" shorter than {SHORT_INTRON_BP} bp"
+            tag += " non-canonical"
+        if length < SHORT_INTRON_BP:
+            status = "needs_human"
+            tag += f" shorter than {SHORT_INTRON_BP} bp: doubtful structure, held for hand review"
         res.add("intron", status, tag)
 
     # ---- gene feature span versus the CDS span
@@ -484,9 +682,15 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         else:
             five = (cds_lo - g_lo) if strand == "+" else (g_hi - cds_hi)
             three = (g_hi - cds_hi) if strand == "+" else (cds_lo - g_lo)
-            res.add("gene_span", "caveat",
-                    f"deposit gene feature {g_lo}..{g_hi} is wider than the CDS {cds_lo}..{cds_hi} "
-                    f"(5' {five} bp, 3' {three} bp; UTRs or a gene-model span); record uses the CDS span")
+            detail = (f"deposit gene feature {g_lo}..{g_hi} is wider than the CDS {cds_lo}..{cds_hi} "
+                      f"(5' {five} bp, 3' {three} bp")
+            if max(five, three) > WIDE_GENE_BP:  # ruling 7
+                res.add("gene_span", "needs_human",
+                        f"{detail}; more than {WIDE_GENE_BP} bp beyond the CDS on a side): doubtful "
+                        f"structure, held for hand review")
+            else:
+                res.add("gene_span", "caveat",
+                        f"{detail}; UTRs or a gene-model span); record uses the CDS span")
 
     # ---- gene name -> roster gene -> idiomorph
     name = normalise_gene_name(gene_name_q) or normalise_gene_name(gp_gene)
@@ -544,16 +748,21 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
     genome_scale = ("WGS" in keywords or "Genome-Annotation-Data" in structured
                     or "Genome-Assembly-Data" in structured or slen >= GENOME_SCALE_BP)
     f["genome_scale_record"] = genome_scale
+    # ruling 6: predictions / TPA are included; the flag is spelled out in curation.notes
+    annotation_flags = []
     if genome_scale:
-        res.add("annotation_source", "caveat",
-                f"genome-project record (WGS keyword, genome structured comment or >= {GENOME_SCALE_BP} bp; "
-                f"{slen} bp): the CDS may be a pipeline gene prediction")
+        annotation_flags.append(
+            f"genome-project record (WGS keyword, genome structured comment or >= {GENOME_SCALE_BP} bp; "
+            f"{slen} bp): the CDS may be a pipeline gene prediction")
     if any(k.startswith("TPA") or "Third Party" in k for k in keywords):
-        res.add("annotation_source", "caveat", f"third-party annotation (TPA) record; keywords {keywords}")
+        annotation_flags.append(f"third-party annotation (TPA) record; keywords {keywords}")
     if inference:
-        res.add("annotation_source", "caveat", f"/inference {inference}")
+        annotation_flags.append(f"/inference {inference}")
     if re.search(r"predict|putative|hypothetical", f"{note} {product or ''}", flags=re.I):
-        res.add("annotation_source", "caveat", f"note/product says predicted/putative: '{note or product}'")
+        annotation_flags.append(f"note/product says predicted/putative: '{note or product}'")
+    for flag in annotation_flags:
+        res.add("annotation_source", "caveat", flag)
+    f["annotation_flags"] = annotation_flags
     if f["molecule_type"] not in ("DNA", "genomic DNA"):
         res.add("molecule", "needs_human", f"molecule type {f['molecule_type']}: not genomic DNA")
 
@@ -610,7 +819,27 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         res.add("transl_table", "needs_human",
                 f"CDS uses table {transl_table}, the taxon's nuclear code is {tax['genetic_code']}")
 
+    # ruling 13: organism.species is the NCBI species-rank name (the same name as s__),
+    # and only a plain binomial is accepted; strain stays in organism.strain.
+    species = by_rank.get("species") or None
+    f["species"] = species
+    if not species_binomial(species):
+        res.add("species", "needs_human",
+                f"species-rank name {species!r} (deposit /organism {organism!r}) is not a plain binomial "
+                f"(sp./cf./aff./strain-bearing or missing): organism.species needs a curator")
+    elif species != organism:
+        res.add("species", "caveat", f"organism.species '{species}' (NCBI species rank); "
+                                     f"deposit /organism is '{organism}'")
+    else:
+        res.add("species", "pass", species)
+
     phylum, order = by_rank["phylum"], by_rank["order"]
+    f["order"], f["phylum"] = order, phylum
+
+    # ruling 1: hold list (built-in Helotiales MAT1-1-1, plus --hold-file)
+    for h in matching_holds(holds, protein, order, name):
+        res.add("hold", "needs_human", h["reason"])
+
     lineage_taxids = {t["taxid"] for t in tax["lineage_ex"]} | {taxid}
     families = route_family(db_root, phylum, lineage_taxids, name)
     if len(families) != 1:
@@ -642,8 +871,26 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
     if not re.match(r"^[0-9]+_[a-z0-9-]+_[A-Za-z0-9-]+_[A-Za-z0-9-]+$", record_id):
         res.add("record_id", "needs_human", f"record_id {record_id} does not match the schema pattern")
         return res
+
+    # ruling 8: compare with existing curated models of the same gene before anything is written
+    conflicts, identical = compare_with_curated(db_index, protein=protein, nuc=nuc, name=name, taxid=taxid,
+                                                slug=slug, strain_known=strain_name is not None,
+                                                exons=exons, codon_start=codon_start, strand=strand,
+                                                aa=len(ncbi_protein))
+    f["conflicts"] = conflicts
+    for c in conflicts:
+        res.add("conflict", "needs_human",
+                f"disagrees with curated {c['existing_record_id']} ({c['match']}): {c['difference']}; "
+                f"see the conflicts table")
+    for m in identical:
+        res.add("duplicate", "needs_human",
+                f"already curated in {m['record_id']} with the same model ({m['match']})")
+
+    # ruling 5: collisions are flagged, never suffixed
     if record_id in db_index["record_ids"]:
         res.add("record_id", "needs_human", f"record_id {record_id} already exists in db/")
+        return res
+    if conflicts or identical:
         return res
     bare = protein.split(".")[0]
     if bare in db_index["proteins"]:
@@ -653,7 +900,7 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         res.add("duplicate", "needs_human",
                 f"nucleotide {nuc} is already a segment of {db_index['nucleotides'][nuc.split('.')[0]]}")
         return res
-    same = sorted(set(db_index["taxids"].get(taxid, [])) | set(db_index["species"].get(organism, [])))
+    same = sorted(set(db_index["taxids"].get(taxid, [])) | set(db_index["species"].get(species, [])))
     if same:
         res.add("same_species", "caveat", f"db/ already holds {same} for this taxid/species")
     res.add("record_id", "pass", record_id)
@@ -663,7 +910,7 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
     tier = tier_cited if pmids else tier_uncited
     cits = [{"pmid": c["pmid"], "doi": c["doi"]} for c in citations]
     deposit_desc = f"GenBank {nuc} CDS {coded_by} (protein {protein})"
-    caveats = res.reasons("caveat")
+    caveats = [c for c in res.reasons("caveat") if not c.startswith("annotation_source:")]  # stated below
     notes = (
         f"Generated {date} by scripts/deposit_to_record.py v{GENERATOR_VERSION} from NCBI E-utilities "
         f"(GenPept {protein}, nuccore {nuc}, taxonomy {taxid}"
@@ -672,9 +919,19 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         f"{'ATG start' if not partial5 else '5-partial'}, "
         f"{'stop codon included' if not partial3 else '3-partial'}; "
         f"{len(introns)} intron(s) {', '.join(d + '..' + a for _, _, d, a, _ in introns) or '-'}. "
-        f"CURATOR-SUPPLIED, not derived: mating_type.system={mating_system}; evidence tier policy "
-        f"{tier_policy} (tier {tier}). "
+        + (f"mating_type.system=unknown: a single-gene deposit does not show the breeding system "
+           f"and none is guessed. " if mating_system == "unknown"
+           else f"CURATOR-SUPPLIED, not derived: mating_type.system={mating_system}. ")
+        + f"CURATOR-SUPPLIED evidence tier policy {tier_policy} (tier {tier}). "
     )
+    if annotation_flags:  # ruling 6: included, and the possible-prediction / TPA status is explicit
+        notes += ("ANNOTATION SOURCE: possible gene prediction or third-party annotation, not a "
+                  "depositor-verified gene model -- " + "; ".join(annotation_flags) + ". ")
+    else:
+        notes += ("ANNOTATION SOURCE: locus-specific deposit; no genome-project, TPA, /inference or "
+                  "predicted/putative flag. ")
+    if organism != species:
+        notes += f"Deposit /organism '{organism}'; organism.species is the NCBI species-rank name. "
     notes += f"Strain from /{strain_from}." if strain_from else "Strain unknown in the deposit."
     if caveats:
         notes += " Caveats: " + " | ".join(caveats)
@@ -686,7 +943,7 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         "record_version": 1,
         "taxonomy": {"taxid": taxid, "lineage": lineage, "lineage_resolved_date": date},
         "organism": {
-            "species": organism,
+            "species": species,
             "strain": {"name": strain_name, "known": strain_name is not None,
                        "culture_collection_ids": collections, "differs_from_sequenced": False},
         },
@@ -694,7 +951,8 @@ def build(protein: str, fetcher: Fetcher, db_root: Path, db_index: dict, *, date
         "locus": {
             "assembly_accession": None,
             "coordinate_provenance": "published_explicit",
-            "excluded_from_coordinate_benchmark": False,
+            # ruling 13: a core-only record has no idiomorph boundary to benchmark
+            "excluded_from_coordinate_benchmark": True,
             "core": {
                 "completeness": "partial",
                 "reference_orientation": f"{name}({strand})",
@@ -764,11 +1022,18 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--repo", required=True, type=Path, help="repository/worktree root (reads db/)")
     ap.add_argument("--protein", action="append", default=[], help="protein accession (repeatable)")
     ap.add_argument("--table", type=Path, help="TSV with a `protein` column (e.g. heldout/selected.tsv)")
-    ap.add_argument("--mating-system", required=True,
-                    choices=["heterothallic", "homothallic", "pseudohomothallic", "unisexual_switching"],
-                    help="CURATOR CHOICE written to every generated record (not derivable from a deposit)")
-    ap.add_argument("--tier-policy", required=True, choices=sorted(TIER_POLICIES),
-                    help="CURATOR CHOICE: evidence tier for cited / uncited deposits")
+    ap.add_argument("--mating-system", default=DEFAULT_MATING_SYSTEM, choices=MATING_SYSTEMS,
+                    help="written to every generated record; default 'unknown' (a single-gene deposit "
+                         "does not show the breeding system; curator ruling 3, 2026-10-22)")
+    ap.add_argument("--tier-policy", default=DEFAULT_TIER_POLICY, choices=sorted(TIER_POLICIES),
+                    help="CURATOR CHOICE: evidence tier for cited / uncited deposits "
+                         f"(default {DEFAULT_TIER_POLICY}, curator ruling 2)")
+    ap.add_argument("--hold-file", type=Path,
+                    help="TSV (protein, order, gene, reason) of extra hold rules; empty field = any")
+    ap.add_argument("--no-builtin-holds", action="store_true",
+                    help="drop the built-in hold list (Helotiales MAT1-1-1, curator ruling 1)")
+    ap.add_argument("--conflicts", type=Path,
+                    help="conflicts TSV (ruling 8); default <report>.conflicts.tsv")
     ap.add_argument("--date", required=True, help="YYYY-MM-DD written as lineage_resolved_date and in notes")
     ap.add_argument("--cache-dir", required=True, type=Path)
     ap.add_argument("--offline", action="store_true", help="use the cache only")
@@ -786,29 +1051,32 @@ def main(argv: list[str] | None = None) -> int:
     db_root = args.repo / "db"
     db_index = load_db_index(db_root)
     fetcher = Fetcher(args.cache_dir, offline=args.offline)
+    holds = load_holds(args.hold_file, builtin=not args.no_builtin_holds)
 
     results = []
     for protein in proteins:
         try:
             res = build(protein, fetcher, db_root, db_index, date=args.date,
-                        mating_system=args.mating_system, tier_policy=args.tier_policy)
+                        mating_system=args.mating_system, tier_policy=args.tier_policy, holds=holds)
         except Exception as exc:  # noqa: BLE001 -- one bad deposit never aborts the batch
             res = Result(protein=protein)
             res.add("exception", "needs_human", f"{type(exc).__name__}: {exc}")
-        if res.record is not None and res.verdict != NEEDS_HUMAN and args.out:
-            rid = res.record["record_id"]
-            d = args.out / res.facts["phylum"] / res.facts["order"] / rid
-            d.mkdir(parents=True, exist_ok=True)
-            (d / "metadata.yaml").write_text(yaml.safe_dump(res.record, sort_keys=False, width=100))
-            res.record_dir = str(d)
-            db_index["record_ids"].add(rid)  # a second deposit of the same strain must not collide
+        if res.record is not None and res.verdict != NEEDS_HUMAN:
+            if args.out:
+                rid = res.record["record_id"]
+                d = args.out / res.facts["phylum"] / res.facts["order"] / rid
+                d.mkdir(parents=True, exist_ok=True)
+                (d / "metadata.yaml").write_text(yaml.safe_dump(res.record, sort_keys=False, width=100))
+                res.record_dir = str(d)
+            # a later deposit of the same strain/gene must collide or conflict, with or without --out
+            add_record_to_index(db_index, res.record)
         results.append(res)
         print(f"{protein}\t{res.verdict}\t{res.facts.get('record_id', '-')}", file=sys.stderr)
 
     args.report.parent.mkdir(parents=True, exist_ok=True)
     with open(f"{args.report}.tsv", "w") as fh:
         fh.write("protein\tverdict\trecord_id\torganism\tgene\tnucleotide\tstrand\texons\taa\t"
-                 "partial5\tpartial3\tpmids\tneeds_human\tcaveats\n")
+                 "partial5\tpartial3\tpmids\tneeds_human\tcaveats\tspecies\torder\n")
         for r in results:
             f = r.facts
             fh.write("\t".join(str(x) for x in [
@@ -817,7 +1085,15 @@ def main(argv: list[str] | None = None) -> int:
                 ";".join(f"{s}-{e}" for s, e in f.get("exons", [])), f.get("protein_aa", ""),
                 f.get("partial5", ""), f.get("partial3", ""), ",".join(f.get("pmids", [])),
                 " | ".join(r.reasons("needs_human")), " | ".join(r.reasons("caveat")),
+                f.get("species") or "", f.get("order") or "",
             ]) + "\n")
+    conflicts_path = args.conflicts or Path(f"{args.report}.conflicts.tsv")
+    conflicts_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(conflicts_path, "w") as fh:
+        fh.write("\t".join(CONFLICT_COLUMNS) + "\n")
+        for r in results:
+            for c in r.facts.get("conflicts") or []:
+                fh.write("\t".join(str(c[k]) for k in CONFLICT_COLUMNS) + "\n")
     with open(f"{args.report}.json", "w") as fh:
         json.dump([{"protein": r.protein, "verdict": r.verdict, "record_dir": r.record_dir,
                     "facts": r.facts, "checks": [c.__dict__ for c in r.checks]} for r in results],

@@ -28,7 +28,8 @@ FEATURES             Location/Qualifiers
      gene            4852..6934
                      /gene="bar3"
                      /role="core_MAT"
-     CDS             4852..6934
+     CDS             join(4852..5062,5118..5230,5281..5347,5396..5533,
+                     5583..6934)
                      /gene="bar3"
                      /role="core_MAT"
                      /translation="MLDPTYPLFPTFAFLGFVLALVPLPWHLQAWNSGTCFFMVWTALG

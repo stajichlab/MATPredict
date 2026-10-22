@@ -10,7 +10,8 @@ FEATURES             Location/Qualifiers
      gene            complement(1..3090)
                      /gene="Z"
                      /role="core_MAT"
-     CDS             complement(1..3090)
+     CDS             complement(join(1..936,989..1189,1240..1444,1493..2192,
+                     2242..2329,2379..2700,2750..3090))
                      /gene="Z"
                      /role="core_MAT"
                      /translation="MSLYSAEDILEWLHHAQAEFLTALAEGDDALAQFQAQWDRVRACV
@@ -34,7 +35,8 @@ FEATURES             Location/Qualifiers
      gene            3362..6450
                      /gene="Y"
                      /role="core_MAT"
-     CDS             3362..6450
+     CDS             join(3362..3844,3895..4008,4059..4118,4168..4758,
+                     4806..4877,4932..5198,5248..6450)
                      /gene="Y"
                      /role="core_MAT"
                      /translation="MAELLACLQSISAHAKDMMALARSRGATGSRPTPTTLPHFDELLP

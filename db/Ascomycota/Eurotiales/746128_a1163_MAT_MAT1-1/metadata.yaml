@@ -89,6 +89,15 @@ genes:
   end: 2522628
   strand: '-'
   order_in_locus: 2
+  exons:
+  - start: 2522352
+    end: 2522628
+  - start: 2522232
+    end: 2522272
+  - start: 2522079
+    end: 2522132
+  - start: 2521591
+    end: 2521971
 - gene_index: 3
   name: MAT1-1-1
   protein_accession: ncbi_protein:EDP53120.1
@@ -100,6 +109,11 @@ genes:
   end: 2523902
   strand: +
   order_in_locus: 3
+  exons:
+  - start: 2522745
+    end: 2523033
+  - start: 2523085
+    end: 2523902
 - gene_index: 4
   name: SLA2
   protein_accession: ncbi_protein:EDP53121.1
@@ -153,4 +167,5 @@ curation:
   proposal_dedupe_key: 19043401|746128|MAT|MAT1-1
   reviewed_by: null
   reviewed_date: null
+  notes: 'Exons are the AFUB_042890 genome-annotation model (EDP53119.1) of a remnant; not experimentally supported; protein intentionally absent from proteins.faa. Exon structure added 2026-10-21 from the deposit (DS499596.1); verified independently against NCBI.'
 model_provenance: null

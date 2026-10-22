@@ -7,6 +7,7 @@ release completed.
 ## [Unreleased]
 
 ### Added
+- `detect --homothallic-policy both_genes` (default off; PR #117): a locus holding a complete alpha-box gene and a complete HMG-box gene is classed `homothallic_candidate` with a `homothallic_note`, and (curator ruling 2026-10-22) its idiomorph is reported `undetermined` with the vote's winner kept in `homothallic_note.vote_idiomorph`. A candidate, not a statement of homothallism. Measured on 3,181 genomes: 99 loci re-classed, 0 changes on the controls (`docs/notes/2026-10-21_homothallic-patch-measurement.md`).
 - Optional gene-level `status: remnant|pseudogene` (and `remnant_note`) in the metadata schema; absent means intact. Metadata only: no detection output changes. `validate_gene_status`
   checks it against `present` (no model recorded vs a model recorded); the DuckDB `locus_gene` table gets `status` and `remnant_note` columns; `locus.gff3`/`locus.gbk` writers mark a status
   gene `/pseudo`; the self-consistency benchmark leaves such genes out of the expected set. Seven records are labelled (decision paper `docs/notes/2026-10-17_remnant-status.md`, option B step 1).

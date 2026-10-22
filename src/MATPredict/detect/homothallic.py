@@ -1,6 +1,8 @@
 """Both-genes homothallic rule: a COMPLETE alpha-box gene and a COMPLETE HMG-box gene at one locus.
 
 Behind `--homothallic-policy both_genes` (default `off`: nothing here runs and the reports are unchanged).
+A re-classed locus reports `idiomorph: undetermined` (it holds both genes, so it has no single idiomorph); the vote's winner
+is kept in `homothallic_note.vote_idiomorph` (curator ruling 2026-10-22; before that the vote's label, mostly MAT1-1, was kept).
 Curator approval 2026-10-18 (question 16). Background and measurements:
 analysis/2026-10-18_dothideomycetes-mat-audit.md and analysis/2026-10-18_homothallic-loci-patch.md.
 

@@ -260,6 +260,17 @@ def idiomorph_class_for(family, idiomorph: str | None) -> str | None:
     return mapping.get(idiomorph, "unassigned")
 
 
+def _as_homothallic_candidate(r, note):
+    """`r` re-classed `homothallic_candidate`: the locus holds a complete alpha-box gene and a complete HMG-box gene, so it
+    has no single idiomorph. The idiomorph the vote chose is an artefact of which gene out-scored the other (92 of the 99
+    candidates in the 3,181-genome test set said MAT1-1, e.g. a spurious 96 bp MAT1-1-3 fragment beat the real MAT1-2-1 in
+    *Pyrenophora tritici-repentis*), so the call reports `undetermined` and the vote's winner moves into the note
+    (curator ruling 2026-10-22). The previous locus class is kept there too, so a run with the policy on shows the legacy label."""
+    note["previous_locus_class"] = r.locus_class
+    note["vote_idiomorph"] = r.idiomorph
+    return replace(r, locus_class=LOCUS_CLASS_HOMOTHALLIC, idiomorph="undetermined", homothallic_note=note)
+
+
 def _with_idiomorph_class(results, families):
     by_key = {f.key: f for f in families}
     return [replace(r, idiomorph_class=idiomorph_class_for(by_key.get(r.family_key), r.idiomorph))
@@ -3086,9 +3097,7 @@ def run_pipeline(
             return r
         if note is None:
             return r
-        # what the call was before this policy, so a run with the policy on also shows the legacy label
-        note["previous_locus_class"] = r.locus_class
-        return replace(r, locus_class=LOCUS_CLASS_HOMOTHALLIC, homothallic_note=note)
+        return _as_homothallic_candidate(r, note)
 
     def _confidence_cap_stats(family, called, evidence):
         """The called allele's core genes (any status, not `lost_to`) as `confidence_cap.CapStat`s."""
@@ -3561,7 +3570,8 @@ def run_pipeline(
 
     # `--homothallic-policy both_genes` (default off): re-class a reported locus whose modelled core genes include a
     # complete alpha-box and a complete HMG-box protein, confirmed by the gene-identity profiles. Last, after every
-    # rule that builds or withholds a call, so it sees the final gene evidence; changes only the class and the note.
+    # rule that builds or withholds a call, so it sees the final gene evidence; changes the class, the note and (curator
+    # ruling 2026-10-22) reports the idiomorph as `undetermined`, keeping the vote's winner in the note.
     if homothallic_policy == homothallic.POLICY_BOTH_GENES:
         results = [_homothallic_reclass(r) for r in results]
 

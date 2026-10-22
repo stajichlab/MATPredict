@@ -12,7 +12,8 @@ def rulings(checks):
         n, d = c["name"], c["detail"]
         if n == "hold": rs.append("1_hold")
         elif n == "other_idiomorph": rs.append("4_two_gene")
-        elif n in ("conflict",) or (n == "duplicate" and "same model" in d): rs.append("8_curated_conflict_or_duplicate")
+        elif n in ("conflict", "existing_no_exons") or (n == "duplicate" and d.startswith("same gene as")): rs.append("8_curated_conflict_or_duplicate")
+        elif n.startswith("batch_"): rs.append("batch_" + n[6:])
         elif n == "intron" and ("GC-AG" in d or "shorter than" in d): rs.append("7_doubtful_intron")
         elif n == "gene_span": rs.append("7_wide_gene_feature")
         elif n in ("start", "stop") and "partial" in d: rs.append("10_partial")

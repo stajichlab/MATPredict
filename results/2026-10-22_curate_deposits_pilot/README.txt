@@ -6,11 +6,16 @@ generator_pilot.tsv        the 14 pilot deposits (13 records written, 1 NEEDS_HU
 generator_dryrun_106_v2.tsv  generator v2 (curator rulings of 2026-10-22) on the same 106 deposits, offline from the
                            pilot NCBI cache, against the pre-pilot db (2d14712, the db the v1 dry run saw; the v1 run
                            reproduces byte-identically from it). No records written. Columns: v1 + species, order.
+                           Updated after the review fixes: 9 CONFIRMED / 57 CAVEAT / 40 NEEDS_HUMAN (v1 11/73/22).
+                           Candidates proposed earlier in the run are indexed apart from db/ ("in-batch candidate (not
+                           written)", reason names batch_*) and never change a record_id: every record_id equals v1's
+                           (unknown-N counts db/ records only).
 generator_dryrun_106_v2_changes.tsv  per deposit: v1 and v2 verdict, moved to NEEDS_HUMAN, and the ruling(s) that
                            cause each NEEDS_HUMAN (scripts/attribute_rulings.py)
-conflicts.tsv              ruling 8 conflicts table of that run (header only: no deposit disagrees with a curated record)
+conflicts.tsv              ruling 8 conflicts table of that run, with a `source` column (db = curated record, batch =
+                           in-batch candidate); header only: no deposit disagrees with a curated record
 generator_dryrun_106_v2_branchdb.tsv  the same run against this branch's db (13 pilot records present): the 13 pilot
-                           deposits come back NEEDS_HUMAN as identical-model duplicates (no conflict)
+                           deposits come back NEEDS_HUMAN as identical-model duplicates of curated records (no conflict)
 replay_genomes.tsv         283 BFD genomes (fixed seed 20261022): pilot species, 60 Hypocreales, 60 Helotiales,
                            16 other pilot orders, 86 Ascomycota controls, 12 Basidiomycota, 8 Mucoromycota
 replay_changes.tsv         every difference between `detect` on origin/main (2d14712) and this branch, per genome

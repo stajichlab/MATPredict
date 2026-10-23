@@ -830,6 +830,18 @@ def _own_profile_scores_for(family, models, genome_fasta, genetic_code, cache):
     return own_profile_scores(clf, gene_idiomorph, proteins)
 
 
+#: A pair decided only by first-pass identity sets the loser's model aside only when the
+#: winner's modelled protein is at least this fraction of the loser's (`_pair_losers_set_aside`).
+_FIRST_PASS_WINNER_MIN_LENGTH_FRACTION = 0.8
+#: The idiomorph-resolution bases that decide a pair on the models themselves (a profile or an
+#: alignment score), so the winner's score is authoritative whatever the length of its model.
+#: Any other basis (`first_pass_identity`, or one added later and not listed here) is held to
+#: the length guard above, so an unknown basis fails toward keeping the loser's model.
+_MODEL_LEVEL_BASES = frozenset({
+    "hmm_bitscore", "hmm_classifier", "model_score_miniprot", "model_score_exonerate",
+})
+
+
 def _pair_losers_set_aside(entries, events) -> set[int]:
     """Indices of classifier `entries` to set aside as the LOSING half of a resolved pair.
 
@@ -854,7 +866,17 @@ def _pair_losers_set_aside(entries, events) -> set[int]:
       displace a polished model, and the loser's protein stays in the verdict;
     * that winner entry is not itself set aside by the same test, so the two genes of a
       pair are never both discarded: a pair that lost to each other at the same place
-      keeps both, as before 0d216c4.
+      keeps both, as before 0d216c4. "Is itself set aside" is judged WITHOUT the length
+      guard below, so the guard only ever removes a set-aside and never adds one: the
+      result is always a subset of the unguarded rule's (Fable review of the guard);
+    * the pair was decided on the MODELS (`_MODEL_LEVEL_BASES`: the profile or alignment
+      score is authoritative, however short the winner's model), or, where only the
+      first-pass identity decided it (no tool modelled both genes, so the HMM pass
+      recorded no event; an unlisted basis is treated the same way), the winner entry's
+      protein is at least
+      `_FIRST_PASS_WINNER_MIN_LENGTH_FRACTION` of the loser entry's. A short modelled
+      first-pass winner therefore never displaces a full-length loser model, and the
+      verdict does not rest on the short protein alone (Fable review of #140, finding 3).
 
     The HSP fallback sets nothing aside: with no model, every first-pass winner is itself
     an unmodelled fragment.
@@ -864,24 +886,32 @@ def _pair_losers_set_aside(entries, events) -> set[int]:
         return a[0] == b[0] and min(a[2], b[2]) >= max(a[1], b[1])
 
     def lost_here(i):
-        """Winners entry i lost to at its own position."""
+        """Winners entry i lost to at its own position, with the bases of those events."""
         gene, span, _ = entries[i]
-        winners = set()
+        winners: dict[str, set[str]] = {}
         for e in events:
             if e.loser != gene:
                 continue
             where = [s for s in (e.loser_span, e.winner_span) if s is not None]
             if not where or any(overlaps(span, (e.contig, *s)) for s in where):
-                winners.add(e.winner)
+                winners.setdefault(e.winner, set()).add(e.basis)
         return winners
 
-    def winner_entries(i):
+    def displaces(j, i, bases):
+        if any(b in _MODEL_LEVEL_BASES for b in bases):
+            return True
+        return len(entries[j][2]) >= _FIRST_PASS_WINNER_MIN_LENGTH_FRACTION * len(entries[i][2])
+
+    def winner_entries(i, guarded):
         winners = lost_here(i)
         return [j for j, (g, sp, _) in enumerate(entries)
-                if j != i and g in winners and g != entries[i][0] and overlaps(entries[i][1], sp)]
+                if j != i and g in winners and g != entries[i][0] and overlaps(entries[i][1], sp)
+                and (not guarded or displaces(j, i, winners[g]))]
 
-    candidates = {i for i in range(len(entries)) if winner_entries(i)}
-    return {i for i in candidates if any(j not in candidates for j in winner_entries(i))}
+    # Which entries lost to a scored overlapping winner at all, length guard or not: a winner
+    # that is itself such an entry lost its own pair here, so it never sets another aside.
+    lost = {i for i in range(len(entries)) if winner_entries(i, False)}
+    return {i for i in range(len(entries)) if any(j not in lost for j in winner_entries(i, True))}
 
 
 def _translate_model(genome_fasta: Path, model, genetic_code: int, cache: dict) -> str:
@@ -2907,7 +2937,9 @@ def run_pipeline(
             # overlaps a scored protein of its winner (`_pair_losers_set_aside`;
             # curator's ruling 2026-10-22, narrowing 0d216c4).
             pair_events = idiomorph_events_by_cluster.get(id(cluster), ())
-            # One entry per scored model: (gene, span, protein).
+            # One entry per scored model: (gene, span, protein, frameshifts). The last
+            # field only sets `frameshift_corrected`; it is dropped before the entries
+            # reach `_pair_losers_set_aside` and the verdict.
             scored_models = []
             for (cluster_id, key, gene), outcome in polish_by.items():
                 if cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph:

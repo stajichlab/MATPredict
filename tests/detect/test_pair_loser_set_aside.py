@@ -246,3 +246,24 @@ def test_a_long_first_pass_winner_still_sets_aside_a_short_loser():
     assert _pair_losers_set_aside(entries, ev) == {1}
     entries[0] = ("sexP", ("c1", 100, 400), "P" * 79)
     assert _pair_losers_set_aside(entries, ev) == set()
+
+
+def test_the_guard_never_adds_a_set_aside_to_a_mutual_pair():
+    """Fable review of the guard, finding 1: a long sexP and a short sexM that each lost to the
+    other at the same place (two first-pass events). The unguarded rule keeps both; the guard
+    must not turn that into 'the long sexP displaces the short sexM'."""
+    entries = [("sexP", ("c1", 400, 1900), "P" * 480), ("sexM", ("c1", 900, 1100), "M" * 60)]
+    ev = [_based("sexP", "sexM", (400, 1900), (900, 1100), "first_pass_identity"),
+          _based("sexM", "sexP", (900, 1100), (400, 1900), "first_pass_identity")]
+    assert _pair_losers_set_aside(entries, ev) == set()
+
+
+def test_an_unlisted_basis_is_held_to_the_length_guard():
+    """An idiomorph-resolution basis added later and not in `_MODEL_LEVEL_BASES` fails toward
+    keeping the loser's model: a short winner under it must not set a full-length loser aside."""
+    entries = [("sexP", ("c1", 1000, 1180), "P" * 60), ("sexM", ("c1", 400, 1900), "M" * 480)]
+    ev = [_based("sexP", "sexM", (1000, 1180), (400, 1900), "some_future_basis")]
+    assert _pair_losers_set_aside(entries, ev) == set()
+    # ... and the classifier's own decision is listed as model-level.
+    ev = [_based("sexP", "sexM", (1000, 1180), (400, 1900), "hmm_classifier")]
+    assert _pair_losers_set_aside(entries, ev) == {1}

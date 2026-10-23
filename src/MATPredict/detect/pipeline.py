@@ -833,6 +833,13 @@ def _own_profile_scores_for(family, models, genome_fasta, genetic_code, cache):
 #: A pair decided only by first-pass identity sets the loser's model aside only when the
 #: winner's modelled protein is at least this fraction of the loser's (`_pair_losers_set_aside`).
 _FIRST_PASS_WINNER_MIN_LENGTH_FRACTION = 0.8
+#: The idiomorph-resolution bases that decide a pair on the models themselves (a profile or an
+#: alignment score), so the winner's score is authoritative whatever the length of its model.
+#: Any other basis (`first_pass_identity`, or one added later and not listed here) is held to
+#: the length guard above, so an unknown basis fails toward keeping the loser's model.
+_MODEL_LEVEL_BASES = frozenset({
+    "hmm_bitscore", "hmm_classifier", "model_score_miniprot", "model_score_exonerate",
+})
 
 
 def _pair_losers_set_aside(entries, events) -> set[int]:
@@ -859,11 +866,14 @@ def _pair_losers_set_aside(entries, events) -> set[int]:
       displace a polished model, and the loser's protein stays in the verdict;
     * that winner entry is not itself set aside by the same test, so the two genes of a
       pair are never both discarded: a pair that lost to each other at the same place
-      keeps both, as before 0d216c4;
-    * the pair was decided on the MODELS (`hmm_bitscore`, `model_score_*`: the profile
-      or alignment score is authoritative, however short the winner's model), or, where
-      only the first-pass identity decided it (no tool modelled both genes, so the HMM
-      pass recorded no event), the winner entry's protein is at least
+      keeps both, as before 0d216c4. "Is itself set aside" is judged WITHOUT the length
+      guard below, so the guard only ever removes a set-aside and never adds one: the
+      result is always a subset of the unguarded rule's (Fable review of the guard);
+    * the pair was decided on the MODELS (`_MODEL_LEVEL_BASES`: the profile or alignment
+      score is authoritative, however short the winner's model), or, where only the
+      first-pass identity decided it (no tool modelled both genes, so the HMM pass
+      recorded no event; an unlisted basis is treated the same way), the winner entry's
+      protein is at least
       `_FIRST_PASS_WINNER_MIN_LENGTH_FRACTION` of the loser entry's. A short modelled
       first-pass winner therefore never displaces a full-length loser model, and the
       verdict does not rest on the short protein alone (Fable review of #140, finding 3).
@@ -888,18 +898,20 @@ def _pair_losers_set_aside(entries, events) -> set[int]:
         return winners
 
     def displaces(j, i, bases):
-        if any(b != "first_pass_identity" for b in bases):
+        if any(b in _MODEL_LEVEL_BASES for b in bases):
             return True
         return len(entries[j][2]) >= _FIRST_PASS_WINNER_MIN_LENGTH_FRACTION * len(entries[i][2])
 
-    def winner_entries(i):
+    def winner_entries(i, guarded):
         winners = lost_here(i)
         return [j for j, (g, sp, _) in enumerate(entries)
                 if j != i and g in winners and g != entries[i][0] and overlaps(entries[i][1], sp)
-                and displaces(j, i, winners[g])]
+                and (not guarded or displaces(j, i, winners[g]))]
 
-    candidates = {i for i in range(len(entries)) if winner_entries(i)}
-    return {i for i in candidates if any(j not in candidates for j in winner_entries(i))}
+    # Which entries lost to a scored overlapping winner at all, length guard or not: a winner
+    # that is itself such an entry lost its own pair here, so it never sets another aside.
+    lost = {i for i in range(len(entries)) if winner_entries(i, False)}
+    return {i for i in range(len(entries)) if any(j not in lost for j in winner_entries(i, True))}
 
 
 def _translate_model(genome_fasta: Path, model, genetic_code: int, cache: dict) -> str:

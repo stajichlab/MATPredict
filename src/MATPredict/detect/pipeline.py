@@ -830,6 +830,60 @@ def _own_profile_scores_for(family, models, genome_fasta, genetic_code, cache):
     return own_profile_scores(clf, gene_idiomorph, proteins)
 
 
+def _pair_losers_set_aside(entries, events) -> set[int]:
+    """Indices of classifier `entries` to set aside as the LOSING half of a resolved pair.
+
+    `entries` are `(gene, (contig, start, end), protein)` for the modelled proteins the
+    locus verdict scores; `events` are the cluster's `IdiomorphResolution`s.
+
+    Curator's ruling 2026-10-22, narrowing 0d216c4 ("the verdict scores the winners of
+    resolved pairs only"), which set aside every gene that lost ANYWHERE in the cluster,
+    by name. That discarded both polished models where sexM and sexP each lost at a
+    different position (R. pusillus JY54, Radiomyces spectabilis: calls withheld), let a
+    48-aa first-pass sexP fragment set aside the polished sexM model it sat inside
+    (M. irregularis B50: Minus/high became undetermined), and left proteome loci, whose
+    winner is an annotated protein the classifier never scores, with nothing to score
+    (Zygo23 Cunninghamella scaffolds: high became medium). An entry is now set aside
+    only when ALL of these hold:
+
+    * its gene lost a pair to a winner, and that loss was AT this entry (the event's
+      span overlaps it, where the event records one);
+    * a SCORED entry of that winner overlaps it -- the winner has a modelled protein
+      here. A first-pass tblastn fragment that was never modelled, or an annotated
+      proteome protein (never classifier input), is not a scored entry and so can never
+      displace a polished model, and the loser's protein stays in the verdict;
+    * that winner entry is not itself set aside by the same test, so the two genes of a
+      pair are never both discarded: a pair that lost to each other at the same place
+      keeps both, as before 0d216c4.
+
+    The HSP fallback sets nothing aside: with no model, every first-pass winner is itself
+    an unmodelled fragment.
+    """
+
+    def overlaps(a, b):
+        return a[0] == b[0] and min(a[2], b[2]) >= max(a[1], b[1])
+
+    def lost_here(i):
+        """Winners entry i lost to at its own position."""
+        gene, span, _ = entries[i]
+        winners = set()
+        for e in events:
+            if e.loser != gene:
+                continue
+            where = [s for s in (e.loser_span, e.winner_span) if s is not None]
+            if not where or any(overlaps(span, (e.contig, *s)) for s in where):
+                winners.add(e.winner)
+        return winners
+
+    def winner_entries(i):
+        winners = lost_here(i)
+        return [j for j, (g, sp, _) in enumerate(entries)
+                if j != i and g in winners and g != entries[i][0] and overlaps(entries[i][1], sp)]
+
+    candidates = {i for i in range(len(entries)) if winner_entries(i)}
+    return {i for i in candidates if any(j not in candidates for j in winner_entries(i))}
+
+
 def _translate_model(genome_fasta: Path, model, genetic_code: int, cache: dict) -> str:
     """The protein a polished model encodes, spliced from its exons and
     translated with the genome's genetic code, stopping at the first stop.
@@ -2849,15 +2903,14 @@ def run_pipeline(
                 continue
             clf = load_classifier(family.idiomorph_classifier, family)
             gene_idiomorph = classifier_genes(family)
-            # The verdict scores the WINNERS of resolved pairs only: a set-aside
-            # gene's protein says nothing about this locus's idiomorph.
-            set_aside = {e.loser for e in idiomorph_events_by_cluster.get(id(cluster), ())}
+            # The verdict sets aside the LOSER of a resolved pair only where it
+            # overlaps a scored protein of its winner (`_pair_losers_set_aside`;
+            # curator's ruling 2026-10-22, narrowing 0d216c4).
+            pair_events = idiomorph_events_by_cluster.get(id(cluster), ())
             # One entry per scored model: (gene, span, protein).
             scored_models = []
-            frameshift_corrected = False
             for (cluster_id, key, gene), outcome in polish_by.items():
-                if (cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph
-                        or gene in set_aside):
+                if cluster_id != id(cluster) or key != family.key or gene not in gene_idiomorph:
                     continue
                 for model in (outcome.miniprot_model, outcome.exonerate_model):
                     if model is None:
@@ -2866,19 +2919,22 @@ def run_pipeline(
                         genome_fasta, model, genetic_code or 1, contig_seq_cache
                     )
                     if protein:
-                        scored_models.append((gene, (model.contig, model.start, model.end), protein))
-                        if getattr(model, "frameshifts", 0):
-                            frameshift_corrected = True
+                        scored_models.append((gene, (model.contig, model.start, model.end), protein,
+                                              bool(getattr(model, "frameshifts", 0))))
+            set_aside = _pair_losers_set_aside([m[:3] for m in scored_models], pair_events)
+            frameshift_corrected = any(m[3] for i, m in enumerate(scored_models) if i not in set_aside)
+            scored_models = [m[:3] for i, m in enumerate(scored_models) if i not in set_aside]
             classifier_input = "model"
             if not scored_models:
                 # No core protein was modelled: score the tblastn HSP
                 # translations instead (curator's ruling 2026-09-27), rather
                 # than letting an identity comparison of short hits decide.
-                # Superseded (set-aside) hits are not scored: winners only.
-                # `min_margin` still applies.
+                # Superseded hits are scored too, as before 0d216c4: a first-pass
+                # winner here is itself an unmodelled fragment, which must not
+                # displace anything (curator's ruling 2026-10-22). `min_margin` still applies.
                 for h in cluster.hits:
                     if (h.family_key != family.key or h.gene_name not in gene_idiomorph
-                            or h.method != "tblastn_genome" or h.superseded_by is not None):
+                            or h.method != "tblastn_genome"):
                         continue
                     span = types.SimpleNamespace(
                         contig=h.contig, start=h.start, end=h.end, strand=h.strand, exons=())

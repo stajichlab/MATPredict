@@ -20,6 +20,8 @@ a first-pass fragment must not displace a polished model; proteome inputs keep a
 scored protein. The original intent (a loser model overlapping the winner's
 model is not scored) still holds.
 """
+import dataclasses
+
 from MATPredict.detect.idiomorph import IdiomorphResolution
 from MATPredict.detect.pipeline import _pair_losers_set_aside, run_pipeline
 from MATPredict.detect.search import SearchHit
@@ -209,3 +211,38 @@ def test_rule_never_discards_both_genes_of_a_pair():
 def test_rule_does_nothing_without_events():
     entries = [("sexP", ("c1", 100, 400), "P"), ("sexM", ("c1", 150, 450), "M")]
     assert _pair_losers_set_aside(entries, []) == set()
+
+
+# --- Fix A: a first-pass-identity winner must be (nearly) as long as the loser ----
+
+def _based(winner, loser, wspan, lspan, basis):
+    return dataclasses.replace(_event(winner, loser, wspan, lspan), basis=basis)
+
+
+def test_a_short_first_pass_winner_keeps_the_full_length_loser():
+    """Fable review of #140, finding 3: no tool modelled both genes, so the HMM pass
+    recorded nothing and the first-pass event stands. A 60-aa sexP model must not set
+    aside the full-length sexM model it sits inside."""
+    entries = [("sexP", ("c1", 1000, 1180), "P" * 60), ("sexM", ("c1", 400, 1900), "M" * 480)]
+    ev = [_based("sexP", "sexM", (1000, 1180), (400, 1900), "first_pass_identity")]
+    assert _pair_losers_set_aside(entries, ev) == set()
+
+
+def test_a_model_level_decision_sets_aside_even_for_a_short_winner():
+    """The profile bitscore is authoritative: the same short winner still sets the loser aside."""
+    entries = [("sexP", ("c1", 1000, 1180), "P" * 60), ("sexM", ("c1", 400, 1900), "M" * 480)]
+    for basis in ("hmm_bitscore", "model_score_miniprot", "model_score_exonerate"):
+        ev = [_based("sexP", "sexM", (1000, 1180), (400, 1900), basis)]
+        assert _pair_losers_set_aside(entries, ev) == {1}, basis
+
+
+def test_a_long_first_pass_winner_still_sets_aside_a_short_loser():
+    entries = [("sexP", ("c1", 400, 1900), "P" * 480), ("sexM", ("c1", 1000, 1180), "M" * 60)]
+    ev = [_based("sexP", "sexM", (400, 1900), (1000, 1180), "first_pass_identity")]
+    assert _pair_losers_set_aside(entries, ev) == {1}
+    # The boundary: a winner of exactly 0.8 x the loser's length still displaces it.
+    entries = [("sexP", ("c1", 100, 400), "P" * 80), ("sexM", ("c1", 150, 450), "M" * 100)]
+    ev = [_based("sexP", "sexM", (100, 400), (150, 450), "first_pass_identity")]
+    assert _pair_losers_set_aside(entries, ev) == {1}
+    entries[0] = ("sexP", ("c1", 100, 400), "P" * 79)
+    assert _pair_losers_set_aside(entries, ev) == set()

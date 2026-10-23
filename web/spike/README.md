@@ -16,7 +16,7 @@ Prototype on branch `wasm-spike`. Not wired into the package or the release. See
 ```bash
 python3 -m pip wheel . --no-deps -w web/spike/dist     # from the repo root
 cd web/spike && npm install
-node import_check.mjs dist/matpredict-0.6.3-py3-none-any.whl
+node import_check.mjs dist/matpredict-0.7.0-py3-none-any.whl
 node seam_probe.mjs
 ```
 

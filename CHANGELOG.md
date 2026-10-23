@@ -6,7 +6,47 @@ release completed.
 
 ## [Unreleased]
 
-### Added
+## [0.7.0] — unreleased — `v0.7.0`
+
+*Draft written 2026-10-23 from the pull requests merged since v0.6.2 (#66-#142); the date and tag are set when the release is cut. Check the entries against the clean-run results before publishing.*
+
+The clean-run release. It adds the detection policies the curator rulings of 2026-09 to 2026-10 asked for (all **off by default**; the clean full-BFD run passes them explicitly, see `docs/notes/2026-10-22_clean-run-plan.md`), a scoped per-taxon roster, many reference-database records and exon structures, the browser page and landing site, and a series of fixes found by the pre-run regression gate. The package version moves from 0.6.3 (never tagged) to 0.7.0.
+
+### Overview by area
+
+#### Detection options (default off)
+- `--partial-core-policy` with a companion-gene veto (#95, #102): a partial core hit against a full-length other-idiomorph gene is decided on the profile bitscore and coverage (Botrytis `MAT1-2`).
+- `--strong-single-gene-policy` (#97), `--confidence-cap-policy` (#100), and `--homothallic-policy both_genes` (#117, #124: a locus with a complete alpha-box and a complete HMG-box gene is a `homothallic_candidate` with idiomorph `undetermined`, vote winner kept in the note).
+- `--scoped-roster-policy` and a per-gene `taxonomic_scope` and `min_identity` in `order.yml` (#132, #136): GAP1 and BGL1 as optional one-member flanks scoped to Pleosporaceae (BGL1 floor 60%); recovers 90 of the 101 previously uncalled *Bipolaris* / *Curvularia* / *Exserohilum* genomes; `detect audit-scope` also lists records carrying a scoped gene from outside its scope.
+
+#### Detection and reports
+- Annotation tracks, gene-model tracks in the report and GenBank as a `detect` input (#69, #88); helixer-lite on locus windows and a flank-only helixer rule (#69, #70); `--polish-strong-identity` and a polished core pair on top of the cap (#40, #104).
+- Parallel polishing (#68), an inline executor for one worker (#74), and exonerate aligned against only the requested gene's proteins (#83, about 6 times faster, same calls).
+- Profile-HMM alpha-box and HMG-box gene-identity profiles for Ascomycota (#86); a subphylum guard that stops Pezizomycotina labels landing on Saccharomycotina yeasts, with MATyl / MATdc / MATkp / MATog families for Dipodascales and Komagataella / Ogataea (#106, #109).
+- Optional gene-level `status: remnant|pseudogene` (#101, #103) and the schema value `mating_type.system: unknown` (#127).
+- Remnant proteins leave the search references (#103); the `unisexual_switching` system value (#98).
+
+#### Tools and data
+- `scripts/deposit_to_record.py` (v2; #128): deterministic generator of core-only candidate records from GenBank deposits, with the curator rulings built in; it writes candidates only.
+- Validator rule: every exon lies inside its gene's start/end (#126). Truth sets and held-out tests: BioSample truth (#82, #91), Ascomycota held-out setup (#79), coordinate truth.
+- Reads typing datasets and k-mer panels for *Coccidioides*, *Cryptococcus*, *Fusarium* (#110, #112); per-family performance table (#108).
+
+#### Database records
+- Exon structures for 119 reference genes (#119, #126); *Hemileia vastatrix* rustHD (#116); *C. fimbriata* (#98); *V. dahliae* (#62); *Fusarium oxysporum* (#29); *Mycotypha africana* with a classifier rebuild (#25); ten Dothideomycetes references (#36); Dipodascales, *Komagataella* and *Ceratocystis* curation (#98, #106, #109); `MAT1-2-3` in the Ascomycota vocabulary (#63).
+- Corrections: *Tuber* `MAT1-1-1` A to S (#119, `record_version` 2 in #123); *Xanthoria* liq80xsp / liq146xsp `MAT1-2-1` (350 aa, 3 exons), *C. auris* B11243 full-length `MTLA1`, *Okayama* B43 notes (#133); *C. cinerea* B43 v2 (#56); the C4 / C5 *C. heterostrophus* records at `record_version` 2 (#132, #136).
+
+#### Web
+- Browser page and landing site: locus downloads, taxon results explorer, per-genome tables, locus maps with NCBI links, About page, theme switcher, *Coccidioides* read-typing results (#64, #67, #72, #73, #77, #78, #80, #84, #85, #87, #90, #111).
+
+#### Changed
+- Polish alignments are capped at a 5 kb intron (#92); a locus verdict sets a pair loser aside only where its winner has a scored protein and, for first-pass-only decisions, is not shorter than 0.8 times the loser's protein (#140; narrows the "winners only" rule of #64 that the regression gate found withheld Mucoromycota `Plus` calls).
+- `taxonkit` failures are errors and not "taxonomy not current" (#93, #99).
+
+#### Fixed (details)
+- A gene of the called idiomorph is no longer shown as lost (#94); `curate-db build-gff` keeps accession-less genes on assembly segments (#134, #121); the fast-path polish test no longer depends on thread order (#131).
+
+
+### Added (details)
 - `scripts/deposit_to_record.py` (v2): deterministic generator of core-only reference records (MAT1-1-1 / MAT1-2-1) from GenBank deposits, with the curator rulings of 2026-10-22 built in (tier by PubMed citation, `system: unknown` by default, two-gene, partial, doubtful-structure, Helotiales `MAT1-1-1` and non-binomial deposits held for hand review, curated records win on conflict). Writes candidates only; no record is added to `db/` by this change. Dry run over the 106 deposits in `results/2026-10-22_curate_deposits_pilot/`.
 - `mating_type.system: unknown` in the metadata schema (curator ruling 2026-10-22): the breeding system is not established. Records generated from a single-gene deposit use it instead of a guess. No detection output reads the field.
 - `detect --homothallic-policy both_genes` (default off; PR #117): a locus holding a complete alpha-box gene and a complete HMG-box gene is classed `homothallic_candidate` with a `homothallic_note`, and (curator ruling 2026-10-22) its idiomorph is reported `undetermined` with the vote's winner kept in `homothallic_note.vote_idiomorph`. A candidate, not a statement of homothallism. Measured on 3,181 genomes: 99 loci re-classed, 0 changes on the controls (`docs/notes/2026-10-21_homothallic-patch-measurement.md`).

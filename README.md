@@ -539,14 +539,14 @@ No paper describes MATPredict yet. Cite the software and the release you used.
 The citation metadata is in [CITATION.cff](CITATION.cff); GitHub shows it under
 "Cite this repository".
 
-> Stajich JE. MATPredict: MAT locus identification in Fungi. Version 0.6.3.
+> Stajich JE. MATPredict: MAT locus identification in Fungi. Version 0.7.0.
 > https://github.com/stajichlab/MATPredict
 
 ```bibtex
 @software{matpredict,
   author  = {Stajich, Jason E.},
   title   = {MATPredict: MAT locus identification in Fungi},
-  version = {0.6.3},
+  version = {0.7.0},
   url     = {https://github.com/stajichlab/MATPredict},
   year    = {2026}
 }

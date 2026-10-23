@@ -74,7 +74,8 @@ def compare(va, vb, gs, name):
 allg = sorted(set(R['base']) | set(R[PROTO]))
 out_scope = [g for g in allg if not scope.get(g)]
 in_scope = [g for g in allg if scope.get(g)]
-ch_v1v2 = compare('proto', PROTO, allg, 'proto(v1) vs ' + PROTO) if PROTO != 'proto' else []
+PREV = os.environ.get('PREV', 'proto')
+ch_v1v2 = compare(PREV, PROTO, allg, PREV + ' vs ' + PROTO) if PROTO != PREV else []
 ch_out = compare('base', PROTO, out_scope, 'OUTSIDE scope base vs proto')
 ch_in = compare('base', PROTO, [g for g in in_scope if g not in clade], 'INSIDE scope (non-clade) base vs proto')
 ch_inc = compare('base', PROTO, [g for g in in_scope if g in clade], 'INSIDE scope clade base vs proto')

@@ -22,7 +22,8 @@ out of `Ascomycota:MAT` and rename every Pleosporaceae call. So the prototype ad
   `fraction_found` (what cost the global prototype its 24 controls: the denominator grew from 4 to 6); the one-member slot adds +1/+1
   when found, so a lone MAT gene with both flanks scores (1+2)/(4+2) = 0.5, the same as the non-optional global prototype, and a
   call that lacks them keeps its score. Reuses the slot mechanism approved for SXI1/SXI2 with one member per slot: needs a ruling.
-* **Per-gene `min_identity`** (`search.drop_below_gene_min_identity`, before clustering), 50% for GAP1/BGL1. Added after the first run
+* **Per-gene `min_identity`** (`search.drop_below_gene_min_identity`, before clustering), measured at 50% for GAP1/BGL1; **BGL1 raised
+  to 60% by curator ruling 2026-10-22 (GAP1 stays 50); see section 4b for the re-run**. Added after the first run
   (v1): BGL1 is a beta-glucosidase family, and 27.7%-identity BGL1 fragments (13.8% coverage) beside an HMG paralog (54%, 21% coverage)
   and a COX13 fragment (32%) on another contig made **8 spurious `high` second MAT calls in Alternaria** (`changes_v1_vs_v2.tsv`).
   Every GAP1/BGL1 hit beside a real MAT gene is >= 70% (`flank_ev_proto2.tsv`: 571 rows, GAP1 70-100%, BGL1 80-100%, all >= 50%
@@ -67,15 +68,16 @@ idiomorph, confidence, genes_found, class and every suppressed/not-detected entr
 
 **The 101 uncalled clade genomes** (`clade_recovery.tsv`): 90 called (Bipolaris 57/57, Curvularia 23/23, Exserohilum 10/10,
 Ophiosphaerella 0/11, Phaeosphaeriaceae, out of scope). As reported: 79 `medium/partial_locus`, 11 `high/mat_locus` (one genome,
-B. gigantea GCA_035079505.1, gets a MAT1-1 and a MAT1-2 locus). **Correction (review 2026-10-22, re-checked in the proto2 reports
-with `high_check.py`): only 1 of the 11 `high` calls is high on real flank evidence** (Curvularia kusanoi GCA_011058905.1: APN2
-64.8%/60.6% coverage and COX13 54.2%/91.2%, both modelled). **The other 10 reach `high` only because a noise third gene breaks the
-0.5 tie**: a lone core gene + GAP1 + BGL1 scores 3/6 = 0.5 = the floor and is capped `partial_locus`/medium; an unmodelled APN2 HSP at
-5-6% coverage (5 Exserohilum) or an unsuperseded opposite-idiomorph core cross-hit at 10-21% coverage (5 Curvularia, which then list
-MAT1-1-1 and MAT1-2-1 together in genes_found) adds a required gene, the score becomes 3/5 or 4/7, and the found GAP1/BGL1 flank
-lets the tier reach `high`. Split both ways: **as called, 79 medium + 11 high; on real evidence, 89 medium-equivalent + 1 high.**
-The slot is what moves these clusters over the floor (on main they scored 1/4 or 2/5), so the curator should decide whether such
-`high` calls are acceptable before the policy goes on in a clean run. Against the pipeline-independent box-ORF scan: 86 agree, 4 agree with one of two
+B. gigantea GCA_035079505.1, gets a MAT1-1 and a MAT1-2 locus). **Correction (review 2026-10-22, corrected again 2026-10-22 with `high_support.py`): none of the 11 recovered `high` calls is high
+on real flank evidence.** The review's "1 of 11" (and this note's previous version) counted Curvularia kusanoi GCA_011058905.1, but
+that genome was already called `high` on main (APN2 64.8%/60.6% and COX13 54.2%/91.2%, both modelled; it only gained GAP1) and is
+not a recovery. **All 11 recovered `high` calls reach `high` only because a noise third gene breaks the 0.5 tie**: a lone core gene +
+GAP1 + BGL1 scores 3/6 = 0.5 = the floor and is capped `partial_locus`/medium; an unmodelled APN2 HSP at 5-6% coverage (5
+Exserohilum) or an unsuperseded opposite-idiomorph core cross-hit at 10-21% coverage (6 Curvularia, which then list MAT1-1-1 and
+MAT1-2-1 together in genes_found) adds a required gene, the score becomes 3/5 or 4/7, and the found GAP1/BGL1 flank lets the tier
+reach `high`. Split both ways: **as called, 79 medium + 11 high; on real flank evidence, 90 medium-equivalent + 0 high.** The slot
+is what moves these clusters over the floor (on main they scored 1/4 or 2/5), so the curator should decide whether such `high`
+calls are acceptable before the policy goes on in a clean run. Against the pipeline-independent box-ORF scan: 86 agree, 4 agree with one of two
 scanned idiomorphs (B. gigantea with both ORFs on different contigs), **0 disagree**. The four C4/C5 strains (strain identity per
 Turgeon 1993; the records come from these strains, so not independent) are all called correctly (MAT1-1 for C5, MAT1-2 for C4,
 medium). No clade BioSample states a mating type. 7 of the high calls list the opposite core gene (a superseded cross-hit) in
@@ -89,7 +91,7 @@ genes_found, as in the earlier prototype.
 | medium -> high | 50 | 44 Alternaria + 2 Pyrenophora `partial_locus` MAT1-x + APN2 -> `mat_locus` + GAP1 (2/4 = tie with the floor -> 3/5); 4 Stemphylium `idiomorph_gene_only` -> `mat_locus` + GAP1/BGL1. The 44 Alternaria are near-identical strains (same APN2/GAP1 identities), one measurement rather than 44. 2 Pyrenophora (GCA_012365135.1, GCA_025504585.1) promote on an APN2 covering 14.7% of its reference plus GAP1: the same shape as the noise-tie `high` calls above |
 | class only | 4 | 3 Pyrenophora, 1 Stemphylium `idiomorph_gene_only` -> `partial_locus` (medium kept) |
 | new call (medium, partial_locus) | 17 | 9 Alternaria, 7 Stemphylium, 1 Paradendryphiella; **17 of 17 agree with the audit's genome-wide box scan** |
-| idiomorph changed / call lost / high -> lower | 0 | (v1 had 8 spurious second calls; removed by the 50% floor) |
+| idiomorph changed / call lost / high -> lower | 0 | (v1 had 8 spurious second calls; removed by the 50% floor, and still absent at 60%) |
 
 Of the earlier prototype's 94 controls: 84 out of scope, identical; 10 in scope: 4 medium->high, 1 class change, 5 GAP1 added. The
 global prototype changed 26 of them (24 high->medium, 2 idiomorph sets).
@@ -112,11 +114,35 @@ and displace another when > 6 clusters are admitted), by bridging two clusters w
 fragment + one flank now clears `min_hits=2`, which is how the 17 new calls and the 8 v1 spurious calls arose). None fired in
 these 477 genomes.
 
-**BGL1 floor margin.** The 50% floor sits only 3-6 points above a full-length BGL1 paralog (44.4-46.7% identity over 802-890 aa,
+**BGL1 floor margin (as measured at 50%; now 60%, see 4b).** The 50% floor sits only 3-6 points above a full-length BGL1 paralog (44.4-46.7% identity over 802-890 aa,
 on another contig) that the review found in every one of 15 sampled recovered genomes (GAP1's nearest paralog: 36.9% over 103 aa).
 A genus whose BGL1 paralog drifts above 50% would rebuild the v1 spurious second calls. The value is not changed here (every real
 flank hit is >= 70%, so a floor near 60 would keep recall with a wider margin; curator's call); it must be re-validated for every
 new genus brought into the scope.
+
+## 4b. BGL1 floor 60% (curator ruling 2026-10-22), re-run
+
+Code: origin/main after PR #132 (2cb453f: BGL1 `min_identity: 60`, GAP1 50). Variant `proto60`, same clean-run settings and
+`--scoped-roster-policy on`, on 722 genomes (`lists/f60.txt`): the 103 clade genomes, the 94 controls, all 477 in-scope genomes
+(including the 385 in-scope non-clade genomes and the 8 Alternaria with the v1 spurious second call) and 150 random out-of-scope
+genomes (245 out-of-scope genomes in all). Tables: `floor60/`.
+
+* **Recoveries: 90 of 101, unchanged** (Bipolaris 57/57, Curvularia 23/23, Exserohilum 10/10, Ophiosphaerella 0/11); none lost;
+  same 79 medium + 11 high; 0 disagree with the scan; the four C4/C5 strains still correct.
+* **No call changed against the 50% run.** 623 of 722 reports are byte-identical to proto2 (minus `run`); the other 99 have the same
+  calls (family, contig, start, end, idiomorph, confidence, class, genes_found as a set) and differ only in (a) the order of
+  `genes_found` in 48 detected calls, (b) withheld loci (`suppressed_loci`: 50 genomes, fewer or smaller withheld clusters, because
+  BGL1-paralog hits at 50-60% no longer seed them) and `suppressed_unpolished` counts (4), and (c) one `not_detected` entry. All 571
+  GAP1/BGL1 rows in detected calls are the same as at 50% (lowest BGL1 87.4%).
+* **Inside the scope, non-clade (385): the same counts as at 50%**: 308 GAP1 added, 50 medium->high, 4 class only, 17 new calls
+  (17/17 scan-consistent), 0 downwards. The 8 v1 spurious second calls stay absent.
+* **High split** (`high_support.py`: "supported" = a SLA2/APN2/COX13 flank modelled over >= 50% of its reference): recovered clade
+  highs 0 supported / 11 tie-break; of the 50 promotions, 44 Alternaria supported (APN2 51-53%, 95-98% coverage; near-identical
+  strains), 2 Pyrenophora tie-break (APN2 14.7% coverage) and 4 Stemphylium tie-break (no SLA2/APN2/COX13; high through GAP1+BGL1
+  plus an opposite-idiomorph cross-hit).
+* **Outside the scope: 245 of 245 reports identical to main** (minus `run`); controls 84/84 identical.
+* Tests on a compute node at 2cb453f: `tests/detect` 1,076 passed, 6 skipped, 1 failed (the known intermittent
+  `test_fast_path_missing_gene_is_polished_in_the_existing_clusters_window`, which also fails in full runs of main and passes alone).
 
 ## 5. Tests
 

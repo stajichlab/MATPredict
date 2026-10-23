@@ -42,7 +42,7 @@ The clean-run release. It adds the detection policies the curator rulings of 202
 - Polish alignments are capped at a 5 kb intron (#92); a locus verdict sets a pair loser aside only where its winner has a scored protein and, for first-pass-only decisions, is not shorter than 0.8 times the loser's protein (#140; narrows the "winners only" rule of #64 that the regression gate found withheld Mucoromycota `Plus` calls).
 - `taxonkit` failures are errors and not "taxonomy not current" (#93, #99).
 
-#### Fixed (details)
+#### Fixed
 - A gene of the called idiomorph is no longer shown as lost (#94); `curate-db build-gff` keeps accession-less genes on assembly segments (#134, #121); the fast-path polish test no longer depends on thread order (#131).
 
 
@@ -54,7 +54,7 @@ The clean-run release. It adds the detection policies the curator rulings of 202
   checks it against `present` (no model recorded vs a model recorded); the DuckDB `locus_gene` table gets `status` and `remnant_note` columns; `locus.gff3`/`locus.gbk` writers mark a status
   gene `/pseudo`; the self-consistency benchmark leaves such genes out of the expected set. Seven records are labelled (decision paper `docs/notes/2026-10-17_remnant-status.md`, option B step 1).
 
-### Fixed
+### Fixed (details)
 - `curate-db build-gff` no longer drops the CDS feature and `proteins.faa` entry of a gene with no `protein_accession` on an `assembly`-type segment (#121).
   The protein of such a gene is translated from its recorded coordinates (exons, `codon_start`, `transl_table`); on an `assembly` segment the GCA_/GCF_ accession
   cannot be fetched, so the translation is now fetched from the segment's `seq_region` contig, as the locus sequence already was. A present gene with coordinates

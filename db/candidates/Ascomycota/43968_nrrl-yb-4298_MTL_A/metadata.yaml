@@ -1,0 +1,155 @@
+record_id: 43968_nrrl-yb-4298_MTL_A
+record_version: 1
+taxonomy:
+  taxid: 43968
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Debaryomycetaceae;g__Aciculoconidium;s__Aciculoconidium_aculeatum
+  lineage_resolved_date: '2026-10-24'
+organism:
+  species: Aciculoconidium aculeatum
+  strain:
+    name: NRRL YB-4298
+    known: true
+    culture_collection_ids:
+    - NRRL YB-4298
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - A
+  system: unknown
+locus:
+  assembly_accession: GCA_030579395.1
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: partial
+    reference_orientation: MTLA1->PIK1->OBP1->PAP1
+    definition_note: Aciculoconidium aculeatum NRRL YB-4298 (GenBank assembly GCA_030579395.1), MTL A
+      idiomorph on JAKTQU010000010.1; genes in contig order MTLA1->PIK1->OBP1->PAP1. Gene models are the
+      BFD (Fungi_BFD) funannotate predictions of that assembly, re-derived from the NCBI contig by exon
+      coordinates with genetic code 12 (CTG = Ser). MTLA1 is F6D375A1_002373-T1 (187 aa in the BFD proteome).
+      The locus_tag values are the local funannotate ids of the BFD predictions, not INSDC locus tags (the
+      GenBank assembly carries no gene annotation for these models). No MTLA2 or alpha-box gene is annotated
+      at the locus, so the core is partial.
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JAKTQU010000010.1
+        seq_region: JAKTQU010000010.1
+      start: 295030
+      end: 303860
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 1
+  name: MTLA1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: F6D375A1_002373
+  segment_index: 0
+  start: 295030
+  end: 295637
+  strand: '-'
+  order_in_locus: 0
+  transl_table: 12
+  exons:
+  - start: 295461
+    end: 295637
+  - start: 295030
+    end: 295416
+  codon_start: 1
+- gene_index: 4
+  name: PIK1
+  protein_accession: null
+  role: flanking_variable
+  present: true
+  locus_tag: F6D375A1_002374
+  segment_index: 0
+  start: 297530
+  end: 300388
+  strand: '-'
+  order_in_locus: 1
+  transl_table: 12
+  codon_start: 1
+- gene_index: 3
+  name: OBP1
+  protein_accession: null
+  role: flanking_variable
+  present: true
+  locus_tag: F6D375A1_002375
+  segment_index: 0
+  start: 300592
+  end: 301875
+  strand: '-'
+  order_in_locus: 2
+  transl_table: 12
+  codon_start: 1
+- gene_index: 2
+  name: PAP1
+  protein_accession: null
+  role: flanking_variable
+  present: true
+  locus_tag: F6D375A1_002376
+  segment_index: 0
+  start: 302187
+  end: 303860
+  strand: +
+  order_in_locus: 3
+  transl_table: 12
+  codon_start: 1
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: 'TIER 3 (genome-derived, no paper). Gene models are unpublished genome-annotation predictions (BFD
+      funannotate, assembly GCA_030579395.1). MTLA1 was found by diamond blastp of curated Serinales MTLA1
+      proteins and the NCBI Lodderomyces MTLA1 deposits (CCG24159.1, ADY62670.1) against the proteome and
+      verified by gene order: neighbours within 4 genes hit the curated C. lusitaniae / C. auris proteins
+      (PIK1 51%; OBP1 68%; PAP1 71%); see results/2026-10-24_ctg_mtla1_verify/verify.tsv. Identity of the
+      MTLA1 candidate to the best curated MTLA1 is 33-39%, so the assignment rests on position and domain
+      content, not sequence alone. Pfam-A (hmmscan, E <= 1e-3): the candidate hits Homeodomain (PF00046; E
+      1.6e-12) and Homeobox_KN (1.9e-5), as do all five curated MTLA1 reference proteins; the curated
+      MTLA2 proteins have no Pfam hit (results/2026-10-24_ctg_mtla1_verify/pfam_candidates.txt).'
+    citations: &id001 []
+  boundaries:
+    tier: 3
+    experimental_method: 'TIER 3 (genome-derived, no paper). Gene models are unpublished genome-annotation predictions (BFD
+      funannotate, assembly GCA_030579395.1). Segment 295030-303860 on JAKTQU010000010.1 spans the BFD-
+      predicted CDS of MTLA1 (two exons, 44 bp intron, minus strand), PIK1, OBP1 and PAP1; boundaries are
+      gene-model CDS spans (no UTR, no sequence-defined idiomorph edge), so they are not suitable for
+      coordinate benchmarking.'
+    citations: *id001
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: 'TIER 3 (genome-derived, no paper). Gene models are unpublished genome-annotation predictions (BFD
+      funannotate, assembly GCA_030579395.1). The A label rests on MTLA1 alone: a homeodomain protein in
+      PAP1/OBP1/PIK1 synteny, like the curated C. albicans and C. auris MTLA1 records. No MTLA2 and no
+      alpha-box (MTLalpha1/2) gene is annotated at the locus; BFD locus tags F6D375A1_002373 and _002374
+      are consecutive, so the annotation has nothing in the 1,892 bp between MTLA1 and PIK1, and a six-
+      frame scan of that gap finds no unspliced ORF longer than 105 aa. The core is therefore recorded as
+      partial.'
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: JAKTQU010000010.1
+  sequence_match:
+    status: not_applicable
+    per_gene: []
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-ctg-mtla1-refs
+  proposal_dedupe_key: bfd|43968|MTL|A|nrrl-yb-4298|GCA_030579395.1
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-10-24 (Claude Code) for the CTG-clade MTLA1 gap: the 55 CTG-clade loci that lost
+    a polished MTLA1 model after the full-length B11243 MTLA1 record (#133) lowered hit coverage. Evidence:
+    results/2026-10-24_ctg_mtla1_verify/. Gene models: BFD predictions; each independently re-derived from the
+    NCBI contig by exon coordinates (genetic code 12) and identical to the BFD protein: MTLA1 187 aa, PIK1 952 aa,
+    OBP1 427 aa, PAP1 557 aa, all starting with M. mating_type.system is unknown (single-gene core, no MTLA2
+    found), the first use of that value in db/; needs the curator''s agreement.'
+model_provenance: null

@@ -1,0 +1,247 @@
+"""scripts/build_site_data.py and build_locus_shards.py: release folders and their codes, both table generations,
+the reporting columns, the held-out sets, the shard notes."""
+import csv
+import importlib.util
+import io
+import json
+import shutil
+import subprocess
+import sys
+import tarfile
+from pathlib import Path
+
+import pytest
+import yaml
+
+_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _load(name):
+    sys.path.insert(0, str(_ROOT / "scripts"))
+    spec = importlib.util.spec_from_file_location(name, _ROOT / "scripts" / f"{name}.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+bsd = _load("build_site_data")
+
+ASCO_G = ["genome", "species", "class_", "order", "family", "status", "routing", "n_loci", "families_called", "wall_s"]
+ASCO_L = ["genome", "class_", "order", "family_called", "contig", "start", "end", "idiomorph", "confidence", "locus_class",
+          "detection_pass", "genes_found", "verification"]
+NOTES = ["baseline_confidence", "tier_note", "label_unsupported", "label_unsupported_reason", "high_basis", "high_basis_outside_scope"]
+MANIFEST = "clean full-BFD run\ntag: cleanrun-2026-10b  commit: 56e11cd74c8e86bd43045efa543ace8b96abc745\n"
+
+
+def _write(path, cols, rows):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=cols, delimiter="\t", lineterminator="\n", restval="", extrasaction="ignore")
+        w.writeheader()
+        w.writerows(rows)
+
+
+def _campaigns(tmp_path, notes=False, mucoro_tables=False, manifest=None):
+    asco, basidio, mucoro = tmp_path / "asco", tmp_path / "basidio", tmp_path / "mucoro"
+    gl = ASCO_L + (NOTES if notes else [])
+    _write(asco / "genomes.tsv", ASCO_G, [
+        dict(genome="A1", species="Aureobasidium pullulans", class_="Dothideomycetes", order="Dothideales", family="Saccotheciaceae",
+             status="called", routing="lineage", n_loci=2),
+        dict(genome="A2", species="Fusarium sp.", class_="Sordariomycetes", order="Hypocreales", family="Nectriaceae",
+             status="uncalled", routing="lineage", n_loci=0)])
+    _write(asco / "loci.tsv", gl, [
+        dict(genome="A1", family_called="Ascomycota:MAT", contig="c1", start=1, end=9, idiomorph="MAT1-1", confidence="medium",
+             locus_class="mat_locus", baseline_confidence="high", tier_note="vote_collapse", label_unsupported="yes",
+             label_unsupported_reason="bit_margin<20;genus:Aureobasidium"),
+        dict(genome="A1", family_called="Ascomycota:MAT", contig="c2", start=1, end=9, idiomorph="MAT1-2", confidence="medium",
+             locus_class="mat_locus", baseline_confidence="high", label_unsupported="no", high_basis=""),
+        dict(genome="A1", family_called="Ascomycota:MAT", contig="c3", start=1, end=9, idiomorph="MAT1-2", confidence="high",
+             locus_class="mat_locus", label_unsupported="no", high_basis_outside_scope="grey")])
+    _write(basidio / "genomes.tsv", ASCO_G, [dict(genome="B1", species="Coprinopsis cinerea", class_="Agaricomycetes",
+                                                  order="Agaricales", family="Psathyrellaceae", status="called", routing="lineage")])
+    _write(basidio / "loci.tsv", gl, [dict(genome="B1", family_called="Basidiomycota:HD", contig="c1", start=1, end=9,
+                                           idiomorph="undetermined", confidence="high", locus_class="mat_locus", label_unsupported="no")])
+    if mucoro_tables:
+        _write(mucoro / "genomes.tsv", ["source", "genome", "species", "class_", "order", "family", "status", "routing"], [
+            dict(source="BFD", genome="M1", species="Mucor lusitanicus", order="Mucorales", status="called"),
+            dict(source="LCG", genome="L1", species="Absidia sp.", order="", status="uncalled")])
+        _write(mucoro / "loci.tsv", ["source", "genome", "contig", "start", "end", "idiomorph", "confidence", "locus_class"] + NOTES, [
+            dict(source="BFD", genome="M1", contig="c9", start=5, end=50, idiomorph="Plus", confidence="high", locus_class="mat_locus",
+                 label_unsupported="no")])
+    else:
+        _write(mucoro / "calls.tsv", ["source", "genome", "name", "bfd_order", "status", "idiomorph", "confidence", "locus_class",
+                                      "contig", "locus_start", "locus_end"], [
+            dict(source="BFD", genome="M1", name="Mucor lusitanicus", bfd_order="Mucorales", status="called", idiomorph="Plus",
+                 confidence="high", locus_class="mat_locus", contig="c9", locus_start=5, locus_end=50),
+            dict(source="LCG", genome="L1", name="Absidia sp.", bfd_order="", status="uncalled")])
+    if manifest:
+        for d in (asco, basidio, mucoro):
+            (d / "MANIFEST.txt").write_text(manifest)
+    return ["--asco", str(asco), "--basidio", str(basidio), "--mucoro", str(mucoro)]
+
+
+def _genomes(path):
+    with open(path, newline="") as fh:
+        return {r["genome"]: r for r in csv.DictReader(fh, delimiter="\t")}
+
+
+def test_default_release_stays_v060_until_the_cleanrun_results_are_committed():
+    assert bsd.DEFAULT_RELEASE == "v060"
+    for rel in bsd.RELEASES.values():
+        assert {"code", "asco", "basidio", "mucoro"} <= set(rel)
+
+
+def test_v060_tables_get_blank_note_columns(tmp_path):
+    out = tmp_path / "out"
+    bsd.main(["--out", str(out)] + _campaigns(tmp_path))
+    taxa = json.loads((out / "taxa.json").read_text())
+    assert taxa["fields"][:14] == ["dataset", "phylum", "class", "order", "family", "genus", "species", "cohort", "n", "called",
+                                   "undet", "two", "alleles", "types"] and taxa["fields"][14] == "unsupported"
+    assert all(r[14] == 0 for r in taxa["rows"])
+    for g in _genomes(out / "genomes_bfd_asco.tsv").values():
+        assert [g[c] for c in ("n_label_unsupported", "tier_notes", "high_basis", "loci_baseline_confidence", "locus_notes")] == [""] * 5
+    assert _genomes(out / "genomes_bfd_asco.tsv")["A1"]["loci"].startswith("c1:1-9|MAT1-1|medium|mat_locus;c2:1-9|MAT1-2|medium|mat_locus")
+    s = json.loads((out / "summary.json").read_text())
+    assert s["release"]["name"] == "v060" and s["datasets"]["bfd_asco"]["n_label_unsupported"] == 0
+
+
+def test_cleanrun_tables_pass_the_notes_and_the_baseline_tier_on(tmp_path):
+    out = tmp_path / "out"
+    bsd.main(["--release", "cleanrun", "--out", str(out)] + _campaigns(tmp_path, notes=True, mucoro_tables=True, manifest=MANIFEST))
+    G = _genomes(out / "genomes_bfd_asco.tsv")
+    g = G["A1"]
+    assert g["n_label_unsupported"] == "1" and g["tier_notes"] == "vote_collapse" and g["high_basis"] == ""
+    assert g["loci_baseline_confidence"] == "high;high;-"
+    assert g["locus_notes"] == "vote_collapse,bit_margin<20+genus:Aureobasidium;-;-"   # outside-scope basis: counts only
+    assert G["A2"]["n_label_unsupported"] == "0"           # uncalled: a count, like a called genome
+    d = json.loads((out / "summary.json").read_text())["datasets"]["bfd_asco"]
+    assert d["n_label_unsupported"] == 1 and d["tier_note"] == {"vote_collapse": 1}
+    assert d["tier_drop"] == 2 and d["tier_drop_without_note"] == 1   # the second drop has no listed mechanism
+    assert d["code"] == "cleanrun-2026-10b (56e11cd)"
+    assert d["high_basis"] == {} and d["high_basis_outside_scope"] == {"grey": 1}
+    taxa = json.loads((out / "taxa.json").read_text())
+    assert sum(r[14] for r in taxa["rows"]) == 1
+    assert taxa["fields"][15] == "high_basis_outside_scope" and [r[15] for r in taxa["rows"] if r[15]] == [{"grey": 1}]
+
+
+def test_each_folder_carries_its_own_code_and_mixed_generations_are_refused(tmp_path):
+    args = _campaigns(tmp_path, notes=True, manifest=MANIFEST)
+    (tmp_path / "mucoro" / "MANIFEST.txt").unlink()          # a v0.6.0-style Mucoromycotina folder without a manifest
+    with pytest.raises(SystemExit, match="mixes result generations"):
+        bsd.main(["--release", "cleanrun", "--out", str(tmp_path / "o")] + args)
+    out = tmp_path / "o2"
+    bsd.main(["--release", "cleanrun", "--out", str(out), "--allow-mixed"] + args)
+    s = json.loads((out / "summary.json").read_text())
+    assert s["datasets"]["bfd_asco"]["code"] == "cleanrun-2026-10b (56e11cd)"
+    assert s["datasets"]["zygolife_lcg"]["code"] == s["datasets"]["bfd_mucoro"]["code"] == "unrecorded"
+    assert s["release"]["code"].startswith("mixed: ")
+
+
+def test_folder_code_falls_back_to_the_release_that_names_the_folder(tmp_path):
+    d = tmp_path / bsd.RELEASES["v060"]["mucoro"]
+    d.mkdir()
+    assert bsd.folder_code(str(d)) == bsd.RELEASES["v060"]["code"]
+    assert bsd.folder_code(str(tmp_path)) == "unrecorded"
+
+
+def test_held_out_sets_are_separate_and_out_of_the_headline(tmp_path):
+    out = tmp_path / "out"
+    bsd.main(["--out", str(out)] + _campaigns(tmp_path))
+    s = json.loads((out / "summary.json").read_text())
+    assert s["datasets"]["zygolife_lcg"]["held_out"] and s["datasets"]["zygolife_jena"]["held_out"]
+    assert not s["datasets"]["bfd_mucoro"]["held_out"]
+    assert s["headline"]["datasets"] == 3 and s["headline"]["genomes"] == 2 + 1 + 1   # A1, A2, B1, M1; not L1
+    taxa = json.loads((out / "taxa.json").read_text())
+    S = taxa["strings"]
+    assert ("ZyGoLife", "LCG") in {(S[r[0]], S[r[7]]) for r in taxa["rows"]}
+
+
+def test_summary_records_outside_folders_as_absolute_paths(tmp_path):
+    out = tmp_path / "out"
+    bsd.main(["--out", str(out)] + _campaigns(tmp_path))
+    folders = json.loads((out / "summary.json").read_text())["release"]["folders"]
+    assert not folders["asco"].startswith("..") and Path(folders["asco"]).is_absolute()
+    assert bsd.show_path(str(_ROOT / "results" / "x")) == "results/x"
+
+
+def test_mucoromycotina_new_tables_read_like_calls_tsv(tmp_path):
+    a, b = tmp_path / "a", tmp_path / "b"
+    bsd.main(["--out", str(a)] + _campaigns(tmp_path / "x"))
+    bsd.main(["--out", str(b)] + _campaigns(tmp_path / "y", mucoro_tables=True))
+    notes = ("n_label_unsupported", "tier_notes", "high_basis", "loci_baseline_confidence", "locus_notes")
+    for ds in ("bfd_mucoro", "zygolife_lcg"):
+        ga, gb = _genomes(a / f"genomes_{ds}.tsv"), _genomes(b / f"genomes_{ds}.tsv")
+        assert {k: {c: v for c, v in r.items() if c not in notes} for k, r in ga.items()} == \
+               {k: {c: v for c, v in r.items() if c not in notes} for k, r in gb.items()}
+    m1 = _genomes(b / "genomes_bfd_mucoro.tsv")["M1"]
+    assert (m1["n_label_unsupported"], m1["loci_baseline_confidence"], m1["locus_notes"]) == ("0", "-", "-")
+    assert _genomes(b / "genomes_zygolife_lcg.tsv")["L1"]["n_label_unsupported"] == "0"
+
+
+def test_missing_or_unset_folders_stop_the_build(tmp_path):
+    args = _campaigns(tmp_path)
+    with pytest.raises(SystemExit, match="does not exist"):
+        bsd.main(["--out", str(tmp_path / "o"), "--asco", str(tmp_path / "nope")] + args[2:])
+    with pytest.raises(SystemExit, match="no mucoro folder"):
+        bsd.resolve_release("cleanrun", asco=args[1], basidio=args[3])
+
+
+# ------------------------------------------------------------------------------------------ shards
+
+def _tar_zst(path, members):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w") as tf:
+        for name, rep in members:
+            data = yaml.safe_dump(rep).encode()
+            ti = tarfile.TarInfo(name)
+            ti.size = len(data)
+            tf.addfile(ti, io.BytesIO(data))
+    path.write_bytes(subprocess.run(["zstd", "-q", "-c"], input=buf.getvalue(), capture_output=True, check=True).stdout)
+
+
+GENE = dict(gene="MAT1-1-1", start=2, end=8, strand="+", role="core_MAT", status="polished_agree")
+REP = dict(detected=[dict(contig="c1", start=1, end=9, idiomorph="MAT1-1", confidence="medium", locus_class="mat_locus",
+                          gene_evidence=[GENE]),
+                     dict(contig="c2", start=1, end=9, idiomorph="MAT1-1", confidence="high", locus_class="mat_locus")])
+needs_zstd = pytest.mark.skipif(shutil.which("zstd") is None, reason="needs the zstd command")
+
+
+@needs_zstd
+def test_locus_shards_append_the_notes_in_report_order(tmp_path):
+    bls = _load("build_locus_shards")
+    camp = tmp_path / "asco"
+    _write(camp / "loci.tsv", ASCO_L + NOTES, [
+        dict(genome="G1", contig="c1", start=1, end=9, baseline_confidence="high", tier_note="margin_fallback", label_unsupported="no"),
+        dict(genome="G1", contig="c2", start=1, end=9, label_unsupported="yes", label_unsupported_reason="genus:Xylaria")])
+    _tar_zst(camp / "reports_all.tar.zst", [("./wave_0/small_000/runs/G1/detection_report.yaml", REP)])
+    shards, noted = bls.campaign_shards("bfd_asco", str(camp))
+    assert noted
+    assert shards["bfd_asco"]["G1"] == [
+        ["c1", 1, 9, "MAT1-1", "medium", "mat_locus", [["MAT1-1-1", 2, 8, "+", "core_MAT", "polished_agree"]],
+         "high", "margin_fallback", "", ""],
+        ["c2", 1, 9, "MAT1-1", "high", "mat_locus", [], "", "", "genus:Xylaria", ""]]
+
+
+@needs_zstd
+def test_locus_shards_choose_the_same_run_as_the_tables_for_a_duplicated_genome(tmp_path):
+    bls = _load("build_locus_shards")
+    bct = _load("build_cleanrun_tables")
+    camp = tmp_path / "basidio"
+    _tar_zst(camp / "reports_all.tar.zst", [
+        ("./runs/small_000/runs/G1/detection_report.yaml", REP),             # an earlier chunk called it
+        ("./runs/zz_rerun/runs/G1/detection_report.yaml", dict(detected=[]))])  # the re-run is uncalled
+    shards, _ = bls.campaign_shards("bfd_basidio", str(camp))
+    runs, _ = bct.read_campaign(str(camp / "reports_all.tar.zst"))
+    picked, _ = bct.pick_runs(runs)
+    assert picked["G1"]["summary"]["loci"] == [] and "G1" not in shards.get("bfd_basidio", {})
+
+
+@needs_zstd
+def test_locus_shards_stop_when_loci_tsv_disagrees_with_the_reports(tmp_path):
+    bls = _load("build_locus_shards")
+    camp = tmp_path / "asco"
+    _write(camp / "loci.tsv", ASCO_L + NOTES, [dict(genome="G1", contig="c1", start=1, end=9, label_unsupported="no")])
+    _tar_zst(camp / "reports_all.tar.zst", [("./wave_0/small_000/runs/G1/detection_report.yaml", REP)])
+    with pytest.raises(SystemExit, match="disagree on the number of loci"):
+        bls.campaign_shards("bfd_asco", str(camp))

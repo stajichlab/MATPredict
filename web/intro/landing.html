@@ -48,7 +48,7 @@
   </table></div>
 
   <h2 id="results">Results across BFD and ZyGoLife</h2>
-  <p>Five datasets, one pipeline version. BFD genomes are the public fungal genome collection (<a href="https://github.com/stajichlab/Fungi_BFD/" target="_blank" rel="noopener">Fungi_BFD</a>, <a href="https://github.com/1KFG/Fungi_BFD_run2026/" target="_blank" rel="noopener">2026 run</a>); ZyGoLife LCG and Jena are Mucoromycotina sets that were held out from training and curation.</p>
+  <p>Three BFD datasets and two held-out ZyGoLife sets, one pipeline version. The headline numbers above count BFD only; the held-out sets are shown as their own rows, labelled “held out”. BFD genomes are the public fungal genome collection (<a href="https://github.com/stajichlab/Fungi_BFD/" target="_blank" rel="noopener">Fungi_BFD</a>, <a href="https://github.com/1KFG/Fungi_BFD_run2026/" target="_blank" rel="noopener">2026 run</a>); ZyGoLife LCG and Jena are Mucoromycotina sets that were held out from training and curation.</p>
 
   <h3>Genomes with a MAT call</h3>
   <div class="chart" id="ch-calls"></div>
@@ -123,8 +123,11 @@ const D = summary.datasets, ids = Object.keys(D);
 document.getElementById("built").textContent = summary.generated;
 if (summary.release?.code) document.getElementById("code").textContent = summary.release.code;   // RELEASES in scripts/build_site_data.py
 
-const tot = ids.reduce((a, k) => a + D[k].genomes, 0), called = ids.reduce((a, k) => a + (D[k].status.called || 0), 0), loci = ids.reduce((a, k) => a + D[k].loci, 0);
-document.getElementById("cards").innerHTML = [[fmt(tot), "genomes searched"], [pct(called, tot), "with a MAT call"], [fmt(loci), "loci called"], [String(ids.length), "datasets"]]
+// Headline cards: BFD datasets only. The held-out ZyGoLife sets (LCG, Jena) are a separate category (curator 2026-10-24).
+const bfd = ids.filter(k => D[k].source === "BFD"), held = ids.filter(k => D[k].source !== "BFD");
+const tot = bfd.reduce((a, k) => a + D[k].genomes, 0), called = bfd.reduce((a, k) => a + (D[k].status.called || 0), 0), loci = bfd.reduce((a, k) => a + D[k].loci, 0);
+const heldN = held.reduce((a, k) => a + D[k].genomes, 0);
+document.getElementById("cards").innerHTML = [[fmt(tot), "BFD genomes searched"], [pct(called, tot), "of BFD genomes with a MAT call"], [fmt(loci), "BFD loci called"], [fmt(heldN), "held-out ZyGoLife genomes (LCG, Jena), shown separately"]]
   .map(([v, l]) => `<div class="card"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
 
 hbar(document.getElementById("ch-calls"), ids.map(k => ({ label: D[k].label, value: (D[k].status.called || 0) / D[k].genomes, max: 1, note: `${pct(D[k].status.called || 0, D[k].genomes)}  (${fmt(D[k].status.called || 0)} of ${fmt(D[k].genomes)})` })), { max: 1 });
@@ -137,7 +140,7 @@ stacked(document.getElementById("ch-class"), ids.map(k => ({ label: D[k].label, 
 // allele composition per dataset (called genomes): top single alleles, two-allele genomes, undetermined
 const per = {};
 for (const r of rows) {
-  const key = r.dataset === "ZyGoLife" ? "ZyGoLife (LCG + Jena)" : `BFD ${r.phylum === "Mucoromycota" ? "Mucoromycotina" : r.phylum}`;
+  const key = r.dataset === "ZyGoLife" ? "ZyGoLife LCG + Jena (held out)" : `BFD ${r.phylum === "Mucoromycota" ? "Mucoromycotina" : r.phylum}`;
   const p = per[key] ??= { n: 0, parts: {}, two: 0, undet: 0 };
   p.n += r.called; p.two += r.two; p.undet += r.undet;
   for (const [a, v] of Object.entries(r.alleles)) if (!a.startsWith("two:")) p.parts[a] = (p.parts[a] || 0) + v;

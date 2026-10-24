@@ -40,9 +40,14 @@ New per-locus columns (loci.tsv):
                        distant_fragment     a gene that is unpolished and not in `confidence_ignored_genes`
                                             now, and was not so in v0.6.0 (e.g. a distant MAT1-1-2 fragment);
                        (blank)              none of these (counted as `other` in the printed summary).
-  label_unsupported  #138: `bit_margin<20` when margin_basis is `bits` and the margin is under 20, and/or
+                     So a blank tier_note means "no listed mechanism", not "no drop": a drop is seen by comparing
+                     `confidence` with `baseline_confidence` (curator 2026-10-24: these stay blank).
+  label_unsupported  #138, `yes` or `no`: `yes` when label_unsupported_reason is not empty.
+  label_unsupported_reason  `bit_margin<20` when margin_basis is `bits` and the margin is under 20, and/or
                      `genus:<G>` for every locus of Aureobasidium, Friedmanniomyces or Xylaria; joined by `;`.
                      The identity fallback is NOT marked (that question is #145). The idiomorph is unchanged.
+                     Only loci that report an idiomorph are marked: an `undetermined` (or empty) idiomorph is
+                     never marked, by either rule (curator 2026-10-24).
   high_basis         #129, for `high` Ascomycota:MAT loci with a called idiomorph in the scope families
                      (default Pleosporaceae; --high-basis-scope all for every family). Extra genes are the
                      genes other than the called idiomorph's core gene and the scoped flanks GAP1/BGL1 (best
@@ -54,9 +59,13 @@ New per-locus columns (loci.tsv):
                                    when there is no extra gene);
                        grey        neither (e.g. an unpolished extra gene with >=30% coverage, <50% identity).
                      Blank outside the scope, below `high`, or for an `undetermined` (homothallic) locus.
+                     (Curator 2026-10-24: the scope stays the BFD FAMILY label Pleosporaceae.)
+  high_basis_outside_scope  the same rule for `high` Ascomycota:MAT idiomorph calls OUTSIDE the scope families,
+                     reported separately so its counts never mix with the scoped column (blank inside the scope).
 New per-genome columns (genomes.tsv): genus, baseline_status, change_vs_baseline (the phase-5 judgement's
-category, computed on the first locus of each sorted locus list), n_tier_note, n_label_unsupported, high_basis
-(distinct values over the genome's loci).
+category, computed on the first locus of each sorted locus list, so it can differ from the per-locus view),
+n_tier_drop (loci whose tier dropped), n_tier_note, n_label_unsupported, high_basis (distinct values over the
+genome's loci).
 
 Taxonomy: --samples (BFD samples.csv: ASMID, SPECIES, CLASS, ORDER, FAMILY, GENUS). For --layout mucoro, the
 names and orders come from --baseline-calls (the v0.6.0 `calls.tsv`) and then `inputs.tsv`.
@@ -96,12 +105,12 @@ SPAN_SHIFT_BP = 1000       # a coordinate shift up to this is not a change (judg
 TIER_NOTES = ("margin_fallback", "vote_collapse", "polished_model_lost", "distant_fragment")
 
 GENOME_COLS = ["genome", "species", "class_", "order", "family", "status", "routing", "n_loci", "families_called", "wall_s",
-               "genus", "not_searched_reason", "baseline_status", "change_vs_baseline", "n_tier_note", "n_label_unsupported",
+               "genus", "not_searched_reason", "baseline_status", "change_vs_baseline", "n_tier_drop", "n_tier_note", "n_label_unsupported",
                "high_basis"]
 LOCUS_COLS = ["genome", "class_", "order", "family_called", "contig", "start", "end", "idiomorph", "confidence", "locus_class",
               "detection_pass", "genes_found", "verification",
               "genus", "family", "polished_genes", "idiomorph_margin", "margin_basis", "n_candidates", "baseline_confidence",
-              "tier_note", "label_unsupported", "high_basis"]
+              "tier_note", "label_unsupported", "label_unsupported_reason", "high_basis", "high_basis_outside_scope"]
 
 
 # ----------------------------------------------------------------------------------------------- reading reports
@@ -206,6 +215,13 @@ def read_campaign(src):
     return dict(runs), lists
 
 
+def choose_run(candidates):
+    """The run folder to use for a genome with several: `candidates` is [(path, has_non_empty_report)]; a non-empty
+    report wins, then the lexicographically last path. Shared with build_locus_shards.py, so the tables and the
+    locus maps always describe the same run."""
+    return max(candidates, key=lambda c: (bool(c[1]), c[0]))[0]
+
+
 def pick_runs(runs):
     """{genome: run} choosing one folder per genome (see the module docstring); also returns the duplicate count."""
     by_genome = defaultdict(list)
@@ -215,7 +231,7 @@ def pick_runs(runs):
     for g, rels in by_genome.items():
         if len(rels) > 1:
             dup += 1
-        out[g] = runs[max(rels, key=lambda r: (runs[r]["has_report"], r))]
+        out[g] = runs[choose_run([(r, runs[r]["has_report"]) for r in rels])]
     return out, dup
 
 
@@ -305,7 +321,10 @@ def margin_basis(locus):
 
 
 def label_unsupported(locus, genus):
-    """#138 reasons for one locus ('' when the label is not marked)."""
+    """#138 reasons for one locus ('' when the label is not marked). A locus that reports no idiomorph
+    (`undetermined`, e.g. a homothallic candidate) has no label to support and is never marked."""
+    if locus["idiomorph"] in (None, "", "undetermined"):
+        return ""
     why = []
     if margin_basis(locus) == "bits" and locus["idiomorph_margin"] < LABEL_MARGIN_BITS:
         why.append(f"bit_margin<{LABEL_MARGIN_BITS:g}")
@@ -368,8 +387,11 @@ def match_baseline(new_loci, old_loci):
     used, out = set(), []
     for x in new_loci:
         best, key = None, None
+        if x["start"] is None or x["end"] is None:   # no span: nothing to overlap (a null span never aborts the table)
+            out.append(None)
+            continue
         for j, o in enumerate(old_loci):
-            if j in used or o["contig"] != x["contig"]:
+            if j in used or o["contig"] != x["contig"] or o["start"] is None or o["end"] is None:
                 continue
             ov = min(int(x["end"]), int(o["end"])) - max(int(x["start"]), int(o["start"])) + 1
             if ov <= 0:
@@ -444,8 +466,8 @@ def build(new, base, listed, samples, mucoro_names, inputs_rows, scope, mucoro=F
         if summ is None:
             if run and run["stderr"]:
                 row["status"] = "failed"
-            row.update(change_vs_baseline=change_category(None, bsum) if base_given else "", n_tier_note=0,
-                       n_label_unsupported=0, high_basis="")
+            row.update(change_vs_baseline=change_category(None, bsum) if base_given else "", n_tier_drop=0,
+                       n_tier_note=0, n_label_unsupported=0, high_basis="")
             G.append(row)
             continue
         loci = summ["loci"]
@@ -455,15 +477,17 @@ def build(new, base, listed, samples, mucoro_names, inputs_rows, scope, mucoro=F
         row["change_vs_baseline"] = change_category(summ, bsum) if base_given else ""
         old_loci = bsum["loci"] if bsum else []
         match = match_baseline(loci, old_loci)
-        n_note = n_lab = 0
+        n_note = n_lab = n_drop = 0
         bases = set()
         for x, j in zip(loci, match):
             o = old_loci[j] if j is not None else None
             note, dropped = tier_note(x, o)
             lab = label_unsupported(x, genus)
             hb = high_basis(x, family, scope)
+            hb_out = high_basis(x, family, None) if scope is not None and family not in scope else ""
             n_note += bool(note)
             n_lab += bool(lab)
+            n_drop += dropped
             if hb:
                 bases.add(hb)
             if dropped:
@@ -475,9 +499,10 @@ def build(new, base, listed, samples, mucoro_names, inputs_rows, scope, mucoro=F
                           polished_genes="" if x["polished_genes"] is None else x["polished_genes"],
                           idiomorph_margin="" if x["idiomorph_margin"] is None else x["idiomorph_margin"],
                           margin_basis=margin_basis(x), n_candidates=x["n_candidates"],
-                          baseline_confidence=o["confidence"] if o else "", tier_note=note, label_unsupported=lab,
-                          high_basis=hb))
-        row.update(n_tier_note=n_note, n_label_unsupported=n_lab, high_basis="|".join(sorted(bases)))
+                          baseline_confidence=o["confidence"] if o else "", tier_note=note,
+                          label_unsupported="yes" if lab else "no", label_unsupported_reason=lab, high_basis=hb,
+                          high_basis_outside_scope=hb_out))
+        row.update(n_tier_drop=n_drop, n_tier_note=n_note, n_label_unsupported=n_lab, high_basis="|".join(sorted(bases)))
         G.append(row)
     return G, L, tally
 
@@ -497,20 +522,25 @@ def by_rank(G, L, rank):
         return v[min(len(v) - 1, int(round((len(v) - 1) * p)))]
 
     head = [rank, "genomes", "reports", "called", "pct_called", "routing", "wall_median_s", "wall_p90_s", "wall_max_s",
-            "loci", "label_unsupported", "tier_dropped_noted"] + list(TIER_NOTES) + ["high_supported", "high_tie_break", "high_grey"]
+            "loci", "n_label_unsupported", "tier_dropped", "tier_dropped_noted"] + list(TIER_NOTES) + ["high_supported", "high_tie_break", "high_grey",
+                                    "outside_scope_high_supported", "outside_scope_high_tie_break", "outside_scope_high_grey"]
     rows = []
     for c, rs in sorted(by.items(), key=lambda x: (-len(x[1]), x[0])):
         rep = [r for r in rs if r["status"] in ("called", "uncalled")]
         wall = [int(r["wall_s"]) for r in rep if str(r["wall_s"]).isdigit()]
         called = sum(r["status"] == "called" for r in rs)
         ls = loc.get(c, [])
+        dropped = sum(1 for x in ls if x["baseline_confidence"] and
+                      CONF_RANK.get(x["confidence"], 0) < CONF_RANK.get(x["baseline_confidence"], 0))
         notes = Counter(x["tier_note"] for x in ls)
         hb = Counter(x["high_basis"] for x in ls)
+        ho = Counter(x["high_basis_outside_scope"] for x in ls)
         rows.append([c, len(rs), len(rep), called, f"{100 * called / max(1, len(rep)):.1f}",
                      "; ".join(f"{k}:{n}" for k, n in sorted(Counter(r["routing"] for r in rep).items(), key=lambda kv: (-kv[1], kv[0]))),
                      int(statistics.median(wall)) if wall else "", q(wall, .9) if wall else "", max(wall) if wall else "",
-                     len(ls), sum(bool(x["label_unsupported"]) for x in ls), sum(notes[n] for n in TIER_NOTES)]
-                    + [notes[n] for n in TIER_NOTES] + [hb["supported"], hb["tie_break"], hb["grey"]])
+                     len(ls), sum(x["label_unsupported"] == "yes" for x in ls), dropped, sum(notes[n] for n in TIER_NOTES)]
+                    + [notes[n] for n in TIER_NOTES] + [hb["supported"], hb["tie_break"], hb["grey"],
+                                                                     ho["supported"], ho["tie_break"], ho["grey"]])
     return head, rows
 
 
@@ -586,8 +616,10 @@ def main(argv=None):
     if unlisted:
         print(f"{len(unlisted)} reports of unlisted genomes left out (e.g. {unlisted[:3]})", file=sys.stderr)
     print("tier drops by note:", dict(sorted(tally.items())), file=sys.stderr)
-    print("label_unsupported loci:", sum(bool(x["label_unsupported"]) for x in L), file=sys.stderr)
+    print("label_unsupported loci:", sum(x["label_unsupported"] == "yes" for x in L), file=sys.stderr)
     print("high_basis:", dict(sorted(Counter(x["high_basis"] for x in L if x["high_basis"]).items())), file=sys.stderr)
+    print("high_basis outside the scope:", dict(sorted(Counter(x["high_basis_outside_scope"] for x in L
+                                                              if x["high_basis_outside_scope"]).items())), file=sys.stderr)
 
 
 if __name__ == "__main__":

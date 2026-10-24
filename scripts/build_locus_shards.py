@@ -5,14 +5,16 @@ Reads each campaign's reports_all.tar.zst (one detection_report.yaml per genome,
 `wave_N/runs/<genome>/`, clean-run `wave_N/small_NNN/runs/<genome>/` or `runs/small_NNN/runs/<genome>/`,
 Mucoromycotina `<SOURCE>__<id>/`) and keeps, for every detected locus, the contig, span, idiomorph,
 confidence, locus class and the gene models (name, span, strand, role, status). When the campaign folder also
-holds the clean-run `loci.tsv` (scripts/build_cleanrun_tables.py), each locus gets three more fields after the
-gene list: tier_note, label_unsupported and high_basis (the viewer reads fields 0-6 and ignores the rest).
+holds the clean-run `loci.tsv` (scripts/build_cleanrun_tables.py), each locus gets four more fields after the
+gene list: baseline_confidence, tier_note, label_unsupported_reason and high_basis (the viewer reads fields 0-6
+and ignores the rest). A genome whose loci.tsv rows do not match its report's loci in number stops the build.
 Writes web/intro/data/loci_<dataset>.json.gz (committed; about 1.9 MB for all 27.8k loci). Run this when a
 campaign changes; build_site_data.py and the site build do not need the tarballs.
 
 The campaign folders are the release's, from RELEASES in build_site_data.py (--release, default as there);
 --asco / --basidio / --mucoro override one, as in build_site_data.py. If a genome has several run folders in
-a tarball, the lexicographically last path with loci wins (the rule of build_cleanrun_tables.py).
+a tarball, the run is chosen by `choose_run` from build_cleanrun_tables.py (a non-empty report, then the last
+path), so the maps and the tables describe the same run.
 
 Needs PyYAML and the zstd command. Usage: python3 scripts/build_locus_shards.py [--out web/intro/data]
     [--release cleanrun|v060] [--asco DIR] [--basidio DIR] [--mucoro DIR]
@@ -30,20 +32,24 @@ from collections import defaultdict
 import yaml
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from build_cleanrun_tables import choose_run  # noqa: E402
 from build_site_data import DEFAULT_RELEASE, RELEASES, REPO, resolve_release  # noqa: E402
 
 MUCORO = {"BFD": "bfd_mucoro", "LCG": "zygolife_lcg", "JENA": "zygolife_jena"}
 FIELDS = ["contig", "start", "end", "idiomorph", "confidence", "locus_class", "genes[name,start,end,strand,role,status]"]
-NOTE_FIELDS = ["tier_note", "label_unsupported", "high_basis"]
+NOTE_FIELDS = ["baseline_confidence", "tier_note", "label_unsupported_reason", "high_basis"]
 
 
 def reports(tar_path):
-    """Yield (member path, genome directory name, parsed detection_report.yaml) from a .tar.zst without unpacking it."""
+    """Yield (member path, genome directory name, report bytes non-empty, parsed detection_report.yaml) from a
+    .tar.zst without unpacking it."""
     proc = subprocess.Popen(["zstd", "-dc", tar_path], stdout=subprocess.PIPE)
     with tarfile.open(fileobj=proc.stdout, mode="r|") as tf:
         for m in tf:
             if m.isfile() and m.name.endswith("/detection_report.yaml"):
-                yield os.path.normpath(m.name), os.path.basename(os.path.dirname(m.name)), yaml.load(tf.extractfile(m), Loader=yaml.CSafeLoader) or {}
+                data = tf.extractfile(m).read()
+                yield (os.path.normpath(os.path.dirname(m.name)), os.path.basename(os.path.dirname(m.name)), bool(data),
+                       (yaml.load(data, Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader)) or {}) if data else {})
     if proc.wait():
         raise RuntimeError(f"zstd failed on {tar_path}")
 
@@ -54,7 +60,7 @@ def locus_row(l):
 
 
 def load_notes(folder):
-    """{genome (SOURCE__id for Mucoromycotina): [(tier_note, label_unsupported, high_basis) per locus]} from the
+    """{genome (SOURCE__id for Mucoromycotina): [(baseline_confidence, tier_note, label_unsupported_reason, high_basis) per locus]} from the
     campaign's clean-run loci.tsv, or None when it has no such columns."""
     path = os.path.join(folder, "loci.tsv")
     if not os.path.exists(path):
@@ -62,7 +68,7 @@ def load_notes(folder):
     out = defaultdict(list)
     with open(path, newline="") as fh:
         rd = csv.DictReader(fh, delimiter="\t")
-        if "label_unsupported" not in (rd.fieldnames or []):
+        if "label_unsupported_reason" not in (rd.fieldnames or []):
             return None
         for r in rd:
             g = f"{r['source']}__{r['genome']}" if r.get("source") else r["genome"]
@@ -73,17 +79,25 @@ def load_notes(folder):
 def campaign_shards(key, folder):
     """{dataset: {genome: [locus rows]}} for one campaign folder; the second value says whether notes were added."""
     notes = load_notes(folder)
-    best = {}
-    for path, name, rep in reports(os.path.join(folder, "reports_all.tar.zst")):
-        loci = [locus_row(l) for l in rep.get("detected") or []]
+    runs = {}
+    for path, name, nonempty, rep in reports(os.path.join(folder, "reports_all.tar.zst")):
+        runs.setdefault(name, {})[path] = (nonempty, [locus_row(l) for l in rep.get("detected") or []])
+    best, bad = {}, []
+    for name, cands in runs.items():
+        loci = cands[choose_run([(p, ne) for p, (ne, _) in cands.items()])][1]
         if not loci:
             continue
-        if notes is not None and len(notes.get(name, [])) == len(loci):   # loci.tsv rows are in report order
-            loci = [l + n for l, n in zip(loci, notes[name])]
-        if name not in best or path > best[name][0]:
-            best[name] = (path, loci)
+        if notes is not None:
+            if len(notes.get(name, [])) != len(loci):
+                bad.append(name)
+                continue
+            loci = [l + n for l, n in zip(loci, notes[name])]   # loci.tsv rows are in report order
+        best[name] = loci
+    if bad:
+        raise SystemExit(f"{folder}: loci.tsv and the reports disagree on the number of loci for {len(bad)} genome(s), "
+                         f"e.g. {sorted(bad)[:5]}; rebuild loci.tsv from the same reports")
     shards = {}
-    for name, (_, loci) in best.items():
+    for name, loci in best.items():
         if key == "mucoromycotina":
             src, _, genome = name.partition("__")
             shards.setdefault(MUCORO[src], {})[genome] = loci

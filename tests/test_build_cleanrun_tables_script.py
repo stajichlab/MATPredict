@@ -70,6 +70,14 @@ def test_label_unsupported_does_not_mark_the_identity_fallback():
     assert bct.label_unsupported(L(margin=None, cands=0), "Beauveria") == ""
 
 
+def test_label_unsupported_never_marks_an_undetermined_locus():
+    # curator 2026-10-24: a homothallic candidate publishes no MAT1-1/MAT1-2 label, so neither rule applies
+    homo = L(idio="undetermined", cls="homothallic_candidate", margin=3.0, cands=2, homothallic_vote="MAT1-1")
+    assert bct.label_unsupported(homo, "Neurospora") == ""
+    assert bct.label_unsupported(homo, "Aureobasidium") == ""
+    assert bct.label_unsupported(L(idio="A", family="Ascomycota:MTL", margin=3.0, cands=2), "Candida") == "bit_margin<20"
+
+
 def test_label_unsupported_genus_rule_marks_every_locus_of_the_three_genera():
     for g in ("Aureobasidium", "Xylaria", "Friedmanniomyces"):
         assert bct.label_unsupported(L(margin=300.0, cands=2), g) == f"genus:{g}"
@@ -170,11 +178,26 @@ def test_high_basis_blank_outside_scope_below_high_or_undetermined():
 # ------------------------------------------------------------------------------------------ matching, categories
 
 
-def test_match_baseline_by_contig_overlap_preferring_the_same_family():
-    old = [L(contig="c1", start=1, end=100, family="Ascomycota:MATsc"), L(contig="c1", start=50, end=5000),
-           L(contig="c2", start=1, end=5000)]
+def test_match_baseline_by_contig_overlap():
+    old = [L(contig="c1", start=1, end=100), L(contig="c1", start=50, end=5000), L(contig="c2", start=1, end=5000)]
     new = [L(contig="c1", start=10, end=4000), L(contig="c3", start=1, end=10)]
     assert bct.match_baseline(new, old) == [1, None]
+
+
+def test_match_baseline_prefers_the_same_family_over_a_larger_overlap():
+    old = [L(contig="c1", start=1, end=5000, family="Ascomycota:MATsc"), L(contig="c1", start=1000, end=2000)]
+    new = [L(contig="c1", start=1, end=5000)]
+    assert bct.match_baseline(new, old) == [1]
+
+
+def test_match_baseline_skips_a_null_span():
+    old = [L(contig="c1", start=None, end=None), L(contig="c1", start=1, end=50)]
+    assert bct.match_baseline([L(contig="c1", start=None, end=None), L(contig="c1", start=1, end=50)], old) == [None, 1]
+
+
+def test_choose_run_prefers_a_report_then_the_last_path():
+    assert bct.choose_run([("a/runs/G", True), ("b/runs/G", False)]) == "a/runs/G"
+    assert bct.choose_run([("a/runs/G", True), ("b/runs/G", True)]) == "b/runs/G"
 
 
 def test_change_category():
@@ -203,7 +226,7 @@ def _report(root, rel, detected):
 def _tree(tmp_path):
     new, old = tmp_path / "new", tmp_path / "old"
     (new / "lists").mkdir(parents=True)
-    (new / "lists" / "wave_0.tsv").write_text("G1\t1\nG2\t2\nG3\t3\nG4\t4\n")
+    (new / "lists" / "wave_0.tsv").write_text("G1\t1\nG2\t2\nG3\t3\nG4\t4\nG5\t5\n")
     # G1 Macrophomina-like identity fallback drop; G2 Aureobasidium vote collapse; G3 no new report but a failure
     _report(new, "wave_0/small_000/runs/G1", [det(conf="medium", margin=4.96, cands=1, genes=[ge("MAT1-2-1")])])
     _report(old, "wave_0/runs/G1", [det(conf="high", margin=5.18, cands=1, genes=[ge("MAT1-2-1")])])
@@ -213,6 +236,8 @@ def _tree(tmp_path):
     (new / "wave_0/small_001/runs/G3/stderr.log").write_text("boom\n")
     _report(new, "wave_0/small_002/runs/G4", [det(idio="MAT1-1", genes=[ge("MAT1-1-1"), ge("GAP1")])])
     _report(new, "wave_0/small_002/runs/UNLISTED", [])
+    # G5 outside the Pleosporaceae scope: a high call resting on the opposite core gene only
+    _report(new, "wave_0/small_002/runs/G5", [det(idio="MAT1-2", genes=[ge("MAT1-2-1"), ge("MAT1-1-1")])])
     samples = tmp_path / "samples.csv"
     with open(samples, "w", newline="") as fh:
         w = csv.writer(fh)
@@ -220,6 +245,7 @@ def _tree(tmp_path):
         w.writerow(["G1", "Macrophomina phaseolina", "Dothideomycetes", "Botryosphaeriales", "Botryosphaeriaceae", "Macrophomina"])
         w.writerow(["G2", "Aureobasidium pullulans", "Dothideomycetes", "Dothideales", "Saccotheciaceae", "Aureobasidium"])
         w.writerow(["G4", "Curvularia lunata", "Dothideomycetes", "Pleosporales", "Pleosporaceae", "Curvularia"])
+        w.writerow(["G5", "Cercospora beticola", "Dothideomycetes", "Mycosphaerellales", "Mycosphaerellaceae", "Cercospora"])
     return new, old, samples
 
 
@@ -233,18 +259,23 @@ def test_end_to_end_tables(tmp_path):
     out = tmp_path / "out"
     bct.main(["--campaign", str(new), "--baseline", str(old), "--samples", str(samples), "--out", str(out)])
     G = {r["genome"]: r for r in _rows(out / "genomes.tsv")}
-    assert list(G) == ["G1", "G2", "G3", "G4"]          # list order; the unlisted report is left out
-    assert G["G1"]["change_vs_baseline"] == "confidence DOWN" and G["G1"]["n_tier_note"] == "1"
+    assert list(G) == ["G1", "G2", "G3", "G4", "G5"]          # list order; the unlisted report is left out
+    assert G["G1"]["change_vs_baseline"] == "confidence DOWN" and G["G1"]["n_tier_note"] == "1" and G["G1"]["n_tier_drop"] == "1"
+    assert G["G3"]["n_label_unsupported"] == "0"
     assert G["G2"]["change_vs_baseline"] == "idiomorph flip"
     assert G["G3"]["status"] == "failed" and G["G3"]["baseline_status"] == "no_report"
     assert G["G4"]["change_vs_baseline"] == "NEW call" and G["G4"]["high_basis"] == "tie_break"
     loci = {r["genome"]: r for r in _rows(out / "loci.tsv")}
     assert loci["G1"]["tier_note"] == "margin_fallback" and loci["G1"]["margin_basis"] == "identity_fallback"
-    assert loci["G1"]["label_unsupported"] == "" and loci["G1"]["baseline_confidence"] == "high"
+    assert loci["G1"]["label_unsupported"] == "no" and loci["G1"]["label_unsupported_reason"] == "" and loci["G1"]["baseline_confidence"] == "high"
     assert loci["G2"]["tier_note"] == "vote_collapse"
-    assert loci["G2"]["label_unsupported"] == "bit_margin<20;genus:Aureobasidium"
+    assert loci["G2"]["label_unsupported"] == "yes"
+    assert loci["G2"]["label_unsupported_reason"] == "bit_margin<20;genus:Aureobasidium"
     assert loci["G2"]["idiomorph"] == "MAT1-1" and loci["G2"]["confidence"] == "medium"   # the report's values are kept
+    assert loci["G4"]["high_basis"] == "tie_break" and loci["G4"]["high_basis_outside_scope"] == ""
+    assert loci["G5"]["high_basis"] == "" and loci["G5"]["high_basis_outside_scope"] == "tie_break"
     by = _rows(out / "by_class.tsv")
+    assert (by[0]["high_tie_break"], by[0]["outside_scope_high_tie_break"]) == ("1", "1")
     assert by[0]["class"] == "Dothideomycetes" and by[0]["margin_fallback"] == "1" and by[0]["vote_collapse"] == "1"
 
 
@@ -289,4 +320,4 @@ def test_mucoromycotina_layout(tmp_path):
         ("BFD", "GCA_1", "Mucor lusitanicus", "Mucoromycotina", "Mucorales", "called"),
         ("LCG", "Absidia_x_1", "Absidia x NRRL 1", "Mucoromycotina", "", "uncalled")]
     loci = _rows(out / "loci.tsv")
-    assert loci[0]["source"] == "BFD" and loci[0]["margin_basis"] == "bits" and loci[0]["label_unsupported"] == ""
+    assert loci[0]["source"] == "BFD" and loci[0]["margin_basis"] == "bits" and loci[0]["label_unsupported"] == "no"

@@ -43,11 +43,12 @@ import { loadData, stacked, legend, fmt, pct, COLORS } from "./charts.js";
 import { loadShard, renderCards } from "./locus-view.js";
 const { rows, summary } = await loadData();
 const RANKS = ["phylum", "class", "order", "family", "genus", "species"];
-const DS = { BFD: "BFD", ZyGoLife: "ZyGoLife (LCG, Jena held out)" };
-const st = { rank: "phylum", q: "", minn: 1, ds: new Set(["BFD", "ZyGoLife"]), filt: {}, sort: "n", dir: -1 };
+const DS = { BFD: "BFD", ZyGoLife: "ZyGoLife LCG and Jena (held-out sets, not counted with BFD)" };
+// The held-out sets are a separate category (curator 2026-10-24): off by default, so the default view is BFD only.
+const st = { rank: "phylum", q: "", minn: 1, ds: new Set(["BFD"]), filt: {}, sort: "n", dir: -1 };
 const $ = id => document.getElementById(id);
 
-$("dsbox").innerHTML = Object.entries(DS).map(([k, l]) => `<label><input type="checkbox" data-ds="${k}" checked> ${l}</label>`).join("");
+$("dsbox").innerHTML = Object.entries(DS).map(([k, l]) => `<label><input type="checkbox" data-ds="${k}"${st.ds.has(k) ? " checked" : ""}> ${l}</label>`).join("");
 $("dsbox").addEventListener("change", e => { const k = e.target.dataset.ds; e.target.checked ? st.ds.add(k) : st.ds.delete(k); render(); });
 $("rank").onchange = e => { st.rank = e.target.value; render(); };
 $("q").oninput = e => { st.q = e.target.value.toLowerCase(); render(); };

@@ -197,6 +197,11 @@ class GeneEvidence:
     #: Frameshifts in the canonical exonerate model (0 = none); reported only
     #: when > 0, so reports of frameshift-free genes are unchanged.
     frameshifts: int = 0
+    #: Internal stop codons in the polished model's CDS, read in its best frame
+    #: (0 = none). Counted only for a frameshift-free model, whose exons read
+    #: through; a frameshifted model is already defective. Reported only when
+    #: > 0. With `frameshifts` it marks a defective gene (issue #151).
+    internal_stops: int = 0
     #: Set on the LOSING half of a resolved sexM/sexP-style pair: the winning
     #: gene's name. The loser stays in the record, marked, so the decision is
     #: auditable; the locus figure and gene table show only the winner.
@@ -238,6 +243,13 @@ class GeneEvidence:
     # BEST (highest) search bitscore among this cluster's hits of the gene;
     # the flank-carried rule has judged on it since 2026-09-27 (bitscore
     # floor replacing the genome-size-dependent e-value floor).
+
+    @property
+    def defective(self) -> bool:
+        """A polished model with a frameshift or an internal stop codon: a
+        defective (pseudogenised) gene, reported as a result, not a failure.
+        Does not change the tier or `polished_genes` (issue #151)."""
+        return bool(self.frameshifts) or bool(self.internal_stops)
 
 
 @dataclass(frozen=True)
@@ -914,20 +926,75 @@ def _pair_losers_set_aside(entries, events) -> set[int]:
     return {i for i in range(len(entries)) if any(j not in lost for j in winner_entries(i, True))}
 
 
+def _contig_sequence(genome_fasta: Path, contig: str, cache: dict):
+    """One contig's sequence, or None when the genome has no such contig.
+    Every contig is read once per run into `cache`."""
+    from Bio import SeqIO
+
+    if contig not in cache:
+        with open(genome_fasta) as handle:
+            for record in SeqIO.parse(handle, "fasta"):
+                cache.setdefault(record.id, record.seq)
+        cache.setdefault(contig, None)
+    return cache.get(contig)
+
+
+def count_internal_stops(seq, exons, strand: str, genetic_code: int) -> int:
+    """Internal stop codons in the CDS spliced from `exons` (1-based closed
+    spans, any order), read in the frame that has the fewest.
+
+    The frame is not assumed (a polished model's first exon need not start on
+    a codon boundary), and taking the minimum over the three frames means a
+    correct model, whose true frame has no stop, can never be counted as
+    defective. One trailing stop codon is the gene's own stop and is not
+    counted. 0 for an empty CDS."""
+    from Bio.Seq import Seq
+
+    ordered = sorted(exons)
+    if strand == "-":
+        ordered = list(reversed(ordered))
+    cds = "".join(
+        str(seq[start - 1:end].reverse_complement() if strand == "-" else seq[start - 1:end])
+        for start, end in ordered
+    )
+    best = None
+    for frame in range(3):
+        sub = cds[frame:]
+        sub = sub[: len(sub) - len(sub) % 3]
+        if not sub:
+            continue
+        protein = str(Seq(sub).translate(table=genetic_code))
+        stops = protein[:-1].count("*") if protein.endswith("*") else protein.count("*")
+        best = stops if best is None else min(best, stops)
+    return best or 0
+
+
+def _flag_internal_stops(evidence: list, genome_fasta: Path, genetic_code: int, cache: dict) -> list:
+    """Set `internal_stops` on each polished, frameshift-free gene model whose
+    CDS holds an internal stop codon (issue #151). Every other entry is returned
+    unchanged, so a gene without a defect reports exactly as before."""
+    out = []
+    for e in evidence:
+        if e.exons and not e.frameshifts and str(e.status).startswith("polished"):
+            try:
+                seq = _contig_sequence(genome_fasta, e.contig, cache)
+            except OSError:
+                seq = None  # report-only flag: an unreadable genome must not stop a run
+            if seq is not None:
+                stops = count_internal_stops(seq, e.exons, e.strand, genetic_code)
+                if stops:
+                    e = dataclasses.replace(e, internal_stops=stops)
+        out.append(e)
+    return out
+
+
 def _translate_model(genome_fasta: Path, model, genetic_code: int, cache: dict) -> str:
     """The protein a polished model encodes, spliced from its exons and
     translated with the genome's genetic code, stopping at the first stop.
     Contig sequences are read once per run into `cache`."""
-    from Bio import SeqIO
     from Bio.Seq import Seq
 
-    if model.contig not in cache:
-        wanted = model.contig
-        with open(genome_fasta) as handle:
-            for record in SeqIO.parse(handle, "fasta"):
-                cache.setdefault(record.id, record.seq)
-        cache.setdefault(wanted, None)
-    seq = cache.get(model.contig)
+    seq = _contig_sequence(genome_fasta, model.contig, cache)
     if seq is None:
         return ""
     # A model with frameshifts (exonerate) is translated from its aligned
@@ -3235,6 +3302,9 @@ def run_pipeline(
         }
         evidence = _gene_evidence(member_clusters, score.family_key, polish_by, lost_to=lost_to,
                                   record_lengths=record_protein_lengths)
+        # A polished model with an internal stop codon is a defective gene (issue #151); a
+        # frameshift is already carried on the evidence. Report-only: no tier reads either.
+        evidence = _flag_internal_stops(evidence, genome_fasta, genetic_code or 1, contig_seq_cache)
         # The bitscore vote, computed once: the partial-coverage rule below reads it and
         # it is what the report carries as `idiomorph_candidates`.
         own_vote = idiomorph_candidates(

@@ -28,7 +28,7 @@ def ge(gene, status=POL, identity=60.0, coverage=80.0, lost_to=None, role="core_
 
 
 def det(idio="MAT1-2", conf="high", cls="mat_locus", margin=None, cands=1, genes=(), polished=None, ignored=(),
-        family="Ascomycota:MAT", contig="c1", start=1, end=5000, homothallic_vote=None):
+        family="Ascomycota:MAT", contig="c1", start=1, end=5000, homothallic_vote=None, defective=()):
     genes = list(genes)
     d = dict(family=family, contig=contig, start=start, end=end, confidence=conf, idiomorph=idio,
              idiomorph_candidates=[dict(idiomorph=f"I{i}", score=50.0 - i) for i in range(cands)],
@@ -38,6 +38,8 @@ def det(idio="MAT1-2", conf="high", cls="mat_locus", margin=None, cands=1, genes
              confidence_ignored_genes=list(ignored))
     if homothallic_vote:
         d["homothallic_note"] = dict(vote_idiomorph=homothallic_vote)
+    if defective:                       # the report writes the key only when a gene is defective (issue #151)
+        d["defective_genes"] = sorted(defective)
     return d
 
 
@@ -234,7 +236,7 @@ def _tree(tmp_path):
     _report(old, "wave_0/runs/G2", [det(idio="MAT1-2", conf="high", margin=9.0, cands=2, genes=[ge("MAT1-1-1")])])
     (new / "wave_0/small_001/runs/G3").mkdir(parents=True)
     (new / "wave_0/small_001/runs/G3/stderr.log").write_text("boom\n")
-    _report(new, "wave_0/small_002/runs/G4", [det(idio="MAT1-1", genes=[ge("MAT1-1-1"), ge("GAP1")])])
+    _report(new, "wave_0/small_002/runs/G4", [det(idio="MAT1-1", genes=[ge("MAT1-1-1"), ge("GAP1")], defective=["GAP1", "MAT1-1-1"])])
     _report(new, "wave_0/small_002/runs/UNLISTED", [])
     # G5 outside the Pleosporaceae scope: a high call resting on the opposite core gene only
     _report(new, "wave_0/small_002/runs/G5", [det(idio="MAT1-2", genes=[ge("MAT1-2-1"), ge("MAT1-1-1")])])
@@ -274,7 +276,12 @@ def test_end_to_end_tables(tmp_path):
     assert loci["G2"]["idiomorph"] == "MAT1-1" and loci["G2"]["confidence"] == "medium"   # the report's values are kept
     assert loci["G4"]["high_basis"] == "tie_break" and loci["G4"]["high_basis_outside_scope"] == ""
     assert loci["G5"]["high_basis"] == "" and loci["G5"]["high_basis_outside_scope"] == "tie_break"
+    # defective genes (#151): the locus lists them `|`-joined, the genome counts loci, an intact locus stays blank/zero
+    assert loci["G4"]["defective_genes"] == "GAP1|MAT1-1-1" and G["G4"]["n_defective_loci"] == "1"
+    assert all(loci[g]["defective_genes"] == "" for g in ("G1", "G2", "G5"))
+    assert [G[g]["n_defective_loci"] for g in ("G1", "G2", "G3", "G5")] == ["0", "0", "0", "0"]    # G3 failed: a count of 0
     by = _rows(out / "by_class.tsv")
+    assert by[0]["defective_loci"] == "1"
     assert (by[0]["high_tie_break"], by[0]["outside_scope_high_tie_break"]) == ("1", "1")
     assert by[0]["class"] == "Dothideomycetes" and by[0]["margin_fallback"] == "1" and by[0]["vote_collapse"] == "1"
 

@@ -28,10 +28,12 @@ table has them they are passed on, and they are simply absent for v0.6.0:
                          no tier_note shows here, curator 2026-10-24), and `locus_notes`: one entry per locus in
                          the same order, that locus' non-empty values of tier_note, label_unsupported_reason (its
                          own `;` written as `+`) and high_basis joined by `,`, or `-` (the vocabularies do not
-                         overlap).
+                         overlap), then `n_defective_loci` (loci with a defective gene, #151: a frameshift or an
+                         internal stop in a polished model; blank for tables without the column).
   summary.json           per dataset: `code`, `held_out`, `n_label_unsupported` (loci), `tier_drop` and
                          `tier_drop_without_note` (loci), `tier_note`, `high_basis` and
-                         `high_basis_outside_scope` (locus counts; the scope is BFD family Pleosporaceae); top level:
+                         `high_basis_outside_scope` (locus counts; the scope is BFD family Pleosporaceae) and
+                         `defective_loci` (loci with a defective gene); top level:
                          `release` (name, code label, folders, per-folder codes) and `headline` (BFD only).
   taxa.json              two fields appended to each row: `unsupported`, the genomes with at least one marked
                          locus, and `high_basis_outside_scope`, {basis: loci} for the `high` Ascomycota:MAT calls
@@ -143,9 +145,10 @@ def loci_by_genome(rows, genome_col="genome"):
 
 GENOME_COLS = ["dataset", "genome", "species", "species_recorded", "phylum", "class", "order", "family", "genus", "status", "call", "alleles",
                "locus_types", "n_loci", "best_confidence", "loci", "n_label_unsupported", "tier_notes", "high_basis",
-               "loci_baseline_confidence", "locus_notes"]
+               "loci_baseline_confidence", "locus_notes", "n_defective_loci"]
 _CONF = {"high": 3, "medium": 2, "low": 1}
-NOTE_COLS = ("tier_note", "label_unsupported_reason", "high_basis", "baseline_confidence", "high_basis_outside_scope")
+NOTE_COLS = ("tier_note", "label_unsupported_reason", "high_basis", "baseline_confidence", "high_basis_outside_scope",
+             "defective_genes")
 
 
 def genome_row(ds_id, genome, species, phylum, cls, order, family, status, called, alleles, types, loci, notes=None):
@@ -162,10 +165,11 @@ def genome_row(ds_id, genome, species, phylum, cls, order, family, status, calle
     row = [ds_id, genome, species_of(species), species, phylum, cls, order, family, genus_of(species), status, call, ",".join(sorted(alleles)),
            ",".join(sorted(set(types))), len(loci), best, ";".join(f"{c}:{a}-{b}|{i or 'undetermined'}|{cf}|{lc}" for c, a, b, i, cf, lc in loci)]
     if notes is None:
-        return row + ["", "", "", "", ""]
+        return row + ["", "", "", "", "", ""]
     return row + [sum(bool(n[1]) for n in notes), "|".join(sorted({n[0] for n in notes if n[0]})),
                   "|".join(sorted({n[2] for n in notes if n[2]})), ";".join(n[3] or "-" for n in notes),
-                  ";".join(",".join(v.replace(";", "+") for v in n[:3] if v) or "-" for n in notes)]
+                  ";".join(",".join(v.replace(";", "+") for v in n[:3] if v) or "-" for n in notes),
+                  sum(bool(n[5]) for n in notes if len(n) > 5)]
 
 
 def has_notes(path):
@@ -316,7 +320,7 @@ def main(argv=None):
             "label": label, "phylum": phylum, "source": source, "code": code, "held_out": held_out, "genomes": n_genomes,
             "loci": 0, "locus_class": Counter(), "confidence": Counter(), "status": Counter(), "routing": Counter(),
             "n_label_unsupported": 0, "tier_drop": 0, "tier_drop_without_note": 0, "tier_note": Counter(), "high_basis": Counter(),
-            "high_basis_outside_scope": Counter(),
+            "high_basis_outside_scope": Counter(), "defective_loci": 0,
         }
         return summary["datasets"][ds_id]
 
@@ -334,6 +338,7 @@ def main(argv=None):
             s["high_basis"][l["high_basis"]] += 1
         if l.get("high_basis_outside_scope"):
             s["high_basis_outside_scope"][l["high_basis_outside_scope"]] += 1
+        s["defective_loci"] += bool(l.get("defective_genes"))
 
     # ---- BFD Ascomycota and Basidiomycota: genomes.tsv + loci.tsv ----
     for ds_id, label, phylum, key_, types_of in (

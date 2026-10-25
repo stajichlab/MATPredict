@@ -6,7 +6,7 @@ Reads each campaign's reports_all.tar.zst (one detection_report.yaml per genome,
 Mucoromycotina `<SOURCE>__<id>/`) and keeps, for every detected locus, the contig, span, idiomorph,
 confidence, locus class and the gene models (name, span, strand, role, status). When the campaign folder also
 holds the clean-run `loci.tsv` (scripts/build_cleanrun_tables.py), each locus gets four more fields after the
-gene list: baseline_confidence, tier_note, label_unsupported_reason and high_basis (the viewer reads fields 0-6
+gene list: baseline_confidence, tier_note, label_unsupported_reason, high_basis and defective_genes (the viewer reads fields 0-6
 and ignores the rest). A genome whose loci.tsv rows do not match its report's loci in number stops the build.
 Writes web/intro/data/loci_<dataset>.json.gz (committed; about 1.9 MB for all 27.8k loci). Run this when a
 campaign changes; build_site_data.py and the site build do not need the tarballs.
@@ -37,7 +37,7 @@ from build_site_data import DEFAULT_RELEASE, RELEASES, REPO, resolve_release  # 
 
 MUCORO = {"BFD": "bfd_mucoro", "LCG": "zygolife_lcg", "JENA": "zygolife_jena"}
 FIELDS = ["contig", "start", "end", "idiomorph", "confidence", "locus_class", "genes[name,start,end,strand,role,status]"]
-NOTE_FIELDS = ["baseline_confidence", "tier_note", "label_unsupported_reason", "high_basis"]
+NOTE_FIELDS = ["baseline_confidence", "tier_note", "label_unsupported_reason", "high_basis", "defective_genes"]
 
 
 def reports(tar_path):

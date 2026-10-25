@@ -29,7 +29,8 @@ bsd = _load("build_site_data")
 ASCO_G = ["genome", "species", "class_", "order", "family", "status", "routing", "n_loci", "families_called", "wall_s"]
 ASCO_L = ["genome", "class_", "order", "family_called", "contig", "start", "end", "idiomorph", "confidence", "locus_class",
           "detection_pass", "genes_found", "verification"]
-NOTES = ["baseline_confidence", "tier_note", "label_unsupported", "label_unsupported_reason", "high_basis", "high_basis_outside_scope"]
+NOTES = ["baseline_confidence", "tier_note", "label_unsupported", "label_unsupported_reason", "high_basis", "high_basis_outside_scope",
+         "defective_genes"]
 MANIFEST = "clean full-BFD run\ntag: cleanrun-2026-10b  commit: 56e11cd74c8e86bd43045efa543ace8b96abc745\n"
 
 
@@ -52,7 +53,7 @@ def _campaigns(tmp_path, notes=False, mucoro_tables=False, manifest=None):
     _write(asco / "loci.tsv", gl, [
         dict(genome="A1", family_called="Ascomycota:MAT", contig="c1", start=1, end=9, idiomorph="MAT1-1", confidence="medium",
              locus_class="mat_locus", baseline_confidence="high", tier_note="vote_collapse", label_unsupported="yes",
-             label_unsupported_reason="bit_margin<20;genus:Aureobasidium"),
+             label_unsupported_reason="bit_margin<20;genus:Aureobasidium", defective_genes="MAT1-1-1"),
         dict(genome="A1", family_called="Ascomycota:MAT", contig="c2", start=1, end=9, idiomorph="MAT1-2", confidence="medium",
              locus_class="mat_locus", baseline_confidence="high", label_unsupported="no", high_basis=""),
         dict(genome="A1", family_called="Ascomycota:MAT", contig="c3", start=1, end=9, idiomorph="MAT1-2", confidence="high",
@@ -99,7 +100,8 @@ def test_v060_tables_get_blank_note_columns(tmp_path):
                                    "undet", "two", "alleles", "types"] and taxa["fields"][14] == "unsupported"
     assert all(r[14] == 0 for r in taxa["rows"])
     for g in _genomes(out / "genomes_bfd_asco.tsv").values():
-        assert [g[c] for c in ("n_label_unsupported", "tier_notes", "high_basis", "loci_baseline_confidence", "locus_notes")] == [""] * 5
+        assert [g[c] for c in ("n_label_unsupported", "tier_notes", "high_basis", "loci_baseline_confidence", "locus_notes",
+                               "n_defective_loci")] == [""] * 6
     assert _genomes(out / "genomes_bfd_asco.tsv")["A1"]["loci"].startswith("c1:1-9|MAT1-1|medium|mat_locus;c2:1-9|MAT1-2|medium|mat_locus")
     s = json.loads((out / "summary.json").read_text())
     assert s["release"]["name"] == "v060" and s["datasets"]["bfd_asco"]["n_label_unsupported"] == 0
@@ -114,10 +116,14 @@ def test_cleanrun_tables_pass_the_notes_and_the_baseline_tier_on(tmp_path):
     assert g["loci_baseline_confidence"] == "high;high;-"
     assert g["locus_notes"] == "vote_collapse,bit_margin<20+genus:Aureobasidium;-;-"   # outside-scope basis: counts only
     assert G["A2"]["n_label_unsupported"] == "0"           # uncalled: a count, like a called genome
+    assert g["n_defective_loci"] == "1" and G["A2"]["n_defective_loci"] == "0"     # #151: loci with a defective gene
     d = json.loads((out / "summary.json").read_text())["datasets"]["bfd_asco"]
     assert d["n_label_unsupported"] == 1 and d["tier_note"] == {"vote_collapse": 1}
     assert d["tier_drop"] == 2 and d["tier_drop_without_note"] == 1   # the second drop has no listed mechanism
     assert d["code"] == "cleanrun-2026-10b (56e11cd)"
+    assert d["defective_loci"] == 1                                # only A1's first locus; the other datasets have none
+    others = json.loads((out / "summary.json").read_text())["datasets"]
+    assert others["bfd_basidio"]["defective_loci"] == 0 and others["bfd_mucoro"]["defective_loci"] == 0
     assert d["high_basis"] == {} and d["high_basis_outside_scope"] == {"grey": 1}
     taxa = json.loads((out / "taxa.json").read_text())
     assert sum(r[14] for r in taxa["rows"]) == 1
@@ -168,13 +174,13 @@ def test_mucoromycotina_new_tables_read_like_calls_tsv(tmp_path):
     a, b = tmp_path / "a", tmp_path / "b"
     bsd.main(["--out", str(a)] + _campaigns(tmp_path / "x"))
     bsd.main(["--out", str(b)] + _campaigns(tmp_path / "y", mucoro_tables=True))
-    notes = ("n_label_unsupported", "tier_notes", "high_basis", "loci_baseline_confidence", "locus_notes")
+    notes = ("n_label_unsupported", "tier_notes", "high_basis", "loci_baseline_confidence", "locus_notes", "n_defective_loci")
     for ds in ("bfd_mucoro", "zygolife_lcg"):
         ga, gb = _genomes(a / f"genomes_{ds}.tsv"), _genomes(b / f"genomes_{ds}.tsv")
         assert {k: {c: v for c, v in r.items() if c not in notes} for k, r in ga.items()} == \
                {k: {c: v for c, v in r.items() if c not in notes} for k, r in gb.items()}
     m1 = _genomes(b / "genomes_bfd_mucoro.tsv")["M1"]
-    assert (m1["n_label_unsupported"], m1["loci_baseline_confidence"], m1["locus_notes"]) == ("0", "-", "-")
+    assert (m1["n_label_unsupported"], m1["loci_baseline_confidence"], m1["locus_notes"], m1["n_defective_loci"]) == ("0", "-", "-", "0")
     assert _genomes(b / "genomes_zygolife_lcg.tsv")["L1"]["n_label_unsupported"] == "0"
 
 
@@ -212,15 +218,17 @@ def test_locus_shards_append_the_notes_in_report_order(tmp_path):
     bls = _load("build_locus_shards")
     camp = tmp_path / "asco"
     _write(camp / "loci.tsv", ASCO_L + NOTES, [
-        dict(genome="G1", contig="c1", start=1, end=9, baseline_confidence="high", tier_note="margin_fallback", label_unsupported="no"),
+        dict(genome="G1", contig="c1", start=1, end=9, baseline_confidence="high", tier_note="margin_fallback", label_unsupported="no",
+             defective_genes="MAT1-1-1"),
         dict(genome="G1", contig="c2", start=1, end=9, label_unsupported="yes", label_unsupported_reason="genus:Xylaria")])
     _tar_zst(camp / "reports_all.tar.zst", [("./wave_0/small_000/runs/G1/detection_report.yaml", REP)])
     shards, noted = bls.campaign_shards("bfd_asco", str(camp))
     assert noted
     assert shards["bfd_asco"]["G1"] == [
         ["c1", 1, 9, "MAT1-1", "medium", "mat_locus", [["MAT1-1-1", 2, 8, "+", "core_MAT", "polished_agree"]],
-         "high", "margin_fallback", "", ""],
-        ["c2", 1, 9, "MAT1-1", "high", "mat_locus", [], "", "", "genus:Xylaria", ""]]
+         "high", "margin_fallback", "", "", "MAT1-1-1"],
+        ["c2", 1, 9, "MAT1-1", "high", "mat_locus", [], "", "", "genus:Xylaria", "", ""]]
+    assert bls.NOTE_FIELDS[-1] == "defective_genes"           # appended last: a viewer that reads fields 0-6 is unaffected
 
 
 @needs_zstd

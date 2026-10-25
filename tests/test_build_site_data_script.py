@@ -122,9 +122,10 @@ def test_cleanrun_tables_pass_the_notes_and_the_baseline_tier_on(tmp_path):
     assert d["n_label_unsupported"] == 1 and d["tier_note"] == {"vote_collapse": 1}
     assert d["tier_drop"] == 2 and d["tier_drop_without_note"] == 1   # the second drop has no listed mechanism
     assert d["code"] == "cleanrun-2026-10b (56e11cd)"
-    assert d["defective_loci"] == 1                                # only A1's first locus; the other datasets have none
+    assert d["defective_loci"] == 1                                # only A1's first locus
     others = json.loads((out / "summary.json").read_text())["datasets"]
-    assert others["bfd_basidio"]["defective_loci"] == 0 and others["bfd_mucoro"]["defective_loci"] == 0
+    assert others["bfd_basidio"]["defective_loci"] == 0            # no defective locus
+    assert others["bfd_mucoro"]["defective_loci"] == 1             # M1's locus (its sexP is defective in the new-table fixture)
     assert d["high_basis"] == {} and d["high_basis_outside_scope"] == {"grey": 1}
     taxa = json.loads((out / "taxa.json").read_text())
     assert sum(r[14] for r in taxa["rows"]) == 1

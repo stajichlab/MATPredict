@@ -1,0 +1,182 @@
+record_id: 273371_cp90-125_MTL_A
+record_version: 1
+taxonomy:
+  taxid: 273371
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Debaryomycetaceae;g__Lodderomyces;s__Lodderomyces_orthopsilosis
+  lineage_resolved_date: '2026-10-25'
+organism:
+  species: Lodderomyces orthopsilosis
+  strain:
+    name: Cp90-125
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - A
+  system: unknown
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: PAP1->OBP1->PIK1->MTLA2->MTLA1
+    definition_note: 'Lodderomyces (Candida) orthopsilosis Cp90-125 (type 2 isolate) MTL a idiomorph,
+      GenBank HQ696681.1 (Sai et al. 2011): MTLa1 (ADY62691.1, 183 aa, three exons) and MTLa2 (ADY62690.1,
+      two exons), plus the idiomorph-specific PAP1 (PAPa), OBP1 (OBPa) and PIK1 (PIKa) alleles (optional
+      flanking_variable roster genes). The deposit also carries a 5''-partial GAP1, orf19.3202, RCY1 and
+      a 3''-partial orf19.3204, which are not MTL roster genes and are not curated. Sai et al. report
+      the regulatory genes intact, but splicing of the introns in MTLa1 and MTLa2 is defective in C. orthopsilosis
+      in the isolate tested, so the deposited gene structures are the annotated ones, not shown to be
+      spliced in vivo.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: HQ696681.1
+        seq_region: HQ696681.1
+      start: 586
+      end: 9266
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 2
+  name: PAP1
+  protein_accession: ncbi_protein:ADY62687.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 586
+  end: 2244
+  strand: '-'
+  order_in_locus: 0
+  transl_table: 12
+  codon_start: 1
+- gene_index: 3
+  name: OBP1
+  protein_accession: ncbi_protein:ADY62688.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2592
+  end: 3908
+  strand: +
+  order_in_locus: 1
+  transl_table: 12
+  codon_start: 1
+- gene_index: 4
+  name: PIK1
+  protein_accession: ncbi_protein:ADY62689.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4169
+  end: 6982
+  strand: +
+  order_in_locus: 2
+  transl_table: 12
+  codon_start: 1
+- gene_index: 0
+  name: MTLA2
+  protein_accession: ncbi_protein:ADY62690.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 7843
+  end: 8494
+  strand: +
+  order_in_locus: 3
+  transl_table: 12
+  exons:
+  - start: 7843
+    end: 8115
+  - start: 8168
+    end: 8494
+  codon_start: 1
+- gene_index: 1
+  name: MTLA1
+  protein_accession: ncbi_protein:ADY62691.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8601
+  end: 9266
+  strand: +
+  order_in_locus: 4
+  transl_table: 12
+  exons:
+  - start: 8601
+    end: 8753
+  - start: 8804
+    end: 9166
+  - start: 9231
+    end: 9266
+  codon_start: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: Cloning and sequencing of the MTL a idiomorph of C. orthopsilosis 90-125 from
+      a fosmid library, deposited as HQ696681.1 (Sai et al. 2011, Eukaryot Cell 10:578-587). 'We sequenced
+      both idiomorphs ... the regulatory genes are intact.'
+    citations: &id001
+    - pmid: '21335529'
+      doi: 10.1128/EC.00276-10
+  boundaries:
+    tier: 2
+    experimental_method: The record segment spans the curated MTL roster genes on the deposit HQ696681.1
+      (PAP1 through MTLA1); the idiomorph's own boundaries (the left junction of MTL alpha lies between
+      the stop codons of MTLalpha2 and GAP1) are described in the paper.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: Idiomorph A by gene content (MTLa1, MTLa2) of the sequenced idiomorph, which
+      Sai et al. identify as the MTL a idiomorph of C. orthopsilosis (isolate 90-125, listed in the paper's
+      accession table as HQ696681, MTL a).
+    citations: *id001
+validation:
+  status: needs_review
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: HQ696681.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: null
+  taxonomy_error: taxonkit is not on PATH
+curation:
+  proposed_by: claude-lodderomyces-mtl-records
+  proposal_dedupe_key: 21335529|273371|MTL|A|cp90-125
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-10-25 (Claude Code) from the cited deposit HQ696681.1. mating_type.system is unknown:
+    C. orthopsilosis isolates are MTL a, MTL alpha or a/alpha heterozygotes and no mating was detected
+    (Sai et al. 2011). CCG24159.1 is annotated on the Co 90-125 genome (probably the same gene, not compared
+    here); the curated protein is the depositor''s ADY62691.1.'
+model_provenance: null

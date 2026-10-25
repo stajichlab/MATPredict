@@ -104,7 +104,7 @@ evidence:
     tier: 3
     experimental_method: 'TIER 3 (genome-derived, no paper). Gene models are unpublished genome-annotation predictions (BFD
       funannotate, assembly GCA_030579395.1). MTLA1 was found by diamond blastp of curated Serinales MTLA1
-      proteins and the NCBI Lodderomyces MTLA1 deposits (CCG24159.1, ADY62670.1) against the proteome and
+      proteins and the L. orthopsilosis MTLA1 protein CCG24159.1 (the query set also held ADY62670.1, which is a L. metapsilosis Mtlalpha1, not an MTLA1 protein; it is not evidence here) against the proteome and
       verified by gene order: neighbours within 4 genes hit the curated C. lusitaniae / C. auris proteins
       (PIK1 51%; OBP1 68%; PAP1 71%); see results/2026-10-24_ctg_mtla1_verify/verify.tsv. Identity of the
       MTLA1 candidate to the best curated MTLA1 is 33-39%, so the assignment rests on position and domain

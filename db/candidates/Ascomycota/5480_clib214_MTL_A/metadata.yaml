@@ -1,0 +1,176 @@
+record_id: 5480_clib214_MTL_A
+record_version: 1
+taxonomy:
+  taxid: 5480
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Debaryomycetaceae;g__Lodderomyces;s__Lodderomyces_parapsilosis
+  lineage_resolved_date: '2026-10-25'
+organism:
+  species: Lodderomyces parapsilosis
+  strain:
+    name: CLIB214
+    known: true
+    culture_collection_ids:
+    - CLIB214
+    - ATCC 22019
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - A
+  system: unknown
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: PAP1->OBP1->PIK1->MTLA2->MTLA1
+    definition_note: 'Lodderomyces (Candida) parapsilosis CLIB214 (type strain, ATCC 22019) MTL a idiomorph,
+      GenBank AY961981.1 (Logue et al. 2005): intact MTLa2 (AAY33181.1, two exons), PAP1 (PAPa, AAY33178.1),
+      OBP1 (OBPa, AAY33179.1) and PIK1 (PIKa, AAY33180.1), and an MTLa1 PSEUDOGENE (no protein): the gene
+      order and orientations match C. albicans MTLa, but MTLa1 has stop codons and an unspliced intron.
+      Documentation record: the MTLa1 entry records a defective gene on purpose, so detection should not
+      expect a modelled MTLA1 in C. parapsilosis. Logue et al. found only the MTL a idiomorph at this
+      locus in every isolate tested (Sai et al. 2011: 189 of 189); MTL alpha sequences exist elsewhere
+      in the genome.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: AY961981.1
+        seq_region: AY961981.1
+      start: 5031
+      end: 13534
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 2
+  name: PAP1
+  protein_accession: ncbi_protein:AAY33178.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5031
+  end: 6689
+  strand: '-'
+  order_in_locus: 0
+  transl_table: 12
+  codon_start: 1
+- gene_index: 3
+  name: OBP1
+  protein_accession: ncbi_protein:AAY33179.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 7046
+  end: 8365
+  strand: +
+  order_in_locus: 1
+  transl_table: 12
+  codon_start: 1
+- gene_index: 4
+  name: PIK1
+  protein_accession: ncbi_protein:AAY33180.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8623
+  end: 11436
+  strand: +
+  order_in_locus: 2
+  transl_table: 12
+  codon_start: 1
+- gene_index: 0
+  name: MTLA2
+  protein_accession: ncbi_protein:AAY33181.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 12091
+  end: 12748
+  strand: +
+  order_in_locus: 3
+  transl_table: 12
+  exons:
+  - start: 12091
+    end: 12363
+  - start: 12416
+    end: 12748
+  codon_start: 1
+- gene_index: 1
+  name: MTLA1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 12866
+  end: 13534
+  strand: +
+  order_in_locus: 4
+  transl_table: 12
+  status: pseudogene
+  remnant_note: 'MTLa1 is defective in C. parapsilosis: four stop codons and an unspliced putative intron
+    in the region corresponding to C. albicans MTLa1; the stop codons are present in all eight isolates
+    sequenced (Logue et al. 2005). The deposit annotates it as a pseudogene with no CDS (12866-13534,
+    670 bp).'
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: 'Cloning and sequencing of the MTL a region of C. parapsilosis CLIB214, deposited
+      as AY961981.1 (Logue et al. 2005, Eukaryot Cell 4:1009-1017): ''The C. parapsilosis MTLa1 locus
+      is a pseudogene ... four stop codons in the region corresponding to CaMTLa1''; the stop codons were
+      confirmed in all eight isolates tested.'
+    citations: &id001
+    - pmid: '15947193'
+      doi: 10.1128/EC.4.6.1009-1017.2005
+  boundaries:
+    tier: 2
+    experimental_method: The record segment spans the curated MTL roster genes on the deposit AY961981.1
+      (PAP1 through the MTLa1 pseudogene).
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: Idiomorph A by gene content and position of the sequenced locus (MTLa2 intact,
+      MTLa1 defective), as reported by Logue et al. 2005.
+    citations: *id001
+validation:
+  status: needs_review
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: AY961981.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: null
+  taxonomy_error: taxonkit is not on PATH
+curation:
+  proposed_by: claude-lodderomyces-mtl-records
+  proposal_dedupe_key: 15947193|5480|MTL|A|clib214
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-10-25 (Claude Code) for documentation, at the curator''s request: the MTLA1 gene
+    entry has status: pseudogene (present: true with coordinates and no protein accession, per validate_gene_status).
+    Detection currently ignores gene status, so this record does not change any call. mating_type.system
+    is unknown: no mating has been observed in C. parapsilosis.'
+model_provenance: null

@@ -446,6 +446,10 @@ repeated here.
 - Sai S et al. 2011. Eukaryot Cell. PMID 21335529. *C. orthopsilosis*
   `HQ696681.1` (16,160 bp) and *C. metapsilosis* `HQ696678.1` (14,971 bp). MTLa
   with GAP1 flank.
+  **Erratum 2026-10-25:** `HQ696678.1` is the MTL *alpha* idiomorph (Sai 2011,
+  accession table; PMC3127640); its GenBank gene names (PAPa, OBPa, PIKa, MTLa1,
+  MTLa2) are mislabelled, and `ADY62670.1` is Mtlalpha1, not MTLa1. Only
+  `HQ696681.1` is an MTLa locus.
 - *C. dubliniensis* `AY622606.1` (8,593 bp, MTLalpha2, OBP, PIK, alpha1, PAP
   partial). Pujol et al. 2004, PMID 15302834.
 - *Candida auris* (Muñoz JF et al. 2018, Nat Commun 9:5346, PMID 30559369,

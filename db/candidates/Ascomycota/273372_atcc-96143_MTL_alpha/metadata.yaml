@@ -1,0 +1,178 @@
+record_id: 273372_atcc-96143_MTL_alpha
+record_version: 1
+taxonomy:
+  taxid: 273372
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Debaryomycetaceae;g__Lodderomyces;s__Lodderomyces_metapsilosis
+  lineage_resolved_date: '2026-10-25'
+organism:
+  species: Lodderomyces metapsilosis
+  strain:
+    name: ATCC 96143
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - alpha
+  system: unknown
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MTLalpha2->OBP1->PIK1->MTLalpha1->PAP1
+    definition_note: Lodderomyces (Candida) metapsilosis ATCC 96143 MTL ALPHA idiomorph, GenBank HQ696678.1
+      (Sai et al. 2011). The deposit names its genes MTLa1, MTLa2, PAPa, OBPa and PIKa, but Sai et al.
+      state that this is the MTL alpha idiomorph (all 18 C. metapsilosis isolates carry only MTL alpha).
+      The two regulators are therefore Mtlalpha1 (ADY62670.1, 208 aa, one exon; the paper's alignment
+      of Mtlalpha1 sequences shows a repeated motif specific to C. metapsilosis) and Mtlalpha2 (ADY62667.1,
+      194 aa, two exons); the deposit's 'a' gene names are not evidence of an a idiomorph. PAP1 (ADY62671.1),
+      OBP1 (ADY62668.1) and PIK1 (ADY62669.1) are the idiomorph-specific alleles (optional flanking_variable
+      roster genes). GAP1, orf19.3202 and the other deposited genes are not MTL roster genes and are not
+      curated.
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: HQ696678.1
+        seq_region: HQ696678.1
+      start: 2767
+      end: 11139
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 1
+  name: MTLalpha2
+  protein_accession: ncbi_protein:ADY62667.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 2767
+  end: 3404
+  strand: '-'
+  order_in_locus: 0
+  transl_table: 12
+  exons:
+  - start: 2890
+    end: 3404
+  - start: 2767
+    end: 2836
+  codon_start: 1
+- gene_index: 2
+  name: OBP1
+  protein_accession: ncbi_protein:ADY62668.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4021
+  end: 5322
+  strand: +
+  order_in_locus: 1
+  transl_table: 12
+  codon_start: 1
+- gene_index: 3
+  name: PIK1
+  protein_accession: ncbi_protein:ADY62669.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5550
+  end: 8390
+  strand: +
+  order_in_locus: 2
+  transl_table: 12
+  codon_start: 1
+- gene_index: 0
+  name: MTLalpha1
+  protein_accession: ncbi_protein:ADY62670.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 8836
+  end: 9462
+  strand: +
+  order_in_locus: 3
+  transl_table: 12
+  codon_start: 1
+- gene_index: 4
+  name: PAP1
+  protein_accession: ncbi_protein:ADY62671.1
+  role: flanking_variable
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 9496
+  end: 11139
+  strand: '-'
+  order_in_locus: 4
+  transl_table: 12
+  codon_start: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: 'Cloning and sequencing of the MTL alpha idiomorph of C. metapsilosis ATCC 96143
+      from a fosmid library, deposited as HQ696678.1 (Sai et al. 2011, Eukaryot Cell 10:578-587; accession
+      table: HQ696678, MTL alpha, ATCC 96143).'
+    citations: &id001
+    - pmid: '21335529'
+      doi: 10.1128/EC.00276-10
+  boundaries:
+    tier: 2
+    experimental_method: The record segment spans the curated MTL roster genes on the deposit HQ696678.1
+      (MTLalpha2 through PAP1); the idiomorph's own boundaries are described in the paper.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: Idiomorph alpha as stated by Sai et al. 2011 for this deposit, NOT as named in
+      the GenBank feature table (which uses MTLa1/MTLa2/PAPa); the gene names here are corrected to the
+      paper's idiomorph.
+    citations: *id001
+validation:
+  status: needs_review
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: HQ696678.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 1
+      percent_identity: 98.45
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 99.15
+      coverage: 100.0
+      status: pass
+    - gene_index: 0
+      percent_identity: 98.08
+      coverage: 100.0
+      status: pass
+    - gene_index: 4
+      percent_identity: 99.63
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: null
+  taxonomy_error: taxonkit is not on PATH
+curation:
+  proposed_by: claude-lodderomyces-mtl-records
+  proposal_dedupe_key: 21335529|273372|MTL|alpha|atcc-96143
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-10-25 (Claude Code) from the cited deposit HQ696678.1. The GenBank gene names
+    (MTLa1, MTLa2, PAPa, OBPa, PIKa) contradict the paper, which calls this the MTL alpha idiomorph; the
+    record follows the paper. The earlier repository note listing HQ696678.1 as an MTLa locus is wrong.
+    The deposit has no transl_table and its proteins translate CTG as Leu; the record uses table 12 (CTG
+    = Ser) like the other Serinales records, so the independent re-translation differs from the deposited
+    proteins at exactly the CTG codons (MTLalpha2 3, PIK1 8, MTLalpha1 4, PAP1 2 residues). mating_type.system
+    is unknown: all 18 isolates carry only MTL alpha and mating has not been observed.'
+model_provenance: null

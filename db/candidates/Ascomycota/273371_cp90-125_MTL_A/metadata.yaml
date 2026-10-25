@@ -27,9 +27,7 @@ locus:
       two exons), plus the idiomorph-specific PAP1 (PAPa), OBP1 (OBPa) and PIK1 (PIKa) alleles (optional
       flanking_variable roster genes). The deposit also carries a 5''-partial GAP1, orf19.3202, RCY1 and
       a 3''-partial orf19.3204, which are not MTL roster genes and are not curated. Sai et al. report
-      the regulatory genes intact, but splicing of the introns in MTLa1 and MTLa2 is defective in C. orthopsilosis
-      in the isolate tested, so the deposited gene structures are the annotated ones, not shown to be
-      spliced in vivo.'
+      the regulatory genes intact, but they also report that MTLa2 was not spliced at all in 11 C. orthopsilosis isolates tested and that MTLa1 (two introns) is inefficiently spliced at intron 2, so the deposited gene structures are the annotated ones and are not shown to give a functional protein in vivo.'
     segments:
     - segment_index: 0
       sequence_source:
@@ -177,6 +175,5 @@ curation:
   reviewed_date: null
   notes: 'Proposed 2026-10-25 (Claude Code) from the cited deposit HQ696681.1. mating_type.system is unknown:
     C. orthopsilosis isolates are MTL a, MTL alpha or a/alpha heterozygotes and no mating was detected
-    (Sai et al. 2011). CCG24159.1 is annotated on the Co 90-125 genome (probably the same gene, not compared
-    here); the curated protein is the depositor''s ADY62691.1.'
+    (Sai et al. 2011). CCG24159.1 (Co 90-125 genome annotation) is 183/183 identical to the curated protein ADY62691.1 (the depositor''s).'
 model_provenance: null

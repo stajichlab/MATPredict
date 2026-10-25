@@ -9,7 +9,8 @@ organism:
   strain:
     name: ATCC 96143
     known: true
-    culture_collection_ids: []
+    culture_collection_ids:
+    - ATCC 96143
     differs_from_sequenced: false
 mating_type:
   locus_name: MTL

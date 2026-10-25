@@ -30,8 +30,7 @@ locus:
       order and orientations match C. albicans MTLa, but MTLa1 has stop codons and an unspliced intron.
       Documentation record: the MTLa1 entry records a defective gene on purpose, so detection should not
       expect a modelled MTLA1 in C. parapsilosis. Logue et al. found only the MTL a idiomorph at this
-      locus in every isolate tested (Sai et al. 2011: 189 of 189); MTL alpha sequences exist elsewhere
-      in the genome.'
+      locus in every isolate tested (Sai et al. 2011: 189 of 189); MTL alpha sequences exist elsewhere in the genome. The text of Sai et al. 2011 differs from Logue et al. 2005 on the splicing and the second regulator (MTLa1 introns efficiently spliced in C. parapsilosis; no intact MTLa2); this record follows Logue 2005 and the deposit (MTLa2 CDS annotated, MTLa1 pseudogene).'
     segments:
     - segment_index: 0
       sequence_source:
@@ -116,7 +115,7 @@ genes:
   remnant_note: 'MTLa1 is defective in C. parapsilosis: four stop codons and an unspliced putative intron
     in the region corresponding to C. albicans MTLa1; the stop codons are present in all eight isolates
     sequenced (Logue et al. 2005). The deposit annotates it as a pseudogene with no CDS (12866-13534,
-    670 bp).'
+    669 bp).'
 evidence:
   locus_existence:
     tier: 2
@@ -171,6 +170,6 @@ curation:
   reviewed_date: null
   notes: 'Proposed 2026-10-25 (Claude Code) for documentation, at the curator''s request: the MTLA1 gene
     entry has status: pseudogene (present: true with coordinates and no protein accession, per validate_gene_status).
-    Detection currently ignores gene status, so this record does not change any call. mating_type.system
+    Detection does not use gene status for confidence tiers (a status gene is only left out of proteins.faa and of the benchmark expected set), so this record on its own does not change any call. mating_type.system
     is unknown: no mating has been observed in C. parapsilosis.'
 model_provenance: null

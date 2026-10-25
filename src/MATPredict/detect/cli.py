@@ -26,7 +26,7 @@ from MATPredict.detect.family_registry import (
 )
 from MATPredict.detect.genbank_input import is_genbank, prepare_genbank_input
 from MATPredict.detect.reference_fasta import build_reference_fasta
-from MATPredict.detect.provenance import RunClock, run_block
+from MATPredict.detect.provenance import RunClock, code_stamp, run_block
 from MATPredict.detect.report import _taxonomy_source, write_detection_gff3, write_detection_report
 from MATPredict.detect.rollout_aggregate import aggregate_reports, write_rollout_summary
 from MATPredict.detect.scope_audit import audit_gene_scopes, audit_scope, record_taxids_by_family
@@ -64,6 +64,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     clock = RunClock()
+    code_stamp()    # read the checkout's identity now, so the report names the code that was there when the run began
     _use_genbank_genome(args, out_dir)
 
     # Route FIRST, then build the reference FASTA from the routed families

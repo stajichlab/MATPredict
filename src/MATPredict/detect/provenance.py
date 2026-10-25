@@ -7,13 +7,20 @@ recorded" for reports written before this block existed.
 """
 from __future__ import annotations
 
+import functools
 import gzip
 import hashlib
+import subprocess
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from MATPredict import __version__
+from MATPredict import __version__, logger
+
+try:  # the project requires Python >= 3.11; the guard keeps a bare import working on older interpreters
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover
+    tomllib = None
 
 
 def genome_stats(path: Path) -> dict:
@@ -63,6 +70,72 @@ def database_digest(db_root: Path) -> dict:
     return {"root": str(root), "content_sha256": digest.hexdigest(), "records": records}
 
 
+def _git(top: Path, *args: str) -> str | None:
+    try:
+        done = subprocess.run(["git", "-C", str(top), *args], capture_output=True, text=True, errors="replace",
+                              timeout=15, check=False)
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return None
+    return done.stdout.strip() if done.returncode == 0 else None
+
+
+#: What counts as "the code" for `dirty`: the package, the curated database, the scripts the campaigns run, and the
+#: project file. Untracked files count (a module dropped into src/ changes behaviour); results written elsewhere in
+#: the tree, and docs, do not, so a tree does not turn dirty because a results file was updated mid-campaign.
+CODE_PATHS = ("src", "db", "scripts", "pyproject.toml")
+
+
+def code_stamp_for(package_dir: Path) -> dict:
+    """Identity of the source checkout `package_dir` (the installed `MATPredict` package directory) runs from.
+
+    The reported `matpredict_version` is the installed package metadata, which is stale whenever the editable
+    install was not refreshed (issue #139: the pilot's reports said 0.6.1 for code at 0.6.3). This reads the
+    checkout itself: `git_describe` (`git describe --tags --always`: the nearest tag), the full `commit`, whether
+    the code is `dirty` (any change or untracked file under `CODE_PATHS`), and the `source_version` in its
+    `pyproject.toml`. Only keys that could be read are returned;
+    `{}` when the package is not in a git checkout of this project (a wheel install, no git, an unrelated
+    enclosing repository), so a report from such an install is unchanged.
+    """
+    package_dir = Path(package_dir).resolve()
+    top_text = _git(package_dir, "rev-parse", "--show-toplevel")
+    if not top_text:
+        return {}
+    top = Path(top_text)
+    if (top / "src" / "MATPredict").resolve() != package_dir:
+        return {}  # a repository around somebody's venv, not this project's checkout
+    out: dict = {}
+    describe = _git(top, "describe", "--tags", "--always")
+    if describe:
+        out["git_describe"] = describe
+    changed = _git(top, "status", "--porcelain", "--untracked-files=normal", "--", *CODE_PATHS)
+    if changed is not None:
+        out["dirty"] = bool(changed)
+    commit = _git(top, "rev-parse", "HEAD")
+    if commit:
+        out["commit"] = commit
+    pyproject = top / "pyproject.toml"
+    if tomllib is not None and pyproject.is_file():
+        try:
+            out["source_version"] = tomllib.loads(pyproject.read_text())["project"]["version"]
+        except (OSError, KeyError, ValueError):
+            pass
+    return out
+
+
+@functools.lru_cache(maxsize=None)
+def code_stamp() -> dict:
+    """`code_stamp_for` the running package, computed once per process. `detect` calls it at the start of a run, so
+    the stamp describes the code that was checked out when the run began. A source checkout whose stamp cannot be read
+    (git missing, a `safe.directory` refusal on a shared directory, a timeout) is logged, not silent: the report would
+    otherwise lack `code` without anyone noticing."""
+    package_dir = Path(__file__).resolve().parents[1]
+    stamp = code_stamp_for(package_dir)
+    if not stamp and (package_dir.parents[1] / ".git").exists():
+        logger.warning("could not read the git identity of the source checkout %s; the report will carry no `code` stamp",
+                       package_dir.parents[1])
+    return stamp
+
+
 class RunClock:
     """Start time (UTC, ISO 8601) and elapsed wall seconds of one run."""
 
@@ -88,6 +161,8 @@ def run_block(*, clock: RunClock, genome: Path | None, proteins: Path | None, db
         "taxid": taxid,
         "phylum": phylum,
         "matpredict_version": __version__,
+        # The checkout the code ran from (issue #139); absent when it cannot be read.
+        **({"code": stamp} if (stamp := code_stamp()) else {}),
         "database": database_digest(db_root),
         "taxonomy_source": taxonomy_source,
         "genome": genome_doc,

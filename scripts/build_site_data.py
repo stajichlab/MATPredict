@@ -29,7 +29,8 @@ table has them they are passed on, and they are simply absent for v0.6.0:
                          the same order, that locus' non-empty values of tier_note, label_unsupported_reason (its
                          own `;` written as `+`) and high_basis joined by `,`, or `-` (the vocabularies do not
                          overlap), then `n_defective_loci` (loci with a defective gene, #151: a frameshift or an
-                         internal stop in a polished model; blank for tables without the column).
+                         internal stop in a polished model; blank for tables without the reporting columns, 0 for a clean-run table that
+                         predates the column).
   summary.json           per dataset: `code`, `held_out`, `n_label_unsupported` (loci), `tier_drop` and
                          `tier_drop_without_note` (loci), `tier_note`, `high_basis` and
                          `high_basis_outside_scope` (locus counts; the scope is BFD family Pleosporaceae) and
@@ -152,9 +153,9 @@ NOTE_COLS = ("tier_note", "label_unsupported_reason", "high_basis", "baseline_co
 
 
 def genome_row(ds_id, genome, species, phylum, cls, order, family, status, called, alleles, types, loci, notes=None):
-    """loci: list of (contig, start, end, idiomorph, confidence, locus_class); notes: one
-    (tier_note, label_unsupported_reason, high_basis, baseline_confidence) per locus ([] for a genome without
-    loci), or None when the tables have no such columns."""
+    """loci: list of (contig, start, end, idiomorph, confidence, locus_class); notes: one tuple per locus, in the
+    order of NOTE_COLS (tier_note, label_unsupported_reason, high_basis, baseline_confidence, high_basis_outside_scope,
+    defective_genes; [] for a genome without loci), or None when the tables have no such columns."""
     if not called:
         call = status if status not in ("called", "") else "uncalled"
     elif not alleles:
@@ -169,7 +170,7 @@ def genome_row(ds_id, genome, species, phylum, cls, order, family, status, calle
     return row + [sum(bool(n[1]) for n in notes), "|".join(sorted({n[0] for n in notes if n[0]})),
                   "|".join(sorted({n[2] for n in notes if n[2]})), ";".join(n[3] or "-" for n in notes),
                   ";".join(",".join(v.replace(";", "+") for v in n[:3] if v) or "-" for n in notes),
-                  sum(bool(n[5]) for n in notes if len(n) > 5)]
+                  sum(bool(n[5]) for n in notes)]
 
 
 def has_notes(path):
@@ -179,8 +180,8 @@ def has_notes(path):
 
 
 def locus_notes(ls, noted):
-    """(tier_note, label_unsupported_reason, high_basis, baseline_confidence) per locus row, or None for tables
-    without the columns."""
+    """One tuple per locus row, in the order of NOTE_COLS, or None for tables without the reporting columns. A column a
+    clean-run table predates (defective_genes, before #151) reads as blank."""
     if not noted:
         return None
     return [tuple(l.get(c, "") or "" for c in NOTE_COLS) for l in ls]

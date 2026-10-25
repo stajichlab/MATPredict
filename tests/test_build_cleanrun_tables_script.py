@@ -286,6 +286,21 @@ def test_end_to_end_tables(tmp_path):
     assert by[0]["class"] == "Dothideomycetes" and by[0]["margin_fallback"] == "1" and by[0]["vote_collapse"] == "1"
 
 
+def test_by_rank_counts_loci_with_a_defective_gene_not_genes():
+    base = dict(baseline_confidence="", confidence="high", tier_note="", high_basis="", high_basis_outside_scope="",
+                label_unsupported="no")
+    G = [dict(class_="C1", status="called", wall_s="5", routing="lineage"),
+         dict(class_="C1", status="uncalled", wall_s="7", routing="lineage"),
+         dict(class_="C2", status="called", wall_s="9", routing="lineage")]
+    Lr = [dict(base, class_="C1", defective_genes="MAT1-1-1|GAP1"),      # one locus with two defective genes counts once
+          dict(base, class_="C1", defective_genes="PIK1"),
+          dict(base, class_="C1", defective_genes=""),
+          dict(base, class_="C2", defective_genes="")]
+    head, rows = bct.by_rank(G, Lr, "class_")
+    assert head[-1] == "defective_loci"
+    assert {r[0]: r[-1] for r in rows} == {"C1": 2, "C2": 0}
+
+
 def test_output_is_deterministic_and_a_tarball_reads_like_the_folder(tmp_path):
     new, old, samples = _tree(tmp_path)
     tar = tmp_path / "old.tar.gz"
@@ -316,7 +331,8 @@ def test_mucoromycotina_layout(tmp_path):
     new.mkdir()
     (new / "inputs.tsv").write_text("source\tid\tgenome\torder\tspecies\ttaxid\n"
                                     "BFD\tGCA_1\t/x.fa\tMucorales\tMucor lusitanicus\t1\nLCG\tAbsidia_x_1\t/y.fa\t\t\t\n")
-    _report(new, "runs/BFD__GCA_1", [det(idio="Plus", family="Mucoromycota:MAT", margin=40.0, cands=2, genes=[ge("sexP")])])
+    _report(new, "runs/BFD__GCA_1", [det(idio="Plus", family="Mucoromycota:MAT", margin=40.0, cands=2, genes=[ge("sexP")],
+                                         defective=["sexP"])])
     _report(new, "runs/LCG__Absidia_x_1", [])
     calls = tmp_path / "calls.tsv"
     calls.write_text("source\tgenome\tname\tbfd_order\nLCG\tAbsidia_x_1\tAbsidia x NRRL 1\t\n")
@@ -328,3 +344,4 @@ def test_mucoromycotina_layout(tmp_path):
         ("LCG", "Absidia_x_1", "Absidia x NRRL 1", "Mucoromycotina", "", "uncalled")]
     loci = _rows(out / "loci.tsv")
     assert loci[0]["source"] == "BFD" and loci[0]["margin_basis"] == "bits" and loci[0]["label_unsupported"] == "no"
+    assert loci[0]["defective_genes"] == "sexP" and [r["n_defective_loci"] for r in G] == ["1", "0"]     # #151 in the mucoro layout

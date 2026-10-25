@@ -5,7 +5,7 @@ Reads each campaign's reports_all.tar.zst (one detection_report.yaml per genome,
 `wave_N/runs/<genome>/`, clean-run `wave_N/small_NNN/runs/<genome>/` or `runs/small_NNN/runs/<genome>/`,
 Mucoromycotina `<SOURCE>__<id>/`) and keeps, for every detected locus, the contig, span, idiomorph,
 confidence, locus class and the gene models (name, span, strand, role, status). When the campaign folder also
-holds the clean-run `loci.tsv` (scripts/build_cleanrun_tables.py), each locus gets four more fields after the
+holds the clean-run `loci.tsv` (scripts/build_cleanrun_tables.py), each locus gets five more fields after the
 gene list: baseline_confidence, tier_note, label_unsupported_reason, high_basis and defective_genes (the viewer reads fields 0-6
 and ignores the rest). A genome whose loci.tsv rows do not match its report's loci in number stops the build.
 Writes web/intro/data/loci_<dataset>.json.gz (committed; about 1.9 MB for all 27.8k loci). Run this when a
@@ -60,8 +60,8 @@ def locus_row(l):
 
 
 def load_notes(folder):
-    """{genome (SOURCE__id for Mucoromycotina): [(baseline_confidence, tier_note, label_unsupported_reason, high_basis) per locus]} from the
-    campaign's clean-run loci.tsv, or None when it has no such columns."""
+    """{genome (SOURCE__id for Mucoromycotina): [NOTE_FIELDS values per locus]} from the campaign's clean-run loci.tsv,
+    or None when it has no such columns. A column the table predates (defective_genes, before #151) reads as blank."""
     path = os.path.join(folder, "loci.tsv")
     if not os.path.exists(path):
         return None

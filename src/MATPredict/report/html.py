@@ -698,11 +698,21 @@ def _glossary(has_calls: bool) -> str:
 </section>'''
 
 
-def _code_note(code: dict | None) -> str:
-    """` (git-describe, commit)` of the checkout a report was run from (`run.code`); empty when not recorded."""
+def _code_note(code: dict | None, run_version: str | None = None) -> str:
+    """` (git-describe, commit)` of the checkout a report was run from (`run.code`), plus the checkout's own source
+    version when it differs from the recorded package version (the #139 symptom: stale installed metadata); empty
+    when not recorded."""
     if not code:
         return ""
-    parts = [code.get("git_describe"), (code.get("commit") or "")[:10] or None]
+    describe, commit = code.get("git_describe"), code.get("commit") or ""
+    parts = [describe]
+    if commit and not (describe and commit.startswith(describe)):     # an untagged checkout describes as a short hash
+        parts.append(commit[:10])
+    source = code.get("source_version")
+    if source and run_version and str(source) != str(run_version):
+        parts.append(f"source {source}")
+    if code.get("dirty"):
+        parts.append("uncommitted changes")
     shown = ", ".join(e(x) for x in dict.fromkeys(p for p in parts if p))
     return f' <span class="muted small mono">({shown})</span>' if shown else ""
 
@@ -727,7 +737,7 @@ def _provenance(doc: dict, files: list[str]) -> str:
         ("Assembly", f'{plural(int(g["contigs"]), "contig")} · {size(g.get("length_bp"))} · N50 {size(g.get("n50"))}'
                      if g.get("length_bp") else e(g.get("error"))),
         ("Genome SHA-256", f'<span class="mono small break">{e(g.get("sha256"))}</span>' if g.get("sha256") else None),
-        ("MATPredict", e(run.get("matpredict_version")) + _code_note(run.get("code"))),
+        ("MATPredict", e(run.get("matpredict_version")) + _code_note(run.get("code"), run.get("matpredict_version"))),
         ("Database", f'<span class="mono small">{e((db.get("content_sha256") or "")[:16])}</span> · '
                      f'{plural(int(db.get("records") or 0), "record")}' if db else None),
         ("Taxonomy", e(run.get("taxonomy_source") or doc.get("taxonomy_source"))),
@@ -769,7 +779,7 @@ def render_genome_report(doc: dict, *, sample: str | None = None, sample_from_fo
         e(phylum) if phylum else None,
     ] if x) or '<span class="muted">organism not recorded</span>'
     run_v = run.get("matpredict_version")
-    meta = [f"Run by MATPredict {e(run_v)}{_code_note(run.get('code'))}" if run_v else "Run version not recorded"]
+    meta = [f"Run by MATPredict {e(run_v)}{_code_note(run.get('code'), run_v)}" if run_v else "Run version not recorded"]
     if run.get("database"):
         meta.append(f'database <span class="mono">{e((run["database"].get("content_sha256") or "")[:12])}</span>')
     if run.get("taxonomy_source"):

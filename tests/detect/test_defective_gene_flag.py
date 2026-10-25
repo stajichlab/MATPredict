@@ -94,15 +94,31 @@ def test_flag_marks_a_polished_model_with_an_internal_stop(tmp_path):
 
 
 def test_flag_leaves_clean_unpolished_and_frameshifted_entries_alone(tmp_path):
-    fasta = _genome(tmp_path, "A" * 10 + CDS + "TAA" + "A" * 10)
+    stopped = CDS[:90] + "TGA" + CDS[93:]
+    pre = "A" * 10 + CDS + "TAA" + "A" * 900
+    s0 = len(pre) + 1                                  # where the stop-containing span starts (1-based)
+    shifted_span = (s0, s0 + len(stopped) + 3 - 1)
+    fasta = _genome(tmp_path, pre + stopped + "TAA" + "A" * 10)
     clean = _ev(exons=((11, 10 + len(CDS) + 3),))
     unpolished = GeneEvidence("MTLA1", "core_MAT", "c1", 11, 100, "+", 31.0, 19.0, "rec", "tblastn_genome", status="unpolished")
-    shifted = _ev(frameshifts=1)
+    shifted = _ev(frameshifts=1, exons=(shifted_span,))
     out = _flag_internal_stops([clean, unpolished, shifted], fasta, 12, {})
     assert out[0].internal_stops == 0 and not out[0].defective
     assert out[1] is unpolished and not out[1].defective
-    # a frameshifted model's exons do not read through, so its stops are not counted; it is defective by the frameshift
+    # the shifted entry's span does contain a stop (counted when asked directly) ...
+    assert count_internal_stops(Seq(pre + stopped + "TAA"), [shifted_span], "+", 12) == 1
+    # ... but a frameshifted model's exons do not read through, so the post-pass leaves it: defective by the frameshift alone
     assert out[2].internal_stops == 0 and out[2].defective
+
+
+def test_every_polished_status_is_flagged_but_not_unpolished(tmp_path):
+    stopped = CDS[:90] + "TGA" + CDS[93:]
+    fasta = _genome(tmp_path, "A" * 10 + stopped + "TAA" + "A" * 10)
+    for status in ("polished_agree", "polished_disagree", "polished_single"):
+        out = _flag_internal_stops([_ev(exons=((11, 10 + len(stopped) + 3),), status=status)], fasta, 12, {})
+        assert out[0].internal_stops == 1, status
+    out = _flag_internal_stops([_ev(exons=((11, 10 + len(stopped) + 3),), status="unpolished")], fasta, 12, {})
+    assert out[0].internal_stops == 0
 
 
 def test_an_unreadable_genome_skips_the_flag_instead_of_failing(tmp_path):

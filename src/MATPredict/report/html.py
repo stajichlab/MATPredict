@@ -343,6 +343,10 @@ def _gene_rows(call: dict) -> str:
                         f"{one(alt.get('identity'))}%")
         if g.get("frameshifts"):
             subs.append(f'<span class="warn-text">{plural(int(g["frameshifts"]), "frameshift")}</span>')
+        if g.get("internal_stops"):
+            subs.append(f'<span class="warn-text">{plural(int(g["internal_stops"]), "internal stop")}</span>')
+        if g.get("defective"):
+            subs.append('<span class="warn-text">defective gene model</span>')
         if g.get("caax_motif"):
             subs.append(f"motif {e(g.get('caax_motif'))}, {num(g.get('orf_length_aa'))} aa ORF")
         role = g.get("role") or ""

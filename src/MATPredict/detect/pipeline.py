@@ -947,7 +947,13 @@ def count_internal_stops(seq, exons, strand: str, genetic_code: int) -> int:
     a codon boundary), and taking the minimum over the three frames means a
     correct model, whose true frame has no stop, can never be counted as
     defective. One trailing stop codon is the gene's own stop and is not
-    counted. 0 for an empty CDS."""
+    counted. 0 for an empty CDS.
+
+    A lower bound: a short model with a real stop can read as clean when another
+    frame happens to be open (simulated on random sense CDS with one internal
+    stop: missed 43% at 30 codons, 10% at 60, 2% at 100). A model that reads on
+    past the target's true stop because the reference is C-terminally longer
+    counts that stop, and one that ends at a premature stop counts none."""
     from Bio.Seq import Seq
 
     ordered = sorted(exons)
@@ -1372,6 +1378,9 @@ def _relaxed_results(
     supported_min_bitscore: float = DEFAULT_SUPPORTED_MIN_BITSCORE,
     record_lengths: dict[tuple[str, str], int] | None = None,
     partial_core_decide: Callable | None = None,
+    genome_fasta: Path | None = None,
+    genetic_code: int | None = None,
+    contig_seq_cache: dict | None = None,
 ) -> list[DetectionResult]:
     """Sub-floor clusters admitted on gene COUNT rather than gene fraction.
 
@@ -1420,6 +1429,9 @@ def _relaxed_results(
             # idiomorphs present, as documented for Syzygites -- impossible to
             # tell from two unrelated spurious HMG hits tens of kb apart.
             evidence = _gene_evidence([cluster], score.family_key, polish_by or {}, record_lengths=record_lengths)
+            if genome_fasta is not None:  # defective-gene flag (issue #151), as in the strict pass
+                evidence = _flag_internal_stops(
+                    evidence, genome_fasta, genetic_code or 1, contig_seq_cache if contig_seq_cache is not None else {})
             segments = _segments_for([cluster], contig_lengths or {}, evidence)
             verdict = (classifier_verdicts or {}).get((id(cluster), score.family_key))
             called = (verdict.idiomorph if verdict is not None else
@@ -3659,6 +3671,7 @@ def run_pipeline(
             on_relaxed_call=_record_relaxed,
             model_losers=model_losers,
             classifier_verdicts=classifier_verdicts,
+            genome_fasta=genome_fasta, genetic_code=genetic_code, contig_seq_cache=contig_seq_cache,
         )
         results, relaxed_withheld, relaxed_by_bar, relaxed_by_flank, relaxed_by_gate = _withhold(relaxed)
         suppressed += relaxed_withheld

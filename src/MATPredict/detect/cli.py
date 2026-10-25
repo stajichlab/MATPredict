@@ -9,6 +9,7 @@ from pathlib import Path
 from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
+from MATPredict.detect import confidence_cap as _confidence_cap, strong_single_gene as _strong_single_gene
 from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CONFIDENCE_CAP_POLICY
 from MATPredict.detect.strong_single_gene import (
     DEFAULT_STRONG_SINGLE_GENE_POLICY, STRONG_SINGLE_GENE_POLICIES,
@@ -22,7 +23,7 @@ from MATPredict.detect.pipeline import (
     not_searched_reason, run_pipeline,
 )
 from MATPredict.detect.family_registry import (
-    DEFAULT_SCOPED_ROSTER_POLICY, SCOPED_ROSTER_POLICIES, available_phyla, load_all_families, route,
+    DEFAULT_SCOPED_ROSTER_POLICY, SCOPED_ROSTER_ON, SCOPED_ROSTER_POLICIES, available_phyla, load_all_families, route,
 )
 from MATPredict.detect.genbank_input import is_genbank, prepare_genbank_input
 from MATPredict.detect.reference_fasta import build_reference_fasta
@@ -64,15 +65,18 @@ PRESETS: dict[str, dict[str, str]] = {
     "v0.7": {
         "partial_core_policy": POLICY_COVERAGE_PROFILE,
         "homothallic_policy": POLICY_BOTH_GENES,
-        "confidence_cap_policy": "off",
-        "strong_single_gene_policy": "off",
-        "scoped_roster_policy": "on",
+        "confidence_cap_policy": _confidence_cap.POLICY_OFF,
+        "strong_single_gene_policy": _strong_single_gene.POLICY_OFF,
+        "scoped_roster_policy": SCOPED_ROSTER_ON,
     },
 }
 
 
 class _PolicyFlag(argparse.Action):
-    """Store the value and remember that this policy option was passed explicitly (so a preset does not override it)."""
+    """Store the value and remember that this policy option was passed explicitly (so a preset does not override it).
+
+    Only a value given on the command line counts as explicit: one supplied through `parser.set_defaults(...)` is not
+    tracked, so a preset would override it (nothing sets a policy that way today)."""
 
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values)
@@ -631,7 +635,7 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
     detect.add_argument(
         "--preset", choices=sorted(PRESETS), default=None,
         help="Set the five policy options below to a named release setting: "
-             + "; ".join(f"{name}: " + ", ".join(f"{k.replace('_', '-')}={v}" for k, v in vals.items()) for name, vals in PRESETS.items())
+             + "; ".join(f"{name}: " + ", ".join(f"{k.replace('_', '-')}={v}" for k, v in vals.items()) for name, vals in PRESETS.items()).replace("%", "%%")
              + ". A policy flag given explicitly overrides the preset. Without --preset every policy keeps its own default (off).",
     )
     detect.add_argument(

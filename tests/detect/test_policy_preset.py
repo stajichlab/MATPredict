@@ -58,6 +58,20 @@ def test_flag_order_on_the_command_line_does_not_matter():
     assert _resolved(a) == _resolved(b) and a.partial_core_policy == "off"
 
 
+def test_the_equals_and_abbreviated_forms_count_as_explicit():
+    args = apply_preset(_parse("--preset=v0.7", "--homothallic-policy=off"))
+    assert args.homothallic_policy == "off" and args.partial_core_policy == "coverage_profile"
+
+
+def test_the_help_text_renders_with_the_preset_values(capsys):
+    parser = argparse.ArgumentParser()
+    register_subcommands(parser.add_subparsers(dest="cmd"))
+    with pytest.raises(SystemExit):
+        parser.parse_args(["detect", "--help"])
+    out = capsys.readouterr().out
+    assert "--preset" in out and "v0.7" in out and "homothallic-policy=both_genes" in out
+
+
 def test_an_unknown_preset_is_rejected_by_the_parser():
     with pytest.raises(SystemExit):
         _parse("--preset", "v9.9")
@@ -68,18 +82,23 @@ def test_the_options_still_validate_their_values():
         _parse("--homothallic-policy", "nonsense")
 
 
-def test_the_run_block_records_the_preset_and_the_resolved_policies():
-    from MATPredict.detect.cli import _partial_core_policy_from_args, _scoped_roster_policy_from_args
+def test_the_run_block_records_the_preset_and_the_resolved_policies(tmp_path):
+    from types import SimpleNamespace
 
-    args = apply_preset(_parse("--preset", "v0.7"))
-    assert _partial_core_policy_from_args(args) == "coverage_profile" and _scoped_roster_policy_from_args(args) == "on"
-    # the parameters mapping is built from these same accessors plus `preset`
-    assert getattr(args, "preset", None) == "v0.7"
+    from MATPredict.detect.provenance import RunClock
+
+    db = tmp_path / "db"
+    db.mkdir()
+    for extra, expect in (([], None), (["--preset", "v0.7"], "v0.7")):
+        args = apply_preset(_parse(*extra))
+        doc = cli._run_doc(args, SimpleNamespace(db_root=db), SimpleNamespace(), RunClock())
+        params = doc["parameters"]
+        assert params["preset"] == expect
+        assert params["partial_core_policy"] == ("coverage_profile" if expect else "off")
+        assert params["scoped_roster_policy"] == ("on" if expect else "off")
 
 
 def test_every_preset_value_is_a_valid_choice_for_its_option():
-    parser = argparse.ArgumentParser()
-    register_subcommands(parser.add_subparsers(dest="cmd"))
     for name, values in PRESETS.items():
         extra = []
         for dest, value in values.items():

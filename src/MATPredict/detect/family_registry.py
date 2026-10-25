@@ -246,6 +246,12 @@ class Family:
     Mucorales tptA/rnhA sit outside it, and the Ascomycota audit found real
     loci up to 9.9 kb off (20 kb). Absent means the 3 kb of the first ruling.
     """
+    max_intron_bp: int | None = None
+    """The longest intron (bp) a polish alignment of this family's genes may span, passed to miniprot `-G` and
+    exonerate `--maxintron` (`search._max_intron_bp`). Absent means the global 5 kb of PR #92, which stops
+    chimeric models that join distant exons through conserved flank genes. Set where that cap loses real genes:
+    the Basidiomycota bLocus (bE/bW), where 5 kb loses the whole locus in 3 of the 6 b-locus genomes that lost a call
+    (see order.yml and results/2026-10-25_intron_cap/)."""
     flank_carried_min_bitscore: float = DEFAULT_FLANK_CARRIED_MIN_BITSCORE
     """The bitscore the strongest core hit of a flank-carried call must reach
     for the call to be kept (`flank_carried`). Absent means the 39 bits of
@@ -460,6 +466,7 @@ def load_all_families(db_root: Path) -> list[Family]:
                         "max_plausible_locus_span_bp",
                         DEFAULT_MAX_PLAUSIBLE_LOCUS_SPAN_BP,
                     ),
+                    max_intron_bp=(int(locus["max_intron_bp"]) if locus.get("max_intron_bp") else None),
                     flank_carried_window_bp=locus.get(
                         "flank_carried_window_bp", DEFAULT_FLANK_CARRIED_WINDOW_BP,
                     ),

@@ -736,14 +736,20 @@ def _select_requested_gene(
 #: points of score. In Xylaria bambusicola (GCA_033171785.1) that gave a MAT1-2-1 model of 8.3 kb whose 5.5 kb
 #: and 2.3 kb "introns" held APN2 and COX13. The 609 introns in the curated records have a median of 58 bp and a
 #: maximum of 517 bp, so 5 kb is ten times the largest known one; 2 kb would also have fixed that case.
-#: `MATPREDICT_MAX_INTRON_BP` overrides it for a run.
+#: `MATPREDICT_MAX_INTRON_BP` overrides it for a run; a family may set its own cap (`max_intron_bp` in `order.yml`,
+#: the Basidiomycota bLocus: the aligners need a cap well above the real intron to model its genes).
 MAX_INTRON_BP = 5_000
 
 
-def _max_intron_bp(max_intron: int | None = None) -> int:
+def _max_intron_bp(max_intron: int | None = None, family=None) -> int:
+    """The intron cap for one polish call. Precedence: an explicit argument, the `MATPREDICT_MAX_INTRON_BP`
+    run-wide override, the family's own `max_intron_bp` from `order.yml`, then the 5 kb default."""
     if max_intron is not None:
         return int(max_intron)
-    return int(os.environ.get("MATPREDICT_MAX_INTRON_BP", "0")) or MAX_INTRON_BP
+    env = int(os.environ.get("MATPREDICT_MAX_INTRON_BP", "0"))
+    if env:
+        return env
+    return int(getattr(family, "max_intron_bp", None) or MAX_INTRON_BP)
 
 
 _GENE_QUERIES: dict[tuple[str, int, int], dict[str, list[tuple[str, str]]]] = {}
@@ -879,7 +885,7 @@ def polish_with_exonerate(
         base_cmd = [
             "exonerate", "--model", "protein2genome",
             "--query", str(query_fasta), "--target", str(target_fasta),
-            "--maxintron", str(_max_intron_bp(max_intron)),
+            "--maxintron", str(_max_intron_bp(max_intron, family)),
         ] + gencode_args
         tail = ["--showtargetgff", "yes", "--showalignment", "no"]
         result = _run_checked(
@@ -1023,7 +1029,7 @@ def polish_with_miniprot(
         target_fasta = _extract_window(genome_fasta, window, tmp_dir)
         offset = win_start - 1
 
-        cmd = (["miniprot"] + _gencode_args(genetic_code, "-T") + ["-G", str(_max_intron_bp(max_intron))]
+        cmd = (["miniprot"] + _gencode_args(genetic_code, "-T") + ["-G", str(_max_intron_bp(max_intron, family))]
                + ["--gff", str(target_fasta), str(reference_fasta)])
         # A signal death here would abort the whole genome exactly as the
         # exonerate crash did. There is no `--refine` to drop, so there is

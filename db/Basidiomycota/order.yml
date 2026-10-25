@@ -502,6 +502,14 @@ loci:
     # across the curated bLocus records: 635 bp (n=19, Ustilaginales) and
     # 504 bp (n=3, Malasseziales); largest span 5,330 bp.
     max_cluster_gap_bp: 5000
+    # Intron cap for polish alignments (miniprot -G / exonerate --maxintron). The global 5 kb of PR #92
+    # (a guard against chimeric models) loses the whole bE/bW call in genomes whose genes it can still align at
+    # 8-10 kb. Of the 7 Basidiomycota genomes that lost a b-locus (or PR) call between v0.6.0 and the clean run,
+    # 3 b-locus genomes come back with ordinary models (largest intron 2.2-2.8 kb) at 8 kb (GCA_001444555.1,
+    # GCA_022813745.1) or 10 kb (GCA_015039315.1); 3 others only return at 50-200 kb with 26-78 kb chimeric models
+    # and stay lost; the PR-locus one (GCA_900009495.1) needs 20 kb and is left lost because PR #92 found long-intron
+    # pheromone-receptor models to be chimeric. results/2026-10-25_intron_cap/. PR and HD keep the 5 kb.
+    max_intron_bp: 10000
     # bE/bW are a divergently-transcribed homeodomain gene pair (the b locus's own
     # curated record, db/Basidiomycota/Ustilaginales/5270_521_bLocus_b1/metadata.yaml,
     # confirms this via RefSeq's own "bE1 allele"/"bW1 allele" product annotation).

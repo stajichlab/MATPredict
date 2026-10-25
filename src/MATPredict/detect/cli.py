@@ -13,8 +13,8 @@ from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CO
 from MATPredict.detect.strong_single_gene import (
     DEFAULT_STRONG_SINGLE_GENE_POLICY, STRONG_SINGLE_GENE_POLICIES,
 )
-from MATPredict.detect.homothallic import DEFAULT_HOMOTHALLIC_POLICY, HOMOTHALLIC_POLICIES
-from MATPredict.detect.partial_core import DEFAULT_PARTIAL_CORE_POLICY, PARTIAL_CORE_POLICIES
+from MATPredict.detect.homothallic import DEFAULT_HOMOTHALLIC_POLICY, HOMOTHALLIC_POLICIES, POLICY_BOTH_GENES
+from MATPredict.detect.partial_core import DEFAULT_PARTIAL_CORE_POLICY, PARTIAL_CORE_POLICIES, POLICY_COVERAGE_PROFILE
 from MATPredict.detect.supported_span import DEFAULT_SUPPORTED_MIN_BITSCORE
 from MATPredict.detect.pipeline import (
     DEFAULT_MAX_POLISHED_CLUSTERS_PER_FAMILY, DEFAULT_POLISH_CORE_PAIR, DEFAULT_POLISH_STRONG_IDENTITY, DetectionOutcome,
@@ -56,7 +56,43 @@ def _refuse_compressed_genome(genome: str) -> None:
                 "(into $SCRATCH on a SLURM node), then pass that file as --genome.")
 
 
+#: Named policy sets for `detect --preset NAME`. A preset only fills in the policy options that were NOT given on the
+#: command line (an explicit flag always wins, even when it names the default). `v0.7` is the setting that produced the
+#: v0.7.0 site data; the code defaults stay as they were (every policy off), so a preset is the one-flag way to reproduce
+#: that data. Add a new key for a later release rather than editing an old one.
+PRESETS: dict[str, dict[str, str]] = {
+    "v0.7": {
+        "partial_core_policy": POLICY_COVERAGE_PROFILE,
+        "homothallic_policy": POLICY_BOTH_GENES,
+        "confidence_cap_policy": "off",
+        "strong_single_gene_policy": "off",
+        "scoped_roster_policy": "on",
+    },
+}
+
+
+class _PolicyFlag(argparse.Action):
+    """Store the value and remember that this policy option was passed explicitly (so a preset does not override it)."""
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, values)
+        setattr(namespace, "_policies_given", frozenset(getattr(namespace, "_policies_given", frozenset())) | {self.dest})
+
+
+def apply_preset(args: argparse.Namespace) -> argparse.Namespace:
+    """Fill the policy options of `--preset` that were not passed explicitly; a no-op without a preset."""
+    name = getattr(args, "preset", None)
+    if not name:
+        return args
+    given = getattr(args, "_policies_given", frozenset())
+    for dest, value in PRESETS[name].items():
+        if dest not in given:
+            setattr(args, dest, value)
+    return args
+
+
 def _cmd_detect(args: argparse.Namespace) -> int:
+    apply_preset(args)
     if not args.genome or not args.out_dir:
         raise ValueError("--genome and --out-dir are required for `matpredict detect`")
     _refuse_compressed_genome(args.genome)
@@ -267,6 +303,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "max_polished_clusters_per_family": _polish_cap_from_args(args),
             "polish_strong_identity": _polish_strong_identity_from_args(args),
             "polish_core_pair": getattr(args, "polish_core_pair", DEFAULT_POLISH_CORE_PAIR),
+            "preset": getattr(args, "preset", None),
             "partial_core_policy": _partial_core_policy_from_args(args),
             "homothallic_policy": _homothallic_policy_from_args(args),
             "confidence_cap_policy": _confidence_cap_policy_from_args(args),
@@ -592,7 +629,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "Default: on. --no-polish-core-pair restores the earlier behaviour.",
     )
     detect.add_argument(
-        "--partial-core-policy", choices=PARTIAL_CORE_POLICIES, default=DEFAULT_PARTIAL_CORE_POLICY,
+        "--preset", choices=sorted(PRESETS), default=None,
+        help="Set the five policy options below to a named release setting: "
+             + "; ".join(f"{name}: " + ", ".join(f"{k.replace('_', '-')}={v}" for k, v in vals.items()) for name, vals in PRESETS.items())
+             + ". A policy flag given explicitly overrides the preset. Without --preset every policy keeps its own default (off).",
+    )
+    detect.add_argument(
+        "--partial-core-policy", action=_PolicyFlag, choices=PARTIAL_CORE_POLICIES, default=DEFAULT_PARTIAL_CORE_POLICY,
         help="off: the best-bitscore idiomorph vote stands (default). coverage_profile: a core hit "
              "that covers < 80%% of its reference does not beat a full-length (>= 90%%) core gene of the "
              "other idiomorph when the alpha-box/HMG-box profiles agree; where they disagree or are "
@@ -600,7 +643,7 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "a contig end is treated as truncation and the vote is kept. Independent of --idiomorph-policy.",
     )
     detect.add_argument(
-        "--homothallic-policy", choices=HOMOTHALLIC_POLICIES, default=DEFAULT_HOMOTHALLIC_POLICY,
+        "--homothallic-policy", action=_PolicyFlag, choices=HOMOTHALLIC_POLICIES, default=DEFAULT_HOMOTHALLIC_POLICY,
         help="off: a locus with an alpha-box and an HMG-box gene is reported as one idiomorph unless the "
              "reference-coverage rule of `classify_locus` passes (default). both_genes: a locus whose modelled "
              "core genes include a COMPLETE alpha-box and a COMPLETE HMG-box protein, each confirmed by the "
@@ -610,14 +653,14 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "and the confidence is unchanged.",
     )
     detect.add_argument(
-        "--confidence-cap-policy", choices=CONFIDENCE_CAP_POLICIES, default=DEFAULT_CONFIDENCE_CAP_POLICY,
+        "--confidence-cap-policy", action=_PolicyFlag, choices=CONFIDENCE_CAP_POLICIES, default=DEFAULT_CONFIDENCE_CAP_POLICY,
         help="off: no extra cap (default). partial_weak: a `high` call drops to `medium` when its best core "
              "hit is a contig-edge partial (< 80%% of its reference, within 500 bp of a contig end, no "
              "full-length core gene) or a weak hit (< 45%% identity) with no flank gene. weak_only: the second "
              "criterion alone. Changes confidence only; the reason is written as `confidence_cap`.",
     )
     detect.add_argument(
-        "--strong-single-gene-policy", choices=STRONG_SINGLE_GENE_POLICIES,
+        "--strong-single-gene-policy", action=_PolicyFlag, choices=STRONG_SINGLE_GENE_POLICIES,
         default=DEFAULT_STRONG_SINGLE_GENE_POLICY,
         help="off: a lone core gene with no flank and no second modelled gene is withheld (default). "
              "on: in a family with no other report, one modelled core gene at >= 85%% identity covering "
@@ -626,7 +669,7 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "gets a `two_idiomorphs` statement. Independent of --idiomorph-policy and --partial-core-policy.",
     )
     detect.add_argument(
-        "--scoped-roster-policy", choices=SCOPED_ROSTER_POLICIES, default=DEFAULT_SCOPED_ROSTER_POLICY,
+        "--scoped-roster-policy", action=_PolicyFlag, choices=SCOPED_ROSTER_POLICIES, default=DEFAULT_SCOPED_ROSTER_POLICY,
         help="off: a roster gene that declares its own `taxonomic_scope` in order.yml is not searched "
              "(default; the run is the one it was before such genes were added). on: it is searched, and "
              "counts, for a genome whose lineage reaches its scope, and nowhere else (prototype: GAP1/BGL1 "

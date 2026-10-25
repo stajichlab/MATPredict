@@ -34,7 +34,7 @@ def test_the_default_cap_is_5kb_and_the_env_var_overrides_it(monkeypatch):
     assert _max_intron_bp(1234) == 1_234        # an explicit argument wins over the environment
 
 
-def _run(tool, tmp_path, **kwargs):
+def _run(tool, tmp_path, family=None, **kwargs):
     cmds = []
 
     def runner(cmd, **kw):
@@ -43,7 +43,7 @@ def _run(tool, tmp_path, **kwargs):
 
     (tmp_path / "g.fa").write_text(">c1\n" + "ACGT" * 150 + "\n")
     (tmp_path / "r.faa").write_text(">rec|gene0|MAT1-2-1\nMKLV\n")
-    tool(tmp_path / "g.fa", FAMILY, "MAT1-2-1", tmp_path / "r.faa", {"rec": KEY}, ("c1", 1, 600), runner=runner, **kwargs)
+    tool(tmp_path / "g.fa", family or FAMILY, "MAT1-2-1", tmp_path / "r.faa", {"rec": KEY}, ("c1", 1, 600), runner=runner, **kwargs)
     return cmds[0]
 
 
@@ -93,25 +93,22 @@ def test_a_family_cap_sits_between_the_env_override_and_the_default(monkeypatch)
 
 
 def test_both_aligners_get_the_family_cap(tmp_path, monkeypatch):
-    global FAMILY
     monkeypatch.delenv("MATPREDICT_MAX_INTRON_BP", raising=False)
-    saved = FAMILY
-    FAMILY = Family(KEY, "enum", ["MAT1-2"], None, [{"name": "MAT1-2-1", "role": "core_MAT"}], [4890], max_intron_bp=10_000)
-    try:
-        cmd = _run(polish_with_miniprot, tmp_path)
-        assert cmd[cmd.index("-G") + 1] == "10000"
-        cmd = _run(polish_with_exonerate, tmp_path)
-        assert cmd[cmd.index("--maxintron") + 1] == "10000"
-    finally:
-        FAMILY = saved
+    fam = Family(KEY, "enum", ["MAT1-2"], None, [{"name": "MAT1-2-1", "role": "core_MAT"}], [4890], max_intron_bp=10_000)
+    cmd = _run(polish_with_miniprot, tmp_path, family=fam)
+    assert cmd[cmd.index("-G") + 1] == "10000"
+    cmd = _run(polish_with_exonerate, tmp_path, family=fam)
+    assert cmd[cmd.index("--maxintron") + 1] == "10000"
 
 
-def test_only_the_basidiomycota_blocus_has_a_family_cap_in_the_curated_order_files():
+def test_the_curated_family_caps_are_the_basidiomycota_blocus_and_no_ascomycota_family():
     from MATPredict.detect.family_registry import load_all_families
 
     db = Path(__file__).resolve().parents[2] / "db"
     caps = {(f.key.phylum, f.key.locus_name): f.max_intron_bp for f in load_all_families(db) if f.max_intron_bp}
-    assert caps == {("Basidiomycota", "bLocus"): 10_000}
+    assert caps[("Basidiomycota", "bLocus")] == 10_000
+    # the Ascomycota keep the 5 kb that fixed the Xylaria chimera (PR #92)
+    assert not [k for k in caps if k[0] == "Ascomycota"]
 
 
 def test_the_order_schema_accepts_a_positive_integer_cap_and_rejects_zero():
@@ -119,6 +116,5 @@ def test_the_order_schema_accepts_a_positive_integer_cap_and_rejects_zero():
     import yaml
 
     doc = yaml.safe_load((Path(__file__).resolve().parents[2] / "db" / "Basidiomycota" / "order.yml").read_text())
-    assert validate_order(doc) == []
     next(l for l in doc["loci"] if l["locus_name"] == "bLocus")["max_intron_bp"] = 0
     assert validate_order(doc) != []

@@ -32,6 +32,13 @@ release completed.
   maximum of 517 bp. On the 166 curated loci (leave-one-out) 163 reports are identical; the others change a model or a withheld span (one Basidiomycota
   pheromone receptor goes from a 19.6 kb exonerate model to a 1.2 kb one). The campaign counts above, 38 Ascomycota and 20 Basidiomycota loci whose core
   model swallows a flank gene, will change on a re-run.
+- The intron cap is now settable per locus (`max_intron_bp` in `order.yml`; precedence: explicit argument, `MATPREDICT_MAX_INTRON_BP`, the locus value, 5 kb). The
+  Basidiomycota bLocus (bE/bW) is set to 10 kb: the global 5 kb lost the whole b-locus call in genomes whose genes the aligners still model at 8-10 kb. Of the 7
+  Basidiomycota genomes that lost a call to the 5 kb cap, 3 b-locus genomes return with ordinary models (largest intron 2.2-2.8 kb), 3 only return at 50-200 kb with
+  26-78 kb chimeric models and stay lost, and the pheromone-receptor one needs 20 kb and stays lost (a known limitation: long-intron pheromone-receptor models are
+  chimeric, as found for the 5 kb cap). On 216 Ustilaginales/Malasseziales genomes plus the 7 the only change is the 3 restored calls; on 500 random Basidiomycota
+  genomes 490 are identical and the rest are one 10.5 kb bW model (7.7 kb intron, call unchanged), two small bW boundary shifts and one new low-confidence HD locus.
+  Evidence: `results/2026-10-25_intron_cap/`.
 
 ## [0.6.2] — 2026-10-15 — `v0.6.2`
 

@@ -250,7 +250,8 @@ class Family:
     """The longest intron (bp) a polish alignment of this family's genes may span, passed to miniprot `-G` and
     exonerate `--maxintron` (`search._max_intron_bp`). Absent means the global 5 kb of PR #92, which stops
     chimeric models that join distant exons through conserved flank genes. Set where that cap loses real genes:
-    the Basidiomycota bLocus (bE/bW), where 5 kb loses the whole locus in 3 of 7 re-run genomes (see order.yml)."""
+    the Basidiomycota bLocus (bE/bW), where 5 kb loses the whole locus in 3 of the 6 b-locus genomes that lost a call
+    (see order.yml and results/2026-10-25_intron_cap/)."""
     flank_carried_min_bitscore: float = DEFAULT_FLANK_CARRIED_MIN_BITSCORE
     """The bitscore the strongest core hit of a flank-carried call must reach
     for the call to be kept (`flank_carried`). Absent means the 39 bits of

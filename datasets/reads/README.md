@@ -7,6 +7,7 @@ One folder per genus. Each holds a `manifest.tsv` (every read set found), notes 
 | `coccidioides/` | Reads already on hpcc (`2025_All_Cocci/Assembly/input`), joined to the assembly freeze | manifest built; no reads copied |
 | `cryptococcus/` | ENA/SRA, Illumina paired WGS | manifest under review |
 | `fusarium/` | ENA/SRA, Illumina paired WGS (*F. graminearum* complex and other species) | manifest under review |
+| `sra_survey/` | ENA/SRA survey of every fungal species with at least 4 strains with paired Illumina WGS reads, and the reference tier MATPredict has for each (2026-10-26) | table committed; no reads downloaded |
 
 ## Coccidioides
 

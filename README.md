@@ -94,9 +94,9 @@ The curated families are defined in each phylum's `order.yml`.
 
 | Phylum | Families (`locus_name`) | Records | Definition |
 |---|---|---|---|
-| Ascomycota | MAT, PM, mat1, mat2, mat3, MATsc, MATyl, MTL, MATtub | 57 | [db/Ascomycota/order.yml](db/Ascomycota/order.yml) |
-| Basidiomycota | HD, PR, MAT, Aalpha, Abeta, Balpha, Bbeta, aLocus, bLocus, rustHD, redPR, redHD, wallMAT | 73 | [db/Basidiomycota/order.yml](db/Basidiomycota/order.yml) |
-| Mucoromycota | MAT (sexP / sexM, with an idiomorph classifier) | 20 | [db/Mucoromycota/order.yml](db/Mucoromycota/order.yml) |
+| Ascomycota | MAT, PM, mat1, mat2, mat3, MATsc, MATyl, MTL, MATtub | 82 | [db/Ascomycota/order.yml](db/Ascomycota/order.yml) |
+| Basidiomycota | HD, PR, MAT, Aalpha, Abeta, Balpha, Bbeta, aLocus, bLocus, rustHD, redPR, redHD, wallMAT | 74 | [db/Basidiomycota/order.yml](db/Basidiomycota/order.yml) |
+| Mucoromycota | MAT (sexP / sexM, with an idiomorph classifier) | 21 | [db/Mucoromycota/order.yml](db/Mucoromycota/order.yml) |
 
 Other phyla (for example Mortierellomycota, Kickxellomycota, Chytridiomycota)
 have no curated family. By default their genomes are reported as
@@ -499,23 +499,29 @@ pixi run -e test pytest -q
 
 ## Validation and known limits
 
-Measured results (details in [analysis/INDEX.md](analysis/INDEX.md)):
+Measured results (details in [analysis/INDEX.md](analysis/INDEX.md)). The BFD and held-out rows are detection (call) rates from
+the v0.7.0 definitive run, not accuracy: no truth set exists for BFD genomes. Subphylum rates count the classes of each subphylum;
+the 7 rust genomes skipped for annotation reasons (#165) are counted as not called. The ground-truth, typing and hold-out rows are
+older measurements and were not repeated for v0.7.0. How each campaign was judged is in
+[results/2026-10_cleanrun_preparation/](results/2026-10_cleanrun_preparation/).
 
 | Test | Result |
 |---|---|
 | Zygomycete ground-truth set (23 genomes) | 23/23 loci and idiomorphs |
-| Held-out LCG Mucoromycotina genomes (never used in curation) | 536/621 called |
-| Held-out Jena Mucoromycotina genomes | 61/64 called |
+| Held-out LCG Mucoromycotina genomes (never used in curation) | 549/621 called (v0.7.0 run) |
+| Held-out Jena Mucoromycotina genomes | 61/64 called (v0.7.0 run) |
 | Idiomorph typing validation | 0/540 typed wrong |
 | Pezizomycotina hold-out, order radius | 7/7 |
-| Basidiomycota, 3,270 BFD genomes | Agaricomycotina 83.0%, Ustilaginomycotina 95.6%, Pucciniomycotina 13.2% called |
+| Ascomycota, 19,415 BFD genomes (v0.7.0 run) | 17,592 called (90.6%) |
+| Basidiomycota, 3,275 BFD genomes (v0.7.0 run) | 2,977 called (90.9%): Agaricomycotina 92.2%, Ustilaginomycotina 97.7%, Pucciniomycotina 79.5% |
+| Mucoromycotina, 289 BFD genomes (v0.7.0 run) | 258 called (89.3%) |
 
 Known limits (open items in [analysis/open-questions.md](analysis/open-questions.md)):
 
 - Only three phyla have curated families.
-- Ascomycota outside the curated orders has had no full-scale run. A genome
-  far from every reference often fails the evidence bar, so an uncalled genome
-  is weak evidence that the genome has no MAT locus.
+- A genome far from every reference often fails the evidence bar, so an
+  uncalled genome is weak evidence that the genome has no MAT locus. The full
+  Ascomycota run (19,415 genomes, v0.7.0) leaves 1,751 uncalled and 72 not run.
 - Fragmented assemblies can split a locus or lose its flanking genes.
 - In Mucoromycota, *Absidia* flanking genes are often off-scaffold, and the
   gene order of the Lichtheimiaceae is not yet known.

@@ -103,6 +103,13 @@ The calls on this site are the output of one release, with its gaps stated here 
   *MAT1-1-1* deposits, *Hyphopichia* and several yeast genera (*Metschnikowia*, *Sungouiella*, *Kurtzmaniella*,
   *Candida*) that lack a full-length *MTLA1* reference, and Basidiomycota pheromone-receptor genes needing introns longer
   than 10 kb (#154; one genome, GCA_900009495.1, stays lost).
+- **Genomes not searched.** Seven rust genomes that v0.6.0 called (four *Austropuccinia psidii*, three *Phakopsora pachyrhizi*) and two other
+  large rust genomes were skipped in this release because the BFD collection's suppress list excludes them for annotation-pipeline reasons, not
+  because they lack a MAT locus. They have no report here. They are planned for the next release (#165).
+- **Calls that may be wrong, accepted for this release.** 102 pheromone-receptor loci (87 in Agaricales) that v0.6.0 withheld are now called at
+  medium confidence on pheromone-protein hits from one reference record (*Coprinopsis cinerea* B43); some may count a pheromone gene and the
+  receptor's CAAX ORF as two genes. Six Basidiomycota *bE*/*bW* models in five genomes have introns of 5 to 10 kb at low coverage and may be
+  chimeric (the 10 kb intron cap, #154). Neither has been checked against the genome sequence.
 - **Candidate references not used.** Four reference records that would fix some of these (*Aciculoconidium aculeatum* and
   three *Lodderomyces* / *Candida parapsilosis*-group records) are held as candidates and are not used by detection until
   they pass a full regression.

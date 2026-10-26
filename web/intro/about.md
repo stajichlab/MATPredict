@@ -103,6 +103,13 @@ The calls on this site are the output of one release, with its gaps stated here 
   *MAT1-1-1* deposits, *Hyphopichia* and several yeast genera (*Metschnikowia*, *Sungouiella*, *Kurtzmaniella*,
   *Candida*) that lack a full-length *MTLA1* reference, and Basidiomycota pheromone-receptor genes needing introns longer
   than 10 kb (#154; one genome, GCA_900009495.1, stays lost).
+- **Genomes not searched.** Seven rust genomes that v0.6.0 called (four *Austropuccinia psidii*, three *Phakopsora pachyrhizi*) and two other
+  large rust genomes were skipped in this release because the BFD collection's suppress list excludes them for annotation-pipeline reasons, not
+  because they lack a MAT locus. They have no report here. They are planned for the next release (#165).
+- **Calls that may be wrong, accepted for this release.** 102 pheromone-receptor loci (87 in Agaricales) that v0.6.0 withheld are now called at
+  medium confidence on pheromone-protein hits from one reference record (*Coprinopsis cinerea* B43); some may count a pheromone gene and the
+  receptor's CAAX ORF as two genes. Six Basidiomycota *bE*/*bW* models in five genomes have introns of 5 to 10 kb at low coverage and may be
+  chimeric (the 10 kb intron cap, #154). Neither has been checked against the genome sequence.
 - **Candidate references not used.** Four reference records that would fix some of these (*Aciculoconidium aculeatum* and
   three *Lodderomyces* / *Candida parapsilosis*-group records) are held as candidates and are not used by detection until
   they pass a full regression.
@@ -117,6 +124,19 @@ The calls on this site are the output of one release, with its gaps stated here 
 
 Held-out items and what each needs for the next release are tracked in
 [issue #155](https://github.com/stajichlab/MATPredict/issues/155).
+
+## Assessments and further reading
+
+The v0.7.0 results were judged campaign by campaign before release. These notes say what changed against the previous
+release, what was checked and what was not, and which decisions are still open. Read them for what the calls can and cannot support.
+
+- **Ascomycota:** [judgement](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/v070_ascomycota_judgement.md) (changes against v0.6.0, the truth checks and the reason for each confidence change).
+- **Basidiomycota:** [independent judgement](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/v070_basidiomycota_judgement.md) (lost and new calls, the long-intron models, the defective-gene flag, the nine open curator decisions).
+- **Mucoromycotina:** [judgement](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/v070_mucoromycotina_judgement.md).
+- **Before the run:** the [regression gate](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/regression_judgement.md) and the [pilot](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/pilot_judgement.md), and the [clean-run plan](https://github.com/stajichlab/MATPredict/blob/main/docs/notes/2026-10-22_clean-run-plan.md).
+- **Benchmarks and held-out sets:** the [held-out benchmark method](https://github.com/stajichlab/MATPredict/blob/main/docs/holdout-benchmark.md), the [held-out sets](https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-09-28_heldout-sets.md) and the [index of analyses](https://github.com/stajichlab/MATPredict/blob/main/analysis/INDEX.md).
+- **Validation and known limits:** the project [README](https://github.com/stajichlab/MATPredict#validation-and-known-limits) and the [changelog](https://github.com/stajichlab/MATPredict/blob/main/CHANGELOG.md) (see "Known issues" under 0.7.0).
+- **What is planned next:** [issue #155](https://github.com/stajichlab/MATPredict/issues/155) lists everything held out of this release and what each item needs.
 
 ## Source, issues and licence
 

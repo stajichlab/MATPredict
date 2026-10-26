@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Survey of public fungal population read sets for `matpredict reads-type` (issue: see datasets/reads/sra_survey/README.md).
 
-Counts, per species, how many distinct strains have paired-end Illumina whole-genome reads in ENA (which mirrors SRA), pooled
+Counts, per species, how many distinct strains have Illumina (paired or single-end) whole-genome reads in ENA (which mirrors SRA), pooled
 across studies, after leaving out studies that are mainly not natural isolates (mutant collections, experimental evolution
 and mutation accumulation lines, crosses and their progeny). Reads are never downloaded here.
 
@@ -87,7 +87,7 @@ def main():
                 bases = int(r["base_count"] or 0)
             except ValueError:
                 bases = 0
-            if r["library_layout"] != "PAIRED" or bases < MIN_BASES:
+            if bases < MIN_BASES:        # paired and single-end runs both count; the layout is recorded
                 continue
             m = meta.get(r["run_accession"], {})
             key = (m.get("strain") or m.get("isolate") or m.get("sample_alias") or r["sample_accession"] or r["run_accession"]).strip().lower()
@@ -95,7 +95,7 @@ def main():
             title.setdefault(st, m.get("study_title", ""))
             prev = strains[sp][st].get(key)
             if prev is None or bases > prev[1]:
-                strains[sp][st][key] = (r["run_accession"], bases, " ".join(m.get(k, "") for k in ("sample_title", "strain", "isolate", "experiment_title")))
+                strains[sp][st][key] = (r["run_accession"], bases, " ".join(m.get(k, "") for k in ("sample_title", "strain", "isolate", "experiment_title")), r["library_layout"])
             n_used += 1
     os.makedirs(a.out, exist_ok=True)
     spdb, gendb = db_tiers(a.db) if a.db else ({}, {})
@@ -120,8 +120,9 @@ def main():
                 continue
             for k, v in ks.items():
                 pooled.setdefault(k, (st, v[0]))
+        single = sum(1 for (st, run) in pooled.values() if strains[sp][st][next(k for k, v in strains[sp][st].items() if v[0] == run)][3] == "SINGLE")
         species_rows.append([sp, len(pooled), len({v[0] for v in pooled.values()}), sum(len(v) for v in strains[sp].values()),
-                             excluded["mutant"], excluded["evolution"], excluded["cross"]])
+                             excluded["mutant"], excluded["evolution"], excluded["cross"], single])
     with open(os.path.join(a.out, "studies.tsv"), "w", newline="") as fh:
         w = csv.writer(fh, delimiter="\t", lineterminator="\n")
         w.writerow(["species", "study", "strains", "excluded_as", "study_title"])
@@ -129,10 +130,10 @@ def main():
     species_rows.sort(key=lambda r: (-r[1], r[0]))
     with open(os.path.join(a.out, "species_summary.tsv"), "w", newline="") as fh:
         w = csv.writer(fh, delimiter="\t", lineterminator="\n")
-        w.writerow(["species", "strains_pooled", "studies", "strains_all_studies", "excluded_mutant", "excluded_evolution", "excluded_cross", "reference_tier"])
+        w.writerow(["species", "strains_pooled", "studies", "strains_all_studies", "excluded_mutant", "excluded_evolution", "excluded_cross", "strains_single_end", "reference_tier"])
         w.writerows(r + [tier(r[0], spdb, gendb) if a.db else ""] for r in species_rows if r[1] >= a.min_samples or r[3] >= a.min_samples)
     keep = [r for r in species_rows if r[1] >= a.min_samples]
-    print(f"{n_runs} runs; {n_used} paired runs at >= {MIN_BASES // 10**6} Mb with a species name; species with >= {a.min_samples} pooled strains: "
+    print(f"{n_runs} runs; {n_used} runs (paired or single-end) at >= {MIN_BASES // 10**6} Mb with a species name; species with >= {a.min_samples} pooled strains: "
           f"{len(keep)} ({sum(r[1] for r in keep)} strains)")
     if a.db:
         for t in ("A", "A1", "B", "C"):

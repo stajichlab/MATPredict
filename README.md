@@ -8,7 +8,7 @@ idiomorph or mating type it is (for example Plus/Minus, MAT1-1/MAT1-2, HD/PR
 alleles). Every reference record traces to a publication or a validated
 deposit, and every call reports the evidence behind it.
 
-Current release: [`v0.6.2`](https://github.com/stajichlab/MATPredict/releases/tag/v0.6.2).
+Current release: [`v0.7.0`](https://github.com/stajichlab/MATPredict/releases/tag/v0.7.0).
 Changes: [CHANGELOG.md](CHANGELOG.md).
 
 ## Contents

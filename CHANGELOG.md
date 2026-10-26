@@ -93,7 +93,19 @@ The clean-run release. It adds the detection policies the curator rulings of 202
   Evidence: `results/2026-10-25_intron_cap/`.
 
 ### The definitive run
-The v0.7.0 data come from the freeze tag `cleanrun-2026-10c` (commit `b317ece`), run with `--preset v0.7`, on database digest `285ee309...` (177 records; candidate records excluded). To reproduce the site data run `matpredict detect --preset v0.7 ...`. *(Counts, the comparison with v0.6.0 and with the first clean run, and the attribution of every difference are filled in after the run is aggregated.)*
+The v0.7.0 data come from the freeze tag `cleanrun-2026-10c` (commit `b317ece`), run with `--preset v0.7`, on database digest `285ee309...` (177 records; candidate records excluded). To reproduce the site data run `matpredict detect --preset v0.7 ...`. Run on 2026-10-26 in three throttled campaigns (48 CPUs); every report carries the tag, `dirty: false` and version 0.7.0. Tables, manifests and report archives: `results/2026-10-26_v070_*`.
+
+| Campaign | Genomes listed | Called | Uncalled | No report (suppressed) | Loci | Loci high / medium / low |
+|---|---|---|---|---|---|---|
+| Ascomycota | 19,415 | 17,592 | 1,751 | 72 | 20,985 | 13,904 / 6,974 / 107 |
+| Basidiomycota | 3,275 | 2,977 | 277 | 21 | 5,986 | 3,802 / 2,173 / 11 |
+| Mucoromycotina | 974 | 868 | 105 | 1 | 914 | 689 / 212 / 13 |
+
+Against v0.6.0 (the `change_vs_baseline` field of `genomes.tsv`): Ascomycota 150 calls lost and 472 new, 387 confidence up and 588 down, 219 idiomorph flips; Basidiomycota 6 lost and 8 new, 2 confidence down; Mucoromycotina 3 new and 3 idiomorph flips. The reasons for the Ascomycota confidence drops are in the `tier_note` column (see Known issues).
+
+Gates: every listed genome has a report except the same 72, 21 and 1 suppressed genomes as the first clean run (`cleanrun-2026-10b`); no report is empty. 36 of 23,570 reports differ from the first clean run (Mucoromycotina 0). 19 Basidiomycota differ because of the per-family intron cap (#153; with the cap forced to 5 kb the first run's calls return), including 4 of the 5 changed calls. The other 17 (5 Ascomycota, 12 Basidiomycota) are run-to-run variance in which of two equal-scoring copies of a gene is polished, reproducible with the first run's own code (#161). A 267-genome pilot run twice gave no differences.
+
+The defective-gene flag (#152) marks at least one gene in 5,160 of 20,985 Ascomycota loci, 1,038 of 5,986 Basidiomycota loci and 156 of 914 Mucoromycotina loci. It is report-only; most are low-identity flank-gene models (see Known issues).
 
 ### Known issues
 - Detection rules the curator has chosen to report and not change in this release: the idiomorph margin falls back to an identity gap for single-candidate loci (#137, #145), the vote on short fragments and tiny margins (#138), a noise third gene breaking the 0.5 tie (#129). The tables carry `tier_note` and `label_unsupported` for them.
@@ -101,6 +113,7 @@ The v0.7.0 data come from the freeze tag `cleanrun-2026-10c` (commit `b317ece`),
 - The Basidiomycota b-locus intron cap of 10 kb (#153) trades three restored calls for one suspect 10.5 kb bW model in a 500-genome sample (#154); the pheromone-receptor genome GCA_900009495.1 stays lost.
 - `defective` marks a model that does not translate cleanly in this assembly, which is not the same as a pseudogene (see above).
 - The rollout path (`batch_runner.py`, `run_detection_batch.py`) passes none of the policy options and writes reports without a `run` block.
+- Run-to-run variance (#161): the same code on the same input can polish a different one of two equal-scoring copies of a gene (about 5 of 19,343 Ascomycota and 31 of 3,254 Basidiomycota reports differ in a model; one genome's calls changed).
 - Held out of this release and tracked in #155: promoting the candidate records, the noise-floor rule, the margin rules, and the rest of the curator's list.
 
 ## [0.6.2] — 2026-10-15 — `v0.6.2`

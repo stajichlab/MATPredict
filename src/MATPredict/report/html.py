@@ -11,7 +11,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from html import escape
 
-from MATPredict import __version__
+from MATPredict.detect.provenance import running_version
 from MATPredict.report.svg import figure_keys, locus_svg
 
 _CONF_RANK = {"high": 3, "medium": 2, "low": 1}
@@ -784,7 +784,7 @@ def render_genome_report(doc: dict, *, sample: str | None = None, sample_from_fo
         meta.append(f'database <span class="mono">{e((run["database"].get("content_sha256") or "")[:12])}</span>')
     if run.get("taxonomy_source"):
         meta.append(e(run["taxonomy_source"]))
-    meta.append(f"rendered {e(generated)} by MATPredict {e(__version__)}")
+    meta.append(f"rendered {e(generated)} by MATPredict {e(running_version())}")
     folder_note = ' <span class="muted small">(name from folder)</span>' if sample_from_folder else ""
     body = f'''
 <header class="masthead"><div class="mast-inner">
@@ -811,7 +811,7 @@ def render_genome_report(doc: dict, *, sample: str | None = None, sample_from_fo
     return (
         "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\">"
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
-        f"<meta name=\"generator\" content=\"MATPredict {e(__version__)}\">"
+        f"<meta name=\"generator\" content=\"MATPredict {e(running_version())}\">"
         f"<title>{e(title)}</title><style>{_css(sample)}</style></head>"
         f"<body>{body}<script>{_JS}</script></body></html>\n"
     )

@@ -93,7 +93,7 @@ def source_version_for(package_dir: Path) -> str | None:
     if tomllib is None or package_dir.parent.name != "src":
         return None
     try:
-        project = tomllib.loads((package_dir.parents[1] / "pyproject.toml").read_text())["project"]
+        project = tomllib.loads((package_dir.parents[1] / "pyproject.toml").read_text(encoding="utf-8"))["project"]
         if str(project.get("name", "")).lower() != "matpredict":
             return None
         return str(project["version"])

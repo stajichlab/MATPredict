@@ -241,10 +241,12 @@ def _pyproject(root, name="MATPredict", version="0.7.0"):
 
 
 def test_the_source_version_is_the_checkouts_pyproject_version_and_needs_no_git(tmp_path):
-    assert provenance.source_version_for(_pyproject(tmp_path / "a")) == ("0.7.0" if provenance.tomllib else None)
     if provenance.tomllib is None:
         pytest.skip("tomllib needs Python 3.11")
+    assert provenance.source_version_for(_pyproject(tmp_path / "a")) == "0.7.0"
     assert provenance.source_version_for(_pyproject(tmp_path / "b", version="1.2.3")) == "1.2.3"
+    assert provenance.source_version_for(_pyproject(tmp_path / "c", name="matpredict")) == "0.7.0"      # the name is case-insensitive
+    assert provenance.source_version_for(_pyproject(tmp_path / "d", name="MATPREDICT", version="4.5.6")) == "4.5.6"
 
 
 def test_the_source_version_is_none_for_a_wheel_another_project_or_an_unreadable_file(tmp_path):
@@ -259,6 +261,13 @@ def test_the_source_version_is_none_for_a_wheel_another_project_or_an_unreadable
     assert provenance.source_version_for(pkg) is None
     (tmp_path / "bad" / "pyproject.toml").unlink()
     assert provenance.source_version_for(pkg) is None                                # no pyproject at all
+    dyn = _pyproject(tmp_path / "dyn")
+    (tmp_path / "dyn" / "pyproject.toml").write_text('[project]\nname = "MATPredict"\ndynamic = ["version"]\n')
+    assert provenance.source_version_for(dyn) is None                                # a dynamic version: fall back to the metadata
+    utf = _pyproject(tmp_path / "utf")
+    (tmp_path / "utf" / "pyproject.toml").write_text('[project]\nname = "MATPredict"\nversion = "2.0.0"\ndescription = "M\u00e4t"\n',
+                                                      encoding="utf-8")
+    assert provenance.source_version_for(utf) == "2.0.0"                             # read as UTF-8 whatever the locale
 
 
 def test_the_running_version_falls_back_to_the_installed_metadata(monkeypatch):
@@ -287,3 +296,21 @@ def test_the_html_provenance_shows_the_stamp_the_source_version_mismatch_and_a_d
     # an untagged checkout describes as the abbreviated hash: shown once, not twice
     once = _code_note({"git_describe": "24829be", "commit": "24829be1a2c3d4e5f60718293a4b5c6d7e8f9012"})
     assert once.count("24829be") == 1
+
+
+def test_the_html_footer_the_generator_tag_and_the_cli_version_use_the_running_version(monkeypatch):
+    from pathlib import Path
+
+    import yaml
+
+    from MATPredict import __main__ as entry
+    from MATPredict.report import html
+
+    monkeypatch.setattr(html, "running_version", lambda: "6.6.6")
+    doc = yaml.safe_load((Path(__file__).parents[1] / "report" / "fixtures" / "basidio_hd_pr.yaml").read_text())
+    page = html.render_genome_report(doc, sample="x", generated="2026-10-26")
+    assert "rendered 2026-10-26 by MATPredict 6.6.6" in page
+    assert '<meta name="generator" content="MATPredict 6.6.6">' in page
+    monkeypatch.setattr(entry, "running_version", lambda: "6.6.6")
+    action = next(a for a in entry.build_parser()._actions if a.option_strings == ["-V", "--version"])
+    assert action.version == "6.6.6"

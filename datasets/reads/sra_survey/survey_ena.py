@@ -13,10 +13,16 @@ Writes species_summary.tsv and studies.tsv next to --out. Deterministic: same in
 import argparse, csv, collections, os, re
 
 MUTANT = re.compile(r"mutant|knock-?out|deletion|disrupt|insertion library|transposon|t-dna|crispr|overexpress|rnai|gene replacement|"
-                    r"deleted|Δ|delta[- ]?\w+|\bko\b|library of (mutants|strains)", re.I)
+                    r"deleted|Δ|delta[- ]?\w+|\bko\b|library of (mutants|strains)|"
+                    r"engineered|constructed|reporter|gfp|bfp|tagged|edited|suppressors?\b|alleles?\b|lacking|absence of|\bnull\b|"
+                    r"point mutation|non[- ]essential gene|chimeric", re.I)
 EVOLVE = re.compile(r"experimental evolution|evolution experiment|evolved|serial passage|mutation[- ]accumulation|passaged|adaptive evolution|"
                     r"laboratory evolution|time[- ]?course|selection experiment", re.I)
 CROSS = re.compile(r"progeny|segregant|backcross|\bf[12]\b|tetrad|meiotic|recombinant (inbred|strains)|genetic cross|offspring", re.I)
+# A title that names a natural or clinical sampling is not left out as `evolution` or `cross` on a stray keyword (a surveillance study
+# whose title contains "F1", a clinical series described as "evolution of resistance"). It never rescues a `mutant` study.
+PROTECT = re.compile(r"surveillance|point prevalence|\bsurvey\b|clinical isolates|outbreak|epidemiolog|\bgwas\b|natural (isolates|populations?)|"
+                     r"wild isolates|bloodstream|candidaemia|candidemia|genomes project|population genom", re.I)
 NOT_SPECIES = re.compile(r"metagenom|uncultured|environmental|unidentified|mixed|fungal sp|fungus sp", re.I)
 MIN_BASES = 300_000_000          # about 10x of a 30 Mb genome; a per-species genome size would be better (open item)
 
@@ -57,8 +63,11 @@ def main():
     ap.add_argument("--meta", required=True)
     ap.add_argument("--out", required=True, help="output folder")
     ap.add_argument("--min-samples", type=int, default=4)
+    ap.add_argument("--skip-species", default="Saccharomyces cerevisiae",
+                    help="comma-separated species left out of the survey altogether (default: %(default)s; the focus is outside the lab-model yeast)")
     ap.add_argument("--db", help="MATPredict db folder: adds the reference tier of each species")
     a = ap.parse_args()
+    skip = {x.strip() for x in a.skip_species.split(",") if x.strip()}
     meta = {}
     with open(a.meta, newline="") as fh:
         for r in csv.DictReader(fh, delimiter="\t"):
@@ -70,7 +79,7 @@ def main():
         for r in csv.DictReader(fh, delimiter="\t"):
             n_runs += 1
             sp = species(r["scientific_name"])
-            if not sp or NOT_SPECIES.search(r["scientific_name"]):
+            if not sp or NOT_SPECIES.search(r["scientific_name"]) or sp in skip:
                 continue
             try:
                 bases = int(r["base_count"] or 0)
@@ -99,9 +108,9 @@ def main():
             frac = lambda rx: sum(1 for k in ks if rx.search(txt[k]) or rx.search(k)) / len(ks)
             if MUTANT.search(tt) or frac(MUTANT) >= .5:
                 flag = "mutant"
-            elif EVOLVE.search(tt) or frac(EVOLVE) >= .5:
+            elif not PROTECT.search(tt) and (EVOLVE.search(tt) or frac(EVOLVE) >= .5):
                 flag = "evolution"
-            elif CROSS.search(tt) or frac(CROSS) >= .5:
+            elif not PROTECT.search(tt) and (CROSS.search(tt) or frac(CROSS) >= .5):
                 flag = "cross"
             study_rows.append([sp, st, len(ks), flag, tt[:160]])
             if flag:

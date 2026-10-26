@@ -178,7 +178,7 @@ Aspergillus oryzae	PRJDB7763	82		Genome sequencing of industrial Asperigillus or
 Aspergillus oryzae	PRJNA1004889	3		FungID
 Aspergillus oryzae	PRJNA1465193	3		Genome sequencing and assembly of three Aspergillus oryzae strains
 Aspergillus oryzae	PRJNA164603	7		Aspergillus oryzae Genome sequencing
-Aspergillus oryzae	PRJNA987873	7		Edible mycelium bioengineered for enhanced nutritional value and sensory appeal using a new synthetic biology toolkit
+Aspergillus oryzae	PRJNA987873	7	mutant	Edible mycelium bioengineered for enhanced nutritional value and sensory appeal using a new synthetic biology toolkit
 Aspergillus parasiticus	PRJNA1191183	38		Aspergillus parasiticus genome sequencing
 Aspergillus parasiticus	PRJNA824811	2		Flavi genomics Genome sequencing and assembly
 Aspergillus quadricinctus	PRJNA800051	2		Fungal Diversity associated with space-craft assembly facility (SAF)
@@ -299,12 +299,12 @@ Calocera cornea	PRJNA210204	2		Calocera cornea HHB12733 Genome sequencing and as
 Calonectria henricotiae	PRJNA631235	13		Boxwood blight pathogen genome wide SNPs
 Calonectria ilicicola	PRJNA659380	8		The Genome Sequence of Calonectria ilicicola (anamorph Cylindrocladium parasiticum) causing Cylindrocladium black rot of peanut and red crown rot of soybean
 Calonectria pseudonaviculata	PRJNA631235	67		Boxwood blight pathogen genome wide SNPs
-Candida albicans	PRJEB11905	44		Effect of Chimeric tRNA in Candida albicans genome
-Candida albicans	PRJEB12264	19	evolution	In this study we tested the hypothesis that generalized codon ambiguity could be beneficial to evolution of resistance against amphotericin B. For this, we have
-Candida albicans	PRJEB1755	5		DNA-seq of Candida albians strains engineered to mis-incorporate increasing levels of leucine at CUG codon, SYBARIS project
+Candida albicans	PRJEB11905	44	mutant	Effect of Chimeric tRNA in Candida albicans genome
+Candida albicans	PRJEB12264	19	mutant	In this study we tested the hypothesis that generalized codon ambiguity could be beneficial to evolution of resistance against amphotericin B. For this, we have
+Candida albicans	PRJEB1755	5	mutant	DNA-seq of Candida albians strains engineered to mis-incorporate increasing levels of leucine at CUG codon, SYBARIS project
 Candida albicans	PRJEB1831	3		Whole genome sequencing to study of pathogenic Candida strains
 Candida albicans	PRJEB27862	4		Diverse lineages of Candida albicans live on old oaks
-Candida albicans	PRJEB40738	29	cross	One Day in Denmark 2018 point prevalence survey on fungi
+Candida albicans	PRJEB40738	29		One Day in Denmark 2018 point prevalence survey on fungi
 Candida albicans	PRJEB56179	4		H3K56ac profiling in Candida albicans by high throughput sequencing
 Candida albicans	PRJEB65085	9		Candida albicans exposure to antifungal polymers
 Candida albicans	PRJEB66720	6		Genome analysis of NFAP2- and fluconazole-resistant strains
@@ -315,9 +315,9 @@ Candida albicans	PRJNA1008086	18		Whole genome sequencing of Candida albicans cl
 Candida albicans	PRJNA1020173	2	mutant	Whole genome sequencing of Candida albicans SC5314 and SC5314-derived BWP17 SIR2 deletion mutants
 Candida albicans	PRJNA1035923	13		WGS data for Inorganic phosphate transport in Candida albicans
 Candida albicans	PRJNA1056337	3		WGS data for study of Chromosome 7 trisomy across C. albicans strains
-Candida albicans	PRJNA1068093	23	evolution	Whole genome sequencing of FLC_evolved strains with ERG251 mutations
+Candida albicans	PRJNA1068093	23	mutant	Whole genome sequencing of FLC_evolved strains with ERG251 mutations
 Candida albicans	PRJNA1068683	102		Whole genome sequencing of Candida albicans clinical bloodstream isolates
-Candida albicans	PRJNA1071177	50	evolution	Step-wise evolution of azole resistance by CNV and LOH in Candida albicans
+Candida albicans	PRJNA1071177	50	mutant	Step-wise evolution of azole resistance by CNV and LOH in Candida albicans
 Candida albicans	PRJNA1108607	7		Whole-genome sequencing of Candida isolated from sputum of pneumonia patients.
 Candida albicans	PRJNA1118730	40		Blood cultures at baseline and during persistent candidemia contain populations of genetically diverse Candida albicans strains that may differ in virulence and
 Candida albicans	PRJNA1122128	92		Diversity of Candida species in bloodstream infections compared to gut and skin metagenome samples
@@ -343,7 +343,7 @@ Candida albicans	PRJNA323475	6		Candida albicans Genome sequencing
 Candida albicans	PRJNA324272	5		Candida albicans strain:tac1/tac1 zcf29/zcf29 Genome sequencing
 Candida albicans	PRJNA345600	9		Genome microevolution of Candida albicans
 Candida albicans	PRJNA400662	36	evolution	Evolution of C. albicans in the mouse gastrointestinal tract
-Candida albicans	PRJNA417396	10	evolution	C. albicans selection to restore filamentation in mfg1 null
+Candida albicans	PRJNA417396	10	mutant	C. albicans selection to restore filamentation in mfg1 null
 Candida albicans	PRJNA421185	15		Candida albicans isolates from an oropharyngeal Candidiasis (OPC) model
 Candida albicans	PRJNA432884	178		Whole genome sequencing of 182 isolates of the fungal pathogen of humans Candida albicans
 Candida albicans	PRJNA433858	11		Tolerance to Caspofungin in Candida albicans Is Associated with at Least Three Distinctive Mechanisms That Govern Expression of FKS Genes and Cell Wall Remodeli
@@ -356,9 +356,9 @@ Candida albicans	PRJNA592373	139		Candida auris
 Candida albicans	PRJNA610214	11		Sequencing of susceptible-turned-resistant strains of Candida albicans, Candida glabrata and Candida tropicalis
 Candida albicans	PRJNA613282	9	evolution	Complex copy number variants in Candida albicans
 Candida albicans	PRJNA635460	42		Whole genome sequencing of Candida albicans
-Candida albicans	PRJNA659611	31		Candida albicans whole genome sequencing data for 57 laboratory engineered isolates
+Candida albicans	PRJNA659611	31	mutant	Candida albicans whole genome sequencing data for 57 laboratory engineered isolates
 Candida albicans	PRJNA664290	14		Candida ATCC WGS
-Candida albicans	PRJNA674870	10		BIR/MCO in Candida albicans, whole genome sequencing data for 51 laboratory engineered isolates
+Candida albicans	PRJNA674870	10	mutant	BIR/MCO in Candida albicans, whole genome sequencing data for 51 laboratory engineered isolates
 Candida albicans	PRJNA686496	12		Candida albicans D-tagatose
 Candida albicans	PRJNA689765	370		Candida albicans Raw sequence reads
 Candida albicans	PRJNA702809	34		Fungal strain-level diversity defines host-mycobiota interactions and inflammation in Inflammatory Bowel Disease
@@ -373,7 +373,7 @@ Candida albicans	PRJNA848263	44		Genomic epidemiology of human candidaemia isola
 Candida albicans	PRJNA865384	3		Clinical isolates of Candida spp.
 Candida albicans	PRJNA889397	12		Response to farnesol in Candida albicans
 Candida albicans	PRJNA926612	2		Whole genome sequencing of clinical oral yeast isolates
-Candida albicans	PRJNA973218	121		Candida albicans Chr3 and Chr5 BFPGFP strains
+Candida albicans	PRJNA973218	121	mutant	Candida albicans Chr3 and Chr5 BFPGFP strains
 Candida albicans	PRJNA977487	4		Long-term Candida albicans microevolution in the gastrointestinal tract of antibiotic treated mice
 Candida albicans	PRJNA991137	71		Homogeneity of recurrent vulvovaginal isolate diversity from vaginal and rectal Candida populations
 Candida boidinii	PRJEB52701	3		Exploring the genomic diversity of species of the Ascomyceta phylum from the CIRM-Levures collection
@@ -385,7 +385,7 @@ Candida dubliniensis	PRJNA848263	4		Genomic epidemiology of human candidaemia is
 Candida dubliniensis	PRJNA926612	2		Whole genome sequencing of clinical oral yeast isolates
 Candida ipomoeae	PRJNA312754	3		Metschnikowia yeast species genome sequencing and assembly
 Candida tropicalis	PRJDB12585	2		C. tropicalis X17 adaptation
-Candida tropicalis	PRJEB40738	2	cross	One Day in Denmark 2018 point prevalence survey on fungi
+Candida tropicalis	PRJEB40738	2		One Day in Denmark 2018 point prevalence survey on fungi
 Candida tropicalis	PRJNA1000249	24		Whole genome sequencing of Candida tropicalis isolates from a Malaysian tertiary medical centre
 Candida tropicalis	PRJNA1090665	13		WGS of Candida tropicalis
 Candida tropicalis	PRJNA1107932	24		WGS of Candida tropicalis
@@ -453,7 +453,7 @@ Candidozyma auris	PRJNA1315194	6		Candidozyma auris Raw sequence reads
 Candidozyma auris	PRJNA1321783	5		Candida auris Sequenced by South Carolina
 Candidozyma auris	PRJNA1343880	39	mutant	Genomic Insights into Fluconazole Resistance in Candidozyma auris Clade II: Comparative SNP-Based Analysis of South Ko-rean Isolates
 Candidozyma auris	PRJNA1364034	14		Candidozyma spp., Missouri State Public Health Laboratory
-Candidozyma auris	PRJNA1367525	2	evolution	Candida auris clade 1 clinical isolates
+Candidozyma auris	PRJNA1367525	2		Candida auris clade 1 clinical isolates
 Candidozyma auris	PRJNA1406732	69		Sequencing of outbreak adapted Candidozyma auris isolates from Kuwait
 Candidozyma auris	PRJNA1425005	13		WGS of Candidozyma auris in Austria
 Candidozyma auris	PRJNA1443748	35		Whole-genome sequencing of clinical Candidozyma auris isolates from a tertiary-care hospital in Seoul, South Korea
@@ -641,8 +641,8 @@ Cryptococcus bacillisporus	PRJNA244927	117		Cryptococcus gattii VGIII Genome seq
 Cryptococcus bacillisporus	PRJNA269039	19		Saccharomyces neoformans Genome sequencing
 Cryptococcus bacillisporus	PRJNA295092	12		Emergence of Cryptococcus gattii in the Southeastern United States: A whole genome analysis
 Cryptococcus deneoformans	PRJNA1000292	2		Cryptococcus neoformans Genome sequencing and assembly
-Cryptococcus deneoformans	PRJNA1202532	4		Cryptococcus deneoformans calcineurin suppressors genome sequencing
-Cryptococcus deneoformans	PRJNA1348356	2		Whole genome sequencing of Tps1 suppressors in Cryptococcus deneoformans
+Cryptococcus deneoformans	PRJNA1202532	4	mutant	Cryptococcus deneoformans calcineurin suppressors genome sequencing
+Cryptococcus deneoformans	PRJNA1348356	2	mutant	Whole genome sequencing of Tps1 suppressors in Cryptococcus deneoformans
 Cryptococcus deneoformans	PRJNA251373	22		Cryptococcus neoformans var. neoformans Genome sequencing
 Cryptococcus deneoformans	PRJNA420966	320		Cryptococcus neoformans var. neoformans strain:XL280 (a or alpha) | isolate:431alpha Raw sequence reads
 Cryptococcus deneoformans	PRJNA626676	21	cross	Cryptococcus neoformans and Cryptococcus deneoformans raw sequence reads
@@ -694,7 +694,7 @@ Cryptococcus neoformans	PRJNA1273840	2		3D genome organization in Cryptococcus n
 Cryptococcus neoformans	PRJNA1279655	6		Cryptococcus neoformans genome sequencing
 Cryptococcus neoformans	PRJNA1281806	2		77 101 100 105 99 97 108 32 99 97 110 110 97 98 105 115 32 97 115 32 116 104 101 32 115 111 117 114 99 101 32 111 102 32 67 114 121 112 116 111 99 111 99 99 117
 Cryptococcus neoformans	PRJNA1284035	56		Clinical Cases of Human Cryptococcosis from Duke University Hospitals Collected from January 1, 1990 - December 31, 2023
-Cryptococcus neoformans	PRJNA1306639	2		Cryptococcus neoformans calcineurin thermoregulation project
+Cryptococcus neoformans	PRJNA1306639	2	mutant	Cryptococcus neoformans calcineurin thermoregulation project
 Cryptococcus neoformans	PRJNA1328773	152		Cryptococcus neoformans Raw sequence reads
 Cryptococcus neoformans	PRJNA1397472	23		Cryptococcus neoformans H99 Raw sequence reads
 Cryptococcus neoformans	PRJNA1459063	32	mutant	Systematic Profiling of Essential Fungal Transcription Factors of Cryptococcus neoformans
@@ -847,7 +847,7 @@ Fusarium graminearum	PRJNA580372	3		Tracking off-target genetic modifications
 Fusarium graminearum	PRJNA605650	3	mutant	Whole genome sequencing of TRI4-6-5 and ABC1 mutants of Fusarium graminearum
 Fusarium graminearum	PRJNA647032	5	mutant	Opposing functions of Fng1 and the Rpd3 HDAC complex in H4 acetylation in Fusarium graminearum
 Fusarium graminearum	PRJNA677929	89		Fusarium Genome sequencing and assembly
-Fusarium graminearum	PRJNA855364	12		pkr suppressors genome sequencing
+Fusarium graminearum	PRJNA855364	12	mutant	pkr suppressors genome sequencing
 Fusarium graminearum	PRJNA946286	2	mutant	Overexpression of FgPtp3 leads to increased MIC of Fusarium graminearum to fludioxonil by inhibiting the phosphorylation of FgHog1
 Fusarium graminearum	PRJNA989623	4		Fusarium graminearum Genome sequencing
 Fusarium grosmichelii	PRJNA979975	3		Fusarium oxysporum f. sp. cubense Genome sequencing and assembly
@@ -898,7 +898,7 @@ Fusarium oxysporum	PRJNA595149	3		Whole-genome sequencing of Fusarium oxysporum 
 Fusarium oxysporum	PRJNA596396	37		Whole-genome sequencing of Fusarium oxysporum strains that cause Fusarium wilt on melon.
 Fusarium oxysporum	PRJNA641642	3		Fusarium oxysporum f. sp. pisi Genome sequencing and assembly
 Fusarium oxysporum	PRJNA645827	6		Whole-genome sequencing of strains that received a chromosome through horizontal transfer from melon-infecting F. oxysporum
-Fusarium oxysporum	PRJNA645829	3		Whole-genome sequencing of strains that received part of chromosome 14 through horizontal transfer
+Fusarium oxysporum	PRJNA645829	3	mutant	Whole-genome sequencing of strains that received part of chromosome 14 through horizontal transfer
 Fusarium oxysporum	PRJNA656528	3		Fusarium oxysporum f. sp. niveum complete genomes
 Fusarium oxysporum	PRJNA675848	7		Fusarium oxysporum f. sp. niveum Genome sequencing and assembly
 Fusarium oxysporum	PRJNA682786	2	evolution	Experimental evolution of Fusarium oxysporum f. sp. lycopersici 4287
@@ -922,7 +922,7 @@ Fusarium proliferatum	PRJNA895867	14		Fusarium fujikuroi species complex Genome 
 Fusarium pseudensiforme	PRJNA1255138	2		Opening Pandora's box Description of five novel species in the ambrosia clade of Neocosmospora (ACN)
 Fusarium pseudograminearum	PRJNA295113	11	mutant	Fusarium pseudograminearum CS3096 Raw sequence reads
 Fusarium pseudograminearum	PRJNA306180	90	cross	Fusarium pseudograminearum Raw sequence reads
-Fusarium pseudograminearum	PRJNA389763	7		Fusarium cytokinin reporter strains
+Fusarium pseudograminearum	PRJNA389763	7	mutant	Fusarium cytokinin reporter strains
 Fusarium pseudograminearum	PRJNA556309	3	mutant	Whole genome sequencing of Velvet A mutants of Fusarium pseudograminearum
 Fusarium purpurascens	PRJNA979975	9		Fusarium oxysporum f. sp. cubense Genome sequencing and assembly
 Fusarium rekanum	PRJNA1255138	2		Opening Pandora's box Description of five novel species in the ambrosia clade of Neocosmospora (ACN)
@@ -1022,7 +1022,7 @@ Histoplasma mississippiense	PRJNA416769	9		Genome sequences for species in the H
 Histoplasma ohiense	PRJNA1199544	5	mutant	Sequencing of knottin deletion mutants of Histoplasma
 Histoplasma ohiense	PRJNA1256922	9	mutant	Sequencing of Histoplasma ura5 deletion, T-DNA insertion, and control strains
 Histoplasma ohiense	PRJNA1257851	2	evolution	Sequencing of laboratory passaged Histoplasma to characterize mutation rate and changes in chromosome copy number.
-Histoplasma ohiense	PRJNA1259587	6	evolution	Sequencing of laboratory passaged Histoplasma clinical isolates.
+Histoplasma ohiense	PRJNA1259587	6		Sequencing of laboratory passaged Histoplasma clinical isolates.
 Histoplasma ohiense	PRJNA1283523	6	mutant	Chemical stimuli override a temperature-dependent morphological program by reprogramming the transcriptome of a fungal pathogen
 Histoplasma ohiense	PRJNA1283525	5		Sequencing of WU15 derived hyphal and yeast biased strains.
 Histoplasma ohiense	PRJNA416769	10		Genome sequences for species in the Histoplasma genus Raw sequence reads
@@ -1075,7 +1075,7 @@ Lachancea quebecensis	PRJEB10592	9		Whole-genome sequencing and intraspecific an
 Lachancea thermotolerans	PRJEB29656	57		Sequencing data related to 57 isolates of Lachancea thermotolerans for population genomics purposes
 Lachancea thermotolerans	PRJNA1111406	100		Lachancea thermotolerans Assemblies
 Lachancea thermotolerans	PRJNA324830	3		Saccharomyces paradoxus Genome sequencing
-Lachancea waltii	PRJEB39767	7	cross	Sequencing of several natural isolates of Lachancea waltii with Illumina technology and the study of the meiotic recombination landscape within this species thr
+Lachancea waltii	PRJEB39767	7		Sequencing of several natural isolates of Lachancea waltii with Illumina technology and the study of the meiotic recombination landscape within this species thr
 Lachancea waltii	PRJNA73481	2		Lachancea waltii ATCC 56500 ARS Sequencing
 Lactarius aquizonatus	PRJNA607895	3		Raw sequence reads from Danish species
 Lactocollybia cycadicola	PRJNA1279621	2		DNA sequenced from fungal specimens at RBG Kew as part of the PAFTOL project.
@@ -1132,7 +1132,7 @@ Lodderomyces parapsilosis	PRJNA1011319	32		Whole genome sequencing of Candida pa
 Lodderomyces parapsilosis	PRJNA1053316	39		Transcriptome and genome-wide analysis of Candida parapsilosis clinical isolates
 Lodderomyces parapsilosis	PRJNA1068185	125		Candida parapsilosis WGS
 Lodderomyces parapsilosis	PRJNA1068541	90		fluconazole-resistant Candida parapsilosis
-Lodderomyces parapsilosis	PRJNA1117439	6		Evaluation of outbreak persistence caused by multidrug-resistant and echinocandin-resistant Candida parapsilosis using multidimensional experimental and epidemi
+Lodderomyces parapsilosis	PRJNA1117439	6	mutant	Evaluation of outbreak persistence caused by multidrug-resistant and echinocandin-resistant Candida parapsilosis using multidimensional experimental and epidemi
 Lodderomyces parapsilosis	PRJNA1122128	36		Diversity of Candida species in bloodstream infections compared to gut and skin metagenome samples
 Lodderomyces parapsilosis	PRJNA1137595	20		Neonatal Candida parapsilosis
 Lodderomyces parapsilosis	PRJNA1152771	3		WGS of Candida parapsilosis
@@ -1518,7 +1518,7 @@ Phymatotrichopsis omnivora	PRJNA641071	4		Genomic resources for Phymatotrichopsi
 Pichia californica	PRJNA435582	2		Genome sequencing of kefir fungal species
 Pichia fermentans	PRJEB52701	2		Exploring the genomic diversity of species of the Ascomyceta phylum from the CIRM-Levures collection
 Pichia inconspicua	PRJNA517794	11		[Candida] inconspicua Genome sequencing and assembly
-Pichia kudriavzevii	PRJEB40738	6	cross	One Day in Denmark 2018 point prevalence survey on fungi
+Pichia kudriavzevii	PRJEB40738	6		One Day in Denmark 2018 point prevalence survey on fungi
 Pichia kudriavzevii	PRJEB49054	10		Development of a multiplex PCR short tandem repeat typing scheme for Candida krusei
 Pichia kudriavzevii	PRJEB52701	2		Exploring the genomic diversity of species of the Ascomyceta phylum from the CIRM-Levures collection
 Pichia kudriavzevii	PRJEB57751	2		Genomics and phenotypic potential of non-Saccharomyces cocoa yeast strains
@@ -1642,7 +1642,7 @@ Purpureocillium lilacinum	PRJDB10251	2		Draft genome of Purpureocillium lilacinu
 Purpureocillium lilacinum	PRJNA1228044	21		CDC Mycotic Diseases Branch Purpureocillium species sequencing
 Purpureocillium lilacinum	PRJNA879330	2		Crop Bioprotection Entomopathogens
 Pyrenophora teres	PRJNA725945	22		Ptt and Ptm population
-Pyrenophora teres	PRJNA726585	113	cross	Pyrenophora teres population genomics
+Pyrenophora teres	PRJNA726585	113		Pyrenophora teres population genomics
 Pyrenophora teres	PRJNA838266	5		Genome assemblies of Pyerenphora teres
 Pyrenophora teres	PRJNA923640	95	cross	Pyrenophora teres f. teres Raw sequence reads
 Pyrenophora teres	PRJNA923641	202		Pyrenophora teres f. teres Raw sequence reads
@@ -1669,7 +1669,7 @@ Pyricularia oryzae	PRJEB27492	5	mutant	Nim1 temperature sensitive mutant of Magn
 Pyricularia oryzae	PRJEB40915	9		Long-range sequencing of genomic DNA from rice-infecting Magnaporthe oryzae isolates from Italy
 Pyricularia oryzae	PRJEB41186	19		Origin and evolutionary history of Pyricularia oryzae fungal pathogens infecting maize and barnyard grass in Iran
 Pyricularia oryzae	PRJEB42377	29		Whole genome sequencing of Pyricularia oryzae fungi isolated from rice
-Pyricularia oryzae	PRJEB45710	4		rgs1 is a dominant transcriptional suppressor that regulates subset of effectors in M.oryzae during the morphogenesis of appressorium maturation
+Pyricularia oryzae	PRJEB45710	4	mutant	rgs1 is a dominant transcriptional suppressor that regulates subset of effectors in M.oryzae during the morphogenesis of appressorium maturation
 Pyricularia oryzae	PRJEB46618	2		Whole genome sequencing of Pyricularia oryzae fungi from Benin and Burkina Faso
 Pyricularia oryzae	PRJEB47684	4		Whole genome sequencing of Pyricularia oryzae fungi from Benin, China, Nepal and Tanzania
 Pyricularia oryzae	PRJEB53625	131		Study for genome-assisted Magnaporthe genetics
@@ -1755,543 +1755,6 @@ Rhynchosporium graminicola	PRJNA914478	71		Resequencing of Rhynchosporium commun
 Rhynchosporium secalis	PRJNA419548	9		Population genomics of Rhynchosporium spp.
 Saccharomyces arboricola	PRJNA260464	9		Saccharomyces Genome sequencing
 Saccharomyces arboricola	PRJNA475869	11		Genome characterization of Saccharomyces genus
-Saccharomyces cerevisiae		114		WGS phylogenetic analysis of C. gattii
-Saccharomyces cerevisiae	PRJDB10279	3		Identification of genes involved in overproduction of ornithine in yeasts
-Saccharomyces cerevisiae	PRJDB10824	10		Breeding sake yeast and identification of mutation patterns by synchrotron light irradiation
-Saccharomyces cerevisiae	PRJDB12413	5		Gene screening to control GAGsi silencing
-Saccharomyces cerevisiae	PRJDB13506	2	evolution	Genetic mapping methodology powered by induced genome rearrangements
-Saccharomyces cerevisiae	PRJDB14442	3	mutant	WGS of aneuploid formation during meiosis in spo11 delta strain
-Saccharomyces cerevisiae	PRJDB15178	2		RPS12 and UBC4 Are Related to Senescence Signal Production in the Ribosomal RNA Gene Cluster
-Saccharomyces cerevisiae	PRJDB16732	2	mutant	Identification of genes involved in high-production of threonine in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJDB18687	3		CUP1 copy number estimated by illumina
-Saccharomyces cerevisiae	PRJDB19864	403	cross	F1 segregant haploids from crossing sake and laboratory yeast
-Saccharomyces cerevisiae	PRJDB39631	2		Genome sequencing of Saccharomyces cerevisiae strains KA31a and a924E1 in relation to piezosensitivity
-Saccharomyces cerevisiae	PRJDB39903	3		Sake Yeast Kyokai No. 11
-Saccharomyces cerevisiae	PRJDB4375	12	evolution	Genome sequence project of laboratory evolved Saccharomyces cerevisiae strains
-Saccharomyces cerevisiae	PRJDB5253	3		Induced genome evolution by transient DNA breaks
-Saccharomyces cerevisiae	PRJDB7030	5		RNA polymerase I activators count and adjust ribosomal RNA gene copy number
-Saccharomyces cerevisiae	PRJDB7788	2	mutant	Saccharomyces cerevisiae strains for awamori brewing
-Saccharomyces cerevisiae	PRJEB100615	47	evolution	Whole-genome sequencing of parental populations and adaptively evolved populations of engineered and wild type strains of Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJEB101156	24	evolution	Experimental evolution of cellular miniaturization
-Saccharomyces cerevisiae	PRJEB104107	20		Whole-genome sequencing data and BSA-seq data used to map mutations altering expression noise of a yeast gene
-Saccharomyces cerevisiae	PRJEB10422	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10424	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10426	48		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10427	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10428	95		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10429	95		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10430	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10432	48		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10433	95		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10434	95		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10435	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10436	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10437	48		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10438	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10439	142		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10440	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10441	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10442	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10443	48		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10444	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10445	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10446	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10447	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10448	142		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10450	233		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10451	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10452	95		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10453	143		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10454	192		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10455	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10456	239		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10457	191		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10458	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10459	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10460	192		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10461	272		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10462	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10463	141		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10464	46		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10465	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10466	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10467	48		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10468	126		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10470	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10474	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10475	143		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10476	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10477	89		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10478	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10480	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10481	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10482	48		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10483	237		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10484	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10485	177		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10486	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10487	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10488	229		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10489	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10490	192		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10491	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10492	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10493	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10494	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10495	93		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10496	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10497	191		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10498	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10499	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10500	142		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10501	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10502	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10503	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10504	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10505	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10506	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10507	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10508	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10509	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10510	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10511	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10512	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10513	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10514	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10515	238		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10516	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10517	144		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10518	143		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10520	192		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10521	316		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB10522	96		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB107301	8		Wine must metagenomic study
-Saccharomyces cerevisiae	PRJEB108394	86		Whole-genome sequencing of 76 monosporic isolates derived from polyploid Saccharomyces cerevisiae strains and 10 isolates generated by intra-ascus mating of dip
-Saccharomyces cerevisiae	PRJEB11178	423	mutant	Testing_pol2_mutation_rev3delta_exo__double_mutants_in_S_cerevisiae
-Saccharomyces cerevisiae	PRJEB111787	7		Light-based footprinting of a eukaryotic genome
-Saccharomyces cerevisiae	PRJEB11363	15	evolution	Sequences from Evolutionary adaptation after crippling cell polarization follows reproducible trajectories (Liedewij Laan, John H Koschwanez, and Andrew W Murra
-Saccharomyces cerevisiae	PRJEB11500	6	cross	The hidden complexity of Mendelian traits across yeast natural populations
-Saccharomyces cerevisiae	PRJEB115124	18		Non-functional DNA dictates cell size and impairs cell fitness by sequestering the transcription machinery
-Saccharomyces cerevisiae	PRJEB11638	4		EccDNA preparation from biological B02-B05 samples. Each sample from 1x10^6 cells.
-Saccharomyces cerevisiae	PRJEB11698	18		Evidence of natural hybridization in Brazilian wild lineages of Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJEB121038	44		Multi-omic analysis of DNA:RNA hybrid genotoxicity in S. cerevisiae
-Saccharomyces cerevisiae	PRJEB121322	10		Whole-genome sequencing of thermotolerant Saccharomyces cerevisiae isolates generated by whole-genome transformation
-Saccharomyces cerevisiae	PRJEB127429	122	evolution	Adaptation to complex environments in Saccharmyces cerevisiae
-Saccharomyces cerevisiae	PRJEB13017	918		The 1002 Saccharomyces cerevisiae Genomes Project
-Saccharomyces cerevisiae	PRJEB13332	33		Distinct domestication trajectories in top-fermenting beer yeasts and wine yeasts
-Saccharomyces cerevisiae	PRJEB13936	192		Mutational_Signatures_in_the_YKO_collection
-Saccharomyces cerevisiae	PRJEB14774	22		Complete Genome Assembly and Comparative Genomic of Yeast Strains using the MinION device
-Saccharomyces cerevisiae	PRJEB16068	24	mutant	Resection and repair of a Cas9 double-strand break at CTG trinucleotide repeats induces local and extensive chromosomal deletions
-Saccharomyces cerevisiae	PRJEB1783	226		Next generation QTL mapping in yeast
-Saccharomyces cerevisiae	PRJEB17891	726		Coupling phenotypic persistence to DNA damage increases genetic diversity in severe stress
-Saccharomyces cerevisiae	PRJEB18051	903		Yeast_suppressors
-Saccharomyces cerevisiae	PRJEB18133	2017		Complexity_of_genetic_incompatibility
-Saccharomyces cerevisiae	PRJEB1871	26		Whole genome sequence for S. cerevisiae isolates.
-Saccharomyces cerevisiae	PRJEB1872	12		Whole genome sequence for S. cerevisiae strains.
-Saccharomyces cerevisiae	PRJEB1905	2		DNA-seq of various fungi isolated from faecal materials and environmental samples for comparative genomic analyses, SYBARIS project
-Saccharomyces cerevisiae	PRJEB19382	14		Adaptive divergence in wine yeasts and their wild relatives suggests a prominent role for introgressions and rapid evolution at non coding sites
-Saccharomyces cerevisiae	PRJEB19603	3	cross	Epigenetic rewiring of cellular morphology and physiology in two Mendelian segregating traits associated with nutrient sensing
-Saccharomyces cerevisiae	PRJEB19900	2		ONT_and_MiSeq_sequencing_of_yeast_strains
-Saccharomyces cerevisiae	PRJEB20453	23		Genome_Analysis_of_Yeast_Pathogenicity
-Saccharomyces cerevisiae	PRJEB2151	7		The baker’s yeast diploid genome is remarkably stable in vegetative growth and meiosis
-Saccharomyces cerevisiae	PRJEB2299	6		S__cerevisiae_strain_variation_2
-Saccharomyces cerevisiae	PRJEB2410	28		Rapid_high_resolution_QTL_mapping_in_yeast
-Saccharomyces cerevisiae	PRJEB2446	39		10_000_diploid_yeast_genomes
-Saccharomyces cerevisiae	PRJEB24932	21		Microbe Secondary Domestication—The Case of CachaçaYeasts
-Saccharomyces cerevisiae	PRJEB2608	169		Quantifying_Linkage_and_Selection_in_Artificially_Outbred_Populations
-Saccharomyces cerevisiae	PRJEB27160	9195		Exploring_genome_architecture_and_stability_in_the_absence_of_any_single_non_essential_gene
-Saccharomyces cerevisiae	PRJEB2769	466		Yeast_Genomes_in_cancer_context
-Saccharomyces cerevisiae	PRJEB2977	1268	mutant	Identification_of_mutational_spectra_in_fission_yeast_DNA_repair_and_chromatin_mutants__S_cerevisiae_
-Saccharomyces cerevisiae	PRJEB29846	92		Cai_Plate1
-Saccharomyces cerevisiae	PRJEB30431	29		A Quasi-Domesticate Relic Hybrid Population of Saccharomyces cerevisiae x S. paradoxus Adapted to Olive Brine
-Saccharomyces cerevisiae	PRJEB31088	41		Genome sequencing of Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJEB34641	84		Evolutionary adaptation to a constitutive perturbation of DNA replication reveals that adaptive mutations in three conserved pathways interact to restore faithf
-Saccharomyces cerevisiae	PRJEB36058	17		Diversity of Saccharomyces cerevisiae isolated from sourdough
-Saccharomyces cerevisiae	PRJEB38714	177	mutant	Sequencing of yeast phosphomutants
-Saccharomyces cerevisiae	PRJEB39189	51	evolution	Gene loss predictably drives evolutionary adaptation
-Saccharomyces cerevisiae	PRJEB40192	84		Trajectory_and_Uniqueness_of_Mutational_Signatures_in_Yeast_Mutators
-Saccharomyces cerevisiae	PRJEB40705	6		Inhibition of acetyl-CoA carboxylase renders phosphatidylcholine redundant in yeast
-Saccharomyces cerevisiae	PRJEB40761	26		Trait tacking for predictive evolution of metabolic phenotypes
-Saccharomyces cerevisiae	PRJEB41108	73	evolution	massive-scale adaptive laboratory evolution of Saccharomyces cerevisiae wine strains
-Saccharomyces cerevisiae	PRJEB41109	10		Model-guided development of evolutionarily stable yeast chassis for dicarboxylic acids production
-Saccharomyces cerevisiae	PRJEB42058	127		Genome architecture shapes evolutionary adaptation to DNA replication stress
-Saccharomyces cerevisiae	PRJEB42916	230		National Collection of Yeast Cultures genomic strain data
-Saccharomyces cerevisiae	PRJEB43186	81	evolution	Data obtained from 169 S. cerevisiae mutation accumulation lines to study patterns of loss of heterozygosity
-Saccharomyces cerevisiae	PRJEB43347	1115		Mutagenic_mechanisms_of_cancer_associated_DNA_polymerase_E_alleles
-Saccharomyces cerevisiae	PRJEB43850	2	evolution	Microfluidic platform for monitoring Saccharomyces cerevisiae mutation accumulation assay
-Saccharomyces cerevisiae	PRJEB44105	56		Restoring fertility in yeast hybrids: breeding and quantitative genetics of beneficial traits
-Saccharomyces cerevisiae	PRJEB45355	6	evolution	Sequencing data from 78 heterozygous S. cerevisiae mutation accumulation lines with different ploidies (2n, 3n, 4n), derived from isolates from various geograph
-Saccharomyces cerevisiae	PRJEB45772	12		Whole genomes sequencing to determine mutations in histidine overproducers generated with a toxic histidine analog
-Saccharomyces cerevisiae	PRJEB45852	34	mutant	Absence of Caf130 or Yjr011c suppresses the ∆acl4 growth defect by increasing RPL4 mRNA levels.
-Saccharomyces cerevisiae	PRJEB4645	1543		Massively_parallel_evolution_of_6000_yeast_populations_to_study_emergence_of_cancer_drug_resistance
-Saccharomyces cerevisiae	PRJEB49512	25		ALE_GA
-Saccharomyces cerevisiae	PRJEB50706	96		Nanopore and illumina read sequencing of a diverse set of Saccharomyces cerevisiae strains for de-novo assemblies. Raw sequencing data
-Saccharomyces cerevisiae	PRJEB5268	50	cross	We map protein level QTLs in yeast by sorting tens of thousands of yeast meiotic progeny based on fluorescence, and bulk genotyping the populations. The deposit
-Saccharomyces cerevisiae	PRJEB56140	3	mutant	Analysis of mitochondrial DNA in yeast cells with altered expression of Lon protease
-Saccharomyces cerevisiae	PRJEB56422	34		Interspecies hybrids of Saccharomyces cerevisiae and Saccharomyces uvarum
-Saccharomyces cerevisiae	PRJEB59588	11		Evading domestication - evidence of ferality among diastatic S. cerevisiae
-Saccharomyces cerevisiae	PRJEB6084	5		Mapping mitochondrial DNA recombination in yeast
-Saccharomyces cerevisiae	PRJEB61952	24	mutant	Determining the impact of escins on Saccharomyces cerevisiae ergosterol biosynthesis mutants
-Saccharomyces cerevisiae	PRJEB62101	22		Irish Brewing Yeast
-Saccharomyces cerevisiae	PRJEB63270	32		Tracking alternative versions of the galactose gene network in the genus Saccharomyces and their expansion after domestication
-Saccharomyces cerevisiae	PRJEB63528	10		Genome sequencing of traditional kveik yeast used in farmhouse brewing on the west-coast of Norway
-Saccharomyces cerevisiae	PRJEB6529	16		The Genowine project: Comparative genomics of wine and flor strains
-Saccharomyces cerevisiae	PRJEB6587	8	evolution	Reduction of ethanol yield and improvement of glycerol formation by adaptive evolution of a wine yeast Saccharomyces cerevisiae under hyperosmotic conditions.
-Saccharomyces cerevisiae	PRJEB67557	4		ChIP-Seq analysis of Myc-tagged budding yeast Rif1
-Saccharomyces cerevisiae	PRJEB67558	5		ChIP-Seq analysis of V5-tagged budding yeast Rif1
-Saccharomyces cerevisiae	PRJEB67897	2		QTL mapping of variation in H2S production
-Saccharomyces cerevisiae	PRJEB70654	35		12 Nanopore whole genome sequencing and 35 Illumina Whole genome sequencing of saccharomyces cerevisiae strains engineered to study genome stability
-Saccharomyces cerevisiae	PRJEB70903	6		Identification of genetic markers of antifungal drug resistance in Saccharomyces hybrids via QTL mapping
-Saccharomyces cerevisiae	PRJEB71987	2		Saccharomyces interspecific hybrids isolated from wild environments
-Saccharomyces cerevisiae	PRJEB7456	163		Active RNAP pre-initiation sites are highly mutated by cytidine deaminases in yeast, with AID targeting small RNA genes
-Saccharomyces cerevisiae	PRJEB7601	72		A Population Genomics Insight into the Mediterranean Origins of Wine Yeast Domestication
-Saccharomyces cerevisiae	PRJEB76824	2		Telomere-to-telomere DNA replication timing profiling using single-molecule sequencing with Nanotiming
-Saccharomyces cerevisiae	PRJEB7711	12		Boi1 and Boi2 direct secretion of specific exocytic vesicles in budding yeast
-Saccharomyces cerevisiae	PRJEB78950	2		Sequence data from the strains used to make IMM Raspberry sour beer
-Saccharomyces cerevisiae	PRJEB80495	8		CYClones Founder Strain WGS
-Saccharomyces cerevisiae	PRJEB81478	6		Genomic analysis of succinic acid-tolerant yeast strains
-Saccharomyces cerevisiae	PRJEB8182	96		Yeast_KO_Seq_Strategy_1___PILOT_FOR_STRATEGY_2_COMPARISON__Mutational_signatures_of_DNA_damage_and_repair_processes
-Saccharomyces cerevisiae	PRJEB8185	542		Yeast_KO_Seq_Strategy_1___PART3__Mutational_signatures_of_DNA_damage_and_repair_processes
-Saccharomyces cerevisiae	PRJEB8186	494		Yeast_KO_Seq_Strategy_1___PART2__Mutational_signatures_of_DNA_damage_and_repair_processes
-Saccharomyces cerevisiae	PRJEB8188	75	mutant	Yeast_DNA_polymerase_point_mutants__Mutational_signatures_of_DNA_damage_and_repair_processes
-Saccharomyces cerevisiae	PRJEB8190	96		Yeast_KO_Seq_Strategy_1__Mutational_signatures_of_DNA_damage_and_repair_processes
-Saccharomyces cerevisiae	PRJEB82457	15		Yeast Deam-seq
-Saccharomyces cerevisiae	PRJEB83891	54	evolution	Evolution experiment tub2T238A
-Saccharomyces cerevisiae	PRJEB8455	30		Integrative computational approaches reveal the Saccharomyces cerevisiae pheno-metabolomic profile.
-Saccharomyces cerevisiae	PRJEB8637	102		Mutational_signatures_in_S_cerevisiae
-Saccharomyces cerevisiae	PRJEB8690	2		Sporulation: MKT1 allele replacement strains WGS
-Saccharomyces cerevisiae	PRJEB8698	2		Sporulation: TAO3 replacement strains
-Saccharomyces cerevisiae	PRJEB87420	86		Compensatory Evolution to DNA Replication Stress is Robust to Nutrient Availability
-Saccharomyces cerevisiae	PRJEB8951	11	evolution	Evolution of robustness to protein mistranslation by accelerated protein turnover
-Saccharomyces cerevisiae	PRJEB89706	64		Whole genome sequencing of traditional Norwegian farmhouse yeasts (kveik)
-Saccharomyces cerevisiae	PRJEB90659	380		EMS02 barcoded yeast collection
-Saccharomyces cerevisiae	PRJEB9407	133	mutant	PART2__Yeast_DNA_polymerase_point_mutants__Mutational_signatures_of_DNA_damage_and_repair_processes
-Saccharomyces cerevisiae	PRJEB96196	143		Whole genome sequencing of 415 haploid strains derived from natural diploid isolates of Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJEB98297	4		Yeast Deam-seq (UVC)
-Saccharomyces cerevisiae	PRJEB98462	5		Yaghnob yeast genomes
-Saccharomyces cerevisiae	PRJNA1010394	2		Saccharomyces cerevisiae IP9 and JP14
-Saccharomyces cerevisiae	PRJNA1018716	27		Whole-genome sequencing of Saccharomyces cerevisiae landrace brewing strains
-Saccharomyces cerevisiae	PRJNA1019277	3451	evolution	The loci of environmental adaptations in a model eukaryote
-Saccharomyces cerevisiae	PRJNA1019646	2		Winemaking yeasts Genome sequencing and assembly
-Saccharomyces cerevisiae	PRJNA1065299	2	mutant	Whole genome sequencing of wildtype and DNA-repair mutant yeast strains treated with acetaldehyde
-Saccharomyces cerevisiae	PRJNA1071556	9		Isolates from grape marc with high bioethanol productivity
-Saccharomyces cerevisiae	PRJNA1076901	4		The budding yeast Fkh1 forkhead-associated (FHA) domain promotes the G1-chromatin status and activity of chromosomal DNA replication origins
-Saccharomyces cerevisiae	PRJNA1078433	15		Identification of eight novel Kveik yeast strains from Scandinavian homebrewers
-Saccharomyces cerevisiae	PRJNA1086986	4		Genomic approach with identification of a gene associated with the H + - ATPase activation pathway
-Saccharomyces cerevisiae	PRJNA1087335	10		Role of PMS1 in MMR events occurring across the yeast nuclear genome
-Saccharomyces cerevisiae	PRJNA1090965	42		Footprints of human migration in the population structure of wild Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA1107929	73	mutant	Whole genome sequencing of copper and sulfite resistant mutants of S. cerevisiae and S. paradoxus
-Saccharomyces cerevisiae	PRJNA1116864	2		Thermal Adaptation in Saccharomyces hybrids
-Saccharomyces cerevisiae	PRJNA1117962	85	evolution	S cervisiae mutation accumulation haploid progeny
-Saccharomyces cerevisiae	PRJNA1126725	3		Red Colony Phylogeny Sequencing
-Saccharomyces cerevisiae	PRJNA1128109	8		Hypomorphic mutation in the large subunit of replication protein A affects mutagenesis by human APOBEC cytidine deaminases in yeast
-Saccharomyces cerevisiae	PRJNA1134236	2		Micafungin-resistant S. cerevisiae isolates
-Saccharomyces cerevisiae	PRJNA1140651	4	mutant	BBR_Resistant_Mutant_WGS_Yeast
-Saccharomyces cerevisiae	PRJNA1153801	61	mutant	Estimation of the frequency of double LOH events in yeasts
-Saccharomyces cerevisiae	PRJNA1157626	5		Saccharomyces cerevisiae Genome sequencing and assembly
-Saccharomyces cerevisiae	PRJNA1181288	117	evolution	Adaptive tracking with antagonistic pleiotropy generates seemingly neutral molecular evolution
-Saccharomyces cerevisiae	PRJNA1195563	4		Beer Bottle Saccharomyces isolates
-Saccharomyces cerevisiae	PRJNA1195887	2	mutant	Whole genome sequencing of wildtype and glo1-deleted mutant yeast strains treated with methylglyoxal
-Saccharomyces cerevisiae	PRJNA1207422	5		Whole-genome sequencing of Saccharomyces cerevisiae strains isolated from yamor chicha
-Saccharomyces cerevisiae	PRJNA1218442	52		Commercial Saccharomyces cerevisiae baker s yeast from Hungary
-Saccharomyces cerevisiae	PRJNA1225307	740		Assessment of hypermutable ssDNA in meiosis
-Saccharomyces cerevisiae	PRJNA1228336	12		A phage telomere bridges prokaryotic and eukaryotic chromosome evolution
-Saccharomyces cerevisiae	PRJNA1230855	2	cross	QTG NaCl
-Saccharomyces cerevisiae	PRJNA1236355	6		Cruciform-forming AT/TA repeats are acted upon by structure selective endonucleases and Rad51 prior to repositioning to the nuclear periphery for repair
-Saccharomyces cerevisiae	PRJNA1247963	8		Whole genome sequencing of formaldehyde treated yeast strains
-Saccharomyces cerevisiae	PRJNA1248131	6		Saccharomyces cerevisiae Group 1 in Kuaijishan
-Saccharomyces cerevisiae	PRJNA1249510	88		Saccharomyces cerevisiae raw sequence reads
-Saccharomyces cerevisiae	PRJNA1251027	4	evolution	Genomic adaptation of autochthonous cider yeast strain to buckwheat and barley wort under stressful brewing conditions
-Saccharomyces cerevisiae	PRJNA1270780	3		The genomic basis of thermal adaptation to global warming across the budding yeast genus
-Saccharomyces cerevisiae	PRJNA1276094	2		CDC Mycotic Diseases Branch AR Bank sequencing
-Saccharomyces cerevisiae	PRJNA1303337	20	mutant	Saccharomyces cerevisiae Genome sequencing
-Saccharomyces cerevisiae	PRJNA1308857	3		Junction-binding–defective Cdc13 promotes adaptive mutation and transcriptomic rewiring under telomere stress
-Saccharomyces cerevisiae	PRJNA1309121	97		From Oak to Wine: Evolution, Genomics, and Fermentation Potential of Saccharomyces cerevisiae from California to British Columbia
-Saccharomyces cerevisiae	PRJNA1313639	43		Clinical Saccharomyces isolates from Hungary
-Saccharomyces cerevisiae	PRJNA1330885	20	cross	Founders: parental strains and 20 F1 Saccharomyces cerevisiae x Saccharomyces paradoxus hybrids (generation 0)
-Saccharomyces cerevisiae	PRJNA1331785	3	evolution	Evolved Saccharomyces cerevisiae x Saccharomyces paradoxus recombinant hybrids
-Saccharomyces cerevisiae	PRJNA1331855	2	evolution	Evolved Saccharomyces cerevisiae x Saccharomyces paradoxus recombinant hybrids at generation 5000
-Saccharomyces cerevisiae	PRJNA1337161	3		Evolutionary responses to increased opportunity for sexual selection in yeast
-Saccharomyces cerevisiae	PRJNA1337182	83		Genetic dissection of transcription start sites' selection by RNA Pol II in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA1344768	64		Whole-genome sequencing of mating-competent Saccharomyces cerevisiae strains for large-scale breeding project
-Saccharomyces cerevisiae	PRJNA1345352	7		Sequencing of industrial Saccharomyces cerevisiae strains
-Saccharomyces cerevisiae	PRJNA1355454	5	evolution	Facultative Cheating and Hybrid Vigor Resolves Cooperator-Cheater Conflict in a Yeast Public Goods System.
-Saccharomyces cerevisiae	PRJNA1358295	4	evolution	Using Experimental Evolution to Correct Mother-Daughter Separation Defects in Brewing Yeast
-Saccharomyces cerevisiae	PRJNA1370072	6		Saccharomyces cerevisiae Genome sequencing
-Saccharomyces cerevisiae	PRJNA1374150	2		Saccharomyces cerevisiae strain:Evol-control, Evol-GATE Raw sequence reads
-Saccharomyces cerevisiae	PRJNA1374440	2		CRI-SPA-Map isolates for chrXIV from BY and W303
-Saccharomyces cerevisiae	PRJNA1394608	395	evolution	Experimental Evolution of Yeast Reveals Trade-offs Between Early and Late Stationary Phase
-Saccharomyces cerevisiae	PRJNA1397233	21		Directed evolution for cell separation in natural isolates of budding yeast
-Saccharomyces cerevisiae	PRJNA1398896	2		APOBEC3A is the predominant global editor of cytosines in human mRNAs and in single-strand RNA viruses
-Saccharomyces cerevisiae	PRJNA1414607	482		Towards a unified model of aneuploid karyotype dynamics
-Saccharomyces cerevisiae	PRJNA1443992	9		Constructing artificial methylotrophic Saccharomyces cerevisiae for chondroitin sulfate production using a multidimensional combinatorial strategy
-Saccharomyces cerevisiae	PRJNA1482565	408		Natural subtelomeric repeat amplifications impact fitness and cellular phenotypes in yeast
-Saccharomyces cerevisiae	PRJNA1492844	5		Rapid evolution of pseudohyphae under extreme mechanical attrition
-Saccharomyces cerevisiae	PRJNA1493039	2	mutant	Msp1 cooperates with mitoRQC to protect the cell from ribotoxic stress-induced mitochondrial dysfunction
-Saccharomyces cerevisiae	PRJNA1512722	251		Genetic analysis of thermotolerance in Saccharomyces hybrids
-Saccharomyces cerevisiae	PRJNA168993	7		Quantitative trait analysis of yeast biodiversity yields novel gene tools for metabolic engineering
-Saccharomyces cerevisiae	PRJNA171999	8		Comparative polygenic analysis of maximal ethanol accumulation capacity and tolerance to high ethanol of cell proliferation in yeast
-Saccharomyces cerevisiae	PRJNA172024	4	evolution	Saccharomyces cerevisiae x Saccharomyces uvarum Genome sequencing
-Saccharomyces cerevisiae	PRJNA175766	4	cross	QTL analysis of high thermotolerance with superior and downgraded parental yeast strains reveals new minor QTLs and converges on novel causative alleles involve
-Saccharomyces cerevisiae	PRJNA186707	8		Yeast Resource Center Phenomics Project genome sequencing
-Saccharomyces cerevisiae	PRJNA191134	9	cross	Saccharomyces cerevisiae CEN.PK113-7D Genome sequencing
-Saccharomyces cerevisiae	PRJNA192270	12	cross	Sequences for: Improved use of a public good selects for the evolution of undifferentiated multicellularity
-Saccharomyces cerevisiae	PRJNA193417	2		Multicellular fast sedimenting Saccharomyces cerevisiae Genome sequencing
-Saccharomyces cerevisiae	PRJNA205542	523		The sequencing of Saccharomyces cerevisiae strains.
-Saccharomyces cerevisiae	PRJNA225819	21	evolution	Molecular Specificity, Convergence and Constraint Shape Adaptive Evolution in Nutrient-Poor Environments
-Saccharomyces cerevisiae	PRJNA227232	12		Saccharomyces cerevisiae YPH499N Genome sequencing
-Saccharomyces cerevisiae	PRJNA230139	2		Saccharomyces uvarum Genome sequencing
-Saccharomyces cerevisiae	PRJNA247448	52		New Zealand Saccharomyces cerevisiae genome sequencing
-Saccharomyces cerevisiae	PRJNA248591	2	evolution	Evolve and resequence study
-Saccharomyces cerevisiae	PRJNA255451	3	mutant	Genomic saturation mutagenesis in Saccharomyces cerevisiae for isolation of mutants in non-selectable and polygenic traits
-Saccharomyces cerevisiae	PRJNA257450	2		Saccharomyces cerevisiae BY4741 Genome sequencing
-Saccharomyces cerevisiae	PRJNA260311	26		Saccharomyces cerevisiae strain genomes
-Saccharomyces cerevisiae	PRJNA261531	2	evolution	Saccharomyces cerevisiae strain:S288c-BY4741 Variation
-Saccharomyces cerevisiae	PRJNA265842	4	cross	Bulk Segregant Mapping
-Saccharomyces cerevisiae	PRJNA269221	2		Saccharomyces cerevisiae Genome sequencing
-Saccharomyces cerevisiae	PRJNA270468	2		Saccharomyces cerevisiae strain:ISO12 Genome sequencing and assembly
-Saccharomyces cerevisiae	PRJNA275385	32		Increased recombination frequency generates a different network of known and novel causative genes for the complex trait of acetic acid tolerance in Saccharomyc
-Saccharomyces cerevisiae	PRJNA277730	4	mutant	Saccharomyces cerevisiae Genome sequencing
-Saccharomyces cerevisiae	PRJNA278859	5	mutant	Saccharomyces cerevisiae strain:LAN210 Genome sequencing and assembly
-Saccharomyces cerevisiae	PRJNA279877	3		Saccharomyces cerevisiae GLBRCY22-3 Genome
-Saccharomyces cerevisiae	PRJNA280130	3		A3A or A3B expressed in yeast
-Saccharomyces cerevisiae	PRJNA282519	2	evolution	experimental evolution of compensatory mutations in las17-41 thermosensitive strains
-Saccharomyces cerevisiae	PRJNA283555	11	mutant	Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA286073	6		Replacement of endogenous ethanol metabolism in Saccharomyces cerevisiae by an ATP-independent acetylating acetaldehyde dehydrogenase pathway
-Saccharomyces cerevisiae	PRJNA291876	3		Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA303109	168		Genomic analysis of commercial wine yeast strains
-Saccharomyces cerevisiae	PRJNA307256	6	evolution	Saccharomyces cerevisiae strain:CG379 Raw sequence reads
-Saccharomyces cerevisiae	PRJNA309059	2	mutant	Saccharomyces cerevisiae strain:S288c/SK1 Raw sequence reads
-Saccharomyces cerevisiae	PRJNA309989	2	evolution	Mechanisms of glycosylase-induced mutagenesis
-Saccharomyces cerevisiae	PRJNA313402	3	evolution	Requirements for carnitine-shuttle-mediated translocation of mitochondrial acetyl moieties to the Saccharomyces cerevisiae cytosol
-Saccharomyces cerevisiae	PRJNA313456	6	evolution	A new laboratory evolution approach to select for constitutive acetic-acid tolerance in Saccharomyces cerevisiae and identification of causal mutations
-Saccharomyces cerevisiae	PRJNA314677	72		Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA315044	145		Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA316742	2		Saccharomyces cerevisiae Variation
-Saccharomyces cerevisiae	PRJNA317665	4		Pathway swapping: towards modular engineering of essential cellular processes in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA320792	85		Deciphering the genic basis of environmental adaptations of diverse Saccharomyces cerevisiae strains by simultaneous forward and reverse genetics
-Saccharomyces cerevisiae	PRJNA321986	32	mutant	Saccharomyces cerevisiae strain:S288c/SK1 Raw sequence reads
-Saccharomyces cerevisiae	PRJNA322647	3		QTL Guided Metabolic Engineering of a Complex Trait
-Saccharomyces cerevisiae	PRJNA323691	156		Saccharomyces cerevisiae Genome sequencing and assembly
-Saccharomyces cerevisiae	PRJNA325521	2	cross	Saccharomyces cerevisiae strain:BY4716xYJM789 backcross strains Raw sequence reads
-Saccharomyces cerevisiae	PRJNA338809	3	mutant	Sequencing of highly oxidative-stress tolerant budding yeast mutants and their progenitors
-Saccharomyces cerevisiae	PRJNA339752	7		Analysis of systemic genome instability in heterozygous yeast diploids
-Saccharomyces cerevisiae	PRJNA340312	7		Illumina sequencing for 12 representative strans from S. cerevisiae and S. paradoxus
-Saccharomyces cerevisiae	PRJNA342356	18		Gene expression of S. cerevisiae
-Saccharomyces cerevisiae	PRJNA343477	3		Sequencing reads of artificial hybrids with industrial interest (wine, beer, biofuel)
-Saccharomyces cerevisiae	PRJNA344503	32	cross	iSeq WGS
-Saccharomyces cerevisiae	PRJNA357993	14	cross	Sequencing of de novo lager yeast hybrids
-Saccharomyces cerevisiae	PRJNA359887	2	evolution	Saccharomyces Cerevisiae sequence reads from hybrid laboratory evolution experiment
-Saccharomyces cerevisiae	PRJNA360861	2		Saccharomyces cerevisiae Genome and Transciprtome Sequencing
-Saccharomyces cerevisiae	PRJNA369471	3		Genome dynamics of a hybrid yeast reveals extensive loss of heterozygosity associated with vegetative divisions
-Saccharomyces cerevisiae	PRJNA373800	119	cross	Tetrads of yeast, Neurospora, and Chlamydomonas
-Saccharomyces cerevisiae	PRJNA374049	29	evolution	Laboratory evolved Saccharomyces diploids and hybrids Raw sequence reads
-Saccharomyces cerevisiae	PRJNA378675	2		Yeast advanced intercross population chemostat growth
-Saccharomyces cerevisiae	PRJNA379194	5	cross	Private haplotype barcoding yeast segregants
-Saccharomyces cerevisiae	PRJNA379348	2		Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA380059	6	mutant	Saccharomyces cerevisiae mutants resistant to tomatidine
-Saccharomyces cerevisiae	PRJNA380825	20	evolution	Lab-evolved S. cerevisiae populations
-Saccharomyces cerevisiae	PRJNA382253	6	cross	Bulk segregant analysis for response to benomyl and ketoconazole
-Saccharomyces cerevisiae	PRJNA384100	3		WGS of Saccharomyces cerevisiae: homozygous diploid exposed to 2 mM MMS
-Saccharomyces cerevisiae	PRJNA386028	6		Sequencing gross chromosomal rearrangements in wild-type, mms21-CH, mre11, mre11-H125N, mms21-CH mre11, and mms21-CH mre11-H125N strains.
-Saccharomyces cerevisiae	PRJNA386321	4		Saccharomyces cerevisiae cdc73, tel1 cdc73, and yku80 cdc73 GCR sequencing
-Saccharomyces cerevisiae	PRJNA387489	318	cross	Mapping causal variants with single nucleotide resolution reveals the biochemical drivers of phenotypic change
-Saccharomyces cerevisiae	PRJNA387678	8		Polygenic analysis unveils a novel ethyl acetate biosynthesis enzyme, Eat1, in flavor production
-Saccharomyces cerevisiae	PRJNA396809	266		Saccharomyces cerevisiae strain whole genome shotgun sequence
-Saccharomyces cerevisiae	PRJNA398277	3		Saccharomyces cerevisiae Genome sequencing screen for modifiers of (GAA)n repeat expansion
-Saccharomyces cerevisiae	PRJNA406841	2		Saccharomyces cerevisiae genome sequencing after transcriptional tuning
-Saccharomyces cerevisiae	PRJNA408119	4		Sequencing of adapted de novo lager yeast hybrids
-Saccharomyces cerevisiae	PRJNA412158	3		Identification of novel alleles conferring superior production of rose flavor phenylethyl acetate using polygenic analysis in yeast
-Saccharomyces cerevisiae	PRJNA412468	36		CfB Yeast Genomics
-Saccharomyces cerevisiae	PRJNA414133	5		Quantitative trait locus analysis of thermotolerance in industrail Sacharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA416056	41		Saccharomyces cerevisiae raw sequence reads
-Saccharomyces cerevisiae	PRJNA417352	6	mutant	Sanger strain deletion mutant arrays (ssDMAs) of non-S288C genetic background
-Saccharomyces cerevisiae	PRJNA419068	3		i-BLESS: ultra-sensitive method for detection of DNA double-strand breaks
-Saccharomyces cerevisiae	PRJNA419220	4		qDSB-Seq is a general method for genome-wide quantification of DNA double-strand breaks using sequencing
-Saccharomyces cerevisiae	PRJNA423174	3		Metabolic and genomic characterization of stress tolerant industrial Saccharomyces cerevisiae strains from TALENs-assisted multiplex editing
-Saccharomyces cerevisiae	PRJNA429985	2		Saccharomyces cerevisiae Genome sequencing and assembly
-Saccharomyces cerevisiae	PRJNA431633	10		Saccharomyces cerevisiae Genome sequencing
-Saccharomyces cerevisiae	PRJNA433287	115		QTL mapping of volatile compound production in Saccharomyces cerevisiae during alcoholic fermentation - genotypic data
-Saccharomyces cerevisiae	PRJNA433540	3		Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA433919	2	evolution	Laboratory evolution for forced glucose-xylose co-consumption enables identification of mutations that improve mixed-sugar fermentation by xylose-fermenting Sac
-Saccharomyces cerevisiae	PRJNA435495	2		fungal sp. strain:BY4741 Genome sequencing
-Saccharomyces cerevisiae	PRJNA439262	4	evolution	Evolved Wine Yeast Strains Sequenced from an Adaptive Evolution Experiment
-Saccharomyces cerevisiae	PRJNA445577	2		SCRaMbLE of Heterozygous Diploids
-Saccharomyces cerevisiae	PRJNA449499	4	cross	Rapid identification of low-temperature tolerance loci in Saccharomyces cerevisiae using bulk segregant mapping
-Saccharomyces cerevisiae	PRJNA449853	2		Genome re-sequencing of two extreme H2S production strains isolated in China
-Saccharomyces cerevisiae	PRJNA450026	20	evolution	Experimental Evolution of Yeast for High Temperature Tolerance
-Saccharomyces cerevisiae	PRJNA471787	45	mutant	Extensive loss of heterozygosity upon CRISPR-Cas9 mediated genome editing in yeast
-Saccharomyces cerevisiae	PRJNA471800	4	evolution	Laboratory evolution and physiological analysis of Saccharomyces cerevisiae strains dependent on sucrose uptake via the Phaseolus vulgaris Suf1 transporter
-Saccharomyces cerevisiae	PRJNA472868	2		Sequencing of S.uvarum x S.cerevisiae hybrid and its S.cerevisiae parental.
-Saccharomyces cerevisiae	PRJNA473077	2		Polygenic analysis of tolerance to carbon dioxide inhibition of isoamyl acetate “banana” flavor production in yeast reveals MDS3 as major causative gene
-Saccharomyces cerevisiae	PRJNA473622	8		Sequencing of traditional Norwegian kveik ale yeasts (S. cerevisiae)
-Saccharomyces cerevisiae	PRJNA475869	8		Genome characterization of Saccharomyces genus
-Saccharomyces cerevisiae	PRJNA476226	10	evolution	6 species hybrids (The Yeasty Monster)
-Saccharomyces cerevisiae	PRJNA483491	103		Whole genome sequencing of mitochondrial recombinants between S. cerevisiae and S. uvarum
-Saccharomyces cerevisiae	PRJNA484962	2		Genomic mechanisms of stress tolerance of the industrial yeast Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA493117	33	evolution	Cold evolved Saccharomyces hybrids
-Saccharomyces cerevisiae	PRJNA493718	4		Aneuploidy and ethanol tolerance in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA493856	11	mutant	Conditional gene essentiality in yeast
-Saccharomyces cerevisiae	PRJNA498704	2		Sequencing S. cerevisiae strain pair used for chromosome biology in meiosis
-Saccharomyces cerevisiae	PRJNA503202	10	mutant	Yeast WGS of evolved mutants
-Saccharomyces cerevisiae	PRJNA503265	20		Saccharomyces cerevisiae Genome sequencing [b/c]
-Saccharomyces cerevisiae	PRJNA504476	81		Beer genome sequencing
-Saccharomyces cerevisiae	PRJNA515073	2		Ploidy instability in experimental hybrid populations
-Saccharomyces cerevisiae	PRJNA516029	73	evolution	Lab-evolved S. cerevisiae populations
-Saccharomyces cerevisiae	PRJNA516557	57		Raw sequence reads of Saccharomyces strains and Saccharomyces interspecific hybrids isolated from industrial environments
-Saccharomyces cerevisiae	PRJNA517782	3		Natural Saccharomyces cerevisiae isolate QTL analysis
-Saccharomyces cerevisiae	PRJNA522928	120		Fermentation associated Saccharomyces hybrids and pure parent strains raw sequence reads
-Saccharomyces cerevisiae	PRJNA527754	3		Complex and polymorphic genetic architecture underlies trans-regulatory variation among strains of Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA528224	45		Repair of Multiple Simultaneous Double-Strand Breaks Causes Genome-wide Formation of Long Single Strand DNA and Bursts of Clustered Hypermutation
-Saccharomyces cerevisiae	PRJNA530331	90		Saccharomyces cerevisiae W303 Genome sequencing
-Saccharomyces cerevisiae	PRJNA531118	7		Comparative genomics of Saccharomyces cerevisiae x Saccharomyces kudriavzevii natural hybrids
-Saccharomyces cerevisiae	PRJNA533131	8		Dissecting the mechanisms facilitating evolutionary adaptation of gene network activity under environmental selection
-Saccharomyces cerevisiae	PRJNA540143	78	evolution	Sequencing of laboratory evolved heterozygous Saccharomyces cerevisiae clones
-Saccharomyces cerevisiae	PRJNA542592	15		Unique genetic basis of the distinct antibiotic potency of high acetic acid production in the probiotic yeast Saccharomyces cerevisiae var. boulardii
-Saccharomyces cerevisiae	PRJNA542834	4		Multidimensional engineering of Saccharomyces cerevisiae for efficient synthesis of medium-chain fatty acids.
-Saccharomyces cerevisiae	PRJNA544115	4	mutant	Phenotypic and genotypic consequences of CRISPR/Cas9 editing of the replication origins in the rDNA of Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA544995	3		Saccharomyces cerevisiae breed:Eukaryotic Raw sequence reads
-Saccharomyces cerevisiae	PRJNA546594	2	evolution	Adaptive laboratory evolution and reverse engineering of low pH tolerance in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA549364	6		Mutational landscape in yeast diploid hybrids
-Saccharomyces cerevisiae	PRJNA549760	32	cross	Rare variants contribute disproportionately to quantitative trait variation in yeast
-Saccharomyces cerevisiae	PRJNA552112	18		Assembly of 18 budding yeast genomes
-Saccharomyces cerevisiae	PRJNA554649	2		Allele-specific expression data of yeast YPS128 and RM11-1a, hybrid and co-culture.
-Saccharomyces cerevisiae	PRJNA564205	2	evolution	Sequencing of S.cerevisiae L5 and L5 evolved strains
-Saccharomyces cerevisiae	PRJNA573925	4		S. cerevisiae Wild Isolate Sequencing
-Saccharomyces cerevisiae	PRJNA574140	69		mutations in yeast single-stranded DNA
-Saccharomyces cerevisiae	PRJNA575820	11		Whole-genome transformation promotes tRNA anticodon suppressor mutations under stress
-Saccharomyces cerevisiae	PRJNA576894	3	evolution	WGS of evolved S. cerevisiae strains with improved tolerance to lignocellulosic derived inhibitors
-Saccharomyces cerevisiae	PRJNA586886	245		Asymmetric segregation of polymerase errors and rate volatility diversify mutation burden in mutator cells
-Saccharomyces cerevisiae	PRJNA590203	2		Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA594913	71		A yeast living ancestor reveals the origin of genomic introgressions
-Saccharomyces cerevisiae	PRJNA596426	4		Mutation signatures specific to DNA alkylating agents in yeast and cancers
-Saccharomyces cerevisiae	PRJNA596648	13		A supernumerary designer chromosome for modular in vivo pathway assembly in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA597653	302	evolution	Antagonistic pleiotropy conceals molecular adaptations in changing environments
-Saccharomyces cerevisiae	PRJNA600776	122		GWAS analysis across 122 Saccharomyces cerevisiae isolates
-Saccharomyces cerevisiae	PRJNA603441	4		Evolutionary and reverse engineering of single vitamin requirement in Saccharomyces cerevisiae CEN.PK113-7D
-Saccharomyces cerevisiae	PRJNA607328	16		Whole-genome sequencing of bacteria, fungi, plants, and metagenomes
-Saccharomyces cerevisiae	PRJNA611915	2		Production of the fragrance geraniol in peroxisomes of a product-tolerant baker's yeast
-Saccharomyces cerevisiae	PRJNA622400	5		Loss of heterozygosity and single nucleotide mutation rates vary among S. cerevisiae hybrid strains
-Saccharomyces cerevisiae	PRJNA623783	5	evolution	Adaptive Laboratory Evolution of Yeast
-Saccharomyces cerevisiae	PRJNA625869	2		Whole-genome sequencing of two Saccharomyces cerevisiae wine strains
-Saccharomyces cerevisiae	PRJNA627739	9		Copy number sequencing in S. cerevisiae
-Saccharomyces cerevisiae	PRJNA627970	520		Saccharomyces cerevisiae foldback inversion GCR sequencing
-Saccharomyces cerevisiae	PRJNA629499	140		Evolution of diploid mutator yeast
-Saccharomyces cerevisiae	PRJNA630580	2	evolution	Sequencing of S.cerevisiae CENPK and CENPK evolved strains
-Saccharomyces cerevisiae	PRJNA631756	2		Rapid & reversable mutations generate subclonal genetic diversity
-Saccharomyces cerevisiae	PRJNA632495	65		Genome-scale investigation performed with Illumina and Nanopore sequencing and phenotype correlation of variants associated to the enological environment across
-Saccharomyces cerevisiae	PRJNA632749	6		The role of gene dosage in budding yeast centrosome scaling and spontaneous diploidization
-Saccharomyces cerevisiae	PRJNA633029	5	evolution	Negative trade-offs shape the evolution of dosage sensitivity
-Saccharomyces cerevisiae	PRJNA634013	2		oxygen-independent pathway for synthesis of pyridine nucleotides
-Saccharomyces cerevisiae	PRJNA634680	100		Sequencing of whole genomes of yeast strains lacking N-terminal part of DNA Pol epsilon
-Saccharomyces cerevisiae	PRJNA637093	8		Natural variation among Saccharomyces cerevisiae strains in resistance to 2-micron plasmid
-Saccharomyces cerevisiae	PRJNA638206	2	mutant	rDNA chimeric mutant of Saccharomyces cerevisiae and its suppressor
-Saccharomyces cerevisiae	PRJNA639117	4		Transposable element mobilization in interspecific yeast hybrids
-Saccharomyces cerevisiae	PRJNA641752	11		Genomic Stability and Adaptation of Beer Brewing Yeasts During Serial Repitching in the Brewery
-Saccharomyces cerevisiae	PRJNA644483	15	cross	Neutral lipid QTL study in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA646611	10		Genome Sequencing of S. cerevisiae Wine Strains
-Saccharomyces cerevisiae	PRJNA646688	2		Clonal heterogeneity in industrial yeasts: Saccharomyces cerevisiae raw sequence reads
-Saccharomyces cerevisiae	PRJNA649809	52		Saccharomyces cerevisiae New Zealand genome sequencing
-Saccharomyces cerevisiae	PRJNA650312	7		Engineered yeast genomes accurately assembled from pure and mixed samples
-Saccharomyces cerevisiae	PRJNA656310	2		Genome sequencing and structural variant analysis of the Saccharomyces cerevisiae strains from the Peterhof Genetic Collection
-Saccharomyces cerevisiae	PRJNA658462	7		Engineering Molybdenum cofactor biosynthesis enables the functional expression of a heterologous nitrate assimilation pathway in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA659115	243		WGS of Saccharomyces cerevisiae mutator strains
-Saccharomyces cerevisiae	PRJNA663092	2		Fast and inexpensive whole genome sequencing library preparation from intact yeast cells
-Saccharomyces cerevisiae	PRJNA663099	3		Competition for MCM Loading at Origins Establishes Replication Timing Patterns
-Saccharomyces cerevisiae	PRJNA665277	7		Creation of Lager Strains with Unique Genomic Structure
-Saccharomyces cerevisiae	PRJNA668197	14		Experimental Co-evolution of Sacharomyces cerevisiae and Esherichia coli
-Saccharomyces cerevisiae	PRJNA668346	3	evolution	Evolved S. cerevisiae population sequencing
-Saccharomyces cerevisiae	PRJNA669567	10		Benchmark test for RAGE-Seq based on mock community of four species
-Saccharomyces cerevisiae	PRJNA671607	5		Tracking DNA synthesis during break-induced replication reveals key mechanistic insights and stalling at roadblocks
-Saccharomyces cerevisiae	PRJNA673501	10		Mapping natural suppressor variants in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA679831	5		Genome sequencing for EMS-mutagenized yeast
-Saccharomyces cerevisiae	PRJNA680387	126		126 saccharomyces cerevisiae genome
-Saccharomyces cerevisiae	PRJNA681162	267		Saccharomyces RTG hybrids
-Saccharomyces cerevisiae	PRJNA689417	2		Genome sequencing of pho13-negative strains of Sacchromyces cerevisiae
-Saccharomyces cerevisiae	PRJNA689775	460	evolution	Mutation Accumulation in S. ceravisiae strains lacking polymerase proofreading and/or mismatch repair
-Saccharomyces cerevisiae	PRJNA690663	2	evolution	Adaptive evolution of Saccharomyces cerevisiae producing lactic acid
-Saccharomyces cerevisiae	PRJNA694785	3	cross	Tetrads of yeast
-Saccharomyces cerevisiae	PRJNA695084	192		Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA699459	6		In-situ muconic acid extraction reveals sugar consumption bottleneck in a xylose-utilizing Saccharomyces cerevisiae strain
-Saccharomyces cerevisiae	PRJNA699755	3		A novel AST2 mutation generated upon whole-genome transformation of Saccharomyces cerevisiae confers high tolerance to HMF and other inhibitors
-Saccharomyces cerevisiae	PRJNA706682	84	cross	Mapping yeast trans-regulatory mutations by sequencing bulk segregant populations
-Saccharomyces cerevisiae	PRJNA707077	6		Homo-40S of Saccharomyces cerevisiae and its suppressors
-Saccharomyces cerevisiae	PRJNA713332	2		The Genetic Basis of Differential Autodiploidization in Evolving Yeast Populations
-Saccharomyces cerevisiae	PRJNA717156	4		Engineering oxygen-independent biotin biosynthesis in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA717746	15		A yeast with muscle does not run faster- full humanization of the glycolytic pathway in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA735524	2		mutation rate and spectrum are selected in yeast
-Saccharomyces cerevisiae	PRJNA736724	2		Genome sequencing and assembly of Saccharomyces cerevisia
-Saccharomyces cerevisiae	PRJNA738851	7		Modular, synthetic chromosomes as new tools for large scale engineering of metabolism
-Saccharomyces cerevisiae	PRJNA739489	4		Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA740182	4	mutant	Breeding of Saccharomyces cerevisiae brewing strains with CRISPR/Cas9-aided mating type switching
-Saccharomyces cerevisiae	PRJNA744506	15		Non-canonical outcomes of break-induced replication produce complex, extremely long-tract gene conversion events in yeast
-Saccharomyces cerevisiae	PRJNA745202	10	evolution	Anaerobically evolved fungi that harbor Class II dihydroorotate dehydrogenase enzymes that function independently of the respiratory chain
-Saccharomyces cerevisiae	PRJNA747839	36		Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA750521	261		BYxRM 10 strains NGS sequence data
-Saccharomyces cerevisiae	PRJNA750593	36		Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA750757	3		Identification of the Saccharomyces cerevisiae cly8 mutation
-Saccharomyces cerevisiae	PRJNA755995	2		Saccharomyces cerevisiae Genome sequencing
-Saccharomyces cerevisiae	PRJNA757122	3		3D nuclear organization in Saccharomyces cerevisiae with megachromosomes
-Saccharomyces cerevisiae	PRJNA757251	2	evolution	Evolution of resistance to induced microtubule depolymerization in S.Cerevisiae
-Saccharomyces cerevisiae	PRJNA757374	7		What is wrong with SwYG? Reaching the limits of S. cerevisiae molecular and analytical toolbox
-Saccharomyces cerevisiae	PRJNA762028	2		Amylolytic bioprocessing yeast
-Saccharomyces cerevisiae	PRJNA768319	2	mutant	Sequencing of yeast cytochrome c oxidase deficiency revertant mutants
-Saccharomyces cerevisiae	PRJNA770168	93		Unlocking the functional potential of polyploid yeasts
-Saccharomyces cerevisiae	PRJNA785778	8		Genome-wide sequencing analysis of Sgs1, Exo1, Rad51 and Srs2 in DNA repair by homologous recombination
-Saccharomyces cerevisiae	PRJNA796586	206		rDNA Array Length is a Major Determinant of Replicative Lifespan in Budding Yeast - WGS data
-Saccharomyces cerevisiae	PRJNA797888	7		Versioning Biological Cells for Trustworthy Cell Engineering
-Saccharomyces cerevisiae	PRJNA811750	6		Simpler is not always better: transplantation of the whole glycolytic pathway from Yarrowia lipolytica to Saccharomyces cerevisiae reveals essential regulatory 
-Saccharomyces cerevisiae	PRJNA813763	5		Saccharomyces cerevisiae 'var. boulardii' raw sequence reads
-Saccharomyces cerevisiae	PRJNA81619	6		Saccharomyces cerevisiae Genome Sequencing
-Saccharomyces cerevisiae	PRJNA818459	6		Expression of Calvin-cycle enzymes enables anaerobic co-fermentation of glucose and sorbitol by Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA818497	4		Saccharomyces hybrids from spontaneous cider fermentations in Slovenia
-Saccharomyces cerevisiae	PRJNA821839	4		Yeast ORC sumoylation status fine-tunes origin activity
-Saccharomyces cerevisiae	PRJNA821991	3		WGS and deep sequencing of Saccharomyces cerevisiae after completed break-induced replication
-Saccharomyces cerevisiae	PRJNA82279	3	cross	Saccharomyces cerevisiae pool-segregant whole-genome sequence analysis
-Saccharomyces cerevisiae	PRJNA827654	16	evolution	xylose fermenting yeast for ethanol production
-Saccharomyces cerevisiae	PRJNA830720	2		Saccharomyces cerevisiae of industrial interest
-Saccharomyces cerevisiae	PRJNA834975	3	mutant	Agrobacterium-transformed yeast BY4741 whole genome sequencing
-Saccharomyces cerevisiae	PRJNA838724	75		Whole Genome Sequencing of Canadian Saccharomyces cerevisiae strains isolated from spontaneous wine fermentations reveals a new Pacific West Coast Wine Clade
-Saccharomyces cerevisiae	PRJNA844343	2		Genome sequences of two Saccharomyces cerevisiae isolated from the marine environment in Quebec, Canada
-Saccharomyces cerevisiae	PRJNA865262	95		Yeast populations and clones from Brazilian bioethanol fermentors
-Saccharomyces cerevisiae	PRJNA867718	8		Sequencing of S. cerevisiae isolates with variant rRNA
-Saccharomyces cerevisiae	PRJNA871925	170		Mitonuclear Recombinant Collection
-Saccharomyces cerevisiae	PRJNA871948	41	evolution	S cerevisiae msh3- mutation accumulation
-Saccharomyces cerevisiae	PRJNA877627	3		Enhanced xylose utilization in an adapted S. cerevisiae strain expressing xylose isomerase
-Saccharomyces cerevisiae	PRJNA877711	5		The relationship between copper sensitivity and sulfite tolerance in Saccharomyces cerevisiae.
-Saccharomyces cerevisiae	PRJNA878596	7	evolution	Experimental evolution on yeast cybrids
-Saccharomyces cerevisiae	PRJNA880975	10	evolution	Global footprints of genome instability under cancer drugs
-Saccharomyces cerevisiae	PRJNA882934	225		Nitrogen limitation batch evolution
-Saccharomyces cerevisiae	PRJNA884379	23	evolution	Suppressors of Histone humanization in the budding yeast S. cerevisiae
-Saccharomyces cerevisiae	PRJNA884518	11		Saccharomyces cerevisiae BY4741 derivatives with tRNA neochromosome raw reads
-Saccharomyces cerevisiae	PRJNA885247	2		Omics sequencing of Saccharomyces cerevisiae with high ethanol production
-Saccharomyces cerevisiae	PRJNA901934	7		Glycidamide-induced ssDNA hypermutation in cdc13-1 yeast
-Saccharomyces cerevisiae	PRJNA902953	2		Long-read direct RNA sequencing of the mitochondrial transcriptome of Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA904552	4		Restricting synthesis of heterologous phosphoribulokinase and ribulose-1,5-bisphosphatase mitigates byproduct formation during slow growth of engineered low-gly
-Saccharomyces cerevisiae	PRJNA906461	3	mutant	Arginine auxotrophy by deletion of the mitochondrial selectable marker ARG8 in Saccharomyces cerevisiae can be reverted by loss-of-function mutations in UME6
-Saccharomyces cerevisiae	PRJNA906656	11		Genetic profile of srtains of Saccharomyces cerevisiae related to the production of high quality cachaca
-Saccharomyces cerevisiae	PRJNA910188	2		Evolution of caffeine tolerance in Fleischmann's yeast
-Saccharomyces cerevisiae	PRJNA910339	19		Sequencing of S. cerevisiae clinical strains
-Saccharomyces cerevisiae	PRJNA911196	3		Acetic acid tolerance in probiotic yeast Saccharomyces var. boulardii.
-Saccharomyces cerevisiae	PRJNA923142	12		Escapee analysis of a genetic biocontainment of yeast with a protein stability switch
-Saccharomyces cerevisiae	PRJNA923502	6	evolution	Characterization and laboratory evolution of mRNA-sized RNA import in mitochondria of Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA937627	9		Genome-wide MMR
-Saccharomyces cerevisiae	PRJNA939183	3		Saccharomyces cerevisiae Genome sequencing
-Saccharomyces cerevisiae	PRJNA941438	2		Characterization of biased partner choice in mitotic non-allelic homologous recombination in Saccharomyces cerevisiae
-Saccharomyces cerevisiae	PRJNA950985	8	evolution	Studies of yeasts with human histone variants
-Saccharomyces cerevisiae	PRJNA951416	5		Genomic data on histone-humanized chromatin in budding yeast
-Saccharomyces cerevisiae	PRJNA967481	4		A microfluidics-free centrifugally-driven nano-liquid pipetting system (CNPS) for single-cell whole genome amplification
-Saccharomyces cerevisiae	PRJNA972286	11		Yeast translational fidelity
-Saccharomyces cerevisiae	PRJNA972872	2		Optimizing the balance between heterologous acetate- and CO2-reduction pathways in anaerobic cultures of Saccharomyces cerevisiae strains engineered for low gly
-Saccharomyces cerevisiae	PRJNA977855	5	mutant	Saccharomyces cerevisiae IMX2713 (CEN.PK113-7D deltasga1::cas9-natNT2 deltaX-2::Ercas12a)
-Saccharomyces cerevisiae	PRJNA977882	7	evolution	Evolution of maintenance of cooperation in sucrose (public-good driven system).
-Saccharomyces cerevisiae	PRJNA980901	408		Saccharomyces cerevisiae spontaneous fermentations isolate genome sequencing and assembly
-Saccharomyces cerevisiae	PRJNA985049	52	evolution	Experimental evolution of yeasts carrying humanized telomeres
-Saccharomyces cerevisiae	PRJNA992067	4		Silage and animal feed yeasts from Hungary
-Saccharomyces cerevisiae	PRJNA994147	101	evolution	Evolution of cross-tolerance to metals in yeast
-Saccharomyces cerevisiae	PRJNA996361	6	evolution	Saccharomyces cerevisiae Raw sequence reads
-Saccharomyces cerevisiae	PRJNA997361	80		Saccharomyces cerevisiae and closely related species Raw sequence reads
-Saccharomyces cerevisiae	PRJNA998225	4	evolution	Parental and co-evolved genome sequencing of S. cerevisiae
 Saccharomyces eubayanus	PRJNA1043100	6		Evolutionary potential of novel interspecific S. eubayanus x S. cerevisiae hybrids
 Saccharomyces eubayanus	PRJNA1320675	12		Aging Enhances Low-Temperature Survival in Saccharomyces eubayanus
 Saccharomyces eubayanus	PRJNA1381546	154		WGS of S. eubayanus
@@ -2339,7 +1802,7 @@ Saccharomyces paradoxus	PRJNA761003	29		Population genomics of Saccharomyces par
 Saccharomyces pastorianus	PRJDB4073	10		Genome comparison of interspecies hybrid S. pastorianus strains
 Saccharomyces pastorianus	PRJEB4656	3		Whole genome resequencing of three Saccharomyces pastorianus strains using a HiSeq2000 sequencer resulting in 100bp paired-end reads.
 Saccharomyces pastorianus	PRJNA1087702	5		Unlocking lager's flavour palette by metabolic engineering of Saccharomyces pastorianus for enhanced ethyl ester production
-Saccharomyces pastorianus	PRJNA1244810	3		Sequencing of engineered Saccharomyces pastorianus strains derived from CBS1483
+Saccharomyces pastorianus	PRJNA1244810	3	mutant	Sequencing of engineered Saccharomyces pastorianus strains derived from CBS1483
 Saccharomyces pastorianus	PRJNA1282013	10		Diversity of alpha-acetolactate decarboxylase in the Saccharomycotina yeast subphylum: From discovery to brewing application
 Saccharomyces pastorianus	PRJNA393253	3		Saccharomyces pastorianus strain:IMS0493 Raw sequence reads
 Saccharomyces pastorianus	PRJNA397648	2		Saccharomyces pastorianus IMX1187
@@ -2387,7 +1850,7 @@ Schizosaccharomyces pombe		6		WGS phylogenetic analysis of C. gattii
 Schizosaccharomyces pombe	PRJDB13261	11	mutant	Suppressor screening of RNAPII mutant
 Schizosaccharomyces pombe	PRJDB4206	7		Isolation of the genes that is involved in gross chromosomal rearrangements
 Schizosaccharomyces pombe	PRJDB711	4	mutant	Whole genome sequencing of S. pombe mutant strains
-Schizosaccharomyces pombe	PRJEB101458	5		Safeguarding quiescent chromatin for accurate cell-cycle re-entry
+Schizosaccharomyces pombe	PRJEB101458	5	mutant	Safeguarding quiescent chromatin for accurate cell-cycle re-entry
 Schizosaccharomyces pombe	PRJEB15550	3	mutant	ChIP-seq analysis of H3K9me3 levels across the genome for one copy of H3K9M mutant in pombe
 Schizosaccharomyces pombe	PRJEB2126	8		S. pombe wild type strains genomes
 Schizosaccharomyces pombe	PRJEB2733	149		S_pombe_genetic_diversity
@@ -2399,7 +1862,7 @@ Schizosaccharomyces pombe	PRJEB58989	3		Whole-genome resequencing of wildtype an
 Schizosaccharomyces pombe	PRJEB6284	12		CCC_IV_4_JurgBahler_Yeast
 Schizosaccharomyces pombe	PRJEB6706	2		Sequencing of the parental fission yeast strains Y0036 and 968
 Schizosaccharomyces pombe	PRJEB69522	11		MLP formation in S. pombe
-Schizosaccharomyces pombe	PRJEB81410	273		Absence of Telomerase Leads to Immune Response and Tumor Regression in Zebrafish Melanoma
+Schizosaccharomyces pombe	PRJEB81410	273	mutant	Absence of Telomerase Leads to Immune Response and Tumor Regression in Zebrafish Melanoma
 Schizosaccharomyces pombe	PRJEB99022	3		Whole-genome sequencing of Schizosaccharomyces pombe strains with mutations in recombination and mating-type switching genes
 Schizosaccharomyces pombe	PRJNA1019646	2		Winemaking yeasts Genome sequencing and assembly
 Schizosaccharomyces pombe	PRJNA1062442	6	mutant	canavanine-resistant mutants
@@ -2413,15 +1876,15 @@ Schizosaccharomyces pombe	PRJNA1358543	6		Schizosaccharomyces pombe
 Schizosaccharomyces pombe	PRJNA1453485	7		Schizosaccharomyces pombe Raw sequence reads
 Schizosaccharomyces pombe	PRJNA248418	32		Schizosaccharomyces pombe Genome sequencing
 Schizosaccharomyces pombe	PRJNA300335	16		Epigenetic control of genetic fidelity
-Schizosaccharomyces pombe	PRJNA341984	3		RNA interference is essential for cellular quiescence (S. pombe)
+Schizosaccharomyces pombe	PRJNA341984	3	mutant	RNA interference is essential for cellular quiescence (S. pombe)
 Schizosaccharomyces pombe	PRJNA416790	5		HAATI survivor sequencing
 Schizosaccharomyces pombe	PRJNA450289	85	mutant	Suppressor screen for separase-securin and cohesin ts mutants in fission yeast
 Schizosaccharomyces pombe	PRJNA471808	7	mutant	Illumina HiSeq2500 Whole Genome Sequencing of Schizosaccharomyces pombe elf1 mutants
 Schizosaccharomyces pombe	PRJNA476416	5		Natural isolate sequencing for wtf gene family assembly
 Schizosaccharomyces pombe	PRJNA490273	4		DNA sequencing of D2O (heavy water) resistant S. pombe strains
-Schizosaccharomyces pombe	PRJNA524233	2		Negative regulation of Mis17-Mis6 centromere complex by mRNA decay pathway and EKC/KEOPS complex in Schizosaccharomyces pombe
-Schizosaccharomyces pombe	PRJNA525996	93		Suppressor screening reveals common kleisin-hinge interaction in condensin and cohesin, but different modes of regulation
-Schizosaccharomyces pombe	PRJNA533914	2		Coordinated roles of the putative ceramide-conjugation protein, Cwh43, and a Mn2+-transporting, P-type ATPase, Pmr1, in fission yeast
+Schizosaccharomyces pombe	PRJNA524233	2	mutant	Negative regulation of Mis17-Mis6 centromere complex by mRNA decay pathway and EKC/KEOPS complex in Schizosaccharomyces pombe
+Schizosaccharomyces pombe	PRJNA525996	93	mutant	Suppressor screening reveals common kleisin-hinge interaction in condensin and cohesin, but different modes of regulation
+Schizosaccharomyces pombe	PRJNA533914	2	mutant	Coordinated roles of the putative ceramide-conjugation protein, Cwh43, and a Mn2+-transporting, P-type ATPase, Pmr1, in fission yeast
 Schizosaccharomyces pombe	PRJNA594219	2		Whole genome sequencing of an industrial bioethanol producing fission yeast isolate
 Schizosaccharomyces pombe	PRJNA604890	30	evolution	Experimental Evolution Pombe
 Schizosaccharomyces pombe	PRJNA631756	7	mutant	Rapid & reversable mutations generate subclonal genetic diversity
@@ -2548,7 +2011,7 @@ Trichoderma reesei	PRJEB8095	4		Recovery of sexual reproduction enables strain i
 Trichoderma reesei	PRJNA1032401	8		genome sequencing of T. reesei transformed strains with an egp under the control of tef1 promoter
 Trichoderma reesei	PRJNA418052	2		Trichoderma reesei JNU-DY-13 Genome sequencing and assembly
 Trichoderma reesei	PRJNA784333	3	cross	Genome-wide mapping of single-stranded DNA (ssDNA) associated with meiotic DNA double strand breaks (DSBs) in Trichoderma reesei
-Trichoderma reesei	PRJNA911017	3		Genome-wide mapping of 5-methylcytosine, C-to-T point mutations and RNA transcripts during Trichoderma reesei vegetative growth and sexual development
+Trichoderma reesei	PRJNA911017	3	mutant	Genome-wide mapping of 5-methylcytosine, C-to-T point mutations and RNA transcripts during Trichoderma reesei vegetative growth and sexual development
 Trichoderma viride	PRJNA1170473	6		Historical comparative genomics to track the evolution of fungal pathogens during agricultural intensification: a test of concept
 Tricholoma matsutake	PRJNA726361	15		Tricholoma matsutake genome sequencing
 Trichophyton concentricum	PRJNA1115111	42		Skin metagenomes, Trichophyton Genome sequencing from the Orang Asli
@@ -2639,7 +2102,7 @@ Yarrowia lipolytica	PRJNA499126	6	mutant	Yarrowia lipolytica smooth mutant seque
 Yarrowia lipolytica	PRJNA509765	3		Yarrowia lipolytica strain characterization
 Yarrowia lipolytica	PRJNA607328	20		Whole-genome sequencing of bacteria, fungi, plants, and metagenomes
 Yarrowia lipolytica	PRJNA704845	6		Engineering of Molybdenum cofactor-dependent nitrate assimilation in Yarrowia lipolytica
-Yarrowia lipolytica	PRJNA715500	2		Yarrowia lipolytica engineered strains for Ehrlich metabolites and pyomelanin production
+Yarrowia lipolytica	PRJNA715500	2	mutant	Yarrowia lipolytica engineered strains for Ehrlich metabolites and pyomelanin production
 Zalaria obscura	PRJNA800051	2		Fungal Diversity associated with space-craft assembly facility (SAF)
 Zasmidium syzygii	PRJNA931964	3		Zasmidium - Genome sequencing and assembly
 Zoophagus insidians	PRJNA451036	2		Phylogenomics of Zoopagales

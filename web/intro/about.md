@@ -11,6 +11,34 @@ MATPredict finds and types the mating-type (MAT) locus in fungal genome assembli
 exists, in raw reads. This site summarises how it works, how it performs, and which MAT alleles it finds across the
 public [BFD](https://github.com/stajichlab/Fungi_BFD/) fungal genomes and the ZyGoLife Mucoromycotina genomes.
 
+## How MATPredict works
+
+MATPredict searches a genome assembly with a curated database of reference MAT loci, then reports where each locus is,
+which genes it carries and which idiomorph (mating type) it is, with the evidence for each call.
+
+1. **Route.** The genome's NCBI taxonomy picks the curated families to search (`db/<Phylum>/order.yml`). A genome outside
+   every curated family falls back to its phylum, or is reported as not searched.
+2. **Search.** The reference proteins (core MAT genes and the flanking genes) are searched against the genome with
+   translated BLAST (tblastn), or against a proteome with DIAMOND.
+3. **Cluster.** Hits on a contig are grouped into candidate loci using gap rules for each lineage.
+4. **Polish.** Each candidate locus is modelled with exonerate and miniprot, on a window sliced around it.
+5. **Gate.** A candidate must pass checks on its modelled genes, the fraction of the reference it covers, the presence of a
+   MAT gene, flanking-gene evidence and paralog class (and the CAAX motif for pheromone receptors).
+6. **Type.** The idiomorph comes from gene content, or from a profile-HMM classifier (Mucoromycota Plus/Minus), and each call
+   gets a confidence tier (high, medium, low) with the reason it was not higher.
+
+Every genome gets a report, including a reason when no locus was called. A genome with two idiomorphs is flagged for
+review, not resolved. A polished gene model with a frameshift or an internal stop codon is marked defective; this is
+reported only and does not change the confidence.
+
+**Curation.** Each reference record is one strain and one idiomorph, and traces to a publication or a validated
+GenBank deposit. Tier 1 is an experimentally validated, published locus. Tier 2 is a genome-derived locus admitted with
+extra checks (domain evidence, alignment to curated orthologs or a gene tree). A candidate record is proposed with its
+accession or PMID and the exact source text, checked automatically (the accession resolves, the translation matches the
+cited protein), signed off by the curator, and then run through a regression panel before it enters the database. The
+database is in the [db folder](https://github.com/stajichlab/MATPredict/tree/main/db); the rules are in the
+[README](https://github.com/stajichlab/MATPredict#curation-process).
+
 ## How to cite
 
 ### This resource
@@ -48,12 +76,47 @@ behind the records you rely on; each record's `metadata.yaml` in the
 
 ## Data used on this site
 
-- **[BFD](https://github.com/stajichlab/Fungi_BFD/)**: the Ascomycota, Basidiomycota and Mucoromycotina genomes of this fungal genome collection (see also the [2026 run documentation](https://github.com/1KFG/Fungi_BFD_run2026/)), run with MATPredict v0.6.0 in October 2026.
+- **[BFD](https://github.com/stajichlab/Fungi_BFD/)**: the Ascomycota, Basidiomycota and Mucoromycotina genomes of this fungal
+  genome collection, as frozen in September 2026 (see also the
+  [2026 run documentation](https://github.com/1KFG/Fungi_BFD_run2026/)). The v0.7.0 run searched 19,415 Ascomycota,
+  3,275 Basidiomycota and 974 Mucoromycotina genomes in October 2026, on release commit `cleanrun-2026-10c` with the
+  `--preset v0.7` policy set.
 - **ZyGoLife**: the LCG and Jena Mucoromycotina genome sets, held out from training and curation.
 - Numbers on the landing page and the explorer come from committed result tables in the
   [results folder](https://github.com/stajichlab/MATPredict/tree/main/results); they are detection counts, not ground truth.
 
 <!-- [UPDATE] Add the ZyGoLife data citation or URL, and any BFD citation you want shown, one bullet each. -->
+
+## What works, and what does not yet
+
+The calls on this site are the output of one release, with its gaps stated here so they are not read as findings.
+
+- **Coverage.** Only three phyla have curated families (Ascomycota, Basidiomycota, Mucoromycotina). An uncalled genome is
+  weak evidence that it has no MAT locus: a genome far from every reference often fails the evidence bar, and a
+  fragmented assembly can split a locus or lose its flanking genes.
+- **Confidence tiers are conservative and rule-based.** Several known rules lower or blur a call and are reported, not
+  changed, in this release: the idiomorph margin for loci with a single candidate (#137, #145), the vote on short fragments
+  and tiny margins (#138), and a noise third gene breaking a tie (#129). The tables mark the affected loci (`tier_note`,
+  `label_unsupported`). A better hit can also lower a confidence because a 39-bit floor for unpolished genes is a cliff
+  (#149); this mostly affects *MTLA1* in CTG-clade yeasts.
+- **Missed loci.** Known losses include some Hypocreales *MAT1-1-1* calls, a Helotiales idiomorph vote that blocks
+  *MAT1-1-1* deposits, *Hyphopichia* and several yeast genera (*Metschnikowia*, *Sungouiella*, *Kurtzmaniella*,
+  *Candida*) that lack a full-length *MTLA1* reference, and Basidiomycota pheromone-receptor genes needing introns longer
+  than 10 kb (#154; one genome, GCA_900009495.1, stays lost).
+- **Candidate references not used.** Four reference records that would fix some of these (*Aciculoconidium aculeatum* and
+  three *Lodderomyces* / *Candida parapsilosis*-group records) are held as candidates and are not used by detection until
+  they pass a full regression.
+- **Defective genes are not proven pseudogenes.** The flag means a model does not translate cleanly in this assembly. It
+  fires on 7.5% of polished Ascomycota genes in a pilot, mostly weak models of distant flanking genes where an alignment
+  artefact is likelier than a pseudogene. A real pseudogene shows in most isolates of a species (for example
+  *Lodderomyces parapsilosis* *MTLA1*, 97 of 97 loci); an assembly error shows in few.
+- **A two-idiomorph result is a flag for review.** It can be homothallism, a mixed culture or a duplication; the
+  `homothallic_candidate` class is a candidate, not a statement of homothallism.
+- **Policies are a preset.** The v0.7.0 results use `--preset v0.7`; the code defaults are unchanged, so a run without
+  the preset gives different calls.
+
+Held-out items and what each needs for the next release are tracked in
+[issue #155](https://github.com/stajichlab/MATPredict/issues/155).
 
 ## Source, issues and licence
 

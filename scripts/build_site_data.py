@@ -2,8 +2,8 @@
 """Aggregate the committed campaign tables into the JSON the project web pages read.
 
 Inputs are tables already under results/ (nothing is recomputed). Which folders are read is set in ONE place,
-`RELEASES` below, and chosen with --release (default `v060`, the live site; the results PR that commits the
-clean-run folders switches DEFAULT_RELEASE to `cleanrun`); --asco / --basidio / --mucoro override one folder.
+`RELEASES` below, and chosen with --release (default `v070`, the v0.7.0 data; `v060` is the previous
+release and the rollback target); --asco / --basidio / --mucoro override one folder.
 Per release:
   BFD Ascomycota      <asco>/{genomes,loci}.tsv
   BFD Basidiomycota   <basidio>/{genomes,loci}.tsv
@@ -62,6 +62,12 @@ R = os.path.join(REPO, "results")
 # The result folders behind each published release (relative to results/). Edit HERE when a campaign folder
 # changes; build_locus_shards.py reads the same table.
 RELEASES = {
+    "v070": {
+        "code": "cleanrun-2026-10c (b317ece, October 2026)",
+        "asco": "2026-10-26_v070_ascomycota",
+        "basidio": "2026-10-26_v070_basidiomycota",
+        "mucoro": "2026-10-26_v070_mucoromycotina",
+    },
     "cleanrun": {
         "code": "cleanrun-2026-10b (56e11cd, October 2026)",
         "asco": "2026-10-23_ascomycota_cleanrun",
@@ -75,9 +81,9 @@ RELEASES = {
         "mucoro": "2026-10-03_mucoromycotina_mat",
     },
 }
-# Stays `v060` until the clean-run tables are committed, so a v* tag (or a rollback re-tag) never fails the
-# Pages build; the results PR that adds the clean-run folders sets it to "cleanrun".
-DEFAULT_RELEASE = "v060"
+# The release the Pages build publishes. v0.7.0 data: the definitive run on the freeze tag cleanrun-2026-10c.
+# To roll back, set it to "v060" (the v0.6.0 folders stay in RELEASES) and re-tag.
+DEFAULT_RELEASE = "v070"
 
 NOT_A_GENUS = {"Ascomycota", "Basidiomycota", "Mucoromycota", "Fungal", "Fungi", "uncultured", "Candidatus", "unidentified"}
 GENUS_RE = re.compile(r"^[A-Z][a-z-]+$")

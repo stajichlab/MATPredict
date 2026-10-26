@@ -87,15 +87,16 @@ def _genomes(path):
         return {r["genome"]: r for r in csv.DictReader(fh, delimiter="\t")}
 
 
-def test_default_release_stays_v060_until_the_cleanrun_results_are_committed():
-    assert bsd.DEFAULT_RELEASE == "v060"
+def test_default_release_is_the_v070_definitive_run():
+    assert bsd.DEFAULT_RELEASE == "v070"
+    assert bsd.RELEASES["v070"]["code"].startswith("cleanrun-2026-10c")
     for rel in bsd.RELEASES.values():
         assert {"code", "asco", "basidio", "mucoro"} <= set(rel)
 
 
 def test_v060_tables_get_blank_note_columns(tmp_path):
     out = tmp_path / "out"
-    bsd.main(["--out", str(out)] + _campaigns(tmp_path))
+    bsd.main(["--release", "v060", "--out", str(out)] + _campaigns(tmp_path))
     taxa = json.loads((out / "taxa.json").read_text())
     assert taxa["fields"][:14] == ["dataset", "phylum", "class", "order", "family", "genus", "species", "cohort", "n", "called",
                                    "undet", "two", "alleles", "types"] and taxa["fields"][14] == "unsupported"

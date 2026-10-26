@@ -74,7 +74,7 @@ parser = argparse.ArgumentParser(prog="matpredict")
 subs = parser.add_subparsers(dest="cmd")
 detect_cli.register_subcommands(subs)
 args = parser.parse_args(["detect", "--genome", "/data/${basename(genome)}", "--phylum", "${phylum}",
-                          "--out-dir", "/out"])
+                          "--preset", "v0.7", "--out-dir", "/out"])
 error = None
 try:
     rc = args.func(args)

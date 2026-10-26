@@ -85,12 +85,36 @@ def _git(top: Path, *args: str) -> str | None:
 CODE_PATHS = ("src", "db", "scripts", "pyproject.toml")
 
 
+def source_version_for(package_dir: Path) -> str | None:
+    """The `version` in the `pyproject.toml` of the source checkout that `package_dir` (the `MATPredict` package
+    directory) sits in, or None: a wheel install (no `src/` layout), no `pyproject.toml`, another project's, or an
+    unreadable one. Needs no git."""
+    package_dir = Path(package_dir).resolve()
+    if tomllib is None or package_dir.parent.name != "src":
+        return None
+    try:
+        project = tomllib.loads((package_dir.parents[1] / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+        if str(project.get("name", "")).lower() != "matpredict":
+            return None
+        return str(project["version"])
+    except (OSError, KeyError, ValueError):
+        return None
+
+
+@functools.lru_cache(maxsize=None)
+def running_version() -> str:
+    """The version a report records as `matpredict_version`: that of the source checkout the code runs from when there
+    is one, else the installed package metadata. The metadata alone is stale whenever an editable install was not
+    refreshed (issue #139: reports said 0.6.1 for code at 0.6.3), and a shared environment must not be reinstalled to fix
+    it, so the checkout's own `pyproject.toml` is the better witness."""
+    return source_version_for(Path(__file__).resolve().parents[1]) or __version__
+
+
 def code_stamp_for(package_dir: Path) -> dict:
     """Identity of the source checkout `package_dir` (the installed `MATPredict` package directory) runs from.
 
-    The reported `matpredict_version` is the installed package metadata, which is stale whenever the editable
-    install was not refreshed (issue #139: the pilot's reports said 0.6.1 for code at 0.6.3). This reads the
-    checkout itself: `git_describe` (`git describe --tags --always`: the nearest tag), the full `commit`, whether
+    The installed package metadata is stale whenever the editable install was not refreshed (issue #139: the pilot's
+    reports said 0.6.1 for code at 0.6.3). This reads the checkout itself: `git_describe` (`git describe --tags --always`: the nearest tag), the full `commit`, whether
     the code is `dirty` (any change or untracked file under `CODE_PATHS`), and the `source_version` in its
     `pyproject.toml`. Only keys that could be read are returned;
     `{}` when the package is not in a git checkout of this project (a wheel install, no git, an unrelated
@@ -113,12 +137,9 @@ def code_stamp_for(package_dir: Path) -> dict:
     commit = _git(top, "rev-parse", "HEAD")
     if commit:
         out["commit"] = commit
-    pyproject = top / "pyproject.toml"
-    if tomllib is not None and pyproject.is_file():
-        try:
-            out["source_version"] = tomllib.loads(pyproject.read_text())["project"]["version"]
-        except (OSError, KeyError, ValueError):
-            pass
+    version = source_version_for(package_dir)
+    if version:
+        out["source_version"] = version
     return out
 
 
@@ -160,7 +181,7 @@ def run_block(*, clock: RunClock, genome: Path | None, proteins: Path | None, db
         "organism": organism,
         "taxid": taxid,
         "phylum": phylum,
-        "matpredict_version": __version__,
+        "matpredict_version": running_version(),
         # The checkout the code ran from (issue #139); absent when it cannot be read.
         **({"code": stamp} if (stamp := code_stamp()) else {}),
         "database": database_digest(db_root),

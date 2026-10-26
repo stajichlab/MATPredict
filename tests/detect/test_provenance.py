@@ -134,7 +134,7 @@ def test_dirty_means_code_changed_including_untracked_files_and_not_a_touched_do
     (tmp_path / "db" / "r.yml").write_text("a: 2\n")                           # an edited database file is code too
     assert code_stamp_for(pkg)["dirty"] is True
     _git(tmp_path, "checkout", "--", "db/r.yml")
-    (tmp_path / "pyproject.toml").write_text('[project]\nversion = "0.0.1"\n')
+    (tmp_path / "pyproject.toml").write_text('[project]\nname = "MATPredict"\nversion = "0.0.1"\n')
     stamp = code_stamp_for(pkg)
     assert stamp["dirty"] is True and stamp["source_version"] == "0.0.1"        # the version of the tree that actually ran
 
@@ -219,9 +219,67 @@ def test_run_block_carries_the_stamp_when_there_is_one_and_omits_it_otherwise(tm
     monkeypatch.setattr(provenance, "code_stamp", lambda: {"git_describe": "cleanrun-x", "commit": "a" * 40, "dirty": False,
                                                            "source_version": "0.7.0"})
     doc = run_block(**kw)
-    assert doc["code"]["git_describe"] == "cleanrun-x" and doc["matpredict_version"] == provenance.__version__
+    assert doc["code"]["git_describe"] == "cleanrun-x"
     monkeypatch.setattr(provenance, "code_stamp", lambda: {})
     assert "code" not in run_block(**kw)
+
+
+def test_run_block_records_the_running_version(tmp_path, monkeypatch):
+    db = tmp_path / "db"
+    db.mkdir()
+    kw = dict(clock=RunClock(), genome=None, proteins=None, db_root=db, taxonomy_source="t", sample="s",
+              organism=None, taxid=None, phylum=None, parameters={})
+    monkeypatch.setattr(provenance, "running_version", lambda: "7.7.7")
+    assert run_block(**kw)["matpredict_version"] == "7.7.7"
+
+
+def _pyproject(root, name="MATPredict", version="0.7.0"):
+    pkg = root / "src" / "MATPredict"
+    pkg.mkdir(parents=True)
+    (root / "pyproject.toml").write_text(f'[project]\nname = "{name}"\nversion = "{version}"\n')
+    return pkg
+
+
+def test_the_source_version_is_the_checkouts_pyproject_version_and_needs_no_git(tmp_path):
+    if provenance.tomllib is None:
+        pytest.skip("tomllib needs Python 3.11")
+    assert provenance.source_version_for(_pyproject(tmp_path / "a")) == "0.7.0"
+    assert provenance.source_version_for(_pyproject(tmp_path / "b", version="1.2.3")) == "1.2.3"
+    assert provenance.source_version_for(_pyproject(tmp_path / "c", name="matpredict")) == "0.7.0"      # the name is case-insensitive
+    assert provenance.source_version_for(_pyproject(tmp_path / "d", name="MATPREDICT", version="4.5.6")) == "4.5.6"
+
+
+def test_the_source_version_is_none_for_a_wheel_another_project_or_an_unreadable_file(tmp_path):
+    if provenance.tomllib is None:
+        pytest.skip("tomllib needs Python 3.11")
+    wheel = tmp_path / "venv" / "lib" / "site-packages" / "MATPredict"
+    wheel.mkdir(parents=True)
+    assert provenance.source_version_for(wheel) is None                              # not a src/ layout
+    assert provenance.source_version_for(_pyproject(tmp_path / "other", name="somethingelse")) is None
+    pkg = _pyproject(tmp_path / "bad")
+    (tmp_path / "bad" / "pyproject.toml").write_text("not [valid toml")
+    assert provenance.source_version_for(pkg) is None
+    (tmp_path / "bad" / "pyproject.toml").unlink()
+    assert provenance.source_version_for(pkg) is None                                # no pyproject at all
+    dyn = _pyproject(tmp_path / "dyn")
+    (tmp_path / "dyn" / "pyproject.toml").write_text('[project]\nname = "MATPredict"\ndynamic = ["version"]\n')
+    assert provenance.source_version_for(dyn) is None                                # a dynamic version: fall back to the metadata
+    utf = _pyproject(tmp_path / "utf")
+    (tmp_path / "utf" / "pyproject.toml").write_text('[project]\nname = "MATPredict"\nversion = "2.0.0"\ndescription = "M\u00e4t"\n',
+                                                      encoding="utf-8")
+    assert provenance.source_version_for(utf) == "2.0.0"                             # read as UTF-8 whatever the locale
+
+
+def test_the_running_version_falls_back_to_the_installed_metadata(monkeypatch):
+    monkeypatch.setattr(provenance, "source_version_for", lambda package_dir: None)
+    provenance.running_version.cache_clear()
+    try:
+        assert provenance.running_version() == provenance.__version__
+        monkeypatch.setattr(provenance, "source_version_for", lambda package_dir: "8.8.8")
+        provenance.running_version.cache_clear()
+        assert provenance.running_version() == "8.8.8"
+    finally:
+        provenance.running_version.cache_clear()
 
 
 def test_the_html_provenance_shows_the_stamp_the_source_version_mismatch_and_a_dirty_tree():
@@ -238,3 +296,21 @@ def test_the_html_provenance_shows_the_stamp_the_source_version_mismatch_and_a_d
     # an untagged checkout describes as the abbreviated hash: shown once, not twice
     once = _code_note({"git_describe": "24829be", "commit": "24829be1a2c3d4e5f60718293a4b5c6d7e8f9012"})
     assert once.count("24829be") == 1
+
+
+def test_the_html_footer_the_generator_tag_and_the_cli_version_use_the_running_version(monkeypatch):
+    from pathlib import Path
+
+    import yaml
+
+    from MATPredict import __main__ as entry
+    from MATPredict.report import html
+
+    monkeypatch.setattr(html, "running_version", lambda: "6.6.6")
+    doc = yaml.safe_load((Path(__file__).parents[1] / "report" / "fixtures" / "basidio_hd_pr.yaml").read_text())
+    page = html.render_genome_report(doc, sample="x", generated="2026-10-26")
+    assert "rendered 2026-10-26 by MATPredict 6.6.6" in page
+    assert '<meta name="generator" content="MATPredict 6.6.6">' in page
+    monkeypatch.setattr(entry, "running_version", lambda: "6.6.6")
+    action = next(a for a in entry.build_parser()._actions if a.option_strings == ["-V", "--version"])
+    assert action.version == "6.6.6"

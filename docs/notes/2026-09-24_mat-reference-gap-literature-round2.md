@@ -110,7 +110,7 @@ present in this strain's assembly." Measurement contradicts this.**
 | `AY622606.1` | 8,593 | *C. dubliniensis* d1558 | MTLalpha | alpha2 AAU13776.1 187; OBP AAU13914.1 429; PIK AAU13915.1 977; alpha1 AAU13777.1 193; PAP partial AAU13916.1 360. Pujol 2004, PMID 15302834 |
 | `HQ696681.1` | 16,160 | *C. orthopsilosis* Cp90-125 | MTLa | GAP1 partial, PAPa, OBPa, PIKa, MTLa2 ADY62690.1 199, MTLa1 ADY62691.1 183, orf19.3202, RCY1. Sai 2011, PMID 21335529 |
 | `HQ696679.1` / `HQ696680.1` / `HQ696682.1` | 8,814 / 9,920 / 9,848 | *C. orthopsilosis* J981224 / Cp289 / Cp185 | MTLa | same gene set |
-| `HQ696678.1` | 14,971 | *C. metapsilosis* ATCC 96143 | MTLa | round 1 |
+| `HQ696678.1` | 14,971 | *C. metapsilosis* ATCC 96143 | MTLa (**erratum 2026-10-25**: MTL alpha per Sai 2011, PMC3127640; GenBank gene names are mislabelled) | round 1 |
 | `FJ524850.1` | 14,633 | *C. lusitaniae* CL143 | MTLa | PAP1 ACS29263.1, OBP1 ACS29264.1, PIK1 ACS29265.1, a2 ACS29266.1 176, a1 ACS29267.1 164, RCY1 ACS29268.1 |
 | `FJ524851.1` | 14,353 | *M. guilliermondii* NRRL Y-2075 | MTLalpha | HIP1, OBP1 ACS29270.1, PIK1 ACS29271.1, alpha1 ACS29273.1 210, PAP1 ACS29269.1, RCY1 ACS29274.1 |
 

@@ -8,9 +8,9 @@ release completed.
 
 ## [0.7.0] — unreleased — `v0.7.0`
 
-*Draft written 2026-10-23 from the pull requests merged since v0.6.2 (#66-#142); the date and tag are set when the release is cut. Check the entries against the clean-run results before publishing.*
+*Draft written 2026-10-23 from the pull requests merged since v0.6.2 (#66-#142) and updated 2026-10-26 for #143-#160; the date and tag are set when the release is cut. Check the entries against the clean-run results before publishing.*
 
-The clean-run release. It adds the detection policies the curator rulings of 2026-09 to 2026-10 asked for (all **off by default**; the clean full-BFD run passes them explicitly, see `docs/notes/2026-10-22_clean-run-plan.md`), a scoped per-taxon roster, many reference-database records and exon structures, the browser page and landing site, and a series of fixes found by the pre-run regression gate. The package version moves from 0.6.3 (never tagged) to 0.7.0.
+The clean-run release. It adds the detection policies the curator rulings of 2026-09 to 2026-10 asked for (all **off by default**; the definitive run passes them with `--preset v0.7`, see `docs/notes/2026-10-22_clean-run-plan.md`), a scoped per-taxon roster, many reference-database records and exon structures, the browser page and landing site, and a series of fixes found by the pre-run regression gate. The package version moves from 0.6.3 (never tagged) to 0.7.0.
 
 ### Overview by area
 
@@ -18,6 +18,7 @@ The clean-run release. It adds the detection policies the curator rulings of 202
 - `--partial-core-policy` with a companion-gene veto (#95, #102): a partial core hit against a full-length other-idiomorph gene is decided on the profile bitscore and coverage (Botrytis `MAT1-2`).
 - `--strong-single-gene-policy` (#97), `--confidence-cap-policy` (#100), and `--homothallic-policy both_genes` (#117, #124: a locus with a complete alpha-box and a complete HMG-box gene is a `homothallic_candidate` with idiomorph `undetermined`, vote winner kept in the note).
 - `--scoped-roster-policy` and a per-gene `taxonomic_scope` and `min_identity` in `order.yml` (#132, #136): GAP1 and BGL1 as optional one-member flanks scoped to Pleosporaceae (BGL1 floor 60%); recovers 90 of the 101 previously uncalled *Bipolaris* / *Curvularia* / *Exserohilum* genomes; `detect audit-scope` also lists records carrying a scoped gene from outside its scope.
+- `--preset v0.7` (#158): one option sets the five policies above to the values that produced the v0.7.0 site data; an explicit policy flag overrides it; the defaults are unchanged.
 
 #### Detection and reports
 - Annotation tracks, gene-model tracks in the report and GenBank as a `detect` input (#69, #88); helixer-lite on locus windows and a flank-only helixer rule (#69, #70); `--polish-strong-identity` and a polished core pair on top of the cap (#40, #104).
@@ -25,21 +26,24 @@ The clean-run release. It adds the detection policies the curator rulings of 202
 - Profile-HMM alpha-box and HMG-box gene-identity profiles for Ascomycota (#86); a subphylum guard that stops Pezizomycotina labels landing on Saccharomycotina yeasts, with MATyl / MATdc / MATkp / MATog families for Dipodascales and Komagataella / Ogataea (#106, #109).
 - Optional gene-level `status: remnant|pseudogene` (#101, #103) and the schema value `mating_type.system: unknown` (#127).
 - Remnant proteins leave the search references (#103); the `unisexual_switching` system value (#98).
+- Defective gene models flagged (#152): a polished model with a frameshift or an internal stop codon, report-only. A report records the code it ran from (#157, #160): git describe, commit, dirty, and the source checkout's version.
 
 #### Tools and data
 - `scripts/deposit_to_record.py` (v2; #128): deterministic generator of core-only candidate records from GenBank deposits, with the curator rulings built in; it writes candidates only.
 - Validator rule: every exon lies inside its gene's start/end (#126). Truth sets and held-out tests: BioSample truth (#82, #91), Ascomycota held-out setup (#79), coordinate truth.
 - Reads typing datasets and k-mer panels for *Coccidioides*, *Cryptococcus*, *Fusarium* (#110, #112); per-family performance table (#108).
+- `defective_genes` in the clean-run tables and the site data (#159).
 
 #### Database records
 - Exon structures for 119 reference genes (#119, #126); *Hemileia vastatrix* rustHD (#116); *C. fimbriata* (#98); *V. dahliae* (#62); *Fusarium oxysporum* (#29); *Mycotypha africana* with a classifier rebuild (#25); ten Dothideomycetes references (#36); Dipodascales, *Komagataella* and *Ceratocystis* curation (#98, #106, #109); `MAT1-2-3` in the Ascomycota vocabulary (#63).
 - Corrections: *Tuber* `MAT1-1-1` A to S (#119, `record_version` 2 in #123); *Xanthoria* liq80xsp / liq146xsp `MAT1-2-1` (350 aa, 3 exons), *C. auris* B11243 full-length `MTLA1`, *Okayama* B43 notes (#133); *C. cinerea* B43 v2 (#56); the C4 / C5 *C. heterostrophus* records at `record_version` 2 (#132, #136).
+- Four candidate records for the *Candida parapsilosis* group and *Aciculoconidium* (#147, #150); they do not affect detection until promoted.
 
 #### Web
 - Browser page and landing site: locus downloads, taxon results explorer, per-genome tables, locus maps with NCBI links, About page, theme switcher, *Coccidioides* read-typing results (#64, #67, #72, #73, #77, #78, #80, #84, #85, #87, #90, #111).
 
 #### Changed
-- Polish alignments are capped at a 5 kb intron (#92); a locus verdict sets a pair loser aside only where its winner has a scored protein and, for first-pass-only decisions, is not shorter than 0.8 times the loser's protein (#140; narrows the "winners only" rule of #64 that the regression gate found withheld Mucoromycota `Plus` calls).
+- Polish alignments are capped at a 5 kb intron (#92), settable per locus (`max_intron_bp` in `order.yml`) and 10 kb for the Basidiomycota bLocus (#153); a locus verdict sets a pair loser aside only where its winner has a scored protein and, for first-pass-only decisions, is not shorter than 0.8 times the loser's protein (#140; narrows the "winners only" rule of #64 that the regression gate found withheld Mucoromycota `Plus` calls).
 - `taxonkit` failures are errors and not "taxonomy not current" (#93, #99).
 
 #### Fixed
@@ -47,12 +51,20 @@ The clean-run release. It adds the detection policies the curator rulings of 202
 
 
 ### Added (details)
+- `detect --preset v0.7`: one option sets the five policy options to the values that produced the v0.7.0 site data (`--partial-core-policy coverage_profile`, `--homothallic-policy both_genes`, `--scoped-roster-policy on`, `--confidence-cap-policy off`, `--strong-single-gene-policy off`). A policy flag given explicitly overrides the preset, whatever its value; the code defaults are unchanged (every policy off); the report's `run.parameters` records the preset and the resolved policies. A later release adds its own preset instead of editing this one. It applies to `matpredict detect` and to the scripts that call it (`run_clade_panel.slurm`, through `DETECT_ARGS`); the rollout path (`batch_runner.py`, `run_detection_batch.py`) passes none of the five policies, with or without a preset, as before.
+- Defective gene models (#152, issue #151): a polished model whose CDS has a frameshift (exonerate) or an internal stop codon (any tool, read in the frame with the fewest) is reported as defective: per gene `defective` with `frameshifts` and/or `internal_stops`, per locus `defective_genes`, and in the HTML report. Report-only (curator ruling 2026-10-25): no tier and no `polished_genes` count reads it. It says the model does not translate cleanly in this assembly; a real pseudogene shows in many isolates of a species (*L. parapsilosis* `MTLA1` in 97 of 97 loci with the intact *L. orthopsilosis* record as reference), an assembly indel in few (conserved *C. auris* genes about 1-1.5%). The stop count is a lower bound for short models. In the pilot of the definitive run it fires on 7.5% of polished Ascomycota entries, mostly low-identity `exonerate` models of the flank genes `APN2`, `COX13` and `SLA2` in distant orders, where an alignment artefact is likelier than a pseudogene.
+- The code a report ran from (#157, issue #139): `run.code` carries `git_describe`, `commit`, `dirty` (any change or untracked file under `src`, `db`, `scripts` or `pyproject.toml`) and `source_version`; absent when the package is not in a git checkout of this project; an unreadable checkout is logged.
+- `defective_genes` in the clean-run tables and the site data (#159): a `defective_genes` column in `loci.tsv`, `n_defective_loci` in `genomes.tsv`, `defective_loci` in `by_class.tsv` and `summary.json`, a trailing note field in the locus shards and a trailing `n_defective_loci` column in the site genome tables. All trailing, blank or 0 for older tables.
+- Four candidate reference records, not used by detection until promoted (#147, #150): *Aciculoconidium aculeatum* `MTLA1` from a BFD annotated genome; *L. orthopsilosis* MTLa (`HQ696681.1`), *L. metapsilosis* MTL alpha (`HQ696678.1`; the deposit's gene names say MTLa, the paper says alpha) and *L. parapsilosis* MTLa with `MTLA1` recorded as a pseudogene (`AY961981.1`), tier 2.
 - `scripts/deposit_to_record.py` (v2): deterministic generator of core-only reference records (MAT1-1-1 / MAT1-2-1) from GenBank deposits, with the curator rulings of 2026-10-22 built in (tier by PubMed citation, `system: unknown` by default, two-gene, partial, doubtful-structure, Helotiales `MAT1-1-1` and non-binomial deposits held for hand review, curated records win on conflict). Writes candidates only; no record is added to `db/` by this change. Dry run over the 106 deposits in `results/2026-10-22_curate_deposits_pilot/`.
 - `mating_type.system: unknown` in the metadata schema (curator ruling 2026-10-22): the breeding system is not established. Records generated from a single-gene deposit use it instead of a guess. No detection output reads the field.
 - `detect --homothallic-policy both_genes` (default off; PR #117): a locus holding a complete alpha-box gene and a complete HMG-box gene is classed `homothallic_candidate` with a `homothallic_note`, and (curator ruling 2026-10-22) its idiomorph is reported `undetermined` with the vote's winner kept in `homothallic_note.vote_idiomorph`. A candidate, not a statement of homothallism. Measured on 3,181 genomes: 99 loci re-classed, 0 changes on the controls (`docs/notes/2026-10-21_homothallic-patch-measurement.md`).
 - Optional gene-level `status: remnant|pseudogene` (and `remnant_note`) in the metadata schema; absent means intact. Metadata only: no detection output changes. `validate_gene_status`
   checks it against `present` (no model recorded vs a model recorded); the DuckDB `locus_gene` table gets `status` and `remnant_note` columns; `locus.gff3`/`locus.gbk` writers mark a status
   gene `/pseudo`; the self-consistency benchmark leaves such genes out of the expected set. Seven records are labelled (decision paper `docs/notes/2026-10-17_remnant-status.md`, option B step 1).
+
+### Changed (details)
+- A report's `run.matpredict_version` is now the version in the `pyproject.toml` of the source checkout the code runs from, when there is one (a `src/` layout whose project is MATPredict), and the installed package metadata otherwise. The metadata alone is stale on a shared environment whose editable install was never refreshed (issue #139: reports said 0.6.1 for code at 0.6.3). A wheel install is unchanged; `run.code` (git describe, commit, dirty, `source_version`) is unchanged. The HTML report's "rendered by" footer and `<meta generator>`, and `matpredict -V`, use the same version, so they agree with the report.
 
 ### Fixed (details)
 - `curate-db build-gff` no longer drops the CDS feature and `proteins.faa` entry of a gene with no `protein_accession` on an `assembly`-type segment (#121).
@@ -72,6 +84,24 @@ The clean-run release. It adds the detection policies the curator rulings of 202
   maximum of 517 bp. On the 166 curated loci (leave-one-out) 163 reports are identical; the others change a model or a withheld span (one Basidiomycota
   pheromone receptor goes from a 19.6 kb exonerate model to a 1.2 kb one). The campaign counts above, 38 Ascomycota and 20 Basidiomycota loci whose core
   model swallows a flank gene, will change on a re-run.
+- The intron cap is now settable per locus (`max_intron_bp` in `order.yml`; precedence: explicit argument, `MATPREDICT_MAX_INTRON_BP`, the locus value, 5 kb). The
+  Basidiomycota bLocus (bE/bW) is set to 10 kb: the global 5 kb lost the whole b-locus call in genomes whose genes the aligners still model at 8-10 kb. Of the 7
+  Basidiomycota genomes that lost a call to the 5 kb cap, 3 b-locus genomes return with ordinary models (largest intron 2.2-2.8 kb), 3 only return at 50-200 kb with
+  26-78 kb chimeric models and stay lost, and the pheromone-receptor one needs 20 kb and stays lost (a known limitation: long-intron pheromone-receptor models are
+  chimeric, as found for the 5 kb cap). On 216 Ustilaginales/Malasseziales genomes plus the 7 the only change is the 3 restored calls; on 500 random Basidiomycota
+  genomes 490 are identical and the rest are one 10.5 kb bW model (7.7 kb intron, call unchanged), two small bW boundary shifts and one new low-confidence HD locus.
+  Evidence: `results/2026-10-25_intron_cap/`.
+
+### The definitive run
+The v0.7.0 data come from the freeze tag `cleanrun-2026-10c` (commit `b317ece`), run with `--preset v0.7`, on database digest `285ee309...` (177 records; candidate records excluded). To reproduce the site data run `matpredict detect --preset v0.7 ...`. *(Counts, the comparison with v0.6.0 and with the first clean run, and the attribution of every difference are filled in after the run is aggregated.)*
+
+### Known issues
+- Detection rules the curator has chosen to report and not change in this release: the idiomorph margin falls back to an identity gap for single-candidate loci (#137, #145), the vote on short fragments and tiny margins (#138), a noise third gene breaking the 0.5 tie (#129). The tables carry `tier_note` and `label_unsupported` for them.
+- A better `MTLA1` hit can lower confidence because the unpolished-gene noise floor is a 39-bit cliff (#149); `MTLA1` is a polished model in 1,182 Serinales A loci but only a 20-28% fragment in 43 medium or low ones, and the rule is left as it is.
+- The Basidiomycota b-locus intron cap of 10 kb (#153) trades three restored calls for one suspect 10.5 kb bW model in a 500-genome sample (#154); the pheromone-receptor genome GCA_900009495.1 stays lost.
+- `defective` marks a model that does not translate cleanly in this assembly, which is not the same as a pseudogene (see above).
+- The rollout path (`batch_runner.py`, `run_detection_batch.py`) passes none of the policy options and writes reports without a `run` block.
+- Held out of this release and tracked in #155: promoting the candidate records, the noise-floor rule, the margin rules, and the rest of the curator's list.
 
 ## [0.6.2] — 2026-10-15 — `v0.6.2`
 

@@ -288,6 +288,16 @@ def write_detection_gff3(
             out_path.with_suffix(".fasta").write_text("\n".join(fasta_lines) + "\n")
 
 
+def defective_genes(result) -> list[str]:
+    """Names of the genes whose polished model is defective (a frameshift or an
+    internal stop codon), from the call's own evidence; the losing half of a
+    resolved pair is not this locus's gene and is skipped. Sorted, de-duplicated."""
+    return sorted({
+        e.gene_name for e in (getattr(result, "gene_evidence", None) or [])
+        if getattr(e, "defective", False) and not getattr(e, "lost_to", None)
+    })
+
+
 def core_span(r: DetectionResult) -> dict | None:
     """Extent of the locus's own gene models on its contig, and how far the reported span goes beyond it.
 
@@ -353,6 +363,11 @@ def _result_doc(r: DetectionResult) -> dict:
         # on every locus so a reader can see the evidence the bar is applied
         # to, not just its verdict.
         "polished_genes": r.polished_genes,
+        # Genes whose polished model is defective (a frameshift or an internal stop codon): a
+        # pseudogene is a result, e.g. C. parapsilosis MTLa1 (issue #151). Absent when none, so
+        # reports of intact loci are unchanged. Report-only: neither the tier nor `polished_genes`
+        # reads it.
+        **({"defective_genes": defective_genes(r)} if defective_genes(r) else {}),
         # How many separate places on the genome this call's evidence actually
         # occupies, grouping hits that overlap by >=50% of the shorter one.
         # A FIELD, not a gate -- emitted so a threshold can be set from data
@@ -450,6 +465,10 @@ def _result_doc(r: DetectionResult) -> dict:
                 "status": e.status,
                 "alternate_model": e.alternate_model,
                 **({"frameshifts": e.frameshifts} if getattr(e, "frameshifts", 0) else {}),
+                # Defective (pseudogenised) gene model: a frameshift or an internal stop codon
+                # (issue #151). Absent for an intact gene, so existing reports are unchanged.
+                **({"internal_stops": e.internal_stops} if getattr(e, "internal_stops", 0) else {}),
+                **({"defective": True} if getattr(e, "defective", False) else {}),
                 **({"lost_to": e.lost_to} if getattr(e, "lost_to", None) else {}),
                 "exons": [{"start": s, "end": end} for s, end in e.exons] if e.exons else None,
                 "evalue": e.evalue,

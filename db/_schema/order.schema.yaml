@@ -55,6 +55,12 @@ properties:
         flank_carried_window_bp:
           type: integer
           minimum: 0
+        # OPTIONAL. Longest intron (bp) a polish alignment of this locus's genes
+        # may span (miniprot -G, exonerate --maxintron). ABSENT MEANS the global
+        # 5000 of PR #92 (chimeric-model guard). See detect.search._max_intron_bp.
+        max_intron_bp:
+          type: integer
+          minimum: 1
         # OPTIONAL. Bitscore the strongest core hit of a flank-carried call
         # must reach (detect.flank_carried). ABSENT MEANS 39, the curator's
         # ruling of 2026-09-27 (replacing E <= 1e-5).

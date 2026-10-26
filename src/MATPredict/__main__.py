@@ -4,7 +4,8 @@ from __future__ import annotations
 import argparse
 import sys
 
-from MATPredict import __version__, logger
+from MATPredict import logger
+from MATPredict.detect.provenance import running_version
 from MATPredict.db.cli import register_subcommands
 from MATPredict.detect.cli import register_subcommands as register_detect_subcommands
 from MATPredict.reads.cli import register_subcommands as register_reads_subcommands
@@ -14,7 +15,7 @@ from MATPredict.report.cli import register_subcommands as register_report_subcom
 def build_parser() -> argparse.ArgumentParser:
     """Construct the top-level `matpredict` argument parser."""
     parser = argparse.ArgumentParser(prog="matpredict", description="MATPredict: fungal MAT locus tooling")
-    parser.add_argument("-V", "--version", action="version", version=__version__)
+    parser.add_argument("-V", "--version", action="version", version=running_version())
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose/debug logging")
     subparsers = parser.add_subparsers(dest="command", required=True)
     register_subcommands(subparsers)

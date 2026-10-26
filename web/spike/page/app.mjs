@@ -67,7 +67,7 @@ from MATPredict.detect import cli as detect_cli
 parser = argparse.ArgumentParser(prog="matpredict")
 subs = parser.add_subparsers(dest="cmd")
 detect_cli.register_subcommands(subs)
-args = parser.parse_args(["detect", "--genome", "/data/${genomeName}", "--phylum", "${phylum}", "--out-dir", "/out"])
+args = parser.parse_args(["detect", "--genome", "/data/${genomeName}", "--phylum", "${phylum}", "--preset", "v0.7", "--out-dir", "/out"])
 error = None
 rc = None
 try:

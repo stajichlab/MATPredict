@@ -6,6 +6,9 @@ release completed.
 
 ## [Unreleased]
 
+### Added
+- Logo (a lens finding the locus in the explorer's gene-map colours): `web/intro/logo/` with horizontal, stacked, mono and dark variants and a favicon, wordmark outlines traced from Nunito (SIL OFL). In the site header (theme-aware: the dark file for the dark and neuromancer themes), as the tab icon on the landing page, explorer, About page and browser tool, and at the top of the README.
+
 ## [0.7.0] — 2026-10-26 — `v0.7.0`
 
 The clean-run release. It adds the detection policies the curator rulings of 2026-09 to 2026-10 asked for (all **off by default**; the definitive run passes them with `--preset v0.7`, see `docs/notes/2026-10-22_clean-run-plan.md`), a scoped per-taxon roster, many reference-database records and exon structures, the browser page and landing site, and a series of fixes found by the pre-run regression gate. The package version moves from 0.6.3 (never tagged) to 0.7.0.

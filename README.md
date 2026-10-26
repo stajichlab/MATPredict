@@ -1,3 +1,5 @@
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="web/intro/logo/stacked-dark.svg"><img src="web/intro/logo/stacked.svg" alt="MATPredict" width="200"></picture></p>
+
 # MATPredict
 
 Find and type the mating-type (MAT) loci of fungi in genome assemblies.

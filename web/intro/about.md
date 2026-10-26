@@ -125,6 +125,19 @@ The calls on this site are the output of one release, with its gaps stated here 
 Held-out items and what each needs for the next release are tracked in
 [issue #155](https://github.com/stajichlab/MATPredict/issues/155).
 
+## Assessments and further reading
+
+The v0.7.0 results were judged campaign by campaign before release. These notes say what changed against the previous
+release, what was checked and what was not, and which decisions are still open. Read them for what the calls can and cannot support.
+
+- **Ascomycota:** [judgement](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/v070_ascomycota_judgement.md) (changes against v0.6.0, the truth checks and the reason for each confidence change).
+- **Basidiomycota:** [independent judgement](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/v070_basidiomycota_judgement.md) (lost and new calls, the long-intron models, the defective-gene flag, the nine open curator decisions).
+- **Mucoromycotina:** [judgement](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/v070_mucoromycotina_judgement.md).
+- **Before the run:** the [regression gate](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/regression_judgement.md) and the [pilot](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/pilot_judgement.md), and the [clean-run plan](https://github.com/stajichlab/MATPredict/blob/main/docs/notes/2026-10-22_clean-run-plan.md).
+- **Benchmarks and held-out sets:** the [held-out benchmark method](https://github.com/stajichlab/MATPredict/blob/main/docs/holdout-benchmark.md), the [held-out sets](https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-09-28_heldout-sets.md) and the [index of analyses](https://github.com/stajichlab/MATPredict/blob/main/analysis/INDEX.md).
+- **Validation and known limits:** the project [README](https://github.com/stajichlab/MATPredict#validation-and-known-limits) and the [changelog](https://github.com/stajichlab/MATPredict/blob/main/CHANGELOG.md) (see "Known issues" under 0.7.0).
+- **What is planned next:** [issue #155](https://github.com/stajichlab/MATPredict/issues/155) lists everything held out of this release and what each item needs.
+
 ## Source, issues and licence
 
 - Source code and documentation: https://github.com/stajichlab/MATPredict

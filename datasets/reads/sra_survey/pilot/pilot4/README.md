@@ -1,12 +1,12 @@
 # Pilot test 2: 80 runs, four species, checked against `detect` (2026-10-26)
 
-20 runs each of *Pyricularia oryzae* (no reference in the database), *Botrytis cinerea*, *Verticillium dahliae* and *Aspergillus flavus* (genus records only), 8 at a time on the HPCC (`../pilot4_runs.tsv` is the run list; `SUMMARY.md`, `summary_by_group.tsv`, `results_all.tsv` and `failures.tsv` are the results; interim copy made while the last run was still downloading). Each panel is the MAT1-1 and MAT1-2 locus with flanks cut from two BFD assemblies on the `detect` coordinates, as for *N. crassa* (`panels` on the cluster: `results/2026-10-26_v070_submit/panels/`; to be committed with the species' panel folders).
+20 runs each of *Pyricularia oryzae* (no reference in the database), *Botrytis cinerea*, *Verticillium dahliae* and *Aspergillus flavus* (genus records only), 8 at a time on the HPCC (`../pilot4_runs.tsv` is the run list; `SUMMARY.md`, `summary_by_group.tsv`, `results_all.tsv` and `failures.tsv` are the results; final: 79 of 80 runs done). Each panel is the MAT1-1 and MAT1-2 locus with flanks cut from two BFD assemblies on the `detect` coordinates, as for *N. crassa* (`panels` on the cluster: `results/2026-10-26_v070_submit/panels/`; to be committed with the species' panel folders).
 
-**Truth.** The `detect` idiomorph of a BFD assembly that shares the run's BioSample (via NCBI's assembly summary). 52 of the 78 finished runs have one.
+**Truth.** The `detect` idiomorph of a BFD assembly that shares the run's BioSample (via NCBI's assembly summary). 53 of the 79 finished runs have one.
 
 ## Result
-- **All 50 typed runs with a truth agree with `detect`: 16/16 *A. flavus*, 11/11 *B. cinerea*, 14/14 *P. oryzae*, 9/9 *V. dahliae*.** Two *P. oryzae* runs with a truth were not called (`low_depth`, below). No run was called with the wrong idiomorph.
-- Typed calls without a truth are plausible: *V. dahliae* 8 MAT1-2 and 0 MAT1-1 among the runs without truth (BFD assemblies: 54 MAT1-2, 5 MAT1-1); *A. flavus* 3 MAT1-2 and 1 MAT1-1; *B. cinerea* 5 MAT1-2, 2 MAT1-1.
+- **All 51 typed runs with a truth agree with `detect`: 16/16 *A. flavus*, 11/11 *B. cinerea*, 14/14 *P. oryzae*, 10/10 *V. dahliae*.** Two *P. oryzae* runs with a truth were not called (`low_depth`, below). No run was called with the wrong idiomorph.
+- Typed calls without a truth are plausible: *V. dahliae* 8 MAT1-2 and 0 MAT1-1 among the runs without truth (the 10 with truth: 9 MAT1-2, 1 MAT1-1, all right) (BFD assemblies: 54 MAT1-2, 5 MAT1-1); *A. flavus* 3 MAT1-2 and 1 MAT1-1; *B. cinerea* 5 MAT1-2, 2 MAT1-1.
 - The other idiomorph appears at low depth in many runs (the `trace_` flag). Among typed runs the other idiomorph's depth is a median 0.000, 90th percentile 0.19 and at most 0.41 of the shared-flank depth.
 
 ## Calls that are not a simple one-idiomorph call
@@ -19,10 +19,10 @@
 
 ## Not completed
 - `ERR2188722` (*P. oryzae*): **unavailable at NCBI.** Not in NCBI's AWS copy, and NCBI itself answers "no data (404)" for it (`prefetch`, `srapath`), while ENA has the FASTQ. About 1 run in 100 so far (the two other ERR runs, in the *N. crassa* test, were in the AWS copy). The worker now records `unavailable_at_ncbi`. Fetching such runs from ENA (0.13 to 0.9 MB/s) is possible but slow; not done.
-- `SRR8238192` (*V. dahliae*): a **128 Gb run (429 million spots), about 40 GB to download**, still running when this was written. My run choice (the largest paired run per sample) was wrong for this: the next selection takes the run nearest a few Gb and caps the size.
+- `SRR8238192` (*V. dahliae*): a **128 Gb run (429 million spots), 39.5 GB to download**. It finished (download 36 minutes, conversion 17 s, typing 63 s) and was typed MAT1-2, agreeing with `detect`. It was chosen by my rule (the largest paired run per sample), which was wrong: the next selection takes the run nearest a few Gb and caps the size. The windowed conversion made the size irrelevant for time after the download.
 
 ## Speed (measured)
-135.6 GB for the 78 finished runs; median 158 s per run; 12 to 15 MB/s per stream with 8 streams at once (about 110 MB/s together), against 17 to 20 MB/s per stream at 4 at once: it scales, with some loss per stream.
+175 GB for the 79 finished runs (39.5 GB of it one run); median 158 s per run; 12 to 15 MB/s per stream with 8 streams at once (about 110 MB/s together), against 17 to 20 MB/s per stream at 4 at once: it scales, with some loss per stream.
 
 ## Next
 - Look at the four non-simple calls (a second *P. oryzae* panel from another lineage; the VD991 locus; the two *B. cinerea* samples).

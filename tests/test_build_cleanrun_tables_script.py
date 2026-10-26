@@ -28,7 +28,7 @@ def ge(gene, status=POL, identity=60.0, coverage=80.0, lost_to=None, role="core_
 
 
 def det(idio="MAT1-2", conf="high", cls="mat_locus", margin=None, cands=1, genes=(), polished=None, ignored=(),
-        family="Ascomycota:MAT", contig="c1", start=1, end=5000, homothallic_vote=None):
+        family="Ascomycota:MAT", contig="c1", start=1, end=5000, homothallic_vote=None, defective=()):
     genes = list(genes)
     d = dict(family=family, contig=contig, start=start, end=end, confidence=conf, idiomorph=idio,
              idiomorph_candidates=[dict(idiomorph=f"I{i}", score=50.0 - i) for i in range(cands)],
@@ -38,6 +38,8 @@ def det(idio="MAT1-2", conf="high", cls="mat_locus", margin=None, cands=1, genes
              confidence_ignored_genes=list(ignored))
     if homothallic_vote:
         d["homothallic_note"] = dict(vote_idiomorph=homothallic_vote)
+    if defective:                       # the report writes the key only when a gene is defective (issue #151)
+        d["defective_genes"] = sorted(defective)
     return d
 
 
@@ -234,7 +236,7 @@ def _tree(tmp_path):
     _report(old, "wave_0/runs/G2", [det(idio="MAT1-2", conf="high", margin=9.0, cands=2, genes=[ge("MAT1-1-1")])])
     (new / "wave_0/small_001/runs/G3").mkdir(parents=True)
     (new / "wave_0/small_001/runs/G3/stderr.log").write_text("boom\n")
-    _report(new, "wave_0/small_002/runs/G4", [det(idio="MAT1-1", genes=[ge("MAT1-1-1"), ge("GAP1")])])
+    _report(new, "wave_0/small_002/runs/G4", [det(idio="MAT1-1", genes=[ge("MAT1-1-1"), ge("GAP1")], defective=["GAP1", "MAT1-1-1"])])
     _report(new, "wave_0/small_002/runs/UNLISTED", [])
     # G5 outside the Pleosporaceae scope: a high call resting on the opposite core gene only
     _report(new, "wave_0/small_002/runs/G5", [det(idio="MAT1-2", genes=[ge("MAT1-2-1"), ge("MAT1-1-1")])])
@@ -274,9 +276,29 @@ def test_end_to_end_tables(tmp_path):
     assert loci["G2"]["idiomorph"] == "MAT1-1" and loci["G2"]["confidence"] == "medium"   # the report's values are kept
     assert loci["G4"]["high_basis"] == "tie_break" and loci["G4"]["high_basis_outside_scope"] == ""
     assert loci["G5"]["high_basis"] == "" and loci["G5"]["high_basis_outside_scope"] == "tie_break"
+    # defective genes (#151): the locus lists them `|`-joined, the genome counts loci, an intact locus stays blank/zero
+    assert loci["G4"]["defective_genes"] == "GAP1|MAT1-1-1" and G["G4"]["n_defective_loci"] == "1"
+    assert all(loci[g]["defective_genes"] == "" for g in ("G1", "G2", "G5"))
+    assert [G[g]["n_defective_loci"] for g in ("G1", "G2", "G3", "G5")] == ["0", "0", "0", "0"]    # G3 failed: a count of 0
     by = _rows(out / "by_class.tsv")
+    assert by[0]["defective_loci"] == "1"
     assert (by[0]["high_tie_break"], by[0]["outside_scope_high_tie_break"]) == ("1", "1")
     assert by[0]["class"] == "Dothideomycetes" and by[0]["margin_fallback"] == "1" and by[0]["vote_collapse"] == "1"
+
+
+def test_by_rank_counts_loci_with_a_defective_gene_not_genes():
+    base = dict(baseline_confidence="", confidence="high", tier_note="", high_basis="", high_basis_outside_scope="",
+                label_unsupported="no")
+    G = [dict(class_="C1", status="called", wall_s="5", routing="lineage"),
+         dict(class_="C1", status="uncalled", wall_s="7", routing="lineage"),
+         dict(class_="C2", status="called", wall_s="9", routing="lineage")]
+    Lr = [dict(base, class_="C1", defective_genes="MAT1-1-1|GAP1"),      # one locus with two defective genes counts once
+          dict(base, class_="C1", defective_genes="PIK1"),
+          dict(base, class_="C1", defective_genes=""),
+          dict(base, class_="C2", defective_genes="")]
+    head, rows = bct.by_rank(G, Lr, "class_")
+    assert head[-1] == "defective_loci"
+    assert {r[0]: r[-1] for r in rows} == {"C1": 2, "C2": 0}
 
 
 def test_output_is_deterministic_and_a_tarball_reads_like_the_folder(tmp_path):
@@ -309,7 +331,8 @@ def test_mucoromycotina_layout(tmp_path):
     new.mkdir()
     (new / "inputs.tsv").write_text("source\tid\tgenome\torder\tspecies\ttaxid\n"
                                     "BFD\tGCA_1\t/x.fa\tMucorales\tMucor lusitanicus\t1\nLCG\tAbsidia_x_1\t/y.fa\t\t\t\n")
-    _report(new, "runs/BFD__GCA_1", [det(idio="Plus", family="Mucoromycota:MAT", margin=40.0, cands=2, genes=[ge("sexP")])])
+    _report(new, "runs/BFD__GCA_1", [det(idio="Plus", family="Mucoromycota:MAT", margin=40.0, cands=2, genes=[ge("sexP")],
+                                         defective=["sexP"])])
     _report(new, "runs/LCG__Absidia_x_1", [])
     calls = tmp_path / "calls.tsv"
     calls.write_text("source\tgenome\tname\tbfd_order\nLCG\tAbsidia_x_1\tAbsidia x NRRL 1\t\n")
@@ -321,3 +344,4 @@ def test_mucoromycotina_layout(tmp_path):
         ("LCG", "Absidia_x_1", "Absidia x NRRL 1", "Mucoromycotina", "", "uncalled")]
     loci = _rows(out / "loci.tsv")
     assert loci[0]["source"] == "BFD" and loci[0]["margin_basis"] == "bits" and loci[0]["label_unsupported"] == "no"
+    assert loci[0]["defective_genes"] == "sexP" and [r["n_defective_loci"] for r in G] == ["1", "0"]     # #151 in the mucoro layout

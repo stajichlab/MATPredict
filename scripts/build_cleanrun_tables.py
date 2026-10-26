@@ -62,10 +62,14 @@ New per-locus columns (loci.tsv):
                      (Curator 2026-10-24: the scope stays the BFD FAMILY label Pleosporaceae.)
   high_basis_outside_scope  the same rule for `high` Ascomycota:MAT idiomorph calls OUTSIDE the scope families,
                      reported separately so its counts never mix with the scoped column (blank inside the scope).
+  defective_genes   genes of the locus whose polished model has a frameshift or an internal stop codon (issue #151,
+                     `defective_genes` in the report), `|`-joined; blank when none or when the report predates the field.
+                     Report-only: the tier and `polished_genes` do not read it. It says "defective in this assembly";
+                     a real pseudogene shows in many isolates of a species, an assembly indel in few.
 New per-genome columns (genomes.tsv): genus, baseline_status, change_vs_baseline (the phase-5 judgement's
 category, computed on the first locus of each sorted locus list, so it can differ from the per-locus view),
 n_tier_drop (loci whose tier dropped), n_tier_note, n_label_unsupported, high_basis (distinct values over the
-genome's loci).
+genome's loci), n_defective_loci (loci with at least one defective gene). by_class.tsv ends with `defective_loci`.
 
 Taxonomy: --samples (BFD samples.csv: ASMID, SPECIES, CLASS, ORDER, FAMILY, GENUS). For --layout mucoro, the
 names and orders come from --baseline-calls (the v0.6.0 `calls.tsv`) and then `inputs.tsv`.
@@ -106,11 +110,12 @@ TIER_NOTES = ("margin_fallback", "vote_collapse", "polished_model_lost", "distan
 
 GENOME_COLS = ["genome", "species", "class_", "order", "family", "status", "routing", "n_loci", "families_called", "wall_s",
                "genus", "not_searched_reason", "baseline_status", "change_vs_baseline", "n_tier_drop", "n_tier_note", "n_label_unsupported",
-               "high_basis"]
+               "high_basis", "n_defective_loci"]
 LOCUS_COLS = ["genome", "class_", "order", "family_called", "contig", "start", "end", "idiomorph", "confidence", "locus_class",
               "detection_pass", "genes_found", "verification",
               "genus", "family", "polished_genes", "idiomorph_margin", "margin_basis", "n_candidates", "baseline_confidence",
-              "tier_note", "label_unsupported", "label_unsupported_reason", "high_basis", "high_basis_outside_scope"]
+              "tier_note", "label_unsupported", "label_unsupported_reason", "high_basis", "high_basis_outside_scope",
+              "defective_genes"]
 
 
 # ----------------------------------------------------------------------------------------------- reading reports
@@ -135,6 +140,7 @@ def summarise_locus(x):
         "n_candidates": len(x.get("idiomorph_candidates") or []),
         "vote_idiomorph": note.get("vote_idiomorph"),
         "ignored": sorted(set(x.get("confidence_ignored_genes") or [])),
+        "defective": sorted(set(x.get("defective_genes") or [])),   # genes whose polished model has a frameshift or an internal stop
         "genes": [{"gene": e.get("gene"), "status": e.get("status"), "identity": _fnum(e.get("identity")),
                    "coverage": _fnum(e.get("coverage")), "lost_to": e.get("lost_to")}
                   for e in (x.get("gene_evidence") or [])],
@@ -467,7 +473,7 @@ def build(new, base, listed, samples, mucoro_names, inputs_rows, scope, mucoro=F
             if run and run["stderr"]:
                 row["status"] = "failed"
             row.update(change_vs_baseline=change_category(None, bsum) if base_given else "", n_tier_drop=0,
-                       n_tier_note=0, n_label_unsupported=0, high_basis="")
+                       n_tier_note=0, n_label_unsupported=0, high_basis="", n_defective_loci=0)
             G.append(row)
             continue
         loci = summ["loci"]
@@ -501,8 +507,9 @@ def build(new, base, listed, samples, mucoro_names, inputs_rows, scope, mucoro=F
                           margin_basis=margin_basis(x), n_candidates=x["n_candidates"],
                           baseline_confidence=o["confidence"] if o else "", tier_note=note,
                           label_unsupported="yes" if lab else "no", label_unsupported_reason=lab, high_basis=hb,
-                          high_basis_outside_scope=hb_out))
-        row.update(n_tier_drop=n_drop, n_tier_note=n_note, n_label_unsupported=n_lab, high_basis="|".join(sorted(bases)))
+                          high_basis_outside_scope=hb_out, defective_genes="|".join(x["defective"])))
+        row.update(n_tier_drop=n_drop, n_tier_note=n_note, n_label_unsupported=n_lab, high_basis="|".join(sorted(bases)),
+                   n_defective_loci=sum(1 for x in loci if x["defective"]))
         G.append(row)
     return G, L, tally
 
@@ -523,7 +530,8 @@ def by_rank(G, L, rank):
 
     head = [rank, "genomes", "reports", "called", "pct_called", "routing", "wall_median_s", "wall_p90_s", "wall_max_s",
             "loci", "n_label_unsupported", "tier_dropped", "tier_dropped_noted"] + list(TIER_NOTES) + ["high_supported", "high_tie_break", "high_grey",
-                                    "outside_scope_high_supported", "outside_scope_high_tie_break", "outside_scope_high_grey"]
+                                    "outside_scope_high_supported", "outside_scope_high_tie_break", "outside_scope_high_grey",
+                                    "defective_loci"]
     rows = []
     for c, rs in sorted(by.items(), key=lambda x: (-len(x[1]), x[0])):
         rep = [r for r in rs if r["status"] in ("called", "uncalled")]
@@ -540,7 +548,8 @@ def by_rank(G, L, rank):
                      int(statistics.median(wall)) if wall else "", q(wall, .9) if wall else "", max(wall) if wall else "",
                      len(ls), sum(x["label_unsupported"] == "yes" for x in ls), dropped, sum(notes[n] for n in TIER_NOTES)]
                     + [notes[n] for n in TIER_NOTES] + [hb["supported"], hb["tie_break"], hb["grey"],
-                                                                     ho["supported"], ho["tie_break"], ho["grey"]])
+                                                                     ho["supported"], ho["tie_break"], ho["grey"],
+                                                                     sum(1 for x in ls if x["defective_genes"])])
     return head, rows
 
 

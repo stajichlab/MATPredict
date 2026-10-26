@@ -6,9 +6,7 @@ release completed.
 
 ## [Unreleased]
 
-## [0.7.0] — unreleased — `v0.7.0`
-
-*Draft written 2026-10-23 from the pull requests merged since v0.6.2 (#66-#142) and updated 2026-10-26 for #143-#160; the date and tag are set when the release is cut. Check the entries against the clean-run results before publishing.*
+## [0.7.0] — 2026-10-26 — `v0.7.0`
 
 The clean-run release. It adds the detection policies the curator rulings of 2026-09 to 2026-10 asked for (all **off by default**; the definitive run passes them with `--preset v0.7`, see `docs/notes/2026-10-22_clean-run-plan.md`), a scoped per-taxon roster, many reference-database records and exon structures, the browser page and landing site, and a series of fixes found by the pre-run regression gate. The package version moves from 0.6.3 (never tagged) to 0.7.0.
 

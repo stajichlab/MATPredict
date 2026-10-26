@@ -6,6 +6,9 @@ release completed.
 
 ## [Unreleased]
 
+### Changed
+- A report's `run.matpredict_version` is now the version in the `pyproject.toml` of the source checkout the code runs from, when there is one (a `src/` layout whose project is MATPredict), and the installed package metadata otherwise. The metadata alone is stale on a shared environment whose editable install was never refreshed (issue #139: reports said 0.6.1 for code at 0.6.3). A wheel install is unchanged; `run.code` (git describe, commit, dirty, `source_version`) is unchanged.
+
 ### Added
 - `detect --preset v0.7`: one option sets the five policy options to the values that produced the v0.7.0 site data (`--partial-core-policy coverage_profile`, `--homothallic-policy both_genes`, `--scoped-roster-policy on`, `--confidence-cap-policy off`, `--strong-single-gene-policy off`). A policy flag given explicitly overrides the preset, whatever its value; the code defaults are unchanged (every policy off); the report's `run.parameters` records the preset and the resolved policies. A later release adds its own preset instead of editing this one. It applies to `matpredict detect` and to the scripts that call it (`run_clade_panel.slurm`, through `DETECT_ARGS`); the rollout path (`batch_runner.py`, `run_detection_batch.py`) passes none of the five policies, with or without a preset, as before.
 - `scripts/deposit_to_record.py` (v2): deterministic generator of core-only reference records (MAT1-1-1 / MAT1-2-1) from GenBank deposits, with the curator rulings of 2026-10-22 built in (tier by PubMed citation, `system: unknown` by default, two-gene, partial, doubtful-structure, Helotiales `MAT1-1-1` and non-binomial deposits held for hand review, curated records win on conflict). Writes candidates only; no record is added to `db/` by this change. Dry run over the 106 deposits in `results/2026-10-22_curate_deposits_pilot/`.

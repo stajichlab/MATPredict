@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="MATPredict: a mating-type locus gene map">
+  <title>MATPredict</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d2b4e"/><stop offset="1" stop-color="#07182e"/></linearGradient>
+    <linearGradient id="hy" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4c9be8"/><stop offset="1" stop-color="#e46fb5"/></linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#bg)"/>
+  <!-- chromosome -->
+  <path d="M26 150H230" stroke="#8fd0f5" stroke-opacity=".45" stroke-width="4" stroke-linecap="round"/>
+  <!-- flanking genes -->
+  <path d="M30 128h40l12 22-12 22H30z" fill="#2fc596"/>
+  <path d="M226 128h-40l-12 22 12 22h40z" fill="#2fc596"/>
+  <!-- the winning core MAT gene -->
+  <path d="M96 100h64l22 26-22 26H96z" fill="#4c9be8"/>
+  <!-- the gene set aside (pale, solid outline) -->
+  <path d="M160 160H96l-22 26 22 26h64z" fill="#e46fb5" fill-opacity=".22" stroke="#e46fb5" stroke-width="5" stroke-linejoin="round"/>
+  <!-- two mating hyphae meeting above the locus -->
+  <path d="M72 78C72 56 100 52 128 52S184 56 184 78" fill="none" stroke="url(#hy)" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="72" cy="80" r="9" fill="#4c9be8"/><circle cx="184" cy="80" r="9" fill="#e46fb5"/>
+  <circle cx="128" cy="52" r="7" fill="#f5b335"/>
+</svg>

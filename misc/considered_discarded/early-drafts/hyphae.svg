@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="MATPredict: two compatible hyphae fuse">
+  <title>MATPredict</title>
+  <defs><radialGradient id="g" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#f7fbff"/><stop offset="1" stop-color="#dce9f7"/></radialGradient></defs>
+  <circle cx="128" cy="128" r="120" fill="url(#g)"/>
+  <circle cx="128" cy="128" r="120" fill="none" stroke="#0a5da8" stroke-width="6"/>
+  <!-- plus hypha -->
+  <path d="M46 206C52 150 84 126 118 110" fill="none" stroke="#0a5da8" stroke-width="22" stroke-linecap="round"/>
+  <!-- minus hypha -->
+  <path d="M210 206C204 150 172 126 138 110" fill="none" stroke="#c2418c" stroke-width="22" stroke-linecap="round"/>
+  <!-- fused zygote tube -->
+  <path d="M128 112V84" stroke="#7d3f9e" stroke-width="22" stroke-linecap="round"/>
+  <circle cx="128" cy="112" r="18" fill="#7d3f9e"/>
+  <!-- locus bar on the fusion tube -->
+  <g transform="translate(128 62)"><path d="M-34 -10h26l8 10-8 10h-26z" fill="#2fc596"/><path d="M34 -10h-26l-8 10 8 10h26z" fill="#f0a000"/></g>
+  <!-- septa -->
+  <g stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".7"><path d="M62 178l16 -8"/><path d="M194 178l-16 -8"/><path d="M70 146l15 -9"/><path d="M186 146l-15 -9"/></g>
+</svg>

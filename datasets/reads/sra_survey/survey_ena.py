@@ -12,13 +12,15 @@ Writes species_summary.tsv and studies.tsv next to --out. Deterministic: same in
 """
 import argparse, csv, collections, os, re
 
-MUTANT = re.compile(r"mutant|knock-?out|deletion|disrupt|insertion library|transposon|t-dna|crispr|overexpress|rnai|gene replacement|"
+MUTANT = re.compile(r"mutant|knock-?out|deletion (collection|strain|library|set|mutant)s?|gene deletions?|deletants?|disrupt|insertion library|transposon|t-dna|crispr|overexpress|rnai|gene replacement|"
                     r"deleted|Δ|delta[- ]?\w+|\bko\b|library of (mutants|strains)|"
                     r"engineered|constructed|reporter|gfp|bfp|tagged|edited|suppressors?\b|alleles?\b|lacking|absence of|\bnull\b|"
                     r"point mutation|non[- ]essential gene|chimeric", re.I)
 EVOLVE = re.compile(r"experimental evolution|evolution experiment|evolved|serial passage|mutation[- ]accumulation|passaged|adaptive evolution|"
                     r"laboratory evolution|time[- ]?course|selection experiment", re.I)
 CROSS = re.compile(r"progeny|segregant|backcross|\bf[12]\b|tetrad|meiotic|recombinant (inbred|strains)|genetic cross|offspring", re.I)
+# On the strain and sample text of a study (not its title) only these count: a clinical sample description can say "lacking" or "indels".
+MUTANT_STRAIN = re.compile(r"mutant|knock-?out|Δ|delta\d|\bko\b|crispr|deletants?|disruptants?", re.I)
 # A title that names a natural or clinical sampling is not left out as `evolution` or `cross` on a stray keyword (a surveillance study
 # whose title contains "F1", a clinical series described as "evolution of resistance"). It never rescues a `mutant` study.
 PROTECT = re.compile(r"surveillance|point prevalence|\bsurvey\b|clinical isolates|outbreak|epidemiolog|\bgwas\b|natural (isolates|populations?)|"
@@ -106,7 +108,7 @@ def main():
             flag = ""
             tt = title.get(st, "")
             frac = lambda rx: sum(1 for k in ks if rx.search(txt[k]) or rx.search(k)) / len(ks)
-            if MUTANT.search(tt) or frac(MUTANT) >= .5:
+            if MUTANT.search(tt) or frac(MUTANT_STRAIN) >= .5:
                 flag = "mutant"
             elif not PROTECT.search(tt) and (EVOLVE.search(tt) or frac(EVOLVE) >= .5):
                 flag = "evolution"

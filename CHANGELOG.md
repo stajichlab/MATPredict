@@ -6,6 +6,11 @@ release completed.
 
 ## [Unreleased]
 
+### Changed
+- Locus maps (explorer) mark the outcome of a resolved idiomorph pair: the gene that won the call keeps its solid fill and the gene set aside (`lost_to` in the report) is drawn pale with a solid outline and labelled "(set aside)"; the tooltip gives the basis and scores (HMM bitscore or alignment identity, for example "won over sexM (HMM score 364 vs 71)"), the locus line names the winner, and the legend has a new entry. The locus shards carry the verdict as a seventh item of a gene entry (`[W|L, other gene, basis, scores]`); a gene outside a resolved pair keeps the six-item form, so readers of the old shards are unaffected. Shards rebuilt for v0.7.0 data.
+- Mucoromycotina tables: a blank order or family is filled from the genus (`scripts/mucoromycotina_genus_lineage.tsv`, NCBI taxonomy of the 51 genera, option `--genus-lineage`); a given order or family is never overwritten. The ZyGoLife LCG and Jena genomes had no order or family, and none of the Mucoromycotina inputs carried a family, so they sat under "(none)" in the explorer. Only the `order` and `family` columns of `genomes.tsv` and `loci.tsv` change (685 and 974 rows); calls, loci and `by_class.tsv` are identical. `build_site_data.py` now carries the family into the taxa rows and the genome tables (it was hard-coded blank), so the explorer groups Mucoromycotina by order, family and genus.
+
+
 ## [0.7.0] — 2026-10-26 — `v0.7.0`
 
 The clean-run release. It adds the detection policies the curator rulings of 2026-09 to 2026-10 asked for (all **off by default**; the definitive run passes them with `--preset v0.7`, see `docs/notes/2026-10-22_clean-run-plan.md`), a scoped per-taxon roster, many reference-database records and exon structures, the browser page and landing site, and a series of fixes found by the pre-run regression gate. The package version moves from 0.6.3 (never tagged) to 0.7.0.

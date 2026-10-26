@@ -15,6 +15,9 @@ export const contigLink = (c, s, e) => ACC.test(c)
 
 const ROLE = { core_MAT: "var(--c1)", flanking_conserved: "var(--c3)", flanking_variable: "var(--c5)" };
 const SOLID = new Set(["polished_agree", "polished_single", "polished_disagree"]);
+const BASIS = { hmm_bitscore: "HMM score", first_pass_identity: "alignment identity" };
+// A gene's verdict (shard gene item 7): ["W" won | "L" was set aside, the other gene, the basis, "winner vs loser" scores].
+const why = v => `${BASIS[v[2]] || String(v[2]).replace(/_/g, " ")}${v[3] ? " " + v[3] : ""}`;
 
 // SVG gene map. Genes are placed in lanes so neither arrows nor labels overlap.
 export function locusSvg(locus) {
@@ -33,13 +36,16 @@ export function locusSvg(locus) {
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gene map of ${esc(contig)}:${start}-${end}">`;
   s += `<rect x="${x(start)}" y="${top - 4}" width="${Math.max(2, x(end) - x(start))}" height="${axisY - top + 4}" fill="var(--locus)" opacity=".85"><title>Called locus ${fmt(start)}–${fmt(end)}</title></rect>`;
   for (const { g, x0, x1, lane } of placed) {
-    const [name, gs, ge, strand, role, status] = g, y = top + lane * laneH + 13, h = 12, w = Math.max(3, x1 - x0), hd = Math.min(7, w);
+    const [name, gs, ge, strand, role, status, verdict] = g, lost = verdict && verdict[0] === "L", y = top + lane * laneH + 13, h = 12, w = Math.max(3, x1 - x0), hd = Math.min(7, w);
     const fwd = strand !== "-", pts = fwd ? `${x0},${y} ${x0 + w - hd},${y} ${x0 + w},${y + h / 2} ${x0 + w - hd},${y + h} ${x0},${y + h}`
                                          : `${x0 + hd},${y} ${x0 + w},${y} ${x0 + w},${y + h} ${x0 + hd},${y + h} ${x0},${y + h / 2}`;
     const col = ROLE[role] || "var(--other)", solid = SOLID.has(status);
-    s += `<polygon points="${pts}" fill="${solid ? col : "none"}" stroke="${col}" stroke-width="${solid ? 0 : 1.5}" ${solid ? "" : 'stroke-dasharray="3 2"'}><title>${esc(name)} ${fmt(gs)}–${fmt(ge)} (${esc(strand)}), ${esc(role)}, ${esc(status)}</title></polygon>`;
+    const note = verdict ? (lost ? ` — set aside: lost the idiomorph call to ${verdict[1]} (${why(verdict)})` : ` — won the idiomorph call over ${verdict[1]} (${why(verdict)})`) : "";
+    // A gene set aside in a resolved pair is drawn pale with a solid outline, so it does not read as a second called gene.
+    s += lost ? `<polygon points="${pts}" fill="${col}" fill-opacity=".18" stroke="${col}" stroke-width="1.5"><title>${esc(name)} ${fmt(gs)}–${fmt(ge)} (${esc(strand)}), ${esc(role)}, ${esc(status)}${esc(note)}</title></polygon>`
+      : `<polygon points="${pts}" fill="${solid ? col : "none"}" stroke="${col}" stroke-width="${solid ? 0 : 1.5}" ${solid ? "" : 'stroke-dasharray="3 2"'}><title>${esc(name)} ${fmt(gs)}–${fmt(ge)} (${esc(strand)}), ${esc(role)}, ${esc(status)}${esc(note)}</title></polygon>`;
     const right = x0 + name.length * 6.4 > W - pad;
-    s += `<text x="${right ? Math.max(x1, x0) : x0}" y="${y - 3}" font-size="11"${right ? ' text-anchor="end"' : ""}>${esc(name)}</text>`;
+    s += `<text x="${right ? Math.max(x1, x0) : x0}" y="${y - 3}" font-size="11"${right ? ' text-anchor="end"' : ""}${lost ? ' class="m"' : ""}>${esc(name)}${lost ? " (set aside)" : ""}</text>`;
   }
   s += `<line x1="${pad}" x2="${W - pad}" y1="${axisY}" y2="${axisY}" stroke="var(--muted)"/>`;
   s += `<text x="${pad}" y="${axisY + 14}" font-size="11" class="m">${fmt(Math.round(lo))}</text><text x="${W - pad}" y="${axisY + 14}" font-size="11" text-anchor="end" class="m">${fmt(Math.round(hi))}</text>`;
@@ -48,8 +54,11 @@ export function locusSvg(locus) {
   return s + "</svg>";
 }
 
+// " · sexP won over sexM (HMM score 364 vs 71)" for a locus whose idiomorph pair was resolved; "" otherwise.
+const winnerNote = l => l[6].filter(g => g[6] && g[6][0] === "W").map(g => ` · ${esc(g[0])} won over ${esc(g[6][1])} (${esc(why(g[6]))})`).join("");
+
 export const LEGEND = `<div class="legend"><span><i style="background:var(--c1)"></i>core MAT gene</span><span><i style="background:var(--c3)"></i>conserved flank gene</span>` +
-  `<span><i style="background:var(--c5)"></i>variable flank gene</span><span><i style="border:1.5px dashed var(--muted)"></i>unpolished (search hit only)</span><span><i style="background:var(--locus)"></i>called locus span</span></div>`;
+  `<span><i style="background:var(--c5)"></i>variable flank gene</span><span><i style="border:1.5px dashed var(--muted)"></i>unpolished (search hit only)</span><span><i style="background:var(--c1);opacity:.25;border:1.5px solid var(--c1)"></i>set aside: lost the idiomorph call to the other core gene</span><span><i style="background:var(--locus)"></i>called locus span</span></div>`;
 
 // genomes: [{dataset, genome, species, status, call}]; shards: {dataset: {genome: [locus...]}}
 export function renderCards(el, genomes, shards, { limit = 40 } = {}) {
@@ -61,7 +70,7 @@ export function renderCards(el, genomes, shards, { limit = 40 } = {}) {
     return `<div class="card locus-card"><div><b><i>${esc(g.species_recorded || g.species || "unnamed")}</i></b> · ` +
       (asm ? `<a href="https://www.ncbi.nlm.nih.gov/datasets/genome/${asm[1]}/" target="_blank" rel="noopener">${esc(g.genome)}</a>` : esc(g.genome)) +
       ` <span class="tag">${esc(g.call)}</span></div>` +
-      loci.map(l => `<div class="muted" style="margin-top:8px">${contigLink(l[0], l[1], l[2])}:${fmt(l[1])}–${fmt(l[2])} · ${esc(l[3])} · ${esc(l[4])} · ${esc(l[5].replace(/_/g, " "))}</div>${locusSvg(l)}`).join("") + `</div>`;
+      loci.map(l => `<div class="muted" style="margin-top:8px">${contigLink(l[0], l[1], l[2])}:${fmt(l[1])}–${fmt(l[2])} · ${esc(l[3])} · ${esc(l[4])} · ${esc(l[5].replace(/_/g, " "))}${winnerNote(l)}</div>${locusSvg(l)}`).join("") + `</div>`;
   };
   let shown = 0;
   const more = () => { const part = called.slice(shown, shown + limit); shown += part.length; el.querySelector(".cards-list").insertAdjacentHTML("beforeend", part.map(card).join("")); el.querySelector(".more").hidden = shown >= called.length; };

@@ -4,7 +4,8 @@
 Reads each campaign's reports_all.tar.zst (one detection_report.yaml per genome, at any depth: v0.6.0
 `wave_N/runs/<genome>/`, clean-run `wave_N/small_NNN/runs/<genome>/` or `runs/small_NNN/runs/<genome>/`,
 Mucoromycotina `<SOURCE>__<id>/`) and keeps, for every detected locus, the contig, span, idiomorph,
-confidence, locus class and the gene models (name, span, strand, role, status). When the campaign folder also
+confidence, locus class and the gene models (name, span, strand, role, status; and, for a gene that took part in a resolved
+idiomorph pair, a seventh item [W|L, the other gene, the basis, the scores]: W won the call, L was set aside). When the campaign folder also
 holds the clean-run `loci.tsv` (scripts/build_cleanrun_tables.py), each locus gets five more fields after the
 gene list: baseline_confidence, tier_note, label_unsupported_reason, high_basis and defective_genes (the viewer reads fields 0-6
 and ignores the rest). A genome whose loci.tsv rows do not match its report's loci in number stops the build.
@@ -36,7 +37,8 @@ from build_cleanrun_tables import choose_run  # noqa: E402
 from build_site_data import DEFAULT_RELEASE, RELEASES, REPO, resolve_release  # noqa: E402
 
 MUCORO = {"BFD": "bfd_mucoro", "LCG": "zygolife_lcg", "JENA": "zygolife_jena"}
-FIELDS = ["contig", "start", "end", "idiomorph", "confidence", "locus_class", "genes[name,start,end,strand,role,status]"]
+FIELDS = ["contig", "start", "end", "idiomorph", "confidence", "locus_class",
+          "genes[name,start,end,strand,role,status,(verdict: W|L, other gene, basis, scores)]"]
 NOTE_FIELDS = ["baseline_confidence", "tier_note", "label_unsupported_reason", "high_basis", "defective_genes"]
 
 
@@ -54,8 +56,38 @@ def reports(tar_path):
         raise RuntimeError(f"zstd failed on {tar_path}")
 
 
+def _score(r):
+    """The verdict's scores as text, winner first: the HMM bitscores when it used them, else the alignment identities; or ""."""
+    w, lo = r.get("winner_hmm_score"), r.get("loser_hmm_score")
+    if w is not None and lo is not None:
+        return f"{w:.0f} vs {lo:.0f}"
+    w, lo = r.get("winner_identity"), r.get("loser_identity")
+    return f"{w:.1f}% vs {lo:.1f}%" if w is not None and lo is not None else ""
+
+
+def verdicts(l):
+    """{gene entry index: ["W"|"L", other gene, basis, "winner vs loser score"]} for the genes of a locus that took part in a
+    resolved idiomorph pair: W won, L was set aside (the report's gene `lost_to`, `idiomorph_resolutions`). The pair is matched by
+    gene names and, when the report gives them, by the gene's own span. A gene with no verdict gets no entry."""
+    genes, out = l.get("gene_evidence") or [], {}
+    for r in l.get("idiomorph_resolutions") or []:
+        win, lose = r.get("winner"), r.get("loser")
+        basis, score = r.get("basis") or "", _score(r)
+        for role, name, other, span in (("W", win, lose, r.get("winner_span")), ("L", lose, win, r.get("loser_span"))):
+            for i, g in enumerate(genes):
+                if g.get("gene") != name or i in out or (span and [g.get("start"), g.get("end")] != list(span)):
+                    continue
+                if role == "L" and g.get("lost_to") not in (None, other):
+                    continue
+                out[i] = [role, other, basis, score]
+                break
+    return out
+
+
 def locus_row(l):
-    genes = [[g["gene"], g["start"], g["end"], g["strand"], g["role"], g["status"]] for g in (l.get("gene_evidence") or [])]
+    verdict = verdicts(l)
+    genes = [[g["gene"], g["start"], g["end"], g["strand"], g["role"], g["status"]] + ([verdict[i]] if i in verdict else [])
+             for i, g in enumerate(l.get("gene_evidence") or [])]
     return [l["contig"], l["start"], l["end"], l.get("idiomorph") or "undetermined", l.get("confidence") or "", l.get("locus_class") or "", genes]
 
 

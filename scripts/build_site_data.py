@@ -283,7 +283,7 @@ def mucoro_rows(folder):
     for l in tsv(os.path.join(folder, "loci.tsv")):
         loci[(l["source"], l["genome"])].append(l)
     for g in tsv(os.path.join(folder, "genomes.tsv")):
-        base = dict(source=g["source"], genome=g["genome"], name=g["species"], bfd_order=g["order"])
+        base = dict(source=g["source"], genome=g["genome"], name=g["species"], bfd_order=g["order"], family=g.get("family", ""))
         ls = loci.get((g["source"], g["genome"]), [])
         if g["status"] != "called" or not ls:
             out.append(dict(base, status=g["status"] if g["status"] != "called" else "uncalled"))
@@ -391,11 +391,12 @@ def main(argv=None):
         loc = [l for l in ls if l["status"] == "called"]
         alleles = {l["idiomorph"] for l in loc if l["idiomorph"] not in ("", "undetermined")}
         order = clean(ls[0]["bfd_order"])
+        family = clean(ls[0].get("family", ""))      # blank in v0.6.0 calls.tsv and in tables built before the genus lineage
         name = ls[0]["name"]
         notes = locus_notes(loc, noted)
-        key = (source, phylum, "Mucoromycotina", order, "", genus_of(name), species_of(name), src)
+        key = (source, phylum, "Mucoromycotina", order, family, genus_of(name), species_of(name), src)
         agg.add(key, called, alleles, ["sexP/sexM MAT locus"] if called else [], any(n[1] for n in notes or ()))
-        grows[ds_id].append(genome_row(ds_id, genome, name, phylum, "Mucoromycotina", order, "", "called" if called else "uncalled", called, alleles,
+        grows[ds_id].append(genome_row(ds_id, genome, name, phylum, "Mucoromycotina", order, family, "called" if called else "uncalled", called, alleles,
                                        ["sexP/sexM MAT locus"] if called else [],
                                        [(l["contig"], l["locus_start"], l["locus_end"], l["idiomorph"], l["confidence"], l["locus_class"]) for l in loc],
                                        notes))

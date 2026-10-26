@@ -72,7 +72,10 @@ n_tier_drop (loci whose tier dropped), n_tier_note, n_label_unsupported, high_ba
 genome's loci), n_defective_loci (loci with at least one defective gene). by_class.tsv ends with `defective_loci`.
 
 Taxonomy: --samples (BFD samples.csv: ASMID, SPECIES, CLASS, ORDER, FAMILY, GENUS). For --layout mucoro, the
-names and orders come from --baseline-calls (the v0.6.0 `calls.tsv`) and then `inputs.tsv`.
+names and orders come from --baseline-calls (the v0.6.0 `calls.tsv`) and then `inputs.tsv`; the ZyGoLife (LCG, Jena)
+inputs carry no order and no family, and none of the Mucoromycotina inputs carries a family, so a blank order or
+family is filled from the genus with --genus-lineage (default scripts/mucoromycotina_genus_lineage.tsv: the NCBI
+taxonomy of the 51 genera of the v0.7.0 Mucoromycotina inputs). A given order or family is never overwritten.
 
 Deterministic: the same inputs give byte-identical outputs (no dates, sorted where order is not given).
 Needs PyYAML (and `zstd` for .tar.zst). Usage, for example:
@@ -294,14 +297,24 @@ def genus_from_species(species):
     return tok[0] if tok and re.fullmatch(r"[A-Z][a-z-]+", tok[0]) else ""
 
 
-def taxonomy(genome, samples, mucoro_names, inputs_rows, mucoro=False):
+def load_genus_lineage(path):
+    """{genus: (order, family)} from a genus,taxid,class,order,family table; {} without one."""
+    if not path or not os.path.exists(path):
+        return {}
+    with open(path, newline="") as fh:
+        return {r["genus"]: (r.get("order", ""), r.get("family", "")) for r in csv.DictReader(fh, delimiter="\t")}
+
+
+def taxonomy(genome, samples, mucoro_names, inputs_rows, mucoro=False, genus_lineage=None):
     """(species, class_, order, family, genus) for one genome id (`SOURCE__id` when `mucoro`)."""
     if mucoro:
         name, order = mucoro_names.get(genome, ("", ""))
         inp = inputs_rows.get(genome, {})
         name = name or inp.get("species", "") or genome.partition("__")[2].replace("_", " ")
         order = order or inp.get("order", "")
-        return name, "Mucoromycotina", order, "", genus_from_species(name)
+        genus = genus_from_species(name)
+        lin_order, lin_family = (genus_lineage or {}).get(genus, ("", ""))
+        return name, "Mucoromycotina", order or lin_order, lin_family, genus
     s = samples.get(genome, {})
     species = s.get("SPECIES", "")
     return species, s.get("CLASS", "") or "NA", s.get("ORDER", ""), s.get("FAMILY", ""), s.get("GENUS", "") or genus_from_species(species)
@@ -452,7 +465,7 @@ def change_category(new, old):
 
 # ----------------------------------------------------------------------------------------------- tables
 
-def build(new, base, listed, samples, mucoro_names, inputs_rows, scope, mucoro=False):
+def build(new, base, listed, samples, mucoro_names, inputs_rows, scope, mucoro=False, genus_lineage=None):
     """Returns (genome rows, locus rows, per-category tallies) as lists of dicts. An empty `base` (no
     --baseline) leaves the baseline columns blank."""
     base_given = bool(base)
@@ -460,7 +473,7 @@ def build(new, base, listed, samples, mucoro_names, inputs_rows, scope, mucoro=F
     tally = Counter()
     for g in listed:
         run = new.get(g)
-        species, cls, order, family, genus = taxonomy(g, samples, mucoro_names, inputs_rows, mucoro)
+        species, cls, order, family, genus = taxonomy(g, samples, mucoro_names, inputs_rows, mucoro, genus_lineage)
         row = dict(genome=g, species=species, class_=cls, order=order, family=family, status="no_report", routing="",
                    n_loci=0, families_called="", wall_s="", genus=genus, not_searched_reason="")
         b = base.get(g)
@@ -571,6 +584,8 @@ def main(argv=None):
     ap.add_argument("--lists", nargs="*", help="genome list files to use instead of the campaign's lists/ (or inputs.tsv)")
     ap.add_argument("--samples", help="BFD samples.csv for taxonomy")
     ap.add_argument("--baseline-calls", help="mucoro: v0.6.0 calls.tsv, for genome names and orders")
+    ap.add_argument("--genus-lineage", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "mucoromycotina_genus_lineage.tsv"),
+                    help="mucoro: genus,taxid,class,order,family table that fills a blank order or family (default %(default)s)")
     ap.add_argument("--rank", choices=("class", "order"), default="class", help="grouping of by_<rank>.tsv")
     ap.add_argument("--high-basis-scope", default=",".join(HIGH_BASIS_SCOPE),
                     help="comma-separated taxonomic families for high_basis, or 'all' (default %(default)s)")
@@ -603,7 +618,7 @@ def main(argv=None):
                 inputs_rows[f"{r['source']}__{r['id']}"] = r
     scope = None if a.high_basis_scope == "all" else tuple(s for s in a.high_basis_scope.split(",") if s)
     G, L, tally = build(new, base, listed, load_samples(a.samples), load_mucoro_names(a.baseline_calls), inputs_rows, scope,
-                     a.layout == "mucoro")
+                     a.layout == "mucoro", load_genus_lineage(a.genus_lineage) if a.layout == "mucoro" else None)
 
     os.makedirs(a.out, exist_ok=True)
     genome_cols, locus_cols = list(GENOME_COLS), list(LOCUS_COLS)

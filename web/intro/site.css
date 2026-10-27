@@ -25,7 +25,11 @@
 * { box-sizing: border-box; }
 body { margin:0; padding:0 16px; font:16px/1.55 var(--font); color:var(--fg); background:var(--bg); }
 nav { max-width:960px; margin:0 auto; padding:14px 0; display:flex; gap:18px; flex-wrap:wrap; align-items:baseline; border-bottom:1px solid var(--line); }
-nav b { font-size:1.1rem; margin-right:auto; } nav a { text-decoration:none; }
+nav b { font-size:1.1rem; margin-right:auto; }
+nav .brand { margin-right:auto; display:flex; align-self:center; } nav .brand img { display:block; } nav .brand .logo-d { display:none; }
+:root[data-theme="dark"] nav .brand .logo-l, :root[data-theme="neuromancer"] nav .brand .logo-l { display:none; }
+:root[data-theme="dark"] nav .brand .logo-d, :root[data-theme="neuromancer"] nav .brand .logo-d { display:block; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme]) nav .brand .logo-l { display:none; } :root:not([data-theme]) nav .brand .logo-d { display:block; } }
 main { max-width:960px; margin:0 auto; padding-bottom:24px; }
 h1 { font-size:2rem; margin:28px 0 4px; } h2 { font-size:1.35rem; margin:40px 0 8px; } h3 { font-size:1.05rem; margin:22px 0 6px; }
 .lede { font-size:1.15rem; color:var(--muted); margin:0 0 18px; }

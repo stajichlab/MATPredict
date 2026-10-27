@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="MATPredict: a lens finds the mating-type locus in a genome" color="#1d1d1f">
+  <title>MATPredict</title>
+  <!-- One-colour version: everything takes the CSS color (defaults to #1d1d1f via the color attribute above).
+       The winning core gene is solid, the flanks and the called span are tints of the same colour. -->
+  <g fill="currentColor" stroke="currentColor">
+    <circle cx="112" cy="112" r="80" fill="none" stroke-width="20"/>
+    <path d="M170 170L232 232" stroke-width="32" stroke-linecap="round"/>
+    <rect x="74" y="74" width="80" height="76" rx="10" stroke="none" fill-opacity=".18"/>
+    <path d="M46 90H60L72 112L60 134H46Z" stroke="none" fill-opacity=".5"/>
+    <path d="M82 90H130L146 112L130 134H82Z" stroke="none"/>
+    <path d="M156 90H168L180 112L168 134H156Z" stroke="none" fill-opacity=".5"/>
+  </g>
+</svg>

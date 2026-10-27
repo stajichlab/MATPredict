@@ -1,0 +1,36 @@
+// NOT RUN. A sketch showing that the worker maps to one Nextflow process; the contract is CONTRACT.md.
+nextflow.enable.dsl = 2
+params.runs = 'runs.tsv'          // see CONTRACT.md
+params.outdir = 'results'
+params.target_spots = 2000000
+params.windows = 8
+params.conc = 8                    // concurrency: 8 tasks x 4 CPUs = 32 CPUs, inside the under-60 limit
+
+process TYPE_RUN {
+    tag "${run}"
+    cpus 4
+    memory '8 GB'
+    time '2h'
+    maxForks params.conc
+    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }   // a failed run keeps its run.json with the state
+    publishDir "${params.outdir}/out", mode: 'copy', pattern: 'out/*', saveAs: { it.tokenize('/')[-1] }
+
+    input:
+    tuple val(run), val(spots), val(group), val(layout), path(panel_dir), val(prefix)
+
+    output:
+    path 'out/*'
+
+    script:
+    """
+    export TARGET_SPOTS=${params.target_spots} WINDOWS=${params.windows} SCRATCH=\${TMPDIR:-/tmp}
+    genotype_mat_one_accession.sh ${run} ${spots} ${panel_dir} ${prefix} out ${group} ${layout}
+    """
+}
+
+workflow {
+    Channel.fromPath(params.runs)
+        .splitCsv(header: true, sep: '\t')
+        .map { r -> tuple(r.run_accession, r.read_count, r.group ?: '', r.library_layout ?: '', file(r.panel_dir), r.panel_prefix) }
+        | TYPE_RUN
+}

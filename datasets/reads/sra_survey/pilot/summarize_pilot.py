@@ -15,8 +15,8 @@ import argparse, collections, csv, glob, json, os, statistics
 
 
 def read_tsv(path):
-    with open(path, newline="") as fh:
-        return list(csv.DictReader(fh, delimiter="\t"))
+    with open(path, newline="") as fh:          # reads-type writes CRLF; a stray CR inside a line (a column appended after it) is dropped
+        return list(csv.DictReader(fh.read().replace("\r", "").splitlines(), delimiter="\t"))
 
 
 def main():

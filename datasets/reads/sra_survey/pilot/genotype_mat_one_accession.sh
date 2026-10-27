@@ -58,8 +58,22 @@ rm -f "$work/$RUN.sra"
 # 3. type
 t2=$(date +%s)
 printf 'sample\treads\n%s\t%s\n' "$RUN" "$fq" > "$work/samples.tsv"
-idio=(); for n in ${IDIOMORPHS:-MAT1-1 MAT1-2}; do idio+=(--idiomorph "$n=$PDIR/${PFX}_$n.fasta"); done
-$PY -m MATPredict reads-type "${idio[@]}" --samples "$work/samples.tsv" --out "$work/$RUN.$PFX.tsv" || { state=failed_type; y1=$(( $(date +%s) - t2 )); exit 1; }
+# a PANEL_DIR with lineage sub-panels (L1/, L2/, ...) is typed against each and the best-matching one (highest shared-flank depth) is kept; the row names it in `panel`
+if compgen -G "$PDIR/L*/${PFX}_*.fasta" > /dev/null; then
+  : > "$work/lineage_rows.tsv"; i=0
+  for sub in "$PDIR"/L*/; do
+    idio=(); for n in ${IDIOMORPHS:-MAT1-1 MAT1-2}; do idio+=(--idiomorph "$n=$sub${PFX}_$n.fasta"); done
+    $PY -m MATPredict reads-type "${idio[@]}" --samples "$work/samples.tsv" --out "$work/r_$i.tsv" 2>/dev/null || continue
+    tail -1 "$work/r_$i.tsv" | tr -d '\r' | awk -F'\t' -v p="$(basename "$sub")" 'BEGIN{OFS="\t"}{print $0,p}' >> "$work/lineage_rows.tsv"
+    [[ -s $work/header.tsv ]] || head -1 "$work/r_$i.tsv" | tr -d '\r' | awk 'BEGIN{OFS="\t"}{print $0,"panel"}' > "$work/header.tsv"; i=$((i+1))
+  done
+  [[ -s $work/lineage_rows.tsv ]] || { state=failed_type; y1=$(( $(date +%s) - t2 )); exit 1; }
+  sc=$(awk -F'\t' 'NR==1{for(i=1;i<=NF;i++)if($i=="shared_depth")c=i}END{print c}' "$work/header.tsv")
+  { cat "$work/header.tsv"; sort -t"$(printf '\t')" -k"$sc","$sc"gr "$work/lineage_rows.tsv" | head -1; } > "$work/$RUN.$PFX.tsv"
+else
+  idio=(); for n in ${IDIOMORPHS:-MAT1-1 MAT1-2}; do idio+=(--idiomorph "$n=$PDIR/${PFX}_$n.fasta"); done
+  $PY -m MATPredict reads-type "${idio[@]}" --samples "$work/samples.tsv" --out "$work/$RUN.$PFX.tsv" || { state=failed_type; y1=$(( $(date +%s) - t2 )); exit 1; }
+fi
 y1=$(( $(date +%s) - t2 )); state=done
 mv "$work/$RUN.$PFX.tsv" "$OUT/$RUN.$PFX.tsv"
 echo "done $RUN: $((nlines/4)) reads typed, download ${d1}s ($((bytes/1000000)) MB), convert ${c1}s, type ${y1}s"

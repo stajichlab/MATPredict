@@ -38,3 +38,6 @@ Output: `<prefix>_MAT1-1.fasta`, `<prefix>_MAT1-2.fasta` and `<prefix>_lineages.
 
 ## Choosing runs (`select_runs.py`)
 One run per strain from a natural-isolate study (not flagged `mutant`, `evolution`, `cross` or `not_wgs` in the survey), 0.6 to 12 Gb with the run nearest 3 Gb chosen, at most 4 per study, a `detect` truth through the shared BioSample where there is one (balanced between idiomorphs). Cost and time follow the size, so a 128 Gb run (39.5 GB, 36 minutes) is never chosen.
+
+## Waves (`wave_driver.py`)
+Many species in one go: `submit-plan` (panels and run lists per species, panel gate), `submit-test` (about 20 runs per species), `gate` (PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC or HOLD with the reasons), `submit-full` (up to 50 runs for the species that passed), `report`, `status`. All runs of a wave write into one `out/` folder; arrays are split over the `exfab` and `stajichlab` partitions with a retry pass and a summary job. Tasks ask for 1 CPU and 6 GB (every step is single-threaded; peak memory 4.9 GB): Slurm gives each 2 CPUs, and the `exfab` account allows 32 CPUs in all, so about 16 tasks run there at once plus whatever `stajichlab` has free.

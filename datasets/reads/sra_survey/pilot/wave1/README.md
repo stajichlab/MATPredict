@@ -1,0 +1,12 @@
+# Wave 1, test stage (2026-10-27): 1137 runs of 112 species
+
+`wave_driver.py` (this folder's parent) planned 112 species (panel-ready, MAT1-1/MAT1-2 naming, `wave1_species.tsv`), built a lineage panel set for each from the BFD assemblies, chose up to 20 runs per species (natural-isolate studies, 0.6 to 12 Gb, 4 per study at most) and typed them on the HPCC (`exfab` and `stajichlab` partitions, 1 CPU and 6 GB per task, about 76 tasks at once; the `exfab` account allows 32 CPUs). Files: `gates.tsv` (decision and numbers per species), `results_all.tsv` (one row per run), `summary_by_group.tsv`, `SUMMARY.md`.
+
+## Result
+- Runs: 1127 finished of 1137; 9 unavailable at NCBI (ENA-only), 1 failed download. Calls: MAT1-1 499, MAT1-2 441, both 30, none 105, low_depth 52.
+- Against `detect` (the idiomorph of a BFD assembly with the same BioSample): 481 runs have a truth, 437 were typed, **434 agree and 3 disagree** (44 untyped). The three disagreements: *Macrophomina phaseolina* 14-48 (MAT1-1 call, truth MAT1-2, MAT1-2 core depth 0), *Aureobasidium melanogenum* FJII-L3-CM-P1 (MAT1-1 call, truth MAT1-2) and *Ustilaginoidea virens* UV-GVT (MAT1-1 depth 2.9 against MAT1-2 0.6, truth MAT1-2). *Aureobasidium* is homothallic with both MAT genes in one locus, where `detect`'s own idiomorph label is a known weak point (issue #138), so these may be the truth's error, not the typing's.
+- Gate decisions: {'PASS': 36, 'PROVISIONAL': 38, 'HOLD': 38} (PASS needs at least 5 typed runs with a truth and 95% agreement; PROVISIONAL has fewer truth runs; PROVISIONAL_HOMOTHALLIC has at least half `both`; thresholds in `wave_driver.py`). 38 species are held, mostly for a low typed fraction (many `none` or `low_depth`: a panel from few assemblies does not match divergent strains) and a few because most runs read `both`, which is the expected answer for a homothallic species and now gets its own status. Five more were held before any download (too few runs or a core too small).
+- The full stage (up to 50 runs per species) was submitted for the species that passed.
+
+## Not checked
+Whether the many `none` and `low_depth` runs in the held species are divergent lineages (a second lineage panel would help), mislabelled species or non-WGS libraries; the held species are the work list. Strain counts are not population frequencies: related or clonal strains are not removed (4 runs per study is the only guard).

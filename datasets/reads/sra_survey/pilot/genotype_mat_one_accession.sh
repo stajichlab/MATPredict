@@ -9,6 +9,7 @@
 #   OUT_DIR       receives <run>.<prefix>.tsv (the reads-type row) and <run>.run.json (the run record)
 # Environment (all optional): FALLBACK_K=21 (retype `none`/`low_depth` runs at this k), EXTRA_KS="21 25" (also type at these k, kept as <run>.<prefix>.k<K>.tsv), READS_K=21 (k-mer length for reads-type; default 31), TARGET_SPOTS=2000000  WINDOWS=8  SRA_URL=https://sra-pub-run-odp.s3.amazonaws.com/sra  IDIOMORPHS
 #   SCRATCH=<fast local dir for the temporary .sra and FASTQ, default /tmp>  KEEP_SRA=1 keeps the temporary files
+#   SKETCH=1 also writes <run>.sig.zip, the sourmash sketch that clone_clusters.py uses (needs sourmash; loads the HPCC module if it is not on PATH).
 #   FASTQ_OUT=path keeps the subsample FASTQ there; SKIP_TYPE=1 stops before typing (follow-up analyses). MAX_SRA_SIZE=50G caps the prefetch fallback. SRATOOLKIT_BIN, PY, PYTHONPATH, MATPREDICT_DB_ROOT: where fastq-dump and `python -m MATPredict` come from (defaults: the HPCC installs).
 # Exit: 0 done (or already done: the result file is the done-marker), 1 failed (the state is in the run.json), 2 bad arguments. Idempotent; safe to retry.
 # Not kept: the .sra and every FASTQ. Cost per run measured 2026-10-26: about 1 GB download, 110 s, 5 GB RAM, up to 4 CPUs (the typing step).
@@ -54,6 +55,11 @@ c1=$(( $(date +%s) - t1 )); nlines=$(wc -l < "$fq")
 rm -f "$work/$RUN.sra"
 # optional, for follow-up analyses: keep a copy of the subsample (FASTQ_OUT=path) and/or stop before typing (SKIP_TYPE=1)
 [[ -n ${FASTQ_OUT:-} ]] && cp "$fq" "$FASTQ_OUT"
+# optional, for clone detection (clone_clusters.py): SKETCH=1 also writes <run>.sig.zip (a sourmash k=21 FracMinHash sketch with abundances of the subsample, about 100 kB; SKETCH_SCALED=500)
+if [[ ${SKETCH:-0} == 1 && ! -s $OUT/$RUN.sig.zip ]]; then
+  command -v sourmash >/dev/null 2>&1 || { type module >/dev/null 2>&1 && module load sourmash/4.9 >/dev/null 2>&1; }
+  sourmash sketch dna -p k=21,scaled=${SKETCH_SCALED:-500},abund --name "$RUN" -o "$work/$RUN.sig.zip" "$fq" >/dev/null 2>&1 && mv "$work/$RUN.sig.zip" "$OUT/$RUN.sig.zip"
+fi
 [[ ${SKIP_TYPE:-0} == 1 ]] && { state=done_untyped; exit 0; }
 # 3. type
 t2=$(date +%s)

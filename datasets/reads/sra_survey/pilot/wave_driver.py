@@ -104,8 +104,8 @@ def sbatch(args, **kw):
 
 def submit_stage(a, stage, rows):
     """rows: run-list rows of ALL species for this stage; split over the two partitions; arrays of at most 2000 tasks; retry pass; summary job."""
-    d = os.path.join(a.wave, stage); os.makedirs(d, exist_ok=True); os.makedirs(os.path.join(a.wave, "out"), exist_ok=True); os.makedirs(os.path.join(d, "logs"), exist_ok=True)
-    out = os.path.join(a.wave, "out")
+    d = os.path.join(a.wave, stage); os.makedirs(d, exist_ok=True); os.makedirs(os.path.join(d, "logs"), exist_ok=True)
+    out = a.out_dir or os.path.join(a.wave, "out"); os.makedirs(out, exist_ok=True)
     cols = list(rows[0].keys()); allp = os.path.join(d, "runs_all.tsv"); wr(allp, rows, cols)
     parts = [("exfab", "exfab"), ("stajichlab", "stajichlab")]
     ids = []; jobs = []
@@ -248,6 +248,7 @@ def main():
     ap.add_argument("--env", action="append", default=[], help="extra KEY=VALUE for the run tasks (for example READS_K=21); repeatable")
     ap.add_argument("--runs", help="submit-list: a run-list TSV with panel_dir and panel_prefix columns")
     ap.add_argument("--stage-name", default="list", help="submit-list: stage folder name under the wave directory")
+    ap.add_argument("--out-dir", help="submit-list: results folder (default <wave>/out; the worker skips a run whose result is already there, so a different analysis of the same runs, for example sketches, needs its own)")
     ap.add_argument("--retry-held", action="store_true", help="submit-plan: only the species held for too few runs")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()

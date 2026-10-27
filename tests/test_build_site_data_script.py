@@ -278,3 +278,47 @@ def test_locus_shards_stop_when_loci_tsv_disagrees_with_the_reports(tmp_path):
     _tar_zst(camp / "reports_all.tar.zst", [("./wave_0/small_000/runs/G1/detection_report.yaml", REP)])
     with pytest.raises(SystemExit, match="disagree on the number of loci"):
         bls.campaign_shards("bfd_asco", str(camp))
+
+
+def test_locus_rows_mark_the_winner_and_the_gene_set_aside_in_a_resolved_pair():
+    bls = _load("build_locus_shards")
+    locus = dict(contig="c1", start=1, end=99, idiomorph="Plus", confidence="high", locus_class="mat_locus", gene_evidence=[
+        dict(gene="sexP", start=10, end=20, strand="-", role="core_MAT", status="polished_disagree", lost_to=None),
+        dict(gene="sexM", start=12, end=18, strand="-", role="core_MAT", status="polished_single", lost_to="sexP"),
+        dict(gene="rnhA", start=1, end=5, strand="-", role="flanking_conserved", status="polished_agree", lost_to=None)],
+        idiomorph_resolutions=[dict(winner="sexP", loser="sexM", basis="hmm_bitscore", winner_hmm_score=364.33, loser_hmm_score=70.79,
+                                    winner_identity=44.9, loser_identity=34.1, winner_span=[10, 20], loser_span=[12, 18])])
+    genes = bls.locus_row(locus)[6]
+    assert genes[0][6:] == [["W", "sexM", "hmm_bitscore", "364 vs 71"]]
+    assert genes[1][6:] == [["L", "sexP", "hmm_bitscore", "364 vs 71"]]
+    assert len(genes[2]) == 6                                 # a gene outside a resolved pair keeps the six-item form
+    r = locus["idiomorph_resolutions"][0]
+    r.update(basis="first_pass_identity", winner_hmm_score=None, loser_hmm_score=None)
+    assert bls.locus_row(locus)[6][1][6] == ["L", "sexP", "first_pass_identity", "44.9% vs 34.1%"]
+    r.update(winner_span=[10, 21])                            # a span that matches no gene leaves the pair unmarked
+    assert len(bls.locus_row(locus)[6][0]) == 6
+
+
+def test_locus_rows_without_resolutions_are_unchanged():
+    bls = _load("build_locus_shards")
+    locus = dict(contig="c1", start=1, end=9, idiomorph="MAT1-1", confidence="high", locus_class="mat_locus", gene_evidence=[
+        dict(gene="MAT1-1-1", start=2, end=8, strand="+", role="core_MAT", status="polished_agree", lost_to=None)])
+    assert bls.locus_row(locus)[6] == [["MAT1-1-1", 2, 8, "+", "core_MAT", "polished_agree"]]
+
+
+def test_mucoromycotina_family_reaches_the_taxa_rows_and_the_genome_table(tmp_path):
+    out = tmp_path / "out"
+    camps = _campaigns(tmp_path, notes=True, mucoro_tables=True, manifest=MANIFEST)
+    mu = Path(camps[camps.index("--mucoro") + 1])
+    g = mu / "genomes.tsv"
+    text = g.read_text().splitlines()
+    cols = text[0].split("\t")
+    assert "family" in cols
+    fi = cols.index("family")
+    text[1:] = ["\t".join(f if i != fi else "Mucoraceae" for i, f in enumerate(l.split("\t"))) for l in text[1:]]
+    g.write_text("\n".join(text) + "\n")
+    bsd.main(["--release", "cleanrun", "--out", str(out)] + camps)
+    taxa = json.loads((out / "taxa.json").read_text())
+    i = {k: n for n, k in enumerate(taxa["fields"])}
+    fam = {taxa["strings"][r[i["family"]]] for r in taxa["rows"] if taxa["strings"][r[i["phylum"]]] == "Mucoromycota"}
+    assert fam == {"Mucoraceae"}

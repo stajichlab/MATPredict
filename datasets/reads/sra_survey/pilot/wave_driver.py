@@ -155,7 +155,7 @@ def submit_test(a):
 
 # ------------------------------------------------------------------------------------------------ gate
 def gate(a):
-    res = rd(os.path.join(a.wave, "test", "summary", "results_all.tsv"))
+    res = rd(os.path.join(a.wave, a.stage, "summary", "results_all.tsv"))
     by = collections.defaultdict(list)
     for r in res: by[r["group"]].append(r)
     rows = []
@@ -185,7 +185,7 @@ def gate(a):
         elif not homo and tf < GATE["provisional_typed"]: why.append(f"provisional_typed_{tf:.2f}")
         dec = "HOLD:" + "+".join(why) if why else ("PROVISIONAL_HOMOTHALLIC" if homo else "PROVISIONAL" if prov else "PASS")
         rows.append(dict(slug=sl, species=r0["species"], decision=dec, reasons=f"runs={len(rs)} done={len(done)} typed={len(typed)} both={len(both)} none/low={len(done)-len(typed)-len(both)} truth_typed={len(tr)} agree={agree} median_shared_depth={msd:.1f}"))
-    wr(os.path.join(a.wave, "gates.tsv"), rows, ["slug", "species", "decision", "reasons"])
+    wr(os.path.join(a.wave, "gates.tsv" if a.stage == "test" else f"gates_{a.stage}.tsv"), rows, ["slug", "species", "decision", "reasons"])
     print(collections.Counter(r["decision"].split(":")[0] for r in rows))
 
 
@@ -200,7 +200,7 @@ def submit_full(a):
 
 # ------------------------------------------------------------------------------------------------ report / status
 def report(a):
-    g = {r["slug"]: r for r in rd(os.path.join(a.wave, "gates.tsv"))}
+    g = {r["slug"]: r for r in rd(os.path.join(a.wave, "gates_full.tsv" if os.path.exists(os.path.join(a.wave, "gates_full.tsv")) else "gates.tsv"))}
     stage = "full" if os.path.exists(os.path.join(a.wave, "full", "summary", "results_all.tsv")) else "test"
     res = rd(os.path.join(a.wave, stage, "summary", "results_all.tsv")); by = collections.defaultdict(list)
     for r in res: by[r["group"]].append(r)
@@ -235,6 +235,7 @@ def main():
     ap.add_argument("--cpus", type=int, default=1, help="CPUs per run task: every step is single-threaded (measured 2026-10-27), and the exfab account is limited to 32 CPUs, so 1 CPU gives 32 tasks at once instead of 8")
     ap.add_argument("--mem", default="6gb", help="memory per run task (peak measured 4.9 GB)")
     ap.add_argument("--cap", type=int, default=50, help="most runs per species in the full stage")
+    ap.add_argument("--stage", default="test", choices=["test", "full"], help="gate: which stage's summary to judge (the full stage has more runs per species)")
     ap.add_argument("--retry-held", action="store_true", help="submit-plan: only the species held for too few runs")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()

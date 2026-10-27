@@ -27,3 +27,14 @@ Reads only the small files above; rerun any time. Writes `SUMMARY.md`, `summary_
 ## Runners
 - **Slurm** (now): `submit_species.sh SLUG RUNS.tsv` queues an array, a retry array and a summary job; results and logs under `ROOT/SLUG/`.
 - **Nextflow** (kept possible, not used): `main.nf.example` shows the same list as a channel and the worker as one process (`maxForks` for the concurrency limit, `errorStrategy retry`, `publishDir` for the outputs). It has not been run.
+
+## Panels (`panel_from_assemblies.py`)
+A reads-type panel is built from the species' BFD assemblies and the `detect` calls on them, as cores and flanks:
+- the **core** of a locus is the extent of its own core_MAT genes (MAT1-1-* for MAT1-1, MAT1-2-* for MAT1-2) plus 1 kb; the rest is **flank**, kept up to 6 kb on each side nearest the core;
+- loci are clustered into **lineages by their flanks**; one MAT1-1 and one MAT1-2 representative per lineage; each idiomorph's FASTA has its own cores and the flanks of every representative of both idiomorphs, so flank k-mers are shared (the single-copy depth control) and only core k-mers decide the call;
+- why: a whole-locus panel from one strain missed divergent lineages (two *P. oryzae* strains shared 1 to 4% of its 31-mers); and with several lineages, flank k-mers present in one idiomorph's file only would have been counted as idiomorph-specific and could miscall strains of that lineage;
+- the cap on flank keeps lineages equal, so the shared depth of a minor lineage is not diluted by a major one.
+Output: `<prefix>_MAT1-1.fasta`, `<prefix>_MAT1-2.fasta` and `<prefix>_lineages.tsv` (loci, members and representatives per lineage). Check with `Panel.from_fastas`: core k-mers per idiomorph in the thousands, shared k-mers in the tens of thousands.
+
+## Choosing runs (`select_runs.py`)
+One run per strain from a natural-isolate study (not flagged `mutant`, `evolution`, `cross` or `not_wgs` in the survey), 0.6 to 12 Gb with the run nearest 3 Gb chosen, at most 4 per study, a `detect` truth through the shared BioSample where there is one (balanced between idiomorphs). Cost and time follow the size, so a 128 Gb run (39.5 GB, 36 minutes) is never chosen.

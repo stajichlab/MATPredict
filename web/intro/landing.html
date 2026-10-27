@@ -85,24 +85,8 @@
   <h2 id="reads">Typing from raw reads</h2>
   <p class="notice">Results for 112 fungal species from public read sets, with a report for each, are on the <a href="reads/">Raw reads page</a>.</p>
   <p>When a good reference panel exists for a species, <code>matpredict reads-type</code> calls the idiomorph of a strain from its reads, with no assembly. It counts k-mers (k = 31) found in only one idiomorph reference, uses the k-mers shared by both flanks as a single-copy depth control, and calls one idiomorph, <code>both</code>, <code>none</code> or <code>low_depth</code>.</p>
-  <div class="tablewrap"><table>
-    <tr><th>Dataset</th><th class="n">Strains</th><th>Agreement</th><th>Status</th></tr>
-    <tr><td><i>Fusarium oxysporum</i> f. sp. <i>lactucae</i> (Fola)</td><td class="n">148</td><td>147/148 (99.3%) with a samtools breadth call; the miss has no signal in either method. Simulated mixes: both idiomorphs called from a 10% minor share in 3/3 pairs.</td><td><span class="tag done">done</span></td></tr>
-    <tr><td><i>Aspergillus fumigatus</i></td><td class="n">331 read sets</td><td>293/296 (99.0%) against assembly BLAST truth; <code>detect</code> on assemblies 288/297. Seven of eight assemblies holding both idiomorphs are <code>both</code> from reads.</td><td><span class="tag done">done</span></td></tr>
-    <tr><td><i>Verticillium</i></td><td class="n">—</td><td>Reference records curated; read-typing results to be added here.</td><td><span class="tag plan">to add</span></td></tr>
-    <tr><td><i>Coccidioides immitis</i>, <i>C. posadasii</i></td><td class="n" id="cocci-n">558</td><td id="cocci-agree">Read calls versus <code>detect</code> on the assemblies; see below.</td><td><span class="tag done">done</span></td></tr>
-    <tr><td><i>Cryptococcus</i></td><td class="n">—</td><td>Panel design for a large, rearranged locus to be worked out.</td><td><span class="tag plan">planned</span></td></tr>
-    <tr><td>Other <i>Fusarium</i> species, including <i>F. graminearum</i> (many public read sets)</td><td class="n">—</td><td>Some read sets need downloading from SRA.</td><td><span class="tag plan">planned</span></td></tr>
-  </table></div>
-  <h3 id="cocci">Coccidioides: MAT alleles from reads</h3>
-  <p>Every <i>C. immitis</i> and <i>C. posadasii</i> read set in the population-genomics collection (<span id="cocci-total"></span> strains) was typed with one panel built from the <i>C. immitis</i> H538.4 (MAT1-1) and RS (MAT1-2) loci, trimmed to the idiomorph plus the flank the two share; the first 8 million reads of each strain were used. Strains with too little shared-flank depth to type are left out as low coverage. Two strains carry corrected species labels (<span id="cocci-relab"></span>; see the
-  <a href="https://github.com/stajichlab/MATPredict/blob/main/datasets/reads/README.md">dataset notes</a>).</p>
-  <div class="chart" id="ch-cocci"></div><div class="legend" id="lg-cocci"></div>
-  <div class="tablewrap"><table id="cocci-table"></table></div>
-  <p class="muted" id="cocci-notes"></p>
-  <p><a href="data/cocci_reads.tsv">Per-strain table (TSV)</a>: reads call, depths, and the <code>detect</code> call for the strains with an assembly.</p>
-
-  <p class="muted">Caveats: cut-offs (50% breadth fraction, 100-base unique-run filter) were set after seeing the Fola and <i>A. fumigatus</i> results, so those numbers are consistency checks, not independent tests. A reference that differs from the strain at about one base in 40 gives <code>none</code>. Details: <a href="https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-10-06_fola-reads-type.md">Fola</a>, <a href="https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-10-07_afum-reads-and-assembly.md"><i>A. fumigatus</i></a>.</p>
+  <p>Results, with a report for each dataset, are on the <a href="reads/">Raw reads page</a>: the curated collections (<a href="reads/species.html?s=fola">Fola</a>, <a href="reads/species.html?s=afum"><i>Aspergillus fumigatus</i></a>, <a href="reads/species.html?s=cocci"><i>Coccidioides</i></a>) and 112 species typed from public runs. Planned: <i>Verticillium</i> beyond the public-run sample, <i>Cryptococcus</i> (a large rearranged locus needs its own panel design).</p>
+  <p class="muted">Caveats: the cut-offs (50% breadth fraction, 100-base unique-run filter) were set after seeing the Fola and <i>A. fumigatus</i> results, so those numbers are consistency checks, not independent tests. A reference that differs from the strain at about one base in 40 gives <code>none</code>. Details: <a href="https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-10-06_fola-reads-type.md">Fola</a>, <a href="https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-10-07_afum-reads-and-assembly.md"><i>A. fumigatus</i></a>.</p>
 
   <h3>From reads to a full locus: map, assemble, extend, process</h3>
   <p>K-mer typing says which idiomorph is present. To recover the locus itself from reads, the same panel seeds an assembly (tested on eight <i>A. fumigatus</i> strains; the steps are scripts, not yet a subcommand):</p>
@@ -164,24 +148,6 @@ function byRank(ds, rank, minN) {
 }
 hbar(document.getElementById("ch-asco"), byRank("Ascomycota", "class", 50), { max: 1 });
 hbar(document.getElementById("ch-basidio"), byRank("Basidiomycota", "order", 50), { max: 1 });
-// Coccidioides read typing
-const cr = await fetch("data/cocci_reads.json").then(r => r.json()).catch(() => null);
-if (cr) {
-  const sp = s => s.replace("Coccidioides ", "C. "), cc = ["MAT1-1", "MAT1-2", "two alleles", "uncalled"], key = { "two alleles": "both", uncalled: "low_depth" };
-  const typedN = s => cr.counts[s]["MAT1-1"] + cr.counts[s]["MAT1-2"] + cr.counts[s].both;
-  stacked(document.getElementById("ch-cocci"), cr.species.map(s => ({ label: sp(s), total: cr.strains && Object.values(cr.counts[s]).reduce((a, b) => a + b, 0),
-    parts: Object.fromEntries(cc.map(c => [c, cr.counts[s][key[c] || c]])) })), cc);
-  legend(document.getElementById("lg-cocci"), cc);
-  document.getElementById("cocci-total").textContent = fmt(cr.strains);
-  document.getElementById("cocci-relab").textContent = cr.relabelled.join(", ");
-  document.getElementById("cocci-n").textContent = fmt(cr.strains);
-  document.getElementById("cocci-agree").textContent = `${cr.agree_with_detect}/${cr.typed_with_detect} (${pct(cr.agree_with_detect, cr.typed_with_detect)}) agree with detect on the assembly; ${cr.counts[cr.species[0]].low_depth + cr.counts[cr.species[1]].low_depth} strains omitted for low coverage.`;
-  document.getElementById("cocci-table").innerHTML = "<tr><th>Species</th><th class='n'>Strains</th><th class='n'>MAT1-1</th><th class='n'>MAT1-2</th><th class='n'>MAT1-1 : MAT1-2</th><th class='n'>both</th><th class='n'>omitted</th></tr>" +
-    cr.species.map(s => { const c = cr.counts[s], n = c["MAT1-1"] + c["MAT1-2"];
-      return `<tr><td><i>${s}</i></td><td class="n">${fmt(c["MAT1-1"] + c["MAT1-2"] + c.both + c.low_depth)}</td><td class="n">${c["MAT1-1"]} (${pct(c["MAT1-1"], typedN(s))})</td><td class="n">${c["MAT1-2"]} (${pct(c["MAT1-2"], typedN(s))})</td><td class="n">${(c["MAT1-1"] / c["MAT1-2"]).toFixed(2)} : 1</td><td class="n">${c.both}</td><td class="n">${c.low_depth}</td></tr>`; }).join("");
-  const om = cr.omitted.map(o => `${o.strain} (${o.shared_depth.toFixed(1)}x)`).join(", "), bo = cr.both.map(o => o.strain).join(", ");
-  document.getElementById("cocci-notes").innerHTML = `Percentages are of the strains with a single-allele call. Omitted for low coverage (shared-flank depth): ${om}. Both idiomorphs seen in ${bo}; whether these are mixed samples, heterokaryons or panel cross-talk is not checked. ${cr.typed_with_detect - cr.agree_with_detect} of the ${cr.typed_with_detect} typed strains with an assembly differ from <code>detect</code>: ${cr.disagree_no_locus} where <code>detect</code> found no locus in the assembly and ${cr.disagree_other} where it called a different allele or both. Counts are for ${fmt(cr.strains)} strains; ${fmt(cr.with_assembly)} have an assembly.`;
-}
 </script>
 </body>
 </html>

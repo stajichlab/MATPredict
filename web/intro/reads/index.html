@@ -19,7 +19,10 @@
   <h2>Confidence of each species panel</h2>
   <p>A species panel is <b>confirmed</b> when at least 75% of its runs get a single-allele call, flank depth is adequate, both idiomorphs together are under 20% of runs, and its calls agree with assembly calls (at least 95%, with five or more comparisons). It is <b>provisional</b> when too few assembly comparisons exist, or the species is homothallic (both idiomorphs expected). It is <b>withheld</b> when any check fails; its reads are listed but no frequencies should be drawn from them.</p>
   <div class="chart" id="ch-conf"></div><div class="legend" id="lg-conf"></div>
-  <h2>Species</h2>
+  <h2>Curated collections</h2>
+  <p>Three collections were typed in full, before the public-run survey, with panels built and checked for the species. Their reports follow the same layout. They overlap with the wave 1 species below (<i>A. fumigatus</i>, <i>C. immitis</i>, <i>C. posadasii</i>) but use more strains, and they are not part of the totals above.</p>
+  <div class="tablewrap"><table id="cur"></table></div>
+  <h2>Species from public runs (wave 1)</h2>
   <div class="controls">
     <label>Confidence <select id="conf"><option value="">all</option></select></label>
     <label>Search <input id="q" type="search" placeholder="species"></label>
@@ -42,10 +45,12 @@
 <script type="module">
 import { stacked, legend, fmt, pct } from "../charts.js";
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const { totals: T, species: S } = await fetch("../data/reads/index.json").then(r => r.json());
+const { totals: T, species: S, curated: CUR = [] } = await fetch("../data/reads/index.json").then(r => r.json());
 S.forEach(s => s.uncalled = s.none + s.low_depth);
 document.getElementById("cards").innerHTML = [[fmt(T.species), "species"], [fmt(T.done), "public runs typed"], [pct(T.typed, T.done), "with a single-allele call"], [T.agree + " / " + T.with_assembly_call, "agree with an assembly call"], [fmt(T.rescued), "recovered at k=21 or a genus panel"]]
   .map(([v, l]) => '<div class="card"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>').join("");
+document.getElementById("cur").innerHTML = "<tr><th>Collection</th><th class='n'>Read sets</th><th class='n'>MAT1-1</th><th class='n'>MAT1-2</th><th class='n'>Both</th><th class='n'>Not called</th><th class='n'>Single-allele calls matching the comparison call</th></tr>" + CUR.map(c => '<tr class="click" data-s="' + c.slug + '"><td><a href="species.html?s=' + c.slug + '"><i>' + esc(c.species) + '</i></a></td><td class="n">' + c.runs + '</td><td class="n">' + c["MAT1-1"] + '</td><td class="n">' + c["MAT1-2"] + '</td><td class="n">' + c.both + '</td><td class="n">' + (c.none + c.low_depth) + '</td><td class="n">' + c.agree + "/" + c.with_assembly_call + '</td></tr>').join("");
+document.querySelector("#cur").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr && tr.dataset.s && e.target.tagName !== "A") location.href = "species.html?s=" + tr.dataset.s; });
 const confs = ["confirmed", "provisional", "provisional (homothallic)", "withheld"];
 const cs = Object.fromEntries(confs.map(c => [c, 0])); S.forEach(s => cs[s.confidence]++);
 const cats = ["MAT1-1", "MAT1-2", "both", "not called"];

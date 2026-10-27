@@ -2,6 +2,7 @@
 label_unsupported, high_basis), on small synthetic report trees."""
 import csv
 import importlib.util
+import os
 import tarfile
 from pathlib import Path
 
@@ -341,7 +342,35 @@ def test_mucoromycotina_layout(tmp_path):
     G = _rows(out / "genomes.tsv")
     assert [(r["source"], r["genome"], r["species"], r["class_"], r["order"], r["status"]) for r in G] == [
         ("BFD", "GCA_1", "Mucor lusitanicus", "Mucoromycotina", "Mucorales", "called"),
-        ("LCG", "Absidia_x_1", "Absidia x NRRL 1", "Mucoromycotina", "", "uncalled")]
+        ("LCG", "Absidia_x_1", "Absidia x NRRL 1", "Mucoromycotina", "Mucorales", "uncalled")]    # order from the genus lineage
+    assert [(r["genus"], r["family"]) for r in G] == [("Mucor", "Mucoraceae"), ("Absidia", "Cunninghamellaceae")]
     loci = _rows(out / "loci.tsv")
     assert loci[0]["source"] == "BFD" and loci[0]["margin_basis"] == "bits" and loci[0]["label_unsupported"] == "no"
     assert loci[0]["defective_genes"] == "sexP" and [r["n_defective_loci"] for r in G] == ["1", "0"]     # #151 in the mucoro layout
+
+
+def test_mucoromycotina_genus_lineage_fills_blanks_and_never_overwrites(tmp_path):
+    new = tmp_path / "mucoro"
+    new.mkdir()
+    (new / "inputs.tsv").write_text("source\tid\tgenome\torder\tspecies\ttaxid\n"
+                                    "BFD\tU1\t/x.fa\tUmbelopsidales\tUmbelopsis ramanniana\t1\n"
+                                    "LCG\tM1\t/y.fa\t\tMucor circinelloides\t\nLCG\tQ1\t/z.fa\t\tUnknownus sp\t\n")
+    for g in ("BFD__U1", "LCG__M1", "LCG__Q1"):
+        _report(new, f"runs/{g}", [])
+    table = tmp_path / "lin.tsv"
+    table.write_text("genus\ttaxid\tclass\torder\tfamily\nUmbelopsis\t1\tMucoromycetes\tMucorales\tWrongaceae\n"
+                     "Mucor\t2\tMucoromycetes\tMucorales\tMucoraceae\n")
+    out = tmp_path / "out"
+    bct.main(["--campaign", str(new), "--out", str(out), "--layout", "mucoro", "--genus-lineage", str(table)])
+    got = {r["genome"]: (r["order"], r["family"], r["genus"]) for r in _rows(out / "genomes.tsv")}
+    assert got["U1"] == ("Umbelopsidales", "Wrongaceae", "Umbelopsis")     # a given order is kept; a blank family is filled
+    assert got["M1"] == ("Mucorales", "Mucoraceae", "Mucor")
+    assert got["Q1"] == ("", "", "Unknownus")                               # a genus outside the table stays blank
+    bct.main(["--campaign", str(new), "--out", str(tmp_path / "out2"), "--layout", "mucoro", "--genus-lineage", str(tmp_path / "none.tsv")])
+    assert {r["genome"]: (r["order"], r["family"]) for r in _rows(tmp_path / "out2" / "genomes.tsv")}["M1"] == ("", "")   # no table: as before
+
+
+def test_the_committed_genus_lineage_table_covers_orders_and_families():
+    rows = bct.load_genus_lineage(os.path.join(os.path.dirname(bct.__file__), "mucoromycotina_genus_lineage.tsv"))
+    assert len(rows) == 51 and all(o and f for o, f in rows.values())
+    assert rows["Thamnidium"] == ("Mucorales", "Mucoraceae") and rows["Umbelopsis"][0] == "Umbelopsidales"

@@ -7,7 +7,7 @@
 #   SPOTS         number of spots (ENA/SRA read_count); 0 or empty = read the whole run
 #   PANEL_DIR     folder with PANEL_PREFIX_<IDIOMORPH>.fasta (IDIOMORPHS="MAT1-1 MAT1-2" by default)
 #   OUT_DIR       receives <run>.<prefix>.tsv (the reads-type row) and <run>.run.json (the run record)
-# Environment (all optional): TARGET_SPOTS=2000000  WINDOWS=8  SRA_URL=https://sra-pub-run-odp.s3.amazonaws.com/sra  IDIOMORPHS
+# Environment (all optional): FALLBACK_K=21 (retype `none`/`low_depth` runs at this k), EXTRA_KS="21 25" (also type at these k, kept as <run>.<prefix>.k<K>.tsv), READS_K=21 (k-mer length for reads-type; default 31), TARGET_SPOTS=2000000  WINDOWS=8  SRA_URL=https://sra-pub-run-odp.s3.amazonaws.com/sra  IDIOMORPHS
 #   SCRATCH=<fast local dir for the temporary .sra and FASTQ, default /tmp>  KEEP_SRA=1 keeps the temporary files
 #   FASTQ_OUT=path keeps the subsample FASTQ there; SKIP_TYPE=1 stops before typing (follow-up analyses). MAX_SRA_SIZE=50G caps the prefetch fallback. SRATOOLKIT_BIN, PY, PYTHONPATH, MATPREDICT_DB_ROOT: where fastq-dump and `python -m MATPredict` come from (defaults: the HPCC installs).
 # Exit: 0 done (or already done: the result file is the done-marker), 1 failed (the state is in the run.json), 2 bad arguments. Idempotent; safe to retry.
@@ -58,22 +58,42 @@ rm -f "$work/$RUN.sra"
 # 3. type
 t2=$(date +%s)
 printf 'sample\treads\n%s\t%s\n' "$RUN" "$fq" > "$work/samples.tsv"
-# a PANEL_DIR with lineage sub-panels (L1/, L2/, ...) is typed against each and the best-matching one (highest shared-flank depth) is kept; the row names it in `panel`
-if compgen -G "$PDIR/L*/${PFX}_*.fasta" > /dev/null; then
-  : > "$work/lineage_rows.tsv"; i=0
-  for sub in "$PDIR"/L*/; do
-    idio=(); for n in ${IDIOMORPHS:-MAT1-1 MAT1-2}; do idio+=(--idiomorph "$n=$sub${PFX}_$n.fasta"); done
-    $PY -m MATPredict reads-type "${idio[@]}" --samples "$work/samples.tsv" --out "$work/r_$i.tsv" 2>/dev/null || continue
-    tail -1 "$work/r_$i.tsv" | tr -d '\r' | awk -F'\t' -v p="$(basename "$sub")" 'BEGIN{OFS="\t"}{print $0,p}' >> "$work/lineage_rows.tsv"
-    [[ -s $work/header.tsv ]] || head -1 "$work/r_$i.tsv" | tr -d '\r' | awk 'BEGIN{OFS="\t"}{print $0,"panel"}' > "$work/header.tsv"; i=$((i+1))
-  done
-  [[ -s $work/lineage_rows.tsv ]] || { state=failed_type; y1=$(( $(date +%s) - t2 )); exit 1; }
-  sc=$(awk -F'\t' 'NR==1{for(i=1;i<=NF;i++)if($i=="shared_depth")c=i}END{print c}' "$work/header.tsv")
-  { cat "$work/header.tsv"; sort -t"$(printf '\t')" -k"$sc","$sc"gr "$work/lineage_rows.tsv" | head -1; } > "$work/$RUN.$PFX.tsv"
-else
-  idio=(); for n in ${IDIOMORPHS:-MAT1-1 MAT1-2}; do idio+=(--idiomorph "$n=$PDIR/${PFX}_$n.fasta"); done
-  $PY -m MATPredict reads-type "${idio[@]}" --samples "$work/samples.tsv" --out "$work/$RUN.$PFX.tsv" || { state=failed_type; y1=$(( $(date +%s) - t2 )); exit 1; }
+# type with k-mer length $1 into file $2. A PANEL_DIR with lineage sub-panels (L1/, L2/, ...) is typed against each and the best-matching one (highest shared-flank depth)
+# is kept; the row names it in `panel`.
+type_k() {
+  local K=$1 DEST=$2 kopt=""; [[ -n $K ]] && kopt="--k $K"
+  if compgen -G "$PDIR/L*/${PFX}_*.fasta" > /dev/null; then
+    : > "$work/lineage_rows.tsv"; rm -f "$work/header.tsv"; local i=0 sub
+    for sub in "$PDIR"/L*/; do
+      idio=(); for n in ${IDIOMORPHS:-MAT1-1 MAT1-2}; do idio+=(--idiomorph "$n=$sub${PFX}_$n.fasta"); done
+      $PY -m MATPredict reads-type $kopt "${idio[@]}" --samples "$work/samples.tsv" --out "$work/r_$i.tsv" 2>/dev/null || continue
+      tail -1 "$work/r_$i.tsv" | tr -d '\r' | awk -F'\t' -v p="$(basename "$sub")" 'BEGIN{OFS="\t"}{print $0,p}' >> "$work/lineage_rows.tsv"
+      [[ -s $work/header.tsv ]] || head -1 "$work/r_$i.tsv" | tr -d '\r' | awk 'BEGIN{OFS="\t"}{print $0,"panel"}' > "$work/header.tsv"; i=$((i+1))
+    done
+    [[ -s $work/lineage_rows.tsv ]] || return 1
+    local sc; sc=$(awk -F'\t' 'NR==1{for(i=1;i<=NF;i++)if($i=="shared_depth")c=i}END{print c}' "$work/header.tsv")
+    { cat "$work/header.tsv"; sort -t"$(printf '\t')" -k"$sc","$sc"gr "$work/lineage_rows.tsv" | head -1; } > "$DEST"
+  else
+    idio=(); for n in ${IDIOMORPHS:-MAT1-1 MAT1-2}; do idio+=(--idiomorph "$n=$PDIR/${PFX}_$n.fasta"); done
+    $PY -m MATPredict reads-type $kopt "${idio[@]}" --samples "$work/samples.tsv" --out "$DEST" || return 1
+  fi
+}
+type_k "${READS_K:-}" "$work/$RUN.$PFX.tsv" || { state=failed_type; y1=$(( $(date +%s) - t2 )); exit 1; }
+# FALLBACK_K=21: a run that is `none` or `low_depth` at k=31 is typed again at this shorter k (more tolerant of a diverged core: a SNP breaks fewer k-mers); if that gives a
+# one-idiomorph call it replaces the row. Every row gets a column `k_used` (31 unless the fallback replaced it). On 278 runs of 47 species (2026-10-27) k=21 typed 41 of 168
+# runs that were untyped at k=31 (35 of 91 `none` runs with the idiomorph present, 6 of 57 `low_depth`, 0 of 20 with the idiomorph absent), 12 of the 13 with a truth agreeing.
+if [[ -n ${FALLBACK_K:-} ]]; then
+  fb1=$(tail -1 "$work/$RUN.$PFX.tsv" | tr -d '\r' | cut -f2)
+  if [[ $fb1 == none || $fb1 == low_depth ]]; then
+    if type_k "$FALLBACK_K" "$work/$RUN.$PFX.fb.tsv"; then
+      fb2=$(tail -1 "$work/$RUN.$PFX.fb.tsv" | tr -d '\r' | cut -f2)
+      if [[ $fb2 == MAT1-1 || $fb2 == MAT1-2 || $fb2 == both ]]; then mv "$work/$RUN.$PFX.fb.tsv" "$work/$RUN.$PFX.tsv"; kused=$FALLBACK_K; fi
+    fi
+  fi
 fi
+tr -d '\r' < "$work/$RUN.$PFX.tsv" | awk -F'\t' -v k="${kused:-${READS_K:-31}}" 'BEGIN{OFS="\t"} NR==1{print $0,"k_used"; next} {print $0,k}' > "$work/$RUN.$PFX.k.tsv" && mv "$work/$RUN.$PFX.k.tsv" "$work/$RUN.$PFX.tsv"
+# EXTRA_KS="21 25": the same subsample typed again at other k-mer lengths, kept as <run>.<prefix>.k<K>.tsv (for experiments on divergent strains; the main result is unchanged)
+for ek in ${EXTRA_KS:-}; do type_k "$ek" "$work/$RUN.$PFX.k$ek.tsv" && mv "$work/$RUN.$PFX.k$ek.tsv" "$OUT/$RUN.$PFX.k$ek.tsv"; done
 y1=$(( $(date +%s) - t2 )); state=done
 mv "$work/$RUN.$PFX.tsv" "$OUT/$RUN.$PFX.tsv"
 echo "done $RUN: $((nlines/4)) reads typed, download ${d1}s ($((bytes/1000000)) MB), convert ${c1}s, type ${y1}s"

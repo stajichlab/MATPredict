@@ -88,6 +88,7 @@ def main():
     ap.add_argument("--max-reps", type=int, default=6); ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--reports", help="reports_all.tar.zst of the campaign: build the panel from cores and flanks (recommended)"); ap.add_argument("--margin", type=int, default=1000)
     ap.add_argument("--max-flank", type=int, default=6000, help="bases of flank kept on each side of a core (nearest the core): every lineage then adds about the same number of shared k-mers, so the shared depth of a minor lineage is not diluted by a major one")
+    ap.add_argument("--diverse", action="store_true", help="rank lineages by the number of distinct species in them before their size (for a genus panel: a few rare lineages of other species beat many loci of the commonest one)")
     ap.add_argument("--per-lineage", action="store_true", help="also write one complete panel per lineage in OUT/L<n>/ (cores and flanks of that lineage only; a lineage lacking one idiomorph borrows the core of the first lineage that has it). A multi-lineage panel dilutes breadth and depth over cores a strain does not carry; typing against each lineage panel and keeping the best-matching one does not.")
     ap.add_argument("--min-flank", type=int, default=1500, help="a locus with less flank on both sides together is not used as a representative")
     a = ap.parse_args()
@@ -112,6 +113,7 @@ def main():
             left, core, right = x["seq"][:c0], x["seq"][c0:c1], x["seq"][c1:]
             left, right = left[-a.max_flank:] if a.max_flank else left, right[:a.max_flank] if a.max_flank else right
             if len(left) + len(right) < a.min_flank or len(core) < 300: continue
+            x["sp"] = g.get(x["genome"], {}).get("species", "")
             x.update(left=left, right=right, core=core, fsketch=canon_sketch(left) | canon_sketch(right), csketch=canon_sketch(core)); ci.append(x)
         print(len(ci), "loci with a core and enough flank (of", len(items), ")", flush=True)
         os.makedirs(a.out, exist_ok=True)
@@ -123,7 +125,7 @@ def main():
                     cl["members"].append(x); cl["fsk"] |= x["fsketch"]; break
             else:
                 lin.append(dict(members=[x], fsk=set(x["fsketch"])))
-        lin.sort(key=lambda c: -len(c["members"]))
+        lin.sort(key=(lambda c: (-len({m["sp"] for m in c["members"]}), -len(c["members"]))) if a.diverse else (lambda c: -len(c["members"])))
         reps = {i: [] for i in ("MAT1-1", "MAT1-2")}; flanks = []
         with open(os.path.join(a.out, f"{a.prefix}_lineages.tsv"), "w") as fh:
             fh.write("lineage\tloci\tMAT1-1\tMAT1-2\trep_MAT1-1\trep_MAT1-2\tkept\n")

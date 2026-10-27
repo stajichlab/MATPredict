@@ -116,7 +116,7 @@ def submit_stage(a, stage, rows):
             for attempt in ("run", "retry"):
                 dep = ["--dependency", f"afterany:{ids[-1]}"] if attempt == "retry" else []
                 jid = sbatch(["-p", part, "-A", acct, "-c", str(a.cpus), "--mem", a.mem, "-J", f"wave-{stage}-{part}-{attempt}", "--array", f"1-{len(chunk)}%{a.conc}", *dep, "-o", f"{d}/logs/%x_%A_%a.out",
-                              "--export", f"ALL,WORKER_DIR={HERE},TARGET_SPOTS=2000000,WINDOWS=8", f"{HERE}/stream_type_sra.slurm", f, "none", "none", out]) if not a.dry_run else f"dry{len(ids)}"
+                              "--export", f"ALL,WORKER_DIR={HERE},TARGET_SPOTS=2000000,WINDOWS=8" + "".join("," + e for e in a.env), f"{HERE}/stream_type_sra.slurm", f, "none", "none", out]) if not a.dry_run else f"dry{len(ids)}"
                 ids.append(jid); jobs.append((stage, part, attempt, jid, len(chunk)))
     last = ids[-1]
     sm = sbatch(["-p", "exfab", "-A", "exfab", "-c", "1", "--mem", "4gb", "-t", "0:30:00", "-J", f"wave-{stage}-summary", "--dependency", "afterany:" + ":".join(ids), "-o", f"{d}/logs/%x_%j.out",
@@ -126,6 +126,12 @@ def submit_stage(a, stage, rows):
         with open(os.path.join(a.wave, "jobs.tsv"), "a") as fh:
             for j in jobs: fh.write("\t".join(map(str, j)) + "\n")
     print(f"{stage}: {len(rows)} runs, arrays {ids}, summary {sm}")
+
+
+def submit_list(a):
+    rows = rd(a.runs)
+    if not rows: sys.exit("empty run list")
+    submit_stage(a, a.stage_name, rows)
 
 
 def planned(a):
@@ -223,23 +229,29 @@ def status(a):
     print("species:", dict(c))
     out = os.path.join(a.wave, "out")
     if os.path.isdir(out):
-        st = collections.Counter(json.load(open(os.path.join(out, f))).get("state") for f in os.listdir(out) if f.endswith(".run.json"))
+        def state(f):
+            try: return json.load(open(os.path.join(out, f))).get("state")
+            except ValueError: return "failed_unfinished"
+        st = collections.Counter(state(f) for f in os.listdir(out) if f.endswith(".run.json"))
         print("runs:", dict(st))
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("cmd", choices=["plan-one", "submit-plan", "submit-test", "gate", "submit-full", "report", "status"])
+    ap.add_argument("cmd", choices=["plan-one", "submit-plan", "submit-test", "gate", "submit-full", "report", "status", "submit-list"])
     ap.add_argument("--wave", required=True); ap.add_argument("--inputs", default=f"{P}/results/sra_reads_typing/wave_inputs")
     ap.add_argument("--species"); ap.add_argument("--conc", type=int, default=60, help="tasks running at once per array (the curator lifted the CPU limit for this work, 2026-10-27)")
     ap.add_argument("--cpus", type=int, default=1, help="CPUs per run task: every step is single-threaded (measured 2026-10-27), and the exfab account is limited to 32 CPUs, so 1 CPU gives 32 tasks at once instead of 8")
     ap.add_argument("--mem", default="6gb", help="memory per run task (peak measured 4.9 GB)")
     ap.add_argument("--cap", type=int, default=50, help="most runs per species in the full stage")
-    ap.add_argument("--stage", default="test", choices=["test", "full"], help="gate: which stage's summary to judge (the full stage has more runs per species)")
+    ap.add_argument("--stage", default="test", help="gate: which stage's summary to judge (a folder under the wave directory with summary/results_all.tsv) (the full stage has more runs per species)")
+    ap.add_argument("--env", action="append", default=[], help="extra KEY=VALUE for the run tasks (for example READS_K=21); repeatable")
+    ap.add_argument("--runs", help="submit-list: a run-list TSV with panel_dir and panel_prefix columns")
+    ap.add_argument("--stage-name", default="list", help="submit-list: stage folder name under the wave directory")
     ap.add_argument("--retry-held", action="store_true", help="submit-plan: only the species held for too few runs")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
-    {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "submit-full": submit_full, "report": report, "status": status}[a.cmd](a)
+    {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)
 
 
 if __name__ == "__main__":

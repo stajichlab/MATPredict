@@ -28,7 +28,10 @@ def main():
     for r in read_tsv(a.runs):
         acc = r["run_accession"]; pfx = r.get("panel_prefix") or ""
         js = os.path.join(a.results, f"{acc}.run.json")
-        j = json.load(open(js)) if os.path.exists(js) else {}
+        try:
+            j = json.load(open(js)) if os.path.exists(js) else {}
+        except ValueError:                      # a task killed while writing its run.json (a time-out)
+            j = {"state": "failed_unfinished"}
         tsvs = glob.glob(os.path.join(a.results, f"{acc}.{pfx or '*'}.tsv"))
         res = read_tsv(tsvs[0])[0] if tsvs else {}
         truth = (r.get("truth_detect") or "").strip()

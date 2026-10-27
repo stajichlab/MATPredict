@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="MATPredict: two fruiting bodies on a DNA helix">
+  <title>MATPredict</title>
+  <rect width="256" height="256" rx="56" fill="#fff8e8"/>
+  <!-- helix strands -->
+  <path d="M104 236C160 210 96 190 152 164C208 138 104 118 152 96" fill="none" stroke="#0a5da8" stroke-width="12" stroke-linecap="round"/>
+  <path d="M152 236C96 210 160 190 104 164C48 138 152 118 104 96" fill="none" stroke="#c2418c" stroke-width="12" stroke-linecap="round"/>
+  <!-- rungs -->
+  <g stroke="#1d1d1f" stroke-width="5" stroke-linecap="round" opacity=".75"><path d="M118 226h20"/><path d="M114 197h28"/><path d="M114 164h28"/><path d="M114 130h28"/><path d="M118 110h20"/></g>
+  <!-- stems leaving the helix tops -->
+  <path d="M104 96C104 80 92 72 80 62" fill="none" stroke="#c2418c" stroke-width="12" stroke-linecap="round"/>
+  <path d="M152 96C152 80 164 72 176 62" fill="none" stroke="#0a5da8" stroke-width="12" stroke-linecap="round"/>
+  <!-- caps -->
+  <path d="M34 66C34 34 62 18 84 26 96 36 98 50 92 62Z" fill="#c2418c" transform="rotate(-8 64 46)"/>
+  <path d="M222 66C222 34 194 18 172 26 160 36 158 50 164 62Z" fill="#0a5da8" transform="rotate(8 192 46)"/>
+  <g stroke="#fff8e8" stroke-width="2.5" opacity=".7" stroke-linecap="round"><path d="M50 58 60 34"/><path d="M64 60 72 32"/><path d="M78 60 82 38"/><path d="M206 58 196 34"/><path d="M192 60 184 32"/><path d="M178 60 174 38"/></g>
+</svg>

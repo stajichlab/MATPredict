@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATPredict raw reads: species report</title>
+<meta name="description" content="Mating-type calls from public raw reads for one species: confidence, agreement with assemblies, and every run.">
+<link rel="icon" type="image/svg+xml" href="../logo/favicon.svg">
+<link rel="stylesheet" href="../site.css">
+<script src="../theme.js"></script>
+</head>
+<body>
+<nav><a class="brand" href="../" aria-label="MATPredict home"><img class="logo-l" src="../logo/horizontal.svg" alt="MATPredict" height="34"><img class="logo-d" src="../logo/horizontal-dark.svg" alt="" height="34"></a><a href="../">Overview</a><a href="../results.html">Genomes by taxon</a><a href="./">Raw reads</a><a href="../page/index.html">Browser tool</a><a href="../about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
+<main>
+  <p class="muted"><a href="./">Raw reads</a> / <span id="crumb"></span></p>
+  <h1 id="title">Species report</h1>
+  <p class="lede" id="lede"></p>
+  <div class="cards" id="cards"></div>
+  <div class="notice" id="why" hidden></div>
+  <h2>Calls</h2>
+  <div class="chart" id="ch-calls"></div><div class="legend" id="lg-calls"></div>
+  <h2>Agreement with assemblies</h2>
+  <p id="agree"></p>
+  <div class="tablewrap"><table id="dis"></table></div>
+  <h2>Calls by study</h2>
+  <div class="chart" id="ch-study"></div><div class="legend" id="lg-study"></div>
+  <p class="muted">Runs of one study are often one population or one cross; the counts are of runs sampled (at most 4 per study), not of independent strains.</p>
+  <h2>Runs</h2>
+  <div class="controls"><label>Call <select id="callf"><option value="">all</option></select></label> <label>Search <input id="q" type="search" placeholder="run, strain, study"></label> <a id="dl" href="#">Download TSV</a></div>
+  <div class="tablewrap"><table id="runs"><thead><tr><th>Run</th><th>Strain</th><th>Study</th><th>Call</th><th class="n">MAT1-1 depth</th><th class="n">MAT1-2 depth</th><th class="n">Flank depth</th><th>Assembly call</th><th>Note</th></tr></thead><tbody></tbody></table></div>
+  <p class="muted">Depths are k-mer depths from up to 2 million read pairs. <i>Note</i>: <code>k21</code> or <code>genus_panel</code> mean the call came from a retyping pass; <code>both_vs_one</code> means both idiomorphs were seen where the assembly shows one.</p>
+</main>
+<footer class="muted">MATPredict · <a href="../about.html">About</a></footer>
+<script type="module">
+import { stacked, legend } from "../charts.js";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const slug = new URLSearchParams(location.search).get("s") || "";
+let D;
+try { D = await fetch("../data/reads/" + encodeURIComponent(slug) + ".json").then(r => { if (!r.ok) throw 0; return r.json(); }); } catch { document.getElementById("title").textContent = "Species not found"; throw 0; }
+document.title = D.species + " raw reads - MATPredict";
+document.getElementById("crumb").textContent = D.species;
+document.getElementById("title").innerHTML = "<i>" + esc(D.species) + "</i>";
+document.getElementById("lede").textContent = D.confidence.charAt(0).toUpperCase() + D.confidence.slice(1) + " panel (reference tier " + D.tier + "); " + D.pooled_strains.toLocaleString() + " public strains pooled in the survey, " + D.runs + " runs sampled.";
+document.getElementById("cards").innerHTML = [[D.done + " / " + D.runs, "runs finished"], [D["MAT1-1"], "MAT1-1"], [D["MAT1-2"], "MAT1-2"], [D.both, "both idiomorphs"], [D.none + D.low_depth, "not called"], [D.with_assembly_call ? D.agree + " / " + D.with_assembly_call : "–", "agree with assembly"]]
+  .map(([v, l]) => '<div class="card"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>').join("");
+if (D.why.length) { const w = document.getElementById("why"); w.hidden = false; w.innerHTML = "<b>Why this panel is " + esc(D.confidence) + ":</b> " + D.why.map(esc).join("; ") + "."; }
+const cats = ["MAT1-1", "MAT1-2", "both", "none", "low_depth"], rows = D.rows.filter(r => r.call);
+const cnt = rs => Object.fromEntries(cats.map(c => [c, rs.filter(r => r.call === c).length]));
+stacked(document.getElementById("ch-calls"), [{ label: "all runs", parts: cnt(rows) }], cats, { labelw: 100 }); legend(document.getElementById("lg-calls"), cats);
+const studies = [...new Set(rows.map(r => r.study))];
+stacked(document.getElementById("ch-study"), studies.map(s => ({ label: s, parts: cnt(rows.filter(r => r.study === s)) })), cats, { labelw: 130 }); legend(document.getElementById("lg-study"), cats);
+const tr = rows.filter(r => r.truth), single = tr.filter(r => r.call === "MAT1-1" || r.call === "MAT1-2"), dis = single.filter(r => r.call !== r.truth);
+document.getElementById("agree").textContent = tr.length ? single.length - dis.length + " of " + single.length + " runs with a single-allele call match the detect call on an assembly of the same BioSample; " + (tr.length - single.length) + " more runs with an assembly call received no single-allele call." : "No run in this sample has an assembly of the same BioSample to compare with.";
+document.getElementById("dis").innerHTML = (dis.length ? "<tr><th>Run</th><th>Strain</th><th>Reads call</th><th>Assembly call</th><th>Assembly</th></tr>" + dis.map(r => "<tr><td>" + esc(r.run) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.call) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(r.truth_assembly) + "</td></tr>").join("") : "");
+const cf = document.getElementById("callf"), q = document.getElementById("q"); cats.forEach(c => cf.add(new Option(c, c)));
+const note = r => [r.rescue, r.verdict === "both_vs_one" ? "both_vs_one" : "", r.verdict === "DISAGREE" ? "disagrees with assembly" : "", r.flags && r.flags !== "-" ? r.flags : ""].filter(Boolean).join("; ");
+function draw() {
+  const f = D.rows.filter(r => (!cf.value || r.call === cf.value) && (r.run + r.strain + r.study).toLowerCase().includes(q.value.toLowerCase()));
+  document.querySelector("#runs tbody").innerHTML = f.map(r => "<tr><td><a href=\"https://www.ncbi.nlm.nih.gov/sra/" + esc(r.run) + "\">" + esc(r.run) + "</a></td><td>" + esc(r.strain) + "</td><td>" + esc(r.study) + "</td><td>" + esc(r.call || "not run") + "</td><td class=\"n\">" + esc(r.depth_1) + "</td><td class=\"n\">" + esc(r.depth_2) + "</td><td class=\"n\">" + esc(r.shared_depth) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(note(r)) + "</td></tr>").join("");
+}
+[cf, q].forEach(e => e.addEventListener("input", draw)); draw();
+document.getElementById("dl").href = "../data/reads/" + encodeURIComponent(slug) + ".tsv"; document.getElementById("dl").download = slug + "_reads_calls.tsv";
+</script>
+</body>
+</html>

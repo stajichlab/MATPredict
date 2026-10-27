@@ -10,7 +10,7 @@
 <script src="theme.js"></script>
 </head>
 <body>
-<nav><a class="brand" href="./" aria-label="MATPredict home"><img class="logo-l" src="logo/horizontal.svg" alt="MATPredict" height="34"><img class="logo-d" src="logo/horizontal-dark.svg" alt="" height="34"></a><a href="#how">How it works</a><a href="#gates">Gating</a><a href="#results">Results</a><a href="#reads">Raw reads</a><a href="results.html">Explore taxa</a><a href="page/index.html">Browser tool</a><a href="about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
+<nav><a class="brand" href="./" aria-label="MATPredict home"><img class="logo-l" src="logo/horizontal.svg" alt="MATPredict" height="34"><img class="logo-d" src="logo/horizontal-dark.svg" alt="" height="34"></a><a href="#how">How it works</a><a href="#gates">Gating</a><a href="#results">Results</a><a href="reads/">Raw reads</a><a href="results.html">Explore taxa</a><a href="page/index.html">Browser tool</a><a href="about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
 <main>
   <h1>MATPredict</h1>
   <p class="lede">Find and type the mating-type (MAT) locus in a fungal genome, with the genes that flank it, from an assembly or from raw reads.</p>
@@ -83,6 +83,7 @@
   <p class="muted">Truth tables for BFD genomes do not exist, so BFD results are recovery (call) rates, not accuracy. Several thresholds were tuned on small panels; the notes say which.</p>
 
   <h2 id="reads">Typing from raw reads</h2>
+  <p class="notice">Results for 112 fungal species from public read sets, with a report for each, are on the <a href="reads/">Raw reads page</a>.</p>
   <p>When a good reference panel exists for a species, <code>matpredict reads-type</code> calls the idiomorph of a strain from its reads, with no assembly. It counts k-mers (k = 31) found in only one idiomorph reference, uses the k-mers shared by both flanks as a single-copy depth control, and calls one idiomorph, <code>both</code>, <code>none</code> or <code>low_depth</code>.</p>
   <div class="tablewrap"><table>
     <tr><th>Dataset</th><th class="n">Strains</th><th>Agreement</th><th>Status</th></tr>

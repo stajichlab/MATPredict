@@ -9,7 +9,7 @@
 #   OUT_DIR       receives <run>.<prefix>.tsv (the reads-type row) and <run>.run.json (the run record)
 # Environment (all optional): TARGET_SPOTS=2000000  WINDOWS=8  SRA_URL=https://sra-pub-run-odp.s3.amazonaws.com/sra  IDIOMORPHS
 #   SCRATCH=<fast local dir for the temporary .sra and FASTQ, default /tmp>  KEEP_SRA=1 keeps the temporary files
-#   MAX_SRA_SIZE=50G caps the prefetch fallback. SRATOOLKIT_BIN, PY, PYTHONPATH, MATPREDICT_DB_ROOT: where fastq-dump and `python -m MATPredict` come from (defaults: the HPCC installs).
+#   FASTQ_OUT=path keeps the subsample FASTQ there; SKIP_TYPE=1 stops before typing (follow-up analyses). MAX_SRA_SIZE=50G caps the prefetch fallback. SRATOOLKIT_BIN, PY, PYTHONPATH, MATPREDICT_DB_ROOT: where fastq-dump and `python -m MATPredict` come from (defaults: the HPCC installs).
 # Exit: 0 done (or already done: the result file is the done-marker), 1 failed (the state is in the run.json), 2 bad arguments. Idempotent; safe to retry.
 # Not kept: the .sra and every FASTQ. Cost per run measured 2026-10-26: about 1 GB download, 110 s, 5 GB RAM, up to 4 CPUs (the typing step).
 set -uo pipefail
@@ -52,6 +52,9 @@ fi
 c1=$(( $(date +%s) - t1 )); nlines=$(wc -l < "$fq")
 [[ $nlines -gt 0 ]] || { state=failed_convert; exit 1; }
 rm -f "$work/$RUN.sra"
+# optional, for follow-up analyses: keep a copy of the subsample (FASTQ_OUT=path) and/or stop before typing (SKIP_TYPE=1)
+[[ -n ${FASTQ_OUT:-} ]] && cp "$fq" "$FASTQ_OUT"
+[[ ${SKIP_TYPE:-0} == 1 ]] && { state=done_untyped; exit 0; }
 # 3. type
 t2=$(date +%s)
 printf 'sample\treads\n%s\t%s\n' "$RUN" "$fq" > "$work/samples.tsv"

@@ -16,7 +16,7 @@ Then `python3 survey_ena.py --runs RUNS.tsv --meta META.tsv --out . --db ../../.
 
 ## What is counted
 - **Species**: the first two words of the scientific name, with a genus and a lower-case species epithet. Metagenomes, unidentified and `sp.` entries are left out. ***Saccharomyces cerevisiae* is skipped** (`--skip-species`, curator ruling 2026-10-26: the focus is outside the lab-model yeast; its public sets are mostly mutant collections, evolution lines and crosses, and it would be 42,000 of the strains). Other *Saccharomyces* species are kept.
-- **Runs**: paired or single-end (the layout is recorded as `strains_single_end` in `species_summary.tsv`), at least 300 Mb (about 10x for a 30 Mb genome; a per-species genome size would be better, an open item). `reads-type` takes one read file per strain, so single-end reads work; including them added 1,857 strains.
+- **Runs**: paired or single-end (the layout is recorded as `strains_single_end` in `species_summary.tsv`), at least 300 Mb (about 10x for a 30 Mb genome; a per-species genome size would be better, an open item). `reads-type` takes one read file per strain, so single-end reads work; including them added 1,841 strains.
 - **Strains**: distinct strain, isolate or sample alias (the first that is given) per study; a strain with several runs counts once and keeps its largest run.
 - **Pooled across studies**: a strain name seen in several studies of one species counts once. Different studies often use different names for one strain, so this still over-counts somewhat.
 - **Left out of the pooled count** (kept in `studies.tsv` with `excluded_as`): studies whose title, or at least half of whose strain names and sample titles, match
@@ -24,18 +24,19 @@ Then `python3 survey_ena.py --runs RUNS.tsv --meta META.tsv --out . --db ../../.
   - `evolution`: experimental or laboratory evolution, serial passage, mutation accumulation lines, time courses;
   - `cross`: progeny, segregants, backcrosses, tetrads, recombinant inbred lines (these are not natural isolates, but a cross has an expected 1:1 idiomorph ratio and could be a useful test later).
   A title that names a natural or clinical sampling (`surveillance`, `point prevalence`, `survey`, `clinical isolates`, `outbreak`, `epidemiolog`, `GWAS`, `natural isolates`, `wild isolates`, `bloodstream`, `candidaemia`, `genomes project`, `population genom`) is not left out as `evolution` or `cross` on a stray keyword; it never rescues a `mutant` study.
+  - `not_wgs`: the study title (or at least half of the strain texts) names RNA-seq, a transcriptome or expression study, ChIP, ATAC, bisulfite or methylation, Hi-C, a metagenome or amplicon, ITS or 16S, barcoding or single-cell work. Added after the pilot found two *V. dahliae* runs filed as WGS that are RNA-seq time points (no MAT depth, `none`).
   This is a keyword filter on titles and names, not a review. It has false positives and misses (for example a study named only by a project code). Treat `excluded_as` as a first pass.
 - **Reference tier** (`species_summary.tsv`): A = MATPredict has accepted records for two or more idiomorphs of this species; A1 = one idiomorph; B = records for another species of the genus only; C = none. Matching is by deposited name, so a synonym (*Pyricularia oryzae* / *Magnaporthe oryzae*, *Nakaseomyces glabratus* / *Candida glabrata*) reads as B or C. Candidate records are not counted.
 
 ## Result (2026-10-26)
-245,243 fungal runs, 108,055 paired or single-end runs of at least 300 Mb with a species name (without *S. cerevisiae*). 693 species have at least 4 strains before the exclusions and **666 species (75,905 strains) after them**: 1,934 strains were left out as mutants or engineered strains, 904 as experimental evolution and 2,402 as crosses.
+245,243 fungal runs, 108,055 paired or single-end runs of at least 300 Mb with a species name (without *S. cerevisiae*). 693 species have at least 4 strains before the exclusions and **649 species (74,905 strains) after them**: 1,919 strains were left out as mutants or engineered strains, 899 as experimental evolution, 2,401 as crosses and 1,085 as not whole-genome DNA (RNA-seq, ChIP, bisulfite, amplicon and similar libraries filed as WGS).
 
 | Reference tier | Species | Strains |
 |---|---|---|
-| A (two or more idiomorphs) | 44 | 42,086 |
-| A1 (one idiomorph) | 19 | 1,709 |
-| B (genus only) | 170 | 11,877 |
-| C (none) | 433 | 20,233 |
+| A (two or more idiomorphs) | 44 | 41,948 |
+| A1 (one idiomorph) | 19 | 1,581 |
+| B (genus only) | 166 | 11,814 |
+| C (none) | 420 | 19,562 |
 
 The strain counts are dominated by a few species: *Candidozyma auris* (24,888, outbreak surveillance, largely clonal), *Zymoseptoria tritici*, *Aspergillus fumigatus*, *Cryptococcus neoformans*, *Candida albicans*.
 

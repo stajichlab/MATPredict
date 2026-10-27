@@ -25,6 +25,10 @@ MUTANT_STRAIN = re.compile(r"mutant|knock-?out|Δ|delta\d|\bko\b|crispr|deletant
 # whose title contains "F1", a clinical series described as "evolution of resistance"). It never rescues a `mutant` study.
 PROTECT = re.compile(r"surveillance|point prevalence|\bsurvey\b|clinical isolates|outbreak|epidemiolog|\bgwas\b|natural (isolates|populations?)|"
                      r"wild isolates|bloodstream|candidaemia|candidemia|genomes project|population genom", re.I)
+# Libraries filed as WGS that are not whole-genome DNA (the pilot found two V. dahliae "WGS" runs that are RNA-seq time points: no MAT depth, flank at 2x).
+NOT_WGS = re.compile(r"transcriptom|rna-?seq|\bmrna\b|small rna|gene expression|expression (profil|analysis)|chip-?seq|atac-?seq|bisulfite|methylom|hi-c\b|"
+                     r"metagenom|amplicon|\bits[12]?\b|16s|barcod|ribosom(e|al) profil|single[- ]cell", re.I)
+NOT_WGS_STRAIN = re.compile(r"rna-?seq|transcriptom|\bmrna\b|chip-?seq|atac-?seq|bisulfite|amplicon|\bits\b|\d+h\b.*(vs|rep)", re.I)
 NOT_SPECIES = re.compile(r"metagenom|uncultured|environmental|unidentified|mixed|fungal sp|fungus sp", re.I)
 MIN_BASES = 300_000_000          # about 10x of a 30 Mb genome; a per-species genome size would be better (open item)
 
@@ -108,7 +112,9 @@ def main():
             flag = ""
             tt = title.get(st, "")
             frac = lambda rx: sum(1 for k in ks if rx.search(txt[k]) or rx.search(k)) / len(ks)
-            if MUTANT.search(tt) or frac(MUTANT_STRAIN) >= .5:
+            if NOT_WGS.search(tt) or frac(NOT_WGS_STRAIN) >= .5:
+                flag = "not_wgs"
+            elif MUTANT.search(tt) or frac(MUTANT_STRAIN) >= .5:
                 flag = "mutant"
             elif not PROTECT.search(tt) and (EVOLVE.search(tt) or frac(EVOLVE) >= .5):
                 flag = "evolution"
@@ -122,7 +128,7 @@ def main():
                 pooled.setdefault(k, (st, v[0]))
         single = sum(1 for (st, run) in pooled.values() if strains[sp][st][next(k for k, v in strains[sp][st].items() if v[0] == run)][3] == "SINGLE")
         species_rows.append([sp, len(pooled), len({v[0] for v in pooled.values()}), sum(len(v) for v in strains[sp].values()),
-                             excluded["mutant"], excluded["evolution"], excluded["cross"], single])
+                             excluded["mutant"], excluded["evolution"], excluded["cross"], single, excluded["not_wgs"]])
     with open(os.path.join(a.out, "studies.tsv"), "w", newline="") as fh:
         w = csv.writer(fh, delimiter="\t", lineterminator="\n")
         w.writerow(["species", "study", "strains", "excluded_as", "study_title"])
@@ -130,7 +136,7 @@ def main():
     species_rows.sort(key=lambda r: (-r[1], r[0]))
     with open(os.path.join(a.out, "species_summary.tsv"), "w", newline="") as fh:
         w = csv.writer(fh, delimiter="\t", lineterminator="\n")
-        w.writerow(["species", "strains_pooled", "studies", "strains_all_studies", "excluded_mutant", "excluded_evolution", "excluded_cross", "strains_single_end", "reference_tier"])
+        w.writerow(["species", "strains_pooled", "studies", "strains_all_studies", "excluded_mutant", "excluded_evolution", "excluded_cross", "strains_single_end", "excluded_not_wgs", "reference_tier"])
         w.writerows(r + [tier(r[0], spdb, gendb) if a.db else ""] for r in species_rows if r[1] >= a.min_samples or r[3] >= a.min_samples)
     keep = [r for r in species_rows if r[1] >= a.min_samples]
     print(f"{n_runs} runs; {n_used} runs (paired or single-end) at >= {MIN_BASES // 10**6} Mb with a species name; species with >= {a.min_samples} pooled strains: "
@@ -140,7 +146,7 @@ def main():
             sel = [r for r in keep if tier(r[0], spdb, gendb) == t]
             print(f"tier {t}: {len(sel)} species, {sum(r[1] for r in sel)} strains")
     print("species with >= 4 strains only before the exclusions:", sum(1 for r in species_rows if r[3] >= a.min_samples), "; exclusions (strains):",
-          {k: sum(r[i] for r in species_rows) for k, i in (("mutant", 4), ("evolution", 5), ("cross", 6))})
+          {k: sum(r[i] for r in species_rows) for k, i in (("mutant", 4), ("evolution", 5), ("cross", 6), ("not_wgs", 8))})
 
 
 if __name__ == "__main__":

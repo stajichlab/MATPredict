@@ -59,6 +59,11 @@ rm -f "$work/$RUN.sra"
 if [[ ${SKETCH:-0} == 1 && ! -s $OUT/$RUN.sig.zip ]]; then
   SM=${SOURMASH:-/opt/linux/rocky/8.x/x86_64/pkgs/sourmash/4.9/bin/sourmash}; [[ -x $SM ]] || SM=$(command -v sourmash)
   "$SM" sketch dna -p k=21,scaled=${SKETCH_SCALED:-500},abund --name "$RUN" -o "$work/$RUN.sig.zip" "$fq" >/dev/null 2>"$work/sketch.log" && mv "$work/$RUN.sig.zip" "$OUT/$RUN.sig.zip" || { echo "sketch failed for $RUN: $(tail -2 "$work/sketch.log")" >&2; }
+  # SKETCH_SPLIT=1: also sketch two halves of the subsample (alternate 4-line records) as <run>.a.sig.zip and <run>.b.sig.zip. Two halves of one run are two samples of one genome: their similarity is the ceiling for "the same strain" at this coverage.
+  if [[ ${SKETCH_SPLIT:-0} == 1 ]]; then
+    awk -v a="$work/$RUN.a.fq" -v b="$work/$RUN.b.fq" '{ r = int((NR-1)/4); print > (r % 2 ? b : a) }' "$fq"
+    for h in a b; do "$SM" sketch dna -p k=21,scaled=${SKETCH_SCALED:-500},abund --name "$RUN.$h" -o "$OUT/$RUN.$h.sig.zip" "$work/$RUN.$h.fq" >/dev/null 2>&1; rm -f "$work/$RUN.$h.fq"; done
+  fi
 fi
 [[ ${SKIP_TYPE:-0} == 1 ]] && { state=done_untyped; exit 0; }
 # 3. type

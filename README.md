@@ -64,7 +64,7 @@ Changes: [CHANGELOG.md](CHANGELOG.md).
  │ 4. POLISH     exonerate / miniprot gene models on a sliced window     │
  │               (at most 6 loci per family)                             │
  ├──────────────────────────────────────────────────────────────────────┤
- │ 5. GATE       modelled-gene bar, fraction floor, MAT-gene gate,       │
+ │ 5. VERIFY     modelled-gene bar, fraction floor, MAT-gene gate,       │
  │               flank-carried rule, paralog class, CAAX check           │
  ├──────────────────────────────────────────────────────────────────────┤
  │ 6. TYPE       idiomorph from gene content, or profile-HMM classifier  │

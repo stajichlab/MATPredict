@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MATPredict</title>
-<meta name="description" content="MATPredict finds and types fungal mating-type loci in genome assemblies and raw reads. Method, gating, and results across BFD and ZyGoLife genomes.">
+<meta name="description" content="MATPredict finds and types fungal mating-type loci in genome assemblies and raw reads. Method, checks and confidence, and results across BFD and ZyGoLife genomes.">
 <link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
 <link rel="stylesheet" href="site.css">
 <script src="theme.js"></script>
 </head>
 <body>
-<nav><a class="brand" href="./" aria-label="MATPredict home"><img class="logo-l" src="logo/horizontal.svg" alt="MATPredict" height="34"><img class="logo-d" src="logo/horizontal-dark.svg" alt="" height="34"></a><a href="#how">How it works</a><a href="#gates">Gating</a><a href="#results">Results</a><a href="reads/">Raw reads</a><a href="results.html">Explore taxa</a><a href="page/index.html">Browser tool</a><a href="about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
+<nav><a class="brand" href="./" aria-label="MATPredict home"><img class="logo-l" src="logo/horizontal.svg" alt="MATPredict" height="34"><img class="logo-d" src="logo/horizontal-dark.svg" alt="" height="34"></a><a href="#how">How it works</a><a href="#checks">Confidence</a><a href="#results">Results</a><a href="#reads">Raw reads</a><a href="results.html">Explore taxa</a><a href="page/index.html">Browser tool</a><a href="about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
 <main>
   <h1>MATPredict</h1>
   <p class="lede">Find and type the mating-type (MAT) locus in a fungal genome, with the genes that flank it, from an assembly or from raw reads.</p>
@@ -28,17 +28,17 @@
     <li><b>Search.</b> Translated search (tblastn on a genome, diamond on a proteome) with the core MAT genes plus flank genes (for example APN2, SLA2, COX13 in Pezizomycotina; tptA, rnhA, algA, glrA in Mucorales).</li>
     <li><b>Cluster.</b> Hits become candidate loci per contig, using lineage-specific gap rules.</li>
     <li><b>Polish.</b> exonerate or miniprot builds gene models in a window around each candidate (at most 6 loci per family).</li>
-    <li><b>Gate.</b> A candidate must pass the checks below, or it is withheld and the reason is recorded.</li>
+    <li><b>Verify.</b> A candidate must pass the checks below, or it is withheld and the reason is recorded.</li>
     <li><b>Type.</b> The idiomorph comes from gene content (for example MAT1-1-1 versus MAT1-2-1) or, in Mucoromycota, from a profile-HMM classifier (sexP = Plus, sexM = Minus). Each call gets a margin and a confidence tier.</li>
   </ol>
   <p class="muted">Output per genome: <code>detection_report.yaml</code> (calls, evidence, withheld loci, reason for any uncalled genome, two-idiomorph flag), <code>detected_loci.gff3</code> and optional FASTA.</p>
 
-  <h2 id="gates">Gating and confidence</h2>
-  <p>The gates trade recall for precision. Each is a decision recorded in the project's <a href="https://github.com/stajichlab/MATPredict/tree/main/analysis">analysis notes</a> with the test that set it.</p>
+  <h2 id="checks">Checks and confidence</h2><span id="gates"></span>
+  <p>The checks trade recall for precision. Each is a decision recorded in the project's <a href="https://github.com/stajichlab/MATPredict/tree/main/analysis">analysis notes</a> with the test that set it.</p>
   <div class="tablewrap"><table>
-    <tr><th>Gate</th><th>What it does</th></tr>
+    <tr><th>Check</th><th>What it tests</th></tr>
     <tr><td>Modelled-gene bar</td><td>The best cluster must carry a minimum number of polished gene models. Clusters below it are withheld (for example "carried 1 modelled gene, below the 2 required").</td></tr>
-    <tr><td>MAT-gene gate</td><td>A locus needs a MAT gene typed by the classifier at or above its bit-score floor (about 100 bits), or at least two flank genes modelled at 40% or more. Fragments need flanks. Removes paralog look-alikes.</td></tr>
+    <tr><td>MAT-gene check</td><td>A locus needs a MAT gene typed by the classifier at or above its bit-score floor (about 100 bits), or at least two flank genes modelled at 40% or more. Fragments need flanks. Removes paralog look-alikes.</td></tr>
     <tr><td>Flank-carried rule</td><td>A call that rests only on flank hits needs a core-gene hit above a bit-score floor (39 bits); this removed 52 of 52 known artefacts in the audit while keeping 7 of 8 real loci.</td></tr>
     <tr><td>Paralog class</td><td>When a family has several real gene copies, paralogs are separated from the MAT copy and withheld or reported as such.</td></tr>
     <tr><td>CAAX check (Basidiomycota)</td><td>Pheromone-receptor calls that depend on a strict CAAX motif scan are labelled <code>unverified</code>. They are counted but kept apart from verified calls.</td></tr>

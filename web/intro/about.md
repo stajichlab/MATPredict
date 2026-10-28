@@ -22,7 +22,7 @@ which genes it carries and which idiomorph (mating type) it is, with the evidenc
    translated BLAST (tblastn), or against a proteome with DIAMOND.
 3. **Cluster.** Hits on a contig are grouped into candidate loci using gap rules for each lineage.
 4. **Polish.** Each candidate locus is modelled with exonerate and miniprot, on a window sliced around it.
-5. **Gate.** A candidate must pass checks on its modelled genes, the fraction of the reference it covers, the presence of a
+5. **Verify.** A candidate must pass checks on its modelled genes, the fraction of the reference it covers, the presence of a
    MAT gene, flanking-gene evidence and paralog class (and the CAAX motif for pheromone receptors).
 6. **Type.** The idiomorph comes from gene content, or from a profile-HMM classifier (Mucoromycota Plus/Minus), and each call
    gets a confidence tier (high, medium, low) with the reason it was not higher.

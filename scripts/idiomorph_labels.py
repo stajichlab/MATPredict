@@ -1,7 +1,7 @@
 """Display labels for idiomorphs and MAT genes, so that a name says which lineage and reference system it belongs to.
 
 Grammar (curator, 2026-10-28): `<Lineage>__<System>_<Cell>`, for example `Taphr__SchPom_M`.
-- Lineage: the subphylum (`Taphr` Taphrinomycotina, `Sacch` Saccharomycotina, the full word `Mucoromycotina` for that group; Pezizomycotina MAT1-1 / MAT1-2 stay as they are).
+- Lineage: a fixed five-letter code (curator, 2026-10-28), see LINEAGES; Pezizomycotina MAT1-1 / MAT1-2 stay unprefixed unless a ruling adds `Pezio__`.
 - System: a code for the REFERENCE ORGANISM of the system (three letters of the genus and three of the species), not for the species the gene was found in and not a clade: `SchPom` is the
   Schizosaccharomyces pombe P/M system, wherever its homologue sits (Pneumocystis, Taphrina, Saitoella, Protomyces, Neolecta ...), like the family name MATsc is the S. cerevisiae system.
   A label says which panel or reference system matched, not a homology or species claim.
@@ -13,6 +13,8 @@ Labels are applied on output (tables, FASTA headers, tree labels, the reads page
 (docs/notes/2026-10-28_idiomorph-naming-proposal.md). Only the P/M system is mapped so far.
 """
 
+# five-letter lineage codes (subphylum; Basid is the phylum): fixed width so labels sort and align
+LINEAGES = {"Pezio": "Pezizomycotina", "Sacch": "Saccharomycotina", "Taphr": "Taphrinomycotina", "Mucor": "Mucoromycotina", "Basid": "Basidiomycota"}
 LINEAGE_PM, SYSTEM_PM = "Taphr", "SchPom"
 GENE_PM = {"matPi": "Pi", "mat1-Pi": "Pi", "matPc": "Pc", "mat1-Pc": "Pc", "matMc": "Mc", "mat1-Mc": "Mc", "matMi": "Mi", "mat1-Mi": "Mi"}
 

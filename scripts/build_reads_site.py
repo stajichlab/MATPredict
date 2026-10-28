@@ -67,23 +67,31 @@ def curated(c, repo, out):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--wave", default="datasets/reads/sra_survey/pilot/wave1"); ap.add_argument("--out", required=True); ap.add_argument("--repo", default=".")
+    ap.add_argument("--wave", action="append", help="a wave folder with results_all_final.tsv and gates_final.tsv (or results_all.tsv and gates.tsv); repeat for several waves (default: wave1 and wave2)"); ap.add_argument("--out", required=True); ap.add_argument("--repo", default=".")
     a = ap.parse_args(); os.makedirs(a.out, exist_ok=True)
-    res = rd(os.path.join(a.wave, "results_all_final.tsv")); gates = {r["slug"]: r for r in rd(os.path.join(a.wave, "gates_final.tsv"))}
-    sp = {r["slug"]: r for r in rd(os.path.join(os.path.dirname(a.wave.rstrip("/")), "wave1_species.tsv"))}
+    res, gates, sp = [], {}, {}
+    for w in a.wave or ["datasets/reads/sra_survey/pilot/wave1", "datasets/reads/sra_survey/pilot/wave2"]:
+        pick = lambda *names: next((os.path.join(w, n) for n in names if os.path.exists(os.path.join(w, n))), None)
+        rf, gf = pick("results_all_final.tsv", "results_all.tsv"), pick("gates_final.tsv", "gates.tsv")
+        if not (rf and gf): print("skipping", w, "(no results or gates)"); continue
+        res += rd(rf); gates.update({r["slug"]: r for r in rd(gf)})
+        sf = pick("species.tsv") or os.path.join(os.path.dirname(w.rstrip("/")), os.path.basename(w.rstrip("/")) + "_species.tsv")
+        if os.path.exists(sf): sp.update({r["slug"]: r for r in rd(sf)})
     by = {}
+    names_of = lambda r: ((r.get("idiomorphs") or "MAT1-1 MAT1-2").split() + ["MAT1-2"])[:2]
+    is_typed = lambda c: c not in ("both", "none", "low_depth", "")      # a call of one idiomorph, under whatever name the panel gave it (MAT1-1, a, alpha, P ...)
     for r in res:      # the verdict is recomputed here: the results table keeps the pre-rescue verdicts of runs typed by a later pass
-        r["verdict"] = "" if not r["truth"] else "untyped" if r["state"] != "done" or r["call"] not in ("MAT1-1", "MAT1-2", "both") else "both_vs_one" if r["call"] == "both" else "agree" if r["call"] == r["truth"] else "DISAGREE"
+        r["verdict"] = "" if not r["truth"] else "untyped" if r["state"] != "done" or not (is_typed(r["call"]) or r["call"] == "both") else "both_vs_one" if r["call"] == "both" else "agree" if r["call"] == r["truth"] else "DISAGREE"
         by.setdefault(r["group"], []).append(r)
     index = []
     for slug, g in sorted(gates.items(), key=lambda kv: kv[1]["species"]):
         runs = by.get(slug, []); done = [r for r in runs if r["state"] == "done"]; c = Counter(r["call"] for r in done)
-        typed = [r for r in done if r["call"] in ("MAT1-1", "MAT1-2")]
+        typed = [r for r in done if is_typed(r["call"])]; n1, n2 = names_of(runs[0]) if runs else ("MAT1-1", "MAT1-2")
         truth = [r for r in typed if r["truth"]]
         d = g["decision"].split(":")[0]; why = list(dict.fromkeys(reason(x) for x in g["decision"].split(":", 1)[1].split("+"))) if ":" in g["decision"] else []
         s = {"slug": slug, "species": g["species"], "tier": sp.get(slug, {}).get("reference_tier", ""), "pooled_strains": int(sp.get(slug, {}).get("strains_pooled") or 0),
              "confidence": "withheld" if d == "HOLD" else CONF.get(d, d), "why": why, "runs": len(runs), "done": len(done), "typed": len(typed),
-             "MAT1-1": c["MAT1-1"], "MAT1-2": c["MAT1-2"], "both": c["both"], "none": c["none"], "low_depth": c["low_depth"],
+             "names": [n1, n2], "c1": c[n1], "c2": c[n2], "MAT1-1": c[n1], "MAT1-2": c[n2], "both": c["both"], "none": c["none"], "low_depth": c["low_depth"],
              "with_assembly_call": len(truth), "agree": sum(r["verdict"] == "agree" for r in truth), "disagree": sum(r["verdict"] == "DISAGREE" for r in truth),
              "rescued": sum(1 for r in typed if r.get("rescue"))}
         index.append(s)
@@ -92,7 +100,7 @@ def main():
         with open(os.path.join(a.out, slug + ".tsv"), "w", newline="") as fh:
             w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n"); w.writeheader(); w.writerows(rows)
     allr = [r for r in res if r["state"] == "done"]
-    typed = [r for r in allr if r["call"] in ("MAT1-1", "MAT1-2")]; tr = [r for r in typed if r["truth"]]
+    typed = [r for r in allr if is_typed(r["call"])]; tr = [r for r in typed if r["truth"]]
     tot = {"species": len(index), "runs": len(res), "done": len(allr), "typed": len(typed), "with_assembly_call": len(tr), "agree": sum(r["verdict"] == "agree" for r in tr),
            "disagree": sum(r["verdict"] == "DISAGREE" for r in tr), "confidence": dict(Counter(s["confidence"] for s in index)),
            "calls": dict(Counter(r["call"] for r in allr)), "rescued": sum(1 for r in typed if r.get("rescue"))}

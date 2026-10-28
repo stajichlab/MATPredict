@@ -121,6 +121,7 @@ def main():
     ap.add_argument("--diverse", action="store_true", help="rank lineages by the number of distinct species in them before their size (for a genus panel: a few rare lineages of other species beat many loci of the commonest one)")
     ap.add_argument("--per-lineage", action="store_true", help="also write one complete panel per lineage in OUT/L<n>/ (cores and flanks of that lineage only; a lineage lacking one idiomorph borrows the core of the first lineage that has it). A multi-lineage panel dilutes breadth and depth over cores a strain does not carry; typing against each lineage panel and keeping the best-matching one does not.")
     ap.add_argument("--names", nargs=2, help="the two idiomorph names (default: chosen from the loci: MAT1-1/MAT1-2, a/alpha, P/M or A/B)")
+    ap.add_argument("--min-own", type=int, default=2, help="with --borrow: an idiomorph with fewer than this many loci in the species also takes loci from the genus")
     ap.add_argument("--borrow", help="genus prefix (for example 'Aspergillus '): an idiomorph with no locus in the species takes its loci from the other species of this genus (flank clustering then pairs them with the species' lineages)")
     ap.add_argument("--min-flank", type=int, default=1500, help="a locus with less flank on both sides together is not used as a representative")
     a = ap.parse_args()
@@ -134,8 +135,9 @@ def main():
     nm = lambda x: "a" if has_alpha and norm_idio(x) == "A" else norm_idio(x)       # a yeast that has alpha: its A is MATa
     names = a.names or choose_names(Counter(nm(r["idiomorph"]) for r in own), Counter(nm(r["idiomorph"]) for r in genus_loci))
     L = [dict(r, idiomorph=nm(r["idiomorph"])) for r in own if nm(r["idiomorph"]) in names]
+    own_set = set(g)
     if a.borrow:
-        have = {r["idiomorph"] for r in L}; missing = [n for n in names if n and n not in have]
+        cnt = Counter(r["idiomorph"] for r in L); missing = [n for n in names if n and cnt[n] < a.min_own]      # no locus, or fewer than --min-own: the genus tops it up
         extra = [dict(r, idiomorph=nm(r["idiomorph"])) for r in genus_loci if r["genome"] not in g and nm(r["idiomorph"]) in missing]
         print("borrowed", len(extra), "loci of", missing, "from", len({r["genome"] for r in extra}), "genomes of", a.borrow, flush=True)
         L += extra; g = {**g, **{k: gall[k] for k in {r["genome"] for r in extra}}}
@@ -162,15 +164,31 @@ def main():
             x.update(left=left, right=right, core=core, fsketch=canon_sketch(left) | canon_sketch(right), csketch=canon_sketch(core)); ci.append(x)
         print(len(ci), "loci with a core and enough flank (of", len(items), ")", flush=True)
         os.makedirs(a.out, exist_ok=True)
-        lin = []     # lineage clusters by flank
-        for x in sorted(ci, key=lambda x: (x["cls"] != "mat_locus", x["conf"] != "high", -(len(x["left"]) + len(x["right"])))):
+        lin = []     # lineage clusters by flank. The species' own loci first; a borrowed locus (another species of the genus) only joins a lineage the species already has (its flank matches); the borrowed loci that
+        #              match nothing are kept aside and used only when a lineage of the species still lacks an idiomorph altogether, so a big genus cannot bury the species' own lineages.
+        for x in ci: x["own"] = x["genome"] in own_set
+        aside = []
+        for x in sorted(ci, key=lambda x: (not x["own"], x["cls"] != "mat_locus", x["conf"] != "high", -(len(x["left"]) + len(x["right"])))):
             for cl in lin:
                 sh = len(x["fsketch"] & cl["fsk"]) / max(1, min(len(x["fsketch"]), len(cl["fsk"])))
                 if sh >= a.contain:
                     cl["members"].append(x); cl["fsk"] |= x["fsketch"]; break
             else:
-                lin.append(dict(members=[x], fsk=set(x["fsketch"])))
-        lin.sort(key=(lambda c: (-len({m["sp"] for m in c["members"]}), -len(c["members"]))) if a.diverse else (lambda c: -len(c["members"])))
+                if x["own"]: lin.append(dict(members=[x], fsk=set(x["fsketch"])))
+                else: aside.append(x)
+        have_idio = {m["idio"] for cl in lin for m in cl["members"]}
+        if any(n not in have_idio for n in names) and aside:      # nothing borrowed shares a flank with the species: cluster the borrowed loci among themselves and add the largest lineages
+            extra = []
+            for x in aside:
+                if x["idio"] in have_idio: continue
+                for cl in extra:
+                    if len(x["fsketch"] & cl["fsk"]) / max(1, min(len(x["fsketch"]), len(cl["fsk"]))) >= a.contain: cl["members"].append(x); cl["fsk"] |= x["fsketch"]; break
+                else: extra.append(dict(members=[x], fsk=set(x["fsketch"])))
+            extra.sort(key=lambda c: -len(c["members"])); lin += extra[:max(1, a.max_reps // 2)]
+            print("no borrowed locus shares a flank with the species: added", min(len(extra), max(1, a.max_reps // 2)), "borrowed lineages", flush=True)
+        else: print("borrowed loci that joined a lineage of the species:", sum(1 for cl in lin for m in cl["members"] if not m["own"]), "; set aside:", len(aside), flush=True)
+        for cl in lin: cl["has_own"] = any(m["own"] for m in cl["members"])
+        lin.sort(key=(lambda c: (not c["has_own"], -len({m["sp"] for m in c["members"]}), -len(c["members"]))) if a.diverse else (lambda c: (not c["has_own"], -len(c["members"]))))
         reps = {i: [] for i in names}; flanks = []
         with open(os.path.join(a.out, f"{a.prefix}_lineages.tsv"), "w") as fh:
             fh.write("lineage\tloci\t" + "\t".join(names) + "\t" + "\t".join("rep_" + n for n in names) + "\tkept\n")

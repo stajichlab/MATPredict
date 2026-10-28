@@ -28,7 +28,7 @@
   <p class="muted">Runs of one study are often one population or one cross; the counts are of runs sampled (at most 4 per study), not of independent strains.</p>
   <h2>Runs</h2>
   <div class="controls"><label>Call <select id="callf"><option value="">all</option></select></label> <label>Search <input id="q" type="search" placeholder="run, strain, study"></label> <a id="dl" href="#">Download TSV</a></div>
-  <div class="tablewrap"><table id="runs"><thead><tr><th>Run</th><th>Strain</th><th>Study</th><th>Call</th><th class="n">MAT1-1 depth</th><th class="n">MAT1-2 depth</th><th class="n">Flank depth</th><th>Assembly call</th><th>Note</th></tr></thead><tbody></tbody></table></div>
+  <div class="tablewrap"><table id="runs"><thead><tr><th>Run</th><th>Strain</th><th>Study</th><th>Call</th><th class="n" id="h-d1">1st allele depth</th><th class="n" id="h-d2">2nd allele depth</th><th class="n">Flank depth</th><th>Assembly call</th><th>Note</th></tr></thead><tbody></tbody></table></div>
   <p class="muted">Depths are k-mer depths from up to 2 million read pairs. <i>Note</i>: <code>k21</code> or <code>genus_panel</code> mean the call came from a retyping pass; <code>both_vs_one</code> means both idiomorphs were seen where the assembly shows one.</p>
 </main>
 <footer class="muted">MATPredict · <a href="../about.html">About</a></footer>
@@ -44,19 +44,20 @@ document.getElementById("title").innerHTML = "<i>" + esc(D.species) + "</i>";
 const cur = D.kind === "curated";
 document.getElementById("lede").textContent = cur ? "Curated collection: every read set of the collection, typed with a panel built for this species. " + D.runs + " read sets." : D.confidence.charAt(0).toUpperCase() + D.confidence.slice(1) + " panel (reference tier " + D.tier + "); " + D.pooled_strains.toLocaleString() + " public strains pooled in the survey, " + D.runs + " runs sampled.";
 if (cur) { document.getElementById("intro").textContent = D.intro; document.getElementById("links").innerHTML = D.links.map(l => '<a href="https://github.com/stajichlab/MATPredict/blob/main/' + esc(l[1]) + '">' + esc(l[0]) + '</a>').join(" · "); }
-document.getElementById("cards").innerHTML = [[D.done + " / " + D.runs, "runs finished"], [D["MAT1-1"], "MAT1-1"], [D["MAT1-2"], "MAT1-2"], [D.both, "both idiomorphs"], [D.none + D.low_depth, "not called"], [D.with_assembly_call ? D.agree + " / " + D.with_assembly_call : "–", "agree with assembly"]]
+document.getElementById("cards").innerHTML = [[D.done + " / " + D.runs, "runs finished"], [D.c1 ?? D["MAT1-1"], (D.names || ["MAT1-1", "MAT1-2"])[0]], [D.c2 ?? D["MAT1-2"], (D.names || ["MAT1-1", "MAT1-2"])[1]], [D.both, "both idiomorphs"], [D.none + D.low_depth, "not called"], [D.with_assembly_call ? D.agree + " / " + D.with_assembly_call : "–", "agree with assembly"]]
   .map(([v, l]) => '<div class="card"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>').join("");
 if (D.why.length) { const w = document.getElementById("why"); w.hidden = false; w.innerHTML = "<b>Why this panel is " + esc(D.confidence) + ":</b> " + D.why.map(esc).join("; ") + "."; }
-const cats = ["MAT1-1", "MAT1-2", "both", "none", "low_depth"], rows = D.rows.filter(r => r.call);
+const NM = D.names || ["MAT1-1", "MAT1-2"], cats = [NM[0], NM[1], "both", "none", "low_depth"], rows = D.rows.filter(r => r.call);
 const cnt = rs => Object.fromEntries(cats.map(c => [c, rs.filter(r => r.call === c).length]));
 stacked(document.getElementById("ch-calls"), [{ label: "all runs", parts: cnt(rows) }], cats, { labelw: 100 }); legend(document.getElementById("lg-calls"), cats);
 const studies = [...new Set(rows.map(r => r.study))];
 stacked(document.getElementById("ch-study"), studies.map(s => ({ label: s, parts: cnt(rows.filter(r => r.study === s)) })), cats, { labelw: 130 }); legend(document.getElementById("lg-study"), cats);
-const one = r => r.call === "MAT1-1" || r.call === "MAT1-2", tr = rows.filter(r => r.truth === "MAT1-1" || r.truth === "MAT1-2"), single = tr.filter(one), dis = single.filter(r => r.call !== r.truth), other = rows.filter(r => r.truth && r.truth !== "MAT1-1" && r.truth !== "MAT1-2").length;
+const isOne = x => x === NM[0] || x === NM[1], one = r => isOne(r.call), tr = rows.filter(r => isOne(r.truth)), single = tr.filter(one), dis = single.filter(r => r.call !== r.truth), other = rows.filter(r => r.truth && !isOne(r.truth)).length;
 const label = D.truth_label || "the detect call on an assembly of the same BioSample";
 document.getElementById("agree").textContent = tr.length ? single.length - dis.length + " of " + single.length + " runs with a single-allele call match " + label + "; " + (tr.length - single.length) + " more runs with a single-allele comparison call received none" + (other ? "; " + other + " runs have a comparison call that is not a single idiomorph (both, ambiguous or not detected) and are not counted" : "") + "." : "No run in this sample has an assembly of the same BioSample to compare with.";
 if (cur) document.getElementById("why").hidden = true;
 document.getElementById("dis").innerHTML = (dis.length ? "<tr><th>Run</th><th>Strain</th><th>Reads call</th><th>Assembly call</th><th>Assembly</th></tr>" + dis.map(r => "<tr><td>" + esc(r.run) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.call) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(r.truth_assembly) + "</td></tr>").join("") : "");
+document.getElementById("h-d1").textContent = NM[0] + " depth"; document.getElementById("h-d2").textContent = NM[1] + " depth";
 const cf = document.getElementById("callf"), q = document.getElementById("q"); cats.forEach(c => cf.add(new Option(c, c)));
 const note = r => [r.rescue, r.verdict === "both_vs_one" ? "both_vs_one" : "", r.verdict === "DISAGREE" ? "disagrees with assembly" : "", r.flags && r.flags !== "-" ? r.flags : ""].filter(Boolean).join("; ");
 function draw() {

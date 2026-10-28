@@ -1,38 +1,317 @@
 {
-  "_comment": "Single source of truth for idiomorph and MAT gene labels (curator rulings 2026-10-28, see docs/notes/2026-10-28_idiomorph-naming-proposal.md). Grammar <Lineage>__<System>_<Cell>; system = frozen code of the reference organism; labels are computed on output from (family_called, raw name) and are never stored in records. A family with system null has no approved system code yet: its raw names are returned unchanged.",
+  "_comment": "Single source of truth for idiomorph and MAT gene labels (curator rulings 2026-10-28, see docs/notes/2026-10-28_idiomorph-naming-proposal.md). Grammar <Lineage>__<System>_<Cell>; system = frozen code of the reference organism; labels are computed on output from (family_called, raw name) and are never stored in records. A family with system null has no approved system code yet: its raw names are returned unchanged. Basidiomycota (multiallelic systems): a family with `locus` is labelled <Lineage>__<System>_<Locus>[-<Allele>]; the allele is the raw idiomorph (A1, b1, v2 ...) and is left out when it is undetermined. A family with `cells` and no `locus` (Cryptococcus MAT) uses the cell token.",
   "version": 1,
-  "lineages": {"Peziz": "Pezizomycotina", "Sacch": "Saccharomycotina", "Taphr": "Taphrinomycotina", "Mucor": "Mucoromycotina", "Basid": "Basidiomycota"},
-  "systems": {
-    "NeuCra": "Neurospora crassa", "AspFum": "Aspergillus fumigatus", "BipMay": "Bipolaris maydis", "BotCin": "Botrytis cinerea", "XanPar": "Xanthoria parietina", "TubMel": "Tuber melanosporum",
-    "NoRef": "no curated reference for the class yet (placeholder)",
-    "SacCer": "Saccharomyces cerevisiae", "CanAlb": "Candida albicans", "KomPha": "Komagataella phaffii", "OgaPol": "Ogataea polymorpha", "YarLip": "Yarrowia lipolytica", "GeoCan": "Geotrichum candidum",
-    "SchPom": "Schizosaccharomyces pombe", "PhyBla": "Phycomyces blakesleeanus"
+  "lineages": {
+    "Peziz": "Pezizomycotina",
+    "Sacch": "Saccharomycotina",
+    "Taphr": "Taphrinomycotina",
+    "Mucor": "Mucoromycotina",
+    "Basid": "Basidiomycota"
   },
-  "pezizomycotina_class_systems": {"Sordariomycetes": "NeuCra", "Eurotiomycetes": "AspFum", "Dothideomycetes": "BipMay", "Leotiomycetes": "BotCin", "Lecanoromycetes": "XanPar", "Pezizomycetes": "TubMel"},
+  "systems": {
+    "NeuCra": "Neurospora crassa",
+    "AspFum": "Aspergillus fumigatus",
+    "BipMay": "Bipolaris maydis",
+    "BotCin": "Botrytis cinerea",
+    "XanPar": "Xanthoria parietina",
+    "TubMel": "Tuber melanosporum",
+    "NoRef": "no curated reference for the class yet (placeholder)",
+    "SacCer": "Saccharomyces cerevisiae",
+    "CanAlb": "Candida albicans",
+    "KomPha": "Komagataella phaffii",
+    "OgaPol": "Ogataea polymorpha",
+    "YarLip": "Yarrowia lipolytica",
+    "GeoCan": "Geotrichum candidum",
+    "SchPom": "Schizosaccharomyces pombe",
+    "PhyBla": "Phycomyces blakesleeanus",
+    "CopCin": "Coprinopsis cinerea",
+    "SchCom": "Schizophyllum commune",
+    "CryDen": "Cryptococcus deneoformans",
+    "UstMay": "Ustilago maydis (recorded as Mycosarcoma maydis)",
+    "RhoTor": "Rhodotorula toruloides",
+    "PucGra": "Puccinia graminis f. sp. tritici",
+    "WalMel": "Wallemia mellicola"
+  },
+  "pezizomycotina_class_systems": {
+    "Sordariomycetes": "NeuCra",
+    "Eurotiomycetes": "AspFum",
+    "Dothideomycetes": "BipMay",
+    "Leotiomycetes": "BotCin",
+    "Lecanoromycetes": "XanPar",
+    "Pezizomycetes": "TubMel"
+  },
   "families": {
-    "Ascomycota:MAT": {"lineage": "Peziz", "system_by_class": "pezizomycotina_class_systems", "default_system": "NoRef", "cells": {"MAT1-1": "MAT1-1", "MAT1-2": "MAT1-2", "undetermined": "undet"}, "gene_pattern": "^MAT[0-9]"},
-    "Ascomycota:MATtub": {"lineage": "Peziz", "system": "TubMel", "cells": {"MAT1-1": "MAT1-1", "MAT1-2": "MAT1-2", "undetermined": "undet"}, "gene_pattern": "^MAT[0-9]"},
-    "Ascomycota:MATsc": {"lineage": "Sacch", "system": "SacCer", "cells": {"MATa": "a", "MATalpha": "alpha", "undetermined": "undet"}, "genes": {"MATA1": "a1", "MATA2": "a2", "MATALPHA1": "alpha1", "MATALPHA2": "alpha2"}},
-    "Ascomycota:MTL": {"lineage": "Sacch", "system": "CanAlb", "cells": {"A": "a", "alpha": "alpha", "undetermined": "undet"}, "genes": {"MTLA1": "a1", "MTLA2": "a2", "MTLalpha1": "alpha1", "MTLalpha2": "alpha2"}},
-    "Ascomycota:MATkp": {"lineage": "Sacch", "system": "KomPha", "cells": {"MATa": "a", "MATalpha": "alpha", "undetermined": "undet"}, "genes": {"MATa1": "a1", "MATa2": "a2", "MATalpha1": "alpha1", "MATalpha2": "alpha2"}},
-    "Ascomycota:MATog": {"lineage": "Sacch", "system": "OgaPol", "cells": {"MATa": "a", "MATalpha": "alpha", "undetermined": "undet"}, "genes": {"MATa1": "a1", "MATa2": "a2", "MATalpha1": "alpha1", "MATalpha2": "alpha2"}},
-    "Ascomycota:MATyl": {"lineage": "Sacch", "system": "YarLip", "cells": {"A": "A", "B": "B", "undetermined": "undet"}, "genes": {"mata1": "A1", "mata2": "A2", "matb1": "B1", "matb2": "B2"}},
-    "Ascomycota:MATdc": {"lineage": "Sacch", "system": "GeoCan", "cells": {"A": "A", "B": "B", "undetermined": "undet"}, "genes": {"MATA": "A", "MATB": "B"}},
-    "Ascomycota:mat1": {"lineage": "Taphr", "system": "SchPom", "cells": {"P": "P", "M": "M", "undetermined": "undet"}, "genes": {"mat1-Pi": "Pi", "mat1-Pc": "Pc", "mat1-Mc": "Mc", "mat1-Mi": "Mi"}},
-    "Ascomycota:mat2": {"lineage": "Taphr", "system": "SchPom", "cells": {"P": "P", "M": "M", "undetermined": "undet"}, "genes": {"matPi": "Pi", "matPc": "Pc"}},
-    "Ascomycota:PM": {"lineage": "Taphr", "system": "SchPom", "cells": {"P": "P", "M": "M", "undetermined": "undet"}, "genes": {"matPi": "Pi", "matPc": "Pc", "matMc": "Mc", "matMi": "Mi"}},
-    "Mucoromycota:MAT": {"lineage": "Mucor", "system": "PhyBla", "cells": {"Plus": "plus", "Minus": "minus", "undetermined": "undet"}, "genes": {"sexP": "sexP", "sexM": "sexM"}},
-    "Basidiomycota:HD": {"lineage": "Basid", "system": null},
-    "Basidiomycota:PR": {"lineage": "Basid", "system": null},
-    "Basidiomycota:MAT": {"lineage": "Basid", "system": null},
-    "Basidiomycota:bLocus": {"lineage": "Basid", "system": null},
-    "Basidiomycota:aLocus": {"lineage": "Basid", "system": null},
-    "Basidiomycota:redHD": {"lineage": "Basid", "system": null},
-    "Basidiomycota:redPR": {"lineage": "Basid", "system": null},
-    "Basidiomycota:rustHD": {"lineage": "Basid", "system": null},
-    "Basidiomycota:Aalpha": {"lineage": "Basid", "system": null},
-    "Basidiomycota:Balpha": {"lineage": "Basid", "system": null},
-    "Basidiomycota:Bbeta": {"lineage": "Basid", "system": null},
-    "Basidiomycota:wallMAT": {"lineage": "Basid", "system": null}
+    "Ascomycota:MAT": {
+      "lineage": "Peziz",
+      "system_by_class": "pezizomycotina_class_systems",
+      "default_system": "NoRef",
+      "cells": {
+        "MAT1-1": "MAT1-1",
+        "MAT1-2": "MAT1-2",
+        "undetermined": "undet"
+      },
+      "gene_pattern": "^MAT[0-9]"
+    },
+    "Ascomycota:MATtub": {
+      "lineage": "Peziz",
+      "system": "TubMel",
+      "cells": {
+        "MAT1-1": "MAT1-1",
+        "MAT1-2": "MAT1-2",
+        "undetermined": "undet"
+      },
+      "gene_pattern": "^MAT[0-9]"
+    },
+    "Ascomycota:MATsc": {
+      "lineage": "Sacch",
+      "system": "SacCer",
+      "cells": {
+        "MATa": "a",
+        "MATalpha": "alpha",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "MATA1": "a1",
+        "MATA2": "a2",
+        "MATALPHA1": "alpha1",
+        "MATALPHA2": "alpha2"
+      }
+    },
+    "Ascomycota:MTL": {
+      "lineage": "Sacch",
+      "system": "CanAlb",
+      "cells": {
+        "A": "a",
+        "alpha": "alpha",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "MTLA1": "a1",
+        "MTLA2": "a2",
+        "MTLalpha1": "alpha1",
+        "MTLalpha2": "alpha2"
+      }
+    },
+    "Ascomycota:MATkp": {
+      "lineage": "Sacch",
+      "system": "KomPha",
+      "cells": {
+        "MATa": "a",
+        "MATalpha": "alpha",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "MATa1": "a1",
+        "MATa2": "a2",
+        "MATalpha1": "alpha1",
+        "MATalpha2": "alpha2"
+      }
+    },
+    "Ascomycota:MATog": {
+      "lineage": "Sacch",
+      "system": "OgaPol",
+      "cells": {
+        "MATa": "a",
+        "MATalpha": "alpha",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "MATa1": "a1",
+        "MATa2": "a2",
+        "MATalpha1": "alpha1",
+        "MATalpha2": "alpha2"
+      }
+    },
+    "Ascomycota:MATyl": {
+      "lineage": "Sacch",
+      "system": "YarLip",
+      "cells": {
+        "A": "A",
+        "B": "B",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "mata1": "A1",
+        "mata2": "A2",
+        "matb1": "B1",
+        "matb2": "B2"
+      }
+    },
+    "Ascomycota:MATdc": {
+      "lineage": "Sacch",
+      "system": "GeoCan",
+      "cells": {
+        "A": "A",
+        "B": "B",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "MATA": "A",
+        "MATB": "B"
+      }
+    },
+    "Ascomycota:mat1": {
+      "lineage": "Taphr",
+      "system": "SchPom",
+      "cells": {
+        "P": "P",
+        "M": "M",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "mat1-Pi": "Pi",
+        "mat1-Pc": "Pc",
+        "mat1-Mc": "Mc",
+        "mat1-Mi": "Mi"
+      }
+    },
+    "Ascomycota:mat2": {
+      "lineage": "Taphr",
+      "system": "SchPom",
+      "cells": {
+        "P": "P",
+        "M": "M",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "matPi": "Pi",
+        "matPc": "Pc"
+      }
+    },
+    "Ascomycota:PM": {
+      "lineage": "Taphr",
+      "system": "SchPom",
+      "cells": {
+        "P": "P",
+        "M": "M",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "matPi": "Pi",
+        "matPc": "Pc",
+        "matMc": "Mc",
+        "matMi": "Mi"
+      }
+    },
+    "Mucoromycota:MAT": {
+      "lineage": "Mucor",
+      "system": "PhyBla",
+      "cells": {
+        "Plus": "plus",
+        "Minus": "minus",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "sexP": "sexP",
+        "sexM": "sexM"
+      }
+    },
+    "Basidiomycota:HD": {
+      "lineage": "Basid",
+      "system": "CopCin",
+      "locus": "HD",
+      "genes": {
+        "HD1": "HD1",
+        "HD2": "HD2"
+      }
+    },
+    "Basidiomycota:PR": {
+      "lineage": "Basid",
+      "system": "CopCin",
+      "locus": "PR"
+    },
+    "Basidiomycota:MAT": {
+      "lineage": "Basid",
+      "system": "CryDen",
+      "cells": {
+        "a": "a",
+        "alpha": "alpha",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "STE3": "STE3",
+        "SXI1": "SXI1",
+        "SXI2": "SXI2",
+        "MFalpha": "MFalpha",
+        "MFa": "MFa"
+      }
+    },
+    "Basidiomycota:bLocus": {
+      "lineage": "Basid",
+      "system": "UstMay",
+      "locus": "b",
+      "genes": {
+        "bE": "bE",
+        "bW": "bW"
+      }
+    },
+    "Basidiomycota:aLocus": {
+      "lineage": "Basid",
+      "system": "UstMay",
+      "locus": "a",
+      "genes": {
+        "pra1": "pra1",
+        "mfa1": "mfa1"
+      }
+    },
+    "Basidiomycota:redHD": {
+      "lineage": "Basid",
+      "system": "RhoTor",
+      "locus": "HD",
+      "genes": {
+        "HD1": "HD1",
+        "HD2": "HD2"
+      }
+    },
+    "Basidiomycota:redPR": {
+      "lineage": "Basid",
+      "system": "RhoTor",
+      "locus": "PR",
+      "genes": {
+        "STE3a1": "STE3a1",
+        "STE3a2": "STE3a2"
+      }
+    },
+    "Basidiomycota:rustHD": {
+      "lineage": "Basid",
+      "system": "PucGra",
+      "locus": "HD",
+      "genes": {
+        "bE": "bE",
+        "bW": "bW"
+      }
+    },
+    "Basidiomycota:Aalpha": {
+      "lineage": "Basid",
+      "system": "SchCom",
+      "locus": "Aalpha",
+      "genes": {
+        "Y": "Y",
+        "Z": "Z",
+        "HD1": "HD1",
+        "HD2": "HD2"
+      }
+    },
+    "Basidiomycota:Balpha": {
+      "lineage": "Basid",
+      "system": "SchCom",
+      "locus": "Balpha"
+    },
+    "Basidiomycota:Bbeta": {
+      "lineage": "Basid",
+      "system": "SchCom",
+      "locus": "Bbeta"
+    },
+    "Basidiomycota:wallMAT": {
+      "lineage": "Basid",
+      "system": "WalMel",
+      "locus": "MAT",
+      "genes": {
+        "HMG": "HMG",
+        "STE3": "STE3",
+        "STE3v2": "STE3v2",
+        "SXI1": "SXI1"
+      }
+    }
   }
 }

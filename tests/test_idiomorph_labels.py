@@ -50,10 +50,20 @@ def test_every_ascomycota_and_mucoromycotina_locus_is_labelled():
         assert {r["label_status"] for r in rows} == {"labelled"}, campaign
 
 
-def test_basidiomycota_are_pending_and_keep_raw_names():
+def test_basidiomycota_labels():
+    assert L.label_locus("Basidiomycota:HD", "undetermined")["label"] == "Basid__CopCin_HD"
+    assert L.label_locus("Basidiomycota:HD", "A43")["label"] == "Basid__CopCin_HD-A43"
+    assert L.label_locus("Basidiomycota:redPR", "A1")["label"] == "Basid__RhoTor_PR-A1"
+    assert L.label_locus("Basidiomycota:wallMAT", "v2")["label"] == "Basid__WalMel_MAT-v2"
+    assert L.label_locus("Basidiomycota:bLocus", "undetermined")["label"] == "Basid__UstMay_b"
+    assert L.label_locus("Basidiomycota:MAT", "alpha")["label"] == "Basid__CryDen_alpha"
+    assert L.gene_label("bE", family="Basidiomycota:rustHD") == "PucGra_bE"
+    assert L.gene_label("MIP1", family="Basidiomycota:HD") == "MIP1"
+
+
+def test_every_basidiomycota_locus_is_labelled():
     rows = T.label_rows(_loci("basidiomycota"))
-    assert {r["label_status"] for r in rows} == {"pending"}
-    assert all(r["idiomorph_label"] == r["idiomorph"] for r in rows)
+    assert {r["label_status"] for r in rows} == {"labelled"}
 
 
 def test_registry_systems_are_declared_and_lineages_are_five_letters():

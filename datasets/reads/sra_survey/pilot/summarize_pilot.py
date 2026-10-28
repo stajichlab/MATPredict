@@ -15,8 +15,8 @@ import argparse, collections, csv, glob, json, os, statistics
 
 
 def read_tsv(path):
-    with open(path, newline="") as fh:
-        return list(csv.DictReader(fh, delimiter="\t"))
+    with open(path, newline="") as fh:          # reads-type writes CRLF; a stray CR inside a line (a column appended after it) is dropped
+        return list(csv.DictReader(fh.read().replace("\r", "").splitlines(), delimiter="\t"))
 
 
 def main():
@@ -28,7 +28,10 @@ def main():
     for r in read_tsv(a.runs):
         acc = r["run_accession"]; pfx = r.get("panel_prefix") or ""
         js = os.path.join(a.results, f"{acc}.run.json")
-        j = json.load(open(js)) if os.path.exists(js) else {}
+        try:
+            j = json.load(open(js)) if os.path.exists(js) else {}
+        except ValueError:                      # a task killed while writing its run.json (a time-out)
+            j = {"state": "failed_unfinished"}
         tsvs = glob.glob(os.path.join(a.results, f"{acc}.{pfx or '*'}.tsv"))
         res = read_tsv(tsvs[0])[0] if tsvs else {}
         truth = (r.get("truth_detect") or "").strip()

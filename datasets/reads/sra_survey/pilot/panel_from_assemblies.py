@@ -46,7 +46,10 @@ def core_extents(tar_path, wanted):
     """{(genome, contig, start, end): (core_start, core_end)} from the reports of `wanted` genomes: the extent of the core_MAT genes of the locus's own idiomorph."""
     import yaml
     L = getattr(yaml, "CSafeLoader", yaml.SafeLoader); out = {}
-    proc = subprocess.Popen(["zstd", "-dc", tar_path], stdout=subprocess.PIPE)
+    import shutil
+    tar_path = os.path.realpath(tar_path)       # zstd refuses to read a symbolic link
+    zstd = shutil.which("zstd") or "/opt/linux/rocky/8.x/x86_64/pkgs/miniconda3/py39_4.12.0/bin/zstd"      # not on PATH in a non-login Slurm shell
+    proc = subprocess.Popen([zstd, "-dc", tar_path], stdout=subprocess.PIPE)
     with tarfile.open(fileobj=proc.stdout, mode="r|") as tf:
         for m in tf:
             if not (m.isfile() and m.name.endswith("/detection_report.yaml")): continue
@@ -63,7 +66,7 @@ def core_extents(tar_path, wanted):
                     gs = [g for g in loc.get("gene_evidence") or [] if g.get("role") == "core_MAT" and str(g.get("gene", "")).startswith(pref) and g.get("start") is not None]
                 if gs:
                     out[(gn, loc["contig"], int(loc["start"]), int(loc["end"]))] = (min(g["start"] for g in gs), max(g["end"] for g in gs))
-    proc.wait()
+    if proc.wait(): raise RuntimeError(f"zstd failed on {tar_path}")
     return out
 
 
@@ -85,6 +88,8 @@ def main():
     ap.add_argument("--max-reps", type=int, default=6); ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--reports", help="reports_all.tar.zst of the campaign: build the panel from cores and flanks (recommended)"); ap.add_argument("--margin", type=int, default=1000)
     ap.add_argument("--max-flank", type=int, default=6000, help="bases of flank kept on each side of a core (nearest the core): every lineage then adds about the same number of shared k-mers, so the shared depth of a minor lineage is not diluted by a major one")
+    ap.add_argument("--diverse", action="store_true", help="rank lineages by the number of distinct species in them before their size (for a genus panel: a few rare lineages of other species beat many loci of the commonest one)")
+    ap.add_argument("--per-lineage", action="store_true", help="also write one complete panel per lineage in OUT/L<n>/ (cores and flanks of that lineage only; a lineage lacking one idiomorph borrows the core of the first lineage that has it). A multi-lineage panel dilutes breadth and depth over cores a strain does not carry; typing against each lineage panel and keeping the best-matching one does not.")
     ap.add_argument("--min-flank", type=int, default=1500, help="a locus with less flank on both sides together is not used as a representative")
     a = ap.parse_args()
     g = {r["genome"]: r for r in csv.DictReader(open(a.genomes), delimiter="\t") if r["species"].startswith(a.species)}
@@ -108,6 +113,7 @@ def main():
             left, core, right = x["seq"][:c0], x["seq"][c0:c1], x["seq"][c1:]
             left, right = left[-a.max_flank:] if a.max_flank else left, right[:a.max_flank] if a.max_flank else right
             if len(left) + len(right) < a.min_flank or len(core) < 300: continue
+            x["sp"] = g.get(x["genome"], {}).get("species", "")
             x.update(left=left, right=right, core=core, fsketch=canon_sketch(left) | canon_sketch(right), csketch=canon_sketch(core)); ci.append(x)
         print(len(ci), "loci with a core and enough flank (of", len(items), ")", flush=True)
         os.makedirs(a.out, exist_ok=True)
@@ -119,7 +125,7 @@ def main():
                     cl["members"].append(x); cl["fsk"] |= x["fsketch"]; break
             else:
                 lin.append(dict(members=[x], fsk=set(x["fsketch"])))
-        lin.sort(key=lambda c: -len(c["members"]))
+        lin.sort(key=(lambda c: (-len({m["sp"] for m in c["members"]}), -len(c["members"]))) if a.diverse else (lambda c: -len(c["members"])))
         reps = {i: [] for i in ("MAT1-1", "MAT1-2")}; flanks = []
         with open(os.path.join(a.out, f"{a.prefix}_lineages.tsv"), "w") as fh:
             fh.write("lineage\tloci\tMAT1-1\tMAT1-2\trep_MAT1-1\trep_MAT1-2\tkept\n")
@@ -146,7 +152,22 @@ def main():
                     seen.append(r["csketch"]); wr(fh, f"{a.prefix}_{i}_core_L{n}", f"{r['genome']}:{r['contig']}:{r['start']}-{r['end']} core", r["core"])
                 for n, r, side, seq in flanks:              # flanks of every representative, in BOTH idiomorph files: shared k-mers
                     wr(fh, f"{a.prefix}_flank_L{n}_{r['idio']}_{side}", f"{r['genome']}:{r['contig']}", seq)
+        if a.per_lineage:
+            first = {i: next((r for n, r in reps[i]), None) for i in reps}
+            by_n = {i: dict(reps[i]) for i in reps}
+            for n, cl in enumerate(lin, 1):
+                if n > a.max_reps: break
+                cores = {i: by_n[i].get(n) or first[i] for i in ("MAT1-1", "MAT1-2")}
+                if not all(cores.values()): continue
+                ld = os.path.join(a.out, f"L{n}"); os.makedirs(ld, exist_ok=True)
+                src = [by_n[j].get(n) for j in ("MAT1-1", "MAT1-2") if by_n[j].get(n)] or [cores["MAT1-1"], cores["MAT1-2"]]
+                for i in ("MAT1-1", "MAT1-2"):
+                    with open(os.path.join(ld, f"{a.prefix}_{i}.fasta"), "w") as fh:
+                        r = cores[i]; wr(fh, f"{a.prefix}_{i}_core_L{n}", f"{r['genome']}:{r['contig']}:{r['start']}-{r['end']} core", r["core"])
+                        for r2 in src:
+                            wr(fh, f"{a.prefix}_flank_L{n}_{r2['idio']}_L", f"{r2['genome']}:{r2['contig']}", r2["left"]); wr(fh, f"{a.prefix}_flank_L{n}_{r2['idio']}_R", f"{r2['genome']}:{r2['contig']}", r2["right"])
         print("lineages (loci):", [len(c["members"]) for c in lin]); return
+
     med = {i: statistics.median(len(x["seq"]) for x in items if x["idio"] == i) for i in ("MAT1-1", "MAT1-2") if any(x["idio"] == i for x in items)}
     # greedy clustering per idiomorph: best loci first (mat_locus, high confidence, span near the median)
     rank = lambda x: (x["cls"] != "mat_locus", x["conf"] != "high", abs(len(x["seq"]) - med[x["idio"]]))

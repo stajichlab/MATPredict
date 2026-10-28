@@ -4,7 +4,7 @@ Grammar (curator, 2026-10-28): `<Lineage>__<System>_<Cell>`, for example `Taphr_
 - Lineage: a fixed five-letter code (Peziz, Sacch, Taphr, Mucor, Basid).
 - System: the frozen code of the REFERENCE ORGANISM of the system (three letters of the genus, three of the species), never a clade or a genus; for the Pezizomycotina MAT family it is chosen by class
   (Sordariomycetes NeuCra, Eurotiomycetes AspFum, ...; `NoRef` when the class has no curated reference). A label says which system's panel matched, not a homology or species claim.
-- Cell: `a` / `alpha`, `A` / `B`, `P` / `M`, `plus` / `minus`, `MAT1-1` / `MAT1-2`, and `undet` for an undetermined idiomorph.
+- Cell (or Basidiomycota locus and allele): `a` / `alpha`, `A` / `B`, `P` / `M`, `plus` / `minus`, `MAT1-1` / `MAT1-2`, and `undet` for an undetermined idiomorph.
 Gene labels are `<System>_<gene>` (`SchPom_Mc`, `CanAlb_alpha2`, `AspFum_MAT1-1-1`); flank genes keep their names; a gene only similar to a reference gene, not in a locus the pipeline reported, gets the
 suffix `_like`. A family with no approved system code (Basidiomycota) returns raw names. Labels are applied on output only; the database and the report YAML keep the raw names.
 Basidiomycota will use `<Lineage>__<System>_<Locus>[-<Allele>]` once their system codes are chosen.
@@ -41,6 +41,9 @@ def label_locus(family, idiomorph, class_=None):
     if not f: return dict(label=idiomorph, lineage="", system="", cell="", status="unmapped")
     sys_ = system_of(family, class_)
     if sys_ is None: return dict(label=idiomorph, lineage=f["lineage"], system="", cell="", status="pending")
+    if f.get("locus"):      # multiallelic Basidiomycota system: <Lineage>__<System>_<Locus>[-<Allele>], the allele being the raw idiomorph unless undetermined
+        allele = "" if idiomorph in ("", "undetermined") else "-" + idiomorph
+        return dict(label=f"{f['lineage']}__{sys_}_{f['locus']}{allele}", lineage=f["lineage"], system=sys_, cell=f["locus"] + allele, status="labelled")
     cell = f["cells"].get(idiomorph)
     if cell is None: return dict(label=idiomorph, lineage=f["lineage"], system=sys_, cell="", status="unmapped")
     return dict(label=f"{f['lineage']}__{sys_}_{cell}", lineage=f["lineage"], system=sys_, cell=cell, status="labelled")

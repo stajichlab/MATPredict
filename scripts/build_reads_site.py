@@ -5,7 +5,9 @@ Input: a wave folder of `datasets/reads/sra_survey/pilot/wave1/` (results_all_fi
     build_reads_site.py --out web/intro/data/reads [--wave datasets/reads/sra_survey/pilot/wave1]
 The pages say "confirmed / provisional / withheld"; the wave driver's gate calls them PASS / PROVISIONAL / HOLD.
 """
-import argparse, csv, json, os, re
+import argparse, csv, json, os, re, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from idiomorph_labels import idiomorph_label
 from collections import Counter
 
 CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)"}
@@ -91,7 +93,7 @@ def main():
         d = g["decision"].split(":")[0]; why = list(dict.fromkeys(reason(x) for x in g["decision"].split(":", 1)[1].split("+"))) if ":" in g["decision"] else []
         s = {"slug": slug, "species": g["species"], "tier": sp.get(slug, {}).get("reference_tier", ""), "pooled_strains": int(sp.get(slug, {}).get("strains_pooled") or 0),
              "confidence": "withheld" if d == "HOLD" else CONF.get(d, d), "why": why, "runs": len(runs), "done": len(done), "typed": len(typed),
-             "names": [n1, n2], "c1": c[n1], "c2": c[n2], "MAT1-1": c[n1], "MAT1-2": c[n2], "both": c["both"], "none": c["none"], "low_depth": c["low_depth"],
+             "names": [n1, n2], "labels": [idiomorph_label(n1, [n1, n2]), idiomorph_label(n2, [n1, n2])], "c1": c[n1], "c2": c[n2], "MAT1-1": c[n1], "MAT1-2": c[n2], "both": c["both"], "none": c["none"], "low_depth": c["low_depth"],
              "with_assembly_call": len(truth), "agree": sum(r["verdict"] == "agree" for r in truth), "disagree": sum(r["verdict"] == "DISAGREE" for r in truth),
              "rescued": sum(1 for r in typed if r.get("rescue"))}
         index.append(s)

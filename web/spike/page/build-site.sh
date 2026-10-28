@@ -53,10 +53,12 @@ PY
 # The landing page and results explorer live in web/intro; their data is regenerated from results/ first.
 INTRO="$REPO/web/intro"
 "$PYTHON" "$REPO/scripts/build_site_data.py" --out "$INTRO/data"
+"$PYTHON" "$REPO/scripts/build_reads_site.py" --out "$INTRO/data/reads"
 cp "$INTRO/landing.html" "$SITE/index.html"
 cp "$INTRO/results.html" "$INTRO/site.css" "$INTRO/charts.js" "$INTRO/theme.js" "$INTRO/locus-view.js" "$INTRO/about.html" "$INTRO/about.md" "$INTRO/md.js" "$SITE/"
 cp -R "$INTRO/data" "$SITE/data"
 cp -R "$INTRO/logo" "$SITE/logo"
+cp -R "$INTRO/reads" "$SITE/reads"
 touch "$SITE/.nojekyll"
 rm -rf "$WHEEL_DIR"
 du -sh "$SITE"

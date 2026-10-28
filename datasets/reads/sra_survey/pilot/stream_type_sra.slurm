@@ -13,4 +13,5 @@ here=$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" 2>/dev/null && pwd)
 getf() { awk -F'\t' -v name="$1" -v row=$((SLURM_ARRAY_TASK_ID+1)) 'NR==1{for(i=1;i<=NF;i++)if($i==name)c=i} NR==row{print (c?$c:"")}' "$RUNS"; }
 run=$(getf run_accession); [[ -n $run ]] || { echo "no run for task $SLURM_ARRAY_TASK_ID" >&2; exit 2; }
 rp=$(getf panel_dir); rx=$(getf panel_prefix); [[ -n $rp ]] && PDIR=$rp; [[ -n $rx ]] && PFX=$rx
+ids=$(getf idiomorphs); [[ -n $ids ]] && export IDIOMORPHS="$ids"      # a panel with other idiomorph names (yeast: a alpha) says so in the run list
 exec "$here/genotype_mat_one_accession.sh" "$run" "$(getf read_count)" "$PDIR" "$PFX" "$OUT" "$(getf group)" "$(getf library_layout)"

@@ -62,18 +62,19 @@ def plan_one(a):
     def hold(reason):
         open(os.path.join(d, "status"), "w").write("held:" + reason + "\n"); print(sp, "HELD", reason); sys.exit(0)
     r = subprocess.run([PY, f"{HERE}/panel_from_assemblies.py", "--species", sp, "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv", "--reports", f"{I}/reports_all.tar.zst",
-                        "--genome-dir", f"{I}/genomes", "--out", panel, "--prefix", prefix, "--min-cluster-size", "1", "--max-reps", "6", "--min-span", "4000", "--per-lineage", "--jobs", "4"],
+                        "--genome-dir", f"{I}/genomes", "--out", panel, "--prefix", prefix, "--min-cluster-size", "1", "--max-reps", "6", "--min-span", "4000", "--per-lineage", "--jobs", "4"] + (["--borrow", sp.split()[0] + " "] if getattr(a, "borrow", False) else []),
                        stdout=log, stderr=log)
     if r.returncode or not os.path.isdir(os.path.join(panel, "L1")): hold("panel_build_failed")
     sys.path.insert(0, f"{P}/.claude/worktrees/run-b317ece/src")
     from MATPredict.reads.panel import Panel
-    qc = dict(species=sp, prefix=prefix, lineages={})
+    nf = os.path.join(panel, f"{prefix}_idiomorphs.txt"); names = open(nf).read().split() if os.path.exists(nf) else ["MAT1-1", "MAT1-2"]
+    qc = dict(species=sp, prefix=prefix, lineages={}, idiomorphs=names, borrowed=bool(getattr(a, "borrow", False)))
     lin = rd(os.path.join(panel, f"{prefix}_lineages.tsv")) if os.path.exists(os.path.join(panel, f"{prefix}_lineages.tsv")) else []
-    qc["loci_per_idiomorph"] = {i: sum(int(x[i]) for x in lin) for i in ("MAT1-1", "MAT1-2")}
+    qc["loci_per_idiomorph"] = {i: sum(int(x[i]) for x in lin) for i in names}
     for ld in sorted(os.listdir(panel)):
         if re.fullmatch(r"L\d+", ld):
             try:
-                pn = Panel.from_fastas({i: f"{panel}/{ld}/{prefix}_{i}.fasta" for i in ("MAT1-1", "MAT1-2")}, k=31, min_run=100)
+                pn = Panel.from_fastas({i: f"{panel}/{ld}/{prefix}_{i}.fasta" for i in names}, k=31, min_run=100)
                 qc["lineages"][ld] = dict(core={k: len(v) for k, v in pn.unique.items()}, shared=len(pn.shared))
             except Exception as ex:
                 qc["lineages"][ld] = dict(error=str(ex)[:120])
@@ -86,7 +87,7 @@ def plan_one(a):
     if max(c) / max(1, min(c)) > GATE["max_core_ratio"]: hold("core_kmers_unbalanced")
     if l1["shared"] < GATE["min_shared_kmers"]: hold("shared_kmers_low")
     common = ["--species", sp, "--group", sl, "--panel-dir", panel, "--panel-prefix", prefix, "--runs", f"{I}/fungi_wgs_illumina.tsv", "--meta", f"{I}/fungi_meta.tsv",
-              "--studies", f"{I}/studies.tsv", "--assembly-summary", f"{I}/asm_summary_fungi.txt", "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv"]
+              "--names", *names, "--studies", f"{I}/studies.tsv", "--assembly-summary", f"{I}/asm_summary_fungi.txt", "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv"]
     r = subprocess.run([PY, f"{HERE}/select_runs.py", *common, "--n-truth", "12", "--n-free", "8", "--out", f"{d}/runs_test.tsv"], capture_output=True, text=True); log.write(r.stdout + r.stderr)
     if r.returncode or not os.path.exists(f"{d}/runs_test.tsv"): hold("run_selection_failed")
     test = rd(f"{d}/runs_test.tsv")
@@ -144,10 +145,11 @@ def planned(a):
 
 def submit_plan(a):
     sp = rd(os.path.join(a.wave, "species.tsv")); os.makedirs(os.path.join(a.wave, "plan"), exist_ok=True)
-    if a.retry_held:      # plan again the species held for too few runs (after the gate changed)
-        sp = [r for r in sp if os.path.exists(os.path.join(a.wave, "plan", r["slug"], "status")) and open(os.path.join(a.wave, "plan", r["slug"], "status")).read().startswith("held:too_few_runs")]; os.makedirs(os.path.join(a.wave, "plan_logs"), exist_ok=True)
+    if a.retry_held or a.retry_status:      # plan again the species held for too few runs (after the gate changed), or whose status starts with --retry-status (for example held:panel_build_failed)
+        pre = a.retry_status or "held:too_few_runs"
+        sp = [r for r in sp if os.path.exists(os.path.join(a.wave, "plan", r["slug"], "status")) and open(os.path.join(a.wave, "plan", r["slug"], "status")).read().startswith(pre)]; os.makedirs(os.path.join(a.wave, "plan_logs"), exist_ok=True)
     lst = os.path.join(a.wave, "plan_species.txt"); open(lst, "w").write("".join(r["species"] + "\n" for r in sp))
-    cmd = (f"export PATH=/opt/linux/rocky/8.x/x86_64/pkgs/miniconda3/py39_4.12.0/bin:$PATH; sp=$(sed -n ${{SLURM_ARRAY_TASK_ID}}p {lst}); {PY} {HERE}/wave_driver.py plan-one --wave {a.wave} --inputs {a.inputs} --species \"$sp\"")
+    cmd = (f"export PATH=/opt/linux/rocky/8.x/x86_64/pkgs/miniconda3/py39_4.12.0/bin:$PATH; sp=$(sed -n ${{SLURM_ARRAY_TASK_ID}}p {lst}); {PY} {HERE}/wave_driver.py plan-one --wave {a.wave} --inputs {a.inputs} --species \"$sp\"" + (" --borrow" if a.borrow else ""))
     jid = sbatch(["-p", "exfab", "-A", "exfab", "-c", "4", "--mem", "16gb", "-t", "2:00:00", "-J", "wave-plan", "--array", f"1-{len(sp)}%{a.conc}", "-o", f"{a.wave}/plan_logs/%x_%A_%a.out", "--wrap", cmd]) if not a.dry_run else "dryplan"
     print("plan array", jid, "for", len(sp), "species")
 
@@ -173,7 +175,7 @@ def gate(a):
         if not rs: rows.append(dict(slug=sl, species=r0["species"], decision="PENDING", reasons="no test results yet")); continue
         counted = [x for x in rs if x["state"] != "unavailable_at_ncbi"]
         done = [x for x in counted if x["state"] == "done"]; why = []
-        typed = [x for x in done if x["call"] in ("MAT1-1", "MAT1-2")]; both = [x for x in done if x["call"] == "both"]
+        typed = [x for x in done if x["call"] not in ("both", "none", "low_depth", "")]; both = [x for x in done if x["call"] == "both"]
         tr = [x for x in typed if x["truth"] and "," not in x["truth"]]; agree = sum(1 for x in tr if x["call"] == x["truth"])
         sd = [float(x["shared_depth"]) for x in done if x["shared_depth"] not in ("", None)]
         msd = statistics.median(sd) if sd else 0
@@ -213,8 +215,8 @@ def report(a):
     L = [f"# Wave report ({stage} stage)", "", f"Species planned {sum(1 for v in g.values() if v['decision'] not in ('HOLD:panel_build_failed',))}; decisions: {dict(collections.Counter(v['decision'].split(':')[0] for v in g.values()))}.", "",
          "| species | decision | runs | MAT1-1 | MAT1-2 | both | none | low_depth | unavailable | truth typed | agree | studies |", "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for sl, v in sorted(g.items()):
-        rs = by.get(sl, []); c = collections.Counter(x["call"] for x in rs if x["state"] == "done"); un = sum(1 for x in rs if x["state"] == "unavailable_at_ncbi")
-        tr = [x for x in rs if x["state"] == "done" and x["truth"] and "," not in x["truth"] and x["call"] in ("MAT1-1", "MAT1-2")]
+        rs = by.get(sl, []); c = collections.Counter(x["call"] for x in rs if x["state"] == "done"); n1, n2 = ((rs[0].get("idiomorphs") if rs else "") or "MAT1-1 MAT1-2").split(); c["MAT1-1"], c["MAT1-2"] = c[n1], c[n2]; un = sum(1 for x in rs if x["state"] == "unavailable_at_ncbi")
+        tr = [x for x in rs if x["state"] == "done" and x["truth"] and "," not in x["truth"] and x["call"] not in ("both", "none", "low_depth", "")]
         L.append(f"| {v['species']} | {v['decision']} | {len(rs)} | {c['MAT1-1']} | {c['MAT1-2']} | {c['both']} | {c['none']} | {c['low_depth']} | {un} | {len(tr)} | {sum(1 for x in tr if x['call'] == x['truth'])} | {len({x['study'] for x in rs})} |")
     L += ["", "Calls are from a subsample of each run (2 million spots, 8 windows) typed against lineage panels cut from BFD assemblies; `truth` = the `detect` idiomorph of an assembly with the same BioSample.",
           "Counts of strains are NOT population frequencies: related or clonal strains are not removed yet (4 runs per study at most is the only guard)."]
@@ -250,6 +252,8 @@ def main():
     ap.add_argument("--stage-name", default="list", help="submit-list: stage folder name under the wave directory")
     ap.add_argument("--out-dir", help="submit-list: results folder (default <wave>/out; the worker skips a run whose result is already there, so a different analysis of the same runs, for example sketches, needs its own)")
     ap.add_argument("--retry-held", action="store_true", help="submit-plan: only the species held for too few runs")
+    ap.add_argument("--retry-status", help="submit-plan: only the species whose plan status starts with this (for example held:panel_build_failed)")
+    ap.add_argument("--borrow", action="store_true", help="plan-one, submit-plan: an idiomorph with no locus in the species takes its loci from the other species of the genus")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)

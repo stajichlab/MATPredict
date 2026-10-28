@@ -17,3 +17,6 @@ Both MATsc and MTL call contig `PPKO02000069.1:20-23514`, as MATalpha and as alp
 1. **Re-run** the 181 genomes with routing that tries MATog for *Ogataea* and the right family by genus for *Pichia* and relatives (or add a Pichiales-level route), and compare.
 2. **Dedupe rule** in the report/table step: when two families call identical coordinates, keep the better-scoring family and mark the other `duplicate_family_call`.
 3. **Curate** the 80 genomes with secondary loci elsewhere, starting with one *Ogataea* and one *Pichia* genome, and with a reference for *Pichia* (none exists).
+
+## Dedupe rule (implemented, output only)
+`scripts/dedupe_family_calls.py` marks loci that two families called at identical coordinates (`duplicate_family_call`, `kept_family`, `kept_idiomorph`) and keeps the better-scoring family: locus class, then confidence tier, polished genes, genes found, the family with more loci in the genome, then the family name. `loci_v070_ascomycota_deduped.tsv` is the v0.7.0 Ascomycota loci table with the three columns added (no row removed): 185 loci in 164 genomes are duplicates, by dropped family MTL 86, mat2 69 (S. pombe, kept as mat1), MATsc 27, MAT 2, MATtub 1. It is not wired into the site build or the clean-run tables; counts with and without it can be taken from the columns. Tests: `tests/test_dedupe_family_calls_script.py`.

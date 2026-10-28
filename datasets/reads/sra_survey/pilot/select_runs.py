@@ -19,6 +19,7 @@ def main():
     ap.add_argument("--n-truth", type=int, default=16); ap.add_argument("--n-free", type=int, default=4); ap.add_argument("--per-study", type=int, default=4)
     ap.add_argument("--min-gb", type=float, default=0.6); ap.add_argument("--max-gb", type=float, default=12); ap.add_argument("--target-gb", type=float, default=3)
     ap.add_argument("--names", nargs=2, default=["MAT1-1", "MAT1-2"], help="the panel's two idiomorph names (truth is balanced between them and written in these spellings)")
+    ap.add_argument("--classes", nargs="+", default=["mat_locus", "partial_locus"], help="locus classes that give a truth idiomorph")
     ap.add_argument("--include", default=""); ap.add_argument("--seed", type=int, default=11)
     a = ap.parse_args()
     asm = {}
@@ -30,7 +31,7 @@ def main():
     nm = lambda x: "a" if "alpha" in a.names and norm_idio(x) == "A" else norm_idio(x)
     truth = collections.defaultdict(set); gen_of = {}
     for r in csv.DictReader(open(a.loci), delimiter="\t"):
-        if r["genome"] in g and r["locus_class"] in ("mat_locus", "partial_locus"):
+        if r["genome"] in g and r["locus_class"] in a.classes:
             bs = asm.get(re.match(r"(GC[AF]_\d+\.\d+)", r["genome"]).group(1))
             if bs: truth[bs].add(nm(r["idiomorph"])); gen_of[bs] = r["genome"]
     flagged = {r["study"] for r in csv.DictReader(open(a.studies), delimiter="\t") if r["species"] == a.species and r["excluded_as"]}

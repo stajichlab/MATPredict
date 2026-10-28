@@ -120,6 +120,7 @@ def main():
     ap.add_argument("--max-flank", type=int, default=6000, help="bases of flank kept on each side of a core (nearest the core): every lineage then adds about the same number of shared k-mers, so the shared depth of a minor lineage is not diluted by a major one")
     ap.add_argument("--diverse", action="store_true", help="rank lineages by the number of distinct species in them before their size (for a genus panel: a few rare lineages of other species beat many loci of the commonest one)")
     ap.add_argument("--per-lineage", action="store_true", help="also write one complete panel per lineage in OUT/L<n>/ (cores and flanks of that lineage only; a lineage lacking one idiomorph borrows the core of the first lineage that has it). A multi-lineage panel dilutes breadth and depth over cores a strain does not carry; typing against each lineage panel and keeping the best-matching one does not.")
+    ap.add_argument("--classes", nargs="+", default=["mat_locus", "partial_locus"], help="locus classes used (add idiomorph_gene_only for lineages whose loci are only ever reported as a gene, such as the Taphrinomycotina)")
     ap.add_argument("--names", nargs=2, help="the two idiomorph names (default: chosen from the loci: MAT1-1/MAT1-2, a/alpha, P/M or A/B)")
     ap.add_argument("--min-own", type=int, default=2, help="with --borrow: an idiomorph with fewer than this many loci in the species also takes loci from the genus")
     ap.add_argument("--borrow", help="genus prefix (for example 'Aspergillus '): an idiomorph with no locus in the species takes its loci from the other species of this genus (flank clustering then pairs them with the species' lineages)")
@@ -127,7 +128,7 @@ def main():
     a = ap.parse_args()
     gall = {r["genome"]: r for r in csv.DictReader(open(a.genomes), delimiter="\t")}
     g = {k: r for k, r in gall.items() if r["species"].startswith(a.species)}
-    ok_loc = lambda r: r["locus_class"] in ("mat_locus", "partial_locus") and a.min_span <= int(r["end"]) - int(r["start"]) <= a.max_span
+    ok_loc = lambda r: r["locus_class"] in a.classes and a.min_span <= int(r["end"]) - int(r["start"]) <= a.max_span
     loci = list(csv.DictReader(open(a.loci), delimiter="\t"))
     own = [r for r in loci if r["genome"] in g and ok_loc(r)]
     genus_loci = [r for r in loci if a.borrow and r["genome"] in gall and gall[r["genome"]]["species"].startswith(a.borrow) and ok_loc(r)]

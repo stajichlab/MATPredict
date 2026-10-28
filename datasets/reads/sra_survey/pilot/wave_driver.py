@@ -55,14 +55,19 @@ def cfg(a):
 
 
 # ------------------------------------------------------------------------------------------------ plan
+# Genera whose MAT loci are only ever reported as a gene (locus class idiomorph_gene_only) and are short: the Taphrinomycotina (fission yeast, Pneumocystis, Taphrina ...). They are planned with that class
+# allowed and a lower minimum span (the loci of S. japonicus are 1 to 2.6 kb), and an idiomorph missing from the species is borrowed from the genus.
+LENIENT_GENERA = ("Schizosaccharomyces", "Pneumocystis", "Taphrina", "Protomyces", "Saitoella", "Neolecta")
+
+
 def plan_one(a):
     sp = a.species; sl = slug(sp); d = os.path.join(a.wave, "plan", sl); os.makedirs(d, exist_ok=True)
     I = a.inputs; prefix = sl.split("_")[0]; panel = os.path.join(d, "panel")
-    log = open(os.path.join(d, "plan.log"), "w")
+    log = open(os.path.join(d, "plan.log"), "w"); lenient = sp.split()[0] in LENIENT_GENERA
     def hold(reason):
         open(os.path.join(d, "status"), "w").write("held:" + reason + "\n"); print(sp, "HELD", reason); sys.exit(0)
     r = subprocess.run([PY, f"{HERE}/panel_from_assemblies.py", "--species", sp, "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv", "--reports", f"{I}/reports_all.tar.zst",
-                        "--genome-dir", f"{I}/genomes", "--out", panel, "--prefix", prefix, "--min-cluster-size", "1", "--max-reps", "6", "--min-span", "4000", "--per-lineage", "--jobs", "4"] + (["--borrow", sp.split()[0] + " "] if getattr(a, "borrow", False) else []),
+                        "--genome-dir", f"{I}/genomes", "--out", panel, "--prefix", prefix, "--min-cluster-size", "1", "--max-reps", "6", "--per-lineage", "--jobs", "4"] + (["--min-span", "1000", "--classes", "mat_locus", "partial_locus", "idiomorph_gene_only"] if lenient else ["--min-span", "4000"]) + (["--borrow", sp.split()[0] + " "] if getattr(a, "borrow", False) or lenient else []),
                        stdout=log, stderr=log)
     if r.returncode or not os.path.isdir(os.path.join(panel, "L1")): hold("panel_build_failed")
     sys.path.insert(0, f"{P}/.claude/worktrees/run-b317ece/src")
@@ -87,7 +92,7 @@ def plan_one(a):
     if max(c) / max(1, min(c)) > GATE["max_core_ratio"]: hold("core_kmers_unbalanced")
     if l1["shared"] < GATE["min_shared_kmers"]: hold("shared_kmers_low")
     common = ["--species", sp, "--group", sl, "--panel-dir", panel, "--panel-prefix", prefix, "--runs", f"{I}/fungi_wgs_illumina.tsv", "--meta", f"{I}/fungi_meta.tsv",
-              "--names", *names, "--studies", f"{I}/studies.tsv", "--assembly-summary", f"{I}/asm_summary_fungi.txt", "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv"]
+              "--names", *names] + (["--classes", "mat_locus", "partial_locus", "idiomorph_gene_only"] if lenient else []) + ["--studies", f"{I}/studies.tsv", "--assembly-summary", f"{I}/asm_summary_fungi.txt", "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv"]
     r = subprocess.run([PY, f"{HERE}/select_runs.py", *common, "--n-truth", "12", "--n-free", "8", "--out", f"{d}/runs_test.tsv"], capture_output=True, text=True); log.write(r.stdout + r.stderr)
     if r.returncode or not os.path.exists(f"{d}/runs_test.tsv"): hold("run_selection_failed")
     test = rd(f"{d}/runs_test.tsv")
@@ -148,7 +153,7 @@ def submit_plan(a):
     if a.retry_held or a.retry_status:      # plan again the species held for too few runs (after the gate changed), or whose status starts with --retry-status (for example held:panel_build_failed)
         pre = a.retry_status or "held:too_few_runs"
         sp = [r for r in sp if os.path.exists(os.path.join(a.wave, "plan", r["slug"], "status")) and open(os.path.join(a.wave, "plan", r["slug"], "status")).read().startswith(pre)]; os.makedirs(os.path.join(a.wave, "plan_logs"), exist_ok=True)
-    lst = os.path.join(a.wave, "plan_species.txt"); open(lst, "w").write("".join(r["species"] + "\n" for r in sp))
+    lst = os.path.join(a.wave, f"plan_species_{int(__import__('time').time())}.txt"); open(lst, "w").write("".join(r["species"] + "\n" for r in sp))      # one list per submission: a pending array reads its own list, not a later one
     cmd = (f"export PATH=/opt/linux/rocky/8.x/x86_64/pkgs/miniconda3/py39_4.12.0/bin:$PATH; sp=$(sed -n ${{SLURM_ARRAY_TASK_ID}}p {lst}); {PY} {HERE}/wave_driver.py plan-one --wave {a.wave} --inputs {a.inputs} --species \"$sp\"" + (" --borrow" if a.borrow else ""))
     jid = sbatch(["-p", "exfab", "-A", "exfab", "-c", "4", "--mem", "16gb", "-t", "2:00:00", "-J", "wave-plan", "--array", f"1-{len(sp)}%{a.conc}", "-o", f"{a.wave}/plan_logs/%x_%A_%a.out", "--wrap", cmd]) if not a.dry_run else "dryplan"
     print("plan array", jid, "for", len(sp), "species")

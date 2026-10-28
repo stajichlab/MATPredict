@@ -1,6 +1,17 @@
 # Idiomorph names: a proposal (2026-10-28)
 
-Status: proposal. Applied on output only for the P/M system (`scripts/idiomorph_labels.py`); no database or report change.
+Status: rulings of 2026-10-28 recorded in `scripts/idiomorph_label_registry.json` (single source of truth; `scripts/idiomorph_labels.py` reads it; `scripts/label_loci_table.py` labels a loci table; tests in `tests/test_idiomorph_labels.py`). Applied on output only; no database or report change.
+
+## Rulings (curator, 2026-10-28)
+- Grammar `<Lineage>__<System>_<Cell>`; lineage codes `Peziz`, `Sacch`, `Taphr`, `Mucor`, `Basid`; system = frozen code of the reference organism (never a clade or genus).
+- Frozen system codes: `SacCer`, `CanAlb`, `KomPha`, `OgaPol`, `YarLip`, `GeoCan` (MATdc kept separate from `YarLip`), `SchPom`, `PhyBla`; Pezizomycotina by class: `NeuCra` (Sordariomycetes), `AspFum` (Eurotiomycetes; *A. nidulans* is homothallic, the documented exemplar), `BipMay` (Dothideomycetes), `BotCin` (Leotiomycetes), `XanPar` (Lecanoromycetes), `TubMel` (Pezizomycetes); `NoRef` for a class without a curated reference, plus a `nearest_reference` column by similarity now and by tree placement later.
+- Cell tokens: lower-case `a` / `alpha`; `A` / `B`; `P` / `M`; `plus` / `minus`; `MAT1-1` / `MAT1-2`; `undet`.
+- Basidiomycota: `<Lineage>__<System>_<Locus>[-<Allele>]`, stopping at the locus type when the allele is undetermined; system codes still to be chosen (registry `system: null`, raw names returned).
+- Genes `<System>_<gene>`: yeast spellings normalised (`SacCer_a1`, `CanAlb_alpha2`, `YarLip_A1`), Turgeon-Yoder symbols and `sexP` / `sexM` kept, flank genes unchanged, `_like` for similarity-only candidates.
+- A locus called by two systems keeps the label of the system whose panel matched, with a flag; identical-coordinate duplicates are marked by `scripts/dedupe_family_calls.py`; routing fix and re-run = issue #188, curation = #189.
+- Build order: registry (done) -> module and tables (done) -> website labels in v0.7.1 beside the raw names -> database change only on a later ruling.
+
+(The sections below are the original proposal and review.)
 
 ## Why
 A bare `M` or `P` is ambiguous: Mucoromycota `sexM` / `sexP` are Minus / Plus, fission yeast P and M are cell types. The yeast names are also inconsistent: the same idiomorph is written `A`, `a`, `MATa` or `MTLa`, and the same string means different systems in different families.

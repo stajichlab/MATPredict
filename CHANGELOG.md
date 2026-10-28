@@ -7,6 +7,7 @@ release completed.
 ## [Unreleased]
 
 ### Added
+- Raw-reads pages (`web/intro/reads/`): an overview of the wave 1 read typing (112 species, 1,629 runs, 599 of 605 single-allele calls agree with an assembly call) with the confidence of each species panel (confirmed / provisional / withheld), and one report per species (calls, agreement with assemblies, calls by study, every run, TSV download). Data written at site-build time by `scripts/build_reads_site.py` from `datasets/reads/sra_survey/pilot/wave1/`; the landing page links to it. The counts are of public runs, not population frequencies. The three curated collections (Fola 148 strains, *A. fumigatus* 331 read sets, *Coccidioides* 558 strains) have their own reports on the same pages, built from their committed tables; the old raw-reads table and Coccidioides chart on the landing page are replaced by a pointer.
 - Logo (a lens finding the locus in the explorer's gene-map colours): `web/intro/logo/` with horizontal, stacked, mono and dark variants and a favicon, wordmark outlines traced from Nunito (SIL OFL). In the site header (theme-aware: the dark file for the dark and neuromancer themes), as the tab icon on the landing page, explorer, About page and browser tool, and at the top of the README.
 ### Changed
 - Site wording: "Gating" becomes "Checks and confidence" (nav item "Confidence", table headers Check / What it tests, pipeline step "Verify"); the old `#gates` anchor still resolves. Wording only: no data or code change.

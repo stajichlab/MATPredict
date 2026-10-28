@@ -3,6 +3,7 @@
 Two questions: (1) collect every candidate MAT protein of the Taphrinomycotina assemblies (low confidence included) for a gene tree; (2) why the detection pipeline withholds the *Neolecta* and *Saitoella* loci, and would closer representatives, a consensus or an HMM help.
 
 ## Candidates for a tree
+Names in the tables and FASTA headers are labelled by reference system (`SchPomMc`, `SchPomPi` ...; columns `ref_gene_label`, `idiomorph_label`; the raw `ref_gene` is kept): see `docs/notes/2026-10-28_idiomorph-naming-proposal.md` and `scripts/idiomorph_labels.py`.
 `scripts/taph_mat_candidates.py` aligns 66 reference MAT proteins (13 Taphrinomycotina P/M proteins, 41 alpha-box/HMG-box proteins of other Ascomycota records, one per order and gene name, and 12 Mucoromycota sexP/sexM) to the 104 Taphrinomycotina assemblies of the BFD table with miniprot and translates every alignment.
 - `candidates.faa` / `candidates.tsv` (identity >= 25%, query coverage >= 40%): 466 proteins in 93 genomes, 27 species; 79 distinct sequences, 50 species x gene groups. 462 are P/M-type (matPi 116, mat1-Mc 112, mat1-Mi 99, matPc 96, matMc 24 ...), 4 alpha/a-type (MAT1-2-1 in *Protomyces*). 394 are *S. pombe*.
 - `loose/` (>= 20% and >= 20%): 468 proteins; adds a *Saitoella coloradoensis* matMc-like protein (215 aa, 40%) and one MAT1-2-1.

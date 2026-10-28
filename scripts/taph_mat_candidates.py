@@ -13,6 +13,8 @@ best reference name and its identity are in the table, so they can be dropped or
 GENOMES.tsv: a column `genome` (file DIR/<genome>.fa.gz) and `species`. Needs miniprot, Biopython and PyYAML. Output: candidates.tsv, candidates.faa, references.faa.
 """
 import argparse, collections, csv, glob, gzip, os, re, subprocess, sys, tempfile
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from idiomorph_labels import gene_label, idiomorph_label
 
 PM_ORDERS = ("Schizosaccharomycetales", "Pneumocystidales", "Taphrinales")
 ALPHA_A = re.compile(r"^(MAT1-1-1|MAT1-2-1|MATALPHA1|MATA1|MATALPHA2|MATA2|MTLALPHA1|MTLA1|MTLALPHA2|MTLA2)$", re.I)
@@ -27,6 +29,12 @@ def read_fasta(path):
             name, seq = ln[1:].strip(), []
         else: seq.append(ln.strip())
     if name: yield name, "".join(seq)
+
+
+def pm_idiomorph(gene):
+    """Label of the idiomorph a P/M-system gene belongs to (matMc -> SchPomM); '' for any other gene."""
+    side = {"Pi": "P", "Pc": "P", "Mc": "M", "Mi": "M"}.get(gene[-2:], "") if re.match(r"(mat|mat1-)[PM][ci]$", gene) else ""
+    return idiomorph_label(side, ["P", "M"]) if side else ""
 
 
 def gene_of(header):
@@ -99,7 +107,7 @@ def report_loci(glob_pat, genome):
 def domain_pass(a, rows, refs_path, rcls, out):
     """tblastn of the reference proteins against the report locus windows of each genome; one peptide per non-overlapping hit (the best bit score wins)."""
     tsv = open(os.path.join(out, "domain_hits.tsv"), "w"); faa = open(os.path.join(out, "domain_hits.faa"), "w")
-    tsv.write("\t".join(["hit", "genome", "species", "contig", "start", "end", "best_ref", "ref_class", "ref_gene", "identity", "aligned_aa", "bitscore", "evalue", "window_status"]) + "\n"); n = 0
+    tsv.write("\t".join(["hit", "genome", "species", "contig", "start", "end", "best_ref", "ref_class", "ref_gene", "ref_gene_label", "idiomorph_label", "identity", "aligned_aa", "bitscore", "evalue", "window_status"]) + "\n"); n = 0
     for r in rows:
         g = r["genome"]; path = os.path.join(a.genome_dir, g + ".fa.gz"); rl = report_loci(a.reports_glob, g) if a.reports_glob else []
         if not os.path.exists(path) or not rl: continue
@@ -120,8 +128,8 @@ def domain_pass(a, rows, refs_path, rcls, out):
             if any(k[0] == sid and min(hi, k[2]) - max(lo, k[1]) > 0.5 * min(hi - lo, k[2] - k[1]) for k in kept): continue
             kept.append((sid, lo, hi)); c, s0, e0, st, idio = wins[sid]; cls, gene = rcls[q]; n += 1
             hid = f"{g}|{c}:{s0 + lo - 1}-{s0 + hi - 1}"; pep = sseq.replace("-", "").replace("*", "")
-            tsv.write("\t".join(map(str, [hid, g, r.get("species", ""), c, s0 + lo - 1, s0 + hi - 1, q, cls, gene, pid, len(pep), bs, ev, st])) + "\n")
-            faa.write(f">{hid} {r.get('species', '')} best={gene}({cls}) id={pid:.0f} bits={bs:.0f} window={st}\n{pep}\n")
+            tsv.write("\t".join(map(str, [hid, g, r.get("species", ""), c, s0 + lo - 1, s0 + hi - 1, q, cls, gene, gene_label(gene), pm_idiomorph(gene), pid, len(pep), bs, ev, st])) + "\n")
+            faa.write(f">{hid} {r.get('species', '')} best={gene_label(gene)}({cls}) id={pid:.0f} bits={bs:.0f} window={st}\n{pep}\n")
         subprocess.run(["rm", "-rf", tmp])
     tsv.close(); faa.close(); print(n, "domain-level hits")
 
@@ -138,7 +146,7 @@ def main():
         for rid, c, g, s in refs: fh.write(f">{rid}|{c}\n{s}\n")
     print(len(refs), "reference proteins:", dict(collections.Counter(r[1] for r in refs)), flush=True)
     rows = list(csv.DictReader(open(a.genomes), delimiter="\t")); tsv = open(os.path.join(a.out, "candidates.tsv"), "w"); faa = open(os.path.join(a.out, "candidates.faa"), "w")
-    cols = ["candidate", "genome", "species", "contig", "start", "end", "strand", "best_ref", "ref_class", "ref_gene", "identity", "positive", "query_coverage", "protein_aa", "has_stop", "report_locus"]
+    cols = ["candidate", "genome", "species", "contig", "start", "end", "strand", "best_ref", "ref_class", "ref_gene", "ref_gene_label", "idiomorph_label", "identity", "positive", "query_coverage", "protein_aa", "has_stop", "report_locus"]
     tsv.write("\t".join(cols) + "\n"); n_all = 0
     for r in rows:
         g = r["genome"]; path = os.path.join(a.genome_dir, g + ".fa.gz")
@@ -160,8 +168,8 @@ def main():
             prot = translate(seqs, h); stop = prot.endswith("*"); prot = prot.rstrip("*")
             ov = [f"{st}:{idio}" for c, s0, e0, idio, st in rl if c == h["contig"] and min(e0, h["end"]) - max(s0, h["start"]) > 0]
             cid = f"{g}|{h['contig']}:{h['start']}-{h['end']}({h['strand']})"; cls, gene = rcls[h["target"]]
-            tsv.write("\t".join(map(str, [cid, g, r.get("species", ""), h["contig"], h["start"], h["end"], h["strand"], h["target"], cls, gene, round(h["ident"], 3), round(h["pos"], 3), round(h["cov"], 3), len(prot), int(stop), ",".join(sorted(set(ov))) or "none"])) + "\n")
-            faa.write(f">{cid} {r.get('species', '')} best={gene}({cls}) id={h['ident']:.2f} cov={h['cov']:.2f}\n{prot}\n"); n_all += 1
+            tsv.write("\t".join(map(str, [cid, g, r.get("species", ""), h["contig"], h["start"], h["end"], h["strand"], h["target"], cls, gene, gene_label(gene), pm_idiomorph(gene), round(h["ident"], 3), round(h["pos"], 3), round(h["cov"], 3), len(prot), int(stop), ",".join(sorted(set(ov))) or "none"])) + "\n")
+            faa.write(f">{cid} {r.get('species', '')} best={gene_label(gene)}({cls}) id={h['ident']:.2f} cov={h['cov']:.2f}\n{prot}\n"); n_all += 1
         print(g, len(loci), "candidate loci", flush=True)
     tsv.close(); faa.close(); print(n_all, "candidates")
     if a.domain_pass: domain_pass(a, rows, os.path.join(a.out, "references.faa"), rcls, a.out)

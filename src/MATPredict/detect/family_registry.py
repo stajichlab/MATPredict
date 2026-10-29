@@ -228,6 +228,13 @@ class Family:
     intersecting it with the declared values, so there is no hard-coded table.
     Absent means the family is not restricted.
     """
+    confirm_outside_scope: dict | None = None
+    """How a call from this family is confirmed when the genome is OUTSIDE `taxonomic_scope`.
+
+    Curation data (curator's decision 2026-10-29, #188/#189): `flank_genes` (names), `min_flank_genes`
+    (default 2) and `window_bp` (default 15000). Read only by `family_status` under
+    `--cross-family-policy on`. Absent means no confirmation rule (the call is never flagged).
+    """
     homothallic_screen: bool = True
     """May this family's calls be labelled `homothallic_candidate`?
 
@@ -478,6 +485,7 @@ def load_all_families(db_root: Path) -> list[Family]:
                     ),
                     fallback_searchable=locus.get("fallback_searchable", True),
                     fallback_subphylum=locus.get("fallback_subphylum"),
+                    confirm_outside_scope=locus.get("confirm_outside_scope"),
                     idiomorph_classes=dict(locus.get("idiomorph_class") or {}),
                     idiomorph_companions={k: list(v) for k, v in
                                           (locus.get("idiomorph_companions") or {}).items()},

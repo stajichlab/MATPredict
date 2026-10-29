@@ -104,7 +104,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import confidence_cap, homothallic, partial_core
+from MATPredict.detect import confidence_cap, family_status, homothallic, partial_core
 from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
@@ -414,6 +414,12 @@ class DetectionResult:
     against this call: weak (< 50%) cross-hits at least 10 points below the
     called allele's best modelled core gene (curator's ruling 2026-09-27;
     `tiering.allele_absent_genes_to_ignore`). Empty when none applied."""
+    family_status: dict | None = None
+    """`--cross-family-policy on` only: `family_unconfirmed` or `family_confirmed` for a call from a
+    family searched outside its scope (`family_status`). Separate from `confidence`, which it never
+    changes. None otherwise."""
+    cross_call: list = field(default_factory=list)
+    """`--cross-family-policy on` only: the overlapping calls of other families folded into this one."""
     verification: dict | None = None
     """`{status: unverified, reason, family_phylum, genome_phylum, evidence}`
     when the family was searched outside the genome's phylum by an override
@@ -2445,6 +2451,10 @@ def run_pipeline(
     #: core hit is a contig-edge partial or a weak-identity hit with no flank gene
     #: (`confidence_cap`). Changes confidence only, never the locus or the idiomorph.
     confidence_cap_policy: str = confidence_cap.DEFAULT_CONFIDENCE_CAP_POLICY,
+    #: `off` (default) or `on`: overlapping calls of two families become one (the family scoped to the genome
+    #: keeps it) and an out-of-scope MTL call is flagged `family_unconfirmed` / `family_confirmed`
+    #: (`family_status`). Independent of the policies above.
+    cross_family_policy: str = family_status.DEFAULT_CROSS_FAMILY_POLICY,
     #: `off` (default) or `on`: a lone modelled core gene at >= 85% identity, near
     #: full length, in a family with no other report is a low-confidence
     #: `idiomorph_gene_only` locus (`strong_single_gene`). Independent of the two
@@ -2696,6 +2706,7 @@ def run_pipeline(
     # the genome. It is read before polishing because the polish window is
     # clamped to the contig's real end.
     confidence_cap.check_policy(confidence_cap_policy)
+    family_status.check_policy(cross_family_policy)
     contig_lengths = _contig_lengths(genome_fasta)
 
     # Stage 2/3 -- polish. `polish_by` is keyed by
@@ -3913,6 +3924,17 @@ def run_pipeline(
     results = merge_overlapping(
         results, {f.key: (f.merge_group, f.merge_generic, f.merge_separately) for f in families},
     )
+    # Curator's decision 2026-10-29 (#188/#189): cross-family calls and the family flag, after every
+    # call decision and the merge. A failed lineage lookup is an unknown lineage: nothing is flagged
+    # and only the score decides a cross-call.
+    if cross_family_policy != family_status.POLICY_OFF and results:
+        lineage: set[int] = set()
+        if taxid is not None:
+            try:
+                lineage = {taxid, *zygosity_lineage_resolver(taxid)}
+            except Exception as exc:  # noqa: BLE001 - logged, treated as an unknown lineage
+                logger.warning("lineage lookup for the cross-family rule failed: %s", exc)
+        results = family_status.apply(results, families, lineage, cross_family_policy)
 
     # Curator's ruling 2026-09-26: a call made by searching a family outside
     # the genome's phylum (an override route) is unverified. A failed lookup

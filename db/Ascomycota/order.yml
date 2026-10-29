@@ -495,6 +495,10 @@ loci:
     # Flank-carried window (curator's ruling 2026-09-26): PAP1/OBP1/PIK1 sit
     # INSIDE the idiomorph, so a core hit must lie within 3 kb of them.
     flank_carried_window_bp: 3000
+    # CURATOR DECISION, J. Stajich, 2026-10-29 (#188/#189, results/2026-10-29_yeast_routing/): an MTL call in a
+    # genome outside Serinales is `family_unconfirmed`, and `family_confirmed` when two of PAP1, OBP1 and PIK1
+    # lie within 15 kb of its core genes (the C. albicans arrangement). Read only with `--cross-family-policy on`.
+    confirm_outside_scope: {flank_genes: [PAP1, OBP1, PIK1], min_flank_genes: 2, window_bp: 15000}
     genes:
       # gene_class added 2026-09-25 so the homothallic rule can tell unrelated
       # genes apart: MTLalpha1 is the alpha-box gene (the MAT1-1-1 counterpart;

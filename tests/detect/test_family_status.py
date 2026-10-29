@@ -109,3 +109,38 @@ def test_apply_resolves_then_flags():
     assert [r.family_key for r in out] == [MTL]
     assert out[0].family_status["status"] == fs.STATUS_CONFIRMED
     assert out[0].cross_call[0]["family"] == "Ascomycota:MATsc"
+
+
+OG = FamilyKey("Ascomycota", "MATog")
+
+
+def _og_families():
+    f = _family(OG, [460523])
+    from dataclasses import replace
+    return FAMILIES + [replace(f, cassette_report=True)]
+
+
+def _og(idiomorph, start, end, contig="c1"):
+    from dataclasses import replace
+    return replace(_call(OG, start, end, contig=contig), idiomorph=idiomorph)
+
+
+def test_two_idiomorphs_are_indicated_as_cassettes_and_not_merged():
+    a, alpha = _og("MATa", 1, 2000, "c1"), _og("MATalpha", 1, 3000, "c2")
+    out = fs.apply([a, alpha], _og_families(), {460523}, "on")
+    assert len(out) == 2
+    assert out[0].cassette == {"idiomorph": "MATa", "partner_idiomorphs": ["MATalpha"], "role": "cassette_undetermined",
+                               "note": out[0].cassette["note"]}
+    assert out[1].cassette["partner_idiomorphs"] == ["MATa"]
+
+
+def test_one_call_or_two_of_the_same_idiomorph_is_not_a_cassette():
+    fams = _og_families()
+    assert fs.apply([_og("MATa", 1, 2000)], fams, {460523}, "on")[0].cassette is None
+    two = fs.apply([_og("MATa", 1, 2000, "c1"), _og("MATa", 1, 2000, "c2")], fams, {460523}, "on")
+    assert all(r.cassette is None for r in two)
+
+
+def test_a_family_without_cassette_report_is_never_indicated():
+    out = fs.apply([_call(SC, 1, 100, contig="c1"), _call(SC, 1, 100, contig="c2")], FAMILIES, {OTHER}, "on")
+    assert all(r.cassette is None for r in out)

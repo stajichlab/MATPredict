@@ -720,6 +720,10 @@ loci:
     fallback_searchable: false
     # SLA2 and DIC1 flank the cassette within about 5 kb in the references; the second SLA2 + a1 copy is 19 kb away.
     flank_carried_window_bp: 20000
+    # CURATOR DECISION, J. Stajich, 2026-10-29 (#189): two non-overlapping MATog calls of different idiomorphs in one genome
+    # are indicated as MATa and MATalpha cassettes; which one is expressed is not determined. Read only with
+    # `--cross-family-policy on`. Evidence: results/2026-10-29_yeast_routing/ogataea_pichia_reference_check.md.
+    cassette_report: true
     genes:
       # MATa1: homeodomain (Pfam PF00046 56.6 bits on the deposit protein, GA 22.9); no class (the schema has none).
       - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}

@@ -418,6 +418,9 @@ class DetectionResult:
     """`--cross-family-policy on` only: `family_unconfirmed` or `family_confirmed` for a call from a
     family searched outside its scope (`family_status`). Separate from `confidence`, which it never
     changes. None otherwise."""
+    cassette: dict | None = None
+    """`--cross-family-policy on` only: this call is one of two cassettes (MATa and MATalpha) of a family that
+    declares `cassette_report`; which one is expressed is not determined (`family_status`). None otherwise."""
     cross_call: list = field(default_factory=list)
     """`--cross-family-policy on` only: the overlapping calls of other families folded into this one."""
     verification: dict | None = None

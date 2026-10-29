@@ -228,6 +228,12 @@ class Family:
     intersecting it with the declared values, so there is no hard-coded table.
     Absent means the family is not restricted.
     """
+    cassette_report: bool = False
+    """Are two calls of this family with different idiomorphs in one genome indicated as cassettes?
+
+    Curation data (curator's decision 2026-10-29, #189): the Ogataea MATa and MATalpha cassettes. Read only by
+    `family_status` under `--cross-family-policy on`. Absent means False.
+    """
     confirm_outside_scope: dict | None = None
     """How a call from this family is confirmed when the genome is OUTSIDE `taxonomic_scope`.
 
@@ -486,6 +492,7 @@ def load_all_families(db_root: Path) -> list[Family]:
                     fallback_searchable=locus.get("fallback_searchable", True),
                     fallback_subphylum=locus.get("fallback_subphylum"),
                     confirm_outside_scope=locus.get("confirm_outside_scope"),
+                    cassette_report=bool(locus.get("cassette_report", False)),
                     idiomorph_classes=dict(locus.get("idiomorph_class") or {}),
                     idiomorph_companions={k: list(v) for k, v in
                                           (locus.get("idiomorph_companions") or {}).items()},

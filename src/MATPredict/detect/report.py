@@ -196,6 +196,8 @@ def write_detection_gff3(
                 attrs += ";reference_records=" + ",".join(r.reference_records)
             if getattr(r, "family_status", None):
                 attrs += ";family_status=" + r.family_status["status"]
+            if getattr(r, "cassette", None):
+                attrs += ";cassette=" + r.cassette["idiomorph"] + "_cassette"
             if getattr(r, "cross_call", None):
                 attrs += ";cross_call=" + ",".join(c["family"] for c in r.cross_call)
             lines.append("\t".join([
@@ -354,6 +356,7 @@ def _result_doc(r: DetectionResult) -> dict:
         # `--cross-family-policy on` (curator's decision 2026-10-29): written only when set.
         **({"family_status": r.family_status} if getattr(r, "family_status", None) else {}),
         **({"cross_call": list(r.cross_call)} if getattr(r, "cross_call", None) else {}),
+        **({"cassette": r.cassette} if getattr(r, "cassette", None) else {}),
         # Same-locus calls folded into this one (curator's ruling 2026-09-27;
         # see `locus_merge`). Empty list when unmerged.
         "merged_from": r.merged_from,

@@ -20,6 +20,10 @@ PAP1, OBP1, PIK1 neighbours, 17 without). With the policy `on`, after every call
    were found within `window_bp` of a core gene of the call. The flag is separate from `confidence`,
    which is never changed. A genome with no lineage is never flagged: nothing says it is outside the scope.
 
+3. **Cassettes.** A genome with two non-overlapping calls of a `cassette_report` family (MATog) of different idiomorphs
+   has each call indicated as `cassette` (role `cassette_undetermined`): the MATa and MATalpha cassettes of a pseudohomothallic
+   Ogataea. Which one is expressed is not determined, and the two calls are never merged.
+
 Everything here is pure: the pipeline passes the calls, the families and the genome's lineage.
 """
 from __future__ import annotations
@@ -151,8 +155,39 @@ def flag_family_status(results: list, families: list, lineage: set[int]) -> list
     return out
 
 
+CASSETTE_ROLE = "cassette_undetermined"
+
+
+def flag_cassettes(results: list, families: list) -> list:
+    """`results` with `cassette` set on the calls of a genome that carries two or more non-overlapping calls
+    of one `cassette_report` family with different idiomorphs (the Ogataea MATa and MATalpha cassettes).
+
+    Which cassette is the expressed locus is not determined, so every such call gets the role
+    `cassette_undetermined`. A genome with a single call of the family, or two calls of one idiomorph, is not touched."""
+    by_key = {f.key: f for f in families}
+    out = list(results)
+    for key in {r.family_key for r in results}:
+        family = by_key.get(key)
+        if not getattr(family, "cassette_report", False):
+            continue
+        idx = [i for i, r in enumerate(results) if r.family_key == key]
+        idiomorphs = {results[i].idiomorph for i in idx}
+        if len(idx) < 2 or len(idiomorphs) < 2:
+            continue
+        for i in idx:
+            r = results[i]
+            out[i] = replace(r, cassette={
+                "idiomorph": r.idiomorph,
+                "partner_idiomorphs": sorted(idiomorphs - {r.idiomorph}),
+                "role": CASSETTE_ROLE,
+                "note": "two cassettes of different idiomorphs in this genome; which one is expressed is not determined",
+            })
+    return out
+
+
 def apply(results: list, families: list, lineage: set[int], policy: str) -> list:
     """The whole rule; `off` returns the calls untouched."""
     if check_policy(policy) == POLICY_OFF:
         return list(results)
-    return flag_family_status(resolve_cross_calls(results, families, lineage), families, lineage)
+    kept = resolve_cross_calls(results, families, lineage)
+    return flag_cassettes(flag_family_status(kept, families, lineage), families)

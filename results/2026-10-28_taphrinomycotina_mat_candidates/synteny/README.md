@@ -1,0 +1,17 @@
+# Synteny of the Pneumocystis PM region in Taphrinomycotina (2026-10-28)
+
+Question: where are the P and M genes in *Protomyces*, *Saitoella* and *Neolecta*, found by conserved neighbours and not by HMG-box similarity alone?
+Reference: the RefSeq annotation of *Pneumocystis jirovecii* RU7 (GCF_001477535.1). The DB record `42068_ru7_PM_combined` holds only the three MAT genes (matPi NW_017264783.1:211240-211935, matMc 220321-221076, matMi 221185-221394); the 53 genes within 50 kb (T551_02133-T551_02185) come from the annotation. Between matPi and matMc lie two large genes: T551_02160 (ClpB-like, 212-216 kb) and T551_02161 (an ANTH-domain protein, 215-220 kb). `pjir_flank.faa` has the 53 proteins, `pjir_flank_orthologs.tsv` their best diamond hit (e < 1e-5) in each target proteome; annotation and diamond output are on the HPCC (`synteny/annot`, `synteny/dm`).
+`scripts/taph_synteny.py` (first step) and the display step are in the repo.
+
+## Results (Pjir position -> ortholog)
+- *P. carinii* B80 (control): the whole region is conserved on `NW_017264725.1:60-89 kb`, same order (21 of 53 flank genes on one contig).
+- *S. pombe*: the matMc ortholog (T551_02162) lies at `NC_003423.3` 2,114 kb, the mat1 region, together with a right-flank gene (T551_02164). Macro-synteny is otherwise lost.
+- *Saitoella coloradoensis* (chromosome level): ClpB-like (T551_02160) at `AP039745.1:81 kb`, ANTH (T551_02161) at 84 kb, right-flank gene T551_02166 at 99 kb. My matMc-like model (0.40-0.54 identity, HMM E = 3e-65) is at `AP039745.1:105.7 kb`, in this block. The matPi-like hit (T551_02159, weak: 49%, e = 1e-13) is on a different chromosome, `AP039721.1:105 kb` (a locus withheld by the pipeline), and a second matMc-like hit at `AP039747.1:197 kb` (38%, e = 2e-9).
+- *S. complicata*: the same arrangement: ClpB, ANTH and right-flank orthologs on `NW_017567016.1:167-192 kb`; matMc-like hits on `NW_017567017.1:205 kb`.
+- *Neolecta*: `LXFE01003595.1` carries the ANTH ortholog (5 kb, 54%) and the matPi-like gene (11 kb); `LXFE01003167.1` carries the matMc-like gene (0-0.9 kb, contig edge) and a right-flank ortholog (T551_02165, 58%). Each contig holds a piece of the Pjir neighbourhood; their join in the assembly is not shown.
+- *P. lactucae-debilis* (Prola1, `MCFI01000029.1`): the annotated "high mobility group box domain-containing protein" at 30,356-30,988 is the matMc ortholog (32%), the ANTH ortholog is at 43.8 kb, right-flank orthologs at 55-56 kb. The order of matMc and ANTH is inverted relative to Pneumocystis. The matPi ortholog (T551_02159, 54%, e = 1e-12) and the ClpB-like gene map to other contigs (`MCFI01000005.1`, `MCFI01000008.1`).
+- *T. deformans* (PYCC): hits scattered over many scaffolds in this annotation; the DB record has matPi and matMc 41 kb apart on one scaffold of another assembly.
+
+## Reading
+The P and M genes are not simply adjacent outside *Pneumocystis*. In *Saitoella* and probably *Protomyces* the matMc-like gene sits beside the ANTH/ClpB neighbourhood, and the matPi-like gene is elsewhere; in *Neolecta* both neighbourhoods are present on small contigs. The matPi ortholog calls are weak (30-54%). Annotated HMG-box proteins of *P. lactucae-debilis* and *S. coloradoensis* give the species' own matMc protein for the representative set (and for candidate records). Not done: checking the *Protomyces* matPi candidates, confirming join of the two *Neolecta* contigs, candidate records.

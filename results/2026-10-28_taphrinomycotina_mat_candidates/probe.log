@@ -1,0 +1,155 @@
+windows: 11
+
+## Neolecta matMc+matPi window LXFE01000411.1:5949-25065
+  Pi A refs (pipeline)   n_query= 5  miniprot -                            exonerate -
+  Pi B refs+close reps   n_query=19  miniprot -                            exonerate -
+  Pi C consensus         n_query= 1  miniprot -                            exonerate -
+  Pi HMM (19 seqs, M=187): best 6-frame hit E=3.2e-13 score 36.4 in 335 aa
+  Mc A refs (pipeline)   n_query= 4  miniprot -                            exonerate -
+  Mc B refs+close reps   n_query=26  miniprot -                            exonerate -
+  Mc C consensus         n_query= 1  miniprot -                            exonerate -
+  Mc HMM (26 seqs, M=200): best 6-frame hit E=1.2e-06 score 14.3 in 109 aa
+  Mi A refs (pipeline)   n_query= 2  miniprot -                            exonerate -
+  Mi B refs+close reps   n_query= 4  miniprot -                            exonerate -
+  Mi C consensus         n_query= 1  miniprot -                            exonerate -
+  Mi HMM (4 seqs, M=70): best 6-frame hit -
+
+## Neolecta matMc contig-edge LXFE01003167.1:5-851
+  Pi A refs (pipeline)   n_query= 5  miniprot -                            exonerate -
+  Pi B refs+close reps   n_query=19  miniprot -                            exonerate -
+  Pi C consensus         n_query= 1  miniprot -                            exonerate -
+  Pi HMM (19 seqs, M=187): best 6-frame hit -
+  Mc A refs (pipeline)   n_query= 4  miniprot id0.41 cov0.87 ex1 s330      exonerate id0.44 cov0.90 ex1 s291
+  Mc B refs+close reps   n_query=26  miniprot id0.46 cov0.97 ex1 s404      exonerate id0.53 cov1.04 ex1 s169
+  Mc C consensus         n_query= 1  miniprot id0.48 cov0.81 ex1 s445      exonerate id0.48 cov0.81 ex1 s439
+  Mc HMM (26 seqs, M=200): best 6-frame hit E=4.3e-73 score 231.1 in 245 aa
+  Mi A refs (pipeline)   n_query= 2  miniprot -                            exonerate -
+  Mi B refs+close reps   n_query= 4  miniprot -                            exonerate -
+  Mi C consensus         n_query= 1  miniprot -                            exonerate -
+  Mi HMM (4 seqs, M=70): best 6-frame hit -
+
+## Neolecta matPi LXFE01003595.1:11513-12163
+  Pi A refs (pipeline)   n_query= 5  miniprot -                            exonerate id0.36 cov0.94 ex1 s298
+  Pi B refs+close reps   n_query=19  miniprot -                            exonerate id0.39 cov0.87 ex1 s315
+  Pi C consensus         n_query= 1  miniprot -                            exonerate id0.38 cov0.88 ex1 s309
+  Pi HMM (19 seqs, M=187): best 6-frame hit E=1.9e-44 score 138.3 in 227 aa
+  Mc A refs (pipeline)   n_query= 4  miniprot -                            exonerate -
+  Mc B refs+close reps   n_query=26  miniprot -                            exonerate -
+  Mc C consensus         n_query= 1  miniprot -                            exonerate -
+  Mc HMM (26 seqs, M=200): best 6-frame hit E=4.5e-12 score 31.9 in 317 aa
+  Mi A refs (pipeline)   n_query= 2  miniprot -                            exonerate -
+  Mi B refs+close reps   n_query= 4  miniprot -                            exonerate -
+  Mi C consensus         n_query= 1  miniprot -                            exonerate -
+  Mi HMM (4 seqs, M=70): best 6-frame hit -
+
+## S. coloradoensis multi-gene window AP039747.1:177119-198616
+  Pi A refs (pipeline)   n_query= 5  miniprot -                            exonerate -
+  Pi B refs+close reps   n_query=19  miniprot -                            exonerate -
+  Pi C consensus         n_query= 1  miniprot -                            exonerate -
+  Pi HMM (19 seqs, M=187): best 6-frame hit -
+  Mc A refs (pipeline)   n_query= 4  miniprot -                            exonerate id0.43 cov0.40 ex1 s148
+  Mc B refs+close reps   n_query=26  miniprot id0.66 cov1.00 ex1 s265      exonerate id0.67 cov0.99 ex1 s268
+  Mc C consensus         n_query= 1  miniprot -                            exonerate id0.37 cov0.45 ex1 s156
+  Mc HMM (26 seqs, M=182): best 6-frame hit E=8.2e-32 score 96.5 in 566 aa
+  Mi A refs (pipeline)   n_query= 2  miniprot -                            exonerate -
+  Mi B refs+close reps   n_query= 4  miniprot -                            exonerate -
+  Mi C consensus         n_query= 1  miniprot -                            exonerate -
+  Mi HMM (4 seqs, M=70): best 6-frame hit -
+
+## S. coloradoensis matMc-like AP039745.1:105707-106351
+  Pi A refs (pipeline)   n_query= 5  miniprot -                            exonerate -
+  Pi B refs+close reps   n_query=19  miniprot -                            exonerate -
+  Pi C consensus         n_query= 1  miniprot -                            exonerate -
+  Pi HMM (19 seqs, M=187): best 6-frame hit -
+  Mc A refs (pipeline)   n_query= 4  miniprot id0.40 cov0.92 ex1 s427      exonerate id0.42 cov0.90 ex1 s302
+  Mc B refs+close reps   n_query=26  miniprot id0.54 cov1.00 ex1 s485      exonerate id0.54 cov1.00 ex1 s485
+  Mc C consensus         n_query= 1  miniprot id0.44 cov0.83 ex1 s439      exonerate id0.44 cov0.84 ex1 s433
+  Mc HMM (26 seqs, M=182): best 6-frame hit E=2.9e-65 score 205.5 in 306 aa
+  Mi A refs (pipeline)   n_query= 2  miniprot -                            exonerate -
+  Mi B refs+close reps   n_query= 4  miniprot -                            exonerate -
+  Mi C consensus         n_query= 1  miniprot -                            exonerate -
+  Mi HMM (4 seqs, M=70): best 6-frame hit -
+
+## S. complicata multi-gene window NW_017567017.1:185699-210006
+  Pi A refs (pipeline)   n_query= 5  miniprot -                            exonerate -
+  Pi B refs+close reps   n_query=19  miniprot -                            exonerate -
+  Pi C consensus         n_query= 1  miniprot -                            exonerate -
+  Pi HMM (19 seqs, M=187): best 6-frame hit -
+  Mc A refs (pipeline)   n_query= 4  miniprot -                            exonerate id0.43 cov0.40 ex1 s151
+  Mc B refs+close reps   n_query=26  miniprot id0.67 cov1.00 ex1 s271      exonerate id0.68 cov0.99 ex1 s274
+  Mc C consensus         n_query= 1  miniprot -                            exonerate id0.36 cov0.45 ex1 s148
+  Mc HMM (26 seqs, M=182): best 6-frame hit E=9.6e-32 score 96.3 in 565 aa
+  Mi A refs (pipeline)   n_query= 2  miniprot -                            exonerate -
+  Mi B refs+close reps   n_query= 4  miniprot -                            exonerate -
+  Mi C consensus         n_query= 1  miniprot -                            exonerate -
+  Mi HMM (4 seqs, M=70): best 6-frame hit -
+
+## control Protomyces lactucae-debilis matMc id0.327 NW_024468021.1:30455-30964
+  Pi A refs (pipeline)   n_query= 5  miniprot -                            exonerate -
+  Pi B refs+close reps   n_query=19  miniprot -                            exonerate -
+  Pi C consensus         n_query= 1  miniprot -                            exonerate -
+  Pi HMM (19 seqs, M=187): best 6-frame hit -
+  Mc A refs (pipeline)   n_query= 4  miniprot id0.33 cov0.62 ex2 s235      exonerate id0.44 cov0.74 ex2 s330
+  Mc B refs+close reps   n_query=25  miniprot id0.45 cov1.00 ex2 s385      exonerate id0.46 cov0.92 ex2 s339
+  Mc C consensus         n_query= 1  miniprot id0.36 cov0.74 ex2 s317      exonerate id0.35 cov0.63 ex1 s228
+  Mc HMM (25 seqs, M=180): best 6-frame hit E=8.2e-40 score 122.6 in 185 aa
+  Mi A refs (pipeline)   n_query= 2  miniprot -                            exonerate -
+  Mi B refs+close reps   n_query= 4  miniprot -                            exonerate -
+  Mi C consensus         n_query= 1  miniprot -                            exonerate -
+  Mi HMM (4 seqs, M=70): best 6-frame hit -
+
+## control Protomyces inouyei matMc id0.319 QXDQ01000433.1:35667-36176
+  Pi A refs (pipeline)   n_query= 5  miniprot -                            exonerate -
+  Pi B refs+close reps   n_query=19  miniprot -                            exonerate -
+  Pi C consensus         n_query= 1  miniprot -                            exonerate -
+  Pi HMM (19 seqs, M=187): best 6-frame hit -
+  Mc A refs (pipeline)   n_query= 4  miniprot id0.32 cov0.62 ex2 s234      exonerate id0.45 cov0.74 ex2 s334
+  Mc B refs+close reps   n_query=25  miniprot id0.45 cov1.00 ex2 s389      exonerate id0.46 cov0.92 ex2 s343
+  Mc C consensus         n_query= 1  miniprot id0.36 cov0.74 ex2 s317      exonerate id0.35 cov0.63 ex1 s228
+  Mc HMM (25 seqs, M=180): best 6-frame hit E=4.4e-40 score 123.5 in 185 aa
+  Mi A refs (pipeline)   n_query= 2  miniprot -                            exonerate -
+  Mi B refs+close reps   n_query= 4  miniprot -                            exonerate -
+  Mi C consensus         n_query= 1  miniprot -                            exonerate -
+  Mi HMM (4 seqs, M=70): best 6-frame hit -
+
+## control Taphrina confusa matMc id0.692 RHGJ01000026.1:166886-167401
+  Pi A refs (pipeline)   n_query= 5  miniprot -                            exonerate -
+  Pi B refs+close reps   n_query=15  miniprot -                            exonerate -
+  Pi C consensus         n_query= 1  miniprot -                            exonerate -
+  Pi HMM (15 seqs, M=212): best 6-frame hit E=5.6e-07 score 15.6 in 119 aa
+  Mc A refs (pipeline)   n_query= 4  miniprot id0.69 cov0.74 ex1 s657      exonerate id0.69 cov0.74 ex1 s657
+  Mc B refs+close reps   n_query=20  miniprot id0.69 cov0.74 ex1 s657      exonerate id0.69 cov0.74 ex1 s657
+  Mc C consensus         n_query= 1  miniprot id0.39 cov0.90 ex1 s356      exonerate id0.45 cov0.71 ex1 s322
+  Mc HMM (20 seqs, M=209): best 6-frame hit E=4.4e-67 score 211.7 in 222 aa
+  Mi A refs (pipeline)   n_query= 2  miniprot -                            exonerate -
+  Mi B refs+close reps   n_query= 4  miniprot -                            exonerate -
+  Mi C consensus         n_query= 1  miniprot -                            exonerate -
+  Mi HMM (4 seqs, M=70): best 6-frame hit -
+
+## control Taphrina confusa matPi id0.433 RHGJ01000026.1:181602-182072
+  Pi A refs (pipeline)   n_query= 5  miniprot id0.43 cov0.87 ex1 s394      exonerate id0.42 cov0.89 ex1 s394
+  Pi B refs+close reps   n_query=15  miniprot id0.43 cov0.87 ex1 s394      exonerate id0.42 cov0.89 ex1 s394
+  Pi C consensus         n_query= 1  miniprot -                            exonerate id0.49 cov0.30 ex1 s176
+  Pi HMM (15 seqs, M=212): best 6-frame hit E=3.1e-32 score 98.1 in 168 aa
+  Mc A refs (pipeline)   n_query= 4  miniprot -                            exonerate -
+  Mc B refs+close reps   n_query=20  miniprot -                            exonerate -
+  Mc C consensus         n_query= 1  miniprot -                            exonerate -
+  Mc HMM (20 seqs, M=209): best 6-frame hit -
+  Mi A refs (pipeline)   n_query= 2  miniprot -                            exonerate -
+  Mi B refs+close reps   n_query= 4  miniprot -                            exonerate -
+  Mi C consensus         n_query= 1  miniprot -                            exonerate -
+  Mi HMM (4 seqs, M=70): best 6-frame hit -
+
+## control Protomyces lactucae-debilis matMc id0.327 QXDS01000345.1:109167-109676
+  Pi A refs (pipeline)   n_query= 5  miniprot -                            exonerate -
+  Pi B refs+close reps   n_query=19  miniprot -                            exonerate -
+  Pi C consensus         n_query= 1  miniprot -                            exonerate -
+  Pi HMM (19 seqs, M=187): best 6-frame hit -
+  Mc A refs (pipeline)   n_query= 4  miniprot id0.33 cov0.62 ex2 s235      exonerate id0.44 cov0.74 ex2 s330
+  Mc B refs+close reps   n_query=25  miniprot id0.45 cov1.00 ex2 s385      exonerate id0.46 cov0.92 ex2 s339
+  Mc C consensus         n_query= 1  miniprot id0.36 cov0.74 ex2 s317      exonerate id0.35 cov0.63 ex1 s228
+  Mc HMM (25 seqs, M=180): best 6-frame hit E=8.2e-40 score 122.6 in 185 aa
+  Mi A refs (pipeline)   n_query= 2  miniprot -                            exonerate -
+  Mi B refs+close reps   n_query= 4  miniprot -                            exonerate -
+  Mi C consensus         n_query= 1  miniprot -                            exonerate -
+  Mi HMM (4 seqs, M=70): best 6-frame hit -

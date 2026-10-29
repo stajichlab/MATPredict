@@ -79,3 +79,22 @@ The locus is found at the right place, but only through the Saccharomyces refere
 - The 27 Pichia genomes with two systems were not examined individually.
 - The MATa2 gene model in CBS573: only an unspliced profile hit; no gene model.
 - No read or expression data was used for Ogataea; which cassette is active is unknown.
+
+## CBS 573 MATa2 gene model from RNA-seq (2026-10-29)
+
+Reads: 72.1 M unpaired, hisat2 against NC_042507.1, 96.2% aligned (job 31372344). Scripts: `pichia_mata2_model.py`, `pichia_mata2_hmm.py`; candidates in `pichia_mata2_candidates.faa`. Window coordinates: `win.fa` index 0 is genome position 295,000.
+
+| Item | Result |
+|---|---|
+| Junction 311,842–311,903 (+ strand) | 27 spliced reads, 62 bp intron, GT…AG |
+| Junction 306,703–306,916 (− strand) | 53 reads, 214 bp, GT…AG on the reverse strand; a different gene, not MATa2 |
+| Other junctions in 305–320 kb | none |
+| Stop codon | spliced ORF ends at 312,245 (two exons) |
+| Depth in 311,450–311,640 | 0–2; rises to 23+ at ~311,670 |
+| MATa2 profile (supporting evidence only) | 52.4 bits (E 8e-18) on the 202 aa ORF from ATG 311,575; 35.9 bits on the 131 aa ORF from ATG 311,788 |
+
+Settled: a two-exon gene with a 62 bp intron after 311,841 and the stop at 312,245. The HMG box (profile hit) spans exon 1 and the junction.
+
+Not settled: the N-terminus. ATG 311,575 gives the better profile score but lies 95 bp upstream of where RNA coverage begins (~311,670); ATG 311,788 is covered but loses the first part of the HMG box. No junction links the upstream region to exon 1. Needs a stranded sample, or a 5' RACE or protein evidence, to choose.
+
+Depth stays high (100–900) from 312,100 to 313,450, past the stop; it is probably the neighbouring gene or UTR, and was not interpreted.

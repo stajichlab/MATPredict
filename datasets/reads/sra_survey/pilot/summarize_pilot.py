@@ -46,13 +46,14 @@ def main():
         else:
             verdict = ""
         flags = res.get("flags", "")
+        nm_ = (r.get("idiomorphs") or "MAT1-1 MAT1-2").split(); n1, n2 = (nm_ + ["MAT1-2"])[:2]
         rows.append(dict(
             run=acc, group=r.get("group", ""), strain=r.get("strain", ""), study=r.get("study_accession", ""), layout=r.get("library_layout", j.get("layout", "")),
             spots=j.get("spots_total", ""), state=state, call=call, truth=truth, verdict=verdict,
-            depth_1=res.get("MAT1-1_depth", ""), depth_2=res.get("MAT1-2_depth", ""), shared_depth=res.get("shared_depth", ""),
-            breadth_1=res.get("MAT1-1_breadth", ""), breadth_2=res.get("MAT1-2_breadth", ""), flags=flags,
+            depth_1=res.get(f"{n1}_depth", ""), depth_2=res.get(f"{n2}_depth", ""), shared_depth=res.get("shared_depth", ""),
+            breadth_1=res.get(f"{n1}_breadth", ""), breadth_2=res.get(f"{n2}_breadth", ""), flags=flags,
             sra_mb=round(j.get("sra_bytes", 0) / 1e6) if j else "", secs_download=j.get("secs_download", ""), secs_convert=j.get("secs_convert", ""),
-            secs_type=j.get("secs_type", ""), truth_assembly=r.get("truth_assembly", "")))
+            secs_type=j.get("secs_type", ""), truth_assembly=r.get("truth_assembly", ""), idiomorphs=" ".join(nm_)))
     cols = list(rows[0].keys())
     with open(os.path.join(a.out, "results_all.tsv"), "w", newline="") as fh:
         w = csv.DictWriter(fh, cols, delimiter="\t", lineterminator="\n"); w.writeheader(); w.writerows(rows)
@@ -62,15 +63,15 @@ def main():
     summ = []
     for g, rs in sorted(groups.items()):
         done = [r for r in rs if r["state"] == "done"]
-        calls = collections.Counter(r["call"] for r in done)
+        calls = collections.Counter(r["call"] for r in done); g1, g2 = ((rs[0].get("idiomorphs") or "MAT1-1 MAT1-2").split() + ["MAT1-2"])[:2]
         withT = [r for r in done if r["truth"] and "," not in r["truth"]]
-        typedT = [r for r in withT if r["call"] in ("MAT1-1", "MAT1-2", "MATa", "MATalpha")]
+        typedT = [r for r in withT if r["call"] not in ("both", "none", "low_depth", "")]
         agree = [r for r in typedT if r["call"] == r["truth"]]
         mb = sum(r["sra_mb"] for r in done if r["sra_mb"] != ""); dl = sum(r["secs_download"] for r in done if r["secs_download"] != "")
         tasks = [r["secs_download"] + r["secs_convert"] + r["secs_type"] for r in done if r["secs_download"] != ""]
         summ.append(dict(group=g, runs=len(rs), done=len(done), failed=sum(1 for r in rs if r["state"].startswith("failed")), not_run=sum(1 for r in rs if r["state"] == "not_run"),
-                         MAT1_1=calls.get("MAT1-1", 0), MAT1_2=calls.get("MAT1-2", 0), both=calls.get("both", 0), none=calls.get("none", 0), low_depth=calls.get("low_depth", 0),
-                         typed_rate=round((calls.get("MAT1-1", 0) + calls.get("MAT1-2", 0)) / len(done), 3) if done else "",
+                         idiomorph_1=g1, idiomorph_2=g2, MAT1_1=calls.get(g1, 0), MAT1_2=calls.get(g2, 0), both=calls.get("both", 0), none=calls.get("none", 0), low_depth=calls.get("low_depth", 0),
+                         typed_rate=round((calls.get(g1, 0) + calls.get(g2, 0)) / len(done), 3) if done else "",
                          with_truth=len(withT), typed_with_truth=len(typedT), agree=len(agree), disagree=len(typedT) - len(agree),
                          agreement=round(len(agree) / len(typedT), 3) if typedT else "", untyped_with_truth=len(withT) - len(typedT),
                          with_trace_flag=sum(1 for r in done if "trace" in r["flags"]), sra_gb=round(mb / 1000, 1),

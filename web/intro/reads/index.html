@@ -15,28 +15,30 @@
   <h1>Raw reads</h1>
   <p class="lede">Which mating-type idiomorph does a strain carry, read from its public sequencing reads without assembling a genome. One report per species.</p>
   <div class="cards" id="cards"></div>
-  <div class="notice"><b>Read this first.</b> Each run is one public read set, typed with <code>matpredict reads-type</code> against a panel built from assemblies of the same species (k-mers found in only one idiomorph, with the shared flank as a depth control). The counts are of the public runs sampled, up to 50 per species and at most 4 per study: <b>they are not population frequencies</b>, and related or repeated strains are not yet separated (clone detection is in development). Agreement is measured against the <code>detect</code> call on an assembly of the same BioSample, where one exists.</div>
+  <div class="notice"><b>Read this first.</b> Each run is one public read set, typed with <code>matpredict reads-type</code> against a panel built from assemblies of the same species (k-mers found in only one idiomorph, with the shared flank as a depth control). The counts are of the public runs sampled, up to 50 per species and at most 4 per study: <b>they are not population frequencies</b>, and related or repeated strains are not removed from the run counts (species with enough sketched runs show clone groups and counts per clone on their report). Agreement is measured against the <code>detect</code> call on an assembly of the same BioSample, where one exists.</div>
   <h2>Confidence of each species panel</h2>
   <p>A species panel is <b>confirmed</b> when at least 75% of its runs get a single-allele call, flank depth is adequate, both idiomorphs together are under 20% of runs, and its calls agree with assembly calls (at least 95%, with five or more comparisons). It is <b>provisional</b> when too few assembly comparisons exist, or the species is homothallic (both idiomorphs expected). It is <b>withheld</b> when any check fails; its reads are listed but no frequencies should be drawn from them.</p>
   <div class="chart" id="ch-conf"></div><div class="legend" id="lg-conf"></div>
   <h2>Curated collections</h2>
-  <p>Three collections were typed in full, before the public-run survey, with panels built and checked for the species. Their reports follow the same layout. They overlap with the wave 1 species below (<i>A. fumigatus</i>, <i>C. immitis</i>, <i>C. posadasii</i>) but use more strains, and they are not part of the totals above.</p>
+  <p>Three collections were typed in full, before the public-run survey, with panels built and checked for the species. Their reports follow the same layout. They overlap with the species below (<i>A. fumigatus</i>, <i>C. immitis</i>, <i>C. posadasii</i>) but use more strains, and they are not part of the totals above.</p>
   <div class="tablewrap"><table id="cur"></table></div>
-  <h2>Species from public runs (wave 1)</h2>
+  <h2>Species from public runs (waves 1 and 2)</h2>
   <div class="controls">
     <label>Confidence <select id="conf"><option value="">all</option></select></label>
     <label>Search <input id="q" type="search" placeholder="species"></label>
     <label>Reference tier <select id="tier"><option value="">all</option></select></label>
   </div>
   <div class="tablewrap"><table id="tbl"><thead><tr>
-    <th data-k="species">Species</th><th data-k="confidence">Confidence</th><th class="n" data-k="runs">Runs</th><th class="n" data-k="MAT1-1">MAT1-1</th><th class="n" data-k="MAT1-2">MAT1-2</th><th class="n" data-k="both">Both</th><th class="n" data-k="uncalled">Not called</th><th class="n" data-k="agree">Agree with assembly</th>
+    <th data-k="species">Species</th><th data-k="confidence">Confidence</th><th class="n" data-k="runs">Runs</th><th data-k="alleles">Alleles</th><th class="n" data-k="c1">1st</th><th class="n" data-k="c2">2nd</th><th class="n" data-k="both">Both</th><th class="n" data-k="uncalled">Not called</th><th class="n" data-k="agree">Agree with assembly</th>
   </tr></thead><tbody></tbody></table></div>
-  <p class="muted">Reference tier: how the species panel was built (A and A1: curated MAT records; B: records of a close relative; C: panel from the species' own assemblies only). Click a species for its report; every report has a TSV of the runs.</p>
+  <p class="muted">The two alleles are the idiomorph names the panel uses (MAT1-1 / MAT1-2 for most filamentous fungi; a / alpha for yeasts; P / M or A / B for others); 1st and 2nd follow that order. Reference tier: how the species panel was built (A and A1: curated MAT records; B: records of a close relative; C: panel from the species' own assemblies only). Click a species for its report; every report has a TSV of the runs.</p>
   <h2>Method and limits</h2>
   <ul>
     <li><b>Data:</b> public runs from the NCBI SRA (survey of fungal whole-genome Illumina sets; mutant, cross, RNA-seq and similar sets are excluded; <i>Saccharomyces cerevisiae</i> is skipped). Up to 2 million read pairs per run, streamed and discarded; only the call and depths are kept.</li>
     <li><b>Retyping:</b> a run with no call at k = 31 is retried at k = 21, then against a genus panel; the report marks these runs.</li>
-    <li><b>Not done yet:</b> clone detection, a browser version of the read typing, and species with yeast-style (MATa/alpha) nomenclature or Basidiomycota.</li>
+    <li><b>Clone groups:</b> runs whose k=21 read sketches have an average similarity of at least 0.998 are grouped (species with 10 or more sketched runs). Counts per clone are given only where the number of clones is stable between 0.998 and 0.997. Each report offers the allele counts for all studies pooled or study by study, per run or per clone.</li>
+    <li><b>Waves:</b> wave 1 covered species with MAT1-1/MAT1-2 panels; wave 2 added the remaining reference-tier A and B species, among them the yeasts (a / alpha and similar names, borrowing loci from congeners where a species had one idiomorph) and <i>Botrytis cinerea</i> typed across all its public strains. In diploid yeasts both idiomorphs are expected in a strain, so a "both" call is not a failure there.</li>
+    <li><b>Not done yet:</b> a browser version of the read typing, Basidiomycota, and the species still withheld.</li>
     <li>Code and details: <a href="https://github.com/stajichlab/MATPredict/tree/main/datasets/reads/sra_survey/pilot">wave notes and scripts</a>.</li>
   </ul>
   <p class="muted" id="built"></p>
@@ -46,15 +48,15 @@
 import { stacked, legend, fmt, pct } from "../charts.js";
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const { totals: T, species: S, curated: CUR = [] } = await fetch("../data/reads/index.json").then(r => r.json());
-S.forEach(s => s.uncalled = s.none + s.low_depth);
+S.forEach(s => { s.uncalled = s.none + s.low_depth; s.names = s.names || ["MAT1-1", "MAT1-2"]; s.alleles = (s.labels || s.names).join(" / "); s.c1 = s.c1 ?? s["MAT1-1"]; s.c2 = s.c2 ?? s["MAT1-2"]; });
 document.getElementById("cards").innerHTML = [[fmt(T.species), "species"], [fmt(T.done), "public runs typed"], [pct(T.typed, T.done), "with a single-allele call"], [T.agree + " / " + T.with_assembly_call, "agree with an assembly call"], [fmt(T.rescued), "recovered at k=21 or a genus panel"]]
   .map(([v, l]) => '<div class="card"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>').join("");
 document.getElementById("cur").innerHTML = "<tr><th>Collection</th><th class='n'>Read sets</th><th class='n'>MAT1-1</th><th class='n'>MAT1-2</th><th class='n'>Both</th><th class='n'>Not called</th><th class='n'>Single-allele calls matching the comparison call</th></tr>" + CUR.map(c => '<tr class="click" data-s="' + c.slug + '"><td><a href="species.html?s=' + c.slug + '"><i>' + esc(c.species) + '</i></a></td><td class="n">' + c.runs + '</td><td class="n">' + c["MAT1-1"] + '</td><td class="n">' + c["MAT1-2"] + '</td><td class="n">' + c.both + '</td><td class="n">' + (c.none + c.low_depth) + '</td><td class="n">' + c.agree + "/" + c.with_assembly_call + '</td></tr>').join("");
 document.querySelector("#cur").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr && tr.dataset.s && e.target.tagName !== "A") location.href = "species.html?s=" + tr.dataset.s; });
 const confs = ["confirmed", "provisional", "provisional (homothallic)", "withheld"];
 const cs = Object.fromEntries(confs.map(c => [c, 0])); S.forEach(s => cs[s.confidence]++);
-const cats = ["MAT1-1", "MAT1-2", "both", "not called"];
-stacked(document.getElementById("ch-conf"), confs.filter(c => cs[c]).map(c => { const g = S.filter(s => s.confidence === c); return { label: c + " (" + g.length + " species)", parts: { "MAT1-1": g.reduce((a, s) => a + s["MAT1-1"], 0), "MAT1-2": g.reduce((a, s) => a + s["MAT1-2"], 0), "both": g.reduce((a, s) => a + s.both, 0), "not called": g.reduce((a, s) => a + s.uncalled, 0) } }; }), cats, { labelw: 230 });
+const cats = ["1st allele", "2nd allele", "both", "not called"];
+stacked(document.getElementById("ch-conf"), confs.filter(c => cs[c]).map(c => { const g = S.filter(s => s.confidence === c); return { label: c + " (" + g.length + " species)", parts: { "1st allele": g.reduce((a, s) => a + s.c1, 0), "2nd allele": g.reduce((a, s) => a + s.c2, 0), "both": g.reduce((a, s) => a + s.both, 0), "not called": g.reduce((a, s) => a + s.uncalled, 0) } }; }), cats, { labelw: 230 });
 legend(document.getElementById("lg-conf"), cats);
 const cf = document.getElementById("conf"), tf = document.getElementById("tier"), q = document.getElementById("q");
 confs.forEach(c => cf.add(new Option(c, c))); [...new Set(S.map(s => s.tier))].sort().forEach(t => tf.add(new Option(t, t)));
@@ -63,7 +65,7 @@ const tag = c => '<span class="tag ' + (c === "confirmed" ? "done" : c === "with
 function draw() {
   const rows = S.filter(s => (!cf.value || s.confidence === cf.value) && (!tf.value || s.tier === tf.value) && s.species.toLowerCase().includes(q.value.toLowerCase()))
     .sort((a, b) => (a[key] > b[key] ? 1 : a[key] < b[key] ? -1 : 0) * dir);
-  document.querySelector("#tbl tbody").innerHTML = rows.map(s => '<tr class="click" data-s="' + s.slug + '"><td><a href="species.html?s=' + s.slug + '"><i>' + esc(s.species) + '</i></a></td><td>' + tag(s.confidence) + '</td><td class="n">' + s.runs + '</td><td class="n">' + s["MAT1-1"] + '</td><td class="n">' + s["MAT1-2"] + '</td><td class="n">' + s.both + '</td><td class="n">' + s.uncalled + '</td><td class="n">' + (s.with_assembly_call ? s.agree + "/" + s.with_assembly_call : "–") + '</td></tr>').join("");
+  document.querySelector("#tbl tbody").innerHTML = rows.map(s => '<tr class="click" data-s="' + s.slug + '"><td><a href="species.html?s=' + s.slug + '"><i>' + esc(s.species) + '</i></a></td><td>' + tag(s.confidence) + '</td><td class="n">' + s.runs + '</td><td>' + esc(s.alleles) + '</td><td class="n">' + s.c1 + '</td><td class="n">' + s.c2 + '</td><td class="n">' + s.both + '</td><td class="n">' + s.uncalled + '</td><td class="n">' + (s.with_assembly_call ? s.agree + "/" + s.with_assembly_call : "–") + '</td></tr>').join("");
 }
 [cf, tf, q].forEach(e => e.addEventListener("input", draw));
 document.querySelectorAll("#tbl th").forEach(th => th.addEventListener("click", () => { const k = th.dataset.k; dir = k === key ? -dir : 1; key = k; draw(); }));

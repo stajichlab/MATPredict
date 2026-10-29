@@ -15,6 +15,7 @@ export async function loadData() {
     F.forEach((f, i) => { if (i < 8) o[f] = S[r[i]]; else if (i < 12) o[f] = r[i]; });
     o.alleles = Object.fromEntries(Object.entries(r[12]).map(([k, v]) => [S[k], v]));
     o.types = Object.fromEntries(Object.entries(r[13]).map(([k, v]) => [S[k], v]));
+    o.label_alleles = Object.fromEntries(Object.entries(r[16] || {}).map(([k, v]) => [S[k], v]));     // the same genomes counted by idiomorph label
     return o;
   });
   return { rows, summary };

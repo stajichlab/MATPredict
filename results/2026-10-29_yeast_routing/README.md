@@ -66,3 +66,22 @@ within 15 kb of the MTL genes, which promotes the five three-flank loci (`RULE_D
 - The 35 genomes still showing two MATsc loci under v1.
 
 The routing change itself is a database change and needs a curator ruling; nothing here edits `db/` or `src/`.
+
+## Replay of the implementation (branch `family-unconfirmed`, `--preset v0.8`)
+
+The same 354 genomes with the rule implemented in the detector (`v3_replay_compare.py`, output `v3_replay_summary.txt`):
+
+| group | n | two or more loci: v0.7.0 / v0.8 | no call: v0.7.0 / v0.8 | confidence changed |
+|---|---|---|---|---|
+| cross-called | 181 | 181 / 45 | 0 / 0 | 0 |
+| MTL only | 22 | 0 / 0 | 0 / 0 | 0 |
+| MATsc only (control) | 40 | 3 / 3 | 0 / 0 | 0 |
+| no call (control) | 25 | 0 / 0 | 25 / 25 | 0 |
+| Ogataea (unchanged until the reference check) | 99 | 31 / 31 | 6 / 6 | 0 |
+
+- No MTL-only call is lost; 5 are `family_confirmed` and 17 `family_unconfirmed`, as predicted from the flank search.
+- The no-call control stays empty and no confidence value changes.
+- Of the 181 cross-called genomes: 114 end with one MATsc locus, 22 with one MTL locus, 23 keep a MATsc and an MTL locus on
+  different positions (none overlap; they are the secondary-locus cases for #189), and 22 have only MATsc loci or only MTL loci in two copies.
+- **For the curator**: in the 22 genomes where MTL is the only family left, MTL won the cross-call on score because neither family is
+  scoped to the genome. v1 (MATsc always kept) would have kept MATsc there. They carry `family_unconfirmed` and the `cross_call` note names MATsc.

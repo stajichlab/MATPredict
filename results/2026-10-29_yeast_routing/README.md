@@ -48,9 +48,9 @@ detector had already found and adds none.
 |---|---|---|
 | 3 of 3 (PAP1, OBP1, PIK1) | 5 | the C. albicans arrangement (PAP1, OBP1, PIK1, then the MTL genes, within about 8 kb) in five independent genomes: GCA_030705185.1 and GCA_030571215.1 ([Candida]), GCA_029290875.1, GCA_029300705.1 and GCA_029300795.1 (Saccharomycetales). Genuine MTL loci. |
 | 1 of 3 (PIK1) | 2 | GCA_029296565.1 and GCA_029293515.1 (same contig length and coordinates, so near-identical assemblies). PIK1 then MTLA2, MTLA1, 232 bp from the contig end, so PAP1 and OBP1 would be off the contig. Consistent with a real locus; cannot be confirmed. |
-| 0 | 15 | no PAP1, OBP1 or PIK1. In 7 of these the locus is within about 600 bp of a contig end or the contig is under 7 kb, so the check says nothing. In 8 there is room (12 to 40 kb on at least one side) and no flank was found: GCA_047716205.1, GCA_031125705.1 (Saccharomycopsis), GCA_004195225.1 (Petasospora), GCA_003706265.2 (Nakazawaea), GCA_030574195.1 (Groenewaldozyma), GCA_030583325.1 (Saccharomycopsis), GCA_003706705.3 (Barnettozyma), GCA_030564985.1 (Saccharomycopsis). |
+| 0 | 15 | no PAP1, OBP1 or PIK1. In 8 the locus is within about 1.3 kb of a contig end or the contig is under 7 kb, so the check says nothing (GCA_030558145.1, GCA_047716225.1, GCA_003706705.3, GCA_030267685.1, GCA_964187715.1, GCA_030564985.1, GCA_031125185.1, GCA_019232045.1). One more (GCA_030267585.1, Ogataea) has 1.3 kb on one side and 5.8 kb on the other, which is limited room. In 6 there is room (12 to 40 kb or more on at least one side) and no flank was found: GCA_047716205.1, GCA_031125705.1 and GCA_030583325.1 (Saccharomycopsis), GCA_004195225.1 (Petasospora), GCA_003706265.2 (Nakazawaea), GCA_030574195.1 (Groenewaldozyma). |
 
-The 8 with room and no flank may carry a different layout (these genera are outside Serinales, where the
+The 6 with room and no flank may carry a different layout (these genera are outside Serinales, where the
 neighbours need not be PAP1, OBP1 and PIK1), or may be false matches from MTLA1 and MTLA2 homology; the
 data here does not separate the two. They are the ones to check against a reference genome of the same genus.
 

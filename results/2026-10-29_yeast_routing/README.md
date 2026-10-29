@@ -54,13 +54,14 @@ The 6 with room and no flank may carry a different layout (these genera are outs
 neighbours need not be PAP1, OBP1 and PIK1), or may be false matches from MTLA1 and MTLA2 homology; the
 data here does not separate the two. They are the ones to check against a reference genome of the same genus.
 
-**Decision (curator, in this conversation): all 22 stay as calls but are marked provisional**, with the five
-three-flank loci eligible for promotion by the flank rule in `RULE_DRAFT.md`.
+**Decision (curator): all 22 stay as calls, flagged `family_unconfirmed`** (a flag separate from confidence;
+"provisional" is already a reads-side word). The flag becomes `family_confirmed` when two of PAP1, OBP1 and PIK1 lie
+within 15 kb of the MTL genes, which promotes the five three-flank loci (`RULE_DRAFT.md`).
 
 ## What this does not decide
 
 - Which of the 15 MTL-only calls without flank genes are real (see above). The routing rule in
-  `RULE_DRAFT.md` keeps MTL searchable and marks them provisional.
+  `RULE_DRAFT.md` keeps MTL searchable and flags them `family_unconfirmed`.
 - Whether two MATog loci in Ogataea are expected. Needs the Ogataea polymorpha reference layout.
 - The 35 genomes still showing two MATsc loci under v1.
 

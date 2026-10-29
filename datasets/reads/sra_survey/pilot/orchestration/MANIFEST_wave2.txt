@@ -1,0 +1,10 @@
+Wave 2 raw-reads typing (2026-10-27 to 2026-10-28)
+planner/driver: datasets/reads/sra_survey/pilot/wave_driver.py (repository versions at the merge of PRs #178-#190; run from the HPCC scripts folder copies, the wave_driver.py copy there lacks only the panel_no_unique_kmers change)
+reads-type code: MATPredict src of the frozen worktree run-b317ece (tag cleanrun-2026-10c, commit b317eced47386ba4fc8bd1ef5859f55980aeb5dd); panel k=31, fallback k=21 (FALLBACK_K=21)
+sketches: sourmash 4.9.3 (Python 3.13.5) from /opt/linux/rocky/8.x/x86_64/pkgs/sourmash/4.9, k=21, scaled 500, abundance; clone_clusters.py repository version (average linkage 0.998) applied to the saved pair files
+inputs: results/sra_reads_typing/wave_inputs (fungi_wgs_illumina.tsv, fungi_meta.tsv, studies.tsv, asm_summary_fungi.txt, asco_genomes.tsv) built from the ENA survey in datasets/reads/sra_survey
+download: parallel-fastq-dump (egress is free on the HPCC, curator, 2026-10-28); up to 2 million read pairs per run, streamed and discarded
+compute: partitions exfab and stajichlab, 1 CPU and 6 GB per task; curator CPU limit lifted for this work
+Botrytis cinerea: capped stage 42 runs, then an all-strains run of 333 samples (11 studies) submitted with SKETCH=1 FALLBACK_K=21 conc 40; list waves/wave2/botrytis/runs_all_strains.tsv
+Not recorded at the time: the exact pixi.lock hash and db digest of the reads-type environment (the v0.7.0 genome-run values are in results/2026-10-26_v070_*/MANIFEST.txt: pixi.lock sha256 2608f434cec9ddaef7b3eeea2359d6beb9887a7ee9210088431badcb7fafd053, database_digest 285ee3093c7ea5c0d9e52758672cdc0c3e2d9921ba10c842929fea16e1068a5a, 177 records); reads-type uses panels built from the BFD assemblies, not the DB records
+scripts archive: see orchestration/README.md (tar sha256 732ec883...f4b1)

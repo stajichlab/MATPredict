@@ -27,13 +27,12 @@ makes it from the three result folders on HPCC. Both jobs finished (354 of 354 g
 2. **v1 loses every MTL-only call** (22 of 22: Saccharomycopsis 6, Barnettozyma 2, Ogataea 3,
    and others). Those genomes had no MATsc locus, so MTL was the only family that found anything.
    Whether those are real mating-type loci or MTL matching a distant homolog is not known; the
-   26 or so MTL reference records are all from Serinales. As written, v1 trades a duplicate for a missing call.
+   reference records of MTL were not checked here. As written, v1 trades a duplicate for a missing call.
 3. **v2 moves Ogataea to MATog**: all 35 Ogataea genomes with a cross call and all 9 Ogataea in the
    MATsc-only control change from MATsc to MATog. The "MATsc-only control" is therefore not a pure
    control for Ogataea. Two of the MTL-only genomes gain a MATog call (Ogataea).
-   The count of genomes with two loci goes up in the Ogataea group (31 to 54); Ogataea carries the
-   MATa and MATalpha cassettes at separate positions, so two MATog loci may be correct biology
-   and need a reference check before they are called duplicates.
+   The count of genomes with two loci goes up in the Ogataea group (31 to 54); two MATog loci in one Ogataea genome
+   may be real (not checked here), so they need a reference check before they are called duplicates.
 4. The no-call control stays empty in both versions, so routing did not introduce calls where
    there were none.
 

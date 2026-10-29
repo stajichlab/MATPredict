@@ -85,3 +85,17 @@ The same 354 genomes with the rule implemented in the detector (`v3_replay_compa
   different positions (none overlap; they are the secondary-locus cases for #189), and 22 have only MATsc loci or only MTL loci in two copies.
 - **For the curator**: in the 22 genomes where MTL is the only family left, MTL won the cross-call on score because neither family is
   scoped to the genome. v1 (MATsc always kept) would have kept MATsc there. They carry `family_unconfirmed` and the `cross_call` note names MATsc.
+
+## Cassette indication (curator's decision, 2026-10-29)
+
+Two non-overlapping MATog calls of different idiomorphs in one genome are each indicated as a cassette (`MATa_cassette`,
+`MATalpha_cassette`, role `cassette_undetermined`; which one is expressed is not determined). Replay on the 99 Ogataea genomes with
+Ogataea added to the MATog scope in a throwaway copy of the database (`cassette_replay.py`, `cassette_replay_summary.txt`):
+53 genomes carry both cassettes, 38 one locus (not marked), 7 no call, and the hybrid assembly with four MATalpha loci is not marked.
+With Ogataea routed to MATog no MATsc call remains in those genomes. The scope change itself is not in PR #214; it is a routing decision.
+
+## MTL against MATsc where MTL wins (25 genomes)
+
+`mtl_vs_matsc_side_by_side.txt` lists both calls of each genome (same coordinates in every case). MTL wins on the tier
+(MTL `high`, MATsc `medium`); neither family has a profile classifier (`idiomorph_classifier` is null for both), so no classifier scores exist to compare.
+By the best core-gene identity of each family's call: MATsc is higher in 13 genomes (Ogataea 5, Williopsis 2, Taiozyma 2, Wickerhamomyces, Barnettozyma, Kregervanrija, [Candida]), MTL in 10 (Saccharomycopsis 5, Barnettozyma 2, Petasospora, Gotozyma, Ambrosiozyma), 2 are equal. Identities are measured against different reference sets, so they are not strictly comparable.

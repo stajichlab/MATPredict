@@ -58,11 +58,17 @@ The locus is found at the right place, but only through the Saccharomyces refere
 
 - **MATalpha**: MH260578 as deposited, complete and annotated (SUI1, SLA2, MATalpha1 complement(4106..4645),
   MATalpha2 complement(5119..5918, three exons), TGL1, SEC3).
-- **MATa**: CBS573 chromosome 2 (CP028774.1, RefSeq NC_042507.1), same strain, the region opposite MH260578. From the RefSeq
-  feature table (genes are all "uncharacterized protein", so these are identified by position and size against MH260578, not named in the annotation):
-  SLA2 at 307,183-310,401 (+, 3,219 bp, the same length as MH260578 SLA2); the next gene at 310,491-311,300 (-, 810 bp) is the
-  MATa1 candidate; a 267 bp ORF at 311,575-311,841 (+) is a short candidate for MATa2 and needs a gene-model check;
-  TGL1 candidate at 312,347-313,684 (-, 1,338 bp). The MATa1/MATa2 names need confirming by sequence (the paper lists them but the annotation does not).
+- **MATa**: CBS573 chromosome 2 (CP028774.1, RefSeq NC_042507.1), same strain, the region opposite MH260578. The RefSeq genes there are all
+  "uncharacterized protein", so the check below identifies them against MH260578 and the database (`pichia_cbs573_flank_miniprot.py`,
+  `pichia_cbs573_hmm_scan.py`, `pichia_reference_proteins.faa`):
+  - **Flanks, same strain and synteny confirmed**: miniprot of the MH260578 proteins on NC_042507.1 gives SUI1 306,404-306,947 (-, 100%), SLA2 307,183-310,401
+    (+, 100%), TGL1 312,365-313,684 (-, 98%) and SEC3 313,903-317,976 (-, 100%). So SLA2 and TGL1 bracket a 1.96 kb gap, against 2.2 kb between SLA2 and TGL1 in the alpha allele.
+  - **MATa1**: the gene at 310,491-311,300 (-, 810 bp). The O. polymorpha MATa1 protein from the MATog record hits it at 55% over 310,497-310,670 (partial). K. phaffii MATa1 and MATa2 and the C. albicans MTLA1 and MTLA2 give no hit.
+  - **MATa2**: the Saccharomycotina MATa2 profile (`db/Ascomycota/classifiers/MATa2_saccharomycotina`) hits a 125 aa open reading frame at about 311,868-312,243 (+; E 2.9e-10, score 31.7)
+    and, more weakly, a 110 aa one at about 311,518-311,848 (+; E 1.2e-5), which is the 267 bp ORF I had listed. The two are 19 bp apart, so they are probably parts of one gene
+    with an intron, but this scan reads unspliced six-frame ORFs and does not give a gene model. **The MATa2 model needs RNA-seq (SRA SRP139056) or a splice-aware prediction before it goes into a record.**
+  - Positive control: the same scan of the MH260578 region finds the MAT1-1-1 (alpha-box) profile on MATalpha1 (190 aa, E 3.2e-7) and nothing else.
+  - The earlier statement that 311,575-311,841 is a MATa2 candidate is replaced by the above.
 - Both records are the same strain (CBS573), which suits the database rule of same-strain records.
 - Scope: Pichia has no family (157 of 158 genomes reach it by phylum fallback). A `Pichia` family scoped to the genus
   (the taxid of *Pichia* itself still has to be looked up), heterothallic, with flank genes SUI1, SLA2, TGL1, SEC3.
@@ -71,5 +77,5 @@ The locus is found at the right place, but only through the Saccharomyces refere
 ## Not checked
 
 - The 27 Pichia genomes with two systems were not examined individually.
-- MATa2 in CBS573 (above) is a candidate by position and size only.
+- The MATa2 gene model in CBS573: only an unspliced profile hit; no gene model.
 - No read or expression data was used for Ogataea; which cassette is active is unknown.

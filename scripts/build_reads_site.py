@@ -115,6 +115,7 @@ def main():
     waves = a.wave or ["datasets/reads/sra_survey/pilot/wave1", "datasets/reads/sra_survey/pilot/wave2"]
     clone_dirs = [os.path.join(a.repo, d) for d in (a.clones or ["datasets/reads/sra_survey/pilot/clone_pilot"] + [os.path.join(w, "clone_pairs") for w in waves])]
     for w in waves:
+        w = w if os.path.isabs(w) else os.path.join(a.repo, w)
         pick = lambda *names: next((os.path.join(w, n) for n in names if os.path.exists(os.path.join(w, n))), None)
         rf, gf = pick("results_all_final.tsv", "results_all.tsv"), pick("gates_final.tsv", "gates.tsv")
         if not (rf and gf): print("skipping", w, "(no results or gates)"); continue

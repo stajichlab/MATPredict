@@ -85,6 +85,7 @@ def plan_one(a):
                 qc["lineages"][ld] = dict(error=str(ex)[:120])
     json.dump(qc, open(os.path.join(d, "qc_panel.json"), "w"), indent=1)
     l1 = qc["lineages"].get("L1", {})
+    if "no unique k-mers" in l1.get("error", ""): hold("panel_no_unique_kmers")      # the lineage's loci carry both idiomorphs' sequence (homothallic or switching species): presence of an idiomorph cannot be typed from reads
     if "error" in l1 or not l1: hold("panel_L1_error")
     if min(qc["loci_per_idiomorph"].values()) < GATE["min_loci"]: hold("too_few_loci")
     c = list(l1["core"].values())

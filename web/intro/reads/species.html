@@ -17,18 +17,30 @@
   <p class="lede" id="lede"></p>
   <p id="intro"></p><p id="links" class="muted"></p>
   <div class="cards" id="cards"></div>
+  <div id="notes"></div>
   <div class="notice" id="why" hidden></div>
   <h2>Calls</h2>
   <div class="chart" id="ch-calls"></div><div class="legend" id="lg-calls"></div>
   <h2>Agreement with assemblies</h2>
   <p id="agree"></p>
   <div class="tablewrap"><table id="dis"></table></div>
+  <h2>Allele counts</h2>
+  <div class="controls"><label>Group <select id="grp"><option value="all">All studies pooled</option><option value="study">By study</option></select></label> <label>Count <select id="unit"><option value="run">Runs</option><option value="clone">Clones (near-identical runs counted once)</option></select></label></div>
+  <div class="tablewrap"><table id="cnt-tbl"></table></div>
+  <p class="muted" id="cnt-note"></p>
   <h2>Calls by study</h2>
   <div class="chart" id="ch-study"></div><div class="legend" id="lg-study"></div>
   <p class="muted">Runs of one study are often one population or one cross; the counts are of runs sampled (at most 4 per study), not of independent strains.</p>
+  <section id="clones" hidden>
+    <h2>Clone groups</h2>
+    <p id="clone-intro"></p>
+    <div class="tablewrap"><table id="clone-tbl"></table></div>
+    <p id="clone-counts"></p>
+    <p class="muted">Groups come from a k=21 sketch of each run's reads (up to 2 million read pairs): runs whose average similarity is at least 0.998 are grouped (average linkage). Two samples of one genome often score 0.995 to 0.999, so the threshold cannot tell a copy of a strain from a very close relative with certainty. <a href="https://github.com/stajichlab/MATPredict/blob/main/datasets/reads/sra_survey/pilot/clone_pilot/README.md">Method and calibration</a>.</p>
+  </section>
   <h2>Runs</h2>
   <div class="controls"><label>Call <select id="callf"><option value="">all</option></select></label> <label>Search <input id="q" type="search" placeholder="run, strain, study"></label> <a id="dl" href="#">Download TSV</a></div>
-  <div class="tablewrap"><table id="runs"><thead><tr><th>Run</th><th>Strain</th><th>Study</th><th>Call</th><th class="n" id="h-d1">1st allele depth</th><th class="n" id="h-d2">2nd allele depth</th><th class="n">Flank depth</th><th>Assembly call</th><th>Note</th></tr></thead><tbody></tbody></table></div>
+  <div class="tablewrap"><table id="runs"><thead><tr><th>Run</th><th>Strain</th><th>Study</th><th>Call</th><th class="n" id="h-d1">1st allele depth</th><th class="n" id="h-d2">2nd allele depth</th><th class="n">Flank depth</th><th>Assembly call</th><th>Clone</th><th>Note</th></tr></thead><tbody></tbody></table></div>
   <p class="muted">Depths are k-mer depths from up to 2 million read pairs. <i>Note</i>: <code>k21</code> or <code>genus_panel</code> mean the call came from a retyping pass; <code>both_vs_one</code> means both idiomorphs were seen where the assembly shows one.</p>
 </main>
 <footer class="muted">MATPredict · <a href="../about.html">About</a></footer>
@@ -44,9 +56,11 @@ document.getElementById("title").innerHTML = "<i>" + esc(D.species) + "</i>";
 const cur = D.kind === "curated";
 document.getElementById("lede").textContent = cur ? "Curated collection: every read set of the collection, typed with a panel built for this species. " + D.runs + " read sets." : D.confidence.charAt(0).toUpperCase() + D.confidence.slice(1) + " panel (reference tier " + D.tier + "); " + D.pooled_strains.toLocaleString() + " public strains pooled in the survey, " + D.runs + " runs sampled.";
 if (cur) { document.getElementById("intro").textContent = D.intro; document.getElementById("links").innerHTML = D.links.map(l => '<a href="https://github.com/stajichlab/MATPredict/blob/main/' + esc(l[1]) + '">' + esc(l[0]) + '</a>').join(" · "); }
+document.getElementById("notes").innerHTML = (D.notes || []).map(n => "<p>" + esc(n) + "</p>").join("");
 document.getElementById("cards").innerHTML = [[D.done + " / " + D.runs, "runs finished"], [D.c1 ?? D["MAT1-1"], (D.labels || D.names || ["MAT1-1", "MAT1-2"])[0]], [D.c2 ?? D["MAT1-2"], (D.labels || D.names || ["MAT1-1", "MAT1-2"])[1]], [D.both, "both idiomorphs"], [D.none + D.low_depth, "not called"], [D.with_assembly_call ? D.agree + " / " + D.with_assembly_call : "–", "agree with assembly"]]
   .map(([v, l]) => '<div class="card"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>').join("");
-if (D.why.length) { const w = document.getElementById("why"); w.hidden = false; w.innerHTML = "<b>Why this panel is " + esc(D.confidence) + ":</b> " + D.why.map(esc).join("; ") + "."; }
+if (/homothallic/.test(D.confidence)) { const w = document.getElementById("why"); w.hidden = false; w.innerHTML = "<b>Both idiomorphs are expected here.</b> In a homothallic species, or a diploid carrying a copy of each idiomorph, most strains read as \"both\". The \"both\" count is then the expected answer and the share of single calls is not an allele frequency. The call is provisional because no assembly comparison tests the single calls."; }
+else if (D.why.length) { const w = document.getElementById("why"); w.hidden = false; w.innerHTML = "<b>Why this panel is " + esc(D.confidence) + ":</b> " + D.why.map(esc).join("; ") + "."; }
 const NM = D.names || ["MAT1-1", "MAT1-2"], LB = D.labels || NM, lab = x => { const i = NM.indexOf(x); return i >= 0 ? LB[i] : x; }, cats = [NM[0], NM[1], "both", "none", "low_depth"], rows = D.rows.filter(r => r.call);
 const cnt = rs => Object.fromEntries(cats.map(c => [lab(c), rs.filter(r => r.call === c).length])), catsL = cats.map(lab);
 stacked(document.getElementById("ch-calls"), [{ label: "all runs", parts: cnt(rows) }], catsL, { labelw: 100 }); legend(document.getElementById("lg-calls"), catsL);
@@ -58,11 +72,42 @@ document.getElementById("agree").textContent = tr.length ? single.length - dis.l
 if (cur) document.getElementById("why").hidden = true;
 document.getElementById("dis").innerHTML = (dis.length ? "<tr><th>Run</th><th>Strain</th><th>Reads call</th><th>Assembly call</th><th>Assembly</th></tr>" + dis.map(r => "<tr><td>" + esc(r.run) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.call) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(r.truth_assembly) + "</td></tr>").join("") : "");
 document.getElementById("h-d1").textContent = LB[0] + " depth"; document.getElementById("h-d2").textContent = LB[1] + " depth";
+
+const CL = D.clones, onePct = (a, b) => a + b ? Math.round(100 * a / (a + b)) + "%" : "–";
+function tally(rs, unit) {      // unit "run": one per run; "clone": runs sharing a clone id count once (a clone with two different single calls is a conflict)
+  const t = { n: 0, c1: 0, c2: 0, both: 0, none: 0, conflict: 0, strains: new Set(), studies: new Set() };
+  rs.forEach(r => { t.strains.add(r.strain || r.run); t.studies.add(r.study); });
+  const put = c => { t.n++; if (c === NM[0]) t.c1++; else if (c === NM[1]) t.c2++; else if (c === "both") t.both++; else if (c === "conflict") t.conflict++; else t.none++; };
+  if (unit === "clone") {
+    const g = new Map(); rs.forEach(r => { const k = r.cid || "r:" + r.run; (g.get(k) || g.set(k, []).get(k)).push(r.call); });
+    g.forEach(cs => { const m = new Set(cs.filter(c => c === NM[0] || c === NM[1] || c === "both")); put(m.size === 0 ? "none" : m.size === 1 ? [...m][0] : "conflict"); });
+  } else rs.forEach(r => put(r.call));
+  return t;
+}
+function drawCounts() {
+  const unit = CL && (CL.plateau || document.getElementById("unit").value === "run") ? document.getElementById("unit").value : "run", by = document.getElementById("grp").value;
+  const groups = by === "study" ? studies.map(s => [s, rows.filter(r => r.study === s)]) : [["All studies", rows]];
+  const T = [...groups.map(([n, rs]) => [n, rs]), ...(by === "study" && studies.length > 1 ? [["All studies pooled", rows]] : [])];
+  const u = unit === "clone" ? "Clones" : "Runs", hasConf = unit === "clone";
+  document.getElementById("cnt-tbl").innerHTML = "<tr><th>" + (by === "study" ? "Study" : "") + "</th><th class=\"n\">Strains</th><th class=\"n\">" + u + "</th><th class=\"n\">" + esc(LB[0]) + "</th><th class=\"n\">" + esc(LB[1]) + "</th><th class=\"n\">Both</th>" + (hasConf ? "<th class=\"n\">Conflict</th>" : "") + "<th class=\"n\">Not called</th><th class=\"n\">" + esc(LB[0]) + " share of single calls</th></tr>" +
+    T.map(([n, rs]) => { const t = tally(rs, unit); return "<tr" + (n === "All studies pooled" ? " style=\"font-weight:600\"" : "") + "><td>" + esc(n) + "</td><td class=\"n\">" + t.strains.size + "</td><td class=\"n\">" + t.n + "</td><td class=\"n\">" + t.c1 + "</td><td class=\"n\">" + t.c2 + "</td><td class=\"n\">" + t.both + "</td>" + (hasConf ? "<td class=\"n\">" + t.conflict + "</td>" : "") + "<td class=\"n\">" + t.none + "</td><td class=\"n\">" + onePct(t.c1, t.c2) + "</td></tr>"; }).join("");
+  const big = studies.length > 1 ? studies.map(s => [s, rows.filter(r => r.study === s).length]).sort((a, b) => b[1] - a[1])[0] : null;
+  document.getElementById("cnt-note").textContent = (big && big[1] > 0.5 * rows.length ? big[0] + " supplies " + Math.round(100 * big[1] / rows.length) + "% of the runs, so the pooled shares mostly describe that study. " : "") + (CL && !CL.plateau ? "Counts per clone are not offered for this species: the number of clones changes a lot between thresholds, so similar runs may be close relatives and not copies. " : "") + "Share of single calls = " + LB[0] + " / (" + LB[0] + " + " + LB[1] + "). These are counts of sampled strains, not population frequencies.";
+  const uo = document.getElementById("unit"); uo.options[1].disabled = !(CL && CL.plateau);
+}
+document.getElementById("grp").addEventListener("input", drawCounts); document.getElementById("unit").addEventListener("input", drawCounts); drawCounts();
+if (CL) {
+  const sec = document.getElementById("clones"); sec.hidden = false;
+  const inGroups = CL.groups.reduce((a, g) => a + g.size, 0);
+  document.getElementById("clone-intro").textContent = CL.runs + " runs of this species were sketched; " + CL.groups.length + (CL.groups.length === 1 ? " group" : " groups") + " of near-identical runs contain " + inGroups + " of them, and " + (CL.runs - inGroups) + " runs stand alone (" + CL.clones + " clones in all)." + (CL.plateau ? "" : " The number of clones changes a lot between thresholds 0.998 (" + CL.clones + ") and 0.997 (" + CL.clones_at_alt + "), so similar runs here may be close relatives and not copies: no counts per clone are given.");
+  document.getElementById("clone-tbl").innerHTML = CL.groups.length ? "<tr><th>Group</th><th class=\"n\">Runs</th><th>MAT calls</th><th class=\"n\">Least similar pair</th><th>Runs in the group</th></tr>" + CL.groups.map(g => "<tr><td>" + esc(g.id) + "</td><td class=\"n\">" + g.size + "</td><td>" + esc(Object.entries(g.calls).map(([k, v]) => lab(k) + " " + v).join(", ")) + "</td><td class=\"n\">" + (g.min_ani ?? "") + "</td><td>" + g.runs.map(esc).join(", ") + "</td></tr>").join("") : "";
+  document.getElementById("clone-counts").innerHTML = CL.counts ? "<b>Counted once per clone</b> (runs with a call only): " + Object.entries(CL.counts).map(([k, v]) => esc(lab(k)) + " " + v).join(", ") + ". A group whose runs disagree is counted as <i>conflict</i>." : "";
+}
 const cf = document.getElementById("callf"), q = document.getElementById("q"); cats.forEach(c => cf.add(new Option(lab(c), c)));
 const note = r => [r.rescue, r.verdict === "both_vs_one" ? "both_vs_one" : "", r.verdict === "DISAGREE" ? "disagrees with assembly" : "", r.flags && r.flags !== "-" ? r.flags : ""].filter(Boolean).join("; ");
 function draw() {
   const f = D.rows.filter(r => (!cf.value || r.call === cf.value) && (r.run + r.strain + r.study + r.call).toLowerCase().includes(q.value.toLowerCase()));
-  document.querySelector("#runs tbody").innerHTML = f.map(r => "<tr><td>" + (/^[SED]RR/.test(r.run) ? "<a href=\"https://www.ncbi.nlm.nih.gov/sra/" + esc(r.run) + "\">" + esc(r.run) + "</a>" : esc(r.run)) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.study) + "</td><td>" + esc(r.call ? lab(r.call) : "not run") + "</td><td class=\"n\">" + esc(r.depth_1) + "</td><td class=\"n\">" + esc(r.depth_2) + "</td><td class=\"n\">" + esc(r.shared_depth) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(note(r)) + "</td></tr>").join("");
+  document.querySelector("#runs tbody").innerHTML = f.map(r => "<tr><td>" + (/^[SED]RR/.test(r.run) ? "<a href=\"https://www.ncbi.nlm.nih.gov/sra/" + esc(r.run) + "\">" + esc(r.run) + "</a>" : esc(r.run)) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.study) + "</td><td>" + esc(r.call ? lab(r.call) : "not run") + "</td><td class=\"n\">" + esc(r.depth_1) + "</td><td class=\"n\">" + esc(r.depth_2) + "</td><td class=\"n\">" + esc(r.shared_depth) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(r.clone || "") + "</td><td>" + esc(note(r)) + "</td></tr>").join("");
 }
 [cf, q].forEach(e => e.addEventListener("input", draw)); draw();
 document.getElementById("dl").href = "../data/reads/" + encodeURIComponent(slug) + ".tsv"; document.getElementById("dl").download = slug + "_reads_calls.tsv";

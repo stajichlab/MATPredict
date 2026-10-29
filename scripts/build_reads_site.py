@@ -5,17 +5,48 @@ Input: a wave folder of `datasets/reads/sra_survey/pilot/wave1/` (results_all_fi
     build_reads_site.py --out web/intro/data/reads [--wave datasets/reads/sra_survey/pilot/wave1]
 The pages say "confirmed / provisional / withheld"; the wave driver's gate calls them PASS / PROVISIONAL / HOLD.
 """
-import argparse, csv, json, os, re, sys
+import argparse, csv, itertools, json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from idiomorph_labels import idiomorph_label
 from collections import Counter
 
 CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)"}
-FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly"]
+FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly", "clone"]
 
 
 def rd(p):
     return list(csv.DictReader(open(p, newline="").read().replace("\r", "").splitlines(), delimiter="\t"))
+
+CLONE_ANI, CLONE_ALT, MIN_RUNS_FOR_COUNTS = 0.998, 0.997, 10
+
+
+def clone_groups(pairs_file, rows):
+    """Clone groups of one species from its saved pair identities (<slug>.pairs.tsv, written by clone_clusters.py --pairs): average linkage at 0.998. Sets row["clone"] to "c<N>" for runs in a group of
+    two or more and row["cid"] to a clone id for every sketched run (the pages count clones from it). Returns the summary for the species report. Counts per clone are given only where the number of clones
+    is stable between 0.998 and 0.997 (a plateau: within 10% of the runs) and there are at least 10 runs; where it is not, similar runs may be close relatives and not copies, and the report says so."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "datasets", "reads", "sra_survey", "pilot"))
+    import clone_clusters as cc
+    prs = [(r["run_a"], r["run_b"], float(r["ani"]) if r["ani"] else None) for r in rd(pairs_file)]
+    runs = sorted({x for p in prs for x in p[:2]}); P = {frozenset((a, b)): v for a, b, v in prs if v is not None}
+    g1 = sorted(cc.cluster(runs, prs, CLONE_ANI, "average"), key=lambda c: (-len(c), c[0])); g2 = cc.cluster(runs, prs, CLONE_ALT, "average")
+    by = {r["run"]: r for r in rows}; groups = []
+    for i, c in enumerate(g1, 1):
+        for x in c:
+            if x in by: by[x]["cid"] = f"c{i}"
+        if len(c) < 2: continue
+        vals = [P[frozenset(q)] for q in itertools.combinations(c, 2) if frozenset(q) in P]
+        for x in c:
+            if x in by: by[x]["clone"] = f"c{i}"
+        groups.append({"id": f"c{i}", "size": len(c), "runs": sorted(c), "calls": dict(Counter(by[x]["call"] for x in c if x in by)), "min_ani": round(min(vals), 4) if vals else None})
+    plateau = abs(len(g1) - len(g2)) <= 0.10 * len(runs) and len(runs) >= MIN_RUNS_FOR_COUNTS
+    out = {"threshold": CLONE_ANI, "linkage": "average", "runs": len(runs), "clones": len(g1), "clones_at_alt": len(g2), "alt_threshold": CLONE_ALT, "groups": groups, "plateau": plateau, "counts": None}
+    if plateau:
+        cnt = Counter()
+        for c in g1:
+            calls = {by[x]["call"] for x in c if x in by and by[x]["call"] in ("MAT1-1", "MAT1-2", "both")}
+            if calls: cnt[next(iter(calls)) if len(calls) == 1 else "conflict"] += 1
+        out["counts"] = dict(cnt)
+    return out
 
 
 def reason(r):
@@ -29,6 +60,15 @@ def reason(r):
     if k == "both": return f"{round(float(v) * 100)}% of runs show both idiomorphs"
     if k == "too_few_runs": return f"only {v} runs available"
     return r.replace("_", " ")
+
+
+NOTES = {      # extra paragraphs on a species report (shown under the lede)
+    "botrytis_cinerea": [
+        "This report covers all 333 samples of the survey that passed the filters (11 studies); the other wave 2 species were capped at 50 runs. Excluded: mutant and cross studies, the UV-mutagenesis study PRJNA1132156 (strain B05.10, three runs) and the cross study PRJNA1224713. PRJNA1295911 supplies 276 of the 333 runs, so use the by-study view to see that the other studies point the same way.",
+        "The three B05.10 runs of PRJNA1132156 (wild type and two mutants, not in this table) were called none: BLASTN of the panel to the B05.10 reference finds the MAT1-1 core end to end (99.7%), but the reads of that lab line cover the MAT1-1 core at 0.7x against 22-24x in the flanks, so about 6-7 kb of the reference locus is absent from the reads. Not tested: whether the deletion is real in the strain (details in the wave 2 notes).",
+        "24 runs read as both idiomorphs. In clone counts a clone whose runs mix a single call and a both call is counted as a conflict.",
+    ],
+}
 
 
 SINGLE = ("MAT1-1", "MAT1-2")
@@ -63,16 +103,18 @@ def curated(c, repo, out):
          "intro": c["intro"], "truth_label": c["truth_label"], "links": c["links"], "refused_with_truth": sum(1 for r in R if r["truth"] in SINGLE and r["call"] in ("low_depth", "none")), "both_vs_one": sum(1 for r in R if r["verdict"] == "both_vs_one")}
     json.dump({**s, "gate": "", "rows": R}, open(os.path.join(out, c["slug"] + ".json"), "w"), separators=(",", ":"))
     with open(os.path.join(out, c["slug"] + ".tsv"), "w", newline="") as fh:
-        w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n"); w.writeheader(); w.writerows(R)
+        w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n", extrasaction="ignore"); w.writeheader(); w.writerows(R)
     return s
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--wave", action="append", help="a wave folder with results_all_final.tsv and gates_final.tsv (or results_all.tsv and gates.tsv); repeat for several waves (default: wave1 and wave2)"); ap.add_argument("--out", required=True); ap.add_argument("--repo", default=".")
+    ap.add_argument("--wave", action="append", help="a wave folder with results_all_final.tsv and gates_final.tsv (or results_all.tsv and gates.tsv); repeat for several waves (default: wave1 and wave2)"); ap.add_argument("--out", required=True); ap.add_argument("--repo", default="."); ap.add_argument("--clones", action="append", help="folder with <slug>.pairs.tsv files; repeat (default: clone_pilot and the clone_pairs folder of every wave)")
     a = ap.parse_args(); os.makedirs(a.out, exist_ok=True)
     res, gates, sp = [], {}, {}
-    for w in a.wave or ["datasets/reads/sra_survey/pilot/wave1", "datasets/reads/sra_survey/pilot/wave2"]:
+    waves = a.wave or ["datasets/reads/sra_survey/pilot/wave1", "datasets/reads/sra_survey/pilot/wave2"]
+    clone_dirs = [os.path.join(a.repo, d) for d in (a.clones or ["datasets/reads/sra_survey/pilot/clone_pilot"] + [os.path.join(w, "clone_pairs") for w in waves])]
+    for w in waves:
         pick = lambda *names: next((os.path.join(w, n) for n in names if os.path.exists(os.path.join(w, n))), None)
         rf, gf = pick("results_all_final.tsv", "results_all.tsv"), pick("gates_final.tsv", "gates.tsv")
         if not (rf and gf): print("skipping", w, "(no results or gates)"); continue
@@ -98,9 +140,11 @@ def main():
              "rescued": sum(1 for r in typed if r.get("rescue"))}
         index.append(s)
         rows = [{k: r.get(k, "") for k in FIELDS} for r in runs]
-        json.dump({**s, "gate": g["reasons"], "rows": rows}, open(os.path.join(a.out, slug + ".json"), "w"), separators=(",", ":"))
+        pf = next((os.path.join(d, slug + ".pairs.tsv") for d in clone_dirs if os.path.exists(os.path.join(d, slug + ".pairs.tsv"))), None); cl = clone_groups(pf, rows) if pf else None
+        if cl: s["clone_groups"] = len(cl["groups"]); s["clone_runs"] = cl["runs"]; s["n_clones"] = cl["clones"]
+        json.dump({**s, "gate": g["reasons"], "notes": NOTES.get(slug, []), "clones": cl, "rows": rows}, open(os.path.join(a.out, slug + ".json"), "w"), separators=(",", ":"))
         with open(os.path.join(a.out, slug + ".tsv"), "w", newline="") as fh:
-            w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n"); w.writeheader(); w.writerows(rows)
+            w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n", extrasaction="ignore"); w.writeheader(); w.writerows(rows)
     allr = [r for r in res if r["state"] == "done"]
     typed = [r for r in allr if is_typed(r["call"])]; tr = [r for r in typed if r["truth"]]
     tot = {"species": len(index), "runs": len(res), "done": len(allr), "typed": len(typed), "with_assembly_call": len(tr), "agree": sum(r["verdict"] == "agree" for r in tr),

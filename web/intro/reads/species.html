@@ -26,9 +26,16 @@
   <h2>Calls by study</h2>
   <div class="chart" id="ch-study"></div><div class="legend" id="lg-study"></div>
   <p class="muted">Runs of one study are often one population or one cross; the counts are of runs sampled (at most 4 per study), not of independent strains.</p>
+  <section id="clones" hidden>
+    <h2>Clone groups</h2>
+    <p id="clone-intro"></p>
+    <div class="tablewrap"><table id="clone-tbl"></table></div>
+    <p id="clone-counts"></p>
+    <p class="muted">Groups come from a k=21 sketch of each run's reads (up to 2 million read pairs): runs whose average similarity is at least 0.998 are grouped (average linkage). Two samples of one genome often score 0.995 to 0.999, so the threshold cannot tell a copy of a strain from a very close relative with certainty. This is a pilot for six species; <a href="https://github.com/stajichlab/MATPredict/blob/main/datasets/reads/sra_survey/pilot/clone_pilot/README.md">method and calibration</a>.</p>
+  </section>
   <h2>Runs</h2>
   <div class="controls"><label>Call <select id="callf"><option value="">all</option></select></label> <label>Search <input id="q" type="search" placeholder="run, strain, study"></label> <a id="dl" href="#">Download TSV</a></div>
-  <div class="tablewrap"><table id="runs"><thead><tr><th>Run</th><th>Strain</th><th>Study</th><th>Call</th><th class="n">MAT1-1 depth</th><th class="n">MAT1-2 depth</th><th class="n">Flank depth</th><th>Assembly call</th><th>Note</th></tr></thead><tbody></tbody></table></div>
+  <div class="tablewrap"><table id="runs"><thead><tr><th>Run</th><th>Strain</th><th>Study</th><th>Call</th><th class="n">MAT1-1 depth</th><th class="n">MAT1-2 depth</th><th class="n">Flank depth</th><th>Assembly call</th><th>Clone</th><th>Note</th></tr></thead><tbody></tbody></table></div>
   <p class="muted">Depths are k-mer depths from up to 2 million read pairs. <i>Note</i>: <code>k21</code> or <code>genus_panel</code> mean the call came from a retyping pass; <code>both_vs_one</code> means both idiomorphs were seen where the assembly shows one.</p>
 </main>
 <footer class="muted">MATPredict · <a href="../about.html">About</a></footer>
@@ -57,11 +64,18 @@ const label = D.truth_label || "the detect call on an assembly of the same BioSa
 document.getElementById("agree").textContent = tr.length ? single.length - dis.length + " of " + single.length + " runs with a single-allele call match " + label + "; " + (tr.length - single.length) + " more runs with a single-allele comparison call received none" + (other ? "; " + other + " runs have a comparison call that is not a single idiomorph (both, ambiguous or not detected) and are not counted" : "") + "." : "No run in this sample has an assembly of the same BioSample to compare with.";
 if (cur) document.getElementById("why").hidden = true;
 document.getElementById("dis").innerHTML = (dis.length ? "<tr><th>Run</th><th>Strain</th><th>Reads call</th><th>Assembly call</th><th>Assembly</th></tr>" + dis.map(r => "<tr><td>" + esc(r.run) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.call) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(r.truth_assembly) + "</td></tr>").join("") : "");
+if (D.clones) {
+  const C = D.clones, sec = document.getElementById("clones"); sec.hidden = false;
+  const inGroups = C.groups.reduce((a, g) => a + g.size, 0);
+  document.getElementById("clone-intro").textContent = C.runs + " runs of this species were sketched; " + C.groups.length + (C.groups.length === 1 ? " group" : " groups") + " of near-identical runs contain " + inGroups + " of them, and " + (C.runs - inGroups) + " runs stand alone (" + C.clones + " clones in all)." + (C.plateau ? "" : " The number of clones changes a lot between thresholds 0.998 (" + C.clones + ") and 0.997 (" + C.clones_at_alt + "), so similar runs here may be close relatives and not copies: no counts per clone are given.");
+  document.getElementById("clone-tbl").innerHTML = C.groups.length ? "<tr><th>Group</th><th class=\"n\">Runs</th><th>MAT calls</th><th class=\"n\">Least similar pair</th><th>Runs in the group</th></tr>" + C.groups.map(g => "<tr><td>" + esc(g.id) + "</td><td class=\"n\">" + g.size + "</td><td>" + esc(Object.entries(g.calls).map(([k, v]) => k + " " + v).join(", ")) + "</td><td class=\"n\">" + (g.min_ani ?? "") + "</td><td>" + g.runs.map(esc).join(", ") + "</td></tr>").join("") : "";
+  document.getElementById("clone-counts").innerHTML = C.counts ? "<b>Counted once per clone</b> (single call, runs with a call only): " + Object.entries(C.counts).map(([k, v]) => esc(k) + " " + v).join(", ") + ". Compare with the run counts above; a group whose runs disagree is counted as <i>conflict</i>. These are still not population frequencies." : "";
+}
 const cf = document.getElementById("callf"), q = document.getElementById("q"); cats.forEach(c => cf.add(new Option(c, c)));
 const note = r => [r.rescue, r.verdict === "both_vs_one" ? "both_vs_one" : "", r.verdict === "DISAGREE" ? "disagrees with assembly" : "", r.flags && r.flags !== "-" ? r.flags : ""].filter(Boolean).join("; ");
 function draw() {
   const f = D.rows.filter(r => (!cf.value || r.call === cf.value) && (r.run + r.strain + r.study + r.call).toLowerCase().includes(q.value.toLowerCase()));
-  document.querySelector("#runs tbody").innerHTML = f.map(r => "<tr><td>" + (/^[SED]RR/.test(r.run) ? "<a href=\"https://www.ncbi.nlm.nih.gov/sra/" + esc(r.run) + "\">" + esc(r.run) + "</a>" : esc(r.run)) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.study) + "</td><td>" + esc(r.call || "not run") + "</td><td class=\"n\">" + esc(r.depth_1) + "</td><td class=\"n\">" + esc(r.depth_2) + "</td><td class=\"n\">" + esc(r.shared_depth) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(note(r)) + "</td></tr>").join("");
+  document.querySelector("#runs tbody").innerHTML = f.map(r => "<tr><td>" + (/^[SED]RR/.test(r.run) ? "<a href=\"https://www.ncbi.nlm.nih.gov/sra/" + esc(r.run) + "\">" + esc(r.run) + "</a>" : esc(r.run)) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.study) + "</td><td>" + esc(r.call || "not run") + "</td><td class=\"n\">" + esc(r.depth_1) + "</td><td class=\"n\">" + esc(r.depth_2) + "</td><td class=\"n\">" + esc(r.shared_depth) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(r.clone || "") + "</td><td>" + esc(note(r)) + "</td></tr>").join("");
 }
 [cf, q].forEach(e => e.addEventListener("input", draw)); draw();
 document.getElementById("dl").href = "../data/reads/" + encodeURIComponent(slug) + ".tsv"; document.getElementById("dl").download = slug + "_reads_calls.tsv";

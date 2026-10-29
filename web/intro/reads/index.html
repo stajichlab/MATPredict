@@ -15,7 +15,7 @@
   <h1>Raw reads</h1>
   <p class="lede">Which mating-type idiomorph does a strain carry, read from its public sequencing reads without assembling a genome. One report per species.</p>
   <div class="cards" id="cards"></div>
-  <div class="notice"><b>Read this first.</b> Each run is one public read set, typed with <code>matpredict reads-type</code> against a panel built from assemblies of the same species (k-mers found in only one idiomorph, with the shared flank as a depth control). The counts are of the public runs sampled, up to 50 per species and at most 4 per study: <b>they are not population frequencies</b>, and related or repeated strains are not yet separated (clone detection is in development). Agreement is measured against the <code>detect</code> call on an assembly of the same BioSample, where one exists.</div>
+  <div class="notice"><b>Read this first.</b> Each run is one public read set, typed with <code>matpredict reads-type</code> against a panel built from assemblies of the same species (k-mers found in only one idiomorph, with the shared flank as a depth control). The counts are of the public runs sampled, up to 50 per species and at most 4 per study: <b>they are not population frequencies</b>, and related or repeated strains are not yet separated (clone groups are shown on the reports of six pilot species; see each report). Agreement is measured against the <code>detect</code> call on an assembly of the same BioSample, where one exists.</div>
   <h2>Confidence of each species panel</h2>
   <p>A species panel is <b>confirmed</b> when at least 75% of its runs get a single-allele call, flank depth is adequate, both idiomorphs together are under 20% of runs, and its calls agree with assembly calls (at least 95%, with five or more comparisons). It is <b>provisional</b> when too few assembly comparisons exist, or the species is homothallic (both idiomorphs expected). It is <b>withheld</b> when any check fails; its reads are listed but no frequencies should be drawn from them.</p>
   <div class="chart" id="ch-conf"></div><div class="legend" id="lg-conf"></div>
@@ -36,7 +36,8 @@
   <ul>
     <li><b>Data:</b> public runs from the NCBI SRA (survey of fungal whole-genome Illumina sets; mutant, cross, RNA-seq and similar sets are excluded; <i>Saccharomyces cerevisiae</i> is skipped). Up to 2 million read pairs per run, streamed and discarded; only the call and depths are kept.</li>
     <li><b>Retyping:</b> a run with no call at k = 31 is retried at k = 21, then against a genus panel; the report marks these runs.</li>
-    <li><b>Not done yet:</b> clone detection, a browser version of the read typing, and species with yeast-style (MATa/alpha) nomenclature or Basidiomycota.</li>
+    <li><b>Clone groups:</b> a pilot for six species (<i>A. fumigatus</i>, <i>C. posadasii</i>, <i>F. oxysporum</i>, <i>P. roqueforti</i>, <i>T. reesei</i>, <i>V. albo-atrum</i>) groups near-identical runs from read sketches; counts per clone are given only where the grouping is stable.</li>
+    <li><b>Not done yet:</b> clone groups for the other species, a browser version of the read typing, and species with yeast-style (MATa/alpha) nomenclature or Basidiomycota.</li>
     <li>Code and details: <a href="https://github.com/stajichlab/MATPredict/tree/main/datasets/reads/sra_survey/pilot">wave notes and scripts</a>.</li>
   </ul>
   <p class="muted" id="built"></p>

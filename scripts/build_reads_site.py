@@ -5,15 +5,45 @@ Input: a wave folder of `datasets/reads/sra_survey/pilot/wave1/` (results_all_fi
     build_reads_site.py --out web/intro/data/reads [--wave datasets/reads/sra_survey/pilot/wave1]
 The pages say "confirmed / provisional / withheld"; the wave driver's gate calls them PASS / PROVISIONAL / HOLD.
 """
-import argparse, csv, json, os, re
+import argparse, csv, itertools, json, os, re, sys
 from collections import Counter
 
 CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)"}
-FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly"]
+FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly", "clone"]
 
 
 def rd(p):
     return list(csv.DictReader(open(p, newline="").read().replace("\r", "").splitlines(), delimiter="\t"))
+
+
+CLONE_ANI, CLONE_ALT, MIN_RUNS_FOR_COUNTS = 0.998, 0.997, 10
+
+
+def clone_groups(pairs_file, rows):
+    """Clone groups of one species from its saved pair identities (clone_pilot/<slug>.pairs.tsv, written by clone_clusters.py --pairs): average linkage at 0.998. Sets row["clone"] to "c<N>" for runs in a group
+    of two or more. Returns the summary for the species report. Counts per clone are given only where the number of clones is stable between 0.998 and 0.997 (a plateau: within 10% of the runs) and there are at
+    least 10 runs; where it is not, similar runs may be close relatives and not copies, and the report says so."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "datasets", "reads", "sra_survey", "pilot"))
+    import clone_clusters as cc
+    prs = [(r["run_a"], r["run_b"], float(r["ani"]) if r["ani"] else None) for r in rd(pairs_file)]
+    runs = sorted({x for p in prs for x in p[:2]}); P = {frozenset((a, b)): v for a, b, v in prs if v is not None}
+    g1 = sorted(cc.cluster(runs, prs, CLONE_ANI, "average"), key=lambda c: (-len(c), c[0])); g2 = cc.cluster(runs, prs, CLONE_ALT, "average")
+    by = {r["run"]: r for r in rows}; groups = []
+    for i, c in enumerate(g1, 1):
+        if len(c) < 2: continue
+        vals = [P[frozenset(q)] for q in itertools.combinations(c, 2) if frozenset(q) in P]
+        for x in c:
+            if x in by: by[x]["clone"] = f"c{i}"
+        groups.append({"id": f"c{i}", "size": len(c), "runs": sorted(c), "calls": dict(Counter(by[x]["call"] for x in c if x in by)), "min_ani": round(min(vals), 4) if vals else None})
+    plateau = abs(len(g1) - len(g2)) <= 0.10 * len(runs) and len(runs) >= MIN_RUNS_FOR_COUNTS
+    out = {"threshold": CLONE_ANI, "linkage": "average", "runs": len(runs), "clones": len(g1), "clones_at_alt": len(g2), "alt_threshold": CLONE_ALT, "groups": groups, "plateau": plateau, "counts": None}
+    if plateau:
+        cnt = Counter()
+        for c in g1:
+            calls = {by[x]["call"] for x in c if x in by and by[x]["call"] in ("MAT1-1", "MAT1-2", "both")}
+            if calls: cnt[next(iter(calls)) if len(calls) == 1 else "conflict"] += 1
+        out["counts"] = dict(cnt)
+    return out
 
 
 def reason(r):
@@ -67,7 +97,7 @@ def curated(c, repo, out):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--wave", default="datasets/reads/sra_survey/pilot/wave1"); ap.add_argument("--out", required=True); ap.add_argument("--repo", default=".")
+    ap.add_argument("--wave", default="datasets/reads/sra_survey/pilot/wave1"); ap.add_argument("--out", required=True); ap.add_argument("--repo", default="."); ap.add_argument("--clones", default="datasets/reads/sra_survey/pilot/clone_pilot", help="folder with <slug>.pairs.tsv files")
     a = ap.parse_args(); os.makedirs(a.out, exist_ok=True)
     res = rd(os.path.join(a.wave, "results_all_final.tsv")); gates = {r["slug"]: r for r in rd(os.path.join(a.wave, "gates_final.tsv"))}
     sp = {r["slug"]: r for r in rd(os.path.join(os.path.dirname(a.wave.rstrip("/")), "wave1_species.tsv"))}
@@ -86,9 +116,11 @@ def main():
              "MAT1-1": c["MAT1-1"], "MAT1-2": c["MAT1-2"], "both": c["both"], "none": c["none"], "low_depth": c["low_depth"],
              "with_assembly_call": len(truth), "agree": sum(r["verdict"] == "agree" for r in truth), "disagree": sum(r["verdict"] == "DISAGREE" for r in truth),
              "rescued": sum(1 for r in typed if r.get("rescue"))}
-        index.append(s)
         rows = [{k: r.get(k, "") for k in FIELDS} for r in runs]
-        json.dump({**s, "gate": g["reasons"], "rows": rows}, open(os.path.join(a.out, slug + ".json"), "w"), separators=(",", ":"))
+        pf = os.path.join(a.repo, a.clones, slug + ".pairs.tsv"); cl = clone_groups(pf, rows) if os.path.exists(pf) else None
+        if cl: s["clone_groups"] = len(cl["groups"]); s["clone_runs"] = cl["runs"]
+        index.append(s)
+        json.dump({**s, "gate": g["reasons"], "clones": cl, "rows": rows}, open(os.path.join(a.out, slug + ".json"), "w"), separators=(",", ":"))
         with open(os.path.join(a.out, slug + ".tsv"), "w", newline="") as fh:
             w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n"); w.writeheader(); w.writerows(rows)
     allr = [r for r in res if r["state"] == "done"]

@@ -714,7 +714,9 @@ loci:
     # A genus scope is deferred until a record from a distant Ogataea clade exists, and the question whether
     # such calls are reported as a "locus detection" or have their confidence capped below an identity/coverage floor
     # is OPEN with the curator.
-    taxonomic_scope: [460523, 870730, 1005962, 2053387]
+    # CURATOR DECISION, J. Stajich, 2026-10-29 (#189): the genus Ogataea (461281) is in the scope, so every Ogataea genome is
+    # searched with this family (the cassette pairs, results/2026-10-29_yeast_routing/ogataea_pichia_reference_check.md).
+    taxonomic_scope: [460523, 870730, 1005962, 2053387, 461281]
     # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
     fallback_subphylum: 147537  # Saccharomycotina
     fallback_searchable: false

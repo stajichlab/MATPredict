@@ -11,9 +11,13 @@ PAP1, OBP1, PIK1 neighbours, 17 without). With the policy `on`, after every call
 
 1. **Cross-calls.** Two families calling overlapping loci (overlap of 0.9 or more of the shorter
    locus, on one contig) are one locus. The call from the family whose `taxonomic_scope` contains the
-   genome is kept; if neither or both families are scoped to it, the better-scoring call is kept
-   (locus class, then confidence tier, then polished genes, then genes found, then the family name).
-   The other call is not lost: it is recorded on the kept call as `cross_call`.
+   genome is kept. If neither or both families are scoped to it, the call whose best core gene has the
+   higher identity is kept (curator's decision, 2026-10-29: the confidence tier is not comparable across
+   families, so it no longer decides). When the best identities are within `NEAR_TIE_POINTS` (3), the
+   call from the family that declares no `confirm_outside_scope` rule is kept, else the better score
+   (locus class, tier, polished genes, genes found, family name), and the kept call is flagged
+   `family_unconfirmed` (reason `cross_call_near_tie`). The other call is not lost: it is recorded
+   on the kept call as `cross_call`.
 2. **Family status.** A call from a family that declares `confirm_outside_scope` (MTL) in a genome
    outside its scope is `family_unconfirmed` (reason `<family>_outside_scope`). It becomes
    `family_confirmed` when at least `min_flank_genes` of the declared flank genes (PAP1, OBP1, PIK1)
@@ -34,6 +38,9 @@ POLICY_OFF = "off"
 POLICY_ON = "on"
 CROSS_FAMILY_POLICIES = (POLICY_OFF, POLICY_ON)
 DEFAULT_CROSS_FAMILY_POLICY = POLICY_OFF
+
+#: Best-core-identity difference (percentage points) at or below which two cross-called families are a near tie.
+NEAR_TIE_POINTS = 3.0
 
 #: Fraction of the shorter locus that two calls must share to count as one locus.
 MIN_OVERLAP = 0.9
@@ -91,6 +98,11 @@ def _groups(results: list) -> list[list[int]]:
     return [g for g in out.values() if len({results[i].family_key for i in g}) > 1]
 
 
+def _best_core_identity(r) -> float:
+    ids = [e.identity for e in r.gene_evidence if e.role == "core_MAT" and e.lost_to is None and e.identity is not None]
+    return max(ids) if ids else 0.0
+
+
 def _note(r) -> dict:
     return {"family": f"{r.family_key.phylum}:{r.family_key.locus_name}", "idiomorph": r.idiomorph,
             "confidence": r.confidence, "locus_class": r.locus_class, "contig": r.contig,
@@ -105,11 +117,32 @@ def resolve_cross_calls(results: list, families: list, lineage: set[int]) -> lis
         family = by_key.get(r.family_key)
         return bool(lineage and family and lineage & set(family.taxonomic_scope))
 
+    def needs_confirmation(r) -> bool:
+        family = by_key.get(r.family_key)
+        return bool(getattr(family, "confirm_outside_scope", None))
+
     drop: set[int] = set()
     kept: dict[int, list[dict]] = {}
     for group in _groups(results):
-        best = min(group, key=lambda i: (0 if in_scope(results[i]) else 1, _score(results[i])))
-        kept[best] = [_note(results[i]) for i in sorted(group) if i != best]
+        scoped = [i for i in group if in_scope(results[i])]
+        near_tie = False
+        if scoped:
+            best = min(scoped, key=lambda i: _score(results[i]))
+        else:
+            top = max(_best_core_identity(results[i]) for i in group)
+            close = [i for i in group if top - _best_core_identity(results[i]) <= NEAR_TIE_POINTS]
+            near_tie = len(close) > 1
+            pool = [i for i in close if not needs_confirmation(results[i])] or close
+            best = min(pool, key=lambda i: _score(results[i])) if near_tie else close[0]
+        notes = []
+        for i in sorted(group):
+            if i != best:
+                note = _note(results[i])
+                note["best_core_identity"] = round(_best_core_identity(results[i]), 2)
+                if near_tie:
+                    note["near_tie"] = True
+                notes.append(note)
+        kept[best] = notes
         drop.update(i for i in group if i != best)
     return [replace(r, cross_call=kept[i]) if i in kept else r for i, r in enumerate(results) if i not in drop]
 
@@ -137,6 +170,9 @@ def flag_family_status(results: list, families: list, lineage: set[int]) -> list
     for r in results:
         family = by_key.get(r.family_key)
         rule = getattr(family, "confirm_outside_scope", None)
+        if any(c.get("near_tie") for c in r.cross_call) and not (rule and lineage and not lineage & set(family.taxonomic_scope)):
+            out.append(replace(r, family_status={"status": STATUS_UNCONFIRMED, "reason": "cross_call_near_tie"}))
+            continue
         if not rule or not lineage or lineage & set(family.taxonomic_scope):
             out.append(r)
             continue

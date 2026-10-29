@@ -48,11 +48,11 @@ def test_cross_call_keeps_the_family_scoped_to_the_genome():
     assert out[0].cross_call[0]["family"] == "Ascomycota:MTL"
 
 
-def test_cross_call_neither_scoped_keeps_the_better_score():
+def test_cross_call_without_gene_evidence_is_a_near_tie_and_keeps_the_family_without_a_rule():
     sc, mtl = _call(SC, 100, 5000, confidence="medium"), _call(MTL, 120, 5000, confidence="high")
     out = fs.resolve_cross_calls([sc, mtl], FAMILIES, {OTHER})
-    assert [r.family_key for r in out] == [MTL]
-    assert out[0].cross_call[0]["family"] == "Ascomycota:MATsc"
+    assert [r.family_key for r in out] == [SC]
+    assert out[0].cross_call[0]["family"] == "Ascomycota:MTL" and out[0].cross_call[0]["near_tie"] is True
 
 
 def test_cross_call_needs_90_percent_overlap_on_the_same_contig():
@@ -144,3 +144,35 @@ def test_one_call_or_two_of_the_same_idiomorph_is_not_a_cassette():
 def test_a_family_without_cassette_report_is_never_indicated():
     out = fs.apply([_call(SC, 1, 100, contig="c1"), _call(SC, 1, 100, contig="c2")], FAMILIES, {OTHER}, "on")
     assert all(r.cassette is None for r in out)
+
+
+def _scored(key, start, end, identity, confidence="high"):
+    from dataclasses import replace
+    c = _call(key, start, end, [_gene("G1", "core_MAT", start, end)], confidence=confidence)
+    g = replace(c.gene_evidence[0], identity=identity)
+    return replace(c, gene_evidence=[g])
+
+
+def test_higher_core_identity_wins_not_the_tier():
+    sc, mtl = _scored(SC, 100, 5000, 60.0, "medium"), _scored(MTL, 100, 5000, 50.0, "high")
+    out = fs.resolve_cross_calls([sc, mtl], FAMILIES, {OTHER})
+    assert [r.family_key for r in out] == [SC]
+    assert out[0].cross_call[0]["best_core_identity"] == 50.0 and "near_tie" not in out[0].cross_call[0]
+
+
+def test_near_tie_keeps_the_family_without_a_confirmation_rule_and_flags_it():
+    sc, mtl = _scored(SC, 100, 5000, 48.0, "medium"), _scored(MTL, 100, 5000, 50.0, "high")
+    out = fs.apply([sc, mtl], FAMILIES, {OTHER}, "on")
+    assert [r.family_key for r in out] == [SC]
+    assert out[0].family_status == {"status": fs.STATUS_UNCONFIRMED, "reason": "cross_call_near_tie"}
+    assert out[0].cross_call[0]["near_tie"] is True
+
+
+def test_exactly_equal_identity_is_a_near_tie():
+    sc, mtl = _scored(SC, 100, 5000, 50.0, "medium"), _scored(MTL, 100, 5000, 50.0, "high")
+    assert [r.family_key for r in fs.resolve_cross_calls([sc, mtl], FAMILIES, {OTHER})] == [SC]
+
+
+def test_scope_still_beats_identity():
+    sc, mtl = _scored(SC, 100, 5000, 30.0, "low"), _scored(MTL, 100, 5000, 90.0, "high")
+    assert [r.family_key for r in fs.resolve_cross_calls([sc, mtl], FAMILIES, {SACCHAROMYCETACEAE})] == [SC]

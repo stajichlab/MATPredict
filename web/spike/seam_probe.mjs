@@ -7,7 +7,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, basename } from "node:path";
 
 const REPO = new URL("../../", import.meta.url).pathname;
-const wheel = join(REPO, "web/spike/dist/matpredict-0.7.0-py3-none-any.whl");
+const wheel = join(REPO, "web/spike/dist/matpredict-0.7.1-py3-none-any.whl");
 const dbDir = join(REPO, "db");
 const genome = join(REPO, "testset/MAT_loci3.fasta");
 

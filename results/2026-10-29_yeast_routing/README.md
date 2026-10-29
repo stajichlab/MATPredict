@@ -36,11 +36,31 @@ makes it from the three result folders on HPCC. Both jobs finished (354 of 354 g
 4. The no-call control stays empty in both versions, so routing did not introduce calls where
    there were none.
 
+## The 22 MTL-only calls: flanking-gene check
+
+`flank_search.py` takes 60 kb either side of each v0.7.0 MTL locus and searches it with miniprot for the
+Candida albicans MTL neighbours PAP1, OBP1 and PIK1 (`flank_refs.faa`, from the database records
+5476_sc5314_MTL_A, 5476_sc5314_MTL_alpha and 36911_cl143_MTL_A). Results are in `flank_search.tsv`
+(contig length and distance to each contig end are included). The search reproduces every flank gene the
+detector had already found and adds none.
+
+| flank genes found | genomes | what it means |
+|---|---|---|
+| 3 of 3 (PAP1, OBP1, PIK1) | 5 | the C. albicans arrangement (PAP1, OBP1, PIK1, then the MTL genes, within about 8 kb) in five independent genomes: GCA_030705185.1 and GCA_030571215.1 ([Candida]), GCA_029290875.1, GCA_029300705.1 and GCA_029300795.1 (Saccharomycetales). Genuine MTL loci. |
+| 1 of 3 (PIK1) | 2 | GCA_029296565.1 and GCA_029293515.1 (same contig length and coordinates, so near-identical assemblies). PIK1 then MTLA2, MTLA1, 232 bp from the contig end, so PAP1 and OBP1 would be off the contig. Consistent with a real locus; cannot be confirmed. |
+| 0 | 15 | no PAP1, OBP1 or PIK1. In 7 of these the locus is within about 600 bp of a contig end or the contig is under 7 kb, so the check says nothing. In 8 there is room (12 to 40 kb on at least one side) and no flank was found: GCA_047716205.1, GCA_031125705.1 (Saccharomycopsis), GCA_004195225.1 (Petasospora), GCA_003706265.2 (Nakazawaea), GCA_030574195.1 (Groenewaldozyma), GCA_030583325.1 (Saccharomycopsis), GCA_003706705.3 (Barnettozyma), GCA_030564985.1 (Saccharomycopsis). |
+
+The 8 with room and no flank may carry a different layout (these genera are outside Serinales, where the
+neighbours need not be PAP1, OBP1 and PIK1), or may be false matches from MTLA1 and MTLA2 homology; the
+data here does not separate the two. They are the ones to check against a reference genome of the same genus.
+
+**Decision (curator, in this conversation): all 22 stay as calls but are marked provisional**, with the five
+three-flank loci eligible for promotion by the flank rule in `RULE_DRAFT.md`.
+
 ## What this does not decide
 
-- Whether the 22 MTL-only calls are genuine. If they are, MTL has to stay searchable for them and
-  the cross-call needs a different rule (prefer the family whose taxonomic scope contains the genome,
-  fall back to MTL only when the scoped family has no call).
+- Which of the 15 MTL-only calls without flank genes are real (see above). The routing rule in
+  `RULE_DRAFT.md` keeps MTL searchable and marks them provisional.
 - Whether two MATog loci in Ogataea are expected. Needs the Ogataea polymorpha reference layout.
 - The 35 genomes still showing two MATsc loci under v1.
 

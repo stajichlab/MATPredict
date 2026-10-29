@@ -99,3 +99,25 @@ With Ogataea routed to MATog no MATsc call remains in those genomes. The scope c
 `mtl_vs_matsc_side_by_side.txt` lists both calls of each genome (same coordinates in every case). MTL wins on the tier
 (MTL `high`, MATsc `medium`); neither family has a profile classifier (`idiomorph_classifier` is null for both), so no classifier scores exist to compare.
 By the best core-gene identity of each family's call: MATsc is higher in 13 genomes (Ogataea 5, Williopsis 2, Taiozyma 2, Wickerhamomyces, Barnettozyma, Kregervanrija, [Candida]), MTL in 10 (Saccharomycopsis 5, Barnettozyma 2, Petasospora, Gotozyma, Ambrosiozyma), 2 are equal. Identities are measured against different reference sets, so they are not strictly comparable.
+
+## Replay with the decided rules (branch `family-unconfirmed`, `--preset v0.8`; `v5_replay_summary.txt`)
+
+The curator's decisions of 2026-10-29 are in: cross-call ties go to the higher best core identity (within 3 points the family without a
+confirmation rule, MATsc, wins and the call is flagged `family_unconfirmed`), and Ogataea (461281) is in the MATog scope.
+
+| group | n | two or more loci: v0.7.0 / now | no call: v0.7.0 / now | confidence changed |
+|---|---|---|---|---|
+| cross-called | 181 | 181 / 51 | 0 / 0 | 7 (Ogataea, now MATog) |
+| MTL only | 22 | 0 / 0 | 0 / **1** | 0 |
+| MATsc only (control) | 40 | 3 / 6 | 0 / 0 | 2 (Ogataea) |
+| no call (control) | 25 | 0 / 0 | 25 / 25 | 0 |
+| Ogataea | 99 | 31 / 54 | 6 / 7 | 13 |
+
+- All 22 genomes whose confidence changed are Ogataea genomes that MATog now calls instead of MATsc; no other genome changes confidence.
+- The 25 genomes where MTL previously won on tier: 8 now keep MATsc, 3 keep MATsc flagged as a near tie, 8 keep MTL (flagged), 5 are Ogataea and
+  now MATog, and 1 keeps both families as separate loci.
+- **One call is lost**: GCA_019232045.1 (Ogataea, Wolfe_Odeg_UCD465). It had an MTL-only alpha locus 73 bp from a contig end; with Ogataea routed to MATog,
+  MTL is no longer searched and MATog finds nothing. One genome of 99, but it is a real loss of a call that the Ogataea scope change causes.
+- **The flag is common**: in the 181 cross-called genomes 103 of 239 loci are `family_unconfirmed` (MTL 61, MATsc near-tie 42). The near-tie flag
+  marks more calls than the MTL-outside-scope flag did (the earlier replay: 51). The curator may want a stricter near-tie margin than 3 points.
+- Ogataea with two or more loci goes from 31 to 54: these are the MATa and MATalpha cassette pairs.

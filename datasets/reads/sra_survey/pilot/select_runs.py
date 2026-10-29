@@ -20,6 +20,7 @@ def main():
     ap.add_argument("--min-gb", type=float, default=0.6); ap.add_argument("--max-gb", type=float, default=12); ap.add_argument("--target-gb", type=float, default=3)
     ap.add_argument("--names", nargs=2, default=["MAT1-1", "MAT1-2"], help="the panel's two idiomorph names (truth is balanced between them and written in these spellings)")
     ap.add_argument("--classes", nargs="+", default=["mat_locus", "partial_locus"], help="locus classes that give a truth idiomorph")
+    ap.add_argument("--exclude-studies", default="", help="comma-separated study accessions to drop although studies.tsv does not flag them (for example a mutagenesis or a cross study the filter missed)")
     ap.add_argument("--include", default=""); ap.add_argument("--seed", type=int, default=11)
     a = ap.parse_args()
     asm = {}
@@ -36,6 +37,7 @@ def main():
             if bs: truth[bs].add(nm(r["idiomorph"])); gen_of[bs] = r["genome"]
     flagged = {r["study"] for r in csv.DictReader(open(a.studies), delimiter="\t") if r["species"] == a.species and r["excluded_as"]}
     meta = {m["run_accession"]: m for m in csv.DictReader(open(a.meta), delimiter="\t")}
+    flagged |= {x for x in a.exclude_studies.split(",") if x}
     inc = {x for x in a.include.split(",") if x}
     best = {}
     for r in csv.DictReader(open(a.runs), delimiter="\t"):

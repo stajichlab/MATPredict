@@ -1,0 +1,10 @@
+# Botrytis cinerea B05.10 reads typed `none`: the MAT locus core is missing from the reads (2026-10-28)
+
+Three runs of study PRJNA1132156 ("UV mutagenesis on Botrytis cinerea to generate pyridazine carboxamides resistance", strain B05.10: SRR29713116 = WT HWD-38, SRR29713114 = mutant M7, SRR29713115 = mutant M3) were called `none` by the reads panel, with flank depth 11-12x and MAT1-1 breadth 0.17-0.28 at depth 0.23-0.77.
+
+Checks (HPCC, `results/sra_reads_typing/waves/wave2/botrytis/`):
+1. BLASTN of the panel (L1) against the B05.10 reference assembly GCF_000143535.2: the MAT1-1 core (4,754 bp) aligns end to end at 99.7% to `NC_037310.1:812478-817230`, both MAT1-1 flanks at 99.8-99.9% (`806478-812477`, `817231-821303`). The MAT1-2 core matches only two pieces (1,165 bp at 97.2%, 875 bp at 96.5%), the MAT1-2-1 remnant inside the MAT1-1 locus. The reference assembly is a clean MAT1-1 match; `detect` calls it MAT1-1 (`MAT1-1-1`, `MAT1-2-1`, `MAT1-1-5` with `APN2`, `SLA2`, `COX13`).
+2. The reference assembly typed with the same panel (`assembly_panel_check.py`): MAT1-1, breadth 0.958, MAT1-2 breadth 0.
+3. The WT run (SRR29713116, 4 M spots) mapped to the reference with minimap2 (`-ax sr`): genome mean depth 11.2x; left flank 24.1x, right flank 21.7x, **MAT1-1 core 0.7x**. Per kb: 808-809 kb 80x, 809-810 kb 47x, 810-811 kb 4x, 811-812 kb 6x, 812-813 kb 0.1x, 813-814 kb 1.0x, 814-815 kb 1.7x, 815-816 kb 0.2x, 816-817 kb 0.2x, 817-818 kb 6x, 818-820 kb 30-32x.
+
+Reading: the reads of this lab line lack roughly 6-7 kb of the reference MAT locus (about 810.5-817.5 kb), so `none` is the correct answer for these reads, not a panel failure; the same holds for the two mutants, so it is a property of the stock, not of the mutagenesis. Not tested: whether the deletion is real in the strain, an assembly of the reads across the junction, or the other B05.10-labelled stocks (this study has the only three B05.10 runs in the survey). The study was not flagged by the survey's mutant filter ("UV mutagenesis"); it is excluded from the all-strains Botrytis run, as is the "Bc116 x Bc448" cross study (PRJNA1224713).

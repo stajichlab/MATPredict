@@ -1,0 +1,22 @@
+genomes 354 354
+genomes whose cross-called loci keep two different families: v5 4 v8 0
+v8 loci with family_ambiguous: 156 in 140 genomes; kept family Counter({'MATsc': 91, 'MTL': 65})
+kept call has the lower identity: 1
+gap (kept minus other), min/median/max: -1.5 5.29 64.41
+family_status v8: {':': 345, 'family_unconfirmed:mtl_outside_scope': 89, 'family_confirmed:mtl_outside_scope': 5}
+family_status v5: {':': 317, 'family_unconfirmed:cross_call_near_tie': 42, 'family_unconfirmed:mtl_outside_scope': 75, 'family_confirmed:mtl_outside_scope': 5}
+genomes whose calls differ: 14
+  GCA_001936135.1_KJJ81 [('MTL', 'alpha'), ('MATsc', 'MATalpha')] => [('MTL', 'alpha'), ('MTL', 'alpha')]
+  GCA_003706315.3_ASM370631v3 [('MATsc', 'MATalpha'), ('MTL', 'A')] => [('MTL', 'alpha'), ('MTL', 'A')]
+  GCA_030557395.1_ASM3055739v1 [('MTL', 'A'), ('MATsc', 'MATalpha')] => [('MTL', 'A'), ('MTL', 'alpha')]
+  GCA_030567455.1_ASM3056745v1 [('MATsc', 'MATa')] => [('MTL', 'A')]
+  GCA_030570795.1_ASM3057079v1 [('MATsc', 'MATa')] => [('MTL', 'alpha')]
+  GCA_030574715.1_ASM3057471v1 [('MATsc', 'MATa'), ('MATsc', 'MATalpha')] => [('MTL', 'A'), ('MATsc', 'MATalpha')]
+  GCA_030579955.1_ASM3057995v1 [('MTL', 'A'), ('MATsc', 'MATalpha')] => [('MTL', 'A'), ('MTL', 'alpha')]
+  GCA_030580455.1_ASM3058045v1 [('MATsc', 'MATa')] => [('MTL', 'A')]
+  GCA_037355565.1_Ssch_CD502 [('MATsc', 'MATalpha')] => [('MTL', 'alpha')]
+  GCA_041498895.1_ASM4149889v1 [('MATsc', 'MATa')] => [('MTL', 'A')]
+  GCA_054085685.1_DORT_Sapseu_12645 [('MATsc', 'MATalpha')] => [('MTL', 'alpha')]
+  GCA_054085705.1_DORT_Sapseu_12643 [('MATsc', 'MATalpha')] => [('MTL', 'alpha')]
+  GCA_054953955.1_ASM5495395v1 [('MTL', 'alpha'), ('MTL', 'alpha'), ('MTL', 'alpha'), ('MTL', 'alpha'), ('MTL', 'A'), ('MATsc', 'MATalpha'), ('MTL', 'alpha')] => [('MTL', 'alpha'), ('MTL', 'alpha'), ('MTL', 'alpha'), ('MTL', 'alpha'), ('MTL', 'A'), ('MTL', 'alpha'), ('MTL', 'alpha')]
+  GCF_020623625.1_UHD_SCDLUD_16 [('MATsc', 'MATalpha')] => [('MTL', 'alpha')]

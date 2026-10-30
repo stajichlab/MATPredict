@@ -200,6 +200,8 @@ def write_detection_gff3(
                 attrs += ";cassette=" + r.cassette["idiomorph"] + "_cassette"
             if getattr(r, "cross_call", None):
                 attrs += ";cross_call=" + ",".join(c["family"] for c in r.cross_call)
+            if getattr(r, "family_ambiguous", None):
+                attrs += ";family_ambiguous=" + "|".join(f"{f}:{v}" for f, v in r.family_ambiguous["identities"].items())
             lines.append("\t".join([
                 contig, "MATPredict", "MAT_locus", str(start), str(end), ".", ".", ".", attrs,
             ]))
@@ -357,6 +359,7 @@ def _result_doc(r: DetectionResult) -> dict:
         **({"family_status": r.family_status} if getattr(r, "family_status", None) else {}),
         **({"cross_call": list(r.cross_call)} if getattr(r, "cross_call", None) else {}),
         **({"cassette": r.cassette} if getattr(r, "cassette", None) else {}),
+        **({"family_ambiguous": r.family_ambiguous} if getattr(r, "family_ambiguous", None) else {}),
         # Same-locus calls folded into this one (curator's ruling 2026-09-27;
         # see `locus_merge`). Empty list when unmerged.
         "merged_from": r.merged_from,

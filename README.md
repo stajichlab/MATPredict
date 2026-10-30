@@ -37,6 +37,7 @@ Changes: [CHANGELOG.md](CHANGELOG.md).
 3. **Typing.** Classify each locus by the mating-type naming scheme of its group
    (for example Plus/Minus, MAT1-1/MAT1-2, HD/PR alleles), and report when the
    evidence is not enough to decide.
+   Idiomorph labels (`Lineage__System_Cell`) are computed on output from the raw names by a versioned registry; see the [naming note](docs/notes/2026-10-28_idiomorph-naming-proposal.md).
 4. **Standard reports.** Extract the locus region and its genes, and report them
    in a standard format with figures and tables. Report uncalled genomes with a
    reason, and two idiomorphs in one genome as a flag for review.

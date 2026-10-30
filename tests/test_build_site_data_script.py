@@ -343,3 +343,20 @@ def test_idiomorph_labels_sit_beside_the_raw_names(tmp_path):
     assert G["A2"]["call"] == G["A2"]["call_label"] == "uncalled"
     assert _genomes(out / "genomes_bfd_basidio.tsv")["B1"]["call_label"] == "undetermined"     # undetermined idiomorph: no allele to label
     assert any(S[int(k)] == "two:Peziz__BipMay_MAT1-1+Peziz__BipMay_MAT1-2" for r in taxa["rows"] for k in r[16])      # A1 carries both idiomorphs
+
+
+def test_label_status_and_registry_version_reach_the_site_data(tmp_path):
+    """#210/#211: registry_version in summary.json, the tooltip file and every genome table row; label_status per genome and loci per status per label."""
+    out = tmp_path / "out"
+    bsd.main(["--release", "v060", "--out", str(out)] + _campaigns(tmp_path))
+    version = bsd.LABELS.registry_version()
+    assert json.loads((out / "summary.json").read_text())["registry_version"] == version
+    j = json.loads((out / "idiomorph_labels.json").read_text())
+    assert j["registry_version"] == version and j["status_order"][0] == "family_unconfirmed" and j["status_order"][-1] == "ok"
+    assert all(set(v["status"]) <= set(j["status_order"]) for v in j["labels"].values())
+    assert j["labels"]["Peziz__BipMay_MAT1-1"]["status"]
+    for name in ("genomes_bfd_asco.tsv", "genomes_bfd_basidio.tsv"):
+        G = _genomes(out / name)
+        assert {r["registry_version"] for r in G.values()} == {version}
+        assert {r["label_status"] for r in G.values()} <= set(j["status_order"]) | {""}
+    assert _genomes(out / "genomes_bfd_asco.tsv")["A2"]["label_status"] == ""         # an uncalled genome has no loci

@@ -59,6 +59,7 @@ from collections import Counter, defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import idiomorph_labels as LABELS     # labels beside the raw names (scripts/idiomorph_label_registry.json); output only
+import label_loci_table as LOCI_LABELS     # per-locus label_status (#211) and registry_version (#210)
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 R = os.path.join(REPO, "results")
@@ -157,6 +158,7 @@ def loci_by_genome(rows, genome_col="genome"):
 
 
 LABEL_RAW = defaultdict(set)      # label -> {raw name (family)}, written to data/idiomorph_labels.json
+LABEL_STATUS = defaultdict(Counter)   # label -> {label_status: loci}, written to data/idiomorph_labels.json (the explorer's marker and tooltip)
 
 
 def locus_labels(ls, family_col="family_called", class_value=None):
@@ -182,13 +184,22 @@ def resolve_labels(alleles, counter):
 
 GENOME_COLS = ["dataset", "genome", "species", "species_recorded", "phylum", "class", "order", "family", "genus", "status", "call", "alleles",
                "locus_types", "n_loci", "best_confidence", "loci", "n_label_unsupported", "tier_notes", "high_basis",
-               "loci_baseline_confidence", "locus_notes", "n_defective_loci", "call_label", "alleles_label"]
+               "loci_baseline_confidence", "locus_notes", "n_defective_loci", "call_label", "alleles_label", "label_status", "label_reasons", "registry_version"]
 _CONF = {"high": 3, "medium": 2, "low": 1}
 NOTE_COLS = ("tier_note", "label_unsupported_reason", "high_basis", "baseline_confidence", "high_basis_outside_scope",
              "defective_genes")
 
 
-def genome_row(ds_id, genome, species, phylum, cls, order, family, status, called, alleles, types, loci, notes=None, labels=()):
+def genome_label_status(ls):
+    """(label_status, label_reasons) of a genome: the first status of its loci in LABELS.STATUS_ORDER, and every reason of every locus ('' for a genome without loci)."""
+    if not ls:
+        return "", ""
+    first = min((l["label_status"] for l in ls), key=LABELS.STATUS_ORDER.index)
+    reasons = sorted({x for l in ls for x in l["label_reasons"].split(";") if x}, key=LABELS.STATUS_ORDER.index)
+    return first, ";".join(reasons)
+
+
+def genome_row(ds_id, genome, species, phylum, cls, order, family, status, called, alleles, types, loci, notes=None, labels=(), label_state=("", "")):
     """loci: list of (contig, start, end, idiomorph, confidence, locus_class); notes: one tuple per locus, in the
     order of NOTE_COLS (tier_note, label_unsupported_reason, high_basis, baseline_confidence, high_basis_outside_scope,
     defective_genes; [] for a genome without loci), or None when the tables have no such columns."""
@@ -202,7 +213,7 @@ def genome_row(ds_id, genome, species, phylum, cls, order, family, status, calle
     row = [ds_id, genome, species_of(species), species, phylum, cls, order, family, genus_of(species), status, call, ",".join(sorted(alleles)),
            ",".join(sorted(set(types))), len(loci), best, ";".join(f"{c}:{a}-{b}|{i or 'undetermined'}|{cf}|{lc}" for c, a, b, i, cf, lc in loci)]
     call_label = "+".join(sorted(labels)) if called and alleles and labels else call
-    tail = [call_label, ",".join(sorted(labels))]
+    tail = [call_label, ",".join(sorted(labels)), label_state[0], label_state[1], LABELS.registry_version()]
     if notes is None:
         return row + ["", "", "", "", "", ""] + tail
     return row + [sum(bool(n[1]) for n in notes), "|".join(sorted({n[0] for n in notes if n[0]})),
@@ -347,7 +358,7 @@ def main(argv=None):
 
     agg = Agg()
     grows = defaultdict(list)
-    summary = {"datasets": {}, "generated": datetime.date.today().isoformat(),
+    summary = {"datasets": {}, "generated": datetime.date.today().isoformat(), "registry_version": LABELS.registry_version(),
                "release": {"name": rel["name"],
                            "code": rel["code"] if len(set(rel["codes"].values())) == 1 else "mixed: " + "; ".join(
                                f"{k} {v}" for k, v in rel["codes"].items()),
@@ -384,7 +395,15 @@ def main(argv=None):
             ("bfd_asco", "BFD Ascomycota", "Ascomycota", "asco", lambda ls, called: ["MAT locus"] if called else []),
             ("bfd_basidio", "BFD Basidiomycota", "Basidiomycota", "basidio", lambda ls, called: [strip_family(l["family_called"]) for l in ls])):
         folder = rel[key_]
-        genomes, loci = tsv(os.path.join(folder, "genomes.tsv")), loci_by_genome(tsv(os.path.join(folder, "loci.tsv")))
+        genomes = tsv(os.path.join(folder, "genomes.tsv"))
+        locus_rows = tsv(os.path.join(folder, "loci.tsv"))
+        gclass = {g["genome"]: clean(g["class_"]) for g in genomes}
+        for l in locus_rows:      # the class that picks the Pezizomycotina system is the genome's, as for the labels beside the raw names
+            l["class_"] = gclass.get(l["genome"], l.get("class_", ""))
+        LOCI_LABELS.label_rows(locus_rows)       # label_status, label_reasons and registry_version per locus
+        for l in locus_rows:
+            LABEL_STATUS[l["idiomorph_label"]][l["label_status"]] += 1
+        loci = loci_by_genome(locus_rows)
         noted = has_notes(os.path.join(folder, "loci.tsv"))
         s = dataset(ds_id, label, phylum, "BFD", rel["codes"][key_], len(genomes))
         for g in genomes:
@@ -398,7 +417,8 @@ def main(argv=None):
             agg.add(key, called, alleles, types, any(n[1] for n in notes or ()), [n[4] for n in notes or () if n[4]], labels)
             grows[ds_id].append(genome_row(ds_id, g["genome"], g["species"], phylum, clean(g["class_"]), clean(g["order"]), clean(g["family"]),
                                            g["status"], called, alleles, types,
-                                           [(l["contig"], l["start"], l["end"], l["idiomorph"], l["confidence"], l["locus_class"]) for l in ls], notes, labels))
+                                           [(l["contig"], l["start"], l["end"], l["idiomorph"], l["confidence"], l["locus_class"]) for l in ls], notes, labels,
+                                           genome_label_status(ls)))
             s["status"][g["status"]] += 1
             s["routing"][g["routing"] or "unrecorded"] += 1
             for l in ls:
@@ -429,11 +449,15 @@ def main(argv=None):
         notes = locus_notes(loc, noted)
         key = (source, phylum, "Mucoromycotina", order, family, genus_of(name), species_of(name), src)
         labels = resolve_labels(alleles, locus_labels([dict(l, family_called="Mucoromycota:MAT") for l in loc]))
+        muc = [dict(l, family_called="Mucoromycota:MAT", contig=l["contig"], start=l["locus_start"], end=l["locus_end"], class_="") for l in loc]
+        LOCI_LABELS.label_rows(muc)
+        for l in muc:
+            LABEL_STATUS[l["idiomorph_label"]][l["label_status"]] += 1
         agg.add(key, called, alleles, ["sexP/sexM MAT locus"] if called else [], any(n[1] for n in notes or ()), (), labels)
         grows[ds_id].append(genome_row(ds_id, genome, name, phylum, "Mucoromycotina", order, family, "called" if called else "uncalled", called, alleles,
                                        ["sexP/sexM MAT locus"] if called else [],
                                        [(l["contig"], l["locus_start"], l["locus_end"], l["idiomorph"], l["confidence"], l["locus_class"]) for l in loc],
-                                       notes, labels))
+                                       notes, labels, genome_label_status(muc)))
         s["status"]["called" if called else "uncalled"] += 1
         for l in loc:
             count_locus(s, l)
@@ -464,9 +488,11 @@ def main(argv=None):
     for lab, raws in sorted(LABEL_RAW.items()):
         parts = lab.split("__")
         system = parts[1].split("_")[0] if len(parts) > 1 else ""
-        labels_out[lab] = {"raw": sorted(raws), "lineage": reg["lineages"].get(parts[0], ""), "reference": reg["systems"].get(system, "")}
+        labels_out[lab] = {"raw": sorted(raws), "lineage": reg["lineages"].get(parts[0], ""), "reference": reg["systems"].get(system, ""),
+                           "status": dict(sorted(LABEL_STATUS[lab].items()))}
     with open(os.path.join(out, "idiomorph_labels.json"), "w") as fh:
-        json.dump({"note": "Labels are computed on output from scripts/idiomorph_label_registry.json; raw names are unchanged in the tables.", "labels": labels_out}, fh, indent=1)
+        json.dump({"note": "Labels are computed on output from scripts/idiomorph_label_registry.json; raw names are unchanged in the tables.",
+                   "registry_version": LABELS.registry_version(), "status_order": list(LABELS.STATUS_ORDER), "labels": labels_out}, fh, indent=1)
     for ds_id, grs in grows.items():
         with open(os.path.join(out, f"genomes_{ds_id}.tsv"), "w", newline="") as fh:
             w = csv.writer(fh, delimiter="\t", lineterminator="\n")

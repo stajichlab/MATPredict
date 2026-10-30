@@ -1,0 +1,184 @@
+record_id: 36038_pb4207_MATbz_MATa-MATalpha
+record_version: 1
+taxonomy:
+  taxid: 36038
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Phaffomycetales;f__Phaffomycetaceae;g__Barnettozyma;s__Barnettozyma_californica
+  lineage_resolved_date: '2026-10-30'
+organism:
+  species: Barnettozyma californica
+  strain:
+    name: PB4207
+    known: true
+    culture_collection_ids:
+    - PB4207
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATbz
+  idiomorphs:
+  - MATa
+  - MATalpha
+  system: homothallic
+locus:
+  assembly_accession: GCA_023627795.1
+  assembly_accession_basis: strain_match_verified
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  assembly_location:
+    contig: JAMAIE010000005.1
+    start: 605238
+    end: 630871
+    identity: 100.0
+  core:
+    completeness: partial
+    reference_orientation: DIC1->MATa2->MATa1->MATalpha1->MATalpha2 (partial)->SLA2
+    definition_note: 'DRAFT, GENE MODELS ARE OURS (tier 3). B. californica strain PB4207 (Dalian Medical
+      University, GCA_023627795.1, ctg_5 = JAMAIE010000005.1, 694,392 bp; the locus is 63 kb from one
+      contig end). The one published description is Hession, Byrne, Wolfe & Butler, PLoS Genet 2025 (PMID
+      41359681, doi 10.1371/journal.pgen.1011814): a centromere formed at the MAT locus of B. californica,
+      whose 460 bp centromere sequence lies in a 2.8 kb intergenic region between MATa1 and MATa2 on one
+      side and MATalpha1 and MATalpha2 on the other; all three Barnettozyma species appear homothallic.
+      The paper gives no gene models, coordinates or accessions for the locus (its UCD09 ONT assembly
+      is not in the NCBI assembly database as of 2026-10-30; the supplement S1 Table was not available).
+      NO RNA-seq exists for the genus (ENA, 2026-10-30: only WGS and Hi-C), so every model is a prediction
+      from sequence: stop-to-stop six-frame ORFs, Pfam (Homeodomain, MATalpha_HMGbox, ANTH/I_LWEQ), phmmer
+      against the curated Saccharomycotina MAT proteins, an exhaustive one-intron GT..AG search scored
+      with the curated Saccharomycotina MATa2 profile. WHAT AGREES WITH THE PAPER: MATa1 ends at 615,568
+      and MATalpha1 starts at 618,402, a 2,833 bp intergenic region (paper: 2.8 kb); MATa2 and MATa1 are
+      the divergent pair on one side. SLA2 and DIC1 flank the locus (DIC1 7.4 kb from MATa2; SLA2 8.6
+      kb from MATalpha1). MODELS: SLA2 (1,046 aa, ANTH + I_LWEQ, single exon), DIC1 (316 aa, single exon),
+      MATa1 (162 aa, homeodomain, single exon), MATalpha1 (233 aa, alpha-box, zero-intron ORF whose C-terminus
+      is uncertain: one-intron alternatives score the same), MATa2 (269 aa, one 56 bp GTATGT..CTTAG intron
+      at 614,112-614,167, 82 bits to the MATa2 profile against a background maximum of 32 over all 124
+      six-frame segments of the window; no Pfam HMG_box hit, as for Komagataella). MATalpha2 IS RECORDED
+      AS PARTIAL (added 2026-10-30): a 113 aa alpha2-type homeodomain ORF at 620,080-620,421 (plus strand;
+      the alpha2 profile of results/2026-10-30_mat_hmms scores 37 bits), the same ORF in all four californica
+      assemblies; it begins right after an in-frame stop, so the N-terminal exon is not found and the
+      model is a fragment. NAMING: the a1 and alpha2 profiles of results/2026-10-30_mat_hmms (supporting
+      evidence, a score difference) call the MATa1 homeodomain a1 (104 bits against 23 for alpha2). The
+      other three californica assemblies (UCD09 GCA_003123585.1, UCD89 GCA_003123885.1, NRRL Y-17395 GCA_003706655.3)
+      carry the same proteins at 99.6-100% identity, which is one strain family, not independent evidence.
+      B. discipulorum (GCA_049863505.1) has SLA2, MATa1, MATalpha1 and DIC1 at 45-86% identity but arranged
+      differently and no MATa2 hit. GENETIC CODE: standard (table 1), not tested. Details: results/2026-10-30_barnettozyma/README.md.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JAMAIE010000005.1
+        seq_region: JAMAIE010000005.1
+      start: 605238
+      end: 630871
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: dic1
+  role: flanking_conserved
+  present: true
+  segment_index: 0
+  start: 605238
+  end: 606188
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 605238
+    end: 606188
+- gene_index: 1
+  name: MATa2
+  role: core_MAT
+  present: true
+  segment_index: 0
+  start: 613590
+  end: 614455
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 614168
+    end: 614455
+  - start: 613590
+    end: 614111
+- gene_index: 2
+  name: MATa1
+  role: core_MAT
+  present: true
+  segment_index: 0
+  start: 615080
+  end: 615568
+  strand: +
+  order_in_locus: 2
+  exons:
+  - start: 615080
+    end: 615568
+- gene_index: 3
+  name: MATalpha1
+  role: core_MAT
+  present: true
+  segment_index: 0
+  start: 618402
+  end: 619103
+  strand: +
+  order_in_locus: 3
+  exons:
+  - start: 618402
+    end: 619103
+  gene_class: alpha_box
+- gene_index: 4
+  name: MATalpha2
+  role: core_MAT
+  present: true
+  segment_index: 0
+  start: 620080
+  end: 620421
+  strand: +
+  order_in_locus: 4
+  exons:
+  - start: 620080
+    end: 620421
+- gene_index: 5
+  name: sla2
+  role: flanking_conserved
+  present: true
+  segment_index: 0
+  start: 627731
+  end: 630871
+  strand: '-'
+  order_in_locus: 5
+  exons:
+  - start: 627731
+    end: 630871
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: published description of the locus (PMID 41359681) plus our own homology/ORF
+      analysis of the PB4207 assembly; no RNA-seq
+    citations: &id001
+    - pmid: '41359681'
+      doi: 10.1371/journal.pgen.1011814
+  boundaries:
+    tier: 3
+    experimental_method: gene models predicted here from sequence (ORF, Pfam, phmmer, one-intron search);
+      not an annotation of the deposit
+    citations: []
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: 'gene content and position: HMG-like MATa2 + homeodomain MATa1 on one side, alpha-box
+      MATalpha1 on the other, separated by 2.8 kb (PMID 41359681); the a1 profile of results/2026-10-30_mat_hmms
+      calls the MATa1 homeodomain a1 (104 vs 23 bits); MATa2 scores 81-82 bits on the a2 profiles'
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: false
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: pass
+    per_gene: []
+    notes: models derived from the assembly itself
+  taxonomy_current: null
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 41359681|36038|MATbz|MATa-MATalpha|PB4207
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

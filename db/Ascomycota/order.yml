@@ -748,3 +748,123 @@ loci:
       # Optional so that contigs ending inside the cassette are not demoted.
       - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
       - {name: dic1, role: flanking_conserved, optional: true}
+  - locus_name: "MATpk"
+    vocabulary_type: "enum"
+    # NEW FAMILY, curator decision 2026-10-29 (#189): Pichia kudriavzevii (Candida krusei) has its own scope-only family.
+    # Name: MATpk after the species, as MATkp (Komagataella phaffii) and MATog (Ogataea); the code is the curator's to change.
+    # Records: 4909_cbs-573_MATpk_MATa (CBS 573 chromosome 2, CP028774.1, the RefSeq annotation) and
+    # 4909_cbs-573_MATpk_MATalpha (MH260578.1, the alpha allele of the same strain on a separate PacBio contig).
+    # Evidence and gene models: results/2026-10-29_yeast_routing/ogataea_pichia_reference_check.md and
+    # results/2026-10-29_pichia_family/README.md.
+    # HETEROTHALLIC, NO SILENT LOCI (Douglass et al. 2018, PMID 30024981): the species cannot switch mating type, so a
+    # diploid or heterozygous assembly such as CBS 573 or CBS 5147 holds one allele on the chromosome and, at most, the
+    # other on a separate contig. A second MATpk call of the other idiomorph is the second allele, not a cassette, so
+    # `cassette_report` stays off and `two_idiomorphs_report` stays off (no homothallism claim is made).
+    idiomorph_values: ["MATa", "MATalpha"]
+    # idiomorph_class unassigned, as for the other yeast families without a curator ruling.
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    # SCOPE = THE SPECIES PICHIA KUDRIAVZEVII (taxid 4909; NCBI Taxonomy efetch 2026-10-29: rank species, genus Pichia 4919). Both
+    # records are from this species. Replay of the 158 Pichia genomes of the v0.7.0 run with the genus (4919) in scope
+    # (results/2026-10-29_pichia_family/README.md): the 54 P. kudriavzevii genomes gain calls (40 -> 52 called, none lost, core
+    # identity median 100%), but the 101 other Pichia genomes (P. kluyveri, fermentans, manshurica, ...) were called `high`
+    # at 31-60% core identity from a one-species reference, where MATsc had called them `medium`. The scope is therefore the
+    # species, the same restraint as MATog's complex-only scope of 2026-10-18; widening to the genus needs a record from a
+    # second Pichia species or an identity floor (open with the curator). Other Pichia genomes stay in phylum fallback.
+    taxonomic_scope: [4909]
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 147537  # Saccharomycotina
+    fallback_searchable: false
+    # SLA2 and TGL1 flank the locus (MATa allele: SLA2 ends 89 bp before MATa1 and TGL1 starts 101 bp after MATa2; SUI1 and
+    # SEC3 lie one gene further out on each side and are not declared).
+    flank_carried_window_bp: 20000
+    genes:
+      # MATa1: homeodomain, no class (the schema has none). Gene model: RefSeq C5L36_0B01580 (XP_029320370.1, "MATa1 gene"), single exon.
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      # MATa2: two exons with a 62 bp intron (27 spliced reads; RefSeq C5L36_0B01585, XP_029320371.1, "MATa2 gene"). No gene_class:
+      # the only profile that sees it is the Saccharomycotina MATa2 profile, which is supporting evidence and not referenced
+      # (52 bits, E 8e-18, for the 202 aa protein). The N-terminus (ATG 311,575) rests on homology and annotation; the RNA
+      # transcript starts about 85 bp downstream.
+      - {name: MATa2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      # MATalpha1: alpha_box (the MAT1-1-1 profile hits MH260578 MATalpha1, E 3.2e-7), the same bar as MATkp and MATog.
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
+      # MATalpha2: homeodomain, no class.
+      - {name: MATalpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      # sla2: sla2_homolog by precedent; optional so that contigs ending inside the locus (MH260578 is one) are not demoted.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      - {name: tgl1, role: flanking_conserved, optional: true}
+  - locus_name: "MATss"
+    vocabulary_type: "enum"
+    # NEW FAMILY, curator decision 2026-10-30 (candidate records for the SLA2-type genera, results/2026-10-29_near_tie/
+    # CANDIDATE_RECORDS.md): Saccharomycopsis (Ascoideales, Saccharomycopsidaceae) has its own scope-only family, named MATss
+    # after the genus as MATkp, MATog and MATpk are named after theirs; the code is the curator's to change.
+    # ARCHITECTURE (Kriti et al., G3 2026, PMID 41849659, doi 10.1093/g3journal/jkag067; Dost et al., Microbiol Res 2024, PMID 38492364):
+    # S. schoenii is HOMOTHALLIC and carries an expanded MAT system, SLA2-MAT cassettes (MATa1, MATa2, MATalpha1, MATalpha2) on every
+    # chromosome, with SLA2 as the anchor and the MAT genes co-transcribed with it (189-247 bp splice junctions between the MAT genes
+    # and SLA2). DIC1 is scattered, not linked. The active locus is on chromosome IV: an alpha-dominant sub-cluster (470,610-475,000)
+    # and a palindromic cassette (528,044-537,777, an SLA2 anchor flanked by mirrored MATa1/MATa2 arrays). Neither MATsc (three
+    # cassettes, HO switching) nor MTL (PAP1/OBP1/PIK1 inside the idiomorph) describes it: the replay of v0.7.0 called these loci MTL
+    # in 22 of 27 cases with SLA2 inside the call and no PIK1/OBP1/PAP1 (results/2026-10-29_near_tie/).
+    # `cassette_report` stays off: which cassette is expressed is not determined and one genome holds several per idiomorph.
+    # `two_idiomorphs_report` stays off (a homothallic species carries both idiomorphs by design).
+    idiomorph_values: ["MATa", "MATalpha"]
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    # SCOPE = THE SPECIES Saccharomycopsis schoenii (taxid 44080; genus Saccharomycopsis 4943, family Saccharomycopsidaceae 34366, order
+    # Ascoideales 2926619; NCBI Taxonomy efetch 2026-10-30). Curator decision 2026-10-30: narrowed from the genus. Only S. schoenii has a record
+    # and it is homothallic with an expanded SLA2-MAT cassette system; the genus is NOT uniform: S. lassenensis is heterothallic (Dost et al. 2024,
+    # PMID 38492364), so a heterothallic species of the genus is EXPECTED to carry a single locus with one idiomorph per genome, a different
+    # architecture from the one recorded here. Other Saccharomycopsis genomes stay in phylum fallback (and, as before, can still be called by
+    # MATsc or MTL until a record of a second species exists).
+    taxonomic_scope: [44080]
+    fallback_subphylum: 147537  # Saccharomycotina
+    fallback_searchable: false
+    flank_carried_window_bp: 20000
+    genes:
+      # Gene models of the records are OUR OWN (tier 3): the authors' GTF is not public (results/2026-10-29_ss_records/README.md).
+      # Gene NAMES rest on the MATa1, MATalpha2 and MATa2 profiles of results/2026-10-30_mat_hmms (supporting evidence, a score
+      # difference, not referenced by any rule). MATa1 and MATalpha2 are homeodomain proteins: no class (the schema has none).
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      # MATa2: optional (HMG-box, divergent; no Pfam HMG_box hit above GA, a2 profile 78 bits on the chromosome IV ORF).
+      - {name: MATa2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATa"]}
+      # MATalpha1: alpha_box (Pfam PF04769 54 bits, GA 28.1, on the chromosome IV ORF), the same bar as MATkp, MATog and MATpk.
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
+      - {name: MATalpha2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATalpha"]}
+      # sla2: the anchor of every cassette; sla2_homolog by precedent. Optional so that truncated copies are not demoted.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      - {name: dic1, role: flanking_conserved, optional: true}
+  # NEW FAMILY, curator decision 2026-10-30 (candidate records for the SLA2-type genera): Petasospora (Cyberlindnera) fabianii has its own
+  # scope-only family, named after the species as MATpk. SCOPE = THE SPECIES (taxid 36022), the same restraint as MATpk and MATog: one
+  # species is curated. HETEROTHALLIC with one idiomorph per genome in the four assemblies checked; no second cassette found. Gene models are
+  # OUR OWN predictions (tier 3: AUGUSTUS and miniprot, no RNA-seq exists for the species); see results/2026-10-30_petasospora/README.md.
+  - locus_name: "MATpf"
+    vocabulary_type: "enum"
+    idiomorph_values: ["MATa", "MATalpha"]
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    taxonomic_scope: [36022]
+    fallback_subphylum: 147537  # Saccharomycotina
+    fallback_searchable: false
+    flank_carried_window_bp: 20000
+    genes:
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}                       # homeodomain (Pfam Homeodomain 64 bits)
+      - {name: MATa2, role: core_MAT, present_in_idiomorphs: ["MATa"]}                       # HMG-box; no Pfam hit above GA, MATa2 Saccharomycotina profile 76.8 bits
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}  # PF04769 36 bits
+      - {name: MATalpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"], optional: true}        # none found in either alpha allele
+      - {name: dic1, role: flanking_conserved, optional: true}
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+  # NEW FAMILY, curator decision 2026-10-30: Barnettozyma (Phaffomycetales) has its own scope-only family, named after the genus; scope = the genus
+  # (taxid 599802). One record, B. californica PB4207, from OUR OWN tier-3 models (no RNA-seq for the genus; the paper, Hession et al. 2025,
+  # PMID 41359681, gives no coordinates); see results/2026-10-30_barnettozyma/README.md. MATalpha2 is a partial fragment (113 aa), hence optional.
+  - locus_name: "MATbz"
+    vocabulary_type: "enum"
+    idiomorph_values: ["MATa", "MATalpha"]
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    taxonomic_scope: [599802]
+    fallback_subphylum: 147537
+    fallback_searchable: false
+    flank_carried_window_bp: 20000
+    genes:
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      - {name: MATa2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATa"]}      # divergent HMG-like; no Pfam HMG_box hit
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
+      - {name: MATalpha2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATalpha"]}   # partial fragment in PB4207
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      - {name: dic1, role: flanking_conserved, optional: true}

@@ -421,6 +421,10 @@ class DetectionResult:
     cassette: dict | None = None
     """`--cross-family-policy on` only: this call is one of two cassettes (MATa and MATalpha) of a family that
     declares `cassette_report`; which one is expressed is not determined (`family_status`). None otherwise."""
+    family_ambiguous: dict | None = None
+    """`--cross-family-policy on` only: this locus was called by two families and neither is scoped to the genome; the family was
+    decided once for the genome by the higher mean best core-gene identity. Holds the identities of both families, their gap and
+    the genome means. None otherwise."""
     cross_call: list = field(default_factory=list)
     """`--cross-family-policy on` only: the overlapping calls of other families folded into this one."""
     verification: dict | None = None

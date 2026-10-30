@@ -11,13 +11,24 @@ PAP1, OBP1, PIK1 neighbours, 17 without). With the policy `on`, after every call
 
 1. **Cross-calls.** Two families calling overlapping loci (overlap of 0.9 or more of the shorter
    locus, on one contig) are one locus. The call from the family whose `taxonomic_scope` contains the
-   genome is kept. If neither or both families are scoped to it, the call whose best core gene has the
-   higher identity is kept (curator's decision, 2026-10-29: the confidence tier is not comparable across
-   families, so it no longer decides). When the best identities are within `NEAR_TIE_POINTS` (3), the
-   call from the family that declares no `confirm_outside_scope` rule is kept, else the better score
-   (locus class, tier, polished genes, genes found, family name), and the kept call is flagged
-   `family_unconfirmed` (reason `cross_call_near_tie`). The other call is not lost: it is recorded
-   on the kept call as `cross_call`.
+   genome is kept. Where neither family is scoped to it, the family is decided ONCE FOR THE GENOME
+   (curator's decision, 2026-10-29, after an independent evaluation of the 3-point near-tie margin of the
+   first draft, `results/2026-10-29_near_tie/`): each family's mean over the genome's unscoped cross-called
+   loci of the best core-gene identity is computed, and the family with the higher mean is kept in every
+   such locus (equal means: the smaller family name). There is no margin and no preference for either
+   family. The confidence tier is not comparable across families and does not decide. Every such kept call
+   carries `family_ambiguous` (both identities, their gap, the genome means), because a best-hit identity
+   against a different reference protein of each family is an uncertain score. The other call is not lost:
+   it is recorded on the kept call as `cross_call`.
+   FLANK RULE (curator's decision, 2026-10-30, #188): in a group with no scoped family, a call from a family that
+   declares `confirm_outside_scope` (MTL) in a genome outside its scope, with fewer than `min_flank_genes` of its
+   declared flank genes within `window_bp` of a core gene, cannot win against a family in the group whose own
+   flank gene (a `flanking_conserved` or `flanking_variable` gene, such as SLA2 or DIC1 beside a MATsc call) is
+   present. The unsupported call is set aside as `cross_call` (`flank_rule: true`), is not counted in the genome
+   means, and the kept call's `family_ambiguous` carries the reason `cross_call_flank_rule`. Evidence: Saccharomycopsis,
+   Barnettozyma, Ambrosiozyma and Petasospora loci called MTL carry SLA2 or DIC1 beside the MAT genes and none of
+   PAP1/OBP1/PIK1 (results/2026-10-29_near_tie/), and the published S. schoenii architecture is SLA2-MAT. Where no
+   competitor has a flank gene, or the MTL call is supported or in scope, the identity rule decides as before.
 2. **Family status.** A call from a family that declares `confirm_outside_scope` (MTL) in a genome
    outside its scope is `family_unconfirmed` (reason `<family>_outside_scope`). It becomes
    `family_confirmed` when at least `min_flank_genes` of the declared flank genes (PAP1, OBP1, PIK1)
@@ -38,9 +49,6 @@ POLICY_OFF = "off"
 POLICY_ON = "on"
 CROSS_FAMILY_POLICIES = (POLICY_OFF, POLICY_ON)
 DEFAULT_CROSS_FAMILY_POLICY = POLICY_OFF
-
-#: Best-core-identity difference (percentage points) at or below which two cross-called families are a near tie.
-NEAR_TIE_POINTS = 3.0
 
 #: Fraction of the shorter locus that two calls must share to count as one locus.
 MIN_OVERLAP = 0.9
@@ -106,45 +114,91 @@ def _best_core_identity(r) -> float:
 def _note(r) -> dict:
     return {"family": f"{r.family_key.phylum}:{r.family_key.locus_name}", "idiomorph": r.idiomorph,
             "confidence": r.confidence, "locus_class": r.locus_class, "contig": r.contig,
-            "start": r.start, "end": r.end, "genes_found": list(r.genes_found)}
+            "start": r.start, "end": r.end, "genes_found": list(r.genes_found),
+            # the evidence of the call that was set aside, so the two families can be compared gene for gene after the run
+            "gene_evidence": [{"gene": e.gene_name, "role": e.role, "identity": round(e.identity, 2) if e.identity is not None else None,
+                               "coverage": round(e.coverage, 2) if e.coverage is not None else None, "status": str(e.status)}
+                              for e in r.gene_evidence if e.lost_to is None]}
+
+
+def _family_name(r) -> str:
+    return f"{r.family_key.phylum}:{r.family_key.locus_name}"
+
+
+def _has_flank_gene(r) -> bool:
+    """The call carries a flank gene of its own family (SLA2, DIC1 for MATsc; PAP1, OBP1, PIK1 for MTL)."""
+    return any(e.role in ("flanking_conserved", "flanking_variable") and e.lost_to is None for e in r.gene_evidence)
 
 
 def resolve_cross_calls(results: list, families: list, lineage: set[int]) -> list:
-    """`results` with each cross-family group reduced to one call; the others ride on it as `cross_call`."""
+    """`results` with each cross-family group reduced to one call; the others ride on it as `cross_call`.
+
+    A group with a family scoped to the genome keeps that family's best call. The other groups (no scoped family) are decided
+    together: the family with the higher mean best core-gene identity over the genome's unscoped groups wins each of them."""
     by_key = {f.key: f for f in families}
 
     def in_scope(r) -> bool:
         family = by_key.get(r.family_key)
         return bool(lineage and family and lineage & set(family.taxonomic_scope))
 
-    def needs_confirmation(r) -> bool:
+    def unsupported(r) -> bool:
+        """An out-of-scope call of a family with a flank rule that the rule does not confirm."""
         family = by_key.get(r.family_key)
-        return bool(getattr(family, "confirm_outside_scope", None))
+        rule = getattr(family, "confirm_outside_scope", None)
+        if not rule or not lineage or lineage & set(family.taxonomic_scope):
+            return False
+        return len(flank_support(r, list(rule["flank_genes"]), int(rule.get("window_bp", 15000)))) < int(rule.get("min_flank_genes", 2))
+
+    def eligible(g: list[int]) -> tuple[list[int], list[int]]:
+        """(members that may win, members set aside by the flank rule) of a group with no scoped family."""
+        weak = [i for i in g if unsupported(results[i])]
+        rest = [i for i in g if i not in weak]
+        if weak and any(_has_flank_gene(results[i]) for i in rest):
+            return rest, weak
+        return list(g), []
+
+    groups = _groups(results)
+    unscoped = [g for g in groups if not any(in_scope(results[i]) for i in g)]
+    pooled: dict[str, list[float]] = {}
+    for g in unscoped:
+        may_win, _ = eligible(g)
+        for fam in {_family_name(results[i]) for i in may_win}:
+            pooled.setdefault(fam, []).append(max(_best_core_identity(results[i]) for i in may_win if _family_name(results[i]) == fam))
+    means = {fam: sum(v) / len(v) for fam, v in pooled.items()}
 
     drop: set[int] = set()
-    kept: dict[int, list[dict]] = {}
-    for group in _groups(results):
+    kept: dict[int, tuple[list[dict], dict | None]] = {}
+    for group in groups:
         scoped = [i for i in group if in_scope(results[i])]
-        near_tie = False
+        ambiguous = None
+        set_aside: list[int] = []
         if scoped:
             best = min(scoped, key=lambda i: _score(results[i]))
         else:
-            top = max(_best_core_identity(results[i]) for i in group)
-            close = [i for i in group if top - _best_core_identity(results[i]) <= NEAR_TIE_POINTS]
-            near_tie = len(close) > 1
-            pool = [i for i in close if not needs_confirmation(results[i])] or close
-            best = min(pool, key=lambda i: _score(results[i])) if near_tie else close[0]
+            may_win, set_aside = eligible(group)
+            here = {_family_name(results[i]) for i in may_win}
+            winner = min(here, key=lambda f: (-means[f], f))
+            best = min((i for i in may_win if _family_name(results[i]) == winner), key=lambda i: _score(results[i]))
+            ident = {f: round(max(_best_core_identity(results[i]) for i in group if _family_name(results[i]) == f), 2)
+                     for f in sorted({_family_name(results[i]) for i in group})}
+            rest = [v for f, v in ident.items() if f != winner]
+            ambiguous = {"reason": "cross_call_flank_rule" if set_aside else "cross_call_unscoped", "kept_family": winner, "identities": ident,
+                         "gap": round(ident[winner] - max(rest), 2) if rest else None,
+                         "genome_mean_identity": {f: round(means[f], 2) for f in sorted(here)},
+                         "genome_loci": {f: len(pooled[f]) for f in sorted(here)}}
+            if set_aside:
+                ambiguous["flank_rule_set_aside"] = sorted({_family_name(results[i]) for i in set_aside})
         notes = []
         for i in sorted(group):
             if i != best:
                 note = _note(results[i])
                 note["best_core_identity"] = round(_best_core_identity(results[i]), 2)
-                if near_tie:
-                    note["near_tie"] = True
+                if not scoped and i in set_aside:
+                    note["flank_rule"] = True
                 notes.append(note)
-        kept[best] = notes
+        kept[best] = (notes, ambiguous)
         drop.update(i for i in group if i != best)
-    return [replace(r, cross_call=kept[i]) if i in kept else r for i, r in enumerate(results) if i not in drop]
+    return [replace(r, cross_call=kept[i][0], family_ambiguous=kept[i][1]) if i in kept else r for i, r in enumerate(results) if i not in drop]
 
 
 def _gap(a, b) -> int:
@@ -170,9 +224,6 @@ def flag_family_status(results: list, families: list, lineage: set[int]) -> list
     for r in results:
         family = by_key.get(r.family_key)
         rule = getattr(family, "confirm_outside_scope", None)
-        if any(c.get("near_tie") for c in r.cross_call) and not (rule and lineage and not lineage & set(family.taxonomic_scope)):
-            out.append(replace(r, family_status={"status": STATUS_UNCONFIRMED, "reason": "cross_call_near_tie"}))
-            continue
         if not rule or not lineage or lineage & set(family.taxonomic_scope):
             out.append(r)
             continue

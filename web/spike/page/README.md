@@ -27,6 +27,10 @@ Build the site locally with `page/build-site.sh <bundle-dir> <site-dir>` (`PYTHO
 `_assets/` is generated and not committed. `build-site.sh` is the Pages equivalent: it copies everything into a self-contained tree with no symlinks. Serve from `web/spike/` (not `page/`) so the page can import
 the shared host and bridge modules.
 
+## Examples
+
+The "Try an example" list runs the pipeline without an upload. The regions are fetched from NCBI efetch when chosen (URLs in `examples/examples.json`, the only file stored in the site), and the same URLs are linked for download. Add an entry there to add an example; keep regions small (tens of kb) so a run takes seconds. Each was run headless in the page before being listed.
+
 ## Output
 
 - Results table: detected loci (family, contig, span, idiomorph, confidence, genes found and missing).

@@ -263,8 +263,40 @@ async function readGenome(file) {
     : new Uint8Array(await file.arrayBuffer());
   return { name: file.name.replace(/\.gz$/i, ""), bytes, text: new TextDecoder().decode(bytes), gzipped };
 }
+// Examples are small real MAT-locus regions, fetched from NCBI when chosen (the list, with each region's
+// URL, is examples/examples.json; no sequence is stored in the site). A visitor can run the pipeline
+// without having a genome to hand, and the same URLs are linked for download.
+async function loadExamples() {
+  try {
+    const list = await (await fetch("examples/examples.json")).json();
+    window.examples = list;
+    for (const ex of list) {
+      const o = document.createElement("option");
+      o.value = ex.file; o.textContent = ex.label;
+      $("example").appendChild(o);
+    }
+    $("example-links").innerHTML = "Download the example sequences from NCBI: " + list
+      .map((ex) => `<a href="${esc(ex.url)}" rel="noopener">${esc(ex.label)}</a>`).join(" · ");
+  } catch (err) {
+    log(`examples unavailable: ${err}`);
+  }
+}
+loadExamples();
+$("example").addEventListener("change", async (e) => {
+  const ex = (window.examples || []).find((x) => x.file === e.target.value);
+  $("example-note").textContent = ex ? ex.note : "";
+  if (!ex) return;
+  $("genome").value = "";
+  log(`fetching ${ex.file} from NCBI`);
+  const bytes = await fetchBytes(ex.url);
+  genome = { name: ex.file, bytes, text: new TextDecoder().decode(bytes), gzipped: false };
+  $("phylum").value = ex.phylum;
+  $("run").disabled = false;
+  log(`example ${ex.file} (${(bytes.length / 1e3).toFixed(1)} kb)`);
+});
 $("genome").addEventListener("change", async (e) => {
   const file = e.target.files[0] || null;
+  if (file) { $("example").value = ""; $("example-note").textContent = ""; }
   genome = file ? await readGenome(file) : null;
   $("run").disabled = !genome;
   if (genome) {

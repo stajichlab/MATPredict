@@ -46,7 +46,11 @@
   </div>
 
   <section class="panel">
-    <label for="genome">Genome FASTA</label>
+    <label for="example">Try an example (no upload)</label>
+    <select id="example"><option value="">Choose an example…</option></select>
+    <p class="muted" id="example-note"></p>
+    <p class="muted" id="example-links"></p>
+    <label for="genome">Or your own genome FASTA</label>
     <input type="file" id="genome" accept=".fa,.fasta,.fna,.fas,.txt,.gz">
     <label for="phylum">Phylum</label>
     <select id="phylum">

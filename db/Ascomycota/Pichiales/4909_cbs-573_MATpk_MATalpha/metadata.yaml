@@ -1,0 +1,163 @@
+record_id: 4909_cbs-573_MATpk_MATalpha
+record_version: 1
+taxonomy:
+  taxid: 4909
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Pichiales;f__Pichiaceae;g__Pichia;s__Pichia_kudriavzevii
+  lineage_resolved_date: '2026-10-29'
+organism:
+  species: Pichia kudriavzevii
+  strain:
+    name: CBS 573
+    known: true
+    culture_collection_ids:
+    - CBS 573
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATpk
+  idiomorphs:
+  - MATalpha
+  system: heterothallic
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: complete
+    reference_orientation: SLA2->MATalpha1->MATalpha2->TGL1
+    definition_note: 'MATalpha allele of P. kudriavzevii CBS 573, the deposit MH260578.1
+      (11,807 bp; SUI1, SLA2, MATalpha1, MATalpha2, TGL1, SEC3; Douglass et al. 2018,
+      PMID 30024981). The deposit is the PacBio contig for the alternative allele
+      of the heterozygous CBS 573; the chromosome-2 assembly carries the MATa allele
+      (record 4909_cbs-573_MATpk_MATa). Same BioSample as the assembly (SAMN08558011,
+      strain CBS 573). The record covers SLA2 to TGL1; SUI1 (5-prime end of the deposit,
+      partial) and SEC3 (partial) are not recorded. MATalpha1 (180 aa) is single-exon
+      on the minus strand; MATalpha2 has three exons on the minus strand (the last
+      exon is 14 bp, as deposited). The MAT1-1-1 profile hits MATalpha1 (E 3.2e-7).
+      GENETIC CODE: standard (table 1). No assembly anchor (assembly_accession null):
+      the 11.8 kb contig is not part of GCA_003054445.1; the alpha allele of the independent
+      isolate SJP (GCA_003033855.1, CP021089.1) is the test case in results/2026-10-29_pichia_family/README.md.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: MH260578.1
+        seq_region: MH260578.1
+      start: 780
+      end: 7515
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+  assembly_accession: null
+genes:
+- gene_index: 0
+  name: sla2
+  protein_accession: ncbi_protein:AXK50427.1
+  role: flanking_conserved
+  present: true
+  locus_tag: PKUD0B01570
+  segment_index: 0
+  start: 780
+  end: 3998
+  strand: +
+  order_in_locus: 0
+  exons:
+  - start: 780
+    end: 3998
+- gene_index: 1
+  name: MATalpha1
+  protein_accession: ncbi_protein:AXK50428.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 4106
+  end: 4645
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 4106
+    end: 4645
+- gene_index: 2
+  name: MATalpha2
+  protein_accession: ncbi_protein:AXK50429.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 5119
+  end: 5918
+  strand: '-'
+  order_in_locus: 2
+  exons:
+  - start: 5905
+    end: 5918
+  - start: 5737
+    end: 5839
+  - start: 5119
+    end: 5676
+- gene_index: 3
+  name: tgl1
+  protein_accession: ncbi_protein:AXK50430.1
+  role: flanking_conserved
+  present: true
+  locus_tag: PKUD0B01590
+  segment_index: 0
+  start: 6193
+  end: 7515
+  strand: '-'
+  order_in_locus: 3
+  exons:
+  - start: 6193
+    end: 7515
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: targeted sequencing and annotation of the alpha allele of
+      the heterozygous CBS 573 (MH260578.1; PMID 30024981)
+    citations: &id001
+    - pmid: '30024981'
+      doi: 10.1371/journal.ppat.1007138
+  boundaries:
+    tier: 2
+    experimental_method: genome annotation (RefSeq or the depositor's); gene extents
+      are annotation-derived
+    citations: *id001
+  idiomorph_assignment:
+    tier: 2
+    experimental_method: 'gene content and homology: MATa1 and MATa2 with the MATa
+      allele, MATalpha1 (alpha box, MAT1-1-1 profile) and MATalpha2 with the MATalpha
+      allele, in a heterozygous strain'
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: MH260578.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 3
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: true
+  taxonomy_error: taxonkit is not on PATH
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 30024981|4909|MATpk|MATalpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

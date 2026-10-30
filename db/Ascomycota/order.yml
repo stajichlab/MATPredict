@@ -748,3 +748,47 @@ loci:
       # Optional so that contigs ending inside the cassette are not demoted.
       - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
       - {name: dic1, role: flanking_conserved, optional: true}
+  - locus_name: "MATpk"
+    vocabulary_type: "enum"
+    # NEW FAMILY, curator decision 2026-10-29 (#189): Pichia kudriavzevii (Candida krusei) has its own scope-only family.
+    # Name: MATpk after the species, as MATkp (Komagataella phaffii) and MATog (Ogataea); the code is the curator's to change.
+    # Records: 4909_cbs-573_MATpk_MATa (CBS 573 chromosome 2, CP028774.1, the RefSeq annotation) and
+    # 4909_cbs-573_MATpk_MATalpha (MH260578.1, the alpha allele of the same strain on a separate PacBio contig).
+    # Evidence and gene models: results/2026-10-29_yeast_routing/ogataea_pichia_reference_check.md and
+    # results/2026-10-29_pichia_family/README.md.
+    # HETEROTHALLIC, NO SILENT LOCI (Douglass et al. 2018, PMID 30024981): the species cannot switch mating type, so a
+    # diploid or heterozygous assembly such as CBS 573 or CBS 5147 holds one allele on the chromosome and, at most, the
+    # other on a separate contig. A second MATpk call of the other idiomorph is the second allele, not a cassette, so
+    # `cassette_report` stays off and `two_idiomorphs_report` stays off (no homothallism claim is made).
+    idiomorph_values: ["MATa", "MATalpha"]
+    # idiomorph_class unassigned, as for the other yeast families without a curator ruling.
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    # SCOPE = THE SPECIES PICHIA KUDRIAVZEVII (taxid 4909; NCBI Taxonomy efetch 2026-10-29: rank species, genus Pichia 4919). Both
+    # records are from this species. Replay of the 158 Pichia genomes of the v0.7.0 run with the genus (4919) in scope
+    # (results/2026-10-29_pichia_family/README.md): the 54 P. kudriavzevii genomes gain calls (40 -> 52 called, none lost, core
+    # identity median 100%), but the 101 other Pichia genomes (P. kluyveri, fermentans, manshurica, ...) were called `high`
+    # at 31-60% core identity from a one-species reference, where MATsc had called them `medium`. The scope is therefore the
+    # species, the same restraint as MATog's complex-only scope of 2026-10-18; widening to the genus needs a record from a
+    # second Pichia species or an identity floor (open with the curator). Other Pichia genomes stay in phylum fallback.
+    taxonomic_scope: [4909]
+    # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
+    fallback_subphylum: 147537  # Saccharomycotina
+    fallback_searchable: false
+    # SLA2 and TGL1 flank the locus (MATa allele: SLA2 ends 89 bp before MATa1 and TGL1 starts 101 bp after MATa2; SUI1 and
+    # SEC3 lie one gene further out on each side and are not declared).
+    flank_carried_window_bp: 20000
+    genes:
+      # MATa1: homeodomain, no class (the schema has none). Gene model: RefSeq C5L36_0B01580 (XP_029320370.1, "MATa1 gene"), single exon.
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      # MATa2: two exons with a 62 bp intron (27 spliced reads; RefSeq C5L36_0B01585, XP_029320371.1, "MATa2 gene"). No gene_class:
+      # the only profile that sees it is the Saccharomycotina MATa2 profile, which is supporting evidence and not referenced
+      # (52 bits, E 8e-18, for the 202 aa protein). The N-terminus (ATG 311,575) rests on homology and annotation; the RNA
+      # transcript starts about 85 bp downstream.
+      - {name: MATa2, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      # MATalpha1: alpha_box (the MAT1-1-1 profile hits MH260578 MATalpha1, E 3.2e-7), the same bar as MATkp and MATog.
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
+      # MATalpha2: homeodomain, no class.
+      - {name: MATalpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"]}
+      # sla2: sla2_homolog by precedent; optional so that contigs ending inside the locus (MH260578 is one) are not demoted.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      - {name: tgl1, role: flanking_conserved, optional: true}

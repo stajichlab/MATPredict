@@ -1,0 +1,126 @@
+record_id: 44080_gdd12_MATss_MATa
+record_version: 1
+taxonomy:
+  taxid: 44080
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Ascoideales;f__Saccharomycopsidaceae;g__Saccharomycopsis;s__Saccharomycopsis_schoenii
+  lineage_resolved_date: '2026-10-30'
+organism:
+  species: Saccharomycopsis schoenii
+  strain:
+    name: GDD12
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATss
+  idiomorphs:
+  - MATa
+  system: homothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sla2->MATa1
+    definition_note: 'Right (palindromic) cassette of the active MAT locus on chromosome
+      IV of S. schoenii GDD12 (CM143129.1; the paper''s span 528,044-537,777; an SLA2
+      anchor between mirrored MAT arrays, Kriti et al. G3 2026, PMID 41849659). HOMOTHALLIC
+      (Dost et al. 2024, PMID 38492364). The record covers the arm that RNA-seq resolves:
+      SLA2 533,981-535,828 (plus, 615 aa) and the homeodomain gene named MATa1 after
+      the paper at 536,046-536,944 (minus, 211 aa; introns of 205 bp, 221 reads, and
+      58 bp, 218 reads, the conserved 58 bp junction the paper reports at 536,635).
+      The mirrored arm (SLA2 529,992-532,490; homeodomain ORF 529,258-529,749, 163
+      aa) is not recorded: short reads cannot separate the two inverted copies, and
+      the paper''s mirrored junction at 529,128 is not seen. No HMG-box (MATa2) ORF
+      passed the filters. GENE MODELS ARE OURS (tier 3), see results/2026-10-29_ss_records/README.md.
+      The library is not stranded. GENETIC CODE: NCBI table 12 (CUG = Ser).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: CM143129.1
+        seq_region: CM143129.1
+      start: 533981
+      end: 536944
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+  assembly_accession: GCA_054953955.1
+  assembly_accession_basis: strain_match_verified
+  assembly_location:
+    contig: CM143129.1
+    start: 533981
+    end: 536944
+    identity: 100.0
+genes:
+- gene_index: 0
+  name: sla2
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 533981
+  end: 535828
+  strand: +
+  order_in_locus: 0
+  transl_table: 12
+  exons:
+  - start: 533981
+    end: 535828
+- gene_index: 1
+  name: MATa1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 536046
+  end: 536944
+  strand: '-'
+  order_in_locus: 1
+  transl_table: 12
+  exons:
+  - start: 536693
+    end: 536944
+  - start: 536296
+    end: 536634
+  - start: 536046
+    end: 536090
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: published description of the SLA2-MAT cassettes and RNA-seq
+      of the active chromosome IV locus (Kriti et al. 2026)
+    citations: &id001
+    - pmid: '41849659'
+      doi: 10.1093/g3journal/jkag067
+    - pmid: '38492364'
+      doi: 10.1016/j.micres.2024.127691
+  boundaries:
+    tier: 3
+    experimental_method: OUR OWN gene models from the public RNA-seq (PRJNA1364152;
+      StringTie, TransDecoder, phmmer/Pfam) because the authors' GTF is not public;
+      coordinates are ours, the locus span is the paper's
+    citations: *id001
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: the paper's assignment of the sub-cluster (alpha-dominant
+      left, palindromic a right); gene names follow it by position; phmmer ranks both
+      homeodomain ORFs closest to MATa1-type references, so MATalpha2 is a hypothesis
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: false
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: pass
+    per_gene: []
+    notes: ''
+  taxonomy_current: null
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 41849659|44080|MATss|MATa
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -1,0 +1,17 @@
+# PROPOSED family block for db/Ascomycota/order.yml (NOT applied; the curator decides name, scope and gene classes).
+# Scope: species Petasospora fabianii (36022), as MATpk was narrowed to the species; the genus Petasospora would be wider than the evidence (one species).
+  - locus_name: "MATpf"
+    vocabulary_type: "enum"
+    idiomorph_values: ["MATa", "MATalpha"]
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    taxonomic_scope: [36022]
+    fallback_subphylum: 147537  # Saccharomycotina
+    fallback_searchable: false
+    flank_carried_window_bp: 20000
+    genes:
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}                       # homeodomain (Pfam Homeodomain 64 bits)
+      - {name: MATa2, role: core_MAT, present_in_idiomorphs: ["MATa"]}                       # HMG-box; no Pfam hit above GA, MATa2 Saccharomycotina profile 76.8 bits
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}  # PF04769 36 bits
+      - {name: MATalpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"], optional: true}        # none found in either alpha allele
+      - {name: dic1, role: flanking_conserved, optional: true}
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}

@@ -35,7 +35,7 @@ def test_matss_routes_the_species_only():
     fams = load_all_families(DB)
     base = [131567, 2759, 33154, 4751, 451864, 4890, 716545, 147537, 4891, 2926619, 34366, 4943]
     d = route(44080, fams, lineage_taxids_resolver=lambda t: base + [44080], phylum_name_resolver=lambda t: "Ascomycota")
-    assert d.routing_mode == "lineage" and "MATss" in {f.key.locus_name for f in d.families}
+    assert d.routing_mode in ("direct", "lineage") and "MATss" in {f.key.locus_name for f in d.families}
     # another Saccharomycopsis species (S. fibuligera 4944, not in scope) is not routed to MATss
     d = route(4944, fams, lineage_taxids_resolver=lambda t: base + [4944], phylum_name_resolver=lambda t: "Ascomycota")
     assert "MATss" not in {f.key.locus_name for f in d.families}

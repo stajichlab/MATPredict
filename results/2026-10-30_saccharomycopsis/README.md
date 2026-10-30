@@ -13,3 +13,6 @@ Curator decisions (2026-10-30): draft records from our own gene models (tier 3);
 - Both SLA2 ORFs lack a start codon (5-prime partial). The mirrored arm of the palindrome is not recorded.
 - The label registry has no entry for `Ascomycota:MATss`; a system code needs your approval before the records are labelled (frozen codes).
 - Scope is the genus; *S. lassenensis* is heterothallic (Dost et al.), so narrow to the species (44080) if a replay over-calls.
+
+## The other two genera (same session)
+`MATpf` (*Petasospora fabianii*, species scope 36022; heterothallic, MATa JOY008 and MATalpha TBRC 4498; AUGUSTUS and miniprot models, no RNA-seq exists) and `MATbz` (*Barnettozyma*, genus scope 599802; one combined PB4207 record, MATalpha2 not modelled) were annotated in `../2026-10-30_petasospora/` and `../2026-10-30_barnettozyma/`. All five candidate records pass `curate-db propose` and `validate` (Slurm job 31446171: `taxonomy_current` true, sequence match not applicable because no record has a protein accession). All are tier 3 (our own models), `needs_review`.

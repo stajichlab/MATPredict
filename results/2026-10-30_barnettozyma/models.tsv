@@ -1,0 +1,6 @@
+gene	role	strand	start	end	exons	aa	M_start	stop	introns	note
+dic1	flanking_conserved	-	605238	606188	1	316	yes	yes	-	mitochondrial dicarboxylate carrier; single exon; phmmer 362 bits to DIC1 references
+MATa2	core_MAT	-	613590	614455	2	269	yes	yes	614112-614167 56bp GT..AG	HMG-box-like MATa2 (no Pfam HMG_box hit, as for Komagataella); ONE-INTRON MODEL chosen by exhaustive search (82 bits to the Saccharomycotina MATa2 profile vs 64 and 50 for the next donors); 56 bp intron GTATGT..CTTAG
+MATa1	core_MAT	+	615080	615568	1	162	yes	yes	-	homeodomain (Pfam 53 bits; helix 3 ...WFTNKR...), single exon, divergent partner of MATa2
+MATalpha1	core_MAT	+	618402	619103	1	233	yes	yes	-	alpha-box (MATalpha_HMGbox 33 bits, 62 bits to curated MATalpha1); zero-intron ORF; the C-terminus is uncertain (alternative one-intron models score the same)
+sla2	flanking_conserved	-	627731	630871	1	1046	yes	yes	-	single exon, ANTH + I_LWEQ, 1217 bits to curated SLA2

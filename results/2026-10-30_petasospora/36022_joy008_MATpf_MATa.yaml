@@ -1,0 +1,158 @@
+record_id: 36022_joy008_MATpf_MATa
+record_version: 1
+taxonomy:
+  taxid: 36022
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Phaffomycetales;f__Wickerhamomycetaceae;g__Petasospora;s__Petasospora_fabianii
+  lineage_resolved_date: '2026-10-30'
+organism:
+  species: Petasospora fabianii
+  strain:
+    name: JOY008
+    known: true
+    culture_collection_ids:
+    - JOY008
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATpf
+  idiomorphs:
+  - MATa
+  system: heterothallic
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  assembly_accession: GCA_022641835.1
+  assembly_accession_basis: sequence_link
+  assembly_location:
+    contig: CP048715.1
+    start: 628449
+    end: 644871
+    identity: 100.0
+  core:
+    completeness: complete
+    reference_orientation: DIC1->MATa2->MATa1->(six conserved genes)->SLA2
+    definition_note: 'MATa idiomorph of P. fabianii isolate JOY008 (ecotype Missouri, St. Louis College of Pharmacy), complete
+      genome GCA_022641835.1, CP048715.1 (BioSample SAMN14051719). The type strain JCM 3601 (GCA_001599195.1, BCGI01000001.1:641,150-657,563)
+      carries the same MATa locus with 99-100% identical proteins (MATa1 and MATa2 one substitution each). The v0.7.0 MATsc
+      call (CP048715.1:630,345-685,843, 55 kb) is wider than the locus: the genes are DIC1 628,452-629,375 to SLA2 641,746-644,871.
+      GENE MODELS ARE OURS (tier 3, manual annotation; curator decision 2026-10-30). No RNA-seq exists for the species in
+      ENA/SRA (checked 2026-10-30), so the models are AUGUSTUS ab initio predictions (species models S. cerevisiae S288C,
+      C. guilliermondii, P. stipitis, K. lactis) chosen where several agree and where homology supports them; MATa2 is also
+      supported by the Saccharomycotina MATa2 profile (76.8 bits, above the 52.4 bits of P. kudriavzevii). Coordinates include
+      the stop codon. Intron signals: MATa2 72 bp GTAGGT..TACTAAC..TAG (strong); MATa1 97 bp GTACCA..AAAG (weak donor; an
+      upstream exon is required because the homeodomain open frame has no start codon, but the splice sites are unconfirmed).
+      The MATalpha1 model is a single exon of 305 aa; the depositor''s ONH67106 (254 aa, strain 65) is the same C-terminal
+      185 aa plus a 69 aa exon joined across a 1,263 bp intron (GTCCTT..CCCCAG) that has no support here: the N-terminus is
+      unresolved. GENE NAMES by homology and position: MATa1 is the homeodomain protein (Pfam Homeodomain 64 bits, 66 bits
+      to Komagataella MATa1), MATa2 the HMG-box protein (divergent; no Pfam HMG_box hit above GA), MATalpha1 the alpha-box
+      protein (PF04769 36 bits, 407 bits to ONH67106). No MATalpha2 homeodomain gene was found in either alpha allele (only
+      a 57 aa Homeobox_KN fragment at 12-18 bits about 1.2 kb upstream of MATalpha1). LAYOUT: DIC1 (minus) - 0.5 kb (MATa)
+      or 5.0 kb (MATalpha) - MAT genes - six conserved non-MAT ORFs (409, 173, 589, 219, 465, 622 aa; identical in both alleles,
+      not recorded) - SLA2 (plus); SLA2 is therefore about 9.5 kb from the MAT genes. The alpha allele also carries an 800
+      aa MutS_III-domain ORF between DIC1 and MATalpha1 that has no counterpart in the MATa allele (not recorded). No second
+      MAT cassette: miniprot of the MAT proteins finds no other MAT gene in any of the four assemblies, so the species looks
+      heterothallic with one idiomorph per genome. GENETIC CODE: standard (table 1). Details: results/2026-10-30_petasospora/README.md.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: CP048715.1
+        seq_region: CP048715.1
+      start: 628449
+      end: 644871
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: dic1
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 628449
+  end: 629375
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 628449
+    end: 629375
+- gene_index: 1
+  name: MATa2
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 629850
+  end: 630863
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 630492
+    end: 630863
+  - start: 629850
+    end: 630419
+- gene_index: 2
+  name: MATa1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 631437
+  end: 632136
+  strand: +
+  order_in_locus: 2
+  exons:
+  - start: 631437
+    end: 631737
+  - start: 631835
+    end: 632136
+- gene_index: 3
+  name: sla2
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 641746
+  end: 644871
+  strand: +
+  order_in_locus: 3
+  exons:
+  - start: 641746
+    end: 644871
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: 'manual annotation: homology (curated Saccharomycotina MAT proteins, Pfam, MATa2 profile) and AUGUSTUS
+      ab initio models on the deposited assembly; no RNA-seq'
+    citations: &id001 []
+  boundaries:
+    tier: 3
+    experimental_method: AUGUSTUS ab initio gene models checked against homology; DIC1 and SLA2 are the flanking anchors,
+      MAT genes lie between them
+    citations: *id001
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: 'gene content: MATa1 (homeodomain) with MATa2 (HMG-box) versus MATalpha1 (alpha box), at the same
+      DIC1-SLA2 position in different strains'
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: false
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: pass
+    per_gene: []
+    notes: ''
+  taxonomy_current: null
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: manual|36022|MATpf|MATa
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

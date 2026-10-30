@@ -829,3 +829,40 @@ loci:
       # sla2: the anchor of every cassette; sla2_homolog by precedent. Optional so that truncated copies are not demoted.
       - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
       - {name: dic1, role: flanking_conserved, optional: true}
+  # NEW FAMILY, curator decision 2026-10-30 (candidate records for the SLA2-type genera): Petasospora (Cyberlindnera) fabianii has its own
+  # scope-only family, named after the species as MATpk. SCOPE = THE SPECIES (taxid 36022), the same restraint as MATpk and MATog: one
+  # species is curated. HETEROTHALLIC with one idiomorph per genome in the four assemblies checked; no second cassette found. Gene models are
+  # OUR OWN predictions (tier 3: AUGUSTUS and miniprot, no RNA-seq exists for the species); see results/2026-10-30_petasospora/README.md.
+  - locus_name: "MATpf"
+    vocabulary_type: "enum"
+    idiomorph_values: ["MATa", "MATalpha"]
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    taxonomic_scope: [36022]
+    fallback_subphylum: 147537  # Saccharomycotina
+    fallback_searchable: false
+    flank_carried_window_bp: 20000
+    genes:
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}                       # homeodomain (Pfam Homeodomain 64 bits)
+      - {name: MATa2, role: core_MAT, present_in_idiomorphs: ["MATa"]}                       # HMG-box; no Pfam hit above GA, MATa2 Saccharomycotina profile 76.8 bits
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}  # PF04769 36 bits
+      - {name: MATalpha2, role: core_MAT, present_in_idiomorphs: ["MATalpha"], optional: true}        # none found in either alpha allele
+      - {name: dic1, role: flanking_conserved, optional: true}
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+  # NEW FAMILY, curator decision 2026-10-30: Barnettozyma (Phaffomycetales) has its own scope-only family, named after the genus; scope = the genus
+  # (taxid 599802). One record, B. californica PB4207, from OUR OWN tier-3 models (no RNA-seq for the genus; the paper, Hession et al. 2025,
+  # PMID 41359681, gives no coordinates); see results/2026-10-30_barnettozyma/README.md. MATalpha2 is not modelled, hence optional.
+  - locus_name: "MATbz"
+    vocabulary_type: "enum"
+    idiomorph_values: ["MATa", "MATalpha"]
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    taxonomic_scope: [599802]
+    fallback_subphylum: 147537
+    fallback_searchable: false
+    flank_carried_window_bp: 20000
+    genes:
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      - {name: MATa2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATa"]}      # divergent HMG-like; no Pfam HMG_box hit
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
+      - {name: MATalpha2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATalpha"]}   # not modelled in PB4207
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      - {name: dic1, role: flanking_conserved, optional: true}

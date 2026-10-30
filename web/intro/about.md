@@ -53,13 +53,13 @@ The command-line software is cited in the project README, under
 [Citation](https://github.com/stajichlab/MATPredict#citation). The citation metadata is in
 [CITATION.cff](https://github.com/stajichlab/MATPredict/blob/main/CITATION.cff), which GitHub shows under "Cite this repository".
 
-> Stajich JE. MATPredict: MAT locus identification in Fungi. Version 0.7.0. https://github.com/stajichlab/MATPredict
+> Stajich JE. MATPredict: MAT locus identification in Fungi. Version 0.8.0. https://github.com/stajichlab/MATPredict
 
 ```bibtex
 @software{matpredict,
   author  = {Stajich, Jason E.},
   title   = {MATPredict: MAT locus identification in Fungi},
-  version = {0.7.0},
+  version = {0.8.0},
   url     = {https://github.com/stajichlab/MATPredict},
   year    = {2026}
 }

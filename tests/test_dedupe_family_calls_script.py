@@ -25,3 +25,21 @@ def test_tie_goes_to_the_family_with_more_loci_in_the_genome():
 def test_different_coordinates_or_one_family_are_not_duplicates():
     rows = mod.mark_duplicates([row("Ascomycota:MATsc"), row("Ascomycota:MTL", start="30"), row("Ascomycota:MATsc", start="900", end="999", genome="g2")])
     assert all(r["duplicate_family_call"] == "" for r in rows)
+
+
+def test_overlap_mode_groups_nested_and_partly_overlapping_loci():
+    # the same locus with different boundaries: one nested in the other (MATsc 100-1000 against MTL 200-900), and a short MTL locus that only just touches
+    rows = mod.mark_duplicates([row("Ascomycota:MATsc", start="100", end="1000", cls="mat_locus"), row("Ascomycota:MTL", start="200", end="900"), row("Ascomycota:MTL", start="990", end="5000", cls="mat_locus")], match="overlap", min_overlap=0.9)
+    assert [r["duplicate_family_call"] for r in rows] == ["", "true", ""]      # the touching locus overlaps 11 bp of 911: a second locus, not a duplicate
+
+
+def test_overlap_mode_is_off_by_default_and_needs_different_families():
+    nested = [row("Ascomycota:MATsc", start="100", end="1000"), row("Ascomycota:MTL", start="200", end="900")]
+    assert all(r["duplicate_family_call"] == "" for r in mod.mark_duplicates([dict(r) for r in nested]))
+    same_family = mod.mark_duplicates([row("Ascomycota:MATsc", start="100", end="1000"), row("Ascomycota:MATsc", start="200", end="900")], match="overlap")
+    assert all(r["duplicate_family_call"] == "" for r in same_family)
+
+
+def test_overlap_mode_requires_the_same_contig_and_genome():
+    rows = mod.mark_duplicates([row("Ascomycota:MATsc", start="100", end="1000"), row("Ascomycota:MTL", start="200", end="900", contig="c2"), row("Ascomycota:MTL", start="200", end="900", genome="g2")], match="overlap")
+    assert all(r["duplicate_family_call"] == "" for r in rows)

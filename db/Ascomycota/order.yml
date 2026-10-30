@@ -495,6 +495,10 @@ loci:
     # Flank-carried window (curator's ruling 2026-09-26): PAP1/OBP1/PIK1 sit
     # INSIDE the idiomorph, so a core hit must lie within 3 kb of them.
     flank_carried_window_bp: 3000
+    # CURATOR DECISION, J. Stajich, 2026-10-29 (#188/#189, results/2026-10-29_yeast_routing/): an MTL call in a
+    # genome outside Serinales is `family_unconfirmed`, and `family_confirmed` when two of PAP1, OBP1 and PIK1
+    # lie within 15 kb of its core genes (the C. albicans arrangement). Read only with `--cross-family-policy on`.
+    confirm_outside_scope: {flank_genes: [PAP1, OBP1, PIK1], min_flank_genes: 2, window_bp: 15000}
     genes:
       # gene_class added 2026-09-25 so the homothallic rule can tell unrelated
       # genes apart: MTLalpha1 is the alpha-box gene (the MAT1-1-1 counterpart;
@@ -710,12 +714,18 @@ loci:
     # A genus scope is deferred until a record from a distant Ogataea clade exists, and the question whether
     # such calls are reported as a "locus detection" or have their confidence capped below an identity/coverage floor
     # is OPEN with the curator.
-    taxonomic_scope: [460523, 870730, 1005962, 2053387]
+    # CURATOR DECISION, J. Stajich, 2026-10-29 (#189): the genus Ogataea (461281) is in the scope, so every Ogataea genome is
+    # searched with this family (the cassette pairs, results/2026-10-29_yeast_routing/ogataea_pichia_reference_check.md).
+    taxonomic_scope: [460523, 870730, 1005962, 2053387, 461281]
     # Subphylum guard (curator ruling 2026-10-17; src/MATPredict/detect/family_registry.py route()):
     fallback_subphylum: 147537  # Saccharomycotina
     fallback_searchable: false
     # SLA2 and DIC1 flank the cassette within about 5 kb in the references; the second SLA2 + a1 copy is 19 kb away.
     flank_carried_window_bp: 20000
+    # CURATOR DECISION, J. Stajich, 2026-10-29 (#189): two non-overlapping MATog calls of different idiomorphs in one genome
+    # are indicated as MATa and MATalpha cassettes; which one is expressed is not determined. Read only with
+    # `--cross-family-policy on`. Evidence: results/2026-10-29_yeast_routing/ogataea_pichia_reference_check.md.
+    cassette_report: true
     genes:
       # MATa1: homeodomain (Pfam PF00046 56.6 bits on the deposit protein, GA 22.9); no class (the schema has none).
       - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}

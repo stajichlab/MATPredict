@@ -9,7 +9,8 @@ from pathlib import Path
 from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
-from MATPredict.detect import confidence_cap as _confidence_cap, strong_single_gene as _strong_single_gene
+from MATPredict.detect import confidence_cap as _confidence_cap, family_status as _family_status, strong_single_gene as _strong_single_gene
+from MATPredict.detect.family_status import CROSS_FAMILY_POLICIES, DEFAULT_CROSS_FAMILY_POLICY
 from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CONFIDENCE_CAP_POLICY
 from MATPredict.detect.strong_single_gene import (
     DEFAULT_STRONG_SINGLE_GENE_POLICY, STRONG_SINGLE_GENE_POLICIES,
@@ -68,6 +69,15 @@ PRESETS: dict[str, dict[str, str]] = {
         "confidence_cap_policy": _confidence_cap.POLICY_OFF,
         "strong_single_gene_policy": _strong_single_gene.POLICY_OFF,
         "scoped_roster_policy": SCOPED_ROSTER_ON,
+    },
+    # v0.7 plus the cross-family rule of #188/#189 (curator's decision 2026-10-29).
+    "v0.8": {
+        "partial_core_policy": POLICY_COVERAGE_PROFILE,
+        "homothallic_policy": POLICY_BOTH_GENES,
+        "confidence_cap_policy": _confidence_cap.POLICY_OFF,
+        "strong_single_gene_policy": _strong_single_gene.POLICY_OFF,
+        "scoped_roster_policy": SCOPED_ROSTER_ON,
+        "cross_family_policy": _family_status.POLICY_ON,
     },
 }
 
@@ -180,6 +190,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         partial_core_policy=_partial_core_policy_from_args(args),
         homothallic_policy=_homothallic_policy_from_args(args),
         confidence_cap_policy=_confidence_cap_policy_from_args(args),
+        cross_family_policy=_cross_family_policy_from_args(args),
         strong_single_gene_policy=_strong_single_gene_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
@@ -312,6 +323,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "partial_core_policy": _partial_core_policy_from_args(args),
             "homothallic_policy": _homothallic_policy_from_args(args),
             "confidence_cap_policy": _confidence_cap_policy_from_args(args),
+            "cross_family_policy": _cross_family_policy_from_args(args),
             "strong_single_gene_policy": _strong_single_gene_policy_from_args(args),
             "scoped_roster_policy": _scoped_roster_policy_from_args(args),
             "scoped_roster": getattr(routing, "scoped_roster", None),
@@ -345,6 +357,12 @@ def _confidence_cap_policy_from_args(args) -> str:
     """The confidence-cap policy for this run; an args object without the attribute
     (a test double) gets the default, `off`."""
     return getattr(args, "confidence_cap_policy", DEFAULT_CONFIDENCE_CAP_POLICY)
+def _cross_family_policy_from_args(args) -> str:
+    """The cross-family policy for this run; an args object without the attribute
+    (a test double) gets the default, `off`."""
+    return getattr(args, "cross_family_policy", DEFAULT_CROSS_FAMILY_POLICY)
+
+
 def _strong_single_gene_policy_from_args(args) -> str:
     """The strong-single-gene policy for this run; an args object without the
     attribute (a test double) gets the default, `off`."""
@@ -663,6 +681,14 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "hit is a contig-edge partial (< 80%% of its reference, within 500 bp of a contig end, no "
              "full-length core gene) or a weak hit (< 45%% identity) with no flank gene. weak_only: the second "
              "criterion alone. Changes confidence only; the reason is written as `confidence_cap`.",
+    )
+    detect.add_argument(
+        "--cross-family-policy", action=_PolicyFlag, choices=CROSS_FAMILY_POLICIES, default=DEFAULT_CROSS_FAMILY_POLICY,
+        help="off: every family's calls are reported as they are (default). on: two families' calls at the "
+             "same locus (>= 90%% of the shorter) are one locus, kept by the family whose taxonomic scope "
+             "contains the genome (else the better score), the other recorded as `cross_call`; an MTL call "
+             "in a genome outside Serinales is flagged `family_unconfirmed`, or `family_confirmed` when two "
+             "of PAP1, OBP1, PIK1 lie within 15 kb of its core genes. Confidence is never changed.",
     )
     detect.add_argument(
         "--strong-single-gene-policy", action=_PolicyFlag, choices=STRONG_SINGLE_GENE_POLICIES,

@@ -322,3 +322,24 @@ def test_mucoromycotina_family_reaches_the_taxa_rows_and_the_genome_table(tmp_pa
     i = {k: n for n, k in enumerate(taxa["fields"])}
     fam = {taxa["strings"][r[i["family"]]] for r in taxa["rows"] if taxa["strings"][r[i["phylum"]]] == "Mucoromycota"}
     assert fam == {"Mucoraceae"}
+
+
+def test_idiomorph_labels_sit_beside_the_raw_names(tmp_path):
+    """Labels from the registry: taxa field `label_alleles`, genome columns `call_label` / `alleles_label`, and the tooltip file; the raw columns are unchanged."""
+    out = tmp_path / "out"
+    bsd.main(["--release", "v060", "--out", str(out)] + _campaigns(tmp_path))
+    taxa = json.loads((out / "taxa.json").read_text())
+    assert taxa["fields"][16] == "label_alleles"
+    S = taxa["strings"]
+    # the genome totals agree between the raw and the label counts in every taxon row
+    for r in taxa["rows"]:
+        assert sum(r[12].values()) == sum(r[16].values())
+    labels = json.loads((out / "idiomorph_labels.json").read_text())["labels"]
+    assert labels["Peziz__BipMay_MAT1-1"]["raw"] == ["MAT1-1 (Ascomycota:MAT)"]
+    assert labels["Mucor__PhyBla_plus"]["reference"] == "Phycomyces blakesleeanus"
+    G = _genomes(out / "genomes_bfd_asco.tsv")
+    assert G["A1"]["call"] == "MAT1-1+MAT1-2" and G["A1"]["call_label"] == "Peziz__BipMay_MAT1-1+Peziz__BipMay_MAT1-2"
+    assert G["A1"]["alleles_label"] == "Peziz__BipMay_MAT1-1,Peziz__BipMay_MAT1-2"
+    assert G["A2"]["call"] == G["A2"]["call_label"] == "uncalled"
+    assert _genomes(out / "genomes_bfd_basidio.tsv")["B1"]["call_label"] == "undetermined"     # undetermined idiomorph: no allele to label
+    assert any(S[int(k)] == "two:Peziz__BipMay_MAT1-1+Peziz__BipMay_MAT1-2" for r in taxa["rows"] for k in r[16])      # A1 carries both idiomorphs

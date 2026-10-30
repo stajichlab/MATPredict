@@ -20,6 +20,7 @@
     "CanAlb": "Candida albicans",
     "KomPha": "Komagataella phaffii",
     "OgaPol": "Ogataea polymorpha",
+    "PicKud": "Pichia kudriavzevii (PROPOSED code, #189; awaiting curator approval)",
     "YarLip": "Yarrowia lipolytica",
     "GeoCan": "Geotrichum candidum",
     "SchPom": "Schizosaccharomyces pombe",
@@ -110,6 +111,21 @@
     "Ascomycota:MATog": {
       "lineage": "Sacch",
       "system": "OgaPol",
+      "cells": {
+        "MATa": "a",
+        "MATalpha": "alpha",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "MATa1": "a1",
+        "MATa2": "a2",
+        "MATalpha1": "alpha1",
+        "MATalpha2": "alpha2"
+      }
+    },
+    "Ascomycota:MATpk": {
+      "lineage": "Sacch",
+      "system": "PicKud",
       "cells": {
         "MATa": "a",
         "MATalpha": "alpha",

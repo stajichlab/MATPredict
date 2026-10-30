@@ -38,15 +38,25 @@
   <p><button id="dlview">Download genomes in the current view</button> <span class="muted" id="dlmsg"></span></p>
   <p class="muted">Rows with no value at a rank (for example Mucoromycotina family, which the input tables do not carry) are grouped under “(none)”. Genus and species come from the genome's recorded species name; unrecognised names are “(unassigned)”.
   “Two alleles” means two distinct idiomorphs were called in one genome: homothallism, silent mating cassettes, a hybrid or mixed assembly, or a paralog. It is a flag, not a ruling. Allele names are as reported per lineage and are not merged; the default view adds a label of the form <code>Lineage__System_Cell</code> (for example <code>Taphr__SchPom_M</code>, <code>Sacch__CanAlb_alpha</code>, <code>Peziz__AspFum_MAT1-1</code>): the system is the reference organism whose panel matched, not a claim about the species, and the raw name and the reference are in the tooltip. “Allele names” switches back to the raw names.
+  <span class="lmark">†</span> beside a label: some loci behind it are cross-called by two families, have an undetermined allele, rest on a placeholder system (NoRef) or on an unconfirmed family call; hover for the counts. The label may change when the data are re-run. The downloads carry the status and the registry version.
   A call is detection, not proof; genome counts reflect uneven strain sampling.</p>
 </main>
 <script type="module">
 import { loadData, stacked, legend, fmt, pct, COLORS } from "./charts.js";
 import { loadShard, renderCards } from "./locus-view.js";
 const { rows, summary } = await loadData();
-const LBL = await fetch("data/idiomorph_labels.json").then(r => r.json()).then(j => j.labels).catch(() => ({}));    // label -> raw names and the reference organism
+const LJ = await fetch("data/idiomorph_labels.json").then(r => r.json()).catch(() => ({}));
+const LBL = LJ.labels || {};    // label -> raw names, the reference organism and the loci per label_status (#211)
+const REGV = LJ.registry_version || "";
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 const tip = a => { const l = LBL[a]; return l ? esc(`${l.raw.join(", ")} · ${l.lineage}, system of ${l.reference}`) : ""; };
+// A marker beside a label when some loci behind it have a label_status other than ok (cross_call, undetermined, no_reference, family_unconfirmed, similarity_only); raw names get none.
+const mark = a => {
+  const l = LBL[a]; if (st.names !== "label" || !l || !l.status) return "";
+  const bad = Object.entries(l.status).filter(([k]) => k !== "ok"); if (!bad.length) return "";
+  const n = Object.values(l.status).reduce((p, v) => p + v, 0), m = bad.reduce((p, [, v]) => p + v, 0);
+  return ` <span class="lmark" title="${esc(`${fmt(m)} of ${fmt(n)} loci with this label are marked: ${bad.map(([k, v]) => `${k.replace(/_/g, " ")} ${fmt(v)}`).join(", ")}. The label may change when these data are replaced by the next run (routing changes, #188). Registry ${REGV}.`)}">†</span>`;
+};
 const RANKS = ["phylum", "class", "order", "family", "genus", "species"];
 const DS = { BFD: "BFD", ZyGoLife: "ZyGoLife LCG and Jena (held-out sets, not counted with BFD)" };
 // The held-out sets are a separate category (curator 2026-10-24): off by default, so the default view is BFD only.
@@ -114,7 +124,7 @@ function render() {
   legend($("lg"), all);
 
   $("tbl").tBodies[0].innerHTML = shown.map(x => {
-    const al = Object.entries(x.al).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([a, v]) => `<span title="${tip(a)}">${a}</span> ${fmt(v)} (${pct(v, x.c, 0)})`).join(" · ");
+    const al = Object.entries(x.al).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([a, v]) => `<span title="${tip(a)}">${a}</span>${mark(a)} ${fmt(v)} (${pct(v, x.c, 0)})`).join(" · ");
     const drill = " click";
     return `<tr class="${drill.trim()}" data-name="${x.name.replace(/"/g, "&quot;")}"><td>${x.name}</td><td class="n">${fmt(x.n)}</td><td class="n">${pct(x.c, x.n)}</td><td>${al || '<span class="muted">none</span>'}${x.undet ? ` <span class="muted">· undetermined ${fmt(x.undet)}</span>` : ""}</td><td class="n">${x.two ? fmt(x.two) : ""}</td></tr>`;
   }).join("");

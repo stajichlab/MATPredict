@@ -53,3 +53,27 @@ Barnettozyma is the one genus where MTL flank genes show up in most loci (6 of 8
 1. Accept **leave** for the genera of A?
 2. For B and C: **hold** now, with a synteny check as the next step, or scope any genus now?
 3. Is the order of work: Barnettozyma, Saccharomycopsis, Ambrosiozyma, Petasospora?
+
+## Synteny check (curator's order: Barnettozyma, Saccharomycopsis, Ambrosiozyma, Petasospora; all 156 loci were run)
+
+`flank_synteny.py` cuts each ambiguous locus +/- 40 kb and searches 35 flank proteins from the curated records with miniprot (SLA2, CHA1, APN2, DIC1 from the MATsc, MATyl and MATog records; PAP1, OBP1, PIK1 from the MTL records). A hit counts at 40% identity or more; `flank_synteny.tsv` has the nearest hit of each gene (identity@distance to the locus edge, 0 = inside the locus span). Cluster job 31430330.
+
+| Genus | loci | kept MATsc / MTL | SLA2 or CHA1 within 10 kb | DIC1 within 10 kb | PIK1, OBP1 or PAP1 within 20 kb |
+|---|---|---|---|---|---|
+| Barnettozyma | 8 | 2 / 6 | 7 | 7 | **0** |
+| Saccharomycopsis | 27 | 5 / 22 | 21 | 0 | **0** |
+| Ambrosiozyma | 19 | 4 / 15 | 13 | 13 | **0** |
+| Petasospora | 11 | 6 / 5 | 11 | 11 | **0** |
+| Wickerhamomyces | 9 | 8 / 1 | 9 | 9 | **0** |
+| all 27 genera | 156 | 91 / 65 | 129 | 71 | **0** |
+
+Findings:
+
+1. **No MTL flank gene lies near any of the 156 loci, including the 65 where MTL was kept.** The MTL architecture has PAP1, OBP1 and PIK1 beside the locus; none is found within 20 kb at 40% identity or more. (The detector's own flank rule found one flank gene beside 38 MTL calls, never two; a hit below 40% identity is not counted here, and a divergent PIK1 in a distant genus could be missed. This is the weak point of the check.)
+2. **SLA2 or CHA1 sits beside the locus in 129 of 156 loci**, and **DIC1 beside 71**, the same side-by-side as the *Komagataella* (MATkp) and *Ogataea* (MATog) cassettes: SLA2 on one side, DIC1 on the other. DIC1 is present in the Pichiales and Phaffomycetales genera (Barnettozyma 7 of 8, Ambrosiozyma 13 of 19, Petasospora 11 of 11, Wickerhamomyces 9 of 9) and absent in Saccharomycopsis and Saccharomycodes (Ascoideales, Saccharomycodales), which have SLA2 only.
+3. So the identity preference for MTL in Saccharomycopsis, Ambrosiozyma, Barnettozyma and Citeromyces is not backed by the neighbourhood: these loci sit in an SLA2 (+ DIC1) neighbourhood, a MATsc, MATog or MATkp-like arrangement. The MTL calls are probably the closest reference by sequence only.
+
+### Proposed (for the curator; not implemented)
+
+- **Genera with SLA2 + DIC1 beside the locus** (Barnettozyma, Ambrosiozyma, Petasospora, Wickerhamomyces, Hansenula, Williopsis, Ruyongia, ...): a MATog/MATkp-type architecture. Candidate action: a reference record from one genus (a *Barnettozyma* or *Petasospora* species with a manual locus check) before scoping; until then the MATsc/MATog calls stand.
+- **Rule change to consider:** an MTL call outside Serinales with no flank support should not win a cross-call against a family whose own flank genes are present (MATsc: SLA2). Applied to this replay it would keep MATsc in all 65 loci where MTL won. It makes the flank rule decide the family, the asymmetric evidence that the evaluation warned about, but here the asymmetry is complete (0 of 156). This needs the curator's decision.

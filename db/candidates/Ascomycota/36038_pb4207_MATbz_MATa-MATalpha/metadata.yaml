@@ -30,7 +30,7 @@ locus:
     identity: 100.0
   core:
     completeness: partial
-    reference_orientation: DIC1->MATa2->MATa1->MATalpha1->SLA2 (MATalpha2 not modelled)
+    reference_orientation: DIC1->MATa2->MATa1->MATalpha1->MATalpha2 (partial)->SLA2
     definition_note: 'DRAFT, GENE MODELS ARE OURS (tier 3). B. californica strain
       PB4207 (Dalian Medical University, GCA_023627795.1, ctg_5 = JAMAIE010000005.1,
       694,392 bp; the locus is 63 kb from one contig end). The one published description
@@ -54,16 +54,18 @@ locus:
       score the same), MATa2 (269 aa, one 56 bp GTATGT..CTTAG intron at 614,112-614,167,
       82 bits to the MATa2 profile against a background maximum of 32 over all 124
       six-frame segments of the window; no Pfam HMG_box hit, as for Komagataella).
-      MATalpha2 IS NOT RECORDED: a homeodomain region (genome 620,370-620,700) follows
-      MATalpha1 but no complete gene model could be built; it is not recorded as present
-      or absent. NAMING: Pfam cannot tell the MATa1 homeodomain from the MATalpha2
-      homeodomain; the names follow position (the homeodomain gene next to the HMG-like
-      gene on the MATa side is MATa1). The other three californica assemblies (UCD09
-      GCA_003123585.1, UCD89 GCA_003123885.1, NRRL Y-17395 GCA_003706655.3) carry
-      the same proteins at 99.6-100% identity, which is one strain family, not independent
-      evidence. B. discipulorum (GCA_049863505.1) has SLA2, MATa1, MATalpha1 and DIC1
-      at 45-86% identity but arranged differently and no MATa2 hit. GENETIC CODE:
-      standard (table 1), not tested. Details: results/2026-10-30_barnettozyma/README.md.'
+      MATalpha2 IS RECORDED AS PARTIAL (added 2026-10-30): a 113 aa alpha2-type homeodomain
+      ORF at 620,080-620,421 (plus strand; the alpha2 profile of results/2026-10-30_mat_hmms
+      scores 37 bits), the same ORF in all four californica assemblies; it begins
+      right after an in-frame stop, so the N-terminal exon is not found and the model
+      is a fragment. NAMING: the a1 and alpha2 profiles of results/2026-10-30_mat_hmms
+      (supporting evidence, a score difference) call the MATa1 homeodomain a1 (104
+      bits against 23 for alpha2). The other three californica assemblies (UCD09 GCA_003123585.1,
+      UCD89 GCA_003123885.1, NRRL Y-17395 GCA_003706655.3) carry the same proteins
+      at 99.6-100% identity, which is one strain family, not independent evidence.
+      B. discipulorum (GCA_049863505.1) has SLA2, MATa1, MATalpha1 and DIC1 at 45-86%
+      identity but arranged differently and no MATa2 hit. GENETIC CODE: standard (table
+      1), not tested. Details: results/2026-10-30_barnettozyma/README.md.'
     segments:
     - segment_index: 0
       sequence_source:
@@ -128,6 +130,18 @@ genes:
     end: 619103
   gene_class: alpha_box
 - gene_index: 4
+  name: MATalpha2
+  role: core_MAT
+  present: true
+  segment_index: 0
+  start: 620080
+  end: 620421
+  strand: +
+  order_in_locus: 4
+  exons:
+  - start: 620080
+    end: 620421
+- gene_index: 5
   name: sla2
   role: flanking_conserved
   present: true
@@ -135,7 +149,7 @@ genes:
   start: 627731
   end: 630871
   strand: '-'
-  order_in_locus: 4
+  order_in_locus: 5
   exons:
   - start: 627731
     end: 630871
@@ -156,7 +170,8 @@ evidence:
     tier: 3
     experimental_method: 'gene content and position: HMG-like MATa2 + homeodomain
       MATa1 on one side, alpha-box MATalpha1 on the other, separated by 2.8 kb (PMID
-      41359681); homeodomain names by position only'
+      41359681); the a1 profile of results/2026-10-30_mat_hmms calls the MATa1 homeodomain
+      a1 (104 vs 23 bits); MATa2 scores 81-82 bits on the a2 profiles'
     citations: *id001
 validation:
   status: needs_review

@@ -23,7 +23,7 @@ def test_matss_declaration():
 
 
 def test_matss_candidates_are_tier_3_models_with_table_12():
-    for rid in ("44080_gdd12_MATss_MATalpha", "44080_gdd12_MATss_MATa"):
+    for rid in ("44080_gdd12_MATss_MATa-MATalpha", "44080_gdd12_MATss_MATa"):
         rec = yaml.safe_load((DB / "candidates" / "Ascomycota" / rid / "metadata.yaml").read_text())
         assert rec["mating_type"]["locus_name"] == "MATss" and rec["mating_type"]["system"] == "homothallic"
         assert rec["evidence"]["boundaries"]["tier"] == 3

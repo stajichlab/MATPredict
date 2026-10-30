@@ -820,10 +820,10 @@ loci:
     flank_carried_window_bp: 20000
     genes:
       # Gene models of the records are OUR OWN (tier 3): the authors' GTF is not public (results/2026-10-29_ss_records/README.md).
-      # MATa1, MATalpha2: homeodomain; no class (the schema has none). Named after the paper's cassette (a: MATa1; alpha: MATalpha2); phmmer
-      # ranks both ORFs closest to MATa1-type references, so the name of the left-cluster homeodomain gene is a hypothesis.
+      # Gene NAMES rest on the MATa1, MATalpha2 and MATa2 profiles of results/2026-10-30_mat_hmms (supporting evidence, a score
+      # difference, not referenced by any rule). MATa1 and MATalpha2 are homeodomain proteins: no class (the schema has none).
       - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
-      # MATa2: optional; no HMG-box ORF was resolved in the right cassette (an HMG-like ORF 470,349-470,951 is not assigned).
+      # MATa2: optional (HMG-box, divergent; no Pfam HMG_box hit above GA, a2 profile 78 bits on the chromosome IV ORF).
       - {name: MATa2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATa"]}
       # MATalpha1: alpha_box (Pfam PF04769 54 bits, GA 28.1, on the chromosome IV ORF), the same bar as MATkp, MATog and MATpk.
       - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
@@ -852,7 +852,7 @@ loci:
       - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
   # NEW FAMILY, curator decision 2026-10-30: Barnettozyma (Phaffomycetales) has its own scope-only family, named after the genus; scope = the genus
   # (taxid 599802). One record, B. californica PB4207, from OUR OWN tier-3 models (no RNA-seq for the genus; the paper, Hession et al. 2025,
-  # PMID 41359681, gives no coordinates); see results/2026-10-30_barnettozyma/README.md. MATalpha2 is not modelled, hence optional.
+  # PMID 41359681, gives no coordinates); see results/2026-10-30_barnettozyma/README.md. MATalpha2 is a partial fragment (113 aa), hence optional.
   - locus_name: "MATbz"
     vocabulary_type: "enum"
     idiomorph_values: ["MATa", "MATalpha"]
@@ -865,6 +865,6 @@ loci:
       - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
       - {name: MATa2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATa"]}      # divergent HMG-like; no Pfam HMG_box hit
       - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
-      - {name: MATalpha2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATalpha"]}   # not modelled in PB4207
+      - {name: MATalpha2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATalpha"]}   # partial fragment in PB4207
       - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
       - {name: dic1, role: flanking_conserved, optional: true}

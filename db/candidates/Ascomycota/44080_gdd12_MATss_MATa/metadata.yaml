@@ -21,19 +21,22 @@ locus:
   excluded_from_coordinate_benchmark: false
   core:
     completeness: partial
-    reference_orientation: sla2->MATa1
+    reference_orientation: sla2->MATa1->MATa2
     definition_note: 'Right (palindromic) cassette of the active MAT locus on chromosome
       IV of S. schoenii GDD12 (CM143129.1; the paper''s span 528,044-537,777; an SLA2
       anchor between mirrored MAT arrays, Kriti et al. G3 2026, PMID 41849659). HOMOTHALLIC
       (Dost et al. 2024, PMID 38492364). The record covers the arm that RNA-seq resolves:
-      SLA2 533,981-535,828 (plus, 615 aa, 5-prime partial: no start codon in the ORF)
-      and the homeodomain gene named MATa1 after the paper at 536,046-536,944 (minus,
-      211 aa; introns of 205 bp, 221 reads, and 58 bp, 218 reads, the conserved 58
-      bp junction the paper reports at 536,635). The mirrored arm (SLA2 529,992-532,490;
-      homeodomain ORF 529,258-529,749, 163 aa) is not recorded: short reads cannot
-      separate the two inverted copies, and the paper''s mirrored junction at 529,128
-      is not seen. No HMG-box (MATa2) ORF passed the filters. GENE MODELS ARE OURS
-      (tier 3), see results/2026-10-29_ss_records/README.md. The library is not stranded.
+      SLA2 533,981-535,828 (plus, 615 aa, 5-prime partial: no start codon in the ORF),
+      MATa1 at 536,046-536,944 (minus, 211 aa; a1 profile 85 bits, alpha2 27; introns
+      of 205 bp, 221 reads, and 58 bp, 218 reads, the conserved 58 bp junction the
+      paper reports at 536,635) and MATa2 at 537,379-538,170 (plus, 263 aa, ATG to
+      stop, single exon, head-to-head with MATa1; a2 profile hit, results/2026-10-30_mat_hmms).
+      The a2 profile finds only three a2-like ORFs in the whole genome, all on chromosome
+      IV: this one, its mirror at 527,654-528,454 (minus) and one at 502,064-502,864
+      at the central cluster. The mirrored arm (SLA2 529,992-532,490; MATa1 529,186-529,746)
+      is not recorded: short reads cannot separate the two inverted copies, and the
+      paper''s mirrored junction at 529,128 is not seen. GENE MODELS ARE OURS (tier
+      3), see results/2026-10-29_ss_records/README.md. The library is not stranded.
       GENETIC CODE: NCBI table 12 (CUG = Ser).'
     segments:
     - segment_index: 0
@@ -42,7 +45,7 @@ locus:
         accession: CM143129.1
         seq_region: CM143129.1
       start: 533981
-      end: 536944
+      end: 538170
       contig_edge_distance: null
       sequence_checksum: null
   extended_flank: []
@@ -51,7 +54,7 @@ locus:
   assembly_location:
     contig: CM143129.1
     start: 533981
-    end: 536944
+    end: 538170
     identity: 100.0
 genes:
 - gene_index: 0
@@ -86,6 +89,20 @@ genes:
     end: 536634
   - start: 536046
     end: 536090
+- gene_index: 2
+  name: MATa2
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 537379
+  end: 538170
+  strand: +
+  order_in_locus: 2
+  transl_table: 12
+  exons:
+  - start: 537379
+    end: 538170
 evidence:
   locus_existence:
     tier: 2
@@ -104,9 +121,9 @@ evidence:
     citations: *id001
   idiomorph_assignment:
     tier: 3
-    experimental_method: the paper's assignment of the sub-cluster (alpha-dominant
-      left, palindromic a right); gene names follow it by position; phmmer ranks both
-      homeodomain ORFs closest to MATa1-type references, so MATalpha2 is a hypothesis
+    experimental_method: 'new MATa1, MATalpha2 and MATa2 profiles (a score difference,
+      supporting evidence: results/2026-10-30_mat_hmms); the sub-clusters are the
+      paper''s'
     citations: *id001
 validation:
   status: needs_review

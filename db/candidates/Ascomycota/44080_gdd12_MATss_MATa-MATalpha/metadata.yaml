@@ -1,4 +1,4 @@
-record_id: 44080_gdd12_MATss_MATalpha
+record_id: 44080_gdd12_MATss_MATa-MATalpha
 record_version: 1
 taxonomy:
   taxid: 44080
@@ -14,6 +14,7 @@ organism:
 mating_type:
   locus_name: MATss
   idiomorphs:
+  - MATa
   - MATalpha
   system: homothallic
 locus:
@@ -21,7 +22,7 @@ locus:
   excluded_from_coordinate_benchmark: false
   core:
     completeness: partial
-    reference_orientation: MATalpha1->MATalpha2->sla2
+    reference_orientation: MATalpha2->MATalpha1->MATa1->sla2
     definition_note: 'Left (alpha-dominant) sub-cluster of the active MAT locus on
       chromosome IV of S. schoenii GDD12 (CM143129.1; the paper''s span 470,610-475,000,
       Kriti et al. G3 2026, PMID 41849659). HOMOTHALLIC (Dost et al. 2024, PMID 38492364);
@@ -30,23 +31,26 @@ locus:
       cites is not on its GitHub or Zenodo, so the models were rebuilt from the three
       public paired RNA-seq runs (PRJNA1364152; hisat2, StringTie, TransDecoder, phmmer
       against the curated MAT proteins, Pfam-A); see results/2026-10-29_ss_records/README.md.
-      The library is not stranded; strand is the ORF''s. MATalpha1 is single-exon,
-      minus strand, 191 aa. The homeodomain ORF (named MATalpha2 after the paper)
-      is partial (103 aa, two exons with a 217 bp intron of 198 reads that joins it
-      toward SLA2, the paper''s MAT-SLA2 splice junction); phmmer ranks it closest
-      to MATa1-type references (50 bits to C. albicans MTLA1), so the name is a hypothesis.
-      SLA2 here is a diverged copy: 256 aa (472,708-473,478, minus), 5-prime partial
-      (the ORF has no start codon); a second SLA2 piece (473,680-474,606, 309 aa)
-      is not recorded. An HMG-like ORF at 470,349-470,951 (200 aa, 44 bits to S. cerevisiae
-      MATA2, no Pfam hit) is not assigned to a gene. GENETIC CODE: NCBI table 12 (CUG
-      = Ser) for the species; proteins are translated with it.'
+      The library is not stranded; strand is the ORF''s. GENE NAMES come from new
+      MATa1, MATalpha2 and MATa2 profiles (results/2026-10-30_mat_hmms; supporting
+      evidence, a score difference, not a gate): the ORF at 470,349-470,951 (200 aa,
+      single exon, 227 aa with a 92 bp intron of 97 reads) is MATalpha2 (alpha2 profile
+      73 bits, a1 12) and not an HMG-box MATa2; the homeodomain at 471,961-472,489
+      is MATa1 (a1 86, alpha2 29), so the cluster holds both an alpha pair and an
+      a1 beside SLA2 (the paper''s MATa1-SLA2 junction). MATalpha1 is single-exon,
+      minus strand, 191 aa. The MATa1 model is partial (103 aa, two exons with a 217
+      bp intron of 198 reads that joins it toward SLA2); the uninterrupted frame through
+      the intron scores lower (a1 60) and runs through a low-complexity repeat. SLA2
+      is a diverged copy: 256 aa (472,708-473,478, minus), 5-prime partial (no start
+      codon); a second SLA2 piece (473,680-474,606, 309 aa) is not recorded. GENETIC
+      CODE: NCBI table 12 (CUG = Ser).'
     segments:
     - segment_index: 0
       sequence_source:
         type: insdc_nucleotide
         accession: CM143129.1
         seq_region: CM143129.1
-      start: 471020
+      start: 470349
       end: 473478
       contig_edge_distance: null
       sequence_checksum: null
@@ -55,11 +59,25 @@ locus:
   assembly_accession_basis: strain_match_verified
   assembly_location:
     contig: CM143129.1
-    start: 471020
+    start: 470349
     end: 473478
     identity: 100.0
 genes:
 - gene_index: 0
+  name: MATalpha2
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 470349
+  end: 470951
+  strand: +
+  order_in_locus: 0
+  transl_table: 12
+  exons:
+  - start: 470349
+    end: 470951
+- gene_index: 1
   name: MATalpha1
   role: core_MAT
   present: true
@@ -68,13 +86,13 @@ genes:
   start: 471020
   end: 471595
   strand: '-'
-  order_in_locus: 0
+  order_in_locus: 1
   transl_table: 12
   exons:
   - start: 471020
     end: 471595
-- gene_index: 1
-  name: MATalpha2
+- gene_index: 2
+  name: MATa1
   role: core_MAT
   present: true
   locus_tag: null
@@ -82,14 +100,14 @@ genes:
   start: 471961
   end: 472489
   strand: +
-  order_in_locus: 1
+  order_in_locus: 2
   transl_table: 12
   exons:
   - start: 471961
     end: 472227
   - start: 472445
     end: 472489
-- gene_index: 2
+- gene_index: 3
   name: sla2
   role: flanking_conserved
   present: true
@@ -98,7 +116,7 @@ genes:
   start: 472708
   end: 473478
   strand: '-'
-  order_in_locus: 2
+  order_in_locus: 3
   transl_table: 12
   exons:
   - start: 472708
@@ -121,9 +139,9 @@ evidence:
     citations: *id001
   idiomorph_assignment:
     tier: 3
-    experimental_method: the paper's assignment of the sub-cluster (alpha-dominant
-      left, palindromic a right); gene names follow it by position; phmmer ranks both
-      homeodomain ORFs closest to MATa1-type references, so MATalpha2 is a hypothesis
+    experimental_method: 'new MATa1, MATalpha2 and MATa2 profiles (a score difference,
+      supporting evidence: results/2026-10-30_mat_hmms); the sub-clusters are the
+      paper''s'
     citations: *id001
 validation:
   status: needs_review
@@ -138,7 +156,7 @@ validation:
   taxonomy_current: null
 curation:
   proposed_by: claude-code-curation-agent
-  proposal_dedupe_key: 41849659|44080|MATss|MATalpha
+  proposal_dedupe_key: 41849659|44080|MATss|MATa-MATalpha
   reviewed_by: null
   reviewed_date: null
 model_provenance: null

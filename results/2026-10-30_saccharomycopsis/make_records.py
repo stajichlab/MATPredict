@@ -22,13 +22,15 @@ def protein(exons, strand):
 
 # name: (role, strand, exons ascending, expected aa, note)
 LEFT = {
- "MATalpha1": ("core_MAT", "-", [(471020, 471595)], 191, "alpha box (MATalpha_HMGbox 54 bits), SS.1982 ORF p4"),
- "MATalpha2": ("core_MAT", "+", [(471961, 472227), (472445, 472489)], 103, "homeodomain (57 bits), partial ORF; 217 bp intron, 198 reads"),
+ "MATalpha2": ("core_MAT", "+", [(470349, 470951)], 200, "alpha2 profile 73 bits (a1 12); a 92 bp intron (97 reads) gives a 227 aa isoform"),
+ "MATalpha1": ("core_MAT", "-", [(471020, 471595)], 191, "alpha box (MATalpha_HMGbox 54 bits)"),
+ "MATa1": ("core_MAT", "+", [(471961, 472227), (472445, 472489)], 103, "a1 profile 86 bits (alpha2 29); partial: 217 bp intron (198 reads) joins it toward SLA2"),
  "sla2": ("flanking_conserved", "-", [(472708, 473478)], 256, "diverged SLA2 (I_LWEQ 186 bits); a second piece 473,680-474,606 (309 aa) is not recorded"),
 }
 RIGHT = {
  "sla2": ("flanking_conserved", "+", [(533981, 535828)], 615, "SLA2 anchor (I_LWEQ 183 bits), SS.2002.2 ORF p1; mirrored copy 529,992-532,490"),
- "MATa1": ("core_MAT", "-", [(536046, 536090), (536296, 536634), (536693, 536944)], 211, "homeodomain (54 bits); introns 205 bp (221 reads) and 58 bp (218 reads)"),
+ "MATa1": ("core_MAT", "-", [(536046, 536090), (536296, 536634), (536693, 536944)], 211, "a1 profile 85 bits (alpha2 27); introns 205 bp (221 reads) and 58 bp (218 reads)"),
+ "MATa2": ("core_MAT", "+", [(537379, 538170)], 263, "a2 profile hit, head-to-head with MATa1; ATG to stop, single exon; mirror copy 527,654-528,454 (minus)"),
 }
 for nm, genes in (("left", LEFT), ("right", RIGHT)):
     for g, (role, strand, ex, aa, _) in genes.items():
@@ -60,31 +62,33 @@ def record(rid, idiomorph, spec, orient, note, span):
            "extended_flank": [], "assembly_accession": "GCA_054953955.1", "assembly_accession_basis": "strain_match_verified",
            "assembly_location": {"contig": "CM143129.1", "start": lo, "end": hi, "identity": 100.0}}
     return {"record_id": rid, "record_version": 1, "taxonomy": TAX, "organism": ORG,
-            "mating_type": {"locus_name": "MATss", "idiomorphs": [idiomorph], "system": "homothallic"},
+            "mating_type": {"locus_name": "MATss", "idiomorphs": idiomorph if isinstance(idiomorph, list) else [idiomorph], "system": "homothallic"},
             "locus": loc, "genes": genes,
             "evidence": {"locus_existence": {"tier": 2, "experimental_method": "published description of the SLA2-MAT cassettes and RNA-seq of the active chromosome IV locus (Kriti et al. 2026)", "citations": CIT},
                          "boundaries": {"tier": 3, "experimental_method": "OUR OWN gene models from the public RNA-seq (PRJNA1364152; StringTie, TransDecoder, phmmer/Pfam) because the authors' GTF is not public; coordinates are ours, the locus span is the paper's", "citations": CIT},
-                         "idiomorph_assignment": {"tier": 3, "experimental_method": "the paper's assignment of the sub-cluster (alpha-dominant left, palindromic a right); gene names follow it by position; phmmer ranks both homeodomain ORFs closest to MATa1-type references, so MATalpha2 is a hypothesis", "citations": CIT}},
+                         "idiomorph_assignment": {"tier": 3, "experimental_method": "new MATa1, MATalpha2 and MATa2 profiles (a score difference, supporting evidence: results/2026-10-30_mat_hmms); the sub-clusters are the paper's", "citations": CIT}},
             "validation": {"status": "needs_review", "rejection_reason": None, "accession_resolved": False, "accession_resolved_date": None,
                            "accession_resolved_version": None, "sequence_match": {"status": "pass", "per_gene": [], "notes": ""}, "taxonomy_current": None},
-            "curation": {"proposed_by": "claude-code-curation-agent", "proposal_dedupe_key": f"41849659|44080|MATss|{idiomorph}", "reviewed_by": None, "reviewed_date": None},
+            "curation": {"proposed_by": "claude-code-curation-agent", "proposal_dedupe_key": f"41849659|44080|MATss|{'-'.join(idiomorph) if isinstance(idiomorph, list) else idiomorph}", "reviewed_by": None, "reviewed_date": None},
             "model_provenance": None}
 
 NOTE_L = ("Left (alpha-dominant) sub-cluster of the active MAT locus on chromosome IV of S. schoenii GDD12 (CM143129.1; the paper's span 470,610-475,000, "
           "Kriti et al. G3 2026, PMID 41849659). HOMOTHALLIC (Dost et al. 2024, PMID 38492364); one of several SLA2-MAT cassettes (one per chromosome plus a palindromic one on chromosome IV). "
           "GENE MODELS ARE OURS (tier 3): the BRAKER2 GTF the paper cites is not on its GitHub or Zenodo, so the models were rebuilt from the three public paired RNA-seq runs "
           "(PRJNA1364152; hisat2, StringTie, TransDecoder, phmmer against the curated MAT proteins, Pfam-A); see results/2026-10-29_ss_records/README.md. The library is not stranded; "
-          "strand is the ORF's. MATalpha1 is single-exon, minus strand, 191 aa. The homeodomain ORF (named MATalpha2 after the paper) is partial (103 aa, two exons with a 217 bp intron of 198 reads that "
-          "joins it toward SLA2, the paper's MAT-SLA2 splice junction); phmmer ranks it closest to MATa1-type references (50 bits to C. albicans MTLA1), so the name is a hypothesis. "
-          "SLA2 here is a diverged copy: 256 aa (472,708-473,478, minus), 5-prime partial (the ORF has no start codon); a second SLA2 piece (473,680-474,606, 309 aa) is not recorded. An HMG-like ORF at 470,349-470,951 (200 aa, 44 bits to "
-          "S. cerevisiae MATA2, no Pfam hit) is not assigned to a gene. GENETIC CODE: NCBI table 12 (CUG = Ser) for the species; proteins are translated with it.")
+          "strand is the ORF's. GENE NAMES come from new MATa1, MATalpha2 and MATa2 profiles (results/2026-10-30_mat_hmms; supporting evidence, a score difference, not a gate): the ORF at 470,349-470,951 "
+          "(200 aa, single exon, 227 aa with a 92 bp intron of 97 reads) is MATalpha2 (alpha2 profile 73 bits, a1 12) and not an HMG-box MATa2; the homeodomain at 471,961-472,489 is MATa1 (a1 86, alpha2 29), "
+          "so the cluster holds both an alpha pair and an a1 beside SLA2 (the paper's MATa1-SLA2 junction). MATalpha1 is single-exon, minus strand, 191 aa. The MATa1 model is partial (103 aa, two exons with a 217 bp intron of "
+          "198 reads that joins it toward SLA2); the uninterrupted frame through the intron scores lower (a1 60) and runs through a low-complexity repeat. "
+          "SLA2 is a diverged copy: 256 aa (472,708-473,478, minus), 5-prime partial (no start codon); a second SLA2 piece (473,680-474,606, 309 aa) is not recorded. GENETIC CODE: NCBI table 12 (CUG = Ser).")
 NOTE_R = ("Right (palindromic) cassette of the active MAT locus on chromosome IV of S. schoenii GDD12 (CM143129.1; the paper's span 528,044-537,777; an SLA2 anchor between mirrored MAT arrays, "
-          "Kriti et al. G3 2026, PMID 41849659). HOMOTHALLIC (Dost et al. 2024, PMID 38492364). The record covers the arm that RNA-seq resolves: SLA2 533,981-535,828 (plus, 615 aa, 5-prime partial: no start codon in the ORF) and the homeodomain gene "
-          "named MATa1 after the paper at 536,046-536,944 (minus, 211 aa; introns of 205 bp, 221 reads, and 58 bp, 218 reads, the conserved 58 bp junction the paper reports at 536,635). The mirrored arm "
-          "(SLA2 529,992-532,490; homeodomain ORF 529,258-529,749, 163 aa) is not recorded: short reads cannot separate the two inverted copies, and the paper's mirrored junction at 529,128 is not seen. No HMG-box "
-          "(MATa2) ORF passed the filters. GENE MODELS ARE OURS (tier 3), see results/2026-10-29_ss_records/README.md. The library is not stranded. GENETIC CODE: NCBI table 12 (CUG = Ser).")
-ra = record("44080_gdd12_MATss_MATalpha", "MATalpha", LEFT, "MATalpha1->MATalpha2->sla2", NOTE_L, None)
-rb = record("44080_gdd12_MATss_MATa", "MATa", RIGHT, "sla2->MATa1", NOTE_R, None)
+          "Kriti et al. G3 2026, PMID 41849659). HOMOTHALLIC (Dost et al. 2024, PMID 38492364). The record covers the arm that RNA-seq resolves: SLA2 533,981-535,828 (plus, 615 aa, 5-prime partial: no start codon in the ORF), "
+          "MATa1 at 536,046-536,944 (minus, 211 aa; a1 profile 85 bits, alpha2 27; introns of 205 bp, 221 reads, and 58 bp, 218 reads, the conserved 58 bp junction the paper reports at 536,635) and MATa2 at 537,379-538,170 "
+          "(plus, 263 aa, ATG to stop, single exon, head-to-head with MATa1; a2 profile hit, results/2026-10-30_mat_hmms). The a2 profile finds only three a2-like ORFs in the whole genome, all on chromosome IV: this one, its mirror "
+          "at 527,654-528,454 (minus) and one at 502,064-502,864 at the central cluster. The mirrored arm (SLA2 529,992-532,490; MATa1 529,186-529,746) is not recorded: short reads cannot separate the two inverted copies, "
+          "and the paper's mirrored junction at 529,128 is not seen. GENE MODELS ARE OURS (tier 3), see results/2026-10-29_ss_records/README.md. The library is not stranded. GENETIC CODE: NCBI table 12 (CUG = Ser).")
+ra = record("44080_gdd12_MATss_MATa-MATalpha", ["MATa", "MATalpha"], LEFT, "MATalpha2->MATalpha1->MATa1->sla2", NOTE_L, None)
+rb = record("44080_gdd12_MATss_MATa", "MATa", RIGHT, "sla2->MATa1->MATa2", NOTE_R, None)
 for r in (ra, rb):
     open(f"{OUT}{r['record_id']}.yaml", "w").write(yaml.safe_dump(r, sort_keys=False))
     print(r["record_id"], [(g["name"], g["start"], g["end"], g["strand"], len(g["exons"])) for g in r["genes"]])

@@ -7,7 +7,7 @@ The pages say "confirmed / provisional / withheld"; the wave driver's gate calls
 """
 import argparse, csv, itertools, json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from idiomorph_labels import idiomorph_label
+from idiomorph_labels import idiomorph_label, registry_version
 from collections import Counter
 
 CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)"}
@@ -101,7 +101,7 @@ def curated(c, repo, out):
          "typed": sum(cnt[k] for k in SINGLE), "MAT1-1": cnt["MAT1-1"], "MAT1-2": cnt["MAT1-2"], "both": cnt["both"], "none": cnt["none"], "low_depth": cnt["low_depth"],
          "with_assembly_call": len(single), "agree": sum(r["verdict"] == "agree" for r in single), "disagree": sum(r["verdict"] == "DISAGREE" for r in single), "rescued": 0,
          "intro": c["intro"], "truth_label": c["truth_label"], "links": c["links"], "refused_with_truth": sum(1 for r in R if r["truth"] in SINGLE and r["call"] in ("low_depth", "none")), "both_vs_one": sum(1 for r in R if r["verdict"] == "both_vs_one")}
-    json.dump({**s, "gate": "", "rows": R}, open(os.path.join(out, c["slug"] + ".json"), "w"), separators=(",", ":"))
+    json.dump({**s, "gate": "", "rows": R, "registry_version": registry_version()}, open(os.path.join(out, c["slug"] + ".json"), "w"), separators=(",", ":"))
     with open(os.path.join(out, c["slug"] + ".tsv"), "w", newline="") as fh:
         w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n", extrasaction="ignore"); w.writeheader(); w.writerows(R)
     return s
@@ -143,7 +143,7 @@ def main():
         rows = [{k: r.get(k, "") for k in FIELDS} for r in runs]
         pf = next((os.path.join(d, slug + ".pairs.tsv") for d in clone_dirs if os.path.exists(os.path.join(d, slug + ".pairs.tsv"))), None); cl = clone_groups(pf, rows) if pf else None
         if cl: s["clone_groups"] = len(cl["groups"]); s["clone_runs"] = cl["runs"]; s["n_clones"] = cl["clones"]
-        json.dump({**s, "gate": g["reasons"], "notes": NOTES.get(slug, []), "clones": cl, "rows": rows}, open(os.path.join(a.out, slug + ".json"), "w"), separators=(",", ":"))
+        json.dump({**s, "gate": g["reasons"], "notes": NOTES.get(slug, []), "clones": cl, "rows": rows, "registry_version": registry_version()}, open(os.path.join(a.out, slug + ".json"), "w"), separators=(",", ":"))
         with open(os.path.join(a.out, slug + ".tsv"), "w", newline="") as fh:
             w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n", extrasaction="ignore"); w.writeheader(); w.writerows(rows)
     allr = [r for r in res if r["state"] == "done"]
@@ -152,7 +152,7 @@ def main():
            "disagree": sum(r["verdict"] == "DISAGREE" for r in tr), "confidence": dict(Counter(s["confidence"] for s in index)),
            "calls": dict(Counter(r["call"] for r in allr)), "rescued": sum(1 for r in typed if r.get("rescue"))}
     cur = [curated(c, a.repo, a.out) for c in CURATED if os.path.exists(os.path.join(a.repo, c["src"]))]
-    json.dump({"totals": tot, "species": index, "curated": cur}, open(os.path.join(a.out, "index.json"), "w"), separators=(",", ":"))
+    json.dump({"totals": tot, "species": index, "curated": cur, "registry_version": registry_version()}, open(os.path.join(a.out, "index.json"), "w"), separators=(",", ":"))
     print(f"{len(index)} species, {tot['runs']} runs; {tot['agree']}/{tot['with_assembly_call']} agree; {tot['confidence']}")
 
 

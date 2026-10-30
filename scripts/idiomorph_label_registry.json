@@ -1,6 +1,48 @@
 {
-  "_comment": "Single source of truth for idiomorph and MAT gene labels (curator rulings 2026-10-28, see docs/notes/2026-10-28_idiomorph-naming-proposal.md). Grammar <Lineage>__<System>_<Cell>; system = frozen code of the reference organism; labels are computed on output from (family_called, raw name) and are never stored in records. A family with system null has no approved system code yet: its raw names are returned unchanged. Basidiomycota (multiallelic systems): a family with `locus` is labelled <Lineage>__<System>_<Locus>[-<Allele>]; the allele is the raw idiomorph (A1, b1, v2 ...) and is left out when it is undetermined. A family with `cells` and no `locus` (Cryptococcus MAT) uses the cell token.",
-  "version": 1,
+  "_comment": "Single source of truth for idiomorph and MAT gene labels (curator rulings 2026-10-28, see docs/notes/2026-10-28_idiomorph-naming-proposal.md). Grammar <Lineage>__<System>_<Cell>; system = frozen code of the reference organism; labels are computed on output from (family_called, raw name) and are never stored in records. A family with system null has no approved system code yet: its raw names are returned unchanged. Basidiomycota (multiallelic systems): a family with `locus` is labelled <Lineage>__<System>_<Locus>[-<Allele>]; the allele is the raw idiomorph (A1, b1, v2 ...) and is left out when it is undetermined. A family with `cells` and no `locus` (Cryptococcus MAT) uses the cell token. registry_version = registry_date + registry_hash (first 8 hex of the SHA-256 of the canonical registry without _comment and registry_hash): bump registry_date by hand when a rule change is approved, then run `python3 scripts/idiomorph_labels.py --stamp`; the tests fail if the hash is stale. frozen_codes lists the approved lineage and system codes: a code may not be removed or renamed; a rename needs an entry in aliases (old -> new) and a deprecation note here. A code is added to frozen_codes when the curator approves it (PicKud approved 2026-10-29).",
+  "registry_date": "2026-10-30",
+  "registry_hash": "5c01ddd5",
+  "frozen_codes": {
+    "lineages": [
+      "Basid",
+      "Mucor",
+      "Peziz",
+      "Sacch",
+      "Taphr"
+    ],
+    "systems": [
+      "AspFum",
+      "BarCal",
+      "BipMay",
+      "BotCin",
+      "CanAlb",
+      "CopCin",
+      "CryDen",
+      "GeoCan",
+      "KomPha",
+      "NeuCra",
+      "NoRef",
+      "OgaPol",
+      "PetFab",
+      "PhyBla",
+      "PicKud",
+      "PucGra",
+      "RhoTor",
+      "SacCer",
+      "SacSch",
+      "SchCom",
+      "SchPom",
+      "TubMel",
+      "UstMay",
+      "WalMel",
+      "XanPar",
+      "YarLip"
+    ]
+  },
+  "aliases": {
+    "lineages": {},
+    "systems": {}
+  },
   "lineages": {
     "Peziz": "Pezizomycotina",
     "Sacch": "Saccharomycotina",
@@ -20,7 +62,7 @@
     "CanAlb": "Candida albicans",
     "KomPha": "Komagataella phaffii",
     "OgaPol": "Ogataea polymorpha",
-    "PicKud": "Pichia kudriavzevii (PROPOSED code, #189; awaiting curator approval)",
+    "PicKud": "Pichia kudriavzevii",
     "YarLip": "Yarrowia lipolytica",
     "GeoCan": "Geotrichum candidum",
     "SchPom": "Schizosaccharomyces pombe",
@@ -31,7 +73,10 @@
     "UstMay": "Ustilago maydis (recorded as Mycosarcoma maydis)",
     "RhoTor": "Rhodotorula toruloides",
     "PucGra": "Puccinia graminis f. sp. tritici",
-    "WalMel": "Wallemia mellicola"
+    "WalMel": "Wallemia mellicola",
+    "SacSch": "Saccharomycopsis schoenii",
+    "PetFab": "Petasospora fabianii",
+    "BarCal": "Barnettozyma californica"
   },
   "pezizomycotina_class_systems": {
     "Sordariomycetes": "NeuCra",
@@ -327,6 +372,72 @@
         "STE3": "STE3",
         "STE3v2": "STE3v2",
         "SXI1": "SXI1"
+      }
+    },
+    "Ascomycota:mat3": {
+      "lineage": "Taphr",
+      "system": "SchPom",
+      "cells": {
+        "M": "M",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "matMc": "Mc",
+        "matMi": "Mi"
+      }
+    },
+    "Basidiomycota:Abeta": {
+      "lineage": "Basid",
+      "system": "SchCom",
+      "locus": "Abeta",
+      "genes": {
+        "Y": "Y",
+        "Z": "Z"
+      }
+    },
+    "Ascomycota:MATss": {
+      "lineage": "Sacch",
+      "system": "SacSch",
+      "cells": {
+        "MATa": "a",
+        "MATalpha": "alpha",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "MATa1": "a1",
+        "MATa2": "a2",
+        "MATalpha1": "alpha1",
+        "MATalpha2": "alpha2"
+      }
+    },
+    "Ascomycota:MATpf": {
+      "lineage": "Sacch",
+      "system": "PetFab",
+      "cells": {
+        "MATa": "a",
+        "MATalpha": "alpha",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "MATa1": "a1",
+        "MATa2": "a2",
+        "MATalpha1": "alpha1",
+        "MATalpha2": "alpha2"
+      }
+    },
+    "Ascomycota:MATbz": {
+      "lineage": "Sacch",
+      "system": "BarCal",
+      "cells": {
+        "MATa": "a",
+        "MATalpha": "alpha",
+        "undetermined": "undet"
+      },
+      "genes": {
+        "MATa1": "a1",
+        "MATa2": "a2",
+        "MATalpha1": "alpha1",
+        "MATalpha2": "alpha2"
       }
     }
   }

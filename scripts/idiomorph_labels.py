@@ -9,9 +9,11 @@ Gene labels are `<System>_<gene>` (`SchPom_Mc`, `CanAlb_alpha2`, `AspFum_MAT1-1-
 suffix `_like`. A family with no approved system code (Basidiomycota) returns raw names. Labels are applied on output only; the database and the report YAML keep the raw names.
 Basidiomycota will use `<Lineage>__<System>_<Locus>[-<Allele>]` once their system codes are chosen.
 """
+import hashlib
 import json
 import os
 import re
+import sys
 from functools import lru_cache
 
 _REGISTRY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "idiomorph_label_registry.json")
@@ -24,6 +26,63 @@ def registry():
 
 
 LINEAGES = registry()["lineages"]
+
+
+def _canonical(reg):
+    return json.dumps({k: v for k, v in reg.items() if k not in ("_comment", "registry_hash")}, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def registry_hash(reg=None):
+    """First 8 hex characters of the SHA-256 of the canonical registry (without `_comment` and `registry_hash`)."""
+    return hashlib.sha256(_canonical(reg or registry()).encode()).hexdigest()[:8]
+
+
+def registry_version():
+    """`<registry_date>+<registry_hash>` as stamped in the registry (curator, 2026-10-29, #210). The date is bumped by hand when a rule change is approved;
+    `registry_problems()` (and the tests) fail when the stamped hash no longer matches the content."""
+    reg = registry()
+    return f"{reg['registry_date']}+{reg['registry_hash']}"
+
+
+def registry_problems(reg=None):
+    """Problems that stop the registry being released: a stale hash, a frozen code removed or renamed without an alias, an alias to a code that does not exist."""
+    reg = reg or registry()
+    out = []
+    if reg.get("registry_hash") != registry_hash(reg):
+        out.append(f"registry_hash is {reg.get('registry_hash')!r} but the content hashes to {registry_hash(reg)!r}: bump registry_date and run `python3 scripts/idiomorph_labels.py --stamp`")
+    for kind in ("lineages", "systems"):
+        aliases = reg.get("aliases", {}).get(kind, {})
+        for code in reg.get("frozen_codes", {}).get(kind, []):
+            if code in reg[kind]:
+                continue
+            if code not in aliases:
+                out.append(f"frozen {kind[:-1]} code {code!r} was removed or renamed without an alias")
+        for old, new in aliases.items():
+            if new not in reg[kind]:
+                out.append(f"alias {old!r} -> {new!r}: {new!r} is not a {kind[:-1]} code in the registry")
+    return out
+
+
+def canonical_code(kind, code):
+    """The current code for `code` (`kind` is "lineages" or "systems"): an alias resolves to the code that replaced it."""
+    return registry().get("aliases", {}).get(kind, {}).get(code, code)
+
+
+# label_status (curator, 2026-10-29, #211): ONE value per locus, the first that applies in this order; `label_reasons` lists every one that applies.
+STATUS_ORDER = ("family_unconfirmed", "cross_call", "no_reference", "similarity_only", "undetermined", "ok")
+
+
+def locus_status(family, idiomorph, class_=None, *, family_unconfirmed=False, cross_call=False, similarity_only=False):
+    """{label_status, label_reasons} of a locus. family_unconfirmed and cross_call come from the report or the table (the registry cannot know them);
+    no_reference: the system is the NoRef placeholder or the family has no label mapping; undetermined: the label ends in `_undet` (a Basidiomycota locus label without an allele is complete, not undetermined)."""
+    lab = label_locus(family, idiomorph, class_)
+    reasons = []
+    if family_unconfirmed: reasons.append("family_unconfirmed")
+    if cross_call: reasons.append("cross_call")
+    if lab["status"] != "labelled" or lab["system"] == "NoRef": reasons.append("no_reference")
+    if similarity_only: reasons.append("similarity_only")
+    if lab["cell"] == "undet": reasons.append("undetermined")      # the label carries `_undet`
+    return dict(label_status=reasons[0] if reasons else "ok", label_reasons=";".join(reasons))
 
 
 def system_of(family, class_=None):
@@ -79,3 +138,13 @@ def lineage_of(names):
 def idiomorph_of_gene(name):
     """P or M for a P/M-system gene name (matMc, mat1-Pi ...), '' otherwise."""
     return {"Pi": "P", "Pc": "P", "Mc": "M", "Mi": "M"}.get(registry()["families"]["Ascomycota:PM"]["genes"].get(name, ""), "")
+
+
+if __name__ == "__main__":        # python3 scripts/idiomorph_labels.py [--stamp]
+    if "--stamp" in sys.argv:
+        reg = registry()
+        reg["registry_hash"] = registry_hash(reg)
+        with open(_REGISTRY_PATH, "w") as fh:
+            fh.write(json.dumps(reg, indent=2, ensure_ascii=False) + "\n")
+    registry.cache_clear()
+    print(registry_version(), *registry_problems(), sep="\n")

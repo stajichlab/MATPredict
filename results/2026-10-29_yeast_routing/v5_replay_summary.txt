@@ -1,0 +1,28 @@
+cross181 {'n': 181, 'base_2plus': 181, 'v3_2plus': 51, 'base_none': 0, 'v3_none': 0, 'conf_changed': 7}
+mtl_only {'n': 22, 'base_2plus': 0, 'v3_2plus': 0, 'base_none': 0, 'v3_none': 1, 'conf_changed': 0}
+sc_only40 {'n': 40, 'base_2plus': 3, 'v3_2plus': 6, 'base_none': 0, 'v3_none': 0, 'conf_changed': 2}
+none25 {'n': 25, 'base_2plus': 0, 'v3_2plus': 0, 'base_none': 25, 'v3_none': 25, 'conf_changed': 0}
+ogataea_other {'n': 99, 'base_2plus': 31, 'v3_2plus': 54, 'base_none': 6, 'v3_none': 7, 'conf_changed': 13}
+{('cross181', 'family_unconfirmed'): 103, ('mtl_only', 'family_unconfirmed'): 14, ('mtl_only', 'family_confirmed'): 5}
+mtl_only lost: ['GCA_019232045.1_Wolfe_Odeg_UCD465']
+--cross181 v3 patterns
+83 ('MATsc',)
+31 ('MTL',)
+19 ('MATog', 'MATog')
+16 ('MATog',)
+13 ('MATsc', 'MATsc')
+11 ('MATsc', 'MTL')
+5 ('MTL', 'MTL')
+1 ('MTL', 'MTL', 'MTL')
+1 ('MATsc', 'MATsc', 'MATsc')
+1 ('MATsc', 'MTL', 'MTL', 'MTL', 'MTL', 'MTL', 'MTL')
+MATsc+MTL survivors: 12 same contig: 1 overlap>0: 0
+25 formerly MTL-wins: 25
+  8 (('MATsc', ''),)
+  8 (('MTL', 'family_unconfirmed'),)
+  5 (('MATog', ''),)
+  3 (('MATsc', 'family_unconfirmed'),)
+  1 (('MATsc', 'family_unconfirmed'), ('MTL', 'family_unconfirmed'))
+cross181 v5 loci by family/status: {('MATsc', 'family_unconfirmed'): 42, ('MATsc', ''): 82, ('MTL', 'family_unconfirmed'): 61, ('MATog', ''): 54}
+GCA_019232045.1_Wolfe_Odeg_UCD465 v5: [] v070: [('MTL', 'high', '', '')]
+conf changed, Ogataea (MATog now): 22 other: []

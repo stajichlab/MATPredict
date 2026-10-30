@@ -792,3 +792,40 @@ loci:
       # sla2: sla2_homolog by precedent; optional so that contigs ending inside the locus (MH260578 is one) are not demoted.
       - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
       - {name: tgl1, role: flanking_conserved, optional: true}
+  - locus_name: "MATss"
+    vocabulary_type: "enum"
+    # NEW FAMILY, curator decision 2026-10-30 (candidate records for the SLA2-type genera, results/2026-10-29_near_tie/
+    # CANDIDATE_RECORDS.md): Saccharomycopsis (Ascoideales, Saccharomycopsidaceae) has its own scope-only family, named MATss
+    # after the genus as MATkp, MATog and MATpk are named after theirs; the code is the curator's to change.
+    # ARCHITECTURE (Kriti et al., G3 2026, PMID 41849659, doi 10.1093/g3journal/jkag067; Dost et al., Microbiol Res 2024, PMID 38492364):
+    # S. schoenii is HOMOTHALLIC and carries an expanded MAT system, SLA2-MAT cassettes (MATa1, MATa2, MATalpha1, MATalpha2) on every
+    # chromosome, with SLA2 as the anchor and the MAT genes co-transcribed with it (189-247 bp splice junctions between the MAT genes
+    # and SLA2). DIC1 is scattered, not linked. The active locus is on chromosome IV: an alpha-dominant sub-cluster (470,610-475,000)
+    # and a palindromic cassette (528,044-537,777, an SLA2 anchor flanked by mirrored MATa1/MATa2 arrays). Neither MATsc (three
+    # cassettes, HO switching) nor MTL (PAP1/OBP1/PIK1 inside the idiomorph) describes it: the replay of v0.7.0 called these loci MTL
+    # in 22 of 27 cases with SLA2 inside the call and no PIK1/OBP1/PAP1 (results/2026-10-29_near_tie/).
+    # `cassette_report` stays off: which cassette is expressed is not determined and one genome holds several per idiomorph.
+    # `two_idiomorphs_report` stays off (a homothallic species carries both idiomorphs by design).
+    idiomorph_values: ["MATa", "MATalpha"]
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    # SCOPE = THE GENUS Saccharomycopsis (taxid 4943; NCBI Taxonomy efetch 2026-10-30: rank genus, family Saccharomycopsidaceae 34366,
+    # order Ascoideales 2926619). Only S. schoenii has a record. Dost et al. 2024 describe S. lassenensis as heterothallic, so the genus is
+    # not uniform; the scope is the genus because 22 of the 27 loci the replay found in the genus have the SLA2-inside architecture,
+    # and it is the curator's to narrow to the species (44080) if a replay over the six Saccharomycopsis species over-calls.
+    taxonomic_scope: [4943]
+    fallback_subphylum: 147537  # Saccharomycotina
+    fallback_searchable: false
+    flank_carried_window_bp: 20000
+    genes:
+      # Gene models of the records are OUR OWN (tier 3): the authors' GTF is not public (results/2026-10-29_ss_records/README.md).
+      # MATa1, MATalpha2: homeodomain; no class (the schema has none). Named after the paper's cassette (a: MATa1; alpha: MATalpha2); phmmer
+      # ranks both ORFs closest to MATa1-type references, so the name of the left-cluster homeodomain gene is a hypothesis.
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      # MATa2: optional; no HMG-box ORF was resolved in the right cassette (an HMG-like ORF 470,349-470,951 is not assigned).
+      - {name: MATa2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATa"]}
+      # MATalpha1: alpha_box (Pfam PF04769 54 bits, GA 28.1, on the chromosome IV ORF), the same bar as MATkp, MATog and MATpk.
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
+      - {name: MATalpha2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATalpha"]}
+      # sla2: the anchor of every cassette; sla2_homolog by precedent. Optional so that truncated copies are not demoted.
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      - {name: dic1, role: flanking_conserved, optional: true}

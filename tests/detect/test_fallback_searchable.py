@@ -53,7 +53,7 @@ def test_shipped_roster_flags_the_scope_only_families():
     Yarrowia `MATyl` and Geotrichum `MATdc` (curator 2026-10-17), Komagataella `MATkp` and the Ogataea
     polymorpha-complex `MATog` (curator 2026-10-17/18)."""
     flagged = {f.key.locus_name for f in load_all_families(DB) if not f.fallback_searchable}
-    assert flagged == {"redPR", "redHD", "rustHD", "wallMAT", "MATyl", "MATdc", "MATkp", "MATog", "MATpk"}
+    assert flagged == {"redPR", "redHD", "rustHD", "wallMAT", "MATyl", "MATdc", "MATkp", "MATog", "MATpk", "MATss"}
 
 
 def test_pr_scope_includes_boletales():

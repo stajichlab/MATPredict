@@ -20,6 +20,15 @@ PAP1, OBP1, PIK1 neighbours, 17 without). With the policy `on`, after every call
    carries `family_ambiguous` (both identities, their gap, the genome means), because a best-hit identity
    against a different reference protein of each family is an uncertain score. The other call is not lost:
    it is recorded on the kept call as `cross_call`.
+   FLANK RULE (curator's decision, 2026-10-30, #188): in a group with no scoped family, a call from a family that
+   declares `confirm_outside_scope` (MTL) in a genome outside its scope, with fewer than `min_flank_genes` of its
+   declared flank genes within `window_bp` of a core gene, cannot win against a family in the group whose own
+   flank gene (a `flanking_conserved` or `flanking_variable` gene, such as SLA2 or DIC1 beside a MATsc call) is
+   present. The unsupported call is set aside as `cross_call` (`flank_rule: true`), is not counted in the genome
+   means, and the kept call's `family_ambiguous` carries the reason `cross_call_flank_rule`. Evidence: Saccharomycopsis,
+   Barnettozyma, Ambrosiozyma and Petasospora loci called MTL carry SLA2 or DIC1 beside the MAT genes and none of
+   PAP1/OBP1/PIK1 (results/2026-10-29_near_tie/), and the published S. schoenii architecture is SLA2-MAT. Where no
+   competitor has a flank gene, or the MTL call is supported or in scope, the identity rule decides as before.
 2. **Family status.** A call from a family that declares `confirm_outside_scope` (MTL) in a genome
    outside its scope is `family_unconfirmed` (reason `<family>_outside_scope`). It becomes
    `family_confirmed` when at least `min_flank_genes` of the declared flank genes (PAP1, OBP1, PIK1)
@@ -116,6 +125,11 @@ def _family_name(r) -> str:
     return f"{r.family_key.phylum}:{r.family_key.locus_name}"
 
 
+def _has_flank_gene(r) -> bool:
+    """The call carries a flank gene of its own family (SLA2, DIC1 for MATsc; PAP1, OBP1, PIK1 for MTL)."""
+    return any(e.role in ("flanking_conserved", "flanking_variable") and e.lost_to is None for e in r.gene_evidence)
+
+
 def resolve_cross_calls(results: list, families: list, lineage: set[int]) -> list:
     """`results` with each cross-family group reduced to one call; the others ride on it as `cross_call`.
 
@@ -127,12 +141,29 @@ def resolve_cross_calls(results: list, families: list, lineage: set[int]) -> lis
         family = by_key.get(r.family_key)
         return bool(lineage and family and lineage & set(family.taxonomic_scope))
 
+    def unsupported(r) -> bool:
+        """An out-of-scope call of a family with a flank rule that the rule does not confirm."""
+        family = by_key.get(r.family_key)
+        rule = getattr(family, "confirm_outside_scope", None)
+        if not rule or not lineage or lineage & set(family.taxonomic_scope):
+            return False
+        return len(flank_support(r, list(rule["flank_genes"]), int(rule.get("window_bp", 15000)))) < int(rule.get("min_flank_genes", 2))
+
+    def eligible(g: list[int]) -> tuple[list[int], list[int]]:
+        """(members that may win, members set aside by the flank rule) of a group with no scoped family."""
+        weak = [i for i in g if unsupported(results[i])]
+        rest = [i for i in g if i not in weak]
+        if weak and any(_has_flank_gene(results[i]) for i in rest):
+            return rest, weak
+        return list(g), []
+
     groups = _groups(results)
     unscoped = [g for g in groups if not any(in_scope(results[i]) for i in g)]
     pooled: dict[str, list[float]] = {}
     for g in unscoped:
-        for fam in {_family_name(results[i]) for i in g}:
-            pooled.setdefault(fam, []).append(max(_best_core_identity(results[i]) for i in g if _family_name(results[i]) == fam))
+        may_win, _ = eligible(g)
+        for fam in {_family_name(results[i]) for i in may_win}:
+            pooled.setdefault(fam, []).append(max(_best_core_identity(results[i]) for i in may_win if _family_name(results[i]) == fam))
     means = {fam: sum(v) / len(v) for fam, v in pooled.items()}
 
     drop: set[int] = set()
@@ -140,23 +171,30 @@ def resolve_cross_calls(results: list, families: list, lineage: set[int]) -> lis
     for group in groups:
         scoped = [i for i in group if in_scope(results[i])]
         ambiguous = None
+        set_aside: list[int] = []
         if scoped:
             best = min(scoped, key=lambda i: _score(results[i]))
         else:
-            here = {_family_name(results[i]) for i in group}
+            may_win, set_aside = eligible(group)
+            here = {_family_name(results[i]) for i in may_win}
             winner = min(here, key=lambda f: (-means[f], f))
-            best = min((i for i in group if _family_name(results[i]) == winner), key=lambda i: _score(results[i]))
-            ident = {f: round(max(_best_core_identity(results[i]) for i in group if _family_name(results[i]) == f), 2) for f in sorted(here)}
+            best = min((i for i in may_win if _family_name(results[i]) == winner), key=lambda i: _score(results[i]))
+            ident = {f: round(max(_best_core_identity(results[i]) for i in group if _family_name(results[i]) == f), 2)
+                     for f in sorted({_family_name(results[i]) for i in group})}
             rest = [v for f, v in ident.items() if f != winner]
-            ambiguous = {"reason": "cross_call_unscoped", "kept_family": winner, "identities": ident,
+            ambiguous = {"reason": "cross_call_flank_rule" if set_aside else "cross_call_unscoped", "kept_family": winner, "identities": ident,
                          "gap": round(ident[winner] - max(rest), 2) if rest else None,
                          "genome_mean_identity": {f: round(means[f], 2) for f in sorted(here)},
                          "genome_loci": {f: len(pooled[f]) for f in sorted(here)}}
+            if set_aside:
+                ambiguous["flank_rule_set_aside"] = sorted({_family_name(results[i]) for i in set_aside})
         notes = []
         for i in sorted(group):
             if i != best:
                 note = _note(results[i])
                 note["best_core_identity"] = round(_best_core_identity(results[i]), 2)
+                if not scoped and i in set_aside:
+                    note["flank_rule"] = True
                 notes.append(note)
         kept[best] = (notes, ambiguous)
         drop.update(i for i in group if i != best)

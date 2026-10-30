@@ -213,3 +213,52 @@ def test_a_third_family_group_is_decided_apart_from_the_scoped_group():
 def test_scope_still_beats_identity():
     sc, mtl = _scored(SC, 100, 5000, 30.0, "low"), _scored(MTL, 100, 5000, 90.0, "high")
     assert [r.family_key for r in fs.resolve_cross_calls([sc, mtl], FAMILIES, {SACCHAROMYCETACEAE})] == [SC]
+
+
+# ---- the flank rule (curator, 2026-10-30): an unsupported out-of-scope MTL call cannot win against a family with its own flank gene
+def _with_flank(call, name, role="flanking_conserved", start=None, end=None):
+    from dataclasses import replace
+    g = _gene(name, role, start if start is not None else call.start, end if end is not None else call.start + 100)
+    return replace(call, gene_evidence=call.gene_evidence + [g], genes_found=call.genes_found + [name])
+
+
+def test_an_mtl_call_without_flank_support_loses_to_a_family_with_its_own_flank_gene_whatever_the_identity():
+    sc, mtl = _with_flank(_scored(SC, 100, 5000, 40.0, "medium"), "sla2"), _scored(MTL, 100, 5000, 70.0)
+    out = fs.resolve_cross_calls([sc, mtl], FAMILIES, {OTHER})
+    assert [r.family_key for r in out] == [SC]
+    assert out[0].cross_call[0]["family"] == "Ascomycota:MTL" and out[0].cross_call[0]["flank_rule"] is True
+    amb = out[0].family_ambiguous
+    assert amb["reason"] == "cross_call_flank_rule" and amb["flank_rule_set_aside"] == ["Ascomycota:MTL"]
+    assert amb["identities"] == {"Ascomycota:MATsc": 40.0, "Ascomycota:MTL": 70.0}
+
+
+def test_an_mtl_call_with_two_flank_genes_keeps_the_identity_rule():
+    mtl = _with_flank(_with_flank(_scored(MTL, 100, 5000, 70.0), "PAP1", "flanking_variable", 100, 200), "OBP1", "flanking_variable", 300, 400)
+    sc = _with_flank(_scored(SC, 100, 5000, 40.0, "medium"), "sla2")
+    out = fs.resolve_cross_calls([sc, mtl], FAMILIES, {OTHER})
+    assert [r.family_key for r in out] == [MTL] and out[0].family_ambiguous["reason"] == "cross_call_unscoped"
+    assert "flank_rule" not in out[0].cross_call[0]
+
+
+def test_no_competitor_flank_gene_means_no_rule():
+    sc, mtl = _scored(SC, 100, 5000, 40.0, "medium"), _scored(MTL, 100, 5000, 70.0)
+    out = fs.resolve_cross_calls([sc, mtl], FAMILIES, {OTHER})
+    assert [r.family_key for r in out] == [MTL] and out[0].family_ambiguous["reason"] == "cross_call_unscoped"
+
+
+def test_an_mtl_call_inside_serinales_is_never_set_aside():
+    sc, mtl = _with_flank(_scored(SC, 100, 5000, 40.0, "medium"), "sla2"), _scored(MTL, 100, 5000, 70.0)
+    out = fs.resolve_cross_calls([sc, mtl], FAMILIES, {SERINALES})
+    assert [r.family_key for r in out] == [MTL] and out[0].family_ambiguous is None
+
+
+def test_a_set_aside_call_is_not_counted_in_the_genome_mean():
+    from dataclasses import replace
+    # locus 1: the rule sets MTL (90) aside; locus 2 is a plain identity decision. Means: MATsc (40+50)/2 = 45, MTL 55 over locus 2 only.
+    l1 = [_with_flank(_scored(SC, 100, 5000, 40.0), "sla2"), _scored(MTL, 100, 5000, 90.0)]
+    l2 = [replace(c, contig="c2", gene_evidence=[replace(g, contig="c2") for g in c.gene_evidence])
+          for c in (_scored(SC, 100, 5000, 50.0), _scored(MTL, 100, 5000, 55.0))]
+    out = fs.resolve_cross_calls(l1 + l2, FAMILIES, {OTHER})
+    assert {r.contig: r.family_key.locus_name for r in out} == {"c1": "MATsc", "c2": "MTL"}
+    c2 = next(r for r in out if r.contig == "c2")
+    assert c2.family_ambiguous["genome_mean_identity"] == {"Ascomycota:MATsc": 45.0, "Ascomycota:MTL": 55.0}   # 90 is not in the MTL mean

@@ -1,4 +1,4 @@
-"""The MATss (Saccharomycopsis) family and its two S. schoenii candidate records (curator, 2026-10-30)."""
+"""The MATss (Saccharomycopsis schoenii) family and its two S. schoenii candidate records (curator, 2026-10-30)."""
 from pathlib import Path
 
 import yaml
@@ -14,7 +14,7 @@ def _family():
 
 def test_matss_declaration():
     fam = _family()
-    assert list(fam.taxonomic_scope) == [4943]
+    assert list(fam.taxonomic_scope) == [44080]
     assert fam.fallback_searchable is False and fam.cassette_report is False and fam.two_idiomorphs_report is False
     genes = {g["name"]: g for g in fam.genes}
     assert genes["MATalpha1"]["gene_class"] == "alpha_box"
@@ -31,11 +31,14 @@ def test_matss_candidates_are_tier_3_models_with_table_12():
         assert rec["validation"]["status"] == "needs_review"
 
 
-def test_matss_routes_the_genus_only():
+def test_matss_routes_the_species_only():
     fams = load_all_families(DB)
     base = [131567, 2759, 33154, 4751, 451864, 4890, 716545, 147537, 4891, 2926619, 34366, 4943]
     d = route(44080, fams, lineage_taxids_resolver=lambda t: base + [44080], phylum_name_resolver=lambda t: "Ascomycota")
     assert d.routing_mode == "lineage" and "MATss" in {f.key.locus_name for f in d.families}
+    # another Saccharomycopsis species (S. fibuligera 4944, not in scope) is not routed to MATss
+    d = route(4944, fams, lineage_taxids_resolver=lambda t: base + [4944], phylum_name_resolver=lambda t: "Ascomycota")
+    assert "MATss" not in {f.key.locus_name for f in d.families}
     d = route(4909, fams, lineage_taxids_resolver=lambda t: [131567, 2759, 33154, 4751, 451864, 4890, 716545, 147537, 4909],
               phylum_name_resolver=lambda t: "Ascomycota")
     assert "MATss" not in {f.key.locus_name for f in d.families}

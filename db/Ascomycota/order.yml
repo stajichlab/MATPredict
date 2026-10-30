@@ -808,11 +808,13 @@ loci:
     # `two_idiomorphs_report` stays off (a homothallic species carries both idiomorphs by design).
     idiomorph_values: ["MATa", "MATalpha"]
     idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
-    # SCOPE = THE GENUS Saccharomycopsis (taxid 4943; NCBI Taxonomy efetch 2026-10-30: rank genus, family Saccharomycopsidaceae 34366,
-    # order Ascoideales 2926619). Only S. schoenii has a record. Dost et al. 2024 describe S. lassenensis as heterothallic, so the genus is
-    # not uniform; the scope is the genus because 22 of the 27 loci the replay found in the genus have the SLA2-inside architecture,
-    # and it is the curator's to narrow to the species (44080) if a replay over the six Saccharomycopsis species over-calls.
-    taxonomic_scope: [4943]
+    # SCOPE = THE SPECIES Saccharomycopsis schoenii (taxid 44080; genus Saccharomycopsis 4943, family Saccharomycopsidaceae 34366, order
+    # Ascoideales 2926619; NCBI Taxonomy efetch 2026-10-30). Curator decision 2026-10-30: narrowed from the genus. Only S. schoenii has a record
+    # and it is homothallic with an expanded SLA2-MAT cassette system; the genus is NOT uniform: S. lassenensis is heterothallic (Dost et al. 2024,
+    # PMID 38492364), so a heterothallic species of the genus is EXPECTED to carry a single locus with one idiomorph per genome, a different
+    # architecture from the one recorded here. Other Saccharomycopsis genomes stay in phylum fallback (and, as before, can still be called by
+    # MATsc or MTL until a record of a second species exists).
+    taxonomic_scope: [44080]
     fallback_subphylum: 147537  # Saccharomycotina
     fallback_searchable: false
     flank_carried_window_bp: 20000

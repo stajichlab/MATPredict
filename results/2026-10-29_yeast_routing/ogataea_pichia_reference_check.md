@@ -58,11 +58,11 @@ The locus is found at the right place, but only through the Saccharomyces refere
 
 - **MATalpha**: MH260578 as deposited, complete and annotated (SUI1, SLA2, MATalpha1 complement(4106..4645),
   MATalpha2 complement(5119..5918, three exons), TGL1, SEC3).
-- **MATa**: CBS573 chromosome 2 (CP028774.1, RefSeq NC_042507.1), same strain, the region opposite MH260578. The RefSeq genes there are all
-  "uncharacterized protein", so the check below identifies them against MH260578 and the database (`pichia_cbs573_flank_miniprot.py`,
+- **MATa**: CBS573 chromosome 2 (CP028774.1, RefSeq NC_042507.1), same strain, the region opposite MH260578. The RefSeq products there are all
+  named "uncharacterized protein", but their `/note` fields carry names (C5L36_0B01585 is "MATa2 gene", C5L36_0B01580 "MATa1 gene", plus a "mating type locus Ya region" feature at 310,398-312,401), so the check below identifies them against MH260578 and the database (`pichia_cbs573_flank_miniprot.py`,
   `pichia_cbs573_hmm_scan.py`, `pichia_reference_proteins.faa`):
   - **Flanks, same strain and synteny confirmed**: miniprot of the MH260578 proteins on NC_042507.1 gives SUI1 306,404-306,947 (-, 100%), SLA2 307,183-310,401
-    (+, 100%), TGL1 312,365-313,684 (-, 98%) and SEC3 313,903-317,976 (-, 100%). So SLA2 and TGL1 bracket a 1.96 kb gap, against 2.2 kb between SLA2 and TGL1 in the alpha allele.
+    (+, 100%), TGL1 312,365-313,684 (-, 98%; RefSeq CDS starts at 312,347) and SEC3 313,903-317,976 (-, 100%). So SLA2 and TGL1 bracket a 1.96 kb gap, against 2.2 kb between SLA2 and TGL1 in the alpha allele.
   - **MATa1**: the gene at 310,491-311,300 (-, 810 bp). The O. polymorpha MATa1 protein from the MATog record hits it at 55% over 310,497-310,670 (partial). K. phaffii MATa1 and MATa2 and the C. albicans MTLA1 and MTLA2 give no hit.
   - **MATa2**: the Saccharomycotina MATa2 profile (`db/Ascomycota/classifiers/MATa2_saccharomycotina`) hits a 125 aa open reading frame at about 311,868-312,243 (+; E 2.9e-10, score 31.7)
     and, more weakly, a 110 aa one at about 311,518-311,848 (+; E 1.2e-5), which is the 267 bp ORF I had listed. The two are 19 bp apart, so they are probably parts of one gene
@@ -82,19 +82,25 @@ The locus is found at the right place, but only through the Saccharomyces refere
 
 ## CBS 573 MATa2 gene model from RNA-seq (2026-10-29)
 
-Reads: 72.1 M unpaired, hisat2 against NC_042507.1, 96.2% aligned (job 31372344). Scripts: `pichia_mata2_model.py`, `pichia_mata2_hmm.py`; candidates in `pichia_mata2_candidates.faa`. Window coordinates: `win.fa` index 0 is genome position 295,000.
+Purpose: the Pichia family record (#189) needs a MATa2 model we can defend, and the database and RefSeq disagree on nothing yet but the N-terminus was unchecked. The RNA-seq is evidence for the curated record, not a test of the detector.
+
+Reads: SRR6966973 (Wolfe_Pkud_CBS573, the same strain), 72.1 M unpaired, hisat2 against NC_042507.1, 96.2% aligned (job 31372344). Scripts: `pichia_mata2_model.py`, `pichia_mata2_hmm.py`; candidates in `pichia_mata2_candidates.faa`. Window coordinates: `win.fa` index 0 is genome position 295,000. An independent review (a second model, re-deriving everything from the BAM) agreed on all coordinates and made the corrections below.
 
 | Item | Result |
 |---|---|
-| Junction 311,842–311,903 (+ strand) | 27 spliced reads, 62 bp intron, GT…AG |
-| Junction 306,703–306,916 (− strand) | 53 reads, 214 bp, GT…AG on the reverse strand; a different gene, not MATa2 |
-| Other junctions in 305–320 kb | none |
-| Stop codon | spliced ORF ends at 312,245 (two exons) |
-| Depth in 311,450–311,640 | 0–2; rises to 23+ at ~311,670 |
-| MATa2 profile (supporting evidence only) | 52.4 bits (E 8e-18) on the 202 aa ORF from ATG 311,575; 35.9 bits on the 131 aa ORF from ATG 311,788 |
+| Junction 311,842-311,903 (+ strand) | 27 spliced reads, all MAPQ 60, 62 bp intron, GTAAGC...CACAG with a TACTAAC branch site about 14 nt before the 3' AG; 14 unspliced + strand reads also cover the intron (some retention or pre-mRNA) |
+| Junction 306,703-306,916 (- strand) | 53 reads, 214 bp, GT...AG on the reverse strand; a different gene |
+| Other junctions in 305-320 kb | none; no soft clip suggests another exon |
+| Stop codon | spliced ORF ends at 312,245 (CDS 311,575..311,841 + 311,904..312,245) |
+| Library | reverse-stranded: all 27 + junction reads are on the reverse flag and 52 of 53 - junction reads on the forward flag |
+| 5' end of the + transcript | read starts cluster at ~311,659-311,666 (19 starts in 8 bp); 0-3 reads per base from 311,450 to 311,650 and no junctions |
+| 3' end of the + transcript | poly(A) reads end at ~312,408-312,413, a ~165 nt 3' UTR |
+| MATa2 profile (supporting evidence only) | 52.4 bits (E 8e-18) for the 202 aa ORF from ATG 311,575; 35.9 bits for the 131 aa ORF from ATG 311,788 |
 
-Settled: a two-exon gene with a 62 bp intron after 311,841 and the stop at 312,245. The HMG box (profile hit) spans exon 1 and the junction.
+Settled: a two-exon gene, 62 bp intron, stop at 312,245, + strand, no frameshift and no variant above 20% of reads. RefSeq annotates the same model (C5L36_0B01585, XP_029320371.1, note "MATa2 gene"; checked on NCBI).
 
-Not settled: the N-terminus. ATG 311,575 gives the better profile score but lies 95 bp upstream of where RNA coverage begins (~311,670); ATG 311,788 is covered but loses the first part of the HMG box. No junction links the upstream region to exon 1. Needs a stranded sample, or a 5' RACE or protein evidence, to choose.
+Depth after the stop (312,400-314,500) is the neighbouring gene TGL1 on the minus strand (about 98% of reads there are on the minus strand; RefSeq CDS 312,347-313,684). The two genes are convergent with overlapping 3' ends, so about half of the reads inside exon 2 are TGL1 antisense and the unstranded depth table overstates MATa2 expression.
 
-Depth stays high (100–900) from 312,100 to 313,450, past the stop; it is probably the neighbouring gene or UTR, and was not interpreted.
+N-terminus: the RNA transcript starts at ~311,660. ATG 311,575 is about 85 bp upstream of that start and is supported by homology (about 54 aa before the HMG-box core, a length like C. albicans MATa2) and by RefSeq. ATG 311,788 removes the whole core motif (KPRNIFLIYRS, aa 55-65, matching the training motif RPRNsFIiaRs), so it is not the protein. Between 311,660 and 311,788 there is no in-frame ATG; only weak near-cognate codons (ATA 311,704 and 311,719, ATT 311,758). Recommendation: record the 202 aa CDS from ATG 311,575 and note that the transcript starts downstream, so the start is supported by homology and annotation, not by this RNA. The profile score (52 bits against 144-256 for the training sequences) shows the protein is divergent.
+
+What would settle it: 5' RACE, CAGE or direct-RNA reads; proteomics or Ribo-seq; other RNA-seq runs or conditions showing a TSS upstream of 311,575; conservation of the upstream in-frame stop and first 54 aa in other Pichia MATa2 genes (CBS 5147, CY902). CBS 573 is an a/alpha heterozygote, so one growth condition may not show the coding start.

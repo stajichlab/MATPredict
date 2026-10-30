@@ -74,6 +74,10 @@ Every reference record in the database traces to a publication or a validated de
 behind the records you rely on; each record's `metadata.yaml` in the
 [db folder](https://github.com/stajichlab/MATPredict/tree/main/db) lists its source (PMID, DOI or accession).
 
+### Idiomorph names and labels
+
+The database, the reports and the calls carry the names as the references use them (MATa, MAT1-2, A, P and so on). Names such as `Sacch__SacCer_alpha` are *labels*: they are computed on output from the family that made the call and the raw name, using a versioned registry, and they say which system's reference panel matched, not that two loci are homologous. The same raw name can mean different systems in different families, which is why the labels exist. A label is never stored in a record. To cite a call, give the raw name together with the registry version (shown in each download and in the explorer). A † beside a label means some loci behind it may change: they were called by two families, have an undetermined idiomorph, rest on a placeholder system with no curated reference, or on a family call that could not be confirmed (`label_status`). The tables list the reason for each locus.
+
 ## Data used on this site
 
 - **[BFD](https://github.com/stajichlab/Fungi_BFD/)**: the Ascomycota, Basidiomycota and Mucoromycotina genomes of this fungal

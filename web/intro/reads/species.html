@@ -15,6 +15,7 @@
   <p class="muted"><a href="./">Raw reads</a> / <span id="crumb"></span></p>
   <h1 id="title">Species report</h1>
   <p class="lede" id="lede"></p>
+  <p class="muted" id="namesbar"></p>
   <p id="intro"></p><p id="links" class="muted"></p>
   <div class="cards" id="cards"></div>
   <div id="notes"></div>
@@ -53,15 +54,19 @@ try { D = await fetch("../data/reads/" + encodeURIComponent(slug) + ".json").the
 document.title = D.species + " raw reads - MATPredict";
 document.getElementById("crumb").textContent = D.species;
 document.getElementById("title").innerHTML = "<i>" + esc(D.species) + "</i>";
+// Allele names: raw by default, labels one click away (?names=label); see reads/index.html.
+const LABELS_ON = new URLSearchParams(location.search).get("names") === "label";
+{ const p = new URLSearchParams(location.search); LABELS_ON ? p.delete("names") : p.set("names", "label");
+  document.getElementById("namesbar").innerHTML = "Allele names: " + (LABELS_ON ? "labels (<code>Lineage__System_Cell</code>) · <a href=\"?" + p + "\">show the raw names</a>" : "raw names, as the panel uses them · <a href=\"?" + p + "\">show labels</a>") + ". A label is computed from the family and the raw name; cite the raw name with the registry version" + (D.registry_version ? " (" + esc(D.registry_version) + ")" : "") + "."; }
 const cur = D.kind === "curated";
 document.getElementById("lede").textContent = cur ? "Curated collection: every read set of the collection, typed with a panel built for this species. " + D.runs + " read sets." : D.confidence.charAt(0).toUpperCase() + D.confidence.slice(1) + " panel (reference tier " + D.tier + "); " + D.pooled_strains.toLocaleString() + " public strains pooled in the survey, " + D.runs + " runs sampled.";
 if (cur) { document.getElementById("intro").textContent = D.intro; document.getElementById("links").innerHTML = D.links.map(l => '<a href="https://github.com/stajichlab/MATPredict/blob/main/' + esc(l[1]) + '">' + esc(l[0]) + '</a>').join(" · "); }
 document.getElementById("notes").innerHTML = (D.notes || []).map(n => "<p>" + esc(n) + "</p>").join("");
-document.getElementById("cards").innerHTML = [[D.done + " / " + D.runs, "runs finished"], [D.c1 ?? D["MAT1-1"], (D.labels || D.names || ["MAT1-1", "MAT1-2"])[0]], [D.c2 ?? D["MAT1-2"], (D.labels || D.names || ["MAT1-1", "MAT1-2"])[1]], [D.both, "both idiomorphs"], [D.none + D.low_depth, "not called"], [D.with_assembly_call ? D.agree + " / " + D.with_assembly_call : "–", "agree with assembly"]]
+document.getElementById("cards").innerHTML = [[D.done + " / " + D.runs, "runs finished"], [D.c1 ?? D["MAT1-1"], ((LABELS_ON ? D.labels : null) || D.names || ["MAT1-1", "MAT1-2"])[0]], [D.c2 ?? D["MAT1-2"], ((LABELS_ON ? D.labels : null) || D.names || ["MAT1-1", "MAT1-2"])[1]], [D.both, "both idiomorphs"], [D.none + D.low_depth, "not called"], [D.with_assembly_call ? D.agree + " / " + D.with_assembly_call : "–", "agree with assembly"]]
   .map(([v, l]) => '<div class="card"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>').join("");
 if (/homothallic/.test(D.confidence)) { const w = document.getElementById("why"); w.hidden = false; w.innerHTML = "<b>Both idiomorphs are expected here.</b> In a homothallic species, or a diploid carrying a copy of each idiomorph, most strains read as \"both\". The \"both\" count is then the expected answer and the share of single calls is not an allele frequency. The call is provisional because no assembly comparison tests the single calls."; }
 else if (D.why.length) { const w = document.getElementById("why"); w.hidden = false; w.innerHTML = "<b>Why this panel is " + esc(D.confidence) + ":</b> " + D.why.map(esc).join("; ") + "."; }
-const NM = D.names || ["MAT1-1", "MAT1-2"], LB = D.labels || NM, lab = x => { const i = NM.indexOf(x); return i >= 0 ? LB[i] : x; }, cats = [NM[0], NM[1], "both", "none", "low_depth"], rows = D.rows.filter(r => r.call);
+const NM = D.names || ["MAT1-1", "MAT1-2"], LB = LABELS_ON ? (D.labels || NM) : NM, lab = x => { const i = NM.indexOf(x); return i >= 0 ? LB[i] : x; }, cats = [NM[0], NM[1], "both", "none", "low_depth"], rows = D.rows.filter(r => r.call);
 const cnt = rs => Object.fromEntries(cats.map(c => [lab(c), rs.filter(r => r.call === c).length])), catsL = cats.map(lab);
 stacked(document.getElementById("ch-calls"), [{ label: "all runs", parts: cnt(rows) }], catsL, { labelw: 100 }); legend(document.getElementById("lg-calls"), catsL);
 const studies = [...new Set(rows.map(r => r.study))];

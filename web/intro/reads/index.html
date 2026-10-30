@@ -23,6 +23,7 @@
   <p>Three collections were typed in full, before the public-run survey, with panels built and checked for the species. Their reports follow the same layout. They overlap with the species below (<i>A. fumigatus</i>, <i>C. immitis</i>, <i>C. posadasii</i>) but use more strains, and they are not part of the totals above.</p>
   <div class="tablewrap"><table id="cur"></table></div>
   <h2>Species from public runs (waves 1 and 2)</h2>
+  <p class="muted" id="namesbar"></p>
   <div class="controls">
     <label>Confidence <select id="conf"><option value="">all</option></select></label>
     <label>Search <input id="q" type="search" placeholder="species"></label>
@@ -46,13 +47,17 @@
 <footer class="muted">MATPredict · <a href="../about.html">About</a></footer>
 <script type="module">
 import { stacked, legend, fmt, pct } from "../charts.js";
+// Allele names: the raw names the panels use are the default; the Lineage__System_Cell labels (computed from the registry) are one click away (?names=label).
+const LABELS_ON = new URLSearchParams(location.search).get("names") === "label", NS = LABELS_ON ? "&names=label" : "";
+{ const p = new URLSearchParams(location.search); LABELS_ON ? p.delete("names") : p.set("names", "label");
+  document.getElementById("namesbar").innerHTML = "Allele names: " + (LABELS_ON ? "labels (<code>Lineage__System_Cell</code>) · <a href=\"?" + p + "\">show the raw names</a>" : "raw names, as the panels use them · <a href=\"?" + p + "\">show labels</a>") + ". A label is computed from the family and the raw name; cite the raw name with the registry version."; }
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const { totals: T, species: S, curated: CUR = [] } = await fetch("../data/reads/index.json").then(r => r.json());
-S.forEach(s => { s.uncalled = s.none + s.low_depth; s.names = s.names || ["MAT1-1", "MAT1-2"]; s.alleles = (s.labels || s.names).join(" / "); s.c1 = s.c1 ?? s["MAT1-1"]; s.c2 = s.c2 ?? s["MAT1-2"]; });
+S.forEach(s => { s.uncalled = s.none + s.low_depth; s.names = s.names || ["MAT1-1", "MAT1-2"]; s.alleles = (LABELS_ON ? (s.labels || s.names) : s.names).join(" / "); s.c1 = s.c1 ?? s["MAT1-1"]; s.c2 = s.c2 ?? s["MAT1-2"]; });
 document.getElementById("cards").innerHTML = [[fmt(T.species), "species"], [fmt(T.done), "public runs typed"], [pct(T.typed, T.done), "with a single-allele call"], [T.agree + " / " + T.with_assembly_call, "agree with an assembly call"], [fmt(T.rescued), "recovered at k=21 or a genus panel"]]
   .map(([v, l]) => '<div class="card"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>').join("");
-document.getElementById("cur").innerHTML = "<tr><th>Collection</th><th class='n'>Read sets</th><th class='n'>MAT1-1</th><th class='n'>MAT1-2</th><th class='n'>Both</th><th class='n'>Not called</th><th class='n'>Single-allele calls matching the comparison call</th></tr>" + CUR.map(c => '<tr class="click" data-s="' + c.slug + '"><td><a href="species.html?s=' + c.slug + '"><i>' + esc(c.species) + '</i></a></td><td class="n">' + c.runs + '</td><td class="n">' + c["MAT1-1"] + '</td><td class="n">' + c["MAT1-2"] + '</td><td class="n">' + c.both + '</td><td class="n">' + (c.none + c.low_depth) + '</td><td class="n">' + c.agree + "/" + c.with_assembly_call + '</td></tr>').join("");
-document.querySelector("#cur").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr && tr.dataset.s && e.target.tagName !== "A") location.href = "species.html?s=" + tr.dataset.s; });
+document.getElementById("cur").innerHTML = "<tr><th>Collection</th><th class='n'>Read sets</th><th class='n'>MAT1-1</th><th class='n'>MAT1-2</th><th class='n'>Both</th><th class='n'>Not called</th><th class='n'>Single-allele calls matching the comparison call</th></tr>" + CUR.map(c => '<tr class="click" data-s="' + c.slug + '"><td><a href="species.html?s=' + c.slug + NS + '"><i>' + esc(c.species) + '</i></a></td><td class="n">' + c.runs + '</td><td class="n">' + c["MAT1-1"] + '</td><td class="n">' + c["MAT1-2"] + '</td><td class="n">' + c.both + '</td><td class="n">' + (c.none + c.low_depth) + '</td><td class="n">' + c.agree + "/" + c.with_assembly_call + '</td></tr>').join("");
+document.querySelector("#cur").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr && tr.dataset.s && e.target.tagName !== "A") location.href = "species.html?s=" + tr.dataset.s + NS; });
 const confs = ["confirmed", "provisional", "provisional (homothallic)", "withheld"];
 const cs = Object.fromEntries(confs.map(c => [c, 0])); S.forEach(s => cs[s.confidence]++);
 const cats = ["1st allele", "2nd allele", "both", "not called"];
@@ -65,11 +70,11 @@ const tag = c => '<span class="tag ' + (c === "confirmed" ? "done" : c === "with
 function draw() {
   const rows = S.filter(s => (!cf.value || s.confidence === cf.value) && (!tf.value || s.tier === tf.value) && s.species.toLowerCase().includes(q.value.toLowerCase()))
     .sort((a, b) => (a[key] > b[key] ? 1 : a[key] < b[key] ? -1 : 0) * dir);
-  document.querySelector("#tbl tbody").innerHTML = rows.map(s => '<tr class="click" data-s="' + s.slug + '"><td><a href="species.html?s=' + s.slug + '"><i>' + esc(s.species) + '</i></a></td><td>' + tag(s.confidence) + '</td><td class="n">' + s.runs + '</td><td>' + esc(s.alleles) + '</td><td class="n">' + s.c1 + '</td><td class="n">' + s.c2 + '</td><td class="n">' + s.both + '</td><td class="n">' + s.uncalled + '</td><td class="n">' + (s.with_assembly_call ? s.agree + "/" + s.with_assembly_call : "–") + '</td></tr>').join("");
+  document.querySelector("#tbl tbody").innerHTML = rows.map(s => '<tr class="click" data-s="' + s.slug + '"><td><a href="species.html?s=' + s.slug + NS + '"><i>' + esc(s.species) + '</i></a></td><td>' + tag(s.confidence) + '</td><td class="n">' + s.runs + '</td><td>' + esc(s.alleles) + '</td><td class="n">' + s.c1 + '</td><td class="n">' + s.c2 + '</td><td class="n">' + s.both + '</td><td class="n">' + s.uncalled + '</td><td class="n">' + (s.with_assembly_call ? s.agree + "/" + s.with_assembly_call : "–") + '</td></tr>').join("");
 }
 [cf, tf, q].forEach(e => e.addEventListener("input", draw));
 document.querySelectorAll("#tbl th").forEach(th => th.addEventListener("click", () => { const k = th.dataset.k; dir = k === key ? -dir : 1; key = k; draw(); }));
-document.querySelector("#tbl tbody").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr && e.target.tagName !== "A") location.href = "species.html?s=" + tr.dataset.s; });
+document.querySelector("#tbl tbody").addEventListener("click", e => { const tr = e.target.closest("tr"); if (tr && e.target.tagName !== "A") location.href = "species.html?s=" + tr.dataset.s + NS; });
 draw();
 </script>
 </body>

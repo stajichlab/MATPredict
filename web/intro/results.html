@@ -18,7 +18,7 @@
     <label>Rank <select id="rank"><option>phylum</option><option>class</option><option>order</option><option>family</option><option>genus</option><option>species</option></select></label>
     <label>Search <input id="q" type="search" placeholder="taxon name"></label>
     <label>Min genomes <input id="minn" type="number" min="1" value="1" style="width:5em"></label>
-    <label>Allele names <select id="names"><option value="label">labels (Lineage__System_Cell)</option><option value="raw">raw names as reported</option></select></label>
+    <label>Allele names <select id="names"><option value="raw">raw names as reported</option><option value="label">labels (Lineage__System_Cell)</option></select></label>
     <button id="up" title="Back out of the last taxon you clicked into">◀ Up one level</button> <button id="reset">Reset</button>
   </div>
   <div class="controls" id="dsbox"></div>
@@ -60,7 +60,7 @@ const mark = a => {
 const RANKS = ["phylum", "class", "order", "family", "genus", "species"];
 const DS = { BFD: "BFD", ZyGoLife: "ZyGoLife LCG and Jena (held-out sets, not counted with BFD)" };
 // The held-out sets are a separate category (curator 2026-10-24): off by default, so the default view is BFD only.
-const st = { names: "label", rank: "phylum", q: "", minn: 1, ds: new Set(["BFD"]), filt: {}, sort: "n", dir: -1 };
+const st = { names: "raw", rank: "phylum", q: "", minn: 1, ds: new Set(["BFD"]), filt: {}, sort: "n", dir: -1 };
 const $ = id => document.getElementById(id);
 
 $("dsbox").innerHTML = Object.entries(DS).map(([k, l]) => `<label><input type="checkbox" data-ds="${k}"${st.ds.has(k) ? " checked" : ""}> ${l}</label>`).join("");

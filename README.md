@@ -196,6 +196,8 @@ apptainer pull matpredict.sif docker://ghcr.io/stajichlab/matpredict:latest
 apptainer run matpredict.sif detect --genome genome.fna --taxid 4837 --out-dir out
 ```
 
+**macOS (Apple Silicon).** `pixi install` works natively on `osx-arm64` (every tool in `pixi.toml` resolves there); the Docker image is also published for `linux/arm64`.
+
 **Conda / mamba.** [environment.yml](environment.yml) lists the same packages
 as `pixi.toml` (exported with `pixi workspace export conda-environment`). Run
 from the repository root, because it installs MATPredict from the checkout:

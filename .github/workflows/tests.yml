@@ -1,0 +1,32 @@
+name: tests
+
+# The test suite in the pixi `test` environment on Linux x86-64 and on macOS (Apple Silicon).
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          environments: test
+          locked: true
+      - name: Tests
+        run: pixi run -e test pytest tests -q
+      - name: Smoke test
+        run: |
+          pixi run matpredict --version
+          pixi run matpredict detect --help > /dev/null
+          pixi run bash -c 'for t in tblastn diamond miniprot exonerate mafft augustus taxonkit; do command -v $t > /dev/null || { echo "missing $t"; exit 1; }; done'

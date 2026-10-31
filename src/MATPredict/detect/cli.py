@@ -227,8 +227,12 @@ def _use_genbank_genome(args, out_dir: Path) -> None:
     gb = prepare_genbank_input(args.genome, out_dir / "_genbank")
     print(f"GenBank input {gb.source.name}: {gb.converted.contigs} contig(s), "
           f"{gb.converted.proteins} CDS protein(s) -> {out_dir / '_genbank'}")
-    args.annotation = getattr(args, "annotation", None) or str(gb.source)
     args.genome = str(gb.converted.genome_fasta)
+    if gb.converted.proteome_fasta is None:
+        print(f"GenBank input {gb.source.name} holds sequence but no CDS translations: searching the genome sequence "
+              f"(no gene-model track)")
+        return
+    args.annotation = getattr(args, "annotation", None) or str(gb.source)
     if not getattr(args, "proteins", None):
         args.proteins = str(gb.converted.proteome_fasta)
 

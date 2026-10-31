@@ -37,12 +37,12 @@ class ConvertedGenome:
     """What `convert_genbank` wrote, and how much of it."""
 
     genome_fasta: Path
-    proteome_fasta: Path
+    proteome_fasta: Path | None  # None for a sequence-only GenBank file read with require_proteins=False
     contigs: int
     proteins: int
 
 
-def convert_genbank(gbk_path: Path, out_dir: Path) -> ConvertedGenome:
+def convert_genbank(gbk_path: Path, out_dir: Path, require_proteins: bool = True) -> ConvertedGenome:
     """Write `<stem>.fna` (contigs) and `<stem>.faa` (proteins) into `out_dir`.
 
     Contig names are preserved EXACTLY: the coordinates written into each
@@ -56,7 +56,10 @@ def convert_genbank(gbk_path: Path, out_dir: Path) -> ConvertedGenome:
 
     Raises ValueError when the file yields no proteins at all. An empty
     proteome is the failure mode that looks like success: diamond returns no
-    hits and the genome is reported as having no locus.
+    hits and the genome is reported as having no locus. With
+    `require_proteins=False` (a GenBank genome given to `detect`) a file with
+    no CDS translations is a sequence-only deposit: only the genome FASTA is
+    written, `proteome_fasta` is None and the caller searches the genome.
     """
     gbk_path = Path(gbk_path)
     out_dir = Path(out_dir)
@@ -90,7 +93,7 @@ def convert_genbank(gbk_path: Path, out_dir: Path) -> ConvertedGenome:
                 f">{identifier} {record.id}:{start}-{end}:{strand}\n{translation}\n"
             )
 
-    if not proteins:
+    if not proteins and require_proteins:
         raise ValueError(
             f"{gbk_path} yielded no CDS with a /translation; refusing to write an "
             f"empty proteome, which would be silently read as 'no locus found'"
@@ -98,7 +101,9 @@ def convert_genbank(gbk_path: Path, out_dir: Path) -> ConvertedGenome:
 
     stem = gbk_path.stem
     genome_fasta = out_dir / f"{stem}.fna"
-    proteome_fasta = out_dir / f"{stem}.faa"
     SeqIO.write(contigs, str(genome_fasta), "fasta")
+    if not proteins:
+        return ConvertedGenome(genome_fasta, None, len(contigs), 0)
+    proteome_fasta = out_dir / f"{stem}.faa"
     proteome_fasta.write_text("".join(proteins))
     return ConvertedGenome(genome_fasta, proteome_fasta, len(contigs), len(proteins))

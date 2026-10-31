@@ -35,6 +35,7 @@ release completed.
 
 
 ### Fixed
+- A `high` call is no longer lowered to `medium` because of a stand-in margin (#137). When the idiomorph vote produced no ranking (a single candidate), the reported margin fell back to the identity gap between two different genes on one HMG box, and the tier cap for a thin margin then applied to it. That gap is reported but no longer lowers the tier. On the 381 `margin_fallback` genomes of the v0.7.0 run (228 *Macrophomina*, 98 *Pyricularia*, others), 380 loci return from `medium` to `high` and nothing else changes.
 - Gene model selection is deterministic when one reference record aligns equally well at two places in a polish window (a gene that flanks a MAT locus on both sides). The tie went to whichever alignment the tool listed first, so the `sla2` model of a withheld MATsc locus in GCA_030583325.1 landed on the left copy in 2 of 10 repeat runs and on the right copy in 8, moving the `core_span` and `beyond_core_bp` of that locus. After score, identity and reference record id, the lower start and then the strand decide. Calls, confidence and the GFF3 did not change between the repeat runs.
 
 ## [0.7.0] — 2026-10-26 — `v0.7.0`

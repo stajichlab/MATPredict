@@ -8,6 +8,8 @@
 <link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
 <link rel="stylesheet" href="site.css">
 <script src="theme.js"></script>
+<script data-goatcounter="https://hyphaltip.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 <nav><a class="brand" href="./" aria-label="MATPredict home"><img class="logo-l" src="logo/horizontal.svg" alt="MATPredict" height="34"><img class="logo-d" src="logo/horizontal-dark.svg" alt="" height="34"></a><a href="index.html">Overview</a><a href="results.html">Explore taxa</a><a href="reads/">Raw reads</a><a href="page/index.html">Browser tool</a><a href="about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
@@ -41,6 +43,7 @@
   <span class="lmark">†</span> beside a label: some loci behind it are cross-called by two families, have an undetermined allele, rest on a placeholder system (NoRef) or on an unconfirmed family call; hover for the counts. The label may change when the data are re-run. The downloads carry the status and the registry version.
   A call is detection, not proof; genome counts reflect uneven strain sampling.</p>
 </main>
+<footer class="muted">Visits are counted with <a href="https://www.goatcounter.com">GoatCounter</a>, which sets no cookies and collects no personal data: it only tallies anonymous page views.</footer>
 <script type="module">
 import { loadData, stacked, legend, fmt, pct, COLORS } from "./charts.js";
 import { loadShard, renderCards } from "./locus-view.js";

@@ -3419,10 +3419,12 @@ def run_pipeline(
         # reported is lost. Each resolution's own margin is unchanged and still
         # carried per event in `idiomorph_resolutions`.
         idiomorph_margin = idiomorph_margin_from_vote(own_vote)
+        margin_is_resolution_gap = False
         if rule_changed_call:
             idiomorph_margin = None  # the vote's margin describes the idiomorph this rule set aside
         elif idiomorph_margin is None and own_resolutions:
             idiomorph_margin = min(e.margin for e in own_resolutions)
+            margin_is_resolution_gap = True
         # Where the family has a profile-HMM classifier and a protein was
         # modelled, the classifier decides and its bit-score margin is THE
         # margin (curator's ruling 2026-09-26). Its own `min_margin` already
@@ -3436,9 +3438,13 @@ def run_pipeline(
             idiomorph_margin = round(verdict.margin, 6)
         elif (
             idiomorph_margin is not None
+            and not margin_is_resolution_gap
             and idiomorph_margin < family.min_idiomorph_margin
             and tier == "high"
         ):
+            # Not for a margin that fell back to a resolution's identity gap (#137): that gap is between two different
+            # genes on one HMG box (a MAT1-2-1 hit against a MAT1-1-3 hit), not a vote against the call, so it is reported
+            # but never lowers the tier.
             tier = "medium"
         # A CAAX-scan precursor satisfies the gene-count rules but cannot by
         # itself make a call `high` (curator's ruling 2026-09-27): it is a

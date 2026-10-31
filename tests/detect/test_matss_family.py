@@ -22,13 +22,14 @@ def test_matss_declaration():
     assert set(genes) == {"MATa1", "MATa2", "MATalpha1", "MATalpha2", "sla2", "dic1"}
 
 
-def test_matss_candidates_are_tier_3_models_with_table_12():
+def test_matss_records_are_accepted_tier_3_models_with_table_12():
     for rid in ("44080_gdd12_MATss_MATa-MATalpha", "44080_gdd12_MATss_MATa"):
-        rec = yaml.safe_load((DB / "candidates" / "Ascomycota" / rid / "metadata.yaml").read_text())
+        rec = yaml.safe_load((DB / "Ascomycota" / "Ascoideales" / rid / "metadata.yaml").read_text())
         assert rec["mating_type"]["locus_name"] == "MATss" and rec["mating_type"]["system"] == "homothallic"
         assert rec["evidence"]["boundaries"]["tier"] == 3
         assert all(g["transl_table"] == 12 for g in rec["genes"])
-        assert rec["validation"]["status"] == "needs_review"
+        assert rec["validation"]["status"] == "accepted"
+        assert (DB / "Ascomycota" / "Ascoideales" / rid / "proteins.faa").stat().st_size > 0
 
 
 def test_matss_routes_the_species_only():
@@ -42,3 +43,14 @@ def test_matss_routes_the_species_only():
     d = route(4909, fams, lineage_taxids_resolver=lambda t: [131567, 2759, 33154, 4751, 451864, 4890, 716545, 147537, 4909],
               phylum_name_resolver=lambda t: "Ascomycota")
     assert "MATss" not in {f.key.locus_name for f in d.families}
+
+
+def test_matbz_and_matpf_records_are_accepted_tier_3_models():
+    ids = {"Phaffomycetales": ["36038_pb4207_MATbz_MATa-MATalpha", "36022_joy008_MATpf_MATa", "36022_tbrc-4498_MATpf_MATalpha"]}
+    for order, rids in ids.items():
+        for rid in rids:
+            rec = yaml.safe_load((DB / "Ascomycota" / order / rid / "metadata.yaml").read_text())
+            assert rec["mating_type"]["locus_name"] in ("MATbz", "MATpf")
+            assert rec["evidence"]["boundaries"]["tier"] == 3
+            assert rec["validation"]["status"] == "accepted"
+            assert (DB / "Ascomycota" / order / rid / "proteins.faa").stat().st_size > 0

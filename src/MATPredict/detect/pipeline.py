@@ -260,6 +260,18 @@ class LocusSegment:
     contig_edge_distance: int | None = None
 
 
+
+def _thin_vote_margin_caps_tier(
+    margin: float | None, is_resolution_gap: bool, minimum: float, tier: str
+) -> bool:
+    """True when a `high` call's idiomorph margin is under the family's minimum, so the tier drops to `medium`.
+
+    Not for a margin that fell back to a resolution's identity gap (#137): that gap is between two different genes on
+    one HMG box (a MAT1-2-1 hit against a MAT1-1-3 hit), not a vote against the call, so it is reported but never
+    lowers the tier.
+    """
+    return margin is not None and not is_resolution_gap and margin < minimum and tier == "high"
+
 def idiomorph_class_for(family, idiomorph: str | None) -> str | None:
     """The cross-lineage class of one idiomorph label (B9, 2026-10-01).
 
@@ -3436,15 +3448,9 @@ def run_pipeline(
                 for k, v in sorted(verdict.scores.items(), key=lambda kv: (-kv[1], kv[0]))
             ]
             idiomorph_margin = round(verdict.margin, 6)
-        elif (
-            idiomorph_margin is not None
-            and not margin_is_resolution_gap
-            and idiomorph_margin < family.min_idiomorph_margin
-            and tier == "high"
+        elif _thin_vote_margin_caps_tier(
+            idiomorph_margin, margin_is_resolution_gap, family.min_idiomorph_margin, tier
         ):
-            # Not for a margin that fell back to a resolution's identity gap (#137): that gap is between two different
-            # genes on one HMG box (a MAT1-2-1 hit against a MAT1-1-3 hit), not a vote against the call, so it is reported
-            # but never lowers the tier.
             tier = "medium"
         # A CAAX-scan precursor satisfies the gene-count rules but cannot by
         # itself make a call `high` (curator's ruling 2026-09-27): it is a

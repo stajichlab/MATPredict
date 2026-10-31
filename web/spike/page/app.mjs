@@ -6,6 +6,7 @@ import { runWasiCommand, WORK_DIR } from "../browser/host/wasi-runner.mjs";
 import createMiniprot from "./_assets/bundle/miniprot/miniprot.mjs";
 import { locusFasta, locusGenbank } from "./genbank.mjs";
 import { locusProteinsFasta } from "./proteins.mjs";
+import { genbankToFasta, isGenbank, GENBANK_SUFFIX } from "./genbank_input.mjs";
 
 const ASSETS = "./_assets";
 const $ = (id) => document.getElementById(id);
@@ -261,7 +262,14 @@ async function readGenome(file) {
   const bytes = gzipped
     ? new Uint8Array(await new Response(file.stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer())
     : new Uint8Array(await file.arrayBuffer());
-  return { name: file.name.replace(/\.gz$/i, ""), bytes, text: new TextDecoder().decode(bytes), gzipped };
+  const text = new TextDecoder().decode(bytes);
+  const name = file.name.replace(/\.gz$/i, "");
+  if (!isGenbank(name, text)) return { name, bytes, text, gzipped };
+  // GenBank: its sequence is the genome. The annotation is not used here (the protein route needs DIAMOND, which
+  // has no WebAssembly build), so the genome is searched, as for a FASTA upload.
+  const gb = genbankToFasta(text);
+  const fasta = new TextEncoder().encode(gb.fasta);
+  return { name: name.replace(GENBANK_SUFFIX, "") + ".fna", bytes: fasta, text: gb.fasta, gzipped, genbank: gb };
 }
 // Examples are small real MAT-locus regions, fetched from NCBI when chosen (the list, with each region's
 // URL, is examples/examples.json; no sequence is stored in the site). A visitor can run the pipeline
@@ -297,10 +305,20 @@ $("example").addEventListener("change", async (e) => {
 $("genome").addEventListener("change", async (e) => {
   const file = e.target.files[0] || null;
   if (file) { $("example").value = ""; $("example-note").textContent = ""; }
-  genome = file ? await readGenome(file) : null;
+  try {
+    genome = file ? await readGenome(file) : null;
+  } catch (err) {
+    genome = null;
+    log(`cannot read ${file.name}: ${err.message}`);
+  }
   $("run").disabled = !genome;
   if (genome) {
     log(`genome ${file.name} (${(file.size / 1e6).toFixed(2)} MB${genome.gzipped ? `, decompressed to ${(genome.bytes.length / 1e6).toFixed(2)} MB` : ""})`);
+    if (genome.genbank) {
+      const gb = genome.genbank;
+      log(`GenBank: ${gb.contigs.length} contig(s), ${gb.cds} CDS feature(s) in the file; the sequence is searched and the annotation is not used in the browser`);
+      if (gb.skipped) log(`${gb.skipped} record(s) without sequence skipped`);
+    }
   }
 });
 for (const id of ["flank", "zoom"]) {

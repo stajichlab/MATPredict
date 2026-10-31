@@ -35,5 +35,8 @@ class GenbankInput:
 
 
 def prepare_genbank_input(path: str | Path, work_dir: Path) -> GenbankInput:
-    """Write the genome FASTA and the coordinate-bearing proteome of a GenBank file into `work_dir`."""
-    return GenbankInput(Path(path), convert_genbank(Path(path), Path(work_dir)))
+    """Write the genome FASTA and the coordinate-bearing proteome of a GenBank file into `work_dir`.
+
+    A file with sequence but no CDS translations (an unannotated deposit) is not an error here: only the genome
+    FASTA is written and `converted.proteome_fasta` is None, so `detect` searches the genome itself."""
+    return GenbankInput(Path(path), convert_genbank(Path(path), Path(work_dir), require_proteins=False))

@@ -38,7 +38,7 @@
 <nav><b>MATPredict</b><a href="../index.html">Overview</a><a href="../results.html">Explore taxa</a><a href="index.html">Browser tool</a><a href="../about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
 <main>
   <h1>MATPredict in the browser</h1>
-  <p class="muted">Upload a fungal genome (FASTA). The detection pipeline runs in this page: Python in Pyodide, the search tools as WebAssembly. Nothing is uploaded to a server.</p>
+  <p class="muted">Upload a fungal genome (FASTA or GenBank). The detection pipeline runs in this page: Python in Pyodide, the search tools as WebAssembly. Nothing is uploaded to a server.</p>
 
   <div id="protocol-warning" class="warn" hidden>
     This page must be served over HTTP. Opened from a file, the browser blocks the modules and data it loads, so the upload stays disabled.
@@ -50,8 +50,8 @@
     <select id="example"><option value="">Choose an example…</option></select>
     <p class="muted" id="example-note"></p>
     <p class="muted" id="example-links"></p>
-    <label for="genome">Or your own genome FASTA</label>
-    <input type="file" id="genome" accept=".fa,.fasta,.fna,.fas,.txt,.gz">
+    <label for="genome">Or your own genome (FASTA or GenBank)</label>
+    <input type="file" id="genome" accept=".fa,.fasta,.fna,.fas,.txt,.gz,.gb,.gbk,.gbff,.genbank">
     <label for="phylum">Phylum</label>
     <select id="phylum">
       <option>Ascomycota</option>

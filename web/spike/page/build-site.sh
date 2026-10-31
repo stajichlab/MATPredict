@@ -12,7 +12,7 @@ rm -rf "$SITE" && mkdir -p "$SITE/page/_assets" "$SITE/browser/host" "$SITE/brow
   "$SITE/browser/pyhmmer" "$SITE/localizer" "$SITE/node_modules/@bjorn3/browser_wasi_shim"
 
 # The page and the shared modules it imports (paths relative to the page, as in the repo).
-cp "$HERE/index.html" "$HERE/app.mjs" "$HERE/genbank.mjs" "$HERE/proteins.mjs" "$SITE/page/"
+cp "$HERE/index.html" "$HERE/app.mjs" "$HERE/genbank.mjs" "$HERE/genbank_input.mjs" "$HERE/proteins.mjs" "$SITE/page/"
 mkdir -p "$SITE/page/examples" && cp "$HERE/examples/examples.json" "$SITE/page/examples/"
 cp "$SPIKE/browser/host/tool-host.mjs" "$SPIKE/browser/host/wasi-runner.mjs" "$SITE/browser/host/"
 cp "$SPIKE/browser/python/bridge.py" "$SITE/browser/python/"

@@ -701,12 +701,14 @@ def _select_requested_gene(
     gene, each producing its own alignment -- the spec (Stage 2) requires
     selecting one per gene per tool by a named, tool-appropriate score, which
     is `_feature_score`'s raw per-tool alignment score. An exact tie goes to the higher
-    identity, then to the lower reference record id (the tool's own order among equal scores is not guaranteed), so selection is
-    deterministic.
+    identity, then to the lower reference record id, then to the lower start and the strand (the tool's own order among equal
+    scores is not guaranteed), so selection is deterministic. The last step matters when one reference record aligns equally
+    well at two places in the window (a gene flanking the locus on both sides): without it the tool's order picked the copy.
     """
     best: tuple[_AlignmentRecord, str, FamilyKey, str] | None = None
     best_score = None
     best_identity = 0.0
+    best_place: tuple[int, str] = (0, "")
     for record in records:
         try:
             record_id, matched_gene = _parse_reference_header(record.query_id)
@@ -722,13 +724,25 @@ def _select_requested_gene(
         # alignment the tool listed first: the tool's order among equal scores is not guaranteed, and the record named in the
         # model (and in `reference_records`) flipped between runs of the same code on Leppa1 (two curated references tie there).
         identity = _record_identity(record)
+        place = _alignment_place(record)
         if (best_score is None or record.score > best_score
                 or (record.score == best_score
-                    and (identity > best_identity or (identity == best_identity and record_id < best[1])))):
+                    and (identity > best_identity
+                         or (identity == best_identity
+                             and (record_id, place) < (best[1], best_place))))):
             best = (record, record_id, family_key, role)
             best_score = record.score
             best_identity = identity
+            best_place = place
     return best
+
+
+def _alignment_place(record: _AlignmentRecord) -> tuple[int, str]:
+    """(start, strand) of an alignment's feature line, the last tie-break between equal alignments."""
+    try:
+        return (int(record.feature[3]), record.feature[6])
+    except (IndexError, ValueError):
+        return (0, "")
 
 
 #: Longest intron, in bp, that a polish alignment may span. Neither aligner is told a limit otherwise

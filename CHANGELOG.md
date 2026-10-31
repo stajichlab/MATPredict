@@ -20,6 +20,9 @@ release completed.
 - Mucoromycotina tables: a blank order or family is filled from the genus (`scripts/mucoromycotina_genus_lineage.tsv`, NCBI taxonomy of the 51 genera, option `--genus-lineage`); a given order or family is never overwritten. The ZyGoLife LCG and Jena genomes had no order or family, and none of the Mucoromycotina inputs carried a family, so they sat under "(none)" in the explorer. Only the `order` and `family` columns of `genomes.tsv` and `loci.tsv` change (685 and 974 rows); calls, loci and `by_class.tsv` are identical. `build_site_data.py` now carries the family into the taxa rows and the genome tables (it was hard-coded blank), so the explorer groups Mucoromycotina by order, family and genus.
 
 
+### Fixed
+- Gene model selection is deterministic when one reference record aligns equally well at two places in a polish window (a gene that flanks a MAT locus on both sides). The tie went to whichever alignment the tool listed first, so the `sla2` model of a withheld MATsc locus in GCA_030583325.1 landed on the left copy in 2 of 10 repeat runs and on the right copy in 8, moving the `core_span` and `beyond_core_bp` of that locus. After score, identity and reference record id, the lower start and then the strand decide. Calls, confidence and the GFF3 did not change between the repeat runs.
+
 ## [0.7.0] — 2026-10-26 — `v0.7.0`
 
 The clean-run release. It adds the detection policies the curator rulings of 2026-09 to 2026-10 asked for (all **off by default**; the definitive run passes them with `--preset v0.7`, see `docs/notes/2026-10-22_clean-run-plan.md`), a scoped per-taxon roster, many reference-database records and exon structures, the browser page and landing site, and a series of fixes found by the pre-run regression gate. The package version moves from 0.6.3 (never tagged) to 0.7.0.

@@ -54,7 +54,8 @@ Against v0.7.0: TBD calls lost and TBD new, TBD confidence up and TBD down, TBD 
 
 ### Known issues
 - Tuning of confidence on weak or short hits is held for v0.9.0: the single-candidate margin (#145), the vote on short fragments and tiny margins (#138), and the unpolished-gene noise floor (#149).
-- The *Hyphopichia burtonii* *MTLA1* candidate record (#148) and the *Pichia* reference record (#189) are held for v0.8.1; until then 26 of 27 *Pichia* genomes still call `MATsc`.
+- The *Hyphopichia burtonii* *MTLA1* candidate record (#148) and the *Pichia* reference record (#189) are held for v0.8.1; until then 26 of 27 *Pichia* genomes in the yeast panel still call `MATsc` (TBD: recount in the full run).
+<!-- TBD: confirm both facts in the line below against the v0.8.0 run, or cut it -->
 - *O. degrootiae* GCA_019232045.1 stays uncalled; 17 IndigoAg genomes carry a stand-in taxid (147538) until real ones are assigned.
 - TBD: the known issues of the v0.7.0 section that still apply (run-to-run variance, #165 rust genomes, #153/#154 intron cap, defective-gene flag); check each against the v0.8.0 run.
 

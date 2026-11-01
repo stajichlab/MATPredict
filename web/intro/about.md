@@ -82,9 +82,9 @@ The database, the reports and the calls carry the names as the references use th
 
 - **[BFD](https://github.com/stajichlab/Fungi_BFD/)**: the Ascomycota, Basidiomycota and Mucoromycotina genomes of this fungal
   genome collection, as frozen in September 2026 (see also the
-  [2026 run documentation](https://github.com/1KFG/Fungi_BFD_run2026/)). The v0.7.0 run searched 19,415 Ascomycota,
-  3,275 Basidiomycota and 974 Mucoromycotina genomes in October 2026, on release commit `cleanrun-2026-10c` with the
-  `--preset v0.7` policy set.
+  [2026 run documentation](https://github.com/1KFG/Fungi_BFD_run2026/)). The v0.8.0 run searched 19,415 Ascomycota,
+  3,275 Basidiomycota and 974 Mucoromycotina genomes in October 2026, on release commit `a2933f7` with the
+  `--preset v0.8` policy set.
 - **ZyGoLife**: the LCG and Jena Mucoromycotina genome sets, held out from training and curation.
 - Numbers on the landing page and the explorer come from committed result tables in the
   [results folder](https://github.com/stajichlab/MATPredict/tree/main/results); they are detection counts, not ground truth.
@@ -123,7 +123,7 @@ The calls on this site are the output of one release, with its gaps stated here 
   *Lodderomyces parapsilosis* *MTLA1*, 97 of 97 loci); an assembly error shows in few.
 - **A two-idiomorph result is a flag for review.** It can be homothallism, a mixed culture or a duplication; the
   `homothallic_candidate` class is a candidate, not a statement of homothallism.
-- **Policies are a preset.** The v0.7.0 results use `--preset v0.7`; the code defaults are unchanged, so a run without
+- **Policies are a preset.** The v0.8.0 results use `--preset v0.8` (the v0.7 policies plus the cross-family policy); the code defaults are unchanged, so a run without
   the preset gives different calls.
 
 Held-out items and what each needs for the next release are tracked in
@@ -131,7 +131,7 @@ Held-out items and what each needs for the next release are tracked in
 
 ## Assessments and further reading
 
-The v0.7.0 results were judged campaign by campaign before release. These notes say what changed against the previous
+The v0.7.0 results were judged campaign by campaign before release; the v0.8.0 judgement notes are TBD (see "The definitive run" in the changelog for what changed against v0.7.0). These notes say what changed against the previous
 release, what was checked and what was not, and which decisions are still open. Read them for what the calls can and cannot support.
 
 - **Ascomycota:** [judgement](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/v070_ascomycota_judgement.md) (changes against v0.6.0, the truth checks and the reason for each confidence change).
@@ -139,7 +139,7 @@ release, what was checked and what was not, and which decisions are still open. 
 - **Mucoromycotina:** [judgement](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/v070_mucoromycotina_judgement.md).
 - **Before the run:** the [regression gate](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/regression_judgement.md) and the [pilot](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/pilot_judgement.md), and the [clean-run plan](https://github.com/stajichlab/MATPredict/blob/main/docs/notes/2026-10-22_clean-run-plan.md).
 - **Benchmarks and held-out sets:** the [held-out benchmark method](https://github.com/stajichlab/MATPredict/blob/main/docs/holdout-benchmark.md), the [held-out sets](https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-09-28_heldout-sets.md) and the [index of analyses](https://github.com/stajichlab/MATPredict/blob/main/analysis/INDEX.md).
-- **Validation and known limits:** the project [README](https://github.com/stajichlab/MATPredict#validation-and-known-limits) and the [changelog](https://github.com/stajichlab/MATPredict/blob/main/CHANGELOG.md) (see "Known issues" under 0.7.0).
+- **Validation and known limits:** the project [README](https://github.com/stajichlab/MATPredict#validation-and-known-limits) and the [changelog](https://github.com/stajichlab/MATPredict/blob/main/CHANGELOG.md) (see "Known issues" under 0.8.0).
 - **What is planned next:** [issue #155](https://github.com/stajichlab/MATPredict/issues/155) lists everything held out of this release and what each item needs.
 
 ## Source, issues and licence

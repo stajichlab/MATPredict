@@ -10,7 +10,7 @@ idiomorph or mating type it is (for example Plus/Minus, MAT1-1/MAT1-2, HD/PR
 alleles). Every reference record traces to a publication or a validated
 deposit, and every call reports the evidence behind it.
 
-Current release: [`v0.8.0`](https://github.com/stajichlab/MATPredict/releases/tag/v0.8.0) (detection code and database of v0.8.0; the data, calls and counts shown on the site are still those of the v0.7.0 run until the v0.8.0 run replaces them).
+Current release: [`v0.8.0`](https://github.com/stajichlab/MATPredict/releases/tag/v0.8.0) (detection code, database and the data, calls and counts shown on the site are those of the v0.8.0 run).
 Changes: [CHANGELOG.md](CHANGELOG.md).
 
 ## Contents
@@ -505,28 +505,28 @@ pixi run -e test pytest -q
 ## Validation and known limits
 
 Measured results (details in [analysis/INDEX.md](analysis/INDEX.md)). The BFD and held-out rows are detection (call) rates from
-the v0.7.0 definitive run, not accuracy: no truth set exists for BFD genomes. Subphylum rates count the classes of each subphylum;
+the v0.8.0 definitive run, not accuracy: no truth set exists for BFD genomes. Subphylum rates count the classes of each subphylum;
 the 7 rust genomes skipped for annotation reasons (#165) are counted as not called. The ground-truth, typing and hold-out rows are
-older measurements and were not repeated for v0.7.0. How each campaign was judged is in
+older measurements and were not repeated for v0.8.0. How each campaign was judged is in
 [results/2026-10_cleanrun_preparation/](results/2026-10_cleanrun_preparation/).
 
 | Test | Result |
 |---|---|
 | Zygomycete ground-truth set (23 genomes) | 23/23 loci and idiomorphs |
-| Held-out LCG Mucoromycotina genomes (never used in curation) | 549/621 called (v0.7.0 run) |
-| Held-out Jena Mucoromycotina genomes | 61/64 called (v0.7.0 run) |
+| Held-out LCG Mucoromycotina genomes (never used in curation) | TBD/621 called (v0.8.0 run) |
+| Held-out Jena Mucoromycotina genomes | TBD/64 called (v0.8.0 run) |
 | Idiomorph typing validation | 0/540 typed wrong |
 | Pezizomycotina hold-out, order radius | 7/7 |
-| Ascomycota, 19,415 BFD genomes (v0.7.0 run) | 17,592 called (90.6%) |
-| Basidiomycota, 3,275 BFD genomes (v0.7.0 run) | 2,977 called (90.9%): Agaricomycotina 92.2%, Ustilaginomycotina 97.7%, Pucciniomycotina 79.5% |
-| Mucoromycotina, 289 BFD genomes (v0.7.0 run) | 258 called (89.3%) |
+| Ascomycota, 19,415 BFD genomes (v0.8.0 run) | TBD called (TBD%) |
+| Basidiomycota, 3,275 BFD genomes (v0.8.0 run) | TBD called (TBD%): Agaricomycotina TBD%, Ustilaginomycotina TBD%, Pucciniomycotina TBD% |
+| Mucoromycotina, 289 BFD genomes (v0.8.0 run) | TBD called (TBD%) |
 
 Known limits (open items in [analysis/open-questions.md](analysis/open-questions.md)):
 
 - Only three phyla have curated families.
 - A genome far from every reference often fails the evidence bar, so an
   uncalled genome is weak evidence that the genome has no MAT locus. The full
-  Ascomycota run (19,415 genomes, v0.7.0) leaves 1,751 uncalled and 72 not run.
+  Ascomycota run (19,415 genomes, v0.8.0) leaves TBD uncalled and TBD not run.
 - Fragmented assemblies can split a locus or lose its flanking genes.
 - In Mucoromycota, *Absidia* flanking genes are often off-scaffold, and the
   gene order of the Lichtheimiaceae is not yet known.

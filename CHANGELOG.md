@@ -6,7 +6,9 @@ release completed.
 
 ## [Unreleased]
 
-(Prepared for v0.8.0, which absorbs the planned v0.7.1 site release: the labels and reads pages, the yeast routing and family work (#188, #189) and the browser examples. Unlike v0.7.0, `src` and `db` change: the new `--cross-family-policy` and `--preset v0.8` (off unless asked), a wider MATog scope and a new MATpk family change which families search Ogataea and *P. kudriavzevii* genomes, so the site's data and counts stay those of the v0.7.0 run until the v0.8.0 run. Release date set at tagging.)
+## [0.8.0] — 2026-10-31 — `v0.8.0`
+
+(Absorbs the planned v0.7.1 site release: the labels and reads pages, the yeast routing and family work (#188, #189) and the browser examples. Unlike v0.7.0, `src` and `db` change: the new `--cross-family-policy` and `--preset v0.8` (off unless asked), a wider MATog scope and a new MATpk family change which families search Ogataea and *P. kudriavzevii* genomes. The site's data and counts are those of the v0.8.0 run (below), made on commit `a2933f7` with `--preset v0.8`.)
 
 ### Added
 - Idiomorph labels (output only; curator rulings of 2026-10-28, `docs/notes/2026-10-28_idiomorph-naming-proposal.md`): grammar `<Lineage>__<System>_<Cell>` with frozen five-letter lineage codes and reference-organism system codes, in `scripts/idiomorph_label_registry.json` (single source of truth) and `scripts/idiomorph_labels.py`; all 27,885 v0.7.0 loci labelled (`results/2026-10-28_idiomorph_labels_v070/`, `scripts/label_loci_table.py`). The explorer and the reads pages show the labels beside the raw names ("Allele names" switch); labels are derived from the family called and the raw name, and the database, reports and calls are unchanged.
@@ -29,6 +31,7 @@ release completed.
 - Browser tool page: a "Try an example" list that fetches two *Neurospora crassa* MAT-locus regions from NCBI, with download links (#215).
 - `scripts/dedupe_family_calls.py` opt-in overlap mode for family calls with different boundaries (#209).
 ### Changed
+- The site pages count visits with [GoatCounter](https://www.goatcounter.com) (#225): anonymous page views only, no cookies. A footer note says so. The per-genome HTML reports written by `matpredict` carry no counter.
 - Site wording: "Gating" becomes "Checks and confidence" (nav item "Confidence", table headers Check / What it tests, pipeline step "Verify"); the old `#gates` anchor still resolves. Wording only: no data or code change.
 - Locus maps (explorer) mark the outcome of a resolved idiomorph pair: the gene that won the call keeps its solid fill and the gene set aside (`lost_to` in the report) is drawn pale with a solid outline and labelled "(set aside)"; the tooltip gives the basis and scores (HMM bitscore or alignment identity, for example "won over sexM (HMM score 364 vs 71)"), the locus line names the winner, and the legend has a new entry. The locus shards carry the verdict as a seventh item of a gene entry (`[W|L, other gene, basis, scores]`); a gene outside a resolved pair keeps the six-item form, so readers of the old shards are unaffected. Shards rebuilt for v0.7.0 data.
 - Mucoromycotina tables: a blank order or family is filled from the genus (`scripts/mucoromycotina_genus_lineage.tsv`, NCBI taxonomy of the 51 genera, option `--genus-lineage`); a given order or family is never overwritten. The ZyGoLife LCG and Jena genomes had no order or family, and none of the Mucoromycotina inputs carried a family, so they sat under "(none)" in the explorer. Only the `order` and `family` columns of `genomes.tsv` and `loci.tsv` change (685 and 974 rows); calls, loci and `by_class.tsv` are identical. `build_site_data.py` now carries the family into the taxa rows and the genome tables (it was hard-coded blank), so the explorer groups Mucoromycotina by order, family and genus.
@@ -37,6 +40,23 @@ release completed.
 ### Fixed
 - A `high` call is no longer lowered to `medium` because of a stand-in margin (#137). When the idiomorph vote produced no ranking (a single candidate), the reported margin fell back to the identity gap between two different genes on one HMG box, and the tier cap for a thin margin then applied to it. That gap is reported but no longer lowers the tier. On the 381 `margin_fallback` genomes of the v0.7.0 run (228 *Macrophomina*, 98 *Pyricularia*, others), 380 loci return from `medium` to `high` and nothing else changes.
 - Gene model selection is deterministic when one reference record aligns equally well at two places in a polish window (a gene that flanks a MAT locus on both sides). The tie went to whichever alignment the tool listed first, so the `sla2` model of a withheld MATsc locus in GCA_030583325.1 landed on the left copy in 2 of 10 repeat runs and on the right copy in 8, moving the `core_span` and `beyond_core_bp` of that locus. After score, identity and reference record id, the lower start and then the strand decide. Calls, confidence and the GFF3 did not change between the repeat runs.
+
+### The definitive run
+The v0.8.0 data come from commit `a2933f7` (the v0.8.0 release-prep branch: main at `6959657` plus the version bump; `src`, `db` and `scripts` are identical to main), run with `--preset v0.8` on database digest TBD (TBD records; candidate records excluded). The lists are those of the v0.7.0 run: 19,415 Ascomycota, 3,275 Basidiomycota and 974 Mucoromycotina genomes. Folders: `results/2026-10-31_v080_{ascomycota,basidiomycota,mucoromycotina}`.
+
+| Campaign | Genomes listed | Called | Uncalled | No report (suppressed) | Loci | Loci high / medium / low |
+|---|---|---|---|---|---|---|
+| Ascomycota | 19,415 | TBD | TBD | TBD | TBD | TBD |
+| Basidiomycota | 3,275 | TBD | TBD | TBD | TBD | TBD |
+| Mucoromycotina | 974 | TBD | TBD | TBD | TBD | TBD |
+
+Against v0.7.0: TBD calls lost and TBD new, TBD confidence up and TBD down, TBD idiomorph flips. Every difference is attributed to a v0.8.0 change (cross-family policy, the wider MATog scope, the MATpk family, the #137 and tie-break fixes) or listed as unexplained: TBD.
+
+### Known issues
+- Tuning of confidence on weak or short hits is held for v0.9.0: the single-candidate margin (#145), the vote on short fragments and tiny margins (#138), and the unpolished-gene noise floor (#149).
+- The *Hyphopichia burtonii* *MTLA1* candidate record (#148) and the *Pichia* reference record (#189) are held for v0.8.1; until then 26 of 27 *Pichia* genomes still call `MATsc`.
+- *O. degrootiae* GCA_019232045.1 stays uncalled; 17 IndigoAg genomes carry a stand-in taxid (147538) until real ones are assigned.
+- TBD: the known issues of the v0.7.0 section that still apply (run-to-run variance, #165 rust genomes, #153/#154 intron cap, defective-gene flag); check each against the v0.8.0 run.
 
 ## [0.7.0] — 2026-10-26 — `v0.7.0`
 

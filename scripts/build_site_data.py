@@ -5,9 +5,9 @@ Inputs are tables already under results/ (nothing is recomputed). Which folders 
 `RELEASES` below, and chosen with --release (default `v080`, the v0.8.0 data; `v070` is the previous
 release and the rollback target; `v060` is older); --asco / --basidio / --mucoro override one folder.
 Per release:
-  BFD Ascomycota      <asco>/{genomes,loci}.tsv
-  BFD Basidiomycota   <basidio>/{genomes,loci}.tsv
-  BFD Mucoromycotina  <mucoro>/{genomes,loci}.tsv with a `source` column (scripts/build_cleanrun_tables.py
+  NCBI public genomes: Ascomycota <asco>/{genomes,loci}.tsv
+  NCBI public genomes: Basidiomycota <basidio>/{genomes,loci}.tsv
+  NCBI public genomes: Mucoromycotina <mucoro>/{genomes,loci}.tsv with a `source` column (scripts/build_cleanrun_tables.py
                       --layout mucoro), or the v0.6.0 <mucoro>/calls.tsv                     (source BFD)
   ZyGoLife (LCG, Jena held-out sets, Mucoromycotina)  the same Mucoromycotina tables, source LCG / JENA
 A missing folder is an error. Each dataset is labelled with the code of ITS folder (`code`: the `tag:`/`commit:`
@@ -16,7 +16,7 @@ Folders of different codes in one build are refused unless --allow-mixed: the si
 of releases by accident, and v0.6.0 data are never labelled with the clean run's code.
 
 The held-out ZyGoLife sets (LCG, Jena) are separate datasets (`held_out: true`, source `ZyGoLife`, taxa rows with
-dataset `ZyGoLife` and cohort `LCG`/`JENA`); `summary.json` `headline` counts the BFD datasets only.
+dataset `ZyGoLife` and cohort `LCG`/`JENA`); `summary.json` `headline` counts the NCBI public genomes datasets only (their `source` value in the data is `BFD`, an internal name).
 
 The clean-run tables (scripts/build_cleanrun_tables.py) carry the curator's post-run reporting columns; when a
 table has them they are passed on, and they are simply absent for v0.6.0:
@@ -35,7 +35,7 @@ table has them they are passed on, and they are simply absent for v0.6.0:
                          `tier_drop_without_note` (loci), `tier_note`, `high_basis` and
                          `high_basis_outside_scope` (locus counts; the scope is BFD family Pleosporaceae) and
                          `defective_loci` (loci with a defective gene); top level:
-                         `release` (name, code label, folders, per-folder codes) and `headline` (BFD only).
+                         `release` (name, code label, folders, per-folder codes) and `headline` (NCBI public genomes only).
   taxa.json              two fields appended to each row: `unsupported`, the genomes with at least one marked
                          locus, and `high_basis_outside_scope`, {basis: loci} for the `high` Ascomycota:MAT calls
                          outside the high_basis scope (readers that index the first 14 fields are unaffected).
@@ -398,8 +398,8 @@ def main(argv=None):
 
     # ---- BFD Ascomycota and Basidiomycota: genomes.tsv + loci.tsv ----
     for ds_id, label, phylum, key_, types_of in (
-            ("bfd_asco", "BFD Ascomycota", "Ascomycota", "asco", lambda ls, called: ["MAT locus"] if called else []),
-            ("bfd_basidio", "BFD Basidiomycota", "Basidiomycota", "basidio", lambda ls, called: [strip_family(l["family_called"]) for l in ls])):
+            ("bfd_asco", "NCBI public genomes Ascomycota", "Ascomycota", "asco", lambda ls, called: ["MAT locus"] if called else []),
+            ("bfd_basidio", "NCBI public genomes Basidiomycota", "Basidiomycota", "basidio", lambda ls, called: [strip_family(l["family_called"]) for l in ls])):
         folder = rel[key_]
         genomes = tsv(os.path.join(folder, "genomes.tsv"))
         locus_rows = tsv(os.path.join(folder, "loci.tsv"))
@@ -437,7 +437,7 @@ def main(argv=None):
         if r["source"] == "source":
             continue
         per[(r["source"], r["genome"])].append(r)
-    meta = {"BFD": ("bfd_mucoro", "BFD Mucoromycotina", "BFD", "Mucoromycota"),
+    meta = {"BFD": ("bfd_mucoro", "NCBI public genomes Mucoromycotina", "BFD", "Mucoromycota"),
             "LCG": ("zygolife_lcg", "ZyGoLife LCG (held out)", "ZyGoLife", "Mucoromycota"),
             "JENA": ("zygolife_jena", "ZyGoLife Jena (held out)", "ZyGoLife", "Mucoromycota")}
     counts = Counter(src for src, _ in per)
@@ -506,7 +506,7 @@ def main(argv=None):
             w.writerows(sorted(grs, key=lambda r: r[1]))
         summary["datasets"][ds_id]["genome_table"] = f"data/genomes_{ds_id}.tsv"
     bfd = [d for d in summary["datasets"].values() if not d["held_out"]]
-    summary["headline"] = {"scope": "BFD datasets only; the held-out ZyGoLife sets are reported separately",
+    summary["headline"] = {"scope": "NCBI public genomes datasets only; the held-out ZyGoLife sets are reported separately",
                            "datasets": len(bfd), "genomes": sum(d["genomes"] for d in bfd),
                            "called": sum(d["status"].get("called", 0) for d in bfd), "loci": sum(d["loci"] for d in bfd)}
     for ds in summary["datasets"].values():

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MATPredict results by taxon</title>
-<meta name="description" content="MAT calls and allele frequencies by phylum, class, order, family, genus and species for BFD and ZyGoLife genomes.">
+<meta name="description" content="MAT calls and allele frequencies by phylum, class, order, family, genus and species for NCBI public genomes and ZyGoLife genomes.">
 <link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
 <link rel="stylesheet" href="site.css">
 <script src="theme.js"></script>
@@ -61,8 +61,8 @@ const mark = a => {
   return ` <span class="lmark" title="${esc(`${fmt(m)} of ${fmt(n)} loci with this label are marked: ${bad.map(([k, v]) => `${k.replace(/_/g, " ")} ${fmt(v)}`).join(", ")}. The label may change when these data are replaced by the next run (routing changes, #188). Registry ${REGV}.`)}">†</span>`;
 };
 const RANKS = ["phylum", "class", "order", "family", "genus", "species"];
-const DS = { BFD: "BFD", ZyGoLife: "ZyGoLife LCG and Jena (held-out sets, not counted with BFD)" };
-// The held-out sets are a separate category (curator 2026-10-24): off by default, so the default view is BFD only.
+const DS = { BFD: "NCBI public genomes", ZyGoLife: "ZyGoLife LCG and Jena (held-out sets, not counted with NCBI public genomes)" };  // the key is the data's source value
+// The held-out sets are a separate category (curator 2026-10-24): off by default, so the default view is NCBI public genomes only.
 const st = { names: "raw", rank: "phylum", q: "", minn: 1, ds: new Set(["BFD"]), filt: {}, sort: "n", dir: -1 };
 const $ = id => document.getElementById(id);
 

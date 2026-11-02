@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MATPredict</title>
-<meta name="description" content="MATPredict finds and types fungal mating-type loci in genome assemblies and raw reads. Method, checks and confidence, and results across BFD and ZyGoLife genomes.">
+<meta name="description" content="MATPredict finds and types fungal mating-type loci in genome assemblies and raw reads. Method, checks and confidence, and results across NCBI Public Genomes and ZyGoLife genomes.">
 <link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
 <link rel="stylesheet" href="site.css">
 <script src="theme.js"></script>
@@ -50,8 +50,8 @@
     <tr><td>Two idiomorphs</td><td>Both idiomorphs in one genome is flagged for review. It can mean homothallism, silent mating cassettes (Saccharomycotina), a hybrid or mixed assembly, not only a true two-allele genome.</td></tr>
   </table></div>
 
-  <h2 id="results">Results across BFD and ZyGoLife</h2>
-  <p>Three BFD datasets and two held-out ZyGoLife sets, one pipeline version. The headline numbers above count BFD only; the held-out sets are shown as their own rows, labelled “held out”. BFD genomes are the public fungal genome collection (<a href="https://github.com/stajichlab/Fungi_BFD/" target="_blank" rel="noopener">Fungi_BFD</a>, <a href="https://github.com/1KFG/Fungi_BFD_run2026/" target="_blank" rel="noopener">2026 run</a>); ZyGoLife LCG and Jena are Mucoromycotina sets that were held out from training and curation.</p>
+  <h2 id="results">Results across NCBI Public Genomes and ZyGoLife</h2>
+  <p>Three NCBI Public Genomes datasets and two held-out ZyGoLife sets, one pipeline version. The headline numbers above count NCBI Public Genomes only; the held-out sets are shown as their own rows, labelled “held out”. NCBI Public Genomes are the public fungal genome assemblies from NCBI (<a href="https://github.com/stajichlab/Fungi_BFD/" target="_blank" rel="noopener">genome collection</a>, <a href="https://github.com/1KFG/Fungi_BFD_run2026/" target="_blank" rel="noopener">2026 run</a>); ZyGoLife LCG and Jena are Mucoromycotina sets that were held out from training and curation.</p>
 
   <h3>Genomes with a MAT call</h3>
   <div class="chart" id="ch-calls"></div>
@@ -82,7 +82,7 @@
     <tr><td>Definitive run against v0.7.0 (v0.8.0, commit <code>a2933f7</code>)</td><td class="n">23,570</td><td>22,448 identical in calls, confidence and gene models; 1,122 differ</td><td>Every difference traced to a v0.8.0 change (cross-family policy, wider <code>MATog</code> scope, #137 confidence fix, #224 tie-break) or to run-to-run variance; the known issues #227 and #228 are listed in the changelog. A 48-genome sample run twice gave 0 differences.</td></tr>
     <tr><td><i>A. fumigatus</i> assemblies, <code>detect</code></td><td class="n">297</td><td>288 agree (97.0%)</td><td>Truth = BLAST of idiomorph regions. Reports one idiomorph for the 8 assemblies holding both.</td></tr>
   </table></div>
-  <p class="muted">Truth tables for BFD genomes do not exist, so BFD results are recovery (call) rates, not accuracy. Several thresholds were tuned on small panels; the notes say which.</p>
+  <p class="muted">There are no truth tables for the NCBI Public Genomes, so their results are recovery (call) rates, not accuracy. Several thresholds were tuned on small panels; the notes say which.</p>
 
   <h2 id="reads">Typing from raw reads</h2>
   <p class="notice">Results for 112 fungal species from public read sets, with a report for each, are on the <a href="reads/">Raw reads page</a>.</p>
@@ -112,11 +112,11 @@ const D = summary.datasets, ids = Object.keys(D);
 document.getElementById("built").textContent = summary.generated;
 if (summary.release?.code) document.getElementById("code").textContent = summary.release.code;   // RELEASES in scripts/build_site_data.py
 
-// Headline cards: BFD datasets only. The held-out ZyGoLife sets (LCG, Jena) are a separate category (curator 2026-10-24).
+// Headline cards: NCBI Public Genomes datasets only (source "BFD" in the data). The held-out ZyGoLife sets (LCG, Jena) are a separate category (curator 2026-10-24).
 const bfd = ids.filter(k => D[k].source === "BFD"), held = ids.filter(k => D[k].source !== "BFD");
 const tot = bfd.reduce((a, k) => a + D[k].genomes, 0), called = bfd.reduce((a, k) => a + (D[k].status.called || 0), 0), loci = bfd.reduce((a, k) => a + D[k].loci, 0);
 const heldN = held.reduce((a, k) => a + D[k].genomes, 0);
-document.getElementById("cards").innerHTML = [[fmt(tot), "BFD genomes searched"], [pct(called, tot), "of BFD genomes with a MAT call"], [fmt(loci), "BFD loci called"], [fmt(heldN), "held-out ZyGoLife genomes (LCG, Jena), shown separately"]]
+document.getElementById("cards").innerHTML = [[fmt(tot), "NCBI Public Genomes searched"], [pct(called, tot), "of NCBI Public Genomes with a MAT call"], [fmt(loci), "loci called in NCBI Public Genomes"], [fmt(heldN), "held-out ZyGoLife genomes (LCG, Jena), shown separately"]]
   .map(([v, l]) => `<div class="card"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
 
 hbar(document.getElementById("ch-calls"), ids.map(k => ({ label: D[k].label, value: (D[k].status.called || 0) / D[k].genomes, max: 1, note: `${pct(D[k].status.called || 0, D[k].genomes)}  (${fmt(D[k].status.called || 0)} of ${fmt(D[k].genomes)})` })), { max: 1 });
@@ -129,7 +129,7 @@ stacked(document.getElementById("ch-class"), ids.map(k => ({ label: D[k].label, 
 // allele composition per dataset (called genomes): top single alleles, two-allele genomes, undetermined
 const per = {};
 for (const r of rows) {
-  const key = r.dataset === "ZyGoLife" ? "ZyGoLife LCG + Jena (held out)" : `BFD ${r.phylum === "Mucoromycota" ? "Mucoromycotina" : r.phylum}`;
+  const key = r.dataset === "ZyGoLife" ? "ZyGoLife LCG + Jena (held out)" : `NCBI Public Genomes ${r.phylum === "Mucoromycota" ? "Mucoromycotina" : r.phylum}`;
   const p = per[key] ??= { n: 0, parts: {}, two: 0, undet: 0 };
   p.n += r.called; p.two += r.two; p.undet += r.undet;
   for (const [a, v] of Object.entries(r.alleles)) if (!a.startsWith("two:")) p.parts[a] = (p.parts[a] || 0) + v;

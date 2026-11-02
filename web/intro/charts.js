@@ -21,8 +21,12 @@ export async function loadData() {
   return { rows, summary };
 }
 
+// The label column is at least `labelw` wide and grows (to 300) to fit the longest label, about 7 px a character.
+const fitLabelW = (items, labelw) => Math.max(labelw, Math.min(300, 14 + 7 * Math.max(0, ...items.map(i => String(i.label ?? "").length))));
+
 // Horizontal bars. items: [{label, value, max, note}]; value shown as fraction of max (default 1).
 export function hbar(el, items, { fmtv = v => v, max = null, labelw = 190 } = {}) {
+  labelw = fitLabelW(items, labelw);
   const W = 760, rh = 26, m = max ?? Math.max(...items.map(i => i.value), 1e-9), bw = W - labelw - 150;
   let s = `<svg viewBox="0 0 ${W} ${items.length * rh + 4}" role="img">`;
   items.forEach((it, i) => {
@@ -36,6 +40,7 @@ export function hbar(el, items, { fmtv = v => v, max = null, labelw = 190 } = {}
 
 // 100% stacked bars. items: [{label, parts: {cat: n}, total?}], cats: ordered list of category names.
 export function stacked(el, items, cats, { labelw = 190, rh = 30 } = {}) {
+  labelw = fitLabelW(items, labelw);
   const W = 760, bw = W - labelw - 70;
   let s = `<svg viewBox="0 0 ${W} ${items.length * rh + 4}" role="img">`;
   items.forEach((it, i) => {

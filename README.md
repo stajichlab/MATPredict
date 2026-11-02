@@ -42,8 +42,8 @@ Changes: [CHANGELOG.md](CHANGELOG.md).
    in a standard format with figures and tables. Report uncalled genomes with a
    reason, and two idiomorphs in one genome as a flag for review.
 5. **Synteny.** Visualize the synteny of MAT regions across sets of species.
-6. **Scale.** Run on thousands of genomes (for example the full [BFD](https://github.com/stajichlab/Fungi_BFD/) fungal
-   genome collection; its 2026 run is documented at
+6. **Scale.** Run on thousands of genomes (for example the full public NCBI fungal genome collection,
+   [Fungi_BFD](https://github.com/stajichlab/Fungi_BFD/); its 2026 run is documented at
    <https://github.com/1KFG/Fungi_BFD_run2026/>) on a SLURM cluster.
 
 ## Workflow
@@ -504,8 +504,8 @@ pixi run -e test pytest -q
 
 ## Validation and known limits
 
-Measured results (details in [analysis/INDEX.md](analysis/INDEX.md)). The BFD and held-out rows are detection (call) rates from
-the v0.8.0 definitive run, not accuracy: no truth set exists for BFD genomes. Subphylum rates count the classes of each subphylum;
+Measured results (details in [analysis/INDEX.md](analysis/INDEX.md)). The NCBI Public Genomes and held-out rows are detection (call) rates from
+the v0.8.0 definitive run, not accuracy: no truth set exists for the NCBI Public Genomes. Subphylum rates count the classes of each subphylum;
 the 7 rust genomes skipped for annotation reasons (#165) are counted as not called. The ground-truth, typing and hold-out rows are
 older measurements and were not repeated for v0.8.0. How each campaign was judged is in
 [results/2026-10_cleanrun_preparation/](results/2026-10_cleanrun_preparation/).
@@ -517,9 +517,9 @@ older measurements and were not repeated for v0.8.0. How each campaign was judge
 | Held-out Jena Mucoromycotina genomes | 61/64 called (v0.8.0 run) |
 | Idiomorph typing validation | 0/540 typed wrong |
 | Pezizomycotina hold-out, order radius | 7/7 |
-| Ascomycota, 19,415 BFD genomes (v0.8.0 run) | 17,607 called (90.7%) |
-| Basidiomycota, 3,275 BFD genomes (v0.8.0 run) | 2,977 called (90.9%): Agaricomycotina 92.2%, Ustilaginomycotina 97.7%, Pucciniomycotina 79.5% |
-| Mucoromycotina, 289 BFD genomes (v0.8.0 run) | 258 called (89.3%) |
+| Ascomycota, 19,415 NCBI Public Genomes (v0.8.0 run) | 17,607 called (90.7%) |
+| Basidiomycota, 3,275 NCBI Public Genomes (v0.8.0 run) | 2,977 called (90.9%): Agaricomycotina 92.2%, Ustilaginomycotina 97.7%, Pucciniomycotina 79.5% |
+| Mucoromycotina, 289 NCBI Public Genomes (v0.8.0 run) | 258 called (89.3%) |
 
 Known limits (open items in [analysis/open-questions.md](analysis/open-questions.md)):
 

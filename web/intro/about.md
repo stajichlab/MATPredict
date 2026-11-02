@@ -9,7 +9,7 @@
 
 MATPredict finds and types the mating-type (MAT) locus in fungal genome assemblies and, where a good reference panel
 exists, in raw reads. This site summarises how it works, how it performs, and which MAT alleles it finds across the
-public [BFD](https://github.com/stajichlab/Fungi_BFD/) fungal genomes and the ZyGoLife Mucoromycotina genomes.
+public fungal genomes from NCBI (NCBI Public Genomes, from this [genome collection](https://github.com/stajichlab/Fungi_BFD/)) and the ZyGoLife Mucoromycotina genomes.
 
 ## How MATPredict works
 
@@ -80,8 +80,8 @@ The database, the reports and the calls carry the names as the references use th
 
 ## Data used on this site
 
-- **[BFD](https://github.com/stajichlab/Fungi_BFD/)**: the Ascomycota, Basidiomycota and Mucoromycotina genomes of this fungal
-  genome collection, as frozen in September 2026 (see also the
+- **NCBI Public Genomes**: the public NCBI Ascomycota, Basidiomycota and Mucoromycotina genomes of this [fungal
+  genome collection](https://github.com/stajichlab/Fungi_BFD/), as frozen in September 2026 (see also the
   [2026 run documentation](https://github.com/1KFG/Fungi_BFD_run2026/)). The v0.8.0 run searched 19,415 Ascomycota,
   3,275 Basidiomycota and 974 Mucoromycotina genomes in October 2026, on release commit `a2933f7` with the
   `--preset v0.8` policy set.
@@ -89,7 +89,7 @@ The database, the reports and the calls carry the names as the references use th
 - Numbers on the landing page and the explorer come from committed result tables in the
   [results folder](https://github.com/stajichlab/MATPredict/tree/main/results); they are detection counts, not ground truth.
 
-<!-- [UPDATE] Add the ZyGoLife data citation or URL, and any BFD citation you want shown, one bullet each. -->
+<!-- [UPDATE] Add the ZyGoLife data citation or URL, and any NCBI Public Genomes citation you want shown, one bullet each. -->
 
 ## What works, and what does not yet
 
@@ -108,7 +108,7 @@ The calls on this site are the output of one release, with its gaps stated here 
   *Candida*) that lack a full-length *MTLA1* reference, and Basidiomycota pheromone-receptor genes needing introns longer
   than 10 kb (#154; one genome, GCA_900009495.1, stays lost).
 - **Genomes not searched.** Seven rust genomes that v0.6.0 called (four *Austropuccinia psidii*, three *Phakopsora pachyrhizi*) and two other
-  large rust genomes were skipped in this release because the BFD collection's suppress list excludes them for annotation-pipeline reasons, not
+  large rust genomes were skipped in this release because the genome collection's suppress list excludes them for annotation-pipeline reasons, not
   because they lack a MAT locus. They have no report here. They are planned for the next release (#165).
 - **Calls that may be wrong, accepted for this release.** 102 pheromone-receptor loci (87 in Agaricales) that v0.6.0 withheld are now called at
   medium confidence on pheromone-protein hits from one reference record (*Coprinopsis cinerea* B43); some may count a pheromone gene and the

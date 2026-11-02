@@ -6,6 +6,15 @@ release completed.
 
 ## [Unreleased]
 
+### Fixed
+- Browser tool: a single failed download no longer ends a run. A 429, 5xx or network error on any asset (the database files, the wheels, the WebAssembly tools) is retried three times with a growing wait, or the wait the server asks for in `Retry-After`; each retry appears in the log. A permanent failure such as a 404 stops at once with a message that names the file and the status ("could not fetch matpredict.whl: HTTP 503, tried 4 times"). A first-time failure showed up as `HTTP 503` on `matpredict.whl` during a second run in the same tab, when the browser's 10-minute cache had expired and about 800 files were requested again at once.
+
+### Changed
+- Browser tool: the database reaches the page as one archive (`db.tar.gz`, 1.5 MB, with its SHA-256 in `db-manifest.json`) instead of 767 separate files. A run makes one request for it, checks the size, checksum and file count, and unpacks it in about 0.1 s; before, the same step made 767 requests in about 14 s, the burst that drew the 503. The site build writes it with `web/spike/page/build_db_manifest.py` and no longer ships the loose files under `_assets/db`. A manifest without an archive (the spike's `assemble.sh`) still mounts file by file.
+
+### Added
+- Browser tool: a Reset button (reloads the page, which frees the interpreter and the mounted database of earlier runs; choose the genome again) and a Copy log button (the log with the page address, browser and time, for a bug report). The log is cleared and its timer restarts at each run.
+
 ## [0.8.0] — 2026-10-31 — `v0.8.0`
 
 (Absorbs the planned v0.7.1 site release: the labels and reads pages, the yeast routing and family work (#188, #189) and the browser examples. Unlike v0.7.0, `src` and `db` change: the new `--cross-family-policy` and `--preset v0.8` (off unless asked), a wider MATog scope and a new MATpk family change which families search Ogataea and *P. kudriavzevii* genomes. The site's data and counts are those of the v0.8.0 run (below), made on commit `a2933f7` with `--preset v0.8`.)

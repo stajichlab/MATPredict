@@ -12,7 +12,7 @@ rm -rf "$SITE" && mkdir -p "$SITE/page/_assets" "$SITE/browser/host" "$SITE/brow
   "$SITE/browser/pyhmmer" "$SITE/localizer" "$SITE/node_modules/@bjorn3/browser_wasi_shim"
 
 # The page and the shared modules it imports (paths relative to the page, as in the repo).
-cp "$HERE/index.html" "$HERE/app.mjs" "$HERE/genbank.mjs" "$HERE/genbank_input.mjs" "$HERE/proteins.mjs" "$SITE/page/"
+cp "$HERE/index.html" "$HERE/app.mjs" "$HERE/genbank.mjs" "$HERE/genbank_input.mjs" "$HERE/proteins.mjs" "$HERE/fetch_retry.mjs" "$SITE/page/"
 mkdir -p "$SITE/page/examples" && cp "$HERE/examples/examples.json" "$SITE/page/examples/"
 cp "$SPIKE/browser/host/tool-host.mjs" "$SPIKE/browser/host/wasi-runner.mjs" "$SITE/browser/host/"
 cp "$SPIKE/browser/python/bridge.py" "$SITE/browser/python/"
@@ -37,17 +37,10 @@ WHEEL_DIR="$(mktemp -d)"
 "$PYTHON" -m pip wheel --no-deps -q -w "$WHEEL_DIR" "$REPO"
 cp "$WHEEL_DIR"/matpredict-*.whl "$SITE/page/_assets/matpredict.whl"
 
-# The database manifest the page mounts, and the pyhmmer wheel's name.
-"$PYTHON" - "$SITE/page/_assets" <<'PY'
-import json, os, sys
-assets = sys.argv[1]
-db = os.path.join(assets, "db")
-files = sorted(os.path.relpath(os.path.join(r, n), db) for r, _, names in os.walk(db) for n in names)
-wheels = sorted(n for n in os.listdir(os.path.join(assets, "bundle")) if n.startswith("pyhmmer-") and n.endswith(".whl"))
-assert wheels, "no pyhmmer wheel in the bundle"
-json.dump({"db": files, "pyhmmerWheel": wheels[0]}, open(os.path.join(assets, "db-manifest.json"), "w"), indent=1)
-print(f"manifest: {len(files)} database files, {wheels[0]}")
-PY
+# The database as one archive (one request per run, not one per file), and the manifest the page mounts:
+# the file list, the archive's size and SHA-256, and the pyhmmer wheel's name.
+"$PYTHON" "$HERE/build_db_manifest.py" "$SITE/page/_assets"
+rm -rf "$SITE/page/_assets/db"   # the page reads the archive; the loose files are not served
 
 # .nojekyll keeps underscore directories (_assets) from being dropped by Pages.
 # The site root is the landing page (web/intro); it links to the tool at page/index.html.

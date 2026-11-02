@@ -7,11 +7,12 @@ import createMiniprot from "./_assets/bundle/miniprot/miniprot.mjs";
 import { locusFasta, locusGenbank } from "./genbank.mjs";
 import { locusProteinsFasta } from "./proteins.mjs";
 import { genbankToFasta, isGenbank, GENBANK_SUFFIX } from "./genbank_input.mjs";
+import { fetchBytes as fetchWithRetry } from "./fetch_retry.mjs";
 
 const ASSETS = "./_assets";
 const $ = (id) => document.getElementById(id);
 const logEl = $("log");
-const t0 = performance.now();
+let t0 = performance.now(); // page load; reset to the click when a run starts, so the log times a run
 const elapsed = () => ((performance.now() - t0) / 1000).toFixed(1);
 function log(msg) {
   logEl.textContent += `\n[${elapsed()}s] ${msg}`;
@@ -19,11 +20,12 @@ function log(msg) {
 }
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-async function fetchBytes(url) {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`fetch ${url}: HTTP ${r.status}`);
-  return new Uint8Array(await r.arrayBuffer());
-}
+// Every asset request retries a 429, 5xx or network failure (see fetch_retry.mjs) and logs the retry, so a
+// busy server shows up in the log as a pause and not as a failed run.
+const fetchBytes = (url) => fetchWithRetry(url, {
+  onRetry: (u, status, attempt, waitMs) =>
+    log(`retrying ${String(u).split("/").pop()} (${status ? `HTTP ${status}` : "network error"}), try ${attempt + 1} in ${(waitMs / 1000).toFixed(1)} s`),
+});
 
 // Pyodide's own linear memory, plus the JS heap where the browser reports it (Chrome, with
 // --enable-precise-memory-info; otherwise coarse).
@@ -34,8 +36,44 @@ function memoryReport(py) {
   return parts.join(", ");
 }
 
-// Mount the database from the manifest. Fetches run in small batches.
+// An error whose message is enough for the log: no stack.
+const plainError = (msg) => Object.assign(new Error(msg), { name: "UserError" });
+
+const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+
+// Files under an Emscripten directory, counted recursively.
+function countFiles(FS, dir) {
+  let n = 0;
+  for (const name of FS.readdir(dir)) {
+    if (name === "." || name === "..") continue;
+    const path = `${dir}/${name}`;
+    n += FS.isDir(FS.stat(path).mode) ? countFiles(FS, path) : 1;
+  }
+  return n;
+}
+
+// Mount the database from one archive: a single request, checked against the manifest's size, SHA-256 and
+// file count, then unpacked into /db. A manifest without an archive (the spike's assemble.sh) uses the
+// per-file route below.
+async function mountDbArchive(py, manifest) {
+  const bytes = await fetchBytes(`${ASSETS}/${manifest.dbArchive}`);
+  if (manifest.dbArchiveBytes && bytes.length !== manifest.dbArchiveBytes) {
+    throw plainError(`database archive is ${bytes.length} bytes, expected ${manifest.dbArchiveBytes}; reload the page and run again`);
+  }
+  if (manifest.dbArchiveSha256 && globalThis.crypto && crypto.subtle) {
+    const sum = hex(await crypto.subtle.digest("SHA-256", bytes));
+    if (sum !== manifest.dbArchiveSha256) throw plainError("database archive does not match the manifest (SHA-256); reload the page and run again");
+  }
+  py.FS.mkdirTree("/db");
+  py.unpackArchive(bytes, "gztar", { extractDir: "/db" });
+  const got = countFiles(py.FS, "/db");
+  if (got !== manifest.db.length) throw plainError(`database archive unpacked ${got} files, expected ${manifest.db.length}`);
+  return got;
+}
+
+// Mount the database from the manifest. Without an archive the files are fetched in small batches.
 async function mountDb(py, manifest) {
+  if (manifest.dbArchive) return mountDbArchive(py, manifest);
   const dirs = new Set();
   for (const rel of manifest.db) {
     const parts = rel.split("/");
@@ -328,12 +366,15 @@ for (const id of ["flank", "zoom"]) {
 $("run").addEventListener("click", async () => {
   $("run").disabled = true;
   const started = performance.now();
+  t0 = started;
+  logEl.textContent = `Run started ${new Date().toISOString()}`;
+  $("timing").textContent = "";
   try {
     log("loading Pyodide 0.27.7");
     const py = await loadPyodide();
     log("loading Python packages");
     await py.loadPackage(["biopython", "pyyaml", "jsonschema", "zstandard", "requests", "micropip"]);
-    const manifest = await (await fetch(`${ASSETS}/db-manifest.json`)).json();
+    const manifest = JSON.parse(new TextDecoder().decode(await fetchBytes(`${ASSETS}/db-manifest.json`)));
     log(`mounting database (${manifest.db.length} files)`);
     await mountDb(py, manifest);
 
@@ -372,8 +413,33 @@ $("run").addEventListener("click", async () => {
     window.lastResult = summary;
     renderResults(summary, genome.text);
   } catch (err) {
-    log(`error: ${err && err.stack ? err.stack : err}`);
+    // A failed download has a clear message of its own; anything else keeps its stack for the bug report.
+    log(`error: ${err && (err.name === "FetchError" || err.name === "UserError") ? err.message : err && err.stack ? err.stack : err}`);
+    log("Use Reset to start clean, then run again. Copy log puts this log on the clipboard for a bug report.");
   } finally {
     $("run").disabled = false;
   }
+});
+
+// Reset reloads the page: it frees the Pyodide interpreter and the mounted database of the last run (each
+// Run starts a new one), and clears the log. The chosen genome is not kept, so choose it again.
+$("reset").addEventListener("click", () => location.reload());
+
+// Copy log: the log plus what a bug report needs. Falls back to selecting the text where the clipboard
+// is refused.
+$("copylog").addEventListener("click", async () => {
+  const text = `${logEl.textContent}\n\n${$("timing").textContent}\nPage: ${location.href}\nBrowser: ${navigator.userAgent}\nTime: ${new Date().toISOString()}`;
+  const button = $("copylog");
+  try {
+    await navigator.clipboard.writeText(text);
+    button.textContent = "Copied";
+  } catch {
+    const range = document.createRange();
+    range.selectNodeContents(logEl);
+    const sel = getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    button.textContent = "Select and copy";
+  }
+  setTimeout(() => { button.textContent = "Copy log"; }, 2000);
 });

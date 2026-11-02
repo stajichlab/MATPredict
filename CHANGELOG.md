@@ -58,8 +58,6 @@ Against v0.7.0, by locus: 475 calls lost (453 Ascomycota, 22 Basidiomycota) and 
 - In *S. pombe*, the silent `mat2`-P cassette can be reported as `mat1` (#227, held for v0.8.1). When two families are both in scope and tie on every evidence term, the cross-family rule falls back to the family name and `mat1` wins over `mat2`. In the v0.8.0 run this replaced 69 `mat2` calls in 54 genomes (taxid 4896) that v0.7.0 reported; in 54 of the 69 `mat1` says `M` where `mat2` said `P`. The cassette is still recorded as `cross_call` on the kept call.
 - The same tie rule can swap a MAT call for a pheromone-receptor call: GCA_017654745.1 loses its `MAT` alpha call to an undetermined `PR` call on the same span (#227). With `--cross-family-policy off` both calls return.
 - Genomes now routed by lineage to `MATog` (*Ogataea*) are no longer searched with `MATsc` and `MTL`. Where the `MATog` hits are withheld, a call v0.7.0 made is lost (#228, held for v0.8.1): *O. degrootiae* GCA_019232045.1 (a high-confidence `MTL` alpha call), GCA_030557025.1 and GCA_003707685.2 (three loci in all).
-<!-- TBD: confirm the 17 IndigoAg stand-in taxids against the v0.8.0 run, or cut the sentence below -->
-- 17 IndigoAg genomes carry a stand-in taxid (147538) until real ones are assigned.
 - The known issues of the v0.7.0 section below still apply unchanged: run-to-run variance on equal-scoring copies (#161), the rust genomes that are not searched (#165; the same 21 Basidiomycota genomes have no report), the b-locus intron cap (#153, #154), the defective-gene flag, and the rollout path without policy options.
 
 ## [0.7.0] — 2026-10-26 — `v0.7.0`

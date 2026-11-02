@@ -36,8 +36,44 @@ function memoryReport(py) {
   return parts.join(", ");
 }
 
-// Mount the database from the manifest. Fetches run in small batches.
+// An error whose message is enough for the log: no stack.
+const plainError = (msg) => Object.assign(new Error(msg), { name: "UserError" });
+
+const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+
+// Files under an Emscripten directory, counted recursively.
+function countFiles(FS, dir) {
+  let n = 0;
+  for (const name of FS.readdir(dir)) {
+    if (name === "." || name === "..") continue;
+    const path = `${dir}/${name}`;
+    n += FS.isDir(FS.stat(path).mode) ? countFiles(FS, path) : 1;
+  }
+  return n;
+}
+
+// Mount the database from one archive: a single request, checked against the manifest's size, SHA-256 and
+// file count, then unpacked into /db. A manifest without an archive (the spike's assemble.sh) uses the
+// per-file route below.
+async function mountDbArchive(py, manifest) {
+  const bytes = await fetchBytes(`${ASSETS}/${manifest.dbArchive}`);
+  if (manifest.dbArchiveBytes && bytes.length !== manifest.dbArchiveBytes) {
+    throw plainError(`database archive is ${bytes.length} bytes, expected ${manifest.dbArchiveBytes}; reload the page and run again`);
+  }
+  if (manifest.dbArchiveSha256 && globalThis.crypto && crypto.subtle) {
+    const sum = hex(await crypto.subtle.digest("SHA-256", bytes));
+    if (sum !== manifest.dbArchiveSha256) throw plainError("database archive does not match the manifest (SHA-256); reload the page and run again");
+  }
+  py.FS.mkdirTree("/db");
+  py.unpackArchive(bytes, "gztar", { extractDir: "/db" });
+  const got = countFiles(py.FS, "/db");
+  if (got !== manifest.db.length) throw plainError(`database archive unpacked ${got} files, expected ${manifest.db.length}`);
+  return got;
+}
+
+// Mount the database from the manifest. Without an archive the files are fetched in small batches.
 async function mountDb(py, manifest) {
+  if (manifest.dbArchive) return mountDbArchive(py, manifest);
   const dirs = new Set();
   for (const rel of manifest.db) {
     const parts = rel.split("/");
@@ -378,7 +414,7 @@ $("run").addEventListener("click", async () => {
     renderResults(summary, genome.text);
   } catch (err) {
     // A failed download has a clear message of its own; anything else keeps its stack for the bug report.
-    log(`error: ${err && err.name === "FetchError" ? err.message : err && err.stack ? err.stack : err}`);
+    log(`error: ${err && (err.name === "FetchError" || err.name === "UserError") ? err.message : err && err.stack ? err.stack : err}`);
     log("Use Reset to start clean, then run again. Copy log puts this log on the clipboard for a bug report.");
   } finally {
     $("run").disabled = false;

@@ -24,7 +24,7 @@ Build the site locally with `page/build-site.sh <bundle-dir> <site-dir>` (`PYTHO
     python3 -m http.server 8000 --directory ..                 # serve web/spike (the page imports ../browser, ../localizer)
     open http://localhost:8000/page/index.html
 
-`_assets/` is generated and not committed. `build-site.sh` is the Pages equivalent: it copies everything into a self-contained tree with no symlinks. Serve from `web/spike/` (not `page/`) so the page can import
+`_assets/` is generated and not committed. `build-site.sh` is the Pages equivalent (it also packs the database into `_assets/db.tar.gz`, one request instead of one per file, with its SHA-256 in `db-manifest.json`; `assemble.sh` writes a manifest without the archive and the page then mounts file by file): it copies everything into a self-contained tree with no symlinks. Serve from `web/spike/` (not `page/`) so the page can import
 the shared host and bridge modules.
 
 ## Examples

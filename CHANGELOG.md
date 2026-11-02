@@ -14,6 +14,7 @@ release completed.
 
 ### Added
 - Browser tool: a Reset button (reloads the page, which frees the interpreter and the mounted database of earlier runs; choose the genome again) and a Copy log button (the log with the page address, browser and time, for a bug report). The log is cleared and its timer restarts at each run.
+- `matpredict detect --phylum auto` (and `auto-weak`): ask [GmG](https://github.com/stajichlab/GmG) which phylum the genome is in, then search that phylum's curated families (the order or family taxid GmG gives is tried first, so the lineage routing applies, and the genetic code is read from it). A weak call, a genome GmG says is not a fungus, no call, or a phylum with no curated family is NOT searched and the report says why (`parameters.phylum_guess`); `auto-weak` also accepts a weak call; `--exhaustive` still forces a search. An explicit `--phylum NAME` or `--taxid` is unchanged and wins. `--gmg-index FILE|NAME|latest|URL` picks the GmG reference index (downloaded once to `~/.cache/matpredict/gmg`, checked against GmG's published sha256, pinned by default, with a warning when a newer one exists). Needs the `gmg` binary or GmG's Python bindings; needs GmG with `routing_hint` for the full rule (an older GmG is read with the same rule). Design: `docs/notes/2026-11-02_gmg-phylum-routing.md`.
 
 ## [0.8.0] — 2026-10-31 — `v0.8.0`
 

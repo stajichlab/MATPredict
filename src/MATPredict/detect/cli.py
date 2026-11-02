@@ -26,6 +26,8 @@ from MATPredict.detect.pipeline import (
 from MATPredict.detect.family_registry import (
     DEFAULT_SCOPED_ROSTER_POLICY, SCOPED_ROSTER_ON, SCOPED_ROSTER_POLICIES, available_phyla, load_all_families, route,
 )
+from MATPredict.db.taxonomy import default_genetic_code
+from MATPredict.detect.gmg_guess import AUTO, AUTO_CHOICES, AUTO_WEAK, decide, guess_phylum
 from MATPredict.detect.genbank_input import is_genbank, prepare_genbank_input
 from MATPredict.detect.reference_fasta import build_reference_fasta
 from MATPredict.detect.provenance import RunClock, code_stamp, run_block
@@ -105,6 +107,67 @@ def apply_preset(args: argparse.Namespace) -> argparse.Namespace:
     return args
 
 
+def _not_searched_reason(args, routing) -> str:
+    """`not_searched_reason`, but when GmG made the decision its sentence says why (a taxid-less run would say "no taxid")."""
+    info = getattr(args, "_phylum_guess", None)
+    if info and info.get("action") == "not_searched":
+        return f"{info['note']} (use --exhaustive, or --phylum NAME, to search it anyway)"
+    return not_searched_reason(routing)
+
+
+def _route_with_gmg(args, config):
+    """`--phylum auto` / `auto-weak`: ask GmG which phylum the genome is in, then route with the answer.
+
+    The decision rules are `gmg_guess.decide` (a wrong phylum is worse than none, so weak or non-fungal calls are not used).
+    An explicit `--taxid` wins and GmG is not run. With a usable call, the order/family taxid GmG gave is tried first, so the
+    lineage routing (subphylum guard) applies; it is accepted only when it lands inside the called phylum, otherwise the run
+    is routed by the phylum alone (`explicit_phylum`). `args.phylum` is then set to the phylum used (or None), so the rest of
+    the command sees a plain `--phylum`; what GmG said and did is kept in `args._phylum_guess` for the report."""
+    exhaustive = getattr(args, "exhaustive", False)
+    policy = _scoped_roster_policy_from_args(args)
+    families = load_all_families(config.db_root)
+    requested = args.phylum
+    if args.taxid:
+        args.phylum = None
+        args._phylum_guess = {"requested": requested, "action": "skipped",
+                              "note": f"--taxid {args.taxid} was given, so it routes the run and GmG was not run"}
+        return route(args.taxid, families, phylum=None, exhaustive=exhaustive, scoped_roster_policy=policy)
+    guess = guess_phylum(args.genome, getattr(args, "gmg_index", None))
+    decision = decide(guess, available_phyla(config.db_root), accept_weak=requested == AUTO_WEAK)
+    info = {"requested": requested, **guess.to_dict(), "note": decision.note,
+            "action": "routed" if decision.phylum else "not_searched", "weak_call_accepted": decision.weak}
+    args._phylum_guess = info
+    args.phylum = decision.phylum
+    if decision.phylum is None:
+        logger.info("%s", decision.note)
+        return route(None, families, phylum=None, exhaustive=exhaustive, scoped_roster_policy=policy)
+    routing = None
+    if decision.taxid and _explicit_genetic_code(args) is None:
+        # The genetic code is a property of the taxon, read from the taxonomy as `--taxid` does (CTG-clade yeasts use table 12).
+        # The GmG taxid is a family or order, which carries the code when it is set at or above that rank. A failed lookup
+        # is recorded and the run uses table 1, never a guess.
+        try:
+            code = default_genetic_code(decision.taxid)
+        except Exception as exc:  # noqa: BLE001 - recorded in the report, never fatal
+            info["genetic_code_error"] = f"{type(exc).__name__}: {str(exc)[:160]}; used table 1"
+        else:
+            if code:
+                args._gmg_genetic_code = int(code)
+                info["genetic_code"] = int(code)
+                info["genetic_code_from"] = f"{guess.routing_taxid_rank} taxid {decision.taxid}"
+    if decision.taxid:
+        by_taxid = route(decision.taxid, families, phylum=None, exhaustive=False, scoped_roster_policy=policy)
+        if (by_taxid.families and by_taxid.routing_mode in ("direct", "lineage", "phylum_fallback")
+                and {f.key.phylum for f in by_taxid.families} == {decision.phylum}):
+            routing = by_taxid
+            info["routed_by"] = f"{guess.routing_taxid_rank} taxid {decision.taxid} ({by_taxid.routing_mode})"
+    if routing is None:
+        routing = route(None, families, phylum=decision.phylum, exhaustive=False, scoped_roster_policy=policy)
+        info["routed_by"] = f"phylum {decision.phylum} (explicit_phylum)"
+    print(f"GmG: {decision.note}; routed by {info['routed_by']}")
+    return routing
+
+
 def _cmd_detect(args: argparse.Namespace) -> int:
     apply_preset(args)
     if not args.genome or not args.out_dir:
@@ -124,9 +187,12 @@ def _cmd_detect(args: argparse.Namespace) -> int:
     # same `RoutingDecision` object is handed to `run_pipeline` so it cannot
     # re-route to a different set than the query set was built for, and so the
     # taxonomy lookup happens once per run.
-    routing = route(args.taxid, load_all_families(config.db_root), phylum=args.phylum,
-                    exhaustive=getattr(args, "exhaustive", False),
-                    scoped_roster_policy=_scoped_roster_policy_from_args(args))
+    if args.phylum in AUTO_CHOICES:
+        routing = _route_with_gmg(args, config)
+    else:
+        routing = route(args.taxid, load_all_families(config.db_root), phylum=args.phylum,
+                        exhaustive=getattr(args, "exhaustive", False),
+                        scoped_roster_policy=_scoped_roster_policy_from_args(args))
     # An explicitly requested phylum that matches no curated family is a usage
     # error, not a valid empty result. Left to run it would build an empty
     # reference FASTA, search nothing, and exit 0 with an empty
@@ -152,7 +218,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         outcome = DetectionOutcome(
             results=[], routing_mode=routing.routing_mode,
             routing_error=routing.routing_error,
-            not_searched_reason=not_searched_reason(routing),
+            not_searched_reason=_not_searched_reason(args, routing),
         )
         write_detection_gff3(outcome, out_dir / "detected_loci.gff3")
         write_detection_report(outcome, out_dir / "detection_report.yaml",
@@ -313,6 +379,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
         phylum=getattr(routing, "phylum", None),
         parameters={
             "phylum": args.phylum,
+            **({"phylum_guess": args._phylum_guess} if getattr(args, "_phylum_guess", None) else {}),
             "exhaustive": getattr(args, "exhaustive", False),
             "genetic_code": _resolve_genetic_code(args),
             "exclude_records": args.exclude_records or None,
@@ -490,7 +557,8 @@ def _phylum_choices() -> list[str] | None:
     argparse was able to constrain the choices.
     """
     try:
-        return available_phyla(MatpredictConfig.from_env(repo_root=Path.cwd()).db_root) or None
+        phyla = available_phyla(MatpredictConfig.from_env(repo_root=Path.cwd()).db_root)
+        return [*phyla, *AUTO_CHOICES] if phyla else None
     except Exception as err:  # noqa: BLE001 - parser construction must never fail here
         logger.warning(
             "could not read the phylum list from the database root (%s) -- "
@@ -501,6 +569,14 @@ def _phylum_choices() -> list[str] | None:
 
 
 def _resolve_genetic_code(args) -> int | None:
+    """The translation table for this run, or None to let the pipeline derive it: the operator's choice
+    (`_explicit_genetic_code`), else the table read from the taxonomy for the family or order GmG called
+    (`--phylum auto`, set by `_route_with_gmg`), else None."""
+    explicit = _explicit_genetic_code(args)
+    return explicit if explicit is not None else getattr(args, "_gmg_genetic_code", None)
+
+
+def _explicit_genetic_code(args) -> int | None:
     """The translation table for this run, or None to let the pipeline derive it.
 
     Precedence, matching how `--phylum` overrides taxid routing: an explicit
@@ -607,8 +683,16 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
             "its taxid routes badly -- without it, a taxid no family's taxonomic_scope "
             "covers falls back to searching every family in every phylum. The choices "
             "are read from the database root at startup, so they always match what is "
-            "actually curated."
+            "actually curated. `auto` asks GmG (https://github.com/stajichlab/GmG) which phylum the genome is in "
+            "and searches that phylum; a weak or non-fungal call, or a phylum with no curated family, is NOT searched "
+            "and the report says why. `auto-weak` also accepts a weak call. An explicit --taxid wins over both."
         ),
+    )
+    detect.add_argument(
+        "--gmg-index", default=None, metavar="FILE|NAME|latest|URL",
+        help=f"With --phylum {AUTO}/{AUTO_WEAK}: the GmG reference index. A path, a release file name (downloaded once to "
+             "~/.cache/matpredict/gmg and checked), `latest`, or a URL. Default: $MATPREDICT_GMG_INDEX, else the index "
+             "MATPredict is validated with; a warning says when a newer one exists.",
     )
     detect.add_argument(
         "--genetic-code", type=int, default=None,

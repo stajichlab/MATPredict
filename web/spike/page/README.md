@@ -41,6 +41,16 @@ the browser's Cache API. A worker does the work and is terminated afterwards, so
 - Tests: `node --test web/spike/page/gmg_route.test.mjs` (decision rules and the button with a fake DOM). Checked by hand in headless Chromium against the real index:
   *S. cerevisiae* gives Ascomycota, *Backusella macrospora* Mucoromycota, *E. coli* no call (pulldown unchanged), about 6 s each.
 
+## Checking a branch before a tag
+
+The Pages workflow publishes only on a `v*` tag. To build and check a branch without publishing (a change to
+`build-site.sh`, a new page module or asset): Actions -> Deploy browser page -> Run workflow, choose the branch
+under "Use workflow from", and leave "Build and check the site ... (untick to publish)" ticked. The run builds the
+WebAssembly bundle and the site, runs `page/check_site.py` (every required file present, every module and file the
+page refers to copied, the database archive matching its manifest), and keeps the site as the `site-preview`
+artifact for seven days; the deploy job does not run. The first build of a branch has no toolchain cache and takes
+hours; later ones reuse it. Unticking the box on a manual run publishes that branch, so do that only on purpose.
+
 ## Examples
 
 The "Try an example" list runs the pipeline without an upload. The regions are fetched from NCBI efetch when chosen (URLs in `examples/examples.json`, the only file stored in the site), and the same URLs are linked for download. Add an entry there to add an example; keep regions small (tens of kb) so a run takes seconds. Each was run headless in the page before being listed.

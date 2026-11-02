@@ -60,6 +60,9 @@
       <option>Basidiomycota</option>
       <option>Mucoromycota</option>
     </select>
+    <p><button id="guess" type="button" disabled title="Compare the genome with the GmG reference in this browser and select the phylum">Guess phylum with GmG</button>
+      <label><input type="checkbox" id="guess-weak"> Accept weak guesses</label></p>
+    <p class="muted" id="guess-note">Not sure of the phylum? <a href="https://github.com/stajichlab/GmG">GmG</a> can guess it from the genome. The first guess downloads a 67 MB reference (kept in this browser); the genome is not uploaded.</p>
     <label for="engine">Localizer (tblastn stand-in)</label>
     <select id="engine">
       <option value="losat">LOSAT (WASI)</option>

@@ -27,6 +27,20 @@ Build the site locally with `page/build-site.sh <bundle-dir> <site-dir>` (`PYTHO
 `_assets/` is generated and not committed. `build-site.sh` is the Pages equivalent (it also packs the database into `_assets/db.tar.gz`, one request instead of one per file, with its SHA-256 in `db-manifest.json`; `assemble.sh` writes a manifest without the archive and the page then mounts file by file): it copies everything into a self-contained tree with no symlinks. Serve from `web/spike/` (not `page/`) so the page can import
 the shared host and bridge modules.
 
+## Guess the phylum (GmG)
+
+"Guess phylum with GmG" compares the loaded genome with the [GmG](https://github.com/stajichlab/GmG) reference in this browser and selects the
+phylum in the pulldown. The genome is not uploaded; the 67 MB reference index is downloaded once from `gmg.fungalgenomes.org` (CORS-open) and kept in
+the browser's Cache API. A worker does the work and is terminated afterwards, so the index's memory is freed before a detection run.
+
+- Same rules as `matpredict detect --phylum auto` (`gmg_route.mjs` mirrors `detect/gmg_guess.py`; `gmg_route.test.mjs` holds the shared cases): a weak call, a
+  genome GmG says is not a fungus, no call, or a phylum without curated families leaves the pulldown unchanged and says why. "Accept weak guesses" (off by
+  default) also takes a weak call.
+- The GmG WebAssembly package is pinned (`fetch-gmg-wasm.sh`: release, SHA-256) and copied to `_assets/gmg/` by `build-site.sh` and `assemble.sh`. To use a newer GmG,
+  set `GMG_WASM_VERSION` and `GMG_WASM_SHA256`, and change the pinned index in `gmg_guess.mjs` to match.
+- Tests: `node --test web/spike/page/gmg_route.test.mjs` (decision rules and the button with a fake DOM). Checked by hand in headless Chromium against the real index:
+  *S. cerevisiae* gives Ascomycota, *Backusella macrospora* Mucoromycota, *E. coli* no call (pulldown unchanged), about 6 s each.
+
 ## Examples
 
 The "Try an example" list runs the pipeline without an upload. The regions are fetched from NCBI efetch when chosen (URLs in `examples/examples.json`, the only file stored in the site), and the same URLs are linked for download. Add an entry there to add an example; keep regions small (tens of kb) so a run takes seconds. Each was run headless in the page before being listed.

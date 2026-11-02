@@ -13,6 +13,7 @@ release completed.
 - Browser tool: the database reaches the page as one archive (`db.tar.gz`, 1.5 MB, with its SHA-256 in `db-manifest.json`) instead of 767 separate files. A run makes one request for it, checks the size, checksum and file count, and unpacks it in about 0.1 s; before, the same step made 767 requests in about 14 s, the burst that drew the 503. The site build writes it with `web/spike/page/build_db_manifest.py` and no longer ships the loose files under `_assets/db`. A manifest without an archive (the spike's `assemble.sh`) still mounts file by file.
 
 ### Added
+- Browser tool: a "Guess phylum with GmG" button next to the phylum pulldown. It runs [GmG](https://github.com/stajichlab/GmG) (WebAssembly, in a worker) on the loaded genome and selects the phylum; a weak or non-fungal guess leaves the pulldown unchanged and says why ("Accept weak guesses" is off by default). The 67 MB reference is downloaded once and cached in the browser; the genome is not uploaded. Same rules as `detect --phylum auto`.
 - Browser tool: a Reset button (reloads the page, which frees the interpreter and the mounted database of earlier runs; choose the genome again) and a Copy log button (the log with the page address, browser and time, for a bug report). The log is cleared and its timer restarts at each run.
 
 ## [0.8.0] — 2026-10-31 — `v0.8.0`

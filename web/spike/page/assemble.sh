@@ -13,6 +13,7 @@ mkdir -p "$A"
 ln -sfn "$(cd "$BUNDLE" && pwd)" "$A/bundle"
 ln -sfn "$(cd "$DB" && pwd)" "$A/db"
 cp "$WHEEL" "$A/matpredict.whl"
+bash "$HERE/fetch-gmg-wasm.sh" "$A/gmg"   # the phylum guess
 python3 - "$DB" "$A/db-manifest.json" "$BUNDLE" <<'PY'
 import json, os, sys
 db, out, bundle = sys.argv[1], sys.argv[2], sys.argv[3]

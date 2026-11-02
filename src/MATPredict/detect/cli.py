@@ -26,6 +26,7 @@ from MATPredict.detect.pipeline import (
 from MATPredict.detect.family_registry import (
     DEFAULT_SCOPED_ROSTER_POLICY, SCOPED_ROSTER_ON, SCOPED_ROSTER_POLICIES, available_phyla, load_all_families, route,
 )
+from MATPredict.db.taxonomy import default_genetic_code
 from MATPredict.detect.gmg_guess import AUTO, AUTO_CHOICES, AUTO_WEAK, decide, guess_phylum
 from MATPredict.detect.genbank_input import is_genbank, prepare_genbank_input
 from MATPredict.detect.reference_fasta import build_reference_fasta
@@ -141,6 +142,19 @@ def _route_with_gmg(args, config):
         logger.info("%s", decision.note)
         return route(None, families, phylum=None, exhaustive=exhaustive, scoped_roster_policy=policy)
     routing = None
+    if decision.taxid and _explicit_genetic_code(args) is None:
+        # The genetic code is a property of the taxon, read from the taxonomy as `--taxid` does (CTG-clade yeasts use table 12).
+        # The GmG taxid is a family or order, which carries the code when it is set at or above that rank. A failed lookup
+        # is recorded and the run uses table 1, never a guess.
+        try:
+            code = default_genetic_code(decision.taxid)
+        except Exception as exc:  # noqa: BLE001 - recorded in the report, never fatal
+            info["genetic_code_error"] = f"{type(exc).__name__}: {str(exc)[:160]}; used table 1"
+        else:
+            if code:
+                args._gmg_genetic_code = int(code)
+                info["genetic_code"] = int(code)
+                info["genetic_code_from"] = f"{guess.routing_taxid_rank} taxid {decision.taxid}"
     if decision.taxid:
         by_taxid = route(decision.taxid, families, phylum=None, exhaustive=False, scoped_roster_policy=policy)
         if (by_taxid.families and by_taxid.routing_mode in ("direct", "lineage", "phylum_fallback")
@@ -555,6 +569,14 @@ def _phylum_choices() -> list[str] | None:
 
 
 def _resolve_genetic_code(args) -> int | None:
+    """The translation table for this run, or None to let the pipeline derive it: the operator's choice
+    (`_explicit_genetic_code`), else the table read from the taxonomy for the family or order GmG called
+    (`--phylum auto`, set by `_route_with_gmg`), else None."""
+    explicit = _explicit_genetic_code(args)
+    return explicit if explicit is not None else getattr(args, "_gmg_genetic_code", None)
+
+
+def _explicit_genetic_code(args) -> int | None:
     """The translation table for this run, or None to let the pipeline derive it.
 
     Precedence, matching how `--phylum` overrides taxid routing: an explicit

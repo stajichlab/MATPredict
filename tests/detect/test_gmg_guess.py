@@ -198,6 +198,28 @@ def test_a_usable_call_with_a_taxid_routes_by_lineage(wired):
     assert "order taxid 5125" in args._phylum_guess["routed_by"]
 
 
+def test_the_genetic_code_is_read_from_the_gmg_taxid(wired, monkeypatch):
+    wired.guess = GmgGuess(usable=True, phylum="Ascomycota", routing_taxid=5125, routing_taxid_rank="order")
+    monkeypatch.setattr(detect_cli, "default_genetic_code", lambda t: 12 if t == 5125 else 1)
+    args, routing = wired.go()
+    assert detect_cli._resolve_genetic_code(args) == 12
+    assert args._phylum_guess["genetic_code"] == 12 and "order taxid 5125" in args._phylum_guess["genetic_code_from"]
+
+
+def test_an_explicit_genetic_code_wins_and_a_failed_lookup_is_recorded(wired, monkeypatch):
+    wired.guess = GmgGuess(usable=True, phylum="Ascomycota", routing_taxid=5125, routing_taxid_rank="order")
+
+    def boom(t):
+        raise OSError("no network")
+    monkeypatch.setattr(detect_cli, "default_genetic_code", boom)
+    args, _ = wired.go()
+    assert detect_cli._resolve_genetic_code(args) is None and "used table 1" in args._phylum_guess["genetic_code_error"]
+    monkeypatch.setattr(detect_cli, "default_genetic_code", lambda t: 12)
+    args = SimpleNamespace(genome="g.fa", taxid=None, phylum="auto", gmg_index=None, exhaustive=False, genetic_code=4)
+    detect_cli._route_with_gmg(args, SimpleNamespace(db_root=Path(".")))
+    assert detect_cli._resolve_genetic_code(args) == 4 and "genetic_code" not in args._phylum_guess
+
+
 def test_a_taxid_that_lands_outside_the_called_phylum_is_ignored(wired):
     wired.guess = GmgGuess(usable=True, phylum="Ascomycota", routing_taxid=999, routing_taxid_rank="family")
     args, routing = wired.go()

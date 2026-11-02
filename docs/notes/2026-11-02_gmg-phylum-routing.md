@@ -109,6 +109,13 @@ Proposal for the CLI:
 - Memory: GmG measured about 180 MB in the browser for this index. The Pyodide genome and the MATPredict tools are also
   in memory; the combined peak is not measured yet. Run the guess first, then free the GmG index before starting detect.
 
+## Genetic code
+
+The translation table is a property of the taxon and MATPredict reads it from the taxonomy for `--taxid` (CTG-clade yeasts use
+table 12). With `--phylum auto`, the table is read the same way for the family or order taxid GmG called (`default_genetic_code`),
+unless `--genetic-code` or `--genetic-code-map` gives one. A failed lookup is recorded in `parameters.phylum_guess.genetic_code_error`
+and the run uses table 1. A phylum-only route (no taxid) uses table 1, as `--phylum NAME` does today.
+
 ## Tests
 
 - Unit: the decision table, with a fake GmG record per row (`ok`, `low_confidence`, `no_match`, `not_fungal`, a fungal

@@ -36,7 +36,7 @@ the browser's Cache API. A worker does the work and is terminated afterwards, so
 - Same rules as `matpredict detect --phylum auto` (`gmg_route.mjs` mirrors `detect/gmg_guess.py`; `gmg_route.test.mjs` holds the shared cases): a weak call, a
   genome GmG says is not a fungus, no call, or a phylum without curated families leaves the pulldown unchanged and says why. "Accept weak guesses" (off by
   default) also takes a weak call.
-- The GmG WebAssembly package is pinned (`fetch-gmg-wasm.sh`: release, SHA-256) and copied to `_assets/gmg/` by `build-site.sh` and `assemble.sh`. To use a newer GmG,
+- The GmG WebAssembly package (v0.3.0, with `routing_hint`) is pinned (`fetch-gmg-wasm.sh`: release, SHA-256) and copied to `_assets/gmg/` by `build-site.sh` and `assemble.sh`. To use a newer GmG,
   set `GMG_WASM_VERSION` and `GMG_WASM_SHA256`, and change the pinned index in `gmg_guess.mjs` to match.
 - Tests: `node --test web/spike/page/gmg_route.test.mjs` (decision rules and the button with a fake DOM). Checked by hand in headless Chromium against the real index:
   *S. cerevisiae* gives Ascomycota, *Backusella macrospora* Mucoromycota, *E. coli* no call (pulldown unchanged), about 6 s each.

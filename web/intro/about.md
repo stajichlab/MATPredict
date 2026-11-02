@@ -9,7 +9,7 @@
 
 MATPredict finds and types the mating-type (MAT) locus in fungal genome assemblies and, where a good reference panel
 exists, in raw reads. This site summarises how it works, how it performs, and which MAT alleles it finds across the
-public fungal genomes from NCBI (NCBI Public Genomes, from this [genome collection](https://github.com/stajichlab/Fungi_BFD/)) and the ZyGoLife Mucoromycotina genomes.
+the NCBI public genomes (from this [genome collection](https://github.com/stajichlab/Fungi_BFD/)) and the ZyGoLife Mucoromycotina genomes.
 
 ## How MATPredict works
 
@@ -80,7 +80,7 @@ The database, the reports and the calls carry the names as the references use th
 
 ## Data used on this site
 
-- **NCBI Public Genomes**: the public NCBI Ascomycota, Basidiomycota and Mucoromycotina genomes of this [fungal
+- **NCBI public genomes**: the public NCBI Ascomycota, Basidiomycota and Mucoromycotina genomes of this [fungal
   genome collection](https://github.com/stajichlab/Fungi_BFD/), as frozen in September 2026 (see also the
   [2026 run documentation](https://github.com/1KFG/Fungi_BFD_run2026/)). The v0.8.0 run searched 19,415 Ascomycota,
   3,275 Basidiomycota and 974 Mucoromycotina genomes in October 2026, on release commit `a2933f7` with the
@@ -89,7 +89,7 @@ The database, the reports and the calls carry the names as the references use th
 - Numbers on the landing page and the explorer come from committed result tables in the
   [results folder](https://github.com/stajichlab/MATPredict/tree/main/results); they are detection counts, not ground truth.
 
-<!-- [UPDATE] Add the ZyGoLife data citation or URL, and any NCBI Public Genomes citation you want shown, one bullet each. -->
+<!-- [UPDATE] Add the ZyGoLife data citation or URL, and any NCBI public genomes citation you want shown, one bullet each. -->
 
 ## What works, and what does not yet
 

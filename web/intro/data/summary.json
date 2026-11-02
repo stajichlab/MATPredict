@@ -1,7 +1,7 @@
 {
  "datasets": {
   "bfd_asco": {
-   "label": "NCBI Public Genomes Ascomycota",
+   "label": "NCBI public genomes Ascomycota",
    "phylum": "Ascomycota",
    "source": "BFD",
    "code": "v0.8.0 (a2933f7, October 2026)",
@@ -50,7 +50,7 @@
    "genome_table": "data/genomes_bfd_asco.tsv"
   },
   "bfd_basidio": {
-   "label": "NCBI Public Genomes Basidiomycota",
+   "label": "NCBI public genomes Basidiomycota",
    "phylum": "Basidiomycota",
    "source": "BFD",
    "code": "v0.8.0 (a2933f7, October 2026)",
@@ -87,7 +87,7 @@
    "genome_table": "data/genomes_bfd_basidio.tsv"
   },
   "bfd_mucoro": {
-   "label": "NCBI Public Genomes Mucoromycotina",
+   "label": "NCBI public genomes Mucoromycotina",
    "phylum": "Mucoromycota",
    "source": "BFD",
    "code": "v0.8.0 (a2933f7, October 2026)",
@@ -199,7 +199,7 @@
   }
  },
  "headline": {
-  "scope": "NCBI Public Genomes datasets only; the held-out ZyGoLife sets are reported separately",
+  "scope": "NCBI public genomes datasets only; the held-out ZyGoLife sets are reported separately",
   "datasets": 3,
   "genomes": 22979,
   "called": 20842,

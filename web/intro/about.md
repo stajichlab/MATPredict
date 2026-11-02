@@ -131,7 +131,7 @@ Held-out items and what each needs for the next release are tracked in
 
 ## Assessments and further reading
 
-The v0.7.0 results were judged campaign by campaign before release; the v0.8.0 judgement notes are TBD (see "The definitive run" in the changelog for what changed against v0.7.0). These notes say what changed against the previous
+The v0.7.0 results were judged campaign by campaign before release; for v0.8.0 the comparison against v0.7.0 and the attribution of every difference are in "The definitive run" in the changelog. These notes say what changed against the previous
 release, what was checked and what was not, and which decisions are still open. Read them for what the calls can and cannot support.
 
 - **Ascomycota:** [judgement](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/v070_ascomycota_judgement.md) (changes against v0.6.0, the truth checks and the reason for each confidence change).

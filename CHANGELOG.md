@@ -38,29 +38,29 @@ release completed.
 
 
 ### Fixed
-- A `high` call is no longer lowered to `medium` because of a stand-in margin (#137). When the idiomorph vote produced no ranking (a single candidate), the reported margin fell back to the identity gap between two different genes on one HMG box, and the tier cap for a thin margin then applied to it. That gap is reported but no longer lowers the tier. On the 381 `margin_fallback` genomes of the v0.7.0 run (228 *Macrophomina*, 98 *Pyricularia*, others), 380 loci return from `medium` to `high` and nothing else changes.
+- A `high` call is no longer lowered to `medium` because of a stand-in margin (#137). When the idiomorph vote produced no ranking (a single candidate), the reported margin fell back to the identity gap between two different genes on one HMG box, and the tier cap for a thin margin then applied to it. That gap is reported but no longer lowers the tier. On the 381 `margin_fallback` genomes of the v0.7.0 run (228 *Macrophomina*, 98 *Pyricularia*, others), 380 loci return from `medium` to `high` and nothing else changes. In the full run the same change raises 645 loci in all (639 Ascomycota, 6 Basidiomycota), every one with an identity-gap margin below 5.
 - Gene model selection is deterministic when one reference record aligns equally well at two places in a polish window (a gene that flanks a MAT locus on both sides). The tie went to whichever alignment the tool listed first, so the `sla2` model of a withheld MATsc locus in GCA_030583325.1 landed on the left copy in 2 of 10 repeat runs and on the right copy in 8, moving the `core_span` and `beyond_core_bp` of that locus. After score, identity and reference record id, the lower start and then the strand decide. Calls, confidence and the GFF3 did not change between the repeat runs.
 
 ### The definitive run
-The v0.8.0 data come from commit `a2933f7` (the v0.8.0 release-prep branch: main at `6959657` plus the version bump; `src`, `db` and `scripts` are identical to main), run with `--preset v0.8` on database digest TBD (TBD records; candidate records excluded). The lists are those of the v0.7.0 run: 19,415 Ascomycota, 3,275 Basidiomycota and 974 Mucoromycotina genomes. Folders: `results/2026-10-31_v080_{ascomycota,basidiomycota,mucoromycotina}`.
+The v0.8.0 data come from commit `a2933f7` (the v0.8.0 release-prep branch: main at `6959657` plus the version bump; `src`, `db` and `scripts` are identical to main), run with `--preset v0.8` on database digest `70afa14e884604f06fa359b083a43317d83458f60b1b0c8254be561d7a131676` (184 records; candidate records excluded). The lists are those of the v0.7.0 run: 19,415 Ascomycota, 3,275 Basidiomycota and 974 Mucoromycotina genomes. Folders: `results/2026-10-31_v080_{ascomycota,basidiomycota,mucoromycotina}`.
 
 | Campaign | Genomes listed | Called | Uncalled | No report (suppressed) | Loci | Loci high / medium / low |
 |---|---|---|---|---|---|---|
-| Ascomycota | 19,415 | TBD | TBD | TBD | TBD | TBD |
-| Basidiomycota | 3,275 | TBD | TBD | TBD | TBD | TBD |
-| Mucoromycotina | 974 | TBD | TBD | TBD | TBD | TBD |
+| Ascomycota | 19,415 | 17,607 | 1,736 | 72 | 20,792 | 14,559 / 6,126 / 107 |
+| Basidiomycota | 3,275 | 2,977 | 277 | 21 | 5,964 | 3,805 / 2,149 / 10 |
+| Mucoromycotina | 974 | 868 | 105 | 1 | 914 | 689 / 212 / 13 |
 
-Against v0.7.0: TBD calls lost and TBD new, TBD confidence up and TBD down, TBD idiomorph flips. Every difference is attributed to a v0.8.0 change (cross-family policy, the wider MATog scope, the MATpk family, the #137 and tie-break fixes) or listed as unexplained: TBD.
+Against v0.7.0, by locus: 475 calls lost (453 Ascomycota, 22 Basidiomycota) and 260 new (all Ascomycota), 645 confidence up (639 Ascomycota, 6 Basidiomycota) and none down, no idiomorph flips; Mucoromycotina is unchanged. 401 of the lost calls are the cross-family policy reporting one call where v0.7.0 reported two families on the same span (381 Ascomycota, 20 Basidiomycota), and the 260 new calls are the `MATog` (136), `MATpk` (88), `MATss` (15), `MATbz` (12) and `MATpf` (9) halves of such pairs; 69 are the *S. pombe* `mat2` copies of #227, one more is the `PR`-over-`MAT` swap of #227, and 3 are the *Ogataea* routing loss of #228. All 645 confidence rises are the #137 fix: each is a single-candidate locus whose stand-in identity-gap margin was below 5 and that was `medium` in v0.7.0 (380 of them carry the `margin_fallback` note, 265 had no note). 171 loci (67 Basidiomycota, 104 Ascomycota) have the same length, identity, span and call but a different exon placement, as the #224 tie-break intends. One low-confidence Basidiomycota partial `HD` locus (GCF_022376455.1) is called in v0.7.0 and not in v0.8.0; the same code calls it in one of three repeat runs, so it is the run-to-run variance of #161 that #224 removes. Nothing is unexplained. The determinism check (24 Ascomycota and 24 Basidiomycota genomes drawn with seed 20261102, run twice) gave no differences between the runs or against the campaign.
 
 ### Known issues
 - Tuning of confidence on weak or short hits is held for v0.9.0: the single-candidate margin (#145), the vote on short fragments and tiny margins (#138), and the unpolished-gene noise floor (#149).
-- The *Hyphopichia burtonii* *MTLA1* candidate record (#148) and the *Pichia* reference record (#189) are held for v0.8.1; until then 26 of 27 *Pichia* genomes in the yeast panel still call `MATsc` (TBD: recount in the full run).
+- The *Hyphopichia burtonii* *MTLA1* candidate record (#148) and the *Pichia* reference record (#189) are held for v0.8.1; until then 94 of the 158 *Pichia* genomes in the full run still call `MATsc` (54 call `MATpk`, 9 are uncalled and 1 has no report).
 - In *S. pombe*, the silent `mat2`-P cassette can be reported as `mat1` (#227, held for v0.8.1). When two families are both in scope and tie on every evidence term, the cross-family rule falls back to the family name and `mat1` wins over `mat2`. In the v0.8.0 run this replaced 69 `mat2` calls in 54 genomes (taxid 4896) that v0.7.0 reported; in 54 of the 69 `mat1` says `M` where `mat2` said `P`. The cassette is still recorded as `cross_call` on the kept call.
 - The same tie rule can swap a MAT call for a pheromone-receptor call: GCA_017654745.1 loses its `MAT` alpha call to an undetermined `PR` call on the same span (#227). With `--cross-family-policy off` both calls return.
 - Genomes now routed by lineage to `MATog` (*Ogataea*) are no longer searched with `MATsc` and `MTL`. Where the `MATog` hits are withheld, a call v0.7.0 made is lost (#228, held for v0.8.1): *O. degrootiae* GCA_019232045.1 (a high-confidence `MTL` alpha call), GCA_030557025.1 and GCA_003707685.2 (three loci in all).
 <!-- TBD: confirm the 17 IndigoAg stand-in taxids against the v0.8.0 run, or cut the sentence below -->
 - 17 IndigoAg genomes carry a stand-in taxid (147538) until real ones are assigned.
-- TBD: the known issues of the v0.7.0 section that still apply (run-to-run variance, #165 rust genomes, #153/#154 intron cap, defective-gene flag); check each against the v0.8.0 run.
+- The known issues of the v0.7.0 section below still apply unchanged: run-to-run variance on equal-scoring copies (#161), the rust genomes that are not searched (#165; the same 21 Basidiomycota genomes have no report), the b-locus intron cap (#153, #154), the defective-gene flag, and the rollout path without policy options.
 
 ## [0.7.0] — 2026-10-26 — `v0.7.0`
 

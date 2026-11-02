@@ -513,20 +513,20 @@ older measurements and were not repeated for v0.8.0. How each campaign was judge
 | Test | Result |
 |---|---|
 | Zygomycete ground-truth set (23 genomes) | 23/23 loci and idiomorphs |
-| Held-out LCG Mucoromycotina genomes (never used in curation) | TBD/621 called (v0.8.0 run) |
-| Held-out Jena Mucoromycotina genomes | TBD/64 called (v0.8.0 run) |
+| Held-out LCG Mucoromycotina genomes (never used in curation) | 549/621 called (v0.8.0 run) |
+| Held-out Jena Mucoromycotina genomes | 61/64 called (v0.8.0 run) |
 | Idiomorph typing validation | 0/540 typed wrong |
 | Pezizomycotina hold-out, order radius | 7/7 |
-| Ascomycota, 19,415 BFD genomes (v0.8.0 run) | TBD called (TBD%) |
-| Basidiomycota, 3,275 BFD genomes (v0.8.0 run) | TBD called (TBD%): Agaricomycotina TBD%, Ustilaginomycotina TBD%, Pucciniomycotina TBD% |
-| Mucoromycotina, 289 BFD genomes (v0.8.0 run) | TBD called (TBD%) |
+| Ascomycota, 19,415 BFD genomes (v0.8.0 run) | 17,607 called (90.7%) |
+| Basidiomycota, 3,275 BFD genomes (v0.8.0 run) | 2,977 called (90.9%): Agaricomycotina 92.2%, Ustilaginomycotina 97.7%, Pucciniomycotina 79.5% |
+| Mucoromycotina, 289 BFD genomes (v0.8.0 run) | 258 called (89.3%) |
 
 Known limits (open items in [analysis/open-questions.md](analysis/open-questions.md)):
 
 - Only three phyla have curated families.
 - A genome far from every reference often fails the evidence bar, so an
   uncalled genome is weak evidence that the genome has no MAT locus. The full
-  Ascomycota run (19,415 genomes, v0.8.0) leaves TBD uncalled and TBD not run.
+  Ascomycota run (19,415 genomes, v0.8.0) leaves 1,736 uncalled and 72 not run.
 - Fragmented assemblies can split a locus or lose its flanking genes.
 - In Mucoromycota, *Absidia* flanking genes are often off-scaffold, and the
   gene order of the Lichtheimiaceae is not yet known.

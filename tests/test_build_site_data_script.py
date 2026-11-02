@@ -87,9 +87,10 @@ def _genomes(path):
         return {r["genome"]: r for r in csv.DictReader(fh, delimiter="\t")}
 
 
-def test_default_release_is_the_v070_definitive_run():
-    assert bsd.DEFAULT_RELEASE == "v070"
-    assert bsd.RELEASES["v070"]["code"].startswith("cleanrun-2026-10c")
+def test_default_release_is_the_v080_definitive_run():
+    assert bsd.DEFAULT_RELEASE == "v080"
+    assert bsd.RELEASES["v080"]["code"].startswith("v0.8.0 (a2933f7")
+    assert bsd.RELEASES["v070"]["code"].startswith("cleanrun-2026-10c")  # the rollback target
     for rel in bsd.RELEASES.values():
         assert {"code", "asco", "basidio", "mucoro"} <= set(rel)
 

@@ -9,7 +9,7 @@
 
 MATPredict finds and types the mating-type (MAT) locus in fungal genome assemblies and, where a good reference panel
 exists, in raw reads. This site summarises how it works, how it performs, and which MAT alleles it finds across the
-the NCBI public genomes (from this [genome collection](https://github.com/stajichlab/Fungi_BFD/)) and the ZyGoLife Mucoromycotina genomes.
+NCBI public genomes (from this [genome collection](https://github.com/stajichlab/Fungi_BFD/)) and the ZyGoLife Mucoromycotina genomes.
 
 ## How MATPredict works
 

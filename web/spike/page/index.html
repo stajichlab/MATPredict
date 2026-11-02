@@ -65,7 +65,9 @@
       <option value="losat">LOSAT (WASI)</option>
       <option value="mmseqs">MMseqs2 (translated search)</option>
     </select>
-    <p><button id="run" disabled>Run detection</button></p>
+    <p><button id="run" disabled>Run detection</button>
+      <button id="reset" type="button" title="Reload the page: frees memory and clears the log (choose the genome again)">Reset</button>
+      <button id="copylog" type="button" title="Copy the log, with the browser and time, for a bug report">Copy log</button></p>
     <div id="log" aria-live="polite">Waiting for a genome.</div>
     <p class="muted" id="timing"></p>
   </section>

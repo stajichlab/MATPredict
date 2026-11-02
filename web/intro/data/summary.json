@@ -4,71 +4,68 @@
    "label": "BFD Ascomycota",
    "phylum": "Ascomycota",
    "source": "BFD",
-   "code": "cleanrun-2026-10c (b317ece)",
+   "code": "v0.8.0 (a2933f7, October 2026)",
    "held_out": false,
    "genomes": 19415,
-   "loci": 20985,
+   "loci": 20792,
    "locus_class": {
-    "mat_locus": 14447,
-    "partial_locus": 1476,
-    "idiomorph_gene_only": 4291,
-    "homothallic_candidate": 771
+    "mat_locus": 14583,
+    "partial_locus": 1427,
+    "idiomorph_gene_only": 4012,
+    "homothallic_candidate": 770
    },
    "confidence": {
-    "high": 13904,
-    "medium": 6974,
+    "high": 14559,
+    "medium": 6126,
     "low": 107
    },
    "status": {
-    "called": 17592,
-    "uncalled": 1751,
+    "called": 17607,
+    "uncalled": 1736,
     "no_report": 72
    },
    "routing": {
-    "phylum_fallback": 1144,
-    "lineage": 18043,
+    "phylum_fallback": 969,
+    "lineage": 18149,
     "unrecorded": 72,
-    "direct": 98,
+    "direct": 167,
     "not_searched": 58
    },
-   "n_label_unsupported": 759,
-   "tier_drop": 668,
-   "tier_drop_without_note": 78,
+   "n_label_unsupported": 709,
+   "tier_drop": 2,
+   "tier_drop_without_note": 0,
    "tier_note": {
-    "distant_fragment": 101,
-    "margin_fallback": 381,
-    "polished_model_lost": 57,
-    "vote_collapse": 51
+    "polished_model_lost": 2
    },
    "high_basis": {
-    "supported": 296,
+    "supported": 302,
     "tie_break": 11
    },
    "high_basis_outside_scope": {
     "grey": 8,
-    "supported": 8343,
+    "supported": 8846,
     "tie_break": 13
    },
-   "defective_loci": 5160,
+   "defective_loci": 5192,
    "genome_table": "data/genomes_bfd_asco.tsv"
   },
   "bfd_basidio": {
    "label": "BFD Basidiomycota",
    "phylum": "Basidiomycota",
    "source": "BFD",
-   "code": "cleanrun-2026-10c (b317ece)",
+   "code": "v0.8.0 (a2933f7, October 2026)",
    "held_out": false,
    "genomes": 3275,
-   "loci": 5986,
+   "loci": 5964,
    "locus_class": {
-    "idiomorph_gene_only": 3037,
-    "mat_locus": 2724,
-    "partial_locus": 225
+    "idiomorph_gene_only": 3021,
+    "mat_locus": 2719,
+    "partial_locus": 224
    },
    "confidence": {
-    "high": 3802,
-    "medium": 2173,
-    "low": 11
+    "high": 3805,
+    "medium": 2149,
+    "low": 10
    },
    "status": {
     "uncalled": 277,
@@ -80,9 +77,9 @@
     "lineage": 2593,
     "unrecorded": 21
    },
-   "n_label_unsupported": 9,
-   "tier_drop": 1,
-   "tier_drop_without_note": 1,
+   "n_label_unsupported": 8,
+   "tier_drop": 0,
+   "tier_drop_without_note": 0,
    "tier_note": {},
    "high_basis": {},
    "high_basis_outside_scope": {},
@@ -93,7 +90,7 @@
    "label": "BFD Mucoromycotina",
    "phylum": "Mucoromycota",
    "source": "BFD",
-   "code": "cleanrun-2026-10c (b317ece)",
+   "code": "v0.8.0 (a2933f7, October 2026)",
    "held_out": false,
    "genomes": 289,
    "loci": 267,
@@ -125,7 +122,7 @@
    "label": "ZyGoLife LCG (held out)",
    "phylum": "Mucoromycota",
    "source": "ZyGoLife",
-   "code": "cleanrun-2026-10c (b317ece)",
+   "code": "v0.8.0 (a2933f7, October 2026)",
    "held_out": true,
    "genomes": 621,
    "loci": 584,
@@ -157,7 +154,7 @@
    "label": "ZyGoLife Jena (held out)",
    "phylum": "Mucoromycota",
    "source": "ZyGoLife",
-   "code": "cleanrun-2026-10c (b317ece)",
+   "code": "v0.8.0 (a2933f7, October 2026)",
    "held_out": true,
    "genomes": 64,
    "loci": 63,
@@ -185,26 +182,27 @@
    "genome_table": "data/genomes_zygolife_jena.tsv"
   }
  },
- "generated": "2026-10-26",
+ "generated": "2026-11-02",
+ "registry_version": "2026-10-30+5c01ddd5",
  "release": {
-  "name": "v070",
-  "code": "cleanrun-2026-10c (b317ece, October 2026)",
+  "name": "v080",
+  "code": "v0.8.0 (a2933f7, October 2026)",
   "folders": {
-   "asco": "results/2026-10-26_v070_ascomycota",
-   "basidio": "results/2026-10-26_v070_basidiomycota",
-   "mucoro": "results/2026-10-26_v070_mucoromycotina"
+   "asco": "results/2026-10-31_v080_ascomycota",
+   "basidio": "results/2026-10-31_v080_basidiomycota",
+   "mucoro": "results/2026-10-31_v080_mucoromycotina"
   },
   "folder_codes": {
-   "asco": "cleanrun-2026-10c (b317ece)",
-   "basidio": "cleanrun-2026-10c (b317ece)",
-   "mucoro": "cleanrun-2026-10c (b317ece)"
+   "asco": "v0.8.0 (a2933f7, October 2026)",
+   "basidio": "v0.8.0 (a2933f7, October 2026)",
+   "mucoro": "v0.8.0 (a2933f7, October 2026)"
   }
  },
  "headline": {
   "scope": "BFD datasets only; the held-out ZyGoLife sets are reported separately",
   "datasets": 3,
   "genomes": 22979,
-  "called": 20827,
-  "loci": 27238
+  "called": 20842,
+  "loci": 27023
  }
 }

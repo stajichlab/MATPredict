@@ -1,0 +1,8 @@
+v0.8.0 definitive run, mucoromycotina campaign
+commit: a2933f7af48df14231ee6923f4578bc0f7b65f6b (branch prep-v0.7.1 = main 6959657 + version 0.8.0; src/db/scripts identical to main)
+worktree: /bigdata/stajichlab/jstajich/projects/MATPredict/.claude/worktrees/run-a2933f7
+DETECT_ARGS: --preset v0.8  (v0.7 policies + cross_family_policy on); Mucoromycotina command as v0.7.0 plus --preset v0.8
+pixi.lock sha256: 675a15123d22857564dbb020592db9075cd60c8bb82f9cbb53a077abb31f4ac9
+compute: throttled, 3 chains x 16 CPUs = 48 CPUs in flight (submit_throttled.py); jobs: results/2026-10-31_v080_submit/jobs.tsv; submitted 2026-10-31
+db content sha256 (database_digest, candidates excluded): 70afa14e884604f06fa359b083a43317d83458f60b1b0c8254be561d7a131676  (184 records)
+determinism: 24 Ascomycota and 24 Basidiomycota genomes (seed 20261102) run twice on this commit with --preset v0.8: 0 changed loci between the runs and against this campaign (results/2026-11-02_determinism on HPCC)

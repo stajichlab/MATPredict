@@ -55,6 +55,7 @@ Against v0.7.0: TBD calls lost and TBD new, TBD confidence up and TBD down, TBD 
 ### Known issues
 - Tuning of confidence on weak or short hits is held for v0.9.0: the single-candidate margin (#145), the vote on short fragments and tiny margins (#138), and the unpolished-gene noise floor (#149).
 - The *Hyphopichia burtonii* *MTLA1* candidate record (#148) and the *Pichia* reference record (#189) are held for v0.8.1; until then 26 of 27 *Pichia* genomes in the yeast panel still call `MATsc` (TBD: recount in the full run).
+- In *S. pombe*, the silent `mat2`-P cassette can be reported as `mat1` (#227, held for v0.8.1). When two families are both in scope and tie on every evidence term, the cross-family rule falls back to the family name and `mat1` wins over `mat2`. In the v0.8.0 run this replaced 69 `mat2` calls in 54 genomes (taxid 4896) that v0.7.0 reported; in 54 of the 69 `mat1` says `M` where `mat2` said `P`. The cassette is still recorded as `cross_call` on the kept call.
 <!-- TBD: confirm both facts in the line below against the v0.8.0 run, or cut it -->
 - *O. degrootiae* GCA_019232045.1 stays uncalled; 17 IndigoAg genomes carry a stand-in taxid (147538) until real ones are assigned.
 - TBD: the known issues of the v0.7.0 section that still apply (run-to-run variance, #165 rust genomes, #153/#154 intron cap, defective-gene flag); check each against the v0.8.0 run.

@@ -12,7 +12,8 @@ rm -rf "$SITE" && mkdir -p "$SITE/page/_assets" "$SITE/browser/host" "$SITE/brow
   "$SITE/browser/pyhmmer" "$SITE/localizer" "$SITE/node_modules/@bjorn3/browser_wasi_shim"
 
 # The page and the shared modules it imports (paths relative to the page, as in the repo).
-cp "$HERE/index.html" "$HERE/app.mjs" "$HERE/genbank.mjs" "$HERE/genbank_input.mjs" "$HERE/proteins.mjs" "$HERE/fetch_retry.mjs" "$SITE/page/"
+cp "$HERE/index.html" "$HERE/app.mjs" "$HERE/genbank.mjs" "$HERE/genbank_input.mjs" "$HERE/proteins.mjs" "$HERE/fetch_retry.mjs" \
+  "$HERE/gmg_guess.mjs" "$HERE/gmg_route.mjs" "$HERE/gmg_worker.mjs" "$SITE/page/"
 mkdir -p "$SITE/page/examples" && cp "$HERE/examples/examples.json" "$SITE/page/examples/"
 cp "$SPIKE/browser/host/tool-host.mjs" "$SPIKE/browser/host/wasi-runner.mjs" "$SITE/browser/host/"
 cp "$SPIKE/browser/python/bridge.py" "$SITE/browser/python/"
@@ -25,6 +26,9 @@ cp -RL "$SPIKE/node_modules/@bjorn3/browser_wasi_shim/." "$SITE/node_modules/@bj
 mkdir -p "$SITE/page/_assets/bundle"
 cp -RL "$BUNDLE/miniprot" "$BUNDLE/mmseqs" "$BUNDLE/exonerate" "$BUNDLE/losat" "$SITE/page/_assets/bundle/"
 cp -L "$BUNDLE"/pyhmmer-*.whl "$SITE/page/_assets/bundle/"
+
+# GmG's WebAssembly package (the phylum guess), pinned and checked against its published SHA-256.
+bash "$HERE/fetch-gmg-wasm.sh" "$SITE/page/_assets/gmg"
 
 # The curated database, copied from the checkout.
 cp -RL "$REPO/db" "$SITE/page/_assets/db"

@@ -8,6 +8,7 @@ import { locusFasta, locusGenbank } from "./genbank.mjs";
 import { locusProteinsFasta } from "./proteins.mjs";
 import { genbankToFasta, isGenbank, GENBANK_SUFFIX } from "./genbank_input.mjs";
 import { fetchBytes as fetchWithRetry } from "./fetch_retry.mjs";
+import { initGuess } from "./gmg_guess.mjs";
 
 const ASSETS = "./_assets";
 const $ = (id) => document.getElementById(id);
@@ -295,6 +296,11 @@ function renderResults(res, genomeText) {
 // A genome as the pipeline needs it: plain FASTA bytes and text. A .gz upload is decompressed in the
 // browser (DecompressionStream), so nothing is sent anywhere and no server is needed.
 let genome = null;
+// "Guess phylum": GmG runs in a worker and fills the phylum pulldown (gmg_guess.mjs).
+const guessUi = initGuess({
+  ui: { button: $("guess"), weak: $("guess-weak"), note: $("guess-note"), select: $("phylum") },
+  getGenome: () => genome, log,
+});
 async function readGenome(file) {
   const gzipped = /\.gz$/i.test(file.name);
   const bytes = gzipped
@@ -338,6 +344,7 @@ $("example").addEventListener("change", async (e) => {
   genome = { name: ex.file, bytes, text: new TextDecoder().decode(bytes), gzipped: false };
   $("phylum").value = ex.phylum;
   $("run").disabled = false;
+  guessUi.update();
   log(`example ${ex.file} (${(bytes.length / 1e3).toFixed(1)} kb)`);
 });
 $("genome").addEventListener("change", async (e) => {
@@ -350,6 +357,7 @@ $("genome").addEventListener("change", async (e) => {
     log(`cannot read ${file.name}: ${err.message}`);
   }
   $("run").disabled = !genome;
+  guessUi.update();
   if (genome) {
     log(`genome ${file.name} (${(file.size / 1e6).toFixed(2)} MB${genome.gzipped ? `, decompressed to ${(genome.bytes.length / 1e6).toFixed(2)} MB` : ""})`);
     if (genome.genbank) {

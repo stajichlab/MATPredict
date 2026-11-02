@@ -56,8 +56,10 @@ Against v0.7.0: TBD calls lost and TBD new, TBD confidence up and TBD down, TBD 
 - Tuning of confidence on weak or short hits is held for v0.9.0: the single-candidate margin (#145), the vote on short fragments and tiny margins (#138), and the unpolished-gene noise floor (#149).
 - The *Hyphopichia burtonii* *MTLA1* candidate record (#148) and the *Pichia* reference record (#189) are held for v0.8.1; until then 26 of 27 *Pichia* genomes in the yeast panel still call `MATsc` (TBD: recount in the full run).
 - In *S. pombe*, the silent `mat2`-P cassette can be reported as `mat1` (#227, held for v0.8.1). When two families are both in scope and tie on every evidence term, the cross-family rule falls back to the family name and `mat1` wins over `mat2`. In the v0.8.0 run this replaced 69 `mat2` calls in 54 genomes (taxid 4896) that v0.7.0 reported; in 54 of the 69 `mat1` says `M` where `mat2` said `P`. The cassette is still recorded as `cross_call` on the kept call.
-<!-- TBD: confirm both facts in the line below against the v0.8.0 run, or cut it -->
-- *O. degrootiae* GCA_019232045.1 stays uncalled; 17 IndigoAg genomes carry a stand-in taxid (147538) until real ones are assigned.
+- The same tie rule can swap a MAT call for a pheromone-receptor call: GCA_017654745.1 loses its `MAT` alpha call to an undetermined `PR` call on the same span (#227). With `--cross-family-policy off` both calls return.
+- Genomes now routed by lineage to `MATog` (*Ogataea*) are no longer searched with `MATsc` and `MTL`. Where the `MATog` hits are withheld, a call v0.7.0 made is lost: *O. degrootiae* GCA_019232045.1 (a high-confidence `MTL` alpha call), GCA_030557025.1 and GCA_003707685.2 (three loci in all).
+<!-- TBD: confirm the 17 IndigoAg stand-in taxids against the v0.8.0 run, or cut the sentence below -->
+- 17 IndigoAg genomes carry a stand-in taxid (147538) until real ones are assigned.
 - TBD: the known issues of the v0.7.0 section that still apply (run-to-run variance, #165 rust genomes, #153/#154 intron cap, defective-gene flag); check each against the v0.8.0 run.
 
 ## [0.7.0] — 2026-10-26 — `v0.7.0`

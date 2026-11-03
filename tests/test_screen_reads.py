@@ -90,6 +90,16 @@ def test_no_genus_call_and_a_missing_record():
     assert sr.finalize(None, "coccidioides_posadasii", 2_000_000)["status"] == "no_result"
 
 
+def test_a_species_call_without_a_genus_call_is_not_a_no_call():
+    """Clonostachys rosea reads get a species call and no genus call from GmG: that is a classification (wave 1, 16 runs)."""
+    r = rec("r", "Clonostachys", [["Fungi", "Clonostachys", "Clonostachys rosea"]] * 3)
+    r["guess"]["calls"] = {"species": {"taxon": "Clonostachys rosea"}}
+    out = sr.finalize(r, "clonostachys_rosea", 2_000_000)
+    assert out["status"] == "ok" and "no_call" not in out["flags"]
+    r["guess"]["calls"] = {}
+    assert "no_call" in sr.finalize(r, "clonostachys_rosea", 2_000_000)["flags"]               # neither call: still flagged
+
+
 def test_without_an_expected_species_the_genus_is_not_checked():
     assert sr.finalize(WHOLE, "", 2_000_000)["status"] == "ok"
 

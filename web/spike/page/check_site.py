@@ -17,6 +17,9 @@ REQUIRED = (
     "index.html", "results.html", "about.html", "data/summary.json",
     "page/index.html", "page/app.mjs",
     "page/_assets/matpredict.whl", "page/_assets/db-manifest.json", "page/_assets/db.tar.gz",
+    # the Guess button's GmG WebAssembly; the .wasm is loaded by the .js through import.meta.url, so no quoted path names it
+    "page/_assets/gmg/gmg_wasm.js", "page/_assets/gmg/gmg_wasm_bg.wasm",
+    "page/gmg_guess.mjs", "page/gmg_route.mjs", "page/gmg_worker.mjs",
 )
 
 # A quoted relative path with a file extension: an import ("./genbank.mjs", "../browser/host/tool-host.mjs") or a

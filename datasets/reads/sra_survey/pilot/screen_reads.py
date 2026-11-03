@@ -18,7 +18,8 @@ The rule (calibrated in results/2026-11-02_contam_spikein/NOTE.md):
   borderline        not flagged, but a second genus with at least 5 hashes and a concentration of at least 0.7 (most of its
                     hashes in one reference genome; chance second genera have a concentration near 0.2). That triggers a deeper
                     screen; a set still not flagged after it, or that cannot be read deeper, keeps `borderline`.
-  no_call           GmG made no genus call.
+  no_call           GmG made neither a genus nor a species call. A species call without a genus call (seen for Clonostachys rosea at
+                    13x coverage) is a classification, so it is not flagged.
   ok                none of the above.
 `status` is the first that applies, in the order genus_mismatch, mixed, borderline, no_call, ok; `flags` lists all that apply.
 """
@@ -105,7 +106,7 @@ def finalize(rec, group, spots, deep_rec=None, deep_spots=None, deep_possible=Tr
         flags.append("mixed")
     elif is_borderline(f) and not (deeper and deeper["present"] and not deeper["mixed"] and not is_borderline(deeper)):
         flags.append("borderline")
-    if not f["genus"] and not (deeper and deeper["genus"]):
+    if not (f["genus"] or f["species"] or (deeper and (deeper["genus"] or deeper["species"]))):
         flags.append("no_call")
     status = next((p for p in PRECEDENCE if p in flags), "ok")
     out.update({

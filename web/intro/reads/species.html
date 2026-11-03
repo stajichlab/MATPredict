@@ -118,7 +118,10 @@ if (CL) {
   document.getElementById("clone-counts").innerHTML = CL.counts ? "<b>Counted once per clone</b> (runs with a call only): " + Object.entries(CL.counts).map(([k, v]) => esc(lab(k)) + " " + v).join(", ") + ". A group whose runs disagree is counted as <i>conflict</i>." : "";
 }
 const cf = document.getElementById("callf"), q = document.getElementById("q"); cats.forEach(c => cf.add(new Option(lab(c), c)));
-const note = r => [r.rescue, r.verdict === "both_vs_one" ? "both_vs_one" : "", r.verdict === "DISAGREE" ? "disagrees with assembly" : "", r.flags && r.flags !== "-" ? r.flags : ""].filter(Boolean).join("; ");
+const SCREEN = { mixed: "mixed read set", genus_mismatch: "genus mismatch", borderline: "possible mixture", no_call: "no genus call", screen_failed: "screen failed", no_result: "no screen result" };
+const screenText = r => !SCREEN[r.screen] ? "" : SCREEN[r.screen] + (r.screen_second ? " (" + r.screen_second + (r.screen_explained !== "" && r.screen_explained != null ? ", " + Math.round(100 * r.screen_explained) + "% of its hashes" : "") + ")" : "");
+if (D.screened) document.getElementById("cards").insertAdjacentHTML("beforeend", '<div class="card"><div class="v">' + D.screen_flagged + " / " + D.screened + '</div><div class="l">runs flagged by the contamination screen</div></div>');
+const note = r => [screenText(r), r.rescue, r.verdict === "both_vs_one" ? "both_vs_one" : "", r.verdict === "DISAGREE" ? "disagrees with assembly" : "", r.flags && r.flags !== "-" ? r.flags : ""].filter(Boolean).join("; ");
 function draw() {
   const f = D.rows.filter(r => (!cf.value || r.call === cf.value) && (r.run + r.strain + r.study + r.call).toLowerCase().includes(q.value.toLowerCase()));
   document.querySelector("#runs tbody").innerHTML = f.map(r => "<tr><td>" + (/^[SED]RR/.test(r.run) ? "<a href=\"https://www.ncbi.nlm.nih.gov/sra/" + esc(r.run) + "\">" + esc(r.run) + "</a>" : esc(r.run)) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.study) + "</td><td>" + esc(r.call ? lab(r.call) : "not run") + "</td><td class=\"n\">" + esc(r.depth_1) + "</td><td class=\"n\">" + esc(r.depth_2) + "</td><td class=\"n\">" + esc(r.shared_depth) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(r.clone || "") + "</td><td>" + esc(note(r)) + "</td></tr>").join("");

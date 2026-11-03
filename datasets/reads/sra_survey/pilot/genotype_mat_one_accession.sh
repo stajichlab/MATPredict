@@ -10,6 +10,7 @@
 # Environment (all optional): FALLBACK_K=21 (retype `none`/`low_depth` runs at this k), EXTRA_KS="21 25" (also type at these k, kept as <run>.<prefix>.k<K>.tsv), READS_K=21 (k-mer length for reads-type; default 31), TARGET_SPOTS=2000000  WINDOWS=8  SRA_URL=https://sra-pub-run-odp.s3.amazonaws.com/sra  IDIOMORPHS
 #   SCRATCH=<fast local dir for the temporary .sra and FASTQ, default /tmp>  KEEP_SRA=1 keeps the temporary files
 #   SKETCH=1 also writes <run>.sig.zip, the sourmash sketch that clone_clusters.py uses (needs sourmash: SOURMASH=path, default the HPCC install, else the one on PATH).
+#   SCREEN=1 screens the subsample with GmG for the wrong organism or a mixture and writes <run>.screen.json (see the block after the extraction; GMG, GMG_INDEX, DEEP_SPOTS).
 #   FASTQ_OUT=path keeps the subsample FASTQ there; SKIP_TYPE=1 stops before typing (follow-up analyses). MAX_SRA_SIZE=50G caps the prefetch fallback. SRATOOLKIT_BIN, PY, PYTHONPATH, MATPREDICT_DB_ROOT: where fastq-dump and `python -m MATPredict` come from (defaults: the HPCC installs).
 # Exit: 0 done (or already done: the result file is the done-marker), 1 failed (the state is in the run.json), 2 bad arguments. Idempotent; safe to retry.
 # Not kept: the .sra and every FASTQ. Cost per run measured 2026-10-26: about 1 GB download, 110 s, 5 GB RAM, up to 4 CPUs (the typing step).
@@ -25,8 +26,8 @@ mkdir -p "$OUT"
 [[ -s $OUT/$RUN.$PFX.tsv ]] && { echo "skip $RUN"; exit 0; }
 work=$(mktemp -d "${SCRATCH:-/tmp}/sra_type.$RUN.XXXXXX")
 state=started; t0=$(date +%s)
-json() { printf '{"run":"%s","group":"%s","layout":"%s","spots_total":%s,"target_spots":%s,"windows":%s,"sra_bytes":%s,"secs_download":%s,"secs_convert":%s,"secs_type":%s,"state":"%s","source":"%s","host":"%s"}\n' \
-  "$RUN" "$GROUP" "$LAYOUT" "${SPOTS:-0}" "$TARGET" "$WIN" "${bytes:-0}" "${d1:-0}" "${c1:-0}" "${y1:-0}" "$state" "${src:-none}" "$(hostname)" > "$OUT/$RUN.run.json"; }
+json() { printf '{"run":"%s","group":"%s","layout":"%s","spots_total":%s,"target_spots":%s,"windows":%s,"sra_bytes":%s,"secs_download":%s,"secs_convert":%s,"secs_type":%s,"secs_screen":%s,"state":"%s","source":"%s","host":"%s"}\n' \
+  "$RUN" "$GROUP" "$LAYOUT" "${SPOTS:-0}" "$TARGET" "$WIN" "${bytes:-0}" "${d1:-0}" "${c1:-0}" "${y1:-0}" "${s1:-0}" "$state" "${src:-none}" "$(hostname)" > "$OUT/$RUN.run.json"; }
 trap 'json; [[ ${KEEP_SRA:-0} == 1 ]] || rm -rf "$work"' EXIT
 # 1. download (resumable, 3 tries) from NCBI's copy on AWS; a 404 means that run is not mirrored there (some European runs are not): then ask NCBI itself through the SRA toolkit
 ok=0; src=aws-open-data
@@ -40,18 +41,60 @@ if [[ $ok != 1 ]] && grep -q "no data" "$work/prefetch.log" 2>/dev/null; then st
 d1=$(( $(date +%s) - t0 )); bytes=$(stat -c %s "$work/$RUN.sra" 2>/dev/null || echo 0)
 [[ $ok == 1 && $bytes -gt 0 ]] || { [[ $state == unavailable_at_ncbi ]] || state=failed_download; exit 1; }
 # 2. evenly spaced windows of spots (1-based, inclusive); a run no larger than the target is read whole
+extract_spots() {       # extract_spots TARGET_SPOTS DEST: the windows above, for a target of TARGET_SPOTS spots, appended to DEST
+  local tgt=$1 dest=$2 w i s e
+  if [[ ${SPOTS:-0} -le $tgt ]]; then
+    fastq-dump -Z --split-spot --ncbi_error_report never "$work/$RUN.sra" 2>/dev/null >> "$dest"
+  else
+    w=$(( tgt / WIN ))
+    for i in $(seq 0 $((WIN-1))); do
+      s=$(( (2*i+1) * SPOTS / (2*WIN) - w/2 + 1 )); [[ $s -lt 1 ]] && s=1; e=$(( s + w - 1 ))
+      fastq-dump -N $s -X $e -Z --split-spot --ncbi_error_report never "$work/$RUN.sra" 2>/dev/null >> "$dest"
+    done
+  fi
+}
 t1=$(date +%s); fq="$work/sub.fastq"; : > "$fq"
-if [[ ${SPOTS:-0} -le $TARGET ]]; then
-  fastq-dump -Z --split-spot --ncbi_error_report never "$work/$RUN.sra" 2>/dev/null >> "$fq"
-else
-  w=$(( TARGET / WIN ))
-  for i in $(seq 0 $((WIN-1))); do
-    s=$(( (2*i+1) * SPOTS / (2*WIN) - w/2 + 1 )); [[ $s -lt 1 ]] && s=1; e=$(( s + w - 1 ))
-    fastq-dump -N $s -X $e -Z --split-spot --ncbi_error_report never "$work/$RUN.sra" 2>/dev/null >> "$fq"
-  done
-fi
+extract_spots "$TARGET" "$fq"
 c1=$(( $(date +%s) - t1 )); nlines=$(wc -l < "$fq")
 [[ $nlines -gt 0 ]] || { state=failed_convert; exit 1; }
+# optional screen of the subsample for the wrong organism or a mixture (SCREEN=1): GmG classifies the same reads against a fungal
+# reference and screen_reads.py turns its record into flags (mixed, genus_mismatch, borderline), written to <run>.screen.json. It never
+# stops a run from being typed. A run with a second genus that looks real but is not flagged is read deeper (DEEP_SPOTS, default 6M
+# spots) and screened again, which is why the .sra is kept until here. Calibration: results/2026-11-02_contam_spikein/NOTE.md.
+#   GMG=path to gmg, GMG_INDEX=path to the .gmgi index, SCREEN_THREADS (default: the task's CPUs), SCREEN_FORCE_DEEP=1 (testing: always screen deeper)
+s1=0
+if [[ ${SCREEN:-0} == 1 ]]; then
+  ts=$(date +%s)
+  GMG=${GMG:-/bigdata/stajichlab/shared/projects/GmG_runs/bin/gmg}
+  GMG_INDEX=${GMG_INDEX:-/bigdata/stajichlab/shared/projects/GmG_runs/release/2026.10.5/bfd-2026.10.5-s10000.gmgi}
+  SCREEN_PY=${SCREEN_PY:-${WORKER_DIR:-$(cd "$(dirname "$0")" && pwd)}/screen_reads.py}
+  screen_one() {          # screen_one FASTQ OUTDIR: GmG on one interleaved FASTQ; the record is OUTDIR/results.jsonl
+    printf 'id\tpath\texpected\n%s\t%s\t%s\n' "$RUN" "$1" "${GROUP//_/ }" > "$2.sheet.tsv"
+    "$GMG" run --sample-sheet "$2.sheet.tsv" --index "$GMG_INDEX" -o "$2" --threads "${SCREEN_THREADS:-${SLURM_CPUS_PER_TASK:-2}}" > "$2.log" 2>&1 && [[ -s $2/results.jsonl ]]
+  }
+  spots_screened=$(( ${SPOTS:-0} > 0 && ${SPOTS:-0} < TARGET ? SPOTS : TARGET )); [[ ${SPOTS:-0} -gt 0 ]] || spots_screened=$(( nlines / 4 ))
+  if screen_one "$fq" "$work/gmg1"; then
+    trig=$($PY "$SCREEN_PY" trigger --results "$work/gmg1/results.jsonl" --run "$RUN" 2>/dev/null || echo ok)
+    [[ ${SCREEN_FORCE_DEEP:-0} == 1 ]] && trig=deeper
+    deep_args=()
+    if [[ $trig == deeper ]]; then
+      if [[ ${SPOTS:-0} -gt $TARGET ]]; then     # the run has reads the first screen did not use
+        DEEP=${DEEP_SPOTS:-6000000}; fq6="$work/sub6.fastq"; : > "$fq6"; extract_spots "$DEEP" "$fq6"
+        if [[ -s $fq6 ]] && screen_one "$fq6" "$work/gmg6"; then
+          deep_args=(--deep-results "$work/gmg6/results.jsonl" --deep-spots "$(( SPOTS < DEEP ? SPOTS : DEEP ))")
+        fi
+        rm -f "$fq6"
+      else
+        deep_args=(--no-deeper)
+      fi
+    fi
+    $PY "$SCREEN_PY" finalize --results "$work/gmg1/results.jsonl" --run "$RUN" --group "$GROUP" --spots "$spots_screened" "${deep_args[@]}" --out "$OUT/$RUN.screen.json" > /dev/null 2>&1 \
+      || printf '{"status":"screen_failed","flags":["screen_failed"]}\n' > "$OUT/$RUN.screen.json"
+  else
+    printf '{"status":"screen_failed","flags":["screen_failed"]}\n' > "$OUT/$RUN.screen.json"
+  fi
+  s1=$(( $(date +%s) - ts ))
+fi
 rm -f "$work/$RUN.sra"
 # optional, for follow-up analyses: keep a copy of the subsample (FASTQ_OUT=path) and/or stop before typing (SKIP_TYPE=1)
 [[ -n ${FASTQ_OUT:-} ]] && cp "$fq" "$FASTQ_OUT"

@@ -11,7 +11,8 @@ from idiomorph_labels import idiomorph_label, registry_version
 from collections import Counter
 
 CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)"}
-FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly", "clone"]
+FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly", "clone", "screen", "screen_second", "screen_explained"]
+SCREEN_FLAGGED = ("mixed", "genus_mismatch", "borderline")      # the statuses screen_reads.py gives to a run worth a second look
 
 
 def rd(p):
@@ -138,7 +139,8 @@ def main():
              "confidence": "withheld" if d == "HOLD" else CONF.get(d, d), "why": why, "runs": len(runs), "done": len(done), "typed": len(typed),
              "names": [n1, n2], "labels": [idiomorph_label(n1, [n1, n2]), idiomorph_label(n2, [n1, n2])], "c1": c[n1], "c2": c[n2], "MAT1-1": c[n1], "MAT1-2": c[n2], "both": c["both"], "none": c["none"], "low_depth": c["low_depth"],
              "with_assembly_call": len(truth), "agree": sum(r["verdict"] == "agree" for r in truth), "disagree": sum(r["verdict"] == "DISAGREE" for r in truth),
-             "rescued": sum(1 for r in typed if r.get("rescue"))}
+             "rescued": sum(1 for r in typed if r.get("rescue")),
+             "screened": sum(1 for r in runs if r.get("screen")), "screen_flagged": sum(1 for r in runs if r.get("screen") in SCREEN_FLAGGED)}
         index.append(s)
         rows = [{k: r.get(k, "") for k in FIELDS} for r in runs]
         pf = next((os.path.join(d, slug + ".pairs.tsv") for d in clone_dirs if os.path.exists(os.path.join(d, slug + ".pairs.tsv"))), None); cl = clone_groups(pf, rows) if pf else None

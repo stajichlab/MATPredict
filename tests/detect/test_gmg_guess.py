@@ -269,3 +269,49 @@ def test_an_unrelated_gmg_package_on_pypi_is_not_mistaken_for_ours(monkeypatch):
     monkeypatch.setattr(gmg_guess.shutil, "which", lambda name: None)
     with pytest.raises(gmg_guess.GmgUnavailable, match="not `pip install gmg`"):
         gmg_guess.classify_genome("g.fa", Path("x.gmgi"))
+
+
+def _fake_gmg(monkeypatch, tmp_path, seen):
+    import json
+    import types
+    monkeypatch.setitem(__import__("sys").modules, "gmg", types.ModuleType("gmg"))     # no bindings: use the binary
+    monkeypatch.setattr(gmg_guess.shutil, "which", lambda name: "/fake/gmg")
+
+    def run(cmd, **kw):
+        if "--version" in cmd:
+            return types.SimpleNamespace(returncode=0, stdout="gmg 0.0\n", stderr="")
+        seen.append(cmd[3])
+        assert Path(cmd[3]).exists(), "the genome handed to gmg must exist while it runs"
+        out = Path(cmd[cmd.index("-o") + 1])
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "results.jsonl").write_text(json.dumps({"status": "ok", "qc_flags": [], "guess": {"calls": {}}}) + "\n")
+        return types.SimpleNamespace(returncode=0, stdout="", stderr="")
+    monkeypatch.setattr(gmg_guess.subprocess, "run", run)
+
+
+def test_a_fsa_genome_is_handed_to_gmg_as_fna(monkeypatch, tmp_path):
+    seen = []
+    _fake_gmg(monkeypatch, tmp_path, seen)
+    g = tmp_path / "Absidia.contigs.fsa"
+    g.write_text(">c\nACGT\n")
+    gmg_guess.classify_genome(g, tmp_path / "x.gmgi")
+    assert seen[0].endswith("genome.fna") and seen[0] != str(g)
+
+
+def test_a_compressed_unknown_extension_keeps_its_compression_suffix(monkeypatch, tmp_path):
+    seen = []
+    _fake_gmg(monkeypatch, tmp_path, seen)
+    g = tmp_path / "x.fsa.gz"
+    g.write_bytes(b"\x1f\x8b")
+    gmg_guess.classify_genome(g, tmp_path / "x.gmgi")
+    assert seen[0].endswith("genome.fna.gz")
+
+
+def test_a_recognised_extension_is_passed_through_unchanged(monkeypatch, tmp_path):
+    seen = []
+    _fake_gmg(monkeypatch, tmp_path, seen)
+    for name in ("a.fna", "b.fa", "c.FASTA", "d.fa.gz", "e.fas"):
+        g = tmp_path / name
+        g.write_text(">c\nACGT\n")
+        gmg_guess.classify_genome(g, tmp_path / "x.gmgi")
+    assert [Path(x).name for x in seen] == ["a.fna", "b.fa", "c.FASTA", "d.fa.gz", "e.fas"]

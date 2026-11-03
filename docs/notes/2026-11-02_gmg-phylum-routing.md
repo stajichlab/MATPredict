@@ -171,6 +171,30 @@ What this says:
 - Caveat: hiding a whole genus is harsher than real use, where a new MATPredict genome usually has a congener among the 23,669 BFD genomes.
   The "own entry hidden" and "species hidden" rows are closer to the typical case; the genus-hidden row is the worst case.
 
+## Measured: `detect --phylum auto` end to end on the HPCC (2026-11-03)
+
+30 genomes of the regression panel (10 each of Ascomycota, Basidiomycota and Mucoromycota), each run three ways with `--preset v0.8` on MATPredict
+`main` (08022a2, with #233): `--phylum auto` (GmG v0.3.1, the representatives index 2026.10.5), `--taxid` (the panel taxid, the published v0.8.0
+routing) and `--phylum <true phylum>`. The genomes are BFD genomes but are not in the representatives index. All 90 runs finished without error. Taxonomy:
+NCBI snapshot 2026-11-01. Raw results: `GmG_runs/matpredict_phylum/` on the HPCC (`summary.tsv`, `loci.tsv`, `detect_out/`).
+
+| | `auto` | `--taxid` | `--phylum` |
+|---|---|---|---|
+| loci found | 22 | 27 | 27 |
+| families searched per genome (mean) | 1.4 | 2.0 | 6.0 |
+| seconds per genome (mean) | 72 | 80 | 163 |
+
+- **`auto` finds what `--taxid` finds, except where GmG declines.** On 27 of 30 genomes `auto` and `--taxid` agree on every locus (25 routed by lineage, 2 by the phylum
+  fallback, as the taxid route also did). `auto` found nothing the taxid route did not. Its 5 missed loci come from 3 genomes it did not search: *Rhizoctonia solani*
+  (weak call, 2 loci) and `Zycmex1` (weak call, 1 locus), both with the right phylum, and `CC3` (no phylum call, 2 loci).
+- **`--phylum auto-weak` recovers the two weak ones.** Re-run on those two genomes, it found the same loci as `--taxid` (same coordinates, confidence and idiomorph;
+  3 of 3). `CC3` has no phylum call and stays not searched. So the weak path is safe on this sample, and it stays opt-in (decision 5 below).
+- **Lineage routing is narrower than phylum routing, and that is not new.** `--taxid` and `--phylum` differ by 5 loci in each direction. Plain phylum routing found two
+  medium-confidence loci with an undetermined idiomorph that both lineage routings missed (a *Cryptococcus* PR locus and a MATsc locus in `GCA_002924885.1`); elsewhere the same
+  locus carries a different family label (`MAT` vs `MATtub`, `redPR`/`redHD` vs `MAT`/`Aalpha`). `auto` inherits exactly the `--taxid` behaviour; the cases belong with #228.
+- **Genetic code:** all 27 searched genomes got table 1 (none is a CUG-clade yeast; table 12 was seen only for *C. albicans* in the earlier routing probe).
+- **Limits:** 30 genomes, the representatives index only; the hard case (a genus absent from the index) is covered by the panel table above, not by this run.
+
 ## Open questions
 
 3. (Answered above for the regression panel: pass the phylum plus an order or family taxid. Not yet run: the 23 Zygo genomes and
@@ -180,7 +204,7 @@ What this says:
 
 5. Policy for a called-but-blocked phylum (weak call) in a curated phylum. Options: (a) `not_searched` (as designed, safe, misses
    loci); (b) search that phylum and mark the run `phylum_source: gmg_weak` (about 86% right on the genus-hidden panel); (c) (b)
-   only behind an explicit `--phylum auto-weak`. I lean to (c): the default stays cautious, and the weak path is opt-in and labelled.
+   only behind an explicit `--phylum auto-weak`. **Decided 2026-11-03: (c)**, opt-in; the HPCC run above supports it (3 of 3 weak-call loci recovered).
 6. Should `mixture_suspected` also make `usable` false? Three of the four wrong usable calls had it, but they are one genus
    (*Cunninghamella*), so the evidence is thin; check it on a wider set before changing the rule.
 

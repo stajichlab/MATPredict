@@ -49,6 +49,7 @@
 <footer class="muted">MATPredict · <a href="../about.html">About</a> · Visits are counted with <a href="https://www.goatcounter.com">GoatCounter</a>, which sets no cookies and collects no personal data: it only tallies anonymous page views.</footer>
 <script type="module">
 import { stacked, legend } from "../charts.js";
+import { makeSortable } from "../sortable.js";
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const slug = new URLSearchParams(location.search).get("s") || "";
 let D;
@@ -77,8 +78,12 @@ const isOne = x => x === NM[0] || x === NM[1], one = r => isOne(r.call), tr = ro
 const label = D.truth_label || "the detect call on an assembly of the same BioSample";
 document.getElementById("agree").textContent = tr.length ? single.length - dis.length + " of " + single.length + " runs with a single-allele call match " + label + "; " + (tr.length - single.length) + " more runs with a single-allele comparison call received none" + (other ? "; " + other + " runs have a comparison call that is not a single idiomorph (both, ambiguous or not detected) and are not counted" : "") + "." : "No run in this sample has an assembly of the same BioSample to compare with.";
 if (cur) document.getElementById("why").hidden = true;
+// Every table sorts by a click on its header; refresh() keeps the order when a table is rebuilt.
+const sortDis = makeSortable(document.getElementById("dis")), sortClone = makeSortable(document.getElementById("clone-tbl")), sortRuns = makeSortable(document.getElementById("runs")),
+  sortCnt = makeSortable(document.getElementById("cnt-tbl"), { fixedLast: tr => tr.style.fontWeight === "600" });   // the pooled row stays last
 document.getElementById("dis").innerHTML = (dis.length ? "<tr><th>Run</th><th>Strain</th><th>Reads call</th><th>Assembly call</th><th>Assembly</th></tr>" + dis.map(r => "<tr><td>" + esc(r.run) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.call) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(r.truth_assembly) + "</td></tr>").join("") : "");
 document.getElementById("h-d1").textContent = LB[0] + " depth"; document.getElementById("h-d2").textContent = LB[1] + " depth";
+sortDis.refresh(); sortRuns.refresh();
 
 const CL = D.clones, onePct = (a, b) => a + b ? Math.round(100 * a / (a + b)) + "%" : "–";
 function tally(rs, unit) {      // unit "run": one per run; "clone": runs sharing a clone id count once (a clone with two different single calls is a conflict)
@@ -101,6 +106,7 @@ function drawCounts() {
   const big = studies.length > 1 ? studies.map(s => [s, rows.filter(r => r.study === s).length]).sort((a, b) => b[1] - a[1])[0] : null;
   document.getElementById("cnt-note").textContent = (big && big[1] > 0.5 * rows.length ? big[0] + " supplies " + Math.round(100 * big[1] / rows.length) + "% of the runs, so the pooled shares mostly describe that study. " : "") + (CL && !CL.plateau ? "Counts per clone are not offered for this species: the number of clones changes a lot between thresholds, so similar runs may be close relatives and not copies. " : "") + "Share of single calls = " + LB[0] + " / (" + LB[0] + " + " + LB[1] + "). These are counts of sampled strains, not population frequencies.";
   const uo = document.getElementById("unit"); uo.options[1].disabled = !(CL && CL.plateau);
+  sortCnt.refresh();
 }
 document.getElementById("grp").addEventListener("input", drawCounts); document.getElementById("unit").addEventListener("input", drawCounts); drawCounts();
 if (CL) {
@@ -108,6 +114,7 @@ if (CL) {
   const inGroups = CL.groups.reduce((a, g) => a + g.size, 0);
   document.getElementById("clone-intro").textContent = CL.runs + " runs of this species were sketched; " + CL.groups.length + (CL.groups.length === 1 ? " group" : " groups") + " of near-identical runs contain " + inGroups + " of them, and " + (CL.runs - inGroups) + " runs stand alone (" + CL.clones + " clones in all)." + (CL.plateau ? "" : " The number of clones changes a lot between thresholds 0.998 (" + CL.clones + ") and 0.997 (" + CL.clones_at_alt + "), so similar runs here may be close relatives and not copies: no counts per clone are given.");
   document.getElementById("clone-tbl").innerHTML = CL.groups.length ? "<tr><th>Group</th><th class=\"n\">Runs</th><th>MAT calls</th><th class=\"n\">Least similar pair</th><th>Runs in the group</th></tr>" + CL.groups.map(g => "<tr><td>" + esc(g.id) + "</td><td class=\"n\">" + g.size + "</td><td>" + esc(Object.entries(g.calls).map(([k, v]) => lab(k) + " " + v).join(", ")) + "</td><td class=\"n\">" + (g.min_ani ?? "") + "</td><td>" + g.runs.map(esc).join(", ") + "</td></tr>").join("") : "";
+  sortClone.refresh();
   document.getElementById("clone-counts").innerHTML = CL.counts ? "<b>Counted once per clone</b> (runs with a call only): " + Object.entries(CL.counts).map(([k, v]) => esc(lab(k)) + " " + v).join(", ") + ". A group whose runs disagree is counted as <i>conflict</i>." : "";
 }
 const cf = document.getElementById("callf"), q = document.getElementById("q"); cats.forEach(c => cf.add(new Option(lab(c), c)));
@@ -115,6 +122,7 @@ const note = r => [r.rescue, r.verdict === "both_vs_one" ? "both_vs_one" : "", r
 function draw() {
   const f = D.rows.filter(r => (!cf.value || r.call === cf.value) && (r.run + r.strain + r.study + r.call).toLowerCase().includes(q.value.toLowerCase()));
   document.querySelector("#runs tbody").innerHTML = f.map(r => "<tr><td>" + (/^[SED]RR/.test(r.run) ? "<a href=\"https://www.ncbi.nlm.nih.gov/sra/" + esc(r.run) + "\">" + esc(r.run) + "</a>" : esc(r.run)) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.study) + "</td><td>" + esc(r.call ? lab(r.call) : "not run") + "</td><td class=\"n\">" + esc(r.depth_1) + "</td><td class=\"n\">" + esc(r.depth_2) + "</td><td class=\"n\">" + esc(r.shared_depth) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(r.clone || "") + "</td><td>" + esc(note(r)) + "</td></tr>").join("");
+  sortRuns.refresh();
 }
 [cf, q].forEach(e => e.addEventListener("input", draw)); draw();
 document.getElementById("dl").href = "../data/reads/" + encodeURIComponent(slug) + ".tsv"; document.getElementById("dl").download = slug + "_reads_calls.tsv";

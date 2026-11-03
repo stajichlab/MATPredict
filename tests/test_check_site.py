@@ -70,6 +70,15 @@ def test_a_missing_archive_or_pyhmmer_wheel_is_named(tmp_path):
     assert "the manifest names the pyhmmer wheel pyhmmer-1.whl, which is not in the bundle" in problems
 
 
+def test_a_script_an_html_page_imports_that_was_not_copied_is_named(tmp_path):
+    s = _site(tmp_path)
+    (s / "reads").mkdir()
+    (s / "charts.js").write_text("x")
+    (s / "reads/species.html").write_text('<link rel="stylesheet" href="../site.css"><script type="module">import { a } from "../charts.js"; import { b } from "../sortable.js";</script>')
+    (s / "site.css").write_text("x")
+    assert cs.check(str(s)) == ["reads/species.html refers to ../sortable.js, which is not in the site"]
+
+
 def test_template_strings_and_urls_are_not_treated_as_files(tmp_path):
     s = _site(tmp_path, app='const u = `${ASSETS}/db.tar.gz`; import x from "https://cdn.example/x.mjs"; fetch("examples/e.json");\n')
     assert cs.check(str(s)) == []
@@ -82,6 +91,16 @@ def test_main_exit_codes(tmp_path, capsys):
     (s / "page/a.mjs").unlink()
     assert cs.main(["check_site.py", str(s)]) == 1
     assert "which is not in the site" in capsys.readouterr().out
+
+
+def test_every_file_the_html_pages_refer_to_exists_in_the_repository():
+    """The landing, results, About and reads pages, as checked in: each stylesheet, script and import is a file
+    in web/intro, apart from generated data under data/ and the browser tool under page/ (assembled from
+    web/spike by build-site.sh)."""
+    intro = REPO / "web/intro"
+    missing = [f"{name}: {ref}" for name, ref in cs.html_references(str(intro))
+               if "/data/" not in ref and "/page/" not in ref and not (intro / Path(name).parent / ref).resolve().is_file()]
+    assert missing == []
 
 
 def test_every_file_the_page_sources_refer_to_exists_in_the_repository():

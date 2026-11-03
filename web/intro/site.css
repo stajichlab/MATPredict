@@ -70,3 +70,13 @@ table.sortable th { cursor:pointer; user-select:none; }
 table.sortable th:hover { color:var(--accent, inherit); }
 th[aria-sort]::after { content:" \25B2"; font-size:.7em; opacity:.75; }
 th[aria-sort="descending"]::after { content:" \25BC"; }
+
+/* Collapsible taxonomy groups of the raw-reads overview (reads/index.html). */
+details.grp { margin:.2rem 0; }
+details.grp > summary { cursor:pointer; padding:6px 8px; border-radius:6px; }
+details.grp > summary:hover { background:var(--card); }
+details.grp.l0 > summary { font-weight:700; font-size:1.05em; }
+details.grp.l1 { margin-left:10px; }
+details.grp.l2 { margin-left:18px; }
+details.grp td:nth-child(1), details.grp td:nth-child(5) { white-space:nowrap; }   /* species name and allele counts stay on one line */
+details.grp .gsum { color:var(--muted); font-weight:400; font-size:.88em; margin-left:.6em; }

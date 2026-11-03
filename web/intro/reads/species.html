@@ -15,6 +15,7 @@
 <nav><a class="brand" href="../" aria-label="MATPredict home"><img class="logo-l" src="../logo/horizontal.svg" alt="MATPredict" height="34"><img class="logo-d" src="../logo/horizontal-dark.svg" alt="" height="34"></a><a href="../">Overview</a><a href="../results.html">Genomes by taxon</a><a href="./">Raw reads</a><a href="../page/index.html">Browser tool</a><a href="../about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
 <main>
   <p class="muted"><a href="./">Raw reads</a> / <span id="crumb"></span></p>
+  <p class="muted" id="lineage"></p>
   <h1 id="title">Species report</h1>
   <p class="lede" id="lede"></p>
   <p class="muted" id="namesbar"></p>
@@ -56,6 +57,7 @@ let D;
 try { D = await fetch("../data/reads/" + encodeURIComponent(slug) + ".json").then(r => { if (!r.ok) throw 0; return r.json(); }); } catch { document.getElementById("title").textContent = "Species not found"; throw 0; }
 document.title = D.species + " raw reads - MATPredict";
 document.getElementById("crumb").textContent = D.species;
+document.getElementById("lineage").textContent = [D.phylum, D.class, D.order, D.family].filter(Boolean).join(" › ");
 document.getElementById("title").innerHTML = "<i>" + esc(D.species) + "</i>";
 // Allele names: raw by default, labels one click away (?names=label); see reads/index.html.
 const LABELS_ON = new URLSearchParams(location.search).get("names") === "label";

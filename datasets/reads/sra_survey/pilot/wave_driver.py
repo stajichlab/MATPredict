@@ -13,8 +13,9 @@ Commands (all take --wave DIR and the config options below):
   plan-one SPECIES     build the lineage panels, check them (panel gate), choose test and full run lists for ONE species
   submit-plan          queue `plan-one` for every species of species.tsv as an array (panels are built on compute nodes)
   submit-test          merge the test runs of the planned species and queue them (split over the exfab and stajichlab partitions)
-  gate                 summarize the test results and decide per species: PASS, PROVISIONAL or HOLD:<reasons>   (gates below)
-  submit-full          queue the remaining runs of the species that passed the gate
+  gate                 summarize the test results and decide per species: PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC, UNVALIDATED:<reasons> or HOLD:<reasons>   (gates below)
+  regate               decide again from the numbers in an existing gates table (after the rules change); writes the previous decision beside the new one
+  submit-full          queue the remaining runs of the species that are not held (PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC and UNVALIDATED)
   report               write WAVE_REPORT.md from the summaries and the gates
   status               counts of species by state, and of runs done and failed
 
@@ -22,6 +23,10 @@ Gates. Panel (before any download): lineage panel L1 exists; at least 2 loci of 
 of each other; shared flank k-mers >= 2000; at least 4 selectable runs (the survey's own minimum; a species with fewer than 8 runs is typed whole and can only be PROVISIONAL). Test (after 20 runs): at least 90% of runs finished (runs not at NCBI are not counted); typed
 (one idiomorph) >= 75% of finished runs and `both` <= 20%; median shared-flank depth >= 3; with >= 5 typed runs that have a `detect` truth: agreement >= 95% and at most one
 disagreement; with fewer than 5 such runs the species is PROVISIONAL (typed >= 85% required). A species with at least half of its runs `both` and typed+both >= 85% is PROVISIONAL_HOMOTHALLIC (`both` is the expected answer for a homothallic species). Thresholds are in GATE below.
+
+A species that has a usable panel and enough runs is not hidden for missing those limits (curator, 2026-11-02): it is UNVALIDATED when it types at least 50% of its finished runs and its only failures are the soft ones (typed
+below 75% or 85%, `both` above 20%, shared depth below 3, or agreement short of the limit with fewer than 10 comparison runs). It gets the full run and is shown on the site as "unvalidated" with the reasons. HOLD is
+left for what makes a call unusable: no panel or too few runs (the plan status), fewer than half the finished runs typed, too many runs failing to download, or agreement short of the limit with 10 or more comparison runs.
 """
 import argparse, collections, csv, json, os, re, statistics, subprocess, sys
 
@@ -29,7 +34,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 P = "/bigdata/stajichlab/jstajich/projects/MATPredict"
 PY = f"{P}/.pixi/envs/default/bin/python"
 GATE = dict(min_loci=2, min_core_kmers=300, max_core_ratio=10, min_shared_kmers=2000, min_runs=4,
-            min_done=0.90, min_typed=0.75, max_both=0.20, min_shared_depth=3.0, min_truth_runs=5, min_agree=0.95, max_disagree=1, provisional_typed=0.85, homothallic_both=0.5)
+            min_done=0.90, min_typed=0.75, max_both=0.20, min_shared_depth=3.0, min_truth_runs=5, min_agree=0.95, max_disagree=1, provisional_typed=0.85, homothallic_both=0.5,
+            unvalidated_typed=0.50, hold_truth_runs=10)
 TSV = dict(delimiter="\t", lineterminator="\n")
 
 
@@ -168,6 +174,29 @@ def submit_test(a):
 
 
 # ------------------------------------------------------------------------------------------------ gate
+def decide(n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd):
+    """(decision, reasons) for one tested species from the numbers of its test runs: runs counted (not "unavailable at NCBI"), finished, typed
+    (one idiomorph), both, typed runs with a `detect` truth, those that agree, and the median shared-flank depth. A reason is "hard" when the
+    calls cannot be used at all (HOLD) and "soft" when they can be used with the reason beside them (UNVALIDATED)."""
+    hard, soft = [], []
+    tf = n_typed / max(1, n_done); bf = n_both / max(1, n_done)
+    if not n_counted or n_done / n_counted < GATE["min_done"]: hard.append("many_failed")
+    homo = bf >= GATE["homothallic_both"] and (n_typed + n_both) / max(1, n_done) >= GATE["provisional_typed"]    # a homothallic species: `both` is the expected answer
+    if not homo:
+        if tf < GATE["min_typed"]: (hard if tf < GATE["unvalidated_typed"] else soft).append(f"typed_{tf:.2f}")
+        if bf > GATE["max_both"]: soft.append(f"both_{bf:.2f}")
+    if msd < GATE["min_shared_depth"]: soft.append(f"shared_depth_{msd:.1f}")
+    prov = n_truth < GATE["min_truth_runs"] or homo
+    if not prov:
+        if n_agree / n_truth < GATE["min_agree"] or n_truth - n_agree > GATE["max_disagree"]:
+            (hard if n_truth >= GATE["hold_truth_runs"] else soft).append(f"agree_{n_agree}of{n_truth}")
+    elif not homo and tf < GATE["provisional_typed"]:
+        (hard if tf < GATE["unvalidated_typed"] else soft).append(f"provisional_typed_{tf:.2f}")
+    if hard: return "HOLD:" + "+".join(hard + soft), hard + soft
+    if soft: return "UNVALIDATED:" + "+".join(soft), soft
+    return ("PROVISIONAL_HOMOTHALLIC" if homo else "PROVISIONAL" if prov else "PASS"), []
+
+
 def gate(a):
     res = rd(os.path.join(a.wave, a.stage, "summary", "results_all.tsv"))
     by = collections.defaultdict(list)
@@ -180,34 +209,48 @@ def gate(a):
         rs = by.get(sl, [])
         if not rs: rows.append(dict(slug=sl, species=r0["species"], decision="PENDING", reasons="no test results yet")); continue
         counted = [x for x in rs if x["state"] != "unavailable_at_ncbi"]
-        done = [x for x in counted if x["state"] == "done"]; why = []
+        done = [x for x in counted if x["state"] == "done"]
         typed = [x for x in done if x["call"] not in ("both", "none", "low_depth", "")]; both = [x for x in done if x["call"] == "both"]
         tr = [x for x in typed if x["truth"] and "," not in x["truth"]]; agree = sum(1 for x in tr if x["call"] == x["truth"])
         sd = [float(x["shared_depth"]) for x in done if x["shared_depth"] not in ("", None)]
         msd = statistics.median(sd) if sd else 0
-        if not counted or len(done) / len(counted) < GATE["min_done"]: why.append("many_failed")
-        tf = len(typed) / max(1, len(done)); bf = len(both) / max(1, len(done))
-        homo = bf >= GATE["homothallic_both"] and (len(typed) + len(both)) / max(1, len(done)) >= GATE["provisional_typed"]    # a homothallic species: `both` is the expected answer
-        if not homo:
-            if tf < GATE["min_typed"]: why.append(f"typed_{tf:.2f}")
-            if bf > GATE["max_both"]: why.append(f"both_{bf:.2f}")
-        if msd < GATE["min_shared_depth"]: why.append(f"shared_depth_{msd:.1f}")
-        prov = len(tr) < GATE["min_truth_runs"]
-        if homo: prov = True
-        if not prov:
-            if agree / len(tr) < GATE["min_agree"] or len(tr) - agree > GATE["max_disagree"]: why.append(f"agree_{agree}of{len(tr)}")
-        elif not homo and tf < GATE["provisional_typed"]: why.append(f"provisional_typed_{tf:.2f}")
-        dec = "HOLD:" + "+".join(why) if why else ("PROVISIONAL_HOMOTHALLIC" if homo else "PROVISIONAL" if prov else "PASS")
+        dec, _ = decide(len(counted), len(done), len(typed), len(both), len(tr), agree, msd)
         rows.append(dict(slug=sl, species=r0["species"], decision=dec, reasons=f"runs={len(rs)} done={len(done)} typed={len(typed)} both={len(both)} none/low={len(done)-len(typed)-len(both)} truth_typed={len(tr)} agree={agree} median_shared_depth={msd:.1f}"))
     wr(os.path.join(a.wave, "gates.tsv" if a.stage == "test" else f"gates_{a.stage}.tsv"), rows, ["slug", "species", "decision", "reasons"])
     print(collections.Counter(r["decision"].split(":")[0] for r in rows))
+
+
+REGATE = re.compile(r"runs=(\d+) done=(\d+) typed=(\d+) both=(\d+) none/low=(\d+) truth_typed=(\d+) agree=(\d+) median_shared_depth=([\d.]+)")
+
+
+def regate(a):
+    """Decide again from the numbers a gates table already holds (its `reasons` column), for example after the rules changed. A species
+    that was not tested (a plan status such as held:panel_build_failed) keeps its decision; one held for many failed downloads stays held.
+    Only a species whose decision changes is rewritten (a species held before and now keeps its row). Writes --out-file (default: the input file,
+    in place) and, beside it, regate_changes.tsv with the previous and the new decision of each species that changed."""
+    src = os.path.join(a.wave, a.in_file); dst = os.path.join(a.wave, a.out_file or a.in_file)
+    rows = rd(src); changes = []
+    for r in rows:
+        m = REGATE.search(r["reasons"])
+        if not m:
+            continue
+        done, typed, both, truth, agree, msd = int(m[2]), int(m[3]), int(m[4]), int(m[6]), int(m[7]), float(m[8])
+        counted = done if "many_failed" not in r["decision"] else done * 2 + 1       # the counted runs are not in the table; this keeps a species held for failed downloads held
+        new, _ = decide(counted, done, typed, both, truth, agree, msd)
+        if new.split(":")[0] != r["decision"].split(":")[0]:
+            changes.append({"slug": r["slug"], "species": r["species"], "previous": r["decision"], "decision": new, "reasons": r["reasons"]})
+            r["decision"] = new
+    wr(dst, rows, ["slug", "species", "decision", "reasons"])
+    wr(os.path.join(os.path.dirname(dst), "regate_changes.tsv"), changes, ["slug", "species", "previous", "decision", "reasons"])
+    kinds = collections.Counter((c["previous"].split(":")[0], c["decision"].split(":")[0]) for c in changes)
+    print(f"{len(rows)} species -> {dst}; decisions: {dict(collections.Counter(r['decision'].split(':')[0] for r in rows))}; changed: {dict(kinds)}")
 
 
 def submit_full(a):
     g = {r["slug"]: r["decision"] for r in rd(os.path.join(a.wave, "gates.tsv"))}
     rows = []
     for sl, dec in g.items():
-        if dec in ("PASS", "PROVISIONAL", "PROVISIONAL_HOMOTHALLIC"): rows += rd(os.path.join(a.wave, "plan", sl, "runs_full.tsv"))[:a.cap]     # the test runs come first; at most --cap runs per species
+        if dec.split(":")[0] in ("PASS", "PROVISIONAL", "PROVISIONAL_HOMOTHALLIC", "UNVALIDATED"): rows += rd(os.path.join(a.wave, "plan", sl, "runs_full.tsv"))[:a.cap]     # the test runs come first; at most --cap runs per species
     if not rows: sys.exit("no species passed the gate")
     submit_stage(a, "full", rows)
 
@@ -246,7 +289,7 @@ def status(a):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("cmd", choices=["plan-one", "submit-plan", "submit-test", "gate", "submit-full", "report", "status", "submit-list"])
+    ap.add_argument("cmd", choices=["plan-one", "submit-plan", "submit-test", "gate", "regate", "submit-full", "report", "status", "submit-list"])
     ap.add_argument("--wave", required=True); ap.add_argument("--inputs", default=f"{P}/results/sra_reads_typing/wave_inputs")
     ap.add_argument("--species"); ap.add_argument("--conc", type=int, default=60, help="tasks running at once per array (the curator lifted the CPU limit for this work, 2026-10-27)")
     ap.add_argument("--cpus", type=int, default=1, help="CPUs per run task: every step is single-threaded (measured 2026-10-27), and the exfab account is limited to 32 CPUs, so 1 CPU gives 32 tasks at once instead of 8")
@@ -260,9 +303,11 @@ def main():
     ap.add_argument("--retry-held", action="store_true", help="submit-plan: only the species held for too few runs")
     ap.add_argument("--retry-status", help="submit-plan: only the species whose plan status starts with this (for example held:panel_build_failed)")
     ap.add_argument("--borrow", action="store_true", help="plan-one, submit-plan: an idiomorph with no locus in the species takes its loci from the other species of the genus")
+    ap.add_argument("--in-file", default="gates_final.tsv", help="regate: the gates table (in the wave directory) to decide again")
+    ap.add_argument("--out-file", help="regate: where to write it (default: the input file)")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
-    {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)
+    {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "regate": regate, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)
 
 
 if __name__ == "__main__":

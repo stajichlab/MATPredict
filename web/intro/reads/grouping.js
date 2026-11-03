@@ -11,13 +11,14 @@ const placeholder = (name) => name === UNPLACED || name.startsWith("(");
 const byName = (a, b) => (placeholder(a.name) - placeholder(b.name)) || a.name.localeCompare(b.name);
 
 // Counts for a group's summary line. `confidence` values are the page's: confirmed, provisional,
-// "provisional (homothallic)" and withheld; the two provisional kinds are counted together.
+// "provisional (homothallic)", unvalidated and withheld; the two provisional kinds are counted together.
 export function summarize(rows) {
-  const t = { species: rows.length, runs: 0, confirmed: 0, provisional: 0, withheld: 0 };
+  const t = { species: rows.length, runs: 0, confirmed: 0, provisional: 0, unvalidated: 0, withheld: 0 };
   for (const r of rows) {
     t.runs += r.runs || 0;
     if (r.confidence === "confirmed") t.confirmed++;
     else if (r.confidence === "withheld") t.withheld++;
+    else if (r.confidence === "unvalidated") t.unvalidated++;
     else t.provisional++;
   }
   return t;

@@ -11,6 +11,7 @@ const ROWS = [
   sp("Fusarium graminearum", "Ascomycota", "Sordariomycetes", "Hypocreales"),
   sp("Candida albicans", "Ascomycota", "Saccharomycetes", "Saccharomycetales", "provisional (homothallic)", 20),
   sp("Mystery fungus", "", "", ""),
+  sp("Epichloe typhina", "Ascomycota", "Sordariomycetes", "Hypocreales", "unvalidated", 7),
 ];
 
 test("a species is grouped under its phylum, class and order, and a blank rank gets a placeholder", () => {
@@ -50,8 +51,8 @@ test("keys are paths, levels count down the tree, and every row is in exactly on
 });
 
 test("summarize counts species, runs and the confidence kinds, with both provisional kinds together", () => {
-  assert.deepEqual(summarize(ROWS), { species: 6, runs: 95, confirmed: 3, provisional: 2, withheld: 1 });
-  assert.deepEqual(summarize([]), { species: 0, runs: 0, confirmed: 0, provisional: 0, withheld: 0 });
+  assert.deepEqual(summarize(ROWS), { species: 7, runs: 102, confirmed: 3, provisional: 2, unvalidated: 1, withheld: 1 });
+  assert.deepEqual(summarize([]), { species: 0, runs: 0, confirmed: 0, provisional: 0, unvalidated: 0, withheld: 0 });
 });
 
 test("filtering rows first leaves the keys of the groups that remain unchanged", () => {

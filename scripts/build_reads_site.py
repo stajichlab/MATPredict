@@ -3,14 +3,14 @@
 
 Input: a wave folder of `datasets/reads/sra_survey/pilot/wave1/` (results_all_final.tsv, gates_final.tsv) and the species list (wave1_species.tsv). Standard library only.
     build_reads_site.py --out web/intro/data/reads [--wave datasets/reads/sra_survey/pilot/wave1]
-The pages say "confirmed / provisional / withheld"; the wave driver's gate calls them PASS / PROVISIONAL / HOLD.
+The pages say "confirmed / provisional / unvalidated / withheld"; the wave driver's gate calls them PASS / PROVISIONAL / UNVALIDATED / HOLD.
 """
 import argparse, csv, itertools, json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from idiomorph_labels import idiomorph_label, registry_version
 from collections import Counter
 
-CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)"}
+CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)", "UNVALIDATED": "unvalidated"}
 FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly", "clone"]
 
 

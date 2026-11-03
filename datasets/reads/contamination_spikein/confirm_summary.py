@@ -2,9 +2,10 @@
 """Summarise confirm_flagged.slurm: one row per read set with the unmapped fraction and what GmG calls the unmapped reads.
 
   confirm_summary.py --out DIR --ids ids.tsv [--table results.tsv]
-A set is `confirmed` when GmG names the expected second genus as the primary genus of the unmapped reads (or as a mixture member) and
-the unmapped fraction is above the largest unmapped fraction of the negative controls; `not_confirmed` when it does not; `no_unmapped`
-when too few reads were left to classify.
+A set is `confirmed` when GmG, run on the reads that do not map to Coccidioides, names the expected genus as its genus or species call, or as
+the second organism with its own mixture flag raised; `not_confirmed` when it does not (a chance second genus without the flag is not enough);
+`no_unmapped` when too few reads were left to classify. The unmapped fraction is reported but does not decide: it depends on how well a strain
+maps to the references (one clean control leaves 19% unmapped). The negative controls are checked instead: the script reports how many GmG flags.
 """
 import argparse, csv, json, os, sys
 
@@ -39,19 +40,22 @@ def main(argv=None):
         r = {"id": sid, "expected": exp, "state": "done", "pairs": pairs, "unmapped_pairs": unm, "unmapped_pct": round(100 * unm / pairs, 2) if pairs else None,
              "aligned_pct": f[4], **{("gmg_" + k): v for k, v in gmg_summary(os.path.join(a.out, sid, "gmg", "results.jsonl")).items()}}
         rows.append(r)
-    neg = [r["unmapped_pct"] for r in rows if r.get("state") == "done" and not r["expected"] and r.get("unmapped_pct") is not None]
-    ceiling = max(neg) if neg else None
     for r in rows:
         if r.get("state") != "done" or not r["expected"]:
             r["verdict"] = "control" if r.get("state") == "done" else r.get("state"); continue
-        if r.get("gmg_genus") is None:
-            r["verdict"] = "no_unmapped"
-        else:
-            named = r["expected"] in (r.get("gmg_genus"), r.get("gmg_primary"), r.get("gmg_second"))
-            r["verdict"] = "confirmed" if named and (ceiling is None or r["unmapped_pct"] > ceiling) else "not_confirmed"
+        if r.get("gmg_genus") is None and r.get("gmg_species") is None:
+            r["verdict"] = "no_unmapped"; continue
+        exp = r["expected"]
+        species_genus = (r.get("gmg_species") or "").split(" ")[0]
+        named_as_call = exp in (r.get("gmg_genus"), r.get("gmg_primary"), species_genus)
+        named_as_second = r.get("gmg_second") == exp and bool(r.get("gmg_mixed"))
+        r["verdict"] = "confirmed" if (named_as_call or named_as_second) else "not_confirmed"
+    controls = [r for r in rows if r.get("state") == "done" and not r["expected"]]
+    flagged = sum(1 for r in controls if r.get("gmg_mixed"))
     cols = ["id", "expected", "state", "pairs", "unmapped_pairs", "unmapped_pct", "aligned_pct", "gmg_genus", "gmg_species", "gmg_status", "gmg_primary", "gmg_second", "gmg_second_hashes", "gmg_n_hashes", "gmg_coverage_est", "gmg_mixed", "verdict"]
     w = csv.DictWriter(open(a.table, "w") if a.table else sys.stdout, cols, delimiter="\t", extrasaction="ignore", lineterminator="\n"); w.writeheader(); w.writerows(rows)
-    print(f"negative-control unmapped ceiling: {ceiling}", file=sys.stderr)
+    tested = [r for r in rows if r.get("state") == "done" and r["expected"]]
+    print(f"{sum(1 for r in tested if r['verdict'] == 'confirmed')} of {len(tested)} flagged sets confirmed; GmG flagged {flagged} of {len(controls)} negative controls", file=sys.stderr)
     return 0
 
 

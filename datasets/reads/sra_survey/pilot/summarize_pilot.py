@@ -6,7 +6,7 @@ failures, flags and timings. Reads only the small per-run files, so it can run a
 
 RUNS.tsv: the run list given to the array (columns run_accession, group; optional strain, truth_detect, truth_assembly, panel_prefix).
 RESULTS_DIR: where the array wrote <run>.<panel_prefix>.tsv and <run>.run.json. Writes in OUT_DIR:
-  results_all.tsv      one row per run: the run list, the call and its numbers, the timings, the state, agreement with the truth
+  results_all.tsv      one row per run: the run list, the call and its numbers, the timings, the state, agreement with the truth, and (when the worker ran with SCREEN=1) the screen: status, GmG's genus, the second genus, its hashes and share, and whether it was read deeper
   summary_by_group.tsv one row per group (species)
   discordant.tsv       typed runs whose call differs from the truth; failures.tsv: runs with no result and the state in their run.json
   SUMMARY.md           the same in words, with the numbers a reader needs to judge the run
@@ -46,6 +46,11 @@ def main():
         else:
             verdict = ""
         flags = res.get("flags", "")
+        sjson = os.path.join(a.results, f"{acc}.screen.json")      # written by the worker when SCREEN=1 (screen_reads.py)
+        try:
+            sc = json.load(open(sjson)) if os.path.exists(sjson) else {}
+        except ValueError:
+            sc = {}
         nm_ = (r.get("idiomorphs") or "MAT1-1 MAT1-2").split(); n1, n2 = (nm_ + ["MAT1-2"])[:2]
         rows.append(dict(
             run=acc, group=r.get("group", ""), strain=r.get("strain", ""), study=r.get("study_accession", ""), layout=r.get("library_layout", j.get("layout", "")),
@@ -53,7 +58,9 @@ def main():
             depth_1=res.get(f"{n1}_depth", ""), depth_2=res.get(f"{n2}_depth", ""), shared_depth=res.get("shared_depth", ""),
             breadth_1=res.get(f"{n1}_breadth", ""), breadth_2=res.get(f"{n2}_breadth", ""), flags=flags,
             sra_mb=round(j.get("sra_bytes", 0) / 1e6) if j else "", secs_download=j.get("secs_download", ""), secs_convert=j.get("secs_convert", ""),
-            secs_type=j.get("secs_type", ""), truth_assembly=r.get("truth_assembly", ""), idiomorphs=" ".join(nm_)))
+            secs_type=j.get("secs_type", ""), truth_assembly=r.get("truth_assembly", ""), idiomorphs=" ".join(nm_),
+            screen=sc.get("status", ""), screen_genus=sc.get("genus") or "", screen_second=sc.get("second_genus") or "", screen_hashes=sc.get("second_hashes") if sc.get("second_hashes") is not None else "",
+            screen_explained=round(sc["second_explained"], 4) if sc.get("second_explained") is not None else "", screen_deeper="yes" if sc.get("rescreened") else ""))
     cols = list(rows[0].keys())
     with open(os.path.join(a.out, "results_all.tsv"), "w", newline="") as fh:
         w = csv.DictWriter(fh, cols, delimiter="\t", lineterminator="\n"); w.writeheader(); w.writerows(rows)

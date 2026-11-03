@@ -5,7 +5,8 @@
 #   3. a summary job after that (summarize_pilot.py) that writes SUMMARY.md and the tables.
 # Nothing here needs the submitting shell once the jobs are queued.
 #
-# Usage: submit_species.sh SLUG RUNS.tsv [--conc 8] [--root DIR] [--target-spots 2000000] [--windows 8] [--dry-run]
+# Usage: submit_species.sh SLUG RUNS.tsv [--conc 8] [--root DIR] [--target-spots 2000000] [--windows 8] [--screen] [--dry-run]
+#   --screen  also screen each run's reads with GmG for the wrong organism or a mixture (SCREEN=1; see CONTRACT.md); the typing is unchanged
 #   SLUG      short species name used for the folder and the job names, e.g. pyricularia_oryzae
 #   RUNS.tsv  one row per run; columns run_accession, read_count (spots), panel_dir, panel_prefix; optional group, strain,
 #             study_accession, library_layout, truth_detect, truth_assembly. panel_dir/panel_prefix point at PANEL_DIR/PREFIX_<IDIOMORPH>.fasta.
@@ -18,9 +19,9 @@
 set -euo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 slug=${1:?usage: submit_species.sh SLUG RUNS.tsv [options]}; runs=${2:?usage: submit_species.sh SLUG RUNS.tsv [options]}; shift 2
-conc=8; root=/bigdata/stajichlab/jstajich/projects/MATPredict/results/sra_reads_typing; target=2000000; win=8; dry=0
+conc=8; root=/bigdata/stajichlab/jstajich/projects/MATPredict/results/sra_reads_typing; target=2000000; win=8; dry=0; screen=0
 while [[ $# -gt 0 ]]; do case $1 in
-  --conc) conc=$2; shift 2;; --root) root=$2; shift 2;; --target-spots) target=$2; shift 2;; --windows) win=$2; shift 2;; --dry-run) dry=1; shift;;
+  --conc) conc=$2; shift 2;; --root) root=$2; shift 2;; --target-spots) target=$2; shift 2;; --windows) win=$2; shift 2;; --screen) screen=1; shift;; --dry-run) dry=1; shift;;
   *) echo "unknown option $1" >&2; exit 2;; esac; done
 cpus=4; [[ $((conc*cpus)) -le 59 ]] || { echo "conc $conc x $cpus CPUs exceeds the 59 CPU limit (curator ruling: under 60)" >&2; exit 2; }
 [[ -s $runs ]] || { echo "cannot read $runs" >&2; exit 2; }
@@ -34,10 +35,11 @@ if [[ $dry == 0 ]]; then
     echo "code: $(git -C "$here" describe --tags --always --dirty 2>/dev/null || echo unknown)"
     echo "sha256 script: $(sha256sum "$here/stream_type_sra.slurm" | cut -c1-16)  summarize: $(sha256sum "$here/summarize_pilot.py" | cut -c1-16)  runs: $(sha256sum "$runs" | cut -c1-16)"
     echo "source: https://sra-pub-run-odp.s3.amazonaws.com/sra (NCBI SRA on AWS open data)"
+    if [[ $screen == 1 ]]; then echo "screen: on (GmG ${GMG:-/bigdata/stajichlab/shared/projects/GmG_runs/bin/gmg}, index sha256 $(sha256sum "${GMG_INDEX:-/bigdata/stajichlab/shared/projects/GmG_runs/release/2026.10.5/bfd-2026.10.5-s10000.gmgi}" | cut -c1-16), screen_reads.py $(sha256sum "$here/screen_reads.py" | cut -c1-16))"; else echo "screen: off"; fi
     awk -F'\t' 'NR==1{for(i=1;i<=NF;i++){if($i=="panel_dir")a=i;if($i=="panel_prefix")b=i}} NR>1{print $a"\t"$b}' "$runs" | sort -u | while IFS=$'\t' read -r pd pf; do
       for f in "$pd/${pf}"_*.fasta; do echo "panel $(basename "$f"): $(sha256sum "$f" | cut -c1-16) $(grep -v '>' "$f" | tr -d '\n' | wc -c) bp"; done; done; } > "$d/MANIFEST.txt"
 fi
-env_x="ALL,TARGET_SPOTS=$target,WINDOWS=$win,WORKER_DIR=$here"      # WORKER_DIR: where the Slurm wrapper finds genotype_mat_one_accession.sh (Slurm runs a spooled copy of the wrapper)
+env_x="ALL,TARGET_SPOTS=$target,WINDOWS=$win,WORKER_DIR=$here"; [[ $screen == 1 ]] && env_x="$env_x,SCREEN=1"      # WORKER_DIR: where the Slurm wrapper finds genotype_mat_one_accession.sh (Slurm runs a spooled copy of the wrapper)
 common=(-p "${PARTITION:-exfab}" -A "${ACCOUNT:-exfab}" --export="$env_x")
 a1=$(sub "${common[@]}" -J "sra-$slug" --array=1-"$n"%"$conc" -o "$d/logs/%x_%A_%a.out" "$here/stream_type_sra.slurm" "$d/runs.tsv" "$d/none" none "$d/out")
 a2=$(sub "${common[@]}" -J "sra-$slug-retry" --array=1-"$n"%"$conc" --dependency=afterany:"$a1" -o "$d/logs/%x_%A_%a.out" "$here/stream_type_sra.slurm" "$d/runs.tsv" "$d/none" none "$d/out")

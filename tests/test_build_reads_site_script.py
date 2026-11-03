@@ -58,3 +58,28 @@ def test_clone_mixing_single_and_both_calls_is_a_conflict(tmp_path):
     calls = ["MAT1-1", "both"] + ["MAT1-2"] * 10
     make_repo(tmp_path, {(0, 1): 0.9995}, calls)
     assert build(tmp_path, tmp_path)["clones"]["counts"].get("conflict") == 1
+
+
+def test_screen_results_reach_the_species_report_and_the_counts(tmp_path):
+    """Runs the worker screened (screen columns in the results table) carry them into the report; unscreened runs stay blank."""
+    wave = make_repo(tmp_path, {}, ["MAT1-1"] * 6)
+    f = wave / "results_all_final.tsv"
+    rows = list(csv.DictReader(open(f, newline=""), delimiter="\t"))
+    extra = {0: ("mixed", "Histoplasma", "0.34"), 1: ("genus_mismatch", "", ""), 2: ("ok", "", ""), 3: ("borderline", "Gigaspora", "0.0052")}
+    for i, r in enumerate(rows):
+        r["screen"], r["screen_second"], r["screen_explained"] = extra.get(i, ("", "", ""))
+    tsv(f, list(rows[0]), [list(r.values()) for r in rows])
+    d = build(tmp_path, tmp_path.parent)
+    by = {r["run"]: r for r in d["rows"]}
+    assert (by["SRR0"]["screen"], by["SRR0"]["screen_second"], by["SRR0"]["screen_explained"]) == ("mixed", "Histoplasma", "0.34")
+    assert by["SRR4"]["screen"] == "" and by["SRR2"]["screen"] == "ok"
+    assert d["screened"] == 4 and d["screen_flagged"] == 3          # ok is screened but not flagged
+    idx = json.load(open(tmp_path / "out" / "index.json"))["species"][0]
+    assert (idx["screened"], idx["screen_flagged"]) == (4, 3)
+    assert "screen" in open(tmp_path / "out" / "sp_one.tsv").readline().split("\t")
+
+
+def test_a_results_table_without_screen_columns_gives_zero_counts(tmp_path):
+    make_repo(tmp_path, {}, ["MAT1-1"] * 6)
+    d = build(tmp_path, tmp_path.parent)
+    assert d["screened"] == 0 and d["screen_flagged"] == 0 and all(r["screen"] == "" for r in d["rows"])

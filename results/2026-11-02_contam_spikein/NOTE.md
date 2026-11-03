@@ -48,7 +48,7 @@ GmG's flag fires on 19 of them (`flagged_in_clean_552.tsv`); the primary genus i
 | *Aspergillus* | 2 | 2.4-2.6% | |
 | *Nakaseomyces* | 2 | 1.2-1.5% | |
 
-The twelve at 1-3% are at the detection limit measured above and are not confirmed: read-level assignment (mapping the reads to the
+The thirteen at 1-3% are at the detection limit measured above and are not confirmed: read-level assignment (mapping the reads to the
 named genome) should confirm them. The four *Histoplasma* sets and B12526 are far above the limit.
 
 ## Limits

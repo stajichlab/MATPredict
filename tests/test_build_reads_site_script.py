@@ -83,3 +83,58 @@ def test_a_results_table_without_screen_columns_gives_zero_counts(tmp_path):
     make_repo(tmp_path, {}, ["MAT1-1"] * 6)
     d = build(tmp_path, tmp_path.parent)
     assert d["screened"] == 0 and d["screen_flagged"] == 0 and all(r["screen"] == "" for r in d["rows"])
+
+
+# ---- the lineage of each species, for the grouped overview ----
+import importlib.util
+
+
+def _load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    sys.path.insert(0, str(path.parent))
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _genomes(path, rows):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tsv(path, ["genome", "species", "class_", "order", "family", "genus"], rows)
+
+
+def test_a_species_is_placed_by_its_name_else_by_its_genus(tmp_path):
+    brs = _load("build_reads_site", SCRIPT)
+    _genomes(tmp_path / "results/asco/genomes.tsv", [
+        ["g1", "Aspergillus flavus", "Eurotiomycetes", "Eurotiales", "Aspergillaceae", "Aspergillus"],
+        ["g2", "Coccidioides immitis", "Eurotiomycetes", "Onygenales", "Onygenaceae", "Coccidioides"],
+        ["g3", "Ascomycota sp.", "NA", "", "", "Ascomycota"],
+    ])
+    _genomes(tmp_path / "results/basidio/genomes.tsv", [["g4", "Cryptococcus neoformans", "Tremellomycetes", "Tremellales", "Cryptococcaceae", "Cryptococcus"]])
+    table = brs.lineage_table(str(tmp_path), folders=[("asco", "Ascomycota"), ("basidio", "Basidiomycota"), ("missing", "Mucoromycota")])
+    assert brs.lineage_fields(table, "Aspergillus flavus") == {"phylum": "Ascomycota", "class": "Eurotiomycetes", "order": "Eurotiales", "family": "Aspergillaceae"}
+    # a name the tables lack lands with its genus, including one with a strain or collection note
+    assert brs.lineage_fields(table, "Coccidioides posadasii")["order"] == "Onygenales"
+    assert brs.lineage_fields(table, "Coccidioides immitis and C. posadasii")["family"] == "Onygenaceae"
+    assert brs.lineage_fields(table, "Cryptococcus gattii (curated collection)")["phylum"] == "Basidiomycota"
+    # an unknown genus is blank, and "NA" is a blank rank, not a class called NA
+    assert brs.lineage_fields(table, "Nothing known") == {"phylum": "", "class": "", "order": "", "family": ""}
+    assert brs.lineage_fields(table, "Ascomycota sp.") == {"phylum": "Ascomycota", "class": "", "order": "", "family": ""}
+
+
+def test_a_missing_results_folder_gives_an_empty_table_and_the_build_still_runs(tmp_path):
+    brs = _load("build_reads_site", SCRIPT)
+    assert brs.lineage_table(str(tmp_path), folders=[("nowhere", "Ascomycota")]) == {}
+    make_repo(tmp_path, {}, ["MAT1-1"] * 6)
+    d = build(tmp_path, tmp_path.parent)
+    assert (d["phylum"], d["class"], d["order"], d["family"]) == ("", "", "", "")
+
+
+def test_the_species_report_and_the_index_carry_the_lineage(tmp_path):
+    bsd = _load("build_site_data", REPO / "scripts" / "build_site_data.py")
+    rel = bsd.RELEASES[bsd.DEFAULT_RELEASE]
+    _genomes(tmp_path / "results" / rel["asco"] / "genomes.tsv", [["g1", "Species one", "Sordariomycetes", "Hypocreales", "Nectriaceae", "Species"]])
+    make_repo(tmp_path, {}, ["MAT1-1"] * 6)
+    d = build(tmp_path, tmp_path.parent)
+    assert (d["phylum"], d["class"], d["order"], d["family"]) == ("Ascomycota", "Sordariomycetes", "Hypocreales", "Nectriaceae")
+    idx = json.load(open(tmp_path / "out" / "index.json"))
+    assert (idx["species"][0]["phylum"], idx["species"][0]["order"]) == ("Ascomycota", "Hypocreales")

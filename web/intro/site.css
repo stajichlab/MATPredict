@@ -64,3 +64,9 @@ h1,h2,h3 { text-shadow:var(--glow); }
 #theme { margin-left:4px; font-size:.85rem; padding:3px 6px; }
 .locus-card { margin:10px 0; padding:12px 14px; } .locus-card svg { width:100%; height:auto; display:block; } .locus-card text { fill:var(--fg); font-family:var(--font); } .locus-card .m { fill:var(--muted); }
 .cards-list { display:block; }
+
+/* Sortable tables (sortable.js, and the species table on reads/): a click on a header sorts; the mark shows the order. */
+table.sortable th { cursor:pointer; user-select:none; }
+table.sortable th:hover { color:var(--accent, inherit); }
+th[aria-sort]::after { content:" \25B2"; font-size:.7em; opacity:.75; }
+th[aria-sort="descending"]::after { content:" \25BC"; }

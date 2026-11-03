@@ -35,6 +35,24 @@ def referenced_files(page_dir: str) -> list[tuple[str, str]]:
     return out
 
 
+HTML_FOLDERS = ("", "reads")   # the landing, results and About pages, and the raw-reads pages
+
+
+def html_references(site: str) -> list[tuple[str, str]]:
+    """(page path relative to the site, relative path it refers to) for the site's HTML pages: stylesheets,
+    scripts and module imports such as "../charts.js"."""
+    out = []
+    for folder in HTML_FOLDERS:
+        d = os.path.join(site, folder)
+        if os.path.isdir(d):
+            for name in sorted(os.listdir(d)):
+                if name.endswith(".html"):
+                    with open(os.path.join(d, name), encoding="utf-8") as fh:
+                        for ref in REFERENCE.findall(fh.read()):
+                            out.append((os.path.join(folder, name), ref))
+    return out
+
+
 def check(site: str) -> list[str]:
     problems = []
     for rel in REQUIRED:
@@ -45,6 +63,9 @@ def check(site: str) -> list[str]:
         for name, ref in referenced_files(page):
             if not os.path.isfile(os.path.normpath(os.path.join(page, ref))):
                 problems.append(f"page/{name} refers to {ref}, which is not in the site")
+    for name, ref in html_references(site):
+        if not os.path.isfile(os.path.normpath(os.path.join(site, os.path.dirname(name), ref))):
+            problems.append(f"{name} refers to {ref}, which is not in the site")
     assets = os.path.join(page, "_assets")
     manifest_path = os.path.join(assets, "db-manifest.json")
     if os.path.isfile(manifest_path):
@@ -75,8 +96,8 @@ def main(argv: list[str]) -> int:
         print(f"site check: {p}")
     if problems:
         return 1
-    n = len(referenced_files(os.path.join(argv[1], "page")))
-    print(f"site check: ok ({len(REQUIRED)} required files, {n} page references, database archive matches its manifest)")
+    n = len(referenced_files(os.path.join(argv[1], "page"))) + len(html_references(argv[1]))
+    print(f"site check: ok ({len(REQUIRED)} required files, {n} references in the page modules and HTML pages, database archive matches its manifest)")
     return 0
 
 

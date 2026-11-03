@@ -19,6 +19,9 @@ def _site(tmp_path: Path, app: str = 'import { a } from "./a.mjs";\nawait fetch(
         "index.html": "x", "results.html": "x", "about.html": "x", "data/summary.json": "{}",
         "page/index.html": "x", "page/app.mjs": app, "page/a.mjs": "export const a = 1;",
         "browser/x.py": "x", "page/_assets/matpredict.whl": "w", "page/_assets/bundle/pyhmmer-1.whl": "w",
+        # the Guess button: its modules and GmG's WebAssembly (the .wasm is loaded by the .js, no module names it)
+        "page/gmg_guess.mjs": "export const g = 1;", "page/gmg_route.mjs": "export const r = 1;", "page/gmg_worker.mjs": "export const w = 1;",
+        "page/_assets/gmg/gmg_wasm.js": "export default 1;", "page/_assets/gmg/gmg_wasm_bg.wasm": "w",
     }
     blob = b"archive bytes"
     (s / "page/_assets").mkdir(parents=True, exist_ok=True)
@@ -53,6 +56,12 @@ def test_a_missing_required_file_is_named(tmp_path):
     s = _site(tmp_path)
     (s / "page/_assets/matpredict.whl").unlink()
     assert "missing page/_assets/matpredict.whl" in cs.check(str(s))
+
+
+def test_a_missing_gmg_wasm_is_named(tmp_path):
+    s = _site(tmp_path)
+    (s / "page/_assets/gmg/gmg_wasm_bg.wasm").unlink()
+    assert "missing page/_assets/gmg/gmg_wasm_bg.wasm" in cs.check(str(s))
 
 
 def test_an_archive_that_does_not_match_its_manifest_is_named(tmp_path):

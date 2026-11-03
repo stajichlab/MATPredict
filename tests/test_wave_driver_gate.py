@@ -136,7 +136,7 @@ def test_submit_full_takes_the_species_that_are_not_held_and_can_be_limited_to_o
         w.writerows([[s, s, d, ""] for s, d in (("p", "PASS"), ("u", "UNVALIDATED:typed_0.70"), ("h", "HOLD:typed_0.40"), ("v", "PROVISIONAL"))])
     seen = []
     monkeypatch.setattr(wd, "submit_stage", lambda a, stage, rows: seen.append((stage, [r["group"] for r in rows])))
-    base = dict(wave=str(wave), cap=3, only=None, stage_name="list")
+    base = dict(wave=str(wave), cap=3, only=None, stage_name="list", gates="gates.tsv")
     wd.submit_full(argparse.Namespace(**base))
     assert seen[-1][0] == "full" and sorted(set(seen[-1][1])) == ["p", "u", "v"] and len(seen[-1][1]) == 9      # held species left out; at most --cap runs each
     wd.submit_full(argparse.Namespace(**{**base, "only": "UNVALIDATED", "stage_name": "full_unvalidated"}))

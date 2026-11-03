@@ -47,3 +47,12 @@ clean sets and the same-genus mixtures.
 One run per condition and one background pair per species. The mix takes each source's reads in file order, so it does not
 model a contaminant that is spread unevenly across lanes. GmG 0.0.1, index 2026.10.5. Read length varies between read sets
 (93 to 150 bp), so the same number of pairs is a different number of bases.
+
+## Read-level confirmation of flagged sets
+
+`confirm_flagged.slurm` checks a set GmG flagged by looking at the reads themselves, with no guess about which genome the contaminant is: it
+maps the first 8M pairs to two *Coccidioides* references (`confirm_setup.sh` builds the bowtie2 index), keeps the pairs where neither mate maps,
+and classifies those with GmG. `confirm_summary.py` calls a set `confirmed` when GmG names the expected second genus in the unmapped reads
+(as the primary genus or as a mixture member) and the unmapped fraction is above that of the negative controls, `not_confirmed` when it does not,
+and `no_unmapped` when too few reads are left. `confirm_ids.tsv` lists the sets: the 13 low-level flagged *Coccidioides* sets, 4 strongly flagged
+ones as positive controls, and 6 clean or borderline sets as negatives.

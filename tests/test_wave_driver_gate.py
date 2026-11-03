@@ -122,3 +122,25 @@ def test_the_committed_gate_tables_are_what_regate_gives():
             counted = done if "many_failed" not in r["decision"] else done * 2 + 1
             new, _ = wd.decide(counted, done, typed, both, truth, agree, msd)
             assert new.split(":")[0] == r["decision"].split(":")[0], (wave, r["species"], r["decision"], new)
+
+
+def test_submit_full_takes_the_species_that_are_not_held_and_can_be_limited_to_one_decision(tmp_path, monkeypatch):
+    import argparse
+    wave = tmp_path / "wave"
+    for sl, decision in (("p", "PASS"), ("u", "UNVALIDATED:typed_0.70"), ("h", "HOLD:typed_0.40"), ("v", "PROVISIONAL")):
+        (wave / "plan" / sl).mkdir(parents=True)
+        with open(wave / "plan" / sl / "runs_full.tsv", "w", newline="") as fh:
+            w = csv.writer(fh, delimiter="\t", lineterminator="\n"); w.writerow(["run_accession", "group"]); w.writerows([[f"{sl}{i}", sl] for i in range(5)])
+    with open(wave / "gates.tsv", "w", newline="") as fh:
+        w = csv.writer(fh, delimiter="\t", lineterminator="\n"); w.writerow(["slug", "species", "decision", "reasons"])
+        w.writerows([[s, s, d, ""] for s, d in (("p", "PASS"), ("u", "UNVALIDATED:typed_0.70"), ("h", "HOLD:typed_0.40"), ("v", "PROVISIONAL"))])
+    seen = []
+    monkeypatch.setattr(wd, "submit_stage", lambda a, stage, rows: seen.append((stage, [r["group"] for r in rows])))
+    base = dict(wave=str(wave), cap=3, only=None, stage_name="list")
+    wd.submit_full(argparse.Namespace(**base))
+    assert seen[-1][0] == "full" and sorted(set(seen[-1][1])) == ["p", "u", "v"] and len(seen[-1][1]) == 9      # held species left out; at most --cap runs each
+    wd.submit_full(argparse.Namespace(**{**base, "only": "UNVALIDATED", "stage_name": "full_unvalidated"}))
+    assert seen[-1] == ("full_unvalidated", ["u", "u", "u"])
+    import pytest
+    with pytest.raises(SystemExit, match="no species to run with the decision NOT_A_DECISION"):
+        wd.submit_full(argparse.Namespace(**{**base, "only": "NOT_A_DECISION"}))

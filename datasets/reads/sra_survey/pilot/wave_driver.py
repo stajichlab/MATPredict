@@ -247,12 +247,17 @@ def regate(a):
 
 
 def submit_full(a):
+    """Queue the runs of the species that are not held. --only WORD limits it to the species whose decision is WORD (for example UNVALIDATED), --stage-name
+    names the stage folder (default full; a second pass must not overwrite the first), and --out-dir a results folder of its own (a run whose result is
+    already in the default folder is skipped by the worker, so a pass that adds a screen needs its own)."""
     g = {r["slug"]: r["decision"] for r in rd(os.path.join(a.wave, "gates.tsv"))}
     rows = []
     for sl, dec in g.items():
-        if dec.split(":")[0] in ("PASS", "PROVISIONAL", "PROVISIONAL_HOMOTHALLIC", "UNVALIDATED"): rows += rd(os.path.join(a.wave, "plan", sl, "runs_full.tsv"))[:a.cap]     # the test runs come first; at most --cap runs per species
-    if not rows: sys.exit("no species passed the gate")
-    submit_stage(a, "full", rows)
+        word = dec.split(":")[0]
+        if word in ("PASS", "PROVISIONAL", "PROVISIONAL_HOMOTHALLIC", "UNVALIDATED") and (not a.only or word == a.only):
+            rows += rd(os.path.join(a.wave, "plan", sl, "runs_full.tsv"))[:a.cap]     # the test runs come first; at most --cap runs per species
+    if not rows: sys.exit("no species to run" + (f" with the decision {a.only}" if a.only else " (none passed the gate)"))
+    submit_stage(a, a.stage_name if a.stage_name != "list" else "full", rows)
 
 
 # ------------------------------------------------------------------------------------------------ report / status
@@ -298,11 +303,12 @@ def main():
     ap.add_argument("--stage", default="test", help="gate: which stage's summary to judge (a folder under the wave directory with summary/results_all.tsv) (the full stage has more runs per species)")
     ap.add_argument("--env", action="append", default=[], help="extra KEY=VALUE for the run tasks (for example READS_K=21); repeatable")
     ap.add_argument("--runs", help="submit-list: a run-list TSV with panel_dir and panel_prefix columns")
-    ap.add_argument("--stage-name", default="list", help="submit-list: stage folder name under the wave directory")
+    ap.add_argument("--stage-name", default="list", help="submit-list and submit-full: stage folder name under the wave directory (submit-full defaults to full)")
     ap.add_argument("--out-dir", help="submit-list: results folder (default <wave>/out; the worker skips a run whose result is already there, so a different analysis of the same runs, for example sketches, needs its own)")
     ap.add_argument("--retry-held", action="store_true", help="submit-plan: only the species held for too few runs")
     ap.add_argument("--retry-status", help="submit-plan: only the species whose plan status starts with this (for example held:panel_build_failed)")
     ap.add_argument("--borrow", action="store_true", help="plan-one, submit-plan: an idiomorph with no locus in the species takes its loci from the other species of the genus")
+    ap.add_argument("--only", help="submit-full: only the species whose decision is this word (PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC or UNVALIDATED)")
     ap.add_argument("--in-file", default="gates_final.tsv", help="regate: the gates table (in the wave directory) to decide again")
     ap.add_argument("--out-file", help="regate: where to write it (default: the input file)")
     ap.add_argument("--dry-run", action="store_true")

@@ -15,6 +15,7 @@
 <nav><a class="brand" href="../" aria-label="MATPredict home"><img class="logo-l" src="../logo/horizontal.svg" alt="MATPredict" height="34"><img class="logo-d" src="../logo/horizontal-dark.svg" alt="" height="34"></a><a href="../">Overview</a><a href="../results.html">Genomes by taxon</a><a href="./">Raw reads</a><a href="../page/index.html">Browser tool</a><a href="../about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
 <main>
   <p class="muted"><a href="./">Raw reads</a> / <span id="crumb"></span></p>
+  <p class="muted" id="lineage"></p>
   <h1 id="title">Species report</h1>
   <p class="lede" id="lede"></p>
   <p class="muted" id="namesbar"></p>
@@ -56,6 +57,7 @@ let D;
 try { D = await fetch("../data/reads/" + encodeURIComponent(slug) + ".json").then(r => { if (!r.ok) throw 0; return r.json(); }); } catch { document.getElementById("title").textContent = "Species not found"; throw 0; }
 document.title = D.species + " raw reads - MATPredict";
 document.getElementById("crumb").textContent = D.species;
+document.getElementById("lineage").textContent = [D.phylum, D.class, D.order, D.family].filter(Boolean).join(" › ");
 document.getElementById("title").innerHTML = "<i>" + esc(D.species) + "</i>";
 // Allele names: raw by default, labels one click away (?names=label); see reads/index.html.
 const LABELS_ON = new URLSearchParams(location.search).get("names") === "label";
@@ -68,7 +70,7 @@ document.getElementById("notes").innerHTML = (D.notes || []).map(n => "<p>" + es
 document.getElementById("cards").innerHTML = [[D.done + " / " + D.runs, "runs finished"], [D.c1 ?? D["MAT1-1"], ((LABELS_ON ? D.labels : null) || D.names || ["MAT1-1", "MAT1-2"])[0]], [D.c2 ?? D["MAT1-2"], ((LABELS_ON ? D.labels : null) || D.names || ["MAT1-1", "MAT1-2"])[1]], [D.both, "both idiomorphs"], [D.none + D.low_depth, "not called"], [D.with_assembly_call ? D.agree + " / " + D.with_assembly_call : "–", "agree with assembly"]]
   .map(([v, l]) => '<div class="card"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>').join("");
 if (/homothallic/.test(D.confidence)) { const w = document.getElementById("why"); w.hidden = false; w.innerHTML = "<b>Both idiomorphs are expected here.</b> In a homothallic species, or a diploid carrying a copy of each idiomorph, most strains read as \"both\". The \"both\" count is then the expected answer and the share of single calls is not an allele frequency. The call is provisional because no assembly comparison tests the single calls."; }
-else if (D.why.length) { const w = document.getElementById("why"); w.hidden = false; w.innerHTML = "<b>Why this panel is " + esc(D.confidence) + ":</b> " + D.why.map(esc).join("; ") + "."; }
+else if (D.why.length) { const w = document.getElementById("why"); w.hidden = false; w.innerHTML = "<b>Why this panel is " + esc(D.confidence) + ":</b> " + D.why.map(esc).join("; ") + "." + (D.confidence === "unvalidated" ? " Its calls are listed, but the panel was not validated: check the allele counts before using them." : ""); }
 const NM = D.names || ["MAT1-1", "MAT1-2"], LB = LABELS_ON ? (D.labels || NM) : NM, lab = x => { const i = NM.indexOf(x); return i >= 0 ? LB[i] : x; }, cats = [NM[0], NM[1], "both", "none", "low_depth"], rows = D.rows.filter(r => r.call);
 const cnt = rs => Object.fromEntries(cats.map(c => [lab(c), rs.filter(r => r.call === c).length])), catsL = cats.map(lab);
 stacked(document.getElementById("ch-calls"), [{ label: "all runs", parts: cnt(rows) }], catsL, { labelw: 100 }); legend(document.getElementById("lg-calls"), catsL);

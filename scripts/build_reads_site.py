@@ -3,14 +3,14 @@
 
 Input: a wave folder of `datasets/reads/sra_survey/pilot/wave1/` (results_all_final.tsv, gates_final.tsv) and the species list (wave1_species.tsv). Standard library only.
     build_reads_site.py --out web/intro/data/reads [--wave datasets/reads/sra_survey/pilot/wave1]
-The pages say "confirmed / provisional / withheld"; the wave driver's gate calls them PASS / PROVISIONAL / HOLD.
+The pages say "confirmed / provisional / unvalidated / withheld"; the wave driver's gate calls them PASS / PROVISIONAL / UNVALIDATED / HOLD.
 """
 import argparse, csv, itertools, json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from idiomorph_labels import idiomorph_label, registry_version
 from collections import Counter
 
-CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)"}
+CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)", "UNVALIDATED": "unvalidated"}
 FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly", "clone", "screen", "screen_second", "screen_explained"]
 SCREEN_FLAGGED = ("mixed", "genus_mismatch", "borderline")      # the statuses screen_reads.py gives to a run worth a second look
 
@@ -19,6 +19,37 @@ def rd(p):
     return list(csv.DictReader(open(p, newline="").read().replace("\r", "").splitlines(), delimiter="\t"))
 
 CLONE_ANI, CLONE_ALT, MIN_RUNS_FOR_COUNTS = 0.998, 0.997, 10
+
+RANKS = ("phylum", "class", "order", "family")
+
+
+def lineage_table(repo, folders=None):
+    """{species: lineage, genus: lineage} from the genome tables the site shows, each lineage (phylum, class, order, family).
+    A species of the reads survey is placed by its own name, else by its genus, so a name the tables lack still lands in the
+    right group. `folders` is [(results folder, phylum)]; the default is the folders of the site's default release."""
+    if folders is None:
+        import build_site_data as bsd
+        rel = bsd.RELEASES[bsd.DEFAULT_RELEASE]
+        folders = [(rel["asco"], "Ascomycota"), (rel["basidio"], "Basidiomycota"), (rel["mucoro"], "Mucoromycota")]
+    clean = lambda v: "" if (v or "").strip() in ("", "NA", "-") else v.strip()
+    table = {}
+    for folder, phylum in folders:
+        path = os.path.join(repo, "results", folder, "genomes.tsv")
+        if not os.path.exists(path):
+            continue
+        for r in rd(path):
+            lin = (phylum, clean(r.get("class_")), clean(r.get("order")), clean(r.get("family")))
+            for name in (clean(r.get("species")), clean(r.get("genus"))):
+                if name:
+                    table.setdefault(name, lin)
+    return table
+
+
+def lineage_fields(table, species):
+    """{phylum, class, order, family} for a survey species name (blank where unknown): the exact species, else its genus
+    (the first word, so "Fusarium oxysporum f. sp. lactucae (Fola)" finds Fusarium)."""
+    lin = table.get(species) or table.get(species.split()[0] if species.split() else "") or ("", "", "", "")
+    return dict(zip(RANKS, lin))
 
 
 def clone_groups(pairs_file, rows):
@@ -65,7 +96,7 @@ def reason(r):
 
 NOTES = {      # extra paragraphs on a species report (shown under the lede)
     "botrytis_cinerea": [
-        "This report covers all 333 samples of the survey that passed the filters (11 studies); the other wave 2 species were capped at 50 runs. Excluded: mutant and cross studies, the UV-mutagenesis study PRJNA1132156 (strain B05.10, three runs) and the cross study PRJNA1224713. PRJNA1295911 supplies 276 of the 333 runs, so use the by-study view to see that the other studies point the same way.",
+        "This report covers all 333 samples of the survey that passed the filters (11 studies); the other species were capped at 50 runs. Excluded: mutant and cross studies, the UV-mutagenesis study PRJNA1132156 (strain B05.10, three runs) and the cross study PRJNA1224713. PRJNA1295911 supplies 276 of the 333 runs, so use the by-study view to see that the other studies point the same way.",
         "The three B05.10 runs of PRJNA1132156 (wild type and two mutants, not in this table) were called none: BLASTN of the panel to the B05.10 reference finds the MAT1-1 core end to end (99.7%), but the reads of that lab line cover the MAT1-1 core at 0.7x against 22-24x in the flanks, so about 6-7 kb of the reference locus is absent from the reads. Not tested: whether the deletion is real in the strain (details in the wave 2 notes).",
         "24 runs read as both idiomorphs. In clone counts a clone whose runs mix a single call and a both call is counted as a conflict.",
     ],
@@ -86,7 +117,7 @@ CURATED = [
 ]
 
 
-def curated(c, repo, out):
+def curated(c, repo, out, lin=None):
     rows = rd(os.path.join(repo, c["src"])); R = []
     if c["slug"] == "afum": rows = [r for r in rows if r["reads"] != "no_reads"]      # one strain has no read set
     for r in rows:
@@ -102,6 +133,7 @@ def curated(c, repo, out):
          "typed": sum(cnt[k] for k in SINGLE), "MAT1-1": cnt["MAT1-1"], "MAT1-2": cnt["MAT1-2"], "both": cnt["both"], "none": cnt["none"], "low_depth": cnt["low_depth"],
          "with_assembly_call": len(single), "agree": sum(r["verdict"] == "agree" for r in single), "disagree": sum(r["verdict"] == "DISAGREE" for r in single), "rescued": 0,
          "intro": c["intro"], "truth_label": c["truth_label"], "links": c["links"], "refused_with_truth": sum(1 for r in R if r["truth"] in SINGLE and r["call"] in ("low_depth", "none")), "both_vs_one": sum(1 for r in R if r["verdict"] == "both_vs_one")}
+    s.update(lin or {})
     json.dump({**s, "gate": "", "rows": R, "registry_version": registry_version()}, open(os.path.join(out, c["slug"] + ".json"), "w"), separators=(",", ":"))
     with open(os.path.join(out, c["slug"] + ".tsv"), "w", newline="") as fh:
         w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n", extrasaction="ignore"); w.writeheader(); w.writerows(R)
@@ -129,6 +161,7 @@ def main():
     for r in res:      # the verdict is recomputed here: the results table keeps the pre-rescue verdicts of runs typed by a later pass
         r["verdict"] = "" if not r["truth"] else "untyped" if r["state"] != "done" or not (is_typed(r["call"]) or r["call"] == "both") else "both_vs_one" if r["call"] == "both" else "agree" if r["call"] == r["truth"] else "DISAGREE"
         by.setdefault(r["group"], []).append(r)
+    LT = lineage_table(a.repo)
     index = []
     for slug, g in sorted(gates.items(), key=lambda kv: kv[1]["species"]):
         runs = by.get(slug, []); done = [r for r in runs if r["state"] == "done"]; c = Counter(r["call"] for r in done)
@@ -139,7 +172,7 @@ def main():
              "confidence": "withheld" if d == "HOLD" else CONF.get(d, d), "why": why, "runs": len(runs), "done": len(done), "typed": len(typed),
              "names": [n1, n2], "labels": [idiomorph_label(n1, [n1, n2]), idiomorph_label(n2, [n1, n2])], "c1": c[n1], "c2": c[n2], "MAT1-1": c[n1], "MAT1-2": c[n2], "both": c["both"], "none": c["none"], "low_depth": c["low_depth"],
              "with_assembly_call": len(truth), "agree": sum(r["verdict"] == "agree" for r in truth), "disagree": sum(r["verdict"] == "DISAGREE" for r in truth),
-             "rescued": sum(1 for r in typed if r.get("rescue")),
+             "rescued": sum(1 for r in typed if r.get("rescue")), **lineage_fields(LT, g["species"]),
              "screened": sum(1 for r in runs if r.get("screen")), "screen_flagged": sum(1 for r in runs if r.get("screen") in SCREEN_FLAGGED)}
         index.append(s)
         rows = [{k: r.get(k, "") for k in FIELDS} for r in runs]
@@ -153,7 +186,7 @@ def main():
     tot = {"species": len(index), "runs": len(res), "done": len(allr), "typed": len(typed), "with_assembly_call": len(tr), "agree": sum(r["verdict"] == "agree" for r in tr),
            "disagree": sum(r["verdict"] == "DISAGREE" for r in tr), "confidence": dict(Counter(s["confidence"] for s in index)),
            "calls": dict(Counter(r["call"] for r in allr)), "rescued": sum(1 for r in typed if r.get("rescue"))}
-    cur = [curated(c, a.repo, a.out) for c in CURATED if os.path.exists(os.path.join(a.repo, c["src"]))]
+    cur = [curated(c, a.repo, a.out, lineage_fields(LT, c["species"])) for c in CURATED if os.path.exists(os.path.join(a.repo, c["src"]))]
     json.dump({"totals": tot, "species": index, "curated": cur, "registry_version": registry_version()}, open(os.path.join(a.out, "index.json"), "w"), separators=(",", ":"))
     print(f"{len(index)} species, {tot['runs']} runs; {tot['agree']}/{tot['with_assembly_call']} agree; {tot['confidence']}")
 

@@ -1,0 +1,131 @@
+record_id: 5477_uniss-cb60_MATog_MATa
+record_version: 1
+taxonomy:
+  taxid: 5477
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Pichiales;f__Pichiaceae;g__Ogataea;s__Candida_boidinii
+  lineage_resolved_date: '2026-11-04'
+organism:
+  species: Candida boidinii
+  strain:
+    name: UNISS-Cb60
+    known: true
+    culture_collection_ids:
+    - UNISS-Cb60
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATog
+  idiomorphs:
+  - MATa
+  system: unknown
+locus:
+  assembly_accession: GCA_002008025.1
+  assembly_accession_basis: strain_match_verified
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sla2->MATa1->dic1
+    definition_note: 'CANDIDATE MATog record of Candida boidinii UNISS-Cb60 (GCA_002008025.1), a divergent
+      member of the genus (MATog score 67-142 in the v0.8.0 run against the two polymorpha-clade references).
+      OUR OWN PROJECTION (tier 3): each gene is the miniprot alignment of the O. parapolymorpha DL-1 or
+      O. polymorpha CBS 4732 MATog proteins to the contig, kept only when it has no frameshift and no
+      internal stop; no RNA-seq or annotation was used (results/2026-11-04_matog_candidates/README.md).
+      The record holds one cassette end (MATa idiomorph; the strain carries one idiomorph). Genes: sla2
+      seg0 302361-305498(+) 1046 aa, 6-1019 of 1019 aa of the DL-1 protein at 50% identity; MATa1 seg0
+      305831-306007(-) 59 aa, 129-187 of 187 aa of the DL-1 protein at 59% identity; dic1 seg0 309858-310793(+)
+      311 aa, 1-294 of 294 aa of the DL-1 protein at 64% identity. PARTIAL BY CONSTRUCTION: every model
+      starts or stops at the alignment end or at a contig end, so none has a verified start or stop codon,
+      and no MAT gene is recorded as absent. sla2 on MSRY01000009.1: projection rejected (frameshift or
+      internal stop). GENETIC CODE: standard (NCBI Taxonomy code 1 for the species).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: MSRY01000009.1
+        seq_region: MSRY01000009.1
+      start: 302361
+      end: 310793
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: sla2
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 302361
+  end: 305498
+  strand: +
+  exons:
+  - start: 302361
+    end: 305498
+  order_in_locus: 0
+- gene_index: 1
+  name: MATa1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 305831
+  end: 306007
+  strand: '-'
+  exons:
+  - start: 305831
+    end: 306007
+  order_in_locus: 1
+- gene_index: 2
+  name: dic1
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 309858
+  end: 310793
+  strand: +
+  exons:
+  - start: 309858
+    end: 310793
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: homology to the two MATog cassette records of the genus (DL-1, CBS 4732; two-locus
+      architecture in H. polymorpha, PMIDs 25412462 and 25349420); the v0.8.0 detection called this locus;
+      no study of this species
+    citations: &id001
+    - pmid: '25412462'
+      doi: 10.1371/journal.pgen.1004796
+    - pmid: '25349420'
+      doi: 10.1073/pnas.1416014111
+  boundaries:
+    tier: 3
+    experimental_method: OUR OWN miniprot projection of the DL-1 and CBS 4732 MATog proteins onto the
+      assembly contigs; no transcript support
+    citations: *id001
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: gene identity by best-scoring MATog reference protein (MATa1 versus MATalpha1/MATalpha2);
+      the idiomorph follows the gene content
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: false
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: pass
+    per_gene: []
+    notes: ''
+  taxonomy_current: null
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 25412462|5477|MATog|MATa|UNISS-Cb60
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

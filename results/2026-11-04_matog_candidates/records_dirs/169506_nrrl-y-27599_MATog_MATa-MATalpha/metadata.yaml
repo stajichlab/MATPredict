@@ -1,0 +1,173 @@
+record_id: 169506_nrrl-y-27599_MATog_MATa-MATalpha
+record_version: 1
+taxonomy:
+  taxid: 169506
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Pichiales;f__Pichiaceae;g__Ogataea;s__Ogataea_dorogensis
+  lineage_resolved_date: '2026-11-04'
+organism:
+  species: Ogataea dorogensis
+  strain:
+    name: NRRL Y-27599
+    known: true
+    culture_collection_ids:
+    - NRRL Y-27599
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATog
+  idiomorphs:
+  - MATa
+  - MATalpha
+  system: unknown
+locus:
+  assembly_accession: GCA_030568015.1
+  assembly_accession_basis: strain_match_verified
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sla2->MATa1->dic1->MATalpha2->MATalpha1
+    definition_note: 'CANDIDATE MATog record of Ogataea dorogensis NRRL Y-27599 (GCA_030568015.1), a divergent
+      member of the genus (MATog score 67-142 in the v0.8.0 run against the two polymorpha-clade references).
+      OUR OWN PROJECTION (tier 3): each gene is the miniprot alignment of the O. parapolymorpha DL-1 or
+      O. polymorpha CBS 4732 MATog proteins to the contig, kept only when it has no frameshift and no
+      internal stop; no RNA-seq or annotation was used (results/2026-11-04_matog_candidates/README.md).
+      The record holds two cassette ends on two contigs of the assembly (SLA2-MATa1 end on one, MATalpha1-MATalpha2-DIC1
+      end on the other). Genes: sla2 seg0 1-1458(+) 486 aa, 524-1018 of 1019 aa of the DL-1 protein at
+      56% identity; MATa1 seg0 1486-2040(-) 185 aa, 7-187 of 187 aa of the DL-1 protein at 33% identity;
+      dic1 seg1 14828-15649(-) 274 aa, 14-287 of 287 aa of the CBS 4732 protein at 78% identity; MATalpha2
+      seg1 16583-17097(+) 161 aa, 58-213 of 222 aa of the DL-1 protein at 44% identity; MATalpha1 seg1
+      17279-17761(+) 161 aa, 32-186 of 190 aa of the DL-1 protein at 45% identity. PARTIAL BY CONSTRUCTION:
+      every model starts or stops at the alignment end or at a contig end, so none has a verified start
+      or stop codon, and no MAT gene is recorded as absent. GENETIC CODE: standard (NCBI Taxonomy code
+      1 for the species).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JAJLTE010000037.1
+        seq_region: JAJLTE010000037.1
+      start: 1
+      end: 2040
+      contig_edge_distance: null
+      sequence_checksum: null
+    - segment_index: 1
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JAJLTE010000018.1
+        seq_region: JAJLTE010000018.1
+      start: 14828
+      end: 17761
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: sla2
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1
+  end: 1458
+  strand: +
+  exons:
+  - start: 1
+    end: 1458
+  order_in_locus: 0
+- gene_index: 1
+  name: MATa1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1486
+  end: 2040
+  strand: '-'
+  exons:
+  - start: 1486
+    end: 2040
+  order_in_locus: 1
+- gene_index: 2
+  name: dic1
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 1
+  start: 14828
+  end: 15649
+  strand: '-'
+  exons:
+  - start: 14828
+    end: 15649
+  order_in_locus: 2
+- gene_index: 3
+  name: MATalpha2
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 1
+  start: 16583
+  end: 17097
+  strand: +
+  exons:
+  - start: 16583
+    end: 16896
+  - start: 16929
+    end: 17097
+  order_in_locus: 3
+- gene_index: 4
+  name: MATalpha1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 1
+  start: 17279
+  end: 17761
+  strand: +
+  exons:
+  - start: 17279
+    end: 17761
+  order_in_locus: 4
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: homology to the two MATog cassette records of the genus (DL-1, CBS 4732; two-locus
+      architecture in H. polymorpha, PMIDs 25412462 and 25349420); the v0.8.0 detection called this locus;
+      no study of this species
+    citations: &id001
+    - pmid: '25412462'
+      doi: 10.1371/journal.pgen.1004796
+    - pmid: '25349420'
+      doi: 10.1073/pnas.1416014111
+  boundaries:
+    tier: 3
+    experimental_method: OUR OWN miniprot projection of the DL-1 and CBS 4732 MATog proteins onto the
+      assembly contigs; no transcript support
+    citations: *id001
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: gene identity by best-scoring MATog reference protein (MATa1 versus MATalpha1/MATalpha2);
+      the idiomorph follows the gene content
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: false
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: pass
+    per_gene: []
+    notes: ''
+  taxonomy_current: null
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 25412462|169506|MATog|MATa-MATalpha|NRRL Y-27599
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

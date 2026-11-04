@@ -1,0 +1,9 @@
+[M::mp_ntseq_read@0.000*19.26] read 2042 bases in 1 contigs
+[M::mp_idx_build@0.000*15.05] 16 blocks
+[M::mp_idx_build@0.001*5.04] collected syncmers
+[M::mp_idx_build@0.022*1.26] 1130 kmer-block pairs
+[M::mp_idx_print_stat] 1128 distinct k-mers; mean occ of infrequent k-mers: 1.00; 0 frequent k-mers accounting for 0 occurrences
+[M::worker_pipeline::0.038*1.69] mapped 73 sequences
+[M::main] Version: 0.18-r281
+[M::main] CMD: miniprot -t4 --gff -P MP win/siamensis__JAJMET010000031.1_1-2042.fa refs.faa
+[M::main] Real time: 0.039 sec; CPU: 0.065 sec; Peak RSS: 0.073 GB

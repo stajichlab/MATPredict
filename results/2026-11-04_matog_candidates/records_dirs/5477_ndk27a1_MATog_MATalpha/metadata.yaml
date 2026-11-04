@@ -1,0 +1,146 @@
+record_id: 5477_ndk27a1_MATog_MATalpha
+record_version: 1
+taxonomy:
+  taxid: 5477
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Pichiales;f__Pichiaceae;g__Ogataea;s__Candida_boidinii
+  lineage_resolved_date: '2026-11-04'
+organism:
+  species: Candida boidinii
+  strain:
+    name: NDK27A1
+    known: true
+    culture_collection_ids:
+    - NDK27A1
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATog
+  idiomorphs:
+  - MATalpha
+  system: unknown
+locus:
+  assembly_accession: GCA_002008015.1
+  assembly_accession_basis: strain_match_verified
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sla2->MATalpha1->MATalpha2->dic1
+    definition_note: 'CANDIDATE MATog record of Candida boidinii NDK27A1 (GCA_002008015.1), a divergent
+      member of the genus (MATog score 67-142 in the v0.8.0 run against the two polymorpha-clade references).
+      OUR OWN PROJECTION (tier 3): each gene is the miniprot alignment of the O. parapolymorpha DL-1 or
+      O. polymorpha CBS 4732 MATog proteins to the contig, kept only when it has no frameshift and no
+      internal stop; no RNA-seq or annotation was used (results/2026-11-04_matog_candidates/README.md).
+      The record holds one cassette end (MATalpha idiomorph; the strain carries one idiomorph). Genes:
+      sla2 seg0 111232-114369(+) 1046 aa, 6-1019 of 1019 aa of the DL-1 protein at 50% identity; MATalpha1
+      seg0 114645-115097(-) 151 aa, 33-185 of 190 aa of the DL-1 protein at 33% identity; MATalpha2 seg0
+      116821-116943(+) 41 aa, 95-135 of 163 aa of the CBS 4732 protein at 59% identity; dic1 seg0 118787-119722(+)
+      311 aa, 1-294 of 294 aa of the DL-1 protein at 64% identity. PARTIAL BY CONSTRUCTION: every model
+      starts or stops at the alignment end or at a contig end, so none has a verified start or stop codon,
+      and no MAT gene is recorded as absent. MATalpha2 on MSSE01000022.1: projection rejected (frameshift
+      or internal stop). GENETIC CODE: standard (NCBI Taxonomy code 1 for the species).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: MSSE01000022.1
+        seq_region: MSSE01000022.1
+      start: 111232
+      end: 119722
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: sla2
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 111232
+  end: 114369
+  strand: +
+  exons:
+  - start: 111232
+    end: 114369
+  order_in_locus: 0
+- gene_index: 1
+  name: MATalpha1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 114645
+  end: 115097
+  strand: '-'
+  exons:
+  - start: 114645
+    end: 115097
+  order_in_locus: 1
+- gene_index: 2
+  name: MATalpha2
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 116821
+  end: 116943
+  strand: +
+  exons:
+  - start: 116821
+    end: 116943
+  order_in_locus: 2
+- gene_index: 3
+  name: dic1
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 118787
+  end: 119722
+  strand: +
+  exons:
+  - start: 118787
+    end: 119722
+  order_in_locus: 3
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: homology to the two MATog cassette records of the genus (DL-1, CBS 4732; two-locus
+      architecture in H. polymorpha, PMIDs 25412462 and 25349420); the v0.8.0 detection called this locus;
+      no study of this species
+    citations: &id001
+    - pmid: '25412462'
+      doi: 10.1371/journal.pgen.1004796
+    - pmid: '25349420'
+      doi: 10.1073/pnas.1416014111
+  boundaries:
+    tier: 3
+    experimental_method: OUR OWN miniprot projection of the DL-1 and CBS 4732 MATog proteins onto the
+      assembly contigs; no transcript support
+    citations: *id001
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: gene identity by best-scoring MATog reference protein (MATa1 versus MATalpha1/MATalpha2);
+      the idiomorph follows the gene content
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: false
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: pass
+    per_gene: []
+    notes: ''
+  taxonomy_current: null
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 25412462|5477|MATog|MATalpha|NDK27A1
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

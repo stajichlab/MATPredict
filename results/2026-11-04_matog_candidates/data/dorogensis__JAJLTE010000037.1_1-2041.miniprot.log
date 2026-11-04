@@ -1,0 +1,9 @@
+[M::mp_ntseq_read@0.000*17.72] read 2041 bases in 1 contigs
+[M::mp_idx_build@0.000*13.59] 16 blocks
+[M::mp_idx_build@0.001*5.17] collected syncmers
+[M::mp_idx_build@0.024*1.25] 1095 kmer-block pairs
+[M::mp_idx_print_stat] 1094 distinct k-mers; mean occ of infrequent k-mers: 1.00; 0 frequent k-mers accounting for 0 occurrences
+[M::worker_pipeline::0.077*0.80] mapped 73 sequences
+[M::main] Version: 0.18-r281
+[M::main] CMD: miniprot -t4 --gff -P MP win/dorogensis__JAJLTE010000037.1_1-2041.fa refs.faa
+[M::main] Real time: 0.077 sec; CPU: 0.062 sec; Peak RSS: 0.074 GB

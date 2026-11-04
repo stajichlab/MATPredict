@@ -49,3 +49,6 @@ The 32 species with 10 or more sketched runs have clone groups on their reports 
 
 ## Not checked
 Whether the single-call shares of yeast species with few strains are meaningful; why the *Saccharomyces* sensu stricto and *C. albicans* panels fail (the work list for a curated a / alpha panel); why *C. fimbriata* has no unique k-mers in its largest lineage; clone groups for species with fewer than 10 sketched runs. Counts are of sampled strains, not population frequencies.
+
+## Screened full run of the UNVALIDATED species (2026-11-03, `merge_screen.py`)
+The 8 species with the decision `UNVALIDATED` were run in full with the GmG contamination screen (`SCREEN=1`; 132 runs, 0 failed; 84 were already in the final table, 48 are new). `results_all_final.tsv` gains the screen columns and the 48 new runs. Screen: ok 123, mixed 6, genus_mismatch 2, borderline 1. With the added runs the gate was decided again for those species (`screen_gate_changes.tsv`): *Candidozyma vulturna* UNVALIDATED to PROVISIONAL; the others stay UNVALIDATED with the new numbers in `gates_final.tsv`.

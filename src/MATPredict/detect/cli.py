@@ -10,7 +10,9 @@ from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect import confidence_cap as _confidence_cap, family_status as _family_status, strong_single_gene as _strong_single_gene
+from MATPredict.detect import fallback_search as _fallback_search
 from MATPredict.detect.family_status import CROSS_FAMILY_POLICIES, DEFAULT_CROSS_FAMILY_POLICY
+from MATPredict.detect.fallback_search import DEFAULT_FALLBACK_AFTER_WITHHELD_POLICY, FALLBACK_AFTER_WITHHELD_POLICIES
 from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CONFIDENCE_CAP_POLICY
 from MATPredict.detect.strong_single_gene import (
     DEFAULT_STRONG_SINGLE_GENE_POLICY, STRONG_SINGLE_GENE_POLICIES,
@@ -24,7 +26,7 @@ from MATPredict.detect.pipeline import (
     not_searched_reason, run_pipeline,
 )
 from MATPredict.detect.family_registry import (
-    DEFAULT_SCOPED_ROSTER_POLICY, SCOPED_ROSTER_ON, SCOPED_ROSTER_POLICIES, available_phyla, load_all_families, route,
+    DEFAULT_SCOPED_ROSTER_POLICY, SCOPED_ROSTER_ON, SCOPED_ROSTER_POLICIES, available_phyla, fallback_families, load_all_families, route,
 )
 from MATPredict.db.taxonomy import default_genetic_code
 from MATPredict.detect.gmg_guess import AUTO, AUTO_CHOICES, AUTO_WEAK, decide, guess_phylum
@@ -80,6 +82,16 @@ PRESETS: dict[str, dict[str, str]] = {
         "strong_single_gene_policy": _strong_single_gene.POLICY_OFF,
         "scoped_roster_policy": SCOPED_ROSTER_ON,
         "cross_family_policy": _family_status.POLICY_ON,
+    },
+    # v0.8 plus the phylum-fallback search of a genome whose routed family had every hit withheld (#228).
+    "v0.8.1": {
+        "partial_core_policy": POLICY_COVERAGE_PROFILE,
+        "homothallic_policy": POLICY_BOTH_GENES,
+        "confidence_cap_policy": _confidence_cap.POLICY_OFF,
+        "strong_single_gene_policy": _strong_single_gene.POLICY_OFF,
+        "scoped_roster_policy": SCOPED_ROSTER_ON,
+        "cross_family_policy": _family_status.POLICY_ON,
+        "fallback_after_withheld_policy": _fallback_search.POLICY_ON,
     },
 }
 
@@ -239,16 +251,14 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         min_hits=args.min_hits, min_identity=args.min_identity,
         require_core_role=args.require_core_role,
     )
-    outcome = run_pipeline(
+    pipeline_kwargs = dict(
         genetic_code=_resolve_genetic_code(args),
         genome_fasta=Path(args.genome),
         proteome_fasta=Path(args.proteins) if args.proteins else None,
         taxid=args.taxid,
         db_root=config.db_root,
-        reference_fasta=reference_fasta,
         evidence_floor=evidence_floor,
         evidence_diagnostics_path=Path(args.evidence_diagnostics) if args.evidence_diagnostics else None,
-        routing=routing,
         exclude_record_ids=exclude_record_ids,
         max_polished_clusters_per_family=_polish_cap_from_args(args),
         polish_strong_identity=_polish_strong_identity_from_args(args),
@@ -260,6 +270,20 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         strong_single_gene_policy=_strong_single_gene_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
+
+    outcome = run_pipeline(**pipeline_kwargs, reference_fasta=reference_fasta, routing=routing)
+    if (_fallback_policy_from_args(args) == _fallback_search.POLICY_ON and args.taxid and _fallback_search.needed(outcome)):
+        # the routed family reported nothing because every hit was withheld: search the phylum-fallback families too (#228)
+        fallback = fallback_families(args.taxid, load_all_families(config.db_root), routing.families,
+                                     scoped_roster_policy=_scoped_roster_policy_from_args(args))
+        if fallback.families and fallback.routing_mode == "phylum_fallback":
+            fallback_fasta = build_reference_fasta(
+                config.db_root, out_dir / "_reference_fallback.faa",
+                family_keys={f.key for f in fallback.families},
+                exclude_record_ids=exclude_record_ids, families=fallback.families,
+            )
+            second = run_pipeline(**pipeline_kwargs, reference_fasta=fallback_fasta, routing=fallback)
+            outcome = _fallback_search.merge(outcome, second, fallback.routing_mode)
 
     # `genome_fasta` is passed ONLY when asked for: it is what makes
     # `write_detection_gff3` additionally emit CDS features with
@@ -395,6 +419,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "homothallic_policy": _homothallic_policy_from_args(args),
             "confidence_cap_policy": _confidence_cap_policy_from_args(args),
             "cross_family_policy": _cross_family_policy_from_args(args),
+            "fallback_after_withheld_policy": _fallback_policy_from_args(args),
             "strong_single_gene_policy": _strong_single_gene_policy_from_args(args),
             "scoped_roster_policy": _scoped_roster_policy_from_args(args),
             "scoped_roster": getattr(routing, "scoped_roster", None),
@@ -432,6 +457,11 @@ def _cross_family_policy_from_args(args) -> str:
     """The cross-family policy for this run; an args object without the attribute
     (a test double) gets the default, `off`."""
     return getattr(args, "cross_family_policy", DEFAULT_CROSS_FAMILY_POLICY)
+
+
+def _fallback_policy_from_args(args) -> str:
+    """The fallback-after-withheld policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
+    return getattr(args, "fallback_after_withheld_policy", DEFAULT_FALLBACK_AFTER_WITHHELD_POLICY)
 
 
 def _strong_single_gene_policy_from_args(args) -> str:
@@ -777,6 +807,14 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "contains the genome (else the better score), the other recorded as `cross_call`; an MTL call "
              "in a genome outside Serinales is flagged `family_unconfirmed`, or `family_confirmed` when two "
              "of PAP1, OBP1, PIK1 lie within 15 kb of its core genes. Confidence is never changed.",
+    )
+    detect.add_argument(
+        "--fallback-after-withheld-policy", action=_PolicyFlag, choices=FALLBACK_AFTER_WITHHELD_POLICIES,
+        default=DEFAULT_FALLBACK_AFTER_WITHHELD_POLICY,
+        help="off: a genome routed by taxid or lineage searches only the families scoped to it (default). on: when that search "
+             "reports no locus because the modelled-gene bar withheld every hit, the phylum-fallback families are searched as "
+             "well (an Ogataea genome whose MATog hits are withheld is then searched with MATsc and MTL); the report's "
+             "`fallback_search` says so. Needs --taxid.",
     )
     detect.add_argument(
         "--strong-single-gene-policy", action=_PolicyFlag, choices=STRONG_SINGLE_GENE_POLICIES,

@@ -534,6 +534,9 @@ class DetectionOutcome:
     #: A taxonomy lookup that failed and so widened the routing; None when
     #: every lookup succeeded. See `RoutingDecision.routing_error`.
     routing_error: str | None = None
+    #: Set when the routed family reported nothing because every hit was withheld, and the phylum-fallback families were searched as
+    #: well (`--fallback-after-withheld-policy on`, #228): `{families, routing_mode, calls}`. None otherwise.
+    fallback_search: dict | None = None
     #: The translation table this run used, and why it fell back to table 1
     #: when the lookup failed (None when it did not fail).
     genetic_code: int | None = None

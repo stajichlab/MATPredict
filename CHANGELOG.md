@@ -6,6 +6,9 @@ release completed.
 
 ## [Unreleased]
 
+### Added
+- Report-only `resolution_flags` on every detected locus (curator ruling 2026-11-04, #256): `contig_edge` (a core gene within 500 bp of a contig end) and `partial_core` (a core model covering under 50% of its reference at under 90% identity; a high-identity exon piece of an intact gene is not flagged), with the genes in `resolution_flag_genes`. They say a called locus may be a fragment; no call, score or confidence tier changes. New module `detect/resolution_flags.py`; `DetectionOutcome.contig_lengths`.
+
 ### Fixed
 - Cross-family policy (#227): when more than one family is scoped to the genome (a genus scope and a species scope, as `mat1` and `mat2` for *S. pombe*) and the evidence terms tie, the call with the higher best core-gene identity is kept before the family name decides; a remaining tie sets `family_ambiguous` (`cross_call_scoped_tie`). On 8 *S. pombe* genomes the silent P donor cassette is `mat2` again in the two genomes that carry it; the six others are unchanged.
 - Browser tool: a single failed download no longer ends a run. A 429, 5xx or network error on any asset (the database files, the wheels, the WebAssembly tools) is retried three times with a growing wait, or the wait the server asks for in `Retry-After`; each retry appears in the log. A permanent failure such as a 404 stops at once with a message that names the file and the status ("could not fetch matpredict.whl: HTTP 503, tried 4 times"). A first-time failure showed up as `HTTP 503` on `matpredict.whl` during a second run in the same tab, when the browser's 10-minute cache had expired and about 800 files were requested again at once.

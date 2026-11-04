@@ -22,6 +22,7 @@ from MATPredict.detect.benchmark import (
     _open_fasta_text,
     translate_gene_from_contig_sequence,
 )
+from MATPredict.detect.resolution_flags import resolution_flags
 from MATPredict.detect.pipeline import DetectionOutcome, DetectionResult
 from MATPredict.detect.receptor_arrays import RECEPTOR_ARRAYS_NOTE
 from MATPredict.detect.scoring import count_distinct_intervals
@@ -319,7 +320,8 @@ def core_span(r: DetectionResult) -> dict | None:
     return {"start": start, "end": end, "beyond_core_bp": (r.end - r.start + 1) - (end - start + 1)}
 
 
-def _result_doc(r: DetectionResult) -> dict:
+def _result_doc(r: DetectionResult, contig_lengths: dict | None = None) -> dict:
+    flags = resolution_flags(r.gene_evidence, contig_lengths)
     return {
         "family": _family_label(r.family_key),
         "contig": r.contig,
@@ -330,6 +332,9 @@ def _result_doc(r: DetectionResult) -> dict:
         # Extent of this locus's modelled genes plus its own hits at or above a bitscore floor (report only).
         "supported_span": r.supported_span,
         "confidence": r.confidence,
+        # Why this call may not be a resolved locus (contig edge, partial or short core gene); report only, never changes a call.
+        "resolution_flags": list(flags),
+        "resolution_flag_genes": flags,
         "idiomorph": r.idiomorph,
         # Cross-lineage class (B9, 2026-10-01): MAT1-1 / MAT1-2 / unassigned,
         # or null for families with no map. Report only.
@@ -593,7 +598,7 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path, run: dict 
         "receptor_arrays_note": RECEPTOR_ARRAYS_NOTE,
         "receptor_arrays": [a.as_report() for a in getattr(outcome, "receptor_arrays", [])],
         "families_attempted": [_family_label(k) for k in outcome.families_attempted],
-        "detected": [_result_doc(r) for r in outcome.results],
+        "detected": [_result_doc(r, getattr(outcome, "contig_lengths", None)) for r in outcome.results],
         "not_detected": [
             {
                 "family": _family_label(n.family_key),

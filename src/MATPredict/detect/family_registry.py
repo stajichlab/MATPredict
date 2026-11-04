@@ -699,6 +699,24 @@ def route(
     return _apply_gene_scopes(decision, taxid, lineage_taxids_resolver, scoped_roster_policy)
 
 
+def fallback_families(
+    taxid: int, families: list[Family], routed: list[Family],
+    lineage_taxids_resolver: Callable[[int], list[int]] = default_lineage_taxids,
+    phylum_name_resolver: Callable[[int], str | None] = default_lineage_phylum_name,
+    scoped_roster_policy: str = DEFAULT_SCOPED_ROSTER_POLICY,
+) -> RoutingDecision:
+    """The families the phylum fallback would search for `taxid`, leaving out the `routed` ones (#228).
+
+    A genome routed by lineage or taxid searches only the families whose scope contains it. When that search reports nothing because
+    every hit was withheld, the caller asks for these as well: the same families v0.7.0 searched before the scoped family existed.
+    The result is a `phylum_fallback` decision (the subphylum guard and `fallback_searchable` apply as in `_route`), or a `not_searched`
+    one when the phylum has no other family."""
+    routed_keys = {f.key for f in routed}
+    others = [f for f in families if f.key not in routed_keys]
+    decision = _route(taxid, others, lineage_taxids_resolver, phylum_name_resolver)
+    return _apply_gene_scopes(decision, taxid, lineage_taxids_resolver, scoped_roster_policy)
+
+
 def _apply_gene_scopes(
     decision: RoutingDecision, taxid: int | None,
     lineage_taxids_resolver: Callable[[int], list[int]], policy: str,

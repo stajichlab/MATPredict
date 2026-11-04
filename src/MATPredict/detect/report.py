@@ -518,6 +518,7 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path, run: dict 
         # because of it: this report searched more families than its taxid
         # warrants and should be re-run once the lookup succeeds.
         "routing_error": outcome.routing_error,
+        "fallback_search": outcome.fallback_search,
         # Set only on a `not_searched` route (curator's ruling 2026-09-26):
         # why no family was searched, and how to search anyway.
         "not_searched_reason": outcome.not_searched_reason,

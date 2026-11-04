@@ -5,22 +5,17 @@ reference, or is only a few dozen residues long. These flags say so next to the 
 Ogataea MATog loci, #256) and never feed back into it. Seam: the detect report writer.
 
   contig_edge   a core gene lies within EDGE_BP of a contig end (needs the contig lengths)
-  partial_core  a core gene covers less than PARTIAL_COVERAGE % of its reference protein
-  short_core    a core gene's model is shorter than SHORT_CORE_AA residues
+  partial_core  a core gene's model covers less than PARTIAL_COVERAGE % of its reference protein AND matches it at less than
+                PARTIAL_IDENTITY % identity: a weak, partial model. A short exon piece at high identity is an intact intron-containing
+                gene modelled in pieces (MATsc MATALPHA1, 40 aa at 97% identity) and is not flagged. A chromosome-level run
+                (80 Saccharomycetaceae/Aspergillaceae/Nectriaceae genomes) showed coverage or length alone flagging 60 of 98 resolved loci.
 """
 from __future__ import annotations
 
 EDGE_BP = 500
 PARTIAL_COVERAGE = 50.0
-SHORT_CORE_AA = 80
-FLAGS = ("contig_edge", "partial_core", "short_core")
-
-
-def _model_aa(e) -> int:
-    """Residues in the gene model: the exons when listed, else the gene extent, divided by 3."""
-    exons = getattr(e, "exons", None)
-    n = sum(b - a + 1 for a, b in exons) if exons else e.end - e.start + 1
-    return n // 3
+PARTIAL_IDENTITY = 90.0
+FLAGS = ("contig_edge", "partial_core")
 
 
 def resolution_flags(gene_evidence, contig_lengths: dict | None = None) -> dict[str, list[str]]:
@@ -33,8 +28,6 @@ def resolution_flags(gene_evidence, contig_lengths: dict | None = None) -> dict[
         length = (contig_lengths or {}).get(e.contig)
         if length is not None and min(e.start - 1, length - e.end) < EDGE_BP:
             out.setdefault("contig_edge", set()).add(e.gene_name)
-        if e.coverage is not None and e.coverage < PARTIAL_COVERAGE:
+        if e.coverage is not None and e.coverage < PARTIAL_COVERAGE and e.identity is not None and e.identity < PARTIAL_IDENTITY:
             out.setdefault("partial_core", set()).add(e.gene_name)
-        if _model_aa(e) < SHORT_CORE_AA:
-            out.setdefault("short_core", set()).add(e.gene_name)
     return {k: sorted(out[k]) for k in FLAGS if k in out}

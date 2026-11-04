@@ -34,6 +34,10 @@ AUTO = "auto"
 AUTO_WEAK = "auto-weak"
 AUTO_CHOICES = (AUTO, AUTO_WEAK)
 
+#: File extensions `gmg run` finds as sequence files (plain or .gz/.zst/.bz2/.xz). A genome with another extension (`.fsa`, the GenBank
+#: submission name, and `.txt` are common) is handed to GmG through a link named `.fna`: the content is the same.
+GMG_SEQUENCE_EXTENSIONS = (".fa", ".fna", ".fasta", ".fas", ".ffn", ".fq", ".fastq")
+_COMPRESSION_SUFFIXES = (".gz", ".zst", ".bz2", ".xz")
 _HTTP_TIMEOUT = 30
 _MANIFEST_TTL_SECONDS = 24 * 3600
 _VERSION_RE = re.compile(r"(\d{4}\.\d+(?:\.\d+)?)")
@@ -287,6 +291,21 @@ def resolve_index(spec: str | None, *, cache: Path | None = None) -> tuple[Path,
 
 # --------------------------------------------------------------------------------------------------------- run GmG
 
+def _as_gmg_input(genome: str | Path, tmp: Path) -> Path:
+    """The genome as `gmg run` accepts it: unchanged when its extension is one GmG recognises, else a link named `genome.fna` in `tmp`
+    (GmG finds sequence files by extension and refuses `.fsa`; the Python bindings read any path, so only the binary needs this)."""
+    path = Path(genome)
+    name = path.name.lower()
+    for suffix in _COMPRESSION_SUFFIXES:
+        if name.endswith(suffix):
+            name = name[: -len(suffix)]
+    if name.endswith(GMG_SEQUENCE_EXTENSIONS):
+        return path
+    link = tmp / ("genome.fna" + next((x for x in _COMPRESSION_SUFFIXES if path.name.lower().endswith(x)), ""))
+    link.symlink_to(path.resolve())
+    return link
+
+
 def classify_genome(genome: str | Path, index_path: Path) -> tuple[dict, str | None]:
     """Run GmG on one genome and return (its record, the GmG version). Uses GmG's Python bindings when they are installed,
     else the `gmg` binary on PATH (`gmg run`). Raises `GmgUnavailable` when neither is there.
@@ -308,9 +327,9 @@ def classify_genome(genome: str | Path, index_path: Path) -> tuple[dict, str | N
                              "https://github.com/stajichlab/GmG/releases) or install GmG's Python bindings (distribution "
                              "`guess-my-genome`, built from that repository; not `pip install gmg`, which is a different project). Or give --phylum or --taxid")
     with tempfile.TemporaryDirectory(prefix="matpredict_gmg_") as tmp:
-        proc = subprocess.run([exe, "-q", "run", str(genome), "--index", str(index_path), "-o", tmp, "--no-report"],
+        proc = subprocess.run([exe, "-q", "run", str(_as_gmg_input(genome, Path(tmp))), "--index", str(index_path), "-o", tmp + "/out", "--no-report"],
                               capture_output=True, text=True)
-        out = Path(tmp) / "results.jsonl"
+        out = Path(tmp) / "out" / "results.jsonl"
         if proc.returncode != 0 or not out.is_file():
             raise GmgUnavailable(f"`gmg run` failed (exit {proc.returncode}): {(proc.stderr or '').strip()[:300]}")
         rec = json.loads(out.read_text().splitlines()[0])

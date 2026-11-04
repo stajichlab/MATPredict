@@ -564,6 +564,8 @@ class DetectionOutcome:
     #: Every pheromone-receptor array of the genome (`receptor_arrays`), one
     #: record per array, with the number of reported calls in it. Report only.
     receptor_arrays: list = field(default_factory=list)
+    #: Contig lengths of the genome, for the report's `resolution_flags`; empty when unknown.
+    contig_lengths: dict = field(default_factory=dict)
 
 
 def _missing_core_genes(cluster: GeneCluster, family: Family) -> set[str]:
@@ -4009,6 +4011,7 @@ def run_pipeline(
         zygosity=zygosity,
         two_idiomorphs=two_idiomorphs,
         receptor_arrays=receptor_arrays,
+        contig_lengths=contig_lengths,
     )
 
 

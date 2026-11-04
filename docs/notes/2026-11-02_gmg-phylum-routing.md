@@ -195,10 +195,31 @@ NCBI snapshot 2026-11-01. Raw results: `GmG_runs/matpredict_phylum/` on the HPCC
 - **Genetic code:** all 27 searched genomes got table 1 (none is a CUG-clade yeast; table 12 was seen only for *C. albicans* in the earlier routing probe).
 - **Limits:** 30 genomes, the representatives index only; the hard case (a genus absent from the index) is covered by the panel table above, not by this run.
 
+## Measured: outside the panel (2026-11-03)
+
+Same setup as above (MATPredict `main` + #248, GmG v0.3.1, the representatives index, `--preset v0.8`); 126 runs on the HPCC (`GmG_runs/matpredict_phylum/detect_out2/`).
+
+- **Zygo 23** (the ZyGoLife genomes, contigs, not in the reference): `--phylum auto` called Mucoromycota for 22 of 23 and found the locus in all 22,
+  with the idiomorph equal to the ZyGoLife truth in 22 of 22 (`--phylum Mucoromycota`: 23 of 23). The 23rd genome (*Absidia cuneospora* RSA_623 Plus) got no
+  phylum call and was not searched. The files end in `.fsa`, which `gmg run` does not recognise; the first attempt failed for all 23 with a clear error, fixed in #248
+  by handing GmG the genome through an `.fna` link (GmG itself should accept `.fsa`, a separate issue).
+- **Chytrid negative control** (the 25 genomes of `2026-09-26_early_diverging`): **25 of 25 not searched and no locus called**, as designed. With the index as it is, 24
+  were called Chytridiomycota with a usable call (a phylum with no curated family) and 1 weakly. With each genome's genus hidden from the index, 11 had no
+  phylum call and 12 named another phylum, mostly weakly (4 Glomeromycota, 3 Basidiomycota, 1 Ascomycota, 1 Neocallimastigomycota, 1 weak and 4 usable Chytridiomycota);
+  none reached a curated phylum with a usable call, so nothing was searched. `auto-weak` would search the 4 that weakly named Basidiomycota or Ascomycota (16%): wasted
+  time and no locus, which is why it stays opt-in.
+- **Genus hidden, 30 panel genomes** (a genome of a genus the index does not have): `auto` routed 5 of 30 (all with the right phylum) and found 1 of the 27 loci that the true
+  taxid finds. The other 25 were not searched: 7 had no phylum call, 17 a weak call (14 of them naming the right phylum), 1 a usable call into Neocallimastigomycota
+  (no curated family). No wrong curated phylum was searched and no locus was invented, but for a genome with no relative in the reference `auto` recovers little. `auto-weak`
+  would search about 20 of the 30 with the right phylum in 19 (not run).
+
+Reading it together: `auto` is safe in every case tested (it never searched a wrong curated phylum or made a false call) and complete when the reference holds the genome or a close
+relative (Zygo 22 of 23; panel 27 of 30). It is incomplete for genomes of a genus the reference lacks, where the user should give `--phylum` or `--taxid`, or accept `auto-weak`.
+Adding more genera to the reference is what improves this, not a change in MATPredict.
+
 ## Open questions
 
-3. (Answered above for the regression panel: pass the phylum plus an order or family taxid. Not yet run: the 23 Zygo genomes and
-   the chytrid negative control, which are outside this panel.)
+3. (Answered above: pass the phylum plus an order or family taxid. The Zygo 23, the chytrid negative control and the genus-hidden case were run on 2026-11-03.)
 4. Reads input: GmG classifies reads too, and MATPredict has a reads path (`src/MATPredict/reads`). Out of scope here, but
    the same function could serve it.
 

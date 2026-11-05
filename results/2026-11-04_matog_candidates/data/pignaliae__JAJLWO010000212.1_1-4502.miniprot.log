@@ -1,0 +1,9 @@
+[M::mp_ntseq_read@0.000*13.51] read 4502 bases in 1 contigs
+[M::mp_idx_build@0.000*10.65] 36 blocks
+[M::mp_idx_build@0.021*0.27] collected syncmers
+[M::mp_idx_build@0.048*0.67] 2104 kmer-block pairs
+[M::mp_idx_print_stat] 2095 distinct k-mers; mean occ of infrequent k-mers: 1.00; 0 frequent k-mers accounting for 0 occurrences
+[M::worker_pipeline::0.060*0.94] mapped 73 sequences
+[M::main] Version: 0.18-r281
+[M::main] CMD: miniprot -t4 --gff -P MP win/pignaliae__JAJLWO010000212.1_1-4502.fa refs.faa
+[M::main] Real time: 0.061 sec; CPU: 0.057 sec; Peak RSS: 0.073 GB

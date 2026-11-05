@@ -1,4 +1,5 @@
 import pytest
+from dataclasses import replace
 
 from MATPredict.detect import family_status as fs
 from MATPredict.detect.family_registry import Family, FamilyKey, _gene_alias_map
@@ -262,3 +263,28 @@ def test_a_set_aside_call_is_not_counted_in_the_genome_mean():
     assert {r.contig: r.family_key.locus_name for r in out} == {"c1": "MATsc", "c2": "MTL"}
     c2 = next(r for r in out if r.contig == "c2")
     assert c2.family_ambiguous["genome_mean_identity"] == {"Ascomycota:MATsc": 45.0, "Ascomycota:MTL": 55.0}   # 90 is not in the MTL mean
+
+
+def _side(key, idiomorph, start, end, contig="c1"):
+    return replace(_call(key, start, end, contig=contig), idiomorph=idiomorph)
+
+
+def test_complementary_idiomorphs_of_two_families_at_two_places_are_cross_family_cassettes():
+    sc, mtl = _side(SC, "MATalpha", 1000, 9000), _side(MTL, "A", 500, 2000, contig="c2")
+    out = fs.apply([sc, mtl], FAMILIES, {OTHER}, "on")
+    assert out[0].cassette["cross_family"] is True and out[0].cassette["partner_idiomorphs"] == ["A"]
+    assert out[0].cassette["partner_families"] == ["Ascomycota:MTL"] and out[0].cassette["role"] == "cassette_undetermined"
+    assert out[1].cassette["partner_families"] == ["Ascomycota:MATsc"] and out[1].cassette["idiomorph"] == "A"
+    assert [r.idiomorph for r in out] == ["MATalpha", "A"]          # no call is changed
+
+
+def test_the_same_idiomorph_or_the_same_place_is_not_a_cross_family_cassette():
+    assert all(r.cassette is None for r in fs.flag_cross_family_cassettes([_side(SC, "MATalpha", 1000, 9000), _side(MTL, "alpha", 500, 2000, contig="c2")]))
+    assert all(r.cassette is None for r in fs.flag_cross_family_cassettes([_side(SC, "MATalpha", 1000, 9000), _side(MTL, "A", 2000, 3000)]))
+    assert fs.flag_cross_family_cassettes([_side(SC, "undetermined", 1000, 9000), _side(MTL, "A", 500, 2000, contig="c2")])[0].cassette is None
+
+
+def test_a_within_family_cassette_block_is_kept():
+    og = _side(SC, "MATa", 1, 100); og = replace(og, cassette={"idiomorph": "MATa", "role": "cassette_undetermined"})
+    out = fs.flag_cross_family_cassettes([og, _side(MTL, "alpha", 5, 50, contig="c2")])
+    assert out[0].cassette == {"idiomorph": "MATa", "role": "cassette_undetermined"} and out[1].cassette["cross_family"] is True

@@ -135,6 +135,9 @@ loci:
   - locus_name: "MAT"
     vocabulary_type: "enum"
     idiomorph_values: ["alpha", "a"]
+    # Report-only statement when one genome calls both idiomorphs (curator, 2026-11-05, #169; see detect/two_idiomorphs.py): C. neoformans x
+    # deneoformans AD hybrids, C. neoformans with an SXI2 a-locus, Mrakia blollopis. It never asserts a cause and changes no call.
+    two_idiomorphs_report: true
     # Widened 2026-09-20 from the single curated species (Cryptococcus
     # deneoformans 40410) to its family, one rank broader -- see HD's scope
     # comment (db/Basidiomycota/order.yml, HD locus) for the measured
@@ -561,6 +564,7 @@ loci:
   - locus_name: "redPR"
     vocabulary_type: "enum"
     idiomorph_values: ["A1", "A2"]
+    two_idiomorphs_report: true   # report-only (curator, 2026-11-05, #169): four genomes hold both redPR alleles
     # Sporidiobolales ("red yeast") pheromone/receptor MAT locus, added
     # 2026-09-26 on the curator's ruling. Biallelic MAT A1 / A2, each
     # idiomorph carrying its own, highly divergent STE3 receptor (Coelho et

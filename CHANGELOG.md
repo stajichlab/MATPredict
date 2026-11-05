@@ -6,6 +6,10 @@ release completed.
 
 ## [Unreleased]
 
+## [0.8.1] — TBD — `v0.8.1`
+
+> DRAFT release prep (do not merge until the release is cut). The entries below are those of the merged pull requests so far; the definitive run (`--preset v0.8.1`) and its counts, the curator's decisions on #254 (S. pombe labels), #148, #165, #169 and #255, and the date are still to be filled in. The release is a re-run of the definitive v0.8.0 run with the fixes of #228 and #227 (reverted by #270 if merged), the report-only `resolution_flags` and cross-family `cassette` indication, and the new rust allow list.
+
 ### Added
 - Report-only `resolution_flags` on every detected locus (curator ruling 2026-11-04, #256): `contig_edge` (a core gene within 500 bp of a contig end) and `partial_core` (a core model covering under 50% of its reference at under 90% identity; a high-identity exon piece of an intact gene is not flagged), with the genes in `resolution_flag_genes`. They say a called locus may be a fragment; no call, score or confidence tier changes. New module `detect/resolution_flags.py`; `DetectionOutcome.contig_lengths`.
 

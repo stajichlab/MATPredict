@@ -1,0 +1,19 @@
+# Candidate records for Ambrosiozyma (MATam) and Wickerhamomyces edaphicus (MATwe), 2026-11-04
+
+Curator decisions (2026-11-04, #189): candidate records for the two best-evidenced genomes, tier 3, `needs_review`; family scope genus for `MATam` (taxid 36917) and species for `MATwe` (640698); label codes `AmbPhi` and `WicEda` (frozen). **Nothing is in `db/`**: the families are in `families_proposal.yml`, the records in `records/`.
+
+| record | genome | what it holds |
+|---|---|---|
+| `43984_nrrl-y-7523_MATam_MATa-MATalpha` | *A. philentoma* NRRL Y-7523, GCA_003707675.3 | MATa side (DIC1, MATa2, MATa1, SLA2) on PPKZ03000004.1 and MATalpha side (MATalpha2, MATalpha1) on PPKZ03000012.1; unrelated sequence, so a cassette pair |
+| `640698_tbrc-bcc18952_MATwe_MATa-MATalpha` | *W. edaphicus* TBRC-BCC18952, GCA_054949465.1 | MATalpha allele (contig 20) and MATa allele (3.5 kb contig 274) of one heterozygous locus, 97% shared flanks: alleles, not cassettes |
+
+Models: miniprot projections (`run_miniprot.sh`, `models.py`, `make_records.py`) of curated Saccharomycotina, Pichia and Ogataea MAT and flank proteins; no frameshift or internal stop; all MAT models partial (MATa1 58 aa and 55 aa homeodomain fragments). Both pass `validate_metadata`; `curate-db validate` not run. The `shared_flank_check` and the Opus review that found the *W. edaphicus* alleles are in #264 and PR #263.
+
+## Test on 40 genomes (`loo_run.sh`; v0.8.1, base DB versus DB plus both families and records; each source genome with its own record excluded)
+- **`MATwe` (species scope): nothing changes** outside the source genome (22 of 22 *Wickerhamomyces* genomes unchanged).
+- **`MATam` (genus scope): 17 of 18 *Ambrosiozyma* genomes switch from phylum fallback to lineage routing and call `MATam`.** Confidence rises (several medium -> high). Genomes that split a pair across MATsc and MTL now report both idiomorphs under one family and, with `cassette_report: true`, a `cassette` indication on each (*A. ambrosiae*, *A. oregonensis*, *A. platypodis*, *A. monospora* x2, *A. cicatricosa*: six genomes). *A. cicatricosa* gains a MATa locus (JAKTRY010000833.1); *A. monospora* GCA_030267765.1, which had no call, now calls MATa.
+- **Cautions.** (1) The confidence rise may be partly an artifact of a more specific one-species family (the concern recorded in #216). (2) With its own record excluded, *A. philentoma* called nothing: the genome is routed only to `MATam`, and with no other `MATam` record there is nothing to find. In real use the record is present, but a genus genome where `MATam` finds nothing would lose the MATsc or MTL call it has today (none did in this run). A second `MATam` record (for example *A. oregonensis*, a clean MTL pair with both loci on contigs of 2.5 kb) would make the family less single-record.
+- **Not covered**: *Wickerhamomyces* other than *edaphicus*, and *Hansenula*, have no record; the fragment genomes of #189 (*Peterozyma*, *Williopsis*, *Kuraishia*, *Saccharomycopsis* sp.) are left as curation notes until confirmed.
+
+## For the curator
+Accept or reject each record; add the families to `db/Ascomycota/order.yml` and the labels to `scripts/idiomorph_label_registry.json` on acceptance (`backfill-gff` builds `proteins.faa` and `locus.gff3`). Question: genus scope for `MATam` changes calls in 17 genomes; confirm that is wanted before the family is added.

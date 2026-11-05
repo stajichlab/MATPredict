@@ -1,0 +1,35 @@
+# PROPOSED families (not in db/Ascomycota/order.yml; the curator adds them with the records). Curator decisions 2026-11-04: MATam is scoped to the
+# genus Ambrosiozyma (three genomes with the same two-locus pattern), MATwe to the species Wickerhamomyces edaphicus; label codes AmbPhi and WicEda (frozen).
+  - locus_name: "MATam"
+    vocabulary_type: "enum"
+    idiomorph_values: ["MATa", "MATalpha"]
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    taxonomic_scope: [36917]            # genus Ambrosiozyma (Pichiales, Pichiaceae); NCBI Taxonomy 2026-11-04
+    # Two non-overlapping calls of different idiomorphs in one genome are indicated as cassettes (role cassette_undetermined), as for MATog:
+    # the genus carries an a side and an alpha side at two unrelated positions (A. philentoma record).
+    cassette_report: true
+    fallback_subphylum: 147537          # Saccharomycotina
+    fallback_searchable: false
+    flank_carried_window_bp: 20000
+    genes:
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      - {name: MATa2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATa"]}      # HMG; divergent
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
+      - {name: MATalpha2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATalpha"]}
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      - {name: dic1, role: flanking_conserved, optional: true}
+  - locus_name: "MATwe"
+    vocabulary_type: "enum"
+    idiomorph_values: ["MATa", "MATalpha"]
+    idiomorph_class: {MATalpha: unassigned, MATa: unassigned}
+    taxonomic_scope: [640698]           # the species Wickerhamomyces edaphicus (NCBI lists it under Hansenula, Wickerhamomycetaceae)
+    fallback_subphylum: 147537
+    fallback_searchable: false
+    flank_carried_window_bp: 20000
+    genes:
+      - {name: MATa1, role: core_MAT, present_in_idiomorphs: ["MATa"]}
+      - {name: MATa2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATa"]}
+      - {name: MATalpha1, role: core_MAT, gene_class: alpha_box, present_in_idiomorphs: ["MATalpha"]}
+      - {name: MATalpha2, role: core_MAT, optional: true, present_in_idiomorphs: ["MATalpha"]}
+      - {name: sla2, role: flanking_conserved, gene_class: sla2_homolog, optional: true}
+      - {name: dic1, role: flanking_conserved, optional: true}

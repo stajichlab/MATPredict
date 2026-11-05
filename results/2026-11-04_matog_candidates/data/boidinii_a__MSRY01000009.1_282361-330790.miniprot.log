@@ -1,0 +1,9 @@
+[M::mp_ntseq_read@0.000*14.01] read 48430 bases in 1 contigs
+[M::mp_idx_build@0.001*11.50] 380 blocks
+[M::mp_idx_build@0.002*4.74] collected syncmers
+[M::mp_idx_build@0.023*1.28] 19575 kmer-block pairs
+[M::mp_idx_print_stat] 18857 distinct k-mers; mean occ of infrequent k-mers: 1.04; 0 frequent k-mers accounting for 0 occurrences
+[M::worker_pipeline::0.099*1.28] mapped 73 sequences
+[M::main] Version: 0.18-r281
+[M::main] CMD: miniprot -t4 --gff -P MP win/boidinii_a__MSRY01000009.1_282361-330790.fa refs.faa
+[M::main] Real time: 0.099 sec; CPU: 0.127 sec; Peak RSS: 0.077 GB

@@ -1,0 +1,203 @@
+record_id: 640698_tbrc-bcc18952_MATwe_MATa-MATalpha
+record_version: 1
+taxonomy:
+  taxid: 640698
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Saccharomycetes;o__Phaffomycetales;f__Wickerhamomycetaceae;g__Hansenula;s__Wickerhamomyces_edaphicus
+  lineage_resolved_date: '2026-11-04'
+organism:
+  species: Wickerhamomyces edaphicus
+  strain:
+    name: TBRC-BCC18952
+    known: true
+    culture_collection_ids:
+    - TBRC-BCC18952
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MATwe
+  idiomorphs:
+  - MATa
+  - MATalpha
+  system: unknown
+locus:
+  assembly_accession: GCA_054949465.1
+  assembly_accession_basis: strain_match_verified
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: false
+  core:
+    completeness: partial
+    reference_orientation: sla2->MATalpha1->MATalpha2->dic1->sla2->MATa1->MATa2
+    definition_note: 'CANDIDATE MATwe record of Wickerhamomyces edaphicus TBRC-BCC18952 (GCA_054949465.1; NCBI Taxonomy
+      lists the species as ''[Wickerhamomyces] edaphicus (nom. inval.)'' under Hansenula). ONE HETEROZYGOUS MAT
+      LOCUS WITH BOTH ALLELES ASSEMBLED AS SEPARATE CONTIGS: the MATalpha allele on JBSXOT010000020.1 (SUI1 - SLA2
+      - MATalpha1 - MATalpha2 - DIC1) and the MATa allele on the 3.5 kb contig JBSXOT010000274.1 (SLA2 3-prime end
+      - MATa1 - MATa2 - DIC1 5-prime end). Both ends of contig 274 match contig 20 at 97.2% (533 bp, contig 20 41,292-41,824)
+      and 97.3% (147 bp, 45,203-45,347) on either side of the idiomorph, so the two are the a and alpha alleles
+      at the same position, NOT two cassettes (blastn, 2026-11-04; independent review, Opus). Only 680 bp of flank
+      is shared; read mapping would confirm half coverage for each allele. OUR OWN PROJECTION (tier 3): miniprot
+      alignments of curated Saccharomycotina and Ogataea MAT proteins, kept only without frameshift or internal
+      stop; no RNA-seq or annotation. GENE NAMES: the MATa2 HMG gene (170 aa at 28% identity to the Pichia/Komagataella
+      MATa2) and MATa1 (55 aa homeodomain fragment) rest on homology. GENETIC CODE: standard (NCBI code 1).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JBSXOT010000020.1
+        seq_region: JBSXOT010000020.1
+      start: 38682
+      end: 46633
+      contig_edge_distance: null
+      sequence_checksum: null
+    - segment_index: 1
+      sequence_source:
+        type: insdc_nucleotide
+        accession: JBSXOT010000274.1
+        seq_region: JBSXOT010000274.1
+      start: 4
+      end: 2444
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: sla2
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 38682
+  end: 41828
+  strand: +
+  exons:
+  - start: 38682
+    end: 41828
+  order_in_locus: 0
+- gene_index: 1
+  name: MATalpha1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 42085
+  end: 42603
+  strand: '-'
+  exons:
+  - start: 42085
+    end: 42603
+  order_in_locus: 1
+- gene_index: 2
+  name: MATalpha2
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 43696
+  end: 44609
+  strand: '-'
+  exons:
+  - start: 44463
+    end: 44609
+  - start: 43845
+    end: 44113
+  - start: 43696
+    end: 43792
+  order_in_locus: 2
+- gene_index: 3
+  name: dic1
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 45797
+  end: 46633
+  strand: +
+  exons:
+  - start: 45797
+    end: 46633
+  order_in_locus: 3
+- gene_index: 4
+  name: sla2
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: null
+  segment_index: 1
+  start: 4
+  end: 537
+  strand: +
+  exons:
+  - start: 4
+    end: 537
+  order_in_locus: 4
+- gene_index: 5
+  name: MATa1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 1
+  start: 624
+  end: 840
+  strand: '-'
+  exons:
+  - start: 703
+    end: 840
+  - start: 624
+    end: 650
+  order_in_locus: 5
+- gene_index: 6
+  name: MATa2
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 1
+  start: 1620
+  end: 2444
+  strand: +
+  exons:
+  - start: 1620
+    end: 1694
+  - start: 1959
+    end: 2225
+  - start: 2277
+    end: 2444
+  order_in_locus: 6
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: homology to curated SLA2-type MAT cassettes (Ogataea, Komagataella; SLA2-MAT architecture,
+      Kriti et al. 2026); the v0.8.0 detection called both loci; no study of this species
+    citations: &id001
+    - pmid: '41849659'
+      doi: 10.1093/g3journal/jkag067
+  boundaries:
+    tier: 3
+    experimental_method: OUR OWN miniprot projection of curated MAT and flank proteins onto the assembly contigs;
+      no transcript support
+    citations: *id001
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: gene identity by best-scoring curated reference (MATa1 and MATa2 versus MATalpha1 and MATalpha2);
+      the idiomorph follows the gene content
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: false
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: pass
+    per_gene: []
+    notes: ''
+  taxonomy_current: null
+curation:
+  proposed_by: claude-code-curation-agent
+  proposal_dedupe_key: 41849659|640698|MATwe|MATa-MATalpha
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

@@ -16,6 +16,10 @@ Both formats are read by one parser: blank lines and `#` comments are
 skipped, the first comma- or tab-separated field is the ASMID, the rest is the
 reason, and a header row whose first field is `ASMID` is ignored.
 
+A third file, `allow.txt` in the curated database root, is the MATPredict-only ALLOW list (#165): genomes on the
+BFD list for annotation-pipeline reasons ("EVM never completes", "too large") that MAT detection can still search.
+Allowed genomes are removed from the merged suppress set; the reason is kept in the file. Same format and matching.
+
 A row is matched by its full ASMID (`GCA_986280975.1_DAH1005FM`) or by the
 bare accession (`GCA_986280975.1`), since some runners carry only the latter.
 """
@@ -33,6 +37,8 @@ BFD_SUPPRESS_PATH = Path(
 )
 #: The MATPredict-only list's name inside the curated database root.
 LOCAL_SUPPRESS_FILENAME = "suppress.txt"
+#: The MATPredict-only allow list's name inside the curated database root.
+LOCAL_ALLOW_FILENAME = "allow.txt"
 
 _ACCESSION = re.compile(r"^(GC[AF]_\d+\.\d+)")
 
@@ -43,7 +49,12 @@ def default_suppress_paths(db_root: Path) -> list[Path]:
     return [bfd, Path(db_root) / LOCAL_SUPPRESS_FILENAME]
 
 
-def load_suppress_list(paths: list[Path]) -> dict[str, str]:
+def default_allow_path(db_root: Path) -> Path:
+    """The MATPredict-only allow list in `db_root`."""
+    return Path(db_root) / LOCAL_ALLOW_FILENAME
+
+
+def load_suppress_list(paths: list[Path], allow: Path | None = None) -> dict[str, str]:
     """{ASMID: reason} merged over `paths`. A missing file is logged and
     skipped: the BFD list is not reachable off /bigdata, and a run there
     must not fail for it."""
@@ -62,6 +73,15 @@ def load_suppress_list(paths: list[Path]) -> dict[str, str]:
             if not asmid or asmid.upper() == "ASMID":
                 continue
             suppressed[asmid] = fields[1] if len(fields) > 1 else ""
+    if allow is not None and Path(allow).is_file():
+        allowed: set[str] = set()
+        for asmid in load_suppress_list([Path(allow)]):
+            allowed |= _keys(asmid)
+        dropped = {a: r for a, r in suppressed.items() if _keys(a) & allowed}
+        for a in dropped:
+            del suppressed[a]
+        if dropped:
+            logger.info("allow list %s: %d genome(s) removed from the suppress set", allow, len(dropped))
     return suppressed
 
 

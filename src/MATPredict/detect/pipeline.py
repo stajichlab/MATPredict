@@ -95,6 +95,7 @@ from MATPredict.detect.mat_gene_gate import (
 from MATPredict.detect.flank_carried import (
     WITHHELD_FLANK_CARRIED, apply_flank_carried_rule,
 )
+from MATPredict.detect.shared_flank import shared_flank_check
 from MATPredict.detect.family_registry import (
     Family,
     FamilyKey,
@@ -3958,7 +3959,8 @@ def run_pipeline(
                 lineage = {taxid, *zygosity_lineage_resolver(taxid)}
             except Exception as exc:  # noqa: BLE001 - logged, treated as an unknown lineage
                 logger.warning("lineage lookup for the cross-family rule failed: %s", exc)
-        results = family_status.apply(results, families, lineage, cross_family_policy)
+        results = family_status.apply(results, families, lineage, cross_family_policy,
+                                      lambda a, b: shared_flank_check(genome_fasta, a, b))
 
     # Curator's ruling 2026-09-26: a call made by searching a family outside
     # the genome's phylum (an override route) is unverified. A failed lookup

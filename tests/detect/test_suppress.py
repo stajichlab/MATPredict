@@ -59,3 +59,27 @@ def test_the_cli_filters_a_panel_list(tmp_path):
     )
     assert proc.stdout == "GCA_8.1_good\t2\n"
     assert "skipped 1 suppressed" in proc.stderr
+
+
+def test_the_allow_list_removes_genomes_from_the_suppress_set_by_full_or_bare_accession(tmp_path):
+    """#165: rust genomes suppressed for annotation reasons are searched when they are on the MATPredict-only allow list."""
+    bfd = tmp_path / "bfd.txt"
+    bfd.write_text("ASMID,REASON\nGCA_902702905.1_Austropuccinia_psidii,EVM never completes\nGCA_943181505.1_UFV02.1,Too small (800kb)\nGCA_9.1_x,other\n")
+    allow = tmp_path / "allow.txt"
+    allow.write_text("# allowed\nGCA_902702905.1,Austropuccinia psidii: annotation only\n")
+    got = load_suppress_list([bfd], allow=allow)
+    assert set(got) == {"GCA_943181505.1_UFV02.1", "GCA_9.1_x"}                    # the allowed genome is gone, the legitimate skips stay
+    kept, skipped = filter_rows(["GCA_902702905.1_Austropuccinia_psidii\t4", "GCA_943181505.1_UFV02.1\t7"], got)
+    assert len(kept) == 1 and kept[0].startswith("GCA_902702905.1") and len(skipped) == 1
+
+
+def test_a_missing_allow_list_changes_nothing(tmp_path):
+    bfd = tmp_path / "bfd.txt"
+    bfd.write_text("GCA_1.1_x,r\n")
+    assert load_suppress_list([bfd], allow=tmp_path / "absent.txt") == load_suppress_list([bfd])
+
+
+def test_the_committed_allow_list_names_only_genomes_that_are_on_the_bfd_reasons_and_not_the_too_small_one():
+    from pathlib import Path
+    ids = set(load_suppress_list([Path(__file__).resolve().parents[2] / "db" / "allow.txt"]))
+    assert len(ids) == 9 and "GCA_943181505.1" not in ids and all(i.startswith("GCA_") for i in ids)

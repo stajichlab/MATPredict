@@ -1,0 +1,9 @@
+[M::mp_ntseq_read@0.000*13.56] read 19539 bases in 1 contigs
+[M::mp_idx_build@0.000*10.75] 154 blocks
+[M::mp_idx_build@0.001*4.27] collected syncmers
+[M::mp_idx_build@0.048*0.57] 10241 kmer-block pairs
+[M::mp_idx_print_stat] 10140 distinct k-mers; mean occ of infrequent k-mers: 1.01; 0 frequent k-mers accounting for 0 occurrences
+[M::worker_pipeline::0.135*0.87] mapped 73 sequences
+[M::main] Version: 0.18-r281
+[M::main] CMD: miniprot -t4 --gff -P MP win/wickerhamii__JAKTQX010000058.1_1-19539.fa refs.faa
+[M::main] Real time: 0.136 sec; CPU: 0.119 sec; Peak RSS: 0.073 GB

@@ -1,0 +1,18 @@
+[M::mp_ntseq_read@0.000*25.95] read 3507 bases in 1 contigs
+[M::mp_idx_build@0.000*15.11] 28 blocks
+[M::mp_idx_build@0.001*4.55] collected syncmers
+[M::mp_idx_build@0.071*0.37] 1504 kmer-block pairs
+[M::mp_idx_print_stat] 1503 distinct k-mers; mean occ of infrequent k-mers: 1.00; 0 frequent k-mers accounting for 0 occurrences
+[M::worker_pipeline::0.082*0.55] mapped 75 sequences
+[M::main] Version: 0.18-r281
+[M::main] CMD: miniprot -t4 --gff -P MP win/edaphicus__JBSXOT010000274.1_1-3507.fa refs.faa
+[M::main] Real time: 0.082 sec; CPU: 0.046 sec; Peak RSS: 0.075 GB
+[M::mp_ntseq_read@0.000*25.56] read 3507 bases in 1 contigs
+[M::mp_idx_build@0.000*22.34] 28 blocks
+[M::mp_idx_build@0.001*5.31] collected syncmers
+[M::mp_idx_build@0.003*2.63] 1540 kmer-block pairs
+[M::mp_idx_print_stat] 1513 distinct k-mers; mean occ of infrequent k-mers: 1.02; 0 frequent k-mers accounting for 0 occurrences
+[M::worker_pipeline::0.511*1.07] mapped 75 sequences
+[M::main] Version: 0.18-r281
+[M::main] CMD: miniprot -t4 -k5 -l2 --outs=0.3 --outc=0.2 -N 5 --gff -P MR win/edaphicus__JBSXOT010000274.1_1-3507.fa refs.faa
+[M::main] Real time: 0.512 sec; CPU: 0.548 sec; Peak RSS: 0.020 GB

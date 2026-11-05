@@ -1,0 +1,18 @@
+[M::mp_ntseq_read@0.000*16.20] read 37566 bases in 1 contigs
+[M::mp_idx_build@0.000*10.93] 294 blocks
+[M::mp_idx_build@0.002*3.48] collected syncmers
+[M::mp_idx_build@0.062*0.46] 15275 kmer-block pairs
+[M::mp_idx_print_stat] 14882 distinct k-mers; mean occ of infrequent k-mers: 1.03; 0 frequent k-mers accounting for 0 occurrences
+[M::worker_pipeline::0.090*1.24] mapped 75 sequences
+[M::main] Version: 0.18-r281
+[M::main] CMD: miniprot -t4 --gff -P MP win/philentoma__PPKZ03000004.1_200815-238380.fa refs.faa
+[M::main] Real time: 0.091 sec; CPU: 0.112 sec; Peak RSS: 0.075 GB
+[M::mp_ntseq_read@0.000*14.82] read 37566 bases in 1 contigs
+[M::mp_idx_build@0.000*13.32] 294 blocks
+[M::mp_idx_build@0.002*4.28] collected syncmers
+[M::mp_idx_build@0.004*2.41] 15294 kmer-block pairs
+[M::mp_idx_print_stat] 12608 distinct k-mers; mean occ of infrequent k-mers: 1.21; 0 frequent k-mers accounting for 0 occurrences
+[M::worker_pipeline::3.093*0.98] mapped 75 sequences
+[M::main] Version: 0.18-r281
+[M::main] CMD: miniprot -t4 -k5 -l2 --outs=0.3 --outc=0.2 -N 5 --gff -P MR win/philentoma__PPKZ03000004.1_200815-238380.fa refs.faa
+[M::main] Real time: 3.094 sec; CPU: 3.031 sec; Peak RSS: 0.018 GB

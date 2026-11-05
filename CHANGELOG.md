@@ -7,6 +7,9 @@ release completed.
 ## [Unreleased]
 
 ### Changed
+- *S. pombe* silent cassettes (#254; curator ruling 2026-11-05): a merged `mat1` call whose genes hold a P cluster and an M cluster 5-20 kb apart on one contig (the silent `mat2`-P / `mat3`-M pair, about 11 kb apart) is split into a `mat2` P call and a `mat3` M call, each with a `cassette` block (role `silent_pair`, the partner family and the distance). A lone cassette elsewhere stays `mat1`; a pair farther apart (35 kb in GCA_006386235.1) stays one call marked `arrangement_ambiguous`. It applies only where the species-scoped `mat2` and `mat3` families are in the genome's lineage (*S. pombe*), as part of `--cross-family-policy on` (`detect/silent_pair.py`). It changes *S. pombe* locus counts and labels.
+
+### Changed
 - Basidiomycota:MAT and Basidiomycota:redPR now report `two_idiomorphs` (#169; curator, 2026-11-05; `two_idiomorphs_report: true`): a genome that calls both idiomorphs of one of these families gets the report-only statement already used for Mucoromycota:MAT (arrangement, evidence, possible causes; no cause asserted, no call, idiomorph or confidence changes). On the nine v0.8.0 genomes with both idiomorphs (six MAT: *C. neoformans* x2, a *Mrakia* and others; four redPR) every one now carries the statement; one is `same_locus`, the others `unlinked`.
 
 ### Added

@@ -78,7 +78,7 @@ def main() -> int:
         score_holdout,
     )
     from MATPredict.detect.suppress import (  # noqa: E402
-        default_suppress_paths, filter_rows, load_suppress_list,
+        default_allow_path, default_suppress_paths, filter_rows, load_suppress_list,
     )
 
     wt, db = args.worktree, args.worktree / "db"
@@ -100,7 +100,7 @@ def main() -> int:
     record_idiomorphs = load_record_idiomorphs(db)
     # Curator's ruling 2026-09-26: a suppressed genome (the BFD list plus the
     # worktree's db/suppress.txt) is never run.
-    suppressed = load_suppress_list(default_suppress_paths(db))
+    suppressed = load_suppress_list(default_suppress_paths(db), allow=default_allow_path(db))
     n_suppressed = 0
 
     results = []

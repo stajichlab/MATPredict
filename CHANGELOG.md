@@ -7,6 +7,9 @@ release completed.
 ## [Unreleased]
 
 ### Added
+- Database: the candidate CTG-clade MTLA1 record for *Hyphopichia burtonii* (`717740_makgeolli_MTL_A`, GCA_003856795.1; curator decision 2026-11-05, #148). On a 389-genome Serinales sample it raises 9 genomes' confidence, lowers 11 (the 39-bit noise floor of #149 and the 10-point cross-hit guard acting on weak fragments; see `results/2026-11-04_148_hyphopichia`) and leaves 354 unchanged; the drops are known and tracked in #149.
+
+### Added
 - Report-only `resolution_flags` on every detected locus (curator ruling 2026-11-04, #256): `contig_edge` (a core gene within 500 bp of a contig end) and `partial_core` (a core model covering under 50% of its reference at under 90% identity; a high-identity exon piece of an intact gene is not flagged), with the genes in `resolution_flag_genes`. They say a called locus may be a fragment; no call, score or confidence tier changes. New module `detect/resolution_flags.py`; `DetectionOutcome.contig_lengths`.
 
 ### Fixed

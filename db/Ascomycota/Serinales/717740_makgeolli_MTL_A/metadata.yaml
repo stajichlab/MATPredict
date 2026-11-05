@@ -1,0 +1,175 @@
+record_id: 717740_makgeolli_MTL_A
+record_version: 1
+taxonomy:
+  taxid: 717740
+  lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Debaryomycetaceae;g__Hyphopichia;s__Hyphopichia_burtonii
+  lineage_resolved_date: '2026-10-24'
+organism:
+  species: Hyphopichia burtonii
+  strain:
+    name: makgeolli
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MTL
+  idiomorphs:
+  - A
+  system: unknown
+locus:
+  assembly_accession: GCA_003856795.1
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: PAP1->OBP1->PIK1->MTLA2->MTLA1
+    definition_note: Hyphopichia burtonii makgeolli (GenBank assembly GCA_003856795.1), MTL A idiomorph
+      on CP024765.1; genes in contig order PAP1->OBP1->PIK1->MTLA2->MTLA1. Gene models are the BFD (Fungi_BFD)
+      funannotate predictions of that assembly, re-derived from the NCBI contig by exon coordinates with
+      genetic code 12 (CTG = Ser). MTLA1 is FA3EFE55_005605-T1 (184 aa in the BFD proteome).
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: CP024765.1
+        seq_region: CP024765.1
+      start: 838996
+      end: 847381
+      contig_edge_distance: null
+  extended_flank: []
+genes:
+- gene_index: 2
+  name: PAP1
+  protein_accession: null
+  role: flanking_variable
+  present: true
+  locus_tag: FA3EFE55_005601
+  segment_index: 0
+  start: 838996
+  end: 840456
+  strand: '-'
+  order_in_locus: 0
+  transl_table: 12
+  codon_start: 1
+- gene_index: 3
+  name: OBP1
+  protein_accession: null
+  role: flanking_variable
+  present: true
+  locus_tag: FA3EFE55_005602
+  segment_index: 0
+  start: 841027
+  end: 842322
+  strand: +
+  order_in_locus: 1
+  transl_table: 12
+  codon_start: 1
+- gene_index: 4
+  name: PIK1
+  protein_accession: null
+  role: flanking_variable
+  present: true
+  locus_tag: FA3EFE55_005603
+  segment_index: 0
+  start: 843567
+  end: 845679
+  strand: +
+  order_in_locus: 2
+  transl_table: 12
+  exons:
+  - start: 843567
+    end: 845600
+  - start: 845671
+    end: 845679
+  codon_start: 1
+- gene_index: 0
+  name: MTLA2
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: FA3EFE55_005604
+  segment_index: 0
+  start: 845838
+  end: 846458
+  strand: +
+  order_in_locus: 3
+  transl_table: 12
+  exons:
+  - start: 845838
+    end: 846119
+  - start: 846174
+    end: 846458
+  codon_start: 1
+- gene_index: 1
+  name: MTLA1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: FA3EFE55_005605
+  segment_index: 0
+  start: 846689
+  end: 847381
+  strand: +
+  order_in_locus: 4
+  transl_table: 12
+  exons:
+  - start: 846689
+    end: 846856
+  - start: 846935
+    end: 847291
+  - start: 847352
+    end: 847381
+  codon_start: 1
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: 'TIER 3 (genome-derived, no paper). Gene models are unpublished genome-annotation
+      predictions (BFD funannotate, assembly GCA_003856795.1). MTLA1 was found by diamond blastp of curated
+      Serinales MTLA1 proteins and the NCBI Lodderomyces MTLA1 deposits (CCG24159.1, ADY62670.1) against
+      the proteome and verified by gene order: neighbours within 4 genes hit the curated C. lusitaniae
+      / C. auris proteins (PAP1 71%; OBP1 70%; PIK1 63%; MTLA2 47%); results/2026-10-24_ctg_mtla1_verify/.
+      Identity of the MTLA1 candidate to the best curated MTLA1 is 33-39%, so the assignment rests on
+      position, not sequence alone.'
+    citations: &id001 []
+  boundaries:
+    tier: 3
+    experimental_method: 'TIER 3 (genome-derived, no paper). Gene models are unpublished genome-annotation
+      predictions (BFD funannotate, assembly GCA_003856795.1). MTLA1 was found by diamond blastp of curated
+      Serinales MTLA1 proteins and the NCBI Lodderomyces MTLA1 deposits (CCG24159.1, ADY62670.1) against
+      the proteome and verified by gene order: neighbours within 4 genes hit the curated C. lusitaniae
+      / C. auris proteins (PAP1 71%; OBP1 70%; PIK1 63%; MTLA2 47%); results/2026-10-24_ctg_mtla1_verify/.
+      Identity of the MTLA1 candidate to the best curated MTLA1 is 33-39%, so the assignment rests on
+      position, not sequence alone.'
+    citations: *id001
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: 'TIER 3 (genome-derived, no paper). Gene models are unpublished genome-annotation
+      predictions (BFD funannotate, assembly GCA_003856795.1). MTLA1 was found by diamond blastp of curated
+      Serinales MTLA1 proteins and the NCBI Lodderomyces MTLA1 deposits (CCG24159.1, ADY62670.1) against
+      the proteome and verified by gene order: neighbours within 4 genes hit the curated C. lusitaniae
+      / C. auris proteins (PAP1 71%; OBP1 70%; PIK1 63%; MTLA2 47%); results/2026-10-24_ctg_mtla1_verify/.
+      Identity of the MTLA1 candidate to the best curated MTLA1 is 33-39%, so the assignment rests on
+      position, not sequence alone.'
+    citations: *id001
+validation:
+  status: accepted
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: CP024765.1
+  sequence_match:
+    status: not_applicable
+    per_gene: []
+    notes: ''
+  taxonomy_current: true
+curation:
+  proposed_by: claude-ctg-mtla1-refs
+  proposal_dedupe_key: bfd|GCA_003856795.1|MTL|A|makgeolli
+  reviewed_by: 'J. Stajich (decision 2026-11-05, #148: add the record although 11 of 389 Serinales genomes drop a tier, see results/2026-11-04_148_hyphopichia)'
+  reviewed_date: '2026-11-05'
+  notes: 'Proposed 2026-10-24 (Claude Code) for the CTG-clade MTLA1 gap: the 55 CTG-clade loci that lost
+    a polished MTLA1 model after the full-length B11243 MTLA1 record (#133) lowered hit coverage (results/2026-10-24_ctg_lost9_attribution/).
+    Gene models: BFD predictions; independent re-derivation vs BFD proteins: PAP1:486aa,M=True,diff=0,CTG_S=0;
+    OBP1:431aa,M=True,diff=0,CTG_S=0; PIK1:680aa,M=True,diff=0,CTG_S=0; MTLA2:188aa,M=True,diff=0,CTG_S=0;
+    MTLA1:184aa,M=True,diff=0,CTG_S=0.'
+model_provenance: null

@@ -19,7 +19,7 @@ Deviations from the proposal, and why:
 - **The four *Ogataea* records have two segments** (the MATa and MATalpha cassette ends sit on different contigs, as in the assemblies).
 - **Several are small fragments**: all four *Ogataea* assemblies hold the cassette ends on contigs of 2-20 kb. The low score of *O. pignaliae* (67-77) is partly fragment length, not only divergence; its MATa1 and MATalpha2 models are 58 and 53 aa. *O. siamensis* MATalpha2 uses the CBS 4732 projection because the DL-1 one has a frameshift.
 
-All six pass `validate_metadata`; `curate-db validate` (taxonomy) has not been run.
+All six pass `validate_metadata`; `curate-db validate` (2026-11-04): `taxonomy_current` and `accession_resolved` true for all six; sequence match not applicable (no protein accessions).
 
 ## Leave-one-out check (`loo_setup.sh`, `loo_run.sh`, `compare_loo.py`, `loo/compare.tsv`)
 v0.8.1 on the 134 *Ogataea* genomes with the base DB (`base`), and with the six records added (`cand`: 128 other genomes; `self0-5`: each source genome with its own record excluded by `--exclude-records`; the *boidinii* genomes still see the other strain's record).

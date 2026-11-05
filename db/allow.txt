@@ -1,0 +1,12 @@
+# MATPredict-only ALLOW list: genomes on the shared BFD suppress list for annotation-pipeline reasons that MAT detection can still search (#165).
+# Read by `matpredict detect suppress-filter` and every runner under scripts/ (src/MATPredict/detect/suppress.py). One ASMID per line, optionally ",REASON".
+# These are large (0.56-1.27 Gb) rust assemblies: run them with a long GENOME_TIMEOUT. GCA_943181505.1 ("Too small (800kb)") stays suppressed.
+GCA_902702905.1,Austropuccinia psidii: BFD list says EVM never completes (annotation only)
+GCA_003724095.1,Austropuccinia psidii Apsidii_AM: same annotation failure
+GCA_023105745.2,Austropuccinia psidii Au3-C622: same annotation failure
+GCA_001443065.1,Austropuccinia psidii Aus_3: same annotation failure
+GCA_000469055.2,Austropuccinia psidii MF-1: same annotation failure
+GCA_004125335.1,Hemileia vastatrix: too large for annotation (temp suppress)
+GCA_055473195.1,Phakopsora pachyrhizi GA_Attapulgus_14.4: same annotation failure
+GCA_055473175.1,Phakopsora pachyrhizi: funannotate_too_few_models
+GCA_055473095.1,Phakopsora pachyrhizi GA_Attapulgus_16: same annotation failure

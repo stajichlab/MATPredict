@@ -39,11 +39,17 @@ PAP1, OBP1, PIK1 neighbours, 17 without). With the policy `on`, after every call
    has each call indicated as `cassette` (role `cassette_undetermined`): the MATa and MATalpha cassettes of a pseudohomothallic
    Ogataea. Which one is expressed is not determined, and the two calls are never merged.
 
+   The same indication is made across families (curator ruling 2026-11-04, #189): two calls of different families with complementary
+   idiomorphs (one MATa-type, one MATalpha-type) at different positions each carry `cassette` with `cross_family` true and the partner
+   families. A call that is already a cassette of its own family keeps that block. Report only: it never changes a call.
+
 Everything here is pure: the pipeline passes the calls, the families and the genome's lineage.
 """
 from __future__ import annotations
 
 from dataclasses import replace
+
+from MATPredict.detect.silent_pair import split_silent_pairs
 
 POLICY_OFF = "off"
 POLICY_ON = "on"
@@ -83,12 +89,6 @@ def _score(r) -> tuple:
     """Smaller is better; the same order as `scripts/dedupe_family_calls.py`."""
     return (_CLASS_RANK.get(r.locus_class, 9), _TIER_RANK.get(r.confidence, 9), -_polished(r),
             -len(r.genes_found), r.family_key.phylum, r.family_key.locus_name)
-
-
-def _scoped_key(r) -> tuple:
-    """`_score` with the best core-gene identity (rounded to 0.01, higher is better) between the evidence terms and the family name."""
-    s = _score(r)
-    return s[:4] + (-round(_best_core_identity(r), 2),) + s[4:]
 
 
 def _groups(results: list) -> list[list[int]]:
@@ -179,18 +179,7 @@ def resolve_cross_calls(results: list, families: list, lineage: set[int]) -> lis
         ambiguous = None
         set_aside: list[int] = []
         if scoped:
-            if len({_family_name(results[i]) for i in scoped}) > 1:
-                # several families are scoped to the genome (a genus scope and a species scope): when the evidence terms of `_score`
-                # tie, the best core-gene identity decides before the family name does (#227)
-                best = min(scoped, key=lambda i: _scoped_key(results[i]))
-                tied = [i for i in scoped if i != best and _scoped_key(results[i])[:5] == _scoped_key(results[best])[:5]
-                        and _family_name(results[i]) != _family_name(results[best])]
-                if tied:
-                    ident = {f: round(max(_best_core_identity(results[i]) for i in scoped if _family_name(results[i]) == f), 2)
-                             for f in sorted({_family_name(results[i]) for i in scoped})}
-                    ambiguous = {"reason": "cross_call_scoped_tie", "kept_family": _family_name(results[best]), "identities": ident, "gap": 0.0}
-            else:
-                best = min(scoped, key=lambda i: _score(results[i]))
+            best = min(scoped, key=lambda i: _score(results[i]))
         else:
             may_win, set_aside = eligible(group)
             here = {_family_name(results[i]) for i in may_win}
@@ -289,9 +278,71 @@ def flag_cassettes(results: list, families: list) -> list:
     return out
 
 
-def apply(results: list, families: list, lineage: set[int], policy: str) -> list:
-    """The whole rule; `off` returns the calls untouched."""
+_A_TYPE, _ALPHA_TYPE = {"a", "mata"}, {"alpha", "matalpha"}
+
+
+def _mating_side(idiomorph) -> str | None:
+    """`a` or `alpha` for the idiomorph names the Saccharomycotina families use (MATa, A, MATalpha, alpha), else None."""
+    v = (idiomorph or "").lower()
+    return "a" if v in _A_TYPE else "alpha" if v in _ALPHA_TYPE else None
+
+
+def _same_place(x, y) -> bool:
+    return x.contig == y.contig and x.start <= y.end and y.start <= x.end
+
+
+ROLE_ALLELIC_PAIR = "allelic_pair"
+
+
+def _is_allelic_pair(check: dict) -> bool:
+    """Shared sequence on both sides of the idiomorph in both loci, and not a repeat (`detect.shared_flank`). Anything less, including a
+    collinear pair, stays a measurement: real cassette systems share sequence too."""
+    return bool(check.get("both_sides")) and check.get("repeat") is False
+
+
+def flag_cross_family_cassettes(results: list, shared_flank=None) -> list:
+    """`results` with `cassette` set (cross_family true) on each call that has a partner call of another family with the complementary
+    idiomorph at a different position. A call that already has a `cassette` block is left as it is.
+
+    `shared_flank(call, partner)` (optional) measures the DNA the two loci share (`detect.shared_flank`), for every partner; the measurements of
+    the most informative partner are recorded as `shared_flank_check` (with its `partner_family`). The role stays `cassette_undetermined`
+    whatever is shared, except that it becomes `allelic_pair` (one heterozygous locus) when a partner shares sequence on both sides of the
+    idiomorph in both loci and the sequence is not a repeat (curator ruling 2026-11-04)."""
+    out = list(results)
+    for i, r in enumerate(results):
+        if getattr(r, "cassette", None):
+            continue
+        side = _mating_side(r.idiomorph)
+        if side is None:
+            continue
+        partners = [q for q in results if q.family_key != r.family_key and _mating_side(q.idiomorph) not in (None, side) and not _same_place(r, q)]
+        if not partners:
+            continue
+        if shared_flank is None:
+            check = {"status": "not_run"}
+        else:
+            checks = [(q, shared_flank(r, q)) for q in partners]
+            q, check = max(checks, key=lambda qc: (_is_allelic_pair(qc[1]), qc[1].get("aligned_bp", 0)))
+            check = {**check, "partner_family": f"{q.family_key.phylum}:{q.family_key.locus_name}"}
+        role = ROLE_ALLELIC_PAIR if _is_allelic_pair(check) else CASSETTE_ROLE
+        out[i] = replace(r, cassette={
+            "idiomorph": r.idiomorph,
+            "partner_idiomorphs": sorted({q.idiomorph for q in partners}),
+            "cross_family": True,
+            "partner_families": sorted(f"{q.family_key.phylum}:{q.family_key.locus_name}" for q in partners),
+            "shared_flank_check": check,
+            "role": role,
+            "note": ("the two loci share flanking sequence on both sides of the idiomorph and it is not a repeat: the a and alpha alleles of one "
+                     "heterozygous locus, not two cassettes" if role == ROLE_ALLELIC_PAIR else
+                     "a call of another family has the complementary idiomorph at another position in this genome: possibly the two cassettes; "
+                     "which one is expressed is not determined"),
+        })
+    return out
+
+
+def apply(results: list, families: list, lineage: set[int], policy: str, shared_flank=None) -> list:
+    """The whole rule; `off` returns the calls untouched. `shared_flank` is the optional cross-family cassette check."""
     if check_policy(policy) == POLICY_OFF:
         return list(results)
-    kept = resolve_cross_calls(results, families, lineage)
-    return flag_cassettes(flag_family_status(kept, families, lineage), families)
+    kept = split_silent_pairs(resolve_cross_calls(results, families, lineage), families, lineage)
+    return flag_cross_family_cassettes(flag_cassettes(flag_family_status(kept, families, lineage), families), shared_flank)

@@ -6,6 +6,9 @@ release completed.
 
 ## [Unreleased]
 
+### Changed
+- Basidiomycota:MAT and Basidiomycota:redPR now report `two_idiomorphs` (#169; curator, 2026-11-05; `two_idiomorphs_report: true`): a genome that calls both idiomorphs of one of these families gets the report-only statement already used for Mucoromycota:MAT (arrangement, evidence, possible causes; no cause asserted, no call, idiomorph or confidence changes). On the nine v0.8.0 genomes with both idiomorphs (six MAT: *C. neoformans* x2, a *Mrakia* and others; four redPR) every one now carries the statement; one is `same_locus`, the others `unlinked`.
+
 ### Added
 - Cross-family `cassette` indication (curator ruling 2026-11-04, #189): a genome with calls of two families that have complementary idiomorphs (MATa-type and MATalpha-type) at different positions marks each call `cassette` with `cross_family: true`, `partner_families` and role `cassette_undetermined`, as the within-family MATog pair already is. Report only; no call, family or tier changes. Each block carries `shared_flank_check` measurements (`detect/shared_flank.py`, blastn on each locus +/- 20 kb, every partner checked): status, aligned bp, best identity, `both_sides` (shared sequence left and right of the idiomorph's genes in both loci) and `repeat` (a flank segment found at a third place in the genome). The role stays `cassette_undetermined` whatever is shared, except that it becomes `allelic_pair` (one heterozygous locus, e.g. *Wickerhamomyces edaphicus*) when the sequence is shared on both sides and is not a repeat; real cassette systems share sequence too (*Saccharomycopsis schoenii*), so sharing alone is only a measurement. `not_run` without blastn.
 

@@ -2,6 +2,8 @@
 
 Curator decisions (2026-11-04, #189): candidate records for the two best-evidenced genomes, tier 3, `needs_review`; family scope genus for `MATam` (taxid 36917) and species for `MATwe` (640698); label codes `AmbPhi` and `WicEda` (frozen). **Nothing is in `db/`**: the families are in `families_proposal.yml`, the records in `records/`.
 
+> **MATam is DEFERRED (curator, 2026-11-04, after the Fable review).** It is a genus family on one partial record with no fallback search; *A. philentoma* called nothing when its own record was held out. Revisit with a second record (*A. oregonensis*, after its allele check, since both its loci lie on 2.5 kb contigs, the haplotig pattern that flipped *W. edaphicus*) or `fallback_searchable: true`, and after the nucleotide comparison of every *Ambrosiozyma* pair (#189 table). The `MATam` record and family text stay here as a proposal. `MATwe` stays proposed but is only a single-species record: its "no change elsewhere" test could not have failed. Open for both records: ploidy and heterozygosity of the strains, and read depth (each allele at half coverage in *W. edaphicus*).
+
 | record | genome | what it holds |
 |---|---|---|
 | `43984_nrrl-y-7523_MATam_MATa-MATalpha` | *A. philentoma* NRRL Y-7523, GCA_003707675.3 | MATa side (DIC1, MATa2, MATa1, SLA2) on PPKZ03000004.1 and MATalpha side (MATalpha2, MATalpha1) on PPKZ03000012.1; unrelated sequence, so a cassette pair |

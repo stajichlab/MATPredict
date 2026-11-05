@@ -265,37 +265,6 @@ def test_a_set_aside_call_is_not_counted_in_the_genome_mean():
     assert c2.family_ambiguous["genome_mean_identity"] == {"Ascomycota:MATsc": 45.0, "Ascomycota:MTL": 55.0}   # 90 is not in the MTL mean
 
 
-# ---- several families scoped to the genome (S. pombe: mat1 by genus, mat2 by species; #227) ----
-POMBE, SCHIZO = 4896, 4895
-M1, M2 = FamilyKey("Ascomycota", "mat1"), FamilyKey("Ascomycota", "mat2")
-SCOPED = [_family(M1, [SCHIZO]), _family(M2, [POMBE])]
-
-
-def _with_identity(key, identity, start=100, end=5000):
-    return _scored(key, start, end, identity)
-
-
-def test_two_scoped_families_with_tied_evidence_are_decided_by_core_identity_not_the_name():
-    m1, m2 = _with_identity(M1, 88.0), _with_identity(M2, 99.5)
-    out = fs.resolve_cross_calls([m1, m2], SCOPED, {POMBE, SCHIZO})
-    assert [r.family_key for r in out] == [M2]                       # mat1 sorts first by name; mat2 fits better
-    assert out[0].cross_call[0]["family"] == "Ascomycota:mat1" and out[0].family_ambiguous is None
-
-
-def test_two_scoped_families_with_equal_identity_keep_the_name_order_and_say_so():
-    out = fs.resolve_cross_calls([_with_identity(M2, 97.0), _with_identity(M1, 97.0)], SCOPED, {POMBE, SCHIZO})
-    assert [r.family_key for r in out] == [M1]
-    assert out[0].family_ambiguous["reason"] == "cross_call_scoped_tie" and out[0].family_ambiguous["kept_family"] == "Ascomycota:mat1"
-
-
-def test_evidence_still_comes_before_identity_among_scoped_families():
-    strong = _call(M1, 100, 5000, [_gene("A", "core_MAT", 100, 900), _gene("B", "core_MAT", 1000, 2000)])
-    weak = _with_identity(M2, 99.9)
-    strong = replace(strong, gene_evidence=[replace(e, identity=60.0) for e in strong.gene_evidence])
-    out = fs.resolve_cross_calls([strong, weak], SCOPED, {POMBE, SCHIZO})
-    assert [r.family_key for r in out] == [M1]                        # more polished genes beat a higher single identity
-
-
 def _side(key, idiomorph, start, end, contig="c1"):
     return replace(_call(key, start, end, contig=contig), idiomorph=idiomorph)
 

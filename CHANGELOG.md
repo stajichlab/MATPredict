@@ -6,6 +6,9 @@ release completed.
 
 ## [Unreleased]
 
+### Known issues
+- *S. pombe* cassette labels (#227, #254): the records are cassette-only, so the mat1-P and mat2-P sequences are identical and identity cannot tell the expressed `mat1` from the silent `mat2`/`mat3` cassettes; only the arrangement can (a P and an M cassette about 11 kb apart are the silent `mat2`/`mat3` pair, a lone cassette is `mat1`). The tie-break by core identity of #252 relabelled a lone P cassette `mat1` -> `mat2` in two genomes (GCA_006386205.1, GCA_036558985.1), which is probably wrong, so it is reverted and v0.8.0 behaviour is restored; the 13 kb silent region of six more genomes is still called `mat1` M (#254). An arrangement rule is planned for v0.9.0; treat *S. pombe* `mat1`/`mat2` labels as unverified.
+
 ### Changed
 - Basidiomycota:MAT and Basidiomycota:redPR now report `two_idiomorphs` (#169; curator, 2026-11-05; `two_idiomorphs_report: true`): a genome that calls both idiomorphs of one of these families gets the report-only statement already used for Mucoromycota:MAT (arrangement, evidence, possible causes; no cause asserted, no call, idiomorph or confidence changes). On the nine v0.8.0 genomes with both idiomorphs (six MAT: *C. neoformans* x2, a *Mrakia* and others; four redPR) every one now carries the statement; one is `same_locus`, the others `unlinked`.
 
@@ -16,7 +19,6 @@ release completed.
 - Report-only `resolution_flags` on every detected locus (curator ruling 2026-11-04, #256): `contig_edge` (a core gene within 500 bp of a contig end) and `partial_core` (a core model covering under 50% of its reference at under 90% identity; a high-identity exon piece of an intact gene is not flagged), with the genes in `resolution_flag_genes`. They say a called locus may be a fragment; no call, score or confidence tier changes. New module `detect/resolution_flags.py`; `DetectionOutcome.contig_lengths`.
 
 ### Fixed
-- Cross-family policy (#227): when more than one family is scoped to the genome (a genus scope and a species scope, as `mat1` and `mat2` for *S. pombe*) and the evidence terms tie, the call with the higher best core-gene identity is kept before the family name decides; a remaining tie sets `family_ambiguous` (`cross_call_scoped_tie`). On 8 *S. pombe* genomes the silent P donor cassette is `mat2` again in the two genomes that carry it; the six others are unchanged.
 - Browser tool: a single failed download no longer ends a run. A 429, 5xx or network error on any asset (the database files, the wheels, the WebAssembly tools) is retried three times with a growing wait, or the wait the server asks for in `Retry-After`; each retry appears in the log. A permanent failure such as a 404 stops at once with a message that names the file and the status ("could not fetch matpredict.whl: HTTP 503, tried 4 times"). A first-time failure showed up as `HTTP 503` on `matpredict.whl` during a second run in the same tab, when the browser's 10-minute cache had expired and about 800 files were requested again at once.
 
 ### Changed

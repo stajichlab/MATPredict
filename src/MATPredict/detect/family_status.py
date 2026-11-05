@@ -89,12 +89,6 @@ def _score(r) -> tuple:
             -len(r.genes_found), r.family_key.phylum, r.family_key.locus_name)
 
 
-def _scoped_key(r) -> tuple:
-    """`_score` with the best core-gene identity (rounded to 0.01, higher is better) between the evidence terms and the family name."""
-    s = _score(r)
-    return s[:4] + (-round(_best_core_identity(r), 2),) + s[4:]
-
-
 def _groups(results: list) -> list[list[int]]:
     """Indices of calls that overlap one another across different families (union-find)."""
     parent = list(range(len(results)))
@@ -183,18 +177,7 @@ def resolve_cross_calls(results: list, families: list, lineage: set[int]) -> lis
         ambiguous = None
         set_aside: list[int] = []
         if scoped:
-            if len({_family_name(results[i]) for i in scoped}) > 1:
-                # several families are scoped to the genome (a genus scope and a species scope): when the evidence terms of `_score`
-                # tie, the best core-gene identity decides before the family name does (#227)
-                best = min(scoped, key=lambda i: _scoped_key(results[i]))
-                tied = [i for i in scoped if i != best and _scoped_key(results[i])[:5] == _scoped_key(results[best])[:5]
-                        and _family_name(results[i]) != _family_name(results[best])]
-                if tied:
-                    ident = {f: round(max(_best_core_identity(results[i]) for i in scoped if _family_name(results[i]) == f), 2)
-                             for f in sorted({_family_name(results[i]) for i in scoped})}
-                    ambiguous = {"reason": "cross_call_scoped_tie", "kept_family": _family_name(results[best]), "identities": ident, "gap": 0.0}
-            else:
-                best = min(scoped, key=lambda i: _score(results[i]))
+            best = min(scoped, key=lambda i: _score(results[i]))
         else:
             may_win, set_aside = eligible(group)
             here = {_family_name(results[i]) for i in may_win}

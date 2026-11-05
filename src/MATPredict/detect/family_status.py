@@ -49,6 +49,8 @@ from __future__ import annotations
 
 from dataclasses import replace
 
+from MATPredict.detect.silent_pair import split_silent_pairs
+
 POLICY_OFF = "off"
 POLICY_ON = "on"
 CROSS_FAMILY_POLICIES = (POLICY_OFF, POLICY_ON)
@@ -342,5 +344,5 @@ def apply(results: list, families: list, lineage: set[int], policy: str, shared_
     """The whole rule; `off` returns the calls untouched. `shared_flank` is the optional cross-family cassette check."""
     if check_policy(policy) == POLICY_OFF:
         return list(results)
-    kept = resolve_cross_calls(results, families, lineage)
+    kept = split_silent_pairs(resolve_cross_calls(results, families, lineage), families, lineage)
     return flag_cross_family_cassettes(flag_cassettes(flag_family_status(kept, families, lineage), families), shared_flank)

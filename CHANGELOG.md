@@ -6,10 +6,9 @@ release completed.
 
 ## [Unreleased]
 
-### Known issues
-- *S. pombe* cassette labels (#227, #254): the records are cassette-only, so the mat1-P and mat2-P sequences are identical and identity cannot tell the expressed `mat1` from the silent `mat2`/`mat3` cassettes; only the arrangement can (a P and an M cassette about 11 kb apart are the silent `mat2`/`mat3` pair, a lone cassette is `mat1`). The tie-break by core identity of #252 relabelled a lone P cassette `mat1` -> `mat2` in two genomes (GCA_006386205.1, GCA_036558985.1), which is probably wrong, so it is reverted and v0.8.0 behaviour is restored; the 13 kb silent region of six more genomes is still called `mat1` M (#254). An arrangement rule is planned for v0.9.0; treat *S. pombe* `mat1`/`mat2` labels as unverified.
-
 ### Changed
+- *S. pombe* silent cassettes (#254; curator ruling 2026-11-05): a merged `mat1` call whose genes hold a P cluster and an M cluster 5-20 kb apart on one contig (the silent `mat2`-P / `mat3`-M pair, about 11 kb apart) is split into a `mat2` P call and a `mat3` M call, each with a `cassette` block (role `silent_pair`, the partner family and the distance). The #252 tie-break by core identity is reverted (it relabelled a lone P cassette `mat2`, probably wrong: the records are cassette-only so identity cannot tell mat1 from mat2); a lone cassette elsewhere stays `mat1`; a pair farther apart (35 kb in GCA_006386235.1) stays one call marked `arrangement_ambiguous`. It applies only where the species-scoped `mat2` and `mat3` families are in the genome's lineage (*S. pombe*), as part of `--cross-family-policy on` (`detect/silent_pair.py`). It changes *S. pombe* locus counts and labels.
+
 - Basidiomycota:MAT and Basidiomycota:redPR now report `two_idiomorphs` (#169; curator, 2026-11-05; `two_idiomorphs_report: true`): a genome that calls both idiomorphs of one of these families gets the report-only statement already used for Mucoromycota:MAT (arrangement, evidence, possible causes; no cause asserted, no call, idiomorph or confidence changes). On the nine v0.8.0 genomes with both idiomorphs (six MAT: *C. neoformans* x2, a *Mrakia* and others; four redPR) every one now carries the statement; one is `same_locus`, the others `unlinked`.
 
 ### Added

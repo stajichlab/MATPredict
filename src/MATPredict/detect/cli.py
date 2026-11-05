@@ -36,7 +36,7 @@ from MATPredict.detect.provenance import RunClock, code_stamp, run_block
 from MATPredict.detect.report import _taxonomy_source, write_detection_gff3, write_detection_report
 from MATPredict.detect.rollout_aggregate import aggregate_reports, write_rollout_summary
 from MATPredict.detect.scope_audit import audit_gene_scopes, audit_scope, record_taxids_by_family
-from MATPredict.detect.suppress import default_suppress_paths, filter_rows, load_suppress_list
+from MATPredict.detect.suppress import default_allow_path, default_suppress_paths, filter_rows, load_suppress_list
 
 _ROLLOUT_REPORT_FILENAME = "detection_report.yaml"
 
@@ -488,10 +488,10 @@ def _cmd_suppress_filter(args: argparse.Namespace) -> int:
     """Filter a panel list (`ASMID<TAB>...` per line) against the suppress
     lists: kept rows to stdout, the skipped count (and each skipped ASMID) to
     stderr. The runners pipe their panel list through this before fanning out."""
-    paths = [] if args.no_default_lists else default_suppress_paths(
-        MatpredictConfig.from_env(repo_root=Path.cwd()).db_root)
+    db_root = MatpredictConfig.from_env(repo_root=Path.cwd()).db_root
+    paths = [] if args.no_default_lists else default_suppress_paths(db_root)
     paths += [Path(p) for p in args.suppress or []]
-    suppressed = load_suppress_list(paths)
+    suppressed = load_suppress_list(paths, allow=None if args.no_default_lists else default_allow_path(db_root))
     source = Path(args.list).read_text() if args.list else sys.stdin.read()
     rows = [r for r in source.splitlines() if r.strip()]
     kept, skipped = filter_rows(rows, suppressed)

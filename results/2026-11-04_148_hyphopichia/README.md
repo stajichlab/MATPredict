@@ -28,3 +28,6 @@ Same 389 genomes, same code, with the experimental noise rule of #149 variant 1b
 | 1b alone (no record) | 386 | 3 | 0 |
 | record added under 1b | 356 | 8 | 9 |
 1b clears two of the eleven drops (GCA_030444895.1, the OBP1 flank gene at 16% coverage, and GCA_030567015.1, an MTLA1 fragment at 27%). Nine remain: the six alpha-locus cross-hits (rest on the 10-point cross-hit gap, not the floor) and three A loci (GCA_030556945.1, GCA_030563265.1, GCA_030674215.1) whose MTLA2 hit covers 39-46% of its reference, above the 30% cut. So variant 1b alone is safe (3 up, 0 down on 389 genomes) but is not the fix for this record. **Recommendation: hold `717740_makgeolli_MTL_A` and move #148 to v0.9.0 with #149**; the source genome (GCA_003856795.1) is already called `A`, medium, without it.
+
+## Outcome (2026-11-05)
+The curator decided to add `717740_makgeolli_MTL_A` now, although the recommendation above was to hold it for #149 (PR #273, merged). The 11 downward changes on the 389-genome sample stand and stay open under #149.

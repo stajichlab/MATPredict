@@ -39,6 +39,10 @@ PAP1, OBP1, PIK1 neighbours, 17 without). With the policy `on`, after every call
    has each call indicated as `cassette` (role `cassette_undetermined`): the MATa and MATalpha cassettes of a pseudohomothallic
    Ogataea. Which one is expressed is not determined, and the two calls are never merged.
 
+   The same indication is made across families (curator ruling 2026-11-04, #189): two calls of different families with complementary
+   idiomorphs (one MATa-type, one MATalpha-type) at different positions each carry `cassette` with `cross_family` true and the partner
+   families. A call that is already a cassette of its own family keeps that block. Report only: it never changes a call.
+
 Everything here is pure: the pipeline passes the calls, the families and the genome's lineage.
 """
 from __future__ import annotations
@@ -289,9 +293,47 @@ def flag_cassettes(results: list, families: list) -> list:
     return out
 
 
+_A_TYPE, _ALPHA_TYPE = {"a", "mata"}, {"alpha", "matalpha"}
+
+
+def _mating_side(idiomorph) -> str | None:
+    """`a` or `alpha` for the idiomorph names the Saccharomycotina families use (MATa, A, MATalpha, alpha), else None."""
+    v = (idiomorph or "").lower()
+    return "a" if v in _A_TYPE else "alpha" if v in _ALPHA_TYPE else None
+
+
+def _same_place(x, y) -> bool:
+    return x.contig == y.contig and x.start <= y.end and y.start <= x.end
+
+
+def flag_cross_family_cassettes(results: list) -> list:
+    """`results` with `cassette` set (cross_family true) on each call that has a partner call of another family with the complementary
+    idiomorph at a different position. A call that already has a `cassette` block is left as it is."""
+    out = list(results)
+    for i, r in enumerate(results):
+        if getattr(r, "cassette", None):
+            continue
+        side = _mating_side(r.idiomorph)
+        if side is None:
+            continue
+        partners = [q for q in results if q.family_key != r.family_key and _mating_side(q.idiomorph) not in (None, side) and not _same_place(r, q)]
+        if not partners:
+            continue
+        out[i] = replace(r, cassette={
+            "idiomorph": r.idiomorph,
+            "partner_idiomorphs": sorted({q.idiomorph for q in partners}),
+            "cross_family": True,
+            "partner_families": sorted(f"{q.family_key.phylum}:{q.family_key.locus_name}" for q in partners),
+            "role": CASSETTE_ROLE,
+            "note": "a call of another family has the complementary idiomorph at another position in this genome: possibly the two cassettes; "
+                    "which one is expressed is not determined",
+        })
+    return out
+
+
 def apply(results: list, families: list, lineage: set[int], policy: str) -> list:
     """The whole rule; `off` returns the calls untouched."""
     if check_policy(policy) == POLICY_OFF:
         return list(results)
     kept = resolve_cross_calls(results, families, lineage)
-    return flag_cassettes(flag_family_status(kept, families, lineage), families)
+    return flag_cross_family_cassettes(flag_cassettes(flag_family_status(kept, families, lineage), families))

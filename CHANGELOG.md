@@ -7,6 +7,9 @@ release completed.
 ## [Unreleased]
 
 ### Added
+- Cross-family `cassette` indication (curator ruling 2026-11-04, #189): a genome with calls of two families that have complementary idiomorphs (MATa-type and MATalpha-type) at different positions marks each call `cassette` with `cross_family: true`, `partner_families` and role `cassette_undetermined`, as the within-family MATog pair already is. Report only; no call, family or tier changes.
+
+### Added
 - Report-only `resolution_flags` on every detected locus (curator ruling 2026-11-04, #256): `contig_edge` (a core gene within 500 bp of a contig end) and `partial_core` (a core model covering under 50% of its reference at under 90% identity; a high-identity exon piece of an intact gene is not flagged), with the genes in `resolution_flag_genes`. They say a called locus may be a fragment; no call, score or confidence tier changes. New module `detect/resolution_flags.py`; `DetectionOutcome.contig_lengths`.
 
 ### Fixed

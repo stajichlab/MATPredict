@@ -1313,16 +1313,23 @@ def sub_floor_genes(hits, family_key: FamilyKey, floor: float) -> set[str]:
     hit at or above the floor, or any hit with no bitscore recorded, is kept.
     """
     best: dict[str, float | None] = {}
+    # EXPERIMENT (#148/#149, not mergeable): MATPREDICT_FLOOR_EXPERIMENT=1b also treats a hit under 30% coverage and under 50 bits as noise.
+    import os
+    variant_1b = os.environ.get("MATPREDICT_FLOOR_EXPERIMENT") == "1b"
     for h in hits:
         if h.family_key != family_key:
             continue
         bits = h.bitscore
         if bits is None:
             best[h.gene_name] = None
-        elif h.gene_name not in best:
-            best[h.gene_name] = float(bits)
+            continue
+        bits = float(bits)
+        if variant_1b and h.coverage is not None and h.coverage < 30.0 and bits < 50.0:
+            bits = min(bits, floor - 1e-6)          # counts as below the floor
+        if h.gene_name not in best:
+            best[h.gene_name] = bits
         elif best[h.gene_name] is not None:
-            best[h.gene_name] = max(best[h.gene_name], float(bits))
+            best[h.gene_name] = max(best[h.gene_name], bits)
     return {g for g, b in best.items() if b is not None and b < floor}
 
 

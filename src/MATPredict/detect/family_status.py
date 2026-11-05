@@ -306,17 +306,23 @@ def _same_place(x, y) -> bool:
     return x.contig == y.contig and x.start <= y.end and y.start <= x.end
 
 
-ROLE_ALLELIC_PAIR, ROLE_DUPLICATE_HAPLOTYPE = "allelic_pair", "duplicate_haplotype"
-_ROLE_BY_FLANK_STATUS = {"shared_flank": ROLE_ALLELIC_PAIR, "collinear": ROLE_DUPLICATE_HAPLOTYPE}
+ROLE_ALLELIC_PAIR = "allelic_pair"
+
+
+def _is_allelic_pair(check: dict) -> bool:
+    """Shared sequence on both sides of the idiomorph in both loci, and not a repeat (`detect.shared_flank`). Anything less, including a
+    collinear pair, stays a measurement: real cassette systems share sequence too."""
+    return bool(check.get("both_sides")) and check.get("repeat") is False
 
 
 def flag_cross_family_cassettes(results: list, shared_flank=None) -> list:
     """`results` with `cassette` set (cross_family true) on each call that has a partner call of another family with the complementary
     idiomorph at a different position. A call that already has a `cassette` block is left as it is.
 
-    `shared_flank(call, partner)` (optional) compares the DNA around the two loci (`detect.shared_flank`); its dict is recorded as
-    `shared_flank_check`. The role stays `cassette_undetermined` when the loci are unrelated, becomes `allelic_pair` when they share
-    flanking sequence (one heterozygous locus) and `duplicate_haplotype` when they are collinear (one locus on two haplotypes)."""
+    `shared_flank(call, partner)` (optional) measures the DNA the two loci share (`detect.shared_flank`), for every partner; the measurements of
+    the most informative partner are recorded as `shared_flank_check` (with its `partner_family`). The role stays `cassette_undetermined`
+    whatever is shared, except that it becomes `allelic_pair` (one heterozygous locus) when a partner shares sequence on both sides of the
+    idiomorph in both loci and the sequence is not a repeat (curator ruling 2026-11-04)."""
     out = list(results)
     for i, r in enumerate(results):
         if getattr(r, "cassette", None):
@@ -327,8 +333,13 @@ def flag_cross_family_cassettes(results: list, shared_flank=None) -> list:
         partners = [q for q in results if q.family_key != r.family_key and _mating_side(q.idiomorph) not in (None, side) and not _same_place(r, q)]
         if not partners:
             continue
-        check = {"status": "not_run"} if shared_flank is None else shared_flank(r, partners[0])
-        role = _ROLE_BY_FLANK_STATUS.get(check["status"], CASSETTE_ROLE)
+        if shared_flank is None:
+            check = {"status": "not_run"}
+        else:
+            checks = [(q, shared_flank(r, q)) for q in partners]
+            q, check = max(checks, key=lambda qc: (_is_allelic_pair(qc[1]), qc[1].get("aligned_bp", 0)))
+            check = {**check, "partner_family": f"{q.family_key.phylum}:{q.family_key.locus_name}"}
+        role = ROLE_ALLELIC_PAIR if _is_allelic_pair(check) else CASSETTE_ROLE
         out[i] = replace(r, cassette={
             "idiomorph": r.idiomorph,
             "partner_idiomorphs": sorted({q.idiomorph for q in partners}),
@@ -336,10 +347,10 @@ def flag_cross_family_cassettes(results: list, shared_flank=None) -> list:
             "partner_families": sorted(f"{q.family_key.phylum}:{q.family_key.locus_name}" for q in partners),
             "shared_flank_check": check,
             "role": role,
-            "note": {ROLE_ALLELIC_PAIR: "the two loci share flanking sequence: the a and alpha alleles of one heterozygous locus, not two cassettes",
-                     ROLE_DUPLICATE_HAPLOTYPE: "the two loci lie on collinear contigs: one locus on two haplotypes, not two cassettes"}.get(
-                role, "a call of another family has the complementary idiomorph at another position in this genome: possibly the two cassettes; "
-                      "which one is expressed is not determined"),
+            "note": ("the two loci share flanking sequence on both sides of the idiomorph and it is not a repeat: the a and alpha alleles of one "
+                     "heterozygous locus, not two cassettes" if role == ROLE_ALLELIC_PAIR else
+                     "a call of another family has the complementary idiomorph at another position in this genome: possibly the two cassettes; "
+                     "which one is expressed is not determined"),
         })
     return out
 

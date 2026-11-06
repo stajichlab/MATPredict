@@ -1,0 +1,56 @@
+{
+ "counts": {
+  "below_min_bases": 8060,
+  "kept": 112213,
+  "no_species": 634,
+  "runs": 245822,
+  "skipped_species": 124915
+ },
+ "inputs": {
+  "gates[0]": {
+   "path": "gates_final.tsv",
+   "sha256": "43a7c506144834c56665645464ed9f56eed0bcc63b58a5fecaafa4b7dc19a6b4"
+  },
+  "gates[1]": {
+   "path": "gates_final.tsv",
+   "sha256": "205245292e7dd1f7136837b424b8bc72328ca2da99170b4e86b47025962cbb72"
+  },
+  "genome_sizes": {
+   "path": "genome_sizes.csv",
+   "sha256": "00d3edb59baafe0ee0d7df86ab9895dbc414867b4b954f24def03d32d0be58b6"
+  },
+  "runs": {
+   "path": "fungi_runs_ena_2026-11-06.tsv.gz",
+   "sha256": "ab97d01ff31cd4df8fe338a96a7f997eeef4c2f6cbb91b4f47d8517c9085f2d1"
+  },
+  "taxmap": {
+   "path": "taxonomy_species_map.csv.gz",
+   "sha256": "8710be275bf4e851fe58d53db40b45a07754f3d3725e86b8c8c497d783874a39"
+  },
+  "typed[0]": {
+   "path": "results_all_final.tsv",
+   "sha256": "7140a0ed236e4897a38a2301c946caa8f3688a053e1a2899ca3f642b7e34e35b"
+  },
+  "typed[1]": {
+   "path": "results_all_final.tsv",
+   "sha256": "8c790cf160fe76533c38f1d90a0bdb0f2d57f370349d24c83b53fcddb6d4cf2e"
+  },
+  "typed[2]": {
+   "path": "results_all.tsv",
+   "sha256": "097a7c16bed2bbb6d1d4065aa67dc633f68f00e321ec3c1bfc189d5bc4288611"
+  },
+  "typed_local[0]": {
+   "path": "cocci2_reads_vs_detect.tsv",
+   "sha256": "d586c00b5b829a344f9a2da3b655a8612d2a6453755eb815dcb2cd0241ffb030"
+  }
+ },
+ "local_inventory": true,
+ "min_bases": 300000000,
+ "min_isolates": 4,
+ "popseq_commit": "35d85b7",
+ "run_table_date": "2026-11-06",
+ "skip_species": [
+  "Saccharomyces cerevisiae"
+ ],
+ "typed_runs_not_in_run_table": {}
+}

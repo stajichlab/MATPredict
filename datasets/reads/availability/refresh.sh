@@ -22,7 +22,7 @@ WORK=${WORK:-/bigdata/stajichlab/jstajich/projects/MATPredict/results/$(date +%F
 INV=$WORK/popseq_inventory
 mkdir -p "$INV"
 : > "$INV/failed.txt"
-"$POPSEQ/.venv/bin/python" "$POPSEQ/scripts/popseq_inventory.py" --list | awk 'NF{print $1}' > "$INV/subprojects.txt"
+"$POPSEQ/.venv/bin/python" "$POPSEQ/scripts/popseq_inventory.py" --list | awk '$2 ~ /^\//{print $1}' > "$INV/subprojects.txt"
 while read -r s; do
     if ! "$POPSEQ/.venv/bin/python" "$POPSEQ/scripts/popseq_inventory.py" --subproject "$s" --out-root "$INV" > "$INV/log.$(echo "$s" | tr / _).txt" 2>&1; then
         echo "$s" >> "$INV/failed.txt"

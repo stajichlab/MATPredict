@@ -1,0 +1,754 @@
+species	species_taxid	reference_tier	wave	gate	action	public_isolates_eligible	public_studies	largest_study_frac	excluded_isolates	typed_public	typed_local	typed_local_matched_public	untyped_public_eligible	local_with_files	local_likely_public	local_not_public	calls	minor_idiomorph_frac	ci95_halfwidth_now	ci95_halfwidth_all	genome_mb
+Candidozyma auris	498019	A	wave2	PASS	expand	27295	138	0.20	evolution:110;mutant:43	50	0	0	27245	0	0	0	a:32;alpha:18	0.360	0.129	0.006	12.25
+Aspergillus fumigatus	746128	A	wave1	PASS	expand	4208	112	0.14	cross:197;evolution:5;mutant:16;not_wgs:8	50	0	0	4158	568	278	290	MAT1-1:24;MAT1-2:25;both:1	0.490	0.135	0.015	29.38
+Zymoseptoria tritici	1047171	A	wave2	PASS	expand	4116	206	0.21	cross:102;evolution:163;mutant:4	50	0	0	4066	0	0	0	MAT1-1:29;MAT1-2:19;both:1;low_depth:1	0.396	0.133	0.015	39.69
+Neurospora crassa	5141	A	wave2	PROVISIONAL	expand	1529	949	0.20	cross:259;mutant:58;not_wgs:1	50	0	0	1479	0	0	0	MAT1-1:30;MAT1-2:15;both:2;low_depth:3	0.333	0.133	0.025	41.04
+Aspergillus flavus	5059	B	wave2	PASS	expand	1324	76	0.41	mutant:13	66	0	0	1258	0	0	0	MAT1-1:30;MAT1-2:34;both:1;low_depth:1	0.469	0.119	0.027	37.75
+Lodderomyces parapsilosis	5480	A1	wave2	PASS	expand	1093	53	0.29	mutant:19;not_wgs:75	50	0	0	1043	0	0	0	a:50				13.0
+Fusarium oxysporum	5507	A	wave1	PASS	expand	785	90	0.32	evolution:39;not_wgs:2	50	0	0	736	0	0	0	MAT1-1:21;MAT1-2:27;low_depth:1;none:1	0.438	0.135	0.035	50.36
+Beauveria bassiana	176275	C	wave1	PASS	expand	653	15	0.47	not_wgs:8	50	0	0	603	0	0	0	MAT1-1:25;MAT1-2:23;both:1;low_depth:1	0.479	0.136	0.039	33.69
+Parastagonospora nodorum	13684	A	wave1	PASS	expand	477	4	0.41		32	0	0	445	0	0	0	MAT1-1:21;MAT1-2:11	0.344	0.156	0.042	37.16
+Plenodomus lingam	5022	A	wave1	PROVISIONAL	expand	456	11	0.50		33	0	0	423	0	0	0	MAT1-1:8;MAT1-2:25	0.242	0.141	0.039	42.04
+Pyrenophora teres	53485	C	wave1	PROVISIONAL	expand	441	9	0.46		32	0	0	409	0	0	0	MAT1-1:15;MAT1-2:13;low_depth:4	0.464	0.173	0.050	42.03
+Yarrowia lipolytica	4952	A	wave2	PASS	expand	415	197	0.16	mutant:9;not_wgs:20	50	0	0	365	0	0	0	A:45;B:5	0.100	0.085	0.029	20.5
+Fusarium graminearum	5518	A	wave2	PROVISIONAL	expand	353	19	0.29	evolution:1;mutant:97;not_wgs:2	50	0	0	314	0	0	0	MAT1-1:50				36.46
+Verticillium dahliae	27337	A	wave2	PASS	expand	320	17	0.60	not_wgs:18	60	0	0	263	0	0	0	MAT1-1:5;MAT1-2:53;none:2	0.086	0.075	0.031	33.83
+Neurospora discreta	29879	B	wave1	PASS	expand	223	89	0.25	cross:19	50	0	0	173	0	0	0	MAT1-1:30;MAT1-2:17;both:3	0.362	0.132	0.064	37.71
+Exophiala dermatitidis	5970	C	wave1	PASS	expand	220	94	0.36	mutant:3	50	0	0	170	24	22	2	MAT1-1:10;MAT1-2:40	0.200	0.109	0.053	26.35
+Coccidioides posadasii	199306	A	wave1	PASS	expand	263	14	0.30	not_wgs:5	50	383	55	171	0	0	0	MAT1-1:207;MAT1-2:212;both:7;low_depth:7	0.494	0.048	0.040	28.19
+Histoplasma capsulatum	5037	C	wave1	PROVISIONAL	expand	176	14	0.35	mutant:7	20	0	0	156	0	0	0	MAT1-1:8;MAT1-2:9;none:3	0.471	0.214	0.079	30.44
+Ophidiomyces ophidiicola	1387563	C	wave1	PASS	expand	89	3	0.92		15	0	0	74	92	10	82	MAT1-1:12;MAT1-2:2;low_depth:1	0.143	0.180	0.076	
+Blastomyces dermatitidis	5039	C	wave1	PROVISIONAL	expand	167	7	0.84	mutant:1	24	0	0	144	0	0	0	MAT1-1:10;MAT1-2:11;low_depth:1;none:2	0.476	0.196	0.080	66.57
+Candidozyma haemuli	45357	B	wave2	PROVISIONAL	expand	159	7	0.36		35	0	0	124	0	0	0	alpha:35				13.27
+Aspergillus niger	5061	B	wave1	PASS	expand	145	55	0.19	mutant:89	50	0	0	101	0	0	0	MAT1-1:36;MAT1-2:14	0.280	0.121	0.071	33.98
+Fusarium pseudograminearum	101028	B	wave1	PROVISIONAL	expand	98	7	0.92	mutant:22	9	0	0	90	0	0	0	MAT1-1:8;MAT1-2:1	0.111	0.208	0.062	36.86
+Fusarium culmorum	5516	B	wave1	PASS	expand	106	4	0.90		19	0	0	87	0	0	0	MAT1-1:8;MAT1-2:10;both:1	0.444	0.209	0.096	37.52
+Fusarium fujikuroi	5127	A	wave1	PASS	expand	101	6	0.89		17	0	0	84	0	0	0	MAT1-1:7;MAT1-2:8;low_depth:2	0.467	0.225	0.102	43.83
+Penicillium roqueforti	5082	C	wave1	PROVISIONAL	expand	108	7	0.31		27	0	0	81	0	0	0	MAT1-1:12;MAT1-2:13;both:2	0.480	0.182	0.096	26.94
+Beauveria pseudobassiana	931006	C	wave1	PASS	expand	88	3	0.98		10	0	0	78	0	0	0	MAT1-1:9;MAT1-2:1	0.100	0.193	0.064	
+Aspergillus oryzae	5062	B	wave1	PASS	expand	105	9	0.78	mutant:8	29	0	0	77	0	0	0	MAT1-1:20;MAT1-2:7;both:2	0.259	0.158	0.086	37.88
+Fusarium poae	36050	B	wave1	PASS	expand	90	5	0.87		20	0	0	70	0	0	0	MAT1-1:13;MAT1-2:6;both:1	0.316	0.193	0.097	
+Trichophyton mentagrophytes	523103	C	wave1	PASS	expand	103	12	0.52		40	0	0	63	0	0	0	MAT1-1:7;MAT1-2:28;none:5	0.200	0.129	0.082	23.59
+Candidozyma duobushaemuli	1231522	B	wave2	PROVISIONAL	expand	95	9	0.58		40	0	0	55	0	0	0	alpha:40				
+Aspergillus tubingensis	5068	B	wave1	PASS	expand	84	11	0.70	not_wgs:1	31	0	0	54	0	0	0	MAT1-1:17;MAT1-2:14	0.452	0.165	0.103	
+Clavispora lusitaniae	36911	A1	wave2	PASS	expand	96	15	0.24	not_wgs:31	48	0	0	48	1	0	1	a:27;alpha:18;both:1;low_depth:1;none:1	0.400	0.138	0.099	12.13
+Ophiostoma novo-ulmi	42373	B	wave1	PROVISIONAL	expand	57	1	1.00		8	0	0	49	0	0	0	MAT1-2:8				
+Exserohilum rostratum	1659837	C	wave1	PROVISIONAL	expand	40	6	0.88		9	0	0	31	0	0	0	MAT1-1:6;MAT1-2:3	0.333	0.263	0.139	
+Coccidioides immitis	5501	A	wave1	PROVISIONAL	expand	95	9	0.34	not_wgs:11	40	175	32	30	0	0	0	MAT1-1:100;MAT1-2:112;both:1;low_depth:1;none:1	0.472	0.067	0.062	28.95
+Drepanopeziza brunnea	698440	C	wave1	PROVISIONAL	expand	35	1	1.00		8	0	0	27	0	0	0	MAT1-1:1;MAT1-2:7	0.125	0.224	0.107	
+Cordyceps javanica	43265	C	wave1	PASS	expand	34	2	0.97		9	0	0	25	0	0	0	MAT1-1:9				
+Paecilomyces variotii	264951	C	wave1	PASS	expand	27	4	0.89	cross:10	10	0	0	17	0	0	0	MAT1-1:9;MAT1-2:1	0.100	0.193	0.121	
+Metarhizium robertsii	568076	C	wave1	PROVISIONAL	expand	24	3	0.92	evolution:24	10	0	0	14	0	0	0	MAT1-1:9;MAT1-2:1	0.100	0.193	0.118	
+Claviceps purpurea	5111	C	wave1	PASS	expand	23	2	0.91		10	0	0	13	0	0	0	MAT1-1:10				
+Purpureocillium lilacinum	33203	C	wave1	PASS	expand	29	7	0.72		16	0	0	13	0	0	0	MAT1-1:7;MAT1-2:9	0.438	0.219	0.170	
+Verticillium albo-atrum	27335	B	wave1	PROVISIONAL	expand	18	2	0.94		5	0	0	13	0	0	0	MAT1-1:1;MAT1-2:4	0.200	0.294	0.181	
+Aspergillus luchuensis	1069201	B	wave1	PASS	expand	36	8	0.53		25	0	0	11	0	0	0	MAT1-1:2;MAT1-2:23	0.080	0.114	0.095	
+Corynespora cassiicola	59586	C	wave1	PROVISIONAL	expand	30	6	0.53		19	0	0	11	0	0	0	MAT1-1:6;MAT1-2:12;both:1	0.333	0.200	0.164	
+Ogataea polymorpha	460523	A	wave2	PROVISIONAL	expand	14	4	0.79	cross:1;mutant:2;not_wgs:1	6	0	0	10	0	0	0	alpha:5;low_depth:1				
+Penicillium camemberti	5075	C	wave1	PROVISIONAL	expand	22	5	0.82	cross:3	12	0	0	10	0	0	0	MAT1-2:12				
+Fusarium avenaceum	40199	B	wave1	PROVISIONAL	expand	20	5	0.65	not_wgs:1	12	0	0	9	0	0	0	MAT1-1:5;MAT1-2:6;none:1	0.455	0.254	0.205	
+Zymoseptoria ardabiliae	1173716	B	wave2	PROVISIONAL	expand	21	2	0.81		12	0	0	9	0	0	0	MAT1-1:6;MAT1-2:6	0.500	0.246	0.196	
+Fusarium falciforme	195108	B	wave1	PASS	expand	24	6	0.67	not_wgs:1	17	0	0	8	0	0	0	MAT1-1:9;MAT1-2:8	0.471	0.214	0.182	
+Fusarium verticillioides	117187	B	wave1	PASS	expand	23	12	0.30	cross:9;not_wgs:1	17	0	0	7	0	0	0	MAT1-1:8;MAT1-2:8;low_depth:1	0.500	0.220	0.189	
+Monilinia fructicola	38448	C	wave1	PROVISIONAL	expand	16	3	0.88		9	0	0	7	0	0	0	MAT1-1:3;MAT1-2:6	0.333	0.263	0.207	
+Penicillium paneum	68879	C	wave1	PROVISIONAL	expand	14	2	0.50		7	0	0	7	0	0	0	MAT1-1:4;MAT1-2:3	0.429	0.296	0.230	
+Alternaria alternata	5599	C	wave1	PASS	expand	32	19	0.19		26	0	0	6	0	0	0	MAT1-1:13;MAT1-2:8;low_depth:5	0.381	0.192	0.175	
+Neurospora cerealis	29881	B	wave2	PASS	expand	14	1	1.00		8	0	0	6	0	0	0	MAT1-1:8				
+Botrytis cinerea	40559	A	wave2	PASS	expand	341	14	0.81	mutant:9	337	0	0	5	0	0	0	MAT1-1:152;MAT1-2:158;both:26;low_depth:1	0.490	0.055	0.055	42.63
+Trichoderma reesei	51453	C	wave1	PROVISIONAL	expand	24	11	0.33	cross:40;mutant:28	36	0	0	5	0	0	0	MAT1-1:7;MAT1-2:27;none:2	0.206	0.132	0.124	
+Penicillium rubens	1108849	C	wave1	PASS	expand	16	5	0.38		12	0	0	4	0	0	0	MAT1-1:9;MAT1-2:3	0.250	0.222	0.197	
+Aspergillus lentulus	293939	B	wave1	PASS	expand	15	4	0.40		12	0	0	3	0	0	0	MAT1-1:1;MAT1-2:10;both:1	0.091	0.181	0.151	
+Diaporthe eres	83184	C	wave1	PROVISIONAL	expand	10	5	0.50		7	0	0	3	0	0	0	MAT1-1:1;MAT1-2:6	0.143	0.244	0.193	
+Hortaea werneckii	91943	C	wave1	PASS	expand	30	7	0.37		27	0	0	3	0	0	0	MAT1-1:15;MAT1-2:10;both:1;none:1	0.400	0.179	0.170	
+Meyerozyma caribbica	66948	B	wave2	PROVISIONAL	expand	9	4	0.44		6	0	0	3	0	0	0	a:3;alpha:3	0.500	0.312	0.272	
+Aureobasidium melanogenum	46634	C	wave1	PROVISIONAL	expand	7	4	0.57		5	0	0	2	0	0	0	MAT1-1:4;MAT1-2:1	0.200	0.294	0.244	
+Meyerozyma guilliermondii	4929	A1	wave2	PROVISIONAL	expand	23	22	0.09		21	0	0	2	0	0	0	a:13;alpha:6;low_depth:1;none:1	0.316	0.193	0.187	
+Parastagonospora avenae	1351752	B	wave1	PASS	expand	10	1	1.00		8	0	0	2	0	0	0	MAT1-1:4;MAT1-2:4	0.500	0.285	0.263	
+Penicillium expansum	27334	C	wave1	PROVISIONAL	expand	6	6	0.17		4	0	0	2	0	0	0	MAT1-1:4				
+Verticillium nonalfalfae	1051616	B	wave2	PROVISIONAL	expand	12	4	0.50		10	0	0	2	0	0	0	MAT1-2:10				
+Alternaria tenuissima	119927	C	wave1	PASS	expand	12	6	0.58		11	0	0	1	0	0	0	MAT1-1:4;MAT1-2:6;low_depth:1	0.400	0.260	0.247	
+Aspergillus calidoustus	454130	B	wave2	PASS	expand	7	3	0.71		6	0	0	1	0	0	0	MAT1-1:1;MAT1-2:5	0.167	0.267	0.244	
+Aspergillus welwitschiae	1341132	B	wave1	PROVISIONAL	expand	7	7	0.14		6	0	0	1	0	0	0	MAT1-1:2;MAT1-2:4	0.333	0.302	0.279	
+Beauveria australis	1069076	C	wave1	PROVISIONAL	expand	7	3	0.57		6	0	0	1	0	0	0	MAT1-1:3;MAT1-2:3	0.500	0.312	0.296	
+Bipolaris sorokiniana	45130	B	wave2	PASS	expand	19	7	0.47		18	0	0	1	0	0	0	MAT1-1:8;MAT1-2:10	0.444	0.209	0.203	
+Diplodia sapinea	66738	C	wave1	PASS	expand	12	2	0.75		11	0	0	1	0	0	0	MAT1-1:5;MAT1-2:6	0.455	0.254	0.244	
+Epichloe festucae	35717	C	wave1	PROVISIONAL	expand	11	3	0.82	not_wgs:1	11	0	0	1	0	0	0	MAT1-1:7;MAT1-2:4	0.364	0.247	0.236	
+Fusarium annulatum	48484	B	wave1	PASS	expand	7	3	0.71		6	0	0	1	0	0	0	MAT1-1:1;MAT1-2:5	0.167	0.267	0.244	
+Fusarium circinatum	48490	B	wave1	PASS	expand	13	3	0.69		12	0	0	1	0	0	0	MAT1-1:1;MAT1-2:10;low_depth:1	0.091	0.181	0.170	
+Fusarium commune	249398	B	wave1	PROVISIONAL	expand	6	4	0.33		5	0	0	1	0	0	0	MAT1-1:4;MAT1-2:1	0.200	0.294	0.267	
+Penicillium brevicompactum	5074	C	wave1	PASS	expand	8	4	0.62		7	0	0	1	0	0	0	MAT1-1:7				
+Penicillium chrysogenum	5076	C	wave1	PASS	expand	24	10	0.38	cross:1;not_wgs:1	25	0	0	1	0	0	0	MAT1-1:12;MAT1-2:12;low_depth:1	0.500	0.186	0.182	
+Trichoderma asperellum	101201	C	wave1	PASS	expand	15	14	0.13		14	0	0	1	0	0	0	MAT1-1:8;MAT1-2:5;none:1	0.385	0.234	0.224	
+Trichoderma longibrachiatum	5548	C	wave1	PROVISIONAL	expand	5	5	0.20		4	0	0	1	0	0	0	MAT1-1:2;MAT1-2:2	0.500	0.350	0.326	
+Trichoderma viride	5547	C	wave1	PASS	expand	7	2	0.86		6	0	0	1	0	0	0	MAT1-1:3;MAT1-2:2;low_depth:1	0.400	0.326	0.302	
+Saccharomyces uvarum	230603	B	wave2	UNVALIDATED:typed_0.74+shared_depth_1.5+provisional_typed_0.74	unvalidated	479	20	0.75	evolution:18	40	0	0	439	0	0	0	alpha:27;low_depth:11;none:2				11.72
+Epichloe typhina	5113	C	wave1	UNVALIDATED:shared_depth_2.4	unvalidated	424	3	1.00	not_wgs:1	11	0	0	414	0	0	0	MAT1-1:8;MAT1-2:3	0.273	0.234	0.042	38.25
+Talaromyces marneffei	37727	C	wave1	UNVALIDATED:typed_0.70+provisional_typed_0.70	unvalidated	357	6	0.94		23	0	0	334	0	0	0	MAT1-1:5;MAT1-2:11;none:7	0.312	0.207	0.057	28.2
+Venturia inaequalis	5025	C	wave1	UNVALIDATED:shared_depth_2.1	unvalidated	165	5	0.39		25	0	0	140	0	0	0	MAT1-1:13;MAT1-2:7;both:1;low_depth:4	0.350	0.193	0.080	72.79
+Clonostachys rosea	29856	C	wave1	UNVALIDATED:provisional_typed_0.81	unvalidated	141	10	0.44		32	0	0	109	0	0	0	MAT1-1:9;MAT1-2:17;low_depth:6	0.346	0.172	0.086	56.92
+Geotrichum candidum	1173061	A	wave2	UNVALIDATED:typed_0.50+provisional_typed_0.50	unvalidated	99	11	0.89		16	0	0	83	0	0	0	A:8;both:1;low_depth:2;none:5				23.64
+Aspergillus parasiticus	5067	B	wave1	UNVALIDATED:typed_0.59	unvalidated	60	11	0.63	not_wgs:7	34	0	0	32	0	0	0	MAT1-1:13;MAT1-2:7;none:14	0.350	0.193	0.144	
+Fusarium sacchari	42676	B	wave1	UNVALIDATED:typed_0.62+provisional_typed_0.62	unvalidated	34	6	0.85		13	0	0	21	0	0	0	MAT1-1:2;MAT1-2:6;none:5	0.250	0.260	0.172	
+Neurospora intermedia	5142	B	wave1	UNVALIDATED:typed_0.50+shared_depth_1.5+provisional_typed_0.50	unvalidated	26	2	0.81		8	0	0	18	0	0	0	MAT1-1:4;low_depth:1;none:3				
+Trichophyton rubrum	5551	C	wave1	UNVALIDATED:typed_0.73+provisional_typed_0.73	unvalidated	56	19	0.34	mutant:1	44	0	0	13	0	0	0	MAT1-1:29;MAT1-2:3;low_depth:11;none:1	0.094	0.105	0.093	
+Dothistroma septosporum	64363	C	wave1	UNVALIDATED:agree_7of9	unvalidated	30	4	0.60		18	0	0	12	0	0	0	MAT1-1:5;MAT1-2:13	0.278	0.192	0.151	
+Fusarium lateritium	5523	B	wave1	UNVALIDATED:typed_0.67	unvalidated	16	2	0.94		9	0	0	7	0	0	0	MAT1-1:5;MAT1-2:1;both:1;low_depth:1;none:1	0.167	0.267	0.213	
+Trichoderma harzianum	5544	C	wave1	UNVALIDATED:typed_0.69+provisional_typed_0.69	unvalidated	22	15	0.14	mutant:1	16	0	0	7	0	0	0	MAT1-1:6;MAT1-2:5;none:5	0.455	0.254	0.219	
+Bipolaris maydis	5016	A	wave2	UNVALIDATED:provisional_typed_0.80	unvalidated	14	12	0.21		10	0	0	4	0	0	0	MAT1-1:5;MAT1-2:3;low_depth:2	0.375	0.279	0.247	
+Aspergillus terreus	33178	B	wave1	UNVALIDATED:typed_0.69+provisional_typed_0.69	unvalidated	19	10	0.26		16	0	0	3	0	0	0	MAT1-1:8;MAT1-2:3;none:5	0.273	0.234	0.225	
+Fusarium solani	169388	B	wave1	UNVALIDATED:typed_0.72	unvalidated	17	13	0.24	not_wgs:1	16	0	0	2	0	0	0	MAT1-1:6;MAT1-2:5;low_depth:4;none:1	0.455	0.254	0.244	
+Aspergillus hortae	1107321	B	wave2	UNVALIDATED:provisional_typed_0.80	unvalidated	6	3	0.50		5	0	0	1	0	0	0	MAT1-2:4;none:1				
+Aspergillus tamarii	41984	B	wave2	UNVALIDATED:typed_0.69+provisional_typed_0.69	unvalidated	14	6	0.43		13	0	0	1	0	0	0	MAT1-1:1;MAT1-2:8;none:4	0.111	0.208	0.193	
+Bipolaris gigantea	2695822	B	wave2	UNVALIDATED:typed_0.71+both_0.29+agree_3of5	unvalidated	8	1	1.00		7	0	0	1	0	0	0	MAT1-1:2;MAT1-2:3;both:2	0.400	0.326	0.302	
+Aspergillus sojae	41058	B	wave2	UNVALIDATED:typed_0.59+provisional_typed_0.59	unvalidated	10	2	0.70	not_wgs:7	17	0	0	0	0	0	0	MAT1-1:10;none:7				
+Fusarium equiseti	61235	B	wave1	UNVALIDATED:provisional_typed_0.75	unvalidated	4	4	0.25		4	0	0	0	0	0	0	MAT1-2:3;low_depth:1				
+Penicillium citrinum	5077	C	wave1	UNVALIDATED:provisional_typed_0.76	unvalidated	17	9	0.41		17	0	0	0	0	0	0	MAT1-1:9;MAT1-2:4;low_depth:3;none:1	0.308	0.225	0.225	
+Pyricularia grisea	148305	C	wave1	UNVALIDATED:typed_0.69	unvalidated	13	10	0.15		13	0	0	0	0	0	0	MAT1-1:7;MAT1-2:2;none:4	0.222	0.242	0.242	
+Ustilaginoidea virens	1159556	C	wave1	UNVALIDATED:provisional_typed_0.80	unvalidated	5	5	0.20		5	0	0	0	0	0	0	MAT1-1:3;MAT1-2:1;low_depth:1	0.250	0.327	0.327	
+Candida albicans	5476	A	wave2	HOLD:typed_0.35+both_0.40+agree_2of5	held	2596	169	0.15	cross:1;evolution:223;mutant:346;not_wgs:100	20	0	0	2576	0	0	0	a:3;alpha:4;both:8;low_depth:4;none:1	0.429	0.296	0.032	14.28
+Saccharomyces paradoxus	27291	B	wave2	HOLD:typed_0.00+shared_depth_1.5+provisional_typed_0.00	held	755	20	0.47	evolution:16;mutant:82	20	0	0	737	0	0	0	low_depth:3;none:17				12.02
+Saccharomyces eubayanus	1080349	B	wave2	HOLD:typed_0.10+shared_depth_1.8+provisional_typed_0.10	held	466	27	0.33	evolution:5;not_wgs:3	19	0	0	447	0	0	0	alpha:1;low_depth:5;none:13				11.67
+Macrophomina phaseolina	35725	C	wave1	HOLD:agree_11of12	held	360	10	0.60		17	0	0	343	0	0	0	MAT1-1:10;MAT1-2:6;low_depth:1	0.375	0.214	0.051	50.55
+Fusarium proliferatum	948311	B	wave1	HOLD:typed_0.45+agree_4of5	held	109	15	0.61	evolution:1	20	0	0	90	0	0	0	MAT1-1:2;MAT1-2:7;low_depth:2;none:9	0.222	0.242	0.114	45.21
+Saccharomyces pastorianus	27292	B	wave2	HOLD:typed_0.15+shared_depth_2.1+provisional_typed_0.15	held	90	20	0.26	mutant:5;not_wgs:4	20	0	0	72	0	0	0	alpha:3;low_depth:2;none:15				22.35
+Lodderomyces elongisporus	36914	B	wave2	HOLD:typed_0.00+shared_depth_0.0+provisional_typed_0.00	held	29	6	0.79		9	0	0	20	0	0	0	low_depth:9				
+Ogataea haglerorum	1937702	B	wave2	HOLD:typed_0.00+shared_depth_1.1+provisional_typed_0.00	held	23	2	0.96		5	0	0	18	0	0	0	low_depth:2;none:3				
+Aspergillus fischeri	36630	B	wave1	HOLD:typed_0.00+both_0.60+provisional_typed_0.00	held	27	6	0.59		10	0	0	17	0	0	0	both:6;none:4				
+Ogataea angusta	870730	B	wave2	HOLD:too_few_runs_2	held	12	3	0.83		0	0	0	12	0	0	0					
+Fusarium keratoplasticum	1328300	B	wave2	HOLD:typed_0.43+provisional_typed_0.43	held	17	4	0.76		7	0	0	10	0	0	0	MAT1-1:3;none:4				
+Coniothyrium glycines	1077358	C	wave1	HOLD:too_few_runs_1	held	9	3	0.56		0	0	0	9	0	0	0					
+Saccharomyces mikatae	114525	B	wave2	HOLD:typed_0.00+shared_depth_1.3+provisional_typed_0.00	held	15	4	0.47		7	0	0	8	0	0	0	low_depth:3;none:4				
+Ogataea parapolymorpha	1005962	A	wave2	HOLD:too_few_runs_3	held	6	3	0.50	cross:1;mutant:2	0	0	0	6	0	0	0					
+Aspergillus quadrilineatus	41735	B	wave1	HOLD:too_few_runs_2	held	5	4	0.40		0	0	0	5	0	0	0					
+Fusarium virguliforme	232082	B	wave2	HOLD:too_few_runs_0	held	5	3	0.60		0	0	0	5	0	0	0					
+Pneumocystis jirovecii	42068	A	wave2	HOLD:too_few_runs_2	held	5	4	0.40		0	0	0	5	0	0	0					
+Aspergillus minisclerotigenes	656917	B	wave2	HOLD:too_few_runs_2	held	4	4	0.25		0	0	0	4	0	0	0					
+Penicillium solitum	60172	C	wave1	HOLD:too_few_runs_3	held	4	4	0.25		0	0	0	4	0	0	0					
+Trichophyton tonsurans	34387	C	wave1	HOLD:too_few_runs_3	held	4	2	0.75		0	0	0	4	0	0	0					
+Fusarium meridionale	282269	B	wave2	HOLD:typed_0.00+shared_depth_0.5+provisional_typed_0.00	held	7	2	0.86		5	0	0	2	0	0	0	low_depth:5				
+Fusarium boothii	282271	B	wave2	HOLD:typed_0.00+shared_depth_0.7+provisional_typed_0.00	held	9	2	0.56		8	0	0	1	0	0	0	low_depth:4;none:4				
+Talaromyces purpureogenus	1266744	C	wave1	HOLD:many_failed	held	6	5	0.33		5	0	0	1	0	0	0	MAT1-1:1;MAT1-2:4	0.200	0.294	0.267	
+Candida boidinii		B	wave2	HOLD:too_few_runs_0	held	0	0			0	0	0	0	0	0	0					
+Morchella eximia	1582338	B	wave2	HOLD:typed_0.33+both_0.33+provisional_typed_0.33	held	6	4	0.50		6	0	0	0	0	0	0	MAT1-1:1;MAT1-2:1;both:2;none:2	0.500	0.405	0.405	
+Trichoderma atroviride	63577	C	wave1	HOLD:typed_0.40+shared_depth_1.5+provisional_typed_0.40	held	5	4	0.40		5	0	0	0	0	0	0	MAT1-2:2;low_depth:1;none:2				
+Schizosaccharomyces pombe	4896	A	wave2	HOLD:panel_L1_error	blocked_panel	1562	50	0.16	cross:203;evolution:165;mutant:850;not_wgs:15	0	0	0	1562	0	0	0					12.57
+Sclerotinia sclerotiorum	5180	A	wave2	HOLD:panel_L1_error	blocked_panel	292	7	0.65	mutant:18;not_wgs:2	0	0	0	292	0	0	0					38.33
+Lachancea thermotolerans	381046	A1	wave2	HOLD:panel_build_failed	blocked_panel	162	5	0.62	mutant:1	0	0	0	162	0	0	0					10.39
+Fusarium sambucinum	5128	B	wave2	HOLD:too_few_loci	blocked_panel	159	1	1.00		0	0	0	159	0	0	0					38.59
+Kluyveromyces lactis	28985	A	wave2	HOLD:panel_build_failed	blocked_panel	121	7	0.61		0	0	0	121	0	0	0					10.69
+Aureobasidium pullulans	5580	C	wave1	HOLD:core_kmers_low	blocked_panel	80	18	0.62		0	0	0	80	0	0	0					
+Lodderomyces orthopsilosis	273371	A1	wave2	HOLD:panel_build_failed	blocked_panel	64	12	0.42	not_wgs:4	0	0	0	64	0	0	0					
+Candida dubliniensis	42374	A1	wave2	HOLD:panel_build_failed	blocked_panel	55	13	0.62	not_wgs:20	0	0	0	55	0	0	0					
+Debaryomyces hansenii	4959	A	wave2	HOLD:panel_build_failed	blocked_panel	39	11	0.59		0	0	0	39	0	0	0					
+Zygosaccharomyces rouxii	4956	A1	wave2	HOLD:panel_build_failed	blocked_panel	37	6	0.84		0	0	0	37	0	0	0					
+Candida viswanathii	5486	B	wave2	HOLD:panel_build_failed	blocked_panel	36	4	0.61		0	0	0	36	0	0	0					
+Zygosaccharomyces bailii	4954	B	wave2	HOLD:panel_build_failed	blocked_panel	17	4	0.82		0	0	0	17	0	0	0					
+Zygosaccharomyces mellis	42258	B	wave2	HOLD:panel_build_failed	blocked_panel	17	4	0.76		0	0	0	17	0	0	0					
+Zygosaccharomyces siamensis	1074906	B	wave2	HOLD:panel_build_failed	blocked_panel	17	4	0.71		0	0	0	17	0	0	0					
+Candidozyma pseudohaemuli	418784	B	wave2	HOLD:too_few_loci	blocked_panel	12	4	0.50		0	0	0	12	0	0	0					
+Zygosaccharomyces parabailii	1365886	B	wave2	HOLD:panel_build_failed	blocked_panel	12	2	0.92		0	0	0	12	0	0	0					
+Schizosaccharomyces japonicus	4897	B	wave2	HOLD:panel_build_failed	blocked_panel	9	4	0.67	mutant:2	0	0	0	9	0	0	0					
+Morchella sextelata	1174677	B	wave2	HOLD:too_few_loci	blocked_panel	8	3	0.75		0	0	0	8	0	0	0					
+Lachancea fermentati	4955	B	wave2	HOLD:panel_build_failed	blocked_panel	7	3	0.71		0	0	0	7	0	0	0					
+Zygosaccharomyces favi	2024901	B	wave2	HOLD:panel_build_failed	blocked_panel	6	2	0.83		0	0	0	6	0	0	0					
+Aspergillus westerdijkiae	357447	B	wave2	HOLD:too_few_loci	blocked_panel	5	3	0.60		0	0	0	5	0	0	0					
+Ceratocystis fimbriata	5158	A	wave2	HOLD:panel_L1_error	blocked_panel	5	4	0.40		0	0	0	5	0	0	0					
+Zygosaccharomyces pseudobailii	1365887	B	wave2	HOLD:panel_build_failed	blocked_panel	5	3	0.60		0	0	0	5	0	0	0					
+Zygosaccharomyces sapae	1461763	B	wave2	HOLD:panel_build_failed	blocked_panel	4	3	0.50		0	0	0	4	0	0	0					
+Candida ipomoeae		B	wave2	HOLD:too_few_loci	blocked_panel	0	0			0	0	0	0	0	0	0					
+Cryptococcus neoformans	5207	B			new_candidate	3522	384	0.17	cross:351;evolution:17;mutant:34;not_wgs:29	0	0	0	3522	0	0	0					18.89
+Puccinia striiformis	27350	B			new_candidate	964	31	0.27	mutant:60	0	0	0	964	0	0	0					89.49
+Cryptococcus deneoformans	40410	A			new_candidate	511	24	0.63	mutant:124	0	0	0	511	0	0	0					19.05
+Pichia kudriavzevii	4909	A			new_candidate	490	387	0.07	not_wgs:20	0	0	0	490	0	0	0					10.81
+Puccinia triticina	208348	B			new_candidate	427	14	0.29		0	0	0	427	0	0	0					122.82
+Puccinia coronata	27344	B			new_candidate	367	5	0.44		0	0	0	367	0	0	0					99.16
+Saccharomyces cerevisiae x Saccharomyces uvarum	489137	A			new_candidate	350	6	0.58	evolution:34;mutant:2;not_wgs:1	0	0	0	350	0	0	0					22.95
+Agaricus bisporus	5341	B			new_candidate	318	6	0.67		0	0	0	318	0	0	0					30.42
+Puccinia graminis	5297	B			new_candidate	312	64	0.31	mutant:12	0	0	0	312	0	0	0					88.64
+Cryptococcus gattii	37769	B			new_candidate	296	25	0.35		0	0	0	296	0	0	0					18.37
+Melampsora laricis-populina	203908	B			new_candidate	257	176	0.18		0	0	0	257	0	0	0					101.13
+Schizophyllum commune	5334	A			new_candidate	250	28	0.62	cross:17;not_wgs:2	0	0	0	250	0	0	0					38.67
+Cryptococcus deuterogattii	1859096	B			new_candidate	231	22	0.27	mutant:3	0	0	0	231	0	0	0					17.55
+Rhizopus arrhizus	64495	A			new_candidate	204	125	0.33	not_wgs:1	0	0	0	204	0	0	0					51.3
+Rhodotorula toruloides	5286	A			new_candidate	186	120	0.32	evolution:2;mutant:1;not_wgs:5	0	0	0	186	0	0	0					20.22
+Cryptococcus bacillisporus	552467	B			new_candidate	183	11	0.64		0	0	0	183	0	0	0					17.83
+Rhodotorula mucilaginosa	5537	A			new_candidate	168	17	0.30		0	0	0	168	0	0	0					20.31
+Cryptococcus tetragattii	1859121	B			new_candidate	149	8	0.81		0	0	0	149	0	0	0					17.8
+Mucor circinelloides	36080	A			new_candidate	138	31	0.48		0	0	0	138	0	0	0					37.44
+Saccharomyces cerevisiae x Saccharomyces paradoxus	595493	A			new_candidate	126	53	0.42	cross:20;evolution:282	0	0	0	126	0	0	0					
+Saccharomyces cerevisiae x Saccharomyces eubayanus	1684324	A			new_candidate	125	8	0.30		0	0	0	125	0	0	0					23.0
+Rhizopus microsporus	58291	B			new_candidate	113	48	0.33		0	0	0	113	48	48	0					25.97
+Ustilago bromivora x Ustilago hordei	2494676	B			new_candidate	109	1	1.00		0	0	0	109	0	0	0					
+Saccharomycopsis fibuligera	4944	B			new_candidate	100	4	0.97		0	0	0	100	0	0	0					19.57
+Neurospora tetrasperma	40127	B			new_candidate	96	4	0.95	not_wgs:1	0	0	0	96	0	0	0					
+Saccharomyces cerevisiae x Saccharomyces kudriavzevii	332112	A			new_candidate	92	9	0.51		0	0	0	92	0	0	0					
+Puccinia novopanici	1904429	B			new_candidate	89	2	0.99		0	0	0	89	0	0	0					
+Rhizopogon salebrosus	176626	B			new_candidate	88	2	0.99		0	0	0	88	0	0	0					
+Puccinia polysora	684837	B			new_candidate	80	2	0.99		0	0	0	80	0	0	0					
+Plenodomus biglobosus	220672	B			new_candidate	79	4	0.92		0	0	0	79	0	0	0					
+Pseudocercospora fijiensis	1873960	A			new_candidate	78	2	0.99		0	0	0	78	0	0	0					
+Cryptococcus neoformans x Cryptococcus deneoformans	192011	B			new_candidate	77	4	0.51		0	0	0	77	0	0	0					
+Grifola frondosa	5627	A1			new_candidate	70	5	0.86		0	0	0	70	0	0	0					
+Neurospora sitophila	40126	B			new_candidate	58	2	0.98		0	0	0	58	0	0	0					
+Mycosarcoma maydis	5270	A			new_candidate	54	6	0.52	mutant:11	0	0	0	54	0	0	0					
+Coprinopsis cinerea	5346	A			new_candidate	47	38	0.13	mutant:3;not_wgs:1	0	0	0	47	0	0	0					
+Phycomyces blakesleeanus	4837	A			new_candidate	47	28	0.34		0	0	0	47	0	0	0					
+Cryptococcus amylolentus	104669	B			new_candidate	45	4	0.62	cross:46;not_wgs:1	0	0	0	45	0	0	0					
+Heterobasidion parviporum	207832	B			new_candidate	45	2	0.67		0	0	0	45	0	0	0					
+Rhizopus delemar	936053	B			new_candidate	43	8	0.70		0	0	0	43	0	0	0					
+Ophiostoma ulmi	5174	B			new_candidate	37	1	1.00		0	0	0	37	0	0	0					
+Fusarium andiyazi	520446	B			new_candidate	36	2	0.97		0	0	0	36	0	0	0					
+Candida cf. parapsilosis	2035803	B			new_candidate	35	1	1.00		0	0	0	35	0	0	0					
+Puccinia hordei	27345	B			new_candidate	35	2	0.91	not_wgs:5	0	0	0	35	0	0	0					
+Lachancea kluyveri	4934	B			new_candidate	33	4	0.85	cross:237;mutant:14	0	0	0	33	0	0	0					11.51
+Neurospora sp. CHS-2018c	2304651	B			new_candidate	32	1	1.00		0	0	0	32	0	0	0					
+Mucor piriformis	105697	B			new_candidate	29	2	0.97		0	0	0	29	0	0	0					
+Fusarium venenatum	56646	B			new_candidate	28	4	0.89		0	0	0	28	0	0	0					
+Rhodotorula sp. 'mucilaginosa hybrid'	3436079	B			new_candidate	27	1	1.00		0	0	0	27	0	0	0					
+Fusarium cf. solani	1715230	B			new_candidate	24	2	0.58		0	0	0	24	0	0	0					
+Malassezia furfur	55194	B			new_candidate	22	6	0.45		0	0	0	22	0	0	0					
+Mucor hiemalis	64493	B			new_candidate	22	22	0.05		0	0	0	22	0	0	0					
+Mucor racemosus	4841	B			new_candidate	21	21	0.05		0	0	0	21	0	0	0					
+Saccharomyces arboricola	706196	B			new_candidate	21	3	0.52		0	0	0	21	0	0	0					
+Malassezia pachydermatis	77020	B			new_candidate	20	5	0.50		0	0	0	20	0	0	0					
+Morchella importuna	1174673	A			new_candidate	20	4	0.65		0	0	0	20	0	0	0					
+Rhizopus stolonifer	4846	B			new_candidate	20	20	0.05		0	0	0	20	0	0	0					
+Rhodotorula paludigena	86838	B			new_candidate	19	5	0.79		0	0	0	19	0	0	0					
+Tuber borchii	42251	B			new_candidate	18	18	0.06		0	0	0	18	0	0	0					
+Puccinia kuehnii	133750	B			new_candidate	16	1	1.00		0	0	0	16	0	0	0					
+Rhodotorula diobovata	5288	B			new_candidate	16	4	0.81		0	0	0	16	0	0	0					
+Saccharomyces eubayanus x Saccharomyces uvarum	1911678	B			new_candidate	17	1	1.00		1	0	0	16	0	0	0	alpha:1				
+Fusarium sp.	29916	B			new_candidate	15	4	0.80		0	0	0	15	0	0	0					
+Zygosaccharomyces osmophilus	2661923	B			new_candidate	14	2	0.86		0	0	0	14	0	0	0					
+Fusarium petroliphilum	203961	B			new_candidate	13	2	0.92		0	0	0	13	0	0	0					
+Hemileia vastatrix	203904	A1			new_candidate	13	2	0.77		0	0	0	13	0	0	0					
+Neurospora sp. CHS-2018b	2304650	B			new_candidate	13	1	1.00		0	0	0	13	0	0	0					
+Pneumocystis murina	263815	B			new_candidate	13	3	0.46		0	0	0	13	0	0	0					
+Rhodotorula aff. babjevae	3434168	B			new_candidate	13	1	1.00		0	0	0	13	0	0	0					
+Circinella muscae	1171613	B			new_candidate	12	12	0.08		0	0	0	12	0	0	0					
+Petasospora fabianii	36022	A			new_candidate	12	9	0.33	not_wgs:5	0	0	0	12	0	0	0					
+Pichia inconspicua	52247	B			new_candidate	12	2	0.92		0	0	0	12	0	0	0					
+Pichia manshurica	121235	B			new_candidate	12	4	0.75		0	0	0	12	0	0	0					
+Saccharomyces cerevisiae x Saccharomyces jurei	2824671	A			new_candidate	12	1	1.00		0	0	0	12	0	0	0					
+Absidia cylindrospora	213030	B			new_candidate	11	11	0.09		0	0	0	11	0	0	0					
+Absidia glauca	4829	B			new_candidate	11	7	0.45		0	0	0	11	0	0	0					
+Mucor indicus	64623	B			new_candidate	11	11	0.09		0	0	0	11	0	0	0					
+Rhodotorula kratochvilovae	86836	A			new_candidate	11	3	0.55		0	0	0	11	0	0	0					
+Tuber melanosporum	39416	A1			new_candidate	11	6	0.55		0	0	0	11	0	0	0					
+Absidia caerulea	90261	B			new_candidate	10	10	0.10		0	0	0	10	0	0	0					
+Aspergillus carbonarius	40993	B			new_candidate	10	6	0.40		0	0	0	10	0	0	0					
+Fusarium cf. falciforme	2778372	B			new_candidate	10	1	1.00		0	0	0	10	0	0	0					
+Lachancea quebecensis	1654605	B			new_candidate	10	2	0.90		0	0	0	10	0	0	0					
+Lachancea waltii	4914	B			new_candidate	10	3	0.70		0	0	0	10	0	0	0					10.22
+Neurospora sp. CHS-2018a	2304649	B			new_candidate	10	1	1.00		0	0	0	10	0	0	0					
+Parasitella parasitica	35722	A1			new_candidate	10	6	0.50		0	0	0	10	0	0	0					
+Rhizopus azygosporus	86630	A1			new_candidate	10	4	0.70		0	0	0	10	0	0	0					
+Rhodotorula dairenensis	86832	B			new_candidate	10	3	0.80	not_wgs:1	0	0	0	10	0	0	0					
+Rhodotorula graminis	29898	A1			new_candidate	10	7	0.30		0	0	0	10	0	0	0					
+Saccharomyces cerevisiae x Saccharomyces kudriavzevii x Saccharomyces mikatae x Saccharomyces uvarum x Saccharomyces arboricola x Saccharomyces paradoxus	2305204	A			new_candidate	10	1	1.00		0	0	0	10	0	0	0					
+Fusarium purpurascens	3053730	B			new_candidate	9	1	1.00		0	0	0	9	0	0	0					
+Heterobasidion irregulare	984962	A			new_candidate	9	1	1.00	evolution:3	0	0	0	9	0	0	0					
+Saccharomyces x bayanus	4931	B			new_candidate	9	7	0.22	mutant:1	0	0	0	9	0	0	0					
+Cryptococcus hyracis	2268382	B			new_candidate	8	2	0.75		0	0	0	8	0	0	0					
+Malassezia restricta	76775	B			new_candidate	8	5	0.25		0	0	0	8	0	0	0					
+Rhodotorula aff. mucilaginosa	2771031	B			new_candidate	8	1	1.00		0	0	0	8	0	0	0					
+Rhodotorula sphaerocarpa	86839	A1			new_candidate	8	4	0.62		0	0	0	8	0	0	0					
+Saccharomyces uvarum x Saccharomyces eubayanus	1862628	B			new_candidate	18	2	0.72		10	0	0	8	0	0	0	alpha:10				
+Syncephalastrum racemosum	13706	A1			new_candidate	8	8	0.12		0	0	0	8	0	0	0					
+Zygosaccharomyces progenitor	3696756	B			new_candidate	8	1	1.00		0	0	0	8	0	0	0					
+Fusarium tardichlamydosporum	2502999	B			new_candidate	7	1	1.00		0	0	0	7	0	0	0					
+Mucor genevensis	64492	B			new_candidate	7	7	0.14		0	0	0	7	0	0	0					
+Pseudocercospora ulei	1740738	B			new_candidate	7	1	1.00		0	0	0	7	0	0	0					
+Saccharomyces sp. FC-2024a	3129044	B			new_candidate	7	1	1.00		0	0	0	7	0	0	0					
+Sporobolomyces roseus	40563	B			new_candidate	7	3	0.71		0	0	0	7	0	0	0					
+Umbelopsis ramanniana	41833	A1			new_candidate	7	7	0.14		0	0	0	7	0	0	0					
+Aspergillus sp.	5065	B			new_candidate	6	2	0.67		0	0	0	6	0	0	0					
+Cryptococcus depauperatus	5208	B			new_candidate	6	3	0.67		0	0	0	6	0	0	0					
+Cryptococcus gattii VGVI	2935097	B			new_candidate	6	2	0.83		0	0	0	6	0	0	0					
+Fusarium kuroshium	2010991	B			new_candidate	6	2	0.83		0	0	0	6	0	0	0					
+Fusarium phialophorum	2750198	B			new_candidate	6	1	1.00		0	0	0	6	0	0	0					
+Malassezia globosa	76773	B			new_candidate	6	2	0.50		0	0	0	6	0	0	0					
+Mucor luteus	156514	B			new_candidate	6	6	0.17		0	0	0	6	0	0	0					
+Mucor plumbeus	97098	B			new_candidate	6	6	0.17		0	0	0	6	0	0	0					
+Pneumocystis sp. 'macacae'	2698480	B			new_candidate	6	6	0.17		0	0	0	6	0	0	0					
+Sporobolomyces pararoseus	5003	A			new_candidate	6	5	0.33		0	0	0	6	0	0	0					
+Ustilago hordei	120017	A			new_candidate	6	1	1.00		0	0	0	6	0	0	0					
+Zygosaccharomyces gambellarensis	927244	B			new_candidate	6	2	0.83		0	0	0	6	0	0	0					
+Aspergillus vadensis	288669	B			new_candidate	5	2	0.80		0	0	0	5	0	0	0					
+Barnettozyma californica	36038	A			new_candidate	5	4	0.40		0	0	0	5	0	0	0					
+Candidozyma cf. pseudohaemuli	3231080	B			new_candidate	5	1	1.00		0	0	0	5	0	0	0					
+Circinella angarensis	1195478	B			new_candidate	5	5	0.20		0	0	0	5	0	0	0					
+Fusarium duoseptatum	2502986	B			new_candidate	5	1	1.00		0	0	0	5	0	0	0					
+Heterobasidion annosum	13563	B			new_candidate	5	1	1.00	evolution:3	0	0	0	5	0	0	0					
+Neurospora metzenbergii	588798	B			new_candidate	5	1	1.00		0	0	0	5	0	0	0					
+Pichia terricola	54551	B			new_candidate	5	5	0.20		0	0	0	5	0	0	0					
+Saccharomyces cerevisiae x Saccharomyces pastorianus	2774448	A			new_candidate	5	1	1.00		0	0	0	5	0	0	0					
+Saccharomyces jurei	1987369	B			new_candidate	5	3	0.40		0	0	0	5	0	0	0					
+Sporisorium reilianum	72558	A1			new_candidate	5	1	1.00		0	0	0	5	0	0	0					
+Umbelopsis isabellina	91625	B			new_candidate	5	5	0.20		0	0	0	5	0	0	0					
+Absidia spinosa	126712	B			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Aspergillus montevidensis	1173306	B			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Circinella umbellata	101103	A1			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Cladonia furcata	174060	B			new_candidate	4	3	0.50		0	0	0	4	0	0	0					
+Cladonia uncialis	174080	B			new_candidate	4	3	0.50		0	0	0	4	0	0	0					
+Debaryomyces fabryi	58627	B			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Fusarium brachygibbosum	679434	B			new_candidate	4	1	1.00		0	0	0	4	0	0	0					
+Fusarium cf. verticillioides	2778375	B			new_candidate	4	1	1.00		0	0	0	4	0	0	0					
+Hyphopichia burtonii	717740	A1			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Malassezia sympodialis	76777	A			new_candidate	4	2	0.75		0	0	0	4	0	0	0					
+Mucor ctenidius	101144	B			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Mucor moelleri	1302847	B			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Mycotypha microspora	64633	B			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Ophiostoma himal-ulmi	61193	B			new_candidate	4	2	0.75		0	0	0	4	0	0	0					
+Pichia californica	460514	B			new_candidate	4	3	0.50		0	0	0	4	0	0	0					
+Pichia kluyveri	36015	B			new_candidate	4	4	0.25	not_wgs:1	0	0	0	4	0	0	0					
+Pichia membranifaciens	4926	B			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Pichia nakasei	53656	B			new_candidate	4	3	0.50		0	0	0	4	0	0	0					
+Pichia sorboxylosa	49334	B			new_candidate	4	3	0.50		0	0	0	4	0	0	0					
+Pneumocystis wakefieldiae	38082	B			new_candidate	4	1	1.00		0	0	0	4	0	0	0					
+Rhizopus circinans	97099	B			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Rhodotorula babjevae	86837	B			new_candidate	4	3	0.50		0	0	0	4	0	0	0					
+Rhodotorula glutinis	5535	A			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Rhodotorula pacifica	1495444	B			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Saccharomycopsis capsularis	36036	B			new_candidate	4	4	0.25		0	0	0	4	0	0	0					
+Sporisorium scitamineum	49012	A			new_candidate	4	1	1.00		0	0	0	4	0	0	0					
+Trametes versicolor	5325	A1			new_candidate	4	3	0.50		0	0	0	4	0	0	0					
+Nakaseomyces glabratus	5478	C			needs_reference	1375	61	0.18	evolution:160;mutant:2;not_wgs:52	0	0	0	1375	0	0	0					12.73
+Pyricularia oryzae	318829	C			needs_reference	1275	67	0.10	evolution:7;mutant:48;not_wgs:238	19	0	0	1257	0	0	0	MAT1-1:7;MAT1-2:10;low_depth:2	0.412	0.212	0.028	40.98
+Blumeria graminis	34373	C			needs_reference	934	10	0.30	mutant:15	0	0	0	934	0	0	0					141.4
+Cercospora beticola	122368	C			needs_reference	687	6	0.45		0	0	0	687	0	0	0					36.07
+Trichophyton indotineae	2739387	C			needs_reference	600	14	0.56		0	0	0	600	0	0	0					22.25
+Brettanomyces bruxellensis	5007	C			needs_reference	561	14	0.77	mutant:1;not_wgs:66	0	0	0	561	0	0	0					13.15
+Lentinula edodes	5353	C			needs_reference	453	230	0.16	not_wgs:104	0	0	0	453	0	0	0					45.59
+Cryphonectria parasitica	5116	C			needs_reference	410	7	0.46		0	0	0	410	0	0	0					43.87
+Batrachochytrium dendrobatidis	109871	C			needs_reference	355	11	0.61		0	0	0	355	329	314	15					23.81
+Acarospora socialis	1307805	C			needs_reference	159	1	1.00		0	0	0	159	187	0	187					31.11
+Trichaptum abietinum	3028765	C			needs_reference	336	4	0.60		0	0	0	336	0	0	0					49.44
+Exserohilum turcicum	93612	C			needs_reference	329	7	0.44	not_wgs:2	0	0	0	329	0	0	0					43.01
+Marasmius oreades	181124	C			needs_reference	292	4	0.49		0	0	0	292	0	0	0					44.31
+Suillus luteus	5384	C			needs_reference	276	270	0.03		0	0	0	276	0	0	0					37.01
+Ascochyta rabiei	5454	C			needs_reference	252	3	0.99		0	0	0	252	0	0	0					40.85
+Ophiocordyceps sinensis	72228	C			needs_reference	237	2	1.00		0	0	0	237	0	0	0					110.88
+Podospora anserina	2587412	C			needs_reference	217	8	0.46		0	0	0	217	0	0	0					34.72
+Rhizoctonia solani	456999	C			needs_reference	211	20	0.69		0	0	0	211	0	0	0					40.7
+Boletus edulis	36056	C			needs_reference	210	7	0.64		0	0	0	210	0	0	0					41.82
+Ceratobasidium cereale	76351	C			needs_reference	206	3	0.97		0	0	0	206	0	0	0					41.5
+Rhynchosporium graminicola	2792576	C			needs_reference	196	2	0.64		0	0	0	196	0	0	0					57.76
+Agroathelia rolfsii	39291	C			needs_reference	157	4	0.98		0	0	0	157	0	0	0					37.67
+Botryosphaeria dothidea	55169	C			needs_reference	157	5	0.81		0	0	0	157	0	0	0					51.76
+Xylaria necrophora	2689400	C			needs_reference	157	1	1.00		0	0	0	157	0	0	0					
+Leptographium pseudotsugae	155674	C			needs_reference	155	1	1.00		0	0	0	155	0	0	0					
+Leucocoprinus sp.	1914972	C			needs_reference	150	1	1.00		0	0	0	150	0	0	0					
+Hypsizygus marmoreus	39966	C			needs_reference	139	4	0.57		0	0	0	139	0	0	0					43.69
+Sphaerulina musiva	85929	C			needs_reference	139	4	0.88		0	0	0	139	0	0	0					29.35
+Cercospora janseana	706553	C			needs_reference	137	2	0.99		0	0	0	137	0	0	0					39.02
+Antrodiella citrinella	2447956	C			needs_reference	121	1	1.00		0	0	0	121	0	0	0					33.02
+Phyllosticta paracitricarpa	2016321	C			needs_reference	121	1	1.00		0	0	0	121	0	0	0					30.83
+Lizanozyma spartinae	45513	C			needs_reference	109	2	0.99		0	0	0	109	0	0	0					12.13
+Microbotryum violaceum	5272	C			needs_reference	107	3	0.50		0	0	0	107	0	0	0					27.02
+Coniferiporia sulphurascens	175648	C			needs_reference	104	2	0.97		0	0	0	104	0	0	0					39.35
+Ganoderma sichuanense	1173713	C			needs_reference	96	2	0.79		0	0	0	96	0	0	0					
+Gloeoporus taxicola	81066	C			needs_reference	94	1	1.00		0	0	0	94	0	0	0					
+Hansenula anomala	4927	C			needs_reference	92	14	0.58		0	0	0	92	0	0	0					
+Hanseniaspora uvarum	29833	C			needs_reference	91	7	0.92	not_wgs:1	0	0	0	91	0	0	0					
+Amanita phalloides	67723	C			needs_reference	89	2	0.99		0	0	0	89	0	0	0					
+Metschnikowia reukaufii	27327	C			needs_reference	89	3	0.97		0	0	0	89	0	0	0					
+Phyllosticta citricarpa	55181	C			needs_reference	88	1	1.00		0	0	0	88	0	0	0					
+Blastomyces gilchristii	1681229	C			needs_reference	87	4	0.87	mutant:1	0	0	0	87	0	0	0					
+Penicillium biforme	707954	C			needs_reference	83	2	0.66		0	0	0	83	0	0	0					
+Suillus brevipes	48565	C			needs_reference	83	2	0.99		0	0	0	83	0	0	0					
+Synchytrium endobioticum	286115	C			needs_reference	83	3	0.63		0	0	0	83	0	0	0					
+Sporothrix brasiliensis	545650	C			needs_reference	82	4	0.68		0	0	0	82	0	0	0					
+Pezicula neosporulosa	1663498	C			needs_reference	75	1	1.00		0	0	0	75	0	0	0					
+Pisolithus microcarpus	178872	C			needs_reference	75	32	0.55		0	0	0	75	0	0	0					
+Cenococcum geophilum	5570	C			needs_reference	74	17	0.78		0	0	0	74	0	0	0					
+Diaporthe humulicola	2593060	C			needs_reference	73	2	0.99		0	0	0	73	0	0	0					
+Pseudogymnoascus destructans	655981	C			needs_reference	73	7	0.45		0	0	0	73	0	0	0					
+Torulaspora delbrueckii	4950	C			needs_reference	73	10	0.58	evolution:4	0	0	0	73	0	0	0					
+Neonectria neomacrospora	78403	C			needs_reference	71	1	1.00		0	0	0	71	0	0	0					
+Pyrrhoderma noxium	2282107	C			needs_reference	68	1	1.00	not_wgs:4	0	0	0	68	0	0	0					
+Calonectria pseudonaviculata	196064	C			needs_reference	67	1	1.00		0	0	0	67	0	0	0					
+Diutina catenulata	45537	C			needs_reference	67	4	0.84	not_wgs:5	0	0	0	67	0	0	0					
+Paracoccidioides brasiliensis	121759	C			needs_reference	65	3	0.48		0	0	0	65	0	0	0					
+Penicillium commune	36653	C			needs_reference	65	1	1.00		0	0	0	65	0	0	0					
+Pseudopithomyces toxicarius	3081760	C			needs_reference	64	1	1.00		0	0	0	64	0	0	0					
+Maudiozyma humilis	51915	C			needs_reference	63	6	0.90	not_wgs:1	0	0	0	63	0	0	0					
+Trichophyton interdigitale	101480	C			needs_reference	63	9	0.35		0	0	0	63	0	0	0					
+Blumeria hordei	2867405	C			needs_reference	62	7	0.85		0	0	0	62	0	0	0					
+Magnusiomyces clavatus	2496157	C			needs_reference	62	5	0.44		0	0	0	62	0	0	0					
+Tilletia maclaganii	1031713	C			needs_reference	61	61	0.02		0	0	0	61	0	0	0					
+Hymenoscyphus fraxineus	746836	C			needs_reference	59	12	0.39		0	0	0	59	0	0	0					
+Madurella mycetomatis	100816	C			needs_reference	58	4	0.48		0	0	0	58	0	0	0					
+Saitozyma podzolica	1890683	C			needs_reference	57	2	0.98		0	0	0	57	0	0	0					
+Monosporozyma unispora	27294	C			needs_reference	56	5	0.93	not_wgs:1	0	0	0	56	0	0	0					
+Nakaseomyces cf. glabratus	2953079	C			needs_reference	55	1	1.00		0	0	0	55	0	0	0					
+Pseudopithomyces chartarum	1892770	C			needs_reference	53	1	1.00		0	0	0	53	0	0	0					
+Neofusicoccum parvum	310453	C			needs_reference	50	12	0.46		0	0	0	50	0	0	0					
+Hirsutella minnesotensis	332947	C			needs_reference	49	1	1.00		0	0	0	49	0	0	0					
+Suillus tomentosus	48589	C			needs_reference	49	49	0.02		0	0	0	49	0	0	0					
+Colletotrichum fructicola	690256	C			needs_reference	47	7	0.40		0	0	0	47	0	0	0					
+Phakopsora pachyrhizi	170000	C			needs_reference	46	46	0.02		0	0	0	46	0	0	0					
+Ganoderma resinaceum	34465	C			needs_reference	45	2	0.98		0	0	0	45	0	0	0					
+Pleurotus cornucopiae	5321	C			needs_reference	44	1	1.00		0	0	0	44	0	0	0					
+Trichaptum fuscoviolaceum	2008363	C			needs_reference	43	3	0.86		0	0	0	43	0	0	0					
+Sporothrix schenckii	29908	C			needs_reference	42	8	0.31		0	0	0	42	0	0	0					
+Wolfiporia cocos	81056	C			needs_reference	42	3	0.93		0	0	0	42	0	0	0					
+Alternaria sect.		C			needs_reference	41	1	1.00		0	0	0	41	0	0	0					
+Didymella arachidicola	749598	C			needs_reference	41	2	0.98		0	0	0	41	0	0	0					
+Eutypa lata	97096	C			needs_reference	41	2	0.98		0	0	0	41	0	0	0					
+Fomitopsis pinicola	40483	C			needs_reference	41	1	1.00		0	0	0	41	0	0	0					
+Histoplasma ohiense	2902605	C			needs_reference	41	6	0.56	evolution:172;mutant:14;not_wgs:6	0	0	0	41	0	0	0					39.45
+[Candida] sp.	1853550	C			needs_reference	40	5	0.47		0	0	0	40	0	0	0					
+Lecanosticta acicola	111012	C			needs_reference	39	3	0.95		0	0	0	39	0	0	0					
+Serpula lacrymans	85982	C			needs_reference	38	3	0.89	not_wgs:1	0	0	0	38	0	0	0					
+Dryadomyces quercivorus	637633	C			needs_reference	37	2	0.97		0	0	0	37	0	0	0					
+Stereocaulon vesuvianum	83470	C			needs_reference	37	1	1.00		0	0	0	37	0	0	0					
+Penicillium sp.	5081	C			needs_reference	36	2	0.97		0	0	0	36	0	0	0					
+Pleurotus citrinopileatus	98342	C			needs_reference	35	2	0.97		0	0	0	35	0	0	0					
+Tremella fuciformis	64657	C			needs_reference	35	3	0.94		0	0	0	35	0	0	0					
+Ascosphaera apis	5105	C			needs_reference	34	3	0.94		0	0	0	34	0	0	0					
+Neonectria ditissima	78410	C			needs_reference	34	3	0.88		0	0	0	34	0	0	0					
+Sarocladium kiliense	45277	C			needs_reference	34	1	1.00		0	0	0	34	0	0	0					
+Lichtheimia corymbifera	42458	C			needs_reference	32	32	0.03		0	0	0	32	0	0	0					
+Psilocybe cubensis	181762	C			needs_reference	32	3	0.84		0	0	0	32	0	0	0					
+Flammulina velutipes	38945	C			needs_reference	31	2	0.97		0	0	0	31	0	0	0					
+Cercospora zeina	348901	C			needs_reference	30	1	1.00		0	0	0	30	0	0	0					
+Fulvia fulva	5499	C			needs_reference	30	4	0.50		0	0	0	30	0	0	0					
+Metschnikowia pulcherrima	27326	C			needs_reference	30	5	0.60		0	0	0	30	0	0	0					
+Penicillium nalgiovense	60175	C			needs_reference	30	2	0.93		0	0	0	30	0	0	0					
+Schizothecium sp. GE-2024h	3385123	C			needs_reference	30	1	1.00		0	0	0	30	0	0	0					
+Trichosporon asahii	82508	C			needs_reference	29	8	0.69	not_wgs:4	0	0	0	29	0	0	0					
+Williopsis jadinii	4903	C			needs_reference	29	8	0.69	not_wgs:4	0	0	0	29	0	0	0					
+Gelatoporia subvermispora	42742	C			needs_reference	28	8	0.75	mutant:3	0	0	0	28	0	0	0					
+Hanseniaspora guilliermondii	56406	C			needs_reference	28	7	0.79		0	0	0	28	0	0	0					
+Leucocoprinus gongylophorus	79220	C			needs_reference	28	6	0.82		0	0	0	28	0	0	0					
+Ophiocordyceps sp. 'leonardi'	2563009	C			needs_reference	28	1	1.00		0	0	0	28	0	0	0					
+Ganoderma gibbosum	34460	C			needs_reference	27	1	1.00		0	0	0	27	0	0	0					
+Laburnicola sp.	2420201	C			needs_reference	27	1	1.00		0	0	0	27	0	0	0					
+Septoria pistaciarum	1387573	C			needs_reference	27	1	1.00		0	0	0	27	0	0	0					
+Penicillium fuscoglaucum	463681	C			needs_reference	26	5	0.54		0	0	0	26	0	0	0					
+Polyporus tsugae	2075311	C			needs_reference	26	3	0.85		0	0	0	26	0	0	0					
+Geosmithia morbida	1094350	C			needs_reference	25	2	0.92		0	0	0	25	0	0	0					
+Vairimorpha ceranae	40302	C			needs_reference	25	4	0.32		0	0	0	25	0	0	0					
+Hanseniaspora opuntiae	211096	C			needs_reference	24	7	0.71		0	0	0	24	0	0	0					
+Hanseniaspora valbyensis	53685	C			needs_reference	23	7	0.70		0	0	0	23	0	0	0					
+Lipomyces starkeyi	29829	C			needs_reference	23	4	0.87		0	0	0	23	0	0	0					
+Moniliophthora roreri	221103	C			needs_reference	23	2	0.96		0	0	0	23	0	0	0					
+Penicillium salamii	1612424	C			needs_reference	22	2	0.95		0	0	0	22	0	0	0					
+Podospora tetraspora	343501	C			needs_reference	22	2	0.91		0	0	0	22	0	0	0					
+Cetradonia linearis	83788	C			needs_reference	21	1	1.00		0	0	0	21	0	0	0					
+Ganoderma lingzhi	1233435	C			needs_reference	21	4	0.86		0	0	0	21	0	0	0					
+Apophysomyces trapeziformis	679948	C			needs_reference	20	2	0.95		0	0	0	20	0	0	0					
+Auricularia auricula-judae	29892	C			needs_reference	20	3	0.90		0	0	0	20	0	0	0					
+Beauveria brongniartii	118266	C			needs_reference	20	4	0.70		0	0	0	20	0	0	0					
+Colletotrichum australisinense (nom. inval.)	2231729	C			needs_reference	20	2	0.95		0	0	0	20	0	0	0					
+Colletotrichum truncatum	5467	C			needs_reference	20	3	0.90		0	0	0	20	0	0	0					
+Ramularia collo-cygni	112498	C			needs_reference	20	2	0.95		0	0	0	20	0	0	0					
+Tricholoma matsutake	40145	C			needs_reference	20	5	0.80		0	0	0	20	0	0	0					
+Ganoderma sinense	36075	C			needs_reference	19	3	0.89	not_wgs:1	0	0	0	19	0	0	0					
+Hericium coralloides	100756	C			needs_reference	19	3	0.53		0	0	0	19	0	0	0					
+Brettanomyces anomalus	37662	C			needs_reference	18	5	0.78		0	0	0	18	0	0	0					
+Colletotrichum lupini	145971	C			needs_reference	18	5	0.78		0	0	0	18	0	0	0					
+Myrmecopterula velohortorum	2582771	C			needs_reference	18	1	1.00		0	0	0	18	0	0	0					
+Hamiltosporidium tvaerminnensis	1176355	C			needs_reference	17	2	0.88		0	0	0	17	0	0	0					
+Laccaria bicolor	29883	C			needs_reference	17	16	0.12		0	0	0	17	0	0	0					
+Pisolithus tinctorius	37468	C			needs_reference	17	17	0.06		0	0	0	17	0	0	0					
+Tilletia caries	13290	C			needs_reference	17	5	0.53		0	0	0	17	0	0	0					
+574655	574655	C			needs_reference	0	0			0	0	0	0	16	0	16					
+Armillaria gallica	47427	C			needs_reference	16	2	0.94		0	0	0	16	0	0	0					
+Penicillium palitans	293373	C			needs_reference	16	3	0.81		0	0	0	16	0	0	0					
+Penicillium swiecickii	1295096	C			needs_reference	15	15	0.07		0	0	0	15	0	0	0					
+Phyllosticta citriasiana	595635	C			needs_reference	15	2	0.93		0	0	0	15	0	0	0					
+Apophysomyces variabilis	760013	C			needs_reference	14	2	0.86		0	0	0	14	0	0	0					
+Colletotrichum gloeosporioides	474922	C			needs_reference	14	9	0.36		0	0	0	14	0	0	0					
+Ganoderma applanatum	29884	C			needs_reference	14	1	1.00		0	0	0	14	0	0	0					
+Ophiocordyceps furcata	2563008	C			needs_reference	14	1	1.00		0	0	0	14	0	0	0					
+Ophiocordyceps sp. 'saundersi'	2563010	C			needs_reference	14	1	1.00		0	0	0	14	0	0	0					
+Pisolithus albus	178870	C			needs_reference	14	14	0.07		0	0	0	14	0	0	0					
+Pisolithus croceorrhizus	2060934	C			needs_reference	14	14	0.07		0	0	0	14	0	0	0					
+Rhodosporidiobolus fluvialis	33190	C			needs_reference	14	1	1.00		0	0	0	14	0	0	0					
+fungal sp.	1709941	C			needs_reference	14	1	1.00		0	0	0	14	0	0	0					
+Beauveria asiatica	1069075	C			needs_reference	13	2	0.92		0	0	0	13	0	0	0					
+Calonectria henricotiae	1868870	C			needs_reference	13	1	1.00		0	0	0	13	0	0	0					
+Colletotrichum fioriniae	710243	C			needs_reference	13	12	0.15		0	0	0	13	0	0	0					
+Metarhizium pingshaense	1278899	C			needs_reference	13	4	0.77		0	0	0	13	0	0	0					
+Microbotryum lychnidis-dioicae	288795	C			needs_reference	13	2	0.92		0	0	0	13	0	0	0					
+Monilinia laxa	61186	C			needs_reference	13	4	0.77		0	0	0	13	0	0	0					
+Phyllosticta capitalensis	121624	C			needs_reference	13	3	0.85		0	0	0	13	0	0	0					
+Tilletia horrida	155126	C			needs_reference	13	8	0.46		0	0	0	13	0	0	0					
+Backusella lamprospora	64654	C			needs_reference	12	12	0.08		0	0	0	12	0	0	0					
+Colletotrichum lini	500171	C			needs_reference	12	1	1.00		0	0	0	12	0	0	0					
+Hanseniaspora opuntiae x Hanseniaspora pseudoguilliermondii	2598436	C			needs_reference	12	2	0.50		0	0	0	12	0	0	0					
+Pseudopithomyces palmicola	1921600	C			needs_reference	12	1	1.00		0	0	0	12	0	0	0					
+Pyrenophora seminiperda	91370	C			needs_reference	12	1	1.00		0	0	0	12	0	0	0					
+Rhizomucor pusillus	4840	C			needs_reference	12	11	0.17		0	0	0	12	0	0	0					
+Tilletia controversa	13291	C			needs_reference	12	6	0.42		0	0	0	12	0	0	0					
+Beauveria varroae	1069079	C			needs_reference	11	1	1.00		0	0	0	11	0	0	0					
+Coniferiporia weirii	135589	C			needs_reference	11	2	0.91		0	0	0	11	0	0	0					
+Hericium erinaceus	91752	C			needs_reference	11	5	0.55		0	0	0	11	0	0	0					
+Magnusiomyces capitatus	1095183	C			needs_reference	11	3	0.82		0	0	0	11	0	0	0					
+Microsporum canis	63405	C			needs_reference	11	4	0.45	not_wgs:3	0	0	0	11	0	0	0					
+Mortierella alpina	64518	C			needs_reference	11	10	0.18		0	0	0	11	0	0	0					
+Akanthomyces dipterigenus	132109	C			needs_reference	10	1	1.00		0	0	0	10	0	0	0					
+Colletotrichum acutatum	27357	C			needs_reference	10	8	0.30		0	0	0	10	0	0	0					
+Flammulina filiformis	2060913	C			needs_reference	10	2	0.90		0	0	0	10	0	0	0					
+Lichtheimia ramosa	688394	C			needs_reference	10	10	0.10		0	0	0	10	0	0	0					
+Lomentospora prolificans	41688	C			needs_reference	10	3	0.70		0	0	0	10	0	0	0					
+Lophodermium australe	66502	C			needs_reference	10	1	1.00		0	0	0	10	0	0	0					
+Naganishia albida	100951	C			needs_reference	10	6	0.40	cross:2	0	0	0	10	0	0	0					
+Ordospora colligata	174685	C			needs_reference	10	2	0.70		0	0	0	10	0	0	0					
+Saccharomycodes ludwigii	36035	C			needs_reference	10	3	0.80	cross:34;evolution:63	0	0	0	10	0	0	0					12.5
+Batrachochytrium salamandrivorans	1357716	C			needs_reference	9	2	0.89		0	0	0	9	0	0	0					
+Calonectria ilicicola	182845	C			needs_reference	9	2	0.89		0	0	0	9	0	0	0					
+Colletotrichum nymphaeae	306554	C			needs_reference	9	9	0.11		0	0	0	9	0	0	0					
+Colletotrichum siamense	690259	C			needs_reference	9	4	0.56		0	0	0	9	0	0	0					
+Cyclocybe aegerita	1973307	C			needs_reference	9	9	0.11		0	0	0	9	0	0	0					
+Hanseniaspora occidentalis	56407	C			needs_reference	9	7	0.22		0	0	0	9	0	0	0					
+Histoplasma mississippiense	2059318	C			needs_reference	9	1	1.00		0	0	0	9	0	0	0					
+Microsporum audouinii	34393	C			needs_reference	9	4	0.33		0	0	0	9	0	0	0					
+Phaeoacremonium minimum	223192	C			needs_reference	9	3	0.44		0	0	0	9	0	0	0					
+Rhynchosporium secalis	38038	C			needs_reference	9	1	1.00		0	0	0	9	0	0	0					
+Arxiozyma pintolopesii	278025	C			needs_reference	8	3	0.62		0	0	0	8	0	0	0					
+Colletotrichum godetiae	1209918	C			needs_reference	8	8	0.12		0	0	0	8	0	0	0					
+Colletotrichum graminicola	31870	C			needs_reference	8	3	0.75		0	0	0	8	0	0	0					
+Colletotrichum scovillei	1209932	C			needs_reference	8	2	0.88	not_wgs:2	0	0	0	8	0	0	0					
+Coniochaeta ligniaria	177197	C			needs_reference	8	8	0.12		0	0	0	8	0	0	0					
+Cunninghamella elegans	4853	C			needs_reference	8	8	0.12		0	0	0	8	0	0	0					
+Diaporthe destruens	748119	C			needs_reference	8	2	0.88		0	0	0	8	0	0	0					
+Diplodia seriata	420778	C			needs_reference	8	6	0.25		0	0	0	8	0	0	0					
+Linnemannia elongata	310910	C			needs_reference	8	8	0.12		0	0	0	8	0	0	0					
+Myriodontium keratinophilum	150376	C			needs_reference	8	1	1.00		0	0	0	8	0	0	0					
+Myrmecopterula nudihortorum	2582766	C			needs_reference	8	1	1.00		0	0	0	8	0	0	0					
+Nakaseomyces bracarensis	273131	C			needs_reference	8	2	0.88		0	0	0	8	0	0	0					
+Nematocida ausubeli	1913371	C			needs_reference	8	3	0.62		0	0	0	8	0	0	0					
+Nosema bombycis	27978	C			needs_reference	8	1	1.00		0	0	0	8	0	0	0					
+Pleurotus ostreatus	5322	C			needs_reference	8	6	0.25	mutant:27	0	0	0	8	0	0	0					
+Podospora comata	48703	C			needs_reference	8	4	0.50		0	0	0	8	0	0	0					
+Rhynchosporium agropyri	914238	C			needs_reference	8	1	1.00		0	0	0	8	0	0	0					
+Schizothecium sp. GE-2024c	3385118	C			needs_reference	8	1	1.00		0	0	0	8	0	0	0					
+Tardiomyces blankii	45524	C			needs_reference	8	8	0.12		0	0	0	8	0	0	0					
+Tilletia laevis	157183	C			needs_reference	8	5	0.38		0	0	0	8	0	0	0					
+Torulaspora microellipsoides	1136883	C			needs_reference	8	6	0.38		0	0	0	8	0	0	0					
+Trichoderma sp.	1715253	C			needs_reference	8	1	1.00		0	0	0	8	0	0	0					
+Vishniacozyma carnescens	214994	C			needs_reference	8	2	0.88		0	0	0	8	0	0	0					
+Aphanoascus verrucosus	180776	C			needs_reference	7	1	1.00		0	0	0	7	0	0	0					
+Backusella circina	64653	C			needs_reference	7	6	0.29		0	0	0	7	0	0	0					
+Brettanomyces naardenensis	13370	C			needs_reference	7	5	0.43		0	0	0	7	0	0	0					
+Cadophora malorum	108018	C			needs_reference	7	2	0.86		0	0	0	7	0	0	0					
+Ceratocystiopsis minuta	360147	C			needs_reference	7	1	1.00		0	0	0	7	0	0	0					
+Cunninghamella bertholletiae	90251	C			needs_reference	7	7	0.14		0	0	0	7	0	0	0					
+Cunninghamella echinulata	76405	C			needs_reference	7	7	0.14		0	0	0	7	0	0	0					
+Entelexis paramagnoliae	5490	C			needs_reference	7	3	0.71		0	0	0	7	0	0	0					
+Entomortierella parvispora	205924	C			needs_reference	7	7	0.14		0	0	0	7	0	0	0					
+Gongronella butleri	101105	C			needs_reference	7	7	0.14		0	0	0	7	0	0	0					
+Lentinus tigrinus	5365	C			needs_reference	7	7	0.14		0	0	0	7	0	0	0					
+Nothopassalora personata	2060155	C			needs_reference	7	4	0.43		0	0	0	7	0	0	0					
+Papiliotrema laurentii	5418	C			needs_reference	7	4	0.43	evolution:2	0	0	0	7	0	0	0					
+Penicillium sp. JPV-2025a	3420822	C			needs_reference	7	1	1.00		0	0	0	7	0	0	0					
+Pirella circinans	64646	C			needs_reference	7	7	0.14		0	0	0	7	0	0	0					
+Podospora pseudoanserina	2609844	C			needs_reference	7	3	0.57		0	0	0	7	0	0	0					
+Sordaria macrospora	5147	C			needs_reference	7	4	0.43	mutant:6	0	0	0	7	0	0	0					
+Suzukiozyma palmioleophila	45574	C			needs_reference	7	6	0.29		0	0	0	7	0	0	0					
+Tardiomyces depauwii	3071767	C			needs_reference	7	1	1.00		0	0	0	7	0	0	0					
+Torulaspora asahi	3680288	C			needs_reference	7	3	0.43		0	0	0	7	0	0	0					
+Tylopilus aff. balloui	2126720	C			needs_reference	7	1	1.00		0	0	0	7	0	0	0					
+[Candida] boidinii	5477	C			needs_reference	7	5	0.43		0	0	0	7	0	0	0					
+Actinomucor elegans	64647	C			needs_reference	6	6	0.17		0	0	0	6	0	0	0					
+Colletotrichum sublineola	1173701	C			needs_reference	6	3	0.67		0	0	0	6	0	0	0					
+Cystobasidium slooffiae	106018	C			needs_reference	6	2	0.50		0	0	0	6	0	0	0					
+Diaporthe phoenicicola	1214574	C			needs_reference	6	1	1.00		0	0	0	6	0	0	0					
+Encephalitozoon cuniculi	6035	C			needs_reference	6	4	0.50		0	0	0	6	0	0	0					
+Erysiphe necator	52586	C			needs_reference	6	6	0.17		0	0	0	6	0	0	0					
+Escovopsis weberi	150374	C			needs_reference	6	2	0.50		0	0	0	6	0	0	0					
+Filobasidium globisporum	89934	C			needs_reference	6	2	0.83		0	0	0	6	0	0	0					
+Gemmamyces piceae	1770616	C			needs_reference	6	2	0.67		0	0	0	6	0	0	0					
+Hanseniaspora clermontiae	211099	C			needs_reference	6	6	0.17		0	0	0	6	0	0	0					
+Hanseniaspora jakobsenii	1926583	C			needs_reference	6	6	0.17		0	0	0	6	0	0	0					
+Hanseniaspora pseudoguilliermondii	332229	C			needs_reference	6	6	0.17		0	0	0	6	0	0	0					
+Hanseniaspora singularis (nom. inval.)	572238	C			needs_reference	6	6	0.17		0	0	0	6	0	0	0					
+Hanseniaspora thailandica (nom. inval.)	689838	C			needs_reference	6	6	0.17		0	0	0	6	0	0	0					
+Metschnikowia bicuspidata	27322	C			needs_reference	6	4	0.50		0	0	0	6	0	0	0					
+Microascus alveolaris	1651237	C			needs_reference	6	1	1.00		0	0	0	6	0	0	0					
+Mrakia blollopis	696254	C			needs_reference	6	1	1.00		0	0	0	6	0	0	0					
+Nematocida parisii	586133	C			needs_reference	6	1	1.00		0	0	0	6	0	0	0					
+Penicillium verrucosum	60171	C			needs_reference	6	2	0.83		0	0	0	6	0	0	0					
+Phaffia rhodozyma	264483	C			needs_reference	6	4	0.50	mutant:40;not_wgs:1	0	0	0	6	0	0	0					
+Pisolithus thermaeus	2136032	C			needs_reference	6	6	0.17		0	0	0	6	0	0	0					
+Pseudopithomyces pavgii	3081757	C			needs_reference	6	1	1.00		0	0	0	6	0	0	0					
+Rhizophagus irregularis	588596	C			needs_reference	6	6	0.17		0	0	0	6	0	0	0					
+Scedosporium apiospermum	563466	C			needs_reference	6	5	0.33		0	0	0	6	0	0	0					
+Schizothecium sp. GE-2024d	3385119	C			needs_reference	6	1	1.00		0	0	0	6	0	0	0					
+Spathaspora passalidarum	340170	C			needs_reference	6	3	0.50	evolution:4;mutant:1	0	0	0	6	0	0	0					
+Starmerella bacillaris	1247836	C			needs_reference	6	5	0.33	not_wgs:1	0	0	0	6	0	0	0					
+Torulaspora pretoriensis	35629	C			needs_reference	6	2	0.83		0	0	0	6	0	0	0					
+Amylomyces rouxii	29923	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Backusella dispersa	2583355	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Blastobotrys raffinosifermentans	1548389	C			needs_reference	5	3	0.40		0	0	0	5	0	0	0					
+Boletus variipes	182791	C			needs_reference	5	2	0.60		0	0	0	5	0	0	0					
+Brettanomyces custersianus	13368	C			needs_reference	5	3	0.60		0	0	0	5	0	0	0					
+Ceratobasidium sp.	1768090	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Cercospora sojina	438356	C			needs_reference	5	3	0.60		0	0	0	5	0	0	0					
+Coemansia aciculifera	417176	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Coemansia erecta	147472	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Colletotrichum salicis	1209931	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Colletotrichum tofieldiae	708197	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Cystobasidium ongulense	1930695	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Didymella pinodes	749589	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Epidermophyton floccosum	34391	C			needs_reference	5	3	0.60		0	0	0	5	0	0	0					
+Ganoderma lucidum	5315	C			needs_reference	5	4	0.40	not_wgs:3	0	0	0	5	0	0	0					
+Glugoides intestinalis	174680	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Gyromitra venenata	2857109	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Hamiltosporidium magnivora	148818	C			needs_reference	5	2	0.60		0	0	0	5	0	0	0					
+Hanseniaspora nectarophila	1443074	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Hypocrella siamensis	696354	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Lecanoropsis subintricata	741392	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Lentinula raphanica	153919	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Leptographium wageneri	155671	C			needs_reference	5	2	0.80		0	0	0	5	0	0	0					
+Lichtheimia hyalospora	420593	C			needs_reference	5	4	0.40		0	0	0	5	0	0	0					
+Lichtheimia ornata	688661	C			needs_reference	5	4	0.40		0	0	0	5	0	0	0					
+Linnemannia hyalina	64524	C			needs_reference	5	2	0.80		0	0	0	5	0	0	0					
+Madurella pseudomycetomatis (nom. inval.)	1157609	C			needs_reference	5	2	0.80		0	0	0	5	0	0	0					
+Metschnikowia chrysoperlae	261276	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Metschnikowia matae	1697385	C			needs_reference	5	2	0.60		0	0	0	5	0	0	0					
+Microsporum ferrugineum	77205	C			needs_reference	5	3	0.40		0	0	0	5	0	0	0					
+Mitosporidium daphniae	1485682	C			needs_reference	5	2	0.80		0	0	0	5	0	0	0					
+Monascus purpureus	5098	C			needs_reference	5	5	0.20	mutant:4	0	0	0	5	0	0	0					
+Mycogone perniciosa	494059	C			needs_reference	5	2	0.80		0	0	0	5	0	0	0					
+Penicillium olsonii	99116	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Piptocephalis cylindrospora	1907219	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Scheffersomyces stipitis	4924	C			needs_reference	5	3	0.60	mutant:1	0	0	0	5	0	0	0					
+Schizothecium sp. GE-2024i	3385836	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Scopulariopsis brevicaulis	561152	C			needs_reference	5	3	0.60		0	0	0	5	0	0	0					
+Starmerella bombicola	75736	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Suillus collinitus	48567	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Sympodiorosea sp.	2723699	C			needs_reference	5	2	0.60		0	0	0	5	0	0	0					
+Syncephalis pseudoplumigaleata	1712513	C			needs_reference	5	2	0.80		0	0	0	5	0	0	0					
+Taiwanofungus camphoratus	2696576	C			needs_reference	5	2	0.80	not_wgs:1	0	0	0	5	0	0	0					
+Thermothielavioides terrestris	2587410	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Torulaspora jiuxiensis	3398717	C			needs_reference	5	1	1.00		0	0	0	5	0	0	0					
+Torulaspora kanakia	3680293	C			needs_reference	5	2	0.60		0	0	0	5	0	0	0					
+Trichoderma asperelloides	702382	C			needs_reference	5	5	0.20		0	0	0	5	0	0	0					
+Trichophyton soudanense	69891	C			needs_reference	5	2	0.80		0	0	0	5	0	0	0					
+Zygotorulaspora florentina	48255	C			needs_reference	5	4	0.40		0	0	0	5	0	0	0					
+Amorphotheca resinae	5101	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Armillaria mellea	47429	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Babjeviella inositovora	45609	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Blastomyces percursus	1658174	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Boletus pinophilus	57192	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Buellia spuria	2654850	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Camarosporium strobilinum	2949312	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Ceratocystiopsis rollhanseniana	360464	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Chaetocladium brefeldii	101089	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Clonostachys byssicola	160290	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Colletotrichum camelliae	538528	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Colletotrichum cereale	343994	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Colletotrichum navitas	681940	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Coprinellus micaceus	71717	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Cordyceps farinosa	89141	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Curvularia lunata	5503	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Cutaneotrichosporon cavernicola	279322	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Diaporthe sp. ZZ-2024aj	3342879	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Dichomitus squalens	114155	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Dioszegia hungarica	4972	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Diplodia mutila	85927	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Drechmeria coniospora	98403	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Elsinoe fawcettii	40997	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Encephalitozoon intestinalis	58839	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Entelexis gropengiesseri	45555	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Filobasidium magnum	104409	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Ganoderma leucocontextum	1566825	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Ganoderma multipileum	1173714	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Hanseniaspora gamundiae	2094518	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Hemisphaericaspora subhashii	561895	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Heterodermia speciosa	116794	C			needs_reference	4	2	0.50		0	0	0	4	0	0	0					
+Holtermanniella wattica	207911	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Kurtzmaniella cleridarum	121466	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Laccaria trichodermophora	344589	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Lichtheimia blakesleeana	101563	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Marasmius tenuissimus	585030	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Marquandomyces marquandii	64636	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Metschnikowia bowlesiae	1699426	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Metschnikowia dekortorum	174643	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Metschnikowia rubicola	2201248	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Monosporozyma servazzii	27293	C			needs_reference	4	3	0.50	not_wgs:1	0	0	0	4	0	0	0					
+Mrakia gelida	105766	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Mycena chlorophos	658473	C			needs_reference	4	2	0.50		0	0	0	4	0	0	0					
+Mycena sanguinolenta	230812	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Naganishia liquefaciens	104408	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Nothophaeocryptopus gaeumannii	2060159	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Pallidohirschioporus biformis	50381	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Papiliotrema flavescens	214993	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Paracoccidioides lutzii	1048829	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Penicillium sclerotiorum	69788	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Phellinus hartigii	83425	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Phellopilus nigrolimitatus	127956	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Phymatotrichopsis omnivora	231936	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Pilaira anomala	64641	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Pleurotus pulmonarius	28995	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Podila verticillata	78898	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Podospora pauciseta	2587415	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Pulveroboletus ravenelii	80668	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Rhynchobrunnera orthospora	210010	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Schizothecium sp. GE-2024k	3385839	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Serendipita vermifera	109899	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Stagonosporopsis dorenboschii	749892	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Starmerella apicola	29830	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Starmerella bombi	45526	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Stemphylium vesicarium	119933	C			needs_reference	4	2	0.50		0	0	0	4	0	0	0					
+Thamnidium elegans	101142	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Thermochaetoides thermophila	209285	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Tilletia indica	43049	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Torulaspora obscura	3680297	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Trichophyton violaceum	34388	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Trichosporon ovoides	82524	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Venturia pyrina	415593	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Verpa bohemica	44609	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Viridothelium virens	1048519	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+Wickerhamiella domercqiae	45788	C			needs_reference	4	4	0.25		0	0	0	4	0	0	0					
+Zygotorulaspora cornina	2726502	C			needs_reference	4	1	1.00		0	0	0	4	0	0	0					
+Zygotorulaspora mrakii	42260	C			needs_reference	4	3	0.50		0	0	0	4	0	0	0					
+[Candida] ipomoeae	1807681	C			needs_reference	4	2	0.75		0	0	0	4	0	0	0					
+Candida tropicalis	5482	B	wave2	PROVISIONAL_HOMOTHALLIC	homothallic	1011	39	0.45	mutant:1;not_wgs:14	50	0	0	961	0	0	0	a:4;both:46				14.58
+Komagataella phaffii	460519	A	wave2	PROVISIONAL_HOMOTHALLIC	homothallic	177	19	0.27	cross:64;mutant:77	50	0	0	135	0	0	0	both:50				9.22
+Aspergillus nidulans	162425	A	wave2	PROVISIONAL_HOMOTHALLIC	homothallic	165	87	0.25	mutant:33	50	0	0	126	0	0	0	both:50				29.83
+Aspergillus latus	41734	B	wave1	PROVISIONAL_HOMOTHALLIC	homothallic	34	5	0.65		7	0	0	27	0	0	0	MAT1-2:1;both:6				
+Neurospora tetraspora	94610	B	wave1	PROVISIONAL_HOMOTHALLIC	homothallic	35	1	1.00		8	0	0	27	0	0	0	MAT1-1:2;both:6				
+Lodderomyces metapsilosis	273372	A1	wave2	PROVISIONAL_HOMOTHALLIC	homothallic	58	9	0.43		37	0	0	21	0	0	0	a:8;alpha:2;both:27	0.200	0.227	0.182	
+Kluyveromyces marxianus	4911	B	wave2	PROVISIONAL_HOMOTHALLIC	homothallic	57	21	0.25	evolution:5;mutant:7;not_wgs:2	49	0	0	15	0	0	0	a:4;both:40;low_depth:1;none:4				
+Aspergillus spinulosporus	1810908	B	wave2	PROVISIONAL_HOMOTHALLIC	homothallic	14	5	0.64		4	0	0	10	0	0	0	both:4				
+Saccharomyces kudriavzevii	114524	B	wave2	PROVISIONAL_HOMOTHALLIC	homothallic	32	8	0.41	evolution:4	22	0	0	10	0	0	0	both:20;low_depth:2				
+Lasallia pustulata	136370	C	wave1	PROVISIONAL_HOMOTHALLIC	homothallic	15	4	0.60		13	0	0	2	0	0	0	MAT1-1:1;both:12				
+Akanthomyces lecanii	2714763	C	wave1	PASS	complete	9	2	0.89		9	0	0	0	0	0	0	MAT1-1:4;MAT1-2:5	0.444	0.272	0.272	
+Alternaria arborescens	156630	C	wave1	PROVISIONAL	complete	5	3	0.60		5	0	0	0	0	0	0	MAT1-1:2;MAT1-2:3	0.400	0.326	0.326	
+Ascochyta lentis	205686	C	wave1	PASS	complete	6	3	0.50		6	0	0	0	0	0	0	MAT1-1:3;MAT1-2:3	0.500	0.312	0.312	
+Aspergillus brasiliensis	319629	B	wave2	PROVISIONAL	complete	5	2	0.80		5	0	0	0	0	0	0	MAT1-2:5				
+Aspergillus chevalieri	182096	B	wave2	PROVISIONAL	complete	6	6	0.17	not_wgs:1	6	0	0	0	0	0	0	MAT1-2:6				
+Aspergillus cristatus	573508	B	wave2	PROVISIONAL	complete	4	2	0.75		4	0	0	0	0	0	0	MAT1-2:4				
+Aspergillus fumigatiaffinis	340414	B	wave1	PROVISIONAL	complete	4	1	1.00		4	0	0	0	0	0	0	MAT1-1:2;MAT1-2:2	0.500	0.350	0.350	
+Bipolaris oryzae	101162	B	wave2	PASS	complete	8	3	0.75		8	0	0	0	0	0	0	MAT1-1:4;MAT1-2:4	0.500	0.285	0.285	
+Bipolaris zeicola	5017	B	wave2	PROVISIONAL	complete	4	4	0.25		4	0	0	0	0	0	0	MAT1-1:3;MAT1-2:1	0.250	0.327	0.327	
+Candidozyma vulturna	2093215	B	wave2	PROVISIONAL	complete	14	4	0.43		14	0	0	0	0	0	0	a:12;none:2				
+Cladosporium cladosporioides	29917	C	wave1	PROVISIONAL	complete	4	2	0.75	not_wgs:1	5	0	0	0	0	0	0	MAT1-1:1;MAT1-2:4	0.200	0.294	0.294	
+Clonostachys chloroleuca	1926264	C	wave1	PROVISIONAL	complete	5	2	0.60		5	0	0	0	0	0	0	MAT1-1:3;MAT1-2:2	0.400	0.326	0.326	
+Cordyceps cateniannulata	983339	C	wave1	PASS	complete	6	2	0.83		6	0	0	0	0	0	0	MAT1-1:4;MAT1-2:2	0.333	0.302	0.302	
+Diaporthe citri	83186	C	wave1	PASS	complete	4	2	0.75		4	0	0	0	0	0	0	MAT1-1:2;MAT1-2:2	0.500	0.350	0.350	
+Elsinoe australis	40998	C	wave1	PASS	complete	5	2	0.80		5	0	0	0	0	0	0	MAT1-2:5				
+Fusarium ambrosium	131363	B	wave2	PROVISIONAL	complete	4	1	1.00		4	0	0	0	0	0	0	MAT1-1:1;MAT1-2:3	0.250	0.327	0.327	
+Fusarium asiaticum	282267	B	wave2	PROVISIONAL	complete	5	2	0.80		5	0	0	0	0	0	0	MAT1-1:5				
+Fusarium euwallaceae	1147111	B	wave2	PASS	complete	9	3	0.44		9	0	0	0	0	0	0	MAT1-1:9				
+Fusarium nygamai	42673	B	wave2	PROVISIONAL	complete	5	4	0.40		5	0	0	0	0	0	0	MAT1-1:4;MAT1-2:1	0.200	0.294	0.294	
+Fusarium odoratissimum	2502994	B	wave1	PROVISIONAL	complete	18	3	0.39	mutant:1;not_wgs:1	19	0	0	0	0	0	0	MAT1-1:17;MAT1-2:2	0.105	0.142	0.142	
+Fusarium xylarioides	221167	B	wave1	PASS	complete	11	3	0.55		11	0	0	0	0	0	0	MAT1-1:4;MAT1-2:7	0.364	0.247	0.247	
+Lasiodiplodia theobromae	45133	C	wave1	PASS	complete	9	6	0.44		9	0	0	0	0	0	0	MAT1-1:5;MAT1-2:4	0.444	0.272	0.272	
+Macrophomina pseudophaseolina	1435034	C	wave1	PASS	complete	8	1	1.00		8	0	0	0	0	0	0	MAT1-1:1;MAT1-2:7	0.125	0.224	0.224	
+Macrophomina tecta	2811287	C	wave1	PROVISIONAL	complete	4	1	1.00		4	0	0	0	0	0	0	MAT1-1:4				
+Metarhizium anisopliae	5530	C	wave1	PROVISIONAL	complete	4	4	0.25		4	0	0	0	0	0	0	MAT1-1:2;MAT1-2:2	0.500	0.350	0.350	
+Paraphaeosphaeria minitans	565426	C	wave1	PASS	complete	7	1	1.00		7	0	0	0	0	0	0	MAT1-1:5;MAT1-2:2	0.286	0.279	0.279	
+Penicillium polonicum	60169	C	wave1	PROVISIONAL	complete	4	3	0.50		4	0	0	0	0	0	0	MAT1-1:1;MAT1-2:3	0.250	0.327	0.327	
+Tolypocladium inflatum	29910	C	wave1	PROVISIONAL	complete	5	1	1.00		5	0	0	0	0	0	0	MAT1-1:4;MAT1-2:1	0.200	0.294	0.294	
+Trichoderma afroharzianum	1567482	C	wave1	PROVISIONAL	complete	6	4	0.33		6	0	0	0	0	0	0	MAT1-1:2;MAT1-2:4	0.333	0.302	0.302	
+Trichoderma koningiopsis	337941	C	wave1	PROVISIONAL	complete	6	4	0.50		6	0	0	0	0	0	0	MAT1-1:5;MAT1-2:1	0.167	0.267	0.267	
+Diaporthe citriasiana	1365815	C			too_few	1	1	1.00		1	0	0	0	0	0	0	MAT1-1:1				
+Diaporthe citrichinensis	1365816	C			too_few	1	1	1.00		1	0	0	0	0	0	0	MAT1-1:1				
+Fusarium solani		B			too_few	2	1	1.00		2	0	0	0	0	0	0	MAT1-1:1;MAT1-2:1	0.500	0.405	0.405	
+Ogataea polymorpha x Ogataea parapolymorpha	2053387	A			too_few	1	1	1.00	cross:4	1	0	0	0	0	0	0	alpha:1				

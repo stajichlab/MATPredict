@@ -4,24 +4,24 @@
    "label": "NCBI public genomes Ascomycota",
    "phylum": "Ascomycota",
    "source": "BFD",
-   "code": "v0.8.0 (a2933f7, October 2026)",
+   "code": "v0.8.1 (50bc950, November 2026)",
    "held_out": false,
    "genomes": 19415,
-   "loci": 20792,
+   "loci": 20843,
    "locus_class": {
-    "mat_locus": 14583,
-    "partial_locus": 1427,
-    "idiomorph_gene_only": 4012,
+    "mat_locus": 14594,
+    "partial_locus": 1425,
+    "idiomorph_gene_only": 4054,
     "homothallic_candidate": 770
    },
    "confidence": {
-    "high": 14559,
-    "medium": 6126,
-    "low": 107
+    "high": 14623,
+    "medium": 6120,
+    "low": 100
    },
    "status": {
-    "called": 17607,
-    "uncalled": 1736,
+    "called": 17618,
+    "uncalled": 1725,
     "no_report": 72
    },
    "routing": {
@@ -32,10 +32,11 @@
     "not_searched": 58
    },
    "n_label_unsupported": 709,
-   "tier_drop": 2,
-   "tier_drop_without_note": 0,
+   "tier_drop": 14,
+   "tier_drop_without_note": 6,
    "tier_note": {
-    "polished_model_lost": 2
+    "distant_fragment": 7,
+    "polished_model_lost": 1
    },
    "high_basis": {
     "supported": 302,
@@ -43,39 +44,39 @@
    },
    "high_basis_outside_scope": {
     "grey": 8,
-    "supported": 8846,
+    "supported": 8847,
     "tie_break": 13
    },
-   "defective_loci": 5192,
+   "defective_loci": 5195,
    "genome_table": "data/genomes_bfd_asco.tsv"
   },
   "bfd_basidio": {
    "label": "NCBI public genomes Basidiomycota",
    "phylum": "Basidiomycota",
    "source": "BFD",
-   "code": "v0.8.0 (a2933f7, October 2026)",
+   "code": "v0.8.1 (50bc950, November 2026)",
    "held_out": false,
    "genomes": 3275,
-   "loci": 5964,
+   "loci": 5993,
    "locus_class": {
-    "idiomorph_gene_only": 3021,
+    "idiomorph_gene_only": 3050,
     "mat_locus": 2719,
     "partial_locus": 224
    },
    "confidence": {
-    "high": 3805,
-    "medium": 2149,
+    "high": 3822,
+    "medium": 2161,
     "low": 10
    },
    "status": {
-    "uncalled": 277,
-    "called": 2977,
-    "no_report": 21
+    "uncalled": 268,
+    "called": 2995,
+    "no_report": 12
    },
    "routing": {
     "phylum_fallback": 661,
-    "lineage": 2593,
-    "unrecorded": 21
+    "lineage": 2602,
+    "unrecorded": 12
    },
    "n_label_unsupported": 8,
    "tier_drop": 0,
@@ -83,14 +84,14 @@
    "tier_note": {},
    "high_basis": {},
    "high_basis_outside_scope": {},
-   "defective_loci": 1038,
+   "defective_loci": 1040,
    "genome_table": "data/genomes_bfd_basidio.tsv"
   },
   "bfd_mucoro": {
    "label": "NCBI public genomes Mucoromycotina",
    "phylum": "Mucoromycota",
    "source": "BFD",
-   "code": "v0.8.0 (a2933f7, October 2026)",
+   "code": "v0.8.1 (50bc950, November 2026)",
    "held_out": false,
    "genomes": 289,
    "loci": 267,
@@ -122,7 +123,7 @@
    "label": "ZyGoLife LCG (held out)",
    "phylum": "Mucoromycota",
    "source": "ZyGoLife",
-   "code": "v0.8.0 (a2933f7, October 2026)",
+   "code": "v0.8.1 (50bc950, November 2026)",
    "held_out": true,
    "genomes": 621,
    "loci": 584,
@@ -154,7 +155,7 @@
    "label": "ZyGoLife Jena (held out)",
    "phylum": "Mucoromycota",
    "source": "ZyGoLife",
-   "code": "v0.8.0 (a2933f7, October 2026)",
+   "code": "v0.8.1 (50bc950, November 2026)",
    "held_out": true,
    "genomes": 64,
    "loci": 63,
@@ -182,27 +183,27 @@
    "genome_table": "data/genomes_zygolife_jena.tsv"
   }
  },
- "generated": "2026-11-02",
+ "generated": "2026-11-06",
  "registry_version": "2026-10-30+5c01ddd5",
  "release": {
-  "name": "v080",
-  "code": "v0.8.0 (a2933f7, October 2026)",
+  "name": "v081",
+  "code": "v0.8.1 (50bc950, November 2026)",
   "folders": {
-   "asco": "results/2026-10-31_v080_ascomycota",
-   "basidio": "results/2026-10-31_v080_basidiomycota",
-   "mucoro": "results/2026-10-31_v080_mucoromycotina"
+   "asco": "results/2026-11-05_v081_ascomycota",
+   "basidio": "results/2026-11-05_v081_basidiomycota",
+   "mucoro": "results/2026-11-05_v081_mucoromycotina"
   },
   "folder_codes": {
-   "asco": "v0.8.0 (a2933f7, October 2026)",
-   "basidio": "v0.8.0 (a2933f7, October 2026)",
-   "mucoro": "v0.8.0 (a2933f7, October 2026)"
+   "asco": "v0.8.1 (50bc950, November 2026)",
+   "basidio": "v0.8.1 (50bc950, November 2026)",
+   "mucoro": "v0.8.1 (50bc950, November 2026)"
   }
  },
  "headline": {
   "scope": "NCBI public genomes datasets only; the held-out ZyGoLife sets are reported separately",
   "datasets": 3,
   "genomes": 22979,
-  "called": 20842,
-  "loci": 27023
+  "called": 20871,
+  "loci": 27103
  }
 }

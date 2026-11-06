@@ -1,0 +1,11 @@
+v0.8.1 definitive run, mucoromycotina campaign
+commit: 50bc950d8baabebf1be6f40d537e237345d1c3f3 (main after the merge of #272 = version 0.8.1; src/db/scripts as released)
+worktree: /bigdata/stajichlab/jstajich/projects/MATPredict/.claude/worktrees/run-50bc950
+DETECT_ARGS: --preset v0.8.1  (v0.8 policies + fallback-after-withheld on); Mucoromycotina command as v0.8.0 plus --preset v0.8.1
+allow list: db/allow.txt (nine rust genomes searched; large chunk GENOME_TIMEOUT=14400, epyc 8:00:00)
+pixi.lock sha256: 675a15123d22857564dbb020592db9075cd60c8bb82f9cbb53a077abb31f4ac9
+compute: throttled, 3 chains x 16 CPUs = 48 CPUs in flight (submit_throttled.py); jobs: results/2026-11-05_v081_submit/jobs.tsv; submitted 2026-11-05
+db content: nine rust genomes searched via db/allow.txt; Hyphopichia burtonii MTLA1 record 717740_makgeolli_MTL_A (#273) in the database
+tables: scripts/build_cleanrun_tables.py with --baseline the v0.8.0 reports_all.tar.zst (baseline columns compare with v0.8.0); reports_all.tar.zst holds the non-empty reports and wall_seconds
+determinism: 60 Ascomycota genomes (seed 20261106; 58 with a report) run twice on this commit with --preset v0.8.1: 0 differences in family, idiomorph, confidence, contig, start or end between the runs or against this campaign (results/2026-11-06_determinism_v081 on HPCC)
+attribution vs v0.8.0: control runs on the frozen code in results/2026-11-06_attrib_v081 on HPCC (database without the Hyphopichia record; --preset v0.8): 0 unexplained differences

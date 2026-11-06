@@ -1,0 +1,12 @@
+v0.8.1 definitive run, ascomycota campaign
+commit: 50bc950d8baabebf1be6f40d537e237345d1c3f3 (main after the merge of #272 = version 0.8.1; src/db/scripts as released)
+worktree: /bigdata/stajichlab/jstajich/projects/MATPredict/.claude/worktrees/run-50bc950
+DETECT_ARGS: --preset v0.8.1  (v0.8 policies + fallback-after-withheld on)
+allow list: db/allow.txt (nine rust genomes searched; large chunk GENOME_TIMEOUT=14400, epyc 8:00:00)
+pixi.lock sha256: 675a15123d22857564dbb020592db9075cd60c8bb82f9cbb53a077abb31f4ac9
+compute: throttled, 3 chains x 16 CPUs = 48 CPUs in flight (submit_throttled.py); jobs: results/2026-11-05_v081_submit/jobs.tsv; submitted 2026-11-05
+rerun: GCA_016165855.1_IBUN_P_ulei_V1 and GCA_023522825.1_DampeI2T2 hit GENOME_TIMEOUT=3600 on the AMD Opteron node c01 (wave_2/small_000, wave_7/small_006: empty folders left there). Rerun 2026-11-06 with GENOME_TIMEOUT=14400, same frozen code and --preset v0.8.1, on the EPYC node r11 (job 31779458): rerun_timeout_epyc/runs/<genome>, 3063 s and 1685 s. A first rerun on c01 (job 31779037, rerun_timeout/) was cancelled after 2 h (empty folders). Cause of the slowness: tblastn -seg no on long low-complexity reference proteins (issue 276).
+db content: nine rust genomes searched via db/allow.txt; Hyphopichia burtonii MTLA1 record 717740_makgeolli_MTL_A (#273) in the database
+tables: scripts/build_cleanrun_tables.py with --baseline the v0.8.0 reports_all.tar.zst (baseline columns compare with v0.8.0); reports_all.tar.zst holds the non-empty reports and wall_seconds
+determinism: 60 Ascomycota genomes (seed 20261106; 58 with a report) run twice on this commit with --preset v0.8.1: 0 differences in family, idiomorph, confidence, contig, start or end between the runs or against this campaign (results/2026-11-06_determinism_v081 on HPCC)
+attribution vs v0.8.0: control runs on the frozen code in results/2026-11-06_attrib_v081 on HPCC (database without the Hyphopichia record; --preset v0.8): 0 unexplained differences

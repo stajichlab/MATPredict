@@ -14,6 +14,7 @@ Commands (all take --wave DIR and the config options below):
   submit-plan          queue `plan-one` for every species of species.tsv as an array (panels are built on compute nodes)
   submit-test          merge the test runs of the planned species and queue them (split over the exfab and stajichlab partitions)
   gate                 summarize the test results and decide per species: PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC, UNVALIDATED:<reasons> or HOLD:<reasons>   (gates below)
+  curate               apply the curator rulings (ZYGOSITY, RELEASED; see the code) to an existing gates table; a ZYGOSITY species is counted again from --stage's results
   regate               decide again from the numbers in an existing gates table (after the rules change); writes the previous decision beside the new one
   submit-full          queue the remaining runs of the species that are not held (PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC and UNVALIDATED)
   report               write WAVE_REPORT.md from the summaries and the gates
@@ -64,6 +65,9 @@ def cfg(a):
 # Genera whose MAT loci are only ever reported as a gene (locus class idiomorph_gene_only) and are short: the Taphrinomycotina (fission yeast, Pneumocystis, Taphrina ...). They are planned with that class
 # allowed and a lower minimum span (the loci of S. japonicus are 1 to 2.6 kb), and an idiomorph missing from the species is borrowed from the genus.
 LENIENT_GENERA = ("Schizosaccharomyces", "Pneumocystis", "Taphrina", "Protomyces", "Saitoella", "Neolecta")
+# Genera whose MAT loci fall outside the default span limits (4 to 60 kb): the Cryptococcus MAT locus is 40 to 200 kb (the a and alpha alleles span the whole region);
+# the Rhodotorula P/R locus as reported is about 2 kb.
+SPAN_GENERA = {"Cryptococcus": ("4000", "250000"), "Rhodotorula": ("1000", "60000")}
 
 
 def plan_one(a):
@@ -73,7 +77,7 @@ def plan_one(a):
     def hold(reason):
         open(os.path.join(d, "status"), "w").write("held:" + reason + "\n"); print(sp, "HELD", reason); sys.exit(0)
     r = subprocess.run([PY, f"{HERE}/panel_from_assemblies.py", "--species", sp, "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv", "--reports", f"{I}/reports_all.tar.zst",
-                        "--genome-dir", f"{I}/genomes", "--out", panel, "--prefix", prefix, "--min-cluster-size", "1", "--max-reps", "6", "--per-lineage", "--jobs", "4"] + (["--min-span", "1000", "--classes", "mat_locus", "partial_locus", "idiomorph_gene_only"] if lenient else ["--min-span", "4000"]) + (["--borrow", sp.split()[0] + " "] if getattr(a, "borrow", False) or lenient else []),
+                        "--genome-dir", f"{I}/genomes", "--out", panel, "--prefix", prefix, "--min-cluster-size", "1", "--max-reps", "6", "--per-lineage", "--jobs", "4"] + (["--min-span", "1000", "--classes", "mat_locus", "partial_locus", "idiomorph_gene_only"] if lenient else ["--min-span", SPAN_GENERA[sp.split()[0]][0], "--max-span", SPAN_GENERA[sp.split()[0]][1]] if sp.split()[0] in SPAN_GENERA else ["--min-span", "4000"]) + (["--borrow", sp.split()[0] + " "] if getattr(a, "borrow", False) or lenient else []),
                        stdout=log, stderr=log)
     if r.returncode or not os.path.isdir(os.path.join(panel, "L1")): hold("panel_build_failed")
     sys.path.insert(0, f"{P}/.claude/worktrees/run-b317ece/src")
@@ -174,14 +178,49 @@ def submit_test(a):
 
 
 # ------------------------------------------------------------------------------------------------ gate
-def decide(n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd):
+# Curator rulings (2026-11-06) that the numbers alone cannot make.
+# ZYGOSITY: a heterozygous diploid whose usual state is a/alpha (Candida albicans: most isolates are MTL-heterozygous). `both` is then a call (MTL a/alpha), so typed = one idiomorph
+#   or both, the `both` limit does not apply, and an assembly's single idiomorph agrees with `both` (an assembly of a heterozygote collapses to one haplotype). Passing words carry _ZYGOSITY.
+# RELEASED: species held only because the reads do not separate the active MAT locus from the silent HML/HMR cassettes (Saccharomyces; Ogataea's two flip-flop loci). The calls are not
+#   wrong, the panel cannot tell the loci apart; they get the full run, flagged UNVALIDATED:released_<why>, so they can be examined (not when the runs failed to download).
+ZYGOSITY = {"Candida albicans"}
+RELEASED = {"Saccharomyces paradoxus": "cassettes", "Saccharomyces eubayanus": "cassettes", "Saccharomyces pastorianus": "cassettes", "Saccharomyces mikatae": "cassettes",
+            "Ogataea haglerorum": "cassettes"}
+
+
+def decide_species(species, n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd):
+    """decide() with the curator rulings for SPECIES applied. For a ZYGOSITY species n_typed must already include the `both` runs and n_agree count `both` as agreeing (numbers())."""
+    if species in ZYGOSITY:
+        dec, why = decide(n_counted, n_done, n_typed, 0, n_truth, n_agree, msd, zygosity=True)
+    else:
+        dec, why = decide(n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd)
+    if species in RELEASED and dec.startswith("HOLD") and "many_failed" not in why:
+        why = [f"released_{RELEASED[species]}"] + why
+        dec = "UNVALIDATED:" + "+".join(why)
+    return dec, why
+
+
+def numbers(rs, zygosity=False):
+    """(counted, done, typed, both, truth_typed, agree, median shared depth) from the result rows of one species. zygosity: `both` is a call and agrees with either single truth."""
+    counted = [x for x in rs if x["state"] != "unavailable_at_ncbi"]
+    done = [x for x in counted if x["state"] == "done"]
+    single = [x for x in done if x["call"] not in ("both", "none", "low_depth", "")]
+    both = [x for x in done if x["call"] == "both"]
+    typed = single + both if zygosity else single
+    tr = [x for x in typed if x["truth"] and "," not in x["truth"]]
+    agree = sum(1 for x in tr if x["call"] == x["truth"] or (zygosity and x["call"] == "both"))
+    sd = [float(x["shared_depth"]) for x in done if x["shared_depth"] not in ("", None)]
+    return len(counted), len(done), len(typed), (0 if zygosity else len(both)), len(tr), agree, (statistics.median(sd) if sd else 0)
+
+
+def decide(n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd, zygosity=False):
     """(decision, reasons) for one tested species from the numbers of its test runs: runs counted (not "unavailable at NCBI"), finished, typed
     (one idiomorph), both, typed runs with a `detect` truth, those that agree, and the median shared-flank depth. A reason is "hard" when the
     calls cannot be used at all (HOLD) and "soft" when they can be used with the reason beside them (UNVALIDATED)."""
     hard, soft = [], []
     tf = n_typed / max(1, n_done); bf = n_both / max(1, n_done)
     if not n_counted or n_done / n_counted < GATE["min_done"]: hard.append("many_failed")
-    homo = bf >= GATE["homothallic_both"] and (n_typed + n_both) / max(1, n_done) >= GATE["provisional_typed"]    # a homothallic species: `both` is the expected answer
+    homo = not zygosity and bf >= GATE["homothallic_both"] and (n_typed + n_both) / max(1, n_done) >= GATE["provisional_typed"]    # a homothallic species: `both` is the expected answer
     if not homo:
         if tf < GATE["min_typed"]: (hard if tf < GATE["unvalidated_typed"] else soft).append(f"typed_{tf:.2f}")
         if bf > GATE["max_both"]: soft.append(f"both_{bf:.2f}")
@@ -192,9 +231,18 @@ def decide(n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd):
             (hard if n_truth >= GATE["hold_truth_runs"] else soft).append(f"agree_{n_agree}of{n_truth}")
     elif not homo and tf < GATE["provisional_typed"]:
         (hard if tf < GATE["unvalidated_typed"] else soft).append(f"provisional_typed_{tf:.2f}")
+    if zygosity and (hard or soft): soft = ["zygosity"] + soft
     if hard: return "HOLD:" + "+".join(hard + soft), hard + soft
     if soft: return "UNVALIDATED:" + "+".join(soft), soft
-    return ("PROVISIONAL_HOMOTHALLIC" if homo else "PROVISIONAL" if prov else "PASS"), []
+    return ("PROVISIONAL_HOMOTHALLIC" if homo else "PROVISIONAL" if prov else "PASS") + ("_ZYGOSITY" if zygosity else ""), []
+
+
+def gate_row(sl, species, rs):
+    """One gates-table row from the result rows of a species. The reasons text holds the numbers regate() reads; a ZYGOSITY species' numbers are already counted that way (mode=zygosity)."""
+    zyg = species in ZYGOSITY
+    n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd = numbers(rs, zyg)
+    dec, _ = decide_species(species, n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd)
+    return dict(slug=sl, species=species, decision=dec, reasons=f"runs={len(rs)} done={n_done} typed={n_typed} both={n_both} none/low={n_done - n_typed - n_both} truth_typed={n_truth} agree={n_agree} median_shared_depth={msd:.1f}" + (" mode=zygosity" if zyg else ""))
 
 
 def gate(a):
@@ -208,14 +256,7 @@ def gate(a):
             rows.append(dict(slug=sl, species=r0["species"], decision="HOLD:" + st.replace("held:", ""), reasons=st)); continue
         rs = by.get(sl, [])
         if not rs: rows.append(dict(slug=sl, species=r0["species"], decision="PENDING", reasons="no test results yet")); continue
-        counted = [x for x in rs if x["state"] != "unavailable_at_ncbi"]
-        done = [x for x in counted if x["state"] == "done"]
-        typed = [x for x in done if x["call"] not in ("both", "none", "low_depth", "")]; both = [x for x in done if x["call"] == "both"]
-        tr = [x for x in typed if x["truth"] and "," not in x["truth"]]; agree = sum(1 for x in tr if x["call"] == x["truth"])
-        sd = [float(x["shared_depth"]) for x in done if x["shared_depth"] not in ("", None)]
-        msd = statistics.median(sd) if sd else 0
-        dec, _ = decide(len(counted), len(done), len(typed), len(both), len(tr), agree, msd)
-        rows.append(dict(slug=sl, species=r0["species"], decision=dec, reasons=f"runs={len(rs)} done={len(done)} typed={len(typed)} both={len(both)} none/low={len(done)-len(typed)-len(both)} truth_typed={len(tr)} agree={agree} median_shared_depth={msd:.1f}"))
+        rows.append(gate_row(sl, r0["species"], rs))
     wr(os.path.join(a.wave, "gates.tsv" if a.stage == "test" else f"gates_{a.stage}.tsv"), rows, ["slug", "species", "decision", "reasons"])
     print(collections.Counter(r["decision"].split(":")[0] for r in rows))
 
@@ -234,16 +275,47 @@ def regate(a):
         m = REGATE.search(r["reasons"])
         if not m:
             continue
+        if r["species"] in ZYGOSITY and "mode=zygosity" not in r["reasons"]:
+            continue                                                                   # counted the ordinary way: only `curate` (from the results) can decide it again
         done, typed, both, truth, agree, msd = int(m[2]), int(m[3]), int(m[4]), int(m[6]), int(m[7]), float(m[8])
         counted = done if "many_failed" not in r["decision"] else done * 2 + 1       # the counted runs are not in the table; this keeps a species held for failed downloads held
-        new, _ = decide(counted, done, typed, both, truth, agree, msd)
-        if new.split(":")[0] != r["decision"].split(":")[0]:
+        new, _ = decide_species(r["species"], counted, done, typed, both, truth, agree, msd)
+        if new.split(":")[0] != r["decision"].split(":")[0] or ("released_" in new) != ("released_" in r["decision"]):
             changes.append({"slug": r["slug"], "species": r["species"], "previous": r["decision"], "decision": new, "reasons": r["reasons"]})
             r["decision"] = new
     wr(dst, rows, ["slug", "species", "decision", "reasons"])
     wr(os.path.join(os.path.dirname(dst), "regate_changes.tsv"), changes, ["slug", "species", "previous", "decision", "reasons"])
     kinds = collections.Counter((c["previous"].split(":")[0], c["decision"].split(":")[0]) for c in changes)
     print(f"{len(rows)} species -> {dst}; decisions: {dict(collections.Counter(r['decision'].split(':')[0] for r in rows))}; changed: {dict(kinds)}")
+
+
+def curate(a):
+    """Apply the curator rulings (ZYGOSITY, RELEASED) to an existing gates table (--in-file, in place or to --out-file). A ZYGOSITY species is counted again from the results of
+    --stage (it needs the calls, not only the numbers); a RELEASED species is decided again from its numbers. Other species are untouched. Changes go to curate_changes.tsv."""
+    src = os.path.join(a.wave, a.in_file); dst = os.path.join(a.wave, a.out_file or a.in_file)
+    rows = rd(src); changes = []; res = None
+    for i, r in enumerate(rows):
+        if r["species"] not in ZYGOSITY and r["species"] not in RELEASED:
+            continue
+        if r["species"] in ZYGOSITY:
+            if res is None:
+                res = collections.defaultdict(list)
+                for x in rd(os.path.join(a.wave, a.stage, "summary", "results_all.tsv")): res[x["group"]].append(x)
+            if not res.get(r["slug"]):
+                continue
+            new = gate_row(r["slug"], r["species"], res[r["slug"]])
+        else:
+            m = REGATE.search(r["reasons"])
+            if not m:
+                continue
+            done = int(m[2]); counted = done if "many_failed" not in r["decision"] else done * 2 + 1
+            new = dict(r, decision=decide_species(r["species"], counted, done, int(m[3]), int(m[4]), int(m[6]), int(m[7]), float(m[8]))[0])
+        if new != r:
+            changes.append({"slug": r["slug"], "species": r["species"], "previous": r["decision"], "decision": new["decision"], "reasons": new["reasons"]}); rows[i] = new
+    wr(dst, rows, ["slug", "species", "decision", "reasons"])
+    wr(os.path.join(os.path.dirname(dst), "curate_changes.tsv"), changes, ["slug", "species", "previous", "decision", "reasons"])
+    for c in changes: print(f"{c['species']}: {c['previous']} -> {c['decision']}")
+    print(len(changes), "species changed ->", dst)
 
 
 def submit_full(a):
@@ -254,7 +326,7 @@ def submit_full(a):
     rows = []
     for sl, dec in g.items():
         word = dec.split(":")[0]
-        if word in ("PASS", "PROVISIONAL", "PROVISIONAL_HOMOTHALLIC", "UNVALIDATED") and (not a.only or word == a.only):
+        if word in ("PASS", "PROVISIONAL", "PROVISIONAL_HOMOTHALLIC", "PASS_ZYGOSITY", "PROVISIONAL_ZYGOSITY", "UNVALIDATED") and (not a.only or word == a.only):
             rows += rd(os.path.join(a.wave, "plan", sl, "runs_full.tsv"))[:a.cap]     # the test runs come first; at most --cap runs per species
     if not rows: sys.exit("no species to run" + (f" with the decision {a.only}" if a.only else " (none passed the gate)"))
     submit_stage(a, a.stage_name if a.stage_name != "list" else "full", rows)
@@ -294,7 +366,7 @@ def status(a):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("cmd", choices=["plan-one", "submit-plan", "submit-test", "gate", "regate", "submit-full", "report", "status", "submit-list"])
+    ap.add_argument("cmd", choices=["plan-one", "submit-plan", "submit-test", "gate", "regate", "curate", "submit-full", "report", "status", "submit-list"])
     ap.add_argument("--wave", required=True); ap.add_argument("--inputs", default=f"{P}/results/sra_reads_typing/wave_inputs")
     ap.add_argument("--species"); ap.add_argument("--conc", type=int, default=60, help="tasks running at once per array (the curator lifted the CPU limit for this work, 2026-10-27)")
     ap.add_argument("--cpus", type=int, default=1, help="CPUs per run task: every step is single-threaded (measured 2026-10-27), and the exfab account is limited to 32 CPUs, so 1 CPU gives 32 tasks at once instead of 8")
@@ -314,7 +386,7 @@ def main():
     ap.add_argument("--out-file", help="regate: where to write it (default: the input file)")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
-    {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "regate": regate, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)
+    {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "regate": regate, "curate": curate, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)
 
 
 if __name__ == "__main__":

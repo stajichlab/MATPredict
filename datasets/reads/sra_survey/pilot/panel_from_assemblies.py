@@ -43,7 +43,7 @@ def contig(path, name):
     return "".join(seq)
 
 
-PAIRS = [("MAT1-1", "MAT1-2"), ("a", "alpha"), ("P", "M"), ("A", "B")]      # idiomorph name pairs, in order of preference
+PAIRS = [("MAT1-1", "MAT1-2"), ("a", "alpha"), ("P", "M"), ("A", "B"), ("A1", "A2"), ("Plus", "Minus")]      # idiomorph name pairs, in order of preference (A1/A2: Rhodotorula; Plus/Minus: Mucorales sexP/sexM)
 
 
 def norm_idio(name):

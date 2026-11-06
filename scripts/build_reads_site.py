@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from idiomorph_labels import idiomorph_label, registry_version
 from collections import Counter
 
-CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)", "UNVALIDATED": "unvalidated"}
+CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)", "PASS_ZYGOSITY": "confirmed (MTL zygosity)", "PROVISIONAL_ZYGOSITY": "provisional (MTL zygosity)", "UNVALIDATED": "unvalidated"}
 FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly", "clone", "screen", "screen_second", "screen_explained"]
 SCREEN_FLAGGED = ("mixed", "genus_mismatch", "borderline")      # the statuses screen_reads.py gives to a run worth a second look
 
@@ -145,7 +145,8 @@ def main():
     ap.add_argument("--wave", action="append", help="a wave folder with results_all_final.tsv and gates_final.tsv (or results_all.tsv and gates.tsv); repeat for several waves (default: wave1 and wave2)"); ap.add_argument("--out", required=True); ap.add_argument("--repo", default="."); ap.add_argument("--clones", action="append", help="folder with <slug>.pairs.tsv files; repeat (default: clone_pilot and the clone_pairs folder of every wave)")
     a = ap.parse_args(); os.makedirs(a.out, exist_ok=True)
     res, gates, sp = [], {}, {}
-    waves = a.wave or ["datasets/reads/sra_survey/pilot/wave1", "datasets/reads/sra_survey/pilot/wave2"]
+    pilot = os.path.join(a.repo, "datasets/reads/sra_survey/pilot")
+    waves = a.wave or sorted(os.path.join("datasets/reads/sra_survey/pilot", d) for d in os.listdir(pilot) if re.fullmatch(r"wave\d+[a-z_]*", d) and os.path.isdir(os.path.join(pilot, d)))      # every committed wave (wave1, wave2, wave3_*); a folder without results or gates is skipped
     clone_dirs = [os.path.join(a.repo, d) for d in (a.clones or ["datasets/reads/sra_survey/pilot/clone_pilot"] + [os.path.join(w, "clone_pairs") for w in waves])]
     for w in waves:
         w = w if os.path.isabs(w) else os.path.join(a.repo, w)
@@ -159,7 +160,8 @@ def main():
     names_of = lambda r: ((r.get("idiomorphs") or "MAT1-1 MAT1-2").split() + ["MAT1-2"])[:2]
     is_typed = lambda c: c not in ("both", "none", "low_depth", "")      # a call of one idiomorph, under whatever name the panel gave it (MAT1-1, a, alpha, P ...)
     for r in res:      # the verdict is recomputed here: the results table keeps the pre-rescue verdicts of runs typed by a later pass
-        r["verdict"] = "" if not r["truth"] else "untyped" if r["state"] != "done" or not (is_typed(r["call"]) or r["call"] == "both") else "both_vs_one" if r["call"] == "both" else "agree" if r["call"] == r["truth"] else "DISAGREE"
+        zyg = "zygosity" in gates.get(r["group"], {}).get("reasons", "") + gates.get(r["group"], {}).get("decision", "").lower()      # a heterozygous diploid (C. albicans): both is a/alpha and agrees with a collapsed assembly
+        r["verdict"] = "" if not r["truth"] else "untyped" if r["state"] != "done" or not (is_typed(r["call"]) or r["call"] == "both") else ("agree_heterozygous" if zyg else "both_vs_one") if r["call"] == "both" else "agree" if r["call"] == r["truth"] else "DISAGREE"
         by.setdefault(r["group"], []).append(r)
     LT = lineage_table(a.repo)
     index = []
@@ -171,7 +173,7 @@ def main():
         s = {"slug": slug, "species": g["species"], "tier": sp.get(slug, {}).get("reference_tier", ""), "pooled_strains": int(sp.get(slug, {}).get("strains_pooled") or 0),
              "confidence": "withheld" if d == "HOLD" else CONF.get(d, d), "why": why, "runs": len(runs), "done": len(done), "typed": len(typed),
              "names": [n1, n2], "labels": [idiomorph_label(n1, [n1, n2]), idiomorph_label(n2, [n1, n2])], "c1": c[n1], "c2": c[n2], "MAT1-1": c[n1], "MAT1-2": c[n2], "both": c["both"], "none": c["none"], "low_depth": c["low_depth"],
-             "with_assembly_call": len(truth), "agree": sum(r["verdict"] == "agree" for r in truth), "disagree": sum(r["verdict"] == "DISAGREE" for r in truth),
+             "with_assembly_call": len(truth), "agree": sum(r["verdict"] in ("agree", "agree_heterozygous") for r in truth), "disagree": sum(r["verdict"] == "DISAGREE" for r in truth),
              "rescued": sum(1 for r in typed if r.get("rescue")), **lineage_fields(LT, g["species"]),
              "screened": sum(1 for r in runs if r.get("screen")), "screen_flagged": sum(1 for r in runs if r.get("screen") in SCREEN_FLAGGED)}
         index.append(s)
@@ -183,7 +185,7 @@ def main():
             w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n", extrasaction="ignore"); w.writeheader(); w.writerows(rows)
     allr = [r for r in res if r["state"] == "done"]
     typed = [r for r in allr if is_typed(r["call"])]; tr = [r for r in typed if r["truth"]]
-    tot = {"species": len(index), "runs": len(res), "done": len(allr), "typed": len(typed), "with_assembly_call": len(tr), "agree": sum(r["verdict"] == "agree" for r in tr),
+    tot = {"species": len(index), "runs": len(res), "done": len(allr), "typed": len(typed), "with_assembly_call": len(tr), "agree": sum(r["verdict"] in ("agree", "agree_heterozygous") for r in tr),
            "disagree": sum(r["verdict"] == "DISAGREE" for r in tr), "confidence": dict(Counter(s["confidence"] for s in index)),
            "calls": dict(Counter(r["call"] for r in allr)), "rescued": sum(1 for r in typed if r.get("rescue"))}
     cur = [curated(c, a.repo, a.out, lineage_fields(LT, c["species"])) for c in CURATED if os.path.exists(os.path.join(a.repo, c["src"]))]

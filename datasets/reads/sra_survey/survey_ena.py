@@ -40,6 +40,24 @@ def species(name):
     return None
 
 
+def classify_study(title, texts):
+    """Exclusion flag of one study of one species: 'not_wgs', 'mutant', 'evolution', 'cross' or '' (kept).
+    title: the study title; texts: {strain key: sample/strain text} for the study's strains (the key itself is searched too).
+    Shared with ../availability/reads_availability.py so both apply the same rule."""
+    if not texts:
+        return ""
+    frac = lambda rx: sum(1 for k, t in texts.items() if rx.search(t) or rx.search(k)) / len(texts)
+    if NOT_WGS.search(title) or frac(NOT_WGS_STRAIN) >= .5:
+        return "not_wgs"
+    if MUTANT.search(title) or frac(MUTANT_STRAIN) >= .5:
+        return "mutant"
+    if not PROTECT.search(title) and (EVOLVE.search(title) or frac(EVOLVE) >= .5):
+        return "evolution"
+    if not PROTECT.search(title) and (CROSS.search(title) or frac(CROSS) >= .5):
+        return "cross"
+    return ""
+
+
 def db_tiers(db):
     """({species: set(idiomorphs)}, {genus: set(idiomorphs)}) from the accepted records' metadata.yaml (candidates are left out)."""
     import glob
@@ -108,18 +126,8 @@ def main():
         pooled, excluded = {}, collections.Counter()
         for st in sorted(strains[sp]):
             ks = strains[sp][st]
-            txt = {k: v[2] for k, v in ks.items()}
-            flag = ""
             tt = title.get(st, "")
-            frac = lambda rx: sum(1 for k in ks if rx.search(txt[k]) or rx.search(k)) / len(ks)
-            if NOT_WGS.search(tt) or frac(NOT_WGS_STRAIN) >= .5:
-                flag = "not_wgs"
-            elif MUTANT.search(tt) or frac(MUTANT_STRAIN) >= .5:
-                flag = "mutant"
-            elif not PROTECT.search(tt) and (EVOLVE.search(tt) or frac(EVOLVE) >= .5):
-                flag = "evolution"
-            elif not PROTECT.search(tt) and (CROSS.search(tt) or frac(CROSS) >= .5):
-                flag = "cross"
+            flag = classify_study(tt, {k: v[2] for k, v in ks.items()})
             study_rows.append([sp, st, len(ks), flag, tt[:160]])
             if flag:
                 excluded[flag] += len(ks)

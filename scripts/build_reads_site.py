@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from idiomorph_labels import idiomorph_label, registry_version
 from collections import Counter
 
-CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)", "UNVALIDATED": "unvalidated"}
+CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)", "PASS_ZYGOSITY": "confirmed (MTL zygosity)", "PROVISIONAL_ZYGOSITY": "provisional (MTL zygosity)", "UNVALIDATED": "unvalidated"}
 FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly", "clone", "screen", "screen_second", "screen_explained"]
 SCREEN_FLAGGED = ("mixed", "genus_mismatch", "borderline")      # the statuses screen_reads.py gives to a run worth a second look
 

@@ -225,12 +225,12 @@ def main():
             name = r["species"]
             key, _ = resolve(name, by_name)
             typed_local[key or "name:" + name][norm_strain(r["strain"])] = r.get("reads_call", "")
-    gates = {}                                   # species key -> (decision, reasons, wave)
+    gates = {}                                   # species key -> (decision, reasons, wave, slug in the wave)
     for p in a.gates:
         wave = os.path.basename(os.path.dirname(p))
         for r in read_tsv(p):
             key = slug_species.get(r["slug"]) or resolve(r["species"], by_name)[0] or "name:" + r["species"]
-            gates[key] = (r["decision"], r["reasons"], wave)
+            gates[key] = (r["decision"], r["reasons"], wave, r["slug"])
 
     # --- what the lab holds locally ------------------------------------------------------------
     local_rows, local_by_sp = [], collections.defaultdict(list)
@@ -274,7 +274,7 @@ def main():
         minor = min(single.values()) if len(single) >= 2 else 0
         typed_rate = n_single / attempted if attempted else 0
         n_all = n_single + round(len(untyped) * typed_rate)
-        gate = gates.get(key, ("", "", ""))
+        gate = gates.get(key, ("", "", "", ""))
         decision = gate[0]
         loc = local_by_sp.get(key, [])
         seen = set()                         # one strain listed by two subprojects counts once
@@ -322,13 +322,13 @@ def main():
             "genome_mb": gsize.get(key, ""),
         })
         if action in ("expand", "unvalidated", "held", "typed_no_gate"):
-            slug = re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
+            slug = gate[3] or re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")     # the wave's own group slug, so a run list finds the panel of plan/<slug>/
             for bs in sorted(untyped):
                 r = elig[bs]
                 cov = f"{r['bases'] / (gsize[key] * 1e6):.1f}" if key in gsize else ""
                 untyped_rows.append([slug, name, r["run_accession"], r["read_count"], r["base_count"], r["library_layout"],
                                      (r.get("strain") or r.get("isolate") or ""), r["study_accession"], bs, cov,
-                                     "yes" if MIN_SEL <= r["bases"] <= MAX_SEL else "no", action])
+                                     "yes" if MIN_SEL <= r["bases"] <= MAX_SEL else "no", action, gate[2]])
     order = ["expand", "unvalidated", "held", "typed_no_gate", "blocked_panel", "new_candidate", "needs_reference", "homothallic", "complete", "too_few"]
     rows.sort(key=lambda r: (order.index(r["action"]), -r["untyped_public_eligible"] - r["local_not_public"], r["species"]))
     cols = list(rows[0].keys())
@@ -339,7 +339,7 @@ def main():
     untyped_rows.sort()
     with gzip.GzipFile(os.path.join(out, "untyped_runs.tsv.gz"), "wb", mtime=0) as gz:
         buf = ["\t".join(["group", "species", "run_accession", "read_count", "base_count", "library_layout", "strain", "study_accession",
-                          "biosample", "est_coverage", "in_select_window", "action"])]
+                          "biosample", "est_coverage", "in_select_window", "action", "wave"])]
         buf += ["\t".join(map(str, r)) for r in untyped_rows]
         gz.write(("\n".join(buf) + "\n").encode())
     if local_rows:

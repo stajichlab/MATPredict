@@ -2,8 +2,8 @@
 """Aggregate the committed campaign tables into the JSON the project web pages read.
 
 Inputs are tables already under results/ (nothing is recomputed). Which folders are read is set in ONE place,
-`RELEASES` below, and chosen with --release (default `v080`, the v0.8.0 data; `v070` is the previous
-release and the rollback target; `v060` is older); --asco / --basidio / --mucoro override one folder.
+`RELEASES` below, and chosen with --release (default `v081`, the v0.8.1 data; `v080` is the previous
+release and the rollback target; `v070` and `v060` are older); --asco / --basidio / --mucoro override one folder.
 Per release:
   NCBI public genomes: Ascomycota <asco>/{genomes,loci}.tsv
   NCBI public genomes: Basidiomycota <basidio>/{genomes,loci}.tsv
@@ -67,6 +67,12 @@ R = os.path.join(REPO, "results")
 # The result folders behind each published release (relative to results/). Edit HERE when a campaign folder
 # changes; build_locus_shards.py reads the same table.
 RELEASES = {
+    "v081": {
+        "code": "v0.8.1 (50bc950, November 2026)",
+        "asco": "2026-11-05_v081_ascomycota",
+        "basidio": "2026-11-05_v081_basidiomycota",
+        "mucoro": "2026-11-05_v081_mucoromycotina",
+    },
     "v080": {
         "code": "v0.8.0 (a2933f7, October 2026)",
         "asco": "2026-10-31_v080_ascomycota",
@@ -92,9 +98,9 @@ RELEASES = {
         "mucoro": "2026-10-03_mucoromycotina_mat",
     },
 }
-# The release the Pages build publishes. v0.8.0 data: the definitive run on commit a2933f7 (--preset v0.8).
-# To roll back, set it to "v070" (the v0.7.0 folders stay in RELEASES) and re-tag.
-DEFAULT_RELEASE = "v080"
+# The release the Pages build publishes. v0.8.1 data: the definitive run on commit 50bc950 (--preset v0.8.1).
+# To roll back, set it to "v080" (the v0.8.0 folders stay in RELEASES) and re-tag.
+DEFAULT_RELEASE = "v081"
 
 NOT_A_GENUS = {"Ascomycota", "Basidiomycota", "Mucoromycota", "Fungal", "Fungi", "uncultured", "Candidatus", "unidentified"}
 GENUS_RE = re.compile(r"^[A-Z][a-z-]+$")

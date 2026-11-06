@@ -33,7 +33,8 @@ def main():
     truth = collections.defaultdict(set); gen_of = {}
     for r in csv.DictReader(open(a.loci), delimiter="\t"):
         if r["genome"] in g and r["locus_class"] in a.classes:
-            bs = asm.get(re.match(r"(GC[AF]_\d+\.\d+)", r["genome"]).group(1))
+            m = re.match(r"(GC[AF]_\d+\.\d+)", r["genome"])      # a genome without an NCBI assembly accession (JGI names in Mucoromycotina) has no BioSample: no truth
+            bs = asm.get(m.group(1)) if m else None
             if bs: truth[bs].add(nm(r["idiomorph"])); gen_of[bs] = r["genome"]
     flagged = {r["study"] for r in csv.DictReader(open(a.studies), delimiter="\t") if r["species"] == a.species and r["excluded_as"]}
     meta = {m["run_accession"]: m for m in csv.DictReader(open(a.meta), delimiter="\t")}

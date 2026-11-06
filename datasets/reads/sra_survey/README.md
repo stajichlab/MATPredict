@@ -50,3 +50,6 @@ Second skim (2026-10-26), clinical and field-pathology species: *Candidozyma aur
 - Restricted-access or withdrawn runs are not distinguished.
 - Non-Illumina data (long reads, Ion Torrent) are left out of this survey.
 - Next: `PILOT_PLAN.md` (how a pilot would run on the HPCC).
+
+## Superseded for refreshes (2026-11-06)
+This survey is a one-off query of 2026-10-26. The refreshable version is `../availability/`: it takes the run table from the lab's shared PopSeq catalog instead of querying ENA here, keys species by NCBI species taxid, adds the lab's local read sets, and joins both to what MATPredict has typed. `classify_study()` in `survey_ena.py` holds the exclusion rule both use.

@@ -34,6 +34,7 @@ PopSeq is the lab's shared catalog (`/bigdata/stajichlab/shared/projects/Fungi/P
 | `expand` | wave gate PASS or PROVISIONAL; untyped isolates exist (the 50-run cap) | type `untyped_runs.tsv.gz` rows for the species with its existing panel |
 | `unvalidated` | typed, but the gate could not validate | curator ruling first (decision 1 in the reads-gate notes) |
 | `held` | HOLD for typing rate or agreement | re-test or panel work |
+| `typed_no_gate` | typed with a panel outside the waves (pilot4: *Pyricularia oryzae*) but never gated | gate it, then treat as `expand` |
 | `blocked_panel` | HOLD because no panel could be built | reference or panel work, not more reads |
 | `new_candidate` | not in a wave; records for the species or its genus | next wave (`wave_species.py`) |
 | `needs_reference` | not in a wave; no record in the genus | reference curation priority, ranked by isolates |
@@ -47,7 +48,7 @@ Also per species: eligible, typed and untyped counts; studies and `largest_study
 - `SUMMARY.md`: counts per action and the top species of each.
 - `species_availability.tsv`: one row per species.
 - `local_samples.tsv`: every local sample PopSeq's inventory found, with its species and whether it is counted.
-- `untyped_runs.tsv.gz`: one run per untyped eligible isolate of `expand`, `unvalidated` and `held` species; the run list columns of `../sra_survey/pilot/CONTRACT.md` once a panel is named. **Not committed** (about 1 MB, regenerated from the inputs).
+- `untyped_runs.tsv.gz`: one run per untyped eligible isolate of `expand`, `unvalidated`, `held` and `typed_no_gate` species; the run list columns of `../sra_survey/pilot/CONTRACT.md` once a panel is named. **Not committed** (about 1 MB, regenerated from the inputs).
 - `snapshot.json`: input files with sha256, the PopSeq commit, the counts of runs kept and dropped.
 - `CHANGES.md`: against the newest earlier snapshot: species new to the table, changed action, gained isolates, and **lost isolates** (a red flag: archives rarely drop records, so a loss usually means the query or a filter changed).
 - `local_inventory_failed.txt`: subprojects PopSeq's inventory could not read.

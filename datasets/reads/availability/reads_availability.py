@@ -294,6 +294,8 @@ def main():
             action = "unvalidated"
         elif decision.startswith("HOLD"):
             action = "blocked_panel" if PANEL_HOLD.search(decision) else "held"
+        elif tp:
+            action = "typed_no_gate"         # typed with a panel outside the waves (pilot4: Pyricularia oryzae) but never gated; not a reference gap
         elif len(elig) + loc_new < a.min_isolates:
             action = "too_few"
         elif t in ("A", "A1", "B"):
@@ -319,7 +321,7 @@ def main():
             "ci95_halfwidth_all": wilson_halfwidth(round(minor / n_single * n_all), n_all) if n_single and len(single) >= 2 else "",
             "genome_mb": gsize.get(key, ""),
         })
-        if action in ("expand", "unvalidated", "held"):
+        if action in ("expand", "unvalidated", "held", "typed_no_gate"):
             slug = re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
             for bs in sorted(untyped):
                 r = elig[bs]
@@ -327,7 +329,7 @@ def main():
                 untyped_rows.append([slug, name, r["run_accession"], r["read_count"], r["base_count"], r["library_layout"],
                                      (r.get("strain") or r.get("isolate") or ""), r["study_accession"], bs, cov,
                                      "yes" if MIN_SEL <= r["bases"] <= MAX_SEL else "no", action])
-    order = ["expand", "unvalidated", "held", "blocked_panel", "new_candidate", "needs_reference", "homothallic", "complete", "too_few"]
+    order = ["expand", "unvalidated", "held", "typed_no_gate", "blocked_panel", "new_candidate", "needs_reference", "homothallic", "complete", "too_few"]
     rows.sort(key=lambda r: (order.index(r["action"]), -r["untyped_public_eligible"] - r["local_not_public"], r["species"]))
     cols = list(rows[0].keys())
     with open(os.path.join(out, "species_availability.tsv"), "w", newline="") as fh:
@@ -372,6 +374,7 @@ def write_summary(out, rows, snap, untyped_rows):
         "expand": "passed the wave gate; more public or local isolates exist than were typed (the 50-run cap)",
         "unvalidated": "typed but the gate could not validate the panel; untyped isolates listed, run only after a curator ruling",
         "held": "held for typing-rate or agreement reasons; untyped isolates listed for a re-test",
+        "typed_no_gate": "typed with a panel outside the waves (pilot runs) but never gated; untyped isolates listed",
         "blocked_panel": "held because no usable panel could be built; needs reference or panel work, not more reads",
         "new_candidate": "not yet in a wave; MATPredict has records for the species or its genus",
         "needs_reference": "not yet in a wave; no MATPredict record in the genus",
@@ -387,7 +390,7 @@ def write_summary(out, rows, snap, untyped_rows):
     for k, v in by.items():
         L.append(f"| `{k}` | {len(v)} | {sum(r['public_isolates_eligible'] for r in v):,} | {sum(r['typed_public'] + r['typed_local'] for r in v):,} | "
                  f"{sum(r['untyped_public_eligible'] for r in v):,} | {sum(r['local_not_public'] for r in v):,} | {meaning[k]} |")
-    L += ["", f"`untyped_runs.tsv.gz`: {len(untyped_rows):,} runs, one per untyped eligible isolate, for `expand`, `unvalidated` and `held` species "
+    L += ["", f"`untyped_runs.tsv.gz`: {len(untyped_rows):,} runs, one per untyped eligible isolate, for `expand`, `unvalidated`, `held` and `typed_no_gate` species "
           "(the run nearest 3 Gb inside 0.6-12 Gb, as `select_runs.py`). Columns fit the run list of `CONTRACT.md` once a panel is named.", ""]
     for k, title, n in (("expand", "Largest gains for passed species", 25), ("new_candidate", "Largest new candidates (records for the species or genus)", 25),
                         ("needs_reference", "Largest species with no MATPredict record in the genus", 15), ("unvalidated", "Unvalidated species with data waiting", 15)):

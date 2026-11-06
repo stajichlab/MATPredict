@@ -67,7 +67,9 @@ def cfg(a):
 LENIENT_GENERA = ("Schizosaccharomyces", "Pneumocystis", "Taphrina", "Protomyces", "Saitoella", "Neolecta")
 # Genera whose MAT loci fall outside the default span limits (4 to 60 kb): the Cryptococcus MAT locus is 40 to 200 kb (the a and alpha alleles span the whole region);
 # the Rhodotorula P/R locus as reported is about 2 kb.
-SPAN_GENERA = {"Cryptococcus": ("4000", "250000"), "Rhodotorula": ("1000", "60000")}
+SPAN_GENERA = {"Cryptococcus": ("4000", "250000"), "Rhodotorula": ("1000", "60000"), "Rhizopus": ("1000", "60000"), "Mucor": ("1000", "60000")}
+# Genera whose loci are reported as little more than their genes (no flank inside the reported span): cut this much genome on each side (panel_from_assemblies --pad).
+PAD_GENERA = {"Rhodotorula": "6000", "Rhizopus": "6000", "Mucor": "6000"}
 
 
 def plan_one(a):
@@ -77,7 +79,7 @@ def plan_one(a):
     def hold(reason):
         open(os.path.join(d, "status"), "w").write("held:" + reason + "\n"); print(sp, "HELD", reason); sys.exit(0)
     r = subprocess.run([PY, f"{HERE}/panel_from_assemblies.py", "--species", sp, "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv", "--reports", f"{I}/reports_all.tar.zst",
-                        "--genome-dir", f"{I}/genomes", "--out", panel, "--prefix", prefix, "--min-cluster-size", "1", "--max-reps", "6", "--per-lineage", "--jobs", "4"] + (["--min-span", "1000", "--classes", "mat_locus", "partial_locus", "idiomorph_gene_only"] if lenient else ["--min-span", SPAN_GENERA[sp.split()[0]][0], "--max-span", SPAN_GENERA[sp.split()[0]][1]] if sp.split()[0] in SPAN_GENERA else ["--min-span", "4000"]) + (["--borrow", sp.split()[0] + " "] if getattr(a, "borrow", False) or lenient else []),
+                        "--genome-dir", f"{I}/genomes", "--out", panel, "--prefix", prefix, "--min-cluster-size", "1", "--max-reps", "6", "--per-lineage", "--jobs", "4"] + (["--min-span", "1000", "--classes", "mat_locus", "partial_locus", "idiomorph_gene_only"] if lenient else ["--min-span", SPAN_GENERA[sp.split()[0]][0], "--max-span", SPAN_GENERA[sp.split()[0]][1]] if sp.split()[0] in SPAN_GENERA else ["--min-span", "4000"]) + (["--borrow", sp.split()[0] + " "] if getattr(a, "borrow", False) or lenient else []) + (["--pad", PAD_GENERA[sp.split()[0]]] if sp.split()[0] in PAD_GENERA else []),
                        stdout=log, stderr=log)
     if r.returncode or not os.path.isdir(os.path.join(panel, "L1")): hold("panel_build_failed")
     sys.path.insert(0, f"{P}/.claude/worktrees/run-b317ece/src")

@@ -84,6 +84,7 @@ def core_extents(tar_path, wanted, names=("MAT1-1", "MAT1-2"), norm=None):
         for m in tf:
             if not (m.isfile() and m.name.endswith("/detection_report.yaml")): continue
             gn = os.path.basename(os.path.dirname(m.name))
+            gn = gn[len("BFD__"):] if gn.startswith("BFD__") else gn      # the Mucoromycotina campaign names its run folders BFD__<genome>; the genome tables do not
             if gn not in wanted: continue
             d = yaml.load(tf.extractfile(m).read(), Loader=L) or {}
             for loc in d.get("detected") or []:

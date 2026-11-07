@@ -17,8 +17,8 @@ the idiomorph that was set aside. The rule does not run where the partial-core r
 
 ## How often
 v0.8.1 run, 12,051 `Ascomycota:MAT` loci with a called idiomorph: 8,309 have evidence for one idiomorph only; of the 3,742 with a live core
-gene of both, 1,613 have both polished, 2,115 have the called idiomorph polished and the other not, and **8 (all medium) have the called
-idiomorph unpolished while the other is polished**: the only loci the rule can touch in a run of that size.
+gene of both, 1,610 have both polished, 2,115 have the called idiomorph polished and the other not, 9 have neither polished, and **8 (all
+medium) have the called idiomorph unpolished while the other is polished**: the only loci the rule can touch in a run of that size.
 
 ## What it does not do
 Other families (MATsc, MTL, MATog, Basidiomycota, Mucoromycota) are out of scope: their genes and bitscore scales were not measured. The

@@ -28,7 +28,9 @@ def main():
         if l.startswith("#"): continue
         p = l.rstrip("\n").split("\t")
         if len(p) > 3: asm[p[0]] = p[2]
-    g = {r["genome"]: r for r in csv.DictReader(open(a.genomes), delimiter="\t") if r["species"].startswith(a.species)}
+    members = a.species.split("|")                       # one species, or a group of them: "Cryptococcus gattii|Cryptococcus deuterogattii|..."
+    is_member = lambda name: any(name.startswith(m) for m in members)
+    g = {r["genome"]: r for r in csv.DictReader(open(a.genomes), delimiter="\t") if is_member(r["species"])}
     nm = lambda x: "a" if "alpha" in a.names and norm_idio(x) == "A" else norm_idio(x)
     truth = collections.defaultdict(set); gen_of = {}
     for r in csv.DictReader(open(a.loci), delimiter="\t"):
@@ -36,13 +38,13 @@ def main():
             m = re.match(r"(GC[AF]_\d+\.\d+)", r["genome"])      # a genome without an NCBI assembly accession (JGI names in Mucoromycotina) has no BioSample: no truth
             bs = asm.get(m.group(1)) if m else None
             if bs: truth[bs].add(nm(r["idiomorph"])); gen_of[bs] = r["genome"]
-    flagged = {r["study"] for r in csv.DictReader(open(a.studies), delimiter="\t") if r["species"] == a.species and r["excluded_as"]}
+    flagged = {r["study"] for r in csv.DictReader(open(a.studies), delimiter="\t") if r["species"] in members and r["excluded_as"]}
     meta = {m["run_accession"]: m for m in csv.DictReader(open(a.meta), delimiter="\t")}
     flagged |= {x for x in a.exclude_studies.split(",") if x}
     inc = {x for x in a.include.split(",") if x}
     best = {}
     for r in csv.DictReader(open(a.runs), delimiter="\t"):
-        if not r["scientific_name"].startswith(a.species) or not r["study_accession"]: continue
+        if not is_member(r["scientific_name"]) or not r["study_accession"]: continue
         if r["study_accession"] in flagged and r["run_accession"] not in inc: continue
         try: gb = int(r["base_count"] or 0) / 1e9
         except ValueError: continue

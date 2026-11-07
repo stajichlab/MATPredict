@@ -67,6 +67,9 @@ def cfg(a):
 LENIENT_GENERA = ("Schizosaccharomyces", "Pneumocystis", "Taphrina", "Protomyces", "Saitoella", "Neolecta")
 # Genera whose MAT loci fall outside the default span limits (4 to 60 kb): the Cryptococcus MAT locus is 40 to 200 kb (the a and alpha alleles span the whole region);
 # the Rhodotorula P/R locus as reported is about 2 kb.
+# Species complexes planned as ONE group (curator 2026-11-06): too few assemblies per species for a panel, enough together. The group name goes in species.tsv;
+# its members (species-name prefixes) are what the panel builder and the run selector match.
+GROUPS = {"Cryptococcus gattii complex": "Cryptococcus gattii|Cryptococcus deuterogattii|Cryptococcus bacillisporus"}
 SPAN_GENERA = {"Cryptococcus": ("4000", "250000"), "Rhodotorula": ("1000", "60000"), "Rhizopus": ("1000", "60000"), "Mucor": ("1000", "60000")}
 # Genera whose loci are reported as little more than their genes (no flank inside the reported span): cut this much genome on each side (panel_from_assemblies --pad).
 PAD_GENERA = {"Rhodotorula": "6000", "Rhizopus": "6000", "Mucor": "6000"}
@@ -78,7 +81,7 @@ def plan_one(a):
     log = open(os.path.join(d, "plan.log"), "w"); lenient = sp.split()[0] in LENIENT_GENERA
     def hold(reason):
         open(os.path.join(d, "status"), "w").write("held:" + reason + "\n"); print(sp, "HELD", reason); sys.exit(0)
-    r = subprocess.run([PY, f"{HERE}/panel_from_assemblies.py", "--species", sp, "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv", "--reports", f"{I}/reports_all.tar.zst",
+    r = subprocess.run([PY, f"{HERE}/panel_from_assemblies.py", "--species", GROUPS.get(sp, sp), "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv", "--reports", f"{I}/reports_all.tar.zst",
                         "--genome-dir", f"{I}/genomes", "--out", panel, "--prefix", prefix, "--min-cluster-size", "1", "--max-reps", "6", "--per-lineage", "--jobs", "4"] + (["--min-span", "1000", "--classes", "mat_locus", "partial_locus", "idiomorph_gene_only"] if lenient else ["--min-span", SPAN_GENERA[sp.split()[0]][0], "--max-span", SPAN_GENERA[sp.split()[0]][1]] if sp.split()[0] in SPAN_GENERA else ["--min-span", "4000"]) + (["--borrow", sp.split()[0] + " "] if getattr(a, "borrow", False) or lenient else []) + (["--pad", PAD_GENERA[sp.split()[0]]] if sp.split()[0] in PAD_GENERA else []),
                        stdout=log, stderr=log)
     if r.returncode or not os.path.isdir(os.path.join(panel, "L1")): hold("panel_build_failed")
@@ -104,7 +107,7 @@ def plan_one(a):
     if min(c) < GATE["min_core_kmers"]: hold("core_kmers_low")
     if max(c) / max(1, min(c)) > GATE["max_core_ratio"]: hold("core_kmers_unbalanced")
     if l1["shared"] < GATE["min_shared_kmers"]: hold("shared_kmers_low")
-    common = ["--species", sp, "--group", sl, "--panel-dir", panel, "--panel-prefix", prefix, "--runs", f"{I}/fungi_wgs_illumina.tsv", "--meta", f"{I}/fungi_meta.tsv",
+    common = ["--species", GROUPS.get(sp, sp), "--group", sl, "--panel-dir", panel, "--panel-prefix", prefix, "--runs", f"{I}/fungi_wgs_illumina.tsv", "--meta", f"{I}/fungi_meta.tsv",
               "--names", *names] + (["--classes", "mat_locus", "partial_locus", "idiomorph_gene_only"] if lenient else []) + ["--studies", f"{I}/studies.tsv", "--assembly-summary", f"{I}/asm_summary_fungi.txt", "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv"]
     r = subprocess.run([PY, f"{HERE}/select_runs.py", *common, "--n-truth", "12", "--n-free", "8", "--out", f"{d}/runs_test.tsv"], capture_output=True, text=True); log.write(r.stdout + r.stderr)
     if r.returncode or not os.path.exists(f"{d}/runs_test.tsv"): hold("run_selection_failed")
@@ -185,7 +188,7 @@ def submit_test(a):
 #   or both, the `both` limit does not apply, and an assembly's single idiomorph agrees with `both` (an assembly of a heterozygote collapses to one haplotype). Passing words carry _ZYGOSITY.
 # RELEASED: species held only because the reads do not separate the active MAT locus from the silent HML/HMR cassettes (Saccharomyces; Ogataea's two flip-flop loci). The calls are not
 #   wrong, the panel cannot tell the loci apart; they get the full run, flagged UNVALIDATED:released_<why>, so they can be examined (not when the runs failed to download).
-ZYGOSITY = {"Candida albicans"}
+ZYGOSITY = {"Candida albicans", "Pichia kudriavzevii"}      # P. kudriavzevii: most isolates are diploid a/alpha (curator 2026-11-06; wave 3 test 8 of 10 both)
 RELEASED = {"Saccharomyces paradoxus": "cassettes", "Saccharomyces eubayanus": "cassettes", "Saccharomyces pastorianus": "cassettes", "Saccharomyces mikatae": "cassettes",
             "Ogataea haglerorum": "cassettes"}
 

@@ -129,7 +129,8 @@ def main():
     ap.add_argument("--pad", type=int, default=0, help="also cut this many bases of the genome on each side of the reported locus (for loci reported as little more than their genes, such as the Rhodotorula P/R locus and the Mucorales sex locus: the flank then comes from the genome)")
     a = ap.parse_args()
     gall = {r["genome"]: r for r in csv.DictReader(open(a.genomes), delimiter="\t")}
-    g = {k: r for k, r in gall.items() if r["species"].startswith(a.species)}
+    members = a.species.split("|")      # one species, or a group of them joined by | (a species complex planned as one group)
+    g = {k: r for k, r in gall.items() if any(r["species"].startswith(m) for m in members)}
     ok_loc = lambda r: r["locus_class"] in a.classes and a.min_span <= int(r["end"]) - int(r["start"]) <= a.max_span
     loci = list(csv.DictReader(open(a.loci), delimiter="\t"))
     own = [r for r in loci if r["genome"] in g and ok_loc(r)]

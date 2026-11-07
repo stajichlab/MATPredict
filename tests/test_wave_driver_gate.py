@@ -186,3 +186,28 @@ def test_curate_applies_the_rulings_and_leaves_other_species_alone(tmp_path):
     assert after[-1].split("\t")[2] == "PROVISIONAL_ZYGOSITY" and after[-1].endswith("mode=zygosity")
     _run_regate(d)                                                                 # regate keeps both rulings
     assert (d / "gates_final.tsv").read_text().splitlines()[-2:] == after[-2:]
+
+
+def test_incomplete_lists_killed_missing_and_failed_runs_but_not_typing_errors(tmp_path):
+    import argparse, json as js
+    w = tmp_path / "wave"; (w / "st").mkdir(parents=True); (w / "out").mkdir()
+    states = {"r1": "done", "r2": "started", "r3": "failed_download", "r4": "failed_type", "r5": "unavailable_at_ncbi"}      # r6: no run.json
+    with open(w / "st" / "runs_all.tsv", "w", newline="") as fh:
+        cw = csv.writer(fh, delimiter="\t", lineterminator="\n"); cw.writerow(["run_accession", "group"]); cw.writerows([[r, "g"] for r in list(states) + ["r6"]])
+    for r, s in states.items():
+        (w / "out" / f"{r}.run.json").write_text(js.dumps({"state": s}))
+    wd.incomplete(argparse.Namespace(wave=str(w), stage_name="st", out_dir=None))
+    got = [r["run_accession"] for r in csv.DictReader(open(w / "st" / "runs_incomplete.tsv"), delimiter="\t")]
+    assert got == ["r2", "r3", "r6"]
+
+
+def test_retry_pass_and_summary_never_go_to_the_run_partitions(tmp_path, monkeypatch):
+    import argparse
+    calls = []
+    monkeypatch.setattr(wd, "sbatch", lambda args, **kw: calls.append(args) or str(len(calls)))
+    a = argparse.Namespace(wave=str(tmp_path / "w"), out_dir=None, parts="preempt:preempt,short:stajichlab:short", retry_part="stajichlab:stajichlab", cpus=1, mem="8gb", conc=60, env=[], dry_run=False)
+    wd.submit_stage(a, "st", [{"run_accession": f"r{i}", "group": "g"} for i in range(4)])
+    part = lambda c: (c[c.index("-p") + 1], c[c.index("--qos") + 1] if "--qos" in c else "")
+    names = [c[c.index("-J") + 1] for c in calls]
+    assert [part(c) for c, n in zip(calls, names) if n.endswith("-run")] == [("preempt", ""), ("short", "short")]
+    assert all(part(c)[0] == "stajichlab" for c, n in zip(calls, names) if n.endswith("-retry") or n.endswith("-summary"))

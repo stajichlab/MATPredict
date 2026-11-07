@@ -15,6 +15,7 @@ Commands (all take --wave DIR and the config options below):
   submit-test          merge the test runs of the planned species and queue them (split over the --parts partitions: stajichlab and preempt by default)
   gate                 summarize the test results and decide per species: PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC, UNVALIDATED:<reasons> or HOLD:<reasons>   (gates below)
   curate               apply the curator rulings (ZYGOSITY, RELEASED; see the code) to an existing gates table; a ZYGOSITY species is counted again from --stage's results
+  incomplete           list the runs of --stage-name that did not finish (no run.json, `started` = killed or preempted, failed download/convert) into runs_incomplete.tsv for submit-list
   regate               decide again from the numbers in an existing gates table (after the rules change); writes the previous decision beside the new one
   submit-full          queue the remaining runs of the species that are not held (PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC and UNVALIDATED)
   report               write WAVE_REPORT.md from the summaries and the gates
@@ -126,24 +127,53 @@ def sbatch(args, **kw):
     return r.stdout.strip().split(";")[0]
 
 
+def parse_part(x):
+    """'partition:account[:qos]' -> (partition, account, qos or ''); a bare name is its own account. The short partition needs its qos: short:stajichlab:short."""
+    f = x.split(":")
+    return (f[0], f[1] if len(f) > 1 else f[0], f[2] if len(f) > 2 else "")
+
+
+INCOMPLETE = ("missing", "started", "failed_download", "failed_convert", "failed_unfinished")
+
+
+def incomplete(a):
+    """Runs of --stage-name STAGE that did not finish: no run.json (the task never started or died at once), state `started` (killed mid-run: preempted, node
+    failure, time limit) or a failed download or conversion. Writes WAVE/STAGE/runs_incomplete.tsv (the stage's own run-list rows, ready for submit-list) and prints
+    the count per state. `failed_type` and `unavailable_at_ncbi` are not rerun: the first is a typing error to look at, the second is not at NCBI."""
+    d = os.path.join(a.wave, a.stage_name); out = a.out_dir or os.path.join(a.wave, "out")
+    rows = rd(os.path.join(d, "runs_all.tsv")); bad = []; c = collections.Counter()
+    for r in rows:
+        j = os.path.join(out, r["run_accession"] + ".run.json")
+        try:
+            st = json.load(open(j)).get("state", "started") if os.path.exists(j) else "missing"
+        except ValueError:
+            st = "failed_unfinished"
+        c[st] += 1
+        if st in INCOMPLETE: bad.append(r)
+    if bad: wr(os.path.join(d, "runs_incomplete.tsv"), bad, list(rows[0].keys()))
+    print(f"{a.stage_name}: {dict(c)}; {len(bad)} to rerun" + (f" -> {d}/runs_incomplete.tsv" if bad else ""))
+
+
 def submit_stage(a, stage, rows):
     """rows: run-list rows of ALL species for this stage; split over the two partitions; arrays of at most 2000 tasks; retry pass; summary job."""
     d = os.path.join(a.wave, stage); os.makedirs(d, exist_ok=True); os.makedirs(os.path.join(d, "logs"), exist_ok=True)
     out = a.out_dir or os.path.join(a.wave, "out"); os.makedirs(out, exist_ok=True)
     cols = list(rows[0].keys()); allp = os.path.join(d, "runs_all.tsv"); wr(allp, rows, cols)
-    parts = [tuple(x.split(":")) if ":" in x else (x, x) for x in getattr(a, "parts", "stajichlab:stajichlab,preempt:preempt").split(",")]      # partition:account pairs; the runs are dealt over them in turn
+    parts = [parse_part(x) for x in getattr(a, "parts", "stajichlab:stajichlab,preempt:preempt").split(",")]      # partition:account[:qos]; the runs are dealt over them in turn
+    rpart = parse_part(getattr(a, "retry_part", None) or "stajichlab:stajichlab")      # the retry pass never runs on a preemptible partition: a run killed twice would be lost silently
     ids = []; jobs = []
-    for pi, (part, acct) in enumerate(parts):
+    for pi, (part, acct, qos) in enumerate(parts):
         mine = rows[pi::len(parts)]
         for ci in range(0, len(mine), 2000):
             chunk = mine[ci:ci + 2000]; f = os.path.join(d, f"runs_{part}_{ci // 2000}.tsv"); wr(f, chunk, cols)
             for attempt in ("run", "retry"):
                 dep = ["--dependency", f"afterany:{ids[-1]}"] if attempt == "retry" else []
-                jid = sbatch(["-p", part, "-A", acct, "-c", str(a.cpus), "--mem", a.mem, "-J", f"wave-{stage}-{part}-{attempt}", "--array", f"1-{len(chunk)}%{a.conc}", *dep, "-o", f"{d}/logs/%x_%A_%a.out",
+                p_, a_, q_ = (rpart if attempt == "retry" else (part, acct, qos))
+                jid = sbatch(["-p", p_, "-A", a_, *(["--qos", q_] if q_ else []), "-c", str(a.cpus), "--mem", a.mem, "-J", f"wave-{stage}-{part}-{attempt}", "--array", f"1-{len(chunk)}%{a.conc}", *dep, "-o", f"{d}/logs/%x_%A_%a.out",
                               "--export", f"ALL,WORKER_DIR={HERE},TARGET_SPOTS=2000000,WINDOWS=8" + "".join("," + e for e in a.env), f"{HERE}/stream_type_sra.slurm", f, "none", "none", out]) if not a.dry_run else f"dry{len(ids)}"
-                ids.append(jid); jobs.append((stage, part, attempt, jid, len(chunk)))
+                ids.append(jid); jobs.append((stage, p_, attempt, jid, len(chunk)))
     last = ids[-1]
-    sm = sbatch(["-p", parts[0][0], "-A", parts[0][1], "-c", "1", "--mem", "4gb", "-t", "0:30:00", "-J", f"wave-{stage}-summary", "--dependency", "afterany:" + ":".join(ids), "-o", f"{d}/logs/%x_%j.out",
+    sm = sbatch(["-p", rpart[0], "-A", rpart[1], *(["--qos", rpart[2]] if rpart[2] else []), "-c", "1", "--mem", "4gb", "-t", "0:30:00", "-J", f"wave-{stage}-summary", "--dependency", "afterany:" + ":".join(ids), "-o", f"{d}/logs/%x_%j.out",
                  "--wrap", f"{PY} {HERE}/summarize_pilot.py --runs {allp} --results {out} --out {d}/summary"]) if not a.dry_run else "drysummary"
     jobs.append((stage, "-", "summary", sm, 0))
     if not a.dry_run:
@@ -373,7 +403,7 @@ def status(a):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("cmd", choices=["plan-one", "submit-plan", "submit-test", "gate", "regate", "curate", "submit-full", "report", "status", "submit-list"])
+    ap.add_argument("cmd", choices=["plan-one", "submit-plan", "submit-test", "gate", "regate", "curate", "incomplete", "submit-full", "report", "status", "submit-list"])
     ap.add_argument("--wave", required=True); ap.add_argument("--inputs", default=f"{P}/results/sra_reads_typing/wave_inputs")
     ap.add_argument("--species"); ap.add_argument("--conc", type=int, default=60, help="tasks running at once per array (the curator lifted the CPU limit for this work, 2026-10-27)")
     ap.add_argument("--cpus", type=int, default=1, help="CPUs per run task: every step is single-threaded (measured 2026-10-27), and the exfab account is limited to 32 CPUs, so 1 CPU gives 32 tasks at once instead of 8")
@@ -392,9 +422,10 @@ def main():
     ap.add_argument("--in-file", default="gates_final.tsv", help="regate: the gates table (in the wave directory) to decide again")
     ap.add_argument("--out-file", help="regate: where to write it (default: the input file)")
     ap.add_argument("--parts", default="stajichlab:stajichlab,preempt:preempt", help="partition:account pairs the run arrays are split over (the exfab partition is one node, gpu12, whose SRA downloads run at about 0.3 MB/s: not a default) (preempt:preempt is allowed: a preempted task is rerun by the retry pass, and the worker is idempotent)")
+    ap.add_argument("--retry-part", default="stajichlab:stajichlab", help="partition:account[:qos] of the retry pass and the summary job; keep it NOT preemptible")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
-    {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "regate": regate, "curate": curate, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)
+    {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "regate": regate, "curate": curate, "incomplete": incomplete, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)
 
 
 if __name__ == "__main__":

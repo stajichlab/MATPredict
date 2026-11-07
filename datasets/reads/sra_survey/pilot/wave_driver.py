@@ -12,7 +12,7 @@ A wave directory (WAVE) holds:
 Commands (all take --wave DIR and the config options below):
   plan-one SPECIES     build the lineage panels, check them (panel gate), choose test and full run lists for ONE species
   submit-plan          queue `plan-one` for every species of species.tsv as an array (panels are built on compute nodes)
-  submit-test          merge the test runs of the planned species and queue them (split over the exfab and stajichlab partitions)
+  submit-test          merge the test runs of the planned species and queue them (split over the --parts partitions: stajichlab and preempt by default)
   gate                 summarize the test results and decide per species: PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC, UNVALIDATED:<reasons> or HOLD:<reasons>   (gates below)
   curate               apply the curator rulings (ZYGOSITY, RELEASED; see the code) to an existing gates table; a ZYGOSITY species is counted again from --stage's results
   regate               decide again from the numbers in an existing gates table (after the rules change); writes the previous decision beside the new one
@@ -129,7 +129,7 @@ def submit_stage(a, stage, rows):
     d = os.path.join(a.wave, stage); os.makedirs(d, exist_ok=True); os.makedirs(os.path.join(d, "logs"), exist_ok=True)
     out = a.out_dir or os.path.join(a.wave, "out"); os.makedirs(out, exist_ok=True)
     cols = list(rows[0].keys()); allp = os.path.join(d, "runs_all.tsv"); wr(allp, rows, cols)
-    parts = [tuple(x.split(":")) if ":" in x else (x, x) for x in getattr(a, "parts", "exfab:exfab,stajichlab:stajichlab").split(",")]      # partition:account pairs; the runs are dealt over them in turn
+    parts = [tuple(x.split(":")) if ":" in x else (x, x) for x in getattr(a, "parts", "stajichlab:stajichlab,preempt:preempt").split(",")]      # partition:account pairs; the runs are dealt over them in turn
     ids = []; jobs = []
     for pi, (part, acct) in enumerate(parts):
         mine = rows[pi::len(parts)]
@@ -171,7 +171,7 @@ def submit_plan(a):
         sp = [r for r in sp if os.path.exists(os.path.join(a.wave, "plan", r["slug"], "status")) and open(os.path.join(a.wave, "plan", r["slug"], "status")).read().startswith(pre)]; os.makedirs(os.path.join(a.wave, "plan_logs"), exist_ok=True)
     lst = os.path.join(a.wave, f"plan_species_{int(__import__('time').time())}.txt"); open(lst, "w").write("".join(r["species"] + "\n" for r in sp))      # one list per submission: a pending array reads its own list, not a later one
     cmd = (f"export PATH=/opt/linux/rocky/8.x/x86_64/pkgs/miniconda3/py39_4.12.0/bin:$PATH; sp=$(sed -n ${{SLURM_ARRAY_TASK_ID}}p {lst}); {PY} {HERE}/wave_driver.py plan-one --wave {a.wave} --inputs {a.inputs} --species \"$sp\"" + (" --borrow" if a.borrow else ""))
-    jid = sbatch(["-p", "exfab", "-A", "exfab", "-c", "4", "--mem", "16gb", "-t", "2:00:00", "-J", "wave-plan", "--array", f"1-{len(sp)}%{a.conc}", "-o", f"{a.wave}/plan_logs/%x_%A_%a.out", "--wrap", cmd]) if not a.dry_run else "dryplan"
+    jid = sbatch(["-p", "stajichlab", "-A", "stajichlab", "-c", "4", "--mem", "16gb", "-t", "2:00:00", "-J", "wave-plan", "--array", f"1-{len(sp)}%{a.conc}", "-o", f"{a.wave}/plan_logs/%x_%A_%a.out", "--wrap", cmd]) if not a.dry_run else "dryplan"
     print("plan array", jid, "for", len(sp), "species")
 
 
@@ -389,7 +389,7 @@ def main():
     ap.add_argument("--only", help="submit-full: only the species whose decision is this word (PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC or UNVALIDATED)")
     ap.add_argument("--in-file", default="gates_final.tsv", help="regate: the gates table (in the wave directory) to decide again")
     ap.add_argument("--out-file", help="regate: where to write it (default: the input file)")
-    ap.add_argument("--parts", default="exfab:exfab,stajichlab:stajichlab", help="partition:account pairs the run arrays are split over (preempt:preempt is allowed: a preempted task is rerun by the retry pass, and the worker is idempotent)")
+    ap.add_argument("--parts", default="stajichlab:stajichlab,preempt:preempt", help="partition:account pairs the run arrays are split over (the exfab partition is one node, gpu12, whose SRA downloads run at about 0.3 MB/s: not a default) (preempt:preempt is allowed: a preempted task is rerun by the retry pass, and the worker is idempotent)")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "regate": regate, "curate": curate, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)

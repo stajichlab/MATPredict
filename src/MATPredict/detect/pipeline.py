@@ -105,7 +105,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import confidence_cap, family_status, homothallic, partial_core
+from MATPredict.detect import confidence_cap, family_status, homothallic, partial_core, weak_fragment_cap
 from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
@@ -412,6 +412,9 @@ class DetectionResult:
     triggered or was stopped by its contig-edge guard: the winning and the other
     idiomorph's core genes with their reference coverage, the profile scores, the
     decision (`flipped`, `undetermined`, `kept_edge_artefact`) and the reasons."""
+    weak_fragment_cap: dict | None = None
+    """Set only when `--weak-fragment-cap-policy` lowered this call to `low` (#275): the strongest core gene, its polish status and
+    bitscore, and the threshold. The idiomorph label is never changed. Absent when the policy is off or did nothing."""
     confidence_cap: dict | None = None
     """Set only when `--confidence-cap-policy` lowered this call from `high` to
     `medium` (`confidence_cap`): which criterion fired (`partial_edge`,
@@ -2476,6 +2479,8 @@ def run_pipeline(
     #: core hit is a contig-edge partial or a weak-identity hit with no flank gene
     #: (`confidence_cap`). Changes confidence only, never the locus or the idiomorph.
     confidence_cap_policy: str = confidence_cap.DEFAULT_CONFIDENCE_CAP_POLICY,
+    #: `--weak-fragment-cap-policy` (`weak_fragment_cap`, #275). Lowers the tier only, never the idiomorph.
+    weak_fragment_cap_policy: str = weak_fragment_cap.DEFAULT_WEAK_FRAGMENT_CAP_POLICY,
     #: `off` (default) or `on`: overlapping calls of two families become one (the family scoped to the genome
     #: keeps it) and an out-of-scope MTL call is flagged `family_unconfirmed` / `family_confirmed`
     #: (`family_status`). Independent of the policies above.
@@ -2731,6 +2736,7 @@ def run_pipeline(
     # the genome. It is read before polishing because the polish window is
     # clamped to the contig's real end.
     confidence_cap.check_policy(confidence_cap_policy)
+    weak_fragment_cap.check_policy(weak_fragment_cap_policy)
     family_status.check_policy(cross_family_policy)
     contig_lengths = _contig_lengths(genome_fasta)
 
@@ -3513,6 +3519,16 @@ def run_pipeline(
             )
             if cap is not None:
                 cap_note, final_confidence = cap.note, "medium"
+        # Weak-fragment cap (`weak_fragment_cap`, off by default, #275): after the caps above, so it sees the tier they left.
+        weak_note = None
+        if weak_fragment_cap_policy != weak_fragment_cap.POLICY_OFF and final_confidence in ("medium", "high"):
+            weak = weak_fragment_cap.evaluate(
+                final_confidence, called_idiomorph, (score.family_key.phylum, score.family_key.locus_name),
+                [weak_fragment_cap.CoreStat(e.gene_name, e.status, e.bitscore) for e in evidence if not e.lost_to],
+                policy=weak_fragment_cap_policy,
+            )
+            if weak is not None:
+                weak_note, final_confidence = weak.note, "low"
         return DetectionResult(
             polished_genes=polished_genes,
             caax_dependent=caax_dependent,
@@ -3529,6 +3545,7 @@ def run_pipeline(
             # keep `high` (that is a statement about how sure we are).
             confidence=final_confidence,
             confidence_cap=cap_note,
+            weak_fragment_cap=weak_note,
             idiomorph=called_idiomorph,
             idiomorph_candidates=own_vote,
             idiomorph_vote_note=vote_note,

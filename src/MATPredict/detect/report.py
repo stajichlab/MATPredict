@@ -424,6 +424,7 @@ def _result_doc(r: DetectionResult, contig_lengths: dict | None = None) -> dict:
         **({"homothallic_note": r.homothallic_note} if getattr(r, "homothallic_note", None) else {}),
         # `--confidence-cap-policy`: written only when it lowered this call from high to medium.
         **({"confidence_cap": r.confidence_cap} if getattr(r, "confidence_cap", None) else {}),
+        **({"weak_fragment_cap": r.weak_fragment_cap} if getattr(r, "weak_fragment_cap", None) else {}),
         # Other-allele cross-hits the confidence tier did not count (curator's
         # ruling 2026-09-27). Written only when non-empty.
         **({"confidence_ignored_genes": list(r.confidence_ignored_genes)}

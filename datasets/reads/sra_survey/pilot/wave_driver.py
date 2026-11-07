@@ -69,7 +69,9 @@ LENIENT_GENERA = ("Schizosaccharomyces", "Pneumocystis", "Taphrina", "Protomyces
 # the Rhodotorula P/R locus as reported is about 2 kb.
 # Species complexes planned as ONE group (curator 2026-11-06): too few assemblies per species for a panel, enough together. The group name goes in species.tsv;
 # its members (species-name prefixes) are what the panel builder and the run selector match.
-GROUPS = {"Cryptococcus gattii complex": "Cryptococcus gattii|Cryptococcus deuterogattii|Cryptococcus bacillisporus"}
+GROUPS = {"Cryptococcus gattii complex": "Cryptococcus gattii|Cryptococcus deuterogattii|Cryptococcus bacillisporus",
+          "Blumeria graminis complex": "Blumeria graminis|Blumeria hordei",                 # B. hordei was split from B. graminis (f. sp. hordei)
+          "Sporothrix schenckii complex": "Sporothrix schenckii|Sporothrix brasiliensis"}
 SPAN_GENERA = {"Cryptococcus": ("4000", "250000"), "Rhodotorula": ("1000", "60000"), "Rhizopus": ("1000", "60000"), "Mucor": ("1000", "60000")}
 # Genera whose loci are reported as little more than their genes (no flank inside the reported span): cut this much genome on each side (panel_from_assemblies --pad).
 PAD_GENERA = {"Rhodotorula": "6000", "Rhizopus": "6000", "Mucor": "6000"}

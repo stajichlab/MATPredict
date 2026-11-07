@@ -6,6 +6,9 @@ release completed.
 
 ## [Unreleased]
 
+### Added
+- Opt-in `--idiomorph-rank-basis bitscore` (#275; default `identity`, in no preset): the pre-polish overlap resolver compares the best bitscore of each of two mutually exclusive idiomorph genes instead of the identity of each gene's best hit, and records `basis: first_pass_bitscore`. On 300 Ascomycota genomes it changes 13 calls (5 idiomorph flips in the MAT family, 8 MATsc locus changes), of which 2 flips have a core model behind the new call and 3 swap one weak call for another; Basidiomycota (120) and Mucoromycotina (90) are unchanged. It does not fix the *T. viride* vote. Details: `docs/notes/2026-11-06_idiomorph-rank-basis.md`.
+
 ## [0.8.1] — 2026-11-06 — `v0.8.1`
 
 > The entries below are those of the merged pull requests; the definitive run and its counts are in "The definitive run" below. v0.8.1 is a re-run of the definitive v0.8.0 run with: the #228 fallback after withheld hits (preset `v0.8.1`), the *S. pombe* silent-pair rule (#254; the #252 tie-break is reverted), report-only `resolution_flags`, the cross-family `cassette` indication with its shared-flank measurements, `two_idiomorphs` for Basidiomycota MAT and redPR, the rust allow list (#165) and the *Hyphopichia* MTLA1 record (#148; 11 of 389 sampled Serinales genomes drop a tier, tracked under #149). Not in v0.8.1: #255, the MATam family, the Ogataea candidate records.

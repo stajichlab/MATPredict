@@ -11,6 +11,7 @@ from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect import confidence_cap as _confidence_cap, family_status as _family_status, strong_single_gene as _strong_single_gene
 from MATPredict.detect import fallback_search as _fallback_search
+from MATPredict.detect.idiomorph import DEFAULT_RANK_BASIS, RANK_BASES
 from MATPredict.detect.family_status import CROSS_FAMILY_POLICIES, DEFAULT_CROSS_FAMILY_POLICY
 from MATPredict.detect.fallback_search import DEFAULT_FALLBACK_AFTER_WITHHELD_POLICY, FALLBACK_AFTER_WITHHELD_POLICIES
 from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CONFIDENCE_CAP_POLICY
@@ -420,6 +421,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "confidence_cap_policy": _confidence_cap_policy_from_args(args),
             "cross_family_policy": _cross_family_policy_from_args(args),
             "fallback_after_withheld_policy": _fallback_policy_from_args(args),
+            "idiomorph_rank_basis": getattr(args, "idiomorph_rank_basis", DEFAULT_RANK_BASIS),
             "strong_single_gene_policy": _strong_single_gene_policy_from_args(args),
             "scoped_roster_policy": _scoped_roster_policy_from_args(args),
             "scoped_roster": getattr(routing, "scoped_roster", None),
@@ -815,6 +817,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "reports no locus because the modelled-gene bar withheld every hit, the phylum-fallback families are searched as "
              "well (an Ogataea genome whose MATog hits are withheld is then searched with MATsc and MTL); the report's "
              "`fallback_search` says so. Needs --taxid.",
+    )
+    detect.add_argument(
+        "--idiomorph-rank-basis", choices=RANK_BASES, default=DEFAULT_RANK_BASIS,
+        help="identity: when two mutually exclusive idiomorph genes (MAT1-1-3 and MAT1-2-1, sexM and sexP) both hit one place, the "
+             "pre-polish overlap resolver compares the identity of each gene's best hit (default, the v0.8.x rule). bitscore: it "
+             "compares the best bitscore of each gene instead, which carries the alignment length that identity ignores (#275); "
+             "the resolution's `basis` is then `first_pass_bitscore`. Opt-in, not part of any preset.",
     )
     detect.add_argument(
         "--strong-single-gene-policy", action=_PolicyFlag, choices=STRONG_SINGLE_GENE_POLICIES,

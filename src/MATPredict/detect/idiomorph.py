@@ -65,7 +65,8 @@ class IdiomorphResolution:
     winner_coverage: float | None = None
     loser_coverage: float | None = None
     #: What decided the pair. `first_pass_identity`: the pre-polish rule
-    #: (`_rank`: proteome first, then raw identity). `model_score_miniprot` /
+    #: (`_rank`: proteome first, then raw identity). `first_pass_bitscore`: the same with the best bitscore of each gene
+    #: (opt-in `rank_basis`, #275). `model_score_miniprot` /
     #: `model_score_exonerate`: both genes were modelled in the same window
     #: and the tool's own alignment scores decided (`resolve_idiomorph_by_models`).
     basis: str = "first_pass_identity"
@@ -332,6 +333,24 @@ def _rank(hit: SearchHit) -> tuple[int, float]:
     genes, not a flaw in the ranking.
     """
     return (1 if hit.method in _PROTEOME_METHODS else 0, hit.identity)
+
+
+#: What `resolve_idiomorph_overlaps` compares once both hits come from the same kind of search (#275). `identity` is the v0.8.x
+#: rule (the percent identity of the single best hit of each gene). `bitscore` compares the best bitscore of each gene
+#: instead: a short HMG-box hit can reach a higher identity than a longer true hit of the other gene (Microdochium nivale: a 34.6%
+#: MAT1-2-1 hit of 59 bits lost to a 36.6% MAT1-1-3 hit of 41 bits), and the bitscore carries the alignment length that identity
+#: ignores. A hit without a bitscore (a fast-path proteome hit) falls back to its identity. Opt-in; the default is `identity`.
+RANK_BASIS_IDENTITY = "identity"
+RANK_BASIS_BITSCORE = "bitscore"
+RANK_BASES = (RANK_BASIS_IDENTITY, RANK_BASIS_BITSCORE)
+DEFAULT_RANK_BASIS = RANK_BASIS_IDENTITY
+
+
+def _rank_by(hit: SearchHit, basis: str) -> tuple[int, float]:
+    """`_rank` under a chosen basis: proteome standing first (as in `_rank`), then identity or bitscore."""
+    if basis == RANK_BASIS_BITSCORE and hit.bitscore is not None:
+        return (1 if hit.method in _PROTEOME_METHODS else 0, hit.bitscore)
+    return _rank(hit)
 
 
 LOCUS_CLASS_MAT = "mat_locus"
@@ -618,6 +637,7 @@ def resolve_idiomorph_overlaps(
     hits: list[SearchHit],
     family: Family,
     min_overlap_fraction: float = DEFAULT_MIN_OVERLAP_FRACTION,
+    rank_basis: str = DEFAULT_RANK_BASIS,
 ) -> tuple[list[SearchHit], list[IdiomorphResolution]]:
     """Collapse pairs of mutually exclusive idiomorph genes that hit one gene.
 
@@ -649,12 +669,12 @@ def resolve_idiomorph_overlaps(
             # contradictory verdicts -- on the real Absidia cuneospora locus,
             # 9 of them, one with sexM beating sexP -- and a margin taken from
             # the closest accidental pairing rather than from the actual call.
-            best_a = max(group_a, key=_rank)
-            best_b = max(group_b, key=_rank)
-            if _rank(best_a) == _rank(best_b):
+            best_a = max(group_a, key=lambda h: _rank_by(h, rank_basis))
+            best_b = max(group_b, key=lambda h: _rank_by(h, rank_basis))
+            if _rank_by(best_a, rank_basis) == _rank_by(best_b, rank_basis):
                 continue  # nothing to choose between them; leave undetermined
             winner, loser = (
-                (best_a, best_b) if _rank(best_a) > _rank(best_b) else (best_b, best_a)
+                (best_a, best_b) if _rank_by(best_a, rank_basis) > _rank_by(best_b, rank_basis) else (best_b, best_a)
             )
             losing_group = group_b if winner is best_a else group_a
             for hit in losing_group:
@@ -670,6 +690,7 @@ def resolve_idiomorph_overlaps(
                 loser_coverage=loser.coverage,
                 winner_span=(winner.start, winner.end),
                 loser_span=(min(h.start for h in losing_group), max(h.end for h in losing_group)),
+                basis="first_pass_bitscore" if rank_basis == RANK_BASIS_BITSCORE else "first_pass_identity",
             ))
     resolved = [
         dataclasses.replace(h, superseded_by=superseded[id(h)]) if id(h) in superseded else h

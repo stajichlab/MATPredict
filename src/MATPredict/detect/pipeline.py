@@ -118,6 +118,7 @@ from MATPredict.detect.idiomorph import (
     is_partial_strength,
     lost_to_for_call,
     DEFAULT_MIN_OVERLAP_FRACTION,
+    DEFAULT_RANK_BASIS,
     IdiomorphResolution,
     assign_idiomorph,
     classify_locus,
@@ -2439,6 +2440,7 @@ def run_pipeline(
     ambiguity_floor: float = 0.5,
     short_orf_aa_floor: int = 60,
     idiomorph_overlap_fraction: float = DEFAULT_MIN_OVERLAP_FRACTION,
+    idiomorph_rank_basis: str = DEFAULT_RANK_BASIS,
     relaxed_second_pass: bool = True,
     window_protein_length_multiple: float = DEFAULT_WINDOW_PROTEIN_LENGTH_MULTIPLE,
     window_max_intron_bp: int = DEFAULT_WINDOW_MAX_INTRON_BP,
@@ -2677,7 +2679,8 @@ def run_pipeline(
             if len(own) < 2:
                 continue
             resolved_own, own_events = resolve_idiomorph_overlaps(
-                own, family, min_overlap_fraction=idiomorph_overlap_fraction
+                own, family, min_overlap_fraction=idiomorph_overlap_fraction,
+                rank_basis=idiomorph_rank_basis,
             )
             if not own_events:
                 continue
@@ -2968,7 +2971,8 @@ def run_pipeline(
             if len(own) < 2:
                 continue
             resolved_own, own_events = resolve_idiomorph_overlaps(
-                own, family, min_overlap_fraction=idiomorph_overlap_fraction
+                own, family, min_overlap_fraction=idiomorph_overlap_fraction,
+                rank_basis=idiomorph_rank_basis,
             )
             # A pair the first pass already resolved comes back unchanged.
             # Recording it again reported every such event twice.

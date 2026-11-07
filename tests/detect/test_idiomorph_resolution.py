@@ -297,3 +297,42 @@ def test_a_custom_overlap_threshold_is_honoured():
     resolved, events = resolve_idiomorph_overlaps(hits, FAM, min_overlap_fraction=0.3)
     assert _by_gene(resolved)["sexM"].superseded_by == "sexP"
     assert len(events) == 1
+
+
+# --- rank basis (#275) -----------------------------------------------------------------------------------------------------------
+# Microdochium nivale (GCA_977970205.2): a 34.6% MAT1-2-1 hit of 59 bits lost to a 36.6% MAT1-1-3 hit of 41 bits under the identity
+# rule. Both come from tblastn, so the proteome standing does not separate them.
+
+def _tb_hit(gene, start, end, identity, bitscore):
+    return SearchHit(
+        FAM.key, gene, "core_MAT", "c1", start, end, "+", identity, f"rec_{gene}", "tblastn_genome", bitscore=bitscore,
+    )
+
+
+def test_identity_basis_is_the_default_and_prefers_the_higher_identity_hit():
+    p = _tb_hit("sexP", 100, 400, 34.6, 59.0)
+    m = _tb_hit("sexM", 100, 250, 36.6, 41.0)
+    resolved, events = resolve_idiomorph_overlaps([p, m], FAM)
+    assert _by_gene(resolved)["sexP"].superseded_by == "sexM"
+    assert events[0].basis == "first_pass_identity" and events[0].winner == "sexM"
+
+
+def test_bitscore_basis_prefers_the_longer_stronger_hit_and_records_its_basis():
+    p = _tb_hit("sexP", 100, 400, 34.6, 59.0)
+    m = _tb_hit("sexM", 100, 250, 36.6, 41.0)
+    resolved, events = resolve_idiomorph_overlaps([p, m], FAM, rank_basis="bitscore")
+    assert _by_gene(resolved)["sexM"].superseded_by == "sexP"
+    assert events[0].basis == "first_pass_bitscore" and events[0].winner == "sexP"
+
+
+def test_bitscore_basis_keeps_the_proteome_standing_and_falls_back_to_identity_without_a_bitscore():
+    # a proteome hit still outranks a tblastn hit whatever the bitscores
+    proteome = SearchHit(FAM.key, "sexM", "core_MAT", "c1", 100, 250, "+", 30.0, "rec_sexM", "diamond_proteome")
+    tblastn = _tb_hit("sexP", 100, 400, 34.0, 80.0)
+    resolved, events = resolve_idiomorph_overlaps([tblastn, proteome], FAM, rank_basis="bitscore")
+    assert events[0].winner == "sexM"
+    # two hits with no bitscore compare by identity, as before
+    a = SearchHit(FAM.key, "sexP", "core_MAT", "c1", 100, 400, "+", 40.0, "rec_sexP", "diamond_proteome")
+    b = SearchHit(FAM.key, "sexM", "core_MAT", "c1", 100, 400, "+", 35.0, "rec_sexM", "diamond_proteome")
+    _, events = resolve_idiomorph_overlaps([a, b], FAM, rank_basis="bitscore")
+    assert events[0].winner == "sexP"

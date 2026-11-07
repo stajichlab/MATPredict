@@ -105,7 +105,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import confidence_cap, family_status, homothallic, partial_core
+from MATPredict.detect import confidence_cap, family_status, homothallic, partial_core, weak_fragment_cap
 from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
@@ -412,6 +412,9 @@ class DetectionResult:
     triggered or was stopped by its contig-edge guard: the winning and the other
     idiomorph's core genes with their reference coverage, the profile scores, the
     decision (`flipped`, `undetermined`, `kept_edge_artefact`) and the reasons."""
+    weak_fragment_cap: dict | None = None
+    """Set only when `--weak-fragment-cap-policy` lowered this call to `low` (#275): the strongest core gene, its polish status and
+    bitscore, and the threshold. The idiomorph label is never changed. Absent when the policy is off or did nothing."""
     confidence_cap: dict | None = None
     """Set only when `--confidence-cap-policy` lowered this call from `high` to
     `medium` (`confidence_cap`): which criterion fired (`partial_edge`,
@@ -2425,6 +2428,21 @@ def _strong_single_gene_calls(results, clusters, families, build, *, searchable_
     return calls
 
 
+def _apply_weak_fragment_cap(results: list, policy: str) -> list:
+    """`weak_fragment_cap` over the final results: a call the rule caps becomes `low` and carries the note; others are returned as they are."""
+    if policy == weak_fragment_cap.POLICY_OFF:
+        return results
+    out = []
+    for r in results:
+        decision = weak_fragment_cap.evaluate(
+            r.confidence, r.idiomorph, (r.family_key.phylum, r.family_key.locus_name),
+            [weak_fragment_cap.CoreStat(e.gene_name, e.status, e.bitscore) for e in r.gene_evidence if not e.lost_to],
+            policy=policy,
+        )
+        out.append(replace(r, confidence="low", weak_fragment_cap=decision.note) if decision is not None else r)
+    return out
+
+
 def run_pipeline(
     genome_fasta: Path,
     proteome_fasta: Path | None,
@@ -2476,6 +2494,8 @@ def run_pipeline(
     #: core hit is a contig-edge partial or a weak-identity hit with no flank gene
     #: (`confidence_cap`). Changes confidence only, never the locus or the idiomorph.
     confidence_cap_policy: str = confidence_cap.DEFAULT_CONFIDENCE_CAP_POLICY,
+    #: `--weak-fragment-cap-policy` (`weak_fragment_cap`, #275). Lowers the tier only, never the idiomorph.
+    weak_fragment_cap_policy: str = weak_fragment_cap.DEFAULT_WEAK_FRAGMENT_CAP_POLICY,
     #: `off` (default) or `on`: overlapping calls of two families become one (the family scoped to the genome
     #: keeps it) and an out-of-scope MTL call is flagged `family_unconfirmed` / `family_confirmed`
     #: (`family_status`). Independent of the policies above.
@@ -2731,6 +2751,7 @@ def run_pipeline(
     # the genome. It is read before polishing because the polish window is
     # clamped to the contig's real end.
     confidence_cap.check_policy(confidence_cap_policy)
+    weak_fragment_cap.check_policy(weak_fragment_cap_policy)
     family_status.check_policy(cross_family_policy)
     contig_lengths = _contig_lengths(genome_fasta)
 
@@ -3973,6 +3994,10 @@ def run_pipeline(
             except Exception as exc:  # noqa: BLE001 - logged, treated as an unknown phylum
                 logger.warning("phylum lookup for the unverified label failed: %s", exc)
         results = label_verification(results, routing.routing_mode, genome_phylum)
+
+    # Weak-fragment cap (`weak_fragment_cap`, off by default, #275): on the FINAL results, after every other stage (the relaxed
+    # second pass sets its own tiers), so a note always names the tier that was actually reported and what it became.
+    results = _apply_weak_fragment_cap(results, weak_fragment_cap_policy)
 
     # Curator's ruling 2026-09-26: in a taxon whose assemblies collapse MTL
     # heterozygosity, a single-idiomorph genome is of unknown zygosity.

@@ -12,7 +12,7 @@ A wave directory (WAVE) holds:
 Commands (all take --wave DIR and the config options below):
   plan-one SPECIES     build the lineage panels, check them (panel gate), choose test and full run lists for ONE species
   submit-plan          queue `plan-one` for every species of species.tsv as an array (panels are built on compute nodes)
-  submit-test          merge the test runs of the planned species and queue them (split over the exfab and stajichlab partitions)
+  submit-test          merge the test runs of the planned species and queue them (split over the --parts partitions: stajichlab and preempt by default)
   gate                 summarize the test results and decide per species: PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC, UNVALIDATED:<reasons> or HOLD:<reasons>   (gates below)
   curate               apply the curator rulings (ZYGOSITY, RELEASED; see the code) to an existing gates table; a ZYGOSITY species is counted again from --stage's results
   regate               decide again from the numbers in an existing gates table (after the rules change); writes the previous decision beside the new one
@@ -67,7 +67,12 @@ def cfg(a):
 LENIENT_GENERA = ("Schizosaccharomyces", "Pneumocystis", "Taphrina", "Protomyces", "Saitoella", "Neolecta")
 # Genera whose MAT loci fall outside the default span limits (4 to 60 kb): the Cryptococcus MAT locus is 40 to 200 kb (the a and alpha alleles span the whole region);
 # the Rhodotorula P/R locus as reported is about 2 kb.
-SPAN_GENERA = {"Cryptococcus": ("4000", "250000"), "Rhodotorula": ("1000", "60000")}
+# Species complexes planned as ONE group (curator 2026-11-06): too few assemblies per species for a panel, enough together. The group name goes in species.tsv;
+# its members (species-name prefixes) are what the panel builder and the run selector match.
+GROUPS = {"Cryptococcus gattii complex": "Cryptococcus gattii|Cryptococcus deuterogattii|Cryptococcus bacillisporus"}
+SPAN_GENERA = {"Cryptococcus": ("4000", "250000"), "Rhodotorula": ("1000", "60000"), "Rhizopus": ("1000", "60000"), "Mucor": ("1000", "60000")}
+# Genera whose loci are reported as little more than their genes (no flank inside the reported span): cut this much genome on each side (panel_from_assemblies --pad).
+PAD_GENERA = {"Rhodotorula": "6000", "Rhizopus": "6000", "Mucor": "6000"}
 
 
 def plan_one(a):
@@ -76,8 +81,8 @@ def plan_one(a):
     log = open(os.path.join(d, "plan.log"), "w"); lenient = sp.split()[0] in LENIENT_GENERA
     def hold(reason):
         open(os.path.join(d, "status"), "w").write("held:" + reason + "\n"); print(sp, "HELD", reason); sys.exit(0)
-    r = subprocess.run([PY, f"{HERE}/panel_from_assemblies.py", "--species", sp, "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv", "--reports", f"{I}/reports_all.tar.zst",
-                        "--genome-dir", f"{I}/genomes", "--out", panel, "--prefix", prefix, "--min-cluster-size", "1", "--max-reps", "6", "--per-lineage", "--jobs", "4"] + (["--min-span", "1000", "--classes", "mat_locus", "partial_locus", "idiomorph_gene_only"] if lenient else ["--min-span", SPAN_GENERA[sp.split()[0]][0], "--max-span", SPAN_GENERA[sp.split()[0]][1]] if sp.split()[0] in SPAN_GENERA else ["--min-span", "4000"]) + (["--borrow", sp.split()[0] + " "] if getattr(a, "borrow", False) or lenient else []),
+    r = subprocess.run([PY, f"{HERE}/panel_from_assemblies.py", "--species", GROUPS.get(sp, sp), "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv", "--reports", f"{I}/reports_all.tar.zst",
+                        "--genome-dir", f"{I}/genomes", "--out", panel, "--prefix", prefix, "--min-cluster-size", "1", "--max-reps", "6", "--per-lineage", "--jobs", "4"] + (["--min-span", "1000", "--classes", "mat_locus", "partial_locus", "idiomorph_gene_only"] if lenient else ["--min-span", SPAN_GENERA[sp.split()[0]][0], "--max-span", SPAN_GENERA[sp.split()[0]][1]] if sp.split()[0] in SPAN_GENERA else ["--min-span", "4000"]) + (["--borrow", sp.split()[0] + " "] if getattr(a, "borrow", False) or lenient else []) + (["--pad", PAD_GENERA[sp.split()[0]]] if sp.split()[0] in PAD_GENERA else []),
                        stdout=log, stderr=log)
     if r.returncode or not os.path.isdir(os.path.join(panel, "L1")): hold("panel_build_failed")
     sys.path.insert(0, f"{P}/.claude/worktrees/run-b317ece/src")
@@ -102,7 +107,7 @@ def plan_one(a):
     if min(c) < GATE["min_core_kmers"]: hold("core_kmers_low")
     if max(c) / max(1, min(c)) > GATE["max_core_ratio"]: hold("core_kmers_unbalanced")
     if l1["shared"] < GATE["min_shared_kmers"]: hold("shared_kmers_low")
-    common = ["--species", sp, "--group", sl, "--panel-dir", panel, "--panel-prefix", prefix, "--runs", f"{I}/fungi_wgs_illumina.tsv", "--meta", f"{I}/fungi_meta.tsv",
+    common = ["--species", GROUPS.get(sp, sp), "--group", sl, "--panel-dir", panel, "--panel-prefix", prefix, "--runs", f"{I}/fungi_wgs_illumina.tsv", "--meta", f"{I}/fungi_meta.tsv",
               "--names", *names] + (["--classes", "mat_locus", "partial_locus", "idiomorph_gene_only"] if lenient else []) + ["--studies", f"{I}/studies.tsv", "--assembly-summary", f"{I}/asm_summary_fungi.txt", "--genomes", f"{I}/asco_genomes.tsv", "--loci", f"{I}/asco_loci.tsv"]
     r = subprocess.run([PY, f"{HERE}/select_runs.py", *common, "--n-truth", "12", "--n-free", "8", "--out", f"{d}/runs_test.tsv"], capture_output=True, text=True); log.write(r.stdout + r.stderr)
     if r.returncode or not os.path.exists(f"{d}/runs_test.tsv"): hold("run_selection_failed")
@@ -124,10 +129,10 @@ def submit_stage(a, stage, rows):
     d = os.path.join(a.wave, stage); os.makedirs(d, exist_ok=True); os.makedirs(os.path.join(d, "logs"), exist_ok=True)
     out = a.out_dir or os.path.join(a.wave, "out"); os.makedirs(out, exist_ok=True)
     cols = list(rows[0].keys()); allp = os.path.join(d, "runs_all.tsv"); wr(allp, rows, cols)
-    parts = [("exfab", "exfab"), ("stajichlab", "stajichlab")]
+    parts = [tuple(x.split(":")) if ":" in x else (x, x) for x in getattr(a, "parts", "stajichlab:stajichlab,preempt:preempt").split(",")]      # partition:account pairs; the runs are dealt over them in turn
     ids = []; jobs = []
     for pi, (part, acct) in enumerate(parts):
-        mine = rows[pi::2]
+        mine = rows[pi::len(parts)]
         for ci in range(0, len(mine), 2000):
             chunk = mine[ci:ci + 2000]; f = os.path.join(d, f"runs_{part}_{ci // 2000}.tsv"); wr(f, chunk, cols)
             for attempt in ("run", "retry"):
@@ -136,7 +141,7 @@ def submit_stage(a, stage, rows):
                               "--export", f"ALL,WORKER_DIR={HERE},TARGET_SPOTS=2000000,WINDOWS=8" + "".join("," + e for e in a.env), f"{HERE}/stream_type_sra.slurm", f, "none", "none", out]) if not a.dry_run else f"dry{len(ids)}"
                 ids.append(jid); jobs.append((stage, part, attempt, jid, len(chunk)))
     last = ids[-1]
-    sm = sbatch(["-p", "exfab", "-A", "exfab", "-c", "1", "--mem", "4gb", "-t", "0:30:00", "-J", f"wave-{stage}-summary", "--dependency", "afterany:" + ":".join(ids), "-o", f"{d}/logs/%x_%j.out",
+    sm = sbatch(["-p", parts[0][0], "-A", parts[0][1], "-c", "1", "--mem", "4gb", "-t", "0:30:00", "-J", f"wave-{stage}-summary", "--dependency", "afterany:" + ":".join(ids), "-o", f"{d}/logs/%x_%j.out",
                  "--wrap", f"{PY} {HERE}/summarize_pilot.py --runs {allp} --results {out} --out {d}/summary"]) if not a.dry_run else "drysummary"
     jobs.append((stage, "-", "summary", sm, 0))
     if not a.dry_run:
@@ -166,7 +171,7 @@ def submit_plan(a):
         sp = [r for r in sp if os.path.exists(os.path.join(a.wave, "plan", r["slug"], "status")) and open(os.path.join(a.wave, "plan", r["slug"], "status")).read().startswith(pre)]; os.makedirs(os.path.join(a.wave, "plan_logs"), exist_ok=True)
     lst = os.path.join(a.wave, f"plan_species_{int(__import__('time').time())}.txt"); open(lst, "w").write("".join(r["species"] + "\n" for r in sp))      # one list per submission: a pending array reads its own list, not a later one
     cmd = (f"export PATH=/opt/linux/rocky/8.x/x86_64/pkgs/miniconda3/py39_4.12.0/bin:$PATH; sp=$(sed -n ${{SLURM_ARRAY_TASK_ID}}p {lst}); {PY} {HERE}/wave_driver.py plan-one --wave {a.wave} --inputs {a.inputs} --species \"$sp\"" + (" --borrow" if a.borrow else ""))
-    jid = sbatch(["-p", "exfab", "-A", "exfab", "-c", "4", "--mem", "16gb", "-t", "2:00:00", "-J", "wave-plan", "--array", f"1-{len(sp)}%{a.conc}", "-o", f"{a.wave}/plan_logs/%x_%A_%a.out", "--wrap", cmd]) if not a.dry_run else "dryplan"
+    jid = sbatch(["-p", "stajichlab", "-A", "stajichlab", "-c", "4", "--mem", "16gb", "-t", "2:00:00", "-J", "wave-plan", "--array", f"1-{len(sp)}%{a.conc}", "-o", f"{a.wave}/plan_logs/%x_%A_%a.out", "--wrap", cmd]) if not a.dry_run else "dryplan"
     print("plan array", jid, "for", len(sp), "species")
 
 
@@ -183,7 +188,7 @@ def submit_test(a):
 #   or both, the `both` limit does not apply, and an assembly's single idiomorph agrees with `both` (an assembly of a heterozygote collapses to one haplotype). Passing words carry _ZYGOSITY.
 # RELEASED: species held only because the reads do not separate the active MAT locus from the silent HML/HMR cassettes (Saccharomyces; Ogataea's two flip-flop loci). The calls are not
 #   wrong, the panel cannot tell the loci apart; they get the full run, flagged UNVALIDATED:released_<why>, so they can be examined (not when the runs failed to download).
-ZYGOSITY = {"Candida albicans"}
+ZYGOSITY = {"Candida albicans", "Pichia kudriavzevii"}      # P. kudriavzevii: most isolates are diploid a/alpha (curator 2026-11-06; wave 3 test 8 of 10 both)
 RELEASED = {"Saccharomyces paradoxus": "cassettes", "Saccharomyces eubayanus": "cassettes", "Saccharomyces pastorianus": "cassettes", "Saccharomyces mikatae": "cassettes",
             "Ogataea haglerorum": "cassettes"}
 
@@ -384,6 +389,7 @@ def main():
     ap.add_argument("--only", help="submit-full: only the species whose decision is this word (PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC or UNVALIDATED)")
     ap.add_argument("--in-file", default="gates_final.tsv", help="regate: the gates table (in the wave directory) to decide again")
     ap.add_argument("--out-file", help="regate: where to write it (default: the input file)")
+    ap.add_argument("--parts", default="stajichlab:stajichlab,preempt:preempt", help="partition:account pairs the run arrays are split over (the exfab partition is one node, gpu12, whose SRA downloads run at about 0.3 MB/s: not a default) (preempt:preempt is allowed: a preempted task is rerun by the retry pass, and the worker is idempotent)")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "regate": regate, "curate": curate, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)

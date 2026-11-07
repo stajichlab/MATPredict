@@ -84,6 +84,7 @@ def core_extents(tar_path, wanted, names=("MAT1-1", "MAT1-2"), norm=None):
         for m in tf:
             if not (m.isfile() and m.name.endswith("/detection_report.yaml")): continue
             gn = os.path.basename(os.path.dirname(m.name))
+            gn = gn[len("BFD__"):] if gn.startswith("BFD__") else gn      # the Mucoromycotina campaign names its run folders BFD__<genome>; the genome tables do not
             if gn not in wanted: continue
             d = yaml.load(tf.extractfile(m).read(), Loader=L) or {}
             for loc in d.get("detected") or []:
@@ -125,9 +126,11 @@ def main():
     ap.add_argument("--min-own", type=int, default=2, help="with --borrow: an idiomorph with fewer than this many loci in the species also takes loci from the genus")
     ap.add_argument("--borrow", help="genus prefix (for example 'Aspergillus '): an idiomorph with no locus in the species takes its loci from the other species of this genus (flank clustering then pairs them with the species' lineages)")
     ap.add_argument("--min-flank", type=int, default=1500, help="a locus with less flank on both sides together is not used as a representative")
+    ap.add_argument("--pad", type=int, default=0, help="also cut this many bases of the genome on each side of the reported locus (for loci reported as little more than their genes, such as the Rhodotorula P/R locus and the Mucorales sex locus: the flank then comes from the genome)")
     a = ap.parse_args()
     gall = {r["genome"]: r for r in csv.DictReader(open(a.genomes), delimiter="\t")}
-    g = {k: r for k, r in gall.items() if r["species"].startswith(a.species)}
+    members = a.species.split("|")      # one species, or a group of them joined by | (a species complex planned as one group)
+    g = {k: r for k, r in gall.items() if any(r["species"].startswith(m) for m in members)}
     ok_loc = lambda r: r["locus_class"] in a.classes and a.min_span <= int(r["end"]) - int(r["start"]) <= a.max_span
     loci = list(csv.DictReader(open(a.loci), delimiter="\t"))
     own = [r for r in loci if r["genome"] in g and ok_loc(r)]
@@ -144,12 +147,12 @@ def main():
         L += extra; g = {**g, **{k: gall[k] for k in {r["genome"] for r in extra}}}
     open(os.path.join(a.out, f"{a.prefix}_idiomorphs.txt"), "w").write(" ".join(names) + "\n") if os.makedirs(a.out, exist_ok=True) is None else None
     print(f"{len(g)} genomes, {len(L)} loci within the span limits", flush=True)
-    jobs = [(r["genome"], r["contig"], int(r["start"]), int(r["end"]), os.path.join(a.genome_dir, r["genome"] + ".fa.gz")) for r in L]
+    jobs = [(r["genome"], r["contig"], max(1, int(r["start"]) - a.pad), int(r["end"]) + a.pad, os.path.join(a.genome_dir, r["genome"] + ".fa.gz")) for r in L]
     with mp.Pool(a.jobs) as pool:
         res = pool.map(work, jobs, chunksize=4)
     items = []
     for r, (gn, sq, sk) in zip(L, res):
-        if sq: items.append(dict(genome=gn, contig=r["contig"], start=int(r["start"]), end=int(r["end"]), idio=r["idiomorph"], conf=r["confidence"], cls=r["locus_class"], seq=sq, sketch=sk))
+        if sq: items.append(dict(genome=gn, contig=r["contig"], start=int(r["start"]), end=int(r["end"]), cut0=max(1, int(r["start"]) - a.pad), idio=r["idiomorph"], conf=r["confidence"], cls=r["locus_class"], seq=sq, sketch=sk))
     print(len(items), "loci cut", flush=True)
     if a.reports:
         ext = core_extents(a.reports, {r["genome"] for r in L}, names, nm)
@@ -157,7 +160,7 @@ def main():
         for x in items:
             e = ext.get((x["genome"], x["contig"], x["start"], x["end"]))
             if not e: continue
-            c0 = max(0, e[0] - a.margin - x["start"]); c1 = min(len(x["seq"]), e[1] + a.margin - x["start"] + 1)
+            c0 = max(0, e[0] - a.margin - x["cut0"]); c1 = min(len(x["seq"]), e[1] + a.margin - x["cut0"] + 1)      # cut0: where the cut sequence starts (the locus start less --pad)
             left, core, right = x["seq"][:c0], x["seq"][c0:c1], x["seq"][c1:]
             left, right = left[-a.max_flank:] if a.max_flank else left, right[:a.max_flank] if a.max_flank else right
             if len(left) + len(right) < a.min_flank or len(core) < 300: continue

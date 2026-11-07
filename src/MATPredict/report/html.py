@@ -434,6 +434,10 @@ def _margin_text(call: dict, cands: list[dict]) -> str:
                 f'<b class="num">{one(margin)}</b> identity points (the narrowest overlap resolution below).</p>')
     if margin is not None:
         return f'<p class="small">Margin: <b class="num">{one(margin)}</b></p>'
+    gap = call.get("idiomorph_identity_gap")
+    if gap is not None:
+        return (f'<p class="small">No other idiomorph scored; identity gap to the set-aside hit on the same HMG box: '
+                f'<b class="num">{one(gap)}</b> identity points.</p>')
     return '<p class="small">No other idiomorph scored.</p>'
 
 

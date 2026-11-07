@@ -411,6 +411,8 @@ def _result_doc(r: DetectionResult, contig_lengths: dict | None = None) -> dict:
         # observations the provisional overlap threshold will be recalibrated
         # against.
         "idiomorph_margin": r.idiomorph_margin,
+        # `--idiomorph-margin-policy separate` (#145): written only when set.
+        **({"idiomorph_identity_gap": r.idiomorph_identity_gap} if getattr(r, "idiomorph_identity_gap", None) is not None else {}),
         # The profile-HMM classifier's scores on the modelled core proteins,
         # when the family has one (curator's ruling 2026-09-26). When present
         # it decided `idiomorph`; `undetermined` means its margin fell below

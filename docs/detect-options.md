@@ -42,6 +42,7 @@ Mucoromycotina runs use `--phylum Mucoromycota` instead of a taxid.
 | `--confidence-cap-policy` | off,partial_weak,weak_only | `off` | off: no extra cap (default). partial_weak: a `high` call drops to `medium` when its best core hit is a contig-edge partial (< 80% of its reference, within 500 bp of a contig end, no full-length core gene) or a weak hit (< 45% identity) with no flank gene. weak_only: the second criterion alone. Changes confidence only; the reason is written as `confidence_cap`. |
 | `--cross-family-policy` | off,on | `off` | off: every family's calls are reported as they are (default). on: two families' calls at the same locus (>= 90% of the shorter) are one locus, kept by the family whose taxonomic scope contains the genome (else the better score), the other recorded as `cross_call`; an MTL call in a genome outside Serinales is flagged `family_unconfirmed`, or `family_confirmed` when two of PAP1, OBP1, PIK1 lie within 15 kb of its core genes. Confidence is never changed. |
 | `--fallback-after-withheld-policy` | off,on | `off` | off: a genome routed by taxid or lineage searches only the families scoped to it (default). on: when that search reports no locus because the modelled-gene bar withheld every hit, the phylum-fallback families are searched as well (an Ogataea genome whose MATog hits are withheld is then searched with MATsc and MTL); the report's `fallback_search` says so. Needs --taxid. |
+| `--weak-fragment-cap-policy` | off,on | `off` | off: no cap (default). on: an Ascomycota:MAT call whose strongest core gene (MAT1-*) is not a model on which both polish tools agree and scores under 50 bits is capped at tier `low`; the idiomorph, the locus and the class are never changed (#275). The report's `weak_fragment_cap` says which gene decided. |
 | `--strong-single-gene-policy` | off,on | `off` | off: a lone core gene with no flank and no second modelled gene is withheld (default). on: in a family with no other report, one modelled core gene at >= 85% identity covering >= 90% of its reference is reported as `idiomorph_gene_only`, confidence `low`, flagged `strong_single_gene`; two such loci of opposite idiomorph are both reported and the genome gets a `two_idiomorphs` statement. Independent of --idiomorph-policy and --partial-core-policy. |
 | `--scoped-roster-policy` | off,on | `off` | off: a roster gene that declares its own `taxonomic_scope` in order.yml is not searched (default; the run is the one it was before such genes were added). on: it is searched, and counts, for a genome whose lineage reaches its scope, and nowhere else (prototype: GAP1/BGL1 as optional bonus flanks of Ascomycota MAT in Pleosporaceae). |
 
@@ -107,18 +108,27 @@ Mucoromycotina runs use `--phylum Mucoromycota` instead of a taxid.
 | `MATPREDICT_HELIXERLITE` | the helixer-lite executable (default for `--helixerlite`). |
 | `MATPREDICT_MAX_INTRON_BP` | overrides the intron cap of the polish calls for a run (a family may set its own cap in `order.yml`). |
 | `MATPREDICT_POLISH_WORKERS` | number of parallel polish calls per genome (default the smaller of 4 and the CPU count; `1` runs them inline in the serial order). Does not change calls. |
+| `MATPREDICT_TBLASTN_SEG` | `yes` runs the genome-wide `tblastn` as two calls: `-seg no` for most queries and `-seg yes -soft_masking true` for the selected ones (default `no`: one `-seg no` call, as in v0.8.1). In `main`, not in a release yet (#276). |
+| `MATPREDICT_TBLASTN_SEG_GENES` | comma-separated reference gene names that get the filtered search (recommended `SLA2,APN2,MAT1-1-1`); replaces the length rule. |
+| `MATPREDICT_TBLASTN_SEG_MIN_AA` | with `MATPREDICT_TBLASTN_SEG=yes` and no gene list: queries of at least this many residues get the filtered search (default 250). |
 | `MATPREDICT_HTML` | `0`, `false`, `no` or `off` turns `report.html` off unless `--html` is given. |
 | `MATPREDICT_BFD_SUPPRESS` | overrides the path of the shared BFD suppress list (`detect suppress-filter`). |
 
-## Not in a release yet
+## In `main`, not in a release yet
 
-These are open pull requests or decisions; none changes a default.
+These are merged but unreleased; none changes a default, and none is in a preset (the preset change belongs in the release-prep pull request).
 
-| Item | State | What it is |
-|---|---|---|
-| `MATPREDICT_TBLASTN_SEG`, `MATPREDICT_TBLASTN_SEG_GENES`, `MATPREDICT_TBLASTN_SEG_MIN_AA` | PR #284 | opt-in `tblastn` filtering for the slowest genomes (#276). Default `-seg no`. With the gene list `SLA2,APN2,MAT1-1-1` it takes two outlier genomes from 3,063 s and 1,685 s to 468 s and 288 s with identical loci; it gives no speed-up on typical genomes. See `docs/notes/2026-11-06_tblastn-seg-policy.md`. |
-| `--idiomorph-rank-basis identity\|bitscore` | experiment closed (draft PR #285, closed unmerged) | compared bitscores instead of identity in the overlap resolver. It changed 13 of 300 Ascomycota calls, dropped silent cassette loci in Saccharomyces-type yeasts and moved the tier at 73 of 347 loci in both directions. The code stays on the `resolver-robust` branch; it is not in `main`. |
-| `--weak-fragment-cap-policy` and `--polished-vote-policy` (each `off\|on`) | cap: built (own PR); vote: decided, not built (#275) | two separate flags, both off by default and in no preset until release prep. The cap: an `Ascomycota:MAT` call whose strongest core gene is not a both-tools-agree model and scores under 50 bits is capped at tier `low`; the idiomorph label is kept (v0.8.1 run: 108 loci match, 68 would change tier, 23 medium and 45 high). The vote: when the called idiomorph rests only on unpolished evidence and the other idiomorph has a polished core gene, the polished one wins (8 loci in the v0.8.1 run; fixes the *T. viride* case). Two pull requests, the cap first. |
+| Item | What it is |
+|---|---|
+| `--weak-fragment-cap-policy off\|on` (#275, PR #288) | an `Ascomycota:MAT` call at medium or high whose strongest core gene is not a both-tools-agree model and scores under 50 bits is capped at tier `low`; the idiomorph label is kept. On the v0.8.1 run: 108 loci match, 68 would change tier (23 medium, 45 high). `docs/notes/2026-11-06_weak-fragment-cap.md`. |
+| `MATPREDICT_TBLASTN_SEG`, `MATPREDICT_TBLASTN_SEG_GENES`, `MATPREDICT_TBLASTN_SEG_MIN_AA` (#276, PR #284) | opt-in `tblastn` filtering for the slowest genomes. With the gene list `SLA2,APN2,MAT1-1-1` it takes two outlier genomes from 3,063 s and 1,685 s to 468 s and 288 s with identical loci; it gives no speed-up on typical genomes. `docs/notes/2026-11-06_tblastn-seg-policy.md`. |
+
+## Tried and not built
+
+| Item | Outcome |
+|---|---|
+| `--idiomorph-rank-basis identity\|bitscore` (draft PR #285, closed unmerged) | compared bitscores instead of identity in the overlap resolver. It changed 13 of 300 Ascomycota calls, dropped silent cassette loci in Saccharomyces-type yeasts and moved the tier at 73 of 347 loci in both directions. The code stays on the `resolver-robust` branch. `docs/notes/2026-11-06_idiomorph-rank-basis.md` (on that branch). |
+| `--polished-vote-policy` (#275; branch `polished-vote`, no pull request) | a polished idiomorph beating an unpolished one in the vote. It flipped a correct call (XylFL0594, MAT1-2 confirmed by reads) and changed none of the 47 pilot assemblies, including the *T. viride* case it was meant for. `docs/notes/2026-11-07_polished-vote-not-built.md`. |
 
 ## Adding a policy
 

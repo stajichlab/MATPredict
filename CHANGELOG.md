@@ -7,6 +7,7 @@ release completed.
 ## [Unreleased]
 
 ### Added
+- `docs/detect-options.md`: one page listing every `detect` option, policy, preset and environment variable with its default and what it does (tables generated from `--help`), and what is not in a release yet; `tests/test_docs_detect_options.py` fails when a policy, preset or environment variable is added without being listed.
 - Opt-in `tblastn` filtering policy for the slowest genomes (#276): `MATPREDICT_TBLASTN_SEG=yes` with `MATPREDICT_TBLASTN_SEG_GENES=SLA2,APN2,MAT1-1-1` (or `MATPREDICT_TBLASTN_SEG_MIN_AA`) runs the genome-wide localization as two `tblastn` calls: `-seg no` for every other query and `-seg yes -soft_masking true` (masked regions used for seeds only) for the listed gene names. On the two genomes that hit the 3,600 s limit in the v0.8.1 run it takes 3,063 s and 1,685 s to 468 s and 288 s with identical loci; on 300 Ascomycota genomes 296 are identical (no change of family, idiomorph, confidence or gene set) and on 120 Basidiomycota genomes all 120. It gives no speed-up on typical genomes. The default is unchanged (`-seg no`). Measurements and what does not work: `docs/notes/2026-11-06_tblastn-seg-policy.md`.
 
 ## [0.8.1] — 2026-11-06 — `v0.8.1`

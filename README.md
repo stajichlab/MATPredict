@@ -245,6 +245,8 @@ not an independent test.
 
 ### `matpredict detect`
 
+Every option, policy, preset (`--preset v0.8.1` is what the v0.8.1 run used) and environment variable is listed in [`docs/detect-options.md`](docs/detect-options.md).
+
 ```
 matpredict detect --genome GENOME [--proteins PROTEINS] [--taxid TAXID]
                   --out-dir OUT_DIR [options]

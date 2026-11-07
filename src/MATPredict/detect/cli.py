@@ -269,6 +269,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         confidence_cap_policy=_confidence_cap_policy_from_args(args),
         cross_family_policy=_cross_family_policy_from_args(args),
         strong_single_gene_policy=_strong_single_gene_policy_from_args(args),
+        idiomorph_rank_basis=getattr(args, "idiomorph_rank_basis", DEFAULT_RANK_BASIS),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
 

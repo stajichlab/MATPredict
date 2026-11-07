@@ -504,6 +504,36 @@ def test_cmd_detect_restricts_the_reference_fasta_to_the_routed_families(monkeyp
     assert recorded["routing"].routing_mode == "explicit_phylum"
 
 
+def test_idiomorph_rank_basis_reaches_the_pipeline(monkeypatch, tmp_path):
+    """#275: `--idiomorph-rank-basis` must arrive in `run_pipeline` (it once reached only the report's `parameters`, so the option
+    did nothing); the default is `identity`."""
+    import MATPredict.detect.cli as detect_cli
+    from MATPredict.detect.pipeline import DetectionOutcome
+
+    monkeypatch.setattr(
+        detect_cli, "MatpredictConfig",
+        SimpleNamespace(from_env=lambda repo_root: SimpleNamespace(db_root=Path("db"))),
+    )
+    seen: list = []
+
+    def fake_run_pipeline(**kwargs):
+        seen.append(kwargs.get("idiomorph_rank_basis", "MISSING"))
+        return DetectionOutcome(results=[])
+
+    monkeypatch.setattr(detect_cli, "build_reference_fasta", lambda db_root, out, family_keys=None, **kw: out)
+    monkeypatch.setattr(detect_cli, "run_pipeline", fake_run_pipeline)
+    monkeypatch.setattr(detect_cli, "write_detection_gff3", lambda *a, **k: None)
+    monkeypatch.setattr(detect_cli, "write_detection_report", lambda outcome, path, run=None: None)
+
+    base = dict(
+        genome="g.fa", proteins=None, taxid=None, out_dir=str(tmp_path / "out"), evidence_diagnostics=None, min_hits=1,
+        min_identity=None, require_core_role=False, exclude_records="", emit_cds_fasta=False, phylum="Mucoromycota",
+    )
+    assert detect_cli._cmd_detect(SimpleNamespace(**base)) == 0
+    assert detect_cli._cmd_detect(SimpleNamespace(**base, idiomorph_rank_basis="bitscore")) == 0
+    assert seen == ["identity", "bitscore"]
+
+
 def test_build_parser_survives_a_malformed_order_yml(monkeypatch, tmp_path):
     """A curator mid-edit leaving one `order.yml` unparseable must not take the
     whole CLI down. `_phylum_choices()` runs while the top-level parser is

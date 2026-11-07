@@ -44,7 +44,11 @@ With the gene list, the four remaining Ascomycota differences are locus spans: t
 edge with an identical gene set and identical scores.
 
 ## Not established
-- Only the Ascomycota MAT family was timed per gene. Mucoromycotina and the yeast families have no slow tail in the v0.8.1 run
-  (maximum 63 to 126 s). Basidiomycota has one (HD up to 3,093 s, PR up to 1,891 s); its slow proteins are being timed.
+- Only the Ascomycota MAT family has proteins that are slow on their own. Per-query timing of the three slowest non-rust
+  Basidiomycota genomes of the v0.8.1 run (Agaricales 59 Mb, Cantharellales 65 Mb, Gomphales 266 Mb; 74 to 157 reference proteins,
+  `-seg no`, one EPYC CPU) sums to 519, 919 and 932 s with no query above 138 s: the cost is spread across many queries (HD1, MIP1,
+  the pheromone receptors at 20 to 140 s each), so the gene list has nothing to protect there. Mucoromycotina and the yeast families
+  have no slow tail in the v0.8.1 run (maximum 63 to 126 s). The Basidiomycota tail of that run (HD up to 3,093 s) is a broad cost
+  on older nodes plus the polishing of many candidate loci, not a few slow proteins.
 - Hardware matters more than this setting for the whole run: the v0.8.1 chunks on the older AMD Opteron nodes ran about 2.15 times
   slower than on EPYC nodes (use `--constraint=milan` for timing).

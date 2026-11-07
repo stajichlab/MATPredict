@@ -813,7 +813,9 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
              "same locus (>= 90%% of the shorter) are one locus, kept by the family whose taxonomic scope "
              "contains the genome (else the better score), the other recorded as `cross_call`; an MTL call "
              "in a genome outside Serinales is flagged `family_unconfirmed`, or `family_confirmed` when two "
-             "of PAP1, OBP1, PIK1 lie within 15 kb of its core genes. Confidence is never changed.",
+             "of PAP1, OBP1, PIK1 lie within 15 kb of its core genes. Confidence is never changed. "
+             "keep_labelled: as on, and where the kept call has no idiomorph label while another family's call "
+             "at the same locus has one, both calls are kept (#255).",
     )
     detect.add_argument(
         "--fallback-after-withheld-policy", action=_PolicyFlag, choices=FALLBACK_AFTER_WITHHELD_POLICIES,

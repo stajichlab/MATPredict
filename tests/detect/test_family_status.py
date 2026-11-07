@@ -288,3 +288,30 @@ def test_a_within_family_cassette_block_is_kept():
     og = _side(SC, "MATa", 1, 100); og = replace(og, cassette={"idiomorph": "MATa", "role": "cassette_undetermined"})
     out = fs.flag_cross_family_cassettes([og, _side(MTL, "alpha", 5, 50, contig="c2")])
     assert out[0].cassette == {"idiomorph": "MATa", "role": "cassette_undetermined"} and out[1].cassette["cross_family"] is True
+
+
+def _labelled_pair(winner_idiomorph, loser_idiomorph):
+    """MATsc wins on identity, MTL loses; the two carry the given idiomorph labels."""
+    sc, mtl = _scored(SC, 100, 5000, 60.0, "medium"), _scored(MTL, 100, 5000, 50.0, "medium")
+    return replace(sc, idiomorph=winner_idiomorph), replace(mtl, idiomorph=loser_idiomorph)
+
+
+def test_keep_labelled_keeps_both_when_the_winner_has_no_label_and_the_other_does():
+    sc, mtl = _labelled_pair("undetermined", "alpha")
+    out = fs.apply([sc, mtl], FAMILIES, {OTHER}, fs.POLICY_KEEP_LABELLED)
+    assert sorted(r.family_key.locus_name for r in out) == ["MATsc", "MTL"]
+    assert all(any(n.get("kept_both") for n in r.cross_call) for r in out)
+
+
+def test_plain_on_still_drops_the_labelled_call():
+    sc, mtl = _labelled_pair("undetermined", "alpha")
+    out = fs.apply([sc, mtl], FAMILIES, {OTHER}, fs.POLICY_ON)
+    assert [r.family_key for r in out] == [SC] and not any(n.get("kept_both") for n in out[0].cross_call)
+
+
+@pytest.mark.parametrize("winner,loser", [("alpha", "undetermined"), ("alpha", "a"), ("undetermined", "undetermined")])
+def test_keep_labelled_changes_nothing_unless_winner_unlabelled_and_other_labelled(winner, loser):
+    sc, mtl = _labelled_pair(winner, loser)
+    on = fs.apply([sc, mtl], FAMILIES, {OTHER}, fs.POLICY_ON)
+    keep = fs.apply([sc, mtl], FAMILIES, {OTHER}, fs.POLICY_KEEP_LABELLED)
+    assert [r.family_key for r in on] == [r.family_key for r in keep] and [r.cross_call for r in on] == [r.cross_call for r in keep]

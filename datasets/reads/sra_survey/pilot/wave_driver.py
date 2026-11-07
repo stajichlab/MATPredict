@@ -126,10 +126,10 @@ def submit_stage(a, stage, rows):
     d = os.path.join(a.wave, stage); os.makedirs(d, exist_ok=True); os.makedirs(os.path.join(d, "logs"), exist_ok=True)
     out = a.out_dir or os.path.join(a.wave, "out"); os.makedirs(out, exist_ok=True)
     cols = list(rows[0].keys()); allp = os.path.join(d, "runs_all.tsv"); wr(allp, rows, cols)
-    parts = [("exfab", "exfab"), ("stajichlab", "stajichlab")]
+    parts = [tuple(x.split(":")) if ":" in x else (x, x) for x in getattr(a, "parts", "exfab:exfab,stajichlab:stajichlab").split(",")]      # partition:account pairs; the runs are dealt over them in turn
     ids = []; jobs = []
     for pi, (part, acct) in enumerate(parts):
-        mine = rows[pi::2]
+        mine = rows[pi::len(parts)]
         for ci in range(0, len(mine), 2000):
             chunk = mine[ci:ci + 2000]; f = os.path.join(d, f"runs_{part}_{ci // 2000}.tsv"); wr(f, chunk, cols)
             for attempt in ("run", "retry"):
@@ -138,7 +138,7 @@ def submit_stage(a, stage, rows):
                               "--export", f"ALL,WORKER_DIR={HERE},TARGET_SPOTS=2000000,WINDOWS=8" + "".join("," + e for e in a.env), f"{HERE}/stream_type_sra.slurm", f, "none", "none", out]) if not a.dry_run else f"dry{len(ids)}"
                 ids.append(jid); jobs.append((stage, part, attempt, jid, len(chunk)))
     last = ids[-1]
-    sm = sbatch(["-p", "exfab", "-A", "exfab", "-c", "1", "--mem", "4gb", "-t", "0:30:00", "-J", f"wave-{stage}-summary", "--dependency", "afterany:" + ":".join(ids), "-o", f"{d}/logs/%x_%j.out",
+    sm = sbatch(["-p", parts[0][0], "-A", parts[0][1], "-c", "1", "--mem", "4gb", "-t", "0:30:00", "-J", f"wave-{stage}-summary", "--dependency", "afterany:" + ":".join(ids), "-o", f"{d}/logs/%x_%j.out",
                  "--wrap", f"{PY} {HERE}/summarize_pilot.py --runs {allp} --results {out} --out {d}/summary"]) if not a.dry_run else "drysummary"
     jobs.append((stage, "-", "summary", sm, 0))
     if not a.dry_run:
@@ -386,6 +386,7 @@ def main():
     ap.add_argument("--only", help="submit-full: only the species whose decision is this word (PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC or UNVALIDATED)")
     ap.add_argument("--in-file", default="gates_final.tsv", help="regate: the gates table (in the wave directory) to decide again")
     ap.add_argument("--out-file", help="regate: where to write it (default: the input file)")
+    ap.add_argument("--parts", default="exfab:exfab,stajichlab:stajichlab", help="partition:account pairs the run arrays are split over (preempt:preempt is allowed: a preempted task is rerun by the retry pass, and the worker is idempotent)")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "regate": regate, "curate": curate, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)

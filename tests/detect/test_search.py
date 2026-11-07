@@ -273,6 +273,7 @@ def fake_tblastn_runner(cmd, **kwargs):
     if cmd[0] == "makeblastdb":
         return _result("")
     assert "-seg" in cmd and cmd[cmd.index("-seg") + 1] == "no"
+    assert "-soft_masking" not in cmd
     return _result(TBLASTN_TSV)
 
 
@@ -297,6 +298,20 @@ def test_search_localize_normalizes_minus_strand_and_batches_one_call(tmp_path):
     # exactly one tblastn invocation regardless of how many families/genes
     tblastn_calls = [c for c in calls if c[0] == "tblastn"]
     assert len(tblastn_calls) == 1
+
+def test_tblastn_seg_defaults_to_no_and_follows_the_environment_switch(tmp_path, monkeypatch):
+    """Issue #276: `-seg no` is the v0.8.x behaviour and stays the default; MATPREDICT_TBLASTN_SEG switches it (opt-in)."""
+    from MATPredict.detect.search import _tblastn_seg
+
+    monkeypatch.delenv("MATPREDICT_TBLASTN_SEG", raising=False)
+    assert _tblastn_seg() == "no"
+    monkeypatch.setenv("MATPREDICT_TBLASTN_SEG", "yes")
+    assert _tblastn_seg() == "yes"
+    monkeypatch.setenv("MATPREDICT_TBLASTN_SEG", "12 2.2 2.5")
+    assert _tblastn_seg() == "12 2.2 2.5"
+    monkeypatch.setenv("MATPREDICT_TBLASTN_SEG", "maybe")
+    with pytest.raises(ValueError):
+        _tblastn_seg()
 
 
 def test_search_localize_raises_on_nonzero_returncode(tmp_path):
@@ -710,3 +725,48 @@ def test_defline_location_is_found_alongside_a_free_text_description(tmp_path):
         runner=fake_runner,
     )
     assert (hits[0].contig, hits[0].start, hits[0].end, hits[0].strand) == ("contigA", 100, 400, "+")
+
+
+def test_tblastn_seg_policy_splits_short_and_long_queries_and_keeps_query_order(tmp_path, monkeypatch):
+    """#276: with filtering on, queries under MATPREDICT_TBLASTN_SEG_MIN_AA residues keep `-seg no`; long ones get `-seg yes`
+    with soft masking; the merged output keeps the reference file's query order."""
+    monkeypatch.setenv("MATPREDICT_TBLASTN_SEG", "yes")
+    monkeypatch.setenv("MATPREDICT_TBLASTN_SEG_MIN_AA", "10")
+    ref = tmp_path / "ref.faa"
+    ref.write_text(">rec1|gene0|longgene\\nMKKKKKKKKKKKKKKKK\\n>rec1|gene1|shortgene\\nMKK\\n".replace("\\n", "\n"))
+    calls = []
+
+    def runner(cmd, **kwargs):
+        if cmd[0] == "makeblastdb":
+            return _result("")
+        calls.append(cmd)
+        q = Path(cmd[cmd.index("-query") + 1]).read_text()
+        qid = q.splitlines()[0][1:]
+        return _result(f"{qid}\tcontigA\t90.0\t10\t17\t60\t1e-9\t50.0\t10\t40\t1\n")
+
+    from MATPredict.detect.search import _merge_tblastn_by_query_order, _split_reference_by_length
+
+    families = []
+    # no families -> no hits kept, but the commands are what is under test
+    try:
+        search_localize(tmp_path / "g.fa", families, ref, {}, runner=runner)
+    except Exception:
+        pass
+    segs = sorted((c[c.index("-seg") + 1], "-soft_masking" in c) for c in calls)
+    assert segs == [("no", False), ("yes", True)]
+    long_p, short_p, order = _split_reference_by_length(ref, 10, tmp_path)
+    assert order == ["rec1|gene0|longgene", "rec1|gene1|shortgene"] and long_p and short_p
+    merged = _merge_tblastn_by_query_order(["rec1|gene1|shortgene\tc\n", "rec1|gene0|longgene\tc\n"], order)
+    assert merged.splitlines()[0].startswith("rec1|gene0") and merged.splitlines()[1].startswith("rec1|gene1")
+
+
+def test_tblastn_seg_gene_list_overrides_the_length_rule(tmp_path, monkeypatch):
+    """#276: with MATPREDICT_TBLASTN_SEG_GENES only the listed genes are searched with filtering; others keep `-seg no`."""
+    from MATPredict.detect.search import _split_reference_by_length
+
+    ref = tmp_path / "ref.faa"
+    ref.write_text(">rec1|gene0|SLA2\nMKKKKKKKKKKKKKKKK\n>rec1|gene1|MAT1-1-5\nMKKKKKKKKKKKKKKKKKKKKKKKK\n")
+    long_p, short_p, order = _split_reference_by_length(ref, 10, tmp_path, {"SLA2"})
+    assert ">rec1|gene0|SLA2" in long_p.read_text() and "MAT1-1-5" not in long_p.read_text()
+    assert ">rec1|gene1|MAT1-1-5" in short_p.read_text()
+    assert order == ["rec1|gene0|SLA2", "rec1|gene1|MAT1-1-5"]

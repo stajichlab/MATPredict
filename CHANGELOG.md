@@ -6,6 +6,9 @@ release completed.
 
 ## [Unreleased]
 
+### Added
+- Opt-in `tblastn` filtering policy for the slowest genomes (#276): `MATPREDICT_TBLASTN_SEG=yes` with `MATPREDICT_TBLASTN_SEG_GENES=SLA2,APN2,MAT1-1-1` (or `MATPREDICT_TBLASTN_SEG_MIN_AA`) runs the genome-wide localization as two `tblastn` calls: `-seg no` for every other query and `-seg yes -soft_masking true` (masked regions used for seeds only) for the listed gene names. On the two genomes that hit the 3,600 s limit in the v0.8.1 run it takes 3,063 s and 1,685 s to 468 s and 288 s with identical loci; on 300 Ascomycota genomes 296 are identical (no change of family, idiomorph, confidence or gene set) and on 120 Basidiomycota genomes all 120. It gives no speed-up on typical genomes. The default is unchanged (`-seg no`). Measurements and what does not work: `docs/notes/2026-11-06_tblastn-seg-policy.md`.
+
 ## [0.8.1] — 2026-11-06 — `v0.8.1`
 
 > The entries below are those of the merged pull requests; the definitive run and its counts are in "The definitive run" below. v0.8.1 is a re-run of the definitive v0.8.0 run with: the #228 fallback after withheld hits (preset `v0.8.1`), the *S. pombe* silent-pair rule (#254; the #252 tie-break is reverted), report-only `resolution_flags`, the cross-family `cassette` indication with its shared-flank measurements, `two_idiomorphs` for Basidiomycota MAT and redPR, the rust allow list (#165) and the *Hyphopichia* MTLA1 record (#148; 11 of 389 sampled Serinales genomes drop a tier, tracked under #149). Not in v0.8.1: #255, the MATam family, the Ogataea candidate records.

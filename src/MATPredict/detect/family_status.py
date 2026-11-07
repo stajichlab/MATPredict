@@ -222,7 +222,10 @@ def resolve_cross_calls(results: list, families: list, lineage: set[int], keep_l
                 note = _note(results[best])
                 note["kept_both"] = True
                 kept[keep_too] = ([note], ambiguous)
-                kept[best][0].append({**_note(results[keep_too]), "kept_both": True})
+                other = results[keep_too]
+                for n in kept[best][0]:  # the set-aside note already there is this call: mark it, do not repeat it
+                    if (n["family"], n["contig"], n["start"], n["end"]) == (_family_name(other), other.contig, other.start, other.end):
+                        n["kept_both"] = True
         drop.update(i for i in group if i != best and i != keep_too)
     return [replace(r, cross_call=kept[i][0], family_ambiguous=kept[i][1]) if i in kept else r for i, r in enumerate(results) if i not in drop]
 

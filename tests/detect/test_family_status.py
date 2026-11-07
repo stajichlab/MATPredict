@@ -300,7 +300,7 @@ def test_keep_labelled_keeps_both_when_the_winner_has_no_label_and_the_other_doe
     sc, mtl = _labelled_pair("undetermined", "alpha")
     out = fs.apply([sc, mtl], FAMILIES, {OTHER}, fs.POLICY_KEEP_LABELLED)
     assert sorted(r.family_key.locus_name for r in out) == ["MATsc", "MTL"]
-    assert all(any(n.get("kept_both") for n in r.cross_call) for r in out)
+    assert all(len(r.cross_call) == 1 and r.cross_call[0].get("kept_both") for r in out)
 
 
 def test_plain_on_still_drops_the_labelled_call():

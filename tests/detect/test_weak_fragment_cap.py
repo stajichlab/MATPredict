@@ -185,3 +185,22 @@ def test_cli_default_and_passthrough(monkeypatch, tmp_path):
 def test_no_preset_turns_the_cap_on():
     from MATPredict.detect.cli import PRESETS
     assert all("weak_fragment_cap_policy" not in v for v in PRESETS.values())
+
+
+# ---- the cap sees the FINAL tier ----------------------------------------------------------------------------------------------------
+
+def _fake_result(confidence, status="polished_single", bits=40.0):
+    from MATPredict.detect.pipeline import DetectionResult, GeneEvidence, FamilyKey
+    ev = GeneEvidence(gene_name="MAT1-2-1", role="core_MAT", contig="c1", start=1, end=900, strand="+", identity=40.0, coverage=90.0,
+                      reference_record_id="r", method="miniprot_refine", status=status, bitscore=bits)
+    return DetectionResult(family_key=FamilyKey("Ascomycota", "MAT"), contig="c1", start=1, end=900, confidence=confidence,
+                           idiomorph="MAT1-2", ambiguous_with=[], genes_found=["MAT1-2-1"], genes_missing=[], fragmented=False,
+                           gene_evidence=[ev])
+
+
+def test_a_final_low_call_gets_no_note_and_a_final_medium_call_does():
+    low, medium = _fake_result("low"), _fake_result("medium")
+    out = pipeline_module._apply_weak_fragment_cap([low, medium], "on")
+    assert out[0] is low and out[0].weak_fragment_cap is None            # the relaxed pass already reported low: no claim of a change
+    assert out[1].confidence == "low" and out[1].weak_fragment_cap["from"] == "medium"
+    assert pipeline_module._apply_weak_fragment_cap([medium], "off")[0] is medium

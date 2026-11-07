@@ -2428,6 +2428,21 @@ def _strong_single_gene_calls(results, clusters, families, build, *, searchable_
     return calls
 
 
+def _apply_weak_fragment_cap(results: list, policy: str) -> list:
+    """`weak_fragment_cap` over the final results: a call the rule caps becomes `low` and carries the note; others are returned as they are."""
+    if policy == weak_fragment_cap.POLICY_OFF:
+        return results
+    out = []
+    for r in results:
+        decision = weak_fragment_cap.evaluate(
+            r.confidence, r.idiomorph, (r.family_key.phylum, r.family_key.locus_name),
+            [weak_fragment_cap.CoreStat(e.gene_name, e.status, e.bitscore) for e in r.gene_evidence if not e.lost_to],
+            policy=policy,
+        )
+        out.append(replace(r, confidence="low", weak_fragment_cap=decision.note) if decision is not None else r)
+    return out
+
+
 def run_pipeline(
     genome_fasta: Path,
     proteome_fasta: Path | None,
@@ -3519,16 +3534,6 @@ def run_pipeline(
             )
             if cap is not None:
                 cap_note, final_confidence = cap.note, "medium"
-        # Weak-fragment cap (`weak_fragment_cap`, off by default, #275): after the caps above, so it sees the tier they left.
-        weak_note = None
-        if weak_fragment_cap_policy != weak_fragment_cap.POLICY_OFF and final_confidence in ("medium", "high"):
-            weak = weak_fragment_cap.evaluate(
-                final_confidence, called_idiomorph, (score.family_key.phylum, score.family_key.locus_name),
-                [weak_fragment_cap.CoreStat(e.gene_name, e.status, e.bitscore) for e in evidence if not e.lost_to],
-                policy=weak_fragment_cap_policy,
-            )
-            if weak is not None:
-                weak_note, final_confidence = weak.note, "low"
         return DetectionResult(
             polished_genes=polished_genes,
             caax_dependent=caax_dependent,
@@ -3545,7 +3550,6 @@ def run_pipeline(
             # keep `high` (that is a statement about how sure we are).
             confidence=final_confidence,
             confidence_cap=cap_note,
-            weak_fragment_cap=weak_note,
             idiomorph=called_idiomorph,
             idiomorph_candidates=own_vote,
             idiomorph_vote_note=vote_note,
@@ -3990,6 +3994,10 @@ def run_pipeline(
             except Exception as exc:  # noqa: BLE001 - logged, treated as an unknown phylum
                 logger.warning("phylum lookup for the unverified label failed: %s", exc)
         results = label_verification(results, routing.routing_mode, genome_phylum)
+
+    # Weak-fragment cap (`weak_fragment_cap`, off by default, #275): on the FINAL results, after every other stage (the relaxed
+    # second pass sets its own tiers), so a note always names the tier that was actually reported and what it became.
+    results = _apply_weak_fragment_cap(results, weak_fragment_cap_policy)
 
     # Curator's ruling 2026-09-26: in a taxon whose assemblies collapse MTL
     # heterozygosity, a single-idiomorph genome is of unknown zygosity.

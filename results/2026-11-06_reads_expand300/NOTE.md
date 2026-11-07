@@ -1,5 +1,13 @@
 # Reads typing: expansion to 300 per species, released species, wave 3 (2026-11-06)
 
+## Outcome (2026-11-07)
+
+- **Expansion**: 7,738 runs (cap 300; `expand300` 4,956 with 25 per study, `expand300b` 2,782 without the study cap, `cleanup` 134 reruns of preempt-killed and failed runs); 7,692 typed into the wave1/wave2 final tables (`merge_screen.py`, regated with the curator rulings). Decisions that changed: see `datasets/reads/sra_survey/pilot/wave1/screen_gate_changes.tsv`.
+- **Wave 3** (`pilot/wave3_*`): PASS *P. oryzae*, *R. toruloides*, *R. mucilaginosa*; PROVISIONAL_ZYGOSITY *Pichia kudriavzevii*; UNVALIDATED *C. neoformans*, *C. deneoformans*, *C. tetragattii*, *C. gattii* complex, *R. microsporus*; HOLD *R. arrhizus* (0.47), *M. circinelloides*.
+- **Wave 4** (`pilot/wave4`, `pilot/wave4_groups`): 4 PASS, 11 PROVISIONAL, 2 PROVISIONAL_HOMOTHALLIC, 4 UNVALIDATED, 5 HOLD (see the commit message of 9ea42df).
+- **Reads site** (built from every committed `pilot/wave*` folder, one entry per species, no wave shown): 234 species, 12,206 runs, 1,003 of 1,018 runs with an assembly call agree. `web/intro/data/reads/` is generated at deploy; the live site changes on the next version tag or a manual Pages run with build_only unticked.
+- Still running at writing: genus-panel rescue of 10 low-typing species and *A. pullulans* (`waves/genus_rescue2`), retests of *Mucor circinelloides* and *Talaromyces purpureogenus*; merged in a follow-up.
+
 Curator decisions of 2026-11-06, after the PopSeq availability join (PR #279):
 
 1. **Cap 300.** Every typed species whose gate is PASS, PROVISIONAL or UNVALIDATED is topped up to 300 isolates (typed + new).

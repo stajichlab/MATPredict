@@ -370,6 +370,99 @@ METHOD_TBLASTN = "tblastn_genome"
 _TBLASTN_OUTFMT = (
     "6 qseqid sseqid pident length qlen qcovhsp evalue bitscore sstart send sframe"
 )
+#: tblastn's `-seg` setting for the genome-wide localization. The default `no` is the v0.8.x behaviour (SEG low-complexity
+#: filtering OFF; the BLAST+ default for tblastn is ON). Opt-in (issue #276): `MATPREDICT_TBLASTN_SEG=yes` turns
+#: filtering on, which is much faster on the few genomes whose translated sequence matches low-complexity regions of
+#: certain reference proteins (two of 19,343 Ascomycota genomes hit the 3,600 s limit in the v0.8.1 run; see docs/notes/2026-11-06_tblastn-seg-policy.md). With filtering on, `-soft_masking true` is added: the masked regions are used to find seeds only,
+#: and alignments are scored and extended through them (measured 2026-11-06 on DampeI2T2: SLA2 query 176 s with `-seg no`,
+#: 1 s with `-seg yes -soft_masking true`, same top hit and bitscore 1424; plain `-seg yes` gave bitscore 1175). Anything but `no`/`yes`/a `window locut hicut` string is rejected.
+_TBLASTN_SEG_ENV = "MATPREDICT_TBLASTN_SEG"
+
+
+def _tblastn_seg() -> str:
+    value = os.environ.get(_TBLASTN_SEG_ENV, "no").strip() or "no"
+    if value not in ("no", "yes") and not re.fullmatch(r"\d+ \d+(\.\d+)? \d+(\.\d+)?", value):
+        raise ValueError(f"{_TBLASTN_SEG_ENV}={value!r}: expected 'no', 'yes' or 'window locut hicut'")
+    return value
+
+
+#: Queries shorter than this many residues keep `-seg no` even when `MATPREDICT_TBLASTN_SEG` turns filtering on: the short,
+#: simple pheromone precursors (MFalpha, pheromone_B43, fungal_mating_type_pheromone, 20-100 aa) are lost under SEG
+#: (120-genome Basidiomycota panel, #276). 0 applies the setting to every query. Superseded by the gene list below when that is set.
+_TBLASTN_SEG_MIN_AA_ENV = "MATPREDICT_TBLASTN_SEG_MIN_AA"
+_TBLASTN_SEG_MIN_AA_DEFAULT = 250
+
+
+#: Opt-in (#276, the recommended form): a comma-separated list of reference GENE NAMES that get the filtered search; every other query keeps `-seg no`.
+#: When set it replaces the length rule. Measured 2026-11-06 on two outlier genomes and an Ascomycota panel: the slow queries are
+#: specific SLA2, APN2 and MAT1-1-1 proteins (the low-complexity fraction of a query does not predict its time).
+_TBLASTN_SEG_GENES_ENV = "MATPREDICT_TBLASTN_SEG_GENES"
+
+
+def _tblastn_seg_genes() -> set[str]:
+    return {g.strip() for g in os.environ.get(_TBLASTN_SEG_GENES_ENV, "").split(",") if g.strip()}
+
+
+def _tblastn_seg_min_aa() -> int:
+    raw = os.environ.get(_TBLASTN_SEG_MIN_AA_ENV, "").strip()
+    try:
+        return int(raw) if raw else _TBLASTN_SEG_MIN_AA_DEFAULT
+    except ValueError:
+        raise ValueError(f"{_TBLASTN_SEG_MIN_AA_ENV}={raw!r}: expected a whole number of residues")
+
+
+def _split_reference_by_length(reference_fasta: Path, min_aa: int, tmp_dir: Path, genes: set[str] | None = None) -> tuple[Path | None, Path | None, list[str]]:
+    """Split a protein FASTA into (long, short, ids in file order): `long` holds records of at least `min_aa` residues.
+    Either path is None when that part is empty. The ids are the first header word (tblastn's `qseqid`)."""
+    order: list[str] = []
+    long_recs: list[str] = []
+    short_recs: list[str] = []
+    header, seq = None, []
+
+    def flush():
+        if header is None:
+            return
+        residues = "".join(seq)
+        rec = f">{header}\n{residues}\n"
+        order.append(header.split()[0])
+        if genes:  # gene-name policy: only the listed genes get the filtered search
+            _, gene_name = _parse_reference_header(header.split()[0])
+            use_filter = gene_name in genes
+        else:
+            use_filter = len(residues.rstrip("*")) >= min_aa
+        (long_recs if use_filter else short_recs).append(rec)
+
+    for line in Path(reference_fasta).read_text().splitlines():
+        if line.startswith(">"):
+            flush()
+            header, seq = line[1:], []
+        elif line.strip():
+            seq.append(line.strip())
+    flush()
+    long_path = short_path = None
+    if long_recs:
+        long_path = tmp_dir / "ref_long.faa"
+        long_path.write_text("".join(long_recs))
+    if short_recs:
+        short_path = tmp_dir / "ref_short.faa"
+        short_path.write_text("".join(short_recs))
+    return long_path, short_path, order
+
+
+def _merge_tblastn_by_query_order(outputs: list[str], order: list[str]) -> str:
+    """Concatenate tblastn tabular outputs so queries appear in `order` (the reference file's order), each query's lines
+    keeping their own order, as one tblastn call over the whole file would print them."""
+    by_query: dict[str, list[str]] = {}
+    for text in outputs:
+        for line in text.splitlines():
+            if line.strip():
+                by_query.setdefault(line.split("\t", 1)[0], []).append(line)
+    lines: list[str] = []
+    for qid in order:
+        lines.extend(by_query.pop(qid, []))
+    for rest in by_query.values():  # a qseqid not in `order` (should not happen): keep it, do not drop evidence
+        lines.extend(rest)
+    return "\n".join(lines) + ("\n" if lines else "")
 #: `qcovhsp` is the percent of the QUERY covered by this HSP, and on this path
 #: the query is the curated reference protein -- so it is the same quantity
 #: diamond's `scovhsp` gives on the fast path, where the roles are reversed.
@@ -470,11 +563,25 @@ def search_localize(
         _run_checked(runner, [
             "makeblastdb", "-in", str(genome_fasta), "-dbtype", "nucl", "-out", str(db_prefix),
         ])
-        cmd = [
-            "tblastn", "-query", str(reference_fasta), "-db", str(db_prefix),
-            "-seg", "no", "-outfmt", _TBLASTN_OUTFMT,
-        ] + _gencode_args(genetic_code, "-db_gencode")
-        result = _run_checked(runner, cmd)
+        seg = _tblastn_seg()
+
+        def _call(query: Path, query_seg: str):
+            return _run_checked(runner, [
+                "tblastn", "-query", str(query), "-db", str(db_prefix),
+                "-seg", query_seg, "-outfmt", _TBLASTN_OUTFMT,
+            ] + (["-soft_masking", "true"] if query_seg != "no" else []) + _gencode_args(genetic_code, "-db_gencode"))
+
+        if seg == "no":
+            result = _call(reference_fasta, "no")
+        else:
+            # long queries: filtering on, masked regions used for seeds only; short queries (precursors): `-seg no`
+            long_path, short_path, order = _split_reference_by_length(reference_fasta, _tblastn_seg_min_aa(), Path(tmp_dir_name), _tblastn_seg_genes())
+            outputs = []
+            if short_path is not None:
+                outputs.append(_call(short_path, "no").stdout)
+            if long_path is not None:
+                outputs.append(_call(long_path, seg).stdout)
+            result = type("_Merged", (), {"stdout": _merge_tblastn_by_query_order(outputs, order)})()
 
         hits: list[SearchHit] = []
         for line in result.stdout.splitlines():

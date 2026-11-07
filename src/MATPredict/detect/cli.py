@@ -10,7 +10,7 @@ from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect import confidence_cap as _confidence_cap, family_status as _family_status, strong_single_gene as _strong_single_gene
-from MATPredict.detect import fallback_search as _fallback_search, weak_fragment_cap as _weak_fragment_cap
+from MATPredict.detect import fallback_search as _fallback_search, polished_vote as _polished_vote, weak_fragment_cap as _weak_fragment_cap
 from MATPredict.detect.family_status import CROSS_FAMILY_POLICIES, DEFAULT_CROSS_FAMILY_POLICY
 from MATPredict.detect.fallback_search import DEFAULT_FALLBACK_AFTER_WITHHELD_POLICY, FALLBACK_AFTER_WITHHELD_POLICIES
 from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CONFIDENCE_CAP_POLICY
@@ -269,6 +269,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         cross_family_policy=_cross_family_policy_from_args(args),
         strong_single_gene_policy=_strong_single_gene_policy_from_args(args),
         weak_fragment_cap_policy=_weak_fragment_cap_policy_from_args(args),
+        polished_vote_policy=_polished_vote_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
 
@@ -422,6 +423,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "cross_family_policy": _cross_family_policy_from_args(args),
             "fallback_after_withheld_policy": _fallback_policy_from_args(args),
             "weak_fragment_cap_policy": _weak_fragment_cap_policy_from_args(args),
+            "polished_vote_policy": _polished_vote_policy_from_args(args),
             "strong_single_gene_policy": _strong_single_gene_policy_from_args(args),
             "scoped_roster_policy": _scoped_roster_policy_from_args(args),
             "scoped_roster": getattr(routing, "scoped_roster", None),
@@ -464,6 +466,11 @@ def _cross_family_policy_from_args(args) -> str:
 def _weak_fragment_cap_policy_from_args(args) -> str:
     """The weak-fragment-cap policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
     return getattr(args, "weak_fragment_cap_policy", _weak_fragment_cap.DEFAULT_WEAK_FRAGMENT_CAP_POLICY)
+
+
+def _polished_vote_policy_from_args(args) -> str:
+    """The polished-vote policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
+    return getattr(args, "polished_vote_policy", _polished_vote.DEFAULT_POLISHED_VOTE_POLICY)
 
 
 def _fallback_policy_from_args(args) -> str:
@@ -829,6 +836,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
         help="off: no cap (default). on: an Ascomycota:MAT call whose strongest core gene (MAT1-*) is not a model on which both polish "
              "tools agree and scores under 50 bits is capped at tier `low`; the idiomorph, the locus and the class are never changed "
              "(#275). The report's `weak_fragment_cap` says which gene decided.",
+    )
+    detect.add_argument(
+        "--polished-vote-policy", action=_PolicyFlag, choices=_polished_vote.POLISHED_VOTE_POLICIES,
+        default=_polished_vote.DEFAULT_POLISHED_VOTE_POLICY,
+        help="off: the bitscore vote stands (default). on: in Ascomycota:MAT, when the called idiomorph rests only on unpolished evidence "
+             "and the other idiomorph has a polished core gene, the polished idiomorph is called (#275). The report's "
+             "`idiomorph_vote_note` records it, the tier is at most medium and the vote's margin is not reported.",
     )
     detect.add_argument(
         "--strong-single-gene-policy", action=_PolicyFlag, choices=STRONG_SINGLE_GENE_POLICIES,

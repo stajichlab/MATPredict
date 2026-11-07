@@ -105,7 +105,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import confidence_cap, family_status, homothallic, partial_core, weak_fragment_cap
+from MATPredict.detect import confidence_cap, family_status, homothallic, partial_core, polished_vote, weak_fragment_cap
 from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
@@ -2496,6 +2496,8 @@ def run_pipeline(
     confidence_cap_policy: str = confidence_cap.DEFAULT_CONFIDENCE_CAP_POLICY,
     #: `--weak-fragment-cap-policy` (`weak_fragment_cap`, #275). Lowers the tier only, never the idiomorph.
     weak_fragment_cap_policy: str = weak_fragment_cap.DEFAULT_WEAK_FRAGMENT_CAP_POLICY,
+    #: `--polished-vote-policy` (`polished_vote`, #275): a polished idiomorph beats an unpolished one in the vote (Ascomycota:MAT only).
+    polished_vote_policy: str = polished_vote.DEFAULT_POLISHED_VOTE_POLICY,
     #: `off` (default) or `on`: overlapping calls of two families become one (the family scoped to the genome
     #: keeps it) and an out-of-scope MTL call is flagged `family_unconfirmed` / `family_confirmed`
     #: (`family_status`). Independent of the policies above.
@@ -2752,6 +2754,7 @@ def run_pipeline(
     # clamped to the contig's real end.
     confidence_cap.check_policy(confidence_cap_policy)
     weak_fragment_cap.check_policy(weak_fragment_cap_policy)
+    polished_vote.check_policy(polished_vote_policy)
     family_status.check_policy(cross_family_policy)
     contig_lengths = _contig_lengths(genome_fasta)
 
@@ -3392,6 +3395,16 @@ def run_pipeline(
                     called_idiomorph = decision.idiomorph
                 elif decision.decision == partial_core.DECISION_UNDETERMINED:
                     called_idiomorph = "undetermined"
+        # Polished-vote rule (`polished_vote`, off by default, #275): after the partial-core rule, and only where that rule did not decide.
+        if (polished_vote_policy != polished_vote.POLICY_OFF and verdict is None and vote_note is None
+                and called_idiomorph != "undetermined"):
+            pv = polished_vote.decide(
+                family, (score.family_key.phylum, score.family_key.locus_name), called_idiomorph,
+                [polished_vote.GeneStat(e.gene_name, e.status, e.bitscore) for e in evidence if not e.lost_to],
+                policy=polished_vote_policy,
+            )
+            if pv is not None:
+                vote_note, called_idiomorph = pv.note, pv.idiomorph
         identities: dict[str, float | None] = {}
         for e in evidence:
             if e.identity is not None:

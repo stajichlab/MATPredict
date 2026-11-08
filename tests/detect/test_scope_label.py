@@ -95,6 +95,6 @@ def test_cli_default_and_passthrough(monkeypatch, tmp_path):
 
 
 def test_no_preset_sets_the_policy():
-    # only the v0.9 preset turns this report-only rule on (curator's ruling 2026-11-07)
-    assert {n for n, v in detect_cli.PRESETS.items() if "out_of_scope_label_policy" in v} == {"v0.9"}
+    # the v0.9 preset and the v0.9.1 preset that extends it turn this report-only rule on (curator's ruling 2026-11-07)
+    assert {n for n, v in detect_cli.PRESETS.items() if "out_of_scope_label_policy" in v} == {"v0.9", "v0.9.1"}
     assert detect_cli.PRESETS["v0.9"]["out_of_scope_label_policy"] == "on"

@@ -1,0 +1,144 @@
+record_id: 5970_cbs-132752_MAT_MAT1-1
+record_version: 1
+taxonomy:
+  taxid: 5970
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Eurotiomycetes;o__Chaetothyriales;f__Herpotrichiellaceae;g__Exophiala;s__Exophiala_dermatitidis
+  lineage_resolved_date: '2026-11-08'
+organism:
+  species: Exophiala dermatitidis
+  strain:
+    name: CBS 132752
+    known: true
+    culture_collection_ids:
+    - CBS 132752
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-1
+  system: unknown
+locus:
+  coordinate_provenance: published_explicit
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: MAT1-1-4->MAT1-1-1
+    definition_note: 'Exophiala dermatitidis (Chaetothyriales) MAT1-1 idiomorph, GenBank
+      MH341450.1 (12,011 bp long-range PCR product from strain CBS 132752, Sanger;
+      Metin et al. 2019, Fungal Genet Biol 124:29-38). The deposit annotates MAT1-1-4
+      (AXZ62320.1, complement, 6 exons, 1761-2935) and MAT1-1-1 (alpha-box, AXZ62321.1,
+      3 exons, 3595-4885) back to back, then a hypothetical protein similar to HMPREF1120_08861
+      (AXZ62322.1), a 5S rRNA gene and a partial gene similar to HMPREF1120_08860.
+      SLA2 and APN2 are not annotated on the deposit. The paper gives the MAT1-1 idiomorph
+      as 3544 bp (MAT1-1-1 + MAT1-1-4); the exact idiomorph boundaries are not given
+      and are not asserted: the segment here spans the two annotated MAT genes (1761-4885,
+      3125 bp, shorter than the stated idiomorph). Coordinates are those of the deposit,
+      fetched through NCBI efetch on 2026-11-08. The MAT1-2 partner is the separate
+      candidate 858893_nih-ut8656_MAT_MAT1-2.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: MH341450.1
+        seq_region: MH341450.1
+      start: 1761
+      end: 4885
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: MAT1-1-4
+  protein_accession: ncbi_protein:AXZ62320.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 1761
+  end: 2935
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 2414
+    end: 2935
+  - start: 2298
+    end: 2351
+  - start: 2181
+    end: 2243
+  - start: 2105
+    end: 2134
+  - start: 1989
+    end: 2058
+  - start: 1761
+    end: 1936
+  codon_start: 1
+- gene_index: 1
+  name: MAT1-1-1
+  protein_accession: ncbi_protein:AXZ62321.1
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 3595
+  end: 4885
+  strand: +
+  order_in_locus: 1
+  exons:
+  - start: 3595
+    end: 3862
+  - start: 3914
+    end: 4443
+  - start: 4547
+    end: 4885
+  codon_start: 1
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: 'Metin et al. 2019: long-range PCR and Sanger sequencing
+      of a ~12 kb product from CBS 132752, PCR screening of 74 isolates (35 MAT1-1,
+      39 MAT1-2) and RT-PCR showing transcription (MAT1-1-1 455 bp, MAT1-1-4 429 bp
+      products). No sexual cycle has been observed.'
+    citations: &id001
+    - pmid: '30611834'
+      doi: 10.1016/j.fgb.2018.12.011
+  boundaries:
+    tier: 2
+    experimental_method: Idiomorph length stated (MAT1-1 3544 bp) but boundaries not
+      given; segment = span of the two annotated MAT genes on MH341450.1.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: MAT1-1 by presence of the alpha-box gene MAT1-1-1 (with MAT1-1-4)
+      in the sequenced isolate, per Metin et al. 2019.
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: MH341450.1
+  sequence_match:
+    status: pass
+    per_gene:
+    - gene_index: 0
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    notes: ''
+  taxonomy_current: null
+  taxonomy_error: taxonkit is not on PATH
+curation:
+  proposed_by: claude-orbilio-chaeto-literature
+  proposal_dedupe_key: 30611834|5970|MAT|MAT1-1
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-11-08 (Claude Code). MH341450.1 is annotated by the paper
+    authors as MAT1-1-4, MAT1-1-1 (alpha-box), two hypothetical proteins and a 5S
+    rRNA. Neither SLA2 nor APN2 is annotated on the deposit, so no flank gene is in
+    the record. mating_type.system is unknown: heterothallism is the authors'' inference
+    from structure and ~1:1 isolate distribution.'
+model_provenance: null

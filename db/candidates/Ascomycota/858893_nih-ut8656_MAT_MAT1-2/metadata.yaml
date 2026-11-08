@@ -1,0 +1,149 @@
+record_id: 858893_nih-ut8656_MAT_MAT1-2
+record_version: 1
+taxonomy:
+  taxid: 858893
+  lineage: k__Fungi;p__Ascomycota;subphylum__Pezizomycotina;c__Eurotiomycetes;o__Chaetothyriales;f__Herpotrichiellaceae;g__Exophiala;s__Exophiala_dermatitidis
+  lineage_resolved_date: '2026-11-08'
+organism:
+  species: Exophiala dermatitidis
+  strain:
+    name: NIH/UT8656
+    known: true
+    culture_collection_ids:
+    - NIH/UT8656
+    - CBS 525.76
+    - ATCC 34100
+    differs_from_sequenced: false
+mating_type:
+  locus_name: MAT
+  idiomorphs:
+  - MAT1-2
+  system: unknown
+locus:
+  assembly_accession: GCF_000230625.1
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  core:
+    completeness: complete
+    reference_orientation: SLA2->MAT1-2-1->APN2
+    definition_note: 'Exophiala dermatitidis (Chaetothyriales) MAT1-2 idiomorph in
+      the reference genome of NIH/UT8656 (= CBS 525.76 = ATCC 34100; Broad assembly
+      Exop_derm_V1, RefSeq GCF_000230625.1, scaffold NW_008751653.1 = supercont1.8).
+      Metin et al. 2019 (Fungal Genet Biol 124:29-38) state that this genome harbors
+      an HMG-domain gene (MAT1-2-1) near SLA2 and APN2; the MAT1-2 idiomorph is 3771
+      bp and carries only MAT1-2-1 (the paper gives lengths, not coordinates; the
+      idiomorph start and end are NOT located here). The HMG gene was identified here
+      as HMPREF1120_08862 (XP_009161380.1, 379 aa, HMG-box_ROX1-like domain, single
+      exon 1140 bp, NCBI Gene 20313501): this identification is by the curator-side
+      reading of the RefSeq annotation (HMG-box domain, position between SLA2 and
+      APN2), not stated by locus tag in the paper. Flank genes: SLA2 = HMPREF1120_08859
+      (annotated huntingtin interacting protein 1, XP_009161377.1) and APN2 = HMPREF1120_08863
+      (AP endonuclease 2, XP_009161381.1). Between SLA2 and MAT1-2-1 lie HMPREF1120_08860
+      (+5S rRNA region) and HMPREF1120_08861, both non-MAT (the paper places the MAT
+      locus between APN2 and HMPREF1120_08861). Gene coordinates were fetched through
+      NCBI efetch (NCBI Gene genomic intervals, 0-based start converted to 1-based)
+      on 2026-11-08. Metin et al. also report a 116-bp MAT1-1-1 remnant in the MAT1-2
+      locus; not modelled. Only one idiomorph per record; the MAT1-1 partner is the
+      separate candidate 5970_cbs-132752_MAT_MAT1-1.'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: insdc_nucleotide
+        accession: NW_008751653.1
+        seq_region: NW_008751653.1
+      start: 289121
+      end: 308458
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: SLA2
+  protein_accession: ncbi_protein:XP_009161377.1
+  role: flanking_conserved
+  present: true
+  locus_tag: HMPREF1120_08859
+  segment_index: 0
+  start: 289121
+  end: 292377
+  strand: +
+  order_in_locus: 0
+- gene_index: 1
+  name: MAT1-2-1
+  protein_accession: ncbi_protein:XP_009161380.1
+  role: core_MAT
+  present: true
+  locus_tag: HMPREF1120_08862
+  segment_index: 0
+  start: 303111
+  end: 304250
+  strand: +
+  order_in_locus: 1
+- gene_index: 2
+  name: APN2
+  protein_accession: ncbi_protein:XP_009161381.1
+  role: flanking_conserved
+  present: true
+  locus_tag: HMPREF1120_08863
+  segment_index: 0
+  start: 305794
+  end: 308458
+  strand: '-'
+  order_in_locus: 2
+evidence:
+  locus_existence:
+    tier: 1
+    experimental_method: Metin et al. 2019 screened 74 E. dermatitidis isolates (11
+      clinical, 63 environmental) by PCR (35 MAT1-1, 39 MAT1-2), amplified and sequenced
+      the surrounding region by long-range PCR, and showed MAT gene transcription
+      by RT-PCR (MAT1-2-1 product 408 bp). No sexual cycle has been observed.
+    citations: &id001
+    - pmid: '30611834'
+      doi: 10.1016/j.fgb.2018.12.011
+  boundaries:
+    tier: 2
+    experimental_method: The paper reports idiomorph lengths (MAT1-2 3771 bp) but
+      no coordinates; the segment here spans SLA2 start to APN2 end from the RefSeq
+      annotation of NIH/UT8656 and is not an experimentally mapped idiomorph boundary.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 1
+    experimental_method: MAT1-2 = HMG-domain MAT1-2-1 idiomorph by PCR typing of 74
+      isolates and sequencing (Metin et al. 2019); the reference genome strain CBS
+      525.76 is the MAT1-2 isolate in that study. The specific gene model HMPREF1120_08862
+      is identified by the curator from the RefSeq annotation.
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: true
+  accession_resolved_date: null
+  accession_resolved_version: NW_008751653.1
+  sequence_match:
+    status: warn
+    per_gene:
+    - gene_index: 0
+      percent_identity: 97.83
+      coverage: 99.81
+      status: warn
+    - gene_index: 1
+      percent_identity: 100.0
+      coverage: 100.0
+      status: pass
+    - gene_index: 2
+      percent_identity: 100.0
+      coverage: 3.62
+      status: warn
+    notes: ''
+  taxonomy_current: null
+  taxonomy_error: taxonkit is not on PATH
+curation:
+  proposed_by: claude-orbilio-chaeto-literature
+  proposal_dedupe_key: 30611834|858893|MAT|MAT1-2
+  reviewed_by: null
+  reviewed_date: null
+  notes: 'Proposed 2026-11-08 (Claude Code). Heterothallism inferred by the authors
+    from idiomorph structure and ~1:1 distribution, not from a mating observation,
+    so mating_type.system is unknown. First Chaetothyriales record: no order directory
+    exists yet under db/Ascomycota (it would be created on acceptance).'
+model_provenance: null

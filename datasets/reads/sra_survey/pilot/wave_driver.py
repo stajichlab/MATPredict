@@ -73,7 +73,8 @@ LENIENT_GENERA = ("Schizosaccharomyces", "Pneumocystis", "Taphrina", "Protomyces
 GROUPS = {"Cryptococcus gattii complex": "Cryptococcus gattii|Cryptococcus deuterogattii|Cryptococcus bacillisporus",
           "Blumeria graminis complex": "Blumeria graminis|Blumeria hordei",                 # B. hordei was split from B. graminis (f. sp. hordei)
           "Sporothrix schenckii complex": "Sporothrix schenckii|Sporothrix brasiliensis"}
-SPAN_GENERA = {"Cryptococcus": ("4000", "250000"), "Rhodotorula": ("1000", "60000"), "Rhizopus": ("1000", "60000"), "Mucor": ("1000", "60000")}
+SPAN_GENERA = {"Cryptococcus": ("4000", "250000"), "Rhodotorula": ("1000", "60000"), "Rhizopus": ("1000", "60000"), "Mucor": ("1000", "60000"),
+               "Ophidiomyces": ("4000", "20000")}      # Ophidiomyces: 49 of 50 MAT1-2 loci span ~11 kb; the 30 kb GCA_022829885.1 locus made a strain-specific MAT1-2 core (wave 1 untyped MAT1-2 runs, breadth ~0.4)
 # Genera whose loci are reported as little more than their genes (no flank inside the reported span): cut this much genome on each side (panel_from_assemblies --pad).
 PAD_GENERA = {"Rhodotorula": "6000", "Rhizopus": "6000", "Mucor": "6000"}
 

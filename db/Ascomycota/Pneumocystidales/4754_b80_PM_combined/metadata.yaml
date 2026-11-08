@@ -1,5 +1,5 @@
 record_id: 4754_b80_PM_combined
-record_version: 1
+record_version: 2
 taxonomy:
   taxid: 4754
   lineage: k__Fungi;p__Ascomycota;subphylum__Taphrinomycotina;c__Pneumocystidomycetes;o__Pneumocystidales;f__Pneumocystidaceae;g__Pneumocystis;s__Pneumocystis_carinii
@@ -32,6 +32,10 @@ locus:
       as a discrete RefSeq gene/CDS at the literature-reported position and could
       not be independently confirmed the same way as the other two genes -- included
       here (present: true) on the source paper''s authority alone, no protein_accession.
+      matMi span corrected in record_version 2 (issue #135): the literature-reported
+      81265-81480 begins with a TGA stop codon; shifted one base to 81264-81479 it
+      reads ATG...TAA, a 71 aa ORF with no internal stop (MNVLNHLYKIF...HWFSF), checked
+      against NW_017264725.1 via NCBI efetch. Still unconfirmed against a RefSeq feature.
       completeness is "partial" for the same reasons as the paired jirovecii record
       (matMi unconfirmable via RefSeq; matPc absent/lost in this genus per the source
       literature).
@@ -84,10 +88,13 @@ genes:
   present: true
   locus_tag: null
   segment_index: 0
-  start: 81265
-  end: 81480
+  start: 81264
+  end: 81479
   strand: +
   order_in_locus: 2
+  exons:
+  - start: 81264
+    end: 81479
 evidence:
   locus_existence:
     tier: 1

@@ -138,3 +138,17 @@ def test_the_species_report_and_the_index_carry_the_lineage(tmp_path):
     assert (d["phylum"], d["class"], d["order"], d["family"]) == ("Ascomycota", "Sordariomycetes", "Hypocreales", "Nectriaceae")
     idx = json.load(open(tmp_path / "out" / "index.json"))
     assert (idx["species"][0]["phylum"], idx["species"][0]["order"]) == ("Ascomycota", "Hypocreales")
+
+
+def test_study_titles_reach_the_species_report_for_its_own_studies_only(tmp_path):
+    """study_titles.tsv (from PopSeq) gives the hover text of the study links; a report carries only the titles of its own studies."""
+    make_repo(tmp_path, {}, ["MAT1-1", "MAT1-2", "MAT1-1", "MAT1-2"])
+    tsv(tmp_path / "datasets/reads/sra_survey/pilot/study_titles.tsv", ["study", "title"],
+        [["PRJ1", "Genomic determinants of host specialization"], ["PRJ2", "Second study"], ["PRJ9", "A study of another species"]])
+    d = build(tmp_path, tmp_path.parent)
+    assert d["study_titles"] == {"PRJ1": "Genomic determinants of host specialization", "PRJ2": "Second study"}
+
+
+def test_no_study_titles_file_gives_an_empty_map(tmp_path):
+    make_repo(tmp_path, {}, ["MAT1-1", "MAT1-2"])
+    assert build(tmp_path, tmp_path.parent)["study_titles"] == {}

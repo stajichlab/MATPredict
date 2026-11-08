@@ -10,7 +10,7 @@ from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect import confidence_cap as _confidence_cap, family_status as _family_status, strong_single_gene as _strong_single_gene
-from MATPredict.detect import fallback_search as _fallback_search, margin_basis as _margin_basis, thin_vote as _thin_vote, weak_fragment_cap as _weak_fragment_cap
+from MATPredict.detect import fallback_search as _fallback_search, margin_basis as _margin_basis, thin_vote as _thin_vote, weak_flank_cap as _weak_flank_cap, weak_fragment_cap as _weak_fragment_cap
 from MATPredict.detect.family_status import CROSS_FAMILY_POLICIES, DEFAULT_CROSS_FAMILY_POLICY
 from MATPredict.detect.fallback_search import DEFAULT_FALLBACK_AFTER_WITHHELD_POLICY, FALLBACK_AFTER_WITHHELD_POLICIES
 from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CONFIDENCE_CAP_POLICY
@@ -270,6 +270,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         strong_single_gene_policy=_strong_single_gene_policy_from_args(args),
         weak_fragment_cap_policy=_weak_fragment_cap_policy_from_args(args),
         short_fragment_vote_policy=_short_fragment_vote_policy_from_args(args),
+        weak_flank_cap_policy=_weak_flank_cap_policy_from_args(args),
         idiomorph_margin_policy=_idiomorph_margin_policy_from_args(args),
         supported_min_bitscore=getattr(args, "supported_min_bitscore", DEFAULT_SUPPORTED_MIN_BITSCORE),
     )
@@ -425,6 +426,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "fallback_after_withheld_policy": _fallback_policy_from_args(args),
             "weak_fragment_cap_policy": _weak_fragment_cap_policy_from_args(args),
             "short_fragment_vote_policy": _short_fragment_vote_policy_from_args(args),
+            "weak_flank_cap_policy": _weak_flank_cap_policy_from_args(args),
             "idiomorph_margin_policy": _idiomorph_margin_policy_from_args(args),
             "strong_single_gene_policy": _strong_single_gene_policy_from_args(args),
             "scoped_roster_policy": _scoped_roster_policy_from_args(args),
@@ -468,6 +470,9 @@ def _cross_family_policy_from_args(args) -> str:
 def _short_fragment_vote_policy_from_args(args) -> str:
     """The short-fragment-vote policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
     return getattr(args, "short_fragment_vote_policy", _thin_vote.DEFAULT_SHORT_FRAGMENT_VOTE_POLICY)
+def _weak_flank_cap_policy_from_args(args) -> str:
+    """The weak-flank-cap policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
+    return getattr(args, "weak_flank_cap_policy", _weak_flank_cap.DEFAULT_WEAK_FLANK_CAP_POLICY)
 def _idiomorph_margin_policy_from_args(args) -> str:
     """The idiomorph-margin policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
     return getattr(args, "idiomorph_margin_policy", _margin_basis.DEFAULT_IDIOMORPH_MARGIN_POLICY)
@@ -850,6 +855,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
         help="off: the best-bitscore idiomorph vote stands (default). undetermined: a vote won by less than the family's minimum margin "
              "(5 bits) while the best core gene covers < 60%% of its reference is reported `undetermined`; the vote's winner, margin "
              "and coverage go into `idiomorph_vote_note` (#138). The locus, coordinates and tier are not changed.",
+    )
+    detect.add_argument(
+        "--weak-flank-cap-policy", action=_PolicyFlag, choices=_weak_flank_cap.WEAK_FLANK_CAP_POLICIES,
+        default=_weak_flank_cap.DEFAULT_WEAK_FLANK_CAP_POLICY,
+        help="off: no cap (default). on: a `high` Ascomycota:MAT call whose every flank gene is weak (unpolished, and under 50%% identity "
+             "or 30%% coverage) is lowered to `medium`; the idiomorph, the locus and the class are never changed (#129). The report's "
+             "`weak_flank_cap` names the weak genes.",
     )
     detect.add_argument(
         "--idiomorph-margin-policy", action=_PolicyFlag, choices=_margin_basis.IDIOMORPH_MARGIN_POLICIES,

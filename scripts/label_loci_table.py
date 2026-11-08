@@ -7,14 +7,18 @@ cross_call / no_reference / similarity_only / undetermined, one value per locus,
 that made the labels, #210), genes_labelled (the labels of `genes_found`, in order). The class column `class_` picks the Pezizomycotina system.
 Cross-calls are read from the table itself: a locus overlapping (0.9 of the shorter) a locus of another family on one contig, or in a genome with loci of two Saccharomycotina systems, or a non-empty `cross_call`
 column; `family_unconfirmed` from a `family_status` column when the table has one (reports of `--cross-family-policy on`). `label_status` was the registry-mapping column before 2026-10-29; that is now `label_mapping`.
+`nearest_reference` (#200, curator 2026-11-07): for each live core gene of the locus, `GENE=SYSTEM`, genes `|`-joined, where SYSTEM is the registry system code of the class of the
+matched curated record's organism (`pezizomycotina_class_systems`), or the record_id itself when its class has no code; the explicit value `none` when the locus has no matched record (blank when the loci table predates the `core_reference` column). The
+matched record, identity and bitscore stay visible in `nearest_reference_detail` (the `core_reference` column of the loci table). Output only: the database and the report keep their raw values.
 Labels come from scripts/idiomorph_label_registry.json through scripts/idiomorph_labels.py. Standard library only.
 """
-import argparse, collections, csv, os, sys
+import argparse, collections, csv, glob, os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import idiomorph_labels as L
 
 
+DEFAULT_DB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db")
 MIN_OVERLAP = 0.9      # of the shorter locus, the rule of detect/family_status.py
 # The yeast systems a genome can be called by twice (scripts/idiomorph_crosscall_flags.py FAMS, plus MATpk): 181 genomes in v0.7.0.
 YEAST_SYSTEMS = ("Ascomycota:MATsc", "Ascomycota:MTL", "Ascomycota:MATog", "Ascomycota:MATkp", "Ascomycota:MATpk")
@@ -43,7 +47,40 @@ def cross_called(rows):
     return out
 
 
-def label_rows(rows):
+_CLASS = re.compile(r"\bc__([A-Za-z_]+)")
+_RECORD_CLASS_CACHE = {}
+
+
+def record_class(record_id, db):
+    """The taxonomic class of the curated record `record_id` (from the `c__` rank of its `lineage` in db/*/*/<record_id>/metadata.yaml), or None."""
+    key = (record_id, db)
+    if key not in _RECORD_CLASS_CACHE:
+        cls = None
+        for path in sorted(glob.glob(os.path.join(db, "*", "*", record_id, "metadata.yaml"))):
+            for line in open(path):
+                if line.strip().startswith("lineage:"):
+                    m = _CLASS.search(line)
+                    cls = m.group(1) if m else None
+                    break
+            break
+        _RECORD_CLASS_CACHE[key] = cls
+    return _RECORD_CLASS_CACHE[key]
+
+
+def nearest_reference(core_reference, db):
+    """`GENE=SYSTEM|GENE=SYSTEM` for a `core_reference` value (`gene:record:identity:bitscore|...`), or `none` when there is no matched record."""
+    systems = L.registry().get("pezizomycotina_class_systems", {})
+    out = []
+    for item in (core_reference or "").split("|"):
+        if not item:
+            continue
+        gene, record = item.split(":")[0], item.split(":")[1]
+        cls = record_class(record, db)
+        out.append(f"{gene}={systems.get(cls, record)}")
+    return "|".join(out) if out else "none"
+
+
+def label_rows(rows, db=None):
     crossed = cross_called(rows)
     version = L.registry_version()
     for n, r in enumerate(rows):
@@ -52,15 +89,16 @@ def label_rows(rows):
         st = L.locus_status(fam, r["idiomorph"], cls, family_unconfirmed=(r.get("family_status") == "family_unconfirmed"), cross_call=n in crossed)
         r.update(idiomorph_label=lab["label"], lineage=lab["lineage"], system=lab["system"], label_mapping=lab["status"], label_status=st["label_status"],
                  label_reasons=st["label_reasons"], registry_version=version,
+                 nearest_reference=nearest_reference(r["core_reference"], db or DEFAULT_DB) if "core_reference" in r else "", nearest_reference_detail=r.get("core_reference", ""),
                  genes_labelled="|".join(L.gene_label(g, family=fam, class_=cls) for g in (r.get("genes_found") or "").split("|") if g))
     return rows
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0]); ap.add_argument("--loci", required=True); ap.add_argument("--out", required=True); ap.add_argument("--summary")
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0]); ap.add_argument("--loci", required=True); ap.add_argument("--out", required=True); ap.add_argument("--summary"); ap.add_argument("--db", default=DEFAULT_DB, help="curated database folder (default: db/ of this repository)")
     a = ap.parse_args()
-    rows = list(csv.DictReader(open(a.loci, newline=""), delimiter="\t")); cols = list(rows[0]) + ["idiomorph_label", "lineage", "system", "label_mapping", "label_status", "label_reasons", "registry_version", "genes_labelled"]
-    label_rows(rows)
+    rows = list(csv.DictReader(open(a.loci, newline=""), delimiter="\t")); cols = list(rows[0]) + ["idiomorph_label", "lineage", "system", "label_mapping", "label_status", "label_reasons", "registry_version", "genes_labelled", "nearest_reference", "nearest_reference_detail"]
+    label_rows(rows, a.db)
     with open(a.out, "w", newline="") as fh:
         w = csv.DictWriter(fh, cols, delimiter="\t", lineterminator="\n"); w.writeheader(); w.writerows(rows)
     c = collections.Counter((r["family_called"], r["idiomorph"], r["idiomorph_label"], r["label_mapping"]) for r in rows)

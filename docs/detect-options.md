@@ -116,6 +116,8 @@ Mucoromycotina runs use `--phylum Mucoromycota` instead of a taxid.
 | `MATPREDICT_TBLASTN_SEG` | `yes` runs the genome-wide `tblastn` as two calls: `-seg no` for most queries and `-seg yes -soft_masking true` for the selected ones (default `no`: one `-seg no` call, as in v0.8.1). In `main`, not in a release yet (#276). |
 | `MATPREDICT_TBLASTN_SEG_GENES` | comma-separated reference gene names that get the filtered search (recommended `SLA2,APN2,MAT1-1-1`); replaces the length rule. |
 | `MATPREDICT_TBLASTN_SEG_MIN_AA` | with `MATPREDICT_TBLASTN_SEG=yes` and no gene list: queries of at least this many residues get the filtered search (default 250). |
+| `MATPREDICT_TBLASTN_TWOSTAGE` | `yes` runs the genome-wide `tblastn` in two stages (#287): the core genes (role `core_MAT`) genome-wide first, then the other (flank) genes only in windows around the core hits, with the genome's full size passed as `-dbsize` so E-values match. A genome with no core hit gets the flank genes searched genome-wide, so its result is the plain search's. Default `no` (one batched `-seg no` call). Applies only with `MATPREDICT_TBLASTN_SEG=no`; with SEG on it is ignored. |
+| `MATPREDICT_TBLASTN_TWOSTAGE_WINDOW_BP` | Padding on each side of a core hit for the flank-gene windows, in base pairs (default 100000). Overlapping windows on one contig are merged. |
 | `MATPREDICT_HTML` | `0`, `false`, `no` or `off` turns `report.html` off unless `--html` is given. |
 | `MATPREDICT_BFD_SUPPRESS` | overrides the path of the shared BFD suppress list (`detect suppress-filter`). |
 
@@ -132,6 +134,7 @@ These are merged but unreleased; none changes a default, and none is in a preset
 | `--single-region-cap-policy off\|on` (#167) | a `high` Basidiomycota call on fewer than two distinct core regions and no polished flank gene is lowered to `medium`. Changes the tier only. |
 | `--idiomorph-margin-policy off\|separate` (#145) | a locus with a single idiomorph candidate reports the identity-point gap its margin falls back to as `idiomorph_identity_gap` and `idiomorph_margin` as null. Report only: no call, coordinate or tier changes. |
 | `MATPREDICT_TBLASTN_SEG`, `MATPREDICT_TBLASTN_SEG_GENES`, `MATPREDICT_TBLASTN_SEG_MIN_AA` (#276, PR #284) | opt-in `tblastn` filtering for the slowest genomes. With the gene list `SLA2,APN2,MAT1-1-1` it takes two outlier genomes from 3,063 s and 1,685 s to 468 s and 288 s with identical loci; it gives no speed-up on typical genomes. `docs/notes/2026-11-06_tblastn-seg-policy.md`. |
+| `MATPREDICT_TBLASTN_TWOSTAGE=yes` (#287 step 2) | core genes genome-wide first, flank genes only in windows around core hits (`MATPREDICT_TBLASTN_TWOSTAGE_WINDOW_BP`, default 100000), full genome size given as `-dbsize`; a genome with no core hit is searched in full. Off by default; in no preset. |
 
 ## Tried and not built
 

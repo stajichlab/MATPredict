@@ -540,6 +540,124 @@ def _gencode_args(genetic_code: int | None, flag: str) -> list[str]:
     return [flag, str(int(genetic_code))]
 
 
+#: Opt-in (#287, step 2): `MATPREDICT_TBLASTN_TWOSTAGE=yes` searches the CORE genes (role `core_MAT`) genome-wide first, then runs the
+#: remaining (flank) genes only in windows around the core hits, with the genome's full size given as `-dbsize` so E-values match the
+#: genome-wide search. A genome with no core hit gets the flank genes searched genome-wide, so its result is the full search's. Off by
+#: default; it applies only with `MATPREDICT_TBLASTN_SEG=no` (the default); with SEG on, the SEG policy's own split is used and this is ignored.
+_TBLASTN_TWOSTAGE_ENV = "MATPREDICT_TBLASTN_TWOSTAGE"
+_TBLASTN_TWOSTAGE_WINDOW_ENV = "MATPREDICT_TBLASTN_TWOSTAGE_WINDOW_BP"
+_TBLASTN_TWOSTAGE_WINDOW_DEFAULT = 100_000
+_CORE_ROLE = "core_MAT"
+
+
+def _tblastn_twostage() -> bool:
+    value = os.environ.get(_TBLASTN_TWOSTAGE_ENV, "no").strip() or "no"
+    if value not in ("no", "yes"):
+        raise ValueError(f"{_TBLASTN_TWOSTAGE_ENV}={value!r}: expected 'no' or 'yes'")
+    return value == "yes"
+
+
+def _tblastn_twostage_window_bp() -> int:
+    raw = os.environ.get(_TBLASTN_TWOSTAGE_WINDOW_ENV, "").strip()
+    try:
+        value = int(raw) if raw else _TBLASTN_TWOSTAGE_WINDOW_DEFAULT
+    except ValueError:
+        raise ValueError(f"{_TBLASTN_TWOSTAGE_WINDOW_ENV}={raw!r}: expected a whole number of base pairs")
+    if value < 1:
+        raise ValueError(f"{_TBLASTN_TWOSTAGE_WINDOW_ENV}={raw!r}: expected a positive number of base pairs")
+    return value
+
+
+def _split_reference_by_role(reference_fasta: Path, tmp_dir: Path, is_core: Callable[[str], bool]) -> tuple[Path | None, Path | None, list[str]]:
+    """Split the reference FASTA into (core queries, other queries, every qseqid in the file's order); a path is None when its side is empty."""
+    core, rest, order = [], [], []
+    header = None
+    for line in reference_fasta.read_text().splitlines(keepends=True):
+        if line.startswith(">"):
+            header = line[1:].strip().split()[0]
+            order.append(header)
+            (core if is_core(header) else rest).append(line)
+        elif header is not None:
+            (core if is_core(header) else rest).append(line)
+    paths = []
+    for name, lines in (("core", core), ("rest", rest)):
+        if lines:
+            path = tmp_dir / f"query_{name}.faa"
+            path.write_text("".join(lines))
+            paths.append(path)
+        else:
+            paths.append(None)
+    return paths[0], paths[1], order
+
+
+def _merge_windows(spans: list[tuple[str, int, int]], pad: int) -> list[tuple[str, int, int]]:
+    """Each (contig, start, end) widened by `pad` (start at least 1), overlapping or touching windows on one contig merged; sorted."""
+    by_contig: dict[str, list[list[int]]] = {}
+    for contig, start, end in sorted(spans):
+        lo, hi = max(1, start - pad), end + pad
+        windows = by_contig.setdefault(contig, [])
+        if windows and lo <= windows[-1][1] + 1:
+            windows[-1][1] = max(windows[-1][1], hi)
+        else:
+            windows.append([lo, hi])
+    return [(c, lo, hi) for c, ws in by_contig.items() for lo, hi in ws]
+
+
+def _remap_window_lines(output: str, window_of: dict[str, tuple[str, int]]) -> str:
+    """tblastn tabular lines against a windows database, with subject ids and positions turned back into genome coordinates."""
+    lines = []
+    for line in output.splitlines():
+        if not line.strip():
+            continue
+        cols = line.split("\t")
+        contig, start = window_of[cols[1]]
+        cols[1] = contig
+        cols[8] = str(int(cols[8]) + start - 1)
+        cols[9] = str(int(cols[9]) + start - 1)
+        lines.append("\t".join(cols))
+    return "\n".join(lines) + ("\n" if lines else "")
+
+
+_TOTAL_BASES = re.compile(r"([\d,]+)\s+total bases")
+
+
+def _two_stage_tblastn(genome_fasta: Path, reference_fasta: Path, db_prefix: Path, tmp_dir: Path, runner: Callable,
+                       genetic_code: int | None, call: Callable, is_core: Callable[[str], bool]) -> str | None:
+    """The `-seg no` tblastn output of the whole reference, produced in two stages (see `_TBLASTN_TWOSTAGE_ENV`); None when the split
+    gives nothing to save (no core or no flank query) or the genome's size cannot be read, so the caller runs the plain search."""
+    core_path, rest_path, order = _split_reference_by_role(reference_fasta, tmp_dir, is_core)
+    if core_path is None or rest_path is None:
+        return None
+    info = _run_checked(runner, ["blastdbcmd", "-db", str(db_prefix), "-info"]).stdout
+    match = _TOTAL_BASES.search(info or "")
+    if match is None:
+        return None
+    db_size = int(match.group(1).replace(",", ""))
+    core_out = call(core_path, "no").stdout
+    spans = []
+    for line in core_out.splitlines():
+        cols = line.split("\t")
+        if len(cols) >= 11:
+            spans.append((cols[1], min(int(cols[8]), int(cols[9])), max(int(cols[8]), int(cols[9]))))
+    if not spans:
+        rest_out = call(rest_path, "no").stdout          # no core hit: the other genes are searched genome-wide, as in the plain search
+        return _merge_tblastn_by_query_order([core_out, rest_out], order)
+    windows = _merge_windows(spans, _tblastn_twostage_window_bp())
+    window_fasta, window_of = tmp_dir / "windows.fasta", {}
+    with open(window_fasta, "w") as handle:
+        for i, (contig, start, end) in enumerate(windows):
+            record = _genome_index(genome_fasta)[contig]
+            sliced = record[start - 1:end]
+            window_of[f"win{i}"] = (contig, start)
+            handle.write(f">win{i}\n{str(sliced.seq)}\n")
+    window_db = tmp_dir / "window_db"
+    _run_checked(runner, ["makeblastdb", "-in", str(window_fasta), "-dbtype", "nucl", "-out", str(window_db)])
+    rest_raw = _run_checked(runner, [
+        "tblastn", "-query", str(rest_path), "-db", str(window_db), "-seg", "no", "-outfmt", _TBLASTN_OUTFMT, "-dbsize", str(db_size),
+    ] + _gencode_args(genetic_code, "-db_gencode")).stdout
+    return _merge_tblastn_by_query_order([core_out, _remap_window_lines(rest_raw, window_of)], order)
+
+
 def search_localize(
     genome_fasta: Path,
     families: list[Family],
@@ -571,7 +689,17 @@ def search_localize(
                 "-seg", query_seg, "-outfmt", _TBLASTN_OUTFMT,
             ] + (["-soft_masking", "true"] if query_seg != "no" else []) + _gencode_args(genetic_code, "-db_gencode"))
 
-        if seg == "no":
+        def _is_core_query(qseqid: str) -> bool:
+            attribution = _attribute(*_parse_reference_header(qseqid), record_families, roles_by_family)
+            return attribution is not None and attribution[1] == _CORE_ROLE
+
+        two_stage_out = None
+        if seg == "no" and _tblastn_twostage():
+            two_stage_out = _two_stage_tblastn(genome_fasta, reference_fasta, db_prefix, Path(tmp_dir_name), runner, genetic_code,
+                                               _call, _is_core_query)
+        if two_stage_out is not None:
+            result = type("_Merged", (), {"stdout": two_stage_out})()
+        elif seg == "no":
             result = _call(reference_fasta, "no")
         else:
             # long queries: filtering on, masked regions used for seeds only; short queries (precursors): `-seg no`

@@ -72,13 +72,26 @@ tools (exonerate, miniprot) built fewer than two gene models. The limiting step 
 5. **Not searched:** *Coprinopsis cinerea* (2), *Malassezia globosa*, *Naganishia albida*, *Candida haemulonis*, *Rhizophagus irregularis* (3):
    GmG made no phylum call. In the BFD run a taxid routes these, so this is a FungiDB-run effect, not a detector gap.
 
+### 4a. Two causes tested on those 31 genomes (frozen v0.8.1 code, same database)
+
+| Test | Result |
+|---|---|
+| Drop the annotated proteome (`--proteins`), genome-only | 2 of 31 recover (*Cladophialophora carrionii* KSF, medium; *Hortaea werneckii* EXF-2000, high); 29 stay uncalled |
+| Also remove the polish cap (`--max-polished-clusters-per-family 0`) | identical: the same 2 recover, 29 stay uncalled |
+
+So the annotated-proteome path costs a small number of calls (2 of 31), and the polishing budget is **not** why these genomes are missed (a
+hypothesis from *B. maydis* C4's 35 withheld clusters, tested and rejected). *Bipolaris* and *Curvularia* are called in 82 of 82 BFD genomes in
+v0.7.0, v0.8.0 and v0.8.1, so the *B. maydis* C4 failure is specific to that assembly: its MAT1-1-1 + SLA2 and MAT1-2-1 + SLA2 clusters (on MU825198
+and MU825193, the second with one polished gene) are the candidate locus, and neither reaches two modelled genes. The cause is not determined here.
+The 29 stay in the "modelling" group of section 2.
+
 ## 5. What could improve recovery, ranked
 
 Effort is the work; risk is the chance of a false MAT call. Each action keeps the repository's rule: opt-in, measured, genome-by-genome review.
 
 | # | Action | Targets | Effort | Risk | Notes |
 |---|---|---|---|---|---|
-| 1 | Take apart *Bipolaris maydis* C4 and *B. sorokiniana* (why a curated, heterothallic genus gives no call) | Dothideomycetes, 137 no-call | small | low | decides whether the cause is polishing, the roster, or the both-core-genes cross-hit |
+| 1 | Take apart *Bipolaris maydis* C4 and *B. sorokiniana* (why a curated, heterothallic genus gives no call in these two FungiDB assemblies when 82 of 82 BFD *Bipolaris* and *Curvularia* genomes are called) | Dothideomycetes, 137 no-call | small | low | the proteome path and the polish cap are ruled out (section 4a); next: the genomic window of the two SLA2-flanked clusters, hand-modelled against a curated record |
 | 2 | Polishing for divergent MAT genes: a miniprot-first or protein-profile model path for genes with search identity under about 50% | the 534 zero-polished and many of the 1,258 | medium | low | the limiting step is modelling; improving it changes no rule, but must pass the identity test |
 | 3 | `--strong-single-gene-policy` (gate: modelled identity >= 85 and coverage >= 90), **measured for #261: not the lever** | the 1,258 | done | medium | on 3,100 candidate genomes the rule recovers 5 loci (each `low`, `idiomorph_gene_only`, no flank genes, none with a truth label) and changes no existing call; 117 lone core hits at >= 85% in 96 genomes never reach the model gate because they are 90-430 bp fragments; one of the 5 recovered models is defective (a frameshift, no stop), so any use needs a defective-model gate (`results/2026-11-07_issue261/FINDINGS.md`) |
 | 4 | Curate references for the unreferenced groups: Dipodascales and Lipomycetes yeasts, Orbiliomycetes, Xylariales, Chaetothyriales, Botryosphaeriales, Podosphaera | about 1,000 genomes | large (curation) | low | each record raises search sensitivity where none exists; follows the #189/#202/#260 pattern |

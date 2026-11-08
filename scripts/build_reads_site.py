@@ -18,7 +18,8 @@ SCREEN_FLAGGED = ("mixed", "genus_mismatch", "borderline")      # the statuses s
 def rd(p):
     return list(csv.DictReader(open(p, newline="").read().replace("\r", "").splitlines(), delimiter="\t"))
 
-CLONE_ANI, CLONE_ALT, MIN_RUNS_FOR_COUNTS = 0.998, 0.997, 10
+CLONE_ANI, CLONE_ALT, MIN_RUNS_FOR_COUNTS = 0.998, 0.997, 10      # the older pair tables (clone_clusters.py)
+SOLID_ANI, SOLID_ALT, LOW_COVERAGE = 0.9995, 0.999, 8               # solid-containment tables (clone_solid.py); calibration in datasets/reads/sra_survey/pilot/clone_solid/README.md
 
 RANKS = ("phylum", "class", "order", "family")
 
@@ -53,26 +54,55 @@ def lineage_fields(table, species):
 
 
 def clone_groups(pairs_file, rows):
-    """Clone groups of one species from its saved pair identities (<slug>.pairs.tsv, written by clone_clusters.py --pairs): average linkage at 0.998. Sets row["clone"] to "c<N>" for runs in a group of
-    two or more and row["cid"] to a clone id for every sketched run (the pages count clones from it). Returns the summary for the species report. Counts per clone are given only where the number of clones
-    is stable between 0.998 and 0.997 (a plateau: within 10% of the runs) and there are at least 10 runs; where it is not, similar runs may be close relatives and not copies, and the report says so."""
+    """Clone groups of one species from its saved pair identities (<slug>.pairs.tsv, written by clone_clusters.py --pairs; the older plain-containment
+    identity of the 2026-10 pilot): average linkage at 0.998, plateau checked against 0.997. Used only where a species has no solid-containment table
+    (clone_groups_solid)."""
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "datasets", "reads", "sra_survey", "pilot"))
     import clone_clusters as cc
     prs = [(r["run_a"], r["run_b"], float(r["ani"]) if r["ani"] else None) for r in rd(pairs_file)]
     runs = sorted({x for p in prs for x in p[:2]}); P = {frozenset((a, b)): v for a, b, v in prs if v is not None}
     g1 = sorted(cc.cluster(runs, prs, CLONE_ANI, "average"), key=lambda c: (-len(c), c[0])); g2 = cc.cluster(runs, prs, CLONE_ALT, "average")
+    def min_ani(c):
+        vals = [P[frozenset(q)] for q in itertools.combinations(c, 2) if frozenset(q) in P]
+        return round(min(vals), 4) if vals else None
+    return clone_summary(rows, runs, g1, len(g2), min_ani, CLONE_ANI, CLONE_ALT, "containment")
+
+
+def clone_groups_solid(clones_file, rows):
+    """Clone groups of one species from its solid-containment table (<slug>.clones.tsv, written by clone_solid.py: clone ids of every sketched run at several
+    identity thresholds, average linkage). Groups at SOLID_ANI, plateau checked against SOLID_ALT. A species whose runs have a median k-mer abundance below
+    LOW_COVERAGE (the subsample is too thin to separate clones) gets groups but no counts, and the report says so."""
+    t = list(csv.DictReader(open(clones_file, newline=""), delimiter="\t"))
+    if not t: return None
+    runs = [r["run"] for r in t]
+    def groups(col):
+        g = {}
+        for r in t: g.setdefault(r[col], []).append(r["run"])
+        return sorted((sorted(c) for c in g.values()), key=lambda c: (-len(c), c[0]))
+    g1 = groups(f"clone_{SOLID_ANI}"); n2 = len(groups(f"clone_{SOLID_ALT}"))
+    mins = {r["run"]: r.get(f"min_ani_{SOLID_ANI}", "") for r in t}
+    min_ani = lambda c: round(float(mins[c[0]]), 5) if mins.get(c[0]) else None
+    abund = sorted(float(r["median_abund"] or 0) for r in t); med = abund[len(abund) // 2]
+    return clone_summary(rows, runs, g1, n2, min_ani, SOLID_ANI, SOLID_ALT, "solid containment", median_abund=round(med, 1), low_coverage=med < LOW_COVERAGE)
+
+
+def clone_summary(rows, runs, g1, n_alt, min_ani, thr, alt, metric, median_abund=None, low_coverage=False):
+    """Sets row["clone"] to "c<N>" for runs in a group of two or more and row["cid"] to a clone id for every sketched run (the pages count clones from it), and
+    returns the summary for the species report. Counts per clone are given only where the number of clones is stable between the two thresholds (a plateau:
+    within 10% of the runs), there are at least MIN_RUNS_FOR_COUNTS runs and coverage is not low; where not, similar runs may be close relatives and not
+    copies (or the reads cannot tell), and the report says so."""
     by = {r["run"]: r for r in rows}; groups = []
     for i, c in enumerate(g1, 1):
         for x in c:
             if x in by: by[x]["cid"] = f"c{i}"
         if len(c) < 2: continue
-        vals = [P[frozenset(q)] for q in itertools.combinations(c, 2) if frozenset(q) in P]
         for x in c:
             if x in by: by[x]["clone"] = f"c{i}"
-        groups.append({"id": f"c{i}", "size": len(c), "runs": sorted(c), "calls": dict(Counter(by[x]["call"] for x in c if x in by)), "min_ani": round(min(vals), 4) if vals else None})
-    plateau = abs(len(g1) - len(g2)) <= 0.10 * len(runs) and len(runs) >= MIN_RUNS_FOR_COUNTS
-    out = {"threshold": CLONE_ANI, "linkage": "average", "runs": len(runs), "clones": len(g1), "clones_at_alt": len(g2), "alt_threshold": CLONE_ALT, "groups": groups, "plateau": plateau, "counts": None}
-    if plateau:
+        groups.append({"id": f"c{i}", "size": len(c), "runs": sorted(c), "calls": dict(Counter(by[x]["call"] for x in c if x in by)), "min_ani": min_ani(c)})
+    plateau = abs(len(g1) - n_alt) <= 0.10 * len(runs) and len(runs) >= MIN_RUNS_FOR_COUNTS
+    out = {"threshold": thr, "linkage": "average", "metric": metric, "runs": len(runs), "clones": len(g1), "clones_at_alt": n_alt, "alt_threshold": alt,
+           "groups": groups, "plateau": plateau, "median_abund": median_abund, "low_coverage": low_coverage, "counts": None}
+    if plateau and not low_coverage:
         cnt = Counter()
         for c in g1:
             calls = {by[x]["call"] for x in c if x in by and by[x]["call"] in ("MAT1-1", "MAT1-2", "both")}
@@ -150,7 +180,7 @@ def study_titles(rows):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--wave", action="append", help="a wave folder with results_all_final.tsv and gates_final.tsv (or results_all.tsv and gates.tsv); repeat for several waves (default: wave1 and wave2)"); ap.add_argument("--out", required=True); ap.add_argument("--repo", default="."); ap.add_argument("--clones", action="append", help="folder with <slug>.pairs.tsv files; repeat (default: clone_pilot and the clone_pairs folder of every wave)")
+    ap.add_argument("--wave", action="append", help="a wave folder with results_all_final.tsv and gates_final.tsv (or results_all.tsv and gates.tsv); repeat for several waves (default: wave1 and wave2)"); ap.add_argument("--out", required=True); ap.add_argument("--repo", default="."); ap.add_argument("--clones", action="append", help="folder with <slug>.pairs.tsv files; repeat (default: clone_pilot and the clone_pairs folder of every wave)"); ap.add_argument("--solid-clones", help="folder with <slug>.clones.tsv files from clone_solid.py, used before the pair tables (default: datasets/reads/sra_survey/pilot/clone_solid)")
     a = ap.parse_args(); os.makedirs(a.out, exist_ok=True)
     res, gates, sp = [], {}, {}
     pilot = os.path.join(a.repo, "datasets/reads/sra_survey/pilot")
@@ -159,6 +189,7 @@ def main():
     TITLES = {r["study"]: r["title"] for r in rd(tf)} if os.path.exists(tf) else {}
     global STUDY_TITLES; STUDY_TITLES = TITLES
     clone_dirs = [os.path.join(a.repo, d) for d in (a.clones or ["datasets/reads/sra_survey/pilot/clone_pilot"] + [os.path.join(w, "clone_pairs") for w in waves])]
+    solid_dir = os.path.join(a.repo, a.solid_clones or "datasets/reads/sra_survey/pilot/clone_solid")      # <slug>.clones.tsv (clone_solid.py): preferred over the pair tables
     for w in waves:
         w = w if os.path.isabs(w) else os.path.join(a.repo, w)
         pick = lambda *names: next((os.path.join(w, n) for n in names if os.path.exists(os.path.join(w, n))), None)
@@ -189,7 +220,9 @@ def main():
              "screened": sum(1 for r in runs if r.get("screen")), "screen_flagged": sum(1 for r in runs if r.get("screen") in SCREEN_FLAGGED)}
         index.append(s)
         rows = [{k: r.get(k, "") for k in FIELDS} for r in runs]
-        pf = next((os.path.join(d, slug + ".pairs.tsv") for d in clone_dirs if os.path.exists(os.path.join(d, slug + ".pairs.tsv"))), None); cl = clone_groups(pf, rows) if pf else None
+        sf_ = os.path.join(solid_dir, slug + ".clones.tsv")
+        pf = next((os.path.join(d, slug + ".pairs.tsv") for d in clone_dirs if os.path.exists(os.path.join(d, slug + ".pairs.tsv"))), None)
+        cl = clone_groups_solid(sf_, rows) if os.path.exists(sf_) else clone_groups(pf, rows) if pf else None
         if cl: s["clone_groups"] = len(cl["groups"]); s["clone_runs"] = cl["runs"]; s["n_clones"] = cl["clones"]
         json.dump({**s, "gate": g["reasons"], "notes": NOTES.get(slug, []), "clones": cl, "rows": rows, "study_titles": study_titles(rows), "registry_version": registry_version()}, open(os.path.join(a.out, slug + ".json"), "w"), separators=(",", ":"))
         with open(os.path.join(a.out, slug + ".tsv"), "w", newline="") as fh:

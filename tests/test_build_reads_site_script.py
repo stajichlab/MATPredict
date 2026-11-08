@@ -152,3 +152,34 @@ def test_study_titles_reach_the_species_report_for_its_own_studies_only(tmp_path
 def test_no_study_titles_file_gives_an_empty_map(tmp_path):
     make_repo(tmp_path, {}, ["MAT1-1", "MAT1-2"])
     assert build(tmp_path, tmp_path.parent)["study_titles"] == {}
+
+
+def solid_table(tmp, labels_main, labels_alt, abund=20.0):
+    """A clone_solid.py table for sp_one: clone ids at 0.9995 and 0.999 per run (SRR0..), one median abundance for all."""
+    d = tmp / "datasets/reads/sra_survey/pilot/clone_solid"; d.mkdir(parents=True, exist_ok=True)
+    ts = ("0.9999", "0.9995", "0.999", "0.998")
+    size = Counter(labels_main)
+    rows = [[f"SRR{i}", 5000, 4500, abund, "", ""] + [m, m, a, a] + ["", "0.99990" if size[m] > 1 else "", "", ""] for i, (m, a) in enumerate(zip(labels_main, labels_alt))]
+    tsv(d / "sp_one.clones.tsv", ["run", "hashes", "solid_hashes", "median_abund", "nearest_run", "nearest_ani"] + [f"clone_{t}" for t in ts] + [f"min_ani_{t}" for t in ts], rows)
+
+
+from collections import Counter
+
+
+def test_a_solid_containment_table_is_used_before_the_pair_table(tmp_path):
+    calls = ["MAT1-1"] * 3 + ["MAT1-2"] * 9
+    make_repo(tmp_path, {(0, 1): 0.9995, (0, 2): 0.9995, (1, 2): 0.9995}, calls)       # the pair table would give one clone of runs 0-2
+    labels = ["c1", "c1"] + [f"c{i}" for i in range(2, 12)]                               # the solid table: runs 0 and 1 only
+    solid_table(tmp_path, labels, labels)
+    cl = build(tmp_path, tmp_path.parent)["clones"]
+    assert cl["metric"] == "solid containment" and cl["threshold"] == 0.9995 and cl["alt_threshold"] == 0.999
+    assert cl["clones"] == 11 and len(cl["groups"]) == 1 and cl["groups"][0]["runs"] == ["SRR0", "SRR1"] and cl["groups"][0]["min_ani"] == 0.9999
+    assert cl["plateau"] and not cl["low_coverage"] and cl["counts"] == {"MAT1-1": 2, "MAT1-2": 9}
+
+
+def test_low_coverage_gives_groups_but_no_counts(tmp_path):
+    make_repo(tmp_path, {}, ["MAT1-1"] * 12)
+    labels = [f"c{i}" for i in range(1, 13)]
+    solid_table(tmp_path, labels, labels, abund=5.0)
+    cl = build(tmp_path, tmp_path.parent)["clones"]
+    assert cl["low_coverage"] and cl["median_abund"] == 5.0 and cl["plateau"] and cl["counts"] is None

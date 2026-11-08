@@ -32,7 +32,7 @@ def merge(final, stage, species_of=lambda run: ""):
     return rows + added, len(added)
 
 
-def regate_species(rows, gates, decide):
+def regate_species(rows, gates, decide=None):
     """Decide again, from the merged table, the species that gained runs. Returns (gates, changes): the gates with the new numbers (`reasons`) and decision of those
     species, and one row per species whose decision changed. `decide` is wave_driver.decide."""
     by = collections.defaultdict(list)
@@ -43,19 +43,12 @@ def regate_species(rows, gates, decide):
         rs = by.get(g["slug"], [])
         if not rs or not g["reasons"].startswith("runs="):
             continue
-        counted = [x for x in rs if x["state"] != "unavailable_at_ncbi"]
-        done = [x for x in counted if x["state"] == "done"]
-        typed = [x for x in done if x["call"] not in ("both", "none", "low_depth", "")]
-        both = [x for x in done if x["call"] == "both"]
-        tr = [x for x in typed if x["truth"] and "," not in x["truth"]]
-        agree = sum(1 for x in tr if x["call"] == x["truth"])
-        sd = [float(x["shared_depth"]) for x in done if x["shared_depth"] not in ("", None)]
-        msd = statistics.median(sd) if sd else 0
-        reasons = (f"runs={len(rs)} done={len(done)} typed={len(typed)} both={len(both)} none/low={len(done) - len(typed) - len(both)} "
-                   f"truth_typed={len(tr)} agree={agree} median_shared_depth={msd:.1f}")
-        if reasons == g["reasons"]:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from wave_driver import gate_row          # applies the curator rulings (ZYGOSITY counting, RELEASED species) as the gate does
+        row = gate_row(g["slug"], g["species"], rs)
+        new, reasons = row["decision"], row["reasons"]
+        if reasons == g["reasons"] and new == g["decision"]:
             continue
-        new, _ = decide(len(counted), len(done), len(typed), len(both), len(tr), agree, msd)
         if new.split(":")[0] != g["decision"].split(":")[0]:
             changes.append({"slug": g["slug"], "species": g["species"], "previous": g["decision"], "decision": new, "reasons": reasons})
         g["decision"], g["reasons"] = new, reasons
@@ -82,8 +75,7 @@ def main(argv=None):
         w.writeheader(); w.writerows(rows)
     if a.gates:
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        from wave_driver import decide
-        gates, changes = regate_species(rows, rd(a.gates), decide)
+        gates, changes = regate_species(rows, rd(a.gates))
         for path, data, cols in ((a.gates, gates, ["slug", "species", "decision", "reasons"]),
                                  (os.path.join(os.path.dirname(a.gates), "screen_gate_changes.tsv"), changes, ["slug", "species", "previous", "decision", "reasons"])):
             with open(path, "w", newline="") as fh:

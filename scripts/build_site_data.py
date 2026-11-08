@@ -41,7 +41,8 @@ table has them they are passed on, and they are simply absent for v0.6.0:
                          outside the high_basis scope (readers that index the first 14 fields are unaffected).
 
 Also writes one per-genome table per dataset, genomes_<dataset>.tsv (git-ignored; built with the site).
-Also writes cocci_reads.json and cocci_reads.tsv from datasets/reads/coccidioides/results when present.
+Also writes cocci_reads.json and cocci_reads.tsv from datasets/reads/coccidioides/results when present, and reads_fola.* and reads_afum.* (#172)
+from the committed tables under results/2026-10-06_fola_reads_type, results/2026-10-06_fola_reads_mixes and results/2026-10-07_afum_reads.
 Writes web/intro/data/taxa.json (one row per dataset x lineage x species, with genome counts and allele
 counts) and summary.json (per-dataset totals, locus classes, confidence). Python standard library only.
 
@@ -310,6 +311,77 @@ def cocci_reads(out):
         w.writerow(cols)
         w.writerows([r[c] for c in cols] for r in rows)
 
+FOLA_TYPE = os.path.join(REPO, "results/2026-10-06_fola_reads_type/v4_concordance.tsv")
+FOLA_MIXES = os.path.join(REPO, "results/2026-10-06_fola_reads_mixes/mixes_all.tsv")
+AFUM_READS = os.path.join(REPO, "results/2026-10-07_afum_reads/comparison.tsv")
+READS_CODE = "v0.7.0 (src/MATPredict/reads/ unchanged since 2026-10-07)"
+
+
+def _write_tsv(path, cols, rows):
+    with open(path, "w", newline="") as fh:
+        w = csv.writer(fh, delimiter="\t", lineterminator="\n")
+        w.writerow(cols)
+        w.writerows([r[c] for c in cols] for r in rows)
+
+
+def _matrix(rows, key_a, key_b):
+    """{a: {b: n}} in first-seen order of a, sorted b; counts only."""
+    out = {}
+    for r in rows:
+        d = out.setdefault(r[key_a], {})
+        d[r[key_b]] = d.get(r[key_b], 0) + 1
+    return {a: dict(sorted(d.items())) for a, d in out.items()}
+
+
+def fola_reads(out):
+    """Fola read typing (#172): truth x k-mer call, the disagreeing and both strains, flags, and the simulated mixes by minor share.
+    Written from the committed v4 concordance and mixes tables; nothing is recomputed."""
+    if not (os.path.exists(FOLA_TYPE) and os.path.exists(FOLA_MIXES)):
+        return
+    rows, mixes = tsv(FOLA_TYPE), tsv(FOLA_MIXES)
+    pcts = sorted({int(m["pct_MAT1-2"]) for m in mixes})
+    by_pct = {str(p): dict(sorted(Counter(m["call"] for m in mixes if int(m["pct_MAT1-2"]) == p).items())) for p in pcts}
+    pairs = sorted({m["pair"] for m in mixes})
+    summ = {
+        "code": READS_CODE, "strains": len(rows), "truth_by_call": _matrix(rows, "truth", "kmer_call"),
+        "agree": sum(1 for r in rows if r["agree"] == "True"),
+        "disagree": [{"strain": r["sample"], "truth": r["truth"], "call": r["kmer_call"], "shared_depth": float(r["shared_depth"])} for r in rows if r["agree"] != "True"],
+        "both": [{"strain": r["sample"], "MAT1-1_depth": float(r["MAT1-1_depth"]), "MAT1-2_depth": float(r["MAT1-2_depth"])} for r in rows if r["kmer_call"] == "both"],
+        "flags": dict(sorted(Counter(f for r in rows for f in r["flags"].split(",") if f not in ("", "-")).items())),
+        "mixes": {"n": len(mixes), "pairs": pairs, "by_pct_MAT1-2": by_pct,
+                  "both_at_10pct_MAT1-2": sum(1 for m in mixes if m["pct_MAT1-2"] == "10" and m["call"] == "both"),
+                  "pairs_at_10pct_MAT1-2": sum(1 for m in mixes if m["pct_MAT1-2"] == "10"),
+                  "both_at_90pct_MAT1-2": sum(1 for m in mixes if m["pct_MAT1-2"] == "90" and m["call"] == "both"),
+                  "pairs_at_90pct_MAT1-2": sum(1 for m in mixes if m["pct_MAT1-2"] == "90"),
+                  "reads_used": sorted({m["reads_used"] for m in mixes})},
+    }
+    with open(os.path.join(out, "reads_fola.json"), "w") as fh:
+        json.dump(summ, fh, indent=1)
+    _write_tsv(os.path.join(out, "reads_fola.tsv"), list(rows[0].keys()), rows)
+    _write_tsv(os.path.join(out, "reads_fola_mixes.tsv"), list(mixes[0].keys()), mixes)
+
+
+def afum_reads(out):
+    """A. fumigatus read typing (#172): assembly-BLAST truth x reads call, agreement with `detect`, the disagreeing and mixed read sets.
+    Written from the committed comparison table; nothing is recomputed."""
+    if not os.path.exists(AFUM_READS):
+        return
+    rows = tsv(AFUM_READS)
+    single = [r for r in rows if r["truth"] in ("MAT1-1", "MAT1-2")]
+    det = [r for r in single if r["detect"] in ("MAT1-1", "MAT1-2")]
+    summ = {
+        "code": READS_CODE, "read_sets": len(rows), "with_reads": sum(1 for r in rows if r["reads"] != "no_reads"),
+        "truth_by_reads": _matrix(rows, "truth", "reads"),
+        "single_truth": len(single), "reads_agree_single_truth": sum(1 for r in single if r["reads"] == r["truth"]),
+        "detect_agree_single_truth": sum(1 for r in det if r["detect"] == r["truth"]), "detect_single_truth": len(det),
+        "reads_not_agreeing": [{"strain": r["strain"], "truth": r["truth"], "reads": r["reads"]} for r in single if r["reads"] != r["truth"]],
+        "layout": dict(sorted(Counter(r["layout"] or "none" for r in rows).items())),
+        "flags": dict(sorted(Counter(f for r in rows for f in r["flags"].split(",") if f not in ("", "-")).items())),
+    }
+    with open(os.path.join(out, "reads_afum.json"), "w") as fh:
+        json.dump(summ, fh, indent=1)
+    _write_tsv(os.path.join(out, "reads_afum.tsv"), list(rows[0].keys()), rows)
+
 
 def resolve_release(release, asco=None, basidio=None, mucoro=None):
     """{"name", "code", "asco", "basidio", "mucoro"} with absolute folders; raises when one is unset or missing."""
@@ -521,6 +593,8 @@ def main(argv=None):
     with open(os.path.join(out, "summary.json"), "w") as fh:
         json.dump(summary, fh, indent=1)
     cocci_reads(out)
+    fola_reads(out)
+    afum_reads(out)
     print(f"{rel['name']}: {len(rows)} rows, {len(strings)} strings; {sum(r[8] for r in rows)} genomes")
 
 

@@ -1,0 +1,59 @@
+{
+ "code": "v0.7.0 (src/MATPredict/reads/ unchanged since 2026-10-07)",
+ "read_sets": 332,
+ "with_reads": 331,
+ "truth_by_reads": {
+  "MAT1-1": {
+   "MAT1-1": 160
+  },
+  "MAT1-2": {
+   "MAT1-2": 126,
+   "both": 1,
+   "no_reads": 1
+  },
+  "both": {
+   "MAT1-1": 1,
+   "both": 7
+  },
+  "no_genome": {
+   "MAT1-1": 11,
+   "MAT1-2": 7,
+   "both": 7,
+   "low_depth": 3
+  },
+  "ambiguous": {
+   "MAT1-1": 2,
+   "MAT1-2": 2,
+   "both": 3
+  },
+  "none": {
+   "low_depth": 1
+  }
+ },
+ "single_truth": 288,
+ "reads_agree_single_truth": 286,
+ "detect_agree_single_truth": 288,
+ "detect_single_truth": 288,
+ "reads_not_agreeing": [
+  {
+   "strain": "AF100-12_2",
+   "truth": "MAT1-2",
+   "reads": "both"
+  },
+  {
+   "strain": "Af10",
+   "truth": "MAT1-2",
+   "reads": "no_reads"
+  }
+ ],
+ "layout": {
+  "none": 1,
+  "paired": 311,
+  "single": 20
+ },
+ "flags": {
+  "idiomorph_depth_ratio_below_0.25": 10,
+  "trace_MAT1-1": 135,
+  "trace_MAT1-2": 53
+ }
+}

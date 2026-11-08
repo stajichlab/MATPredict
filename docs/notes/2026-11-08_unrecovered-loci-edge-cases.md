@@ -95,12 +95,35 @@ Effort is the work; risk is the chance of a false MAT call. Each action keeps th
 | 2 | Polishing for divergent MAT genes: a miniprot-first or protein-profile model path for genes with search identity under about 50% | the 534 zero-polished and many of the 1,258 | medium | low | the limiting step is modelling; improving it changes no rule, but must pass the identity test |
 | 3 | `--strong-single-gene-policy` (gate: modelled identity >= 85 and coverage >= 90), **measured for #261: not the lever** | the 1,258 | done | medium | on 3,100 candidate genomes the rule recovers 5 loci (each `low`, `idiomorph_gene_only`, no flank genes, none with a truth label) and changes no existing call; 117 lone core hits at >= 85% in 96 genomes never reach the model gate because they are 90-430 bp fragments; one of the 5 recovered models is defective (a frameshift, no stop), so any use needs a defective-model gate (`results/2026-11-07_issue261/FINDINGS.md`) |
 | 4 | Curate references for the unreferenced groups: Dipodascales and Lipomycetes yeasts, Orbiliomycetes, Xylariales, Chaetothyriales, Botryosphaeriales, Podosphaera | about 1,000 genomes | large (curation) | low | each record raises search sensitivity where none exists; follows the #189/#202/#260 pattern |
-| 5 | Review the one-polished-gene ruling for a flank-supported tier: one polished MAT gene plus a polished flank gene reports `low`, not nothing | part of the 1,258 | small | medium | needs a curator decision; the 2026-09-22 ruling was made when no tier below the bar existed |
+| 5 | Report a locus with exactly one polished gene at `low` instead of withholding it. **Measured, 2026-11-08: not worth a general rule** (section 5a) | the 1,264 | done | high | 92% of the polished core genes are under 60% identity; a narrow gate recovers 12 genomes |
 | 6 | `flank_carried_core_outside_flank_span`: widen the span or allow the core gene beyond it when the flanks are polished | the 203 (Hypoxylon, Yamadazyma, Pyricularia) | medium | medium | overlaps #260 |
 | 7 | Family-structure fixes: join `matMc`/`matPi` pieces of the PM family and `bE`/`bW` of rustHD across a split | S. pombe group, Pneumocystis, Taphrina, rust | medium | medium | relates to the silent-pair work (#252 revert) |
 | 8 | A per-genome "why no call" field naming the best withheld locus and the reason | all | small | none | report-only; turns this census into a column |
 
 Suggested order: 1, 8 (cheap, informative), then 2 and 4 (largest effect), then the curator-gated 5 to 7. Action 3 is measured and small (5 loci), so the rule does not address the one-polished-gene genomes: those have other, unpolished hits and no lone modelled gene to promote.
+
+### 5a. The one-polished-gene measurement (action 5)
+
+The bar counts any polished gene, so a locus with a polished core gene and a polished flank gene already passes; what is withheld is a locus with
+**exactly one** polished gene. With `--withheld-detail-policy on` (report-only) the 1,935 no-call Ascomycota and Basidiomycota genomes of the v0.8.1 run
+were rerun with the same code (`results/2026-11-08_withheld_detail/`; calls unchanged by construction). Of 162,417 withheld `modelled_gene_bar` loci,
+160,051 (98.5%) have no polished gene and 2,366 have exactly one.
+
+| | Loci | Genomes (best withheld locus) |
+|---|---|---|
+| the one polished gene is a flank gene (SLA2, APN2, COX13, PAN6, FAO1 ...) | 1,202 | 557 |
+| the one polished gene is a core gene | 1,164 | 707 |
+
+For the 707 genomes with a polished core gene: identity under 60% in 653 (92%), 60-85% in 23, 85% or more in 31. In 545 the locus also holds another
+core hit (a possible opposite idiomorph) and in 495 it holds no flank hit at all. With identity at least 60% and coverage at least 60%, 35 genomes
+remain, and 23 of those rest on `RPL39`, a conserved ribosomal gene that is not mating-type specific. The other 12 are *Taphrina* `matMc`
+(100% identity, `matPi` unpolished; 5), *Sphaerulina musiva* `MAT1-1-1` (3), *Flavoplaca navasiana* `MAT1-1-1` (1), *Asteromyces cruciatus* and
+*Sporothrix epigloea* `MAT1-2-1` (2) and *Melampsora aecidioides* `bW` (1).
+
+So a general `low` tier would add about 700 loci that are mostly weak models with no flank support (a false-call risk the 2026-09-22 ruling was made to
+avoid), and a gate that keeps only well-modelled specific genes recovers 12 genomes, about 0.6% of the unrecovered ones. The better lever is why the second
+gene is not modelled where one gene is modelled at 100% (*Taphrina* `matPi`, *Melampsora* `bE`): a short or intron-containing partner that the polishing
+tools cannot build. That belongs with action 2.
 
 ## 6. What this census cannot say
 

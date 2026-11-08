@@ -123,9 +123,10 @@ remain, and 23 of those rest on `RPL39`, a conserved ribosomal gene that is not 
 So a general `low` tier would add about 700 loci that are mostly weak models with no flank support (a false-call risk the 2026-09-22 ruling was made to
 avoid), and a gate that keeps only well-modelled specific genes recovers 12 genomes, about 0.6% of the unrecovered ones. The "unpolished partner" in these 12 cases is not a gene the polishing tools failed to build: it is a weak search fragment (identity 23-47%,
 coverage 12-53%, 28-41 bits; for example *Taphrina deformans* `matPi` at 33%, 18% coverage and 29 bits beside `matMc` at 100%, *Melampsora aecidioides* `bE`
-at 37.5%, 16% and 32 bits beside `bW` at 75%). So where one gene is modelled and its partner is not, the partner is barely detected at all, and the
-lever is the **sensitivity of the search** for the divergent partner (a profile or HMM search, more references, or a lower threshold in a window already
-known to hold a modelled MAT gene), not the polishing tools. That belongs with action 4 (references) and a search-sensitivity experiment, not action 2.
+at 37.5%, 16% and 32 bits beside `bW` at 75%). So where one gene is modelled and its partner is not, the partner is too divergent for the search to place it with confidence and, at that identity,
+for the polishing tools to build a model; neither step is working "wrongly" on a well-detected gene. The lever is a method that tolerates divergence (a
+profile or HMM search or gene model, more references closer to the clade, or a lower threshold inside a window already known to hold a modelled MAT
+gene), which belongs with action 4 (references) and a search-sensitivity experiment, together with action 2.
 
 ## 6. What this census cannot say
 

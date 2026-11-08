@@ -105,7 +105,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import confidence_cap, family_status, homothallic, margin_basis, partial_core, weak_flank_cap, weak_fragment_cap
+from MATPredict.detect import confidence_cap, family_status, homothallic, margin_basis, partial_core, weak_coverage_noise, weak_flank_cap, weak_fragment_cap
 from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
@@ -2517,6 +2517,7 @@ def run_pipeline(
     confidence_cap_policy: str = confidence_cap.DEFAULT_CONFIDENCE_CAP_POLICY,
     #: `--weak-fragment-cap-policy` (`weak_fragment_cap`, #275). Lowers the tier only, never the idiomorph.
     weak_fragment_cap_policy: str = weak_fragment_cap.DEFAULT_WEAK_FRAGMENT_CAP_POLICY,
+    weak_coverage_noise_policy: str = weak_coverage_noise.DEFAULT_WEAK_COVERAGE_NOISE_POLICY,
     weak_flank_cap_policy: str = weak_flank_cap.DEFAULT_WEAK_FLANK_CAP_POLICY,
     idiomorph_margin_policy: str = margin_basis.DEFAULT_IDIOMORPH_MARGIN_POLICY,
     #: `off` (default) or `on`: overlapping calls of two families become one (the family scoped to the genome
@@ -2775,6 +2776,7 @@ def run_pipeline(
     # clamped to the contig's real end.
     confidence_cap.check_policy(confidence_cap_policy)
     weak_fragment_cap.check_policy(weak_fragment_cap_policy)
+    weak_coverage_noise.check_policy(weak_coverage_noise_policy)
     weak_flank_cap.check_policy(weak_flank_cap_policy)
     margin_basis.check_policy(idiomorph_margin_policy)
     family_status.check_policy(cross_family_policy)
@@ -3266,6 +3268,10 @@ def run_pipeline(
             [h for c in clusters if id(c) in cluster_ids for h in c.hits],
             family_key, families_by_key[family_key].flank_carried_min_bitscore,
         )
+        # `--weak-coverage-noise-policy on` (#149): a gene whose every hit covers < 30% of its reference is noise too.
+        if weak_coverage_noise_policy == weak_coverage_noise.POLICY_ON:
+            noise = noise | weak_coverage_noise.low_coverage_genes(
+                [h for c in clusters if id(c) in cluster_ids for h in c.hits], family_key)
         return any(
             outcome.status == STATUS_UNPOLISHED
             for (cluster_id, key, gene_name), outcome in polish_by.items()

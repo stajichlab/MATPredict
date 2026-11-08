@@ -23,9 +23,14 @@ A preset fills the policy options that were not passed explicitly.
 | `v0.7` | coverage_profile | both_genes | off | off | on | off | off |
 | `v0.8` | coverage_profile | both_genes | off | off | on | on | off |
 | `v0.8.1` | coverage_profile | both_genes | off | off | on | on | on |
+| `v0.9` | coverage_profile | both_genes | off | off | on | keep_labelled | on |
 
-Each preset adds to the one before it: `v0.8` adds the cross-family policy to `v0.7`, and `v0.8.1` adds the fallback after withheld hits to
-`v0.8`. Two policies stay off in every preset: `confidence_cap_policy` and `strong_single_gene_policy` (the latter waits for a 12-locus
+Each preset adds to the one before it: `v0.8` adds the cross-family policy to `v0.7`, `v0.8.1` adds the fallback after withheld hits to
+`v0.8`, and `v0.9` adds the three **report-only** rules of the v0.9.0 cycle to `v0.8.1` (curator's ruling 2026-11-07): `cross_family_policy=keep_labelled`
+(both calls kept where the kept one has no idiomorph label and the other has one, #255), `idiomorph_margin_policy=separate` (a single-candidate
+identity gap reported as `idiomorph_identity_gap`, #145) and `out_of_scope_label_policy=on` (a Basidiomycota MAT call outside its scope on STE3, PAN6
+and RPL39 alone marked `family_unconfirmed`, #170; the command-line flag is `--scope-label-policy`). `v0.9` turns on no rule that changes a tier or an idiomorph label: the weak-fragment,
+weak-flank, short-fragment-vote, single-region and weak-coverage rules stay off in every preset until the curator approves their genome lists. Two policies stay off in every preset: `confidence_cap_policy` and `strong_single_gene_policy` (the latter waits for a 12-locus
 sequence check, #261).
 
 A full run passes the preset through the batch scripts, for example `DETECT_ARGS="--preset v0.8.1"` with `scripts/run_clade_panel.slurm`.
@@ -96,7 +101,7 @@ Mucoromycotina runs use `--phylum Mucoromycota` instead of a taxid.
 | `--sample` |  | `None` | Sample name for the report (default: the genome file name up to the first dot) |
 | `--organism` |  | `None` | Organism name for the report, e.g. 'Fusarium oxysporum f. sp. lactucae'. Shown as given; routing still uses --taxid |
 | `--out-dir` |  | `None` |  |
-| `--preset` | v0.7,v0.8,v0.8.1 | `None` | Set the five policy options below to a named release setting: v0.7: partial-core-policy=coverage_profile, homothallic-policy=both_genes, confidence-cap-policy=off, strong-single-gene-policy=off, scoped-roster-policy=on; v0.8: partial-core-policy=coverage_profile, homothallic-policy=both_genes, confidence-cap-policy=off, strong-single-gene-policy=off, scoped-roster-policy=on, cross-family-policy=on; v0.8.1: partial-core-policy=coverage_profile, homothallic-policy=both_genes, confidence-cap-policy=off, strong-single-gene-policy=off, scoped-roster-policy=on, cross-family-policy=on, fallback-after-withheld-policy=on. A policy flag given explicitly overrides the preset. Without --preset every policy keeps its own default (off). |
+| `--preset` | v0.7,v0.8,v0.8.1,v0.9 | `None` | Set the five policy options below to a named release setting: v0.7: partial-core-policy=coverage_profile, homothallic-policy=both_genes, confidence-cap-policy=off, strong-single-gene-policy=off, scoped-roster-policy=on; v0.8: partial-core-policy=coverage_profile, homothallic-policy=both_genes, confidence-cap-policy=off, strong-single-gene-policy=off, scoped-roster-policy=on, cross-family-policy=on; v0.8.1: partial-core-policy=coverage_profile, homothallic-policy=both_genes, confidence-cap-policy=off, strong-single-gene-policy=off, scoped-roster-policy=on, cross-family-policy=on, fallback-after-withheld-policy=on; v0.9: partial-core-policy=coverage_profile, homothallic-policy=both_genes, confidence-cap-policy=off, strong-single-gene-policy=off, scoped-roster-policy=on, cross-family-policy=keep_labelled, fallback-after-withheld-policy=on, idiomorph-margin-policy=separate, out-of-scope-label-policy=on. A policy flag given explicitly overrides the preset. Without --preset every policy keeps its own default (off). |
 | `--emit-cds-fasta` |  | `False` | Also emit real CDS features with translation= attributes in the GFF3, and write a companion detected_loci.fasta next to it. The companion FASTA contains the FULL sequence of every contig the detection results reference, not just the locus spans, so it can be large (a whole chromosome-scale contig per referenced contig). Off by default. |
 
 ## Environment variables

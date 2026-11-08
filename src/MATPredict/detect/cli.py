@@ -93,6 +93,21 @@ PRESETS: dict[str, dict[str, str]] = {
         "cross_family_policy": _family_status.POLICY_ON,
         "fallback_after_withheld_policy": _fallback_search.POLICY_ON,
     },
+    # v0.8.1 plus the three REPORT-ONLY rules of the v0.9.0 cycle (curator's ruling 2026-11-07): keep both calls where the kept one has
+    # no idiomorph label and the other has one (#255), report a single-candidate identity gap apart from the vote margin (#145), and label
+    # a Basidiomycota MAT call outside its scope on STE3/PAN6/RPL39 alone as unverified (#170). No rule that changes a tier or an idiomorph
+    # label is in this preset: those wait for the curator's approval of their genome lists.
+    "v0.9": {
+        "partial_core_policy": POLICY_COVERAGE_PROFILE,
+        "homothallic_policy": POLICY_BOTH_GENES,
+        "confidence_cap_policy": _confidence_cap.POLICY_OFF,
+        "strong_single_gene_policy": _strong_single_gene.POLICY_OFF,
+        "scoped_roster_policy": SCOPED_ROSTER_ON,
+        "cross_family_policy": _family_status.POLICY_KEEP_LABELLED,
+        "fallback_after_withheld_policy": _fallback_search.POLICY_ON,
+        "idiomorph_margin_policy": _margin_basis.POLICY_SEPARATE,
+        "out_of_scope_label_policy": _scope_label.POLICY_ON,
+    },
 }
 
 

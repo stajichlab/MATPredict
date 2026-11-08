@@ -34,7 +34,7 @@ withheld locus in each genome:
 
 The reporting bar is `MIN_POLISHED_GENES = 2` (`detect/pipeline.py`, curator ruling 2026-09-22: loci with exactly one polished gene gave no
 high-confidence call). So 88% of the unrecovered genomes (the first two rows) are cases where the search found the genes but the polishing
-tools (exonerate, miniprot) built fewer than two gene models. The limiting step is gene **modelling** of divergent MAT genes, not search.
+tools (exonerate, miniprot) built fewer than two gene models. Whether the limiting step is gene **modelling** or the **sensitivity of the search** is not settled by these counts: the unmodelled hits are mostly weak fragments (section 5a measured this for the best cases: 23-47% identity, 12-53% coverage, 28-41 bits), so a divergent gene that the search barely detects looks the same as a gene the polishing tools cannot build.
 
 ## 3. The failure is concentrated in a small number of groups
 
@@ -92,7 +92,7 @@ Effort is the work; risk is the chance of a false MAT call. Each action keeps th
 | # | Action | Targets | Effort | Risk | Notes |
 |---|---|---|---|---|---|
 | 1 | Take apart *Bipolaris maydis* C4 and *B. sorokiniana* (why a curated, heterothallic genus gives no call in these two FungiDB assemblies when 82 of 82 BFD *Bipolaris* and *Curvularia* genomes are called) | Dothideomycetes, 137 no-call | small | low | the proteome path and the polish cap are ruled out (section 4a); next: the genomic window of the two SLA2-flanked clusters, hand-modelled against a curated record |
-| 2 | Polishing for divergent MAT genes: a miniprot-first or protein-profile model path for genes with search identity under about 50% | the 534 zero-polished and many of the 1,258 | medium | low | the limiting step is modelling; improving it changes no rule, but must pass the identity test |
+| 2 | Polishing for divergent MAT genes: a miniprot-first or protein-profile model path for genes with search identity under about 50%. **Check first (section 5a): in the best cases the unmodelled partner is only a weak search fragment, so search sensitivity may matter more than polishing** | the 534 zero-polished and many of the 1,258 | medium | low | the limiting step is modelling; improving it changes no rule, but must pass the identity test |
 | 3 | `--strong-single-gene-policy` (gate: modelled identity >= 85 and coverage >= 90), **measured for #261: not the lever** | the 1,258 | done | medium | on 3,100 candidate genomes the rule recovers 5 loci (each `low`, `idiomorph_gene_only`, no flank genes, none with a truth label) and changes no existing call; 117 lone core hits at >= 85% in 96 genomes never reach the model gate because they are 90-430 bp fragments; one of the 5 recovered models is defective (a frameshift, no stop), so any use needs a defective-model gate (`results/2026-11-07_issue261/FINDINGS.md`) |
 | 4 | Curate references for the unreferenced groups: Dipodascales and Lipomycetes yeasts, Orbiliomycetes, Xylariales, Chaetothyriales, Botryosphaeriales, Podosphaera | about 1,000 genomes | large (curation) | low | each record raises search sensitivity where none exists; follows the #189/#202/#260 pattern |
 | 5 | Report a locus with exactly one polished gene at `low` instead of withholding it. **Measured, 2026-11-08: not worth a general rule** (section 5a) | the 1,264 | done | high | 92% of the polished core genes are under 60% identity; a narrow gate recovers 12 genomes |
@@ -121,9 +121,11 @@ remain, and 23 of those rest on `RPL39`, a conserved ribosomal gene that is not 
 *Sporothrix epigloea* `MAT1-2-1` (2) and *Melampsora aecidioides* `bW` (1).
 
 So a general `low` tier would add about 700 loci that are mostly weak models with no flank support (a false-call risk the 2026-09-22 ruling was made to
-avoid), and a gate that keeps only well-modelled specific genes recovers 12 genomes, about 0.6% of the unrecovered ones. The better lever is why the second
-gene is not modelled where one gene is modelled at 100% (*Taphrina* `matPi`, *Melampsora* `bE`): a short or intron-containing partner that the polishing
-tools cannot build. That belongs with action 2.
+avoid), and a gate that keeps only well-modelled specific genes recovers 12 genomes, about 0.6% of the unrecovered ones. The "unpolished partner" in these 12 cases is not a gene the polishing tools failed to build: it is a weak search fragment (identity 23-47%,
+coverage 12-53%, 28-41 bits; for example *Taphrina deformans* `matPi` at 33%, 18% coverage and 29 bits beside `matMc` at 100%, *Melampsora aecidioides* `bE`
+at 37.5%, 16% and 32 bits beside `bW` at 75%). So where one gene is modelled and its partner is not, the partner is barely detected at all, and the
+lever is the **sensitivity of the search** for the divergent partner (a profile or HMM search, more references, or a lower threshold in a window already
+known to hold a modelled MAT gene), not the polishing tools. That belongs with action 4 (references) and a search-sensitivity experiment, not action 2.
 
 ## 6. What this census cannot say
 

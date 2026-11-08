@@ -15,7 +15,7 @@ const [genome, outDir, ...rest] = process.argv.slice(2);
 const phylum = rest[rest.indexOf("--phylum") + 1] ?? "Ascomycota";
 const ENGINE = process.env.ENGINE ?? "losat";  // tblastn engine: "losat" or "mmseqs"
 const home = "/Users/jstajich/projects/MATPredict";
-const WHEEL = process.env.WHEEL ?? join(home, "web/spike/dist/matpredict-0.8.1-py3-none-any.whl");
+const WHEEL = process.env.WHEEL ?? join(home, "web/spike/dist/matpredict-0.9.0-py3-none-any.whl");
 const DB_DIR = process.env.DB_DIR ?? join(home, "db");
 const WASM_DIR = process.env.WASM_DIR ?? join(process.env.HOME, "wasm-build");
 const LOC_DIR = process.env.LOCALIZER_DIR ?? join(home, "web/spike/localizer");
@@ -74,7 +74,7 @@ parser = argparse.ArgumentParser(prog="matpredict")
 subs = parser.add_subparsers(dest="cmd")
 detect_cli.register_subcommands(subs)
 args = parser.parse_args(["detect", "--genome", "/data/${basename(genome)}", "--phylum", "${phylum}",
-                          "--preset", "v0.8.1", "--out-dir", "/out"])
+                          "--preset", "v0.9.1", "--out-dir", "/out"])
 error = None
 try:
     rc = args.func(args)

@@ -105,7 +105,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import confidence_cap, family_status, homothallic, margin_basis, partial_core, weak_flank_cap, weak_fragment_cap
+from MATPredict.detect import confidence_cap, family_status, homothallic, margin_basis, partial_core, thin_vote, weak_flank_cap, weak_fragment_cap
 from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
@@ -2517,6 +2517,7 @@ def run_pipeline(
     confidence_cap_policy: str = confidence_cap.DEFAULT_CONFIDENCE_CAP_POLICY,
     #: `--weak-fragment-cap-policy` (`weak_fragment_cap`, #275). Lowers the tier only, never the idiomorph.
     weak_fragment_cap_policy: str = weak_fragment_cap.DEFAULT_WEAK_FRAGMENT_CAP_POLICY,
+    short_fragment_vote_policy: str = thin_vote.DEFAULT_SHORT_FRAGMENT_VOTE_POLICY,
     weak_flank_cap_policy: str = weak_flank_cap.DEFAULT_WEAK_FLANK_CAP_POLICY,
     idiomorph_margin_policy: str = margin_basis.DEFAULT_IDIOMORPH_MARGIN_POLICY,
     #: `off` (default) or `on`: overlapping calls of two families become one (the family scoped to the genome
@@ -2775,6 +2776,7 @@ def run_pipeline(
     # clamped to the contig's real end.
     confidence_cap.check_policy(confidence_cap_policy)
     weak_fragment_cap.check_policy(weak_fragment_cap_policy)
+    thin_vote.check_policy(short_fragment_vote_policy)
     weak_flank_cap.check_policy(weak_flank_cap_policy)
     margin_basis.check_policy(idiomorph_margin_policy)
     family_status.check_policy(cross_family_policy)
@@ -3417,6 +3419,14 @@ def run_pipeline(
                     called_idiomorph = decision.idiomorph
                 elif decision.decision == partial_core.DECISION_UNDETERMINED:
                     called_idiomorph = "undetermined"
+        # Close vote between short fragments (`thin_vote`, off by default, #138): the call reports `undetermined`.
+        if vote_note is None and called_idiomorph != "undetermined":
+            note = thin_vote.decide(
+                short_fragment_vote_policy, called_idiomorph, idiomorph_margin_from_vote(own_vote), len(own_vote),
+                family.min_idiomorph_margin, [e.coverage for e in evidence if e.role == "core_MAT" and not e.lost_to])
+            if note is not None:
+                vote_note = note
+                called_idiomorph = "undetermined"
         identities: dict[str, float | None] = {}
         for e in evidence:
             if e.identity is not None:

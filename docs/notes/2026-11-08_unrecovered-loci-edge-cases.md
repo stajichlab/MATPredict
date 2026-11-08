@@ -80,14 +80,14 @@ Effort is the work; risk is the chance of a false MAT call. Each action keeps th
 |---|---|---|---|---|---|
 | 1 | Take apart *Bipolaris maydis* C4 and *B. sorokiniana* (why a curated, heterothallic genus gives no call) | Dothideomycetes, 137 no-call | small | low | decides whether the cause is polishing, the roster, or the both-core-genes cross-hit |
 | 2 | Polishing for divergent MAT genes: a miniprot-first or protein-profile model path for genes with search identity under about 50% | the 534 zero-polished and many of the 1,258 | medium | low | the limiting step is modelling; improving it changes no rule, but must pass the identity test |
-| 3 | `--strong-single-gene-policy` gate check (agreed: modelled identity >= 85 and coverage >= 90) on the one-polished genomes | the 1,258 | small (check running, #261) | medium | the rule exists and is off; this measures how many it would recover |
+| 3 | `--strong-single-gene-policy` (gate: modelled identity >= 85 and coverage >= 90), **measured for #261: not the lever** | the 1,258 | done | medium | on 3,100 candidate genomes the rule recovers 5 loci (each `low`, `idiomorph_gene_only`, no flank genes, none with a truth label) and changes no existing call; 117 lone core hits at >= 85% in 96 genomes never reach the model gate because they are 90-430 bp fragments; one of the 5 recovered models is defective (a frameshift, no stop), so any use needs a defective-model gate (`results/2026-11-07_issue261/FINDINGS.md`) |
 | 4 | Curate references for the unreferenced groups: Dipodascales and Lipomycetes yeasts, Orbiliomycetes, Xylariales, Chaetothyriales, Botryosphaeriales, Podosphaera | about 1,000 genomes | large (curation) | low | each record raises search sensitivity where none exists; follows the #189/#202/#260 pattern |
 | 5 | Review the one-polished-gene ruling for a flank-supported tier: one polished MAT gene plus a polished flank gene reports `low`, not nothing | part of the 1,258 | small | medium | needs a curator decision; the 2026-09-22 ruling was made when no tier below the bar existed |
 | 6 | `flank_carried_core_outside_flank_span`: widen the span or allow the core gene beyond it when the flanks are polished | the 203 (Hypoxylon, Yamadazyma, Pyricularia) | medium | medium | overlaps #260 |
 | 7 | Family-structure fixes: join `matMc`/`matPi` pieces of the PM family and `bE`/`bW` of rustHD across a split | S. pombe group, Pneumocystis, Taphrina, rust | medium | medium | relates to the silent-pair work (#252 revert) |
 | 8 | A per-genome "why no call" field naming the best withheld locus and the reason | all | small | none | report-only; turns this census into a column |
 
-Suggested order: 1, 3, 8 (cheap, informative), then 2 and 4 (largest effect), then the curator-gated 5 to 7.
+Suggested order: 1, 8 (cheap, informative), then 2 and 4 (largest effect), then the curator-gated 5 to 7. Action 3 is measured and small (5 loci), so the rule does not address the one-polished-gene genomes: those have other, unpolished hits and no lone modelled gene to promote.
 
 ## 6. What this census cannot say
 

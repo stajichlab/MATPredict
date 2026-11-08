@@ -100,6 +100,21 @@ are called either way, with different calls. The no-call cases of section 4 that
 The FungiDB comparison repository (`hyphaltip/FungiDB_MATpredict`, `scripts/03_run_matpredict.sbatch`) should pass `--preset v0.8.1` (or `--preset v0.9`) to match
 the release it reports.
 
+### 4c. Does a profile search find the divergent partners? (measured 2026-11-08)
+
+The 12 cases of section 5a (14 partner genes) were searched with a profile HMM built from the database's curated references of the partner gene (`mafft`
+then `pyhmmer`), against the six-frame translation of the window of the withheld locus plus 20 kb each side, with the same profile searched in 4-17 random
+windows of the same size as a control (`results/2026-11-08_sensitivity/`). The bar was set before the run: E at most 1e-5 and at least half of the profile.
+**None of the 14 reaches it.** *Taphrina* `matPi` (five assemblies; 3 references) gives E 4e-5 to 1e-4 over 11-24% of the profile; *Sphaerulina* `MAT1-1-5` E 2.5e-3
+over 23%; `MAT1-2-1`, `MAT1-1-2`, *Asteromyces* `MAT1-1-1` and *Melampsora* `bE` give no hit; two further genes have a single reference and could not be profiled. The only strong
+scores are `MAT1-1-3` in *Asteromyces cruciatus* (E 1.2e-8, 46% of the profile) and *Sporothrix epigloea* (E 1.1e-7, 23.5%); `MAT1-1-3` is an HMG-box gene and both
+loci already hold a modelled HMG gene (`MAT1-2-1`), so these hits are probably that gene's own HMG box and are not independent evidence of a partner. The controls
+produced no hit at E 1e-5 (0 of 100 random windows).
+
+So with the references the database holds, a profile search does not make these partners detectable. The profiles are thin (1-6 references for most partners;
+27 and 26 for `MAT1-1-1` and `MAT1-2-1`, which also gave no hit): references close to the clade (action 4) are the more likely lever, and a profile search
+is worth repeating once they exist. Not tested: lower thresholds, iterative search, or miniprot with relaxed settings in the window.
+
 ## 5. What could improve recovery, ranked
 
 Effort is the work; risk is the chance of a false MAT call. Each action keeps the repository's rule: opt-in, measured, genome-by-genome review.

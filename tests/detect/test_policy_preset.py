@@ -98,11 +98,19 @@ def test_the_run_block_records_the_preset_and_the_resolved_policies(tmp_path):
         assert params["scoped_roster_policy"] == ("on" if expect else "off")
 
 
+def _flag_of(dest):
+    """The option string of the `detect` option whose destination is `dest` (a flag need not be its dest spelled with dashes)."""
+    parser = argparse.ArgumentParser()
+    sub = register_subcommands(parser.add_subparsers(dest="cmd"))
+    detect = parser._subparsers._group_actions[0].choices["detect"]
+    return next(a.option_strings[0] for a in detect._actions if a.dest == dest and a.option_strings)
+
+
 def test_every_preset_value_is_a_valid_choice_for_its_option():
     for name, values in PRESETS.items():
         extra = []
         for dest, value in values.items():
-            extra += ["--" + dest.replace("_", "-"), value]
+            extra += [_flag_of(dest), value]
         _parse(*extra)       # the parser would exit on an invalid choice
 
 
@@ -116,3 +124,17 @@ def test_the_cmd_detect_handler_applies_the_preset_first(monkeypatch):
     with pytest.raises(RuntimeError):
         cli._cmd_detect(args)
     assert _resolved(args) == PRESETS["v0.7"]                    # applied in place by the handler
+
+
+def test_the_v09_preset_is_v081_plus_the_three_report_only_rules():
+    v081, v09 = PRESETS["v0.8.1"], PRESETS["v0.9"]
+    added = {k: v for k, v in v09.items() if v081.get(k) != v}
+    assert added == {"cross_family_policy": "keep_labelled", "idiomorph_margin_policy": "separate", "out_of_scope_label_policy": "on"}
+    assert all(v09[k] == v for k, v in v081.items() if k != "cross_family_policy")
+
+
+def test_no_preset_turns_on_a_rule_that_changes_a_tier_or_a_label():
+    changers = ("weak_fragment_cap_policy", "weak_flank_cap_policy", "short_fragment_vote_policy", "single_region_cap_policy",
+                "weak_coverage_noise_policy", "strong_single_gene_policy", "confidence_cap_policy")
+    for name, vals in PRESETS.items():
+        assert all(vals.get(k, "off") == "off" for k in changers), name

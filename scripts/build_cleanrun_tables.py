@@ -70,6 +70,10 @@ New per-locus columns (loci.tsv):
                      only a core gene at >= 60% identity and >= 80% coverage is listed; the other flagged genes move to
                      `low_confidence_model_genes` (on the v0.8.1 run 18 Wallemia STE3 stops are a splice-junction mis-model,
                      and about 90% of the flagged Boletales HD1 loci are below 50% identity, a divergent gene poorly modelled).
+  core_reference    the matched curated record of each live core gene of the locus (#200, curator 2026-11-07: both core genes are listed):
+                     `gene:record_id:identity:bitscore`, genes `|`-joined, one entry per gene (the entry with the highest identity, then the
+                     higher bitscore, then the smaller record_id), blank when the locus has no live core gene with a matched record. The
+                     label table (`label_loci_table.py`) turns it into `nearest_reference`.
   low_confidence_model_genes  Basidiomycota only: the flagged genes that fail the model-check filter above, `|`-joined; blank otherwise.
 New per-genome columns (genomes.tsv): genus, baseline_status, change_vs_baseline (the phase-5 judgement's
 category, computed on the first locus of each sorted locus list, so it can differ from the per-locus view),
@@ -127,7 +131,7 @@ LOCUS_COLS = ["genome", "class_", "order", "family_called", "contig", "start", "
               "detection_pass", "genes_found", "verification",
               "genus", "family", "polished_genes", "idiomorph_margin", "margin_basis", "n_candidates", "baseline_confidence",
               "tier_note", "label_unsupported", "label_unsupported_reason", "high_basis", "high_basis_outside_scope",
-              "defective_genes", "low_confidence_model_genes"]
+              "defective_genes", "low_confidence_model_genes", "core_reference"]
 
 
 # ----------------------------------------------------------------------------------------------- reading reports
@@ -137,6 +141,20 @@ def _fnum(v):
         return float(v)
     except (TypeError, ValueError):
         return None
+
+
+def core_references(x):
+    """`gene:record_id:identity:bitscore` for each live core gene of the `detected` entry `x` (#200), `|`-joined; one entry per gene: the highest
+    identity, then the higher bitscore, then the smaller record_id (a total order, so the same report always gives the same string)."""
+    best = {}
+    for e in x.get("gene_evidence") or []:
+        if e.get("role") != "core_MAT" or e.get("lost_to") or not e.get("reference_record") or e.get("gene") is None:
+            continue
+        ident, bits = _fnum(e.get("identity")), _fnum(e.get("bitscore"))
+        key = (-(ident if ident is not None else -1.0), -(bits if bits is not None else -1.0), str(e["reference_record"]))
+        if e["gene"] not in best or key < best[e["gene"]][0]:
+            best[e["gene"]] = (key, f'{e["gene"]}:{e["reference_record"]}:{"" if ident is None else format(ident, "g")}:{"" if bits is None else format(bits, "g")}')
+    return "|".join(v[1] for _, v in sorted(best.items(), key=lambda kv: kv[0]))
 
 
 def split_defective(x):
@@ -169,7 +187,7 @@ def summarise_locus(x):
         "n_candidates": len(x.get("idiomorph_candidates") or []),
         "vote_idiomorph": note.get("vote_idiomorph"),
         "ignored": sorted(set(x.get("confidence_ignored_genes") or [])),
-        "defective": defective, "low_confidence_model": low_conf,
+        "defective": defective, "low_confidence_model": low_conf, "core_reference": core_references(x),
         "genes": [{"gene": e.get("gene"), "status": e.get("status"), "identity": _fnum(e.get("identity")),
                    "coverage": _fnum(e.get("coverage")), "lost_to": e.get("lost_to")}
                   for e in (x.get("gene_evidence") or [])],
@@ -547,7 +565,8 @@ def build(new, base, listed, samples, mucoro_names, inputs_rows, scope, mucoro=F
                           baseline_confidence=o["confidence"] if o else "", tier_note=note,
                           label_unsupported="yes" if lab else "no", label_unsupported_reason=lab, high_basis=hb,
                           high_basis_outside_scope=hb_out, defective_genes="|".join(x["defective"]),
-                          low_confidence_model_genes="|".join(x.get("low_confidence_model") or [])))
+                          low_confidence_model_genes="|".join(x.get("low_confidence_model") or []),
+                          core_reference=x.get("core_reference", "")))
         row.update(n_tier_drop=n_drop, n_tier_note=n_note, n_label_unsupported=n_lab, high_basis="|".join(sorted(bases)),
                    n_defective_loci=sum(1 for x in loci if x["defective"]))
         G.append(row)

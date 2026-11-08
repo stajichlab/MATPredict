@@ -87,4 +87,6 @@ def test_cli_default_and_passthrough(monkeypatch, tmp_path):
 
 
 def test_no_preset_sets_the_margin_policy():
-    assert all("idiomorph_margin_policy" not in v for v in detect_cli.PRESETS.values())
+    # only the v0.9 preset turns this report-only rule on (curator's ruling 2026-11-07)
+    assert {n for n, v in detect_cli.PRESETS.items() if "idiomorph_margin_policy" in v} == {"v0.9"}
+    assert detect_cli.PRESETS["v0.9"]["idiomorph_margin_policy"] == "separate"

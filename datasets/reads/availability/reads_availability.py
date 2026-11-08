@@ -26,12 +26,15 @@ sys.path.insert(0, os.path.join(HERE, "..", "sra_survey"))
 from survey_ena import classify_study, species as parse_species, NOT_SPECIES, MIN_BASES, db_tiers, tier  # noqa: E402
 
 PILOT = os.path.join(HERE, "..", "sra_survey", "pilot")
-DEFAULT_TYPED = [os.path.join(PILOT, p) for p in ("wave1/results_all_final.tsv", "wave2/results_all_final.tsv", "pilot4/results_all.tsv")]
-DEFAULT_GATES = [os.path.join(PILOT, p) for p in ("wave1/gates_final.tsv", "wave2/gates_final.tsv")]
-DEFAULT_TYPED_LOCAL = [os.path.join(HERE, "..", "coccidioides", "results", "cocci2_reads_vs_detect.tsv")]
+WAVES = sorted(d for d in glob.glob(os.path.join(PILOT, "wave*")) if re.fullmatch(r"wave\d+[a-z_]*", os.path.basename(d)) and os.path.exists(os.path.join(d, "gates_final.tsv")))      # every committed wave (wave1, wave2, wave3_*, wave4*), as the reads site
+DEFAULT_TYPED = [os.path.join(w, "results_all_final.tsv") for w in WAVES] + [os.path.join(PILOT, "pilot4", "results_all.tsv")]
+DEFAULT_GATES = [os.path.join(w, "gates_final.tsv") for w in WAVES]
+sys.path.insert(0, PILOT)
+from wave_driver import GROUPS  # noqa: E402  (species complexes typed as one group; standard library only)
+DEFAULT_TYPED_LOCAL =[os.path.join(HERE, "..", "coccidioides", "results", "cocci2_reads_vs_detect.tsv")]
 NOT_A_CALL = {"", "both", "none", "low_depth", "untyped"}
 PASSING = ("PASS", "PROVISIONAL")                      # PROVISIONAL_HOMOTHALLIC is handled separately
-PANEL_HOLD = re.compile(r"panel_build_failed|too_few_loci|panel_L1_error|core_kmers_low")
+PANEL_HOLD = re.compile(r"panel_build_failed|too_few_loci|panel_L1_error|core_kmers_low|core_kmers_unbalanced|shared_kmers_low|panel_no_unique_kmers|run_selection_failed")
 TARGET_BASES, MIN_SEL, MAX_SEL = 3e9, 0.6e9, 12e9     # select_runs.py: nearest 3 Gb within 0.6-12 Gb
 
 
@@ -229,7 +232,15 @@ def main():
     for p in a.gates:
         wave = os.path.basename(os.path.dirname(p))
         for r in read_tsv(p):
+            members = GROUPS.get(r["species"])
+            if members:          # a species complex typed as one group: every member species takes the group's decision and slug (its runs use the group panel)
+                for m in members.split("|"):
+                    mk = resolve(m, by_name)[0]
+                    if mk: gates[mk] = (r["decision"], r["reasons"], wave, r["slug"])
+                continue
             key = slug_species.get(r["slug"]) or resolve(r["species"], by_name)[0] or "name:" + r["species"]
+            if key in gates and r["decision"].startswith("HOLD") and not gates[key][0].startswith("HOLD"):
+                continue         # a member species' own held row (too few loci) must not undo its group's decision
             gates[key] = (r["decision"], r["reasons"], wave, r["slug"])
 
     # --- what the lab holds locally ------------------------------------------------------------

@@ -211,3 +211,14 @@ def test_retry_pass_and_summary_never_go_to_the_run_partitions(tmp_path, monkeyp
     names = [c[c.index("-J") + 1] for c in calls]
     assert [part(c) for c, n in zip(calls, names) if n.endswith("-run")] == [("preempt", ""), ("short", "short")]
     assert all(part(c)[0] == "stajichlab" for c, n in zip(calls, names) if n.endswith("-retry") or n.endswith("-summary"))
+
+
+def test_retry_part_none_submits_no_retry_arrays(tmp_path, monkeypatch):
+    import argparse
+    calls = []
+    monkeypatch.setattr(wd, "sbatch", lambda args, **kw: calls.append(args) or str(len(calls)))
+    a = argparse.Namespace(wave=str(tmp_path / "w"), out_dir=None, parts="preempt:preempt", retry_part="none", cpus=1, mem="8gb", conc=60, env=[], dry_run=False)
+    wd.submit_stage(a, "st", [{"run_accession": f"r{i}", "group": "g"} for i in range(3)])
+    names = [c[c.index("-J") + 1] for c in calls]
+    assert names == ["wave-st-preempt-run", "wave-st-summary"]
+    assert calls[-1][calls[-1].index("-p") + 1] == "stajichlab"

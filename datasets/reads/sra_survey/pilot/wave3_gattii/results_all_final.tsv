@@ -1,63 +1,675 @@
-run	group	strain	study	layout	spots	state	call	truth	verdict	depth_1	depth_2	shared_depth	breadth_1	breadth_2	flags	sra_mb	secs_download	secs_convert	secs_type	truth_assembly	idiomorphs	screen	screen_genus	screen_second	screen_hashes	screen_explained	screen_deeper
-SRR1010366	cryptococcus_gattii_complex	LA55	PRJNA191328	PAIRED	51235653	done	low_depth	a	untyped	0.00	0.00	0.03	0.0001	0.0003	-	6906	900	35	457	GCA_000836315.1_Cryp_gatt_LA55_V1	a alpha	genus_mismatch		Fusarium	31	0.0185	
-SRR822338	cryptococcus_gattii_complex	E566	PRJNA191324	PAIRED	3962677	done	a	a	agree	46.03	0.89	15.16	1.0000	0.0631	trace_alpha	541	74	34	476	GCA_000875815.1_Cryp_gatt_E566_V1	a alpha	ok	Cryptococcus	Fusarium	5	0.0028	
-SRR798972	cryptococcus_gattii_complex	CA1873	PRJNA191333	PAIRED	5729731	done	a	a	agree	11.71	0.02	9.25	0.9989	0.0119	trace_alpha	766	108	36	462	GCA_000855695.2_ASM85569v2	a alpha	ok	Cryptococcus	Fusarium	9	0.0045	
-SRR798727	cryptococcus_gattii_complex	CA1014	PRJNA191329	PAIRED	5455837	done	alpha	alpha	agree	0.07	8.93	8.10	0.0105	0.9827	trace_a	724	106	36	462	GCA_000875795.1_Cryp_gatt_CA1014_V1	a alpha	ok	Cryptococcus	Penicillium	9	0.0043	
-SRR866984	cryptococcus_gattii_complex	2001/935-1	PRJNA203282	PAIRED	5655921	done	alpha	alpha	agree	0.09	11.39	10.76	0.0128	0.8798	trace_a	770	167	35	483	GCA_000835815.1_Cryp_gatt_2001_935-1_V1	a alpha	ok	Cryptococcus	Boletus	2	0.0011	
-SRR797806	cryptococcus_gattii_complex	Ru294	PRJNA191334	PAIRED	4925640	done	none	alpha	untyped	0.09	5.01	6.66	0.0065	0.4372	trace_a,trace_alpha	669	68	51	1672	GCA_000836355.1_Cryp_gatt_Ru294_V1	a alpha	ok	Cryptococcus	Cladonia	1	0.0006	
-SRR798183	cryptococcus_gattii_complex	Ram5	PRJNA191332	PAIRED	10009613	done	alpha	alpha	agree	0.09	12.30	11.07	0.0066	0.9681	trace_a	1351	102	35	472	GCA_000836375.1_Cryp_gatt_Ram5_V1	a alpha	ok	Cryptococcus	Neurospora	3	0.0017	
-SRR825476	cryptococcus_gattii_complex	MMRL2647	PRJNA191372	PAIRED	9252454	done	alpha	alpha	agree	0.10	14.18	18.59	0.0077	0.9082	trace_a	1132	61	29	302	GCA_000875855.1_Cryp_gatt_MMRL2647_V2	a alpha	ok	Cryptococcus	Aspergillus	42	0.0202	
-SRR28807733	cryptococcus_gattii_complex	4907F8	PRJNA1103328	SINGLE	4979187	done	none			0.10	5.85	7.74	0.0065	0.4379	trace_a,trace_alpha	343	35	29	1399		a alpha	ok	Cryptococcus	Diaporthe	3	0.0017	
-SRR28807349	cryptococcus_gattii_complex	4907X3	PRJNA1103328	SINGLE	6728047	done	none			0.12	5.86	7.92	0.0070	0.4381	trace_a,trace_alpha	472	42	19	478		a alpha	ok	Cryptococcus	Colletotrichum	2	0.0011	
-SRR1520880	cryptococcus_gattii_complex	B8214	PRJNA244927	PAIRED	3286387	done	alpha			0.12	13.55	13.84	0.0073	0.8812	trace_a	398	52	22	484		a alpha	ok	Cryptococcus	Melampsora	2	0.0011	
-SRR34113457	cryptococcus_gattii_complex	RB50	PRJNA1279626	PAIRED	2356572	done	alpha			0.17	20.91	18.55	0.0066	0.9940	trace_a	234	45	24	756		a alpha	mixed	Cryptococcus	Meira	48	0.0132	
-SRR14695751	cryptococcus_gattii_complex	G8	PRJNA721774	PAIRED	5081696	done	none			0.17	7.46	10.16	0.0068	0.4400	trace_a,trace_alpha	636	36	22	791		a alpha	ok	Cryptococcus	Colletotrichum	15	0.0072	
-SRR27350354	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11510211	done	a			56.44	1.44	32.00	1.0000	0.0584	trace_alpha	1046	88	21	748		a alpha	ok	Cryptococcus	Cryphonectria	2	0.0011	
-SRR1520862	cryptococcus_gattii_complex	CDC R272	PRJNA244927	PAIRED	6027294	done	alpha			0.45	43.88	42.72	0.1222	0.9741	trace_a	1838	294	28	1352		a alpha	ok	Cryptococcus	Aspergillus	14	0.0068	
-SRR28807731	cryptococcus_gattii_complex	4907F5	PRJNA1103328	SINGLE	4603983	done	none			0.10	5.85	7.95	0.0064	0.4377	trace_a,trace_alpha	316	31	19	481		a alpha	ok	Cryptococcus	Colletotrichum	2	0.0011	
-SRR27350359	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11414709	done	none			0.25	10.77	13.91	0.0065	0.4426	trace_a,trace_alpha	1028	98	22	742		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022	
-SRR27295222	cryptococcus_gattii_complex	YQJ112	PRJNA1054030	PAIRED	7888347	done	none			0.18	10.25	13.37	0.0065	0.4445	trace_a,trace_alpha	824	72	22	771		a alpha	ok	Cryptococcus	Penicillium	4	0.0022	
-SRR28807095	cryptococcus_gattii_complex	1601F7	PRJNA1103328	SINGLE	6699736	done	none			0.08	5.94	7.70	0.0057	0.4616	trace_a,trace_alpha	454	52	19	484		a alpha	ok	Cryptococcus	Diaporthe	3	0.0017	
-SRR3707773	cryptococcus_gattii_complex	WM_11_8_COL_Env_116	PRJNA289249	PAIRED	7801503	done	a			11.96	0.03	9.77	0.8267	0.0103	trace_alpha	1096	143	20	479		a alpha	ok	Cryptococcus	Morchella	6	0.0032	
-SRR28807371	cryptococcus_gattii_complex	2307X2	PRJNA1103328	SINGLE	6897263	done	none			0.13	5.67	7.97	0.0066	0.4426	trace_a,trace_alpha	465	116	16	396		a alpha	ok	Cryptococcus	Phyllosticta	2	0.0011	
-SRR8653996	cryptococcus_gattii_complex	RBB18	PRJNA525019	PAIRED	20269621	done	alpha			0.14	19.48	18.12	0.0066	0.9940	trace_a	1878	416	23	613		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0039	
-SRR1520882	cryptococcus_gattii_complex	B8571	PRJNA244927	PAIRED	4357881	done	alpha			0.11	12.26	12.21	0.0076	0.8846	trace_a	533	171	18	427		a alpha	ok	Cryptococcus	Trichoderma	8	0.0043	
-SRR1520876	cryptococcus_gattii_complex	B7641	PRJNA244927	PAIRED	4696393	done	alpha			0.12	13.48	13.37	0.0071	0.8842	trace_a	578	124	20	483		a alpha	ok	Cryptococcus	Talaromyces	1	0.0006	
-SRR1520861	cryptococcus_gattii_complex	B9758	PRJNA244927	PAIRED	9369801	done	alpha			0.10	13.38	13.14	0.0071	0.9711	trace_a	1325	261	16	424		a alpha	ok	Cryptococcus	Fusarium	6	0.0033	
-SRR13742186	cryptococcus_gattii_complex	Cg365	PRJNA702892	PAIRED	5522814	done	none			0.17	8.44	11.61	0.0075	0.4469	trace_a,trace_alpha	697	132	24	738		a alpha	ok	Cryptococcus	Colletotrichum	10	0.0051	
-SRR27350384	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11593417	done	alpha			0.16	24.56	24.30	0.0065	0.9705	trace_a	1087	156	17	652		a alpha	ok	Cryptococcus	Penicillium	2	0.0011	
-SRR28807094	cryptococcus_gattii_complex	1601F6	PRJNA1103328	SINGLE	6578254	done	none			0.08	6.03	7.51	0.0058	0.4615	trace_a,trace_alpha	467	46	19	451		a alpha	ok	Cryptococcus	Diaporthe	4	0.0022	
-SRR27295228	cryptococcus_gattii_complex	YQJ106	PRJNA1054030	PAIRED	7298864	done	alpha			0.16	22.93	22.95	0.0066	0.9940	trace_a	750	223	18	617		a alpha	ok	Cryptococcus	Colletotrichum	6	0.0032	
-SRR1520935	cryptococcus_gattii_complex	WM 08.309	PRJNA244927	PAIRED	10231288	done	alpha			0.16	24.51	22.54	0.0114	0.9715	trace_a	1977	380	24	757		a alpha	ok	Cryptococcus	Mortierella	6	0.0033	
-SRR798761	cryptococcus_gattii_complex	CBS 10090	PRJNA191323	PAIRED	6112700	done	a			10.62	0.02	8.05	0.9986	0.0033	trace_alpha	824	161	31	450		a alpha	ok	Cryptococcus	Puccinia	6	0.0029	
-SRR27350369	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11605772	done	none			0.18	10.75	13.93	0.0069	0.4393	trace_a,trace_alpha	1099	330	20	739		a alpha	ok	Cryptococcus	Fusarium	3	0.0017	
-SRR1511428	cryptococcus_gattii_complex	NT7	PRJNA254979	PAIRED	17808914	done	alpha			0.11	12.74	12.29	0.0090	0.9103	trace_a	2235	260	17	427		a alpha	mixed	Cryptococcus	Saccharomyces	41	0.0213	yes
-SRR27350423	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12015500	done	alpha			0.17	19.64	20.13	0.0067	0.8859	trace_a	1120	148	20	774		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022	
-SRR1166941	cryptococcus_gattii_complex	MCPR1-S1B	PRJNA235210	PAIRED	11378258	done	a			14.57	0.08	14.00	0.9956	0.0451	trace_alpha	1446	233	16	473		a alpha	ok	Cryptococcus	Aspergillus	1	0.0006	
-SRR7345541	cryptococcus_gattii_complex	MF_1	PRJNA476154	PAIRED	5649285	done	low_depth			0.06	0.00	0.24	0.0010	0.0000	-	294	51	40	485		a alpha	ok	Cryptococcus	Kwoniella	2	0.0028	
-SRR1511453	cryptococcus_gattii_complex	RDH2	PRJNA254979	PAIRED	12017120	done	alpha			0.36	13.06	13.40	0.2201	0.9091	trace_a	1490	212	17	474		a alpha	ok	Cryptococcus	Diaporthe	5	0.0028	
-SRR7345549	cryptococcus_gattii_complex	MF_18	PRJNA476154	PAIRED	6054497	done	low_depth			0.00	0.01	0.28	0.0000	0.0003	-	407	101	44	487		a alpha	ok	Cryptococcus	Aspergillus	2	0.0028	
-SRR1513338	cryptococcus_gattii_complex	B7436	PRJNA254979	PAIRED	13686218	done	alpha			0.11	13.42	12.66	0.0067	0.9944	trace_a	1529	187	18	464		a alpha	ok	Cryptococcus	Neurospora	1	0.0006	
-SRR3707834	cryptococcus_gattii_complex	WM_183_USA_Clin_86	PRJNA289249	PAIRED	11972215	done	alpha			0.05	13.46	13.64	0.0079	0.9831	trace_a	1633	318	21	485		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022	
-SRR28807742	cryptococcus_gattii_complex	3207F5	PRJNA1103328	SINGLE	5485974	done	none			0.13	6.05	8.15	0.0069	0.4412	trace_a,trace_alpha	384	75	17	454		a alpha	ok	Cryptococcus	Fusarium	4	0.0023	
-SRR3707831	cryptococcus_gattii_complex	WM_1824_MEX_Clin_90	PRJNA289249	PAIRED	9327001	done	alpha			0.10	12.07	12.98	0.0253	0.8505	trace_a	1276	322	23	485		a alpha	ok	Cryptococcus	Colletotrichum	5	0.0027	
-SRR5575280	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5020143	done	a			13.45	0.03	12.26	0.9757	0.0032	trace_alpha	535	132	16	484		a alpha	ok	Cryptococcus	Rhizopus	2	0.0011	
-SRR3707851	cryptococcus_gattii_complex	WM_779_ZAF_Vet	PRJNA289249	PAIRED	10588401	done	none			0.14	11.14	13.99	0.0065	0.4668	trace_a,trace_alpha	2048	345	23	771		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0038	
-SRR28807104	cryptococcus_gattii_complex	5907F6	PRJNA1103328	SINGLE	7460442	done	none			0.09	6.03	8.43	0.0060	0.4617	trace_a,trace_alpha	508	124	16	466		a alpha	ok	Cryptococcus	Fusarium	2	0.0011	
-SRR5575281	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5740977	done	a			12.80	0.03	12.58	0.9759	0.0107	trace_alpha	612	77	19	480		a alpha	ok	Cryptococcus	Lachancea	1	0.0006	
-SRR1511163	cryptococcus_gattii_complex	RDH7	PRJNA254979	PAIRED	8521331	done	alpha			0.12	13.08	13.27	0.0161	0.9079	trace_a	1087	235	16	444		a alpha	ok	Cryptococcus	Rhizopus	2	0.0011	
-SRR3707821	cryptococcus_gattii_complex	WM_1663_USA_Clin_94	PRJNA289249	PAIRED	9345280	done	alpha			0.05	13.23	13.00	0.0049	0.9811	trace_a	1297	275	20	487		a alpha	ok	Cryptococcus	Colletotrichum	5	0.0027	
-SRR34113471	cryptococcus_gattii_complex	CgZe107bun_i	PRJNA1279626	PAIRED	2397950	done	low_depth			0.00	0.00	0.00	0.0000	0.0000	-	236	75	20	653		a alpha	genus_mismatch		Penicillium	6	0.007	
-SRR6407139	cryptococcus_gattii_complex	B11591_OR_dog_2016	PRJNA388113	PAIRED	1954962	done	alpha			0.25	29.42	28.13	0.0088	0.8874	trace_a	840	236	21	1551		a alpha	ok	Cryptococcus	Fusarium	26	0.0078	
-SRR643926	cryptococcus_gattii_complex	CDCR271	PRJNA183619	PAIRED	6107911	done	low_depth			0.09	0.05	0.71	0.0120	0.0268	-	704	152	37	300		a alpha	ok	Cryptococcus	Penicillium	6	0.0065	
-SRR643915	cryptococcus_gattii_complex	CBS10090	PRJNA183619	PAIRED	3644093	done	a			9.77	0.04	13.69	0.9995	0.0195	trace_alpha	419	118	42	367		a alpha	ok	Cryptococcus	Colletotrichum	8	0.0062	
-SRR7345535	cryptococcus_gattii_complex	MF_6	PRJNA476154	PAIRED	5493782	done	low_depth			0.06	0.00	0.31	0.0010	0.0001	-	287	37	34	373		a alpha	ok	Cryptococcus	Aspergillus	4	0.0054	
-SRR8653987	cryptococcus_gattii_complex	RBB17	PRJNA525019	PAIRED	8786649	done	alpha			0.14	18.32	18.47	0.0069	0.9940	trace_a	822	213	21	635		a alpha	ok	Cryptococcus	Rhizopus	19	0.0104	
-SRR11413019	cryptococcus_gattii_complex	Cryptococcus	PRJNA615060	PAIRED	4309434	done	alpha			0.18	26.88	26.60	0.0075	0.9703	trace_a	1250	199	24	1126		a alpha	ok	Cryptococcus	Aspergillus	38	0.016	
-SRR6407141	cryptococcus_gattii_complex	WM_05_76_Greece_Clin_1996	PRJNA388113	PAIRED	15183297	done	alpha			0.11	13.66	13.25	0.0073	0.9666	trace_a	2126	282	21	482		a alpha	ok	Cryptococcus	Mycena	5	0.0027	
-SRR5574085	cryptococcus_gattii_complex	NIH444_H	PRJNA387047	PAIRED	9255312	done	alpha			0.10	13.99	13.39	0.0091	0.9940	trace_a	615	180	18	461		a alpha	ok	Cryptococcus	Candida	1	0.0006	
-SRR11413020	cryptococcus_gattii_complex	Cryptococcus	PRJNA615060	PAIRED	4886950	done	alpha			0.23	33.96	30.68	0.0069	0.9714	trace_a	1457	229	30	1474		a alpha	ok	Cryptococcus	Aspergillus	28	0.012	
-SRR13810230	cryptococcus_gattii_complex	RA2	PRJNA704667	PAIRED	3658897	done	alpha			0.17	25.08	22.51	0.0066	0.9940	trace_a	461	152	19	681		a alpha	ok	Cryptococcus	Trichoderma	3	0.0017	
-SRR8653985	cryptococcus_gattii_complex	R265	PRJNA525019	PAIRED	6680988	done	alpha			0.07	5.23	17.06	0.0066	0.9796	trace_a	458	55	19	471		a alpha	ok	Cryptococcus	Fusarium	3	0.0017	
-SRR10499337	cryptococcus_gattii_complex	RBB18	PRJNA525019	PAIRED	36920484	done	alpha			0.12	18.77	24.16	0.0065	0.9940	trace_a	3640	366	19	432		a alpha	ok	Cryptococcus	Aspergillus	12	0.0054	
-SRR13742182	cryptococcus_gattii_complex	Cg434	PRJNA702892	PAIRED	4980153	done	alpha			0.15	17.83	17.73	0.0075	0.8841	trace_a	630	150	23	734		a alpha	ok	Cryptococcus	Colletotrichum	9	0.0044	
+run	group	strain	study	layout	spots	state	call	truth	verdict	depth_1	depth_2	shared_depth	breadth_1	breadth_2	flags	sra_mb	secs_download	secs_convert	secs_type	truth_assembly	idiomorphs	screen	screen_genus	screen_second	screen_hashes	screen_explained	screen_deeper	rescue
+SRR1010366	cryptococcus_gattii_complex	LA55	PRJNA191328	PAIRED	51235653	done	low_depth	a	untyped	0.00	0.00	0.03	0.0001	0.0003	-	6906	900	35	457	GCA_000836315.1_Cryp_gatt_LA55_V1	a alpha							
+SRR822338	cryptococcus_gattii_complex	E566	PRJNA191324	PAIRED	3962677	done	a	a	agree	46.03	0.89	15.16	1.0000	0.0631	trace_alpha	541	74	34	476	GCA_000875815.1_Cryp_gatt_E566_V1	a alpha							
+SRR798972	cryptococcus_gattii_complex	CA1873	PRJNA191333	PAIRED	5729731	done	a	a	agree	11.71	0.02	9.25	0.9989	0.0119	trace_alpha	766	108	36	462	GCA_000855695.2_ASM85569v2	a alpha							
+SRR798727	cryptococcus_gattii_complex	CA1014	PRJNA191329	PAIRED	5455837	done	alpha	alpha	agree	0.07	8.93	8.10	0.0105	0.9827	trace_a	724	106	36	462	GCA_000875795.1_Cryp_gatt_CA1014_V1	a alpha							
+SRR866984	cryptococcus_gattii_complex	2001/935-1	PRJNA203282	PAIRED	5655921	done	alpha	alpha	agree	0.09	11.39	10.76	0.0128	0.8798	trace_a	770	167	35	483	GCA_000835815.1_Cryp_gatt_2001_935-1_V1	a alpha							
+SRR797806	cryptococcus_gattii_complex	Ru294	PRJNA191334	PAIRED	4925640	done	none	alpha	untyped	0.09	5.01	6.66	0.0065	0.4372	trace_a,trace_alpha	669	68	51	1672	GCA_000836355.1_Cryp_gatt_Ru294_V1	a alpha							
+SRR798183	cryptococcus_gattii_complex	Ram5	PRJNA191332	PAIRED	10009613	done	alpha	alpha	agree	0.09	12.30	11.07	0.0066	0.9681	trace_a	1351	102	35	472	GCA_000836375.1_Cryp_gatt_Ram5_V1	a alpha							
+SRR825476	cryptococcus_gattii_complex	MMRL2647	PRJNA191372	PAIRED	9252454	done	alpha	alpha	agree	0.10	14.18	18.59	0.0077	0.9082	trace_a	1132	61	29	302	GCA_000875855.1_Cryp_gatt_MMRL2647_V2	a alpha							
+SRR28807733	cryptococcus_gattii_complex	4907F8	PRJNA1103328	SINGLE	4979187	done	none			0.10	5.85	7.74	0.0065	0.4379	trace_a,trace_alpha	343	35	29	1399		a alpha							
+SRR28807349	cryptococcus_gattii_complex	4907X3	PRJNA1103328	SINGLE	6728047	done	none			0.12	5.86	7.92	0.0070	0.4381	trace_a,trace_alpha	472	42	19	478		a alpha							
+SRR1520880	cryptococcus_gattii_complex	B8214	PRJNA244927	PAIRED	3286387	done	alpha			0.12	13.55	13.84	0.0073	0.8812	trace_a	398	52	22	484		a alpha							
+SRR34113457	cryptococcus_gattii_complex	RB50	PRJNA1279626	PAIRED	2356572	done	alpha			0.17	20.91	18.55	0.0066	0.9940	trace_a	234	45	24	756		a alpha							
+SRR14695751	cryptococcus_gattii_complex	G8	PRJNA721774	PAIRED	5081696	done	none			0.17	7.46	10.16	0.0068	0.4400	trace_a,trace_alpha	636	36	22	791		a alpha							
+SRR27350354	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11510211	done	a			56.44	1.44	32.00	1.0000	0.0584	trace_alpha	1046	88	21	748		a alpha							
+SRR1520862	cryptococcus_gattii_complex	CDC R272	PRJNA244927	PAIRED	6027294	done	alpha			0.45	43.88	42.72	0.1222	0.9741	trace_a	1838	294	28	1352		a alpha							
+SRR28807731	cryptococcus_gattii_complex	4907F5	PRJNA1103328	SINGLE	4603983	done	none			0.10	5.85	7.95	0.0064	0.4377	trace_a,trace_alpha	316	31	19	481		a alpha							
+SRR27350359	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11414709	done	none			0.25	10.77	13.91	0.0065	0.4426	trace_a,trace_alpha	1028	98	22	742		a alpha							
+SRR27295222	cryptococcus_gattii_complex	YQJ112	PRJNA1054030	PAIRED	7888347	done	none			0.18	10.25	13.37	0.0065	0.4445	trace_a,trace_alpha	824	72	22	771		a alpha							
+SRR28807095	cryptococcus_gattii_complex	1601F7	PRJNA1103328	SINGLE	6699736	done	none			0.08	5.94	7.70	0.0057	0.4616	trace_a,trace_alpha	454	52	19	484		a alpha							
+SRR3707773	cryptococcus_gattii_complex	WM_11_8_COL_Env_116	PRJNA289249	PAIRED	7801503	done	a			11.96	0.03	9.77	0.8267	0.0103	trace_alpha	1096	143	20	479		a alpha							
+SRR28807371	cryptococcus_gattii_complex	2307X2	PRJNA1103328	SINGLE	6897263	done	none			0.13	5.67	7.97	0.0066	0.4426	trace_a,trace_alpha	465	116	16	396		a alpha							
+SRR8653996	cryptococcus_gattii_complex	RBB18	PRJNA525019	PAIRED	20269621	done	alpha			0.14	19.48	18.12	0.0066	0.9940	trace_a	1878	416	23	613		a alpha							
+SRR1520882	cryptococcus_gattii_complex	B8571	PRJNA244927	PAIRED	4357881	done	alpha			0.11	12.26	12.21	0.0076	0.8846	trace_a	533	171	18	427		a alpha							
+SRR1520876	cryptococcus_gattii_complex	B7641	PRJNA244927	PAIRED	4696393	done	alpha			0.12	13.48	13.37	0.0071	0.8842	trace_a	578	124	20	483		a alpha							
+SRR1520861	cryptococcus_gattii_complex	B9758	PRJNA244927	PAIRED	9369801	done	alpha			0.10	13.38	13.14	0.0071	0.9711	trace_a	1325	261	16	424		a alpha							
+SRR13742186	cryptococcus_gattii_complex	Cg365	PRJNA702892	PAIRED	5522814	done	none			0.17	8.44	11.61	0.0075	0.4469	trace_a,trace_alpha	697	132	24	738		a alpha							
+SRR27350384	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11593417	done	alpha			0.16	24.56	24.30	0.0065	0.9705	trace_a	1087	156	17	652		a alpha							
+SRR28807094	cryptococcus_gattii_complex	1601F6	PRJNA1103328	SINGLE	6578254	done	none			0.08	6.03	7.51	0.0058	0.4615	trace_a,trace_alpha	467	46	19	451		a alpha							
+SRR27295228	cryptococcus_gattii_complex	YQJ106	PRJNA1054030	PAIRED	7298864	done	alpha			0.16	22.93	22.95	0.0066	0.9940	trace_a	750	223	18	617		a alpha							
+SRR1520935	cryptococcus_gattii_complex	WM 08.309	PRJNA244927	PAIRED	10231288	done	alpha			0.16	24.51	22.54	0.0114	0.9715	trace_a	1977	380	24	757		a alpha							
+SRR798761	cryptococcus_gattii_complex	CBS 10090	PRJNA191323	PAIRED	6112700	done	a			10.62	0.02	8.05	0.9986	0.0033	trace_alpha	824	161	31	450		a alpha							
+SRR27350369	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11605772	done	none			0.18	10.75	13.93	0.0069	0.4393	trace_a,trace_alpha	1099	330	20	739		a alpha							
+SRR1511428	cryptococcus_gattii_complex	NT7	PRJNA254979	PAIRED	17808914	done	alpha			0.11	12.74	12.29	0.0090	0.9103	trace_a	2235	260	17	427		a alpha							
+SRR27350423	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12015500	done	alpha			0.17	19.64	20.13	0.0067	0.8859	trace_a	1120	148	20	774		a alpha							
+SRR1166941	cryptococcus_gattii_complex	MCPR1-S1B	PRJNA235210	PAIRED	11378258	done	a			14.57	0.08	14.00	0.9956	0.0451	trace_alpha	1446	233	16	473		a alpha							
+SRR7345541	cryptococcus_gattii_complex	MF_1	PRJNA476154	PAIRED	5649285	done	low_depth			0.06	0.00	0.24	0.0010	0.0000	-	294	51	40	485		a alpha							
+SRR1511453	cryptococcus_gattii_complex	RDH2	PRJNA254979	PAIRED	12017120	done	alpha			0.36	13.06	13.40	0.2201	0.9091	trace_a	1490	212	17	474		a alpha							
+SRR7345549	cryptococcus_gattii_complex	MF_18	PRJNA476154	PAIRED	6054497	done	low_depth			0.00	0.01	0.28	0.0000	0.0003	-	407	101	44	487		a alpha							
+SRR1513338	cryptococcus_gattii_complex	B7436	PRJNA254979	PAIRED	13686218	done	alpha			0.11	13.42	12.66	0.0067	0.9944	trace_a	1529	187	18	464		a alpha							
+SRR3707834	cryptococcus_gattii_complex	WM_183_USA_Clin_86	PRJNA289249	PAIRED	11972215	done	alpha			0.05	13.46	13.64	0.0079	0.9831	trace_a	1633	318	21	485		a alpha							
+SRR28807742	cryptococcus_gattii_complex	3207F5	PRJNA1103328	SINGLE	5485974	done	none			0.13	6.05	8.15	0.0069	0.4412	trace_a,trace_alpha	384	75	17	454		a alpha							
+SRR3707831	cryptococcus_gattii_complex	WM_1824_MEX_Clin_90	PRJNA289249	PAIRED	9327001	done	alpha			0.10	12.07	12.98	0.0253	0.8505	trace_a	1276	322	23	485		a alpha							
+SRR5575280	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5020143	done	a			13.45	0.03	12.26	0.9757	0.0032	trace_alpha	535	132	16	484		a alpha							
+SRR3707851	cryptococcus_gattii_complex	WM_779_ZAF_Vet	PRJNA289249	PAIRED	10588401	done	none			0.14	11.14	13.99	0.0065	0.4668	trace_a,trace_alpha	2048	345	23	771		a alpha							
+SRR28807104	cryptococcus_gattii_complex	5907F6	PRJNA1103328	SINGLE	7460442	done	none			0.09	6.03	8.43	0.0060	0.4617	trace_a,trace_alpha	508	124	16	466		a alpha							
+SRR5575281	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5740977	done	a			12.80	0.03	12.58	0.9759	0.0107	trace_alpha	612	77	19	480		a alpha							
+SRR1511163	cryptococcus_gattii_complex	RDH7	PRJNA254979	PAIRED	8521331	done	alpha			0.12	13.08	13.27	0.0161	0.9079	trace_a	1087	235	16	444		a alpha							
+SRR3707821	cryptococcus_gattii_complex	WM_1663_USA_Clin_94	PRJNA289249	PAIRED	9345280	done	alpha			0.05	13.23	13.00	0.0049	0.9811	trace_a	1297	275	20	487		a alpha							
+SRR34113471	cryptococcus_gattii_complex	CgZe107bun_i	PRJNA1279626	PAIRED	2397950	done	low_depth			0.00	0.00	0.00	0.0000	0.0000	-	236	75	20	653		a alpha							
+SRR6407139	cryptococcus_gattii_complex	B11591_OR_dog_2016	PRJNA388113	PAIRED	1954962	done	alpha			0.25	29.42	28.13	0.0088	0.8874	trace_a	840	236	21	1551		a alpha							
+SRR643926	cryptococcus_gattii_complex	CDCR271	PRJNA183619	PAIRED	6107911	done	low_depth			0.09	0.05	0.71	0.0120	0.0268	-	704	152	37	300		a alpha							
+SRR643915	cryptococcus_gattii_complex	CBS10090	PRJNA183619	PAIRED	3644093	done	a			9.77	0.04	13.69	0.9995	0.0195	trace_alpha	419	118	42	367		a alpha							
+SRR7345535	cryptococcus_gattii_complex	MF_6	PRJNA476154	PAIRED	5493782	done	low_depth			0.06	0.00	0.31	0.0010	0.0001	-	287	37	34	373		a alpha							
+SRR8653987	cryptococcus_gattii_complex	RBB17	PRJNA525019	PAIRED	8786649	done	alpha			0.14	18.32	18.47	0.0069	0.9940	trace_a	822	213	21	635		a alpha							
+SRR11413019	cryptococcus_gattii_complex	Cryptococcus	PRJNA615060	PAIRED	4309434	done	alpha			0.18	26.88	26.60	0.0075	0.9703	trace_a	1250	199	24	1126		a alpha							
+SRR6407141	cryptococcus_gattii_complex	WM_05_76_Greece_Clin_1996	PRJNA388113	PAIRED	15183297	done	alpha			0.11	13.66	13.25	0.0073	0.9666	trace_a	2126	282	21	482		a alpha							
+SRR5574085	cryptococcus_gattii_complex	NIH444_H	PRJNA387047	PAIRED	9255312	done	alpha			0.10	13.99	13.39	0.0091	0.9940	trace_a	615	180	18	461		a alpha							
+SRR11413020	cryptococcus_gattii_complex	Cryptococcus	PRJNA615060	PAIRED	4886950	done	alpha			0.23	33.96	30.68	0.0069	0.9714	trace_a	1457	229	30	1474		a alpha							
+SRR13810230	cryptococcus_gattii_complex	RA2	PRJNA704667	PAIRED	3658897	done	alpha			0.17	25.08	22.51	0.0066	0.9940	trace_a	461	152	19	681		a alpha							
+SRR8653985	cryptococcus_gattii_complex	R265	PRJNA525019	PAIRED	6680988	done	alpha			0.07	5.23	17.06	0.0066	0.9796	trace_a	458	55	19	471		a alpha							
+SRR10499337	cryptococcus_gattii_complex	RBB18	PRJNA525019	PAIRED	36920484	done	alpha			0.12	18.77	24.16	0.0065	0.9940	trace_a	3640	366	19	432		a alpha							
+SRR13742182	cryptococcus_gattii_complex	Cg434	PRJNA702892	PAIRED	4980153	done	alpha			0.15	17.83	17.73	0.0075	0.8841	trace_a	630	150	23	734		a alpha							
+SRR1520878	cryptococcus_gattii_complex	B7765	PRJNA244927	PAIRED	15181996	done	alpha			0.13	12.67	13.46	0.0072	0.8812	trace_a	1903	1630	43	1703		a alpha	ok	Cryptococcus	Morchella	2	0.0011		
+SRR364479	cryptococcus_gattii_complex			PAIRED	14509339	done	alpha			0.05	6.99	6.41	0.0067	0.9910	trace_a	1186	5568	33	527		a alpha	ok	Cryptococcus	Aspergillus	4	0.0021		
+SRR3476549	cryptococcus_gattii_complex	B9207	PRJNA295092	PAIRED	15422621	done	none			0.11	5.80	6.98	0.0139	0.4399	trace_a,trace_alpha	2083	1641	41	1692		a alpha	ok	Cryptococcus	Aspergillus	14	0.0077		
+SRR1166940	cryptococcus_gattii_complex	BHPP3-S1A	PRJNA235210	PAIRED	12424240	done	alpha			0.09	11.24	12.52	0.0090	0.7868	trace_a	1565	1390	33	838		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR1931721	cryptococcus_gattii_complex	PMHc1017.ENR	PRJNA269039	PAIRED	3170341	done	none			0.06	6.01	9.33	0.0060	0.4604	trace_a,trace_alpha	383	1760	62	654		a alpha	ok	Cryptococcus	Aspergillus	43	0.0248		
+SRR27350413	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11451072	done	alpha			0.09	24.40	23.17	0.0038	0.9993	trace_a	1084	4400	35	1068		a alpha	ok	Cryptococcus	Botrytis	2	0.0011		
+ERR299603	cryptococcus_gattii_complex	CBS 7750	PRJEB4173	PAIRED	34904514	done	alpha			0.09	10.91	10.19	0.0065	0.9873	trace_a	5617	2379	35	1501		a alpha	ok	Cryptococcus	Fusarium	39	0.0075		
+SRR34113450	cryptococcus_gattii_complex	CgZe121_iii	PRJNA1279626	PAIRED	2450910	done	alpha			0.07	15.84	13.84	0.0030	0.9970	trace_a	247	1622	41	1092		a alpha	ok	Cryptococcus	Fusarium	7	0.0034		
+SRR823283	cryptococcus_gattii_complex	CA1280	PRJNA191331	PAIRED	8577666	done	alpha			0.04	10.66	10.54	0.0051	0.9932	trace_a	1157	5866	54	647		a alpha	ok	Cryptococcus	Fusarium	5	0.0028		
+SRR1392241	cryptococcus_gattii_complex	97/433	PRJNA252720	PAIRED	16416655	done	alpha			0.09	10.80	11.67	0.0094	0.7874	trace_a	2240	1664	41	1791		a alpha	ok	Cryptococcus	Morchella	3	0.0017		
+SRR1520939	cryptococcus_gattii_complex	WM 11.65	PRJNA244927	PAIRED	10268055	done	alpha			0.18	22.24	20.90	0.0069	0.9090	trace_a	2059	1640	41	2330		a alpha	ok	Cryptococcus	Fusarium	5	0.0027		
+SRR364477	cryptococcus_gattii_complex			PAIRED	11975225	done	alpha			0.04	7.14	6.35	0.0068	0.9922	trace_a	978	3894	32	484		a alpha	ok	Cryptococcus	Penicillium	5	0.0026		
+SRR3476548	cryptococcus_gattii_complex	B9313	PRJNA295092	PAIRED	13214352	done	none			0.11	5.70	7.64	0.0160	0.4425	trace_a,trace_alpha	1773	1459	41	1669		a alpha	ok	Cryptococcus	Aspergillus	19	0.0107		
+SRR1166793	cryptococcus_gattii_complex	CA1508	PRJNA235210	PAIRED	12372697	done	a			14.76	0.06	13.95	0.9954	0.0327	trace_alpha	1568	1400	34	1693		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR1942913	cryptococcus_gattii_complex	PMHc1019.CLIN.1	PRJNA269039	PAIRED	3126143	done	none			0.07	6.80	9.52	0.0057	0.4592	trace_a,trace_alpha	383	1818	59	626		a alpha	ok	Cryptococcus	Aspergillus	33	0.0195		
+SRR27350355	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11536906	done	a			25.15	0.04	24.21	0.9951	0.0015	trace_alpha	1046	4671	36	1102		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR1520938	cryptococcus_gattii_complex	WM 09.152	PRJNA244927	PAIRED	9501244	done	alpha			0.17	23.80	23.78	0.0067	0.9713	trace_a	1905	1586	45	1979		a alpha	ok	Cryptococcus	Aspergillus	5	0.0027		
+SRR364489	cryptococcus_gattii_complex			PAIRED	6536922	done	alpha			0.10	13.36	13.12	0.0074	0.9701	trace_a	885	3521	34	734		a alpha	ok	Cryptococcus	Aspergillus	11	0.0059		
+SRR3476508	cryptococcus_gattii_complex	B9473	PRJNA295092	PAIRED	11911837	done	none			0.11	5.82	7.42	0.0066	0.4423	trace_a,trace_alpha	1659	1401	34	1480		a alpha	ok	Cryptococcus	Colletotrichum	15	0.0084		
+SRR1166787	cryptococcus_gattii_complex	CA1053	PRJNA235210	PAIRED	8225351	done	alpha			0.10	11.34	12.16	0.0081	0.7864	trace_a	1038	4682	31	742		a alpha	ok	Cryptococcus	Candida	2	0.0011		
+SRR1925885	cryptococcus_gattii_complex	PMHc1019A.REL.STOR	PRJNA269039	PAIRED	3057443	done	none			0.06	6.17	9.23	0.0053	0.4596	trace_a,trace_alpha	372	1788	59	638		a alpha	ok	Cryptococcus	Aspergillus	35	0.0202		
+SRR27350374	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12166272	done	a			25.08	0.03	24.15	0.9961	0.0014	trace_alpha	1152	921	34	2076		a alpha	ok	Cryptococcus	Penicillium	2	0.0011		
+SRR1520910	cryptococcus_gattii_complex	WM 1851	PRJNA244927	PAIRED	9402332	done	alpha			0.20	21.49	21.91	0.0079	0.8840	trace_a	1823	1504	44	2380		a alpha	ok	Cryptococcus	Fusarium	6	0.0033		
+SRR364514	cryptococcus_gattii_complex			PAIRED	5405112	done	alpha			0.11	11.76	11.29	0.0072	0.8831	trace_a	734	3675	36	717		a alpha	ok	Cryptococcus	Aspergillus	13	0.0069		
+SRR3476505	cryptococcus_gattii_complex	B9929	PRJNA295092	PAIRED	9976504	done	none			0.11	6.10	7.95	0.0072	0.4414	trace_a,trace_alpha	1408	1281	34	1334		a alpha	ok	Cryptococcus	Trichoderma	6	0.0034		
+SRR1166791	cryptococcus_gattii_complex	CA1308	PRJNA235210	PAIRED	7026875	done	alpha			0.11	11.46	12.75	0.0103	0.7860	trace_a	885	4098	32	682		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR1942991	cryptococcus_gattii_complex	PMHc1037.ENR.CLIN1	PRJNA269039	PAIRED	3011060	done	alpha			0.02	1.69	2.40	0.0060	0.4312	trace_a	303	1669	55	596		a alpha	ok	Cryptococcus	Aspergillus	104	0.0542		
+SRR1520925	cryptococcus_gattii_complex	WM 05.527	PRJNA244927	PAIRED	10498521	done	alpha			0.22	21.69	21.97	0.0150	0.8872	trace_a	2054	1555	44	2138		a alpha	ok	Cryptococcus	Colletotrichum	8	0.0044		
+SRR364471	cryptococcus_gattii_complex			PAIRED	5080580	done	alpha			0.09	14.05	13.25	0.0066	0.9940	trace_a	690	3040	32	707		a alpha	ok	Cryptococcus	Penicillium	7	0.0038		
+SRR3476557	cryptococcus_gattii_complex	B9017	PRJNA295092	PAIRED	8802810	done	none			0.10	5.78	6.47	0.0085	0.4444	trace_a,trace_alpha	1180	5618	34	668		a alpha	ok	Cryptococcus	Aspergillus	21	0.0114		
+SRR1166944	cryptococcus_gattii_complex	78-1-S3A	PRJNA235210	PAIRED	31709401	done	alpha			0.10	11.05	14.69	0.0066	0.7866	trace_a	4151	2065	40	1536		a alpha	ok	Cryptococcus	Morchella	2	0.0011		
+SRR1520909	cryptococcus_gattii_complex	WM 1850	PRJNA244927	PAIRED	10511354	done	a			25.16	0.06	23.38	0.9758	0.0169	trace_alpha	2062	1611	38	2115		a alpha	ok	Cryptococcus	Penicillium	7	0.0038		
+SRR364513	cryptococcus_gattii_complex			PAIRED	5063608	done	alpha			0.10	12.42	11.46	0.0073	0.8819	trace_a	686	3492	33	698		a alpha	ok	Cryptococcus	Aspergillus	7	0.0037		
+SRR3476551	cryptococcus_gattii_complex	B9144	PRJNA295092	PAIRED	7937300	done	none			0.11	5.78	6.83	0.0075	0.4464	trace_a,trace_alpha	1069	4416	33	651		a alpha	ok	Cryptococcus	Colletotrichum	14	0.0075		
+SRR1166943	cryptococcus_gattii_complex	MCP-1A	PRJNA235210	PAIRED	43013655	done	alpha			0.08	11.03	13.62	0.0069	0.7859	trace_a	5612	2524	40	1484		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR1520941	cryptococcus_gattii_complex	WM 779	PRJNA244927	PAIRED	10588401	done	none			0.14	11.14	13.99	0.0065	0.4668	trace_a,trace_alpha	2048	1620	39	2050		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0038		
+SRR364488	cryptococcus_gattii_complex			PAIRED	4933454	done	alpha			0.05	4.99	5.29	0.0070	0.7786	trace_a	653	2964	31	694		a alpha	ok	Cryptococcus	Fusarium	50	0.0116		
+SRR3476507	cryptococcus_gattii_complex	B7488	PRJNA295092	PAIRED	4222189	done	none			0.13	6.03	7.28	0.0070	0.4448	trace_a,trace_alpha	430	1985	32	765		a alpha	ok	Cryptococcus	Colletotrichum	6	0.0033		
+SRR1520867	cryptococcus_gattii_complex	WM 06.634	PRJNA244927	PAIRED	9070808	done	alpha			0.18	24.76	23.30	0.0068	0.9715	trace_a	1750	1497	43	2816		a alpha	ok	Cryptococcus	Cladosporium	2	0.0011		
+SRR364490	cryptococcus_gattii_complex			PAIRED	4357881	done	alpha			0.11	12.26	12.21	0.0076	0.8846	trace_a	590	3715	41	712		a alpha	ok	Cryptococcus	Trichoderma	8	0.0043		
+SRR3476552	cryptococcus_gattii_complex	B9142	PRJNA295092	PAIRED	1425358	done	none			0.22	13.24	16.83	0.0072	0.4426	trace_a,trace_alpha	416	2091	25	1684		a alpha	ok	Cryptococcus	Colletotrichum	13	0.0069		
+SRR1520937	cryptococcus_gattii_complex	WM 09.94	PRJNA244927	PAIRED	8982923	done	a			23.68	0.07	22.57	0.9527	0.0072	trace_alpha	1761	1367	37	2859		a alpha	ok	Cryptococcus	Aspergillus	9	0.0049		
+SRR364485	cryptococcus_gattii_complex			PAIRED	4222189	done	none			0.13	6.03	7.28	0.0070	0.4448	trace_a,trace_alpha	473	2514	35	803		a alpha	ok	Cryptococcus	Colletotrichum	6	0.0033		
+SRR3476558	cryptococcus_gattii_complex	B10172	PRJNA295092	PAIRED	1172327	done	none			0.18	11.43	14.56	0.0083	0.4452	trace_a,trace_alpha	458	2296	24	1645		a alpha	ok	Cryptococcus	Colletotrichum	15	0.0069		
+SRR1520893	cryptococcus_gattii_complex	HL_B4	PRJNA244927	PAIRED	20323755	done	alpha			0.05	5.09	4.72	0.0079	0.8795	trace_a	1828	1586	33	1114		a alpha	ok	Cryptococcus	Aspergillus	19	0.01		
+SRR364483	cryptococcus_gattii_complex			PAIRED	3978348	done	alpha			0.12	11.96	12.28	0.0075	0.8854	trace_a	534	2337	35	772		a alpha	ok	Cryptococcus	Penicillium	7	0.0038		
+SRR1520915	cryptococcus_gattii_complex	WM 05.275	PRJNA244927	PAIRED	10991246	done	a			24.71	0.06	22.34	0.9759	0.0130	trace_alpha	2152	1645	45	2001		a alpha	ok	Cryptococcus	Morchella	10	0.0055		
+SRR364493	cryptococcus_gattii_complex			PAIRED	3927398	done	alpha			0.08	14.15	13.08	0.0069	0.9936	trace_a	536	2641	36	778		a alpha	ok	Cryptococcus	Fusarium	9	0.0047		
+SRR1520853	cryptococcus_gattii_complex	B7394	PRJNA244927	PAIRED	13340710	done	alpha			0.08	12.87	12.43	0.0084	0.9715	trace_a	1850	1583	34	1159		a alpha	ok	Cryptococcus	Fusarium	14	0.0076		
+SRR364486	cryptococcus_gattii_complex			PAIRED	3906561	done	alpha			0.05	6.16	5.99	0.0068	0.9663	trace_a	519	2630	36	774		a alpha	ok	Cryptococcus	Fusarium	55	0.013		
+SRR1520869	cryptococcus_gattii_complex	WM 04.75	PRJNA244927	PAIRED	8782838	done	alpha			0.18	23.44	22.36	0.0072	0.9716	trace_a	1685	746	19	718		a alpha	ok	Cryptococcus	Fusarium	6	0.0033		
+SRR364473	cryptococcus_gattii_complex			PAIRED	3724742	done	alpha			0.09	14.23	12.67	0.0065	0.9940	trace_a	501	270	17	420		a alpha	ok	Cryptococcus	Mortierella	7	0.0038		
+SRR1520904	cryptococcus_gattii_complex	HL_A8	PRJNA244927	PAIRED	25360206	done	alpha			0.06	6.13	6.07	0.0090	0.8810	trace_a	2418	922	17	298		a alpha	ok	Cryptococcus	Candida	6	0.0033		
+SRR364484	cryptococcus_gattii_complex			PAIRED	3664168	done	alpha			0.09	14.00	13.59	0.0068	0.9940	trace_a	493	230	17	367		a alpha	ok	Cryptococcus	Penicillium	5	0.0027		
+SRR1520931	cryptococcus_gattii_complex	WM 05.545	PRJNA244927	PAIRED	8674494	done	alpha			0.22	21.83	22.44	0.0274	0.8927	trace_a	1687	758	18	682		a alpha	ok	Cryptococcus	Fusarium	8	0.0043		
+SRR364487	cryptococcus_gattii_complex			PAIRED	3642591	done	alpha			0.12	12.81	12.45	0.0073	0.8823	trace_a	489	200	17	371		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0038		
+SRR1520912	cryptococcus_gattii_complex	WM 04.78	PRJNA244927	PAIRED	11200957	done	alpha			0.24	20.83	20.91	0.0100	0.8869	trace_a	2237	918	18	718		a alpha	ok	Cryptococcus	Morchella	4	0.0022		
+SRR364494	cryptococcus_gattii_complex			PAIRED	3102290	done	alpha			0.10	12.95	11.95	0.0068	0.9723	trace_a	425	153	18	373		a alpha	ok	Cryptococcus	Aspergillus	6	0.0032		
+SRR1520921	cryptococcus_gattii_complex	WM 05.457	PRJNA244927	PAIRED	8583926	done	a			25.48	0.06	24.21	0.9995	0.0231	trace_alpha	1657	609	18	618		a alpha	ok	Cryptococcus	Fusarium	4	0.0022		
+SRR364472	cryptococcus_gattii_complex			PAIRED	3039743	done	alpha			0.10	12.67	12.90	0.0081	0.8852	trace_a	411	212	17	345		a alpha	ok	Cryptococcus	Fusarium	7	0.0038		
+SRR1520911	cryptococcus_gattii_complex	WM 3032	PRJNA244927	PAIRED	8519115	done	alpha			0.20	23.04	21.73	0.0189	0.9086	trace_a	1678	680	19	723		a alpha	ok	Cryptococcus	Xylaria	4	0.0022		
+SRR364474	cryptococcus_gattii_complex			PAIRED	2978985	done	alpha			0.10	11.47	11.04	0.0075	0.8819	trace_a	349	200	17	341		a alpha	ok	Cryptococcus	Fusarium	10	0.005		
+SRR1520895	cryptococcus_gattii_complex	B8973	PRJNA244927	PAIRED	12815599	done	alpha			0.10	11.97	11.76	0.0076	0.8875	trace_a	1781	779	17	445		a alpha	ok	Cryptococcus	Aspergillus	16	0.0087		
+SRR1520928	cryptococcus_gattii_complex	WM 05.530	PRJNA244927	PAIRED	8445911	done	alpha			0.18	21.70	21.52	0.0163	0.8937	trace_a	1676	740	18	755		a alpha	ok	Cryptococcus	Fusarium	4	0.0022		
+SRR1520940	cryptococcus_gattii_complex	WM 11.139	PRJNA244927	PAIRED	8326183	done	a			25.79	0.03	22.28	0.9940	0.0017	trace_alpha	1625	608	18	737		a alpha	ok	Cryptococcus	Morchella	6	0.0033		
+SRR1520854	cryptococcus_gattii_complex	B7735	PRJNA244927	PAIRED	12519852	done	alpha			0.10	13.47	12.48	0.0078	0.9706	trace_a	1731	794	16	468		a alpha	ok	Cryptococcus	Aspergillus	13	0.0071		
+SRR1520917	cryptococcus_gattii_complex	WM 05.342	PRJNA244927	PAIRED	8267396	done	a			25.22	0.05	23.02	0.9761	0.0154	trace_alpha	1604	758	18	811		a alpha	ok	Cryptococcus	Puccinia	5	0.0028		
+SRR1520851	cryptococcus_gattii_complex	WM 06.10	PRJNA244927	PAIRED	11674836	done	alpha			0.19	23.40	21.82	0.0174	0.9940	trace_a	2220	874	18	768		a alpha	ok	Cryptococcus	Aspergillus	24	0.0128		
+SRR1520835	cryptococcus_gattii_complex	B9457	PRJNA244927	PAIRED	12279645	done	alpha			0.11	14.01	12.87	0.0069	0.9939	trace_a	1722	746	16	482		a alpha	ok	Cryptococcus	Mortierella	7	0.0038		
+SRR1520934	cryptococcus_gattii_complex	WM 06.12	PRJNA244927	PAIRED	8128266	done	a			25.94	0.09	24.77	0.9764	0.0508	trace_alpha	1573	699	18	792		a alpha	ok	Cryptococcus	Colletotrichum	5	0.0027		
+SRR1520844	cryptococcus_gattii_complex	HL_A11	PRJNA244927	PAIRED	18323733	done	alpha			0.06	7.43	6.85	0.0100	0.9933	trace_a	1763	761	16	332		a alpha	ok	Cryptococcus	Penicillium	4	0.0021		
+SRR1520919	cryptococcus_gattii_complex	WM 05.452	PRJNA244927	PAIRED	7825178	done	a			26.28	0.05	22.85	0.9995	0.0140	trace_alpha	1508	744	18	816		a alpha	ok	Cryptococcus	Aspergillus	5	0.0028		
+SRR1520892	cryptococcus_gattii_complex	HL_B3	PRJNA244927	PAIRED	17587950	done	alpha			0.06	6.23	5.93	0.0083	0.8798	trace_a	1653	756	16	334		a alpha	ok	Cryptococcus	Rhizopus	11	0.0059		
+SRR1520908	cryptococcus_gattii_complex	WM 178	PRJNA244927	PAIRED	12142147	done	alpha			0.16	22.71	21.15	0.0069	0.9613	trace_a	2350	953	19	778		a alpha	ok	Cryptococcus	Fusarium	11	0.0059		
+SRR1520825	cryptococcus_gattii_complex	WM 179	PRJNA244927	PAIRED	12185182	done	none			0.23	10.65	13.41	0.0107	0.4461	trace_a,trace_alpha	2331	878	18	736		a alpha	ok	Cryptococcus	Aspergillus	13	0.0072		
+SRR1520914	cryptococcus_gattii_complex	WM 05.274	PRJNA244927	PAIRED	7633255	done	alpha			0.22	21.98	21.98	0.0606	0.8885	trace_a	1488	704	18	781		a alpha	ok	Cryptococcus	Aspergillus	8	0.0043		
+SRR1520924	cryptococcus_gattii_complex	WM 05.525	PRJNA244927	PAIRED	7572519	done	alpha			0.19	21.26	21.47	0.0170	0.8909	trace_a	1442	730	18	792		a alpha	ok	Cryptococcus	Aspergillus	18	0.0097		
+SRR1520926	cryptococcus_gattii_complex	WM 05.528	PRJNA244927	PAIRED	7518958	done	alpha			0.17	21.58	21.95	0.0075	0.8940	trace_a	1484	714	18	779		a alpha	ok	Cryptococcus	Colletotrichum	6	0.0033		
+SRR1520868	cryptococcus_gattii_complex	WM 06.636	PRJNA244927	PAIRED	7421544	done	alpha			0.17	24.34	23.42	0.0153	0.9713	trace_a	1432	657	18	770		a alpha	ok	Cryptococcus	Aspergillus	7	0.0038		
+SRR1520902	cryptococcus_gattii_complex	HL_A5	PRJNA244927	PAIRED	28466598	done	alpha			0.06	6.07	6.34	0.0073	0.8846	trace_a	2706	949	17	265		a alpha	ok	Cryptococcus	Candida	3	0.0016		
+SRR1520829	cryptococcus_gattii_complex	B7436	PRJNA244927	PAIRED	14509339	done	alpha			0.06	9.43	8.61	0.0069	0.9936	trace_a	1067	480	17	228		a alpha	ok	Cryptococcus	Cordyceps	4	0.0021		
+SRR1520859	cryptococcus_gattii_complex	B9563	PRJNA244927	PAIRED	10897695	done	alpha			0.10	13.18	11.98	0.0067	0.9708	trace_a	1532	683	17	444		a alpha	ok	Cryptococcus	Colletotrichum	13	0.0071		
+SRR1520884	cryptococcus_gattii_complex	B8798	PRJNA244927	PAIRED	10780213	done	alpha			0.11	12.14	12.31	0.0079	0.8825	trace_a	1410	685	16	463		a alpha	ok	Cryptococcus	Absidia	5	0.0026		
+SRR1520906	cryptococcus_gattii_complex	HL_B11	PRJNA244927	PAIRED	16081413	done	alpha			0.06	7.10	6.69	0.0071	0.9650	trace_a	1543	704	16	310		a alpha	ok	Cryptococcus	Colletotrichum	4	0.0022		
+SRR1520864	cryptococcus_gattii_complex	WM 03.27	PRJNA244927	PAIRED	7052713	done	alpha			0.19	24.11	23.45	0.0068	0.9710	trace_a	1362	534	18	725		a alpha	ok	Cryptococcus	Aspergillus	5	0.0028		
+SRR1520916	cryptococcus_gattii_complex	WM 05.339	PRJNA244927	PAIRED	7032077	done	a			25.47	0.06	22.99	0.9762	0.0177	trace_alpha	1368	676	18	745		a alpha	ok	Cryptococcus	Puccinia	2	0.0011		
+SRR1520932	cryptococcus_gattii_complex	WM 05.546	PRJNA244927	PAIRED	6915075	done	alpha			0.22	21.85	21.70	0.0118	0.8887	trace_a	1377	563	18	536		a alpha	ok	Cryptococcus	Colletotrichum	11	0.0059		
+SRR1520918	cryptococcus_gattii_complex	WM 05.419	PRJNA244927	PAIRED	6913385	done	alpha			0.22	21.79	21.55	0.0157	0.8941	trace_a	1338	531	19	751		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR1520860	cryptococcus_gattii_complex	B9588	PRJNA244927	PAIRED	10367440	done	alpha			0.08	13.24	12.44	0.0072	0.9713	trace_a	1452	494	16	404		a alpha	ok	Cryptococcus	Xylaria	11	0.006		
+SRR1520865	cryptococcus_gattii_complex	WM 04.71	PRJNA244927	PAIRED	6823158	done	alpha			0.21	24.59	23.28	0.0168	0.9709	trace_a	1319	822	38	1649		a alpha	ok	Cryptococcus	Aspergillus	5	0.0027		
+SRR1520831	cryptococcus_gattii_complex	B8555	PRJNA244927	PAIRED	10199156	done	alpha			0.11	13.47	13.11	0.0068	0.9940	trace_a	1307	786	39	1266		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR1520936	cryptococcus_gattii_complex	WM 08.311	PRJNA244927	PAIRED	6807518	done	alpha			0.22	21.61	21.18	0.0124	0.8869	trace_a	1360	794	38	1334		a alpha	ok	Cryptococcus	Fusarium	5	0.0027		
+SRR1520886	cryptococcus_gattii_complex	B8833	PRJNA244927	PAIRED	10139868	done	alpha			0.10	12.53	12.16	0.0074	0.8806	trace_a	1287	400	16	448		a alpha	ok	Cryptococcus	Metschnikowia	6	0.003		
+SRR1520845	cryptococcus_gattii_complex	HL_B5	PRJNA244927	PAIRED	30188184	done	alpha			0.06	7.46	6.95	0.0075	0.9927	trace_a	2883	785	17	276		a alpha	ok	Cryptococcus	Penicillium	2	0.0011		
+SRR1520852	cryptococcus_gattii_complex	ICB-107	PRJNA244927	PAIRED	9701988	done	alpha			0.08	12.76	12.18	0.0068	0.9932	trace_a	1240	436	19	421		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR1520933	cryptococcus_gattii_complex	WM 05.547	PRJNA244927	PAIRED	6354603	done	alpha			0.21	21.32	21.06	0.0109	0.8926	trace_a	1270	418	19	567		a alpha	ok	Cryptococcus	Penicillium	9	0.0048		
+SRR1520833	cryptococcus_gattii_complex	B8793	PRJNA244927	PAIRED	9467725	done	alpha			0.10	13.73	12.24	0.0067	0.9937	trace_a	1207	396	18	478		a alpha	ok	Cryptococcus	Fusarium	2	0.001		
+SRR1520922	cryptococcus_gattii_complex	WM 05.461	PRJNA244927	PAIRED	6311492	done	alpha			0.20	23.09	22.43	0.0209	0.8904	trace_a	1215	377	19	689		a alpha	ok	Cryptococcus	Aspergillus	5	0.0027		
+SRR1520927	cryptococcus_gattii_complex	WM 05.529	PRJNA244927	PAIRED	6256274	done	alpha			0.19	21.78	21.34	0.0092	0.8905	trace_a	1240	391	18	699		a alpha	ok	Cryptococcus	Aspergillus	7	0.0038		
+SRR1520836	cryptococcus_gattii_complex	B9458	PRJNA244927	PAIRED	9402202	done	alpha			0.09	12.44	11.75	0.0069	0.9941	trace_a	1260	917	36	1222		a alpha	ok	Cryptococcus	Aspergillus	8	0.0043		
+SRR1520838	cryptococcus_gattii_complex	B9759	PRJNA244927	PAIRED	9388305	done	alpha			0.12	13.20	12.82	0.0072	0.9940	trace_a	1322	305	17	432		a alpha	ok	Cryptococcus	Pyricularia	9	0.0049		
+SRR1520826	cryptococcus_gattii_complex	B6864	PRJNA244927	PAIRED	9096202	done	alpha			0.10	15.04	14.13	0.0066	0.9940	trace_a	1139	712	46	1347		a alpha	ok	Cryptococcus	Nakaseomyces	2	0.0011		
+SRR1520828	cryptococcus_gattii_complex	B7422	PRJNA244927	PAIRED	11975225	done	alpha			0.06	9.65	8.61	0.0068	0.9939	trace_a	880	181	17	281		a alpha	ok	Cryptococcus	Penicillium	4	0.0021		
+SRR1520848	cryptococcus_gattii_complex	WM 03.697	PRJNA244927	PAIRED	13868759	done	alpha			0.18	24.20	22.91	0.0088	0.9940	trace_a	2776	559	18	704		a alpha	ok	Cryptococcus	Aspergillus	7	0.0038		
+SRR1520913	cryptococcus_gattii_complex	WM 04.84	PRJNA244927	PAIRED	5995073	done	alpha			0.18	21.98	21.66	0.0075	0.8858	trace_a	1163	653	44	1943		a alpha	ok	Cryptococcus	Aspergillus	7	0.0039		
+SRR1520866	cryptococcus_gattii_complex	WM 05.465	PRJNA244927	PAIRED	5950896	done	alpha			0.20	23.44	23.93	0.0159	0.9745	trace_a	1150	593	45	2413		a alpha	ok	Cryptococcus	Morchella	7	0.0038		
+SRR1520875	cryptococcus_gattii_complex	B7493	PRJNA244927	PAIRED	8883816	done	alpha			0.11	13.34	12.77	0.0072	0.8927	trace_a	1081	4498	42	1057		a alpha	ok	Cryptococcus	Metschnikowia	2	0.0011		
+SRR1520840	cryptococcus_gattii_complex	CBS 7750	PRJNA244927	PAIRED	8676003	done	alpha			0.09	13.06	12.46	0.0067	0.9934	trace_a	1102	237	18	433		a alpha	ok	Cryptococcus	Pyricularia	5	0.0027		
+SRR1520872	cryptococcus_gattii_complex	B7434	PRJNA244927	PAIRED	8649505	done	alpha			0.13	13.15	13.27	0.0072	0.8808	trace_a	1085	585	47	1288		a alpha	ok	Cryptococcus	Puccinia	1	0.0006		
+SRR1520849	cryptococcus_gattii_complex	WM 05.432	PRJNA244927	PAIRED	5714797	done	alpha			0.20	24.98	23.54	0.0141	0.9940	trace_a	1105	559	46	2599		a alpha	ok	Cryptococcus	Colletotrichum	6	0.0033		
+SRR1520883	cryptococcus_gattii_complex	B8788	PRJNA244927	PAIRED	8386332	done	alpha			0.11	12.25	11.72	0.0076	0.8944	trace_a	1078	554	45	1517		a alpha	ok	Cryptococcus	Melampsora	2	0.0011		
+SRR1520847	cryptococcus_gattii_complex	NIH 444	PRJNA244927	PAIRED	8370530	done	alpha			0.08	12.47	12.02	0.0071	0.9940	trace_a	1057	164	19	471		a alpha	ok	Cryptococcus	Trichoderma	6	0.0032		
+SRR1520846	cryptococcus_gattii_complex	HL_B6	PRJNA244927	PAIRED	12567315	done	alpha			0.06	7.52	6.89	0.0085	0.9933	trace_a	1209	135	17	314		a alpha	ok	Cryptococcus	Botrytis	2	0.0011		
+SRR1520858	cryptococcus_gattii_complex	B9552	PRJNA244927	PAIRED	7963599	done	alpha			0.09	12.63	11.61	0.0078	0.9706	trace_a	1073	67	17	428		a alpha	ok	Cryptococcus	Aspergillus	14	0.0074		
+SRR1520850	cryptococcus_gattii_complex	WM 05.554	PRJNA244927	PAIRED	5272749	done	alpha			0.17	23.57	23.45	0.0076	0.9940	trace_a	1017	133	19	788		a alpha	ok	Cryptococcus	Aspergillus	9	0.0049		
+SRR1520837	cryptococcus_gattii_complex	B9757	PRJNA244927	PAIRED	7897871	done	alpha			0.09	13.19	12.41	0.0104	0.9940	trace_a	1063	170	17	288		a alpha	ok	Cryptococcus	Colletotrichum	14	0.0075		
+SRR1520896	cryptococcus_gattii_complex	B9764	PRJNA244927	PAIRED	7790725	done	alpha			0.08	12.27	11.65	0.0070	0.9624	trace_a	1046	63	17	443		a alpha	ok	Cryptococcus	Morchella	12	0.0064		
+SRR1520905	cryptococcus_gattii_complex	HL_B2	PRJNA244927	PAIRED	11707977	done	alpha			0.05	6.36	6.23	0.0077	0.8813	trace_a	1120	183	16	302		a alpha	ok	Cryptococcus	Aspergillus	7	0.0038		
+SRR1520857	cryptococcus_gattii_complex	B9157	PRJNA244927	PAIRED	7659989	done	alpha			0.09	11.60	10.82	0.0070	0.9709	trace_a	1030	196	17	453		a alpha	ok	Cryptococcus	Fusarium	13	0.0068		
+SRR1520890	cryptococcus_gattii_complex	B9933	PRJNA244927	PAIRED	7494317	done	alpha			0.11	11.45	11.82	0.0080	0.8848	trace_a	1007	185	17	449		a alpha	ok	Cryptococcus	Fusarium	7	0.0038		
+SRR1520923	cryptococcus_gattii_complex	WM 05.462	PRJNA244927	PAIRED	4912235	done	alpha			0.21	22.40	22.04	0.0076	0.8909	trace_a	950	57	19	746		a alpha	ok	Cryptococcus	Fusarium	4	0.0022		
+SRR1520929	cryptococcus_gattii_complex	WM 05.533	PRJNA244927	PAIRED	4910109	done	alpha			0.17	20.50	20.67	0.0089	0.8860	trace_a	981	128	19	715		a alpha	ok	Cryptococcus	Aspergillus	10	0.0054		
+SRR1520881	cryptococcus_gattii_complex	B8510	PRJNA244927	PAIRED	7318598	done	alpha			0.10	13.38	12.95	0.0073	0.8815	trace_a	910	124	18	474		a alpha	ok	Cryptococcus	Daldinia	2	0.0011		
+SRR1520930	cryptococcus_gattii_complex	WM 05.536	PRJNA244927	PAIRED	4856750	done	a			23.69	0.08	21.98	0.9459	0.0329	trace_alpha	938	186	18	781		a alpha	ok	Cryptococcus	Fusarium	12	0.0065		
+SRR1520907	cryptococcus_gattii_complex	HL_B12	PRJNA244927	PAIRED	10932279	done	a			7.73	0.02	6.54	0.9985	0.0110	trace_alpha	1043	86	16	296		a alpha	ok	Cryptococcus	Penicillium	5	0.0027		
+SRR1520920	cryptococcus_gattii_complex	WM 05.456	PRJNA244927	PAIRED	4723034	done	alpha			0.20	22.07	22.68	0.0091	0.8966	trace_a	913	110	19	775		a alpha	ok	Cryptococcus	Fusarium	8	0.0043		
+SRR1520863	cryptococcus_gattii_complex	WM 2552	PRJNA244927	PAIRED	15263412	done	alpha			0.17	24.13	23.68	0.0072	0.9709	trace_a	3060	454	19	788		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR1520855	cryptococcus_gattii_complex	B8554	PRJNA244927	PAIRED	6536922	done	alpha			0.10	13.36	13.12	0.0074	0.9701	trace_a	799	60	18	454		a alpha	ok	Cryptococcus	Aspergillus	11	0.0059		
+SRR1520903	cryptococcus_gattii_complex	HL_A6	PRJNA244927	PAIRED	35938890	done	a			7.24	0.03	6.83	0.9730	0.0124	trace_alpha	3433	701	16	252		a alpha	ok	Cryptococcus	Puccinia	3	0.0016		
+SRR1520839	cryptococcus_gattii_complex	CA-1014	PRJNA244927	PAIRED	6015575	done	alpha			0.11	14.71	13.97	0.0072	0.9940	trace_a	750	185	18	304		a alpha	ok	Cryptococcus	Penicillium	2	0.0011		
+SRR1520874	cryptococcus_gattii_complex	B7491	PRJNA244927	PAIRED	5835876	done	alpha			0.11	13.22	13.24	0.0072	0.8808	trace_a	735	177	47	1254		a alpha	ok	Cryptococcus	Nakaseomyces	3	0.0017		
+SRR1520888	cryptococcus_gattii_complex	B8843	PRJNA244927	PAIRED	5405112	done	alpha			0.11	11.76	11.29	0.0072	0.8831	trace_a	662	267	18	383		a alpha	ok	Cryptococcus	Aspergillus	13	0.0069		
+SRR1520879	cryptococcus_gattii_complex	B8210	PRJNA244927	PAIRED	5081959	done	alpha			0.10	13.71	12.74	0.0072	0.8803	trace_a	616	27	18	479		a alpha	ok	Cryptococcus	Mortierella	2	0.0011		
+SRR1520834	cryptococcus_gattii_complex	B8849	PRJNA244927	PAIRED	5080580	done	alpha			0.09	14.05	13.25	0.0066	0.9940	trace_a	622	57	18	468		a alpha	ok	Cryptococcus	Penicillium	7	0.0038		
+SRR1520887	cryptococcus_gattii_complex	B8838	PRJNA244927	PAIRED	5063608	done	alpha			0.10	12.42	11.46	0.0073	0.8819	trace_a	619	205	18	408		a alpha	ok	Cryptococcus	Aspergillus	7	0.0037		
+SRR1520897	cryptococcus_gattii_complex	CDC-3225	PRJNA244927	PAIRED	2013799	done	alpha			0.38	40.43	36.68	0.0276	0.8890	trace_a	600	213	22	958		a alpha	ok	Cryptococcus	Aspergillus	30	0.0147		
+SRR1520898	cryptococcus_gattii_complex	CDC-3234	PRJNA244927	PAIRED	1968861	done	alpha			0.36	41.01	38.41	0.0279	0.8872	trace_a	570	51	15	1243		a alpha	ok	Cryptococcus	Aspergillus	16	0.0077		
+SRR1520891	cryptococcus_gattii_complex	GT-11-7650	PRJNA244927	PAIRED	1941640	done	alpha			0.26	31.39	32.16	0.0081	0.8818	trace_a	550	29	14	1229		a alpha	ok	Cryptococcus	Fusarium	46	0.0168		
+SRR1520889	cryptococcus_gattii_complex	B9816	PRJNA244927	PAIRED	1772856	done	alpha			0.29	33.95	31.10	0.0087	0.8817	trace_a	552	66	13	1169		a alpha	ok	Cryptococcus	Fusarium	22	0.0108		
+SRR1520899	cryptococcus_gattii_complex	CDC-3243	PRJNA244927	PAIRED	1731931	done	a			40.15	0.11	37.56	0.9442	0.0309	trace_alpha	509	93	13	1020		a alpha	ok	Cryptococcus	Aspergillus	10	0.005		
+SRR1520873	cryptococcus_gattii_complex	B7466	PRJNA244927	PAIRED	3978348	done	alpha			0.12	11.96	12.28	0.0075	0.8854	trace_a	482	100	18	462		a alpha	ok	Cryptococcus	Penicillium	7	0.0038		
+SRR1520841	cryptococcus_gattii_complex	R265	PRJNA244927	PAIRED	1595778	done	alpha			0.22	35.45	33.96	0.0072	0.9940	trace_a	482	106	12	945		a alpha	ok	Cryptococcus	Aspergillus	14	0.0071		
+SRR1520832	cryptococcus_gattii_complex	B8577	PRJNA244927	PAIRED	3927398	done	alpha			0.08	14.15	13.08	0.0069	0.9936	trace_a	484	110	19	490		a alpha	ok	Cryptococcus	Fusarium	9	0.0047		
+SRR1520827	cryptococcus_gattii_complex	B7395	PRJNA244927	PAIRED	3724742	done	alpha			0.09	14.23	12.67	0.0065	0.9940	trace_a	453	115	18	433		a alpha	ok	Cryptococcus	Mortierella	7	0.0038		
+SRR1520830	cryptococcus_gattii_complex	B7467	PRJNA244927	PAIRED	3664168	done	alpha			0.09	14.00	13.59	0.0068	0.9940	trace_a	446	184	18	388		a alpha	ok	Cryptococcus	Penicillium	5	0.0027		
+SRR1520877	cryptococcus_gattii_complex	B7737	PRJNA244927	PAIRED	3642591	done	alpha			0.12	12.81	12.45	0.0073	0.8823	trace_a	442	77	17	371		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0038		
+SRR1520885	cryptococcus_gattii_complex	B8825	PRJNA244927	PAIRED	1253873	done	alpha			0.20	23.98	23.61	0.0079	0.8819	trace_a	367	58	31	2960		a alpha	ok	Cryptococcus	Colletotrichum	17	0.0091		
+SRR1520856	cryptococcus_gattii_complex	B8828	PRJNA244927	PAIRED	3102290	done	alpha			0.10	12.95	11.95	0.0068	0.9723	trace_a	383	40	18	460		a alpha	ok	Cryptococcus	Aspergillus	6	0.0032		
+SRR1520870	cryptococcus_gattii_complex	B6863	PRJNA244927	PAIRED	3039743	done	alpha			0.10	12.67	12.90	0.0081	0.8852	trace_a	372	28	18	494		a alpha	ok	Cryptococcus	Fusarium	7	0.0038		
+SRR1520894	cryptococcus_gattii_complex	B7390	PRJNA244927	PAIRED	2978985	done	alpha			0.10	11.47	11.04	0.0075	0.8819	trace_a	312	72	18	449		a alpha	ok	Cryptococcus	Fusarium	10	0.005		
+SRR1520900	cryptococcus_gattii_complex	HL_A2	PRJNA244927	PAIRED	55507680	done	alpha			0.07	6.23	6.16	0.0108	0.8869	trace_a	5234	1234	17	315		a alpha	ok	Cryptococcus	Colletotrichum	5	0.0027		
+SRR1520842	cryptococcus_gattii_complex	HL_A1	PRJNA244927	PAIRED	66702696	done	alpha			0.05	6.93	6.55	0.0072	0.9926	trace_a	6332	1380	16	281		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0038		
+SRR1520843	cryptococcus_gattii_complex	HL_A3	PRJNA244927	PAIRED	72672009	done	alpha			0.06	6.97	6.25	0.0096	0.9922	trace_a	6811	1409	16	252		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR27295213	cryptococcus_gattii_complex	YQJ066	PRJNA1054030	PAIRED	9391217	done	alpha			0.18	23.72	24.24	0.0066	0.9701	trace_a	962	254	18	568		a alpha	ok	Cryptococcus	Colletotrichum	3	0.0016		
+SRR1513319	cryptococcus_gattii_complex	LA499	PRJNA254979	PAIRED	15385310	done	a			9.45	0.02	8.50	0.9752	0.0044	trace_alpha	1627	390	18	344		a alpha	ok	Cryptococcus	Aspergillus	30	0.0159		
+SRR6407134	cryptococcus_gattii_complex		PRJNA388113	PAIRED	15222256	done	a			13.36	0.03	12.32	0.9995	0.0085	trace_alpha	2048	159	17	427		a alpha	ok	Cryptococcus	Aspergillus	20	0.0105		
+SRR7345526	cryptococcus_gattii_complex	MF_23	PRJNA476154	PAIRED	6781440	done	low_depth			0.07	0.00	0.14	0.0013	0.0000	-	327	24	34	368		a alpha	ok	Cryptococcus	Colletotrichum	1	0.0018		
+SRR5574076	cryptococcus_gattii_complex	R265a	PRJNA387047	PAIRED	11685718	done	a			14.67	0.02	13.55	0.9759	0.0013	trace_alpha	778	65	18	451		a alpha	ok	Cryptococcus	Saccharomyces	1	0.0006		
+SRR13810222	cryptococcus_gattii_complex	RA13	PRJNA704667	PAIRED	6839482	done	alpha			0.15	23.06	21.51	0.0067	0.9940	trace_a	888	72	19	731		a alpha	ok	Cryptococcus	Fusarium	7	0.0037		
+SRR8653988	cryptococcus_gattii_complex	RBB17	PRJNA525019	PAIRED	14647598	done	alpha			0.15	18.73	18.31	0.0067	0.9940	trace_a	1361	178	18	581		a alpha	ok	Cryptococcus	Aspergillus	22	0.0121		
+SRR13742219	cryptococcus_gattii_complex	Cn201	PRJNA702892	PAIRED	10358232	done	alpha			0.17	17.48	17.25	0.0074	0.8870	trace_a	1294	106	20	654		a alpha	ok	Cryptococcus	Colletotrichum	6	0.003		
+SRR14698316	cryptococcus_gattii_complex	G6	PRJNA721775	PAIRED	4541541	done	alpha			0.14	16.50	16.84	0.0081	0.8867	trace_a	578	85	20	706		a alpha	ok	Cryptococcus	Colletotrichum	8	0.0038		
+SRR34113460	cryptococcus_gattii_complex	CgZe107bun_ii	PRJNA1279626	PAIRED	2577055	done	alpha			0.10	20.35	19.82	0.0034	0.9764	trace_a	269	16	21	754		a alpha	ok	Cryptococcus	Fusarium	3	0.0016		
+SRR643936	cryptococcus_gattii_complex		PRJNA183619	PAIRED	17452257	done	low_depth			0.22	0.06	0.22	0.0090	0.0253	-	1962	97	39	283		a alpha	ok	Cryptococcus	Cladosporium	5	0.0063		
+SRR798896	cryptococcus_gattii_complex	99/473	PRJNA191326	PAIRED	5205628	done	alpha			0.09	12.51	11.09	0.0086	0.9684	trace_a	708	78	31	335		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR7899955	cryptococcus_gattii_complex	SEC744	PRJNA493061	PAIRED	11059425	done	alpha			0.14	21.39	21.97	0.0089	0.9940	trace_a	1348	85	40	1331		a alpha	mixed	Cryptococcus	Saccharomyces	40	0.0158	yes	
+SRR8427072	cryptococcus_gattii_complex	R265	PRJNA511460	PAIRED	12123282	done	alpha			0.16	22.92	22.50	0.0102	0.9942	trace_a	1472	194	48	2522		a alpha	ok	Cryptococcus	Aspergillus	14	0.0073		
+SRR8584959	cryptococcus_gattii_complex	CNRMA13-120	PRJNA522741	PAIRED	35765736	done	alpha			0.16	20.35	19.73	0.0074	0.8934	trace_a	4613	1679	46	2077		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR27350342	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	9254427	done	alpha			0.17	24.16	21.26	0.0065	0.9940	trace_a	924	4519	33	1079		a alpha	ok	Cryptococcus	Aspergillus	5	0.0027		
+SRR1511160	cryptococcus_gattii_complex	ICB184	PRJNA254979	PAIRED	15162276	done	alpha			0.10	12.48	12.76	0.0073	0.8866	trace_a	1923	174	17	457		a alpha	ok	Cryptococcus	Candida	3	0.0017		
+SRR6407132	cryptococcus_gattii_complex		PRJNA388113	PAIRED	8182598	done	alpha			0.14	21.35	19.88	0.0070	0.9709	trace_a	1643	148	18	691		a alpha	ok	Cryptococcus	Aspergillus	8	0.0043		
+SRR7345542	cryptococcus_gattii_complex	MF_27	PRJNA476154	PAIRED	6244968	done	low_depth			0.08	0.00	0.27	0.0013	0.0000	-	318	32	34	378		a alpha	ok	Cryptococcus	Fusarium	2	0.0029		
+SRR5574084	cryptococcus_gattii_complex	NIH444_V	PRJNA387047	PAIRED	10022798	done	alpha			0.10	14.47	13.35	0.0065	0.9936	trace_a	666	30	43	1204		a alpha	ok	Cryptococcus	Botrytis	1	0.0006		
+SRR13810226	cryptococcus_gattii_complex	RA11	PRJNA704667	PAIRED	6235878	done	alpha			0.18	24.44	22.38	0.0067	0.9940	trace_a	793	241	18	497		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR8654000	cryptococcus_gattii_complex	RBB18	PRJNA525019	PAIRED	9215124	done	alpha			0.10	11.98	14.54	0.0067	0.9940	trace_a	619	137	17	357		a alpha	ok	Cryptococcus	Penicillium	3	0.0017		
+SRR13742203	cryptococcus_gattii_complex	Cn894	PRJNA702892	PAIRED	10061964	done	a			20.49	0.03	18.93	0.9614	0.0007	trace_alpha	1262	433	20	700		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0035		
+SRR14698323	cryptococcus_gattii_complex	G17	PRJNA721775	PAIRED	15383935	done	alpha			0.15	21.61	21.93	0.0082	0.9459	trace_a	1918	591	20	729		a alpha	ok	Cryptococcus	Aspergillus	6	0.0029		
+SRR34113481	cryptococcus_gattii_complex	Cg124un_ii	PRJNA1279626	PAIRED	2543672	done	alpha			0.08	17.25	15.94	0.0031	0.9947	trace_a	264	67	20	551		a alpha	ok	Cryptococcus	Fusarium	4	0.0021		
+SRR27350372	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	10794928	done	alpha			0.17	24.66	24.92	0.0068	0.9706	trace_a	1027	371	17	691		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR1511164	cryptococcus_gattii_complex	V9	PRJNA254979	PAIRED	14653504	done	alpha			0.10	13.54	13.15	0.0072	0.9710	trace_a	1856	584	16	418		a alpha	ok	Cryptococcus	Sphaerulina	2	0.0011		
+SRR6407142	cryptococcus_gattii_complex		PRJNA388113	PAIRED	3816691	done	alpha			0.27	40.22	36.58	0.0086	0.9940	trace_a	1617	462	24	1458		a alpha	ok	Cryptococcus	Colletotrichum	30	0.0093		
+SRR7345537	cryptococcus_gattii_complex	MF_57	PRJNA476154	PAIRED	6190637	done	low_depth			0.08	0.00	0.27	0.0011	0.0000	-	305	19	34	338		a alpha	ok	Cryptococcus	Trichoderma	3	0.0046		
+SRR5575264	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	6421535	done	alpha			0.11	13.62	12.75	0.0187	0.9940	trace_a	687	235	16	389		a alpha	ok	Cryptococcus	Hanseniaspora	2	0.0011		
+SRR13810228	cryptococcus_gattii_complex	RA7	PRJNA704667	PAIRED	6220688	done	alpha			0.18	25.25	23.30	0.0065	0.9944	trace_a	773	129	49	2310		a alpha	ok	Cryptococcus	Geotrichum	3	0.0017		
+SRR8653984	cryptococcus_gattii_complex	R265	PRJNA525019	PAIRED	16707037	done	alpha			0.13	19.43	18.39	0.0065	0.9940	trace_a	1561	179	47	1977		a alpha	ok	Cryptococcus	Aspergillus	11	0.0061		
+SRR13742187	cryptococcus_gattii_complex	Cg221	PRJNA702892	PAIRED	5983640	done	alpha			0.15	19.97	18.53	0.0077	0.9940	trace_a	754	97	20	724		a alpha	ok	Cryptococcus	Geotrichum	5	0.0025		
+SRR14698324	cryptococcus_gattii_complex	G26	PRJNA721775	PAIRED	15708211	done	alpha			0.13	16.74	18.12	0.0081	0.8862	trace_a	1900	954	40	2473		a alpha	ok	Cryptococcus	Penicillium	8	0.0037		
+SRR34113451	cryptococcus_gattii_complex	CgZe121_ii	PRJNA1279626	PAIRED	2487468	done	alpha			0.07	14.92	14.04	0.0032	0.9983	trace_a	256	17	22	806		a alpha	ok	Cryptococcus	Puccinia	5	0.0026		
+SRR27350425	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11152168	done	alpha			0.17	21.61	22.87	0.0070	0.8851	trace_a	1055	148	17	692		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR1513323	cryptococcus_gattii_complex	EJB21	PRJNA254979	PAIRED	14887648	done	alpha			0.09	11.67	10.91	0.0132	0.9939	trace_a	1599	382	18	402		a alpha	ok	Cryptococcus	Aspergillus	14	0.0077		
+SRR6407133	cryptococcus_gattii_complex		PRJNA388113	PAIRED	11387424	done	a			13.80	0.04	13.44	0.9759	0.0152	trace_alpha	1574	334	17	431		a alpha	ok	Cryptococcus	Ceratocystiopsis	5	0.0027		
+SRR7345544	cryptococcus_gattii_complex	MF_20	PRJNA476154	PAIRED	6136931	done	low_depth			0.08	0.00	0.27	0.0012	0.0000	-	301	45	33	345		a alpha	ok	Cryptococcus	Colletotrichum	2	0.0032		
+SRR5575279	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5928384	done	alpha			0.13	14.19	13.16	0.0196	0.9940	trace_a	632	87	16	463		a alpha	ok	Cryptococcus	Neurospora	2	0.0011		
+SRR13810223	cryptococcus_gattii_complex	RA12	PRJNA704667	PAIRED	5904366	done	alpha			0.16	24.75	23.35	0.0066	0.9940	trace_a	750	55	19	699		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR8653986	cryptococcus_gattii_complex	RBB17	PRJNA525019	PAIRED	8999084	done	alpha			0.09	11.49	12.18	0.0065	0.9940	trace_a	609	190	17	380		a alpha	ok	Cryptococcus	Colletotrichum	3	0.0015		
+SRR13742178	cryptococcus_gattii_complex	Cg461	PRJNA702892	PAIRED	4912731	done	alpha			0.15	19.24	18.55	0.0082	0.8887	trace_a	605	251	44	1877		a alpha	ok	Cryptococcus	Aspergillus	5	0.0026		
+SRR14698321	cryptococcus_gattii_complex	G13	PRJNA721775	PAIRED	18087019	done	alpha			0.15	21.53	21.00	0.0078	0.9713	trace_a	2215	397	20	803		a alpha	ok	Cryptococcus	Colletotrichum	12	0.0056		
+SRR27350373	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11208786	done	alpha			0.16	24.74	24.67	0.0065	0.9940	trace_a	1071	329	17	587		a alpha	ok	Cryptococcus	Termitomyces	3	0.0016		
+SRR1513314	cryptococcus_gattii_complex	RB59	PRJNA254979	PAIRED	16619167	done	alpha			0.09	12.99	12.17	0.0065	0.9936	trace_a	1865	383	18	352		a alpha	ok	Cryptococcus	Tricholoma	3	0.0017		
+SRR6407151	cryptococcus_gattii_complex		PRJNA388113	PAIRED	3497014	done	alpha			0.32	43.04	39.52	0.0078	0.9940	trace_a	1396	271	25	1649		a alpha	ok	Cryptococcus	Colletotrichum	31	0.0106		
+SRR7345534	cryptococcus_gattii_complex	MF_60	PRJNA476154	PAIRED	6110295	done	low_depth			0.08	0.00	0.24	0.0012	0.0000	-	302	83	73	1562		a alpha	ok	Cryptococcus	Mortierella	3	0.0043		
+SRR5575274	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5885932	done	a			14.66	0.03	13.20	0.9759	0.0070	trace_alpha	632	103	17	424		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR13810219	cryptococcus_gattii_complex	RB15	PRJNA704667	PAIRED	5722658	done	alpha			0.19	23.94	24.31	0.0064	0.9940	trace_a	691	146	83	4479		a alpha	mixed	Cryptococcus	Verticillium	49	0.0244	yes	
+SRR8653983	cryptococcus_gattii_complex	R265	PRJNA525019	PAIRED	8829417	done	alpha			0.10	14.65	13.95	0.0064	0.9940	trace_a	609	172	45	1328		a alpha	ok	Cryptococcus	Saccharomyces	3	0.0017		
+SRR13742188	cryptococcus_gattii_complex	Cg188	PRJNA702892	PAIRED	4072944	done	alpha			0.15	17.75	17.87	0.0067	0.8933	trace_a	514	159	44	2051		a alpha	ok	Cryptococcus	Colletotrichum	12	0.006		
+SRR14698322	cryptococcus_gattii_complex	G14	PRJNA721775	PAIRED	18876309	done	alpha			0.13	18.60	19.43	0.0080	0.8835	trace_a	2320	330	20	727		a alpha	ok	Cryptococcus	Penicillium	8	0.0037		
+SRR27350403	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11233928	done	alpha			0.17	24.75	23.44	0.0068	0.9706	trace_a	1048	109	18	712		a alpha	ok	Cryptococcus	Boletus	2	0.0011		
+SRR1511014	cryptococcus_gattii_complex	98.1132	PRJNA254979	PAIRED	13683059	done	alpha			0.10	12.91	13.00	0.0072	0.8919	trace_a	1735	338	17	426		a alpha	ok	Cryptococcus	Aspergillus	5	0.0028		
+SRR6407137	cryptococcus_gattii_complex		PRJNA388113	PAIRED	3164908	done	alpha			0.30	36.12	35.75	0.0089	0.8860	trace_a	1345	293	25	1394		a alpha	ok	Cryptococcus	Colletotrichum	30	0.0092		
+SRR7345533	cryptococcus_gattii_complex	MF_53	PRJNA476154	PAIRED	6039737	done	low_depth			0.08	0.00	0.37	0.0012	0.0000	-	307	15	34	389		a alpha	ok	Cryptococcus	Colletotrichum	3	0.0043		
+SRR5575275	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5769647	done	a			13.77	0.02	12.86	0.9759	0.0061	trace_alpha	615	153	17	456		a alpha	ok	Cryptococcus	Pyricularia	3	0.0017		
+SRR13810233	cryptococcus_gattii_complex	RA4	PRJNA704667	PAIRED	5624727	done	alpha			0.16	24.31	23.95	0.0068	0.9940	trace_a	698	210	48	2609		a alpha	ok	Cryptococcus	Aspergillus	5	0.0028		
+SRR8653990	cryptococcus_gattii_complex	RBB17	PRJNA525019	PAIRED	8071981	done	alpha			0.09	10.52	11.55	0.0066	0.9940	trace_a	543	92	17	409		a alpha	ok	Cryptococcus	Austropuccinia	4	0.002		
+SRR13742191	cryptococcus_gattii_complex	Cg158	PRJNA702892	PAIRED	3183101	done	alpha			0.16	18.03	18.25	0.0077	0.8939	trace_a	401	69	21	695		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0035		
+SRR14698315	cryptococcus_gattii_complex	G1	PRJNA721775	PAIRED	23855852	done	alpha			0.12	20.30	19.88	0.0063	0.9630	trace_a	2935	419	19	624		a alpha	ok	Cryptococcus	Fusarium	6	0.0028		
+SRR27350432	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11250544	done	a			25.06	0.03	24.07	0.9580	0.0007	trace_alpha	1064	201	42	2055		a alpha	ok	Cryptococcus	Termitomyces	3	0.0016		
+SRR1513312	cryptococcus_gattii_complex	V6	PRJNA254979	PAIRED	13075869	done	alpha			0.12	14.06	13.77	0.0301	0.9710	trace_a	1620	757	39	1123		a alpha	mixed	Cryptococcus	Saccharomyces	39	0.0203	yes	
+SRR6407148	cryptococcus_gattii_complex		PRJNA388113	PAIRED	3096994	done	alpha			0.36	51.37	47.89	0.0079	0.9940	trace_a	994	4107	46	2650		a alpha	ok	Cryptococcus	Colletotrichum	36	0.017		
+SRR7345543	cryptococcus_gattii_complex	MF_3	PRJNA476154	PAIRED	6004550	done	low_depth			0.09	0.00	0.23	0.0014	0.0000	-	293	11	34	363		a alpha	ok	Cryptococcus	Trichoderma	2	0.0031		
+SRR5575282	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5637526	done	alpha			0.12	12.77	11.59	0.0262	0.9940	trace_a	608	96	17	441		a alpha	ok	Cryptococcus	Boletus	3	0.0017		
+SRR13810227	cryptococcus_gattii_complex	RA9	PRJNA704667	PAIRED	5486988	done	alpha			0.17	23.77	23.25	0.0065	0.9940	trace_a	685	76	19	655		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR8653982	cryptococcus_gattii_complex	RBB17	PRJNA525019	PAIRED	7842358	done	alpha			0.10	9.33	18.19	0.0065	0.9915	trace_a	535	38	17	444		a alpha	ok	Cryptococcus	Penicillium	5	0.0028		
+SRR13742180	cryptococcus_gattii_complex	Cg460	PRJNA702892	PAIRED	2660325	done	a			21.27	0.03	20.08	0.9995	0.0013	trace_alpha	329	63	21	587		a alpha	ok	Cryptococcus	Fusarium	5	0.0025		
+SRR14698320	cryptococcus_gattii_complex	G10	PRJNA721775	PAIRED	31758022	done	alpha			0.17	20.88	20.26	0.0073	0.9706	trace_a	4007	814	19	550		a alpha	ok	Cryptococcus	Colletotrichum	9	0.0043		
+SRR27350433	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11251482	done	alpha			0.18	21.25	20.31	0.0067	0.8863	trace_a	1066	5856	32	1113		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR1511013	cryptococcus_gattii_complex	93.980	PRJNA254979	PAIRED	12789809	done	alpha			0.11	11.82	11.89	0.0074	0.8910	trace_a	1622	130	17	469		a alpha	ok	Cryptococcus	Botrytis	2	0.0011		
+SRR6407140	cryptococcus_gattii_complex		PRJNA388113	PAIRED	3037793	done	alpha			0.31	48.82	45.50	0.0072	0.9618	trace_a	984	88	25	1589		a alpha	ok	Cryptococcus	Aspergillus	27	0.0126		
+SRR7345546	cryptococcus_gattii_complex	MF_11	PRJNA476154	PAIRED	5899297	done	low_depth			0.09	0.00	0.21	0.0012	0.0000	-	288	68	35	345		a alpha	ok	Cryptococcus	Trichoderma	3	0.0045		
+SRR5575276	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5453998	done	a			12.50	0.03	11.80	0.9759	0.0044	trace_alpha	586	69	17	454		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR13810220	cryptococcus_gattii_complex	RB14	PRJNA704667	PAIRED	5153361	done	alpha			0.18	24.72	22.76	0.0068	0.9940	trace_a	633	35	20	766		a alpha	ok	Cryptococcus	Apiospora	4	0.0022		
+SRR8653981	cryptococcus_gattii_complex	RBB17	PRJNA525019	PAIRED	7473163	done	alpha			0.07	5.25	10.79	0.0064	0.9691	trace_a	506	237	41	1873		a alpha	ok	Cryptococcus	Fusarium	8	0.0035		
+SRR27350352	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11315004	done	a			24.51	0.03	25.12	0.9585	0.0007	trace_alpha	1014	85	17	776		a alpha	ok	Cryptococcus	Boletus	3	0.0016		
+SRR1513324	cryptococcus_gattii_complex	EJB17	PRJNA254979	PAIRED	13203368	done	alpha			0.10	13.10	12.00	0.0097	0.9940	trace_a	1424	296	74	2204		a alpha	ok	Cryptococcus	Fusarium	4	0.0022		
+SRR6407131	cryptococcus_gattii_complex		PRJNA388113	PAIRED	9026606	done	alpha			0.12	11.50	11.38	0.0108	0.8885	trace_a	1211	575	41	1151		a alpha	ok	Cryptococcus	Mycena	7	0.0037		
+SRR7345545	cryptococcus_gattii_complex	MF_10	PRJNA476154	PAIRED	5876150	done	low_depth			0.08	0.00	0.20	0.0012	0.0000	-	287	100	67	2059		a alpha	ok	Cryptococcus	Trichoderma	2	0.003		
+SRR5575345	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5433843	done	a			13.63	0.02	12.33	0.9760	0.0090	trace_alpha	582	75	17	439		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR13810221	cryptococcus_gattii_complex	RB2	PRJNA704667	PAIRED	5083082	done	alpha			0.19	25.56	24.53	0.0070	0.9940	trace_a	632	55	20	743		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR8653991	cryptococcus_gattii_complex	RBB18	PRJNA525019	PAIRED	7306097	done	alpha			0.08	11.17	15.08	0.0065	0.9940	trace_a	493	76	18	375		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR27350362	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11321974	done	alpha			0.15	23.24	24.30	0.0065	0.9704	trace_a	1022	240	17	739		a alpha	ok	Cryptococcus	Boletus	3	0.0016		
+SRR1513327	cryptococcus_gattii_complex	NT13	PRJNA254979	PAIRED	13112186	done	alpha			0.10	13.47	12.89	0.0071	0.9791	trace_a	1480	231	18	407		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR6407146	cryptococcus_gattii_complex		PRJNA388113	PAIRED	2740376	done	alpha			0.27	36.10	32.69	0.0084	0.9941	trace_a	1193	207	25	1549		a alpha	ok	Cryptococcus	Colletotrichum	39	0.0122		
+SRR7345531	cryptococcus_gattii_complex	MF_38	PRJNA476154	PAIRED	5612518	done	low_depth			0.08	0.00	0.55	0.0012	0.0000	-	314	84	34	359		a alpha	ok	Cryptococcus	Penicillium	4	0.0056		
+SRR5575343	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5345853	done	a			13.79	0.04	12.83	0.9759	0.0209	trace_alpha	573	179	16	373		a alpha	ok	Cryptococcus	Gigaspora	3	0.0017		
+SRR13810225	cryptococcus_gattii_complex	RB1	PRJNA704667	PAIRED	5070249	done	alpha			0.17	23.46	22.45	0.0069	0.9942	trace_a	641	298	19	544		a alpha	ok	Cryptococcus	Colletotrichum	5	0.0027		
+SRR8653994	cryptococcus_gattii_complex	RBB18	PRJNA525019	PAIRED	6357125	done	alpha			0.11	6.89	16.45	0.0070	0.9829	trace_a	428	63	18	485		a alpha	ok	Cryptococcus	Penicillium	5	0.0027		
+SRR27350401	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11339949	done	alpha			0.18	21.51	23.06	0.0069	0.8830	trace_a	1056	131	17	697		a alpha	ok	Cryptococcus	Talaromyces	2	0.0011		
+SRR1511483	cryptococcus_gattii_complex	B7395	PRJNA254979	PAIRED	13072169	done	alpha			0.09	12.57	11.75	0.0065	0.9940	trace_a	1296	179	18	369		a alpha	ok	Cryptococcus	Aspergillus	10	0.0055		
+SRR6407147	cryptococcus_gattii_complex		PRJNA388113	PAIRED	2736348	done	alpha			0.35	51.77	48.89	0.0078	0.9940	trace_a	866	170	24	1489		a alpha	ok	Cryptococcus	Aspergillus	27	0.0129		
+SRR7345525	cryptococcus_gattii_complex	MF_7	PRJNA476154	PAIRED	5470669	done	low_depth			0.07	0.00	0.10	0.0012	0.0000	-	281	65	34	371		a alpha	ok	Cryptococcus	Penicillium	4	0.0054		
+SRR5575263	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	5037226	done	alpha			0.13	13.87	13.64	0.0255	0.9940	trace_a	539	112	17	460		a alpha	ok	Cryptococcus	Rhizopus	3	0.0017		
+SRR13810231	cryptococcus_gattii_complex	R265	PRJNA704667	PAIRED	4962920	done	alpha			0.17	23.69	22.94	0.0070	0.9940	trace_a	619	91	20	795		a alpha	ok	Cryptococcus	Fusarium	3	0.0016		
+SRR10499336	cryptococcus_gattii_complex	RBB18	PRJNA525019	PAIRED	38974086	done	alpha			0.13	20.96	26.21	0.0070	0.9940	trace_a	3804	360	19	791		a alpha	ok	Cryptococcus	Aspergillus	11	0.0052		
+SRR27350377	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11345436	done	a			24.22	0.02	23.49	0.9520	0.0011	trace_alpha	1080	135	18	758		a alpha	ok	Cryptococcus	Fusarium	5	0.0027		
+SRR1513339	cryptococcus_gattii_complex	VBGc11	PRJNA254979	PAIRED	12185055	done	a			15.06	0.37	14.08	0.9759	0.2861	trace_alpha	1507	378	16	360		a alpha	ok	Cryptococcus	Neurospora	3	0.0017		
+SRR6407144	cryptococcus_gattii_complex		PRJNA388113	PAIRED	2549534	done	alpha			0.26	38.39	36.90	0.0091	0.9723	trace_a	1091	242	25	1320		a alpha	ok	Cryptococcus	Colletotrichum	30	0.0092		
+SRR7345529	cryptococcus_gattii_complex	MF_36	PRJNA476154	PAIRED	5411137	done	low_depth			0.08	0.00	0.23	0.0013	0.0000	-	279	94	34	383		a alpha	ok	Cryptococcus	Colletotrichum	2	0.0026		
+SRR5575277	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	4888959	done	a			14.70	0.02	13.55	0.9759	0.0025	trace_alpha	522	100	16	419		a alpha	ok	Cryptococcus	Termitomyces	2	0.0011		
+SRR13810229	cryptococcus_gattii_complex	RA5	PRJNA704667	PAIRED	4799036	done	alpha			0.20	24.15	24.05	0.0068	0.9940	trace_a	590	168	19	627		a alpha	mixed	Cryptococcus	Verticillium	38	0.0192	yes	
+SRR27350426	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11349146	done	alpha			0.15	19.00	20.51	0.0070	0.8854	trace_a	1081	234	18	631		a alpha	ok	Cryptococcus	Penicillium	2	0.0011		
+SRR1513318	cryptococcus_gattii_complex	R272	PRJNA254979	PAIRED	12393924	done	alpha			0.08	11.50	11.50	0.0087	0.9703	trace_a	1330	243	18	380		a alpha	ok	Cryptococcus	Fusarium	4	0.0022		
+SRR6407145	cryptococcus_gattii_complex		PRJNA388113	PAIRED	2394452	done	alpha			0.27	38.84	35.34	0.0088	0.9941	trace_a	1024	135	25	1749		a alpha	ok	Cryptococcus	Colletotrichum	39	0.0121		
+SRR7345540	cryptococcus_gattii_complex	SA03	PRJNA476154	PAIRED	5382452	done	low_depth			0.07	0.00	0.52	0.0010	0.0000	-	309	17	35	383		a alpha	ok	Cryptococcus	Penicillium	3	0.004		
+SRR5575278	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	4516476	done	alpha			0.13	12.93	12.25	0.0473	0.9940	trace_a	482	25	17	435		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR27295212	cryptococcus_gattii_complex	YQJ078	PRJNA1054030	PAIRED	8631212	done	alpha			0.18	21.19	21.33	0.0065	0.8854	trace_a	884	91	18	693		a alpha	ok	Cryptococcus	Colletotrichum	5	0.0027		
+SRR1511484	cryptococcus_gattii_complex	V26	PRJNA254979	PAIRED	11586891	done	alpha			0.11	14.16	13.90	0.0103	0.9706	trace_a	1450	160	17	460		a alpha	ok	Cryptococcus	Paracoccidioides	2	0.0011		
+SRR6407152	cryptococcus_gattii_complex		PRJNA388113	PAIRED	2365697	done	alpha			0.26	37.69	34.78	0.0079	0.9945	trace_a	1017	91	25	1734		a alpha	ok	Cryptococcus	Colletotrichum	39	0.0119		
+SRR7345527	cryptococcus_gattii_complex	MF_35	PRJNA476154	PAIRED	5217776	done	low_depth			0.06	0.00	0.13	0.0010	0.0000	-	269	60	35	381		a alpha	ok	Cryptococcus	Puccinia	3	0.0039		
+SRR5575344	cryptococcus_gattii_complex	R265axNIH444	PRJNA387047	PAIRED	4498199	done	alpha			0.10	12.78	12.80	0.0190	0.9940	trace_a	480	28	17	447		a alpha	ok	Cryptococcus	Pyricularia	2	0.0011		
+SRR27350428	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11377007	done	a			26.02	0.03	23.73	0.9995	0.0005	trace_alpha	1077	93	18	727		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR1513315	cryptococcus_gattii_complex	R498	PRJNA254979	PAIRED	11857452	done	alpha			0.10	13.32	12.45	0.0066	0.9940	trace_a	1327	111	18	454		a alpha	ok	Cryptococcus	Ceratocystis	2	0.0011		
+SRR6407135	cryptococcus_gattii_complex		PRJNA388113	PAIRED	2004009	done	alpha			0.43	47.11	46.90	0.0087	0.8829	trace_a	650	87	60	5092		a alpha	ok	Cryptococcus	Colletotrichum	33	0.0155		
+SRR7345532	cryptococcus_gattii_complex	MF_31	PRJNA476154	PAIRED	5122369	done	low_depth			0.07	0.00	0.17	0.0012	0.0000	-	265	13	34	385		a alpha	ok	Cryptococcus	Penicillium	2	0.0025		
+SRR27350431	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11385743	done	alpha			0.18	21.41	23.73	0.0072	0.8855	trace_a	1095	106	18	690		a alpha	ok	Cryptococcus	Boletus	3	0.0016		
+SRR1511423	cryptococcus_gattii_complex	CBS1930	PRJNA254979	PAIRED	11427912	done	a			14.69	0.11	13.98	0.9765	0.0772	trace_alpha	1430	210	17	444		a alpha	ok	Cryptococcus	Puccinia	3	0.0017		
+SRR6407138	cryptococcus_gattii_complex		PRJNA388113	PAIRED	1907258	done	alpha			0.24	26.92	26.03	0.0094	0.8844	trace_a	834	69	16	1615		a alpha	ok	Cryptococcus	Aspergillus	57	0.0186		
+SRR7345530	cryptococcus_gattii_complex	MF_4	PRJNA476154	PAIRED	4955410	done	low_depth			0.07	0.00	0.09	0.0012	0.0001	-	258	72	34	370		a alpha	ok	Cryptococcus	Aspergillus	3	0.0037		
+SRR27350434	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11406638	done	alpha			0.18	22.53	23.20	0.0068	0.8855	trace_a	1080	170	20	721		a alpha	ok	Cryptococcus	Epichloe	4	0.0022		
+SRR1511433	cryptococcus_gattii_complex	78-5-46	PRJNA254979	PAIRED	11451915	done	alpha			0.10	12.38	12.05	0.0071	0.8856	trace_a	1282	270	18	458		a alpha	ok	Cryptococcus	Candida	4	0.0022		
+SRR6407136	cryptococcus_gattii_complex		PRJNA388113	PAIRED	1905854	done	alpha			0.38	43.78	42.93	0.0086	0.8826	trace_a	615	173	14	1361		a alpha	ok	Cryptococcus	Aspergillus	25	0.012		
+SRR7345536	cryptococcus_gattii_complex	MF_29	PRJNA476154	PAIRED	4231945	done	low_depth			0.06	0.00	0.17	0.0012	0.0001	-	229	12	34	345		a alpha	ok	Cryptococcus	Penicillium	2	0.0022		
+SRR27350398	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11444303	done	alpha			0.15	24.43	24.26	0.0062	0.9450	trace_a	1073	138	43	2772		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR1511165	cryptococcus_gattii_complex	WA861	PRJNA254979	PAIRED	10952954	done	alpha			0.14	12.74	13.04	0.0091	0.8860	trace_a	1389	149	17	468		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR6407143	cryptococcus_gattii_complex		PRJNA388113	PAIRED	1644551	done	alpha			0.32	39.34	38.36	0.0080	0.8816	trace_a	499	73	12	1126		a alpha	ok	Cryptococcus	Aspergillus	19	0.0096		
+SRR27350348	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11461894	done	alpha			0.17	23.01	24.03	0.0070	0.8852	trace_a	1034	120	17	588		a alpha	ok	Cryptococcus	Candida	3	0.0016		
+SRR1511452	cryptococcus_gattii_complex	99/473-1	PRJNA254979	PAIRED	11122006	done	alpha			0.08	11.65	10.54	0.0092	0.9709	trace_a	1194	150	18	423		a alpha	ok	Cryptococcus	Fusarium	10	0.0055		
+SRR6407150	cryptococcus_gattii_complex		PRJNA388113	PAIRED	1279086	done	alpha			0.19	26.46	24.45	0.0072	0.9940	trace_a	417	50	10	883		a alpha	ok	Cryptococcus	Aspergillus	7	0.0036		
+SRR27350412	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11481878	done	alpha			0.18	21.36	21.79	0.0070	0.8861	trace_a	1078	4678	36	1155		a alpha	ok	Cryptococcus	Fusarium	3	0.0016		
+SRR1511158	cryptococcus_gattii_complex	ICB182	PRJNA254979	PAIRED	10638582	done	alpha			0.10	12.27	12.65	0.0098	0.8893	trace_a	1356	229	17	467		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR6407149	cryptococcus_gattii_complex		PRJNA388113	PAIRED	52356771	done	alpha			0.06	7.39	6.84	0.0074	0.9928	trace_a	4947	2213	38	864		a alpha	ok	Cryptococcus	Colletotrichum	6	0.0032		
+SRR27350388	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11483608	done	alpha			0.15	20.64	21.73	0.0074	0.8847	trace_a	1064	225	18	685		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR1513313	cryptococcus_gattii_complex	RB1	PRJNA254979	PAIRED	10957352	done	alpha			0.09	13.49	12.68	0.0064	0.9940	trace_a	1191	218	39	1591		a alpha	ok	Cryptococcus	Penicillium	3	0.0017		
+SRR27350410	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11502813	done	alpha			0.20	21.87	22.40	0.0070	0.8824	trace_a	1080	158	43	1670		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR1511422	cryptococcus_gattii_complex	B9588	PRJNA254979	PAIRED	10409165	done	alpha			0.09	14.25	13.71	0.0066	0.9713	trace_a	1283	74	17	394		a alpha	mixed	Cryptococcus	Saccharomyces	31	0.0164	yes	
+SRR27350361	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11505081	done	alpha			0.23	21.25	23.38	0.0091	0.8857	trace_a	1047	181	17	492		a alpha	ok	Cryptococcus	Sporothrix	3	0.0016		
+SRR1513844	cryptococcus_gattii_complex	R265	PRJNA254979	PAIRED	10261656	done	alpha			0.09	13.67	12.78	0.0077	0.9940	trace_a	1411	115	17	471		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR27350411	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11525444	done	alpha			0.16	22.20	22.15	0.0072	0.8859	trace_a	1071	57	18	739		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR1511426	cryptococcus_gattii_complex	EJB87	PRJNA254979	PAIRED	9965497	done	alpha			0.11	12.69	12.58	0.0075	0.8821	trace_a	1233	268	17	325		a alpha	mixed	Cryptococcus	Saccharomyces	27	0.0149		
+SRR27350357	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11528861	done	alpha			0.17	21.66	23.95	0.0073	0.8805	trace_a	1049	203	17	488		a alpha	ok	Cryptococcus	Fusarium	5	0.0027		
+SRR1511166	cryptococcus_gattii_complex	WM178	PRJNA254979	PAIRED	9258744	done	alpha			0.07	13.14	13.11	0.0096	0.9617	trace_a	1176	66	17	395		a alpha	ok	Cryptococcus	Candida	3	0.0017		
+SRR27350370	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11552706	done	alpha			0.16	22.66	22.77	0.0066	0.9082	trace_a	1051	202	18	638		a alpha	ok	Cryptococcus	Boletus	3	0.0016		
+SRR1511480	cryptococcus_gattii_complex	RDH6	PRJNA254979	PAIRED	9225543	done	alpha			0.11	14.03	13.45	0.0090	0.9706	trace_a	1166	325	17	458		a alpha	ok	Cryptococcus	Colletotrichum	2	0.0011		
+SRR27350368	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11556981	done	alpha			0.18	27.69	24.64	0.0065	0.9707	trace_a	1050	102	18	730		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR1511421	cryptococcus_gattii_complex	2003.125	PRJNA254979	PAIRED	9030045	done	alpha			0.10	12.52	12.83	0.0104	0.8904	trace_a	1143	510	39	1323		a alpha	ok	Cryptococcus	Candida	3	0.0017		
+SRR27350344	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11562216	done	alpha			0.18	20.80	22.39	0.0074	0.8912	trace_a	1060	96	18	727		a alpha	ok	Cryptococcus	Fusarium	4	0.0021		
+SRR1511424	cryptococcus_gattii_complex	CBS7750	PRJNA254979	PAIRED	8836098	done	alpha			0.12	14.36	13.62	0.0068	0.9940	trace_a	1092	103	17	446		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR27350427	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11591468	done	alpha			0.17	24.46	24.51	0.0067	0.9703	trace_a	1107	123	17	705		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR1511162	cryptococcus_gattii_complex	NT8	PRJNA254979	PAIRED	8729836	done	alpha			0.10	13.03	13.52	0.0074	0.9082	trace_a	1106	299	16	433		a alpha	ok	Cryptococcus	Termitomyces	2	0.0011		
+SRR27350376	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11605834	done	alpha			0.21	22.41	23.17	0.0078	0.8806	trace_a	1107	298	18	638		a alpha	ok	Cryptococcus	Boletus	3	0.0016		
+SRR1511427	cryptococcus_gattii_complex	IP96/1120-1	PRJNA254979	PAIRED	8530416	done	alpha			0.10	11.91	11.46	0.0146	0.8840	trace_a	1064	104	17	459		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR27295218	cryptococcus_gattii_complex	YQJ115	PRJNA1054030	PAIRED	8377538	done	alpha			0.16	23.42	23.47	0.0065	0.9705	trace_a	859	158	17	767		a alpha	ok	Cryptococcus	Aspergillus	5	0.0026		
+SRR1511161	cryptococcus_gattii_complex	NT3	PRJNA254979	PAIRED	8281752	done	alpha			0.10	12.98	13.19	0.0096	0.9118	trace_a	1053	193	17	367		a alpha	ok	Cryptococcus	Cladosporium	1	0.0006		
+SRR27295217	cryptococcus_gattii_complex	YQJ266	PRJNA1054030	PAIRED	8323685	done	alpha			0.18	23.04	22.41	0.0066	0.9713	trace_a	855	200	17	637		a alpha	ok	Cryptococcus	Aspergillus	1	0.0005		
+SRR1513320	cryptococcus_gattii_complex	ICB107	PRJNA254979	PAIRED	7949871	done	alpha			0.07	10.35	9.70	0.0065	0.9925	trace_a	787	331	45	890		a alpha	ok	Cryptococcus	Trichoderma	26	0.0136		
+SRR27350346	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11678861	done	alpha			0.16	22.83	24.02	0.0072	0.8817	trace_a	1061	202	18	729		a alpha	ok	Cryptococcus	Penicillium	2	0.0011		
+SRR1511425	cryptococcus_gattii_complex	EJB18	PRJNA254979	PAIRED	6521379	done	alpha			0.11	12.14	12.43	0.0102	0.8818	trace_a	806	133	17	441		a alpha	mixed	Cryptococcus	Saccharomyces	41	0.0213	yes	
+SRR27350405	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11692986	done	alpha			0.14	24.44	23.45	0.0072	0.9705	trace_a	1120	158	41	2564		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR1511159	cryptococcus_gattii_complex	ICB183	PRJNA254979	PAIRED	6511113	done	alpha			0.15	12.41	12.86	0.0147	0.8876	trace_a	826	377	42	1907		a alpha	ok	Cryptococcus	Morchella	4	0.0022		
+SRR27350402	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11790806	done	alpha			0.17	25.62	24.29	0.0064	0.9940	trace_a	1129	209	18	777		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR1513322	cryptococcus_gattii_complex	NIH444	PRJNA254979	PAIRED	25047814	done	alpha			0.10	13.22	12.05	0.0065	0.9940	trace_a	2797	976	18	318		a alpha	ok	Cryptococcus	Termitomyces	4	0.0022		
+SRR27295230	cryptococcus_gattii_complex	YQJ003	PRJNA1054030	PAIRED	8202784	done	a			23.87	0.03	24.51	0.9585	0.0008	trace_alpha	842	444	36	1725		a alpha	ok	Cryptococcus	Trichophyton	3	0.0016		
+SRR27350347	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11798326	done	alpha			0.14	20.30	19.67	0.0065	0.8845	trace_a	1121	287	18	779		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR27350349	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11852724	done	alpha			0.17	20.97	22.76	0.0071	0.8844	trace_a	1083	276	17	777		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR27350345	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11860948	done	alpha			0.14	20.78	23.09	0.0070	0.8813	trace_a	1082	262	17	786		a alpha	ok	Cryptococcus	Aspergillus	4	0.0021		
+SRR27350406	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11899330	done	alpha			0.17	24.45	24.01	0.0070	0.9705	trace_a	1134	347	18	778		a alpha	ok	Cryptococcus	Candida	3	0.0016		
+SRR27350415	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11903253	done	alpha			0.17	22.24	23.78	0.0070	0.8811	trace_a	1108	308	17	708		a alpha	ok	Cryptococcus	Austropuccinia	3	0.0016		
+SRR27350391	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11907777	done	alpha			0.19	21.69	23.41	0.0072	0.8878	trace_a	1128	665	69	4457		a alpha	ok	Cryptococcus	Puccinia	2	0.0011		
+SRR27350393	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11916230	done	alpha			0.16	23.98	20.88	0.0061	0.9610	trace_a	1104	306	18	785		a alpha	ok	Cryptococcus	Funneliformis	6	0.0033		
+SRR27350429	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11933611	done	alpha			0.18	22.31	23.39	0.0071	0.8805	trace_a	1135	374	17	668		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR27295231	cryptococcus_gattii_complex	YQJ002	PRJNA1054030	PAIRED	8060023	done	a			24.26	0.02	23.36	0.9585	0.0007	trace_alpha	819	194	17	705		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0038		
+SRR27350356	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11958253	done	alpha			0.15	21.04	21.81	0.0074	0.8848	trace_a	1084	577	36	1955		a alpha	ok	Cryptococcus	Aspergillus	5	0.0028		
+SRR27295226	cryptococcus_gattii_complex	YQJ108	PRJNA1054030	PAIRED	8032414	done	alpha			0.17	21.83	21.73	0.0063	0.9610	trace_a	816	241	18	779		a alpha	ok	Cryptococcus	Aspergillus	6	0.0032		
+SRR27295214	cryptococcus_gattii_complex	YQJ064	PRJNA1054030	PAIRED	8032273	done	alpha			0.16	23.36	23.06	0.0068	0.9705	trace_a	829	180	17	749		a alpha	ok	Cryptococcus	Colletotrichum	4	0.0021		
+SRR27350409	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11970267	done	alpha			0.17	22.01	21.66	0.0069	0.8819	trace_a	1110	240	18	744		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR27350414	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11988081	done	alpha			0.15	21.33	21.46	0.0070	0.8811	trace_a	1111	151	18	715		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR27350408	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12003074	done	alpha			0.15	21.86	22.51	0.0070	0.8816	trace_a	1139	178	18	783		a alpha	ok	Cryptococcus	Puccinia	2	0.0011		
+SRR27350417	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12038331	done	alpha			0.15	22.54	22.27	0.0070	0.8916	trace_a	1123	228	17	735		a alpha	ok	Cryptococcus	Aspergillus	7	0.0038		
+SRR27350422	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12068446	done	alpha			0.18	21.67	22.30	0.0065	0.8849	trace_a	1125	258	17	477		a alpha	ok	Cryptococcus	Xylaria	3	0.0016		
+SRR27295219	cryptococcus_gattii_complex	YQJ024	PRJNA1054030	PAIRED	7908053	done	a			24.60	0.03	23.23	0.9585	0.0008	trace_alpha	803	152	18	598		a alpha	ok	Cryptococcus	Aspergillus	5	0.0027		
+SRR27350435	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12192676	done	alpha			0.15	24.71	24.49	0.0067	0.9940	trace_a	1151	399	17	549		a alpha	ok	Cryptococcus	Xylaria	6	0.0032		
+SRR27295211	cryptococcus_gattii_complex	YQJ103	PRJNA1054030	PAIRED	7779174	done	alpha			0.17	21.13	20.44	0.0069	0.8823	trace_a	797	577	35	2201		a alpha	ok	Cryptococcus	Colletotrichum	5	0.0026		
+SRR27295224	cryptococcus_gattii_complex	YQJ110	PRJNA1054030	PAIRED	7710725	done	a			24.62	0.03	23.61	0.9590	0.0008	trace_alpha	792	484	63	4461		a alpha	ok	Cryptococcus	Penicillium	4	0.0021		
+SRR27295227	cryptococcus_gattii_complex	YQJ107	PRJNA1054030	PAIRED	7193776	done	a			24.41	0.03	22.50	0.9591	0.0009	trace_alpha	726	387	36	2380		a alpha	ok	Cryptococcus	Aspergillus	6	0.0032		
+SRR27295216	cryptococcus_gattii_complex	YQJ046	PRJNA1054030	PAIRED	7109382	done	alpha			0.17	22.65	22.05	0.0071	0.9705	trace_a	716	79	18	782		a alpha	ok	Cryptococcus	Colletotrichum	4	0.0022		
+SRR27295223	cryptococcus_gattii_complex	YQJ111	PRJNA1054030	PAIRED	6598993	done	alpha			0.17	23.88	21.74	0.0067	0.9940	trace_a	678	113	17	550		a alpha	ok	Cryptococcus	Hanseniaspora	2	0.0011		
+SRR28807726	cryptococcus_gattii_complex	5907X1	PRJNA1103328	SINGLE	8090272	done	none			0.09	6.06	8.59	0.0057	0.4614	trace_a,trace_alpha	542	262	32	1488		a alpha	ok	Cryptococcus	Fusarium	3	0.0016		
+SRR3707772	cryptococcus_gattii_complex	WM_11_63_AUS_Clin_144	PRJNA289249	PAIRED	10006140	done	alpha			0.15	20.14	20.62	0.0088	0.7847	trace_a	1944	1145	38	1325		a alpha	ok	Cryptococcus	Aspergillus	5	0.0028		
+SRR27350381	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	10810181	done	none			0.26	11.26	14.46	0.0066	0.4427	trace_a,trace_alpha	1003	103	17	664		a alpha	ok	Cryptococcus	Paracoccidioides	1	0.0005		
+SRR14695749	cryptococcus_gattii_complex	G12	PRJNA721774	PAIRED	10394171	done	a			43.56	1.17	19.23	0.7222	0.0691	trace_alpha	1282	109	19	750		a alpha	ok	Cryptococcus	Aspergillus	6	0.0028		
+SRR643937	cryptococcus_gattii_complex		PRJNA183619	PAIRED	13850189	done	low_depth			0.15	0.25	0.23	0.0028	0.1472	-	1578	805	70	1597		a alpha	ok	Cryptococcus	Fusarium	7	0.0081		
+SRR34113473	cryptococcus_gattii_complex	CDCF3016	PRJNA1279626	PAIRED	2694213	done	alpha			0.11	15.45	13.40	0.0071	0.9940	trace_a	277	28	21	609		a alpha	ok	Cryptococcus	Aspergillus	5	0.0024		
+SRR7345547	cryptococcus_gattii_complex	MF_21	PRJNA476154	PAIRED	6559871	done	low_depth			0.00	0.02	0.35	0.0000	0.0003	-	437	250	132	1406		a alpha	ok	Cryptococcus	Colletotrichum	4	0.0065		
+SRR13742189	cryptococcus_gattii_complex	Cg198	PRJNA702892	PAIRED	7953155	done	none			0.19	7.92	10.51	0.0073	0.4493	trace_a,trace_alpha	998	686	52	2601		a alpha	ok	Cryptococcus	Fusarium	13	0.0062		
+SRR822883	cryptococcus_gattii_complex	EJB2	PRJNA191325	PAIRED	3895418	done	none			0.13	5.87	8.22	0.0097	0.4436	trace_a,trace_alpha	528	27	30	431		a alpha	ok	Cryptococcus	Pyrenula	2	0.0011		
+SRR825368	cryptococcus_gattii_complex	NT-10	PRJNA191330	PAIRED	51114338	done	none			0.15	5.10	7.02	0.0107	0.4410	trace_a,trace_alpha	6731	1872	63	1451		a alpha	ok	Cryptococcus	Penicillium	5	0.0028		
+SRR1062980	cryptococcus_gattii_complex	RSA-MW-6610	PRJNA227971	PAIRED	3594544	done	none			0.09	6.41	8.91	0.0060	0.4620	trace_a,trace_alpha	455	33	31	451		a alpha	ok	Cryptococcus	Puccinia	6	0.0033		
+SRR1062965	cryptococcus_gattii_complex	RSA-MW-4243	PRJNA227972	PAIRED	3813060	done	none			0.11	6.11	7.87	0.0070	0.4445	trace_a,trace_alpha	484	21	31	450		a alpha	ok	Cryptococcus	Claviceps	3	0.0017		
+SRR1062978	cryptococcus_gattii_complex	RSA-MW-500	PRJNA227973	PAIRED	4371106	done	none			0.08	6.18	8.31	0.0060	0.4605	trace_a,trace_alpha	549	190	31	308		a alpha	ok	Cryptococcus	Penicillium	6	0.0032		
+SRR1062961	cryptococcus_gattii_complex	RSA-MW-3980	PRJNA227974	PAIRED	3911414	done	none			0.09	6.69	8.72	0.0063	0.4623	trace_a,trace_alpha	494	117	30	351		a alpha	ok	Cryptococcus	Geotrichum	5	0.0027		
+SRR1062956	cryptococcus_gattii_complex	RSA-MW-2399	PRJNA227975	PAIRED	4291005	done	none			0.11	6.34	8.26	0.0073	0.4451	trace_a,trace_alpha	548	34	31	449		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR1062948	cryptococcus_gattii_complex	RSA-MW-2343	PRJNA227976	PAIRED	5000841	done	none			0.08	5.99	8.51	0.0062	0.4609	trace_a,trace_alpha	632	47	31	383		a alpha	ok	Cryptococcus	Fusarium	8	0.0043		
+SRR1105705	cryptococcus_gattii_complex	NIH444	PRJNA232695	PAIRED	9764277	done	alpha			0.10	7.78	9.34	0.0064	0.9923	trace_a	1387	105	17	472		a alpha	ok	Cryptococcus					
+SRR1105724	cryptococcus_gattii_complex	RV20186	PRJNA232696	SINGLE	40837574	done	alpha			0.05	2.04	3.40	0.0181	0.4422	trace_a	2992	380	15	213		a alpha	ok	Cryptococcus	Penicillium	2	0.0011		
+SRR1105727	cryptococcus_gattii_complex	USC1499	PRJNA232698	SINGLE	38732293	done	alpha			0.05	4.12	5.36	0.0205	0.7777	trace_a	2841	257	14	236		a alpha	ok	Cryptococcus	Gigaspora	3	0.0017		
+SRR1105729	cryptococcus_gattii_complex	VMGC3	PRJNA232699	PAIRED	9909989	done	a			9.62	0.01	10.43	0.9728	0.0007	trace_alpha	1409	128	17	398		a alpha	ok	Cryptococcus	Puccinia	1	0.0006		
+SRR14658099	cryptococcus_gattii_complex	PW 039	PRJNA732892	SINGLE	10601046	done	alpha			0.18	23.76	22.01	0.0067	0.9202	trace_a	1015	593	46	2993		a alpha	ok	Cryptococcus	Diaporthe	3	0.0017		
+SRR24010549	cryptococcus_gattii_complex		PRJNA950111	PAIRED	21273782	done	none			0.24	10.24	13.61	0.0063	0.4426	trace_a,trace_alpha	2030	645	20	680		a alpha	mixed	Cryptococcus	Candidozyma	37	0.0174	yes	
+SRR28807728	cryptococcus_gattii_complex	5901X3	PRJNA1103328	SINGLE	7978200	done	none			0.09	5.80	7.95	0.0057	0.4617	trace_a,trace_alpha	533	319	32	1638		a alpha	ok	Cryptococcus	Fusarium	5	0.0028		
+SRR3707775	cryptococcus_gattii_complex	WM_11_938_USA_Clin_78	PRJNA289249	PAIRED	15322493	done	alpha			0.11	11.52	12.12	0.0180	0.7894	trace_a	2103	1604	41	1866		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR27295215	cryptococcus_gattii_complex	YQJ063	PRJNA1054030	PAIRED	9059322	done	none			0.22	10.15	13.04	0.0065	0.4421	trace_a,trace_alpha	922	157	18	783		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR14695769	cryptococcus_gattii_complex	G23	PRJNA721774	PAIRED	11912724	done	none			0.24	9.64	12.36	0.0084	0.4441	trace_a,trace_alpha	1434	208	20	752		a alpha	ok	Cryptococcus	Colletotrichum	10	0.0047		
+SRR643935	cryptococcus_gattii_complex		PRJNA183619	PAIRED	17966948	done	alpha			0.04	4.96	4.75	0.0069	0.7556	trace_a	2339	389	32	299		a alpha	ok	Cryptococcus	Colletotrichum	10	0.0064		
+SRR34113494	cryptococcus_gattii_complex	Cg104un_i	PRJNA1279626	PAIRED	2681560	done	alpha			0.08	15.26	14.87	0.0033	0.9982	trace_a	277	28	21	680		a alpha	ok	Cryptococcus	Fusarium	4	0.0021		
+SRR7345538	cryptococcus_gattii_complex	MF_26	PRJNA476154	PAIRED	5968659	done	low_depth			0.05	0.01	0.21	0.0016	0.0007	-	383	53	36	375		a alpha	ok	Cryptococcus	Fusarium	2	0.003		
+SRR13742181	cryptococcus_gattii_complex	Cg456	PRJNA702892	PAIRED	3688984	done	none			0.21	8.73	12.29	0.0080	0.4484	trace_a,trace_alpha	457	57	21	685		a alpha	ok	Cryptococcus	Aspergillus	10	0.0051		
+SRR28807372	cryptococcus_gattii_complex	2307X1	PRJNA1103328	SINGLE	7638374	done	none			0.11	5.65	8.18	0.0066	0.4436	trace_a,trace_alpha	509	40	16	442		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR3707784	cryptococcus_gattii_complex	WM_1618_MEX_Clin_92	PRJNA289249	PAIRED	14132990	done	alpha			0.09	10.95	11.52	0.0149	0.7940	trace_a	1919	688	17	321		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR27350421	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	10968801	done	none			0.24	10.42	12.88	0.0069	0.4442	trace_a,trace_alpha	1035	4124	37	1175		a alpha	ok	Cryptococcus	Aspergillus	1	0.0006		
+SRR14695770	cryptococcus_gattii_complex	G21	PRJNA721774	PAIRED	12671336	done	none			0.16	9.41	11.98	0.0069	0.4383	trace_a,trace_alpha	1605	1422	39	2409		a alpha	ok	Cryptococcus	Penicillium	10	0.005		
+SRR643919	cryptococcus_gattii_complex		PRJNA183619	PAIRED	11979630	done	a			8.78	0.03	3.33	0.9664	0.0021	trace_alpha	1385	5870	58	533		a alpha	ok	Cryptococcus	Trichoderma	7	0.0088		
+SRR34113461	cryptococcus_gattii_complex	RB14	PRJNA1279626	PAIRED	2533691	done	alpha			0.07	8.95	7.82	0.0065	0.9936	trace_a	261	1343	41	2198		a alpha	ok	Cryptococcus	Aspergillus	2	0.001		
+SRR7345550	cryptococcus_gattii_complex	MF_2	PRJNA476154	PAIRED	5637727	done	low_depth			0.00	0.02	0.18	0.0000	0.0006	-	379	1699	74	1882		a alpha	ok	Cryptococcus	Fusarium	4	0.0055		
+SRR13742183	cryptococcus_gattii_complex	Cg368	PRJNA702892	PAIRED	3448449	done	none			0.18	9.52	12.85	0.0075	0.4455	trace_a,trace_alpha	435	1747	42	1177		a alpha	ok	Cryptococcus	Aspergillus	4	0.0021		
+SRR28807752	cryptococcus_gattii_complex	2501F8	PRJNA1103328	SINGLE	7635346	done	none			0.11	5.78	7.65	0.0063	0.4412	trace_a,trace_alpha	518	2364	33	746		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR3707801	cryptococcus_gattii_complex	WM_1620_MEX_Clin_97	PRJNA289249	PAIRED	16056845	done	alpha			0.08	12.68	12.64	0.0070	0.8483	trace_a	2213	1694	41	1683		a alpha	ok	Cryptococcus	Cordyceps	3	0.0017		
+SRR27350416	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11159571	done	none			0.23	10.75	14.02	0.0068	0.4426	trace_a,trace_alpha	1046	4174	39	1070		a alpha	ok	Cryptococcus	Mycena	4	0.0022		
+SRR14695747	cryptococcus_gattii_complex	G16	PRJNA721774	PAIRED	13130950	done	none			0.23	9.52	11.54	0.0073	0.4426	trace_a,trace_alpha	1571	1549	39	2255		a alpha	ok	Cryptococcus	Penicillium	5	0.0024		
+SRR643934	cryptococcus_gattii_complex		PRJNA183619	PAIRED	18502560	done	none			0.11	31.39	28.21	0.0104	0.3960	trace_a,trace_alpha	2121	1613	73	1477		a alpha	ok	Cryptococcus	Colletotrichum	11	0.0138		
+SRR34113477	cryptococcus_gattii_complex	CBS8755	PRJNA1279626	PAIRED	2526941	done	alpha			0.07	16.25	15.79	0.0036	0.9809	trace_a	260	1290	41	1133		a alpha	ok	Cryptococcus	Fusarium	12	0.0061		
+SRR7345523	cryptococcus_gattii_complex	MF_43	PRJNA476154	PAIRED	5493498	done	low_depth			0.00	0.02	0.22	0.0000	0.0003	-	358	1783	62	827		a alpha	ok	Cryptococcus	Claviceps	1	0.0014		
+SRR13742184	cryptococcus_gattii_complex	Cg367	PRJNA702892	PAIRED	2799623	done	none			0.17	9.37	13.05	0.0077	0.4465	trace_a,trace_alpha	352	1647	38	1109		a alpha	ok	Cryptococcus	Colletotrichum	6	0.0031		
+SRR28807366	cryptococcus_gattii_complex	2301X2	PRJNA1103328	SINGLE	7436866	done	none			0.12	5.81	7.66	0.0074	0.4426	trace_a,trace_alpha	509	2355	31	675		a alpha	ok	Cryptococcus	Fusarium	5	0.0027		
+SRR3707839	cryptococcus_gattii_complex	WM_2063_COL_Clin_85	PRJNA289249	PAIRED	9178271	done	alpha			0.10	22.58	22.83	0.0090	0.9801	trace_a	1802	1351	36	2149		a alpha	ok	Cryptococcus	Fusarium	12	0.0066		
+SRR27350365	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11264102	done	none			0.24	11.40	14.57	0.0062	0.4393	trace_a,trace_alpha	1020	3895	33	1121		a alpha	ok	Cryptococcus	Aspergillus	5	0.0028		
+SRR14695771	cryptococcus_gattii_complex	G20	PRJNA721774	PAIRED	13843720	done	none			0.22	9.19	11.86	0.0072	0.4390	trace_a,trace_alpha	1795	1527	48	2540		a alpha	ok	Cryptococcus	Aspergillus	8	0.0041		
+SRR643918	cryptococcus_gattii_complex		PRJNA183619	PAIRED	10956792	done	none			0.08	1.46	2.58	0.0099	0.2890	trace_a,trace_alpha	1426	1316	57	1426		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0046		
+SRR34113447	cryptococcus_gattii_complex	CgZe142_i	PRJNA1279626	PAIRED	2509059	done	alpha			0.08	15.87	15.67	0.0030	0.9974	trace_a	263	1185	41	1178		a alpha	ok	Cryptococcus	Fusarium	4	0.0021		
+SRR7345524	cryptococcus_gattii_complex	MF_19	PRJNA476154	PAIRED	5249400	done	low_depth			0.00	0.02	0.23	0.0000	0.0003	-	354	1931	64	826		a alpha	ok	Cryptococcus	Claviceps	2	0.0026		
+SRR28807379	cryptococcus_gattii_complex	1607X1	PRJNA1103328	SINGLE	7268958	done	none			0.08	5.98	7.93	0.0058	0.4614	trace_a,trace_alpha	487	2384	30	676		a alpha	ok	Cryptococcus	Diaporthe	4	0.0022		
+SRR3707777	cryptococcus_gattii_complex	WM_11_942_USA_Clin_139	PRJNA289249	PAIRED	16219725	done	alpha			0.09	11.49	11.82	0.0063	0.7869	trace_a	2299	402	17	456		a alpha	ok	Cryptococcus	Mortierella	4	0.0022		
+SRR27350399	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11306602	done	none			0.27	10.97	14.79	0.0063	0.4421	trace_a,trace_alpha	1052	443	37	2227		a alpha	ok	Cryptococcus	Colletotrichum	4	0.0022		
+SRR14695773	cryptococcus_gattii_complex	G18	PRJNA721774	PAIRED	14049832	done	none			0.24	9.66	12.68	0.0077	0.4457	trace_a,trace_alpha	1787	318	19	700		a alpha	ok	Cryptococcus	Aspergillus	7	0.0036		
+SRR643924	cryptococcus_gattii_complex		PRJNA183619	PAIRED	10062728	done	low_depth			0.04	0.05	0.24	0.0072	0.0258	-	1139	221	34	280		a alpha	ok	Cryptococcus	Aspergillus	8	0.0099		
+SRR34113454	cryptococcus_gattii_complex	WM779	PRJNA1279626	PAIRED	2511105	done	none			0.12	7.09	8.76	0.0060	0.4639	trace_a,trace_alpha	260	87	20	581		a alpha	ok	Cryptococcus	Gigaspora	11	0.0045	yes	
+SRR7345528	cryptococcus_gattii_complex	MF_42	PRJNA476154	PAIRED	4901531	done	low_depth			0.00	0.02	0.20	0.0000	0.0003	-	331	19	35	353		a alpha	ok	Cryptococcus	Claviceps	3	0.0036		
+SRR28807743	cryptococcus_gattii_complex	3201F8	PRJNA1103328	SINGLE	7265683	done	none			0.13	5.76	7.70	0.0072	0.4413	trace_a,trace_alpha	494	35	16	406		a alpha	ok	Cryptococcus	Aspergillus	4	0.0023		
+SRR3707853	cryptococcus_gattii_complex	WM_09_44_USA_Vet_62	PRJNA289249	PAIRED	13665960	done	a			14.22	0.03	12.27	0.9952	0.0079	trace_alpha	1915	676	17	447		a alpha	ok	Cryptococcus	Morchella	5	0.0027		
+SRR27350397	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11368159	done	none			0.25	11.12	14.07	0.0066	0.4435	trace_a,trace_alpha	1059	333	18	500		a alpha	ok	Cryptococcus	Fusarium	4	0.0022		
+SRR14695768	cryptococcus_gattii_complex	G24	PRJNA721774	PAIRED	14334341	done	none			0.16	8.88	11.98	0.0075	0.4468	trace_a,trace_alpha	1794	647	19	684		a alpha	ok	Cryptococcus	Aspergillus	9	0.0044		
+SRR643932	cryptococcus_gattii_complex		PRJNA183619	PAIRED	9488866	done	alpha			0.22	43.79	43.67	0.0063	0.8937	trace_a	1093	571	33	257		a alpha	ok	Cryptococcus	Aspergillus	8	0.0097		
+SRR34113455	cryptococcus_gattii_complex	Ram002	PRJNA1279626	PAIRED	2455264	done	alpha			0.08	18.33	12.04	0.0065	0.9708	trace_a	249	31	21	674		a alpha	ok	Cryptococcus	Colletotrichum	5	0.0023		
+SRR28807384	cryptococcus_gattii_complex	1601X4	PRJNA1103328	SINGLE	7249779	done	none			0.08	6.32	8.33	0.0058	0.4616	trace_a,trace_alpha	487	135	16	475		a alpha	ok	Cryptococcus	Phyllosticta	2	0.0011		
+SRR3707827	cryptococcus_gattii_complex	WM_1802_MEX_Clin_100	PRJNA289249	PAIRED	8841080	done	a			15.67	0.15	12.65	0.6186	0.0115	trace_alpha	1772	436	19	753		a alpha	ok	Cryptococcus	Penicillium	3	0.0016		
+SRR27350371	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11385779	done	none			0.24	11.19	14.19	0.0066	0.4427	trace_a,trace_alpha	1080	359	17	587		a alpha	ok	Cryptococcus	Fusarium	5	0.0028		
+SRR14695767	cryptococcus_gattii_complex	G25	PRJNA721774	PAIRED	14743693	done	none			0.21	8.87	10.92	0.0075	0.4436	trace_a,trace_alpha	1825	377	20	611		a alpha	ok	Cryptococcus	Colletotrichum	15	0.0068		
+SRR643931	cryptococcus_gattii_complex		PRJNA183619	PAIRED	8453402	done	none			0.07	12.07	6.10	0.0051	0.3668	trace_a,trace_alpha	980	325	34	304		a alpha	ok	Cryptococcus	Aspergillus	7	0.0084		
+SRR34113475	cryptococcus_gattii_complex	CDCF2866	PRJNA1279626	PAIRED	2334919	done	alpha			0.20	18.44	19.99	0.0317	0.9940	trace_a	232	13	20	744		a alpha	mixed	Cryptococcus	Meira	34	0.0105		
+SRR28807369	cryptococcus_gattii_complex	2307X4	PRJNA1103328	SINGLE	7183592	done	none			0.12	5.51	7.08	0.0069	0.4432	trace_a,trace_alpha	492	19	17	437		a alpha	ok	Cryptococcus	Diaporthe	4	0.0022		
+SRR3707767	cryptococcus_gattii_complex	WM_11_139_USA_Vet_143	PRJNA289249	PAIRED	8326183	done	a			25.79	0.03	22.28	0.9940	0.0017	trace_alpha	1625	381	18	698		a alpha	ok	Cryptococcus	Morchella	6	0.0033		
+SRR27350379	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11409259	done	none			0.20	10.60	13.83	0.0072	0.4382	trace_a,trace_alpha	1064	379	18	728		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR14695775	cryptococcus_gattii_complex	G2	PRJNA721774	PAIRED	4780884	done	none			0.16	8.70	11.14	0.0085	0.4474	trace_a,trace_alpha	606	106	19	721		a alpha	ok	Cryptococcus	Gigaspora	8	0.004		
+SRR643927	cryptococcus_gattii_complex		PRJNA183619	PAIRED	7857340	done	alpha			0.03	4.16	4.84	0.0063	0.7632	trace_a	1024	288	32	361		a alpha	ok	Cryptococcus	Fusarium	9	0.0057		
+SRR34113456	cryptococcus_gattii_complex	RB59JF	PRJNA1279626	PAIRED	2328914	done	alpha			0.18	16.79	13.93	0.0066	0.9936	trace_a	227	68	21	714		a alpha	mixed	Cryptococcus	Meira	120	0.017		
+SRR28807346	cryptococcus_gattii_complex	4914X1	PRJNA1103328	SINGLE	7148959	done	none			0.11	6.06	7.99	0.0064	0.4379	trace_a,trace_alpha	478	191	38	1567		a alpha	ok	Cryptococcus	Colletotrichum	2	0.0011		
+SRR3707769	cryptococcus_gattii_complex	WM11_949_USA_Clin_75	PRJNA289249	PAIRED	12009244	done	alpha			0.08	10.98	11.19	0.0145	0.7870	trace_a	1632	454	41	1684		a alpha	ok	Cryptococcus	Fusarium	13	0.0072		
+SRR27350407	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11459305	done	none			0.25	10.67	13.38	0.0060	0.4415	trace_a,trace_alpha	1086	336	18	705		a alpha	ok	Cryptococcus	Termitomyces	2	0.0011		
+SRR14695752	cryptococcus_gattii_complex	G7	PRJNA721774	PAIRED	4719012	done	none			0.24	9.03	11.94	0.0080	0.4466	trace_a,trace_alpha	608	168	19	712		a alpha	ok	Cryptococcus	Colletotrichum	10	0.005		
+SRR643925	cryptococcus_gattii_complex		PRJNA183619	PAIRED	22234232	done	low_depth			0.22	0.20	0.16	0.0033	0.1106	-	2534	419	34	269		a alpha	ok	Cryptococcus	Aspergillus	6	0.0084		
+SRR28807719	cryptococcus_gattii_complex	5914X3	PRJNA1103328	SINGLE	7089479	done	none			0.08	6.29	8.45	0.0058	0.4624	trace_a,trace_alpha	485	99	17	448		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR3707852	cryptococcus_gattii_complex	WM_09_43_USA_Vet_72	PRJNA289249	PAIRED	7884052	done	alpha			0.17	20.56	21.69	0.0112	0.7883	trace_a	1520	373	44	2321		a alpha	ok	Cryptococcus	Colletotrichum	5	0.0028		
+SRR27350358	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11467890	done	none			0.23	10.89	14.01	0.0087	0.4409	trace_a,trace_alpha	1091	194	17	663		a alpha	ok	Cryptococcus	Aspergillus	1	0.0006		
+SRR14695766	cryptococcus_gattii_complex	G27	PRJNA721774	PAIRED	15578014	done	none			0.22	9.00	11.72	0.0072	0.4442	trace_a,trace_alpha	1837	324	19	746		a alpha	ok	Cryptococcus	Aspergillus	8	0.0035		
+SRR643928	cryptococcus_gattii_complex		PRJNA183619	PAIRED	6774585	done	alpha			0.16	25.10	23.52	0.0072	0.8947	trace_a	761	206	34	346		a alpha	ok	Cryptococcus	Colletotrichum	28	0.026		
+SRR28807099	cryptococcus_gattii_complex	5914F6	PRJNA1103328	SINGLE	7065921	done	none			0.09	6.18	8.32	0.0058	0.4616	trace_a,trace_alpha	479	155	17	432		a alpha	ok	Cryptococcus	Diaporthe	3	0.0017		
+SRR3707761	cryptococcus_gattii_complex	WM_10_17_USA_Vet_76	PRJNA289249	PAIRED	11841901	done	alpha			0.05	13.33	13.32	0.0086	0.9812	trace_a	1668	347	67	2768		a alpha	ok	Cryptococcus	Penicillium	3	0.0016		
+SRR27350367	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11472599	done	none			0.22	11.24	14.52	0.0062	0.4424	trace_a,trace_alpha	1037	368	18	501		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR14695763	cryptococcus_gattii_complex	G4	PRJNA721774	PAIRED	4279812	done	none			0.16	8.18	11.32	0.0074	0.4445	trace_a,trace_alpha	549	116	19	730		a alpha	ok	Cryptococcus	Aspergillus	9	0.0045		
+SRR643929	cryptococcus_gattii_complex		PRJNA183619	PAIRED	5862650	done	alpha			0.13	25.94	25.13	0.0096	0.8874	trace_a	670	114	34	330		a alpha	ok	Cryptococcus	Trichoderma	15	0.0147		
+SRR28807725	cryptococcus_gattii_complex	5907X2	PRJNA1103328	SINGLE	6983475	done	none			0.08	6.11	8.57	0.0057	0.4618	trace_a,trace_alpha	468	88	17	464		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR3707759	cryptococcus_gattii_complex	WM_10_121_USA_Vet_77	PRJNA289249	PAIRED	11722056	done	a			14.17	0.04	12.81	0.9952	0.0113	trace_alpha	1642	163	17	451		a alpha	ok	Cryptococcus	Fusarium	5	0.0027		
+SRR27350392	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11496808	done	none			0.25	11.08	14.16	0.0067	0.4431	trace_a,trace_alpha	1075	143	18	674		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR14695748	cryptococcus_gattii_complex	G15	PRJNA721774	PAIRED	15607312	done	none			0.17	9.69	12.41	0.0066	0.4398	trace_a,trace_alpha	1933	367	80	3805		a alpha	ok	Cryptococcus	Colletotrichum	9	0.0044		
+SRR643930	cryptococcus_gattii_complex		PRJNA183619	PAIRED	24224003	done	alpha			0.35	122.96	112.45	0.0131	0.9945	trace_a	2743	199	34	286		a alpha	ok	Cryptococcus	Fusarium	11	0.014		
+SRR28807359	cryptococcus_gattii_complex	3207X1	PRJNA1103328	SINGLE	6929209	done	none			0.13	5.84	7.47	0.0066	0.4411	trace_a,trace_alpha	475	92	17	312		a alpha	ok	Cryptococcus	Diaporthe	6	0.0034		
+SRR3707802	cryptococcus_gattii_complex	WM_1631_MEX_Clin_98	PRJNA289249	PAIRED	11706390	done	alpha			0.10	11.32	12.52	0.0073	0.7892	trace_a	1646	422	17	339		a alpha	ok	Cryptococcus	Penicillium	4	0.0022		
+SRR27350390	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11505806	done	none			0.21	11.21	13.55	0.0066	0.4448	trace_a,trace_alpha	1080	61	18	668		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR14695774	cryptococcus_gattii_complex	G3	PRJNA721774	PAIRED	3474532	done	none			0.24	8.82	12.03	0.0077	0.4442	trace_a,trace_alpha	445	74	48	2656		a alpha	ok	Cryptococcus	Aspergillus	6	0.003		
+SRR643914	cryptococcus_gattii_complex		PRJNA183619	PAIRED	5360471	done	low_depth			0.08	0.04	0.51	0.0068	0.0212	-	618	53	37	293		a alpha	ok	Cryptococcus	Colletotrichum	8	0.0076		
+SRR28807387	cryptococcus_gattii_complex	2501F7	PRJNA1103328	SINGLE	6923325	done	none			0.09	5.78	7.44	0.0063	0.4408	trace_a,trace_alpha	471	22	17	435		a alpha	ok	Cryptococcus	Diaporthe	4	0.0023		
+SRR3707850	cryptococcus_gattii_complex	WM_178_AUS_Clin	PRJNA289249	PAIRED	12142147	done	alpha			0.16	22.71	21.15	0.0069	0.9613	trace_a	2350	361	18	685		a alpha	ok	Cryptococcus	Fusarium	11	0.0059		
+SRR27350386	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11556029	done	none			0.26	11.07	14.73	0.0062	0.4392	trace_a,trace_alpha	1083	160	17	663		a alpha	ok	Cryptococcus	Talaromyces	2	0.0011		
+SRR14695753	cryptococcus_gattii_complex	G5	PRJNA721774	PAIRED	3242823	done	none			0.24	9.13	12.19	0.0079	0.4469	trace_a,trace_alpha	455	25	20	697		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0034		
+SRR643917	cryptococcus_gattii_complex		PRJNA183619	PAIRED	4189105	done	low_depth			0.06	0.05	0.36	0.0074	0.0322	-	479	99	34	305		a alpha	ok	Cryptococcus	Penicillium	3	0.0025		
+SRR28807368	cryptococcus_gattii_complex	2301X4	PRJNA1103328	SINGLE	6909654	done	none			0.12	5.67	7.25	0.0066	0.4430	trace_a,trace_alpha	465	131	16	432		a alpha	ok	Cryptococcus	Fusarium	4	0.0022		
+SRR3707849	cryptococcus_gattii_complex	WM_179_AUS_Clin	PRJNA289249	PAIRED	12185182	done	none			0.23	10.65	13.41	0.0107	0.4461	trace_a,trace_alpha	2331	349	44	2660		a alpha	ok	Cryptococcus	Aspergillus	13	0.0072		
+SRR27350366	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11562381	done	none			0.23	11.01	14.17	0.0062	0.4393	trace_a,trace_alpha	1048	230	17	653		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR14695765	cryptococcus_gattii_complex	G28	PRJNA721774	PAIRED	17141468	done	none			0.21	8.07	10.14	0.0069	0.4408	trace_a,trace_alpha	2025	375	19	687		a alpha	ok	Cryptococcus	Colletotrichum	17	0.0073		
+SRR643933	cryptococcus_gattii_complex		PRJNA183619	PAIRED	3902659	done	alpha			0.13	18.04	17.39	0.0077	0.8865	trace_a	456	116	37	315		a alpha	ok	Cryptococcus	Colletotrichum	13	0.0103		
+SRR28807718	cryptococcus_gattii_complex	5914X4	PRJNA1103328	SINGLE	6826481	done	none			0.06	6.12	8.26	0.0058	0.4618	trace_a,trace_alpha	463	74	16	406		a alpha	ok	Cryptococcus	Phyllosticta	3	0.0017		
+SRR3707846	cryptococcus_gattii_complex	WM_2423_NZL_Clin_68	PRJNA289249	PAIRED	12230866	done	a			24.86	0.05	22.23	0.9955	0.0075	trace_alpha	2362	418	18	762		a alpha	ok	Cryptococcus	Aspergillus	10	0.0055		
+SRR27350404	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11684969	done	a			49.77	1.32	23.18	0.7266	0.0576	trace_alpha	1123	295	17	737		a alpha	ok	Cryptococcus	Talaromyces	2	0.0011		
+SRR14695772	cryptococcus_gattii_complex	G19	PRJNA721774	PAIRED	19625322	done	none			0.17	8.72	11.46	0.0077	0.4464	trace_a,trace_alpha	2374	466	19	761		a alpha	ok	Cryptococcus	Penicillium	10	0.0045		
+SRR643922	cryptococcus_gattii_complex		PRJNA183619	PAIRED	3571607	done	none			0.08	1.56	2.33	0.0056	0.3118	trace_a,trace_alpha	477	27	33	361		a alpha	ok	Cryptococcus	Colletotrichum	8	0.0046		
+SRR28807382	cryptococcus_gattii_complex	1601X3	PRJNA1103328	SINGLE	6800963	done	none			0.07	6.11	7.96	0.0058	0.4614	trace_a,trace_alpha	453	54	17	412		a alpha	ok	Cryptococcus	Phyllosticta	2	0.0011		
+SRR3707837	cryptococcus_gattii_complex	WM_1916_COL_Env_79	PRJNA289249	PAIRED	7563208	done	alpha			0.09	23.40	23.70	0.0142	0.9813	trace_a	1461	427	19	555		a alpha	ok	Cryptococcus	Trichoderma	16	0.0087		
+SRR27295225	cryptococcus_gattii_complex	YQJ109	PRJNA1054030	PAIRED	8282980	done	none			0.21	10.22	13.41	0.0065	0.4426	trace_a,trace_alpha	845	3962	40	1162		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR14695750	cryptococcus_gattii_complex	G9	PRJNA721774	PAIRED	19897710	done	none			0.21	8.73	11.32	0.0066	0.4447	trace_a,trace_alpha	2457	449	20	781		a alpha	ok	Cryptococcus	Aspergillus	9	0.004		
+SRR643923	cryptococcus_gattii_complex		PRJNA183619	PAIRED	31875542	done	low_depth			0.05	0.06	0.71	0.0088	0.0408	-	3599	704	38	318		a alpha	ok	Cryptococcus	Penicillium	12	0.0162		
+SRR28807107	cryptococcus_gattii_complex	5901F7	PRJNA1103328	SINGLE	6778014	done	none			0.07	6.05	8.43	0.0057	0.4617	trace_a,trace_alpha	460	34	16	425		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR3707778	cryptococcus_gattii_complex	WM_11_943_USA_Clin_140	PRJNA289249	PAIRED	11389476	done	a			11.23	0.04	9.30	0.8110	0.0169	trace_alpha	1572	1236	38	1498		a alpha	ok	Cryptococcus	Rhodotorula	4	0.0022		
+SRR27350420	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11751622	done	none			0.22	11.20	14.18	0.0063	0.4387	trace_a,trace_alpha	1095	134	17	712		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR14695764	cryptococcus_gattii_complex	G29	PRJNA721774	PAIRED	34560744	done	none			0.25	9.05	11.61	0.0073	0.4451	trace_a,trace_alpha	4422	858	48	2619		a alpha	ok	Cryptococcus	Aspergillus	9	0.0044		
+SRR28807744	cryptococcus_gattii_complex	3201F7	PRJNA1103328	SINGLE	6760662	done	none			0.12	5.82	7.87	0.0066	0.4411	trace_a,trace_alpha	456	22	16	398		a alpha	ok	Cryptococcus	Diaporthe	4	0.0022		
+SRR3707774	cryptococcus_gattii_complex	WM_11_937_USA_Vet_61	PRJNA289249	PAIRED	11268892	done	alpha			0.10	10.61	11.08	0.0069	0.9205	trace_a	1594	271	17	461		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0038		
+SRR27350363	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11755090	done	none			0.18	11.13	14.40	0.0065	0.4448	trace_a,trace_alpha	1058	180	18	705		a alpha	ok	Cryptococcus	Xanthoria	2	0.0011		
+SRR28807100	cryptococcus_gattii_complex	5914F5	PRJNA1103328	SINGLE	6747222	done	none			0.07	6.17	8.49	0.0057	0.4620	trace_a,trace_alpha	453	29	17	413		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR3707758	cryptococcus_gattii_complex	WM_09_47_USA_Vet_74	PRJNA289249	PAIRED	12532942	done	alpha			0.17	19.94	21.28	0.0069	0.7884	trace_a	2405	343	18	752		a alpha	ok	Cryptococcus	Aspergillus	8	0.0045		
+SRR27350353	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11764761	done	none			0.27	11.18	13.97	0.0064	0.4428	trace_a,trace_alpha	1062	126	17	637		a alpha	ok	Cryptococcus	Fusarium	3	0.0016		
+SRR28807106	cryptococcus_gattii_complex	5901F8	PRJNA1103328	SINGLE	6741610	done	none			0.07	6.01	7.93	0.0058	0.4624	trace_a,trace_alpha	465	26	16	439		a alpha	ok	Cryptococcus	Fusarium	4	0.0022		
+SRR3707822	cryptococcus_gattii_complex	WM_1665_USA_Clin_66	PRJNA289249	PAIRED	11067448	done	alpha			0.05	12.95	12.98	0.0057	0.9807	trace_a	1558	314	17	465		a alpha	ok	Cryptococcus	Fusarium	9	0.0049		
+SRR27350351	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11842307	done	none			0.18	10.97	14.05	0.0064	0.4421	trace_a,trace_alpha	1073	167	17	558		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR28807361	cryptococcus_gattii_complex	3201X3	PRJNA1103328	SINGLE	6713557	done	none			0.13	5.90	7.82	0.0065	0.4413	trace_a,trace_alpha	451	100	16	383		a alpha	ok	Cryptococcus	Aspergillus	5	0.0028		
+SRR3707840	cryptococcus_gattii_complex	WM_2088_COL_Clin_59	PRJNA289249	PAIRED	12599491	done	a			20.91	0.05	15.74	0.8294	0.0097	trace_alpha	2484	798	19	762		a alpha	ok	Cryptococcus	Aspergillus	19	0.0104		
+SRR27350383	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11864203	done	none			0.23	11.02	14.46	0.0068	0.4372	trace_a,trace_alpha	1105	334	17	499		a alpha	ok	Cryptococcus	Pyricularia	3	0.0017		
+SRR28807347	cryptococcus_gattii_complex	4907X1	PRJNA1103328	SINGLE	6702964	done	none			0.12	6.09	7.98	0.0064	0.4380	trace_a,trace_alpha	459	79	39	1869		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR3707768	cryptococcus_gattii_complex	WM_11_32_USA_Vet_114	PRJNA289249	PAIRED	7146495	done	a			24.53	0.07	20.49	0.9468	0.0211	trace_alpha	1411	315	18	752		a alpha	ok	Cryptococcus	Fusarium	15	0.0082		
+SRR27350389	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11893701	done	none			0.25	10.81	14.21	0.0065	0.4416	trace_a,trace_alpha	1100	187	17	732		a alpha	ok	Cryptococcus	Aspergillus	5	0.0027		
+SRR28807345	cryptococcus_gattii_complex	4914X2	PRJNA1103328	SINGLE	6656885	done	none			0.11	6.06	7.81	0.0065	0.4380	trace_a,trace_alpha	457	45	16	449		a alpha	ok	Cryptococcus	Colletotrichum	3	0.0017		
+SRR3707833	cryptococcus_gattii_complex	WM_1826_MEX_Clin_75	PRJNA289249	PAIRED	10647096	done	alpha			0.10	11.41	12.10	0.0065	0.7900	trace_a	1475	117	41	1607		a alpha	ok	Cryptococcus	Fusarium	5	0.0028		
+SRR27350375	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11913643	done	none			0.23	11.18	14.61	0.0062	0.4423	trace_a,trace_alpha	1129	126	17	734		a alpha	ok	Cryptococcus	Austropuccinia	3	0.0017		
+SRR28807720	cryptococcus_gattii_complex	5914X2	PRJNA1103328	SINGLE	6651576	done	none			0.08	6.15	8.27	0.0059	0.4615	trace_a,trace_alpha	445	21	17	376		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR3707764	cryptococcus_gattii_complex	WM_10_186_USA_Vet_118	PRJNA289249	PAIRED	10239813	done	alpha			0.09	10.65	10.78	0.0122	0.7903	trace_a	1409	202	17	462		a alpha	ok	Cryptococcus	Aspergillus	27	0.0143		
+SRR27350360	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11935094	done	none			0.23	10.94	13.92	0.0062	0.4416	trace_a,trace_alpha	1089	182	17	544		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR28807391	cryptococcus_gattii_complex	2301F7	PRJNA1103328	SINGLE	6623754	done	none			0.12	5.74	7.48	0.0067	0.4432	trace_a,trace_alpha	454	57	17	452		a alpha	ok	Cryptococcus	Fusarium	3	0.0016		
+SRR3707835	cryptococcus_gattii_complex	WM_1846_VEN_Clin_65	PRJNA289249	PAIRED	10206562	done	alpha			0.05	13.96	13.91	0.0040	0.9812	trace_a	1422	400	40	966		a alpha	ok	Cryptococcus	Colletotrichum	7	0.0039		
+SRR27350395	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11941661	done	none			0.20	11.06	14.69	0.0066	0.4382	trace_a,trace_alpha	1114	408	42	2291		a alpha	ok	Cryptococcus	Candida	3	0.0017		
+SRR28807358	cryptococcus_gattii_complex	3207X2	PRJNA1103328	SINGLE	6598868	done	none			0.13	6.17	8.01	0.0066	0.4417	trace_a,trace_alpha	444	37	16	436		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR3707765	cryptococcus_gattii_complex	WM_11_105_COL_Clin_79	PRJNA289249	PAIRED	6749172	done	alpha			0.09	19.36	18.78	0.0120	0.9812	trace_a	1338	199	18	802		a alpha	ok	Cryptococcus	Colletotrichum	15	0.0045		
+SRR27350387	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11957319	done	none			0.25	11.28	14.32	0.0066	0.4427	trace_a,trace_alpha	1111	245	18	745		a alpha	ok	Cryptococcus	Rhodotorula	2	0.0011		
+SRR28807102	cryptococcus_gattii_complex	5907F8	PRJNA1103328	SINGLE	6576106	done	none			0.09	6.23	8.59	0.0057	0.4620	trace_a,trace_alpha	446	36	17	457		a alpha	ok	Cryptococcus	Phyllosticta	3	0.0017		
+SRR3707756	cryptococcus_gattii_complex	WM_175_USA_Env_60	PRJNA289249	PAIRED	6532345	done	alpha			0.17	19.93	22.68	0.0190	0.7886	trace_a	1246	229	19	775		a alpha	ok	Cryptococcus	Aspergillus	11	0.006		
+SRR27350343	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11970443	done	none			0.22	10.75	14.12	0.0077	0.4424	trace_a,trace_alpha	1078	380	42	2524		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR28807370	cryptococcus_gattii_complex	2307X3	PRJNA1103328	SINGLE	6551230	done	none			0.10	5.73	7.61	0.0068	0.4428	trace_a,trace_alpha	443	151	33	1417		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR3707823	cryptococcus_gattii_complex	WM_1666_USA_Clin_83	PRJNA289249	PAIRED	9143887	done	alpha			0.06	13.28	13.23	0.0055	0.9808	trace_a	1283	223	17	455		a alpha	ok	Cryptococcus	Fusarium	5	0.0027		
+SRR27350418	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	11995311	done	none			0.28	11.19	14.64	0.0067	0.4429	trace_a,trace_alpha	1121	203	17	736		a alpha	ok	Cryptococcus	Xylaria	3	0.0017		
+SRR28807362	cryptococcus_gattii_complex	3201X2	PRJNA1103328	SINGLE	6542960	done	none			0.14	5.92	7.84	0.0065	0.4414	trace_a,trace_alpha	451	35	17	446		a alpha	ok	Cryptococcus	Diaporthe	8	0.004	yes	
+SRR3707854	cryptococcus_gattii_complex	WM_09_45_USA_Vet_73	PRJNA289249	PAIRED	9047555	done	alpha			0.09	11.46	12.21	0.0097	0.7891	trace_a	1262	341	17	302		a alpha	ok	Cryptococcus	Aspergillus	3	0.0016		
+SRR27350424	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12005572	done	none			0.22	10.80	13.49	0.0058	0.4409	trace_a,trace_alpha	1134	346	37	2391		a alpha	ok	Cryptococcus	Gigaspora	2	0.0011		
+SRR28807374	cryptococcus_gattii_complex	2501X3	PRJNA1103328	SINGLE	6511866	done	none			0.10	5.61	7.18	0.0063	0.4411	trace_a,trace_alpha	435	41	16	476		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR3707776	cryptococcus_gattii_complex	WM_11_941_USA_Clin_112	PRJNA289249	PAIRED	9027992	done	a			11.14	0.06	10.05	0.8301	0.0350	trace_alpha	1213	127	17	426		a alpha	ok	Cryptococcus	Colletotrichum	9	0.0048		
+SRR27350350	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12017167	done	none			0.19	10.81	13.68	0.0063	0.4414	trace_a,trace_alpha	1089	85	18	724		a alpha	ok	Cryptococcus	Morchella	3	0.0017		
+SRR28807110	cryptococcus_gattii_complex	4914F8	PRJNA1103328	SINGLE	6508845	done	none			0.11	5.74	7.35	0.0064	0.4376	trace_a,trace_alpha	440	23	16	415		a alpha	ok	Cryptococcus	Lignosus	3	0.0017		
+SRR3707803	cryptococcus_gattii_complex	WM_1635_MEX_Clin_91	PRJNA289249	PAIRED	9008071	done	alpha			0.10	10.89	11.72	0.0086	0.7935	trace_a	1213	92	17	352		a alpha	ok	Cryptococcus	Xylaria	5	0.0027		
+SRR27295221	cryptococcus_gattii_complex	YQJ113	PRJNA1054030	PAIRED	7968371	done	none			0.20	10.34	13.09	0.0070	0.4457	trace_a,trace_alpha	827	233	37	2280		a alpha	ok	Cryptococcus	Udeniomyces	3	0.0016		
+SRR28807363	cryptococcus_gattii_complex	3201X1	PRJNA1103328	SINGLE	6504576	done	none			0.15	5.98	8.03	0.0066	0.4410	trace_a,trace_alpha	432	144	33	1541		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR3707820	cryptococcus_gattii_complex	WM_1661_USA_Clin_87	PRJNA289249	PAIRED	8994810	done	alpha			0.08	10.62	11.38	0.0072	0.7909	trace_a	1219	156	17	424		a alpha	ok	Cryptococcus	Fusarium	5	0.0027		
+SRR27350400	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12035369	done	none			0.20	11.32	14.22	0.0065	0.4385	trace_a,trace_alpha	1119	127	18	710		a alpha	ok	Cryptococcus	Hypoxylon	4	0.0022		
+SRR28807388	cryptococcus_gattii_complex	2501F6	PRJNA1103328	SINGLE	6459872	done	none			0.10	5.21	7.33	0.0062	0.4410	trace_a,trace_alpha	435	28	17	424		a alpha	ok	Cryptococcus	Aspergillus	4	0.0023		
+SRR3707757	cryptococcus_gattii_complex	WM_11_118_COL_Clin_146	PRJNA289249	PAIRED	3562434	done	alpha			0.26	35.37	40.87	0.0077	0.7917	trace_a	1118	476	52	3578		a alpha	ok	Cryptococcus	Fusarium	14	0.0069		
+SRR27350436	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12040290	done	a			46.48	1.39	22.07	0.7213	0.0580	trace_alpha	1142	145	17	723		a alpha	ok	Cryptococcus	Fusarium	6	0.0032		
+SRR28807747	cryptococcus_gattii_complex	2307F8	PRJNA1103328	SINGLE	6450490	done	none			0.13	5.81	7.58	0.0066	0.4433	trace_a,trace_alpha	433	151	40	1871		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR3707824	cryptococcus_gattii_complex	WM_02_138_USA_Clin_95	PRJNA289249	PAIRED	8941657	done	alpha			0.07	13.00	13.76	0.0234	0.9809	trace_a	1233	183	17	474		a alpha	ok	Cryptococcus	Colletotrichum	5	0.0027		
+SRR27350396	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12047895	done	none			0.22	11.15	13.88	0.0065	0.4434	trace_a,trace_alpha	1121	234	17	720		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR28807375	cryptococcus_gattii_complex	2501X2	PRJNA1103328	SINGLE	6446842	done	none			0.11	5.63	7.52	0.0063	0.4410	trace_a,trace_alpha	445	113	17	464		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR3707838	cryptococcus_gattii_complex	WM_2041_COL_Clin_64	PRJNA289249	PAIRED	5770961	done	alpha			0.23	14.06	17.09	0.0106	0.5329	trace_a	1098	287	18	741		a alpha	ok	Cryptococcus	Fusarium	16	0.009		
+SRR27350385	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12064466	done	none			0.25	11.23	14.71	0.0063	0.4420	trace_a,trace_alpha	1123	283	17	652		a alpha	ok	Cryptococcus	Saccharomyces	2	0.0011		
+SRR28807395	cryptococcus_gattii_complex	1607F5	PRJNA1103328	SINGLE	6424658	done	none			0.08	6.00	8.34	0.0058	0.4616	trace_a,trace_alpha	447	99	16	460		a alpha	ok	Cryptococcus	Phyllosticta	2	0.0011		
+SRR3707762	cryptococcus_gattii_complex	WM_10_181_USA_vet_115	PRJNA289249	PAIRED	8301525	done	alpha			0.09	11.61	12.79	0.0086	0.7898	trace_a	1156	292	17	464		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR27350430	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12102637	done	none			0.22	11.08	14.18	0.0070	0.4389	trace_a,trace_alpha	1141	297	18	745		a alpha	ok	Cryptococcus	Termitomyces	2	0.0011		
+SRR28807393	cryptococcus_gattii_complex	2301F5	PRJNA1103328	SINGLE	6403891	done	none			0.11	5.72	7.58	0.0066	0.4434	trace_a,trace_alpha	434	95	17	438		a alpha	ok	Cryptococcus	Diaporthe	3	0.0017		
+SRR3707830	cryptococcus_gattii_complex	WM_1814_MEX_Clin_79	PRJNA289249	PAIRED	8039086	done	alpha			0.05	12.83	13.03	0.0065	0.9823	trace_a	1069	361	34	785		a alpha	ok	Cryptococcus	Morchella	6	0.0032		
+SRR27350380	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12144045	done	none			0.21	11.35	14.26	0.0064	0.4437	trace_a,trace_alpha	1162	231	17	669		a alpha	ok	Cryptococcus	Aspergillus	1	0.0006		
+SRR28807105	cryptococcus_gattii_complex	5907F5	PRJNA1103328	SINGLE	6396730	done	none			0.08	6.28	8.00	0.0057	0.4617	trace_a,trace_alpha	434	117	16	391		a alpha	ok	Cryptococcus	Trichoderma	3	0.0017		
+SRR3707780	cryptococcus_gattii_complex	WM_02_127_GTM_Clin_96	PRJNA289249	PAIRED	7842378	done	alpha			0.11	17.56	18.31	0.0152	0.8513	trace_a	1075	344	40	1551		a alpha	ok	Cryptococcus	Rhodotorula	3	0.0016		
+SRR27350382	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12161817	done	none			0.28	11.96	15.07	0.0100	0.4934	trace_a,trace_alpha	1143	349	43	2358		a alpha	ok	Cryptococcus	Fusarium	11	0.006		
+SRR28807385	cryptococcus_gattii_complex	1607X4	PRJNA1103328	SINGLE	6349407	done	none			0.07	6.00	7.97	0.0060	0.4615	trace_a,trace_alpha	425	98	16	447		a alpha	ok	Cryptococcus	Diaporthe	4	0.0022		
+SRR3707848	cryptococcus_gattii_complex	WM_06_38_USA_ND_81	PRJNA289249	PAIRED	7793126	done	a			14.43	0.04	12.68	0.9964	0.0178	trace_alpha	1085	291	17	451		a alpha	ok	Cryptococcus	Colletotrichum	5	0.0027		
+SRR27350419	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12163744	done	none			0.26	11.40	13.83	0.0062	0.4396	trace_a,trace_alpha	1135	417	18	769		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR28807111	cryptococcus_gattii_complex	4914F7	PRJNA1103328	SINGLE	6325506	done	none			0.09	5.68	7.60	0.0064	0.4380	trace_a,trace_alpha	441	97	38	1114		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR3707783	cryptococcus_gattii_complex	WM_11_950_USA_Vet_142	PRJNA289249	PAIRED	22217123	done	alpha			0.06	13.16	13.64	0.0100	0.9805	trace_a	3074	492	17	435		a alpha	ok	Cryptococcus	Aspergillus	18	0.0098		
+SRR27350394	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12175756	done	none			0.17	11.10	14.51	0.0062	0.4358	trace_a,trace_alpha	1148	252	18	677		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR28807734	cryptococcus_gattii_complex	4901F8	PRJNA1103328	SINGLE	6313569	done	none			0.10	5.41	7.91	0.0064	0.4385	trace_a,trace_alpha	440	124	38	1632		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR3707760	cryptococcus_gattii_complex	WM_10_179_USA_Vet_117	PRJNA289249	PAIRED	7326270	done	alpha			0.06	13.46	13.22	0.0079	0.9788	trace_a	1028	293	40	1591		a alpha	ok	Cryptococcus	Rhizopus	3	0.0017		
+SRR27350378	cryptococcus_gattii_complex	strain	PRJNA1054030	PAIRED	12250476	done	none			0.22	11.08	14.57	0.0066	0.4443	trace_a,trace_alpha	1143	153	17	758		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR28807364	cryptococcus_gattii_complex	2301X1	PRJNA1103328	SINGLE	6310650	done	none			0.12	5.69	7.45	0.0067	0.4431	trace_a,trace_alpha	427	89	17	455		a alpha	ok	Cryptococcus	Mycena	3	0.0017		
+SRR3707844	cryptococcus_gattii_complex	WM_2220_USA_Clin_68	PRJNA289249	PAIRED	7198698	done	a			13.87	0.04	12.63	0.9945	0.0196	trace_alpha	1001	158	17	424		a alpha	ok	Cryptococcus	Aspergillus	5	0.0027		
+SRR27295229	cryptococcus_gattii_complex	YQJ105	PRJNA1054030	PAIRED	7682202	done	none			0.20	10.46	13.38	0.0064	0.4451	trace_a,trace_alpha	792	204	18	568		a alpha	ok	Cryptococcus	Fusarium	5	0.0028		
+SRR28807727	cryptococcus_gattii_complex	5901X4	PRJNA1103328	SINGLE	6260716	done	none			0.08	6.11	8.27	0.0057	0.4617	trace_a,trace_alpha	420	146	17	354		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR3707779	cryptococcus_gattii_complex	WM_11_945_USA_Clin_138	PRJNA289249	PAIRED	22944515	done	alpha			0.37	9.91	11.15	0.1798	0.7969	trace_a	3151	1520	34	874		a alpha	ok	Cryptococcus	Mortierella	17	0.0091		
+SRR27295210	cryptococcus_gattii_complex	YQJ104	PRJNA1054030	PAIRED	7499472	done	none			0.20	10.23	13.28	0.0077	0.4461	trace_a,trace_alpha	766	207	43	2474		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR28807373	cryptococcus_gattii_complex	2501X4	PRJNA1103328	SINGLE	6250282	done	none			0.10	5.65	7.59	0.0063	0.4406	trace_a,trace_alpha	426	111	38	1418		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR3707826	cryptococcus_gattii_complex	WM_1699_PRY_Clin_67	PRJNA289249	PAIRED	6982663	done	alpha			0.11	11.48	11.72	0.0112	0.8369	trace_a	989	159	17	482		a alpha	ok	Cryptococcus	Penicillium	3	0.0016		
+SRR27295220	cryptococcus_gattii_complex	YQJ114	PRJNA1054030	PAIRED	7408290	done	none			0.26	10.21	13.43	0.0064	0.4429	trace_a,trace_alpha	754	140	18	727		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR28807341	cryptococcus_gattii_complex	4914X4	PRJNA1103328	SINGLE	6222669	done	none			0.11	6.19	8.45	0.0065	0.4379	trace_a,trace_alpha	432	57	16	458		a alpha	ok	Cryptococcus	Diaporthe	4	0.0022		
+SRR3707781	cryptococcus_gattii_complex	WM_11_946_USA_Vet_141	PRJNA289249	PAIRED	23084152	done	alpha			0.09	11.28	11.40	0.0093	0.8496	trace_a	3185	287	17	449		a alpha	ok	Cryptococcus	Aspergillus	19	0.0103		
+SRR28807109	cryptococcus_gattii_complex	5901F5	PRJNA1103328	SINGLE	6205539	done	none			0.07	6.02	8.58	0.0059	0.4616	trace_a,trace_alpha	418	21	16	454		a alpha	ok	Cryptococcus	Diaporthe	3	0.0017		
+SRR3707836	cryptococcus_gattii_complex	WM_02_139_USA_Clin_93	PRJNA289249	PAIRED	6181643	done	a			14.89	0.03	13.23	0.9981	0.0157	trace_alpha	853	71	17	471		a alpha	ok	Cryptococcus	Penicillium	6	0.0032		
+SRR28807392	cryptococcus_gattii_complex	2301F6	PRJNA1103328	SINGLE	6194089	done	none			0.11	5.52	7.62	0.0066	0.4425	trace_a,trace_alpha	419	19	16	466		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR3707841	cryptococcus_gattii_complex	WM_2148_COL_Env_80	PRJNA289249	PAIRED	5933902	done	alpha			0.06	13.01	13.02	0.0087	0.9811	trace_a	798	58	17	476		a alpha	ok	Cryptococcus	Aspergillus	6	0.0032		
+SRR28807357	cryptococcus_gattii_complex	3207X3	PRJNA1103328	SINGLE	6184046	done	none			0.13	5.82	7.77	0.0066	0.4413	trace_a,trace_alpha	421	47	17	469		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR3707770	cryptococcus_gattii_complex	WM_11_40_USA_Vet_55	PRJNA289249	PAIRED	5931413	done	a			13.55	0.04	12.29	0.9961	0.0135	trace_alpha	837	81	17	446		a alpha	ok	Cryptococcus	Penicillium	2	0.0011		
+SRR28807339	cryptococcus_gattii_complex	5901X2	PRJNA1103328	SINGLE	6153523	done	none			0.08	6.01	8.43	0.0058	0.4614	trace_a,trace_alpha	426	57	16	422		a alpha	ok	Cryptococcus	Diaporthe	3	0.0016		
+SRR3707845	cryptococcus_gattii_complex	WM_2358_USA_Clin_89	PRJNA289249	PAIRED	5902332	done	alpha			0.08	10.56	11.10	0.0060	0.7882	trace_a	807	96	17	473		a alpha	ok	Cryptococcus	Fusarium	25	0.012		
+SRR28807389	cryptococcus_gattii_complex	2501F5	PRJNA1103328	SINGLE	6143736	done	none			0.09	5.75	7.41	0.0062	0.4414	trace_a,trace_alpha	415	22	17	401		a alpha	ok	Cryptococcus	Fusarium	4	0.0023		
+SRR3707847	cryptococcus_gattii_complex	WM_3071_COL_Env_79	PRJNA289249	PAIRED	5832483	done	alpha			0.07	13.51	13.83	0.0197	0.9814	trace_a	802	364	35	1030		a alpha	ok	Cryptococcus	Fusarium	6	0.0033		
+SRR28807386	cryptococcus_gattii_complex	1607F6	PRJNA1103328	SINGLE	6120374	done	none			0.07	6.07	8.31	0.0058	0.4613	trace_a,trace_alpha	422	159	38	837		a alpha	ok	Cryptococcus	Aureobasidium	2	0.0011		
+SRR3707771	cryptococcus_gattii_complex	WM_11_42_USA_Vet_145	PRJNA289249	PAIRED	5538780	done	a			14.02	0.04	12.06	0.9940	0.0170	trace_alpha	772	3668	36	730		a alpha	ok	Cryptococcus	Gigaspora	4	0.0021		
+SRR28807723	cryptococcus_gattii_complex	5907X4	PRJNA1103328	SINGLE	6118411	done	none			0.07	6.15	8.26	0.0057	0.4617	trace_a,trace_alpha	414	39	17	475		a alpha	ok	Cryptococcus	Phyllosticta	3	0.0016		
+SRR3707766	cryptococcus_gattii_complex	WM_11_123_USA_Vet_148	PRJNA289249	PAIRED	5411099	done	a			13.80	0.03	11.80	0.9979	0.0083	trace_alpha	759	91	17	461		a alpha	ok	Cryptococcus	Penicillium	4	0.0022		
+SRR28807740	cryptococcus_gattii_complex	3207F7	PRJNA1103328	SINGLE	6072625	done	none			0.13	6.15	7.75	0.0066	0.4408	trace_a,trace_alpha	414	89	17	465		a alpha	ok	Cryptococcus	Aspergillus	5	0.0028		
+SRR3707825	cryptococcus_gattii_complex	WM_1667_USA_Clin_84	PRJNA289249	PAIRED	4485646	done	alpha			0.06	13.26	13.55	0.0194	0.9835	trace_a	614	145	17	461		a alpha	ok	Cryptococcus	Mycena	5	0.0026		
+SRR28807351	cryptococcus_gattii_complex	4901X4	PRJNA1103328	SINGLE	6030257	done	none			0.11	6.01	8.06	0.0066	0.4376	trace_a,trace_alpha	411	34	17	404		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR3707843	cryptococcus_gattii_complex	WM_2173_COL_Env_82	PRJNA289249	PAIRED	4449057	done	alpha			0.05	12.78	12.89	0.0056	0.9839	trace_a	602	144	17	471		a alpha	ok	Cryptococcus	Colletotrichum	4	0.0021		
+SRR28807367	cryptococcus_gattii_complex	2301X3	PRJNA1103328	SINGLE	6014214	done	none			0.12	5.69	7.77	0.0066	0.4437	trace_a,trace_alpha	420	82	39	1413		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR3707829	cryptococcus_gattii_complex	WM_1811_MEX_Clin_99	PRJNA289249	PAIRED	3625513	done	alpha			0.09	10.40	11.32	0.0082	0.7906	trace_a	514	41	17	487		a alpha	ok	Cryptococcus	Ascosphaera	2	0.0011		
+SRR28807750	cryptococcus_gattii_complex	2307F6	PRJNA1103328	SINGLE	5997955	done	none			0.12	5.62	7.57	0.0066	0.4435	trace_a,trace_alpha	407	62	16	487		a alpha	ok	Cryptococcus	Diaporthe	4	0.0022		
+SRR28807092	cryptococcus_gattii_complex	1607F8	PRJNA1103328	SINGLE	5994790	done	none			0.07	5.98	8.05	0.0062	0.4610	trace_a,trace_alpha	409	65	16	322		a alpha	ok	Cryptococcus	Phyllosticta	2	0.0011		
+SRR28807748	cryptococcus_gattii_complex	2307F7	PRJNA1103328	SINGLE	5967066	done	none			0.12	5.44	7.52	0.0067	0.4431	trace_a,trace_alpha	406	29	17	459		a alpha	ok	Cryptococcus	Fusarium	4	0.0022		
+SRR28807739	cryptococcus_gattii_complex	3207F8	PRJNA1103328	SINGLE	5946588	done	none			0.13	5.94	7.60	0.0065	0.4416	trace_a,trace_alpha	408	58	17	457		a alpha	ok	Cryptococcus	Fusarium	4	0.0023		
+SRR28807353	cryptococcus_gattii_complex	4901X2	PRJNA1103328	SINGLE	5894835	done	none			0.11	6.04	7.72	0.0065	0.4386	trace_a,trace_alpha	405	17	17	338		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR28807096	cryptococcus_gattii_complex	1601F8	PRJNA1103328	SINGLE	5870257	done	none			0.08	6.05	7.41	0.0057	0.4612	trace_a,trace_alpha	404	108	16	345		a alpha	ok	Cryptococcus	Phyllosticta	3	0.0017		
+SRR28807735	cryptococcus_gattii_complex	4901F7	PRJNA1103328	SINGLE	5816510	done	none			0.10	5.87	8.08	0.0064	0.4383	trace_a,trace_alpha	417	67	17	434		a alpha	ok	Cryptococcus	Colletotrichum	4	0.0022		
+SRR28807093	cryptococcus_gattii_complex	1601F5	PRJNA1103328	SINGLE	5798396	done	none			0.08	5.86	7.50	0.0057	0.4613	trace_a,trace_alpha	410	40	17	456		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR28807350	cryptococcus_gattii_complex	4907X4	PRJNA1103328	SINGLE	5792201	done	none			0.10	5.95	8.09	0.0065	0.4376	trace_a,trace_alpha	400	20	17	462		a alpha	ok	Cryptococcus	Diaporthe	3	0.0017		
+SRR28807381	cryptococcus_gattii_complex	1607X2	PRJNA1103328	SINGLE	5781518	done	none			0.08	6.20	8.42	0.0059	0.4612	trace_a,trace_alpha	389	141	16	345		a alpha	ok	Cryptococcus	Aspergillus	2	0.0011		
+SRR28807741	cryptococcus_gattii_complex	3207F6	PRJNA1103328	SINGLE	5726697	done	none			0.13	5.74	7.64	0.0065	0.4410	trace_a,trace_alpha	388	143	40	901		a alpha	ok	Cryptococcus	Diaporthe	3	0.0017		
+SRR28807340	cryptococcus_gattii_complex	5901X1	PRJNA1103328	SINGLE	5723855	done	none			0.08	6.14	8.25	0.0060	0.4613	trace_a,trace_alpha	386	1591	37	943		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR28807737	cryptococcus_gattii_complex	4901F5	PRJNA1103328	SINGLE	5698651	done	none			0.11	5.87	8.02	0.0065	0.4380	trace_a,trace_alpha	391	1500	31	679		a alpha	ok	Cryptococcus	Phyllosticta	3	0.0017		
+SRR28807103	cryptococcus_gattii_complex	5907F7	PRJNA1103328	SINGLE	5664787	done	none			0.08	6.25	8.56	0.0057	0.4615	trace_a,trace_alpha	386	1705	29	902		a alpha	ok	Cryptococcus	Fusarium	3	0.0016		
+SRR28807377	cryptococcus_gattii_complex	2501X1	PRJNA1103328	SINGLE	5660477	done	none			0.11	5.92	7.51	0.0068	0.4409	trace_a,trace_alpha	388	125	40	870		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR28807360	cryptococcus_gattii_complex	3201X4	PRJNA1103328	SINGLE	5625004	done	none			0.13	6.01	7.91	0.0065	0.4412	trace_a,trace_alpha	384	20	17	427		a alpha	ok	Cryptococcus	Diaporthe	4	0.0023		
+SRR28807097	cryptococcus_gattii_complex	5914F8	PRJNA1103328	SINGLE	5536810	done	none			0.08	5.86	7.87	0.0058	0.4624	trace_a,trace_alpha	380	58	16	428		a alpha	ok	Cryptococcus	Diaporthe	2	0.0011		
+SRR28807348	cryptococcus_gattii_complex	4907X2	PRJNA1103328	SINGLE	5492069	done	none			0.11	5.98	7.71	0.0066	0.4388	trace_a,trace_alpha	391	110	17	382		a alpha	ok	Cryptococcus	Aspergillus	7	0.0035	yes	
+SRR28807729	cryptococcus_gattii_complex	4914F5	PRJNA1103328	SINGLE	5474462	done	none			0.10	5.87	8.08	0.0067	0.4378	trace_a,trace_alpha	375	84	16	405		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR28807356	cryptococcus_gattii_complex	3207X4	PRJNA1103328	SINGLE	5462361	done	none			0.14	6.00	8.17	0.0066	0.4412	trace_a,trace_alpha	372	212	34	1223		a alpha	ok	Cryptococcus	Diaporthe	4	0.0023		
+SRR28807722	cryptococcus_gattii_complex	5914X1	PRJNA1103328	SINGLE	5449933	done	none			0.09	6.14	8.39	0.0058	0.4621	trace_a,trace_alpha	375	24	16	416		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR28807352	cryptococcus_gattii_complex	4901X3	PRJNA1103328	SINGLE	5431939	done	none			0.10	5.68	7.54	0.0065	0.4377	trace_a,trace_alpha	376	30	17	410		a alpha	ok	Cryptococcus	Fusarium	3	0.0017		
+SRR28807113	cryptococcus_gattii_complex	4914F6	PRJNA1103328	SINGLE	5421779	done	none			0.10	5.93	8.20	0.0066	0.4378	trace_a,trace_alpha	367	19	17	454		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR28807108	cryptococcus_gattii_complex	5901F6	PRJNA1103328	SINGLE	5399224	done	none			0.07	6.05	8.06	0.0059	0.4624	trace_a,trace_alpha	370	77	16	446		a alpha	ok	Cryptococcus	Fusarium	2	0.0011		
+SRR28807383	cryptococcus_gattii_complex	1607X3	PRJNA1103328	SINGLE	5393355	done	none			0.08	6.15	7.97	0.0057	0.4614	trace_a,trace_alpha	362	50	16	395		a alpha	ok	Cryptococcus	Diaporthe	3	0.0017		
+SRR28807390	cryptococcus_gattii_complex	2301F8	PRJNA1103328	SINGLE	5354815	done	none			0.11	5.55	7.64	0.0068	0.4430	trace_a,trace_alpha	366	86	16	416		a alpha	borderline	Cryptococcus	Saccharomyces	13	0.0065	yes	
+SRR28807380	cryptococcus_gattii_complex	1601X2	PRJNA1103328	SINGLE	5341859	done	none			0.08	5.78	8.05	0.0058	0.4613	trace_a,trace_alpha	359	61	16	444		a alpha	ok	Cryptococcus	Diaporthe	3	0.0016		
+SRR28807736	cryptococcus_gattii_complex	4901F6	PRJNA1103328	SINGLE	5313029	done	none			0.10	5.90	7.75	0.0066	0.4383	trace_a,trace_alpha	379	109	17	404		a alpha	ok	Cryptococcus	Diaporthe	3	0.0017		
+SRR28807746	cryptococcus_gattii_complex	3201F5	PRJNA1103328	SINGLE	5306470	done	none			0.13	5.94	7.43	0.0066	0.4411	trace_a,trace_alpha	365	1848	29	657		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR28807378	cryptococcus_gattii_complex	1601X1	PRJNA1103328	SINGLE	5302628	done	none			0.08	5.50	7.47	0.0060	0.4616	trace_a,trace_alpha	356	100	33	1071		a alpha	ok	Cryptococcus	Diaporthe	3	0.0016		
+SRR28807355	cryptococcus_gattii_complex	4901X1	PRJNA1103328	SINGLE	5287551	done	none			0.11	5.72	7.49	0.0064	0.4389	trace_a,trace_alpha	372	121	39	1083		a alpha	ok	Cryptococcus	Colletotrichum	3	0.0017		
+SRR28807344	cryptococcus_gattii_complex	4914X3	PRJNA1103328	SINGLE	5285381	done	none			0.11	5.99	8.44	0.0065	0.4392	trace_a,trace_alpha	364	25	17	406		a alpha	ok	Cryptococcus	Colletotrichum	2	0.0011		
+SRR28807730	cryptococcus_gattii_complex	4907F6	PRJNA1103328	SINGLE	5278940	done	none			0.10	5.82	7.46	0.0065	0.4377	trace_a,trace_alpha	357	70	17	328		a alpha	ok	Cryptococcus	Aspergillus	3	0.0017		
+SRR28807751	cryptococcus_gattii_complex	2307F5	PRJNA1103328	SINGLE	5278178	done	none			0.11	5.32	7.43	0.0066	0.4431	trace_a,trace_alpha	359	1620	38	748		a alpha	ok	Cryptococcus	Diaporthe	3	0.0017		
+SRR28807732	cryptococcus_gattii_complex	4907F7	PRJNA1103328	SINGLE	5199959	done	none			0.10	5.88	7.70	0.0065	0.4381	trace_a,trace_alpha	355	1619	30	716		a alpha	ok	Cryptococcus	Lignosus	3	0.0017		
+SRR28807724	cryptococcus_gattii_complex	5907X3	PRJNA1103328	SINGLE	5144172	done	none			0.08	5.96	8.28	0.0059	0.4618	trace_a,trace_alpha	359	22	16	372		a alpha	ok	Cryptococcus	Aspergillus	4	0.0022		
+SRR28807098	cryptococcus_gattii_complex	5914F7	PRJNA1103328	SINGLE	5029319	done	none			0.08	6.09	7.76	0.0058	0.4614	trace_a,trace_alpha	343	18	17	374		a alpha	ok	Cryptococcus	Pyricularia	3	0.0017		
+SRR28807745	cryptococcus_gattii_complex	3201F6	PRJNA1103328	SINGLE	4830505	done	none			0.12	5.70	7.75	0.0065	0.4411	trace_a,trace_alpha	344	23	17	372		a alpha	ok	Cryptococcus	Fusarium	4	0.0022		

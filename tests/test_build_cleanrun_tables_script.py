@@ -415,3 +415,37 @@ def test_the_locus_summary_carries_both_lists_and_the_tier_is_untouched():
             defective=["HD1", "HD2"])
     s = bct.summarise_locus(x)
     assert s["defective"] == ["HD1"] and s["low_confidence_model"] == ["HD2"] and s["confidence"] == "high"
+
+
+# ------------------------------------------------------------------------------------- core_reference (#200)
+
+
+def _ev(gene, record, identity, bitscore, role="core_MAT", lost_to=None):
+    return dict(gene=gene, role=role, reference_record=record, identity=identity, bitscore=bitscore, lost_to=lost_to, status=POL)
+
+
+def test_core_reference_lists_every_live_core_gene_once():
+    x = det(genes=[_ev("MAT1-1-1", "r1", 55.49, 120.0), _ev("MAT1-2-1", "r2", 40.0, 80.0), _ev("SLA2", "r3", 90.0, 400.0, role="flanking_conserved")])
+    assert bct.core_references(x) == "MAT1-1-1:r1:55.49:120|MAT1-2-1:r2:40:80"
+
+
+def test_core_reference_breaks_ties_by_identity_then_bitscore_then_record_id():
+    x = det(genes=[_ev("MAT1-1-1", "rB", 60.0, 100.0), _ev("MAT1-1-1", "rA", 60.0, 100.0), _ev("MAT1-1-1", "rC", 60.0, 90.0), _ev("MAT1-1-1", "rD", 59.0, 999.0)])
+    assert bct.core_references(x) == "MAT1-1-1:rA:60:100"
+    y = det(genes=[_ev("MAT1-1-1", "rB", 60.0, 100.0), _ev("MAT1-1-1", "rA", 60.0, 101.0)])
+    assert bct.core_references(y) == "MAT1-1-1:rA:60:101"
+
+
+def test_core_reference_skips_superseded_genes_and_entries_without_a_record_and_is_blank_when_empty():
+    x = det(genes=[_ev("MAT1-1-1", "r1", 55.0, 1.0, lost_to="MAT1-2-1"), _ev("MAT1-2-1", None, 40.0, 1.0)])
+    assert bct.core_references(x) == ""
+    assert bct.core_references(det(genes=[])) == ""
+
+
+def test_core_reference_is_the_same_for_the_same_report():
+    x = det(genes=[_ev("MAT1-2-1", "r2", 40.0, 80.0), _ev("MAT1-1-1", "r1", 55.49, 120.0)])
+    assert bct.core_references(x) == bct.core_references(dict(x)) == "MAT1-1-1:r1:55.49:120|MAT1-2-1:r2:40:80"
+
+
+def test_the_locus_summary_carries_core_reference():
+    assert bct.summarise_locus(det(genes=[_ev("MAT1-1-1", "r1", 55.0, 120.0)]))["core_reference"] == "MAT1-1-1:r1:55:120"

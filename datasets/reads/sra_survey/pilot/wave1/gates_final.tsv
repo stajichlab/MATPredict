@@ -1,13 +1,13 @@
 slug	species	decision	reasons
-aspergillus_fumigatus	Aspergillus fumigatus	PASS	runs=300 done=295 typed=284 both=10 none/low=1 truth_typed=25 agree=25 median_shared_depth=12.6
-fusarium_oxysporum	Fusarium oxysporum	PASS	runs=300 done=300 typed=290 both=1 none/low=9 truth_typed=25 agree=25 median_shared_depth=4.9
-beauveria_bassiana	Beauveria bassiana	PASS	runs=300 done=300 typed=283 both=6 none/low=11 truth_typed=21 agree=21 median_shared_depth=5.3
-parastagonospora_nodorum	Parastagonospora nodorum	PASS	runs=300 done=300 typed=292 both=4 none/low=4 truth_typed=16 agree=16 median_shared_depth=6.9
-plenodomus_lingam	Plenodomus lingam	PROVISIONAL	runs=300 done=300 typed=298 both=2 none/low=0 truth_typed=2 agree=2 median_shared_depth=7.4
-epichloe_typhina	Epichloe typhina	UNVALIDATED:typed_0.73+shared_depth_2.3+provisional_typed_0.73	runs=300 done=300 typed=219 both=16 none/low=65 truth_typed=2 agree=2 median_shared_depth=2.3
+aspergillus_fumigatus	Aspergillus fumigatus	PASS	runs=700 done=686 typed=663 both=22 none/low=1 truth_typed=25 agree=25 median_shared_depth=13.0
+fusarium_oxysporum	Fusarium oxysporum	PASS	runs=700 done=699 typed=635 both=9 none/low=55 truth_typed=25 agree=25 median_shared_depth=4.5
+beauveria_bassiana	Beauveria bassiana	PASS	runs=634 done=634 typed=569 both=11 none/low=54 truth_typed=21 agree=21 median_shared_depth=5.1
+parastagonospora_nodorum	Parastagonospora nodorum	PASS	runs=448 done=448 typed=431 both=6 none/low=11 truth_typed=16 agree=16 median_shared_depth=6.6
+plenodomus_lingam	Plenodomus lingam	PROVISIONAL	runs=454 done=454 typed=452 both=2 none/low=0 truth_typed=2 agree=2 median_shared_depth=7.5
+epichloe_typhina	Epichloe typhina	UNVALIDATED:typed_0.72+shared_depth_2.3+provisional_typed_0.72	runs=392 done=392 typed=284 both=21 none/low=87 truth_typed=2 agree=2 median_shared_depth=2.3
 macrophomina_phaseolina	Macrophomina phaseolina	HOLD:agree_11of12	runs=17 done=17 typed=16 both=0 none/low=1 truth_typed=12 agree=11 median_shared_depth=5.5
-talaromyces_marneffei	Talaromyces marneffei	PROVISIONAL	runs=300 done=300 typed=289 both=0 none/low=11 truth_typed=1 agree=1 median_shared_depth=7.4
-pyrenophora_teres	Pyrenophora teres	UNVALIDATED:provisional_typed_0.77	runs=300 done=300 typed=230 both=1 none/low=69 truth_typed=1 agree=1 median_shared_depth=4.9
+talaromyces_marneffei	Talaromyces marneffei	PROVISIONAL	runs=334 done=334 typed=322 both=0 none/low=12 truth_typed=1 agree=1 median_shared_depth=7.4
+pyrenophora_teres	Pyrenophora teres	UNVALIDATED:typed_0.65+provisional_typed_0.65	runs=410 done=410 typed=267 both=1 none/low=142 truth_typed=1 agree=1 median_shared_depth=4.5
 neurospora_discreta	Neurospora discreta	PASS	runs=219 done=219 typed=198 both=5 none/low=16 truth_typed=15 agree=15 median_shared_depth=8.0
 coccidioides_posadasii	Coccidioides posadasii	PASS	runs=218 done=218 typed=201 both=17 none/low=0 truth_typed=6 agree=6 median_shared_depth=9.2
 histoplasma_capsulatum	Histoplasma capsulatum	UNVALIDATED:typed_0.69+provisional_typed_0.69	runs=175 done=175 typed=120 both=2 none/low=53 truth_typed=1 agree=1 median_shared_depth=7.1
@@ -21,7 +21,7 @@ aspergillus_oryzae	Aspergillus oryzae	PASS	runs=103 done=103 typed=101 both=2 no
 venturia_inaequalis	Venturia inaequalis	UNVALIDATED:typed_0.71+shared_depth_2.9	runs=155 done=155 typed=110 both=1 none/low=44 truth_typed=6 agree=6 median_shared_depth=2.9
 trichophyton_mentagrophytes	Trichophyton mentagrophytes	PASS	runs=103 done=103 typed=98 both=0 none/low=5 truth_typed=6 agree=6 median_shared_depth=15.2
 fusarium_poae	Fusarium poae	PASS	runs=90 done=90 typed=89 both=1 none/low=0 truth_typed=14 agree=14 median_shared_depth=7.3
-ophidiomyces_ophidiicola	Ophidiomyces ophidiicola	UNVALIDATED:typed_0.54	runs=52 done=52 typed=28 both=0 none/low=24 truth_typed=11 agree=11 median_shared_depth=12.8
+ophidiomyces_ophidiicola	Ophidiomyces ophidiicola	PASS	runs=52 done=52 typed=51 both=0 none/low=1 truth_typed=11 agree=11 median_shared_depth=10.2
 beauveria_pseudobassiana	Beauveria pseudobassiana	PASS	runs=86 done=86 typed=86 both=0 none/low=0 truth_typed=8 agree=8 median_shared_depth=6.5
 aureobasidium_pullulans	Aureobasidium pullulans	HOLD:core_kmers_low	held:core_kmers_low
 coccidioides_immitis	Coccidioides immitis	PROVISIONAL	runs=67 done=67 typed=66 both=0 none/low=1 truth_typed=0 agree=0 median_shared_depth=14.0

@@ -73,7 +73,8 @@ LENIENT_GENERA = ("Schizosaccharomyces", "Pneumocystis", "Taphrina", "Protomyces
 GROUPS = {"Cryptococcus gattii complex": "Cryptococcus gattii|Cryptococcus deuterogattii|Cryptococcus bacillisporus",
           "Blumeria graminis complex": "Blumeria graminis|Blumeria hordei",                 # B. hordei was split from B. graminis (f. sp. hordei)
           "Sporothrix schenckii complex": "Sporothrix schenckii|Sporothrix brasiliensis"}
-SPAN_GENERA = {"Cryptococcus": ("4000", "250000"), "Rhodotorula": ("1000", "60000"), "Rhizopus": ("1000", "60000"), "Mucor": ("1000", "60000")}
+SPAN_GENERA = {"Cryptococcus": ("4000", "250000"), "Rhodotorula": ("1000", "60000"), "Rhizopus": ("1000", "60000"), "Mucor": ("1000", "60000"),
+               "Ophidiomyces": ("4000", "20000")}      # Ophidiomyces: 49 of 50 MAT1-2 loci span ~11 kb; the 30 kb GCA_022829885.1 locus made a strain-specific MAT1-2 core (wave 1 untyped MAT1-2 runs, breadth ~0.4)
 # Genera whose loci are reported as little more than their genes (no flank inside the reported span): cut this much genome on each side (panel_from_assemblies --pad).
 PAD_GENERA = {"Rhodotorula": "6000", "Rhizopus": "6000", "Mucor": "6000"}
 
@@ -161,19 +162,21 @@ def submit_stage(a, stage, rows):
     cols = list(rows[0].keys()); allp = os.path.join(d, "runs_all.tsv"); wr(allp, rows, cols)
     parts = [parse_part(x) for x in getattr(a, "parts", "stajichlab:stajichlab,preempt:preempt").split(",")]      # partition:account[:qos]; the runs are dealt over them in turn
     rpart = parse_part(getattr(a, "retry_part", None) or "stajichlab:stajichlab")      # the retry pass never runs on a preemptible partition: a run killed twice would be lost silently
+    no_retry = rpart[0] == "none"                     # --retry-part none: no retry arrays (halves the queued tasks); rerun what `incomplete` lists afterwards
+    spart = ("stajichlab", "stajichlab", "") if no_retry else rpart
     ids = []; jobs = []
     for pi, (part, acct, qos) in enumerate(parts):
         mine = rows[pi::len(parts)]
         for ci in range(0, len(mine), 2000):
             chunk = mine[ci:ci + 2000]; f = os.path.join(d, f"runs_{part}_{ci // 2000}.tsv"); wr(f, chunk, cols)
-            for attempt in ("run", "retry"):
+            for attempt in (("run",) if no_retry else ("run", "retry")):
                 dep = ["--dependency", f"afterany:{ids[-1]}"] if attempt == "retry" else []
                 p_, a_, q_ = (rpart if attempt == "retry" else (part, acct, qos))
                 jid = sbatch(["-p", p_, "-A", a_, *(["--qos", q_] if q_ else []), "-c", str(a.cpus), "--mem", a.mem, "-J", f"wave-{stage}-{part}-{attempt}", "--array", f"1-{len(chunk)}%{a.conc}", *dep, "-o", f"{d}/logs/%x_%A_%a.out",
                               "--export", f"ALL,WORKER_DIR={HERE},TARGET_SPOTS=2000000,WINDOWS=8" + "".join("," + e for e in a.env), f"{HERE}/stream_type_sra.slurm", f, "none", "none", out]) if not a.dry_run else f"dry{len(ids)}"
                 ids.append(jid); jobs.append((stage, p_, attempt, jid, len(chunk)))
     last = ids[-1]
-    sm = sbatch(["-p", rpart[0], "-A", rpart[1], *(["--qos", rpart[2]] if rpart[2] else []), "-c", "1", "--mem", "4gb", "-t", "0:30:00", "-J", f"wave-{stage}-summary", "--dependency", "afterany:" + ":".join(ids), "-o", f"{d}/logs/%x_%j.out",
+    sm = sbatch(["-p", spart[0], "-A", spart[1], *(["--qos", spart[2]] if spart[2] else []), "-c", "1", "--mem", "4gb", "-t", "0:30:00", "-J", f"wave-{stage}-summary", "--dependency", "afterany:" + ":".join(ids), "-o", f"{d}/logs/%x_%j.out",
                  "--wrap", f"{PY} {HERE}/summarize_pilot.py --runs {allp} --results {out} --out {d}/summary"]) if not a.dry_run else "drysummary"
     jobs.append((stage, "-", "summary", sm, 0))
     if not a.dry_run:
@@ -422,7 +425,7 @@ def main():
     ap.add_argument("--in-file", default="gates_final.tsv", help="regate: the gates table (in the wave directory) to decide again")
     ap.add_argument("--out-file", help="regate: where to write it (default: the input file)")
     ap.add_argument("--parts", default="stajichlab:stajichlab,preempt:preempt", help="partition:account pairs the run arrays are split over (the exfab partition is one node, gpu12, whose SRA downloads run at about 0.3 MB/s: not a default) (preempt:preempt is allowed: a preempted task is rerun by the retry pass, and the worker is idempotent)")
-    ap.add_argument("--retry-part", default="stajichlab:stajichlab", help="partition:account[:qos] of the retry pass and the summary job; keep it NOT preemptible")
+    ap.add_argument("--retry-part", default="stajichlab:stajichlab", help="partition:account[:qos] of the retry pass and the summary job; keep it NOT preemptible. 'none': no retry arrays (then run `incomplete` and resubmit)")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "regate": regate, "curate": curate, "incomplete": incomplete, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)

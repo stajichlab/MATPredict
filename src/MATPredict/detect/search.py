@@ -546,8 +546,10 @@ def _gencode_args(genetic_code: int | None, flag: str) -> list[str]:
 #: default; it applies only with `MATPREDICT_TBLASTN_SEG=no` (the default); with SEG on, the SEG policy's own split is used and this is ignored.
 _TBLASTN_TWOSTAGE_ENV = "MATPREDICT_TBLASTN_TWOSTAGE"
 _TBLASTN_TWOSTAGE_WINDOW_ENV = "MATPREDICT_TBLASTN_TWOSTAGE_WINDOW_BP"
-_TBLASTN_TWOSTAGE_WINDOW_DEFAULT = 100_000
+_TBLASTN_TWOSTAGE_WINDOW_DEFAULT = 60_000
 _CORE_ROLE = "core_MAT"
+#: Rounds of window growth before the two-stage search gives up and the plain search runs (a cluster rarely needs more than 3).
+_TWOSTAGE_MAX_ROUNDS = 12
 
 
 def _tblastn_twostage() -> bool:
@@ -642,20 +644,32 @@ def _two_stage_tblastn(genome_fasta: Path, reference_fasta: Path, db_prefix: Pat
     if not spans:
         rest_out = call(rest_path, "no").stdout          # no core hit: the other genes are searched genome-wide, as in the plain search
         return _merge_tblastn_by_query_order([core_out, rest_out], order)
-    windows = _merge_windows(spans, _tblastn_twostage_window_bp())
-    window_fasta, window_of = tmp_dir / "windows.fasta", {}
-    with open(window_fasta, "w") as handle:
-        for i, (contig, start, end) in enumerate(windows):
-            record = _genome_index(genome_fasta)[contig]
-            sliced = record[start - 1:end]
-            window_of[f"win{i}"] = (contig, start)
-            handle.write(f">win{i}\n{str(sliced.seq)}\n")
-    window_db = tmp_dir / "window_db"
-    _run_checked(runner, ["makeblastdb", "-in", str(window_fasta), "-dbtype", "nucl", "-out", str(window_db)])
-    rest_raw = _run_checked(runner, [
-        "tblastn", "-query", str(rest_path), "-db", str(window_db), "-seg", "no", "-outfmt", _TBLASTN_OUTFMT, "-dbsize", str(db_size),
-    ] + _gencode_args(genetic_code, "-db_gencode")).stdout
-    return _merge_tblastn_by_query_order([core_out, _remap_window_lines(rest_raw, window_of)], order)
+    pad = _tblastn_twostage_window_bp()
+    flank_out, flank_spans = "", []
+    for _ in range(_TWOSTAGE_MAX_ROUNDS):
+        # Windows around every hit found so far (core genome-wide, flank in the last round); a flank hit near a window's edge widens the
+        # window in the next round, so the search grows along a cluster the way the pipeline's gap rule joins hits, until nothing changes.
+        windows = _merge_windows(spans + flank_spans, pad)
+        window_fasta, window_of = tmp_dir / "windows.fasta", {}
+        with open(window_fasta, "w") as handle:
+            for i, (contig, start, end) in enumerate(windows):
+                record = _genome_index(genome_fasta)[contig]
+                window_of[f"win{i}"] = (contig, start)
+                handle.write(f">win{i}\n{str(record[start - 1:end].seq)}\n")
+        window_db = tmp_dir / "window_db"
+        _run_checked(runner, ["makeblastdb", "-in", str(window_fasta), "-dbtype", "nucl", "-out", str(window_db)])
+        rest_raw = _run_checked(runner, [
+            "tblastn", "-query", str(rest_path), "-db", str(window_db), "-seg", "no", "-outfmt", _TBLASTN_OUTFMT, "-dbsize", str(db_size),
+        ] + _gencode_args(genetic_code, "-db_gencode")).stdout
+        new_out = _remap_window_lines(rest_raw, window_of)
+        if new_out == flank_out:
+            break
+        flank_out = new_out
+        flank_spans = [(c[1], min(int(c[8]), int(c[9])), max(int(c[8]), int(c[9])))
+                       for c in (ln.split("\t") for ln in flank_out.splitlines()) if len(c) >= 11]
+    else:
+        return None                                        # no fixed point: do not guess, run the plain search
+    return _merge_tblastn_by_query_order([core_out, flank_out], order)
 
 
 def search_localize(

@@ -27,13 +27,13 @@ def _record(root, record_id, locus_name, phylum="Basidiomycota", order="Agarical
 
 def _counting_loads(monkeypatch) -> list[int]:
     calls: list[int] = []
-    real = yaml.safe_load
+    real = fr._load_yaml
 
     def counted(text):
         calls.append(1)
         return real(text)
 
-    monkeypatch.setattr(fr.yaml, "safe_load", counted)
+    monkeypatch.setattr(fr, "_load_yaml", counted)
     return calls
 
 

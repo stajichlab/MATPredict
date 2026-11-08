@@ -8,6 +8,14 @@ from typing import Callable
 
 import yaml
 
+#: libyaml's C loader parses the same documents to identical objects about 9x
+#: faster (checked over every db YAML file); fall back where libyaml is absent.
+_YamlLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+
+def _load_yaml(text: str):
+    return yaml.load(text, Loader=_YamlLoader)  # noqa: S506 - safe loader
+
 from MATPredict import logger
 from MATPredict.db.taxonomy import default_lineage_phylum_name, default_lineage_taxids
 from MATPredict.detect.split_locus import DEFAULT_SPLIT_LOCUS, SplitLocusParams, split_locus_params
@@ -406,7 +414,7 @@ def available_phyla(db_root: Path) -> list[str]:
     names = set()
     for order_file in db_root.glob("*/order.yml"):
         try:
-            doc = yaml.safe_load(order_file.read_text())
+            doc = _load_yaml(order_file.read_text())
         except (OSError, yaml.YAMLError) as err:
             logger.warning(
                 "available_phyla: could not read %s (%s) -- that phylum will not be "
@@ -450,7 +458,7 @@ def load_all_families(db_root: Path) -> list[Family]:
 
     families: list[Family] = []
     for order_file in sorted(db_root.glob("*/order.yml")):
-        doc = yaml.safe_load(order_file.read_text())
+        doc = _load_yaml(order_file.read_text())
         for locus in doc["loci"]:
             families.append(
                 Family(
@@ -669,7 +677,7 @@ def load_record_families(db_root: Path) -> dict[str, FamilyKey]:
     for meta_path in sorted(db_root.glob("*/*/*/metadata.yaml")):
         if meta_path.relative_to(db_root).parts[0] == "candidates":
             continue
-        doc = yaml.safe_load(meta_path.read_text())
+        doc = _load_yaml(meta_path.read_text())
         record_id = doc.get("record_id")
         locus_name = (doc.get("mating_type") or {}).get("locus_name")
         if not record_id or not locus_name:

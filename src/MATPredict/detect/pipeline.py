@@ -105,7 +105,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import confidence_cap, family_status, homothallic, partial_core, weak_flank_cap, weak_fragment_cap
+from MATPredict.detect import confidence_cap, family_status, homothallic, margin_basis, partial_core, weak_flank_cap, weak_fragment_cap
 from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
@@ -363,6 +363,9 @@ class DetectionResult:
     `min_idiomorph_margin` the confidence tier is capped; the number is
     reported either way so a close call is never mistaken for a clean one.
     """
+    idiomorph_identity_gap: float | None = None
+    """Set only under `--idiomorph-margin-policy separate` (#145): the identity-point gap that `idiomorph_margin` would have reported for
+    a locus with a single idiomorph candidate (the fallback margin). `idiomorph_margin` is then `None`."""
     supported_span: dict | None = None
     """Report only: extent of this locus's modelled genes and its own hits at or above a bitscore floor
     (`supported_span.py`), with `beyond_supported_bp`, how much of start-end lies outside it. None when unset."""
@@ -2515,6 +2518,7 @@ def run_pipeline(
     #: `--weak-fragment-cap-policy` (`weak_fragment_cap`, #275). Lowers the tier only, never the idiomorph.
     weak_fragment_cap_policy: str = weak_fragment_cap.DEFAULT_WEAK_FRAGMENT_CAP_POLICY,
     weak_flank_cap_policy: str = weak_flank_cap.DEFAULT_WEAK_FLANK_CAP_POLICY,
+    idiomorph_margin_policy: str = margin_basis.DEFAULT_IDIOMORPH_MARGIN_POLICY,
     #: `off` (default) or `on`: overlapping calls of two families become one (the family scoped to the genome
     #: keeps it) and an out-of-scope MTL call is flagged `family_unconfirmed` / `family_confirmed`
     #: (`family_status`). Independent of the policies above.
@@ -2772,6 +2776,7 @@ def run_pipeline(
     confidence_cap.check_policy(confidence_cap_policy)
     weak_fragment_cap.check_policy(weak_fragment_cap_policy)
     weak_flank_cap.check_policy(weak_flank_cap_policy)
+    margin_basis.check_policy(idiomorph_margin_policy)
     family_status.check_policy(cross_family_policy)
     contig_lengths = _contig_lengths(genome_fasta)
 
@@ -4020,6 +4025,8 @@ def run_pipeline(
     results = _apply_weak_fragment_cap(results, weak_fragment_cap_policy)
     # Weak-flank cap (`weak_flank_cap`, off by default, #129): also on the final results; lowers `high` to `medium` only.
     results = _apply_weak_flank_cap(results, weak_flank_cap_policy)
+    # Single-candidate identity gap reported apart from the vote margin (`margin_basis`, off by default, #145): report only.
+    results = margin_basis.apply(results, idiomorph_margin_policy)
 
     # Curator's ruling 2026-09-26: in a taxon whose assemblies collapse MTL
     # heterozygosity, a single-idiomorph genome is of unknown zygosity.

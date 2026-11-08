@@ -6,6 +6,7 @@ import os
 import tarfile
 from pathlib import Path
 
+import pytest
 import yaml
 
 _ROOT = Path(__file__).resolve().parents[1]
@@ -374,3 +375,43 @@ def test_the_committed_genus_lineage_table_covers_orders_and_families():
     rows = bct.load_genus_lineage(os.path.join(os.path.dirname(bct.__file__), "mucoromycotina_genus_lineage.tsv"))
     assert len(rows) == 51 and all(o and f for o, f in rows.values())
     assert rows["Thamnidium"] == ("Mucorales", "Mucoraceae") and rows["Umbelopsis"][0] == "Umbelopsidales"
+
+# ------------------------------------------------------------------------------- Basidiomycota model check (#168)
+
+
+def _flagged(family, genes, defective):
+    return bct.split_defective(det(family=family, genes=genes, defective=defective))
+
+
+def test_outside_basidiomycota_every_flagged_gene_is_listed():
+    genes = [ge("MAT1-1-1", identity=35.0, coverage=40.0), ge("GAP1", role="flanking_conserved", identity=30.0, coverage=20.0)]
+    assert _flagged("Ascomycota:MAT", genes, ["GAP1", "MAT1-1-1"]) == (["GAP1", "MAT1-1-1"], [])
+
+
+def test_basidiomycota_lists_only_a_well_modelled_core_gene():
+    good = ge("HD1", identity=72.0, coverage=95.0)
+    assert _flagged("Basidiomycota:HD", [good], ["HD1"]) == (["HD1"], [])
+
+
+@pytest.mark.parametrize("gene", [
+    ge("HD1", identity=45.0, coverage=95.0),                              # divergent gene, poorly modelled
+    ge("HD1", identity=72.0, coverage=60.0),                              # short model
+    ge("MIP1", role="flanking_conserved", identity=90.0, coverage=95.0),  # not a core gene
+    ge("HD1", identity=72.0, coverage=95.0, lost_to="HD2"),               # a superseded entry never counts
+    ge("HD1", identity=None, coverage=None),                              # no numbers: do not list
+])
+def test_basidiomycota_other_flagged_genes_become_low_confidence_models(gene):
+    listed, low = _flagged("Basidiomycota:HD", [gene], [gene["gene"]])
+    assert listed == [] and low == [gene["gene"]]
+
+
+def test_the_thresholds_are_inclusive():
+    assert _flagged("Basidiomycota:HD", [ge("HD1", identity=60.0, coverage=80.0)], ["HD1"]) == (["HD1"], [])
+    assert _flagged("Basidiomycota:HD", [ge("HD1", identity=59.9, coverage=80.0)], ["HD1"])[0] == []
+
+
+def test_the_locus_summary_carries_both_lists_and_the_tier_is_untouched():
+    x = det(family="Basidiomycota:HD", conf="high", genes=[ge("HD1", identity=72.0, coverage=95.0), ge("HD2", identity=40.0, coverage=90.0)],
+            defective=["HD1", "HD2"])
+    s = bct.summarise_locus(x)
+    assert s["defective"] == ["HD1"] and s["low_confidence_model"] == ["HD2"] and s["confidence"] == "high"

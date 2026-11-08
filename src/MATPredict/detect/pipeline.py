@@ -105,7 +105,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import confidence_cap, family_status, homothallic, margin_basis, partial_core, weak_fragment_cap
+from MATPredict.detect import confidence_cap, family_status, homothallic, margin_basis, partial_core, scope_label, single_region_cap, thin_vote, weak_flank_cap, weak_fragment_cap
 from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
@@ -415,6 +415,12 @@ class DetectionResult:
     triggered or was stopped by its contig-edge guard: the winning and the other
     idiomorph's core genes with their reference coverage, the profile scores, the
     decision (`flipped`, `undetermined`, `kept_edge_artefact`) and the reasons."""
+    single_region_cap: dict | None = None
+    """Set only when `--single-region-cap-policy` lowered this call from `high` to `medium` (#167): its core genes, the number of distinct
+    core regions and that it had no polished flank gene. The idiomorph label is never changed. Absent when the policy is off or did nothing."""
+    weak_flank_cap: dict | None = None
+    """Set only when `--weak-flank-cap-policy` lowered this call from `high` to `medium` (#129): the weak flank genes (status, identity,
+    coverage) that were its only flank support. The idiomorph label is never changed. Absent when the policy is off or did nothing."""
     weak_fragment_cap: dict | None = None
     """Set only when `--weak-fragment-cap-policy` lowered this call to `low` (#275): the strongest core gene, its polish status and
     bitscore, and the threshold. The idiomorph label is never changed. Absent when the policy is off or did nothing."""
@@ -2431,6 +2437,36 @@ def _strong_single_gene_calls(results, clusters, families, build, *, searchable_
     return calls
 
 
+def _apply_single_region_cap(results: list, policy: str) -> list:
+    """`single_region_cap` over the final results: a `high` Basidiomycota call the rule caps becomes `medium` and carries the note."""
+    if policy == single_region_cap.POLICY_OFF:
+        return results
+    out = []
+    for r in results:
+        note = single_region_cap.evaluate(
+            r.confidence, r.family_key.phylum,
+            [single_region_cap.GeneStat(e.gene_name, e.role, e.status, e.contig, e.start, e.end) for e in r.gene_evidence if not e.lost_to],
+            policy=policy,
+        )
+        out.append(replace(r, confidence="medium", single_region_cap=note) if note is not None else r)
+    return out
+
+
+def _apply_weak_flank_cap(results: list, policy: str) -> list:
+    """`weak_flank_cap` over the final results: a `high` call the rule caps becomes `medium` and carries the note; others are returned as they are."""
+    if policy == weak_flank_cap.POLICY_OFF:
+        return results
+    out = []
+    for r in results:
+        note = weak_flank_cap.evaluate(
+            r.confidence, r.idiomorph, (r.family_key.phylum, r.family_key.locus_name),
+            [weak_flank_cap.FlankStat(e.gene_name, e.role, e.status, e.identity, e.coverage) for e in r.gene_evidence if not e.lost_to],
+            policy=policy,
+        )
+        out.append(replace(r, confidence="medium", weak_flank_cap=note) if note is not None else r)
+    return out
+
+
 def _apply_weak_fragment_cap(results: list, policy: str) -> list:
     """`weak_fragment_cap` over the final results: a call the rule caps becomes `low` and carries the note; others are returned as they are."""
     if policy == weak_fragment_cap.POLICY_OFF:
@@ -2499,6 +2535,10 @@ def run_pipeline(
     confidence_cap_policy: str = confidence_cap.DEFAULT_CONFIDENCE_CAP_POLICY,
     #: `--weak-fragment-cap-policy` (`weak_fragment_cap`, #275). Lowers the tier only, never the idiomorph.
     weak_fragment_cap_policy: str = weak_fragment_cap.DEFAULT_WEAK_FRAGMENT_CAP_POLICY,
+    out_of_scope_label_policy: str = scope_label.DEFAULT_OUT_OF_SCOPE_LABEL_POLICY,
+    short_fragment_vote_policy: str = thin_vote.DEFAULT_SHORT_FRAGMENT_VOTE_POLICY,
+    weak_flank_cap_policy: str = weak_flank_cap.DEFAULT_WEAK_FLANK_CAP_POLICY,
+    single_region_cap_policy: str = single_region_cap.DEFAULT_SINGLE_REGION_CAP_POLICY,
     idiomorph_margin_policy: str = margin_basis.DEFAULT_IDIOMORPH_MARGIN_POLICY,
     #: `off` (default) or `on`: overlapping calls of two families become one (the family scoped to the genome
     #: keeps it) and an out-of-scope MTL call is flagged `family_unconfirmed` / `family_confirmed`
@@ -2756,6 +2796,10 @@ def run_pipeline(
     # clamped to the contig's real end.
     confidence_cap.check_policy(confidence_cap_policy)
     weak_fragment_cap.check_policy(weak_fragment_cap_policy)
+    scope_label.check_policy(out_of_scope_label_policy)
+    thin_vote.check_policy(short_fragment_vote_policy)
+    weak_flank_cap.check_policy(weak_flank_cap_policy)
+    single_region_cap.check_policy(single_region_cap_policy)
     margin_basis.check_policy(idiomorph_margin_policy)
     family_status.check_policy(cross_family_policy)
     contig_lengths = _contig_lengths(genome_fasta)
@@ -3397,6 +3441,14 @@ def run_pipeline(
                     called_idiomorph = decision.idiomorph
                 elif decision.decision == partial_core.DECISION_UNDETERMINED:
                     called_idiomorph = "undetermined"
+        # Close vote between short fragments (`thin_vote`, off by default, #138): the call reports `undetermined`.
+        if vote_note is None and called_idiomorph != "undetermined":
+            note = thin_vote.decide(
+                short_fragment_vote_policy, called_idiomorph, idiomorph_margin_from_vote(own_vote), len(own_vote),
+                family.min_idiomorph_margin, [e.coverage for e in evidence if e.role == "core_MAT" and not e.lost_to])
+            if note is not None:
+                vote_note = note
+                called_idiomorph = "undetermined"
         identities: dict[str, float | None] = {}
         for e in evidence:
             if e.identity is not None:
@@ -3988,6 +4040,17 @@ def run_pipeline(
         results = family_status.apply(results, families, lineage, cross_family_policy,
                                       lambda a, b: shared_flank_check(genome_fasta, a, b))
 
+    # A Basidiomycota MAT call outside its scope that rests on STE3/PAN6/RPL39 alone is labelled unverified (`scope_label`, off by
+    # default, #170). Report only; an unknown lineage is never flagged.
+    if out_of_scope_label_policy != scope_label.POLICY_OFF and results:
+        label_lineage: set[int] = set()
+        if taxid is not None:
+            try:
+                label_lineage = {taxid, *zygosity_lineage_resolver(taxid)}
+            except Exception as exc:  # noqa: BLE001 - logged, treated as an unknown lineage
+                logger.warning("lineage lookup for the out-of-scope label failed: %s", exc)
+        results = scope_label.apply(results, families, label_lineage, out_of_scope_label_policy)
+
     # Curator's ruling 2026-09-26: a call made by searching a family outside
     # the genome's phylum (an override route) is unverified. A failed lookup
     # is an unknown phylum, never an error that loses the calls.
@@ -4003,6 +4066,10 @@ def run_pipeline(
     # Weak-fragment cap (`weak_fragment_cap`, off by default, #275): on the FINAL results, after every other stage (the relaxed
     # second pass sets its own tiers), so a note always names the tier that was actually reported and what it became.
     results = _apply_weak_fragment_cap(results, weak_fragment_cap_policy)
+    # Weak-flank cap (`weak_flank_cap`, off by default, #129): also on the final results; lowers `high` to `medium` only.
+    results = _apply_weak_flank_cap(results, weak_flank_cap_policy)
+    # Single-region cap (`single_region_cap`, off by default, #167): Basidiomycota `high` to `medium`; tier only.
+    results = _apply_single_region_cap(results, single_region_cap_policy)
     # Single-candidate identity gap reported apart from the vote margin (`margin_basis`, off by default, #145): report only.
     results = margin_basis.apply(results, idiomorph_margin_policy)
 

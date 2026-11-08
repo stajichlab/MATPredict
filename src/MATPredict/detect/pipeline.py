@@ -105,7 +105,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import confidence_cap, family_status, homothallic, partial_core, weak_fragment_cap
+from MATPredict.detect import confidence_cap, family_status, homothallic, partial_core, scope_label, weak_fragment_cap
 from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
@@ -2496,6 +2496,7 @@ def run_pipeline(
     confidence_cap_policy: str = confidence_cap.DEFAULT_CONFIDENCE_CAP_POLICY,
     #: `--weak-fragment-cap-policy` (`weak_fragment_cap`, #275). Lowers the tier only, never the idiomorph.
     weak_fragment_cap_policy: str = weak_fragment_cap.DEFAULT_WEAK_FRAGMENT_CAP_POLICY,
+    out_of_scope_label_policy: str = scope_label.DEFAULT_OUT_OF_SCOPE_LABEL_POLICY,
     #: `off` (default) or `on`: overlapping calls of two families become one (the family scoped to the genome
     #: keeps it) and an out-of-scope MTL call is flagged `family_unconfirmed` / `family_confirmed`
     #: (`family_status`). Independent of the policies above.
@@ -2752,6 +2753,7 @@ def run_pipeline(
     # clamped to the contig's real end.
     confidence_cap.check_policy(confidence_cap_policy)
     weak_fragment_cap.check_policy(weak_fragment_cap_policy)
+    scope_label.check_policy(out_of_scope_label_policy)
     family_status.check_policy(cross_family_policy)
     contig_lengths = _contig_lengths(genome_fasta)
 
@@ -3982,6 +3984,17 @@ def run_pipeline(
                 logger.warning("lineage lookup for the cross-family rule failed: %s", exc)
         results = family_status.apply(results, families, lineage, cross_family_policy,
                                       lambda a, b: shared_flank_check(genome_fasta, a, b))
+
+    # A Basidiomycota MAT call outside its scope that rests on STE3/PAN6/RPL39 alone is labelled unverified (`scope_label`, off by
+    # default, #170). Report only; an unknown lineage is never flagged.
+    if out_of_scope_label_policy != scope_label.POLICY_OFF and results:
+        label_lineage: set[int] = set()
+        if taxid is not None:
+            try:
+                label_lineage = {taxid, *zygosity_lineage_resolver(taxid)}
+            except Exception as exc:  # noqa: BLE001 - logged, treated as an unknown lineage
+                logger.warning("lineage lookup for the out-of-scope label failed: %s", exc)
+        results = scope_label.apply(results, families, label_lineage, out_of_scope_label_policy)
 
     # Curator's ruling 2026-09-26: a call made by searching a family outside
     # the genome's phylum (an override route) is unverified. A failed lookup

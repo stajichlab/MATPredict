@@ -1,0 +1,424 @@
+run	species	strain	study	screen	screen_genus	second_genus	second_hashes	second_share	deeper_screen	call	truth	wave
+SRR7779982	Beauveria bassiana	Bb3256	PRJNA488964	genus_mismatch	Cordyceps	Colletotrichum	18	0.0043		low_depth		wave1
+SRR7779996	Beauveria bassiana	Bb2989	PRJNA488964	genus_mismatch	Cordyceps	Beauveria	21	0.0056		low_depth		wave1
+SRR7780017	Beauveria bassiana	Bb2066	PRJNA488964	genus_mismatch		Fusarium	72	0.0219		low_depth		wave1
+SRR7780029	Beauveria bassiana	Bb2981	PRJNA488964	genus_mismatch		Beauveria	495	0.1288		low_depth		wave1
+SRR7780038	Beauveria bassiana	Bb2134	PRJNA488964	genus_mismatch	Cordyceps	Fusarium	11	0.0031		low_depth		wave1
+SRR7780090	Beauveria bassiana	Bb2588	PRJNA488964	genus_mismatch	Cordyceps	Colletotrichum	16	0.005		low_depth		wave1
+SRR7780131	Beauveria bassiana	Bb3255	PRJNA488964	genus_mismatch	Cordyceps	Colletotrichum	19	0.0041		low_depth		wave1
+SRR7780144	Beauveria bassiana	Bb1998	PRJNA488964	genus_mismatch	Cordyceps	Beauveria	99	0.0248	yes	low_depth		wave1
+SRR19214212	Candidozyma auris	C. auris	PRJNA838244	genus_mismatch		Candidozyma	1251	0.3832		a		wave2
+SRR30008718	Candidozyma auris	Clade I	PRJNA1140213	genus_mismatch	Candida	Candidozyma	490	0.3852		low_depth		wave2
+SRR40524074	Candidozyma auris	3069	PRJNA1439863	genus_mismatch	Lodderomyces	Candidozyma	1208	0.4739		a		wave2
+ERR12084585	Cercospora beticola		PRJEB66134	genus_mismatch	Penicillium	Cercospora	2023	0.4044		MAT1-1		wave4
+ERR12084630	Cercospora beticola		PRJEB66134	genus_mismatch	Penicillium	Cercospora	188	0.0537		low_depth		wave4
+ERR12084718	Cercospora beticola		PRJEB66134	genus_mismatch	Cladosporium	Aspergillus	19	0.0062		low_depth		wave4
+ERR12084752	Cercospora beticola		PRJEB66134	genus_mismatch	Penicillium	Aspergillus	4	0.0014		low_depth		wave4
+ERR12084881	Cercospora beticola		PRJEB66134	genus_mismatch	Penicillium	Cercospora	368	0.1122		low_depth		wave4
+SRR31166608	Cercospora beticola	DK12-290	PRJNA1174990	genus_mismatch	Penicillium	Cercospora	2259	0.3981		MAT1-2		wave4
+SRR31166716	Cercospora beticola	UK11-79	PRJNA1174990	genus_mismatch	Akanthomyces	Cercospora	1557	0.2988		MAT1-1		wave4
+SRR31166794	Cercospora beticola	SP12-107	PRJNA1174990	genus_mismatch	Penicillium	Cercospora	584	0.1552		low_depth		wave4
+SRR837381	Cryptococcus neoformans	MMRL1361	PRJNA191374	genus_mismatch	Lodderomyces	Aspergillus	19	0.0127		low_depth		wave3_basidio
+SRR17915107	Cryptococcus tetragattii	MRL1124	PRJNA804139	genus_mismatch	Clavispora	Cryptococcus	819	0.3767		alpha		wave3_basidio
+SRR17915120	Cryptococcus tetragattii	MRL3061	PRJNA804139	genus_mismatch	Lodderomyces	Gigaspora	10	0.005	yes	low_depth		wave3_basidio
+SRR6118228	Fusarium oxysporum	EtdFoc-124	PRJNA412392	genus_mismatch	Meyerozyma	Fusarium	248	0.1648		low_depth		wave1
+SRR6118306	Fusarium oxysporum	EtdFoc-187	PRJNA412392	genus_mismatch	Meyerozyma	Fusarium	82	0.0605		low_depth		wave1
+SRR6118387	Fusarium oxysporum	EtdFoc-28	PRJNA412392	genus_mismatch	Meyerozyma	Fusarium	913	0.289		low_depth		wave1
+SRR6118401	Fusarium oxysporum	EtdFoc-107	PRJNA412392	genus_mismatch	Meyerozyma	Fusarium	332	0.1712		low_depth		wave1
+SRR6118402	Fusarium oxysporum	EtdFoc-105	PRJNA412392	genus_mismatch	Meyerozyma	Calonectria	456	0.2524		low_depth		wave1
+SRR6118443	Fusarium oxysporum	EtdFoc-123	PRJNA412392	genus_mismatch	Meyerozyma	Fusarium	63	0.046		low_depth		wave1
+SRR6118511	Fusarium oxysporum	EtdFoc-199	PRJNA412392	genus_mismatch	Meyerozyma	Fusarium	55	0.0413		low_depth		wave1
+SRR6118517	Fusarium oxysporum	EtdFoc-194	PRJNA412392	genus_mismatch	Meyerozyma	Fusarium	395	0.1758		low_depth		wave1
+SRR18739950	Pichia kudriavzevii	MAG	PRJNA819536	genus_mismatch	Lodderomyces	Nakaseomyces	934	0.341		low_depth		wave3_asco
+SRR18739952	Pichia kudriavzevii	1418	PRJNA819536	genus_mismatch	Lodderomyces	Pichia	650	0.298		both		wave3_asco
+SRR18739956	Pichia kudriavzevii	706K	PRJNA819536	genus_mismatch	Lodderomyces	Aspergillus	31	0.0196		low_depth		wave3_asco
+SRR18739962	Pichia kudriavzevii	1786	PRJNA819536	genus_mismatch	Lodderomyces	Pichia	11	0.0061		low_depth		wave3_asco
+SRR18739963	Pichia kudriavzevii	1434	PRJNA819536	genus_mismatch	Lodderomyces	Fusarium	20	0.0124		low_depth		wave3_asco
+SRR31541907	Plenodomus lingam	STE-U 9756	PRJNA1191806	genus_mismatch	Aspergillus	Plenodomus	2800	0.4345		MAT1-1		wave1
+ERR1976667	Pyricularia oryzae		PRJEB20844	genus_mismatch		Aspergillus	90	0.0135		low_depth		wave3_poryzae
+SRR13201205	Rhizopus arrhizus	NRRL 66642	PRJNA676572	genus_mismatch	Umbelopsis	Mucor	263	0.0479		none		wave3_mucoro
+SRR9028607	Rhizopus arrhizus	NRRL 1470	PRJNA537966	genus_mismatch	Circinella	Rhizopus	66	0.0141		none		wave3_mucoro
+SRR9720365	Rhizopus delemar	NRRL 1472	PRJNA538869	genus_mismatch	Mucor	Rhizopus	8	0.0024		none		wave5_mucoro
+SRR23977879	Talaromyces marneffei	03_037_b_d0	PRJNA949141	genus_mismatch	Candida	Fusarium	9	0.0056		low_depth		wave1
+ERR13824526	Zymoseptoria tritici		PRJEB81422	genus_mismatch	Alternaria	Saccharomyces	12	0.0034		low_depth		wave2
+ERR13824560	Zymoseptoria tritici		PRJEB81422	genus_mismatch	Sporobolomyces	Rhodotorula	173	0.0683		low_depth		wave2
+ERR13824566	Zymoseptoria tritici		PRJEB81422	genus_mismatch	Alternaria	Zymoseptoria	174	0.0451		low_depth		wave2
+DRR1095426	Aspergillus flavus	missing	PRJDB43097	borderline	Aspergillus	Saccharomyces	22	0.0054	yes	MAT1-2		wave2
+DRR1095524	Aspergillus flavus	missing	PRJDB43097	borderline	Aspergillus	Saccharomyces	15	0.0037	yes	MAT1-2		wave2
+DRR1095541	Aspergillus flavus	missing	PRJDB43097	mixed	Aspergillus	Saccharomyces	76	0.0186	yes	MAT1-1		wave2
+DRR1095542	Aspergillus flavus	missing	PRJDB43097	mixed	Aspergillus	Saccharomyces	86	0.0207	yes	MAT1-1		wave2
+DRR1095629	Aspergillus flavus	missing	PRJDB43097	borderline	Aspergillus	Saccharomyces	28	0.0067	yes	MAT1-1		wave2
+DRR1095641	Aspergillus flavus	missing	PRJDB43097	borderline	Aspergillus	Neurospora	31	0.0067	yes	MAT1-2		wave2
+DRR1095683	Aspergillus flavus	missing	PRJDB43097	borderline	Aspergillus	Saccharomyces	17	0.0042	yes	MAT1-1		wave2
+DRR1095694	Aspergillus flavus	missing	PRJDB43097	mixed	Aspergillus	Saccharomyces	73	0.0173	yes	MAT1-2		wave2
+DRR1095718	Aspergillus flavus	missing	PRJDB43097	borderline	Aspergillus	Saccharomyces	14	0.0034	yes	MAT1-2		wave2
+DRR1095722	Aspergillus flavus	missing	PRJDB43097	borderline	Aspergillus	Saccharomyces	13	0.0032	yes	MAT1-1		wave2
+DRR1095724	Aspergillus flavus	missing	PRJDB43097	borderline	Aspergillus	Saccharomyces	29	0.0072	yes	MAT1-2		wave2
+DRR1095758	Aspergillus flavus	missing	PRJDB43097	borderline	Aspergillus	Saccharomyces	20	0.0049	yes	MAT1-2		wave2
+DRR1095790	Aspergillus flavus	missing	PRJDB43097	mixed	Aspergillus	Saccharomyces	50	0.0123	yes	low_depth		wave2
+DRR1095848	Aspergillus flavus	missing	PRJDB43097	mixed	Aspergillus	Saccharomyces	70	0.0167	yes	MAT1-1		wave2
+DRR1095849	Aspergillus flavus	missing	PRJDB43097	borderline	Aspergillus	Saccharomyces	31	0.0074	yes	MAT1-1		wave2
+DRR1095870	Aspergillus flavus	missing	PRJDB43097	mixed	Aspergillus	Saccharomyces	89	0.0212	yes	MAT1-1		wave2
+DRR1095932	Aspergillus flavus	missing	PRJDB43097	mixed	Aspergillus	Meyerozyma	103	0.0246	yes	MAT1-2		wave2
+ERR16037715	Aspergillus flavus		PRJEB105462	mixed	Aspergillus	Candida	211	0.0652		MAT1-1		wave2
+DRR289668	Aspergillus fumigatus	TBCZ34	PRJDB11554	borderline	Aspergillus	Nakaseomyces	18	0.0055	yes	MAT1-1		wave1
+DRR290031	Aspergillus fumigatus	IFM 49895	PRJDB11624	mixed	Aspergillus	Nakaseomyces	52	0.017	yes	MAT1-1		wave1
+DRR290035	Aspergillus fumigatus	IFM 60994	PRJDB11624	mixed	Aspergillus	Scedosporium	72	0.0231	yes	MAT1-2		wave1
+DRR290037	Aspergillus fumigatus	IFM 62054	PRJDB11624	mixed	Aspergillus	Scedosporium	38	0.0123	yes	MAT1-2		wave1
+DRR290038	Aspergillus fumigatus	IFM 62241	PRJDB11624	mixed	Aspergillus	Scedosporium	42	0.0132	yes	MAT1-1		wave1
+DRR290039	Aspergillus fumigatus	IFM 62521	PRJDB11624	borderline	Aspergillus	Scedosporium	27	0.0085	yes	MAT1-2		wave1
+DRR290041	Aspergillus fumigatus	IFM 63311	PRJDB11624	mixed	Aspergillus	Scedosporium	47	0.0148	yes	MAT1-1		wave1
+DRR290042	Aspergillus fumigatus	IFM 64302	PRJDB11624	borderline	Aspergillus	Scedosporium	25	0.0077	yes	MAT1-1		wave1
+DRR290043	Aspergillus fumigatus	IFM 64563	PRJDB11624	mixed	Aspergillus	Scedosporium	78	0.0231	yes	MAT1-1		wave1
+DRR290851	Aspergillus fumigatus	3-1-D	PRJDB11643	borderline	Aspergillus	Trichophyton	11	0.0033	yes	MAT1-1		wave1
+ERR16779443	Aspergillus fumigatus		PRJEB109029	borderline	Aspergillus	Diaporthe	7	0.0024	yes	MAT1-1		wave1
+ERR16779477	Aspergillus fumigatus		PRJEB109029	borderline	Aspergillus	Diaporthe	7	0.0024	yes	MAT1-1		wave1
+ERR16779478	Aspergillus fumigatus		PRJEB109029	borderline	Aspergillus	Diaporthe	7	0.0024	yes	MAT1-1		wave1
+ERR16779642	Aspergillus fumigatus		PRJEB109029	borderline	Aspergillus	Diaporthe	6	0.002	yes	MAT1-2		wave1
+ERR18000355	Aspergillus fumigatus		PRJEB126758	borderline	Aspergillus	Diaporthe	6	0.0021	yes	MAT1-1		wave1
+SRR11785205	Aspergillus fumigatus	AFIS2241	PRJNA632561	mixed	Aspergillus	Malassezia	71	0.0155	yes	MAT1-1		wave1
+SRR15010376	Aspergillus fumigatus	A17-3A-1	PRJNA742769	mixed	Aspergillus	Coccidioides	87	0.0256	yes	MAT1-1		wave1
+SRR16944274	Aspergillus fumigatus	JD_2	PRJNA780348	borderline	Aspergillus	Irpex	14	0.0049	yes	MAT1-1		wave1
+SRR25073377	Aspergillus fumigatus	Not applicable	PRJNA985736	borderline	Aspergillus	Saccharomyces	27	0.0073	yes	MAT1-2		wave1
+SRR25183004	Aspergillus fumigatus	eAF1008	PRJNA991533	borderline	Aspergillus	Diaporthe	7	0.002	yes	MAT1-1		wave1
+SRR28508725	Aspergillus fumigatus	dAceA	PRJNA1094460	borderline	Aspergillus	Botrytis	22	0.0058	yes	MAT1-1		wave1
+SRR28508727	Aspergillus fumigatus	dAceA	PRJNA1094460	borderline	Aspergillus	Saccharomyces	20	0.0055	yes	MAT1-1		wave1
+SRR28508730	Aspergillus fumigatus	CEA10	PRJNA1094460	mixed	Aspergillus	Saccharomyces	52	0.0147	yes	MAT1-1		wave1
+SRR28508732	Aspergillus fumigatus	dCrpA	PRJNA1094460	borderline	Aspergillus	Saccharomyces	26	0.0068	yes	MAT1-1		wave1
+SRR28508734	Aspergillus fumigatus	dCrpA	PRJNA1094460	mixed	Aspergillus	Saccharomyces	56	0.0145	yes	MAT1-1		wave1
+SRR28508735	Aspergillus fumigatus	CEA10	PRJNA1094460	mixed	Aspergillus	Saccharomyces	43	0.0143		MAT1-1		wave1
+SRR8759704	Aspergillus fumigatus	V157-59	PRJNA528395	borderline	Aspergillus	Diaporthe	7	0.0021	yes	MAT1-1		wave1
+SRR22001920	Beauveria bassiana	MBC 273	PRJNA879330	mixed	Beauveria	Purpureocillium	59	0.0165		MAT1-2		wave1
+SRR22001938	Beauveria bassiana	MBC 042	PRJNA879330	mixed	Beauveria	Akanthomyces	45	0.0102	yes	MAT1-1		wave1
+SRR22001941	Beauveria bassiana	MBC 245	PRJNA879330	borderline	Beauveria	Cordyceps	17	0.004	yes	MAT1-2		wave1
+SRR22001951	Beauveria bassiana	MBC 229	PRJNA879330	borderline	Beauveria	Cordyceps	20	0.0048	yes	MAT1-2		wave1
+SRR22001966	Beauveria bassiana	MBC 196	PRJNA879330	borderline	Beauveria	Akanthomyces	17	0.0043	yes	MAT1-2		wave1
+SRR22001972	Beauveria bassiana	MBC 161	PRJNA879330	mixed	Beauveria	Akanthomyces	73	0.0208		MAT1-2		wave1
+SRR22001993	Beauveria bassiana	MBC 106	PRJNA879330	borderline	Beauveria	Akanthomyces	39	0.0096	yes	MAT1-2		wave1
+SRR22002004	Beauveria bassiana	MBC 295	PRJNA879330	borderline	Beauveria	Arthroderma	27	0.0062	yes	MAT1-2		wave1
+SRR22002008	Beauveria bassiana	MBC 291	PRJNA879330	borderline	Beauveria	Arthroderma	26	0.0064	yes	MAT1-2		wave1
+SRR22217057	Beauveria bassiana	MBC 503	PRJNA879330	borderline	Beauveria	Arthroderma	25	0.006	yes	MAT1-2		wave1
+SRR22217062	Beauveria bassiana	MBC 322	PRJNA879330	borderline	Beauveria	Arthroderma	23	0.0052	yes	MAT1-2		wave1
+SRR22217079	Beauveria bassiana	MBC 459	PRJNA879330	borderline	Beauveria	Purpureocillium	12	0.0029	yes	MAT1-1		wave1
+SRR22217096	Beauveria bassiana	MBC 417	PRJNA879330	borderline	Beauveria	Purpureocillium	11	0.0026	yes	MAT1-2		wave1
+SRR22217109	Beauveria bassiana	MBC 379	PRJNA879330	borderline	Beauveria	Purpureocillium	31	0.0066	yes	MAT1-2		wave1
+SRR22217230	Beauveria bassiana	MBC 693	PRJNA879330	mixed	Beauveria	Akanthomyces	49	0.012	yes	MAT1-2		wave1
+SRR22217279	Beauveria bassiana	MBC 953	PRJNA879330	mixed	Beauveria	Arthroderma	52	0.0131	yes	MAT1-2		wave1
+SRR22217281	Beauveria bassiana	MBC 951	PRJNA879330	mixed	Beauveria	Arthroderma	63	0.0153	yes	MAT1-2		wave1
+SRR22217368	Beauveria bassiana	MBC 910	PRJNA879330	borderline	Beauveria	Cordyceps	33	0.0084	yes	MAT1-1		wave1
+SRR22217385	Beauveria bassiana	MBC 887	PRJNA879330	borderline	Beauveria	Purpureocillium	31	0.0074	yes	MAT1-1		wave1
+SRR7779894	Beauveria bassiana	Bb257	PRJNA488964	mixed	Beauveria	Penicillium	42	0.0119		MAT1-2		wave1
+SRR7779899	Beauveria bassiana	Bb2530	PRJNA488964	mixed	Beauveria	Cordyceps	162	0.0387		MAT1-1		wave1
+SRR7780003	Beauveria bassiana	Bb2993	PRJNA488964	mixed	Beauveria	Cordyceps	126	0.0347		none		wave1
+SRR7780020	Beauveria bassiana	Bb2064	PRJNA488964	mixed	Beauveria	Cordyceps	44	0.0122		MAT1-1		wave1
+SRR7780061	Beauveria bassiana	Bb158	PRJNA488964	mixed	Beauveria	Akanthomyces	2706	0.3983		MAT1-2		wave1
+SRR7780136	Beauveria bassiana	Bb2136	PRJNA488964	mixed	Beauveria	Cordyceps	2766	0.4203		MAT1-1		wave1
+SRR10551681	Brettanomyces bruxellensis	CRL-82	PRJNA592329	mixed	Brettanomyces	Saccharomyces	32	0.0156		a		wave4
+SRR10551683	Brettanomyces bruxellensis	CRL-80	PRJNA592329	mixed	Brettanomyces	Saccharomyces	32	0.0179		a		wave4
+SRR10551684	Brettanomyces bruxellensis	CRL-9	PRJNA592329	mixed	Brettanomyces	Saccharomyces	74	0.0351	yes	a		wave4
+SRR10551703	Brettanomyces bruxellensis	CRL-60	PRJNA592329	mixed	Brettanomyces	Saccharomyces	34	0.0154	yes	low_depth		wave4
+SRR10551718	Brettanomyces bruxellensis	CRL-47	PRJNA592329	mixed	Brettanomyces	Saccharomyces	30	0.0128	yes	a		wave4
+SRR10551723	Brettanomyces bruxellensis	CRL-38	PRJNA592329	mixed	Brettanomyces	Saccharomyces	77	0.0428		a		wave4
+SRR10551724	Brettanomyces bruxellensis	CRL-36	PRJNA592329	mixed	Brettanomyces	Saccharomyces	29	0.0182		a		wave4
+SRR10551732	Brettanomyces bruxellensis	CRL-28	PRJNA592329	mixed	Brettanomyces	Saccharomyces	56	0.035		a		wave4
+SRR10551733	Brettanomyces bruxellensis	CRL-27	PRJNA592329	mixed	Brettanomyces	Saccharomyces	24	0.015		a		wave4
+SRR10551737	Brettanomyces bruxellensis	CRL-23	PRJNA592329	mixed	Sporobolomyces	Brettanomyces	822	0.2348		a		wave4
+SRR10551738	Brettanomyces bruxellensis	CRL-22	PRJNA592329	mixed	Brettanomyces	Saccharomyces	24	0.0111		a		wave4
+ERR6565669	Candida albicans	T1	PRJEB46537	mixed	Candida	Saccharomyces	37	0.0203	yes	both		wave2
+SRR13587841	Candida albicans	GX39	PRJNA689765	mixed	Candida	Nakaseomyces	21	0.01	yes	both		wave2
+SRR13587867	Candida albicans	GZ244	PRJNA689765	borderline	Candida	Mortierella	18	0.0086	yes	both		wave2
+SRR19696266	Candida albicans	A_18_5	PRJNA848263	mixed	Candida	Meyerozyma	94	0.0514		both		wave2
+SRR23500571	Candida albicans	child	PRJNA926612	mixed	Candida	Lodderomyces	1504	0.4363		both		wave2
+SRR29246728	Candida albicans	C. albicans Q2	PRJNA1118730	borderline	Candida	Nakaseomyces	15	0.0083	yes	both		wave2
+SRR29246735	Candida albicans	C. albicans N1	PRJNA1118730	borderline	Candida	Saccharomyces	13	0.0071	yes	both		wave2
+SRR29246738	Candida albicans	C. albicans M3	PRJNA1118730	borderline	Candida	Saccharomyces	15	0.008	yes	both		wave2
+SRR30894139	Candida albicans	missing	PRJNA1168696	mixed	Candida	Pichia	65	0.0314		both		wave2
+SRR31487775	Candida albicans	missing	PRJNA1189032	mixed	Candida	Lodderomyces	29	0.0159		both		wave2
+SRR8163383	Candida albicans	BWP17	PRJNA503946	mixed	Candida	Saccharomyces	233	0.1795		both		wave2
+SRR8163395	Candida albicans	BWP17	PRJNA503946	mixed	Candida	Saccharomyces	268	0.1836		both		wave2
+ERR1519357	Candidozyma auris		PRJEB14717	mixed	Candidozyma	Williopsis	431	0.1825		a		wave2
+SRR10461263	Candidozyma auris	B11808	PRJNA595978	mixed	Candidozyma	Exophiala	96	0.0611		alpha		wave2
+SRR17577089	Candidozyma auris	B17916	PRJNA796037	mixed	Candidozyma	Lodderomyces	1264	0.4206		alpha		wave2
+SRR18117958	Candidozyma auris	VPCI-F35-A	PRJNA809768	mixed	Candidozyma	Lodderomyces	64	0.0237		a		wave2
+SRR19214215	Candidozyma auris	C. auris	PRJNA838244	mixed	Candidozyma	Hansenula	47	0.0313		a		wave2
+SRR25583621	Candidozyma auris	B18613	PRJNA1003896	mixed	Candidozyma	Nakaseomyces	74	0.0467		a		wave2
+SRR28543403	Candidozyma auris	TX-DSHS-CAU-240029-TX-VH00729-240314B_S51	PRJNA1092051	mixed	Candidozyma	Lodderomyces	22	0.0157	yes	a		wave2
+SRR30284740	Candidozyma auris	MF3330BC	PRJNA1039591	mixed	Candidozyma	Gigaspora	110	0.0564		alpha		wave2
+SRR30847251	Candidozyma auris	77-CA	PRJNA1164417	mixed	Candidozyma	Lodderomyces	31	0.0138	yes	a		wave2
+SRR30847265	Candidozyma auris	64-CA	PRJNA1164417	mixed	Candidozyma	Lizanozyma	34	0.0116	yes	a		wave2
+SRR34036255	Candidozyma auris	NV-WW-CAU-1123B126W	PRJNA1279182	mixed	Candidozyma	Blastobotrys	62	0.0344		a		wave2
+SRR3883450	Candidozyma auris	B11218	PRJNA328792	mixed	Candidozyma	Nakaseomyces	1169	0.4491		a		wave2
+SRR7909172	Candidozyma auris	B12031	PRJNA493622	mixed	Candidozyma	Nakaseomyces	23	0.0159		a		wave2
+SRR9316762	Candidozyma auris	A41	PRJNA549344	borderline	Candidozyma	Saccharomyces	14	0.0093	yes	alpha		wave2
+SRR9316775	Candidozyma auris	A57	PRJNA549344	borderline	Candidozyma	Saccharomyces	19	0.0104	yes	alpha		wave2
+ERR12084582	Cercospora beticola		PRJEB66134	mixed	Cercospora	Penicillium	1082	0.2443		MAT1-2		wave4
+ERR12084584	Cercospora beticola		PRJEB66134	mixed	Cercospora	Penicillium	1279	0.3061		MAT1-1		wave4
+ERR12084586	Cercospora beticola		PRJEB66134	mixed	Cercospora	Penicillium	2212	0.4274		MAT1-2		wave4
+ERR12084587	Cercospora beticola		PRJEB66134	mixed	Cercospora	Penicillium	2235	0.4288		MAT1-2		wave4
+ERR12084720	Cercospora beticola		PRJEB66134	mixed	Cercospora	Talaromyces	2253	0.4399		MAT1-2		wave4
+ERR12084793	Cercospora beticola		PRJEB66134	mixed	Cercospora	Penicillium	55	0.0153	yes	MAT1-2		wave4
+ERR12084842	Cercospora beticola		PRJEB66134	mixed	Cercospora	Aspergillus	61	0.0172	yes	MAT1-2		wave4
+ERR12084848	Cercospora beticola		PRJEB66134	mixed	Cercospora	Aspergillus	46	0.0131	yes	MAT1-2		wave4
+SRR12966216	Cercospora beticola	16-F29	PRJNA673877	borderline	Cercospora	Elsinoe	29	0.0084	yes	MAT1-2		wave4
+SRR12966257	Cercospora beticola	16-F19	PRJNA673877	mixed	Cercospora	Apiospora	198	0.0552		MAT1-2		wave4
+SRR12966310	Cercospora beticola	16-716	PRJNA673877	mixed	Cercospora	Talaromyces	145	0.0417		MAT1-2		wave4
+SRR12966311	Cercospora beticola	16-704	PRJNA673877	mixed	Cercospora	Pyricularia	104	0.0286	yes	MAT1-2		wave4
+SRR12966312	Cercospora beticola	16-666	PRJNA673877	borderline	Cercospora	Pyricularia	33	0.0094	yes	MAT1-2		wave4
+SRR12966313	Cercospora beticola	16-523	PRJNA673877	borderline	Cercospora	Pyricularia	34	0.0096	yes	MAT1-2		wave4
+SRR12966314	Cercospora beticola	16-498	PRJNA673877	mixed	Cercospora	Pyricularia	36	0.0102	yes	MAT1-1		wave4
+SRR12966317	Cercospora beticola	16-317	PRJNA673877	borderline	Cercospora	Pyricularia	25	0.0071	yes	MAT1-1		wave4
+SRR12966320	Cercospora beticola	16-33	PRJNA673877	borderline	Cercospora	Pyricularia	32	0.009	yes	MAT1-1		wave4
+SRR31166606	Cercospora beticola	DK12-305	PRJNA1174990	borderline	Cercospora	Akanthomyces	25	0.0069	yes	MAT1-1		wave4
+SRR31166609	Cercospora beticola	DK12-232	PRJNA1174990	mixed	Cercospora	Pseudogymnoascus	233	0.0589		MAT1-1		wave4
+SRR31166611	Cercospora beticola	DE_11_58	PRJNA1174990	mixed	Cercospora	Apiospora	181	0.0509		MAT1-2		wave4
+SRR31166637	Cercospora beticola	NL12-418	PRJNA1174990	borderline	Cercospora	Penicillium	17	0.0048	yes	MAT1-1		wave4
+SRR31166638	Cercospora beticola	NL12-392	PRJNA1174990	borderline	Cercospora	Akanthomyces	25	0.0068	yes	MAT1-1		wave4
+SRR31166639	Cercospora beticola	NL12-381	PRJNA1174990	borderline	Cercospora	Akanthomyces	19	0.0055	yes	MAT1-2		wave4
+SRR31166640	Cercospora beticola	NL12-372	PRJNA1174990	mixed	Cercospora	Penicillium	2186	0.3884		MAT1-2		wave4
+SRR31166643	Cercospora beticola	NL12-357	PRJNA1174990	borderline	Cercospora	Penicillium	19	0.0052	yes	MAT1-1		wave4
+SRR31166644	Cercospora beticola	NL12-354	PRJNA1174990	borderline	Cercospora	Penicillium	24	0.0067	yes	MAT1-2		wave4
+SRR31166646	Cercospora beticola	NL12-352	PRJNA1174990	borderline	Cercospora	Akanthomyces	30	0.0069	yes	MAT1-2		wave4
+SRR31166692	Cercospora beticola	UK_4A3.1B	PRJNA1174990	mixed	Cercospora	Penicillium	2341	0.3989		MAT1-1		wave4
+SRR31166694	Cercospora beticola	UK_30.7.2B	PRJNA1174990	mixed	Cercospora	Penicillium	434	0.1101		MAT1-1		wave4
+SRR31166701	Cercospora beticola	UK_29.5.1B	PRJNA1174990	mixed	Cercospora	Aspergillus	203	0.0541		MAT1-2		wave4
+SRR31166705	Cercospora beticola	UK_25.1.1A	PRJNA1174990	mixed		Penicillium	2667	0.4438		MAT1-2		wave4
+SRR31166757	Cercospora beticola	FR10-4-10	PRJNA1174990	borderline	Cercospora	Akanthomyces	13	0.0037	yes	MAT1-2		wave4
+SRR31166777	Cercospora beticola	SP12-90	PRJNA1174990	mixed	Cercospora	Penicillium	461	0.1182		MAT1-1		wave4
+SRR31166784	Cercospora beticola	SP12-52	PRJNA1174990	mixed	Cercospora	Penicillium	1039	0.2309		MAT1-1		wave4
+SRR31166788	Cercospora beticola	SP12-35	PRJNA1174990	mixed	Cercospora	Penicillium	2024	0.3709		MAT1-2		wave4
+SRR31166790	Cercospora beticola	SP12-16	PRJNA1174990	borderline	Cercospora	Akanthomyces	22	0.0062	yes	MAT1-2		wave4
+SRR31166806	Cercospora beticola	SE12-264	PRJNA1174990	borderline	Cercospora	Akanthomyces	20	0.0056	yes	MAT1-2		wave4
+SRR31166807	Cercospora beticola	SE12-261	PRJNA1174990	mixed	Akanthomyces	Cercospora	2568	0.4084		MAT1-2		wave4
+SRR31166808	Cercospora beticola	SE12-144	PRJNA1174990	borderline	Cercospora	Akanthomyces	31	0.0085	yes	MAT1-2		wave4
+SRR31166814	Cercospora beticola	SCL15-3-52	PRJNA1174990	borderline	Cercospora	Penicillium	17	0.0048	yes	MAT1-2		wave4
+SRR10861776	Cryptococcus deneoformans	PMY2420	PRJNA420966	borderline	Cryptococcus	Saccharomyces	18	0.007	yes	alpha		wave3_basidio
+SRR10861794	Cryptococcus deneoformans	PMY2418	PRJNA420966	mixed	Cryptococcus	Saccharomyces	29	0.0129		alpha		wave3_basidio
+SRR10861829	Cryptococcus deneoformans	PMY2414	PRJNA420966	borderline	Cryptococcus	Saccharomyces	18	0.0079	yes	alpha		wave3_basidio
+SRR10861858	Cryptococcus deneoformans	PMY2540	PRJNA420966	borderline	Cryptococcus	Saccharomyces	7	0.0033	yes	a		wave3_basidio
+SRR10861861	Cryptococcus deneoformans	PMY2516	PRJNA420966	borderline	Cryptococcus	Saccharomyces	15	0.0066	yes	alpha		wave3_basidio
+SRR10861876	Cryptococcus deneoformans	PMY2538	PRJNA420966	mixed	Cryptococcus	Saccharomyces	28	0.0108	yes	alpha		wave3_basidio
+SRR10861881	Cryptococcus deneoformans	PMY2478	PRJNA420966	borderline	Cryptococcus	Saccharomyces	19	0.0085	yes	a		wave3_basidio
+SRR10861883	Cryptococcus deneoformans	PMY2466	PRJNA420966	borderline	Cryptococcus	Saccharomyces	11	0.0051	yes	alpha		wave3_basidio
+SRR10861900	Cryptococcus deneoformans	PMY2464	PRJNA420966	mixed	Cryptococcus	Saccharomyces	25	0.0104	yes	alpha		wave3_basidio
+SRR10861922	Cryptococcus deneoformans	PMY2509	PRJNA420966	mixed	Cryptococcus	Saccharomyces	27	0.0108	yes	a		wave3_basidio
+SRR10861937	Cryptococcus deneoformans	PMY2398	PRJNA420966	mixed	Cryptococcus	Saccharomyces	32	0.0143		alpha		wave3_basidio
+SRR10861960	Cryptococcus deneoformans	PMY2361	PRJNA420966	borderline	Cryptococcus	Saccharomyces	19	0.0078	yes	a		wave3_basidio
+SRR10861961	Cryptococcus deneoformans	PMY2349	PRJNA420966	mixed	Cryptococcus	Saccharomyces	29	0.0115	yes	alpha		wave3_basidio
+SRR13810219	Cryptococcus gattii complex	RB15	PRJNA704667	mixed	Cryptococcus	Verticillium	49	0.0244	yes	alpha		wave3_gattii
+SRR13810229	Cryptococcus gattii complex	RA5	PRJNA704667	mixed	Cryptococcus	Verticillium	38	0.0192	yes	alpha		wave3_gattii
+SRR1511422	Cryptococcus gattii complex	B9588	PRJNA254979	mixed	Cryptococcus	Saccharomyces	31	0.0164	yes	alpha		wave3_gattii
+SRR1511425	Cryptococcus gattii complex	EJB18	PRJNA254979	mixed	Cryptococcus	Saccharomyces	41	0.0213	yes	alpha		wave3_gattii
+SRR1511426	Cryptococcus gattii complex	EJB87	PRJNA254979	mixed	Cryptococcus	Saccharomyces	27	0.0149		alpha		wave3_gattii
+SRR1513312	Cryptococcus gattii complex	V6	PRJNA254979	mixed	Cryptococcus	Saccharomyces	39	0.0203	yes	alpha		wave3_gattii
+SRR24010549	Cryptococcus gattii complex		PRJNA950111	mixed	Cryptococcus	Candidozyma	37	0.0174	yes	none		wave3_gattii
+SRR28807390	Cryptococcus gattii complex	2301F8	PRJNA1103328	borderline	Cryptococcus	Saccharomyces	13	0.0065	yes	none		wave3_gattii
+SRR34113456	Cryptococcus gattii complex	RB59JF	PRJNA1279626	mixed	Cryptococcus	Meira	120	0.017		alpha		wave3_gattii
+SRR34113475	Cryptococcus gattii complex	CDCF2866	PRJNA1279626	mixed	Cryptococcus	Meira	34	0.0105		alpha		wave3_gattii
+SRR7899955	Cryptococcus gattii complex	SEC744	PRJNA493061	mixed	Cryptococcus	Saccharomyces	40	0.0158	yes	alpha		wave3_gattii
+ERR1395149	Cryptococcus neoformans		PRJEB13814	mixed	Cryptococcus	Papiliotrema	152	0.0743		alpha		wave3_basidio
+ERR1395150	Cryptococcus neoformans		PRJEB13814	borderline	Cryptococcus	Papiliotrema	14	0.0045	yes	a		wave3_basidio
+ERR1520645	Cryptococcus neoformans		PRJEB14735	mixed	Cryptococcus	Papiliotrema	152	0.0743		alpha		wave3_basidio
+SRR13783222	Cryptococcus neoformans	VNI	PRJNA694643	borderline	Cryptococcus	Saccharomyces	15	0.0062	yes	alpha		wave3_basidio
+SRR13810236	Cryptococcus neoformans	HL11	PRJNA704667	mixed	Cryptococcus	Verticillium	51	0.0242	yes	alpha		wave3_basidio
+SRR16002825	Cryptococcus neoformans	var grubii	PRJNA764746	mixed	Cryptococcus	Saccharomyces	28	0.0139	yes	alpha		wave3_basidio
+SRR24010545	Cryptococcus neoformans		PRJNA950111	mixed	Cryptococcus	Trichophyton	27	0.0122	yes	alpha		wave3_basidio
+SRR27558955	Cryptococcus neoformans	Cryptococcus neoformans NK1	PRJNA1065146	mixed	Cryptococcus	Lodderomyces	132	0.035		alpha		wave3_basidio
+SRR33300448	Cryptococcus neoformans	P24	PRJNA1254625	mixed	Cryptococcus	Lodderomyces	56	0.022		alpha		wave3_basidio
+SRR33300459	Cryptococcus neoformans	P14	PRJNA1254625	mixed	Cryptococcus	Lodderomyces	547	0.1896		alpha		wave3_basidio
+SRR841965	Cryptococcus neoformans	It756	PRJNA191373	mixed	Cryptococcus	Lodderomyces	24	0.012		a		wave3_basidio
+SRR17915059	Cryptococcus tetragattii	MRL2530	PRJNA804139	borderline	Cryptococcus	Clavispora	17	0.0076	yes	alpha		wave3_basidio
+SRR17915075	Cryptococcus tetragattii	MRL2172	PRJNA804139	mixed	Cryptococcus	Meyerozyma	20	0.0103	yes	alpha		wave3_basidio
+SRR17915085	Cryptococcus tetragattii	MRL339	PRJNA804139	mixed	Cryptococcus	Aspergillus	96	0.0357		alpha		wave3_basidio
+SRR17915103	Cryptococcus tetragattii	MRL88	PRJNA804139	mixed	Cryptococcus	Aspergillus	61	0.0262	yes	alpha		wave3_basidio
+SRR17915105	Cryptococcus tetragattii	MRL3917	PRJNA804139	mixed	Cryptococcus	Clavispora	292	0.1159		alpha		wave3_basidio
+SRR17915112	Cryptococcus tetragattii	MRL6044	PRJNA804139	mixed	Cryptococcus	Clavispora	29	0.0143		alpha		wave3_basidio
+SRR17915116	Cryptococcus tetragattii	MRL2899	PRJNA804139	mixed	Cryptococcus	Clavispora	68	0.0353		alpha		wave3_basidio
+SRR17915130	Cryptococcus tetragattii	MRL252	PRJNA804139	mixed	Cryptococcus	Meyerozyma	62	0.0269	yes	alpha		wave3_basidio
+SRR17915138	Cryptococcus tetragattii	MRL376	PRJNA804139	mixed	Cryptococcus	Meyerozyma	31	0.0145	yes	alpha		wave3_basidio
+ERR10815104	Epichloe typhina	1714_4	PRJEB59262	mixed	Epichloe	Cladosporium	29	0.0103		both		wave1
+ERR4009568	Exserohilum turcicum		PRJEB37432	mixed	Exserohilum	Bipolaris	37	0.0108		MAT1-2		wave4
+ERR4009684	Exserohilum turcicum		PRJEB37432	borderline	Exserohilum	Cladosporium	18	0.0047	yes	MAT1-2		wave4
+ERR4009692	Exserohilum turcicum		PRJEB37432	mixed	Exserohilum	Cladosporium	73	0.0211		MAT1-2		wave4
+ERR4020011	Exserohilum turcicum		PRJEB37432	mixed	Exserohilum	Cladosporium	43	0.0125		MAT1-2		wave4
+ERR4020019	Exserohilum turcicum		PRJEB37432	mixed	Exserohilum	Cladosporium	51	0.0121	yes	MAT1-2		wave4
+SRR14371331	Exserohilum turcicum	Not applicable	PRJNA726560	borderline	Exserohilum	Bipolaris	10	0.0028	yes	MAT1-2		wave4
+SRR14371363	Exserohilum turcicum	Not applicable	PRJNA726560	mixed	Exserohilum	Talaromyces	42	0.0119		MAT1-2		wave4
+SRR23856886	Exserohilum turcicum	HAC10	PRJNA944617	mixed	Exserohilum	Alternaria	1248	0.2613		MAT1-1		wave4
+SRR33824040	Fulvia fulva	Ff16-A	PRJNA1271984	mixed	Fulvia	Vishniacozyma	78	0.0133	yes	MAT1-1		wave4
+SRR26696011	Fusarium graminearum	FU12203	PRJNA1036432	mixed	Fusarium	Penicillium	84	0.0192	yes	MAT1-1		wave2
+SRR31682759	Fusarium oxysporum	C30	PRJNA1005897	borderline	Fusarium	Pseudocercospora	51	0.0095	yes	MAT1-2		wave1
+SRR6118162	Fusarium oxysporum	EthFoc-99	PRJNA412392	mixed	Fusarium	Meyerozyma	207	0.0372		MAT1-2		wave1
+SRR6118166	Fusarium oxysporum	EtdFoc-245	PRJNA412392	mixed	Fusarium	Sarocladium	615	0.1027		MAT1-2		wave1
+SRR6118181	Fusarium oxysporum	EtdFoc-192	PRJNA412392	borderline	Fusarium	Meyerozyma	29	0.0045	yes	MAT1-1		wave1
+SRR6118191	Fusarium oxysporum	EtdFoc-27	PRJNA412392	mixed	Fusarium	Meyerozyma	535	0.1187		low_depth		wave1
+SRR6118206	Fusarium oxysporum	EtdFoc-136	PRJNA412392	mixed	Fusarium	Meyerozyma	124	0.0219	yes	MAT1-2		wave1
+SRR6118207	Fusarium oxysporum	EtdFoc-137	PRJNA412392	mixed	Fusarium	Meyerozyma	536	0.0939		MAT1-2		wave1
+SRR6118210	Fusarium oxysporum	EtdFoc-142	PRJNA412392	borderline	Fusarium	Sarocladium	60	0.0082	yes	low_depth		wave1
+SRR6118211	Fusarium oxysporum	EtdFoc-143	PRJNA412392	borderline	Fusarium	Meyerozyma	42	0.0066	yes	MAT1-1		wave1
+SRR6118217	Fusarium oxysporum	EtdFoc-218	PRJNA412392	borderline	Fusarium	Meyerozyma	31	0.0052	yes	MAT1-1		wave1
+SRR6118219	Fusarium oxysporum	EtdFoc-220	PRJNA412392	borderline	Fusarium	Meyerozyma	44	0.0074	yes	MAT1-2		wave1
+SRR6118223	Fusarium oxysporum	EtdFoc-129	PRJNA412392	mixed	Fusarium	Meyerozyma	480	0.0824		MAT1-2		wave1
+SRR6118224	Fusarium oxysporum	EtdFoc-128	PRJNA412392	mixed	Sarocladium	Fusarium	901	0.154		low_depth		wave1
+SRR6118236	Fusarium oxysporum	EtdFoc-24	PRJNA412392	borderline	Fusarium	Meyerozyma	27	0.0074	yes	low_depth		wave1
+SRR6118252	Fusarium oxysporum	EtdFoc-9	PRJNA412392	borderline	Fusarium	Meyerozyma	71	0.0065	yes	MAT1-2		wave1
+SRR6118257	Fusarium oxysporum	EthFoc-DSP6	PRJNA412392	borderline	Fusarium	Candida	25	0.0043	yes	MAT1-1		wave1
+SRR6118258	Fusarium oxysporum	EthFoc-DSP7	PRJNA412392	borderline	Fusarium	Candida	17	0.0028	yes	MAT1-1		wave1
+SRR6118261	Fusarium oxysporum	EtdFoc-100	PRJNA412392	mixed	Fusarium	Meyerozyma	96	0.0141		MAT1-2		wave1
+SRR6118262	Fusarium oxysporum	EtdFoc-102	PRJNA412392	borderline	Fusarium	Meyerozyma	44	0.0049	yes	both		wave1
+SRR6118264	Fusarium oxysporum	EthFoc-168	PRJNA412392	borderline	Fusarium	Candida	17	0.0028	yes	MAT1-1		wave1
+SRR6118269	Fusarium oxysporum	EthFoc-166	PRJNA412392	borderline	Fusarium	Candida	38	0.0054	yes	MAT1-2		wave1
+SRR6118282	Fusarium oxysporum	EthFoc-DSP2	PRJNA412392	borderline	Fusarium	Candida	25	0.0042	yes	MAT1-1		wave1
+SRR6118292	Fusarium oxysporum	EtdFoc-256	PRJNA412392	borderline	Fusarium	Meyerozyma	28	0.0052	yes	MAT1-2		wave1
+SRR6118300	Fusarium oxysporum	EtdFoc-86	PRJNA412392	borderline	Fusarium	Meyerozyma	52	0.0092	yes	MAT1-1		wave1
+SRR6118301	Fusarium oxysporum	EtdFoc-87	PRJNA412392	borderline	Fusarium	Aspergillus	35	0.006	yes	MAT1-2		wave1
+SRR6118303	Fusarium oxysporum	EtdFoc-92	PRJNA412392	mixed	Fusarium	Calonectria	293	0.0487		MAT1-2		wave1
+SRR6118304	Fusarium oxysporum	EtdFoc-89	PRJNA412392	mixed	Fusarium	Sarocladium	485	0.0713		both		wave1
+SRR6118331	Fusarium oxysporum	EthFoc-169	PRJNA412392	borderline	Fusarium	Candida	18	0.0031	yes	MAT1-1		wave1
+SRR6118332	Fusarium oxysporum	EthFoc-173	PRJNA412392	borderline	Fusarium	Candida	15	0.0027	yes	MAT1-2		wave1
+SRR6118350	Fusarium oxysporum	EtdFoc-181	PRJNA412392	mixed		Fusarium	802	0.1357		low_depth		wave1
+SRR6118357	Fusarium oxysporum	EtdFoc-16	PRJNA412392	borderline	Fusarium	Meyerozyma	19	0.0032	yes	MAT1-2		wave1
+SRR6118358	Fusarium oxysporum	EtdFoc-159	PRJNA412392	mixed	Fusarium	Meyerozyma	487	0.1841		low_depth		wave1
+SRR6118359	Fusarium oxysporum	EtdFoc-158	PRJNA412392	borderline	Fusarium	Meyerozyma	25	0.0042	yes	MAT1-1		wave1
+SRR6118364	Fusarium oxysporum	EtdFoc-149	PRJNA412392	mixed	Fusarium	Meyerozyma	537	0.1269		low_depth		wave1
+SRR6118365	Fusarium oxysporum	EtdFoc-148	PRJNA412392	mixed	Fusarium	Calonectria	120	0.0593		low_depth		wave1
+SRR6118385	Fusarium oxysporum	EtdFoc-233	PRJNA412392	borderline	Fusarium	Meyerozyma	46	0.0074	yes	both		wave1
+SRR6118400	Fusarium oxysporum	EtdFoc-108	PRJNA412392	mixed	Fusarium	Meyerozyma	536	0.2322		low_depth		wave1
+SRR6118403	Fusarium oxysporum	EtdFoc-103	PRJNA412392	borderline	Fusarium	Meyerozyma	21	0.0049	yes	low_depth		wave1
+SRR6118409	Fusarium oxysporum	EtdFoc-115	PRJNA412392	mixed	Fusarium	Meyerozyma	537	0.1812		low_depth		wave1
+SRR6118422	Fusarium oxysporum	EtdFoc-99	PRJNA412392	borderline	Fusarium	Meyerozyma	16	0.003	yes	MAT1-2		wave1
+SRR6118425	Fusarium oxysporum	EtdFoc-203	PRJNA412392	borderline	Fusarium	Epicoccum	31	0.0055	yes	MAT1-1		wave1
+SRR6118432	Fusarium oxysporum	EtdFoc-85	PRJNA412392	mixed	Fusarium	Meyerozyma	122	0.0219		MAT1-2		wave1
+SRR6118439	Fusarium oxysporum	EtdFoc-80	PRJNA412392	mixed	Fusarium	Meyerozyma	358	0.0438		MAT1-2		wave1
+SRR6118457	Fusarium oxysporum	EtdFoc-174	PRJNA412392	borderline	Fusarium	Meyerozyma	59	0.0059	yes	MAT1-1		wave1
+SRR6118485	Fusarium oxysporum	EtdFoc-45	PRJNA412392	mixed		Meyerozyma	108	0.0488		low_depth		wave1
+SRR6118486	Fusarium oxysporum	EtdFoc-42	PRJNA412392	mixed	Fusarium	Meyerozyma	534	0.144		low_depth		wave1
+SRR6118498	Fusarium oxysporum	EthFoc-139	PRJNA412392	borderline	Fusarium	Candida	16	0.0027	yes	MAT1-2		wave1
+SRR6118508	Fusarium oxysporum	EtdFoc-18	PRJNA412392	borderline	Fusarium	Meyerozyma	47	0.006	yes	both		wave1
+SRR6118513	Fusarium oxysporum	EtdFoc-198	PRJNA412392	borderline	Fusarium	Meyerozyma	40	0.0058	yes	MAT1-2		wave1
+SRR6118520	Fusarium oxysporum	EtdFoc-12	PRJNA412392	mixed	Sarocladium	Fusarium	554	0.1223		low_depth		wave1
+SRR6118523	Fusarium oxysporum	EtdFoc-119	PRJNA412392	mixed	Fusarium	Meyerozyma	536	0.1455		low_depth		wave1
+SRR6118524	Fusarium oxysporum	EtdFoc-117	PRJNA412392	mixed	Fusarium	Sarocladium	115	0.0141		MAT1-2		wave1
+SRR6118526	Fusarium oxysporum	EtdFoc-183	PRJNA412392	mixed	Fusarium	Sarocladium	190	0.0308		MAT1-2		wave1
+SRR6118536	Fusarium oxysporum	EtdFoc-53	PRJNA412392	borderline	Fusarium	Meyerozyma	34	0.0054	yes	low_depth		wave1
+SRR6118538	Fusarium oxysporum	EtdFoc-96	PRJNA412392	mixed	Fusarium	Meyerozyma	68	0.0221		low_depth		wave1
+SRR31240466	Fusarium venenatum	A3/5	PRJNA1151243	mixed	Fusarium	Debaryomyces	448	0.1042		MAT1-1		wave5_asco
+SRR31240467	Fusarium venenatum	A3/5	PRJNA1151243	mixed	Fusarium	Debaryomyces	707	0.1547		MAT1-1		wave5_asco
+SRR25357640	Lodderomyces parapsilosis	NRZ-2022-0439	PRJNA996760	mixed	Lodderomyces	Gigaspora	21	0.0126		a		wave2
+SRR25916007	Lodderomyces parapsilosis	A05	PRJNA592373	borderline	Lodderomyces	Gigaspora	19	0.0113	yes	a		wave2
+SRR27723392	Lodderomyces parapsilosis	CAS22_14901	PRJNA1068541	mixed	Lodderomyces	Candidozyma	179	0.0748		a		wave2
+SRR27794434	Lodderomyces parapsilosis	E50	PRJNA1068185	mixed	Lodderomyces	Gigaspora	28	0.0192		a		wave2
+SRR27794473	Lodderomyces parapsilosis	E15	PRJNA1068185	mixed	Lodderomyces	Gigaspora	32	0.0156	yes	a		wave2
+SRR31487762	Lodderomyces parapsilosis	missing	PRJNA1189032	mixed	Lodderomyces	Candida	27	0.0179		a		wave2
+SRR9736760	Paracoccidioides brasiliensis	9	PRJNA531163	mixed	Paracoccidioides	Aspergillus	120	0.0405		MAT1-1		wave4
+SRR34918526	Parastagonospora nodorum	PN333	PRJNA1128849	mixed	Parastagonospora	Penicillium	158	0.0406		MAT1-1		wave1
+SRR34918574	Parastagonospora nodorum	PN262	PRJNA1128849	mixed	Parastagonospora	Rhizopus	892	0.1913		MAT1-2		wave1
+SRR7771508	Parastagonospora nodorum	LDN08-Sn-5	PRJNA398070	mixed	Parastagonospora	Pyrenophora	43	0.0123	yes	MAT1-2		wave1
+SRR7771509	Parastagonospora nodorum	LDN08-Sn-4	PRJNA398070	mixed	Parastagonospora	Pyrenophora	40	0.0107	yes	MAT1-2		wave1
+SRR7771526	Parastagonospora nodorum	LDN05Sn-5	PRJNA398070	borderline	Parastagonospora	Pyrenophora	12	0.0033	yes	MAT1-1		wave1
+SRR7771533	Parastagonospora nodorum	LDN08-Sn-2	PRJNA398070	mixed	Parastagonospora	Pyrenophora	40	0.0108	yes	MAT1-2		wave1
+SRR7771539	Parastagonospora nodorum	SC3-1	PRJNA398070	mixed	Parastagonospora	Penicillium	1275	0.2359		both		wave1
+SRR7771540	Parastagonospora nodorum	SC3-4	PRJNA398070	borderline	Parastagonospora	Pyrenophora	29	0.0074	yes	MAT1-2		wave1
+SRR7771543	Parastagonospora nodorum	SDRF16-Sn-6	PRJNA398070	mixed	Parastagonospora	Pyrenophora	40	0.0112	yes	MAT1-1		wave1
+SRR7771547	Parastagonospora nodorum	NDJ16-Sn-11	PRJNA398070	borderline	Parastagonospora	Pyrenophora	23	0.0062	yes	MAT1-2		wave1
+SRR7771552	Parastagonospora nodorum	NDJ16-Sn-10	PRJNA398070	borderline	Parastagonospora	Pyrenophora	31	0.0076	yes	MAT1-2		wave1
+SRR7771553	Parastagonospora nodorum	NDJ16-Sn-1	PRJNA398070	mixed	Parastagonospora	Pyrenophora	49	0.0131	yes	MAT1-1		wave1
+SRR7771601	Parastagonospora nodorum	NDJ16-Sn-17	PRJNA398070	borderline	Parastagonospora	Pyrenophora	16	0.0044	yes	MAT1-1		wave1
+SRR7771602	Parastagonospora nodorum	NDJ16-Sn-18	PRJNA398070	mixed	Parastagonospora	Pyrenophora	27	0.0114		MAT1-1		wave1
+SRR7771604	Parastagonospora nodorum	NDJ16-Sn-2	PRJNA398070	borderline	Parastagonospora	Pyrenophora	18	0.0047	yes	MAT1-1		wave1
+SRR7771605	Parastagonospora nodorum	OKG16-Sn-15	PRJNA398070	mixed	Parastagonospora	Pyrenophora	42	0.0113	yes	MAT1-1		wave1
+SRR7771608	Parastagonospora nodorum	OKG16-Sn-12	PRJNA398070	borderline	Parastagonospora	Pyrenophora	14	0.0038	yes	MAT1-2		wave1
+SRR7771611	Parastagonospora nodorum	OKG16-Sn-1	PRJNA398070	borderline	Parastagonospora	Pyrenophora	21	0.0057	yes	MAT1-1		wave1
+SRR7771615	Parastagonospora nodorum	LDN03Sn-11	PRJNA398070	borderline	Parastagonospora	Pyrenophora	20	0.0054	yes	MAT1-1		wave1
+SRR7771624	Parastagonospora nodorum	LDN03Sn-8	PRJNA398070	borderline	Parastagonospora	Pyrenophora	34	0.0094	yes	MAT1-2		wave1
+SRR7771639	Parastagonospora nodorum	NDM16-Sn-3	PRJNA398070	borderline	Parastagonospora	Pyrenophora	26	0.007	yes	MAT1-2		wave1
+SRR32938752	Penicillium biforme	ESE00993	PRJNA1241262	mixed	Penicillium	Geotrichum	60	0.0162		MAT1-2		wave4
+SRR32938801	Penicillium biforme	ESE01522	PRJNA1241262	mixed	Penicillium	Mucor	63	0.0167		MAT1-2		wave4
+SRR33454474	Penicillium fuscoglaucum	ESE00079	PRJNA1241262	mixed	Penicillium	Scopulariopsis	54	0.0119	yes	MAT1-1		wave4
+SRR18739954	Pichia kudriavzevii	MCFLIP	PRJNA819536	mixed	Pichia	Lodderomyces	622	0.2254		both		wave3_asco
+SRR28254461	Pichia kudriavzevii	1732_P_18	PRJNA1084001	mixed		Alternaria	1159	0.4312		both		wave3_asco
+SRR28254463	Pichia kudriavzevii	1734_P_18	PRJNA1084001	mixed	Pichia	Candidozyma	234	0.1394		both		wave3_asco
+SRR28254470	Pichia kudriavzevii	255_P_20	PRJNA1084001	mixed	Pichia	Lodderomyces	35	0.0146	yes	both		wave3_asco
+SRR28254473	Pichia kudriavzevii	251_P_20	PRJNA1084001	mixed	Pichia	Lodderomyces	38	0.0292		both		wave3_asco
+SRR38563184	Pichia kudriavzevii	SD108	PRJNA1464882	mixed	Pichia	Saccharomyces	41	0.0294		both		wave3_asco
+SRR38565315	Pichia kudriavzevii	SD108	PRJNA1464835	mixed	Pichia	Saccharomyces	21	0.0169		both		wave3_asco
+SRR24907166	Pyrenophora teres	CAWB19_Pt_12	PRJNA923641	mixed	Pyrenophora	Saccharomyces	58	0.0143	yes	MAT1-2		wave1
+SRR24907167	Pyrenophora teres	CAWB19_Pt_1	PRJNA923641	mixed	Pyrenophora	Saccharomyces	47	0.012	yes	MAT1-2		wave1
+SRR24907168	Pyrenophora teres	CAWB19_Pt_11	PRJNA923641	mixed	Pyrenophora	Saccharomyces	59	0.0148	yes	MAT1-1		wave1
+SRR24907172	Pyrenophora teres	CAWB05_Pt_4	PRJNA923641	mixed	Pyrenophora	Saccharomyces	81	0.0198	yes	MAT1-2		wave1
+SRR24907176	Pyrenophora teres	CAWB3	PRJNA923641	mixed	Pyrenophora	Saccharomyces	71	0.017	yes	MAT1-2		wave1
+SRR24907179	Pyrenophora teres	CAWB19_Pt_9	PRJNA923641	borderline	Pyrenophora	Saccharomyces	29	0.0073	yes	MAT1-2		wave1
+SRR24907180	Pyrenophora teres	CAWB19_Pt_7	PRJNA923641	borderline	Pyrenophora	Saccharomyces	23	0.0059	yes	MAT1-1		wave1
+SRR24907181	Pyrenophora teres	CAWB19_Pt_4	PRJNA923641	borderline	Pyrenophora	Saccharomyces	21	0.0054	yes	MAT1-2		wave1
+SRR24907183	Pyrenophora teres	CAWB19_Pt_2	PRJNA923641	borderline	Pyrenophora	Saccharomyces	28	0.007	yes	MAT1-2		wave1
+SRR24907185	Pyrenophora teres	CAWB05_Pt_1	PRJNA923641	borderline	Pyrenophora	Saccharomyces	35	0.0089	yes	MAT1-2		wave1
+SRR24918497	Pyrenophora teres	AZB19_Ptt_11	PRJNA923641	mixed	Pyrenophora	Saccharomyces	54	0.013	yes	low_depth		wave1
+DRR445893	Pyricularia oryzae	Iwa-kita	PRJDB15332	borderline	Pyricularia	Gigaspora	25	0.0053	yes	MAT1-2		wave3_poryzae
+SRR14119007	Pyricularia oryzae	12.0.321	PRJNA324432	mixed	Pyricularia	Gigaspora	81	0.0154	yes	MAT1-1		wave3_poryzae
+SRR14813101	Pyricularia oryzae	BTMP-2807-4	PRJNA737609	mixed	Pyricularia	Clonostachys	164	0.0344		MAT1-2		wave3_poryzae
+SRR18767173	Pyricularia oryzae	R01	PRJNA826999	mixed	Pyricularia	Ramularia	410	0.0876		MAT1-2		wave3_poryzae
+SRR23498602	Pyricularia oryzae	UFVPY110	PRJNA926786	mixed	Pyricularia	Fusarium	69	0.0129	yes	MAT1-2		wave3_poryzae
+SRR27891887	Pyricularia oryzae	UFVPY232	PRJNA926786	borderline	Pyricularia	Lecanosticta	48	0.01	yes	MAT1-2		wave3_poryzae
+SRR27891905	Pyricularia oryzae	UFVPY202	PRJNA926786	borderline	Pyricularia	Lecanosticta	30	0.0063	yes	MAT1-2		wave3_poryzae
+SRR27891917	Pyricularia oryzae	UFVPY218	PRJNA926786	mixed	Pyricularia	Lecanosticta	60	0.0122	yes	MAT1-1		wave3_poryzae
+SRR27893664	Pyricularia oryzae	UFVPY113	PRJNA926786	borderline	Pyricularia	Lecanosticta	21	0.0043	yes	MAT1-1		wave3_poryzae
+SRR27918216	Pyricularia oryzae	UFVPY204	PRJNA926786	borderline	Pyricularia	Lecanosticta	23	0.005	yes	MAT1-2		wave3_poryzae
+SRR6207176	Pyricularia oryzae	12.0.012i	PRJNA324432	mixed	Pyricularia	Aspergillus	44	0.0106		MAT1-2		wave3_poryzae
+SRR6669155	Pyricularia oryzae	YN072313	PRJNA354675	borderline	Pyricularia	Candida	22	0.0052	yes	MAT1-2		wave3_poryzae
+SRR6669156	Pyricularia oryzae	YN08181e	PRJNA354675	borderline	Pyricularia	Candida	20	0.0046	yes	MAT1-2		wave3_poryzae
+SRR11788087	Rhizopus arrhizus	soy sauce	PRJNA628809	mixed	Rhizopus	Gigaspora	51	0.0121	yes	none		wave3_mucoro
+SRR12274347	Rhizopus arrhizus	NRRL A-12134	PRJNA619770	borderline	Rhizopus	Gigaspora	22	0.0052	yes	none		wave3_mucoro
+SRR12274854	Rhizopus arrhizus	NRRL A-26116	PRJNA619929	borderline	Rhizopus	Gigaspora	33	0.0079	yes	none		wave3_mucoro
+SRR12277049	Rhizopus arrhizus	NRRL A-15308	PRJNA619783	borderline	Rhizopus	Neocallimastix	31	0.0081	yes	Minus		wave3_mucoro
+SRR12277944	Rhizopus arrhizus	NBRC 4735	PRJNA619766	mixed	Rhizopus	Meyerozyma	42	0.0111		none		wave3_mucoro
+SRR12278004	Rhizopus arrhizus	JCM 5580	PRJNA619765	borderline	Rhizopus	Gigaspora	11	0.0028	yes	Minus		wave3_mucoro
+SRR9029845	Rhizopus arrhizus	NRRL A-12640	PRJNA537156	borderline	Rhizopus	Gigaspora	30	0.0073	yes	Plus		wave3_mucoro
+SRR23350461	Rhizopus delemar	409-P-21	PRJNA931319	mixed	Rhizopus	Lichtheimia	55	0.013		Plus		wave5_mucoro
+SRR975549	Rhizopus delemar	Type II NRRL 21447	PRJNA186021	mixed	Rhizopus	Lichtheimia	51	0.0126	yes	Plus	Plus	wave5_mucoro
+ERR13388810	Rhizopus microsporus		PRJEB76713	mixed	Rhizopus	Gigaspora	44	0.0109	yes	none		wave3_mucoro
+SRR1008835	Rhizopus microsporus	B9738	PRJNA211903	mixed	Rhizopus	Mucor	71	0.0132		Minus		wave3_mucoro
+SRR8845244	Rhizopus microsporus	B06600	PRJNA526061	borderline	Rhizopus	Gigaspora	28	0.0067	yes	Minus		wave3_mucoro
+SRR24222649	Rhodotorula mucilaginosa	10NJ071	PRJNA794005	mixed	Rhodotorula	Lodderomyces	180	0.0447		both		wave3_basidio
+SRR33764142	Rhodotorula mucilaginosa	DBVPG 4618	PRJNA1258052	mixed	Rhodotorula	Cystobasidium	23	0.0109		A2		wave3_basidio
+SRR33764144	Rhodotorula mucilaginosa	DBVPG 4377	PRJNA1258052	mixed	Rhodotorula	Cystobasidium	332	0.1261		none		wave3_basidio
+SRR33764145	Rhodotorula mucilaginosa	DBVPG 3983	PRJNA1258052	mixed	Rhodotorula	Cystobasidium	207	0.0857		none		wave3_basidio
+SRR33764151	Rhodotorula mucilaginosa	DBVPG 3774	PRJNA1258052	mixed	Rhodotorula	Cystobasidium	40	0.0179		A2		wave3_basidio
+SRR33764156	Rhodotorula mucilaginosa	DBVPG 3382	PRJNA1258052	mixed	Rhodotorula	Cystobasidium	55	0.0249		A2		wave3_basidio
+SRR33764158	Rhodotorula mucilaginosa	DBVPG 3237	PRJNA1258052	mixed	Rhodotorula	Cystobasidium	29	0.0126		A2		wave3_basidio
+SRR33764194	Rhodotorula mucilaginosa	TFCN 152A-2	PRJNA1258052	mixed	Rhodotorula	Aspergillus	197	0.0781		A2		wave3_basidio
+SRR33764131	Rhodotorula toruloides	DBVPG 6121	PRJNA1258052	mixed	Rhodotorula	Cystobasidium	34	0.0136	yes	A1		wave3_basidio
+SRR23091961	Rhynchosporium graminicola	WAI435	PRJNA914478	borderline	Rhynchosporium	Zymoseptoria	31	0.0063	yes	MAT1-1		wave4
+SRR3740562	Rhynchosporium graminicola	US_24	PRJNA327656	mixed	Rhynchosporium	Golubevia	2296	0.3519		MAT1-1		wave4
+ERR13913767	Trichophyton indotineae		PRJEB75499	mixed	Trichophyton	Alternaria	37	0.0151	yes	MAT1-2		wave4
+SRR30640731	Trichophyton indotineae	CAMS-CCPM-D03933	PRJNA1157579	mixed	Trichophyton	Moesziomyces	27	0.0114		MAT1-2		wave4
+SRR31645855	Trichophyton indotineae	B18435	PRJNA1194187	mixed	Trichophyton	Candidozyma	42	0.0166		MAT1-2		wave4
+SRR31645894	Trichophyton indotineae	B18448	PRJNA1194187	mixed	Trichophyton	Candidozyma	36	0.014		MAT1-2		wave4
+SRR31645969	Trichophyton indotineae	B18447	PRJNA1194187	mixed	Trichophyton	Candidozyma	38	0.0145		MAT1-2		wave4
+SRR31645980	Trichophyton indotineae	B18445	PRJNA1194187	mixed	Trichophyton	Candidozyma	85	0.0321		MAT1-2		wave4
+SRR31645991	Trichophyton indotineae	B18444	PRJNA1194187	mixed	Trichophyton	Candidozyma	69	0.0261		MAT1-2		wave4
+SRR31646002	Trichophyton indotineae	B18443	PRJNA1194187	mixed	Trichophyton	Candidozyma	123	0.0459		MAT1-2		wave4
+SRR31646013	Trichophyton indotineae	B18442	PRJNA1194187	mixed	Trichophyton	Alternaria	2940	0.4836		MAT1-2		wave4
+SRR31646024	Trichophyton indotineae	B18440	PRJNA1194187	mixed	Trichophyton	Candidozyma	83	0.0319		MAT1-2		wave4
+SRR36030490	Trichophyton indotineae	USA/NY-WCPHL-TIN-061850/2023	PRJNA1173536	borderline	Trichophyton	Rhodotorula	18	0.007	yes	MAT1-2		wave4
+SRR23072474	Trichophyton interdigitale	IGIB-JA-CI02	PRJNA923483	mixed	Trichophyton	Aspergillus	96	0.0337		MAT1-2		wave4
+SRR32943296	Williopsis jadinii	AHU3255	PRJNA1244612	mixed	Williopsis	Saccharomyces	51	0.0212		alpha		wave4
+SRR32943297	Williopsis jadinii	AHU3256	PRJNA1244612	mixed	Williopsis	Saccharomyces	78	0.0296		alpha		wave4
+SRR32943298	Williopsis jadinii	AHU3259	PRJNA1244612	mixed	Williopsis	Saccharomyces	70	0.0277		alpha		wave4
+SRR32943311	Williopsis jadinii	IAM4246	PRJNA1244612	mixed	Williopsis	Saccharomyces	29	0.0116		alpha		wave4
+SRR32943312	Williopsis jadinii	ATCC 9226	PRJNA1244612	mixed	Williopsis	Saccharomyces	31	0.0125		both		wave4
+SRR34056357	Williopsis jadinii	ATCC 9950	PRJNA1244612	mixed	Williopsis	Saccharomyces	115	0.0447		alpha		wave4
+ERR5235123	Yarrowia lipolytica	DBVPG 4557	PRJEB42834	mixed	Yarrowia	Starmerella	55	0.0238	yes	A		wave2
+ERR5235138	Yarrowia lipolytica	CBS 599	PRJEB42834	mixed	Yarrowia	Starmerella	45	0.0194	yes	A		wave2
+ERR5235156	Yarrowia lipolytica	NCIM 3589	PRJEB42834	mixed	Yarrowia	Starmerella	40	0.0171	yes	A		wave2
+ERR5235158	Yarrowia lipolytica	INAG 33250	PRJEB42834	mixed	Yarrowia	Saccharomyces	50	0.0209	yes	B		wave2
+ERR13824521	Zymoseptoria tritici		PRJEB81422	mixed	Zymoseptoria	Vishniacozyma	747	0.261		low_depth		wave2
+ERR13824576	Zymoseptoria tritici		PRJEB81422	mixed	Zymoseptoria	Saccharomyces	82	0.0199	yes	MAT1-1		wave2
+ERR13824582	Zymoseptoria tritici		PRJEB81422	mixed	Zymoseptoria	Saccharomyces	75	0.019	yes	MAT1-2		wave2
+ERR13824594	Zymoseptoria tritici		PRJEB81422	borderline	Zymoseptoria	Saccharomyces	30	0.0074	yes	MAT1-2		wave2
+ERR13824609	Zymoseptoria tritici		PRJEB81422	mixed	Zymoseptoria	Saccharomyces	76	0.0187	yes	MAT1-1		wave2
+SRR16762580	Zymoseptoria tritici	IPO-09774.MS1	PRJNA777581	borderline	Zymoseptoria	Lactarius	17	0.0047	yes	MAT1-2		wave2
+SRR16762657	Zymoseptoria tritici	IPO-091012.MS1	PRJNA777581	borderline	Zymoseptoria	Tricholoma	26	0.0056	yes	MAT1-2		wave2
+SRR21156274	Zymoseptoria tritici	07STGB009	PRJNA870233	mixed	Zymoseptoria	Penicillium	37	0.0104		MAT1-1		wave2
+SRR22188293	Zymoseptoria tritici	Zt88	PRJNA890236	mixed	Zymoseptoria	Debaryomyces	1221	0.2581		MAT1-2		wave2
+SRR7513094	Zymoseptoria tritici	WAI1966	PRJNA480739	borderline	Zymoseptoria	Diaporthe	8	0.0021	yes	MAT1-1		wave2
+SRR7513103	Zymoseptoria tritici	WAI2000	PRJNA480739	borderline	Zymoseptoria	Diaporthe	7	0.0017	yes	MAT1-2		wave2
+SRR7513129	Zymoseptoria tritici	WAI2210	PRJNA480739	borderline	Zymoseptoria	Diaporthe	8	0.0021	yes	MAT1-2		wave2

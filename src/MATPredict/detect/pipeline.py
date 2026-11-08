@@ -105,7 +105,7 @@ from MATPredict.detect.family_registry import (
     load_record_families,
     route,
 )
-from MATPredict.detect import confidence_cap, family_status, homothallic, margin_basis, partial_core, weak_fragment_cap
+from MATPredict.detect import confidence_cap, family_status, homothallic, margin_basis, partial_core, weak_flank_cap, weak_fragment_cap
 from MATPredict.detect import strong_single_gene as ssg
 from MATPredict.detect.idiomorph import (
     LOCUS_CLASS_MAT,
@@ -415,6 +415,9 @@ class DetectionResult:
     triggered or was stopped by its contig-edge guard: the winning and the other
     idiomorph's core genes with their reference coverage, the profile scores, the
     decision (`flipped`, `undetermined`, `kept_edge_artefact`) and the reasons."""
+    weak_flank_cap: dict | None = None
+    """Set only when `--weak-flank-cap-policy` lowered this call from `high` to `medium` (#129): the weak flank genes (status, identity,
+    coverage) that were its only flank support. The idiomorph label is never changed. Absent when the policy is off or did nothing."""
     weak_fragment_cap: dict | None = None
     """Set only when `--weak-fragment-cap-policy` lowered this call to `low` (#275): the strongest core gene, its polish status and
     bitscore, and the threshold. The idiomorph label is never changed. Absent when the policy is off or did nothing."""
@@ -2431,6 +2434,21 @@ def _strong_single_gene_calls(results, clusters, families, build, *, searchable_
     return calls
 
 
+def _apply_weak_flank_cap(results: list, policy: str) -> list:
+    """`weak_flank_cap` over the final results: a `high` call the rule caps becomes `medium` and carries the note; others are returned as they are."""
+    if policy == weak_flank_cap.POLICY_OFF:
+        return results
+    out = []
+    for r in results:
+        note = weak_flank_cap.evaluate(
+            r.confidence, r.idiomorph, (r.family_key.phylum, r.family_key.locus_name),
+            [weak_flank_cap.FlankStat(e.gene_name, e.role, e.status, e.identity, e.coverage) for e in r.gene_evidence if not e.lost_to],
+            policy=policy,
+        )
+        out.append(replace(r, confidence="medium", weak_flank_cap=note) if note is not None else r)
+    return out
+
+
 def _apply_weak_fragment_cap(results: list, policy: str) -> list:
     """`weak_fragment_cap` over the final results: a call the rule caps becomes `low` and carries the note; others are returned as they are."""
     if policy == weak_fragment_cap.POLICY_OFF:
@@ -2499,6 +2517,7 @@ def run_pipeline(
     confidence_cap_policy: str = confidence_cap.DEFAULT_CONFIDENCE_CAP_POLICY,
     #: `--weak-fragment-cap-policy` (`weak_fragment_cap`, #275). Lowers the tier only, never the idiomorph.
     weak_fragment_cap_policy: str = weak_fragment_cap.DEFAULT_WEAK_FRAGMENT_CAP_POLICY,
+    weak_flank_cap_policy: str = weak_flank_cap.DEFAULT_WEAK_FLANK_CAP_POLICY,
     idiomorph_margin_policy: str = margin_basis.DEFAULT_IDIOMORPH_MARGIN_POLICY,
     #: `off` (default) or `on`: overlapping calls of two families become one (the family scoped to the genome
     #: keeps it) and an out-of-scope MTL call is flagged `family_unconfirmed` / `family_confirmed`
@@ -2756,6 +2775,7 @@ def run_pipeline(
     # clamped to the contig's real end.
     confidence_cap.check_policy(confidence_cap_policy)
     weak_fragment_cap.check_policy(weak_fragment_cap_policy)
+    weak_flank_cap.check_policy(weak_flank_cap_policy)
     margin_basis.check_policy(idiomorph_margin_policy)
     family_status.check_policy(cross_family_policy)
     contig_lengths = _contig_lengths(genome_fasta)
@@ -4003,6 +4023,8 @@ def run_pipeline(
     # Weak-fragment cap (`weak_fragment_cap`, off by default, #275): on the FINAL results, after every other stage (the relaxed
     # second pass sets its own tiers), so a note always names the tier that was actually reported and what it became.
     results = _apply_weak_fragment_cap(results, weak_fragment_cap_policy)
+    # Weak-flank cap (`weak_flank_cap`, off by default, #129): also on the final results; lowers `high` to `medium` only.
+    results = _apply_weak_flank_cap(results, weak_flank_cap_policy)
     # Single-candidate identity gap reported apart from the vote margin (`margin_basis`, off by default, #145): report only.
     results = margin_basis.apply(results, idiomorph_margin_policy)
 

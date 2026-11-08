@@ -85,13 +85,28 @@ v0.7.0, v0.8.0 and v0.8.1, so the *B. maydis* C4 failure is specific to that ass
 and MU825193, the second with one polished gene) are the candidate locus, and neither reaches two modelled genes. The cause is not determined here.
 The 29 stay in the "modelling" group of section 2.
 
+### 4b. The *Bipolaris* cause: the FungiDB run did not use the release preset
+
+The published FungiDB run (and the proteome and polish-cap tests of 4a, which copied its arguments) used no `--preset`; the code defaults turn every policy
+off, so it did not reproduce the settings of the definitive v0.8.1 run (`--preset v0.8.1`: `partial_core_policy`, `homothallic_policy`, `scoped_roster_policy`,
+`cross_family_policy`, `fallback_after_withheld_policy`). That is why *Bipolaris* is uncalled there while 82 of 82 BFD *Bipolaris* and *Curvularia* genomes are called.
+Rerunning all 313 FungiDB genomes on the same code with `--preset v0.8.1` (`results/2026-11-08_fdb_preset081`): **three genomes gain a call**
+(*Bipolaris maydis* C4, *B. sorokiniana* ND90Pr, *Curvularia clavata* yc1106, all Pleosporaceae, which rely on the Pleosporaceae-scoped roster), **none
+loses one**, and the called count goes from 274 to 277. Three other genomes (*Alternaria alternata* SRC1lrK2f, *A. dauci* A2016, *Fusarium graminearum* 233423)
+are called either way, with different calls. The no-call cases of section 4 that are not Pleosporaceae are unchanged by the preset. A detail run of the two
+*Bipolaris* genomes shows what the default run saw: every candidate locus is a weak fragment (28-38% identity, 4-22% coverage, 24-36 bits), except one
+`MAT1-2-1` at 53.5% identity beside SLA2, which the preset's scoped roster accepts.
+
+The FungiDB comparison repository (`hyphaltip/FungiDB_MATpredict`, `scripts/03_run_matpredict.sbatch`) should pass `--preset v0.8.1` (or `--preset v0.9`) to match
+the release it reports.
+
 ## 5. What could improve recovery, ranked
 
 Effort is the work; risk is the chance of a false MAT call. Each action keeps the repository's rule: opt-in, measured, genome-by-genome review.
 
 | # | Action | Targets | Effort | Risk | Notes |
 |---|---|---|---|---|---|
-| 1 | Take apart *Bipolaris maydis* C4 and *B. sorokiniana* (why a curated, heterothallic genus gives no call in these two FungiDB assemblies when 82 of 82 BFD *Bipolaris* and *Curvularia* genomes are called) | Dothideomycetes, 137 no-call | small | low | the proteome path and the polish cap are ruled out (section 4a); next: the genomic window of the two SLA2-flanked clusters, hand-modelled against a curated record |
+| 1 | *Bipolaris maydis* C4 and *B. sorokiniana* (no call in the FungiDB assemblies while 82 of 82 BFD *Bipolaris* and *Curvularia* genomes are called) | Dothideomycetes | done | none | **explained (section 4b): the FungiDB run did not pass `--preset v0.8.1`**; with it three FungiDB genomes gain a call and none loses one |
 | 2 | Polishing for divergent MAT genes: a miniprot-first or protein-profile model path for genes with search identity under about 50%. **Check first (section 5a): in the best cases the unmodelled partner is only a weak search fragment, so search sensitivity may matter more than polishing** | the 534 zero-polished and many of the 1,258 | medium | low | the limiting step is modelling; improving it changes no rule, but must pass the identity test |
 | 3 | `--strong-single-gene-policy` (gate: modelled identity >= 85 and coverage >= 90), **measured for #261: not the lever** | the 1,258 | done | medium | on 3,100 candidate genomes the rule recovers 5 loci (each `low`, `idiomorph_gene_only`, no flank genes, none with a truth label) and changes no existing call; 117 lone core hits at >= 85% in 96 genomes never reach the model gate because they are 90-430 bp fragments; one of the 5 recovered models is defective (a frameshift, no stop), so any use needs a defective-model gate (`results/2026-11-07_issue261/FINDINGS.md`) |
 | 4 | Curate references for the unreferenced groups: Dipodascales and Lipomycetes yeasts, Orbiliomycetes, Xylariales, Chaetothyriales, Botryosphaeriales, Podosphaera | about 1,000 genomes | large (curation) | low | each record raises search sensitivity where none exists; follows the #189/#202/#260 pattern |

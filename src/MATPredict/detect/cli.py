@@ -10,7 +10,7 @@ from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect import confidence_cap as _confidence_cap, family_status as _family_status, strong_single_gene as _strong_single_gene
-from MATPredict.detect import fallback_search as _fallback_search, margin_basis as _margin_basis, scope_label as _scope_label, single_region_cap as _single_region_cap, thin_vote as _thin_vote, weak_flank_cap as _weak_flank_cap, weak_fragment_cap as _weak_fragment_cap
+from MATPredict.detect import fallback_search as _fallback_search, margin_basis as _margin_basis, scope_label as _scope_label, single_region_cap as _single_region_cap, thin_vote as _thin_vote, weak_coverage_noise as _weak_coverage_noise, weak_flank_cap as _weak_flank_cap, weak_fragment_cap as _weak_fragment_cap
 from MATPredict.detect.family_status import CROSS_FAMILY_POLICIES, DEFAULT_CROSS_FAMILY_POLICY
 from MATPredict.detect.fallback_search import DEFAULT_FALLBACK_AFTER_WITHHELD_POLICY, FALLBACK_AFTER_WITHHELD_POLICIES
 from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CONFIDENCE_CAP_POLICY
@@ -269,6 +269,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         cross_family_policy=_cross_family_policy_from_args(args),
         strong_single_gene_policy=_strong_single_gene_policy_from_args(args),
         weak_fragment_cap_policy=_weak_fragment_cap_policy_from_args(args),
+        weak_coverage_noise_policy=_weak_coverage_noise_policy_from_args(args),
         out_of_scope_label_policy=_out_of_scope_label_policy_from_args(args),
         short_fragment_vote_policy=_short_fragment_vote_policy_from_args(args),
         weak_flank_cap_policy=_weak_flank_cap_policy_from_args(args),
@@ -427,6 +428,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "cross_family_policy": _cross_family_policy_from_args(args),
             "fallback_after_withheld_policy": _fallback_policy_from_args(args),
             "weak_fragment_cap_policy": _weak_fragment_cap_policy_from_args(args),
+            "weak_coverage_noise_policy": _weak_coverage_noise_policy_from_args(args),
             "out_of_scope_label_policy": _out_of_scope_label_policy_from_args(args),
             "short_fragment_vote_policy": _short_fragment_vote_policy_from_args(args),
             "weak_flank_cap_policy": _weak_flank_cap_policy_from_args(args),
@@ -488,6 +490,11 @@ def _weak_flank_cap_policy_from_args(args) -> str:
 def _idiomorph_margin_policy_from_args(args) -> str:
     """The idiomorph-margin policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
     return getattr(args, "idiomorph_margin_policy", _margin_basis.DEFAULT_IDIOMORPH_MARGIN_POLICY)
+
+
+def _weak_coverage_noise_policy_from_args(args) -> str:
+    """The weak-coverage-noise policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
+    return getattr(args, "weak_coverage_noise_policy", _weak_coverage_noise.DEFAULT_WEAK_COVERAGE_NOISE_POLICY)
 
 
 def _weak_fragment_cap_policy_from_args(args) -> str:
@@ -888,6 +895,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
         help="off: `idiomorph_margin` is reported as it is (default). separate: for a locus with a single idiomorph candidate the "
              "identity-point gap the margin falls back to is reported as `idiomorph_identity_gap` and `idiomorph_margin` is null "
              "(#145). Report only: no call, coordinate or tier changes.",
+    )
+    detect.add_argument(
+        "--weak-coverage-noise-policy", action=_PolicyFlag, choices=_weak_coverage_noise.WEAK_COVERAGE_NOISE_POLICIES,
+        default=_weak_coverage_noise.DEFAULT_WEAK_COVERAGE_NOISE_POLICY,
+        help="off: only a gene scoring under the family's noise floor (39 bits) is ignored when an unpolished gene would cap the tier "
+             "(default). on: a gene whose every hit covers < 30%% of its reference is ignored too, whatever its bitscore, so a fragment "
+             "crossing 39 bits no longer lowers a call to `medium` (#149). Tier only (medium to high).",
     )
     detect.add_argument(
         "--single-region-cap-policy", action=_PolicyFlag, choices=_single_region_cap.SINGLE_REGION_CAP_POLICIES,

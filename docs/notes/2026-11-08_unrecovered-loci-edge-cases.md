@@ -34,7 +34,7 @@ withheld locus in each genome:
 
 The reporting bar is `MIN_POLISHED_GENES = 2` (`detect/pipeline.py`, curator ruling 2026-09-22: loci with exactly one polished gene gave no
 high-confidence call). So 88% of the unrecovered genomes (the first two rows) are cases where the search found the genes but the polishing
-tools (exonerate, miniprot) built fewer than two gene models. The limiting step is gene **modelling** of divergent MAT genes, not search.
+tools (exonerate, miniprot) built fewer than two gene models. Whether the limiting step is gene **modelling** or the **sensitivity of the search** is not settled by these counts: the unmodelled hits are mostly weak fragments (section 5a measured this for the best cases: 23-47% identity, 12-53% coverage, 28-41 bits), so a divergent gene that the search barely detects looks the same as a gene the polishing tools cannot build.
 
 ## 3. The failure is concentrated in a small number of groups
 
@@ -85,22 +85,78 @@ v0.7.0, v0.8.0 and v0.8.1, so the *B. maydis* C4 failure is specific to that ass
 and MU825193, the second with one polished gene) are the candidate locus, and neither reaches two modelled genes. The cause is not determined here.
 The 29 stay in the "modelling" group of section 2.
 
+### 4b. The *Bipolaris* cause: the FungiDB run did not use the release preset
+
+The published FungiDB run (and the proteome and polish-cap tests of 4a, which copied its arguments) used no `--preset`; the code defaults turn every policy
+off, so it did not reproduce the settings of the definitive v0.8.1 run (`--preset v0.8.1`: `partial_core_policy`, `homothallic_policy`, `scoped_roster_policy`,
+`cross_family_policy`, `fallback_after_withheld_policy`). That is why *Bipolaris* is uncalled there while 82 of 82 BFD *Bipolaris* and *Curvularia* genomes are called.
+Rerunning all 313 FungiDB genomes on the same code with `--preset v0.8.1` (`results/2026-11-08_fdb_preset081`): **three genomes gain a call**
+(*Bipolaris maydis* C4, *B. sorokiniana* ND90Pr, *Curvularia clavata* yc1106, all Pleosporaceae, which rely on the Pleosporaceae-scoped roster), **none
+loses one**, and the called count goes from 274 to 277. Three other genomes (*Alternaria alternata* SRC1lrK2f, *A. dauci* A2016, *Fusarium graminearum* 233423)
+are called either way, with different calls. The no-call cases of section 4 that are not Pleosporaceae are unchanged by the preset. A detail run of the two
+*Bipolaris* genomes shows what the default run saw: every candidate locus is a weak fragment (28-38% identity, 4-22% coverage, 24-36 bits), except one
+`MAT1-2-1` at 53.5% identity beside SLA2, which the preset's scoped roster accepts.
+
+The FungiDB comparison repository (`hyphaltip/FungiDB_MATpredict`, `scripts/03_run_matpredict.sbatch`) should pass `--preset v0.8.1` (or `--preset v0.9`) to match
+the release it reports.
+
+### 4c. Does a profile search find the divergent partners? (measured 2026-11-08)
+
+The 12 cases of section 5a (14 partner genes) were searched with a profile HMM built from the database's curated references of the partner gene (`mafft`
+then `pyhmmer`), against the six-frame translation of the window of the withheld locus plus 20 kb each side, with the same profile searched in 4-17 random
+windows of the same size as a control (`results/2026-11-08_sensitivity/`). The bar was set before the run: E at most 1e-5 and at least half of the profile.
+**None of the 14 reaches it.** *Taphrina* `matPi` (five assemblies; 3 references) gives E 4e-5 to 1e-4 over 11-24% of the profile; *Sphaerulina* `MAT1-1-5` E 2.5e-3
+over 23%; `MAT1-2-1`, `MAT1-1-2`, *Asteromyces* `MAT1-1-1` and *Melampsora* `bE` give no hit; two further genes have a single reference and could not be profiled. The only strong
+scores are `MAT1-1-3` in *Asteromyces cruciatus* (E 1.2e-8, 46% of the profile) and *Sporothrix epigloea* (E 1.1e-7, 23.5%); `MAT1-1-3` is an HMG-box gene and both
+loci already hold a modelled HMG gene (`MAT1-2-1`), so these hits are probably that gene's own HMG box and are not independent evidence of a partner. The controls
+produced no hit at E 1e-5 (0 of 100 random windows).
+
+So with the references the database holds, a profile search does not make these partners detectable. The profiles are thin (1-6 references for most partners;
+27 and 26 for `MAT1-1-1` and `MAT1-2-1`, which also gave no hit): references close to the clade (action 4) are the more likely lever, and a profile search
+is worth repeating once they exist. Not tested: lower thresholds, iterative search, or miniprot with relaxed settings in the window.
+
 ## 5. What could improve recovery, ranked
 
 Effort is the work; risk is the chance of a false MAT call. Each action keeps the repository's rule: opt-in, measured, genome-by-genome review.
 
 | # | Action | Targets | Effort | Risk | Notes |
 |---|---|---|---|---|---|
-| 1 | Take apart *Bipolaris maydis* C4 and *B. sorokiniana* (why a curated, heterothallic genus gives no call in these two FungiDB assemblies when 82 of 82 BFD *Bipolaris* and *Curvularia* genomes are called) | Dothideomycetes, 137 no-call | small | low | the proteome path and the polish cap are ruled out (section 4a); next: the genomic window of the two SLA2-flanked clusters, hand-modelled against a curated record |
-| 2 | Polishing for divergent MAT genes: a miniprot-first or protein-profile model path for genes with search identity under about 50% | the 534 zero-polished and many of the 1,258 | medium | low | the limiting step is modelling; improving it changes no rule, but must pass the identity test |
+| 1 | *Bipolaris maydis* C4 and *B. sorokiniana* (no call in the FungiDB assemblies while 82 of 82 BFD *Bipolaris* and *Curvularia* genomes are called) | Dothideomycetes | done | none | **explained (section 4b): the FungiDB run did not pass `--preset v0.8.1`**; with it three FungiDB genomes gain a call and none loses one |
+| 2 | Polishing for divergent MAT genes: a miniprot-first or protein-profile model path for genes with search identity under about 50%. **Check first (section 5a): in the best cases the unmodelled partner is only a weak search fragment, so search sensitivity may matter more than polishing** | the 534 zero-polished and many of the 1,258 | medium | low | the limiting step is modelling; improving it changes no rule, but must pass the identity test |
 | 3 | `--strong-single-gene-policy` (gate: modelled identity >= 85 and coverage >= 90), **measured for #261: not the lever** | the 1,258 | done | medium | on 3,100 candidate genomes the rule recovers 5 loci (each `low`, `idiomorph_gene_only`, no flank genes, none with a truth label) and changes no existing call; 117 lone core hits at >= 85% in 96 genomes never reach the model gate because they are 90-430 bp fragments; one of the 5 recovered models is defective (a frameshift, no stop), so any use needs a defective-model gate (`results/2026-11-07_issue261/FINDINGS.md`) |
 | 4 | Curate references for the unreferenced groups: Dipodascales and Lipomycetes yeasts, Orbiliomycetes, Xylariales, Chaetothyriales, Botryosphaeriales, Podosphaera | about 1,000 genomes | large (curation) | low | each record raises search sensitivity where none exists; follows the #189/#202/#260 pattern |
-| 5 | Review the one-polished-gene ruling for a flank-supported tier: one polished MAT gene plus a polished flank gene reports `low`, not nothing | part of the 1,258 | small | medium | needs a curator decision; the 2026-09-22 ruling was made when no tier below the bar existed |
+| 5 | Report a locus with exactly one polished gene at `low` instead of withholding it. **Measured, 2026-11-08: not worth a general rule** (section 5a) | the 1,264 | done | high | 92% of the polished core genes are under 60% identity; a narrow gate recovers 12 genomes |
 | 6 | `flank_carried_core_outside_flank_span`: widen the span or allow the core gene beyond it when the flanks are polished | the 203 (Hypoxylon, Yamadazyma, Pyricularia) | medium | medium | overlaps #260 |
 | 7 | Family-structure fixes: join `matMc`/`matPi` pieces of the PM family and `bE`/`bW` of rustHD across a split | S. pombe group, Pneumocystis, Taphrina, rust | medium | medium | relates to the silent-pair work (#252 revert) |
 | 8 | A per-genome "why no call" field naming the best withheld locus and the reason | all | small | none | report-only; turns this census into a column |
 
 Suggested order: 1, 8 (cheap, informative), then 2 and 4 (largest effect), then the curator-gated 5 to 7. Action 3 is measured and small (5 loci), so the rule does not address the one-polished-gene genomes: those have other, unpolished hits and no lone modelled gene to promote.
+
+### 5a. The one-polished-gene measurement (action 5)
+
+The bar counts any polished gene, so a locus with a polished core gene and a polished flank gene already passes; what is withheld is a locus with
+**exactly one** polished gene. With `--withheld-detail-policy on` (report-only) the 1,935 no-call Ascomycota and Basidiomycota genomes of the v0.8.1 run
+were rerun with the same code (`results/2026-11-08_withheld_detail/`; calls unchanged by construction). Of 162,417 withheld `modelled_gene_bar` loci,
+160,051 (98.5%) have no polished gene and 2,366 have exactly one.
+
+| | Loci | Genomes (best withheld locus) |
+|---|---|---|
+| the one polished gene is a flank gene (SLA2, APN2, COX13, PAN6, FAO1 ...) | 1,202 | 557 |
+| the one polished gene is a core gene | 1,164 | 707 |
+
+For the 707 genomes with a polished core gene: identity under 60% in 653 (92%), 60-85% in 23, 85% or more in 31. In 545 the locus also holds another
+core hit (a possible opposite idiomorph) and in 495 it holds no flank hit at all. With identity at least 60% and coverage at least 60%, 35 genomes
+remain, and 23 of those rest on `RPL39`, a conserved ribosomal gene that is not mating-type specific. The other 12 are *Taphrina* `matMc`
+(100% identity, `matPi` unpolished; 5), *Sphaerulina musiva* `MAT1-1-1` (3), *Flavoplaca navasiana* `MAT1-1-1` (1), *Asteromyces cruciatus* and
+*Sporothrix epigloea* `MAT1-2-1` (2) and *Melampsora aecidioides* `bW` (1).
+
+So a general `low` tier would add about 700 loci that are mostly weak models with no flank support (a false-call risk the 2026-09-22 ruling was made to
+avoid), and a gate that keeps only well-modelled specific genes recovers 12 genomes, about 0.6% of the unrecovered ones. The "unpolished partner" in these 12 cases is not a gene the polishing tools failed to build: it is a weak search fragment (identity 23-47%,
+coverage 12-53%, 28-41 bits; for example *Taphrina deformans* `matPi` at 33%, 18% coverage and 29 bits beside `matMc` at 100%, *Melampsora aecidioides* `bE`
+at 37.5%, 16% and 32 bits beside `bW` at 75%). So where one gene is modelled and its partner is not, the partner is too divergent for the search to place it with confidence and, at that identity,
+for the polishing tools to build a model; neither step is working "wrongly" on a well-detected gene. The lever is a method that tolerates divergence (a
+profile or HMM search or gene model, more references closer to the clade, or a lower threshold inside a window already known to hold a modelled MAT
+gene), which belongs with action 4 (references) and a search-sensitivity experiment, together with action 2.
 
 ## 6. What this census cannot say
 

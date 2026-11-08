@@ -14,7 +14,8 @@ clone ids and applies its plateau rule; this script only records what the reads 
 
 PILOT_DIR: the committed wave folders (wave*/results_all_final.tsv give run -> species group). DIR: folders holding <run>.sig.zip
 (searched in the order given; the first copy of a run wins). Writes per group OUT_DIR/<slug>.clones.tsv (one row per sketched run) and
-OUT_DIR/summary.tsv (one row per group). Columns of <slug>.clones.tsv:
+OUT_DIR/summary.tsv (one row per group, with a same-strain check: pairs of runs whose strain names match, their median ANI and how
+many reach 0.9995 and 0.999). Columns of <slug>.clones.tsv:
   run, hashes, solid_hashes, median_abund (k-mer abundance: a coverage proxy for the subsample), nearest_run, nearest_ani,
   clone_<t> for each threshold t (c1 = the largest group), min_ani_<t> (least similar pair inside that run's group; blank for a singleton).
 """
@@ -97,15 +98,28 @@ def group_min(M, labels):
     return res
 
 
+NOT_A_NAME = {"", "-", "na", "n/a", "none", "missing", "not applicable", "not collected", "unknown", "not provided"}
+
+
+def strain_key(name):
+    """A strain name normalised for the same-strain check (case, spaces, punctuation); "" for a placeholder."""
+    k = re.sub(r"[^a-z0-9]", "", (name or "").lower())
+    return "" if (name or "").strip().lower() in NOT_A_NAME or len(k) < 3 else k
+
+
+STRAINS = {}
+
+
 def species_groups(pilot):
-    """{slug: [runs]} from every committed wave table (results_all_final.tsv), runs in first-seen order, no duplicates."""
+    """{slug: [runs]} from every committed wave table (results_all_final.tsv), runs in first-seen order, no duplicates.
+    Also fills STRAINS {run: strain name} for the same-strain check."""
     g = defaultdict(list); seen = set()
     for w in sorted(glob.glob(os.path.join(pilot, "wave*"))):
         f = os.path.join(w, "results_all_final.tsv")
         if not (re.fullmatch(r"wave\d+[a-z_]*", os.path.basename(w)) and os.path.exists(f)): continue
         for r in csv.DictReader(open(f, newline=""), delimiter="\t"):
             if r.get("run") and r.get("group") and r["run"] not in seen:
-                seen.add(r["run"]); g[r["group"]].append(r["run"])
+                seen.add(r["run"]); g[r["group"]].append(r["run"]); STRAINS[r["run"]] = r.get("strain", "")
     return g
 
 
@@ -116,7 +130,17 @@ def load_sig(path):
     return {}
 
 
-def write_group(slug, runs, sketches, out):
+def same_strain(M, runs, strains):
+    """ANI of every pair of runs whose strain names match (after strain_key): the same strain submitted twice, a natural check of
+    what 'one clone' looks like at this coverage (some are lab lines that differ, some names are reused, so it is a guide, not truth)."""
+    by = defaultdict(list)
+    for i, r in enumerate(runs):
+        k = strain_key(strains.get(r, ""))
+        if k: by[k].append(i)
+    return [float(M[i, j]) for m in by.values() for x, i in enumerate(m) for j in m[x + 1:]]
+
+
+def write_group(slug, runs, sketches, out, strains=None):
     M = ani_matrix(sketches)
     labs = clusters(M)
     mins = {t: group_min(M, labs[t]) for t in THRESHOLDS}
@@ -135,7 +159,11 @@ def write_group(slug, runs, sketches, out):
     iu = np.triu_indices(n, 1)
     between = M[iu] if n > 1 else np.array([])
     meds = [s[0] for s in stats]
-    return {"slug": slug, "runs": n, "median_abund": f"{np.median(meds):.1f}", "low_coverage_runs": sum(m < LOW_COVERAGE for m in meds),
+    ss = same_strain(M, runs, strains or {})
+    return {"slug": slug, "runs": n,
+            "same_strain_pairs": len(ss), "same_strain_median": f"{np.median(ss):.6f}" if ss else "",
+            "same_strain_ge_0.9995": sum(v >= 0.9995 for v in ss), "same_strain_ge_0.999": sum(v >= 0.999 for v in ss),
+            "median_abund": f"{np.median(meds):.1f}", "low_coverage_runs": sum(m < LOW_COVERAGE for m in meds),
             "between_median": f"{np.median(between):.6f}" if len(between) else "", "between_p99": f"{np.quantile(between, .99):.6f}" if len(between) else "",
             **{f"clones_{t}": len(set(labs[t])) for t in THRESHOLDS}}
 
@@ -167,10 +195,11 @@ def main():
         with Pool(a.threads) as p:
             got = [(r, d) for r, d in p.map(_load, [(r, where[r]) for r in have]) if d]
         if not got: continue
-        s = write_group(slug, [r for r, _ in got], [d for _, d in got], a.out)
+        s = write_group(slug, [r for r, _ in got], [d for _, d in got], a.out, STRAINS)
         s["typed_runs"] = len(groups[slug]); rows.append(s)
         print(f"{slug}: {s['runs']} of {len(groups[slug])} runs sketched; clones at 0.9995 {s['clones_0.9995']}; median abundance {s['median_abund']}", flush=True)
-    cols = ["slug", "typed_runs", "runs", "median_abund", "low_coverage_runs", "between_median", "between_p99"] + [f"clones_{t}" for t in THRESHOLDS]
+    cols = ["slug", "typed_runs", "runs", "median_abund", "low_coverage_runs", "between_median", "between_p99"] + [f"clones_{t}" for t in THRESHOLDS] + \
+        ["same_strain_pairs", "same_strain_median", "same_strain_ge_0.9995", "same_strain_ge_0.999"]
     with open(os.path.join(a.out, "summary.tsv"), "w", newline="") as fh:
         w = csv.DictWriter(fh, cols, delimiter="\t", lineterminator="\n"); w.writeheader(); w.writerows(rows)
 

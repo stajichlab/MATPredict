@@ -80,3 +80,11 @@ def test_write_group_gives_a_row_per_run_and_a_summary(tmp_path):
     assert rows[0]["nearest_run"] == "R2" and rows[0]["clone_0.9995"] == rows[1]["clone_0.9995"] == "c1"
     assert rows[2]["min_ani_0.9995"] == "" and float(rows[2]["median_abund"]) < cs.LOW_COVERAGE
     assert s["runs"] == 3 and s["clones_0.9995"] == 2 and s["low_coverage_runs"] == 1
+    assert s["same_strain_pairs"] == 0
+
+
+def test_same_strain_pairs_use_normalised_names_and_skip_placeholders():
+    assert cs.strain_key("CBS 144.89") == cs.strain_key("cbs144-89") == "cbs14489"
+    assert cs.strain_key("missing") == cs.strain_key("NA") == cs.strain_key("") == ""
+    M = np.array([[1, .9999, .99], [.9999, 1, .98], [.99, .98, 1]])
+    assert cs.same_strain(M, ["a", "b", "c"], {"a": "Af293", "b": "AF-293", "c": "missing"}) == [pytest.approx(.9999)]

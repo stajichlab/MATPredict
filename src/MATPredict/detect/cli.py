@@ -10,6 +10,7 @@ from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect import confidence_cap as _confidence_cap, family_status as _family_status, strong_single_gene as _strong_single_gene
+from MATPredict.detect import report as _report
 from MATPredict.detect import fallback_search as _fallback_search, margin_basis as _margin_basis, scope_label as _scope_label, single_region_cap as _single_region_cap, thin_vote as _thin_vote, weak_flank_cap as _weak_flank_cap, weak_fragment_cap as _weak_fragment_cap
 from MATPredict.detect.family_status import CROSS_FAMILY_POLICIES, DEFAULT_CROSS_FAMILY_POLICY
 from MATPredict.detect.fallback_search import DEFAULT_FALLBACK_AFTER_WITHHELD_POLICY, FALLBACK_AFTER_WITHHELD_POLICIES
@@ -430,6 +431,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "out_of_scope_label_policy": _out_of_scope_label_policy_from_args(args),
             "short_fragment_vote_policy": _short_fragment_vote_policy_from_args(args),
             "weak_flank_cap_policy": _weak_flank_cap_policy_from_args(args),
+            "withheld_detail_policy": _withheld_detail_policy_from_args(args),
             "single_region_cap_policy": _single_region_cap_policy_from_args(args),
             "idiomorph_margin_policy": _idiomorph_margin_policy_from_args(args),
             "strong_single_gene_policy": _strong_single_gene_policy_from_args(args),
@@ -482,6 +484,11 @@ def _out_of_scope_label_policy_from_args(args) -> str:
 def _short_fragment_vote_policy_from_args(args) -> str:
     """The short-fragment-vote policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
     return getattr(args, "short_fragment_vote_policy", _thin_vote.DEFAULT_SHORT_FRAGMENT_VOTE_POLICY)
+def _withheld_detail_policy_from_args(args) -> str:
+    """The withheld-detail policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
+    return getattr(args, "withheld_detail_policy", _report.DEFAULT_WITHHELD_DETAIL_POLICY)
+
+
 def _weak_flank_cap_policy_from_args(args) -> str:
     """The weak-flank-cap policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
     return getattr(args, "weak_flank_cap_policy", _weak_flank_cap.DEFAULT_WEAK_FLANK_CAP_POLICY)
@@ -895,6 +902,11 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
         help="off: no cap (default). on: a `high` Basidiomycota call whose live core genes fall in fewer than two distinct regions "
              "(models overlapping by half or more are one region) and that has no polished flank gene is lowered to `medium`; the "
              "idiomorph, the locus and the class are never changed (#167). The report's `single_region_cap` says what was found.",
+    )
+    detect.add_argument(
+        "--withheld-detail-policy", action=_PolicyFlag, choices=_report.WITHHELD_DETAIL_POLICIES, default=_report.DEFAULT_WITHHELD_DETAIL_POLICY,
+        help="off: a withheld locus lists its genes by name only (default). on: each entry of `suppressed_loci` also lists `genes` (name, role, polish "
+             "status, identity, coverage, bitscore), which shows what a locus under the polished-gene bar consisted of. Report only; no call changes.",
     )
     detect.add_argument(
         "--strong-single-gene-policy", action=_PolicyFlag, choices=STRONG_SINGLE_GENE_POLICIES,

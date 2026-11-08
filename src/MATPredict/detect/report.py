@@ -514,7 +514,22 @@ def _taxonomy_source() -> str:
         return f"error reading local taxonomy table: {type(exc).__name__}: {str(exc)[:120]}"
 
 
+WITHHELD_DETAIL_POLICIES = ("off", "on")
+DEFAULT_WITHHELD_DETAIL_POLICY = "off"
+
+
+def withheld_gene_detail(r) -> list[dict]:
+    """The live genes of a withheld locus, compactly: name, role, polish status, identity, coverage and bitscore (`--withheld-detail-policy on`,
+    report only). It shows which gene carried the one polished model when a locus fell under the polished-gene bar."""
+    return [{"gene": e.gene_name, "role": e.role, "status": str(e.status),
+             "identity": None if e.identity is None else round(e.identity, 2),
+             "coverage": None if e.coverage is None else round(e.coverage, 2),
+             "bitscore": None if e.bitscore is None else round(e.bitscore, 1)}
+            for e in r.gene_evidence if not getattr(e, "lost_to", None)]
+
+
 def write_detection_report(outcome: DetectionOutcome, out_path: Path, run: dict | None = None) -> None:
+    detail = ((run or {}).get("parameters") or {}).get("withheld_detail_policy", DEFAULT_WITHHELD_DETAIL_POLICY) == "on"
     # `routing_mode` is written next to `families_attempted` because the two
     # are only meaningful together: the list says WHICH families were searched,
     # the mode says why -- and an `exhaustive` run's not-detected entries for
@@ -566,6 +581,7 @@ def write_detection_report(outcome: DetectionOutcome, out_path: Path, run: dict 
                 "core_span": core_span(r),
                 "supported_span": r.supported_span,
                 "withheld_reason": r.withheld_reason,
+                **({"genes": withheld_gene_detail(r)} if detail else {}),
                 **(r.withheld_detail or {}),
                 # The classifier verdict (or null), so a withheld locus's
                 # idiomorph margin can be audited. Review finding F5,

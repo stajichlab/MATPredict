@@ -53,7 +53,10 @@ from MATPredict.detect.silent_pair import split_silent_pairs
 
 POLICY_OFF = "off"
 POLICY_ON = "on"
-CROSS_FAMILY_POLICIES = (POLICY_OFF, POLICY_ON)
+#: `on`, plus: where the kept call of a cross-family group has no idiomorph label and another family's call
+#: at the same locus has one, both calls are kept (#255).
+POLICY_KEEP_LABELLED = "keep_labelled"
+CROSS_FAMILY_POLICIES = (POLICY_OFF, POLICY_ON, POLICY_KEEP_LABELLED)
 DEFAULT_CROSS_FAMILY_POLICY = POLICY_OFF
 
 #: Fraction of the shorter locus that two calls must share to count as one locus.
@@ -136,7 +139,15 @@ def _has_flank_gene(r) -> bool:
     return any(e.role in ("flanking_conserved", "flanking_variable") and e.lost_to is None for e in r.gene_evidence)
 
 
-def resolve_cross_calls(results: list, families: list, lineage: set[int]) -> list:
+_UNLABELLED = (None, "", "undetermined", "none")
+
+
+def _labelled(r) -> bool:
+    """The call names an idiomorph (not `undetermined` or empty)."""
+    return str(r.idiomorph).lower() not in _UNLABELLED if r.idiomorph is not None else False
+
+
+def resolve_cross_calls(results: list, families: list, lineage: set[int], keep_labelled: bool = False) -> list:
     """`results` with each cross-family group reduced to one call; the others ride on it as `cross_call`.
 
     A group with a family scoped to the genome keeps that family's best call. The other groups (no scoped family) are decided
@@ -203,7 +214,19 @@ def resolve_cross_calls(results: list, families: list, lineage: set[int]) -> lis
                     note["flank_rule"] = True
                 notes.append(note)
         kept[best] = (notes, ambiguous)
-        drop.update(i for i in group if i != best)
+        keep_too = None
+        if keep_labelled and not _labelled(results[best]):
+            labelled = [i for i in group if i != best and _labelled(results[i])]
+            if labelled:
+                keep_too = min(labelled, key=lambda i: _score(results[i]))
+                note = _note(results[best])
+                note["kept_both"] = True
+                kept[keep_too] = ([note], ambiguous)
+                other = results[keep_too]
+                for n in kept[best][0]:  # the set-aside note already there is this call: mark it, do not repeat it
+                    if (n["family"], n["contig"], n["start"], n["end"]) == (_family_name(other), other.contig, other.start, other.end):
+                        n["kept_both"] = True
+        drop.update(i for i in group if i != best and i != keep_too)
     return [replace(r, cross_call=kept[i][0], family_ambiguous=kept[i][1]) if i in kept else r for i, r in enumerate(results) if i not in drop]
 
 
@@ -344,5 +367,5 @@ def apply(results: list, families: list, lineage: set[int], policy: str, shared_
     """The whole rule; `off` returns the calls untouched. `shared_flank` is the optional cross-family cassette check."""
     if check_policy(policy) == POLICY_OFF:
         return list(results)
-    kept = split_silent_pairs(resolve_cross_calls(results, families, lineage), families, lineage)
+    kept = split_silent_pairs(resolve_cross_calls(results, families, lineage, policy == POLICY_KEEP_LABELLED), families, lineage)
     return flag_cross_family_cassettes(flag_cassettes(flag_family_status(kept, families, lineage), families), shared_flank)

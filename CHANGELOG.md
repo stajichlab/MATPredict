@@ -6,6 +6,10 @@ release completed.
 
 ## [Unreleased]
 
+## [0.9.0] — TBD — `v0.9.0`
+
+> DRAFT release prep (do not tag until the definitive run is integrated). The entries below are those of the merged pull requests of the v0.9.0 cycle; the definitive run is `--preset v0.9.1 --withheld-detail-policy on` with the `tblastn` outlier policy (`MATPREDICT_TBLASTN_SEG=yes`, `MATPREDICT_TBLASTN_SEG_GENES=SLA2,APN2,MAT1-1-1`) and its counts are filled in once the tables are built. Rules that exist but are in no preset: `--weak-fragment-cap-policy`, `--weak-coverage-noise-policy`, `--strong-single-gene-policy`, `--confidence-cap-policy`.
+
 ### Added
 - `--preset v0.9.1` (curator's ruling 2026-11-07): v0.9 plus three rules that lower a tier or withhold an idiomorph label: `--weak-flank-cap-policy on` (#129: 23 loci in the v0.8.1 run go from `high` to `medium`), `--short-fragment-vote-policy undetermined` (#138: 107 loci become `undetermined`) and `--single-region-cap-policy on` (#167: 202 Basidiomycota loci go from `high` to `medium`). The weak-coverage rule (#149: 109 loci `medium` to `high`) is held out for the curator's review. It is the preset of the v0.9.0 full run.
 - `--preset v0.9` (curator's ruling 2026-11-07): v0.8.1 plus the three report-only rules of the v0.9.0 cycle: `--cross-family-policy keep_labelled` (#255: both calls kept where the kept call has no idiomorph label and the other has one; one genome in 23,579 v0.8.1 reports is affected), `--idiomorph-margin-policy separate` (#145: a single-candidate identity gap is reported as `idiomorph_identity_gap`; 74 of the loci in a 300-genome panel move the value), and `--scope-label-policy on` (#170: 10 `Basidiomycota:MAT` loci in the v0.8.1 run, on STE3, PAN6 and RPL39 alone outside the family's scope, are marked `family_unconfirmed`). No call, coordinate or tier changes. The rules that change a tier or an idiomorph label (`--weak-fragment-cap-policy`, `--weak-flank-cap-policy`, `--short-fragment-vote-policy`, `--single-region-cap-policy`, `--weak-coverage-noise-policy`) are in no preset until the curator approves their genome lists.

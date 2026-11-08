@@ -1,4 +1,8 @@
 slug	species	previous	decision	reasons
-pyrenophora_teres	Pyrenophora teres	UNVALIDATED:provisional_typed_0.79	PROVISIONAL	runs=32 done=32 typed=28 both=0 none/low=4 truth_typed=1 agree=1 median_shared_depth=4.5
-blastomyces_dermatitidis	Blastomyces dermatitidis	UNVALIDATED:provisional_typed_0.81	PROVISIONAL	runs=24 done=24 typed=21 both=0 none/low=3 truth_typed=1 agree=1 median_shared_depth=17.4
-trichoderma_viride	Trichoderma viride	UNVALIDATED:provisional_typed_0.80	PASS	runs=6 done=6 typed=5 both=0 none/low=1 truth_typed=5 agree=5 median_shared_depth=9.8
+talaromyces_marneffei	Talaromyces marneffei	UNVALIDATED:typed_0.70+provisional_typed_0.70	PROVISIONAL	runs=300 done=300 typed=289 both=0 none/low=11 truth_typed=1 agree=1 median_shared_depth=7.4
+pyrenophora_teres	Pyrenophora teres	PROVISIONAL	UNVALIDATED:provisional_typed_0.77	runs=300 done=300 typed=230 both=1 none/low=69 truth_typed=1 agree=1 median_shared_depth=4.9
+histoplasma_capsulatum	Histoplasma capsulatum	PROVISIONAL	UNVALIDATED:typed_0.69+provisional_typed_0.69	runs=175 done=175 typed=120 both=2 none/low=53 truth_typed=1 agree=1 median_shared_depth=7.1
+ophidiomyces_ophidiicola	Ophidiomyces ophidiicola	PASS	UNVALIDATED:typed_0.54	runs=52 done=52 typed=28 both=0 none/low=24 truth_typed=11 agree=11 median_shared_depth=12.8
+neurospora_intermedia	Neurospora intermedia	UNVALIDATED:typed_0.50+shared_depth_1.5+provisional_typed_0.50	HOLD:typed_0.48+provisional_typed_0.48+shared_depth_1.2	runs=21 done=21 typed=10 both=0 none/low=11 truth_typed=0 agree=0 median_shared_depth=1.2
+verticillium_albo_atrum	Verticillium albo-atrum	PROVISIONAL	HOLD:typed_0.28+provisional_typed_0.28+shared_depth_1.6	runs=18 done=18 typed=5 both=0 none/low=13 truth_typed=3 agree=3 median_shared_depth=1.6
+exserohilum_rostratum	Exserohilum rostratum	PROVISIONAL	UNVALIDATED:provisional_typed_0.82	runs=40 done=40 typed=33 both=0 none/low=7 truth_typed=4 agree=4 median_shared_depth=4.9

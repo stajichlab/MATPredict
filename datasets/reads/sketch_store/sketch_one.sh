@@ -40,6 +40,11 @@ take_pairs() {
     N=$(( GENOME_KB * 1000 * COVERAGE / L ))
     for f in "${r1[@]}"; do $reader "$f"; done | zcat -f 2>/dev/null | head -n $((4 * N)) > "$fq"
   fi
+  # a stream that broke mid-file (seen on ENA HTTPS for 3 GB 2013 files) leaves a truncated record that sourmash rejects:
+  # keep only whole records (4 lines, '@' header, sequence and quality of equal length), in whole pairs when interleaved
+  awk -v per=$(( ${#r2[@]} > 0 ? 2 : 1 )) 'NR%4==1{h=$0} NR%4==2{s=$0} NR%4==3{p=$0}
+    NR%4==0{ if (substr(h,1,1)!="@" || length(s)!=length($0)) exit; b=b h "\n" s "\n" p "\n" $0 "\n"; if (++k==per) {printf "%s", b; b=""; k=0} }' \
+    "$fq" > "$fq.ok" && mv "$fq.ok" "$fq"
 }
 KEY=${RUN:-$SID}
 typed() { [[ -s $STORE/mat/$KEY.$PANEL_PREFIX.tsv ]]; }
@@ -58,6 +63,14 @@ if [[ $SRC == public ]]; then
     # (only those bytes are downloaded). No GmG screen on this path; the sketch QC (query qc) still flags mixtures. Typed below.
     IFS=';' read -ra urls <<< "$ENA"; r1=("https://${urls[0]}"); r2=(); [[ ${#urls[@]} -ge 2 ]] && r2=("https://${urls[-1]}")
     rm -f "$fq"; reader="curl -sfL --retry 3 --retry-delay 20"; take_pairs; ENA_USED=1
+    # a broken stream that delivered under half the target (and under half the run, for runs smaller than the target) is retried by
+    # the planner rather than sketched thin
+    got=$(awk 'NR%4==2{s+=length($0)}END{print s+0}' "$fq" 2>/dev/null || echo 0)
+    want=$(awk -F'\t' -v n=$((IDX + 1)) -v t=$(( GENOME_KB * 1000 * COVERAGE )) 'NR==1{for(i=1;i<=NF;i++)c[$i]=i} NR==n{b=$c["base_count"]+0; print (b && b < t) ? b : t}' "$STORE/manifest.tsv")
+    if [[ -s $fq && $got -lt $(( want / 2 )) ]]; then
+      echo "$SID: ENA stream gave $got of $want bases; leaving it for a retry" >&2
+      echo -e "$SID\t$SRC\t$KEY\t$got\t0\t0\tena_partial" > "$STORE/stats/$SID.tsv"; exit 1
+    fi
     if [[ -s $fq ]]; then state=ok; echo -e "{\"run\":\"$RUN\",\"state\":\"done_ena\",\"source\":\"ena-https\"}" > "$STORE/mat/$KEY.ena.json"; fi
   fi
   [[ -s $fq ]] || { echo "$SID: no subsample ($state): $(tail -3 "$work/worker.log" | tr '\n' ' ')" >&2; \

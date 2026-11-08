@@ -66,6 +66,11 @@ New per-locus columns (loci.tsv):
                      `defective_genes` in the report), `|`-joined; blank when none or when the report predates the field.
                      Report-only: the tier and `polished_genes` do not read it. It says "defective in this assembly";
                      a real pseudogene shows in many isolates of a species, an assembly indel in few.
+                     For a Basidiomycota locus the column is a MODEL CHECK, not a pseudogene call (issue #168, curator 2026-11-07):
+                     only a core gene at >= 60% identity and >= 80% coverage is listed; the other flagged genes move to
+                     `low_confidence_model_genes` (on the v0.8.1 run 18 Wallemia STE3 stops are a splice-junction mis-model,
+                     and about 90% of the flagged Boletales HD1 loci are below 50% identity, a divergent gene poorly modelled).
+  low_confidence_model_genes  Basidiomycota only: the flagged genes that fail the model-check filter above, `|`-joined; blank otherwise.
 New per-genome columns (genomes.tsv): genus, baseline_status, change_vs_baseline (the phase-5 judgement's
 category, computed on the first locus of each sorted locus list, so it can differ from the per-locus view),
 n_tier_drop (loci whose tier dropped), n_tier_note, n_label_unsupported, high_basis (distinct values over the
@@ -109,6 +114,10 @@ CORE_GENE = {"MAT1-1": "MAT1-1-1", "MAT1-2": "MAT1-2-1"}
 SCOPED_FLANKS = frozenset({"GAP1", "BGL1"})
 SPAN_SHIFT_BP = 1000       # a coordinate shift up to this is not a change (judgement, as in the pilot)
 
+# Basidiomycota model check (#168): a flagged gene is listed by default only when it is a core gene modelled well enough to read a stop from.
+MODEL_CHECK_MIN_IDENTITY = 60.0
+MODEL_CHECK_MIN_COVERAGE = 80.0
+
 TIER_NOTES = ("margin_fallback", "vote_collapse", "polished_model_lost", "distant_fragment")
 
 GENOME_COLS = ["genome", "species", "class_", "order", "family", "status", "routing", "n_loci", "families_called", "wall_s",
@@ -118,7 +127,7 @@ LOCUS_COLS = ["genome", "class_", "order", "family_called", "contig", "start", "
               "detection_pass", "genes_found", "verification",
               "genus", "family", "polished_genes", "idiomorph_margin", "margin_basis", "n_candidates", "baseline_confidence",
               "tier_note", "label_unsupported", "label_unsupported_reason", "high_basis", "high_basis_outside_scope",
-              "defective_genes"]
+              "defective_genes", "low_confidence_model_genes"]
 
 
 # ----------------------------------------------------------------------------------------------- reading reports
@@ -130,8 +139,25 @@ def _fnum(v):
         return None
 
 
+def split_defective(x):
+    """(listed, low_confidence_model): the locus's flagged genes (frameshift or internal stop in the polished model) split by the Basidiomycota
+    model check (#168). Outside Basidiomycota every flagged gene is listed. In Basidiomycota a gene is listed only when one of its live entries
+    is a core gene with identity >= MODEL_CHECK_MIN_IDENTITY and coverage >= MODEL_CHECK_MIN_COVERAGE; the rest are low-confidence models."""
+    flagged = sorted(set(x.get("defective_genes") or []))
+    if not str(x.get("family") or "").startswith("Basidiomycota:"):
+        return flagged, []
+    good = set()
+    for e in x.get("gene_evidence") or []:
+        ident, cov = _fnum(e.get("identity")), _fnum(e.get("coverage"))
+        if (e.get("gene") in flagged and not e.get("lost_to") and e.get("role") == "core_MAT" and ident is not None and cov is not None
+                and ident >= MODEL_CHECK_MIN_IDENTITY and cov >= MODEL_CHECK_MIN_COVERAGE):
+            good.add(e["gene"])
+    return [g for g in flagged if g in good], [g for g in flagged if g not in good]
+
+
 def summarise_locus(x):
     """The fields of one `detected` entry that the tables and the rules need."""
+    defective, low_conf = split_defective(x)
     v = x.get("verification")
     note = x.get("homothallic_note") if isinstance(x.get("homothallic_note"), dict) else {}
     return {
@@ -143,7 +169,7 @@ def summarise_locus(x):
         "n_candidates": len(x.get("idiomorph_candidates") or []),
         "vote_idiomorph": note.get("vote_idiomorph"),
         "ignored": sorted(set(x.get("confidence_ignored_genes") or [])),
-        "defective": sorted(set(x.get("defective_genes") or [])),   # genes whose polished model has a frameshift or an internal stop
+        "defective": defective, "low_confidence_model": low_conf,
         "genes": [{"gene": e.get("gene"), "status": e.get("status"), "identity": _fnum(e.get("identity")),
                    "coverage": _fnum(e.get("coverage")), "lost_to": e.get("lost_to")}
                   for e in (x.get("gene_evidence") or [])],
@@ -520,7 +546,8 @@ def build(new, base, listed, samples, mucoro_names, inputs_rows, scope, mucoro=F
                           margin_basis=margin_basis(x), n_candidates=x["n_candidates"],
                           baseline_confidence=o["confidence"] if o else "", tier_note=note,
                           label_unsupported="yes" if lab else "no", label_unsupported_reason=lab, high_basis=hb,
-                          high_basis_outside_scope=hb_out, defective_genes="|".join(x["defective"])))
+                          high_basis_outside_scope=hb_out, defective_genes="|".join(x["defective"]),
+                          low_confidence_model_genes="|".join(x.get("low_confidence_model") or [])))
         row.update(n_tier_drop=n_drop, n_tier_note=n_note, n_label_unsupported=n_lab, high_basis="|".join(sorted(bases)),
                    n_defective_loci=sum(1 for x in loci if x["defective"]))
         G.append(row)

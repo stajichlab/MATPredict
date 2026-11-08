@@ -34,7 +34,7 @@
   <p class="muted" id="cnt-note"></p>
   <h2>Calls by study</h2>
   <div class="chart" id="ch-study"></div><div class="legend" id="lg-study"></div>
-  <p class="muted">Runs of one study are often one population or one cross; the counts are of runs sampled (at most 4 per study), not of independent strains.</p>
+  <p class="muted">Runs of one study are often one population or one cross; the counts are of runs sampled, not of independent strains. Hover over a study to see its BioProject title.</p>
   <section id="clones" hidden>
     <h2>Clone groups</h2>
     <p id="clone-intro"></p>
@@ -43,7 +43,7 @@
     <p class="muted">Groups come from a k=21 sketch of each run's reads (up to 2 million read pairs): runs whose average similarity is at least 0.998 are grouped (average linkage). Two samples of one genome often score 0.995 to 0.999, so the threshold cannot tell a copy of a strain from a very close relative with certainty. <a href="https://github.com/stajichlab/MATPredict/blob/main/datasets/reads/sra_survey/pilot/clone_pilot/README.md">Method and calibration</a>.</p>
   </section>
   <h2>Runs</h2>
-  <div class="controls"><label>Call <select id="callf"><option value="">all</option></select></label> <label>Search <input id="q" type="search" placeholder="run, strain, study"></label> <a id="dl" href="#">Download TSV</a></div>
+  <div class="controls"><label>Call <select id="callf"><option value="">all</option></select></label> <label>Search <input id="q" type="search" placeholder="run, strain, study or project title"></label> <a id="dl" href="#">Download TSV</a></div>
   <div class="tablewrap"><table id="runs"><thead><tr><th>Run</th><th>Strain</th><th>Study</th><th>Call</th><th class="n" id="h-d1">Allele depth</th><th class="n" id="h-d2">Allele depth</th><th class="n">Flank depth</th><th>Assembly call</th><th>Clone</th><th>Note</th></tr></thead><tbody></tbody></table></div>
   <p class="muted">Depths are k-mer depths from up to 2 million read pairs. <i>Note</i>: <code>k21</code> or <code>genus_panel</code> mean the call came from a retyping pass; <code>both_vs_one</code> means both idiomorphs were seen where the assembly shows one; <code>agree_heterozygous</code> is the same for a heterozygous diploid (<i>Candida albicans</i>), where an assembly collapses the a/alpha pair to one.</p>
 </main>
@@ -75,6 +75,10 @@ const NM = D.names || ["MAT1-1", "MAT1-2"], LB = LABELS_ON ? (D.labels || NM) : 
 const cnt = rs => Object.fromEntries(cats.map(c => [lab(c), rs.filter(r => r.call === c).length])), catsL = cats.map(lab);
 stacked(document.getElementById("ch-calls"), [{ label: "all runs", parts: cnt(rows) }], catsL, { labelw: 100 }); legend(document.getElementById("lg-calls"), catsL);
 const studies = [...new Set(rows.map(r => r.study))];
+// A study accession links to its NCBI BioProject; the project title (from PopSeq, study_titles.tsv) shows on hover.
+const TITLES = D.study_titles || {};
+const studyLink = s => !s ? "" : /^PRJ[A-Z]{1,2}\d+$/.test(s) ? '<a href="https://www.ncbi.nlm.nih.gov/bioproject/' + esc(s) + '" title="' + esc(TITLES[s] || s) + '">' + esc(s) + "</a>"
+  : /^[SED]RP\d+$/.test(s) ? '<a href="https://www.ncbi.nlm.nih.gov/bioproject/?term=' + esc(s) + '" title="' + esc(TITLES[s] || s) + '">' + esc(s) + "</a>" : esc(s);
 stacked(document.getElementById("ch-study"), studies.map(s => ({ label: s, parts: cnt(rows.filter(r => r.study === s)) })), catsL, { labelw: 130 }); legend(document.getElementById("lg-study"), catsL);
 const isOne = x => x === NM[0] || x === NM[1], one = r => isOne(r.call), tr = rows.filter(r => isOne(r.truth)), single = tr.filter(one), dis = single.filter(r => r.call !== r.truth), other = rows.filter(r => r.truth && !isOne(r.truth)).length;
 const label = D.truth_label || "the detect call on an assembly of the same BioSample";
@@ -104,7 +108,7 @@ function drawCounts() {
   const T = [...groups.map(([n, rs]) => [n, rs]), ...(by === "study" && studies.length > 1 ? [["All studies pooled", rows]] : [])];
   const u = unit === "clone" ? "Clones" : "Runs", hasConf = unit === "clone";
   document.getElementById("cnt-tbl").innerHTML = "<tr><th>" + (by === "study" ? "Study" : "") + "</th><th class=\"n\">Strains</th><th class=\"n\">" + u + "</th><th class=\"n\">" + esc(LB[0]) + "</th><th class=\"n\">" + esc(LB[1]) + "</th><th class=\"n\">Both</th>" + (hasConf ? "<th class=\"n\">Conflict</th>" : "") + "<th class=\"n\">Not called</th><th class=\"n\">" + esc(LB[0]) + " share of single calls</th></tr>" +
-    T.map(([n, rs]) => { const t = tally(rs, unit); return "<tr" + (n === "All studies pooled" ? " style=\"font-weight:600\"" : "") + "><td>" + esc(n) + "</td><td class=\"n\">" + t.strains.size + "</td><td class=\"n\">" + t.n + "</td><td class=\"n\">" + t.c1 + "</td><td class=\"n\">" + t.c2 + "</td><td class=\"n\">" + t.both + "</td>" + (hasConf ? "<td class=\"n\">" + t.conflict + "</td>" : "") + "<td class=\"n\">" + t.none + "</td><td class=\"n\">" + onePct(t.c1, t.c2) + "</td></tr>"; }).join("");
+    T.map(([n, rs]) => { const t = tally(rs, unit); return "<tr" + (n === "All studies pooled" ? " style=\"font-weight:600\"" : "") + "><td>" + (by === "study" && n !== "All studies pooled" ? studyLink(n) : esc(n)) + "</td><td class=\"n\">" + t.strains.size + "</td><td class=\"n\">" + t.n + "</td><td class=\"n\">" + t.c1 + "</td><td class=\"n\">" + t.c2 + "</td><td class=\"n\">" + t.both + "</td>" + (hasConf ? "<td class=\"n\">" + t.conflict + "</td>" : "") + "<td class=\"n\">" + t.none + "</td><td class=\"n\">" + onePct(t.c1, t.c2) + "</td></tr>"; }).join("");
   const big = studies.length > 1 ? studies.map(s => [s, rows.filter(r => r.study === s).length]).sort((a, b) => b[1] - a[1])[0] : null;
   document.getElementById("cnt-note").textContent = (big && big[1] > 0.5 * rows.length ? big[0] + " supplies " + Math.round(100 * big[1] / rows.length) + "% of the runs, so the pooled shares mostly describe that study. " : "") + (CL && !CL.plateau ? "Counts per clone are not offered for this species: the number of clones changes a lot between thresholds, so similar runs may be close relatives and not copies. " : "") + "Share of single calls = " + LB[0] + " / (" + LB[0] + " + " + LB[1] + "). These are counts of sampled strains, not population frequencies.";
   const uo = document.getElementById("unit"); uo.options[1].disabled = !(CL && CL.plateau);
@@ -125,8 +129,8 @@ const screenText = r => !SCREEN[r.screen] ? "" : SCREEN[r.screen] + (r.screen_se
 if (D.screened) document.getElementById("cards").insertAdjacentHTML("beforeend", '<div class="card"><div class="v">' + D.screen_flagged + " / " + D.screened + '</div><div class="l">runs flagged by the contamination screen</div></div>');
 const note = r => [screenText(r), r.rescue, r.verdict === "both_vs_one" ? "both_vs_one" : "", r.verdict === "DISAGREE" ? "disagrees with assembly" : "", r.flags && r.flags !== "-" ? r.flags : ""].filter(Boolean).join("; ");
 function draw() {
-  const f = D.rows.filter(r => (!cf.value || r.call === cf.value) && (r.run + r.strain + r.study + r.call).toLowerCase().includes(q.value.toLowerCase()));
-  document.querySelector("#runs tbody").innerHTML = f.map(r => "<tr><td>" + (/^[SED]RR/.test(r.run) ? "<a href=\"https://www.ncbi.nlm.nih.gov/sra/" + esc(r.run) + "\">" + esc(r.run) + "</a>" : esc(r.run)) + "</td><td>" + esc(r.strain) + "</td><td>" + esc(r.study) + "</td><td>" + esc(r.call ? lab(r.call) : "not run") + "</td><td class=\"n\">" + esc(r.depth_1) + "</td><td class=\"n\">" + esc(r.depth_2) + "</td><td class=\"n\">" + esc(r.shared_depth) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(r.clone || "") + "</td><td>" + esc(note(r)) + "</td></tr>").join("");
+  const f = D.rows.filter(r => (!cf.value || r.call === cf.value) && (r.run + r.strain + r.study + r.call + (TITLES[r.study] || "")).toLowerCase().includes(q.value.toLowerCase()));
+  document.querySelector("#runs tbody").innerHTML = f.map(r => "<tr><td>" + (/^[SED]RR/.test(r.run) ? "<a href=\"https://www.ncbi.nlm.nih.gov/sra/" + esc(r.run) + "\">" + esc(r.run) + "</a>" : esc(r.run)) + "</td><td>" + esc(r.strain) + "</td><td>" + studyLink(r.study) + "</td><td>" + esc(r.call ? lab(r.call) : "not run") + "</td><td class=\"n\">" + esc(r.depth_1) + "</td><td class=\"n\">" + esc(r.depth_2) + "</td><td class=\"n\">" + esc(r.shared_depth) + "</td><td>" + esc(r.truth) + "</td><td>" + esc(r.clone || "") + "</td><td>" + esc(note(r)) + "</td></tr>").join("");
   sortRuns.refresh();
 }
 [cf, q].forEach(e => e.addEventListener("input", draw)); draw();

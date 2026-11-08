@@ -134,10 +134,18 @@ def curated(c, repo, out, lin=None):
          "with_assembly_call": len(single), "agree": sum(r["verdict"] == "agree" for r in single), "disagree": sum(r["verdict"] == "DISAGREE" for r in single), "rescued": 0,
          "intro": c["intro"], "truth_label": c["truth_label"], "links": c["links"], "refused_with_truth": sum(1 for r in R if r["truth"] in SINGLE and r["call"] in ("low_depth", "none")), "both_vs_one": sum(1 for r in R if r["verdict"] == "both_vs_one")}
     s.update(lin or {})
-    json.dump({**s, "gate": "", "rows": R, "registry_version": registry_version()}, open(os.path.join(out, c["slug"] + ".json"), "w"), separators=(",", ":"))
+    json.dump({**s, "gate": "", "rows": R, "study_titles": study_titles(R), "registry_version": registry_version()}, open(os.path.join(out, c["slug"] + ".json"), "w"), separators=(",", ":"))
     with open(os.path.join(out, c["slug"] + ".tsv"), "w", newline="") as fh:
         w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n", extrasaction="ignore"); w.writeheader(); w.writerows(R)
     return s
+
+
+STUDY_TITLES = {}
+
+
+def study_titles(rows):
+    """{study: title} for the studies of these rows that have a title (the page shows it on hover over the study link)."""
+    return {st: STUDY_TITLES[st] for st in sorted({r.get("study", "") for r in rows}) if STUDY_TITLES.get(st)}
 
 
 def main():
@@ -147,6 +155,9 @@ def main():
     res, gates, sp = [], {}, {}
     pilot = os.path.join(a.repo, "datasets/reads/sra_survey/pilot")
     waves = a.wave or sorted(os.path.join("datasets/reads/sra_survey/pilot", d) for d in os.listdir(pilot) if re.fullmatch(r"wave\d+[a-z_]*", d) and os.path.isdir(os.path.join(pilot, d)))      # every committed wave (wave1, wave2, wave3_*); a folder without results or gates is skipped
+    tf = os.path.join(a.repo, "datasets/reads/sra_survey/pilot/study_titles.tsv")      # study (BioProject) titles from PopSeq (study_titles.py): the hover text of the study links
+    TITLES = {r["study"]: r["title"] for r in rd(tf)} if os.path.exists(tf) else {}
+    global STUDY_TITLES; STUDY_TITLES = TITLES
     clone_dirs = [os.path.join(a.repo, d) for d in (a.clones or ["datasets/reads/sra_survey/pilot/clone_pilot"] + [os.path.join(w, "clone_pairs") for w in waves])]
     for w in waves:
         w = w if os.path.isabs(w) else os.path.join(a.repo, w)
@@ -180,7 +191,7 @@ def main():
         rows = [{k: r.get(k, "") for k in FIELDS} for r in runs]
         pf = next((os.path.join(d, slug + ".pairs.tsv") for d in clone_dirs if os.path.exists(os.path.join(d, slug + ".pairs.tsv"))), None); cl = clone_groups(pf, rows) if pf else None
         if cl: s["clone_groups"] = len(cl["groups"]); s["clone_runs"] = cl["runs"]; s["n_clones"] = cl["clones"]
-        json.dump({**s, "gate": g["reasons"], "notes": NOTES.get(slug, []), "clones": cl, "rows": rows, "registry_version": registry_version()}, open(os.path.join(a.out, slug + ".json"), "w"), separators=(",", ":"))
+        json.dump({**s, "gate": g["reasons"], "notes": NOTES.get(slug, []), "clones": cl, "rows": rows, "study_titles": study_titles(rows), "registry_version": registry_version()}, open(os.path.join(a.out, slug + ".json"), "w"), separators=(",", ":"))
         with open(os.path.join(a.out, slug + ".tsv"), "w", newline="") as fh:
             w = csv.DictWriter(fh, FIELDS, delimiter="\t", lineterminator="\n", extrasaction="ignore"); w.writeheader(); w.writerows(rows)
     allr = [r for r in res if r["state"] == "done"]

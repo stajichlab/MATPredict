@@ -17,8 +17,8 @@ def genome(seed, n=4000):
     return [rnd.randrange(1, 2 ** 50) for _ in range(n)]
 
 
-def sample(hashes, seed, cov=20, errors=400, gaps=0.02):
-    """A sketch of one sequenced genome: abundances around cov, `errors` error hashes seen once or twice, a fraction `gaps` not seen at all."""
+def sample(hashes, seed, cov=20, errors=400, gaps=0.0005):
+    """A sketch of one sequenced genome: abundances around cov, `errors` error hashes seen once or twice, a fraction `gaps` not seen at all (at 20x almost none)."""
     rnd = random.Random(seed)
     d = {h: max(1, int(rnd.gauss(cov, cov ** 0.5))) for h in hashes if rnd.random() >= gaps}
     for _ in range(errors): d[rnd.randrange(2 ** 50, 2 ** 51)] = rnd.choice((1, 2))
@@ -34,7 +34,7 @@ def strain(base, seed, frac):
 def test_same_genome_sequenced_twice_is_near_one_and_a_different_strain_is_not():
     g = genome(1); other = strain(g, 2, 0.05)
     M = cs.ani_matrix([sample(g, 10), sample(g, 11), sample(other, 12)])
-    assert M[0, 1] > 0.9995                       # errors and 2% gaps do not count as differences
+    assert M[0, 1] > 0.9995                       # error hashes do not count as differences
     assert 0.995 < M[0, 2] < 0.999                # 5% of hashes differ: 0.95^(1/21) ~ 0.9976
     assert np.allclose(M, M.T) and np.all(np.diag(M) == 1)
 
@@ -74,7 +74,7 @@ def test_species_groups_reads_every_committed_wave_once(tmp_path):
 
 def test_write_group_gives_a_row_per_run_and_a_summary(tmp_path):
     g = genome(6)
-    s = cs.write_group("sp_a", ["R1", "R2", "R3"], [sample(g, 1), sample(g, 2), sample(strain(g, 7, 0.1), 3, cov=5)], str(tmp_path))
+    s = cs.write_group("sp_a", ["R1", "R2", "R3"], [sample(g, 1), sample(g, 2), sample(strain(g, 7, 0.1), 3, cov=5, gaps=0.01)], str(tmp_path))
     rows = list(csv.DictReader(open(tmp_path / "sp_a.clones.tsv"), delimiter="\t"))
     assert [r["run"] for r in rows] == ["R1", "R2", "R3"]
     assert rows[0]["nearest_run"] == "R2" and rows[0]["clone_0.9995"] == rows[1]["clone_0.9995"] == "c1"

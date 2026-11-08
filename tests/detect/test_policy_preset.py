@@ -133,8 +133,16 @@ def test_the_v09_preset_is_v081_plus_the_three_report_only_rules():
     assert all(v09[k] == v for k, v in v081.items() if k != "cross_family_policy")
 
 
-def test_no_preset_turns_on_a_rule_that_changes_a_tier_or_a_label():
-    changers = ("weak_fragment_cap_policy", "weak_flank_cap_policy", "short_fragment_vote_policy", "single_region_cap_policy",
-                "weak_coverage_noise_policy", "strong_single_gene_policy", "confidence_cap_policy")
+def test_only_the_approved_tier_and_label_rules_are_in_a_preset():
+    held_out = ("weak_fragment_cap_policy", "weak_coverage_noise_policy", "strong_single_gene_policy", "confidence_cap_policy")
+    approved = {"weak_flank_cap_policy": "on", "short_fragment_vote_policy": "undetermined", "single_region_cap_policy": "on"}
     for name, vals in PRESETS.items():
-        assert all(vals.get(k, "off") == "off" for k in changers), name
+        assert all(vals.get(k, "off") == "off" for k in held_out), name
+        got = {k: vals[k] for k in approved if k in vals}
+        assert got == (approved if name == "v0.9.1" else {}), name
+
+
+def test_the_v091_preset_is_v09_plus_the_three_approved_rules():
+    v09, v091 = PRESETS["v0.9"], PRESETS["v0.9.1"]
+    assert {k: v for k, v in v091.items() if v09.get(k) != v} == {"weak_flank_cap_policy": "on", "short_fragment_vote_policy": "undetermined", "single_region_cap_policy": "on"}
+    assert all(v091[k] == v for k, v in v09.items())

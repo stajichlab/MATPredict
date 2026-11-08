@@ -109,6 +109,23 @@ PRESETS: dict[str, dict[str, str]] = {
         "idiomorph_margin_policy": _margin_basis.POLICY_SEPARATE,
         "out_of_scope_label_policy": _scope_label.POLICY_ON,
     },
+    # v0.9 plus three rules that lower a tier or withhold an idiomorph label, approved by the curator on 2026-11-07 for the v0.9.0 full run: the
+    # weak-flank cap (#129: 23 loci in the v0.8.1 run, high to medium), the short-fragment vote (#138: 107 loci to `undetermined`) and the
+    # single-region cap (#167: 202 Basidiomycota loci, high to medium). Held out: the weak-coverage rule (#149), which raises 109 loci to `high`.
+    "v0.9.1": {
+        "partial_core_policy": POLICY_COVERAGE_PROFILE,
+        "homothallic_policy": POLICY_BOTH_GENES,
+        "confidence_cap_policy": _confidence_cap.POLICY_OFF,
+        "strong_single_gene_policy": _strong_single_gene.POLICY_OFF,
+        "scoped_roster_policy": SCOPED_ROSTER_ON,
+        "cross_family_policy": _family_status.POLICY_KEEP_LABELLED,
+        "fallback_after_withheld_policy": _fallback_search.POLICY_ON,
+        "idiomorph_margin_policy": _margin_basis.POLICY_SEPARATE,
+        "out_of_scope_label_policy": _scope_label.POLICY_ON,
+        "weak_flank_cap_policy": _weak_flank_cap.POLICY_ON,
+        "short_fragment_vote_policy": _thin_vote.POLICY_UNDETERMINED,
+        "single_region_cap_policy": _single_region_cap.POLICY_ON,
+    },
 }
 
 

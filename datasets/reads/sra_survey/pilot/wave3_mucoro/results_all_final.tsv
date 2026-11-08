@@ -1,145 +1,335 @@
 run	group	strain	study	layout	spots	state	call	truth	verdict	depth_1	depth_2	shared_depth	breadth_1	breadth_2	flags	sra_mb	secs_download	secs_convert	secs_type	truth_assembly	idiomorphs	screen	screen_genus	screen_second	screen_hashes	screen_explained	screen_deeper	rescue
-SRR975137	rhizopus_arrhizus	97-1192	PRJNA186024	PAIRED	15055013	done	Plus	Plus	agree	2.65	0.00	5.33	0.8847	0.0000	-	2203	240	21	161	GCA_000697195.1_MucRam97-1192-1.0	Plus Minus	ok	Rhizopus	Aspergillus	5	0.0014		
-SRR1009174	rhizopus_arrhizus	Type I NRRL 18148	PRJNA186014	PAIRED	15789752	done	Plus	Plus	agree	3.21	0.00	10.79	0.8337	0.0000	-	1980	239	21	173	GCA_000697095.1_RhiDel18148-1.0	Plus Minus	ok	Rhizopus	Rhizophagus	13	0.0032		
-SRR1009239	rhizopus_arrhizus	99-133	PRJNA186016	PAIRED	15878359	done	Plus	Plus	agree	2.33	0.00	4.85	0.8871	0.0000	-	2326	286	22	162	GCA_000697135.1_RhiOry99-133-1.0	Plus Minus	ok	Rhizopus	Fusarium	6	0.0017		
-SRR975171	rhizopus_arrhizus	HUMC 02	PRJNA186018	PAIRED	14881989	done	Plus	Plus	agree	1.33	0.00	5.04	0.4903	0.0000	-	2183	278	28	163	GCA_000697605.1_RhiOryHUMC02-1.0	Plus Minus	ok	Rhizopus	Aspergillus	6	0.0017		
-SRR975139	rhizopus_arrhizus	Type I NRRL 21396	PRJNA186015	PAIRED	15123224	done	Plus	Plus	agree	1.54	0.00	4.99	0.5149	0.0000	-	2194	291	24	161	GCA_000697115.1_RhiOry21396-1.0	Plus Minus	ok	Rhizopus	Fusarium	9	0.0025		
-SRR38428940	rhizopus_arrhizus	CBS 329.47	PRJNA1463150	PAIRED	28163564	done	none	Minus	untyped	0.11	0.84	8.04	0.0123	0.1725	trace_Plus,trace_Minus	2561	299	28	158	GCA_058380225.1_DTU-UU_Rory329_1.0	Plus Minus	ok	Rhizopus	Racocetra	2	0.0006		
-SRR975140	rhizopus_arrhizus	Type I NRRL 13440	PRJNA186013	PAIRED	15690236	done	Minus	Minus	agree	0.12	1.39	4.78	0.0165	0.5733	trace_Plus	2297	245	21	165	GCA_000697075.1_RhiOry13440-1.0	Plus Minus	ok	Rhizopus	Fusarium	7	0.0019		
-SRR12439786	rhizopus_arrhizus	VS III A KN 2	PRJNA644637	PAIRED	9251347	done	Minus	Minus	agree	0.25	2.89	20.04	0.0175	0.6883	trace_Plus	921	127	25	260	GCA_019828915.1_ASM1982891v1	Plus Minus	mixed	Rhizopus	Leucosporidium	310	0.0775		
-SRR975156	rhizopus_arrhizus	99-892	PRJNA186020	PAIRED	15051032	done	Minus	Minus	agree	0.09	4.90	14.40	0.0104	1.0000	trace_Plus	2185	215	23	167	GCA_000697725.1_RhiOry99-892-1.0	Plus Minus	ok	Rhizopus	Fusarium	6	0.0017		
-SRR38428941	rhizopus_arrhizus	CBS 127.08	PRJNA1463150	PAIRED	23771577	done	Minus	Minus	agree	0.11	2.63	9.00	0.0265	0.5401	trace_Plus	2218	250	27	168	GCA_058380175.1_DTU-UU_Rory127_1.0	Plus Minus	ok	Rhizopus	Fusarium	2	0.0006		
-SRR969291	rhizopus_arrhizus	B7407	PRJNA184879	PAIRED	14106946	done	Minus	Minus	agree	0.04	2.43	5.39	0.0080	0.6543	trace_Plus	2042	258	22	166	GCA_000696915.1_RhiOryB7407-1.0	Plus Minus	ok	Rhizopus	Penicillium	7	0.0019		
-SRR11788096	rhizopus_arrhizus	Vigna unguiculata	PRJNA628809	SINGLE	14116642	done	none			0.16	2.26	19.49	0.0076	0.1628	trace_Plus,trace_Minus	1405	215	26	275		Plus Minus	ok	Rhizopus	Smittium	4	0.0011		
-SRR12274632	rhizopus_arrhizus	NRRL A-12745	PRJNA619771	PAIRED	3871897	done	Plus			6.93	0.40	31.24	0.7562	0.0603	trace_Minus	398	73	25	272		Plus Minus	ok	Rhizopus	Fusarium	18	0.0047		genus_panel
-SRR9650566	rhizopus_arrhizus	NRRL 5899	PRJNA537984	PAIRED	8307261	done	none			0.20	1.45	19.05	0.0146	0.1725	trace_Plus,trace_Minus	836	79	25	272		Plus Minus	ok	Rhizopus	Rhizophagus	13	0.0034		
-SRR23350464	rhizopus_arrhizus	398-P-21	PRJNA931319	PAIRED	34162155	done	Plus			12.36	0.00	53.31	0.5634	0.0000	-	3555	358	26	278		Plus Minus	ok	Rhizopus	Gigaspora	38	0.007		genus_panel
-SRR9720332	rhizopus_arrhizus	NRRL 66565	PRJNA535100	PAIRED	7281533	done	none			0.22	1.10	14.63	0.0066	0.1628	trace_Plus,trace_Minus	785	71	26	277		Plus Minus	ok	Rhizopus	Rhizophagus	39	0.0086	yes	
-SRR11788114	rhizopus_arrhizus	flower	PRJNA628809	SINGLE	18563962	done	none			0.11	1.54	11.32	0.0066	0.1684	trace_Plus,trace_Minus	2267	401	17	141		Plus Minus	ok	Rhizopus	Rhizophagus	21	0.0054		
-SRR11788106	rhizopus_arrhizus	koji	PRJNA628809	SINGLE	15283687	done	Plus			7.46	0.00	17.23	0.9858	0.0000	-	1880	345	17	142		Plus Minus	ok	Rhizopus	Fusarium	8	0.0021		
-SRR11788071	rhizopus_arrhizus	sweet potato	PRJNA628809	SINGLE	16289680	done	Plus			6.92	0.00	14.14	0.7492	0.0000	-	1512	5300	21	197		Plus Minus	ok	Rhizopus	Gigaspora	8	0.0022		
-SRR9720313	rhizopus_arrhizus	NRRL 66596	PRJNA535018	PAIRED	12714739	done	Plus			5.37	0.38	31.75	0.7599	0.0603	trace_Minus	1360	5466	24	201		Plus Minus	ok	Rhizopus	Rhizophagus	22	0.0057		genus_panel
-SRR1006392	rhizopus_microsporus	B7455	PRJNA211913	PAIRED	15750327	done	Plus	Plus	agree	3.21	0.43	15.26	0.9512	0.0852	trace_Minus	2095	386	15	175	GCA_000738565.1_RhiAzyB7455-1.0	Plus Minus	ok	Rhizopus	Fusarium	8	0.0021		
-SRR38428942	rhizopus_microsporus	CBS 112.586	PRJNA1463150	PAIRED	27926063	done	none	Plus	untyped	1.27	0.00	5.52	0.1371	0.0000	trace_Plus	2601	480	18	168	GCA_058380205.1_DTU-UU_Roli_1.0	Plus Minus	borderline	Rhizopus	Austropuccinia	25	0.0098	yes	
-SRR4063844	rhizopus_microsporus	ATCC 11559	PRJNA330885	PAIRED	38679459	done	Plus	Plus	agree	16.14	0.00	25.66	0.9857	0.0000	-	4972	581	16	265	GCA_002083735.1_Rhimi_ATCC11559_1	Plus Minus	ok	Rhizopus	Fusarium	3	0.0012		
-SRR8845274	rhizopus_microsporus	B11533	PRJNA526061	PAIRED	3101371	done	Plus	Plus	agree	29.95	0.00	41.17	0.9857	0.0000	-	1182	5315	27	844	GCA_006680115.1_ASM668011v1	Plus Minus	ok	Rhizopus	Fusarium	28	0.0084		
-SRR8845253	rhizopus_microsporus	B11541	PRJNA526061	PAIRED	4680046	done	Plus			15.55	1.54	31.31	0.9615	0.0861	trace_Minus	1722	265	19	600		Plus Minus	ok	Rhizopus	Fusarium	37	0.0082		
-ERR13388816	rhizopus_microsporus	R0020	PRJEB76713	PAIRED	36734544	done	Minus			0.05	2.23	12.68	0.0237	0.7157	trace_Plus	1854	6634	16	182		Plus Minus	ok	Rhizopus	Rhizophagus	18	0.0058		
-SRR8845256	rhizopus_microsporus	B11547	PRJNA526061	PAIRED	11938178	done	Plus			16.18	0.00	28.33	0.9857	0.0000	-	1478	5943	23	375		Plus Minus	ok	Rhizopus	Aspergillus	6	0.0025		
-SRR25224717	rhizopus_microsporus	CMC_M24	PRJNA993381	PAIRED	23104535	done	none			0.01	0.00	3.41	0.0014	0.0000	trace_Plus	2852	411	18	331		Plus Minus	ok		Fusarium	26	0.0235		
-SRR9720177	rhizopus_microsporus	NRRL 6258	PRJNA536243	PAIRED	8402162	done	Plus			13.58	0.00	22.42	0.9857	0.0000	-	907	3543	22	377		Plus Minus	ok	Rhizopus	Fusarium	8	0.0032		
-SRR8845258	rhizopus_microsporus	B11538	PRJNA526061	PAIRED	11599965	done	Plus			15.25	0.00	28.41	0.9857	0.0000	-	1438	5838	27	384		Plus Minus	ok	Rhizopus	Gigaspora	5	0.0021		
-SRR9720301	rhizopus_microsporus	NRRL A-17693	PRJNA536201	PAIRED	11970821	done	none			0.00	0.00	11.00	0.0000	0.0000	-	1292	5201	23	389		Plus Minus	genus_mismatch	Circinella	Fusarium	141	0.031		
-SRR9650568	rhizopus_microsporus	NRRL 6259	PRJNA537988	PAIRED	6838853	done	Plus			15.33	0.00	26.14	0.9857	0.0000	-	695	2941	24	370		Plus Minus	ok	Rhizopus	Aspergillus	4	0.0017		
-SRR9650569	rhizopus_microsporus	NRRL 6495	PRJNA537989	PAIRED	5228361	done	Minus			0.90	8.29	18.71	0.1371	0.9200	trace_Plus	523	2245	23	378		Plus Minus	ok	Rhizopus	Gigaspora	22	0.0057		
-SRR9029403	rhizopus_microsporus	NRRL 5554	PRJNA537146	PAIRED	6917746	done	none			0.00	0.00	46.57	0.0000	0.0000	-	699	3272	22	375		Plus Minus	ok	Rhizopus	Aspergillus	47	0.0122		
-SRR9720307	rhizopus_microsporus	NRRL 13129	PRJNA536200	PAIRED	7370023	done	Minus			0.00	11.47	27.22	0.0000	0.9855	-	797	2735	22	376		Plus Minus	ok	Rhizopus	Rhizophagus	26	0.0089		
-SRR9720175	rhizopus_microsporus	NRRL A-26117	PRJNA535668	PAIRED	7705008	done	Minus			0.67	4.99	12.76	0.1371	0.9200	trace_Plus	775	3752	21	373		Plus Minus	ok	Rhizopus	Gigaspora	36	0.0092		
-ERR13388811	rhizopus_microsporus	R0016	PRJEB76713	PAIRED	35683548	done	none			0.61	0.00	18.31	0.2358	0.0000	trace_Plus	1750	6036	16	180		Plus Minus	ok	Rhizopus	Rhizophagus	17	0.0061		
-SRR25759129	rhizopus_microsporus	1232_1	PRJNA1004889	PAIRED	1946710	done	Plus			17.08	0.00	31.26	0.9857	0.0000	-	520	2156	16	608		Plus Minus	ok	Rhizopus	Fusarium	15	0.0058		
-SRR23350467	rhizopus_microsporus	460-P-21	PRJNA931319	PAIRED	4794362	done	none			0.36	0.00	23.78	0.0317	0.0000	trace_Plus	499	1973	25	400		Plus Minus	ok		Aspergillus	50	0.0129		
-SRR9720181	rhizopus_microsporus	NRRL 6246	PRJNA535670	PAIRED	7964866	done	Plus			14.75	0.00	22.57	0.9857	0.0000	-	856	3282	24	379		Plus Minus	ok	Rhizopus	Fusarium	5	0.0021		
-SRR33648462	mucor_circinelloides	CBS 172.27	PRJNA1168941	PAIRED	16520968	done	none	Plus	untyped	5.56	1.60	10.80	0.3316	0.0696	trace_Plus,trace_Minus	2783	149	20	95	GCA_051307255.1_Mcir_PS15p_1.0	Plus Minus	ok	Mucor	Aspergillus	19	0.0052		
-SRR974749	mucor_circinelloides	B8987	PRJNA184880	PAIRED	12693048	done	Plus	Plus	agree	2.58	0.17	2.43	0.4845	0.0339	trace_Minus	1850	7114	20	36	GCA_000696935.1_MucCirB8987-1.0	Plus Minus	ok	Mucor	Fusarium	3	0.0009		
-SRR770025	mucor_circinelloides	1006Ph	PRJNA172437	PAIRED	43593834	done	Plus	Plus	agree	4.32	0.02	3.05	0.9566	0.0058	trace_Minus	6105	351	30	40	GCA_000401635.1_Muco_sp_1006Ph_V1	Plus Minus	ok	Mucor	Aspergillus	22	0.0056	yes	
-DRR032634	mucor_circinelloides	JCM 22480	PRJDB3642	PAIRED	13387957	done	none	Minus	untyped	0.61	1.29	3.46	0.1154	0.2346	trace_Plus,trace_Minus	2325	133	18	56	GCA_001599575.1_JCM_22480_assembly_v001	Plus Minus	ok	Mucor	Fusarium	20	0.0051		
-SRR33648463	mucor_circinelloides	CBS 394.68	PRJNA1168935	PAIRED	9411066	done	Minus	Minus	agree	0.00	17.63	10.89	0.0000	1.0000	-	1599	5641	26	99	GCA_051295215.1_Mcir_PS15m_1.0	Plus Minus	ok	Mucor	Aspergillus	23	0.0062		
-SRR33648554	mucor_circinelloides	PS15	PRJNA1170303	PAIRED	9856621	done	none			6.65	1.01	11.69	0.3327	0.0696	trace_Plus,trace_Minus	1725	5816	24	106		Plus Minus	ok	Mucor	Fusarium	21	0.0058		
-SRR8873499	mucor_circinelloides	NRRL 3629	PRJNA519265	PAIRED	7640193	done	low_depth			0.00	0.03	0.04	0.0000	0.0017	-	760	3372	21	61		Plus Minus	ok	Mucor	Aspergillus	9	0.0028		
-SRR33648440	mucor_circinelloides	PS15	PRJNA1170303	PAIRED	13443492	done	none			4.52	1.18	10.64	0.3310	0.0696	trace_Plus,trace_Minus	2336	179	50	324		Plus Minus	ok	Mucor	Aspergillus	21	0.0056		
-SRR33648523	mucor_circinelloides	PS15	PRJNA1170303	PAIRED	12184080	done	Minus			0.00	15.90	10.67	0.0000	1.0000	-	2128	213	46	267		Plus Minus	ok	Mucor	Fusarium	20	0.0054		
-ERR2211767	mucor_circinelloides	SEC_VEG1	PRJEB23686	PAIRED	7203507	done	Plus			6.54	0.04	4.24	0.9818	0.0058	trace_Minus	654	2348	21	48		Plus Minus	ok	Mucor	Fusarium	5	0.0016		
-SRR33648520	mucor_circinelloides	PS15	PRJNA1170303	PAIRED	11562370	done	none			5.75	0.85	10.40	0.3310	0.0696	trace_Plus,trace_Minus	2008	311	42	226		Plus Minus	ok	Mucor	Aspergillus	24	0.0064		
-ERR2211742	mucor_circinelloides	P02_783_BU1_SLS	PRJEB23686	PAIRED	17256821	done	none			2.20	0.78	4.87	0.3421	0.0696	trace_Plus,trace_Minus	2180	287	39	132		Plus Minus	ok	Mucor	Colletotrichum	8	0.0024		
-ERR2211768	mucor_circinelloides	SEC_VEG2	PRJEB23686	PAIRED	15195044	done	Plus			8.86	0.04	4.39	0.9818	0.0058	trace_Minus	1374	5087	21	48		Plus Minus	ok	Mucor	Saccharomycopsis	2	0.0006		
-ERR2211762	mucor_circinelloides	P11_702_BU2_PER	PRJEB23686	PAIRED	14991719	done	none			0.00	4.55	4.18	0.0000	0.4807	trace_Minus	1912	130	38	111		Plus Minus	ok	Mucor	Penicillium	15	0.0044		
-SRR7686312	mucor_circinelloides	NRRL 3621	PRJNA455967	PAIRED	6961960	done	low_depth			0.00	0.04	0.05	0.0012	0.0063	-	687	2630	22	37		Plus Minus	ok	Mucor	Fusarium	17	0.0056		
-SRR12950045	mucor_circinelloides	NRRL 13473	PRJNA650808	PAIRED	22859033	done	none			1.03	2.65	5.35	0.1154	0.2340	trace_Plus,trace_Minus	2230	95	40	155		Plus Minus	ok	Mucor	Colletotrichum	4	0.0012		
-SRR10127301	mucor_circinelloides	NRRL 3614	PRJNA535052	PAIRED	3188028	done	Plus			11.10	0.21	6.16	0.8079	0.0167	trace_Minus	302	1301	22	66		Plus Minus	borderline	Mucor	Gigaspora	5	0.0015	yes	
-SRR26360069	mucor_circinelloides	NRRL 1416	PRJNA677206	PAIRED	12256210	done	low_depth			0.02	0.08	0.12	0.0012	0.0063	-	1237	5167	21	59		Plus Minus	ok	Mucor	Fusarium	21	0.0066		
-SRR9719146	mucor_circinelloides	NRRL A-25893	PRJNA536164	PAIRED	7345134	done	Plus			5.45	1.07	5.06	0.9818	0.2473	trace_Minus	749	2827	22	60		Plus Minus	ok	Mucor	Fusarium	19	0.0041		
-SRR26359908	mucor_circinelloides	NRRL 1443	PRJNA653020	PAIRED	7790365	done	low_depth			0.00	0.01	0.04	0.0000	0.0017	-	787	3594	21	59		Plus Minus	ok	Mucor	Aspergillus	3	0.0009		
-SRR35182723	rhizopus_arrhizus	PR1	PRJNA1246581	PAIRED	5267029	done	Minus	Minus	agree	0.47	6.46	27.08	0.0250	0.5433	trace_Plus	887	288	23	329	GCA_054130755.1_ASM5413075v1	Plus Minus	ok	Rhizopus	Aspergillus	17	0.0041		
-SRR12268270	rhizopus_arrhizus	IMI215407	PRJNA619762	PAIRED	4139338	done	none			0.12	1.51	14.17	0.0076	0.1628	trace_Plus,trace_Minus	430	191	21	226		Plus Minus	ok	Rhizopus	Fusarium	18	0.0047		
-SRR9029840	rhizopus_arrhizus	NRRL A-11564	PRJNA537155	PAIRED	5462613	done	none			0.09	1.54	16.47	0.0066	0.1628	trace_Plus,trace_Minus	554	163	19	181		Plus Minus	ok	Rhizopus	Fusarium	20	0.0052		
-SRR11788092	rhizopus_arrhizus	Vicia faba seedling	PRJNA628809	SINGLE	15525935	done	none			2.32	0.00	16.40	0.2900	0.0000	trace_Plus	1900	322	21	222		Plus Minus	ok	Rhizopus	Penicillium	11	0.0029		
-SRR23350460	rhizopus_arrhizus	483-P-21	PRJNA931319	PAIRED	14445100	done	Minus			0.19	5.01	34.03	0.0057	0.6559	trace_Plus	1516	318	19	190		Plus Minus	mixed	Rhizopus	Gigaspora	46	0.0114		
-SRR9028606	rhizopus_arrhizus	NRRL 1512	PRJNA537968	PAIRED	7622414	done	none			2.59	0.00	25.80	0.3113	0.0000	trace_Plus	773	207	22	229		Plus Minus	ok	Rhizopus	Fusarium	12	0.0031		
-SRR25224698	rhizopus_arrhizus	CMC_M41	PRJNA993381	PAIRED	21102894	done	none			0.22	0.00	2.30	0.1682	0.0000	trace_Plus	2740	406	18	180		Plus Minus	ok	Rhizopus	Aspergillus	23	0.0078		
-SRR8485190	rhizopus_arrhizus	NRRL 66674	PRJNA499685	PAIRED	4483199	done	Minus			0.22	4.17	30.95	0.0265	0.5004	trace_Plus	457	152	22	250		Plus Minus	ok	Rhizopus	Aspergillus	24	0.0065		
-SRR9650570	rhizopus_arrhizus	NRRL 13098	PRJNA537153	PAIRED	5661330	done	none			0.15	1.02	18.54	0.0071	0.1879	trace_Plus,trace_Minus	568	178	19	182		Plus Minus	ok	Rhizopus	Rhizophagus	22	0.0057		
-SRR11788095	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	16613105	done	Minus			0.14	9.27	20.66	0.0094	0.9749	trace_Plus	2033	470	22	256		Plus Minus	ok	Rhizopus	Aspergillus	12	0.0031		
-SRR23350462	rhizopus_arrhizus	402-P-21	PRJNA931319	PAIRED	20632177	done	Minus			0.32	4.08	17.59	0.0255	0.5433	trace_Plus	2160	372	19	192		Plus Minus	ok	Rhizopus	Massospora	21	0.0054		
-SRR11788098	rhizopus_arrhizus	shell	PRJNA628809	SINGLE	17518524	done	Plus			6.21	0.00	6.31	0.9542	0.0000	-	2085	468	23	256		Plus Minus	ok	Rhizopus	Penicillium	3	0.0005		
-SRR9029060	rhizopus_arrhizus	NRRL 2871	PRJNA537150	PAIRED	7966452	done	Plus			3.94	0.34	35.67	0.7588	0.0603	trace_Minus	816	224	19	180		Plus Minus	ok	Rhizopus	Aspergillus	26	0.0067		genus_panel
-SRR11788097	rhizopus_arrhizus	dung	PRJNA628809	SINGLE	16548448	done	Plus			5.03	0.00	15.81	0.5720	0.0000	-	2019	380	22	243		Plus Minus	ok	Rhizopus	Aspergillus	8	0.0021		
-SRR9650544	rhizopus_arrhizus	NRRL 2911	PRJNA537978	PAIRED	8429831	done	Plus			6.83	0.45	36.04	0.7509	0.0603	trace_Minus	888	250	19	182		Plus Minus	ok	Rhizopus	Pyricularia	6	0.0016		genus_panel
-SRR9650592	rhizopus_arrhizus	NRRL A-13860	PRJNA537996	PAIRED	8381384	done	Minus			0.46	4.21	19.63	0.0260	0.5433	trace_Plus	840	167	22	250		Plus Minus	ok	Rhizopus	Colletotrichum	12	0.0032		
-SRR12278002	rhizopus_arrhizus	XY00429	PRJNA619931	PAIRED	3458557	done	none			0.10	1.11	15.01	0.0071	0.1628	trace_Plus,trace_Minus	360	92	18	179		Plus Minus	ok	Rhizopus	Rhizophagus	36	0.009		
-SRR12278006	rhizopus_arrhizus	XY01909	PRJNA619936	PAIRED	3337446	done	Plus			7.19	0.52	33.90	0.7599	0.0603	trace_Minus	343	89	21	239		Plus Minus	ok	Rhizopus	Colletotrichum	6	0.0016		genus_panel
-SRR25224700	rhizopus_arrhizus	CMC_M40	PRJNA993381	PAIRED	21455486	done	Minus			0.16	2.82	20.52	0.0161	0.6996	trace_Plus	2870	383	18	181		Plus Minus	ok	Rhizopus	Gigaspora	28	0.0049		
-SRR12277396	rhizopus_arrhizus	NBRC 5318	PRJNA619768	PAIRED	3948614	done	Minus			0.18	10.67	21.53	0.0080	0.9749	trace_Plus	403	85	20	230		Plus Minus	ok	Rhizopus	Gigaspora	13	0.0034		
-SRR25224701	rhizopus_arrhizus	CMC_M39	PRJNA993381	PAIRED	14939271	done	Minus			0.17	4.92	21.66	0.0080	0.6559	trace_Plus	1803	367	17	182		Plus Minus	ok	Rhizopus	Gigaspora	31	0.0076		
-SRR9720209	rhizopus_arrhizus	NRRL 1476	PRJNA535671	PAIRED	10103872	done	Plus			8.23	0.00	18.92	0.9731	0.0000	-	1068	235	22	225		Plus Minus	ok	Rhizopus	Fusarium	14	0.0036		
-SRR12272498	rhizopus_arrhizus	NRRL A-21704	PRJNA619789	PAIRED	3309827	done	Plus			6.03	0.00	19.26	0.5725	0.0000	-	348	156	19	188		Plus Minus	ok	Rhizopus	Gigaspora	14	0.0035	yes	
-SRR25224729	rhizopus_arrhizus	CMC_M13	PRJNA993381	PAIRED	24414380	done	Minus			0.27	3.89	18.40	0.0269	0.5433	trace_Plus	2995	533	22	268		Plus Minus	ok	Rhizopus	Aspergillus	7	0.0017		
-SRR23350471	rhizopus_arrhizus	421-P-21	PRJNA931319	PAIRED	13272776	done	Plus			5.26	0.00	14.34	0.5909	0.0000	-	1425	266	18	191		Plus Minus	ok	Rhizopus	Fusarium	18	0.0046		
-SRR12269333	rhizopus_arrhizus	IMI201247	PRJNA619761	PAIRED	4361107	done	Plus			6.90	0.47	28.60	0.7599	0.0603	trace_Minus	456	107	21	223		Plus Minus	ok	Rhizopus	Gigaspora	32	0.0078	yes	genus_panel
-SRR9712530	rhizopus_arrhizus	NRRL 2910	PRJNA535083	PAIRED	6870244	done	Plus			6.57	0.44	36.00	0.7515	0.0603	trace_Minus	696	211	19	184		Plus Minus	ok	Rhizopus	Rhizophagus	10	0.0027		genus_panel
-SRR9720333	rhizopus_arrhizus	NRRL 66568	PRJNA534996	PAIRED	7909769	done	Plus			7.32	0.47	33.61	0.7319	0.0603	trace_Minus	847	151	23	247		Plus Minus	ok	Rhizopus	Colletotrichum	18	0.0046		genus_panel
-SRR12273142	rhizopus_arrhizus	NRRL A-21477	PRJNA619786	PAIRED	2436759	done	Plus			7.16	0.48	32.41	0.7609	0.0603	trace_Minus	255	61	19	182		Plus Minus	ok	Rhizopus	Fusarium	7	0.0019		genus_panel
-SRR12354677	rhizopus_arrhizus	XY01865	PRJNA619935	PAIRED	3070428	done	none			1.44	0.00	13.55	0.1247	0.0000	trace_Plus	319	84	21	229		Plus Minus	ok	Rhizopus	Xylaria	9	0.0024		
-SRR9029062	rhizopus_arrhizus	NRRL 2582	PRJNA537976	PAIRED	8806949	done	none			0.15	1.46	16.85	0.0137	0.1725	trace_Plus,trace_Minus	891	323	19	186		Plus Minus	ok	Rhizopus	Gigaspora	21	0.005		
-SRR12277047	rhizopus_arrhizus	NRRL A-13677	PRJNA619776	PAIRED	3630580	done	none			0.14	1.37	12.98	0.0080	0.1628	trace_Plus,trace_Minus	378	102	21	231		Plus Minus	ok	Rhizopus	Rhizophagus	19	0.0049		
-SRR9720299	rhizopus_arrhizus	NRRL 3563	PRJNA538862	PAIRED	8360791	done	Plus			7.00	0.51	32.29	0.7599	0.0603	trace_Minus	914	300	19	183		Plus Minus	ok	Rhizopus	Fusarium	8	0.0021		genus_panel
-SRR9027887	rhizopus_arrhizus	NRRL A-17011	PRJNA537964	PAIRED	7921940	done	Plus			16.88	0.00	27.62	0.9857	0.0000	-	774	131	22	226		Plus Minus	ok	Rhizopus	Fusarium	7	0.0029		genus_panel
-SRR12951053	rhizopus_arrhizus	NRRL A-13338	PRJNA650822	PAIRED	18913638	done	Minus			0.00	7.44	19.34	0.0000	0.8930	-	1815	296	19	182		Plus Minus	ok	Rhizopus	Colletotrichum	6	0.0015		genus_panel
-SRR12272724	rhizopus_arrhizus	NRRL A-20824	PRJNA619785	PAIRED	2183740	done	Plus			6.03	0.00	16.59	0.7530	0.0000	-	228	209	22	195		Plus Minus	borderline	Rhizopus	Gigaspora	12	0.0032	yes	
-SRR9720377	rhizopus_arrhizus	NRRL A-11376	PRJNA536151	PAIRED	8312805	done	none			1.57	0.00	18.01	0.3751	0.0000	trace_Plus	919	256	19	184		Plus Minus	ok	Rhizopus	Fusarium	57	0.0089		
-SRR12274947	rhizopus_arrhizus	NRRL A-13642	PRJNA619774	PAIRED	3429803	done	none			0.15	1.41	14.93	0.0066	0.1628	trace_Plus,trace_Minus	360	27	24	243		Plus Minus	ok	Rhizopus	Penicillium	5	0.0013		
-SRR12268523	rhizopus_arrhizus	IMI53173	PRJNA619764	PAIRED	3027353	done	none			2.89	0.00	14.00	0.2915	0.0000	trace_Plus	321	132	19	178		Plus Minus	ok	Rhizopus	Fusarium	11	0.0028		
-SRR8845262	rhizopus_microsporus	B11550	PRJNA526061	PAIRED	11283037	done	Plus			14.36	0.00	26.07	0.9857	0.0000	-	1402	1414	24	455		Plus Minus	ok	Rhizopus	Aspergillus	6	0.0025		
-SRR8845266	rhizopus_microsporus	B10548	PRJNA526061	PAIRED	11836897	done	Plus			14.83	0.00	27.03	0.9857	0.0000	-	1461	266	19	345		Plus Minus	ok	Rhizopus	Gigaspora	4	0.0017		
-SRR8845248	rhizopus_microsporus	B07643	PRJNA526061	PAIRED	11895945	done	Plus			17.01	0.00	28.06	0.9704	0.0000	-	1453	263	23	512		Plus Minus	ok	Rhizopus	Fusarium	5	0.0021		
-ERR13388800	rhizopus_microsporus	R0010	PRJEB76713	PAIRED	35881790	done	Minus			0.06	2.59	14.70	0.0385	0.7052	trace_Plus	1769	347	13	177		Plus Minus	ok	Rhizopus	Colletotrichum	36	0.0089	yes	
-SRR20066946	rhizopus_microsporus	UCLA_890	PRJNA857096	PAIRED	1586046	done	none			0.00	1.16	5.27	0.0000	0.1139	trace_Minus	385	71	16	658		Plus Minus	ok	Rhizopus	Colletotrichum	19	0.0064		
-ERR13388801	rhizopus_microsporus	R0011	PRJEB76713	PAIRED	36791340	done	none			0.77	0.00	20.95	0.2640	0.0000	trace_Plus	1804	386	13	176		Plus Minus	ok	Rhizopus	Rhizophagus	20	0.0081		
-SRR9029124	rhizopus_microsporus	NRRL 5550	PRJNA537144	PAIRED	7958104	done	none			0.00	1.15	12.06	0.0000	0.1043	trace_Minus	790	116	20	455		Plus Minus	ok	Rhizopus	Aspergillus	10	0.0036		
-ERR13388818	rhizopus_microsporus	R0022	PRJEB76713	PAIRED	40876056	done	Minus			0.16	4.22	14.49	0.0488	0.8478	trace_Plus	2046	388	13	177		Plus Minus	ok	Rhizopus	Colletotrichum	13	0.0042		
-SRR8845276	rhizopus_microsporus	B11551	PRJNA526061	PAIRED	11569156	done	Plus			15.49	0.00	29.28	0.9857	0.0000	-	1440	243	22	489		Plus Minus	ok	Rhizopus	Aspergillus	6	0.0025		
-ERR13388793	rhizopus_microsporus	R0003	PRJEB76713	PAIRED	36107216	done	none			0.64	0.00	19.29	0.2830	0.0000	trace_Plus	1796	286	13	180		Plus Minus	ok	Rhizopus	Rhizophagus	13	0.0052		
-SRR26320846	rhizopus_microsporus	Rmic1	PRJNA1025866	PAIRED	34689363	done	Minus			0.96	5.95	14.48	0.1371	0.8513	trace_Plus	3420	437	20	493		Plus Minus	mixed	Rhizopus	Mucor	122	0.0242		
-SRR9720180	rhizopus_microsporus	NRRL 5556	PRJNA535098	PAIRED	9442819	done	Plus			14.56	0.00	21.44	0.9857	0.0000	-	1024	323	18	340		Plus Minus	ok	Rhizopus	Fusarium	6	0.0024		
-ERR647679	rhizopus_microsporus	CBS_344.29_PDA	PRJEB7409	PAIRED	6044723	done	Minus			0.56	8.13	18.12	0.0602	1.0000	trace_Plus	1597	1437	25	675		Plus Minus	ok	Rhizopus	Aspergillus	7	0.0017		
-SRR9712541	rhizopus_microsporus	NRRL 5551	PRJNA535095	PAIRED	7698109	done	none			1.00	0.00	10.82	0.0868	0.0000	trace_Plus	778	199	19	346		Plus Minus	ok	Rhizopus	Fusarium	21	0.0073		
-SRR36541087	rhizopus_microsporus	52200	PRJNA1391998	PAIRED	12549507	done	Plus			7.73	0.00	12.18	0.9492	0.0000	-	1299	1121	23	446		Plus Minus	ok	Rhizopus	Fusarium	31	0.007		
-SRR9720465	rhizopus_microsporus	NRRL 2870	PRJNA536234	PAIRED	6891269	done	Minus			0.27	6.87	16.36	0.0518	0.9730	trace_Plus	725	213	19	347		Plus Minus	mixed	Rhizopus	Gigaspora	51	0.0116	yes	
-SRR9720297	rhizopus_microsporus	NRRL A-26124	PRJNA535669	PAIRED	7514810	done	Minus			0.94	5.34	12.88	0.1371	0.9200	trace_Plus	800	843	22	416		Plus Minus	ok	Rhizopus	Gigaspora	25	0.0063		
-SRR9720176	rhizopus_microsporus	NRRL 6500	PRJNA535020	PAIRED	8053218	done	Minus			0.85	6.58	15.67	0.1287	0.9052	trace_Plus	869	265	19	347		Plus Minus	ok	Rhizopus	Massospora	12	0.0031		
-SRR25626834	rhizopus_microsporus	CBS 631.82	PRJNA1004889	PAIRED	1547203	done	Minus			0.00	18.34	27.04	0.0000	0.9461	-	350	4670	8	334		Plus Minus	ok	Rhizopus	Aspergillus	11	0.0044		
-SRR9712532	rhizopus_microsporus	NRRL 5552	PRJNA535096	PAIRED	6597492	done	none			0.00	1.60	10.10	0.0000	0.0991	trace_Minus	661	198	19	352		Plus Minus	ok	Rhizopus	Colletotrichum	7	0.0025		
-SRR36541086	rhizopus_microsporus	56517	PRJNA1391998	PAIRED	12691428	done	Plus			7.11	0.00	11.73	0.9857	0.0000	-	1301	1088	23	453		Plus Minus	mixed	Rhizopus	Aspergillus	527	0.1066		
-SRR1796775	rhizopus_microsporus	ATCC 52813	PRJNA205957	PAIRED	51821839	done	Plus			4.37	0.01	13.34	0.9054	0.0113	trace_Minus	6741	530	18	188		Plus Minus	ok	Rhizopus	Fusarium	5	0.0016		
-SRR9029157	rhizopus_microsporus	NRRL 5189	PRJNA537982	PAIRED	8404014	done	Plus			16.01	0.00	33.77	0.9857	0.0000	-	849	762	21	412		Plus Minus	ok	Rhizopus	Pyricularia	7	0.0029		
-SRR9650571	rhizopus_microsporus	NRRL 6501	PRJNA537990	PAIRED	5697142	done	Minus			0.98	6.08	20.35	0.1321	0.9200	trace_Plus	564	183	19	374		Plus Minus	ok	Rhizopus	Colletotrichum	11	0.0029		
-SRR36541088	rhizopus_microsporus	50926	PRJNA1391998	PAIRED	14805358	done	Plus			6.02	0.00	11.22	0.9083	0.0000	-	1508	1304	23	448		Plus Minus	mixed	Rhizopus	Aspergillus	59	0.0133		
-SRR23350468	rhizopus_microsporus	415-P-21	PRJNA931319	PAIRED	17687231	done	none			0.39	0.00	12.49	0.0313	0.0000	trace_Plus	1891	274	19	384		Plus Minus	ok	Rhizopus	Fusarium	36	0.0132		
-SRR16016945	rhizopus_microsporus	XY03801	PRJNA765118	PAIRED	16270509	done	Minus			0.00	5.12	13.72	0.0000	0.9656	-	1568	1505	22	441		Plus Minus	ok	Rhizopus	Aspergillus	6	0.0021		
-SRR25224693	rhizopus_microsporus	CMC_M46	PRJNA993381	PAIRED	20307244	done	none			0.10	0.00	2.79	0.0568	0.0000	trace_Plus	2508	305	19	359		Plus Minus	ok	Rhizopus	Fusarium	9	0.0053		
-SRR9720461	rhizopus_microsporus	NRRL 2905	PRJNA538874	PAIRED	7681137	done	Minus			0.27	5.31	15.70	0.0518	0.9730	trace_Plus	822	38	22	417		Plus Minus	ok	Rhizopus	Peltigera	12	0.0031		
-SRR9029145	rhizopus_microsporus	NRRL 5548	PRJNA537143	PAIRED	10083512	done	none			0.00	1.50	11.20	0.0000	0.1043	trace_Minus	994	217	18	354		Plus Minus	ok	Rhizopus	Colletotrichum	7	0.0025		
-SRR9720186	rhizopus_microsporus	NRRL 5558	PRJNA535003	PAIRED	11853027	done	none			1.06	0.00	8.21	0.0710	0.0000	trace_Plus	1269	73	22	416		Plus Minus	ok	Rhizopus	Aspergillus	12	0.0042		
-SRR9029401	rhizopus_microsporus	NRRL 5553	PRJNA537145	PAIRED	7557210	done	Plus			8.39	0.00	14.98	0.6484	0.0000	-	754	186	18	360		Plus Minus	ok	Rhizopus	Aspergillus	15	0.0052		
-SRR9720179	rhizopus_microsporus	NRRL 6260	PRJNA538860	PAIRED	6815628	done	Plus			11.85	0.00	21.48	0.9857	0.0000	-	734	43	21	422		Plus Minus	ok	Rhizopus	Fusarium	8	0.0032		
-SRR9029102	rhizopus_microsporus	NRRL 2909	PRJNA537977	PAIRED	11674512	done	none			0.00	0.00	24.41	0.0000	0.0000	-	1200	217	19	357		Plus Minus	ok	Rhizopus	Colletotrichum	5	0.0013		
-SRR9029156	rhizopus_microsporus	NRRL 5547	PRJNA537142	PAIRED	5869616	done	none			0.96	0.00	17.49	0.0710	0.0000	trace_Plus	594	36	21	419		Plus Minus	ok	Rhizopus	Aspergillus	23	0.0078		
-SRR9650593	rhizopus_microsporus	NRRL A-16034	PRJNA537997	PAIRED	5778973	done	Plus			16.75	0.00	25.74	0.9857	0.0000	-	567	164	19	363		Plus Minus	ok	Rhizopus	Aspergillus	3	0.0012		
-SRR36541089	rhizopus_microsporus	50906	PRJNA1391998	PAIRED	11683228	done	Plus			3.85	0.00	11.70	0.9857	0.0000	-	1211	165	22	508		Plus Minus	ok	Rhizopus	Fusarium	33	0.0074		
-SRR9720653	rhizopus_microsporus	NRRL 3671	PRJNA536233	PAIRED	5274452	done	Minus			0.33	6.32	15.72	0.0518	0.9730	trace_Plus	560	140	19	359		Plus Minus	ok	Rhizopus	Rhizophagus	20	0.0051		
-SRR9720312	rhizopus_microsporus	NRRL 5905	PRJNA538867	PAIRED	7456167	done	Minus			0.86	3.88	12.22	0.1371	0.8904	trace_Plus	797	109	23	506		Plus Minus	ok	Rhizopus	Rhizophagus	19	0.0049		
-SRR9029128	rhizopus_microsporus	NRRL 5190	PRJNA537983	PAIRED	9136199	done	Plus			13.05	0.00	31.32	0.9857	0.0000	-	924	222	18	344		Plus Minus	ok	Rhizopus	Aspergillus	9	0.0037		
-SRR9029155	rhizopus_microsporus	NRRL 5546	PRJNA537141	PAIRED	7728784	done	none			0.00	1.66	16.33	0.0000	0.1139	trace_Minus	767	75	21	503		Plus Minus	ok	Rhizopus	Fusarium	8	0.0029		
-SRR9720651	rhizopus_microsporus	NRRL 2906	PRJNA535084	PAIRED	7682025	done	Minus			0.38	7.51	16.75	0.0518	0.9730	trace_Plus	811	174	19	345		Plus Minus	ok	Rhizopus	Fusarium	14	0.0036		
-ERR647682	rhizopus_microsporus	ATCC_62417_VK	PRJEB7410	PAIRED	18453325	done	Minus			0.35	5.68	7.59	0.0532	0.5799	trace_Plus	2345	435	21	252		Plus Minus	ok	Rhizopus	Rhizophagus	16	0.0064		
-ERR647686	rhizopus_microsporus	ATCC_62417_PDA	PRJEB7410	PAIRED	4311793	done	Minus			0.00	17.92	40.84	0.0000	0.9855	-	1381	345	22	607		Plus Minus	mixed	Rhizopus	Gigaspora	70	0.022		
-SRR9028948	rhizopus_microsporus	NRRL 2570	PRJNA537975	PAIRED	8141647	done	Plus			15.60	0.00	26.99	0.9857	0.0000	-	827	81	21	479		Plus Minus	ok	Rhizopus	Aspergillus	4	0.0017		
+SRR975137	rhizopus_arrhizus	97-1192	PRJNA186024	PAIRED	15055013	done	Plus	Plus	agree	2.65	0.00	5.33	0.8847	0.0000	-	2203	240	21	161	GCA_000697195.1_MucRam97-1192-1.0	Plus Minus							
+SRR1009174	rhizopus_arrhizus	Type I NRRL 18148	PRJNA186014	PAIRED	15789752	done	Plus	Plus	agree	3.21	0.00	10.79	0.8337	0.0000	-	1980	239	21	173	GCA_000697095.1_RhiDel18148-1.0	Plus Minus							
+SRR1009239	rhizopus_arrhizus	99-133	PRJNA186016	PAIRED	15878359	done	Plus	Plus	agree	2.33	0.00	4.85	0.8871	0.0000	-	2326	286	22	162	GCA_000697135.1_RhiOry99-133-1.0	Plus Minus							
+SRR975171	rhizopus_arrhizus	HUMC 02	PRJNA186018	PAIRED	14881989	done	Plus	Plus	agree	1.33	0.00	5.04	0.4903	0.0000	-	2183	278	28	163	GCA_000697605.1_RhiOryHUMC02-1.0	Plus Minus							
+SRR975139	rhizopus_arrhizus	Type I NRRL 21396	PRJNA186015	PAIRED	15123224	done	Plus	Plus	agree	1.54	0.00	4.99	0.5149	0.0000	-	2194	291	24	161	GCA_000697115.1_RhiOry21396-1.0	Plus Minus							
+SRR38428940	rhizopus_arrhizus	CBS 329.47	PRJNA1463150	PAIRED	28163564	done	none	Minus	untyped	0.11	0.84	8.04	0.0123	0.1725	trace_Plus,trace_Minus	2561	299	28	158	GCA_058380225.1_DTU-UU_Rory329_1.0	Plus Minus							
+SRR975140	rhizopus_arrhizus	Type I NRRL 13440	PRJNA186013	PAIRED	15690236	done	Minus	Minus	agree	0.12	1.39	4.78	0.0165	0.5733	trace_Plus	2297	245	21	165	GCA_000697075.1_RhiOry13440-1.0	Plus Minus							
+SRR12439786	rhizopus_arrhizus	VS III A KN 2	PRJNA644637	PAIRED	9251347	done	Minus	Minus	agree	0.25	2.89	20.04	0.0175	0.6883	trace_Plus	921	127	25	260	GCA_019828915.1_ASM1982891v1	Plus Minus							
+SRR975156	rhizopus_arrhizus	99-892	PRJNA186020	PAIRED	15051032	done	Minus	Minus	agree	0.09	4.90	14.40	0.0104	1.0000	trace_Plus	2185	215	23	167	GCA_000697725.1_RhiOry99-892-1.0	Plus Minus							
+SRR38428941	rhizopus_arrhizus	CBS 127.08	PRJNA1463150	PAIRED	23771577	done	Minus	Minus	agree	0.11	2.63	9.00	0.0265	0.5401	trace_Plus	2218	250	27	168	GCA_058380175.1_DTU-UU_Rory127_1.0	Plus Minus							
+SRR969291	rhizopus_arrhizus	B7407	PRJNA184879	PAIRED	14106946	done	Minus	Minus	agree	0.04	2.43	5.39	0.0080	0.6543	trace_Plus	2042	258	22	166	GCA_000696915.1_RhiOryB7407-1.0	Plus Minus							
+SRR11788096	rhizopus_arrhizus	Vigna unguiculata	PRJNA628809	SINGLE	14116642	done	none			0.16	2.26	19.49	0.0076	0.1628	trace_Plus,trace_Minus	1405	215	26	275		Plus Minus							
+SRR12274632	rhizopus_arrhizus	NRRL A-12745	PRJNA619771	PAIRED	3871897	done	Plus			6.93	0.40	31.24	0.7562	0.0603	trace_Minus	398	73	25	272		Plus Minus							genus_panel
+SRR9650566	rhizopus_arrhizus	NRRL 5899	PRJNA537984	PAIRED	8307261	done	none			0.20	1.45	19.05	0.0146	0.1725	trace_Plus,trace_Minus	836	79	25	272		Plus Minus							
+SRR23350464	rhizopus_arrhizus	398-P-21	PRJNA931319	PAIRED	34162155	done	Plus			12.36	0.00	53.31	0.5634	0.0000	-	3555	358	26	278		Plus Minus							genus_panel
+SRR9720332	rhizopus_arrhizus	NRRL 66565	PRJNA535100	PAIRED	7281533	done	none			0.22	1.10	14.63	0.0066	0.1628	trace_Plus,trace_Minus	785	71	26	277		Plus Minus							
+SRR11788114	rhizopus_arrhizus	flower	PRJNA628809	SINGLE	18563962	done	none			0.11	1.54	11.32	0.0066	0.1684	trace_Plus,trace_Minus	2267	401	17	141		Plus Minus							
+SRR11788106	rhizopus_arrhizus	koji	PRJNA628809	SINGLE	15283687	done	Plus			7.46	0.00	17.23	0.9858	0.0000	-	1880	345	17	142		Plus Minus							
+SRR11788071	rhizopus_arrhizus	sweet potato	PRJNA628809	SINGLE	16289680	done	Plus			6.92	0.00	14.14	0.7492	0.0000	-	1512	5300	21	197		Plus Minus							
+SRR9720313	rhizopus_arrhizus	NRRL 66596	PRJNA535018	PAIRED	12714739	done	Plus			5.37	0.38	31.75	0.7599	0.0603	trace_Minus	1360	5466	24	201		Plus Minus							genus_panel
+SRR1006392	rhizopus_microsporus	B7455	PRJNA211913	PAIRED	15750327	done	Plus	Plus	agree	3.21	0.43	15.26	0.9512	0.0852	trace_Minus	2095	386	15	175	GCA_000738565.1_RhiAzyB7455-1.0	Plus Minus							
+SRR38428942	rhizopus_microsporus	CBS 112.586	PRJNA1463150	PAIRED	27926063	done	none	Plus	untyped	1.27	0.00	5.52	0.1371	0.0000	trace_Plus	2601	480	18	168	GCA_058380205.1_DTU-UU_Roli_1.0	Plus Minus							
+SRR4063844	rhizopus_microsporus	ATCC 11559	PRJNA330885	PAIRED	38679459	done	Plus	Plus	agree	16.14	0.00	25.66	0.9857	0.0000	-	4972	581	16	265	GCA_002083735.1_Rhimi_ATCC11559_1	Plus Minus							
+SRR8845274	rhizopus_microsporus	B11533	PRJNA526061	PAIRED	3101371	done	Plus	Plus	agree	29.95	0.00	41.17	0.9857	0.0000	-	1182	5315	27	844	GCA_006680115.1_ASM668011v1	Plus Minus							
+SRR8845253	rhizopus_microsporus	B11541	PRJNA526061	PAIRED	4680046	done	Plus			15.55	1.54	31.31	0.9615	0.0861	trace_Minus	1722	265	19	600		Plus Minus							
+ERR13388816	rhizopus_microsporus	R0020	PRJEB76713	PAIRED	36734544	done	Minus			0.05	2.23	12.68	0.0237	0.7157	trace_Plus	1854	6634	16	182		Plus Minus							
+SRR8845256	rhizopus_microsporus	B11547	PRJNA526061	PAIRED	11938178	done	Plus			16.18	0.00	28.33	0.9857	0.0000	-	1478	5943	23	375		Plus Minus							
+SRR25224717	rhizopus_microsporus	CMC_M24	PRJNA993381	PAIRED	23104535	done	none			0.01	0.00	3.41	0.0014	0.0000	trace_Plus	2852	411	18	331		Plus Minus							
+SRR9720177	rhizopus_microsporus	NRRL 6258	PRJNA536243	PAIRED	8402162	done	Plus			13.58	0.00	22.42	0.9857	0.0000	-	907	3543	22	377		Plus Minus							
+SRR8845258	rhizopus_microsporus	B11538	PRJNA526061	PAIRED	11599965	done	Plus			15.25	0.00	28.41	0.9857	0.0000	-	1438	5838	27	384		Plus Minus							
+SRR9720301	rhizopus_microsporus	NRRL A-17693	PRJNA536201	PAIRED	11970821	done	none			0.00	0.00	11.00	0.0000	0.0000	-	1292	5201	23	389		Plus Minus							
+SRR9650568	rhizopus_microsporus	NRRL 6259	PRJNA537988	PAIRED	6838853	done	Plus			15.33	0.00	26.14	0.9857	0.0000	-	695	2941	24	370		Plus Minus							
+SRR9650569	rhizopus_microsporus	NRRL 6495	PRJNA537989	PAIRED	5228361	done	Minus			0.90	8.29	18.71	0.1371	0.9200	trace_Plus	523	2245	23	378		Plus Minus							
+SRR9029403	rhizopus_microsporus	NRRL 5554	PRJNA537146	PAIRED	6917746	done	none			0.00	0.00	46.57	0.0000	0.0000	-	699	3272	22	375		Plus Minus							
+SRR9720307	rhizopus_microsporus	NRRL 13129	PRJNA536200	PAIRED	7370023	done	Minus			0.00	11.47	27.22	0.0000	0.9855	-	797	2735	22	376		Plus Minus							
+SRR9720175	rhizopus_microsporus	NRRL A-26117	PRJNA535668	PAIRED	7705008	done	Minus			0.67	4.99	12.76	0.1371	0.9200	trace_Plus	775	3752	21	373		Plus Minus							
+ERR13388811	rhizopus_microsporus	R0016	PRJEB76713	PAIRED	35683548	done	none			0.61	0.00	18.31	0.2358	0.0000	trace_Plus	1750	6036	16	180		Plus Minus							
+SRR25759129	rhizopus_microsporus	1232_1	PRJNA1004889	PAIRED	1946710	done	Plus			17.08	0.00	31.26	0.9857	0.0000	-	520	2156	16	608		Plus Minus							
+SRR23350467	rhizopus_microsporus	460-P-21	PRJNA931319	PAIRED	4794362	done	none			0.36	0.00	23.78	0.0317	0.0000	trace_Plus	499	1973	25	400		Plus Minus							
+SRR9720181	rhizopus_microsporus	NRRL 6246	PRJNA535670	PAIRED	7964866	done	Plus			14.75	0.00	22.57	0.9857	0.0000	-	856	3282	24	379		Plus Minus							
+SRR33648462	mucor_circinelloides	CBS 172.27	PRJNA1168941	PAIRED	16520968	done	none	Plus	untyped	5.56	1.60	10.80	0.3316	0.0696	trace_Plus,trace_Minus	2783	149	20	95	GCA_051307255.1_Mcir_PS15p_1.0	Plus Minus							
+SRR974749	mucor_circinelloides	B8987	PRJNA184880	PAIRED	12693048	done	Plus	Plus	agree	2.58	0.17	2.43	0.4845	0.0339	trace_Minus	1850	7114	20	36	GCA_000696935.1_MucCirB8987-1.0	Plus Minus							
+SRR770025	mucor_circinelloides	1006Ph	PRJNA172437	PAIRED	43593834	done	Plus	Plus	agree	4.32	0.02	3.05	0.9566	0.0058	trace_Minus	6105	351	30	40	GCA_000401635.1_Muco_sp_1006Ph_V1	Plus Minus							
+DRR032634	mucor_circinelloides	JCM 22480	PRJDB3642	PAIRED	13387957	done	none	Minus	untyped	0.61	1.29	3.46	0.1154	0.2346	trace_Plus,trace_Minus	2325	133	18	56	GCA_001599575.1_JCM_22480_assembly_v001	Plus Minus							
+SRR33648463	mucor_circinelloides	CBS 394.68	PRJNA1168935	PAIRED	9411066	done	Minus	Minus	agree	0.00	17.63	10.89	0.0000	1.0000	-	1599	5641	26	99	GCA_051295215.1_Mcir_PS15m_1.0	Plus Minus							
+SRR33648554	mucor_circinelloides	PS15	PRJNA1170303	PAIRED	9856621	done	none			6.65	1.01	11.69	0.3327	0.0696	trace_Plus,trace_Minus	1725	5816	24	106		Plus Minus							
+SRR8873499	mucor_circinelloides	NRRL 3629	PRJNA519265	PAIRED	7640193	done	low_depth			0.00	0.03	0.04	0.0000	0.0017	-	760	3372	21	61		Plus Minus							
+SRR33648440	mucor_circinelloides	PS15	PRJNA1170303	PAIRED	13443492	done	none			4.52	1.18	10.64	0.3310	0.0696	trace_Plus,trace_Minus	2336	179	50	324		Plus Minus							
+SRR33648523	mucor_circinelloides	PS15	PRJNA1170303	PAIRED	12184080	done	Minus			0.00	15.90	10.67	0.0000	1.0000	-	2128	213	46	267		Plus Minus							
+ERR2211767	mucor_circinelloides	SEC_VEG1	PRJEB23686	PAIRED	7203507	done	Plus			6.54	0.04	4.24	0.9818	0.0058	trace_Minus	654	2348	21	48		Plus Minus							
+SRR33648520	mucor_circinelloides	PS15	PRJNA1170303	PAIRED	11562370	done	none			5.75	0.85	10.40	0.3310	0.0696	trace_Plus,trace_Minus	2008	311	42	226		Plus Minus							
+ERR2211742	mucor_circinelloides	P02_783_BU1_SLS	PRJEB23686	PAIRED	17256821	done	none			2.20	0.78	4.87	0.3421	0.0696	trace_Plus,trace_Minus	2180	287	39	132		Plus Minus							
+ERR2211768	mucor_circinelloides	SEC_VEG2	PRJEB23686	PAIRED	15195044	done	Plus			8.86	0.04	4.39	0.9818	0.0058	trace_Minus	1374	5087	21	48		Plus Minus							
+ERR2211762	mucor_circinelloides	P11_702_BU2_PER	PRJEB23686	PAIRED	14991719	done	none			0.00	4.55	4.18	0.0000	0.4807	trace_Minus	1912	130	38	111		Plus Minus							
+SRR7686312	mucor_circinelloides	NRRL 3621	PRJNA455967	PAIRED	6961960	done	low_depth			0.00	0.04	0.05	0.0012	0.0063	-	687	2630	22	37		Plus Minus							
+SRR12950045	mucor_circinelloides	NRRL 13473	PRJNA650808	PAIRED	22859033	done	none			1.03	2.65	5.35	0.1154	0.2340	trace_Plus,trace_Minus	2230	95	40	155		Plus Minus							
+SRR10127301	mucor_circinelloides	NRRL 3614	PRJNA535052	PAIRED	3188028	done	Plus			11.10	0.21	6.16	0.8079	0.0167	trace_Minus	302	1301	22	66		Plus Minus							
+SRR26360069	mucor_circinelloides	NRRL 1416	PRJNA677206	PAIRED	12256210	done	low_depth			0.02	0.08	0.12	0.0012	0.0063	-	1237	5167	21	59		Plus Minus							
+SRR9719146	mucor_circinelloides	NRRL A-25893	PRJNA536164	PAIRED	7345134	done	Plus			5.45	1.07	5.06	0.9818	0.2473	trace_Minus	749	2827	22	60		Plus Minus							
+SRR26359908	mucor_circinelloides	NRRL 1443	PRJNA653020	PAIRED	7790365	done	low_depth			0.00	0.01	0.04	0.0000	0.0017	-	787	3594	21	59		Plus Minus							
+SRR35182723	rhizopus_arrhizus	PR1	PRJNA1246581	PAIRED	5267029	done	Minus	Minus	agree	0.47	6.46	27.08	0.0250	0.5433	trace_Plus	887	288	23	329	GCA_054130755.1_ASM5413075v1	Plus Minus							
+SRR12268270	rhizopus_arrhizus	IMI215407	PRJNA619762	PAIRED	4139338	done	none			0.12	1.51	14.17	0.0076	0.1628	trace_Plus,trace_Minus	430	191	21	226		Plus Minus							
+SRR9029840	rhizopus_arrhizus	NRRL A-11564	PRJNA537155	PAIRED	5462613	done	none			0.09	1.54	16.47	0.0066	0.1628	trace_Plus,trace_Minus	554	163	19	181		Plus Minus							
+SRR11788092	rhizopus_arrhizus	Vicia faba seedling	PRJNA628809	SINGLE	15525935	done	none			2.32	0.00	16.40	0.2900	0.0000	trace_Plus	1900	322	21	222		Plus Minus							
+SRR23350460	rhizopus_arrhizus	483-P-21	PRJNA931319	PAIRED	14445100	done	Minus			0.19	5.01	34.03	0.0057	0.6559	trace_Plus	1516	318	19	190		Plus Minus							
+SRR9028606	rhizopus_arrhizus	NRRL 1512	PRJNA537968	PAIRED	7622414	done	none			2.59	0.00	25.80	0.3113	0.0000	trace_Plus	773	207	22	229		Plus Minus							
+SRR25224698	rhizopus_arrhizus	CMC_M41	PRJNA993381	PAIRED	21102894	done	none			0.22	0.00	2.30	0.1682	0.0000	trace_Plus	2740	406	18	180		Plus Minus							
+SRR8485190	rhizopus_arrhizus	NRRL 66674	PRJNA499685	PAIRED	4483199	done	Minus			0.22	4.17	30.95	0.0265	0.5004	trace_Plus	457	152	22	250		Plus Minus							
+SRR9650570	rhizopus_arrhizus	NRRL 13098	PRJNA537153	PAIRED	5661330	done	none			0.15	1.02	18.54	0.0071	0.1879	trace_Plus,trace_Minus	568	178	19	182		Plus Minus							
+SRR11788095	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	16613105	done	Minus			0.14	9.27	20.66	0.0094	0.9749	trace_Plus	2033	470	22	256		Plus Minus							
+SRR23350462	rhizopus_arrhizus	402-P-21	PRJNA931319	PAIRED	20632177	done	Minus			0.32	4.08	17.59	0.0255	0.5433	trace_Plus	2160	372	19	192		Plus Minus							
+SRR11788098	rhizopus_arrhizus	shell	PRJNA628809	SINGLE	17518524	done	Plus			6.21	0.00	6.31	0.9542	0.0000	-	2085	468	23	256		Plus Minus							
+SRR9029060	rhizopus_arrhizus	NRRL 2871	PRJNA537150	PAIRED	7966452	done	Plus			3.94	0.34	35.67	0.7588	0.0603	trace_Minus	816	224	19	180		Plus Minus							genus_panel
+SRR11788097	rhizopus_arrhizus	dung	PRJNA628809	SINGLE	16548448	done	Plus			5.03	0.00	15.81	0.5720	0.0000	-	2019	380	22	243		Plus Minus							
+SRR9650544	rhizopus_arrhizus	NRRL 2911	PRJNA537978	PAIRED	8429831	done	Plus			6.83	0.45	36.04	0.7509	0.0603	trace_Minus	888	250	19	182		Plus Minus							genus_panel
+SRR9650592	rhizopus_arrhizus	NRRL A-13860	PRJNA537996	PAIRED	8381384	done	Minus			0.46	4.21	19.63	0.0260	0.5433	trace_Plus	840	167	22	250		Plus Minus							
+SRR12278002	rhizopus_arrhizus	XY00429	PRJNA619931	PAIRED	3458557	done	none			0.10	1.11	15.01	0.0071	0.1628	trace_Plus,trace_Minus	360	92	18	179		Plus Minus							
+SRR12278006	rhizopus_arrhizus	XY01909	PRJNA619936	PAIRED	3337446	done	Plus			7.19	0.52	33.90	0.7599	0.0603	trace_Minus	343	89	21	239		Plus Minus							genus_panel
+SRR25224700	rhizopus_arrhizus	CMC_M40	PRJNA993381	PAIRED	21455486	done	Minus			0.16	2.82	20.52	0.0161	0.6996	trace_Plus	2870	383	18	181		Plus Minus							
+SRR12277396	rhizopus_arrhizus	NBRC 5318	PRJNA619768	PAIRED	3948614	done	Minus			0.18	10.67	21.53	0.0080	0.9749	trace_Plus	403	85	20	230		Plus Minus							
+SRR25224701	rhizopus_arrhizus	CMC_M39	PRJNA993381	PAIRED	14939271	done	Minus			0.17	4.92	21.66	0.0080	0.6559	trace_Plus	1803	367	17	182		Plus Minus							
+SRR9720209	rhizopus_arrhizus	NRRL 1476	PRJNA535671	PAIRED	10103872	done	Plus			8.23	0.00	18.92	0.9731	0.0000	-	1068	235	22	225		Plus Minus							
+SRR12272498	rhizopus_arrhizus	NRRL A-21704	PRJNA619789	PAIRED	3309827	done	Plus			6.03	0.00	19.26	0.5725	0.0000	-	348	156	19	188		Plus Minus							
+SRR25224729	rhizopus_arrhizus	CMC_M13	PRJNA993381	PAIRED	24414380	done	Minus			0.27	3.89	18.40	0.0269	0.5433	trace_Plus	2995	533	22	268		Plus Minus							
+SRR23350471	rhizopus_arrhizus	421-P-21	PRJNA931319	PAIRED	13272776	done	Plus			5.26	0.00	14.34	0.5909	0.0000	-	1425	266	18	191		Plus Minus							
+SRR12269333	rhizopus_arrhizus	IMI201247	PRJNA619761	PAIRED	4361107	done	Plus			6.90	0.47	28.60	0.7599	0.0603	trace_Minus	456	107	21	223		Plus Minus							genus_panel
+SRR9712530	rhizopus_arrhizus	NRRL 2910	PRJNA535083	PAIRED	6870244	done	Plus			6.57	0.44	36.00	0.7515	0.0603	trace_Minus	696	211	19	184		Plus Minus							genus_panel
+SRR9720333	rhizopus_arrhizus	NRRL 66568	PRJNA534996	PAIRED	7909769	done	Plus			7.32	0.47	33.61	0.7319	0.0603	trace_Minus	847	151	23	247		Plus Minus							genus_panel
+SRR12273142	rhizopus_arrhizus	NRRL A-21477	PRJNA619786	PAIRED	2436759	done	Plus			7.16	0.48	32.41	0.7609	0.0603	trace_Minus	255	61	19	182		Plus Minus							genus_panel
+SRR12354677	rhizopus_arrhizus	XY01865	PRJNA619935	PAIRED	3070428	done	none			1.44	0.00	13.55	0.1247	0.0000	trace_Plus	319	84	21	229		Plus Minus							
+SRR9029062	rhizopus_arrhizus	NRRL 2582	PRJNA537976	PAIRED	8806949	done	none			0.15	1.46	16.85	0.0137	0.1725	trace_Plus,trace_Minus	891	323	19	186		Plus Minus							
+SRR12277047	rhizopus_arrhizus	NRRL A-13677	PRJNA619776	PAIRED	3630580	done	none			0.14	1.37	12.98	0.0080	0.1628	trace_Plus,trace_Minus	378	102	21	231		Plus Minus							
+SRR9720299	rhizopus_arrhizus	NRRL 3563	PRJNA538862	PAIRED	8360791	done	Plus			7.00	0.51	32.29	0.7599	0.0603	trace_Minus	914	300	19	183		Plus Minus							genus_panel
+SRR9027887	rhizopus_arrhizus	NRRL A-17011	PRJNA537964	PAIRED	7921940	done	Plus			16.88	0.00	27.62	0.9857	0.0000	-	774	131	22	226		Plus Minus							genus_panel
+SRR12951053	rhizopus_arrhizus	NRRL A-13338	PRJNA650822	PAIRED	18913638	done	Minus			0.00	7.44	19.34	0.0000	0.8930	-	1815	296	19	182		Plus Minus							genus_panel
+SRR12272724	rhizopus_arrhizus	NRRL A-20824	PRJNA619785	PAIRED	2183740	done	Plus			6.03	0.00	16.59	0.7530	0.0000	-	228	209	22	195		Plus Minus							
+SRR9720377	rhizopus_arrhizus	NRRL A-11376	PRJNA536151	PAIRED	8312805	done	none			1.57	0.00	18.01	0.3751	0.0000	trace_Plus	919	256	19	184		Plus Minus							
+SRR12274947	rhizopus_arrhizus	NRRL A-13642	PRJNA619774	PAIRED	3429803	done	none			0.15	1.41	14.93	0.0066	0.1628	trace_Plus,trace_Minus	360	27	24	243		Plus Minus							
+SRR12268523	rhizopus_arrhizus	IMI53173	PRJNA619764	PAIRED	3027353	done	none			2.89	0.00	14.00	0.2915	0.0000	trace_Plus	321	132	19	178		Plus Minus							
+SRR8845262	rhizopus_microsporus	B11550	PRJNA526061	PAIRED	11283037	done	Plus			14.36	0.00	26.07	0.9857	0.0000	-	1402	1414	24	455		Plus Minus							
+SRR8845266	rhizopus_microsporus	B10548	PRJNA526061	PAIRED	11836897	done	Plus			14.83	0.00	27.03	0.9857	0.0000	-	1461	266	19	345		Plus Minus							
+SRR8845248	rhizopus_microsporus	B07643	PRJNA526061	PAIRED	11895945	done	Plus			17.01	0.00	28.06	0.9704	0.0000	-	1453	263	23	512		Plus Minus							
+ERR13388800	rhizopus_microsporus	R0010	PRJEB76713	PAIRED	35881790	done	Minus			0.06	2.59	14.70	0.0385	0.7052	trace_Plus	1769	347	13	177		Plus Minus							
+SRR20066946	rhizopus_microsporus	UCLA_890	PRJNA857096	PAIRED	1586046	done	none			0.00	1.16	5.27	0.0000	0.1139	trace_Minus	385	71	16	658		Plus Minus							
+ERR13388801	rhizopus_microsporus	R0011	PRJEB76713	PAIRED	36791340	done	none			0.77	0.00	20.95	0.2640	0.0000	trace_Plus	1804	386	13	176		Plus Minus							
+SRR9029124	rhizopus_microsporus	NRRL 5550	PRJNA537144	PAIRED	7958104	done	none			0.00	1.15	12.06	0.0000	0.1043	trace_Minus	790	116	20	455		Plus Minus							
+ERR13388818	rhizopus_microsporus	R0022	PRJEB76713	PAIRED	40876056	done	Minus			0.16	4.22	14.49	0.0488	0.8478	trace_Plus	2046	388	13	177		Plus Minus							
+SRR8845276	rhizopus_microsporus	B11551	PRJNA526061	PAIRED	11569156	done	Plus			15.49	0.00	29.28	0.9857	0.0000	-	1440	243	22	489		Plus Minus							
+ERR13388793	rhizopus_microsporus	R0003	PRJEB76713	PAIRED	36107216	done	none			0.64	0.00	19.29	0.2830	0.0000	trace_Plus	1796	286	13	180		Plus Minus							
+SRR26320846	rhizopus_microsporus	Rmic1	PRJNA1025866	PAIRED	34689363	done	Minus			0.96	5.95	14.48	0.1371	0.8513	trace_Plus	3420	437	20	493		Plus Minus							
+SRR9720180	rhizopus_microsporus	NRRL 5556	PRJNA535098	PAIRED	9442819	done	Plus			14.56	0.00	21.44	0.9857	0.0000	-	1024	323	18	340		Plus Minus							
+ERR647679	rhizopus_microsporus	CBS_344.29_PDA	PRJEB7409	PAIRED	6044723	done	Minus			0.56	8.13	18.12	0.0602	1.0000	trace_Plus	1597	1437	25	675		Plus Minus							
+SRR9712541	rhizopus_microsporus	NRRL 5551	PRJNA535095	PAIRED	7698109	done	none			1.00	0.00	10.82	0.0868	0.0000	trace_Plus	778	199	19	346		Plus Minus							
+SRR36541087	rhizopus_microsporus	52200	PRJNA1391998	PAIRED	12549507	done	Plus			7.73	0.00	12.18	0.9492	0.0000	-	1299	1121	23	446		Plus Minus							
+SRR9720465	rhizopus_microsporus	NRRL 2870	PRJNA536234	PAIRED	6891269	done	Minus			0.27	6.87	16.36	0.0518	0.9730	trace_Plus	725	213	19	347		Plus Minus							
+SRR9720297	rhizopus_microsporus	NRRL A-26124	PRJNA535669	PAIRED	7514810	done	Minus			0.94	5.34	12.88	0.1371	0.9200	trace_Plus	800	843	22	416		Plus Minus							
+SRR9720176	rhizopus_microsporus	NRRL 6500	PRJNA535020	PAIRED	8053218	done	Minus			0.85	6.58	15.67	0.1287	0.9052	trace_Plus	869	265	19	347		Plus Minus							
+SRR25626834	rhizopus_microsporus	CBS 631.82	PRJNA1004889	PAIRED	1547203	done	Minus			0.00	18.34	27.04	0.0000	0.9461	-	350	4670	8	334		Plus Minus							
+SRR9712532	rhizopus_microsporus	NRRL 5552	PRJNA535096	PAIRED	6597492	done	none			0.00	1.60	10.10	0.0000	0.0991	trace_Minus	661	198	19	352		Plus Minus							
+SRR36541086	rhizopus_microsporus	56517	PRJNA1391998	PAIRED	12691428	done	Plus			7.11	0.00	11.73	0.9857	0.0000	-	1301	1088	23	453		Plus Minus							
+SRR1796775	rhizopus_microsporus	ATCC 52813	PRJNA205957	PAIRED	51821839	done	Plus			4.37	0.01	13.34	0.9054	0.0113	trace_Minus	6741	530	18	188		Plus Minus							
+SRR9029157	rhizopus_microsporus	NRRL 5189	PRJNA537982	PAIRED	8404014	done	Plus			16.01	0.00	33.77	0.9857	0.0000	-	849	762	21	412		Plus Minus							
+SRR9650571	rhizopus_microsporus	NRRL 6501	PRJNA537990	PAIRED	5697142	done	Minus			0.98	6.08	20.35	0.1321	0.9200	trace_Plus	564	183	19	374		Plus Minus							
+SRR36541088	rhizopus_microsporus	50926	PRJNA1391998	PAIRED	14805358	done	Plus			6.02	0.00	11.22	0.9083	0.0000	-	1508	1304	23	448		Plus Minus							
+SRR23350468	rhizopus_microsporus	415-P-21	PRJNA931319	PAIRED	17687231	done	none			0.39	0.00	12.49	0.0313	0.0000	trace_Plus	1891	274	19	384		Plus Minus							
+SRR16016945	rhizopus_microsporus	XY03801	PRJNA765118	PAIRED	16270509	done	Minus			0.00	5.12	13.72	0.0000	0.9656	-	1568	1505	22	441		Plus Minus							
+SRR25224693	rhizopus_microsporus	CMC_M46	PRJNA993381	PAIRED	20307244	done	none			0.10	0.00	2.79	0.0568	0.0000	trace_Plus	2508	305	19	359		Plus Minus							
+SRR9720461	rhizopus_microsporus	NRRL 2905	PRJNA538874	PAIRED	7681137	done	Minus			0.27	5.31	15.70	0.0518	0.9730	trace_Plus	822	38	22	417		Plus Minus							
+SRR9029145	rhizopus_microsporus	NRRL 5548	PRJNA537143	PAIRED	10083512	done	none			0.00	1.50	11.20	0.0000	0.1043	trace_Minus	994	217	18	354		Plus Minus							
+SRR9720186	rhizopus_microsporus	NRRL 5558	PRJNA535003	PAIRED	11853027	done	none			1.06	0.00	8.21	0.0710	0.0000	trace_Plus	1269	73	22	416		Plus Minus							
+SRR9029401	rhizopus_microsporus	NRRL 5553	PRJNA537145	PAIRED	7557210	done	Plus			8.39	0.00	14.98	0.6484	0.0000	-	754	186	18	360		Plus Minus							
+SRR9720179	rhizopus_microsporus	NRRL 6260	PRJNA538860	PAIRED	6815628	done	Plus			11.85	0.00	21.48	0.9857	0.0000	-	734	43	21	422		Plus Minus							
+SRR9029102	rhizopus_microsporus	NRRL 2909	PRJNA537977	PAIRED	11674512	done	none			0.00	0.00	24.41	0.0000	0.0000	-	1200	217	19	357		Plus Minus							
+SRR9029156	rhizopus_microsporus	NRRL 5547	PRJNA537142	PAIRED	5869616	done	none			0.96	0.00	17.49	0.0710	0.0000	trace_Plus	594	36	21	419		Plus Minus							
+SRR9650593	rhizopus_microsporus	NRRL A-16034	PRJNA537997	PAIRED	5778973	done	Plus			16.75	0.00	25.74	0.9857	0.0000	-	567	164	19	363		Plus Minus							
+SRR36541089	rhizopus_microsporus	50906	PRJNA1391998	PAIRED	11683228	done	Plus			3.85	0.00	11.70	0.9857	0.0000	-	1211	165	22	508		Plus Minus							
+SRR9720653	rhizopus_microsporus	NRRL 3671	PRJNA536233	PAIRED	5274452	done	Minus			0.33	6.32	15.72	0.0518	0.9730	trace_Plus	560	140	19	359		Plus Minus							
+SRR9720312	rhizopus_microsporus	NRRL 5905	PRJNA538867	PAIRED	7456167	done	Minus			0.86	3.88	12.22	0.1371	0.8904	trace_Plus	797	109	23	506		Plus Minus							
+SRR9029128	rhizopus_microsporus	NRRL 5190	PRJNA537983	PAIRED	9136199	done	Plus			13.05	0.00	31.32	0.9857	0.0000	-	924	222	18	344		Plus Minus							
+SRR9029155	rhizopus_microsporus	NRRL 5546	PRJNA537141	PAIRED	7728784	done	none			0.00	1.66	16.33	0.0000	0.1139	trace_Minus	767	75	21	503		Plus Minus							
+SRR9720651	rhizopus_microsporus	NRRL 2906	PRJNA535084	PAIRED	7682025	done	Minus			0.38	7.51	16.75	0.0518	0.9730	trace_Plus	811	174	19	345		Plus Minus							
+ERR647682	rhizopus_microsporus	ATCC_62417_VK	PRJEB7410	PAIRED	18453325	done	Minus			0.35	5.68	7.59	0.0532	0.5799	trace_Plus	2345	435	21	252		Plus Minus							
+ERR647686	rhizopus_microsporus	ATCC_62417_PDA	PRJEB7410	PAIRED	4311793	done	Minus			0.00	17.92	40.84	0.0000	0.9855	-	1381	345	22	607		Plus Minus							
+SRR9028948	rhizopus_microsporus	NRRL 2570	PRJNA537975	PAIRED	8141647	done	Plus			15.60	0.00	26.99	0.9857	0.0000	-	827	81	21	479		Plus Minus							
+SRR11788066	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	13575476	done	none			1.29	0.00	19.78	0.1705	0.0000	trace_Plus	1703	439	19	189		Plus Minus	ok	Rhizopus	Rhizophagus	4	0.0011		
+SRR25224699	rhizopus_arrhizus	CMC_M5	PRJNA993381	PAIRED	12757691	done	Plus			6.05	0.00	28.46	0.8016	0.0000	-	1589	419	19	187		Plus Minus	ok	Rhizopus	Aspergillus	10	0.0024		
+SRR16016946	rhizopus_arrhizus	XY03792	PRJNA765118	PAIRED	15959809	done	none			0.02	0.07	1.64	0.0057	0.0664	trace_Plus,trace_Minus	1553	490	19	185		Plus Minus	ok	Rhizopus	Rhodotorula	4	0.0019		
+SRR8485431	rhizopus_arrhizus	NRRL 66676	PRJNA499688	PAIRED	3904479	done	none			0.14	0.85	23.72	0.0137	0.1360	trace_Plus,trace_Minus	401	114	18	187		Plus Minus	ok	Rhizopus	Xylaria	13	0.0034		
+SRR9720376	rhizopus_arrhizus	NRRL 5896	PRJNA535007	PAIRED	7833562	done	none			1.77	0.00	16.14	0.1705	0.0000	trace_Plus	853	231	19	187		Plus Minus	ok	Rhizopus	Fusarium	13	0.0034		
+SRR9720311	rhizopus_arrhizus	NRRL 66592	PRJNA535009	PAIRED	7983412	done	Plus			6.45	0.00	16.78	0.7534	0.0000	-	846	264	19	201		Plus Minus	ok	Rhizopus	Gigaspora	30	0.0069	yes	
+SRR9720322	rhizopus_arrhizus	NRRL 66595	PRJNA535015	PAIRED	11060898	done	Plus			9.11	0.00	15.44	0.9858	0.0000	-	1183	306	19	200		Plus Minus	ok	Rhizopus	Gigaspora	20	0.0051		
+SRR9720363	rhizopus_arrhizus	NRRL 46180	PRJNA535029	PAIRED	8518655	done	none			1.27	0.00	16.16	0.1729	0.0000	trace_Plus	911	256	19	202		Plus Minus	ok	Rhizopus	Fusarium	8	0.0021		
+SRR9720302	rhizopus_arrhizus	NRRL 5545	PRJNA535031	PAIRED	7960679	done	none			0.18	1.17	16.37	0.0066	0.1636	trace_Plus,trace_Minus	849	231	19	204		Plus Minus	ok	Rhizopus	Fusarium	15	0.004		
+SRR9720459	rhizopus_arrhizus	NRRL 2874	PRJNA535037	PAIRED	6289115	done	none			1.81	0.00	18.66	0.1705	0.0000	trace_Plus	670	165	18	184		Plus Minus	ok	Rhizopus	Fusarium	7	0.0019		
+SRR9720221	rhizopus_arrhizus	NRRL A-10180	PRJNA535665	PAIRED	7561446	done	none			0.13	1.36	15.48	0.0076	0.1628	trace_Plus,trace_Minus	814	266	18	187		Plus Minus	ok	Rhizopus	Fusarium	15	0.0039		
+SRR9720183	rhizopus_arrhizus	NRRL 1527	PRJNA536149	PAIRED	11008529	done	Plus			6.32	0.00	15.30	0.9485	0.0000	-	1182	350	20	226		Plus Minus	ok	Rhizopus	Gigaspora	17	0.0043		
+SRR9720372	rhizopus_arrhizus	NRRL A-10365	PRJNA536150	PAIRED	6272330	done	none			1.08	0.00	12.45	0.1228	0.0000	trace_Plus	677	148	19	186		Plus Minus	ok	Rhizopus	Gigaspora	14	0.0036		
+SRR9720051	rhizopus_arrhizus	NRRL A-26112	PRJNA536152	PAIRED	7624047	done	Minus			0.21	3.17	14.02	0.0260	0.5433	trace_Plus	787	485	39	887		Plus Minus	ok	Rhizopus	Gigaspora	24	0.006		
+SRR9720300	rhizopus_arrhizus	NRRL 62023	PRJNA536202	PAIRED	8528363	done	none			2.20	0.00	17.26	0.3855	0.0000	trace_Plus	917	229	19	189		Plus Minus	ok	Rhizopus	Aspergillus	57	0.0089		
+SRR9720201	rhizopus_arrhizus	NRRL 2862	PRJNA536220	PAIRED	9820554	done	none			1.68	0.00	15.32	0.1719	0.0000	trace_Plus	1052	291	19	188		Plus Minus	ok	Rhizopus	Xylaria	12	0.0032		
+SRR9720178	rhizopus_arrhizus	NRRL 6400	PRJNA536228	PAIRED	9641729	done	none			1.59	0.00	13.41	0.1710	0.0000	trace_Plus	1056	220	19	187		Plus Minus	ok	Rhizopus	Fusarium	9	0.0024		
+SRR9028959	rhizopus_arrhizus	NRRL 1549	PRJNA537147	PAIRED	7569457	done	none			0.25	1.03	18.34	0.0132	0.1725	trace_Plus,trace_Minus	779	182	19	195		Plus Minus	ok	Rhizopus	Fusarium	16	0.0042		
+SRR9650532	rhizopus_arrhizus	NRRL 2625	PRJNA537149	PAIRED	7517766	done	none			1.60	0.00	18.94	0.1715	0.0000	trace_Plus	750	209	19	195		Plus Minus	ok	Rhizopus	Aspergillus	6	0.0016		
+SRR9650551	rhizopus_arrhizus	NRRL 3613	PRJNA537151	PAIRED	10065283	done	none			1.94	0.00	17.15	0.1710	0.0000	trace_Plus	1022	307	20	191		Plus Minus	ok	Rhizopus	Aspergillus	30	0.0074	yes	
+SRR9029551	rhizopus_arrhizus	NRRL 6202	PRJNA537152	PAIRED	7514517	done	none			0.14	1.14	17.08	0.0080	0.1628	trace_Plus,trace_Minus	753	402	46	1276		Plus Minus	ok	Rhizopus	Gigaspora	8	0.0022		
+SRR9029844	rhizopus_arrhizus	NRRL 66569	PRJNA537154	PAIRED	4887316	done	none			0.12	1.29	15.01	0.0066	0.1628	trace_Plus,trace_Minus	492	321	46	625		Plus Minus	ok	Rhizopus	Fusarium	23	0.006		
+SRR9029845	rhizopus_arrhizus	NRRL A-12640	PRJNA537156	PAIRED	5435650	done	Plus			4.44	0.00	22.88	0.5574	0.0000	-	554	394	45	1295		Plus Minus	borderline	Rhizopus	Gigaspora	30	0.0073	yes	
+SRR9650591	rhizopus_arrhizus	NRRL A-12997	PRJNA537157	PAIRED	5886081	done	Minus			1.20	3.29	18.78	0.2258	0.5182	trace_Plus	595	522	39	1223		Plus Minus	ok	Rhizopus	Fusarium	32	0.0067	yes	
+SRR9028607	rhizopus_arrhizus	NRRL 1470	PRJNA537966	PAIRED	8432633	done	none			0.01	0.00	4.18	0.0009	0.0000	trace_Plus	861	577	46	1256		Plus Minus	genus_mismatch	Circinella	Rhizopus	66	0.0141		
+SRR9650540	rhizopus_arrhizus	NRRL 1514	PRJNA537969	PAIRED	9098894	done	none			0.03	0.00	4.20	0.0024	0.0000	trace_Plus	923	542	40	1021		Plus Minus	ok	Rhizopus	Fusarium	25	0.0094		
+SRR9028654	rhizopus_arrhizus	NRRL 1522	PRJNA537971	PAIRED	8486138	done	none			2.82	0.00	18.23	0.3132	0.0000	trace_Plus	864	189	19	187		Plus Minus	ok	Rhizopus	Colletotrichum	10	0.0026		
+SRR9028813	rhizopus_arrhizus	NRRL 1529	PRJNA537972	PAIRED	11670367	done	none			0.23	1.56	19.01	0.0132	0.1725	trace_Plus,trace_Minus	1187	207	19	193		Plus Minus	ok	Rhizopus	Fusarium	13	0.0034		
+SRR9028955	rhizopus_arrhizus	NRRL 1703	PRJNA537973	PAIRED	7446285	done	none			0.29	0.00	20.96	0.0142	0.0000	trace_Plus	750	155	20	191		Plus Minus	ok	Rhizopus	Aspergillus	53	0.0148		
+SRR9028957	rhizopus_arrhizus	NRRL 2004	PRJNA537974	PAIRED	11730239	done	none			2.49	0.00	17.77	0.3132	0.0000	trace_Plus	1195	297	19	199		Plus Minus	ok	Rhizopus	Fusarium	11	0.0029		
+SRR9650550	rhizopus_arrhizus	NRRL 5129	PRJNA537981	PAIRED	7699756	done	none			0.12	1.09	12.98	0.0066	0.1628	trace_Plus,trace_Minus	808	147	18	199		Plus Minus	ok	Rhizopus	Rhizophagus	23	0.006		
+SRR9029539	rhizopus_arrhizus	NRRL 13014	PRJNA537991	PAIRED	6758310	done	Minus			0.32	3.86	20.50	0.0255	0.5255	trace_Plus	684	86	18	193		Plus Minus	ok	Rhizopus	Fusarium	13	0.0035		
+SRR9650585	rhizopus_arrhizus	NRRL 66564	PRJNA537993	PAIRED	6173284	done	none			0.03	0.00	4.16	0.0014	0.0000	trace_Plus	617	411	40	1094		Plus Minus	ok	Rhizopus	Aspergillus	9	0.0034		
+SRR9650588	rhizopus_arrhizus	NRRL A-10369	PRJNA537994	PAIRED	9340696	done	none			0.13	1.32	14.58	0.0066	0.1628	trace_Plus,trace_Minus	958	575	48	1362		Plus Minus	ok	Rhizopus	Gigaspora	19	0.0049		
+SRR9029842	rhizopus_arrhizus	NRRL A-12998	PRJNA537995	PAIRED	5690395	done	none			2.56	0.00	19.66	0.3118	0.0000	trace_Plus	576	419	41	1338		Plus Minus	ok	Rhizopus	Rhizophagus	43	0.01	yes	
+SRR9030128	rhizopus_arrhizus	NRRL A-16824	PRJNA537999	PAIRED	7291116	done	Minus			0.24	5.16	18.79	0.0260	0.5433	trace_Plus	747	489	48	818		Plus Minus	ok	Rhizopus	Fusarium	9	0.0023		
+SRR9030123	rhizopus_arrhizus	NRRL A-16826	PRJNA538000	PAIRED	7316580	done	Minus			0.31	4.47	20.90	0.0260	0.5433	trace_Plus	744	473	47	1077		Plus Minus	ok	Rhizopus	Fusarium	8	0.0021		
+SRR9030125	rhizopus_arrhizus	NRRL A-16827	PRJNA538001	PAIRED	7337443	done	none			2.07	0.54	17.83	0.3113	0.3911	trace_Plus,trace_Minus	754	473	44	1297		Plus Minus	ok	Rhizopus	Aspergillus	22	0.0052		
+SRR9030683	rhizopus_arrhizus	NRRL A-23526	PRJNA538003	PAIRED	7312542	done	Plus			8.25	0.00	21.88	0.8167	0.0000	-	754	501	52	1339		Plus Minus	ok	Rhizopus	Gigaspora	19	0.0048		
+SRR9720375	rhizopus_arrhizus	NRRL 2286	PRJNA538866	PAIRED	7990145	done	Plus			5.53	0.00	15.79	0.7506	0.0000	-	873	518	49	948		Plus Minus	ok	Rhizopus	Gigaspora	38	0.0085	yes	
+SRR10127527	rhizopus_arrhizus	NRRL 2344	PRJNA538882	PAIRED	4079917	done	none			0.01	0.00	1.51	0.0009	0.0000	trace_Plus	392	326	39	861		Plus Minus	ok	Rhizopus	Gigaspora	26	0.0062		
+SRR12277945	rhizopus_arrhizus	CBS 258.28	PRJNA619754	PAIRED	4453821	done	Minus			0.20	6.53	17.66	0.0175	0.6664	trace_Plus	467	43	19	198		Plus Minus	ok	Rhizopus	Gigaspora	20	0.005	yes	
+SRR12334051	rhizopus_arrhizus	CBS 330.53	PRJNA619755	PAIRED	3335765	done	Minus			0.18	9.16	16.58	0.0080	0.9749	trace_Plus	349	72	19	191		Plus Minus	ok	Rhizopus	Gigaspora	9	0.0024		
+SRR12270018	rhizopus_arrhizus	IMI16641	PRJNA619757	PAIRED	4061459	done	none			0.23	1.00	13.17	0.0099	0.1660	trace_Plus,trace_Minus	427	36	19	203		Plus Minus	ok	Rhizopus	Gigaspora	21	0.0055		
+SRR12270128	rhizopus_arrhizus	IMI180966	PRJNA619758	PAIRED	4128068	done	Minus			0.29	7.01	18.76	0.0165	0.6478	trace_Plus	429	305	39	1178		Plus Minus	ok	Rhizopus	Trichoderma	4	0.0011		
+SRR12278003	rhizopus_arrhizus	IMI195599	PRJNA619759	PAIRED	2334240	done	none			0.15	1.78	15.40	0.0066	0.1628	trace_Plus,trace_Minus	243	207	39	1141		Plus Minus	ok	Rhizopus	Fusarium	4	0.0011		
+SRR12278007	rhizopus_arrhizus	IMI199624	PRJNA619760	PAIRED	2988729	done	Minus			0.35	5.32	16.31	0.0255	0.5433	trace_Plus	311	1395	39	453		Plus Minus	ok	Rhizopus	Gigaspora	15	0.0038	yes	
+SRR12278013	rhizopus_arrhizus	IMI266680	PRJNA619763	PAIRED	2359620	done	none			0.20	0.09	19.85	0.0057	0.0073	trace_Plus,trace_Minus	245	1003	39	469		Plus Minus	ok	Rhizopus	Aspergillus	44	0.0115		
+SRR12278004	rhizopus_arrhizus	JCM 5580	PRJNA619765	PAIRED	2529065	done	Minus			0.42	4.15	18.62	0.0265	0.5433	trace_Plus	264	207	39	1127		Plus Minus	borderline	Rhizopus	Gigaspora	11	0.0028	yes	
+SRR12277944	rhizopus_arrhizus	NBRC 4735	PRJNA619766	PAIRED	2379421	done	none			0.14	1.66	18.87	0.0066	0.1660	trace_Plus,trace_Minus	246	964	37	467		Plus Minus	mixed	Rhizopus	Meyerozyma	42	0.0111		
+SRR12277417	rhizopus_arrhizus	NBRC 4770	PRJNA619767	PAIRED	3457179	done	none			0.17	1.72	16.40	0.0090	0.1628	trace_Plus,trace_Minus	361	20	19	202		Plus Minus	ok	Rhizopus	Gigaspora	9	0.0024		
+SRR12274631	rhizopus_arrhizus	NRRL A-10276	PRJNA619769	PAIRED	3104534	done	Minus			0.27	8.45	23.32	0.0165	0.6664	trace_Plus	316	14	19	188		Plus Minus	ok	Rhizopus	Aspergillus	14	0.0036	yes	
+SRR12274347	rhizopus_arrhizus	NRRL A-12134	PRJNA619770	PAIRED	4476289	done	none			2.79	0.00	19.15	0.3127	0.0000	trace_Plus	460	336	47	1213		Plus Minus	borderline	Rhizopus	Gigaspora	22	0.0052	yes	
+SRR12274345	rhizopus_arrhizus	NRRL A-13471	PRJNA619772	PAIRED	4191493	done	none			3.13	0.00	16.02	0.3137	0.0000	trace_Plus	437	280	50	1331		Plus Minus	ok	Rhizopus	Neurospora	5	0.0013		
+SRR12274946	rhizopus_arrhizus	NRRL A-13606	PRJNA619773	PAIRED	3649161	done	none			1.37	0.00	13.99	0.1715	0.0000	trace_Plus	383	236	42	1336		Plus Minus	ok	Rhizopus	Aspergillus	11	0.0028	yes	
+SRR12277044	rhizopus_arrhizus	NRRL A-13676	PRJNA619775	PAIRED	4046459	done	none			1.02	0.00	13.15	0.1228	0.0000	trace_Plus	425	273	42	1005		Plus Minus	ok	Rhizopus	Fusarium	5	0.0013		
+SRR12277053	rhizopus_arrhizus	NRRL A-13678	PRJNA619777	PAIRED	2530239	done	none			0.14	1.39	14.21	0.0071	0.1628	trace_Plus,trace_Minus	264	17	20	189		Plus Minus	ok	Rhizopus	Colletotrichum	19	0.0049		
+SRR12274376	rhizopus_arrhizus	NRRL A-13688	PRJNA619778	PAIRED	2329368	done	none			1.29	0.00	15.15	0.1705	0.0000	trace_Plus	244	11	19	199		Plus Minus	ok	Rhizopus	Aspergillus	8	0.0022		
+SRR12270127	rhizopus_arrhizus	NRRL A-13690	PRJNA619779	PAIRED	3789198	done	none			0.14	0.96	14.42	0.0066	0.1628	trace_Plus,trace_Minus	395	83	19	187		Plus Minus	ok	Rhizopus	Rhizophagus	19	0.0049		
+SRR12271099	rhizopus_arrhizus	NRRL A-13738	PRJNA619780	PAIRED	3970379	done	none			1.25	0.00	13.68	0.1705	0.0000	trace_Plus	414	98	19	187		Plus Minus	ok	Rhizopus	Aspergillus	9	0.0024		
+SRR12277049	rhizopus_arrhizus	NRRL A-15308	PRJNA619783	PAIRED	2529383	done	Minus			0.29	4.81	16.84	0.0265	0.5004	trace_Plus	259	12	19	190		Plus Minus	borderline	Rhizopus	Neocallimastix	31	0.0081	yes	
+SRR12272094	rhizopus_arrhizus	NRRL A-17371	PRJNA619784	PAIRED	4409824	done	none			0.12	1.09	12.62	0.0076	0.1660	trace_Plus,trace_Minus	465	48	19	186		Plus Minus	ok	Rhizopus	Gigaspora	21	0.0054		
+SRR12272621	rhizopus_arrhizus	NRRL A-21578	PRJNA619787	PAIRED	3510174	done	Plus			6.57	0.00	16.41	0.9858	0.0000	-	365	80	19	187		Plus Minus	ok	Rhizopus	Gigaspora	20	0.0051		
+SRR12354412	rhizopus_arrhizus	NRRL A-21579	PRJNA619788	PAIRED	3710825	done	none			0.13	0.07	15.28	0.0071	0.0073	trace_Plus,trace_Minus	391	25	19	190		Plus Minus	ok	Rhizopus	Aspergillus	57	0.0144		
+SRR12273147	rhizopus_arrhizus	NRRL A-23526	PRJNA619790	PAIRED	3001442	done	Plus			9.08	0.00	18.68	0.8167	0.0000	-	307	90	19	186		Plus Minus	ok	Rhizopus	Gigaspora	23	0.006		
+SRR12274855	rhizopus_arrhizus	NRRL A-23527	PRJNA619791	PAIRED	3240000	done	Plus			6.48	0.00	15.19	0.8167	0.0000	-	342	32	19	189		Plus Minus	ok	Rhizopus	Gigaspora	18	0.0046		
+SRR12277073	rhizopus_arrhizus	NRRL A-25359	PRJNA619792	PAIRED	4693392	done	none			0.26	1.16	12.19	0.0161	0.1360	trace_Plus,trace_Minus	492	89	20	198		Plus Minus	ok	Rhizopus	Fusarium	5	0.0013		
+SRR12274854	rhizopus_arrhizus	NRRL A-26116	PRJNA619929	PAIRED	4038714	done	none			1.35	0.00	27.52	0.1238	0.0000	trace_Plus	415	20	19	184		Plus Minus	borderline	Rhizopus	Gigaspora	33	0.0079	yes	
+SRR12277947	rhizopus_arrhizus	XY00507	PRJNA619932	PAIRED	2772957	done	Plus			9.79	0.00	18.12	0.9731	0.0000	-	291	14	19	196		Plus Minus	ok	Rhizopus	Peltigera	12	0.0031		
+SRR12277934	rhizopus_arrhizus	XY01745	PRJNA619933	PAIRED	3062218	done	none			0.14	1.24	17.29	0.0090	0.1628	trace_Plus,trace_Minus	314	46	19	196		Plus Minus	ok	Rhizopus	Rhizophagus	23	0.0059		
+SRR12354434	rhizopus_arrhizus	XY01861	PRJNA619934	PAIRED	3638294	done	none			0.13	1.59	14.35	0.0071	0.1628	trace_Plus,trace_Minus	377	22	19	189		Plus Minus	ok	Rhizopus	Gigaspora	16	0.0042		
+SRR12277932	rhizopus_arrhizus	XY01921	PRJNA619937	PAIRED	3937822	done	Minus			0.15	5.92	14.06	0.0260	0.5433	trace_Plus	416	21	19	187		Plus Minus	ok	Rhizopus	Rhizophagus	20	0.0051		
+SRR12334052	rhizopus_arrhizus	XY02152	PRJNA619938	PAIRED	2857950	done	Minus			0.38	4.66	15.20	0.0250	0.5433	trace_Plus	298	15	19	202		Plus Minus	ok	Rhizopus	Gigaspora	17	0.0043		
+SRR12277946	rhizopus_arrhizus	XY02848	PRJNA619939	PAIRED	3336723	done	none			1.14	0.00	13.33	0.1247	0.0000	trace_Plus	347	21	20	185		Plus Minus	ok	Rhizopus	Xylaria	10	0.0026		
+SRR12951099	rhizopus_arrhizus	NRRL 6253	PRJNA650722	PAIRED	21639809	done	none			0.02	0.00	3.06	0.0014	0.0000	trace_Plus	2105	417	18	188		Plus Minus	ok	Rhizopus	Aspergillus	26	0.0086		
+SRR13201205	rhizopus_arrhizus	NRRL 66642	PRJNA676572	PAIRED	9126326	done	none			0.00	0.00	1.22	0.0009	0.0000	trace_Plus	880	173	19	184		Plus Minus	genus_mismatch	Umbelopsis	Mucor	263	0.0479		
+SRR13201207	rhizopus_arrhizus	NRRL 66519	PRJNA676573	PAIRED	6520031	done	none			2.65	0.00	16.01	0.3118	0.0000	trace_Plus	640	78	19	188		Plus Minus	ok	Rhizopus	Rhizophagus	12	0.0031		
+SRR13201211	rhizopus_arrhizus	NRRL 66645	PRJNA676576	PAIRED	9555913	done	none			0.09	1.44	12.74	0.0076	0.1628	trace_Plus,trace_Minus	955	213	19	185		Plus Minus	ok	Rhizopus	Rhizophagus	15	0.0039		
+SRR26360105	rhizopus_arrhizus	NRRL A-13276	PRJNA710989	PAIRED	8798675	done	none			2.06	0.00	22.28	0.3089	0.0000	trace_Plus	899	89	18	188		Plus Minus	ok	Rhizopus	Fusarium	7	0.0018		
+SRR16108677	rhizopus_arrhizus	CMFCCC B81a	PRJNA766449	PAIRED	16286955	done	Minus			0.19	4.67	14.47	0.0255	0.5433	trace_Plus	1586	173	19	184		Plus Minus	ok	Rhizopus	Fusarium	6	0.0016		
+SRR11788086	rhizopus_arrhizus	cotton lint	PRJNA628809	SINGLE	14830601	done	none			0.15	0.89	16.81	0.0090	0.1660	trace_Plus,trace_Minus	1400	5939	36	425		Plus Minus	ok	Rhizopus	Gigaspora	22	0.006		
+SRR25224724	rhizopus_arrhizus	CMC_M18	PRJNA993381	PAIRED	12859240	done	Plus			3.02	0.00	18.97	0.7747	0.0000	-	1588	504	17	180		Plus Minus	ok	Rhizopus	Aspergillus	43	0.0109		
+SRR16016944	rhizopus_arrhizus	XY03829	PRJNA765118	PAIRED	16169115	done	none			0.04	0.02	4.87	0.0047	0.0073	trace_Plus,trace_Minus	1537	471	83	1830		Plus Minus	ok	Rhizopus	Aspergillus	53	0.0148		
+SRR11788101	rhizopus_arrhizus	eye socket	PRJNA628809	SINGLE	13765256	done	Minus			0.19	3.85	16.29	0.0260	0.5433	trace_Plus	1380	351	77	1473		Plus Minus	ok	Rhizopus	Rhizophagus	16	0.0041		
+SRR25224726	rhizopus_arrhizus	CMC_M16	PRJNA993381	PAIRED	13954194	done	Plus			4.17	0.00	17.17	0.7803	0.0000	-	1735	472	43	931		Plus Minus	ok	Rhizopus	Fusarium	24	0.0061		
+SRR11788073	rhizopus_arrhizus	koji	PRJNA628809	SINGLE	14480916	done	none			2.50	0.00	19.09	0.3118	0.0000	trace_Plus	1400	1204	38	1037		Plus Minus	ok	Rhizopus	Fusarium	12	0.0031		
+SRR25224718	rhizopus_arrhizus	CMC_M23	PRJNA993381	PAIRED	21489840	done	Plus			3.84	0.00	22.18	0.5616	0.0000	-	2810	413	18	192		Plus Minus	ok	Rhizopus	Fusarium	5	0.0013		
+SRR11788062	rhizopus_arrhizus	Chinese yeast	PRJNA628809	SINGLE	13984693	done	Minus			0.19	6.77	15.63	0.0165	0.6664	trace_Plus	1393	139	19	186		Plus Minus	ok	Rhizopus	Fusarium	6	0.0016		
+SRR25224728	rhizopus_arrhizus	CMC_M14	PRJNA993381	PAIRED	34590383	done	Plus			3.36	0.00	23.55	0.5371	0.0000	-	4171	461	18	189		Plus Minus	ok	Rhizopus	Aspergillus	12	0.0029		
+SRR11788057	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	14287893	done	Minus			0.21	3.03	21.82	0.0132	0.7765	trace_Plus	1670	287	23	188		Plus Minus	ok	Rhizopus	Fusarium	51	0.0081		
+SRR11788110	rhizopus_arrhizus	flower	PRJNA628809	SINGLE	14319239	done	Minus			0.54	4.89	16.21	0.0359	0.5522	trace_Plus	1429	256	19	185		Plus Minus	ok	Rhizopus	Rhizophagus	19	0.0049		
+SRR11788080	rhizopus_arrhizus	mouldy bran	PRJNA628809	SINGLE	14336727	done	Minus			0.24	4.28	15.82	0.0250	0.5433	trace_Plus	1762	377	20	194		Plus Minus	ok	Rhizopus	Fusarium	8	0.0021		
+SRR11788052	rhizopus_arrhizus	Chinese yeast	PRJNA628809	SINGLE	14451119	done	Plus			7.64	0.00	17.59	0.9731	0.0000	-	1449	241	19	199		Plus Minus	ok	Rhizopus	Fusarium	6	0.0016		
+SRR11788085	rhizopus_arrhizus	Arachis hypogaea	PRJNA628809	SINGLE	14502117	done	Minus			0.11	7.90	18.20	0.0085	0.7036	trace_Plus	1782	539	19	190		Plus Minus	ok	Rhizopus	Fusarium	10	0.0026		
+SRR11788087	rhizopus_arrhizus	soy sauce	PRJNA628809	SINGLE	14695363	done	none			0.08	0.97	12.56	0.0071	0.1628	trace_Plus,trace_Minus	1523	432	18	180		Plus Minus	mixed	Rhizopus	Gigaspora	51	0.0121	yes	
+SRR11788088	rhizopus_arrhizus	Gossypium root	PRJNA628809	SINGLE	14709762	done	none			2.84	0.00	19.66	0.3113	0.0000	trace_Plus	1804	493	19	182		Plus Minus	ok	Rhizopus	Fusarium	12	0.0031		
+SRR11788094	rhizopus_arrhizus	lake mud	PRJNA628809	SINGLE	14978640	done	Minus			0.32	5.97	15.28	0.0255	0.5433	trace_Plus	1557	381	18	182		Plus Minus	ok	Rhizopus	Fusarium	9	0.0024		
+SRR11788082	rhizopus_arrhizus	radio set	PRJNA628809	SINGLE	15040112	done	Minus			0.80	4.21	17.73	0.0524	0.5182	trace_Plus	1488	321	19	202		Plus Minus	ok	Rhizopus	Rhizophagus	6	0.0016		
+SRR11788100	rhizopus_arrhizus	sweet wrapping	PRJNA628809	SINGLE	15044785	done	Plus			5.75	0.00	21.58	0.5735	0.0000	-	1504	441	19	179		Plus Minus	ok	Rhizopus	Aspergillus	5	0.0013		
+SRR11788108	rhizopus_arrhizus	grass	PRJNA628809	SINGLE	15057934	done	none			2.50	0.00	19.01	0.3113	0.0000	trace_Plus	1501	424	18	185		Plus Minus	ok	Rhizopus	Gigaspora	16	0.0041		
+SRR11788076	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	16245671	done	Plus			2.17	0.98	11.18	0.7619	0.4275	trace_Minus	1743	500	22	171		Plus Minus	ok	Rhizopus	Aspergillus	29	0.0061		
+SRR11788113	rhizopus_arrhizus	cake	PRJNA628809	SINGLE	15137246	done	none			0.12	1.88	13.67	0.0071	0.1814	trace_Plus,trace_Minus	1906	464	19	185		Plus Minus	ok	Rhizopus	Fusarium	21	0.0049		
+SRR11788105	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	15150318	done	Plus			8.44	0.00	18.21	0.9731	0.0000	-	1479	200	19	188		Plus Minus	ok	Rhizopus	Rhizophagus	6	0.0016		
+SRR11788117	rhizopus_arrhizus	skin scabs	PRJNA628809	SINGLE	15236381	done	none			0.11	1.45	17.42	0.0066	0.1628	trace_Plus,trace_Minus	1899	474	19	191		Plus Minus	ok	Rhizopus	Fusarium	5	0.0013		
+SRR11788090	rhizopus_arrhizus	Gossypium	PRJNA628809	SINGLE	15592248	done	Plus			4.07	0.00	28.77	0.5791	0.0000	-	1919	462	19	190		Plus Minus	ok	Rhizopus	Colletotrichum	8	0.0021		
+SRR11788072	rhizopus_arrhizus	human	PRJNA628809	SINGLE	15716533	done	Plus			4.68	0.00	23.01	0.5744	0.0000	-	1461	504	18	188		Plus Minus	ok	Rhizopus	Mucor	6	0.0016		
+SRR11788089	rhizopus_arrhizus	honey dew	PRJNA628809	SINGLE	15724920	done	Plus			6.46	0.00	36.72	0.9731	0.0000	-	1588	476	18	191		Plus Minus	ok	Rhizopus	Gigaspora	19	0.0048		
+SRR11788068	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	15952907	done	Plus			7.13	0.00	17.54	0.8276	0.0000	-	1473	419	18	183		Plus Minus	ok	Rhizopus	Rhizophagus	18	0.0043	yes	
+SRR11788081	rhizopus_arrhizus	Carica papaya fruit	PRJNA628809	SINGLE	15966040	done	none			0.22	1.87	20.36	0.0113	0.1636	trace_Plus,trace_Minus	1580	395	19	182		Plus Minus	ok	Rhizopus	Gigaspora	15	0.0041		
+SRR11788069	rhizopus_arrhizus	human	PRJNA628809	SINGLE	16187140	done	none			2.00	0.00	18.34	0.1719	0.0000	trace_Plus	1503	484	19	182		Plus Minus	ok	Rhizopus	Trichoderma	2	0.0006		
+SRR11788109	rhizopus_arrhizus	sweet wrapping	PRJNA628809	SINGLE	16216956	done	none			0.88	0.00	13.02	0.1242	0.0000	trace_Plus	1995	516	19	183		Plus Minus	ok	Rhizopus	Fusarium	7	0.0018		
+SRR11788103	rhizopus_arrhizus	plant	PRJNA628809	SINGLE	16474134	done	Plus			6.90	0.00	16.65	0.9858	0.0000	-	2019	715	19	183		Plus Minus	ok	Rhizopus	Fusarium	7	0.0018		
+SRR11788053	rhizopus_arrhizus	distillery yeast	PRJNA628809	SINGLE	16478000	done	none			1.55	0.00	15.67	0.1705	0.0000	trace_Plus	2032	250	19	187		Plus Minus	ok	Rhizopus	Fusarium	7	0.0019		
+SRR11788056	rhizopus_arrhizus	dung	PRJNA628809	SINGLE	16564448	done	none			0.05	0.02	8.03	0.0047	0.0073	trace_Plus,trace_Minus	1594	374	19	184		Plus Minus	ok	Rhizopus	Aspergillus	56	0.0156		
+SRR11788118	rhizopus_arrhizus	rotten pod of Liliaceae	PRJNA628809	SINGLE	16647496	done	Minus			0.44	5.12	23.61	0.0255	0.5433	trace_Plus	1595	465	19	188		Plus Minus	ok	Rhizopus	Fusarium	9	0.0024		
+SRR11788079	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	16746416	done	none			0.12	1.05	19.06	0.0076	0.1628	trace_Plus,trace_Minus	1579	426	19	188		Plus Minus	ok	Rhizopus	Rhizophagus	22	0.0057		
+SRR11788074	rhizopus_arrhizus	ragi-tempeh	PRJNA628809	SINGLE	16761485	done	none			0.11	1.37	13.08	0.0076	0.1628	trace_Plus,trace_Minus	1574	402	18	180		Plus Minus	ok	Rhizopus	Fusarium	17	0.0045		
+SRR11788111	rhizopus_arrhizus	flower	PRJNA628809	SINGLE	16775959	done	Minus			0.25	3.28	17.33	0.0265	0.5579	trace_Plus	2050	601	19	191		Plus Minus	ok	Rhizopus	Rhizophagus	16	0.004		
+SRR11788083	rhizopus_arrhizus	Allium	PRJNA628809	SINGLE	17042096	done	Minus			0.17	4.96	19.14	0.0165	0.6478	trace_Plus	2081	484	19	188		Plus Minus	ok	Rhizopus	Massospora	4	0.001		
+SRR11788091	rhizopus_arrhizus	Allium	PRJNA628809	SINGLE	17128439	done	Plus			4.22	0.00	15.47	0.5650	0.0000	-	2088	234	46	950		Plus Minus	ok	Rhizopus	Aspergillus	15	0.0038		
+SRR11788065	rhizopus_arrhizus	insect	PRJNA628809	SINGLE	17240801	done	Plus			6.17	0.00	15.01	0.8167	0.0000	-	1618	1492	40	1031		Plus Minus	ok	Rhizopus	Gigaspora	17	0.0044		
+SRR11788058	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	17250442	done	none			0.12	1.64	13.22	0.0118	0.1628	trace_Plus,trace_Minus	1598	409	19	180		Plus Minus	ok	Rhizopus	Rhizophagus	18	0.0047		
+SRR11788078	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	17347276	done	none			0.04	0.00	10.98	0.0019	0.0000	trace_Plus	1654	377	19	186		Plus Minus	ok	Rhizopus	Aspergillus	8	0.0033		
+SRR11788102	rhizopus_arrhizus	lesion	PRJNA628809	SINGLE	17460442	done	none			0.17	0.90	13.49	0.0137	0.1360	trace_Plus,trace_Minus	2130	399	19	181		Plus Minus	ok	Rhizopus	Gigaspora	8	0.0021		
+SRR11788077	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	17461925	done	none			2.71	0.00	13.67	0.1710	0.0000	trace_Plus	1628	305	18	181		Plus Minus	ok	Rhizopus	Rhizophagus	23	0.0058	yes	
+SRR11788099	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	17775444	done	Plus			4.15	0.00	23.53	0.5735	0.0000	-	2192	430	19	183		Plus Minus	ok	Rhizopus	Aspergillus	6	0.0016		
+SRR11788075	rhizopus_arrhizus	dung	PRJNA628809	SINGLE	17893786	done	none			1.40	0.00	13.77	0.1710	0.0000	trace_Plus	1667	98	18	182		Plus Minus	ok	Rhizopus	Rhizophagus	10	0.0027		
+SRR11788061	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	17909297	done	none			1.05	0.00	12.82	0.3373	0.0000	trace_Plus	1636	268	18	181		Plus Minus	ok	Rhizopus	Fusarium	41	0.0084		
+SRR11788070	rhizopus_arrhizus	dung	PRJNA628809	SINGLE	17919607	done	none			1.52	0.00	22.75	0.1715	0.0000	trace_Plus	1673	97	77	1633		Plus Minus	ok	Rhizopus	Aspergillus	20	0.0052		
+SRR11788104	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	18030530	done	none			0.10	0.87	11.69	0.0066	0.1628	trace_Plus,trace_Minus	2181	281	41	777		Plus Minus	ok	Rhizopus	Fusarium	17	0.0044		
+SRR11788054	rhizopus_arrhizus	corn flour	PRJNA628809	SINGLE	18277595	done	Minus			0.25	3.51	16.13	0.0260	0.5433	trace_Plus	2235	183	19	185		Plus Minus	ok	Rhizopus	Colletotrichum	3	0.0008		
+SRR11788064	rhizopus_arrhizus	onion	PRJNA628809	SINGLE	18312982	done	Plus			8.14	0.00	16.00	0.7931	0.0000	-	1698	297	19	182		Plus Minus	ok	Rhizopus	Fusarium	5	0.0013		
+SRR11788116	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	18393426	done	none			1.50	0.00	15.54	0.1856	0.0000	trace_Plus	2241	1613	48	974		Plus Minus	ok	Rhizopus	Fusarium	5	0.0013		
+SRR11788107	rhizopus_arrhizus	wrapping paper	PRJNA628809	SINGLE	18410882	done	none			1.72	0.00	14.18	0.1705	0.0000	trace_Plus	2245	248	19	196		Plus Minus	ok	Rhizopus	Fusarium	7	0.0019		
+SRR11788055	rhizopus_arrhizus	food	PRJNA628809	SINGLE	18819426	done	none			0.17	0.76	11.64	0.0142	0.1360	trace_Plus,trace_Minus	1788	389	18	182		Plus Minus	ok	Rhizopus	Xylaria	6	0.0016		
+SRR11788059	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	19131949	done	none			1.34	0.00	13.14	0.1233	0.0000	trace_Plus	1775	295	18	182		Plus Minus	ok	Rhizopus	Xylaria	5	0.0013		
+SRR11788084	rhizopus_arrhizus	ragi	PRJNA628809	SINGLE	19277080	done	none			0.10	1.00	11.81	0.0071	0.1652	trace_Plus,trace_Minus	2630	277	19	183		Plus Minus	ok	Rhizopus	Massospora	18	0.0046		
+SRR11788067	rhizopus_arrhizus	peanuts	PRJNA628809	SINGLE	19377313	done	none			1.71	0.00	13.78	0.1710	0.0000	trace_Plus	1802	246	19	190		Plus Minus	ok	Rhizopus	Fusarium	12	0.0033		
+SRR11788115	rhizopus_arrhizus	flour	PRJNA628809	SINGLE	19514581	done	Minus			0.40	4.49	16.32	0.0529	0.5182	trace_Plus	2390	334	19	197		Plus Minus	ok	Rhizopus	Penicillium	6	0.0015		
+SRR11788063	rhizopus_arrhizus	leaf	PRJNA628809	SINGLE	19970730	done	Plus			5.31	0.00	16.71	0.5720	0.0000	-	1848	184	19	194		Plus Minus	ok	Rhizopus	Mucor	6	0.0016		
+SRR11788060	rhizopus_arrhizus	soil	PRJNA628809	SINGLE	20419887	done	none			1.02	0.00	12.78	0.1242	0.0000	trace_Plus	1871	507	19	180		Plus Minus	ok	Rhizopus	Xylaria	4	0.0011		
+SRR11788093	rhizopus_arrhizus	ragi	PRJNA628809	SINGLE	21230536	done	Minus			0.31	3.66	22.07	0.0255	0.5433	trace_Plus	2019	222	18	182		Plus Minus	ok	Rhizopus	Fusarium	7	0.0018		
+SRR11788112	rhizopus_arrhizus	air	PRJNA628809	SINGLE	21396589	done	none			0.18	1.35	22.87	0.0066	0.1652	trace_Plus,trace_Minus	2953	739	19	187		Plus Minus	ok	Rhizopus	Rhizophagus	20	0.005		
+SRR8845260	rhizopus_microsporus	B11540	PRJNA526061	PAIRED	9943895	done	Plus			16.16	0.00	27.34	0.9857	0.0000	-	1238	60	49	2020		Plus Minus	ok	Rhizopus	Aspergillus	9	0.0037		
+ERR13388762	rhizopus_microsporus		PRJEB76713	PAIRED	35975588	done	none			0.60	0.00	9.83	0.0710	0.0000	trace_Plus	1817	518	26	755		Plus Minus	ok	Rhizopus	Rhizophagus	5	0.0021		
+ERR647674	rhizopus_microsporus		PRJEB7409	PAIRED	19754128	done	Minus			0.12	4.32	6.38	0.0409	0.7557	trace_Plus	2322	734	40	1026		Plus Minus	ok	Rhizopus	Fusarium	8	0.0024		
+SRR1008835	rhizopus_microsporus	B9738	PRJNA211903	PAIRED	14683109	done	Minus			0.55	2.16	20.06	0.2041	0.9008	trace_Plus	1919	1477	41	1389		Plus Minus	mixed	Rhizopus	Mucor	71	0.0132		
+SRR8845265	rhizopus_microsporus	B11549	PRJNA526061	PAIRED	9754577	done	Plus			15.99	0.00	29.51	0.9857	0.0000	-	1214	260	19	344		Plus Minus	ok	Rhizopus	Rhizophagus	8	0.0033		
+ERR13388798	rhizopus_microsporus		PRJEB76713	PAIRED	36480640	done	none			0.50	0.00	14.84	0.2330	0.0000	trace_Plus	1808	448	13	173		Plus Minus	ok	Rhizopus	Rhizophagus	15	0.0064		
+SRR8845268	rhizopus_microsporus	B11147	PRJNA526061	PAIRED	10345712	done	Plus			15.45	0.00	27.30	0.9857	0.0000	-	1286	399	19	347		Plus Minus	ok	Rhizopus	Fusarium	6	0.0025		
+ERR13388767	rhizopus_microsporus		PRJEB76713	PAIRED	36786150	done	none			0.09	0.75	12.28	0.0321	0.4678	trace_Plus,trace_Minus	1780	453	14	178		Plus Minus	ok	Rhizopus	Colletotrichum	12	0.0042		
+SRR8845257	rhizopus_microsporus	B11535	PRJNA526061	PAIRED	10422312	done	Plus			14.72	0.00	28.50	0.9857	0.0000	-	1308	241	19	352		Plus Minus	ok	Rhizopus	Aspergillus	7	0.0029		
+ERR13388803	rhizopus_microsporus		PRJEB76713	PAIRED	37083046	done	Minus			0.08	2.06	11.51	0.0409	0.8000	trace_Plus	1836	524	13	175		Plus Minus	ok	Rhizopus	Rhizophagus	13	0.0048		
+SRR8845272	rhizopus_microsporus	B11531	PRJNA526061	PAIRED	10473421	done	Plus			12.83	0.00	27.80	0.9857	0.0000	-	1303	415	20	355		Plus Minus	ok	Rhizopus	Penicillium	3	0.0012		
+ERR13388796	rhizopus_microsporus		PRJEB76713	PAIRED	37223976	done	Minus			0.16	4.50	15.47	0.0370	0.9730	trace_Plus	1842	581	13	177		Plus Minus	ok	Rhizopus	Colletotrichum	14	0.0046		
+SRR8845259	rhizopus_microsporus	B11539	PRJNA526061	PAIRED	10620306	done	Plus			17.26	0.00	28.39	0.9857	0.0000	-	1322	58	80	3824		Plus Minus	ok	Rhizopus	Fusarium	7	0.0029		
+ERR13388804	rhizopus_microsporus		PRJEB76713	PAIRED	37634086	done	none			0.40	0.00	15.21	0.2217	0.0000	trace_Plus	1890	638	26	769		Plus Minus	ok	Rhizopus	Rhizophagus	19	0.0092		
+SRR8845271	rhizopus_microsporus	B11532	PRJNA526061	PAIRED	10708021	done	Plus			16.48	0.00	27.70	0.9857	0.0000	-	1331	1118	39	1823		Plus Minus	ok	Rhizopus	Colletotrichum	3	0.0012		
+ERR13388812	rhizopus_microsporus		PRJEB76713	PAIRED	37929990	done	none			0.90	0.00	17.27	0.2947	0.0000	trace_Plus	1897	575	13	183		Plus Minus	ok	Rhizopus	Rhizophagus	21	0.0085		
+SRR8845250	rhizopus_microsporus	B07386	PRJNA526061	PAIRED	10849558	done	none			0.00	1.67	14.21	0.0000	0.1139	trace_Minus	1362	466	19	350		Plus Minus	ok	Rhizopus	Rhizophagus	25	0.0083		
+ERR13388797	rhizopus_microsporus		PRJEB76713	PAIRED	38347278	done	none			1.08	0.00	16.62	0.2843	0.0000	trace_Plus	1953	576	13	177		Plus Minus	ok	Rhizopus	Peltigera	19	0.008		
+SRR8845273	rhizopus_microsporus	B11534	PRJNA526061	PAIRED	11303128	done	Plus			14.94	0.00	28.22	0.9857	0.0000	-	1409	575	44	1674		Plus Minus	ok	Rhizopus	Aspergillus	6	0.0025		
+ERR13388794	rhizopus_microsporus		PRJEB76713	PAIRED	38555762	done	none			0.72	0.00	12.58	0.2454	0.0000	trace_Plus	1993	675	27	1160		Plus Minus	ok	Rhizopus	Rhizophagus	21	0.0106		
+SRR8845254	rhizopus_microsporus	B11543	PRJNA526061	PAIRED	11305424	done	Plus			16.79	0.00	26.36	0.9857	0.0000	-	1408	537	42	1678		Plus Minus	ok	Rhizopus	Fusarium	7	0.0029		
+ERR13388810	rhizopus_microsporus		PRJEB76713	PAIRED	38820564	done	none			0.48	0.00	21.01	0.2010	0.0000	trace_Plus	1921	828	26	1178		Plus Minus	mixed	Rhizopus	Gigaspora	44	0.0109	yes	
+SRR8845270	rhizopus_microsporus	B11526	PRJNA526061	PAIRED	11317137	done	Plus			14.01	0.00	26.46	0.9857	0.0000	-	1406	302	20	384		Plus Minus	ok	Rhizopus	Fusarium	6	0.0025		
+ERR13388813	rhizopus_microsporus		PRJEB76713	PAIRED	38976718	done	Minus			0.20	3.07	16.04	0.0360	0.8417	trace_Plus	1919	429	13	185		Plus Minus	ok	Rhizopus	Fusarium	16	0.0055		
+SRR8845269	rhizopus_microsporus	B11529	PRJNA526061	PAIRED	11406618	done	Plus			13.93	0.00	25.56	0.9857	0.0000	-	1429	173	19	363		Plus Minus	ok	Rhizopus	Aspergillus	4	0.0017		
+ERR13388809	rhizopus_microsporus		PRJEB76713	PAIRED	39812818	done	none			0.64	0.00	18.95	0.2420	0.0000	trace_Plus	1970	539	13	189		Plus Minus	ok	Rhizopus	Fusarium	19	0.0079		
+SRR8845261	rhizopus_microsporus	B11553	PRJNA526061	PAIRED	11474979	done	Plus			17.12	0.00	28.27	0.9857	0.0000	-	1423	335	20	368		Plus Minus	ok	Rhizopus	Aspergillus	23	0.0083	yes	
+ERR13388799	rhizopus_microsporus		PRJEB76713	PAIRED	40752094	done	none			0.18	1.53	16.04	0.0454	0.7009	trace_Plus,trace_Minus	1993	409	13	184		Plus Minus	ok	Rhizopus	Rhizophagus	18	0.0061		
+SRR8845243	rhizopus_microsporus	B07367	PRJNA526061	PAIRED	11492835	done	Plus			15.60	0.00	25.95	0.9857	0.0000	-	1424	330	19	369		Plus Minus	ok	Rhizopus	Aspergillus	5	0.0021		
+ERR13388817	rhizopus_microsporus		PRJEB76713	PAIRED	40894920	done	none			0.45	0.00	22.00	0.1959	0.0000	trace_Plus	1994	588	14	191		Plus Minus	ok	Rhizopus	Rhizophagus	16	0.0054		
+SRR8845251	rhizopus_microsporus	B10187	PRJNA526061	PAIRED	11614261	done	Plus			15.82	0.00	27.55	0.9857	0.0000	-	1431	423	20	377		Plus Minus	ok	Rhizopus	Colletotrichum	7	0.0029		
+ERR13388814	rhizopus_microsporus		PRJEB76713	PAIRED	44398288	done	none			0.88	0.00	18.88	0.2668	0.0000	trace_Plus	2177	499	14	191		Plus Minus	ok	Rhizopus	Rhizophagus	13	0.0043		
+SRR8845249	rhizopus_microsporus	B07585	PRJNA526061	PAIRED	11766345	done	none			0.12	1.92	12.08	0.1193	0.0991	trace_Plus,trace_Minus	1449	381	19	371		Plus Minus	ok	Rhizopus	Colletotrichum	23	0.008		
+ERR13388795	rhizopus_microsporus		PRJEB76713	PAIRED	57794948	done	Minus			0.16	3.31	14.95	0.0493	0.9217	trace_Plus	2839	720	14	179		Plus Minus	ok	Rhizopus	Rhizophagus	15	0.0051		
+SRR8845245	rhizopus_microsporus	B06590	PRJNA526061	PAIRED	11959223	done	Minus			0.00	7.29	21.47	0.0000	0.9200	-	1487	380	19	358		Plus Minus	ok	Rhizopus	Aspergillus	7	0.0019		
+SRR8845244	rhizopus_microsporus	B06600	PRJNA526061	PAIRED	12078554	done	Minus			0.69	6.90	21.22	0.1287	0.9200	trace_Plus	1485	359	19	360		Plus Minus	borderline	Rhizopus	Gigaspora	28	0.0067	yes	
+SRR8845267	rhizopus_microsporus	B11523	PRJNA526061	PAIRED	3895014	done	Plus			30.51	0.00	42.84	0.9857	0.0000	-	1450	420	23	770		Plus Minus	ok	Rhizopus	Aspergillus	31	0.0095		
+SRR8845279	rhizopus_microsporus	B11555	PRJNA526061	PAIRED	3867074	done	Plus			27.12	0.00	45.31	0.9857	0.0000	-	1432	498	23	766		Plus Minus	ok	Rhizopus	Fusarium	34	0.0102		
+SRR8845252	rhizopus_microsporus	B08956	PRJNA526061	PAIRED	12462415	done	none			0.00	1.20	13.35	0.0000	0.1226	trace_Minus	1547	379	19	354		Plus Minus	ok	Rhizopus	Aspergillus	8	0.0028		
+SRR8845275	rhizopus_microsporus	B11552	PRJNA526061	PAIRED	12520656	done	Plus			14.42	0.00	29.10	0.9857	0.0000	-	1556	489	20	374		Plus Minus	ok	Rhizopus	Aspergillus	6	0.0025		
+SRR8845278	rhizopus_microsporus	B11556	PRJNA526061	PAIRED	12522185	done	Plus			15.58	0.00	27.80	0.9857	0.0000	-	1549	410	19	372		Plus Minus	ok	Rhizopus	Aspergillus	4	0.0017		
+SRR8845264	rhizopus_microsporus	B10881	PRJNA526061	PAIRED	13029506	done	Plus			14.64	0.00	27.35	0.9704	0.0000	-	1600	543	20	364		Plus Minus	ok	Rhizopus	Aspergillus	6	0.0025		
+SRR8845263	rhizopus_microsporus	B11554	PRJNA526061	PAIRED	13132782	done	Plus			7.15	0.81	25.05	0.9857	0.0861	trace_Minus	1615	377	19	361		Plus Minus	ok	Rhizopus	Aspergillus	7	0.0019		
+SRR8845246	rhizopus_microsporus	B05459	PRJNA526061	PAIRED	13442453	done	Plus			13.91	0.00	25.98	0.9857	0.0000	-	1640	356	20	358		Plus Minus	ok	Rhizopus	Penicillium	6	0.0025		
+SRR8845255	rhizopus_microsporus	B11546	PRJNA526061	PAIRED	13445805	done	Plus			15.91	0.00	29.62	0.9857	0.0000	-	1661	339	20	380		Plus Minus	ok	Rhizopus	Aspergillus	4	0.0017		
+SRR8845247	rhizopus_microsporus	B07675	PRJNA526061	PAIRED	13515305	done	Plus			17.63	0.00	26.40	0.9857	0.0000	-	1644	337	20	358		Plus Minus	ok	Rhizopus	Fusarium	5	0.0021		
+SRR8845277	rhizopus_microsporus	B11557	PRJNA526061	PAIRED	14152546	done	Plus			7.80	1.07	23.81	0.9615	0.1104	trace_Minus	1750	293	20	361		Plus Minus	ok	Rhizopus	Penicillium	5	0.0014		

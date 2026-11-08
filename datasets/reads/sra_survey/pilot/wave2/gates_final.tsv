@@ -1,17 +1,17 @@
 slug	species	decision	reasons
-candidozyma_auris	Candidozyma auris	PASS	runs=300 done=300 typed=292 both=0 none/low=8 truth_typed=25 agree=24 median_shared_depth=23.9
-zymoseptoria_tritici	Zymoseptoria tritici	PASS	runs=300 done=299 typed=296 both=1 none/low=2 truth_typed=11 agree=11 median_shared_depth=4.6
-candida_albicans	Candida albicans	UNVALIDATED:zygosity+agree_4of7	runs=300 done=298 typed=262 both=0 none/low=36 truth_typed=7 agree=4 median_shared_depth=14.5 mode=zygosity
-neurospora_crassa	Neurospora crassa	PROVISIONAL	runs=300 done=300 typed=289 both=3 none/low=8 truth_typed=2 agree=2 median_shared_depth=4.3
+candidozyma_auris	Candidozyma auris	PASS	runs=700 done=700 typed=669 both=1 none/low=30 truth_typed=25 agree=24 median_shared_depth=24.3
+zymoseptoria_tritici	Zymoseptoria tritici	PASS	runs=700 done=699 typed=690 both=3 none/low=6 truth_typed=11 agree=11 median_shared_depth=5.2
+candida_albicans	Candida albicans	UNVALIDATED:zygosity+agree_4of7	runs=700 done=695 typed=609 both=0 none/low=86 truth_typed=7 agree=4 median_shared_depth=15.8 mode=zygosity
+neurospora_crassa	Neurospora crassa	PROVISIONAL	runs=700 done=696 typed=676 both=6 none/low=14 truth_typed=2 agree=2 median_shared_depth=4.0
 candida_tropicalis	Candida tropicalis	PROVISIONAL_HOMOTHALLIC	runs=50 done=50 typed=4 both=46 none/low=0 truth_typed=1 agree=1 median_shared_depth=15.5
-lodderomyces_parapsilosis	Lodderomyces parapsilosis	PASS	runs=300 done=300 typed=297 both=0 none/low=3 truth_typed=15 agree=15 median_shared_depth=30.6
-aspergillus_flavus	Aspergillus flavus	PASS	runs=284 done=284 typed=273 both=10 none/low=1 truth_typed=24 agree=24 median_shared_depth=8.6
+lodderomyces_parapsilosis	Lodderomyces parapsilosis	PASS	runs=700 done=700 typed=697 both=0 none/low=3 truth_typed=15 agree=15 median_shared_depth=30.9
+aspergillus_flavus	Aspergillus flavus	PASS	runs=684 done=684 typed=660 both=21 none/low=3 truth_typed=24 agree=24 median_shared_depth=9.5
 schizosaccharomyces_pombe	Schizosaccharomyces pombe	HOLD:panel_L1_error	held:panel_L1_error
 saccharomyces_eubayanus	Saccharomyces eubayanus	UNVALIDATED:released_cassettes+typed_0.01+provisional_typed_0.01+shared_depth_1.7	runs=301 done=301 typed=2 both=0 none/low=299 truth_typed=0 agree=0 median_shared_depth=1.7
-fusarium_graminearum	Fusarium graminearum	PROVISIONAL	runs=300 done=299 typed=291 both=2 none/low=6 truth_typed=3 agree=3 median_shared_depth=4.4
-yarrowia_lipolytica	Yarrowia lipolytica	PASS	runs=300 done=299 typed=296 both=2 none/low=1 truth_typed=9 agree=9 median_shared_depth=9.6
+fusarium_graminearum	Fusarium graminearum	PROVISIONAL	runs=359 done=358 typed=350 both=2 none/low=6 truth_typed=3 agree=3 median_shared_depth=4.5
+yarrowia_lipolytica	Yarrowia lipolytica	PASS	runs=384 done=383 typed=379 both=3 none/low=1 truth_typed=9 agree=9 median_shared_depth=10.4
 saccharomyces_paradoxus	Saccharomyces paradoxus	UNVALIDATED:released_cassettes+typed_0.00+provisional_typed_0.00+shared_depth_1.5	runs=300 done=299 typed=0 both=0 none/low=299 truth_typed=0 agree=0 median_shared_depth=1.5
-botrytis_cinerea	Botrytis cinerea	PASS	runs=333 done=333 typed=308 both=24 none/low=1 truth_typed=46 agree=45 median_shared_depth=9.4
+botrytis_cinerea	Botrytis cinerea	PASS	runs=338 done=338 typed=308 both=26 none/low=4 truth_typed=46 agree=45 median_shared_depth=9.4
 verticillium_dahliae	Verticillium dahliae	PASS	runs=253 done=253 typed=253 both=0 none/low=0 truth_typed=9 agree=9 median_shared_depth=9.2
 sclerotinia_sclerotiorum	Sclerotinia sclerotiorum	HOLD:panel_L1_error	held:panel_L1_error
 lachancea_thermotolerans	Lachancea thermotolerans	HOLD:panel_build_failed	held:panel_build_failed

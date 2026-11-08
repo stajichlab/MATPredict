@@ -1,6 +1,6 @@
 slug	species	decision	reasons
-cryptococcus_neoformans	Cryptococcus neoformans	UNVALIDATED:typed_0.70	runs=60 done=60 typed=42 both=2 none/low=16 truth_typed=13 agree=13 median_shared_depth=17.4
-cryptococcus_deneoformans	Cryptococcus deneoformans	UNVALIDATED:provisional_typed_0.85	runs=60 done=59 typed=50 both=1 none/low=8 truth_typed=0 agree=0 median_shared_depth=19.0
-cryptococcus_tetragattii	Cryptococcus tetragattii	UNVALIDATED:typed_0.55+provisional_typed_0.55	runs=22 done=22 typed=12 both=0 none/low=10 truth_typed=0 agree=0 median_shared_depth=12.2
-rhodotorula_toruloides	Rhodotorula toruloides	PASS	runs=58 done=58 typed=58 both=0 none/low=0 truth_typed=12 agree=12 median_shared_depth=18.9
-rhodotorula_mucilaginosa	Rhodotorula mucilaginosa	PASS	runs=36 done=36 typed=27 both=1 none/low=8 truth_typed=11 agree=11 median_shared_depth=18.9
+cryptococcus_neoformans	Cryptococcus neoformans	PASS	runs=700 done=697 typed=558 both=32 none/low=107 truth_typed=13 agree=13 median_shared_depth=18.4
+cryptococcus_deneoformans	Cryptococcus deneoformans	PROVISIONAL	runs=512 done=510 typed=500 both=2 none/low=8 truth_typed=0 agree=0 median_shared_depth=22.7
+cryptococcus_tetragattii	Cryptococcus tetragattii	UNVALIDATED:provisional_typed_0.80	runs=148 done=148 typed=118 both=0 none/low=30 truth_typed=0 agree=0 median_shared_depth=19.3
+rhodotorula_toruloides	Rhodotorula toruloides	PASS	runs=181 done=181 typed=180 both=0 none/low=1 truth_typed=12 agree=12 median_shared_depth=18.8
+rhodotorula_mucilaginosa	Rhodotorula mucilaginosa	UNVALIDATED:typed_0.72	runs=163 done=163 typed=118 both=3 none/low=42 truth_typed=11 agree=11 median_shared_depth=18.8

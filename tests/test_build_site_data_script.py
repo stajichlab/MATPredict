@@ -362,3 +362,16 @@ def test_label_status_and_registry_version_reach_the_site_data(tmp_path):
         assert {r["registry_version"] for r in G.values()} == {version}
         assert {r["label_status"] for r in G.values()} <= set(j["status_order"]) | {""}
     assert _genomes(out / "genomes_bfd_asco.tsv")["A2"]["label_status"] == ""         # an uncalled genome has no loci
+
+
+def test_curated_reads_tables_fola_afum(tmp_path):
+    """#172: reads_fola.* and reads_afum.* come straight from the committed tables."""
+    bsd.fola_reads(str(tmp_path))
+    bsd.afum_reads(str(tmp_path))
+    f = json.loads((tmp_path / "reads_fola.json").read_text())
+    assert f["strains"] == 148 and f["agree"] == 147 and f["mixes"]["n"] == 34
+    assert f["mixes"]["both_at_10pct_MAT1-2"] == f["mixes"]["pairs_at_10pct_MAT1-2"] == 3
+    a = json.loads((tmp_path / "reads_afum.json").read_text())
+    assert a["read_sets"] == 332 and a["with_reads"] == 331
+    assert len((tmp_path / "reads_fola.tsv").read_text().splitlines()) == 149
+    assert len((tmp_path / "reads_afum.tsv").read_text().splitlines()) == 333

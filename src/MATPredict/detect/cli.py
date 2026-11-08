@@ -10,7 +10,7 @@ from MATPredict import logger
 from MATPredict.config import MatpredictConfig
 from MATPredict.detect.benchmark import run_benchmark
 from MATPredict.detect import confidence_cap as _confidence_cap, family_status as _family_status, strong_single_gene as _strong_single_gene
-from MATPredict.detect import fallback_search as _fallback_search, margin_basis as _margin_basis, single_region_cap as _single_region_cap, thin_vote as _thin_vote, weak_flank_cap as _weak_flank_cap, weak_fragment_cap as _weak_fragment_cap
+from MATPredict.detect import fallback_search as _fallback_search, margin_basis as _margin_basis, scope_label as _scope_label, single_region_cap as _single_region_cap, thin_vote as _thin_vote, weak_flank_cap as _weak_flank_cap, weak_fragment_cap as _weak_fragment_cap
 from MATPredict.detect.family_status import CROSS_FAMILY_POLICIES, DEFAULT_CROSS_FAMILY_POLICY
 from MATPredict.detect.fallback_search import DEFAULT_FALLBACK_AFTER_WITHHELD_POLICY, FALLBACK_AFTER_WITHHELD_POLICIES
 from MATPredict.detect.confidence_cap import CONFIDENCE_CAP_POLICIES, DEFAULT_CONFIDENCE_CAP_POLICY
@@ -269,6 +269,7 @@ def _cmd_detect(args: argparse.Namespace) -> int:
         cross_family_policy=_cross_family_policy_from_args(args),
         strong_single_gene_policy=_strong_single_gene_policy_from_args(args),
         weak_fragment_cap_policy=_weak_fragment_cap_policy_from_args(args),
+        out_of_scope_label_policy=_out_of_scope_label_policy_from_args(args),
         short_fragment_vote_policy=_short_fragment_vote_policy_from_args(args),
         weak_flank_cap_policy=_weak_flank_cap_policy_from_args(args),
         single_region_cap_policy=_single_region_cap_policy_from_args(args),
@@ -426,6 +427,7 @@ def _run_doc(args, config, routing, clock: RunClock) -> dict:
             "cross_family_policy": _cross_family_policy_from_args(args),
             "fallback_after_withheld_policy": _fallback_policy_from_args(args),
             "weak_fragment_cap_policy": _weak_fragment_cap_policy_from_args(args),
+            "out_of_scope_label_policy": _out_of_scope_label_policy_from_args(args),
             "short_fragment_vote_policy": _short_fragment_vote_policy_from_args(args),
             "weak_flank_cap_policy": _weak_flank_cap_policy_from_args(args),
             "single_region_cap_policy": _single_region_cap_policy_from_args(args),
@@ -474,6 +476,9 @@ def _single_region_cap_policy_from_args(args) -> str:
     return getattr(args, "single_region_cap_policy", _single_region_cap.DEFAULT_SINGLE_REGION_CAP_POLICY)
 
 
+def _out_of_scope_label_policy_from_args(args) -> str:
+    """The out-of-scope-label policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
+    return getattr(args, "out_of_scope_label_policy", _scope_label.DEFAULT_OUT_OF_SCOPE_LABEL_POLICY)
 def _short_fragment_vote_policy_from_args(args) -> str:
     """The short-fragment-vote policy for this run; an args object without the attribute (a test double) gets the default, `off`."""
     return getattr(args, "short_fragment_vote_policy", _thin_vote.DEFAULT_SHORT_FRAGMENT_VOTE_POLICY)
@@ -855,6 +860,13 @@ def register_subcommands(subparsers: argparse._SubParsersAction) -> None:
         help="off: no cap (default). on: an Ascomycota:MAT call whose strongest core gene (MAT1-*) is not a model on which both polish "
              "tools agree and scores under 50 bits is capped at tier `low`; the idiomorph, the locus and the class are never changed "
              "(#275). The report's `weak_fragment_cap` says which gene decided.",
+    )
+    detect.add_argument(
+        "--scope-label-policy", action=_PolicyFlag, choices=_scope_label.OUT_OF_SCOPE_LABEL_POLICIES,
+        dest="out_of_scope_label_policy", default=_scope_label.DEFAULT_OUT_OF_SCOPE_LABEL_POLICY,
+        help="off: no label (default). on: a Basidiomycota:MAT call in a genome outside the family's taxonomic scope whose genes are only "
+             "STE3, PAN6 and RPL39 is marked `family_unconfirmed` (reason `mat_outside_scope_weak_genes_only`) in `family_status`; the "
+             "call, idiomorph and tier are never changed (#170). An unknown lineage is never flagged.",
     )
     detect.add_argument(
         "--short-fragment-vote-policy", action=_PolicyFlag, choices=_thin_vote.SHORT_FRAGMENT_VOTE_POLICIES,

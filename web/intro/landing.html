@@ -90,6 +90,24 @@
   <p>Results, with a report for each dataset, are on the <a href="reads/">Raw reads page</a>: the curated collections (<a href="reads/species.html?s=fola">Fola</a>, <a href="reads/species.html?s=afum"><i>Aspergillus fumigatus</i></a>, <a href="reads/species.html?s=cocci"><i>Coccidioides</i></a>) and 112 species typed from public runs. Planned: <i>Verticillium</i> beyond the public-run sample, <i>Cryptococcus</i> (a large rearranged locus needs its own panel design).</p>
   <p class="muted">Caveats: the cut-offs (50% breadth fraction, 100-base unique-run filter) were set after seeing the Fola and <i>A. fumigatus</i> results, so those numbers are consistency checks, not independent tests. A reference that differs from the strain at about one base in 40 gives <code>none</code>. Details: <a href="https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-10-06_fola-reads-type.md">Fola</a>, <a href="https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-10-07_afum-reads-and-assembly.md"><i>A. fumigatus</i></a>.</p>
 
+  <h3 id="reads-curated">Curated collections: Fola and <i>A. fumigatus</i></h3>
+  <p class="muted">These results describe the <span id="reads-code">v0.7.0</span> code (<code>src/MATPredict/reads/</code> has not changed since 2026-10-07). The charts and tables below are written by <code>scripts/build_site_data.py</code> from committed tables; every number is a count from them.</p>
+
+  <h4><i>Fusarium oxysporum</i> f. sp. <i>lactucae</i> (Fola)</h4>
+  <p id="fola-lead"></p>
+  <div class="chart" id="ch-fola"></div><div class="legend" id="lg-fola"></div>
+  <p class="muted">Rows are the truth (the samtools breadth call from the same reads); bars are the k-mer call. Table: <a href="data/reads_fola.tsv">reads_fola.tsv</a> (148 strains: truth, k-mer call, breadths, depths, flags).</p>
+  <h5>Simulated mixed samples</h5>
+  <div class="chart" id="ch-fola-mix"></div><div class="legend" id="lg-fola-mix"></div>
+  <p class="muted" id="fola-mix-note"></p>
+  <ul class="notes" id="fola-notes"></ul>
+
+  <h4><i>Aspergillus fumigatus</i></h4>
+  <p id="afum-lead"></p>
+  <div class="chart" id="ch-afum"></div><div class="legend" id="lg-afum"></div>
+  <p class="muted">Rows are the assembly-BLAST truth (<code>ambiguous</code>: a partial hit; <code>no_genome</code>: a read set without an assembly; ambiguous and no_genome are left out of agreement counts); bars are the reads call. Table: <a href="data/reads_afum.tsv">reads_afum.tsv</a> (every read set: truth, <code>detect</code> call and confidence, reads call, depths, flags).</p>
+  <ul class="notes" id="afum-notes"></ul>
+
   <h3>From reads to a full locus: map, assemble, extend, process</h3>
   <p>K-mer typing says which idiomorph is present. To recover the locus itself from reads, the same panel seeds an assembly (tested on eight <i>A. fumigatus</i> strains; the steps are scripts, not yet a subcommand):</p>
   <ol class="steps">
@@ -151,6 +169,41 @@ function byRank(ds, rank, minN) {
 }
 hbar(document.getElementById("ch-asco"), byRank("Ascomycota", "class", 50), { max: 1 });
 hbar(document.getElementById("ch-basidio"), byRank("Basidiomycota", "order", 50), { max: 1 });
+
+// Curated read collections (#172): data/reads_fola.json and data/reads_afum.json, written by scripts/build_site_data.py
+try {
+  const [F, A] = await Promise.all(["reads_fola", "reads_afum"].map(n => fetch(`data/${n}.json`).then(r => r.json())));
+  const callCats = ["MAT1-1", "MAT1-2", "both", "low_depth", "no_reads"];
+  document.getElementById("reads-code").textContent = F.code;
+  const li = (el, arr) => { document.getElementById(el).innerHTML = arr.map(t => `<li>${t}</li>`).join(""); };
+  const names = a => a.map(x => `<code>${x.strain}</code>`).join(", ");
+
+  const tb = F.truth_by_call, tr = k => Object.values(tb[k] || {}).reduce((a, b) => a + b, 0);
+  document.getElementById("fola-lead").innerHTML = `K-mer call against the samtools truth: ${F.agree} of ${F.strains} strains agree (${pct(F.agree, F.strains)}); MAT1-2 ${tb["MAT1-2"]["MAT1-2"]} of ${tr("MAT1-2")}, MAT1-1 ${tb["MAT1-1"]["MAT1-1"]} of ${tr("MAT1-1")}, both ${tb.both.both} of ${tr("both")}.`;
+  stacked(document.getElementById("ch-fola"), ["MAT1-2", "MAT1-1", "both", "none"].filter(k => tb[k]).map(k => ({ label: `truth ${k}`, parts: tb[k] })), callCats);
+  legend(document.getElementById("lg-fola"), callCats.slice(0, 4));
+  const bp = F.mixes["by_pct_MAT1-2"];
+  stacked(document.getElementById("ch-fola-mix"), Object.keys(bp).map(p => ({ label: `${p}% MAT1-2 reads`, parts: bp[p] })), callCats.slice(0, 3));
+  legend(document.getElementById("lg-fola-mix"), callCats.slice(0, 3));
+  document.getElementById("fola-mix-note").innerHTML = `${F.mixes.n} mixtures from ${F.mixes.pairs.length} strain pairs (one MAT1-1 and one MAT1-2 strain each), ${fmt(+F.mixes.reads_used[0])} reads each; the number at the right of a bar is the pairs run at that share. Table: <a href="data/reads_fola_mixes.tsv">reads_fola_mixes.tsv</a>.`;
+  li("fola-notes", [
+    `The disagreement: ${names(F.disagree)} (truth ${F.disagree[0].truth}) is called <code>${F.disagree[0].call}</code>; the shared-flank control depth is ${F.disagree[0].shared_depth}, so neither method has a signal.`,
+    `Only ${names(F.both)} tests the <code>both</code> outcome (depths ${F.both[0]["MAT1-1_depth"]} and ${F.both[0]["MAT1-2_depth"]}); <code>none</code> is not tested on real data (the one truth <code>none</code> strain came out <code>low_depth</code>).`,
+    `Mixtures: with 10% MAT1-2 reads, both idiomorphs are called in ${F.mixes["both_at_10pct_MAT1-2"]} of ${F.mixes["pairs_at_10pct_MAT1-2"]} pairs. The reverse (90% MAT1-2, a 10% MAT1-1 minor) gave <code>both</code> in ${F.mixes["both_at_90pct_MAT1-2"]} of ${F.mixes["pairs_at_90pct_MAT1-2"]} pairs run; the call is asymmetric. At 2% or less the call is the major idiomorph, with a trace flag.`,
+    `Not independent: the cut-offs were set after seeing these strains, and the truth comes from the same reads. Notes: <a href="https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-10-06_fola-reads-type.md">analysis/2026-10-06_fola-reads-type.md</a> (status open).`]);
+
+  const tbA = A.truth_by_reads, order = ["MAT1-1", "MAT1-2", "both", "ambiguous", "none", "no_genome"].filter(k => tbA[k]);
+  const noReads = Object.values(tbA).reduce((a, d) => a + (d.no_reads || 0), 0);
+  const sums = k => Object.values(tbA[k] || {}).reduce((a, b) => a + b, 0);
+  document.getElementById("afum-lead").innerHTML = `${A.with_reads} read sets typed (${A.read_sets} listed; ${noReads} has no reads). Of the ${A.single_truth} read sets whose assembly holds one idiomorph, ${A.reads_agree_single_truth} give the same reads call (${A.single_truth - noReads} have reads); <code>detect</code> on the assembly agrees in ${A.detect_agree_single_truth} of ${A.detect_single_truth}.`;
+  stacked(document.getElementById("ch-afum"), order.map(k => ({ label: `truth ${k}`, parts: tbA[k] })), callCats);
+  legend(document.getElementById("lg-afum"), callCats);
+  li("afum-notes", [
+    `Not agreeing with a single-idiomorph truth: ${A.reads_not_agreeing.map(x => `<code>${x.strain}</code> (truth ${x.truth}, reads ${x.reads})`).join("; ")}.`,
+    `Read sets whose assembly holds both idiomorphs: ${sums("both")}, of which ${tbA.both.both} give <code>both</code> from reads and ${tbA.both["MAT1-1"]} gives <code>MAT1-1</code>. The ${sums("no_genome")} read sets without an assembly (${tbA.no_genome.both} <code>both</code>) have no truth here.`,
+    `Layout: ${A.layout.paired} paired and ${A.layout.single} single-end read sets. The flag <code>idiomorph_depth_ratio_below_0.25</code> marks ${A.flags["idiomorph_depth_ratio_below_0.25"]} read sets.`,
+    `Not independent: the cut-offs (50% breadth fraction, 100-base unique-run filter) were set after seeing these data. Notes: <a href="https://github.com/stajichlab/MATPredict/blob/main/analysis/2026-10-07_afum-reads-and-assembly.md">analysis/2026-10-07_afum-reads-and-assembly.md</a> (status open).`]);
+} catch (e) { console.error("curated reads section:", e); }
 </script>
 </body>
 </html>

@@ -14,7 +14,7 @@ clone ids and applies its plateau rule; this script only records what the reads 
 
 PILOT_DIR: the committed wave folders (wave*/results_all_final.tsv give run -> species group). DIR: folders holding <run>.sig.zip
 (searched in the order given; the first copy of a run wins). Writes per group OUT_DIR/<slug>.clones.tsv (one row per sketched run) and
-OUT_DIR/summary.tsv (one row per group, with a same-strain check: pairs of runs whose strain names match, their median ANI and how
+OUT_DIR/same_strain_pairs.tsv (slug, strain, run_a, run_b, ani of every same-strain pair) and OUT_DIR/summary.tsv (one row per group, with a same-strain check: pairs of runs whose strain names match, their median ANI and how
 many reach 0.9995 and 0.999). Columns of <slug>.clones.tsv:
   run, hashes, solid_hashes, median_abund (k-mer abundance: a coverage proxy for the subsample), nearest_run, nearest_ani,
   clone_<t> for each threshold t (c1 = the largest group), min_ani_<t> (least similar pair inside that run's group; blank for a singleton).
@@ -25,16 +25,18 @@ from multiprocessing import Pool
 
 import numpy as np
 
-K, SCALED, SOLID = 21, 1000, 0.25
+K, SCALED, SOLID, MIN_ABUND = 21, 1000, 0.25, 2
 MAXH = 2 ** 64
 THRESHOLDS = (0.9999, 0.9995, 0.999, 0.998)
 LOW_COVERAGE = 8          # median k-mer abundance below this: too few solid hashes to separate clones (sketch_query.py qc flag)
 
 
-def downsample(d, scaled=SCALED):
-    """{hash: abundance} kept to hashes below 2^64/scaled (FracMinHash downsampling)."""
+def downsample(d, scaled=SCALED, min_abund=MIN_ABUND):
+    """{hash: abundance} kept to hashes below 2^64/scaled (FracMinHash downsampling) and seen at least min_abund times. The worker's sketches keep
+    k-mers seen once (mostly sequencing errors, often more numerous than the genome's k-mers, so they pull the median abundance to 1-5); the sketch
+    store drops them when it sketches (sketch_one.sh), and the solid threshold and the coverage proxy were validated that way."""
     lim = MAXH // scaled
-    return {h: v for h, v in d.items() if h < lim}
+    return {h: v for h, v in d.items() if h < lim and v >= min_abund}
 
 
 def solid(d):
@@ -140,6 +142,15 @@ def same_strain(M, runs, strains):
     return [float(M[i, j]) for m in by.values() for x, i in enumerate(m) for j in m[x + 1:]]
 
 
+def same_strain_rows(M, runs, strains):
+    """(strain, run_a, run_b, ani) for every same-strain pair (the detail behind same_strain), for OUT_DIR/same_strain_pairs.tsv."""
+    by = defaultdict(list)
+    for i, r in enumerate(runs):
+        k = strain_key(strains.get(r, ""))
+        if k: by[k].append(i)
+    return [(strains[runs[m[0]]], runs[i], runs[j], float(M[i, j])) for m in by.values() for x, i in enumerate(m) for j in m[x + 1:]]
+
+
 def write_group(slug, runs, sketches, out, strains=None):
     M = ani_matrix(sketches)
     labs = clusters(M)
@@ -160,6 +171,9 @@ def write_group(slug, runs, sketches, out, strains=None):
     between = M[iu] if n > 1 else np.array([])
     meds = [s[0] for s in stats]
     ss = same_strain(M, runs, strains or {})
+    if ss:
+        with open(os.path.join(out, "same_strain_pairs.tsv"), "a", newline="") as fh:
+            for st, ra, rb, v in same_strain_rows(M, runs, strains): fh.write(f"{slug}\t{st}\t{ra}\t{rb}\t{v:.6f}\n")
     return {"slug": slug, "runs": n,
             "same_strain_pairs": len(ss), "same_strain_median": f"{np.median(ss):.6f}" if ss else "",
             "same_strain_ge_0.9995": sum(v >= 0.9995 for v in ss), "same_strain_ge_0.999": sum(v >= 0.999 for v in ss),
@@ -188,6 +202,7 @@ def main():
             if "." not in r: where.setdefault(r, p)            # <run>.a.sig.zip halves are not runs
     groups = species_groups(a.pilot)
     rows = []
+    with open(os.path.join(a.out, "same_strain_pairs.tsv"), "w") as fh: fh.write("slug\tstrain\trun_a\trun_b\tani\n")
     for slug in sorted(groups):
         if a.only and slug not in a.only: continue
         have = [r for r in groups[slug] if r in where]

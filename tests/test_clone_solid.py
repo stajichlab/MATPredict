@@ -46,7 +46,7 @@ def test_solid_drops_low_abundance_hashes():
 
 def test_downsample_keeps_hashes_below_the_scaled_limit():
     lim = cs.MAXH // 1000
-    assert cs.downsample({lim - 1: 5, lim: 5, 3: 1}) == {lim - 1: 5, 3: 1}
+    assert cs.downsample({lim - 1: 5, lim: 5, 3: 2, 4: 1}) == {lim - 1: 5, 3: 2}      # and k-mers seen once are dropped, as in the sketch store
 
 
 def test_clusters_label_the_largest_group_c1_and_cut_at_each_threshold():

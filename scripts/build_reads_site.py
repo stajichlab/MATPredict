@@ -83,14 +83,19 @@ def clone_groups_solid(clones_file, rows):
     mins = {r["run"]: r.get(f"min_ani_{SOLID_ANI}", "") for r in t}
     min_ani = lambda c: round(float(mins[c[0]]), 5) if mins.get(c[0]) else None
     abund = sorted(float(r["median_abund"] or 0) for r in t); med = abund[len(abund) // 2]
-    return clone_summary(rows, runs, g1, n2, min_ani, SOLID_ANI, SOLID_ALT, "solid containment", median_abund=round(med, 1), low_coverage=med < LOW_COVERAGE)
+    sf = os.path.join(os.path.dirname(clones_file), "summary.tsv"); slug = os.path.basename(clones_file)[:-len(".clones.tsv")]
+    bm = next((r.get("between_median") for r in rd(sf) if r["slug"] == slug), "") if os.path.exists(sf) else ""
+    uniform = bool(bm) and float(bm) >= SOLID_ALT      # the species' runs are near-identical at sketch resolution: groups are "indistinguishable", not copies
+    return clone_summary(rows, runs, g1, n2, min_ani, SOLID_ANI, SOLID_ALT, "solid containment", median_abund=round(med, 1), low_coverage=med < LOW_COVERAGE,
+                         between_median=float(bm) if bm else None, uniform=uniform)
 
 
-def clone_summary(rows, runs, g1, n_alt, min_ani, thr, alt, metric, median_abund=None, low_coverage=False):
+def clone_summary(rows, runs, g1, n_alt, min_ani, thr, alt, metric, median_abund=None, low_coverage=False, between_median=None, uniform=False):
     """Sets row["clone"] to "c<N>" for runs in a group of two or more and row["cid"] to a clone id for every sketched run (the pages count clones from it), and
     returns the summary for the species report. Counts per clone are given only where the number of clones is stable between the two thresholds (a plateau:
-    within 10% of the runs), there are at least MIN_RUNS_FOR_COUNTS runs and coverage is not low; where not, similar runs may be close relatives and not
-    copies (or the reads cannot tell), and the report says so."""
+    within 10% of the runs), there are at least MIN_RUNS_FOR_COUNTS runs, coverage is not low and the species is not uniform (median ANI between its runs at
+    least SOLID_ALT: the sketch cannot separate its strains); where not, similar runs may be close relatives and not copies (or the reads cannot tell), and
+    the report says so."""
     by = {r["run"]: r for r in rows}; groups = []
     for i, c in enumerate(g1, 1):
         for x in c:
@@ -101,8 +106,8 @@ def clone_summary(rows, runs, g1, n_alt, min_ani, thr, alt, metric, median_abund
         groups.append({"id": f"c{i}", "size": len(c), "runs": sorted(c), "calls": dict(Counter(by[x]["call"] for x in c if x in by)), "min_ani": min_ani(c)})
     plateau = abs(len(g1) - n_alt) <= 0.10 * len(runs) and len(runs) >= MIN_RUNS_FOR_COUNTS
     out = {"threshold": thr, "linkage": "average", "metric": metric, "runs": len(runs), "clones": len(g1), "clones_at_alt": n_alt, "alt_threshold": alt,
-           "groups": groups, "plateau": plateau, "median_abund": median_abund, "low_coverage": low_coverage, "counts": None}
-    if plateau and not low_coverage:
+           "groups": groups, "plateau": plateau, "median_abund": median_abund, "low_coverage": low_coverage, "between_median": between_median, "uniform": uniform, "counts": None}
+    if plateau and not low_coverage and not uniform:
         cnt = Counter()
         for c in g1:
             calls = {by[x]["call"] for x in c if x in by and by[x]["call"] in ("MAT1-1", "MAT1-2", "both")}

@@ -183,3 +183,13 @@ def test_low_coverage_gives_groups_but_no_counts(tmp_path):
     solid_table(tmp_path, labels, labels, abund=5.0)
     cl = build(tmp_path, tmp_path.parent)["clones"]
     assert cl["low_coverage"] and cl["median_abund"] == 5.0 and cl["plateau"] and cl["counts"] is None
+
+
+def test_a_uniform_species_gives_groups_but_no_counts(tmp_path):
+    """Median ANI between runs >= 0.999 (summary.tsv of clone_solid.py): the sketch cannot separate the strains, so no counts per clone."""
+    make_repo(tmp_path, {}, ["MAT1-1"] * 12)
+    labels = [f"c{i}" for i in range(1, 13)]
+    solid_table(tmp_path, labels, labels)
+    tsv(tmp_path / "datasets/reads/sra_survey/pilot/clone_solid/summary.tsv", ["slug", "runs", "between_median"], [["sp_one", "12", "0.99990"], ["sp_two", "5", "0.99"]])
+    cl = build(tmp_path, tmp_path.parent)["clones"]
+    assert cl["uniform"] and cl["between_median"] == 0.9999 and cl["counts"] is None

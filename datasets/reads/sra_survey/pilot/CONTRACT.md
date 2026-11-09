@@ -48,3 +48,19 @@ Many species in one go: `submit-plan` (panels and run lists per species, panel g
 
 ## Study titles (`study_titles.py`, `study_titles.tsv`)
 `study_titles.py PILOT_DIR POPSEQ_RUN_TABLE OUT.tsv` writes one row per study accession found in the committed wave folders, with its title from the PopSeq kingdom run table (`study_accession`, `study_title`). The reads site links each study to `https://www.ncbi.nlm.nih.gov/bioproject/<accession>` and shows this title on hover. Regenerate it when the wave tables gain studies (2026-11-08: 3,912 studies, all with a title).
+
+## Causes (`causes.tsv`, `cause_evidence.py`, `cause_evidence.tsv`; curator ruling 2026-11-09, #195/#196)
+`causes.tsv` (curated: species, cause, build_cause, basis) says why presence typing cannot give a species' mating type. `wave_driver.py` loads it at import, and a cause overrides the numbers:
+- `homothallic_locus`: both MAT genes are in every genome, at one locus or at unlinked loci. Decision `NOT_TYPABLE:homothallic_locus`.
+- `silent_cassettes`: an expressed locus plus silent copies of both idiomorphs (HML/HMR, flip-flop, mat2/mat3). Decision `NOT_TYPABLE:silent_cassettes`.
+- `zygosity`: a heterozygous diploid. The species joins `ZYGOSITY`, so `both` counts as MTL a/alpha.
+- `cause_unchecked`: most runs read `both` for a reason not yet checked. Decision `HOLD:cause_unchecked`.
+
+A species with only a `build_cause` keeps its technical HOLD. The site shows NOT_TYPABLE as "not typable by presence", with the reason and the `basis`, and gives no allele counts. `submit-full` does not queue these species again.
+
+`wave_driver.py apply-causes` rewrites the committed `wave*/gates_final.tsv` and writes `cause_changes.tsv` beside each changed table. `cause_evidence.py` writes `cause_evidence.tsv`, the evidence the causes cite. For each species it gives:
+- the assembly genomes with one idiomorph, with both genes in one locus, or with both at separate loci (from the release `loci.tsv`);
+- the reads gate numbers;
+- for a failed build, the panel lineages, each with its idiomorph counts.
+
+Generated 2026-11-09 from release v0.8.1 and the wave plan folders on the HPCC.

@@ -48,7 +48,9 @@ Counts per clone are given only when all of these hold:
 
 1. **At least 10 sketched runs.**
 2. **The plateau holds**, as above.
-3. **Coverage is enough:** the species' median k-mer abundance is at least 8. Below that, a thin subsample cannot separate a copy from a close relative. 23 of 202 groups fall below.
+3. **Coverage is enough:** the species' median k-mer abundance is at least 8. Below that, a thin subsample cannot separate a copy from a close relative. On the site 21 of 202 groups fall below. `summary.tsv` counts 23, because the builder takes the upper middle value of an even number of runs.
+
+In the site build of 2026-11-08, 202 species have clone groups. 83 get counts per clone; 103 pass the plateau rule; 13 are withheld as uniform and 21 for low coverage.
 4. **The species is not uniform:** the median ANI between its runs is below 0.999.
 
 Rule 4 covers species whose strains differ by fewer variants than the sketch resolves, at roughly one in 10 kb or less. There, a group means "the sketch cannot tell these runs apart", not "these are copies". This applies to 13 groups:
@@ -78,4 +80,4 @@ sbatch -p short --qos short -c 16 --mem 96gb -t 2:00:00 --wrap \
    --pilot datasets/reads/sra_survey/pilot --out results/2026-11-08_clone_solid_v2 --threads 16 $A"
 ```
 
-This run was job 31874107, at commit cd5648d, and took about 25 minutes on 16 cores. It sketched 21,618 of the 22,138 typed runs across 202 groups. A run without a sketch is shown without a clone id.
+This run was job 31874107, at commit cd5648d, and took 17 minutes on 16 cores. It sketched 21,618 of the 22,138 typed runs across 202 groups. A run without a sketch is shown without a clone id.

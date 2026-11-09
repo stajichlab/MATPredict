@@ -1,13 +1,13 @@
 slug	species	decision	reads	genomes	genomes_with_mat	single	both_one_locus	both_separate	labels	plan_status	lineages
-aspergillus_latus	Aspergillus latus	NOT_TYPABLE:homothallic_locus	done 7, single 1, both 6	27	27	0	0	27	MAT1-1: 27, MAT1-2: 27	planned	L1 27 loci: 0 MAT1-1 / 27 MAT1-2; L2 27 loci: 27 MAT1-1 / 0 MAT1-2; L3 26 loci: 0 MAT1-1 / 26 MAT1-2; L4 26 loci: 26 MAT1-1 / 0 MAT1-2; L5 1 loci: 1 MAT1-1 / 0 MAT1-2; L6 1 loci: 0 MAT1-1 / 1 MAT1-2
-aspergillus_nidulans	Aspergillus nidulans	NOT_TYPABLE:homothallic_locus	done 50, single 0, both 50	19	19	0	0	19	MAT1-1: 19, MAT1-2: 19	planned	L1 18 loci: 0 MAT1-1 / 18 MAT1-2; L2 18 loci: 18 MAT1-1 / 0 MAT1-2; L3 1 loci: 0 MAT1-1 / 1 MAT1-2; L4 1 loci: 1 MAT1-1 / 0 MAT1-2
-aspergillus_spinulosporus	Aspergillus spinulosporus	NOT_TYPABLE:homothallic_locus	done 4, single 0, both 4	11	11	1	0	10	MAT1-1: 11, MAT1-2: 10	planned	L1 11 loci: 11 MAT1-1 / 0 MAT1-2; L2 10 loci: 0 MAT1-1 / 10 MAT1-2
+aspergillus_latus	Aspergillus latus	NOT_TYPABLE:homothallic	done 7, single 1, both 6	27	27	0	0	27	MAT1-1: 27, MAT1-2: 27	planned	L1 27 loci: 0 MAT1-1 / 27 MAT1-2; L2 27 loci: 27 MAT1-1 / 0 MAT1-2; L3 26 loci: 0 MAT1-1 / 26 MAT1-2; L4 26 loci: 26 MAT1-1 / 0 MAT1-2; L5 1 loci: 1 MAT1-1 / 0 MAT1-2; L6 1 loci: 0 MAT1-1 / 1 MAT1-2
+aspergillus_nidulans	Aspergillus nidulans	NOT_TYPABLE:homothallic	done 50, single 0, both 50	19	19	0	0	19	MAT1-1: 19, MAT1-2: 19	planned	L1 18 loci: 0 MAT1-1 / 18 MAT1-2; L2 18 loci: 18 MAT1-1 / 0 MAT1-2; L3 1 loci: 0 MAT1-1 / 1 MAT1-2; L4 1 loci: 1 MAT1-1 / 0 MAT1-2
+aspergillus_spinulosporus	Aspergillus spinulosporus	NOT_TYPABLE:homothallic	done 4, single 0, both 4	11	11	1	0	10	MAT1-1: 11, MAT1-2: 10	planned	L1 11 loci: 11 MAT1-1 / 0 MAT1-2; L2 10 loci: 0 MAT1-1 / 10 MAT1-2
 candida_albicans	Candida albicans	UNVALIDATED:zygosity+agree_4of7	done 695, single 609, both 0	134	129	51	1	77	alpha: 112, A: 94	planned	L1 98 loci: 97 a / 1 alpha; L2 30 loci: 0 a / 30 alpha; L3 1 loci: 0 a / 1 alpha
 candida_dubliniensis	Candida dubliniensis	HOLD:panel_build_failed		10	10	2	0	8	alpha: 10, A: 8	held:panel_build_failed	L1 8 loci: 8 a / 0 alpha
 candida_tropicalis	Candida tropicalis	PASS_ZYGOSITY	done 50, single 50, both 0	115	115	28	0	87	A: 104, alpha: 98	planned	L1 102 loci: 102 a / 0 alpha; L2 2 loci: 0 a / 2 alpha
 candida_viswanathii	Candida viswanathii	HOLD:panel_build_failed		13	13	2	0	11	A: 13, alpha: 11	held:panel_build_failed	L1 13 loci: 13 a / 0 alpha
-ceratocystis_fimbriata	Ceratocystis fimbriata	NOT_TYPABLE:homothallic_locus		8	1	0	1	0		held:panel_L1_error	L1 17 loci: 13 MAT1-2 / 4 MAT1-1; L2 6 loci: 6 MAT1-2 / 0 MAT1-1; L3 1 loci: 1 MAT1-2 / 0 MAT1-1; L4 1 loci: 1 MAT1-2 / 0 MAT1-1
-debaryomyces_hansenii	Debaryomyces hansenii	NOT_TYPABLE:homothallic_locus		77	72	7	65	0	A: 57, alpha: 14	held:panel_build_failed	no lineages
+ceratocystis_fimbriata	Ceratocystis fimbriata	NOT_TYPABLE:homothallic		8	1	0	1	0		held:panel_L1_error	L1 17 loci: 13 MAT1-2 / 4 MAT1-1; L2 6 loci: 6 MAT1-2 / 0 MAT1-1; L3 1 loci: 1 MAT1-2 / 0 MAT1-1; L4 1 loci: 1 MAT1-2 / 0 MAT1-1
+debaryomyces_hansenii	Debaryomyces hansenii	NOT_TYPABLE:homothallic		77	72	7	65	0	A: 57, alpha: 14	held:panel_build_failed	no lineages
 hansenula_anomala	Hansenula anomala	HOLD:cause_unchecked	done 38, single 8, both 29	26	25	12	0	13	MATalpha: 20, MATa: 18	planned	L1 32 loci: 15 a / 17 alpha; L2 1 loci: 1 a / 0 alpha
 kluyveromyces_lactis	Kluyveromyces lactis	NOT_TYPABLE:silent_cassettes		24	20	7	0	13	MATalpha: 18, MATa: 15	held:panel_build_failed	L1 13 loci: 0 a / 13 alpha
 kluyveromyces_marxianus	Kluyveromyces marxianus	NOT_TYPABLE:silent_cassettes	done 49, single 4, both 40	46	44	6	0	38	MATa: 42, MATalpha: 40	planned	L1 13 loci: 0 a / 13 alpha; L2 7 loci: 7 a / 0 alpha
@@ -32,7 +32,7 @@ saccharomyces_pastorianus	Saccharomyces pastorianus	NOT_TYPABLE:silent_cassettes
 saccharomyces_uvarum	Saccharomyces uvarum	NOT_TYPABLE:silent_cassettes	done 294, single 263, both 0	38	23	9	0	14	MATalpha: 19, MATa: 18	planned	L1 5 loci: 3 alpha / 2 a
 schizosaccharomyces_japonicus	Schizosaccharomyces japonicus	NOT_TYPABLE:silent_cassettes		3	3	2	0	1	M: 3, P: 1	held:panel_build_failed	L1 9 loci: 9 P / 0 M; L2 1 loci: 1 P / 0 M; L3 1 loci: 1 P / 0 M
 schizosaccharomyces_pombe	Schizosaccharomyces pombe	NOT_TYPABLE:silent_cassettes		59	59	18	0	41	M: 58, P: 42	held:panel_L1_error	L1 18 loci: 9 P / 9 M; L2 2 loci: 1 P / 1 M
-sclerotinia_sclerotiorum	Sclerotinia sclerotiorum	NOT_TYPABLE:homothallic_locus		36	36	15	20	1	MAT1-2: 16, MAT1-1: 1	held:panel_L1_error	L1 16 loci: 1 MAT1-1 / 15 MAT1-2; L2 1 loci: 0 MAT1-1 / 1 MAT1-2
+sclerotinia_sclerotiorum	Sclerotinia sclerotiorum	NOT_TYPABLE:homothallic		36	36	15	20	1	MAT1-2: 16, MAT1-1: 1	held:panel_L1_error	L1 16 loci: 1 MAT1-1 / 15 MAT1-2; L2 1 loci: 0 MAT1-1 / 1 MAT1-2
 zygosaccharomyces_bailii	Zygosaccharomyces bailii	NOT_TYPABLE:silent_cassettes		18	18	18	0	0	MATalpha: 18	held:panel_build_failed	L1 12 loci: 0 a / 12 alpha
 zygosaccharomyces_favi	Zygosaccharomyces favi	NOT_TYPABLE:silent_cassettes		6	6	6	0	0	MATalpha: 6	held:panel_build_failed	L1 1 loci: 0 a / 1 alpha
 zygosaccharomyces_mellis	Zygosaccharomyces mellis	NOT_TYPABLE:silent_cassettes		17	17	17	0	0	MATalpha: 17	held:panel_build_failed	L1 1 loci: 0 a / 1 alpha

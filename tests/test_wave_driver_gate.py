@@ -23,7 +23,8 @@ def word(res):
 def test_the_strict_cases_are_unchanged():
     assert decide(truth=10, agree=10)[0] == "PASS"                               # all typed, 10 truth runs agree
     assert decide(truth=3, agree=3)[0] == "PROVISIONAL"                          # too few comparisons to confirm
-    assert decide(typed=2, both=18)[0] == "PROVISIONAL_HOMOTHALLIC"              # both is the expected answer
+    assert decide(typed=2, both=18)[0] == "UNVALIDATED:cause_unchecked+both_0.90"  # mostly both, no cause on file: no homothallic claim (2026-11-09)
+    assert decide(typed=2, both=18, msd=1.0)[0] == "UNVALIDATED:cause_unchecked+both_0.90+shared_depth_1.0"
 
 
 def test_typing_between_half_and_the_bar_is_unvalidated_and_below_half_is_held():
@@ -226,11 +227,13 @@ def test_retry_part_none_submits_no_retry_arrays(tmp_path, monkeypatch):
 
 
 def test_a_cause_overrides_the_numbers_and_a_zygosity_cause_counts_both(monkeypatch):
-    """causes.tsv (curator ruling 2026-11-09): homothallic_locus and silent_cassettes give NOT_TYPABLE, cause_unchecked gives HOLD, zygosity joins ZYGOSITY."""
-    monkeypatch.setattr(wd, "CAUSES", {"Sp homo": "homothallic_locus", "Sp cas": "silent_cassettes", "Sp unk": "cause_unchecked", "Sp zyg": "zygosity"})
-    assert wd.decide_species("Sp homo", 20, 20, 0, 20, 0, 0, 10.0)[0] == "NOT_TYPABLE:homothallic_locus"     # would have been PROVISIONAL_HOMOTHALLIC
+    """causes.tsv (curator ruling 2026-11-09): homothallic and silent_cassettes give NOT_TYPABLE, cause_unchecked stays visible as UNVALIDATED, zygosity joins ZYGOSITY."""
+    monkeypatch.setattr(wd, "CAUSES", {"Sp homo": "homothallic", "Sp cas": "silent_cassettes", "Sp unk": "cause_unchecked", "Sp zyg": "zygosity"})
+    assert wd.decide_species("Sp homo", 20, 20, 0, 20, 0, 0, 10.0)[0] == "NOT_TYPABLE:homothallic"     # would have been PROVISIONAL_HOMOTHALLIC
     assert wd.decide_species("Sp cas", 20, 20, 0, 0, 0, 0, 1.5)[0] == "NOT_TYPABLE:silent_cassettes"
-    assert wd.decide_species("Sp unk", 20, 20, 2, 18, 0, 0, 10.0)[0] == "HOLD:cause_unchecked"
+    assert wd.decide_species("Sp unk", 20, 20, 2, 18, 0, 0, 10.0)[0] == "UNVALIDATED:cause_unchecked+both_0.90"
+    assert wd.decide_species("Sp unk", 20, 20, 4, 8, 0, 0, 10.0)[0] == "UNVALIDATED:cause_unchecked+typed_0.20+both_0.40"     # would be HOLD without the cause
+    assert wd.decide_species("Sp unk", 20, 10, 2, 8, 0, 0, 10.0)[0].startswith("HOLD:many_failed")
     assert wd.cause_decision("Sp zyg") is None and wd.cause_decision("Other") is None
     assert {r["species"]: r["cause"] for r in wd.rd(wd.CAUSES_FILE)}["Candida tropicalis"] == "zygosity"
     assert "Candida tropicalis" in wd.ZYGOSITY                                     # loaded at import from causes.tsv
@@ -238,13 +241,13 @@ def test_a_cause_overrides_the_numbers_and_a_zygosity_cause_counts_both(monkeypa
 
 def test_causes_file_uses_only_the_ruled_causes():
     rows = wd.rd(wd.CAUSES_FILE)
-    assert {r["cause"] for r in rows} <= {"", "homothallic_locus", "silent_cassettes", "zygosity", "cause_unchecked"}
+    assert {r["cause"] for r in rows} <= {"", "homothallic", "silent_cassettes", "zygosity", "cause_unchecked"}
     assert all(r["basis"] for r in rows) and len({r["species"] for r in rows}) == len(rows)
 
 
 def test_apply_causes_rewrites_typed_and_panel_held_species_and_lists_the_changes(tmp_path, monkeypatch):
     import argparse
-    monkeypatch.setattr(wd, "CAUSES", {"Sp homo": "homothallic_locus", "Sp held": "silent_cassettes"})
+    monkeypatch.setattr(wd, "CAUSES", {"Sp homo": "homothallic", "Sp held": "silent_cassettes"})
     w = tmp_path / "wave9"; w.mkdir(); (tmp_path / "notawave").mkdir()
     _gates_rows = [["sp_homo", "Sp homo", "PROVISIONAL_HOMOTHALLIC", "runs=2 done=2 typed=0 both=2 none/low=0 truth_typed=0 agree=0 median_shared_depth=9.0"],
                    ["sp_held", "Sp held", "HOLD:panel_build_failed", "held:panel_build_failed"],
@@ -256,6 +259,6 @@ def test_apply_causes_rewrites_typed_and_panel_held_species_and_lists_the_change
         cw.writerows([["r1", "sp_homo", "done", "both", "", "9"], ["r2", "sp_homo", "done", "both", "", "9"]])
     wd.apply_causes(argparse.Namespace(pilot=str(tmp_path)))
     got = {r["slug"]: r["decision"] for r in wd.rd(w / "gates_final.tsv")}
-    assert got == {"sp_homo": "NOT_TYPABLE:homothallic_locus", "sp_held": "NOT_TYPABLE:silent_cassettes", "sp_other": "PASS"}
+    assert got == {"sp_homo": "NOT_TYPABLE:homothallic", "sp_held": "NOT_TYPABLE:silent_cassettes", "sp_other": "PASS"}
     ch = wd.rd(w / "cause_changes.tsv")
     assert [(c["slug"], c["previous"]) for c in ch] == [("sp_homo", "PROVISIONAL_HOMOTHALLIC"), ("sp_held", "HOLD:panel_build_failed")]

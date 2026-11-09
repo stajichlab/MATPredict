@@ -51,10 +51,10 @@ Many species in one go: `submit-plan` (panels and run lists per species, panel g
 
 ## Causes (`causes.tsv`, `cause_evidence.py`, `cause_evidence.tsv`; curator ruling 2026-11-09, #195/#196)
 `causes.tsv` (curated: species, cause, build_cause, basis) says why presence typing cannot give a species' mating type. `wave_driver.py` loads it at import, and a cause overrides the numbers:
-- `homothallic_locus`: both MAT genes are in every genome, at one locus or at unlinked loci. Decision `NOT_TYPABLE:homothallic_locus`.
+- `homothallic`: both MAT genes are in every genome, at one locus or at unlinked loci (the layout is in `basis`). Decision `NOT_TYPABLE:homothallic`.
 - `silent_cassettes`: an expressed locus plus silent copies of both idiomorphs (HML/HMR, flip-flop, mat2/mat3). Decision `NOT_TYPABLE:silent_cassettes`.
 - `zygosity`: a heterozygous diploid. The species joins `ZYGOSITY`, so `both` counts as MTL a/alpha.
-- `cause_unchecked`: most runs read `both` for a reason not yet checked. Decision `HOLD:cause_unchecked`.
+- `cause_unchecked`: most runs read `both` for a reason not yet checked. Decision `UNVALIDATED:cause_unchecked` plus the gate's other reasons: the calls stay visible with the warning, and only many failed downloads hold the species. A species with `both` in at least half its runs and no row in `causes.tsv` gets the same decision. PROVISIONAL_HOMOTHALLIC, the label it got until 2026-11-09, is no longer given.
 
 A species with only a `build_cause` keeps its technical HOLD. The site shows NOT_TYPABLE as "not typable by presence", with the reason and the `basis`, and gives no allele counts. `submit-full` does not queue these species again.
 

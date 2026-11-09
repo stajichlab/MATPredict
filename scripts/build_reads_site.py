@@ -12,7 +12,7 @@ from collections import Counter
 
 CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)", "PASS_ZYGOSITY": "confirmed (MTL zygosity)", "PROVISIONAL_ZYGOSITY": "provisional (MTL zygosity)", "UNVALIDATED": "unvalidated", "NOT_TYPABLE": "not typable by presence"}
 CAUSE_TEXT = {      # page wording for the causes of causes.tsv (curator ruling 2026-11-09, #195)
-    "homothallic_locus": "homothallic: both MAT genes are in every genome, so every strain reads as both idiomorphs",
+    "homothallic": "homothallic: both MAT genes are in every genome, so every strain reads as both idiomorphs",
     "silent_cassettes": "silent mating-type cassettes: every cell carries the sequence of both idiomorphs (the expressed locus and silent copies), so reads cannot show the active mating type by presence",
     "cause_unchecked": "most runs show both idiomorphs for a reason not yet checked",
 }

@@ -16,7 +16,7 @@ Commands (all take --wave DIR and the config options below):
   gate                 summarize the test results and decide per species: PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC, UNVALIDATED:<reasons>, NOT_TYPABLE:<cause> or HOLD:<reasons>   (gates below; causes: CAUSES)
   curate               apply the curator rulings (ZYGOSITY, RELEASED; see the code) to an existing gates table; a ZYGOSITY species is counted again from --stage's results
   incomplete           list the runs of --stage-name that did not finish (no run.json, `started` = killed or preempted, failed download/convert) into runs_incomplete.tsv for submit-list
-  apply-causes         apply causes.tsv (curator ruling 2026-11-09: NOT_TYPABLE:homothallic_locus / silent_cassettes, zygosity, HOLD:cause_unchecked) to the committed
+  apply-causes         apply causes.tsv (curator ruling 2026-11-09: NOT_TYPABLE:homothallic / silent_cassettes, zygosity, HOLD:cause_unchecked) to the committed
                        wave folders (--pilot), writing cause_changes.tsv beside each changed gates_final.tsv
   regate               decide again from the numbers in an existing gates table (after the rules change); writes the previous decision beside the new one
   submit-full          queue the remaining runs of the species that are not held (PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC and UNVALIDATED)
@@ -26,7 +26,7 @@ Commands (all take --wave DIR and the config options below):
 Gates. Panel (before any download): lineage panel L1 exists; at least 2 loci of each idiomorph went into the panel; core k-mers per idiomorph >= 300 and within a factor 10
 of each other; shared flank k-mers >= 2000; at least 4 selectable runs (the survey's own minimum; a species with fewer than 8 runs is typed whole and can only be PROVISIONAL). Test (after 20 runs): at least 90% of runs finished (runs not at NCBI are not counted); typed
 (one idiomorph) >= 75% of finished runs and `both` <= 20%; median shared-flank depth >= 3; with >= 5 typed runs that have a `detect` truth: agreement >= 95% and at most one
-disagreement; with fewer than 5 such runs the species is PROVISIONAL (typed >= 85% required). A species with at least half of its runs `both` and typed+both >= 85% is PROVISIONAL_HOMOTHALLIC (`both` is the expected answer for a homothallic species). Thresholds are in GATE below.
+disagreement; with fewer than 5 such runs the species is PROVISIONAL (typed >= 85% required). A species with at least half of its runs `both` and typed+both >= 85% is UNVALIDATED:cause_unchecked unless causes.tsv gives its cause (until 2026-11-09 it was PROVISIONAL_HOMOTHALLIC; only a cause with evidence now calls a species homothallic). Thresholds are in GATE below.
 
 A species that has a usable panel and enough runs is not hidden for missing those limits (curator, 2026-11-02): it is UNVALIDATED when it types at least 50% of its finished runs and its only failures are the soft ones (typed
 below 75% or 85%, `both` above 20%, shared depth below 3, or agreement short of the limit with fewer than 10 comparison runs). It gets the full run and is shown on the site as "unvalidated" with the reasons. HOLD is
@@ -230,12 +230,14 @@ RELEASED = {"Saccharomyces paradoxus": "cassettes", "Saccharomyces eubayanus": "
             "Ogataea haglerorum": "cassettes"}
 # CAUSES (curator ruling 2026-11-09, #195/#196; design docs/notes/2026-11-09_junction-panel-design.md): why presence typing cannot give a species' mating type, from causes.tsv
 # (species, cause, build_cause, basis; the evidence is cause_evidence.py's table). The cause overrides the numbers:
-#   homothallic_locus  both MAT genes in every genome (one locus or unlinked loci)      -> NOT_TYPABLE:homothallic_locus (no allele frequencies on the site)
+#   homothallic        both MAT genes in every genome (one locus or unlinked loci; the layout is in basis) -> NOT_TYPABLE:homothallic (no allele frequencies on the site)
 #   silent_cassettes   expressed locus plus silent copies (HML/HMR, flip-flop, mat2/3) -> NOT_TYPABLE:silent_cassettes
 #   zygosity           heterozygous diploid: joins ZYGOSITY (both = MTL a/alpha)
-#   cause_unchecked    `both` in most runs for a reason not yet checked                -> HOLD:cause_unchecked (no longer published as homothallic)
+#   cause_unchecked    `both` in most runs for a reason not yet checked                -> UNVALIDATED:cause_unchecked+<soft reasons> (shown with counts and the
+#                      warning; HOLD only for many failed downloads). A species with `both` in at least half its runs and NO cause gets the same (decide();
+#                      it was PROVISIONAL_HOMOTHALLIC until 2026-11-09): only a causes.tsv row with evidence calls a species homothallic.
 # A species with only a build_cause keeps its plan-stage HOLD (a technical reason). NOT_TYPABLE species are not queued again (submit-full skips them).
-NOT_TYPABLE_CAUSES = ("homothallic_locus", "silent_cassettes")
+NOT_TYPABLE_CAUSES = ("homothallic", "silent_cassettes")
 CAUSES_FILE = os.path.join(HERE, "causes.tsv")
 
 
@@ -249,11 +251,9 @@ ZYGOSITY |= {s for s, c in CAUSES.items() if c == "zygosity"}
 
 
 def cause_decision(species):
-    """The decision a cause forces (NOT_TYPABLE:<cause> or HOLD:cause_unchecked), or None when the species has none or its cause is zygosity."""
+    """The decision a cause forces whatever the numbers (NOT_TYPABLE:<cause>), or None (no cause, zygosity, or cause_unchecked, which is decided from the numbers)."""
     c = CAUSES.get(species)
-    if c in NOT_TYPABLE_CAUSES: return f"NOT_TYPABLE:{c}"
-    if c == "cause_unchecked": return "HOLD:cause_unchecked"
-    return None
+    return f"NOT_TYPABLE:{c}" if c in NOT_TYPABLE_CAUSES else None
 
 
 def decide_species(species, n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd):
@@ -266,6 +266,9 @@ def decide_species(species, n_counted, n_done, n_typed, n_both, n_truth, n_agree
         dec, why = decide(n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd)
     if species in RELEASED and dec.startswith("HOLD") and "many_failed" not in why:
         why = [f"released_{RELEASED[species]}"] + why
+        dec = "UNVALIDATED:" + "+".join(why)
+    if CAUSES.get(species) == "cause_unchecked" and "many_failed" not in why:      # curator 2026-11-09: kept visible with the warning
+        why = ["cause_unchecked"] + [w for w in why if w != "cause_unchecked"]
         dec = "UNVALIDATED:" + "+".join(why)
     return dec, why
 
@@ -302,9 +305,12 @@ def decide(n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd, zygosity=F
     elif not homo and tf < GATE["provisional_typed"]:
         (hard if tf < GATE["unvalidated_typed"] else soft).append(f"provisional_typed_{tf:.2f}")
     if zygosity and (hard or soft): soft = ["zygosity"] + soft
+    if homo and not hard:                            # mostly `both` with no cause on file: no claim of homothallism (curator 2026-11-09, #195)
+        why = ["cause_unchecked", f"both_{bf:.2f}"] + soft
+        return "UNVALIDATED:" + "+".join(why), why
     if hard: return "HOLD:" + "+".join(hard + soft), hard + soft
     if soft: return "UNVALIDATED:" + "+".join(soft), soft
-    return ("PROVISIONAL_HOMOTHALLIC" if homo else "PROVISIONAL" if prov else "PASS") + ("_ZYGOSITY" if zygosity else ""), []
+    return ("PROVISIONAL" if prov else "PASS") + ("_ZYGOSITY" if zygosity else ""), []
 
 
 def gate_row(sl, species, rs):
@@ -353,7 +359,7 @@ def regate(a):
         done, typed, both, truth, agree, msd = int(m[2]), int(m[3]), int(m[4]), int(m[6]), int(m[7]), float(m[8])
         counted = done if "many_failed" not in r["decision"] else done * 2 + 1       # the counted runs are not in the table; this keeps a species held for failed downloads held
         new, _ = decide_species(r["species"], counted, done, typed, both, truth, agree, msd)
-        if new.split(":")[0] != r["decision"].split(":")[0] or ("released_" in new) != ("released_" in r["decision"]) or (new != r["decision"] and new.startswith(("NOT_TYPABLE", "HOLD:cause_unchecked"))):
+        if new.split(":")[0] != r["decision"].split(":")[0] or ("released_" in new) != ("released_" in r["decision"]) or (new != r["decision"] and ("NOT_TYPABLE" in new or "cause_unchecked" in new)):
             changes.append({"slug": r["slug"], "species": r["species"], "previous": r["decision"], "decision": new, "reasons": r["reasons"]})
             r["decision"] = new
     wr(dst, rows, ["slug", "species", "decision", "reasons"])

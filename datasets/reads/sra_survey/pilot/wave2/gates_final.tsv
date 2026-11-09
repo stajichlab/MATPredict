@@ -13,12 +13,12 @@ yarrowia_lipolytica	Yarrowia lipolytica	PASS	runs=384 done=383 typed=379 both=3 
 saccharomyces_paradoxus	Saccharomyces paradoxus	NOT_TYPABLE:silent_cassettes	runs=300 done=299 typed=0 both=0 none/low=299 truth_typed=0 agree=0 median_shared_depth=1.5
 botrytis_cinerea	Botrytis cinerea	PASS	runs=338 done=338 typed=308 both=26 none/low=4 truth_typed=46 agree=45 median_shared_depth=9.4
 verticillium_dahliae	Verticillium dahliae	PASS	runs=253 done=253 typed=253 both=0 none/low=0 truth_typed=9 agree=9 median_shared_depth=9.2
-sclerotinia_sclerotiorum	Sclerotinia sclerotiorum	NOT_TYPABLE:homothallic_locus	held:panel_L1_error
+sclerotinia_sclerotiorum	Sclerotinia sclerotiorum	NOT_TYPABLE:homothallic	held:panel_L1_error
 lachancea_thermotolerans	Lachancea thermotolerans	NOT_TYPABLE:silent_cassettes	held:panel_build_failed
 candidozyma_haemuli	Candidozyma haemuli	PROVISIONAL	runs=159 done=159 typed=159 both=0 none/low=0 truth_typed=1 agree=1 median_shared_depth=30.8
 fusarium_sambucinum	Fusarium sambucinum	HOLD:too_few_loci	held:too_few_loci
 saccharomyces_uvarum	Saccharomyces uvarum	NOT_TYPABLE:silent_cassettes	runs=294 done=294 typed=263 both=0 none/low=31 truth_typed=0 agree=0 median_shared_depth=1.7
-aspergillus_nidulans	Aspergillus nidulans	NOT_TYPABLE:homothallic_locus	runs=50 done=50 typed=0 both=50 none/low=0 truth_typed=0 agree=0 median_shared_depth=9.7
+aspergillus_nidulans	Aspergillus nidulans	NOT_TYPABLE:homothallic	runs=50 done=50 typed=0 both=50 none/low=0 truth_typed=0 agree=0 median_shared_depth=9.7
 geotrichum_candidum	Geotrichum candidum	UNVALIDATED:typed_0.52+provisional_typed_0.52	runs=96 done=96 typed=50 both=1 none/low=45 truth_typed=3 agree=3 median_shared_depth=14.6
 candidozyma_duobushaemuli	Candidozyma duobushaemuli	PROVISIONAL	runs=94 done=94 typed=94 both=0 none/low=0 truth_typed=0 agree=0 median_shared_depth=51.2
 clavispora_lusitaniae	Clavispora lusitaniae	PASS	runs=92 done=92 typed=88 both=2 none/low=2 truth_typed=25 agree=25 median_shared_depth=25.1
@@ -27,7 +27,7 @@ lodderomyces_orthopsilosis	Lodderomyces orthopsilosis	HOLD:panel_build_failed	he
 kluyveromyces_lactis	Kluyveromyces lactis	NOT_TYPABLE:silent_cassettes	held:panel_build_failed
 lodderomyces_metapsilosis	Lodderomyces metapsilosis	PROVISIONAL_ZYGOSITY	runs=37 done=37 typed=37 both=0 none/low=0 truth_typed=1 agree=1 median_shared_depth=19.2 mode=zygosity
 kluyveromyces_marxianus	Kluyveromyces marxianus	NOT_TYPABLE:silent_cassettes	runs=49 done=49 typed=4 both=40 none/low=5 truth_typed=0 agree=0 median_shared_depth=36.3
-debaryomyces_hansenii	Debaryomyces hansenii	NOT_TYPABLE:homothallic_locus	held:panel_build_failed
+debaryomyces_hansenii	Debaryomyces hansenii	NOT_TYPABLE:homothallic	held:panel_build_failed
 komagataella_phaffii	Komagataella phaffii	NOT_TYPABLE:silent_cassettes	runs=50 done=50 typed=0 both=50 none/low=0 truth_typed=0 agree=0 median_shared_depth=85.7
 zygosaccharomyces_rouxii	Zygosaccharomyces rouxii	NOT_TYPABLE:silent_cassettes	held:panel_build_failed
 candida_viswanathii	Candida viswanathii	HOLD:panel_build_failed	held:panel_build_failed
@@ -46,7 +46,7 @@ ogataea_polymorpha	Ogataea polymorpha	PROVISIONAL	runs=17 done=16 typed=15 both=
 candidozyma_vulturna	Candidozyma vulturna	PROVISIONAL	runs=14 done=14 typed=12 both=0 none/low=2 truth_typed=0 agree=0 median_shared_depth=28.1
 neurospora_cerealis	Neurospora cerealis	PASS	runs=14 done=14 typed=14 both=0 none/low=0 truth_typed=8 agree=8 median_shared_depth=10.3
 bipolaris_maydis	Bipolaris maydis	UNVALIDATED:typed_0.69+provisional_typed_0.69	runs=13 done=13 typed=9 both=0 none/low=4 truth_typed=2 agree=2 median_shared_depth=4.9
-aspergillus_spinulosporus	Aspergillus spinulosporus	NOT_TYPABLE:homothallic_locus	runs=4 done=4 typed=0 both=4 none/low=0 truth_typed=0 agree=0 median_shared_depth=9.9
+aspergillus_spinulosporus	Aspergillus spinulosporus	NOT_TYPABLE:homothallic	runs=4 done=4 typed=0 both=4 none/low=0 truth_typed=0 agree=0 median_shared_depth=9.9
 aspergillus_tamarii	Aspergillus tamarii	UNVALIDATED:typed_0.69+provisional_typed_0.69	runs=13 done=13 typed=9 both=0 none/low=4 truth_typed=3 agree=3 median_shared_depth=10.2
 ogataea_angusta	Ogataea angusta	HOLD:too_few_runs_2	held:too_few_runs_2
 zygosaccharomyces_parabailii	Zygosaccharomyces parabailii	NOT_TYPABLE:silent_cassettes	held:panel_build_failed
@@ -70,7 +70,7 @@ ogataea_parapolymorpha	Ogataea parapolymorpha	HOLD:too_few_runs_3	held:too_few_r
 zygosaccharomyces_favi	Zygosaccharomyces favi	NOT_TYPABLE:silent_cassettes	held:panel_build_failed
 aspergillus_brasiliensis	Aspergillus brasiliensis	PROVISIONAL	runs=5 done=5 typed=5 both=0 none/low=0 truth_typed=3 agree=3 median_shared_depth=6.0
 aspergillus_westerdijkiae	Aspergillus westerdijkiae	HOLD:too_few_loci	held:too_few_loci
-ceratocystis_fimbriata	Ceratocystis fimbriata	NOT_TYPABLE:homothallic_locus	held:panel_L1_error
+ceratocystis_fimbriata	Ceratocystis fimbriata	NOT_TYPABLE:homothallic	held:panel_L1_error
 fusarium_asiaticum	Fusarium asiaticum	PROVISIONAL	runs=5 done=5 typed=5 both=0 none/low=0 truth_typed=0 agree=0 median_shared_depth=4.0
 fusarium_nygamai	Fusarium nygamai	PROVISIONAL	runs=5 done=5 typed=5 both=0 none/low=0 truth_typed=2 agree=2 median_shared_depth=4.8
 morchella_eximia	Morchella eximia	UNVALIDATED:typed_0.50+both_0.33+provisional_typed_0.50	runs=6 done=6 typed=3 both=2 none/low=1 truth_typed=1 agree=1 median_shared_depth=5.6

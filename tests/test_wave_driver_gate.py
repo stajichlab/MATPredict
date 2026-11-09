@@ -232,7 +232,7 @@ def test_a_cause_overrides_the_numbers_and_a_zygosity_cause_counts_both(monkeypa
     assert wd.decide_species("Sp homo", 20, 20, 0, 20, 0, 0, 10.0)[0] == "NOT_TYPABLE:homothallic"     # would have been PROVISIONAL_HOMOTHALLIC
     assert wd.decide_species("Sp cas", 20, 20, 0, 0, 0, 0, 1.5)[0] == "NOT_TYPABLE:silent_cassettes"
     assert wd.decide_species("Sp unk", 20, 20, 2, 18, 0, 0, 10.0)[0] == "UNVALIDATED:cause_unchecked+both_0.90"
-    assert wd.decide_species("Sp unk", 20, 20, 4, 8, 0, 0, 10.0)[0] == "UNVALIDATED:cause_unchecked+typed_0.20+both_0.40"     # would be HOLD without the cause
+    assert wd.decide_species("Sp unk", 20, 20, 4, 8, 0, 0, 10.0)[0] == "UNVALIDATED:cause_unchecked+typed_0.20+provisional_typed_0.20+both_0.40"     # would be HOLD without the cause
     assert wd.decide_species("Sp unk", 20, 10, 2, 8, 0, 0, 10.0)[0].startswith("HOLD:many_failed")
     assert wd.cause_decision("Sp zyg") is None and wd.cause_decision("Other") is None
     assert {r["species"]: r["cause"] for r in wd.rd(wd.CAUSES_FILE)}["Candida tropicalis"] == "zygosity"

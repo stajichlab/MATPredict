@@ -10,7 +10,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from idiomorph_labels import idiomorph_label, registry_version
 from collections import Counter
 
-CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)", "PASS_ZYGOSITY": "confirmed (MTL zygosity)", "PROVISIONAL_ZYGOSITY": "provisional (MTL zygosity)", "UNVALIDATED": "unvalidated"}
+CONF = {"PASS": "confirmed", "PROVISIONAL": "provisional", "PROVISIONAL_HOMOTHALLIC": "provisional (homothallic)", "PASS_ZYGOSITY": "confirmed (MTL zygosity)", "PROVISIONAL_ZYGOSITY": "provisional (MTL zygosity)", "UNVALIDATED": "unvalidated", "NOT_TYPABLE": "not typable by presence"}
+CAUSE_TEXT = {      # page wording for the causes of causes.tsv (curator ruling 2026-11-09, #195)
+    "homothallic_locus": "homothallic: both MAT genes are in every genome, so every strain reads as both idiomorphs",
+    "silent_cassettes": "silent mating-type cassettes: every cell carries the sequence of both idiomorphs (the expressed locus and silent copies), so reads cannot show the active mating type by presence",
+    "cause_unchecked": "most runs show both idiomorphs for a reason not yet checked",
+}
 FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly", "clone", "screen", "screen_second", "screen_explained"]
 SCREEN_FLAGGED = ("mixed", "genus_mismatch", "borderline")      # the statuses screen_reads.py gives to a run worth a second look
 
@@ -119,6 +124,7 @@ def clone_summary(rows, runs, g1, n_alt, min_ani, thr, alt, metric, median_abund
 def reason(r):
     """Plain wording for one gate reason token, e.g. typed_0.67 -> 'only 67% of runs got a call'."""
     m = re.match(r"([a-z_0-9]+?)_([0-9.]+)(?:of([0-9]+))?$", r)
+    if r in CAUSE_TEXT: return CAUSE_TEXT[r]
     if not m: return r.replace("_", " ")
     k, v, n = m.groups()
     if k == "agree": return f"only {v} of {n} runs with an assembly call agree with it"
@@ -193,6 +199,8 @@ def main():
     tf = os.path.join(a.repo, "datasets/reads/sra_survey/pilot/study_titles.tsv")      # study (BioProject) titles from PopSeq (study_titles.py): the hover text of the study links
     TITLES = {r["study"]: r["title"] for r in rd(tf)} if os.path.exists(tf) else {}
     global STUDY_TITLES; STUDY_TITLES = TITLES
+    cf_ = os.path.join(a.repo, "datasets/reads/sra_survey/pilot/causes.tsv")      # the evidence line behind a cause (causes.tsv basis), shown on the species page
+    BASIS = {r["species"]: r["basis"] for r in rd(cf_) if r.get("cause")} if os.path.exists(cf_) else {}
     clone_dirs = [os.path.join(a.repo, d) for d in (a.clones or ["datasets/reads/sra_survey/pilot/clone_pilot"] + [os.path.join(w, "clone_pairs") for w in waves])]
     solid_dir = os.path.join(a.repo, a.solid_clones or "datasets/reads/sra_survey/pilot/clone_solid")      # <slug>.clones.tsv (clone_solid.py): preferred over the pair tables
     for w in waves:
@@ -222,6 +230,7 @@ def main():
              "names": [n1, n2], "labels": [idiomorph_label(n1, [n1, n2]), idiomorph_label(n2, [n1, n2])], "c1": c[n1], "c2": c[n2], "MAT1-1": c[n1], "MAT1-2": c[n2], "both": c["both"], "none": c["none"], "low_depth": c["low_depth"],
              "with_assembly_call": len(truth), "agree": sum(r["verdict"] in ("agree", "agree_heterozygous") for r in truth), "disagree": sum(r["verdict"] == "DISAGREE" for r in truth),
              "rescued": sum(1 for r in typed if r.get("rescue")), **lineage_fields(LT, g["species"]),
+             "cause": next((x for x in CAUSE_TEXT if x in g["decision"]), ""), "cause_basis": BASIS.get(g["species"], "") if any(x in g["decision"] for x in CAUSE_TEXT) else "",
              "screened": sum(1 for r in runs if r.get("screen")), "screen_flagged": sum(1 for r in runs if r.get("screen") in SCREEN_FLAGGED)}
         index.append(s)
         rows = [{k: r.get(k, "") for k in FIELDS} for r in runs]

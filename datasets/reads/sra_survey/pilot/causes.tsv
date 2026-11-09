@@ -1,0 +1,43 @@
+species	cause	build_cause	basis
+Aspergillus latus	homothallic_locus		27 of 27 assemblies carry MAT1-1 and MAT1-2 (separate loci): homothallic; reads 6 of 7 both
+Aspergillus nidulans	homothallic_locus		19 of 19 assemblies carry MAT1-1 and MAT1-2 (separate loci): homothallic; reads 50 of 50 both
+Aspergillus spinulosporus	homothallic_locus		10 of 11 assemblies carry MAT1-1 and MAT1-2 (separate loci): homothallic; reads 4 of 4 both
+Sclerotinia sclerotiorum	homothallic_locus	both_idiomorphs_one_lineage	20 of 36 assemblies have both MAT genes in one locus (homothallic_candidate), the rest a partial call; panel lineage L1 mixes the two (panel_L1_error)
+Debaryomyces hansenii	homothallic_locus	no_loci_cut	65 of 72 assemblies have the a and alpha genes in one locus (homothallic_candidate); no locus within the span limits, so no panel
+Ceratocystis fimbriata	homothallic_locus	both_idiomorphs_one_lineage	the one searched assembly (GCA_000389695.3) has both MAT genes in one locus; 7 of 8 assemblies were not searched (no taxid or phylum: a routing gap); panel lineages mix MAT1-1 and MAT1-2 (panel_L1_error)
+Saccharomyces paradoxus	silent_cassettes		HML/HMR cassette genus; 38 of 49 assemblies carry a and alpha; reads 0 of 299 single calls (released 2026-11-07)
+Saccharomyces eubayanus	silent_cassettes		HML/HMR cassette genus; 10 of 11 assemblies carry a and alpha; reads 2 of 301 single calls (released 2026-11-07)
+Saccharomyces pastorianus	silent_cassettes		HML/HMR cassette genus (hybrid); 10 of 12 assemblies carry a and alpha; reads 11 of 91 single calls (released 2026-11-07)
+Saccharomyces mikatae	silent_cassettes		HML/HMR cassette genus; reads 0 of 8 single calls (released 2026-11-07)
+Saccharomyces kudriavzevii	silent_cassettes		HML/HMR cassette genus; reads 20 of 22 both (was PROVISIONAL_HOMOTHALLIC)
+Saccharomyces uvarum	silent_cassettes		HML/HMR cassette genus; its 263 single calls of 294 runs at flank depth 1.7 are unexplained and cannot be read as the active MAT (#196)
+Saccharomyces arboricola	silent_cassettes		HML/HMR cassette genus; reads 0 of 4 single calls
+Kluyveromyces marxianus	silent_cassettes		HML/HMR cassette genus; 38 of 44 assemblies carry a and alpha; reads 40 of 49 both (was PROVISIONAL_HOMOTHALLIC)
+Kluyveromyces lactis	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus; 13 of 20 assemblies carry a and alpha; the 13 panel loci are all alpha
+Komagataella phaffii	silent_cassettes		two-locus flip-flop switching; assemblies called MATa (128 of 132, mostly one lab lineage); reads 50 of 50 both (was PROVISIONAL_HOMOTHALLIC)
+Ogataea haglerorum	silent_cassettes		two-locus flip-flop switching; 22 of 23 assemblies carry a and alpha; reads 0 of 23 single calls (released 2026-11-07)
+Lachancea thermotolerans	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus; 46 of 108 assemblies carry a and alpha; 2 panel loci, both a
+Lachancea fermentati	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus; 2 assemblies with a locus; 2 panel loci, both a
+Lachancea kluyveri	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus; 1 assembly (a and alpha); 1 panel locus (a)
+Zygosaccharomyces bailii	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus; all 18 assemblies called alpha only, so all panel loci are alpha
+Zygosaccharomyces favi	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus; all 6 assemblies called alpha only
+Zygosaccharomyces mellis	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus; all 17 assemblies called alpha only
+Zygosaccharomyces parabailii	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus (hybrid); all 13 assemblies with a locus called alpha only
+Zygosaccharomyces pseudobailii	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus (hybrid); all 5 assemblies with a locus called alpha only
+Zygosaccharomyces rouxii	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus; all 41 assemblies called alpha only
+Zygosaccharomyces sapae	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus; all 4 assemblies with a locus called alpha only
+Zygosaccharomyces siamensis	silent_cassettes	one_idiomorph_in_panel_loci	HML/HMR cassette genus; all 16 assemblies called alpha only
+Schizosaccharomyces pombe	silent_cassettes	panel_no_unique_kmers	mat1 plus silent mat2-P and mat3-M; 41 of 59 assemblies carry P and M; the P and M cores of the 36 kb representative are identical over 14,111 bp (#195)
+Schizosaccharomyces japonicus	silent_cassettes	one_idiomorph_in_panel_loci	mating-type switching genus; 3 assemblies; the 11 panel loci are all P
+Candida albicans	zygosity		heterozygous diploid MTL a/alpha (curator 2026-11-06); 77 of 129 assemblies carry a and alpha
+Pichia kudriavzevii	zygosity		mostly diploid a/alpha (curator 2026-11-06); 32 of 54 assemblies carry a and alpha
+Candida tropicalis	zygosity		87 of 115 assemblies carry a and alpha: heterozygous diploid; reads 46 of 50 both (was PROVISIONAL_HOMOTHALLIC)
+Lodderomyces metapsilosis	zygosity		hybrid diploid; 7 of 15 assemblies carry a and alpha; reads 27 of 37 both (was PROVISIONAL_HOMOTHALLIC)
+Candida dubliniensis	zygosity	one_idiomorph_in_panel_loci	8 of 10 assemblies carry a and alpha: heterozygous diploid; the 8 panel loci are all a, so no panel
+Candida viswanathii	zygosity	one_idiomorph_in_panel_loci	11 of 13 assemblies carry a and alpha: heterozygous diploid; the 13 panel loci are all a, so no panel
+Lodderomyces orthopsilosis		one_idiomorph_in_panel_loci	11 assemblies each carry one idiomorph (6 a, 5 alpha), so typable in principle; the 6 panel loci are all a
+Mucor hiemalis		one_genome	1 assembly (minus); no plus locus to build from
+Neurospora tetraspora	cause_unchecked		35 of 36 assemblies carry one idiomorph (heterothallic-looking) but reads are 6 of 8 both; a heterokaryon (pseudohomothallic) culture is a hypothesis, not checked (was PROVISIONAL_HOMOTHALLIC)
+Lasallia pustulata	cause_unchecked		5 assemblies each carry one idiomorph but reads are 12 of 13 both; mixed lichen thalli are a hypothesis, not checked (was PROVISIONAL_HOMOTHALLIC)
+Hansenula anomala	cause_unchecked		13 of 25 assemblies carry a and alpha, 12 one: a diploid (zygosity) or cassettes, not checked; reads 29 of 38 both (was PROVISIONAL_HOMOTHALLIC)
+Metschnikowia pulcherrima	cause_unchecked		13 of 17 assemblies carry a and alpha: a diploid (zygosity) or cassettes, not checked; reads 6 of 12 both (was PROVISIONAL_HOMOTHALLIC)

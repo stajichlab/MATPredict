@@ -8,7 +8,7 @@ assemblies say about its MAT loci with what the reads gate and the panel build s
 PILOT_DIR: committed wave folders (wave*/gates_final.tsv). RESULTS_DIR: a MATPredict release folder with genomes.tsv and loci.tsv (for example
 results/2026-11-05_v081_ascomycota). WAVES_DIR (HPCC): the wave folders with plan/<slug>/{status, panel/*_lineages.tsv}; without it the build columns
 are blank. Default species: every species whose decision is PROVISIONAL_HOMOTHALLIC, a ZYGOSITY word, released_*, NOT_TYPABLE, or a HOLD from the
-panel stage (panel_build_failed, panel_L1_error, panel_no_unique_kmers).
+panel stage (panel_build_failed, panel_L1_error, panel_no_unique_kmers), and every species named in PILOT_DIR/causes.tsv.
 
 Assembly columns count genomes of the species (by genomes.tsv `species`):
   genomes, genomes_with_mat (a called locus), single (one idiomorph label), both_one_locus (a homothallic_candidate locus: both genes in one locus),
@@ -86,11 +86,12 @@ def main():
     ap.add_argument("--out", required=True); ap.add_argument("--species", nargs="*")
     a = ap.parse_args()
     g = gates(a.pilot); ev = assembly_evidence(a.release)
+    cf = os.path.join(a.pilot, "causes.tsv"); named = {r["species"] for r in rd(cf)} if os.path.exists(cf) else set()
     cols = ["slug", "species", "decision", "reads", "genomes", "genomes_with_mat", "single", "both_one_locus", "both_separate", "labels", "plan_status", "lineages"]
     rows = []
     for slug, (species, decision, reasons) in sorted(g.items(), key=lambda kv: kv[1][0]):
         if a.species: keep = species in a.species
-        else: keep = is_target(decision)
+        else: keep = is_target(decision) or species in named
         if not keep: continue
         e = ev.get(species, {"n": Counter(), "labels": Counter()})
         m = re.search(r"done=(\d+) typed=(\d+) both=(\d+)", reasons)

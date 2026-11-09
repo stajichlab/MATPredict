@@ -13,9 +13,11 @@ Commands (all take --wave DIR and the config options below):
   plan-one SPECIES     build the lineage panels, check them (panel gate), choose test and full run lists for ONE species
   submit-plan          queue `plan-one` for every species of species.tsv as an array (panels are built on compute nodes)
   submit-test          merge the test runs of the planned species and queue them (split over the --parts partitions: stajichlab and preempt by default)
-  gate                 summarize the test results and decide per species: PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC, UNVALIDATED:<reasons> or HOLD:<reasons>   (gates below)
+  gate                 summarize the test results and decide per species: PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC, UNVALIDATED:<reasons>, NOT_TYPABLE:<cause> or HOLD:<reasons>   (gates below; causes: CAUSES)
   curate               apply the curator rulings (ZYGOSITY, RELEASED; see the code) to an existing gates table; a ZYGOSITY species is counted again from --stage's results
   incomplete           list the runs of --stage-name that did not finish (no run.json, `started` = killed or preempted, failed download/convert) into runs_incomplete.tsv for submit-list
+  apply-causes         apply causes.tsv (curator ruling 2026-11-09: NOT_TYPABLE:homothallic_locus / silent_cassettes, zygosity, HOLD:cause_unchecked) to the committed
+                       wave folders (--pilot), writing cause_changes.tsv beside each changed gates_final.tsv
   regate               decide again from the numbers in an existing gates table (after the rules change); writes the previous decision beside the new one
   submit-full          queue the remaining runs of the species that are not held (PASS, PROVISIONAL, PROVISIONAL_HOMOTHALLIC and UNVALIDATED)
   report               write WAVE_REPORT.md from the summaries and the gates
@@ -226,10 +228,38 @@ def submit_test(a):
 ZYGOSITY = {"Candida albicans", "Pichia kudriavzevii"}      # P. kudriavzevii: most isolates are diploid a/alpha (curator 2026-11-06; wave 3 test 8 of 10 both)
 RELEASED = {"Saccharomyces paradoxus": "cassettes", "Saccharomyces eubayanus": "cassettes", "Saccharomyces pastorianus": "cassettes", "Saccharomyces mikatae": "cassettes",
             "Ogataea haglerorum": "cassettes"}
+# CAUSES (curator ruling 2026-11-09, #195/#196; design docs/notes/2026-11-09_junction-panel-design.md): why presence typing cannot give a species' mating type, from causes.tsv
+# (species, cause, build_cause, basis; the evidence is cause_evidence.py's table). The cause overrides the numbers:
+#   homothallic_locus  both MAT genes in every genome (one locus or unlinked loci)      -> NOT_TYPABLE:homothallic_locus (no allele frequencies on the site)
+#   silent_cassettes   expressed locus plus silent copies (HML/HMR, flip-flop, mat2/3) -> NOT_TYPABLE:silent_cassettes
+#   zygosity           heterozygous diploid: joins ZYGOSITY (both = MTL a/alpha)
+#   cause_unchecked    `both` in most runs for a reason not yet checked                -> HOLD:cause_unchecked (no longer published as homothallic)
+# A species with only a build_cause keeps its plan-stage HOLD (a technical reason). NOT_TYPABLE species are not queued again (submit-full skips them).
+NOT_TYPABLE_CAUSES = ("homothallic_locus", "silent_cassettes")
+CAUSES_FILE = os.path.join(HERE, "causes.tsv")
+
+
+def load_causes(path=CAUSES_FILE):
+    """{species: cause} for the rows of causes.tsv with a cause (empty when the file is missing)."""
+    return {r["species"]: r["cause"] for r in rd(path) if r.get("cause")} if os.path.exists(path) else {}
+
+
+CAUSES = load_causes()
+ZYGOSITY |= {s for s, c in CAUSES.items() if c == "zygosity"}
+
+
+def cause_decision(species):
+    """The decision a cause forces (NOT_TYPABLE:<cause> or HOLD:cause_unchecked), or None when the species has none or its cause is zygosity."""
+    c = CAUSES.get(species)
+    if c in NOT_TYPABLE_CAUSES: return f"NOT_TYPABLE:{c}"
+    if c == "cause_unchecked": return "HOLD:cause_unchecked"
+    return None
 
 
 def decide_species(species, n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd):
     """decide() with the curator rulings for SPECIES applied. For a ZYGOSITY species n_typed must already include the `both` runs and n_agree count `both` as agreeing (numbers())."""
+    forced = cause_decision(species)
+    if forced: return forced, [forced.split(":", 1)[1]]
     if species in ZYGOSITY:
         dec, why = decide(n_counted, n_done, n_typed, 0, n_truth, n_agree, msd, zygosity=True)
     else:
@@ -293,7 +323,7 @@ def gate(a):
     for r0 in rd(os.path.join(a.wave, "species.tsv")):
         sl = r0["slug"]; sf = os.path.join(a.wave, "plan", sl, "status"); st = open(sf).read().strip() if os.path.exists(sf) else "not_planned"
         if st != "planned":
-            rows.append(dict(slug=sl, species=r0["species"], decision="HOLD:" + st.replace("held:", ""), reasons=st)); continue
+            rows.append(dict(slug=sl, species=r0["species"], decision=cause_decision(r0["species"]) or "HOLD:" + st.replace("held:", ""), reasons=st)); continue
         rs = by.get(sl, [])
         if not rs: rows.append(dict(slug=sl, species=r0["species"], decision="PENDING", reasons="no test results yet")); continue
         rows.append(gate_row(sl, r0["species"], rs))
@@ -314,13 +344,16 @@ def regate(a):
     for r in rows:
         m = REGATE.search(r["reasons"])
         if not m:
+            forced = cause_decision(r["species"])             # a species held at the panel stage still takes its cause
+            if forced and forced != r["decision"]:
+                changes.append({"slug": r["slug"], "species": r["species"], "previous": r["decision"], "decision": forced, "reasons": r["reasons"]}); r["decision"] = forced
             continue
         if r["species"] in ZYGOSITY and "mode=zygosity" not in r["reasons"]:
             continue                                                                   # counted the ordinary way: only `curate` (from the results) can decide it again
         done, typed, both, truth, agree, msd = int(m[2]), int(m[3]), int(m[4]), int(m[6]), int(m[7]), float(m[8])
         counted = done if "many_failed" not in r["decision"] else done * 2 + 1       # the counted runs are not in the table; this keeps a species held for failed downloads held
         new, _ = decide_species(r["species"], counted, done, typed, both, truth, agree, msd)
-        if new.split(":")[0] != r["decision"].split(":")[0] or ("released_" in new) != ("released_" in r["decision"]):
+        if new.split(":")[0] != r["decision"].split(":")[0] or ("released_" in new) != ("released_" in r["decision"]) or (new != r["decision"] and new.startswith(("NOT_TYPABLE", "HOLD:cause_unchecked"))):
             changes.append({"slug": r["slug"], "species": r["species"], "previous": r["decision"], "decision": new, "reasons": r["reasons"]})
             r["decision"] = new
     wr(dst, rows, ["slug", "species", "decision", "reasons"])
@@ -335,9 +368,11 @@ def curate(a):
     src = os.path.join(a.wave, a.in_file); dst = os.path.join(a.wave, a.out_file or a.in_file)
     rows = rd(src); changes = []; res = None
     for i, r in enumerate(rows):
-        if r["species"] not in ZYGOSITY and r["species"] not in RELEASED:
+        if r["species"] not in ZYGOSITY and r["species"] not in RELEASED and r["species"] not in CAUSES:
             continue
-        if r["species"] in ZYGOSITY:
+        if cause_decision(r["species"]) and not REGATE.search(r["reasons"]):
+            new = dict(r, decision=cause_decision(r["species"]))                      # held at the panel stage: the cause alone decides
+        elif r["species"] in ZYGOSITY:
             if res is None:
                 res = collections.defaultdict(list)
                 for x in rd(os.path.join(a.wave, a.stage, "summary", "results_all.tsv")): res[x["group"]].append(x)
@@ -356,6 +391,31 @@ def curate(a):
     wr(os.path.join(os.path.dirname(dst), "curate_changes.tsv"), changes, ["slug", "species", "previous", "decision", "reasons"])
     for c in changes: print(f"{c['species']}: {c['previous']} -> {c['decision']}")
     print(len(changes), "species changed ->", dst)
+
+
+def apply_causes(a):
+    """Apply causes.tsv (and the ZYGOSITY counting it adds) to the committed wave folders under --pilot: in each wave*/gates_final.tsv, a species with a cause is
+    decided again, from its rows in results_all_final.tsv when it was typed (gate_row: a zygosity species is counted that way) and from the cause alone when the panel
+    stage held it. Rewrites gates_final.tsv in place and writes cause_changes.tsv beside it (slug, species, previous, decision, reasons) for every changed row."""
+    total = 0
+    for w in sorted(os.listdir(a.pilot)):
+        wd = os.path.join(a.pilot, w); gf = os.path.join(wd, "gates_final.tsv"); rf = os.path.join(wd, "results_all_final.tsv")
+        if not (re.fullmatch(r"wave\d+[a-z_]*", w) and os.path.exists(gf)): continue
+        rows = rd(gf); res = collections.defaultdict(list); changes = []
+        if os.path.exists(rf):
+            for x in rd(rf): res[x["group"]].append(x)
+        for i, r in enumerate(rows):
+            if r["species"] not in CAUSES: continue
+            if r["reasons"].startswith("runs=") and res.get(r["slug"]): new = gate_row(r["slug"], r["species"], res[r["slug"]])
+            else: new = dict(r, decision=cause_decision(r["species"]) or r["decision"])
+            if new["decision"] != r["decision"] or new["reasons"] != r["reasons"]:
+                changes.append({"slug": r["slug"], "species": r["species"], "previous": r["decision"], "decision": new["decision"], "reasons": new["reasons"]}); rows[i] = new
+        if changes:
+            wr(gf, rows, ["slug", "species", "decision", "reasons"])
+            wr(os.path.join(wd, "cause_changes.tsv"), changes, ["slug", "species", "previous", "decision", "reasons"])
+        for c in changes: print(f"{w}\t{c['species']}\t{c['previous']} -> {c['decision']}")
+        total += len(changes)
+    print(total, "species rows changed")
 
 
 def submit_full(a):
@@ -406,8 +466,8 @@ def status(a):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("cmd", choices=["plan-one", "submit-plan", "submit-test", "gate", "regate", "curate", "incomplete", "submit-full", "report", "status", "submit-list"])
-    ap.add_argument("--wave", required=True); ap.add_argument("--inputs", default=f"{P}/results/sra_reads_typing/wave_inputs")
+    ap.add_argument("cmd", choices=["plan-one", "submit-plan", "submit-test", "gate", "regate", "curate", "incomplete", "submit-full", "report", "status", "submit-list", "apply-causes"])
+    ap.add_argument("--wave", help="the wave directory (every command but apply-causes)"); ap.add_argument("--pilot", default=HERE, help="apply-causes: the folder of committed wave folders (default: this script's folder)"); ap.add_argument("--inputs", default=f"{P}/results/sra_reads_typing/wave_inputs")
     ap.add_argument("--species"); ap.add_argument("--conc", type=int, default=60, help="tasks running at once per array (the curator lifted the CPU limit for this work, 2026-10-27)")
     ap.add_argument("--cpus", type=int, default=1, help="CPUs per run task: every step is single-threaded (measured 2026-10-27), and the exfab account is limited to 32 CPUs, so 1 CPU gives 32 tasks at once instead of 8")
     ap.add_argument("--mem", default="6gb", help="memory per run task (peak measured 4.9 GB)")
@@ -428,7 +488,8 @@ def main():
     ap.add_argument("--retry-part", default="stajichlab:stajichlab", help="partition:account[:qos] of the retry pass and the summary job; keep it NOT preemptible. 'none': no retry arrays (then run `incomplete` and resubmit)")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
-    {"plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "regate": regate, "curate": curate, "incomplete": incomplete, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)
+    if a.cmd != "apply-causes" and not a.wave: ap.error("--wave is required")
+    {"apply-causes": apply_causes, "plan-one": plan_one, "submit-plan": submit_plan, "submit-test": submit_test, "gate": gate, "regate": regate, "curate": curate, "incomplete": incomplete, "submit-full": submit_full, "report": report, "status": status, "submit-list": submit_list}[a.cmd](a)
 
 
 if __name__ == "__main__":

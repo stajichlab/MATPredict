@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATPredict raw reads: population report</title>
+<meta name="description" content="Mating-type idiomorph frequency of a species from the read sketches of every public and local isolate: per isolate and per clone, by country, study and lineage.">
+<link rel="icon" type="image/svg+xml" href="../logo/favicon.svg">
+<link rel="stylesheet" href="../site.css">
+<script src="../theme.js"></script>
+<script data-goatcounter="https://hyphaltip.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+<style>
+  .forest { width:100%; overflow-x:auto; }
+  .forest svg { display:block; max-width:100%; height:auto; }
+  .forest text { fill:var(--fg); font-size:12px; }
+  .forest .axis { stroke:var(--line); }
+  .forest .half { stroke:var(--muted); stroke-dasharray:3 3; }
+  .forest .ci { stroke:var(--c1); stroke-width:2; }
+  .forest .pt { fill:var(--c1); }
+  .forest .sig .pt { fill:var(--undet); } .forest .sig .ci { stroke:var(--undet); }
+  #pcoa svg { display:block; width:100%; max-width:640px; height:auto; border:1px solid var(--line); border-radius:6px; background:var(--card); }
+  #pcoa .m1 { fill:var(--c1); } #pcoa .m2 { fill:var(--c2); } #pcoa .m3 { fill:var(--two); } #pcoa .m0 { fill:var(--other); }
+  .key { display:inline-flex; align-items:center; gap:6px; margin-right:14px; font-size:.92rem; }
+  .key i { width:11px; height:11px; border-radius:50%; display:inline-block; }
+  tr.sig td { font-weight:600; }
+</style>
+</head>
+<body>
+<nav><a class="brand" href="../" aria-label="MATPredict home"><img class="logo-l" src="../logo/horizontal.svg" alt="MATPredict" height="34"><img class="logo-d" src="../logo/horizontal-dark.svg" alt="" height="34"></a><a href="../">Overview</a><a href="../results.html">Genomes by taxon</a><a href="./">Raw reads</a><a href="../page/index.html">Browser tool</a><a href="../about.html">About</a><a href="https://github.com/stajichlab/MATPredict">GitHub</a><select id="theme" aria-label="Colour theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="paper">Paper</option><option value="neuromancer">Neuromancer</option></select></nav>
+<main>
+  <p class="muted"><a href="./">Raw reads</a> / <span id="crumb"></span></p>
+  <h1 id="title">Population report</h1>
+  <p class="lede" id="lede"></p>
+  <div class="cards" id="cards"></div>
+  <div class="notice" id="first"></div>
+
+  <h2>Mating-type frequency</h2>
+  <p id="headline"></p>
+  <div class="controls"><label>Count <select id="unit"><option value="clones">Clones (near-identical isolates counted once)</option><option value="samples">Isolates</option></select></label></div>
+  <h3>By country</h3>
+  <div class="forest" id="f-country"></div>
+  <p class="muted">MAT1-1 share of single calls, with its 95% Wilson interval; the dashed line is 50%. Countries with fewer than <span class="ming"></span> typed <span class="unitname"></span> are pooled as <i>other</i>. Highlighted: differs from 50% at p &lt; 0.01 (exact binomial test, not corrected for the number of groups).</p>
+  <h3>By study</h3>
+  <div class="tablewrap"><table id="t-study"></table></div>
+  <p class="muted">Studies are BioProjects (hover for the title); local collections of the Population_Genomics project are listed by collection, never by strain.</p>
+
+  <h2>Lineages</h2>
+  <p id="lin-intro"></p>
+  <div class="tablewrap"><table id="t-lin"></table></div>
+
+  <h2>Population structure</h2>
+  <p id="pcoa-intro"></p>
+  <div id="pcoa"></div>
+  <p id="pcoa-key"></p>
+
+  <h2>Sketch and reads-type agree</h2>
+  <p id="conc-intro"></p>
+  <div class="tablewrap"><table id="t-conc"></table></div>
+
+  <h2>Samples left out</h2>
+  <p id="out-intro"></p>
+  <div class="tablewrap"><table id="t-other"></table></div>
+
+  <h2>Gene and Starship screens</h2>
+  <p>The same sketches answer presence questions for any sequence. These are the standing screens of this store: each target is called from its own specific k-mers (absent from the other targets and from the core shared by 95% of isolates). The truth columns compare with assemblies or a curated set where one exists. A short target (a single gene, a few specific k-mers) gives a coarse call: <i>partial</i> means only some of its k-mers were seen.</p>
+  <div class="tablewrap"><table id="t-scr"></table></div>
+
+  <h2>Public isolates</h2>
+  <div class="controls"><label>Call <select id="callf"><option value="">all</option></select></label> <label>Search <input id="q" type="search" placeholder="BioSample, run, strain, study, country"></label> <a id="dl" href="#">Download TSV</a></div>
+  <div class="tablewrap"><table id="runs"><thead><tr><th>BioSample</th><th>Run</th><th>Strain</th><th>Study</th><th>Country</th><th>Call</th><th>Sketch</th><th>Reads-type</th><th>Clone</th><th>Lineage</th><th>Left out</th></tr></thead><tbody></tbody></table></div>
+  <p class="muted" id="runs-note"></p>
+
+  <h2>Method and limits</h2>
+  <ul id="method"></ul>
+  <p class="muted" id="built"></p>
+</main>
+<footer class="muted">MATPredict · <a href="../about.html">About</a> · Visits are counted with <a href="https://www.goatcounter.com">GoatCounter</a>, which sets no cookies and collects no personal data: it only tallies anonymous page views.</footer>
+<script type="module">
+import { fmt } from "../charts.js";
+import { makeSortable } from "../sortable.js";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const slug = new URLSearchParams(location.search).get("s") || "aspergillus_fumigatus";
+let D;
+try { D = await fetch("../data/reads/population_" + encodeURIComponent(slug) + ".json").then(r => { if (!r.ok) throw 0; return r.json(); }); }
+catch { document.getElementById("title").textContent = "Population report not found"; throw 0; }
+const sp = "<i>" + esc(D.species) + "</i>", S = D.store, CC = D.overall["clone-corrected"], PS = D.overall.samples, TITLES = D.study_titles || {};
+const P = x => x == null ? "–" : (100 * x).toFixed(1) + "%";
+document.title = D.species + " population MAT report - MATPredict";
+document.getElementById("crumb").innerHTML = sp + " population";
+document.getElementById("title").innerHTML = sp + ": mating type across " + fmt(S.sketched) + " isolates";
+document.getElementById("lede").textContent = "Every public whole-genome read set of the species (one per BioSample, " + fmt(S.public) + ") and every read set of the lab's population-genomics collection (" + fmt(S.local) + "), each reduced to a 30x read sketch and typed twice: by the MATPredict reads panel and by idiomorph-specific k-mers of the sketch.";
+document.getElementById("cards").innerHTML = [[fmt(S.sketched), "isolates sketched"], [fmt(D.excluded.kept || 0), "kept for the frequency"], [fmt(CC.n), "clones typed"],
+  [P(CC.frac), "MAT1-1, per clone (95% CI " + P(CC.lo) + "–" + P(CC.hi) + ")"], [P(PS.frac), "MAT1-1, per isolate"]]
+  .map(([v, l]) => '<div class="card"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>').join("");
+document.getElementById("first").innerHTML = "<b>Read this first.</b> Public collections over-sample some strains: a study may sequence one clone dozens of times. The <b>per-clone</b> numbers give each group of near-identical isolates (sketch similarity at least " + S.clone_ani + ") one vote, the majority call of its members; they are the closest this survey comes to a population frequency. Isolates of another species filed under this name, curator exclusions and isolates flagged as mixtures are left out (see <a href=\"#t-other\">Samples left out</a>). Local isolates count in every number but are not listed by name.";
+document.getElementById("headline").innerHTML = "Per clone, " + fmt(CC.MAT1_1) + " clones are MAT1-1 and " + fmt(CC.MAT1_2) + " MAT1-2: <b>" + P(CC.frac) + " MAT1-1</b> (95% CI " + P(CC.lo) + "–" + P(CC.hi) + "; exact binomial test against 50%, p = " + CC.p + "). Per isolate the share is " + P(PS.frac) + " (" + fmt(PS.MAT1_1) + " / " + fmt(PS.MAT1_1 + PS.MAT1_2) + "); " + fmt(PS.both) + " isolates carry both idiomorphs (most likely mixed cultures).";
+document.querySelectorAll(".ming").forEach(e => e.textContent = D.min_group);
+
+function forest(el, rows) {
+  const W = 640, rh = 22, lw = 150, rw = 140, pw = W - lw - rw, H = rows.length * rh + 26, x = v => lw + v * pw;
+  let s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="MAT1-1 share by group with 95% intervals">';
+  [0, .25, .5, .75, 1].forEach(t => s += '<line class="' + (t === .5 ? "half" : "axis") + '" x1="' + x(t) + '" x2="' + x(t) + '" y1="4" y2="' + (H - 18) + '"/><text x="' + x(t) + '" y="' + (H - 4) + '" text-anchor="middle">' + t * 100 + "%</text>");
+  rows.forEach((r, i) => { const y = 14 + i * rh, sig = r.p != null && r.p < 0.01;
+    s += '<g class="' + (sig ? "sig" : "") + '"><title>' + esc(r.group) + ": " + r.MAT1_1 + " MAT1-1 / " + r.n + " (" + P(r.frac) + ", 95% CI " + P(r.lo) + "–" + P(r.hi) + ")</title>" +
+      '<text x="' + (lw - 8) + '" y="' + (y + 4) + '" text-anchor="end">' + esc(r.group.length > 22 ? r.group.slice(0, 21) + "…" : r.group) + "</text>" +
+      '<line class="ci" x1="' + x(r.lo) + '" x2="' + x(r.hi) + '" y1="' + y + '" y2="' + y + '"/><circle class="pt" cx="' + x(r.frac) + '" cy="' + y + '" r="4.5"/>' +
+      '<text x="' + (W - rw + 10) + '" y="' + (y + 4) + '">' + P(r.frac) + " of " + fmt(r.n) + "</text></g>"; });
+  el.innerHTML = s + "</svg>";
+}
+const studyLink = s => /^PRJ[A-Z]{1,2}\d+$/.test(s) ? '<a href="https://www.ncbi.nlm.nih.gov/bioproject/' + esc(s) + '" title="' + esc(TITLES[s] || s) + '">' + esc(s) + "</a>"
+  : /^[SED]RP\d+$/.test(s) ? '<a href="https://www.ncbi.nlm.nih.gov/bioproject/?term=' + esc(s) + '">' + esc(s) + "</a>" : s === "other" ? "<i>other (small studies pooled)</i>" : esc(s) + ' <span class="muted">(local collection)</span>';
+const sortStudy = makeSortable(document.getElementById("t-study"));
+function drawFreq() {
+  const u = document.getElementById("unit").value;
+  document.querySelectorAll(".unitname").forEach(e => e.textContent = u === "clones" ? "clones" : "isolates");
+  forest(document.getElementById("f-country"), D.by_country[u]);
+  document.getElementById("t-study").innerHTML = "<thead><tr><th>Study</th><th class=\"n\">Typed " + (u === "clones" ? "clones" : "isolates") + "</th><th class=\"n\">MAT1-1</th><th class=\"n\">MAT1-2</th><th class=\"n\">MAT1-1 share</th><th class=\"n\">95% CI</th><th class=\"n\">p vs 50%</th></tr></thead><tbody>" +
+    D.by_study[u].map(r => '<tr class="' + (r.p != null && r.p < 0.01 ? "sig" : "") + '"><td>' + studyLink(r.group) + '</td><td class="n">' + fmt(r.n) + '</td><td class="n">' + r.MAT1_1 + '</td><td class="n">' + r.MAT1_2 + '</td><td class="n">' + P(r.frac) + '</td><td class="n">' + P(r.lo) + "–" + P(r.hi) + '</td><td class="n">' + r.p + "</td></tr>").join("") + "</tbody>";
+  sortStudy.refresh();
+}
+document.getElementById("unit").addEventListener("input", drawFreq); drawFreq();
+
+const sig = D.lineages.filter(r => r.p != null && r.p < 0.01 && r.group !== "other");
+document.getElementById("lin-intro").innerHTML = "Lineages are groups of isolates with sketch similarity of at least " + S.lineage_ani + " (average linkage), coarser than clones. " + D.lineages.filter(r => r.group !== "other").length + " lineages have " + D.min_group + " or more typed clones. " +
+  (sig.length ? sig.length + " depart from 50% at p &lt; 0.01: each is a set of closely related clones that mostly share one idiomorph, as expected when a lineage spreads clonally; they do not shift the species-wide frequency." : "None departs from 50% at p &lt; 0.01.");
+const nw = s => '<span style="white-space:nowrap">' + s + "</span>";
+const top = a => a.map(([k, v]) => nw(esc(k === "local" ? "local collections" : k) + " " + v)).join(", ");
+const sortLin = makeSortable(document.getElementById("t-lin"));
+document.getElementById("t-lin").innerHTML = "<thead><tr><th>Lineage</th><th class=\"n\">Isolates</th><th class=\"n\">Clones typed</th><th class=\"n\">MAT1-1</th><th class=\"n\">MAT1-2</th><th class=\"n\">MAT1-1 share (95% CI)</th><th class=\"n\">p vs 50%</th><th>Main studies</th><th>Main countries</th></tr></thead><tbody>" +
+  D.lineages.filter(r => r.group !== "other").map(r => '<tr class="' + (r.p != null && r.p < 0.01 ? "sig" : "") + '"><td>' + (r.group === "none" ? "no lineage (outliers)" : "L" + esc(r.group)) + '</td><td class="n">' + r.samples + '</td><td class="n">' + r.n + '</td><td class="n">' + r.MAT1_1 + '</td><td class="n">' + r.MAT1_2 + '</td><td class="n">' + P(r.frac) + " (" + P(r.lo) + "–" + P(r.hi) + ')</td><td class="n">' + r.p + "</td><td>" + r.studies.map(([k, v]) => nw(studyLink(k).replace(/ <span.*<\/span>/, "") + " " + v)).join(", ") + "</td><td>" + top(r.countries) + "</td></tr>").join("") + "</tbody>";
+sortLin.refresh();
+
+{ const pts = D.pcoa.points, W = 640, H = 460, pad = 14;
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]), q = (a, f) => { const s = [...a].sort((u, v) => u - v); return s[Math.floor(f * (s.length - 1))]; };
+  const x0 = q(xs, .002), x1 = q(xs, .998), y0 = q(ys, .002), y1 = q(ys, .998);
+  const X = v => pad + (Math.min(Math.max(v, x0), x1) - x0) / (x1 - x0) * (W - 2 * pad), Y = v => H - pad - (Math.min(Math.max(v, y0), y1) - y0) / (y1 - y0) * (H - 2 * pad);
+  const order = [0, 3, 2, 1];      // draw unresolved first, MAT1-1 last
+  let s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="PCoA of sketch distances, isolates coloured by mating type">';
+  order.forEach(c => pts.filter(p => p[2] === c).forEach(p => s += '<circle class="m' + c + '" cx="' + X(p[0]).toFixed(1) + '" cy="' + Y(p[1]).toFixed(1) + '" r="2.4" fill-opacity=".7"/>'));
+  document.getElementById("pcoa").innerHTML = s + "</svg>";
+  const v = D.pcoa.var;
+  document.getElementById("pcoa-intro").textContent = "Principal coordinates of the all-against-all sketch distances (" + fmt(pts.length) + " isolates; samples of another species and curator exclusions removed; the most extreme 0.2% on each axis are drawn at the edge)." + (v ? " Axis 1 carries " + (100 * v[0]).toFixed(1) + "% of the variance, axis 2 " + (100 * v[1]).toFixed(1) + "%." : "") + " Both idiomorphs are spread across the whole population, as expected for a species that recombines.";
+  document.getElementById("pcoa-key").innerHTML = [["m1", "MAT1-1", "--c1"], ["m2", "MAT1-2", "--c2"], ["m3", "both", "--two"], ["m0", "not called", "--other"]].map(([c, l, t]) => '<span class="key"><i style="background:var(' + t + ')"></i>' + l + " " + fmt(pts.filter(p => p[2] === +c[1]).length) + "</span>").join("") + '<span class="muted">PCo1 across, PCo2 up.</span>';
+}
+
+{ const C = D.concordance, single = r => r === "MAT1-1" || r === "MAT1-2";
+  const both = C.filter(r => single(r.reads_type) && single(r.sketch)), agree = both.filter(r => r.reads_type === r.sketch).reduce((a, r) => a + r.n, 0), opp = both.filter(r => r.reads_type !== r.sketch).reduce((a, r) => a + r.n, 0);
+  document.getElementById("conc-intro").innerHTML = "Each isolate is typed twice from the same 30x subsample: by <code>matpredict reads-type</code> (the species panel, with flank depth as a control) and by the idiomorph-specific k-mers in its stored sketch. Where both give one idiomorph they agree " + fmt(agree) + " times and disagree " + opp + " times. The page uses the reads-type call and falls back to the sketch call when reads-type had too little depth.";
+  document.getElementById("t-conc").innerHTML = "<thead><tr><th>Reads-type call</th><th>Sketch call</th><th class=\"n\">Isolates</th></tr></thead><tbody>" + C.map(r => "<tr><td>" + esc(r.reads_type) + "</td><td>" + esc(r.sketch) + '</td><td class="n">' + fmt(r.n) + "</td></tr>").join("") + "</tbody>"; }
+
+{ const E = D.excluded, O = D.outliers, K = O.kinds || {};
+  document.getElementById("out-intro").innerHTML = "Left out of the frequency: " + fmt(E.other_species || 0) + " isolates of another species (mean sketch similarity to the rest below 0.95), " + fmt(E.qc_mixture || 0) + " flagged as mixtures by the k-mer QC and " + fmt(E.curator_exclude || 0) + " excluded by the curator (a low-quality sequencing). " +
+    "The distance step marks " + O.n + " isolates as outliers (mean similarity below " + O.cutoff + ", against a median of " + O.median_ani + "): " + (K.other_species || 0) + " are another species, " + (K.poor_sample || 0) + " are poor samples (thin coverage, few k-mers or a mixture flag) and " + (K.divergent_lineage || 0) + " are clean isolates of divergent lineages, which stay in. Isolates of another species, by study:";
+  document.getElementById("t-other").innerHTML = "<thead><tr><th>Study</th><th class=\"n\">Isolates</th><th class=\"n\">Mean similarity to the rest</th><th>BioProject title</th></tr></thead><tbody>" + O.other_species_studies.map(r => "<tr><td>" + studyLink(r.study) + '</td><td class="n">' + r.n + '</td><td class="n">' + r.mean_ani + "</td><td>" + esc(r.title || "") + "</td></tr>").join("") + "</tbody>"; }
+
+{ const tbl = document.getElementById("t-scr"), srt = makeSortable(tbl);
+  tbl.innerHTML = "<thead><tr><th>Target</th><th class=\"n\">Length (bp)</th><th class=\"n\">Specific k-mers</th><th class=\"n\">Present</th><th class=\"n\">Partial</th><th class=\"n\">Absent</th><th class=\"n\">Agree with truth</th><th class=\"n\">False present</th><th class=\"n\">False absent</th></tr></thead><tbody>" +
+    D.screens.map(r => "<tr><td>" + esc(r.target) + '</td><td class="n">' + fmt(r.length) + '</td><td class="n">' + r.specific_hashes + '</td><td class="n">' + fmt(r.present) + '</td><td class="n">' + fmt(r.partial) + '</td><td class="n">' + fmt(r.absent) + '</td><td class="n">' + (r.truth ? (r.truth.TP + r.truth.TN) + "/" + (r.truth.TP + r.truth.TN + r.truth.FP + r.truth.FN) : "–") + '</td><td class="n">' + (r.truth ? r.truth.FP : "–") + '</td><td class="n">' + (r.truth ? r.truth.FN : "–") + "</td></tr>").join("") + "</tbody>";
+  srt.refresh(); }
+
+const tsvUrl = "../data/reads/population_" + encodeURIComponent(slug) + ".tsv";
+document.getElementById("dl").href = tsvUrl; document.getElementById("dl").download = slug + "_population_mat.tsv";
+const rows = await fetch(tsvUrl).then(r => r.ok ? r.text() : "").then(t => { const [h, ...ls] = t.trim().split("\n"), k = h.split("\t"); return ls.map(l => Object.fromEntries(l.split("\t").map((v, i) => [k[i], v]))); }).catch(() => []);
+const cf = document.getElementById("callf"), qi = document.getElementById("q"), sortRuns = makeSortable(document.getElementById("runs")), LIMIT = 200;
+[...new Set(rows.map(r => r.call))].sort().forEach(c => cf.add(new Option(c, c)));
+function drawRuns() {
+  const f = rows.filter(r => (!cf.value || r.call === cf.value) && (r.biosample + " " + r.run + " " + r.strain + " " + r.study + " " + r.country + " " + (TITLES[r.study] || "")).toLowerCase().includes(qi.value.toLowerCase()));
+  document.querySelector("#runs tbody").innerHTML = f.slice(0, LIMIT).map(r => '<tr><td><a href="https://www.ncbi.nlm.nih.gov/biosample/' + esc(r.biosample) + '">' + esc(r.biosample) + '</a></td><td><a href="https://www.ncbi.nlm.nih.gov/sra/' + esc(r.run) + '">' + esc(r.run) + "</a></td><td>" + esc(r.strain) + "</td><td>" + studyLink(r.study) + "</td><td>" + esc(r.country) + "</td><td>" + esc(r.call) + "</td><td>" + esc(r.sketch_call) + "</td><td>" + esc(r.reads_type_call) + "</td><td>" + esc(r.clone) + "</td><td>" + esc(r.lineage) + "</td><td>" + esc(r.excluded) + "</td></tr>").join("");
+  document.getElementById("runs-note").textContent = fmt(f.length) + " of " + fmt(rows.length) + " public isolates match" + (f.length > LIMIT ? "; the first " + LIMIT + " are shown (search or download the TSV for all)" : "") + ". Call: reads-type, else the sketch. Clone and lineage are group numbers of this store.";
+  sortRuns.refresh();
+}
+[cf, qi].forEach(e => e.addEventListener("input", drawRuns)); drawRuns();
+
+document.getElementById("method").innerHTML = [
+  "<b>Isolates:</b> every public Illumina whole-genome read set of the species in the ENA/SRA (one run per BioSample, the paired run with most bases; crosses, mutants and evolution lines left out) and every read set of the lab's population-genomics collection. " + fmt(S.sketched) + " of " + fmt(S.samples) + " were sketched; " + S.missing + " could not be downloaded in full.",
+  "<b>Sketch:</b> a subsample of 30x genome coverage per isolate, sketched with sourmash (FracMinHash " + esc(S.params) + "). The read sets are not kept; the sketches are, so new questions need no new downloads.",
+  "<b>Clones and lineages:</b> similarity is solid containment (k-mers seen too rarely in an isolate, mostly sequencing errors, do not count against it). Isolates are grouped by average linkage at " + S.clone_ani + " (clones; two sequencings of one strain score about 0.99996, different strains below 0.999) and at " + S.lineage_ani + " (lineages).",
+  "<b>Limits:</b> collections are not random samples of the species; the clone correction removes repeated strains, not sampling bias by place or source. A clone whose members disagree, or that has only isolates with both idiomorphs, gets no vote. Country is the submitter's country field, missing for local isolates and for many public ones.",
+  'Code: <a href="https://github.com/stajichlab/MATPredict/tree/main/datasets/reads/sketch_store">datasets/reads/sketch_store</a> (build, queries, <code>mat_frequency.py</code>, <code>export_report.py</code>).'
+].map(x => "<li>" + x + "</li>").join("");
+document.getElementById("built").textContent = "Report built " + D.built + " from the sketch store of " + D.species + ".";
+</script>
+</body>
+</html>

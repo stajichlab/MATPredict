@@ -61,6 +61,14 @@ python mat_frequency.py --store STORE --out OUTDIR      # MAT1-1 fraction per sa
 leaves them out, together with samples of another species (mean ANI < 0.95) and QC-flagged mixtures, and says why in its
 `samples.tsv`. Its clone-corrected frequency gives each clone group (ANI 0.9995) one vote.
 
+## Site report
+
+`export_report.py --store STORE --matfreq MATFREQ_DIR --species "..." --slug <slug> --titles ../sra_survey/pilot/study_titles.tsv
+--out reports/<slug>` (on the HPCC) writes `reports/<slug>/population.json` and `runs_public.tsv`, which are committed;
+`scripts/build_reads_site.py` copies them for `web/intro/reads/population.html?s=<slug>`, lists the report on the raw-reads overview
+and links it from the species report. Local isolates count in every number but are never named (curator decision 2026-11-09):
+the run table is public runs only and the PCoA points carry no identifiers.
+
 Public samples: one run per BioSample (paired, most bases), natural isolates only (`survey_ena.classify_study` drops crosses,
 mutants, evolution lines). Local samples: every FASTQ sample of the Population_Genomics subproject; a local strain that matches a
 public strain name is kept and named in `also_public` (two sequencings of what may be one strain, a useful same-strain check).

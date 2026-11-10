@@ -193,3 +193,24 @@ def test_a_uniform_species_gives_groups_but_no_counts(tmp_path):
     tsv(tmp_path / "datasets/reads/sra_survey/pilot/clone_solid/summary.tsv", ["slug", "runs", "between_median"], [["sp_one", "12", "0.99990"], ["sp_two", "5", "0.99"]])
     cl = build(tmp_path, tmp_path.parent)["clones"]
     assert cl["uniform"] and cl["between_median"] == 0.9999 and cl["counts"] is None
+
+
+def test_population_report_is_copied_and_indexed(tmp_path):
+    """A sketch-store report (datasets/reads/sketch_store/reports/<slug>/) is copied for reads/population.html and listed in the index."""
+    make_repo(tmp_path, {}, ["MAT1-1", "MAT1-2"] * 3)
+    rep = tmp_path / "datasets/reads/sketch_store/reports/sp_one"; rep.mkdir(parents=True)
+    cc = {"group": "all", "n": 40, "MAT1_1": 21, "MAT1_2": 19, "both": 0, "frac": 0.525, "lo": 0.375, "hi": 0.67, "p": 0.87}
+    (rep / "population.json").write_text(json.dumps({"species": "Species one", "built": "2026-11-09", "store": {"sketched": 50, "public": 45, "local": 5},
+                                                     "excluded": {"kept": 48}, "overall": {"clone-corrected": cc, "samples": cc}}))
+    (rep / "runs_public.tsv").write_text("biosample\trun\nSAMN1\tSRR1\n")
+    build(tmp_path, tmp_path.parent)
+    out = tmp_path / "out"
+    assert json.load(open(out / "index.json"))["population"] == [{"slug": "sp_one", "species": "Species one", "samples": 50, "public": 45, "local": 5, "kept": 48,
+                                                                  "clones": 40, "frac": 0.525, "lo": 0.375, "hi": 0.67, "built": "2026-11-09", "has_species_page": True}]
+    assert (out / "population_sp_one.json").exists() and (out / "population_sp_one.tsv").read_text().startswith("biosample")
+
+
+def test_no_population_reports_gives_an_empty_list(tmp_path):
+    make_repo(tmp_path, {}, ["MAT1-1", "MAT1-2"])
+    build(tmp_path, tmp_path.parent)
+    assert json.load(open(tmp_path / "out" / "index.json"))["population"] == []

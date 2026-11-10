@@ -175,6 +175,26 @@ def curated(c, repo, out, lin=None):
     return s
 
 
+def population_reports(repo, out, species_slugs):
+    """Population MAT reports of the sketch stores (datasets/reads/sketch_store/reports/<slug>/population.json and runs_public.tsv,
+    written by export_report.py on the HPCC and committed): copied to population_<slug>.json/.tsv for reads/population.html.
+    Returns the index entries; `has_species_page` says whether the survey has a species report to link back to."""
+    import shutil
+    base = os.path.join(repo, "datasets", "reads", "sketch_store", "reports"); entries = []
+    for slug in sorted(os.listdir(base)) if os.path.isdir(base) else []:
+        src = os.path.join(base, slug, "population.json")
+        if not os.path.exists(src):
+            continue
+        d = json.load(open(src)); cc = d["overall"]["clone-corrected"]
+        shutil.copy(src, os.path.join(out, f"population_{slug}.json"))
+        if os.path.exists(os.path.join(base, slug, "runs_public.tsv")):
+            shutil.copy(os.path.join(base, slug, "runs_public.tsv"), os.path.join(out, f"population_{slug}.tsv"))
+        entries.append(dict(slug=slug, species=d["species"], samples=d["store"]["sketched"], public=d["store"]["public"], local=d["store"]["local"],
+                            kept=d["excluded"].get("kept", 0), clones=cc["n"], frac=cc["frac"], lo=cc["lo"], hi=cc["hi"], built=d["built"],
+                            has_species_page=slug in species_slugs))
+    return entries
+
+
 STUDY_TITLES = {}
 
 
@@ -238,7 +258,8 @@ def main():
            "disagree": sum(r["verdict"] == "DISAGREE" for r in tr), "confidence": dict(Counter(s["confidence"] for s in index)),
            "calls": dict(Counter(r["call"] for r in allr)), "rescued": sum(1 for r in typed if r.get("rescue"))}
     cur = [curated(c, a.repo, a.out, lineage_fields(LT, c["species"])) for c in CURATED if os.path.exists(os.path.join(a.repo, c["src"]))]
-    json.dump({"totals": tot, "species": index, "curated": cur, "registry_version": registry_version()}, open(os.path.join(a.out, "index.json"), "w"), separators=(",", ":"))
+    pop = population_reports(a.repo, a.out, {s["slug"] for s in index})
+    json.dump({"totals": tot, "species": index, "curated": cur, "population": pop, "registry_version": registry_version()}, open(os.path.join(a.out, "index.json"), "w"), separators=(",", ":"))
     print(f"{len(index)} species, {tot['runs']} runs; {tot['agree']}/{tot['with_assembly_call']} agree; {tot['confidence']}")
 
 

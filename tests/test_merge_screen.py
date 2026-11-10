@@ -36,3 +36,12 @@ def test_a_no_call_run_with_a_species_call_is_ok():
     stage = [{"run": "A", "screen": "no_call"}, {"run": "B", "screen": "no_call"}, {"run": "C", "screen": "mixed"}]
     rows, _ = ms.merge([], stage, species_of=lambda r: "Clonostachys rosea" if r == "A" else "")
     assert [r["screen"] for r in rows] == ["ok", "no_call", "mixed"]
+
+
+def test_regating_a_thin_evidence_species_keeps_the_cap():
+    """A species typed on thin evidence (single_locus / few_runs_<n>) stays UNVALIDATED when a screen merge decides it again (curator 2026-11-09)."""
+    rows = [{"run": f"R{i}", "group": "sp_x", "state": "done", "call": "MAT1-1", "truth": "MAT1-1", "shared_depth": "9.0"} for i in range(12)]
+    gates = [{"slug": "sp_x", "species": "Species x", "decision": "UNVALIDATED:single_locus",
+              "reasons": "runs=2 done=2 typed=2 both=0 none/low=0 truth_typed=2 agree=2 median_shared_depth=9.0 thin=single_locus"}]
+    gates, changes = ms.regate_species(rows, gates)
+    assert gates[0]["decision"] == "UNVALIDATED:single_locus" and gates[0]["reasons"].endswith(" thin=single_locus") and changes == []

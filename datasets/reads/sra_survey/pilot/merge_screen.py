@@ -44,8 +44,8 @@ def regate_species(rows, gates, decide=None):
         if not rs or not g["reasons"].startswith("runs="):
             continue
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        from wave_driver import gate_row          # applies the curator rulings (ZYGOSITY counting, RELEASED species) as the gate does
-        row = gate_row(g["slug"], g["species"], rs)
+        from wave_driver import gate_row, thin_of      # applies the curator rulings (ZYGOSITY counting, RELEASED species, thin-evidence cap) as the gate does
+        row = gate_row(g["slug"], g["species"], rs, thin_of(g["reasons"]))
         new, reasons = row["decision"], row["reasons"]
         if reasons == g["reasons"] and new == g["decision"]:
             continue

@@ -1,6 +1,6 @@
 slug	species	decision	reasons
 rhizopus_delemar	Rhizopus delemar	UNVALIDATED:typed_0.64+provisional_typed_0.64	runs=14 done=14 typed=9 both=0 none/low=5 truth_typed=4 agree=4 median_shared_depth=32.1
-rhizopus_stolonifer	Rhizopus stolonifer	HOLD:too_few_loci	held:too_few_loci
-mucor_piriformis	Mucor piriformis	HOLD:too_few_loci	held:too_few_loci
+rhizopus_stolonifer	Rhizopus stolonifer	UNVALIDATED:single_locus+typed_0.74+provisional_typed_0.74	runs=19 done=19 typed=14 both=0 none/low=5 truth_typed=2 agree=2 median_shared_depth=32.2 thin=single_locus
+mucor_piriformis	Mucor piriformis	HOLD:single_locus+typed_0.00+provisional_typed_0.00	runs=9 done=9 typed=0 both=0 none/low=9 truth_typed=0 agree=0 median_shared_depth=8.8 thin=single_locus
 mucor_hiemalis	Mucor hiemalis	HOLD:panel_build_failed	held:panel_build_failed
-mucor_racemosus	Mucor racemosus	HOLD:too_few_loci	held:too_few_loci
+mucor_racemosus	Mucor racemosus	HOLD:single_locus+typed_0.10+provisional_typed_0.10	runs=20 done=20 typed=2 both=0 none/low=18 truth_typed=0 agree=0 median_shared_depth=8.7 thin=single_locus

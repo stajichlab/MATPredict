@@ -121,7 +121,7 @@ def test_the_committed_gate_tables_are_what_regate_gives():
                 continue
             done, typed, both, truth, agree, msd = int(m[2]), int(m[3]), int(m[4]), int(m[6]), int(m[7]), float(m[8])
             counted = done if "many_failed" not in r["decision"] else done * 2 + 1
-            new, _ = wd.decide_species(r["species"], counted, done, typed, both, truth, agree, msd)
+            new, _ = wd.decide_species(r["species"], counted, done, typed, both, truth, agree, msd, wd.thin_of(r["reasons"]))
             assert new.split(":")[0] == r["decision"].split(":")[0], (wave, r["species"], r["decision"], new)
 
 
@@ -262,3 +262,33 @@ def test_apply_causes_rewrites_typed_and_panel_held_species_and_lists_the_change
     assert got == {"sp_homo": "NOT_TYPABLE:homothallic", "sp_held": "NOT_TYPABLE:silent_cassettes", "sp_other": "PASS"}
     ch = wd.rd(w / "cause_changes.tsv")
     assert [(c["slug"], c["previous"]) for c in ch] == [("sp_homo", "PROVISIONAL_HOMOTHALLIC"), ("sp_held", "HOLD:panel_build_failed")]
+
+
+# Thin evidence (curator 2026-11-09): one assembled locus of an idiomorph, or fewer than 4 runs, no longer holds a species at the plan stage; it is typed and capped at UNVALIDATED.
+def test_thin_evidence_caps_a_passing_species_at_unvalidated_with_the_reason_first():
+    assert wd.decide_species("Species x", 2, 2, 2, 0, 0, 0, 9.0)[0] == "PROVISIONAL"                       # the numbers alone
+    assert wd.decide_species("Species x", 2, 2, 2, 0, 0, 0, 9.0, ("few_runs_2",))[0] == "UNVALIDATED:few_runs_2"
+    assert wd.decide_species("Species x", 20, 20, 20, 0, 10, 10, 9.0, ("single_locus",))[0] == "UNVALIDATED:single_locus"
+    assert wd.decide_species("Species x", 3, 3, 2, 0, 0, 0, 9.0, ("single_locus", "few_runs_3"))[0] == "UNVALIDATED:single_locus+few_runs_3+provisional_typed_0.67"
+
+
+def test_thin_evidence_leaves_a_hold_held_and_a_cause_alone(monkeypatch):
+    assert wd.decide_species("Species x", 2, 2, 0, 0, 0, 0, 9.0, ("few_runs_2",))[0].startswith("HOLD:few_runs_2+typed_0.00")
+    monkeypatch.setitem(wd.CAUSES, "Species y", "homothallic")
+    assert wd.decide_species("Species y", 2, 2, 0, 2, 0, 0, 9.0, ("few_runs_2",))[0] == "NOT_TYPABLE:homothallic"
+
+
+def test_thin_tokens_go_from_the_plan_to_the_gates_row_and_survive_regate(tmp_path):
+    import argparse
+    wave = tmp_path / "wave"; (wave / "plan" / "sp_x").mkdir(parents=True); (wave / "test" / "summary").mkdir(parents=True)
+    (wave / "species.tsv").write_text("species\tslug\nSpecies x\tsp_x\n")
+    (wave / "plan" / "sp_x" / "status").write_text("planned\n")
+    (wave / "plan" / "sp_x" / "thin").write_text("single_locus+few_runs_2\n")
+    cols = ["group", "run_accession", "state", "call", "truth", "shared_depth"]
+    (wave / "test" / "summary" / "results_all.tsv").write_text("\t".join(cols) + "\n" + "".join(f"sp_x\tR{i}\tdone\tMAT1-1\t\t9.0\n" for i in range(2)))
+    wd.gate(argparse.Namespace(wave=str(wave), stage="test"))
+    row = next(csv.DictReader(open(wave / "gates.tsv"), delimiter="\t"))
+    assert row["decision"] == "UNVALIDATED:single_locus+few_runs_2" and row["reasons"].endswith(" thin=single_locus+few_runs_2")
+    assert wd.thin_of(row["reasons"]) == ("single_locus", "few_runs_2")
+    wd.regate(argparse.Namespace(wave=str(wave), in_file="gates.tsv", out_file=None))
+    assert next(csv.DictReader(open(wave / "gates.tsv"), delimiter="\t"))["decision"] == "UNVALIDATED:single_locus+few_runs_2"

@@ -15,6 +15,7 @@ CAUSE_TEXT = {      # page wording for the causes of causes.tsv (curator ruling 
     "homothallic": "homothallic: both MAT genes are in every genome, so every strain reads as both idiomorphs",
     "silent_cassettes": "silent mating-type cassettes: every cell carries the sequence of both idiomorphs (the expressed locus and silent copies), so reads cannot show the active mating type by presence",
     "cause_unchecked": "most runs show both idiomorphs for a reason not yet checked",
+    "single_locus": "thin evidence: the panel of an idiomorph comes from a single assembled locus (one strain), so it may miss divergent strains",
 }
 FIELDS = ["run", "strain", "study", "layout", "call", "truth", "verdict", "shared_depth", "depth_1", "depth_2", "breadth_1", "breadth_2", "flags", "rescue", "truth_assembly", "clone", "screen", "screen_second", "screen_explained"]
 SCREEN_FLAGGED = ("mixed", "genus_mismatch", "borderline")      # the statuses screen_reads.py gives to a run worth a second look
@@ -132,6 +133,7 @@ def reason(r):
     if k == "shared_depth": return f"flank depth too low ({v}x)"
     if k == "both": return f"{round(float(v) * 100)}% of runs show both idiomorphs"
     if k == "too_few_runs": return f"only {v} runs available"
+    if k == "few_runs": return f"thin evidence: only {v} run{'s' if v != '1' else ''} available to type"
     return r.replace("_", " ")
 
 

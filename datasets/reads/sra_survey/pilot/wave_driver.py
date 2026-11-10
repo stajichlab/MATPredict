@@ -3,7 +3,7 @@
 
 A wave directory (WAVE) holds:
   species.tsv                       input: species<TAB>slug (one row per species)
-  plan/<slug>/                      panel/ (lineage panels L*/), runs_test.tsv, runs_full.tsv, qc_panel.json, status (planned | held:<reason>)
+  plan/<slug>/                      panel/ (lineage panels L*/), runs_test.tsv, runs_full.tsv, qc_panel.json, status (planned | held:<reason>), thin (thin-evidence tokens, if any)
   out/                              ONE folder of per-run results for all species (<run>.<prefix>.tsv, <run>.run.json); a finished run is never redone
   test/, full/                      run lists, job ids and summaries of the two stages
   gates.tsv                         the decision per species and the numbers behind it
@@ -23,14 +23,16 @@ Commands (all take --wave DIR and the config options below):
   report               write WAVE_REPORT.md from the summaries and the gates
   status               counts of species by state, and of runs done and failed
 
-Gates. Panel (before any download): lineage panel L1 exists; at least 2 loci of each idiomorph went into the panel; core k-mers per idiomorph >= 300 and within a factor 10
-of each other; shared flank k-mers >= 2000; at least 4 selectable runs (the survey's own minimum; a species with fewer than 8 runs is typed whole and can only be PROVISIONAL). Test (after 20 runs): at least 90% of runs finished (runs not at NCBI are not counted); typed
+Gates. Panel (before any download): lineage panel L1 exists; at least 1 locus of each idiomorph went into the panel; core k-mers per idiomorph >= 300 and within a factor 10
+of each other; shared flank k-mers >= 2000; at least 1 selectable run. Thin evidence (curator 2026-11-09): a species whose panel has only 1 locus of an idiomorph (single_locus,
+for example a species with one assembled strain) or with fewer than 4 selectable runs (few_runs_<n>) is planned and typed, but its decision is capped at UNVALIDATED with
+those reasons first (plan/<slug>/thin; ' thin=' in the gates table). Until 2026-11-09 both were plan-stage HOLDs (too_few_loci, too_few_runs_<n>). Test (after 20 runs): at least 90% of runs finished (runs not at NCBI are not counted); typed
 (one idiomorph) >= 75% of finished runs and `both` <= 20%; median shared-flank depth >= 3; with >= 5 typed runs that have a `detect` truth: agreement >= 95% and at most one
 disagreement; with fewer than 5 such runs the species is PROVISIONAL (typed >= 85% required). A species with at least half of its runs `both` and typed+both >= 85% is UNVALIDATED:cause_unchecked unless causes.tsv gives its cause (until 2026-11-09 it was PROVISIONAL_HOMOTHALLIC; only a cause with evidence now calls a species homothallic). Thresholds are in GATE below.
 
 A species that has a usable panel and enough runs is not hidden for missing those limits (curator, 2026-11-02): it is UNVALIDATED when it types at least 50% of its finished runs and its only failures are the soft ones (typed
 below 75% or 85%, `both` above 20%, shared depth below 3, or agreement short of the limit with fewer than 10 comparison runs). It gets the full run and is shown on the site as "unvalidated" with the reasons. HOLD is
-left for what makes a call unusable: no panel or too few runs (the plan status), fewer than half the finished runs typed, too many runs failing to download, or agreement short of the limit with 10 or more comparison runs.
+left for what makes a call unusable: no panel, an idiomorph with no locus, or no runs (the plan status), fewer than half the finished runs typed, too many runs failing to download, or agreement short of the limit with 10 or more comparison runs.
 """
 import argparse, collections, csv, json, os, re, statistics, subprocess, sys
 
@@ -40,6 +42,7 @@ PY = f"{P}/.pixi/envs/default/bin/python"
 GATE = dict(min_loci=2, min_core_kmers=300, max_core_ratio=10, min_shared_kmers=2000, min_runs=4,
             min_done=0.90, min_typed=0.75, max_both=0.20, min_shared_depth=3.0, min_truth_runs=5, min_agree=0.95, max_disagree=1, provisional_typed=0.85, homothallic_both=0.5,
             unvalidated_typed=0.50, hold_truth_runs=10)
+# min_loci and min_runs are thin-evidence floors (below them: UNVALIDATED with single_locus / few_runs_<n>); the hard floors are 1 locus per idiomorph and 1 run.
 TSV = dict(delimiter="\t", lineterminator="\n")
 
 
@@ -108,7 +111,9 @@ def plan_one(a):
     l1 = qc["lineages"].get("L1", {})
     if "no unique k-mers" in l1.get("error", ""): hold("panel_no_unique_kmers")      # the lineage's loci carry both idiomorphs' sequence (homothallic or switching species): presence of an idiomorph cannot be typed from reads
     if "error" in l1 or not l1: hold("panel_L1_error")
-    if min(qc["loci_per_idiomorph"].values()) < GATE["min_loci"]: hold("too_few_loci")
+    thin = []      # thin evidence (curator 2026-11-09): the species goes on, capped at UNVALIDATED with the reason (plan/<slug>/thin; decide_species)
+    if min(qc["loci_per_idiomorph"].values()) < 1: hold("too_few_loci")      # an idiomorph with no locus at all (not even borrowed): nothing to build its panel from
+    if min(qc["loci_per_idiomorph"].values()) < GATE["min_loci"]: thin.append("single_locus")
     c = list(l1["core"].values())
     if min(c) < GATE["min_core_kmers"]: hold("core_kmers_low")
     if max(c) / max(1, min(c)) > GATE["max_core_ratio"]: hold("core_kmers_unbalanced")
@@ -118,7 +123,11 @@ def plan_one(a):
     r = subprocess.run([PY, f"{HERE}/select_runs.py", *common, "--n-truth", "12", "--n-free", "8", "--out", f"{d}/runs_test.tsv"], capture_output=True, text=True); log.write(r.stdout + r.stderr)
     if r.returncode or not os.path.exists(f"{d}/runs_test.tsv"): hold("run_selection_failed")
     test = rd(f"{d}/runs_test.tsv")
-    if len(test) < GATE["min_runs"]: hold(f"too_few_runs_{len(test)}")
+    if not test: hold("too_few_runs_0")
+    if len(test) < GATE["min_runs"]: thin.append(f"few_runs_{len(test)}")
+    tf = os.path.join(d, "thin")
+    if thin: open(tf, "w").write("+".join(thin) + "\n")
+    elif os.path.exists(tf): os.remove(tf)
     r = subprocess.run([PY, f"{HERE}/select_runs.py", *common, "--n-truth", "25", "--n-free", "25", "--include", ",".join(x["run_accession"] for x in test), "--out", f"{d}/runs_full.tsv"], capture_output=True, text=True); log.write(r.stdout + r.stderr)
     open(os.path.join(d, "status"), "w").write("planned\n"); print(sp, "planned:", len(test), "test runs;", len(rd(f"{d}/runs_full.tsv")), "full runs")
 
@@ -256,8 +265,32 @@ def cause_decision(species):
     return f"NOT_TYPABLE:{c}" if c in NOT_TYPABLE_CAUSES else None
 
 
-def decide_species(species, n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd):
-    """decide() with the curator rulings for SPECIES applied. For a ZYGOSITY species n_typed must already include the `both` runs and n_agree count `both` as agreeing (numbers())."""
+THIN_RE = re.compile(r"\bthin=(\S+)")
+
+
+def thin_of(reasons):
+    """The thin-evidence tokens recorded in a gates-table reasons text (' thin=single_locus+few_runs_2'), as a tuple."""
+    m = THIN_RE.search(reasons or "")
+    return tuple(m[1].split("+")) if m else ()
+
+
+def plan_thin(wave, sl):
+    """The thin-evidence tokens plan-one wrote to plan/<slug>/thin (single_locus, few_runs_<n>), as a tuple."""
+    f = os.path.join(wave, "plan", sl, "thin")
+    return tuple(t for t in open(f).read().strip().split("+") if t) if os.path.exists(f) else ()
+
+
+def decide_species(species, n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd, thin=()):
+    """decide() with the curator rulings for SPECIES applied. For a ZYGOSITY species n_typed must already include the `both` runs and n_agree count `both` as agreeing (numbers()).
+    thin: thin-evidence tokens from the plan (single_locus: an idiomorph's panel comes from one assembly locus; few_runs_<n>: fewer than GATE min_runs runs exist). Curator
+    2026-11-09: such a species is typed and shown, but never above UNVALIDATED, with the tokens first among the reasons; a HOLD stays a HOLD (the tokens are added)."""
+    dec, why = _decide_species(species, n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd)
+    if not thin or dec.startswith("NOT_TYPABLE"): return dec, why
+    why = list(thin) + [w for w in why if w not in thin]
+    return ("HOLD:" if dec.startswith("HOLD") else "UNVALIDATED:") + "+".join(why), why
+
+
+def _decide_species(species, n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd):
     forced = cause_decision(species)
     if forced: return forced, [forced.split(":", 1)[1]]
     if species in ZYGOSITY:
@@ -313,12 +346,13 @@ def decide(n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd, zygosity=F
     return ("PROVISIONAL" if prov else "PASS") + ("_ZYGOSITY" if zygosity else ""), []
 
 
-def gate_row(sl, species, rs):
-    """One gates-table row from the result rows of a species. The reasons text holds the numbers regate() reads; a ZYGOSITY species' numbers are already counted that way (mode=zygosity)."""
+def gate_row(sl, species, rs, thin=()):
+    """One gates-table row from the result rows of a species. The reasons text holds the numbers regate() reads; a ZYGOSITY species' numbers are already counted that way (mode=zygosity);
+    thin-evidence tokens from the plan are kept as ' thin=a+b'."""
     zyg = species in ZYGOSITY
     n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd = numbers(rs, zyg)
-    dec, _ = decide_species(species, n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd)
-    return dict(slug=sl, species=species, decision=dec, reasons=f"runs={len(rs)} done={n_done} typed={n_typed} both={n_both} none/low={n_done - n_typed - n_both} truth_typed={n_truth} agree={n_agree} median_shared_depth={msd:.1f}" + (" mode=zygosity" if zyg else ""))
+    dec, _ = decide_species(species, n_counted, n_done, n_typed, n_both, n_truth, n_agree, msd, thin)
+    return dict(slug=sl, species=species, decision=dec, reasons=f"runs={len(rs)} done={n_done} typed={n_typed} both={n_both} none/low={n_done - n_typed - n_both} truth_typed={n_truth} agree={n_agree} median_shared_depth={msd:.1f}" + (" mode=zygosity" if zyg else "") + (" thin=" + "+".join(thin) if thin else ""))
 
 
 def gate(a):
@@ -332,7 +366,7 @@ def gate(a):
             rows.append(dict(slug=sl, species=r0["species"], decision=cause_decision(r0["species"]) or "HOLD:" + st.replace("held:", ""), reasons=st)); continue
         rs = by.get(sl, [])
         if not rs: rows.append(dict(slug=sl, species=r0["species"], decision="PENDING", reasons="no test results yet")); continue
-        rows.append(gate_row(sl, r0["species"], rs))
+        rows.append(gate_row(sl, r0["species"], rs, plan_thin(a.wave, sl)))
     wr(os.path.join(a.wave, "gates.tsv" if a.stage == "test" else f"gates_{a.stage}.tsv"), rows, ["slug", "species", "decision", "reasons"])
     print(collections.Counter(r["decision"].split(":")[0] for r in rows))
 
@@ -358,8 +392,9 @@ def regate(a):
             continue                                                                   # counted the ordinary way: only `curate` (from the results) can decide it again
         done, typed, both, truth, agree, msd = int(m[2]), int(m[3]), int(m[4]), int(m[6]), int(m[7]), float(m[8])
         counted = done if "many_failed" not in r["decision"] else done * 2 + 1       # the counted runs are not in the table; this keeps a species held for failed downloads held
-        new, _ = decide_species(r["species"], counted, done, typed, both, truth, agree, msd)
-        if new.split(":")[0] != r["decision"].split(":")[0] or ("released_" in new) != ("released_" in r["decision"]) or (new != r["decision"] and ("NOT_TYPABLE" in new or "cause_unchecked" in new)):
+        thin = thin_of(r["reasons"])
+        new, _ = decide_species(r["species"], counted, done, typed, both, truth, agree, msd, thin)
+        if new.split(":")[0] != r["decision"].split(":")[0] or ("released_" in new) != ("released_" in r["decision"]) or (new != r["decision"] and ("NOT_TYPABLE" in new or "cause_unchecked" in new or thin)):
             changes.append({"slug": r["slug"], "species": r["species"], "previous": r["decision"], "decision": new, "reasons": r["reasons"]})
             r["decision"] = new
     wr(dst, rows, ["slug", "species", "decision", "reasons"])
@@ -384,13 +419,13 @@ def curate(a):
                 for x in rd(os.path.join(a.wave, a.stage, "summary", "results_all.tsv")): res[x["group"]].append(x)
             if not res.get(r["slug"]):
                 continue
-            new = gate_row(r["slug"], r["species"], res[r["slug"]])
+            new = gate_row(r["slug"], r["species"], res[r["slug"]], thin_of(r["reasons"]))
         else:
             m = REGATE.search(r["reasons"])
             if not m:
                 continue
             done = int(m[2]); counted = done if "many_failed" not in r["decision"] else done * 2 + 1
-            new = dict(r, decision=decide_species(r["species"], counted, done, int(m[3]), int(m[4]), int(m[6]), int(m[7]), float(m[8]))[0])
+            new = dict(r, decision=decide_species(r["species"], counted, done, int(m[3]), int(m[4]), int(m[6]), int(m[7]), float(m[8]), thin_of(r["reasons"]))[0])
         if new != r:
             changes.append({"slug": r["slug"], "species": r["species"], "previous": r["decision"], "decision": new["decision"], "reasons": new["reasons"]}); rows[i] = new
     wr(dst, rows, ["slug", "species", "decision", "reasons"])
@@ -412,7 +447,7 @@ def apply_causes(a):
             for x in rd(rf): res[x["group"]].append(x)
         for i, r in enumerate(rows):
             if r["species"] not in CAUSES: continue
-            if r["reasons"].startswith("runs=") and res.get(r["slug"]): new = gate_row(r["slug"], r["species"], res[r["slug"]])
+            if r["reasons"].startswith("runs=") and res.get(r["slug"]): new = gate_row(r["slug"], r["species"], res[r["slug"]], thin_of(r["reasons"]))
             else: new = dict(r, decision=cause_decision(r["species"]) or r["decision"])
             if new["decision"] != r["decision"] or new["reasons"] != r["reasons"]:
                 changes.append({"slug": r["slug"], "species": r["species"], "previous": r["decision"], "decision": new["decision"], "reasons": new["reasons"]}); rows[i] = new

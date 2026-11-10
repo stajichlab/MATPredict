@@ -186,6 +186,23 @@ def probe_all(store, probe, threads):
         return p.map(_hits, sample_files(store), chunksize=8)
 
 
+def solo_hashes(spec, hit_sets, max_solo=0.01, min_samples=10):
+    """Hashes of one target's specific set that are not specific in practice: seen ALONE (none of the target's other specific
+    hashes in the sample) in more than max(min_samples, max_solo x samples) samples. Such a hash is shared with sequence outside
+    the target (another allele, a paralog, a repeat): in the A. fumigatus store one of bafA's three hashes was alone in 778 isolates
+    that lack the gene and its Starship. Returns {hash: samples where it is alone}; a target with one specific hash is left as is."""
+    if len(spec) < 2 or not max_solo:
+        return {}
+    solo = collections.Counter()
+    for hits in hit_sets:
+        got = [h for h in spec if h in hits]
+        if len(got) == 1:
+            solo[got[0]] += 1
+    lim = max(min_samples, max_solo * len(hit_sets))
+    drop = {h: c for h, c in solo.items() if c > lim}
+    return drop if len(drop) < len(spec) else {}      # never drop every hash of a target
+
+
 def cmd_screen(a):
     out = os.path.join(a.store, "query", "screen_" + a.name); os.makedirs(out, exist_ok=True)
     tg = {}
@@ -200,6 +217,16 @@ def cmd_screen(a):
     for t in tg:
         others = set().union(*[H[u] for u in H if u != t and (t, u) not in linked and (u, t) not in linked])
         spec[t] = H[t] - others - core
+    dropped = {}
+    for t in tg:
+        d = solo_hashes(spec[t], [hits for _, _, hits in res], a.max_solo)
+        if d:
+            spec[t] = spec[t] - set(d); dropped[t] = d
+    with open(os.path.join(out, "dropped_hashes.tsv"), "w") as fh:
+        fh.write("target\thash\tsamples_alone\n")
+        for t, d in dropped.items():
+            for h, c in sorted(d.items(), key=lambda x: -x[1]):
+                fh.write(f"{t}\t{h}\t{c}\n")
     truth = {}
     if a.truth:
         for r in csv.DictReader(open(a.truth), delimiter="\t"):
@@ -229,6 +256,8 @@ def cmd_screen(a):
                     p = call == "present"
                     tp += p and v == "1"; fn += (not p) and v == "1"; fp += p and v == "0"; tn += (not p) and v == "0"
                 line += f"  | vs truth TP {tp} FN {fn} FP {fp} TN {tn}"
+            if t in dropped:
+                line += f"  | dropped {len(dropped[t])} hash(es) seen alone in {max(dropped[t].values())} samples"
             print(line); fh.write(line + "\n")
 
 
@@ -273,6 +302,8 @@ def main():
     s = sub.add_parser("screen"); s.add_argument("--name", required=True); s.add_argument("--targets", nargs="+", required=True)
     s.add_argument("--min-fraction", type=float, default=0.5); s.add_argument("--core-fraction", type=float, default=0.95)
     s.add_argument("--linked", nargs="*", help="TARGET_A,TARGET_B pairs whose shared hashes are kept (e.g. a gene and the element that carries it)")
+    s.add_argument("--max-solo", type=float, default=0.01, help="drop a specific hash seen alone (none of its target's other specific hashes "
+                   "present) in more than this fraction of samples (and more than 10); 0 keeps every hash. Dropped hashes: dropped_hashes.tsv")
     s.add_argument("--truth"); s.add_argument("--truth-id", default="sample_id")
     s.add_argument("--truth-map", type=lambda x: dict(kv.split("=", 1) for kv in x.split(";")), help="target=truth_column;...")
     m = sub.add_parser("mat"); m.add_argument("--panel", required=True); m.add_argument("--prefix", required=True)

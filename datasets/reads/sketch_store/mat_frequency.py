@@ -9,9 +9,10 @@ exclusions, optional) and STORE/manifest.tsv (strain, first_public).
 
 Call per sample: the reads-type call when it is MAT1-1 or MAT1-2, else the sketch call when that is single; 'both' (both idiomorphs,
 a mixture or a heterothallic-looking sample) and unresolved calls are counted but not in the frequency.
-Samples left out of the frequency, each with its reason in samples.tsv: curator exclusion; mean ANI below --min-mean-ani (another
-species: an A. fumigatus store at 0.95 keeps divergent lineages, mean ANI ~0.99, and drops section Fumigati relatives, ~0.83);
-a k-mer QC 'mixture?' flag.
+Samples left out of the frequency, each with its reason in samples.tsv: curator exclusion; mean ANI below --min-mean-ani with the
+k-mer QC flag few_hashes and a whole library under 2x (too_little_data: a read set of a few hundred reads, e.g. targeted sequencing filed as WGS, is unlike every
+other sample for lack of k-mers, not for being another species); mean ANI below --min-mean-ani otherwise (other_species: an
+A. fumigatus store at 0.95 keeps divergent lineages, mean ANI ~0.99); a k-mer QC 'mixture?' flag.
 Clone-corrected frequency: one vote per clone group (average-linkage groups at --clone ANI), the group's majority call (ties: no
 vote), so a study that sequenced one clone 50 times counts once. Lineages are the groups at --lineage ANI.
 Fractions are MAT1-1 / (MAT1-1 + MAT1-2) with a Wilson 95% interval and a two-sided exact binomial test against 0.5.
@@ -79,6 +80,9 @@ def main(argv=None):
         reason = ""
         if s in excl:
             reason = "curator_exclude"
+        elif ("few_hashes" in (f.get("flag") or "") and d.get("mean_ani") and float(d["mean_ani"]) < a.min_mean_ani
+              and float(man.get(s, {}).get("full_coverage") or 0) < 2):      # the whole library under 2x (blank for local samples)
+            reason = "too_little_data"      # a read set of a few hundred reads (targeted sequencing filed as WGS): unlike the rest for lack of k-mers
         elif d.get("mean_ani") and float(d["mean_ani"]) < a.min_mean_ani:
             reason = "other_species"
         elif "mixture?" in (f.get("flag") or ""):

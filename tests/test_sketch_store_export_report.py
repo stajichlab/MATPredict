@@ -53,6 +53,7 @@ def test_export_report(tmp_path):
     assert d["excluded"] == {"kept": 9, "other_species": 1}
     assert d["overall"]["clone-corrected"]["n"] == 9
     assert d["outliers"]["kinds"] == {"other_species": 1} and d["outliers"]["other_species_studies"][0]["study"] == "PRJNA9"
+    assert d["outliers"]["too_little_data_studies"] == []
     assert len(d["pcoa"]["points"]) == 9 and all(len(p) == 4 for p in d["pcoa"]["points"])       # the other species is not drawn
     assert d["screens"][0]["target"] == "bafA" and d["screens"][0]["truth"] == {"TP": 2, "FN": 0, "FP": 1, "TN": 3}
     text = (out / "population.json").read_text() + (out / "runs_public.tsv").read_text()

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Study (BioProject) titles for the reads pages: one row per study accession that appears in the committed wave folders, with its title from the
-PopSeq kingdom run table (study_accession, study_title). The reads site shows the title when the mouse is over a study link.
+"""Study (BioProject) titles for the reads pages: one row per study accession that appears in the committed wave folders or in a sketch-store
+report (datasets/reads/sketch_store/reports/*/runs_public.tsv, found next to PILOT_DIR's parent), with its title from the PopSeq kingdom run
+table (study_accession, study_title). The reads site shows the title when the mouse is over a study link.
 
     study_titles.py PILOT_DIR POPSEQ_RUN_TABLE(.tsv/.csv, .gz) OUT.tsv
 
@@ -14,6 +15,9 @@ for w in glob.glob(os.path.join(PILOT, "wave*")):
     f = os.path.join(w, "results_all_final.tsv")
     if re.fullmatch(r"wave\d+[a-z_]*", os.path.basename(w)) and os.path.exists(f):
         studies |= {r.get("study", "") for r in csv.DictReader(open(f, newline=""), delimiter="\t")}
+# the sketch stores' population reports (public runs of every isolate of a species): datasets/reads/sketch_store/reports/<slug>/runs_public.tsv
+for f in glob.glob(os.path.join(PILOT, "..", "..", "sketch_store", "reports", "*", "runs_public.tsv")):
+    studies |= {r.get("study", "") for r in csv.DictReader(open(f, newline=""), delimiter="\t")}
 studies.discard("")
 fh = io.TextIOWrapper(gzip.open(RUNS, "rb"), newline="") if RUNS.endswith(".gz") else open(RUNS, newline="")
 first = fh.readline(); delim = "\t" if first.count("\t") > first.count(",") else ","

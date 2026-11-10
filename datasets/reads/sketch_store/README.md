@@ -58,8 +58,15 @@ python mat_frequency.py --store STORE --out OUTDIR      # MAT1-1 fraction per sa
 ```
 
 `STORE/exclude.tsv` (sample_id, reason, decided) lists curator exclusions, for example a low-quality sequencing; `mat_frequency.py`
-leaves them out, together with samples of another species (mean ANI < 0.95) and QC-flagged mixtures, and says why in its
+leaves them out, together with read sets too small to type (mean ANI < 0.95 with the QC flag few_hashes: a few hundred reads, as in
+the 50 targeted-sequencing runs of PRJNA1186192 and PRJNA1381729 filed as WGS), samples of another species (mean ANI < 0.95
+otherwise) and QC-flagged mixtures, and says why in its
 `samples.tsv`. Its clone-corrected frequency gives each clone group (ANI 0.9995) one vote.
+
+Screens: a target's specific hashes are its hashes minus those of the other targets and of the core (95% of samples). A hash that
+still turns up alone (none of the target's other specific hashes in the sample) in more than 1% of samples is shared with sequence
+outside the target and is dropped (`--max-solo`, listed in `dropped_hashes.tsv`): one of *bafA*'s three hashes was alone in 778
+*A. fumigatus* isolates that lack the gene and its Starship, which made 782 false "partial" calls.
 
 ## Site report
 

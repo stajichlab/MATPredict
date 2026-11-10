@@ -27,16 +27,21 @@ def store(tmp_path):
             dict(sample_id="s7", source="public", study_accession="P3", sketch_call="MAT1-1", reads_type_call="MAT1-1"),
             dict(sample_id="s8", source="local", study_accession="L", sketch_call="MAT1-1", reads_type_call="MAT1-1"),
             dict(sample_id="s9", source="public", study_accession="P2", sketch_call="MAT1-2", reads_type_call="MAT1-2"),
-            dict(sample_id="s10", source="public", study_accession="P2", sketch_call="both", reads_type_call="both")]
+            dict(sample_id="s10", source="public", study_accession="P2", sketch_call="both", reads_type_call="both"),
+            dict(sample_id="s11", source="public", study_accession="P4", sketch_call="none/unclear", reads_type_call="low_depth"),
+            dict(sample_id="s12", source="public", study_accession="P5", sketch_call="none/unclear", reads_type_call="none")]
     write(q / "mat" / "mat_calls.tsv", ["sample_id", "source", "study_accession", "country", "sketch_call", "reads_type_call"], mat)
     sq = [dict(sample_id=f"s{i}", mean_ani="0.995", **{"clone_0.9995": "c1", "clone_0.998": "L1"}) for i in range(1, 5)]
     sq += [dict(sample_id=s, mean_ani="0.995", **{"clone_0.9995": c, "clone_0.998": "L2"}) for s, c in
            (("s5", "c5"), ("s6", "c6"), ("s8", "c8"), ("s9", "c9"), ("s10", "c10"))]
-    sq += [dict(sample_id="s7", mean_ani="0.83")]
+    sq += [dict(sample_id="s7", mean_ani="0.83"), dict(sample_id="s11", mean_ani="0.83"), dict(sample_id="s12", mean_ani="0.70")]
     write(q / "distances" / "samples_qc.tsv", ["sample_id", "mean_ani", "clone_0.9995", "clone_0.998"], sq)
-    write(q / "qc" / "qc.tsv", ["sample_id", "flag"], [dict(sample_id="s9", flag="mixture?")])
+    # s11: a read set of a few hundred reads (few_hashes) is unlike the rest for lack of k-mers, not another species
+    write(q / "qc" / "qc.tsv", ["sample_id", "flag"], [dict(sample_id="s9", flag="mixture?"), dict(sample_id="s11", flag="low_coverage;few_hashes"),
+                                                    dict(sample_id="s12", flag="few_hashes")])     # s12: few k-mers from a deep library: another organism
     write(s / "exclude.tsv", ["sample_id", "reason"], [dict(sample_id="s8", reason="low quality")])
-    write(s / "manifest.tsv", ["sample_id", "strain"], [dict(sample_id=f"s{i}", strain=f"st{i}") for i in range(1, 11)])
+    write(s / "manifest.tsv", ["sample_id", "strain", "full_coverage"],
+          [dict(sample_id=f"s{i}", strain=f"st{i}", full_coverage="0.01" if i == 11 else "50") for i in range(1, 13)])
     return s
 
 
@@ -46,6 +51,8 @@ def test_mat_frequency(tmp_path):
     samples = {r["sample_id"]: r for r in csv.DictReader(open(out / "samples.tsv"), delimiter="\t")}
     assert samples["s6"]["call"] == "MAT1-2"                      # reads-type low depth -> sketch call
     assert samples["s7"]["excluded"] == "other_species"
+    assert samples["s11"]["excluded"] == "too_little_data"
+    assert samples["s12"]["excluded"] == "other_species"
     assert samples["s8"]["excluded"] == "curator_exclude"
     assert samples["s9"]["excluded"] == "qc_mixture"
     assert samples["s10"]["call"] == "both"

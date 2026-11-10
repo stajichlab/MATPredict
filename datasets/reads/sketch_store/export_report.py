@@ -49,6 +49,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--store", required=True); ap.add_argument("--matfreq", required=True); ap.add_argument("--species", required=True)
     ap.add_argument("--slug", required=True); ap.add_argument("--titles"); ap.add_argument("--out", required=True)
+    ap.add_argument("--species-id", help="species_id.tsv (sample_id, best, best_ani): nearest reference genome of the isolates unlike the rest")
     ap.add_argument("--clone", default="0.9995"); ap.add_argument("--lineage", default="0.998"); ap.add_argument("--min-group", type=int, default=10)
     a = ap.parse_args(argv)
     q = os.path.join(a.store, "query")
@@ -75,23 +76,42 @@ def main(argv=None):
         L["studies"] = collections.Counter(r["study"] for r in mem).most_common(4)
         L["countries"] = collections.Counter(r["country"] for r in mem).most_common(4)
 
-    # distance outliers in three kinds: another species (mean ANI < 0.95), poor sample (a QC flag or no reads-type depth), divergent lineage
+    # distance outliers in four kinds: too little data (mean ANI < 0.95 with few k-mers: a few hundred reads), another species (mean ANI
+    # < 0.95 otherwise), poor sample (a QC flag or no reads-type depth), divergent lineage
     ani = [float(r["mean_ani"]) for r in sq.values() if r.get("mean_ani")]
     outl = [s for s, r in sq.items() if r.get("outlier") == "1"]
     kind = {}
     for s in outl:
-        if float(sq[s]["mean_ani"]) < 0.95:
-            kind[s] = "other_species"
+        ex = fs.get(s, {}).get("excluded", "")
+        if ex in ("too_little_data", "other_species"):
+            kind[s] = ex
+        elif float(sq[s]["mean_ani"]) < 0.95:
+            kind[s] = "other_species"      # a curator exclusion of another species (local Moose_3-1.1 is A. nidulans)
         elif (qc.get(s, {}).get("flag") or "") or mat.get(s, {}).get("reads_type_call") in ("low_depth", "none"):
             kind[s] = "poor_sample"
         else:
             kind[s] = "divergent_lineage"
-    other = collections.defaultdict(list)
-    for s, r in sq.items():
-        if r.get("mean_ani") and float(r["mean_ani"]) < 0.95:
-            other[man.get(s, {}).get("study_accession", "")].append(float(r["mean_ani"]))
-    other_studies = sorted(([st, len(v), round(statistics.mean(v), 3), titles.get(st, "")] for st, v in other.items()), key=lambda x: -x[1])
-    other_studies = [dict(study=st if man_public(st, man) else "local", n=n, mean_ani=m, title=t) for st, n, m, t in other_studies]
+    spid = {r["sample_id"]: r for r in rd(a.species_id)} if a.species_id else {}
+
+    def by_study(reason):
+        g = collections.defaultdict(list)
+        for s, f in fs.items():
+            if f["excluded"] == reason or (reason == "other_species" and f["excluded"] == "curator_exclude" and spid.get(s, {}).get("best", "").find("fumigatus") < 0 and s in spid):
+                g[man.get(s, {}).get("study_accession", "")].append(s)
+        rows = []
+        for st, ss in sorted(g.items(), key=lambda x: -len(x[1])):
+            best = collections.defaultdict(list)      # nearest reference -> implied identities (one entry per isolate)
+            for s in ss:
+                if s in spid:
+                    v = float(spid[s].get("best_ani") or 0)
+                    best[spid[s]["best"] if v >= 0.95 else "unresolved"].append(v)
+            label = lambda k, v: k if k == "unresolved" else f"{k}, ANI {min(v):.3f}" + (f"-{max(v):.3f}" if max(v) > min(v) else "")
+            best = collections.Counter({label(k, v) + (f" x{len(v)}" if len(v) > 1 else ""): len(v) for k, v in best.items()})
+            rows.append(dict(study=st if man_public(st, man) else "local", n=len(ss), mean_ani=round(statistics.mean(float(fs[s]["mean_ani"]) for s in ss if fs[s]["mean_ani"]), 3),
+                             title=titles.get(st, ""), nearest="; ".join(k for k, _ in best.most_common()),
+                             reads=sum(int(man[s].get("read_count") or 0) for s in ss) // max(1, len(ss))))
+        return rows
+    other_studies, thin_studies = by_study("other_species"), by_study("too_little_data")
 
     # PCoA points: PC1, PC2, call, public/local; no identifiers
     var = None
@@ -103,7 +123,7 @@ def main(argv=None):
     pts = []
     for r in rd(f"{q}/distances/pcoa.tsv"):
         s = r["sample_id"]; f = fs.get(s, {})
-        if f.get("excluded") in ("other_species", "curator_exclude"):
+        if f.get("excluded") in ("other_species", "too_little_data", "curator_exclude"):
             continue
         pts.append([round(float(r["PCo1"]), 6), round(float(r["PCo2"]), 6), code.get(f.get("call"), 0), 1 if man.get(s, {}).get("source") == "local" else 0])
 
@@ -120,7 +140,7 @@ def main(argv=None):
         lineages=lin_rows, min_group=a.min_group,
         outliers=dict(n=len(outl), median_ani=round(statistics.median(ani), 5) if ani else None,
                       cutoff=round(max(float(sq[s]["mean_ani"]) for s in outl), 5) if outl else None,
-                      kinds=dict(collections.Counter(kind.values())), other_species_studies=other_studies),
+                      kinds=dict(collections.Counter(kind.values())), other_species_studies=other_studies, too_little_data_studies=thin_studies),
         pcoa=dict(var=var, points=pts),
         screens=screens(q),
         study_titles={r["group"]: titles[r["group"]] for r in freq(os.path.join(a.matfreq, "freq_study_samples.tsv")) if r["group"] in titles},

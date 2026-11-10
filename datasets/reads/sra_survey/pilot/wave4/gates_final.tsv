@@ -5,8 +5,8 @@ blastomyces_gilchristii	Blastomyces gilchristii	PROVISIONAL	runs=80 done=79 type
 penicillium_biforme	Penicillium biforme	PROVISIONAL	runs=83 done=83 typed=83 both=0 none/low=0 truth_typed=0 agree=0 median_shared_depth=9.9
 pseudogymnoascus_destructans	Pseudogymnoascus destructans	PROVISIONAL	runs=60 done=60 typed=57 both=0 none/low=3 truth_typed=0 agree=0 median_shared_depth=8.2
 trichophyton_interdigitale	Trichophyton interdigitale	PROVISIONAL	runs=63 done=63 typed=62 both=0 none/low=1 truth_typed=3 agree=3 median_shared_depth=13.3
-hymenoscyphus_fraxineus	Hymenoscyphus fraxineus	HOLD:too_few_loci	held:too_few_loci
-madurella_mycetomatis	Madurella mycetomatis	HOLD:too_few_loci	held:too_few_loci
+hymenoscyphus_fraxineus	Hymenoscyphus fraxineus	UNVALIDATED:single_locus	runs=41 done=41 typed=35 both=6 none/low=0 truth_typed=1 agree=1 median_shared_depth=3.9 thin=single_locus
+madurella_mycetomatis	Madurella mycetomatis	UNVALIDATED:single_locus	runs=20 done=20 typed=19 both=0 none/low=1 truth_typed=2 agree=2 median_shared_depth=17.3 thin=single_locus
 neofusicoccum_parvum	Neofusicoccum parvum	HOLD:typed_0.00+provisional_typed_0.00+shared_depth_0.6	runs=20 done=20 typed=0 both=0 none/low=20 truth_typed=0 agree=0 median_shared_depth=0.6
 histoplasma_ohiense	Histoplasma ohiense	UNVALIDATED:provisional_typed_0.84	runs=49 done=49 typed=41 both=0 none/low=8 truth_typed=2 agree=2 median_shared_depth=10.2
 penicillium_fuscoglaucum	Penicillium fuscoglaucum	PROVISIONAL	runs=26 done=26 typed=24 both=0 none/low=2 truth_typed=1 agree=1 median_shared_depth=9.3

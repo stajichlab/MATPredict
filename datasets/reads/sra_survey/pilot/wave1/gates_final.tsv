@@ -75,7 +75,7 @@ fusarium_xylarioides	Fusarium xylarioides	PASS	runs=11 done=11 typed=11 both=0 n
 diaporthe_eres	Diaporthe eres	PROVISIONAL	runs=7 done=7 typed=7 both=0 none/low=0 truth_typed=2 agree=2 median_shared_depth=5.9
 parastagonospora_avenae	Parastagonospora avenae	PASS	runs=8 done=8 typed=8 both=0 none/low=0 truth_typed=8 agree=8 median_shared_depth=8.7
 akanthomyces_lecanii	Akanthomyces lecanii	PASS	runs=9 done=9 typed=9 both=0 none/low=0 truth_typed=9 agree=9 median_shared_depth=7.6
-coniothyrium_glycines	Coniothyrium glycines	HOLD:too_few_runs_1	held:too_few_runs_1
+coniothyrium_glycines	Coniothyrium glycines	UNVALIDATED:few_runs_1	runs=1 done=1 typed=1 both=0 none/low=0 truth_typed=1 agree=1 median_shared_depth=8.5 thin=few_runs_1
 lasiodiplodia_theobromae	Lasiodiplodia theobromae	PASS	runs=9 done=9 typed=9 both=0 none/low=0 truth_typed=6 agree=6 median_shared_depth=6.4
 macrophomina_pseudophaseolina	Macrophomina pseudophaseolina	PASS	runs=8 done=8 typed=8 both=0 none/low=0 truth_typed=8 agree=8 median_shared_depth=7.1
 penicillium_brevicompactum	Penicillium brevicompactum	PASS	runs=7 done=7 typed=7 both=0 none/low=0 truth_typed=6 agree=6 median_shared_depth=8.7
@@ -92,7 +92,7 @@ fusarium_commune	Fusarium commune	PROVISIONAL	runs=5 done=5 typed=5 both=0 none/
 fusarium_pseudograminearum	Fusarium pseudograminearum	PROVISIONAL	runs=55 done=55 typed=55 both=0 none/low=0 truth_typed=3 agree=3 median_shared_depth=5.8
 trichoderma_koningiopsis	Trichoderma koningiopsis	PROVISIONAL	runs=6 done=6 typed=6 both=0 none/low=0 truth_typed=4 agree=4 median_shared_depth=6.3
 alternaria_arborescens	Alternaria arborescens	PROVISIONAL	runs=5 done=5 typed=5 both=0 none/low=0 truth_typed=3 agree=3 median_shared_depth=13.0
-aspergillus_quadrilineatus	Aspergillus quadrilineatus	HOLD:too_few_runs_2	held:too_few_runs_2
+aspergillus_quadrilineatus	Aspergillus quadrilineatus	UNVALIDATED:few_runs_2+cause_unchecked+both_1.00	runs=2 done=2 typed=0 both=2 none/low=0 truth_typed=0 agree=0 median_shared_depth=11.8 thin=few_runs_2
 clonostachys_chloroleuca	Clonostachys chloroleuca	PROVISIONAL	runs=5 done=5 typed=5 both=0 none/low=0 truth_typed=3 agree=3 median_shared_depth=4.8
 elsinoe_australis	Elsinoe australis	PASS	runs=5 done=5 typed=5 both=0 none/low=0 truth_typed=5 agree=5 median_shared_depth=12.7
 penicillium_expansum	Penicillium expansum	PROVISIONAL	runs=4 done=4 typed=4 both=0 none/low=0 truth_typed=2 agree=2 median_shared_depth=9.3
@@ -109,5 +109,5 @@ fusarium_equiseti	Fusarium equiseti	UNVALIDATED:provisional_typed_0.75	runs=4 do
 macrophomina_tecta	Macrophomina tecta	PROVISIONAL	runs=4 done=4 typed=4 both=0 none/low=0 truth_typed=4 agree=4 median_shared_depth=6.0
 metarhizium_anisopliae	Metarhizium anisopliae	PROVISIONAL	runs=4 done=4 typed=4 both=0 none/low=0 truth_typed=3 agree=3 median_shared_depth=6.6
 penicillium_polonicum	Penicillium polonicum	PROVISIONAL	runs=4 done=4 typed=4 both=0 none/low=0 truth_typed=3 agree=3 median_shared_depth=11.2
-penicillium_solitum	Penicillium solitum	HOLD:too_few_runs_3	held:too_few_runs_3
-trichophyton_tonsurans	Trichophyton tonsurans	HOLD:too_few_runs_3	held:too_few_runs_3
+penicillium_solitum	Penicillium solitum	UNVALIDATED:few_runs_3	runs=3 done=3 typed=3 both=0 none/low=0 truth_typed=1 agree=1 median_shared_depth=8.6 thin=few_runs_3
+trichophyton_tonsurans	Trichophyton tonsurans	UNVALIDATED:few_runs_3	runs=3 done=3 typed=3 both=0 none/low=0 truth_typed=3 agree=3 median_shared_depth=17.2 thin=few_runs_3

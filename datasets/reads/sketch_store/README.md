@@ -54,7 +54,20 @@ cp sketch_one.sh sketch_query.py run_queries.sh submit.sh build_manifest.py STOR
 cp ../sra_survey/pilot/genotype_mat_one_accession.sh ../sra_survey/pilot/screen_reads.py STORE/bin/
 bash STORE/bin/submit.sh STORE [JOBS_TO_WAIT_FOR]      # self-feeding planner: rounds sized to the queue limit, retries, then run_queries.sh
 python sketch_query.py --store STORE screen --name mygenes --targets genes.fa     # any new question, any time
+python mat_frequency.py --store STORE --out OUTDIR      # MAT1-1 fraction per sample and per clone group, by study/country/lineage
 ```
+
+`STORE/exclude.tsv` (sample_id, reason, decided) lists curator exclusions, for example a low-quality sequencing; `mat_frequency.py`
+leaves them out, together with samples of another species (mean ANI < 0.95) and QC-flagged mixtures, and says why in its
+`samples.tsv`. Its clone-corrected frequency gives each clone group (ANI 0.9995) one vote.
+
+## Site report
+
+`export_report.py --store STORE --matfreq MATFREQ_DIR --species "..." --slug <slug> --titles ../sra_survey/pilot/study_titles.tsv
+--out reports/<slug>` (on the HPCC) writes `reports/<slug>/population.json` and `runs_public.tsv`, which are committed;
+`scripts/build_reads_site.py` copies them for `web/intro/reads/population.html?s=<slug>`, lists the report on the raw-reads overview
+and links it from the species report. Local isolates count in every number but are never named (curator decision 2026-11-09):
+the run table is public runs only and the PCoA points carry no identifiers.
 
 Public samples: one run per BioSample (paired, most bases), natural isolates only (`survey_ena.classify_study` drops crosses,
 mutants, evolution lines). Local samples: every FASTQ sample of the Population_Genomics subproject; a local strain that matches a
@@ -64,6 +77,7 @@ Adding samples later: append rows to the manifest and run `submit.sh` again; sam
 Downloads: public runs come through the MATPredict reads worker (AWS open data, then NCBI prefetch). Some ENA runs have an NCBI record
 but no loaded data (2026-11-08: 48 of 1,887 ENA *A. fumigatus* runs, deposited with sibling runs that did load, so they will not sync);
 for those `sketch_one.sh` streams the first N read pairs from ENA (`ena_fastq`, HTTPS) and types them without the GmG screen.
+When ENA refuses HTTPS (403 for 17 runs from the HPCC on 2026-11-09, after earlier retries) it tries the same files over FTP.
 
 Several sessions build sketches on the HPCC; `/bigdata/stajichlab/jstajich/projects/MATPredict/sketch_store/REGISTRY.tsv` records
 who builds which species or run list with which parameters. Add a row before starting a build.

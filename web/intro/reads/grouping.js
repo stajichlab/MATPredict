@@ -13,12 +13,13 @@ const byName = (a, b) => (placeholder(a.name) - placeholder(b.name)) || a.name.l
 // Counts for a group's summary line. `confidence` values are the page's: confirmed, provisional,
 // "provisional (homothallic)", unvalidated and withheld; the two provisional kinds are counted together.
 export function summarize(rows) {
-  const t = { species: rows.length, runs: 0, confirmed: 0, provisional: 0, unvalidated: 0, withheld: 0 };
+  const t = { species: rows.length, runs: 0, confirmed: 0, provisional: 0, unvalidated: 0, not_typable: 0, withheld: 0 };
   for (const r of rows) {
     t.runs += r.runs || 0;
     if (r.confidence === "confirmed") t.confirmed++;
     else if (r.confidence === "withheld") t.withheld++;
     else if (r.confidence === "unvalidated") t.unvalidated++;
+    else if (r.confidence === "not typable by presence") t.not_typable++;
     else t.provisional++;
   }
   return t;

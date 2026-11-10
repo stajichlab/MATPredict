@@ -63,6 +63,11 @@ if [[ $SRC == public ]]; then
     # (only those bytes are downloaded). No GmG screen on this path; the sketch QC (query qc) still flags mixtures. Typed below.
     IFS=';' read -ra urls <<< "$ENA"; r1=("https://${urls[0]}"); r2=(); [[ ${#urls[@]} -ge 2 ]] && r2=("https://${urls[-1]}")
     rm -f "$fq"; reader="curl -sfL --retry 3 --retry-delay 20"; take_pairs; ENA_USED=1
+    # ENA has answered HTTPS with 403 for some files from the HPCC (2026-11-09, after earlier retries) while FTP served them: try FTP
+    if [[ ! -s $fq ]]; then
+      r1=("${r1[@]/#https:/ftp:}"); [[ ${#r2[@]} -gt 0 ]] && r2=("${r2[@]/#https:/ftp:}")
+      rm -f "$fq"; take_pairs
+    fi
     # a broken stream that delivered under half the target (and under half the run, for runs smaller than the target) is retried by
     # the planner rather than sketched thin
     got=$(awk 'NR%4==2{s+=length($0)}END{print s+0}' "$fq" 2>/dev/null || echo 0)

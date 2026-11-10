@@ -297,7 +297,9 @@ def main():
             ts = [tier(n, spdb, gendb) for n in sorted({name} | d["aliases"])]
             t = min(ts, key=["A", "A1", "B", "C"].index)
         # action: what would add MAT frequency information for this species
-        if decision.startswith("PROVISIONAL_HOMOTHALLIC"):
+        if decision.startswith("NOT_TYPABLE"):
+            action = "not_typable"           # homothallic or silent cassettes (causes.tsv): more runs add nothing until active-MAT typing exists (#322)
+        elif decision.startswith("PROVISIONAL_HOMOTHALLIC"):
             action = "homothallic"
         elif decision.startswith(PASSING):
             action = "expand" if untyped or loc_new else "complete"
@@ -340,7 +342,7 @@ def main():
                 untyped_rows.append([slug, name, r["run_accession"], r["read_count"], r["base_count"], r["library_layout"],
                                      (r.get("strain") or r.get("isolate") or ""), r["study_accession"], bs, cov,
                                      "yes" if MIN_SEL <= r["bases"] <= MAX_SEL else "no", action, gate[2]])
-    order = ["expand", "unvalidated", "held", "typed_no_gate", "blocked_panel", "new_candidate", "needs_reference", "homothallic", "complete", "too_few"]
+    order = ["expand", "unvalidated", "held", "typed_no_gate", "blocked_panel", "new_candidate", "needs_reference", "homothallic", "not_typable", "complete", "too_few"]
     rows.sort(key=lambda r: (order.index(r["action"]), -r["untyped_public_eligible"] - r["local_not_public"], r["species"]))
     cols = list(rows[0].keys())
     with open(os.path.join(out, "species_availability.tsv"), "w", newline="") as fh:
@@ -390,6 +392,7 @@ def write_summary(out, rows, snap, untyped_rows):
         "new_candidate": "not yet in a wave; MATPredict has records for the species or its genus",
         "needs_reference": "not yet in a wave; no MATPredict record in the genus",
         "homothallic": "passed as homothallic: an idiomorph frequency is not meaningful",
+        "not_typable": "not typable by presence (homothallic or silent cassettes, causes.tsv): waits on active-MAT typing (#322)",
         "complete": "passed; every eligible public isolate is typed",
         "too_few": "fewer eligible isolates than the minimum, kept because MATPredict has typed or holds some",
     }

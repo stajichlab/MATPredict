@@ -1,0 +1,43 @@
+slug	species	decision	reads	genomes	genomes_with_mat	single	both_one_locus	both_separate	labels	plan_status	lineages
+aspergillus_latus	Aspergillus latus	NOT_TYPABLE:homothallic	done 7, single 1, both 6	27	27	0	0	27	MAT1-1: 27, MAT1-2: 27	planned	L1 27 loci: 0 MAT1-1 / 27 MAT1-2; L2 27 loci: 27 MAT1-1 / 0 MAT1-2; L3 26 loci: 0 MAT1-1 / 26 MAT1-2; L4 26 loci: 26 MAT1-1 / 0 MAT1-2; L5 1 loci: 1 MAT1-1 / 0 MAT1-2; L6 1 loci: 0 MAT1-1 / 1 MAT1-2
+aspergillus_nidulans	Aspergillus nidulans	NOT_TYPABLE:homothallic	done 50, single 0, both 50	19	19	0	0	19	MAT1-1: 19, MAT1-2: 19	planned	L1 18 loci: 0 MAT1-1 / 18 MAT1-2; L2 18 loci: 18 MAT1-1 / 0 MAT1-2; L3 1 loci: 0 MAT1-1 / 1 MAT1-2; L4 1 loci: 1 MAT1-1 / 0 MAT1-2
+aspergillus_spinulosporus	Aspergillus spinulosporus	NOT_TYPABLE:homothallic	done 4, single 0, both 4	11	11	1	0	10	MAT1-1: 11, MAT1-2: 10	planned	L1 11 loci: 11 MAT1-1 / 0 MAT1-2; L2 10 loci: 0 MAT1-1 / 10 MAT1-2
+candida_albicans	Candida albicans	UNVALIDATED:zygosity+agree_4of7	done 695, single 609, both 0	134	129	51	1	77	alpha: 112, A: 94	planned	L1 98 loci: 97 a / 1 alpha; L2 30 loci: 0 a / 30 alpha; L3 1 loci: 0 a / 1 alpha
+candida_dubliniensis	Candida dubliniensis	HOLD:panel_build_failed		10	10	2	0	8	alpha: 10, A: 8	held:panel_build_failed	L1 8 loci: 8 a / 0 alpha
+candida_tropicalis	Candida tropicalis	PASS_ZYGOSITY	done 50, single 50, both 0	115	115	28	0	87	A: 104, alpha: 98	planned	L1 102 loci: 102 a / 0 alpha; L2 2 loci: 0 a / 2 alpha
+candida_viswanathii	Candida viswanathii	HOLD:panel_build_failed		13	13	2	0	11	A: 13, alpha: 11	held:panel_build_failed	L1 13 loci: 13 a / 0 alpha
+ceratocystis_fimbriata	Ceratocystis fimbriata	NOT_TYPABLE:homothallic		8	1	0	1	0		held:panel_L1_error	L1 17 loci: 13 MAT1-2 / 4 MAT1-1; L2 6 loci: 6 MAT1-2 / 0 MAT1-1; L3 1 loci: 1 MAT1-2 / 0 MAT1-1; L4 1 loci: 1 MAT1-2 / 0 MAT1-1
+debaryomyces_hansenii	Debaryomyces hansenii	NOT_TYPABLE:homothallic		77	72	7	65	0	A: 57, alpha: 14	held:panel_build_failed	no lineages
+hansenula_anomala	Hansenula anomala	UNVALIDATED:cause_unchecked+both_0.76	done 38, single 8, both 29	26	25	12	0	13	MATalpha: 20, MATa: 18	planned	L1 32 loci: 15 a / 17 alpha; L2 1 loci: 1 a / 0 alpha
+kluyveromyces_lactis	Kluyveromyces lactis	NOT_TYPABLE:silent_cassettes		24	20	7	0	13	MATalpha: 18, MATa: 15	held:panel_build_failed	L1 13 loci: 0 a / 13 alpha
+kluyveromyces_marxianus	Kluyveromyces marxianus	NOT_TYPABLE:silent_cassettes	done 49, single 4, both 40	46	44	6	0	38	MATa: 42, MATalpha: 40	planned	L1 13 loci: 0 a / 13 alpha; L2 7 loci: 7 a / 0 alpha
+komagataella_phaffii	Komagataella phaffii	NOT_TYPABLE:silent_cassettes	done 50, single 0, both 50	135	132	128	0	4	MATa: 131, MATalpha: 5	planned	L1 8 loci: 4 a / 4 alpha
+lachancea_fermentati	Lachancea fermentati	NOT_TYPABLE:silent_cassettes		5	2	2	0	0	MATalpha: 2	held:panel_build_failed	L1 1 loci: 0 alpha / 1 a; L2 1 loci: 0 alpha / 1 a
+lachancea_kluyveri	Lachancea kluyveri	NOT_TYPABLE:silent_cassettes		1	1	0	0	1	MATa: 1, MATalpha: 1	held:panel_build_failed	L1 1 loci: 1 a / 0 alpha
+lachancea_thermotolerans	Lachancea thermotolerans	NOT_TYPABLE:silent_cassettes		108	108	62	0	46	MATalpha: 107, MATa: 47	held:panel_build_failed	L1 1 loci: 1 a / 0 alpha; L2 1 loci: 1 a / 0 alpha
+lasallia_pustulata	Lasallia pustulata	UNVALIDATED:cause_unchecked+both_0.92	done 13, single 1, both 12	6	5	5	0	0	MAT1-1: 3, MAT1-2: 2	planned	L1 5 loci: 3 MAT1-1 / 2 MAT1-2
+lodderomyces_metapsilosis	Lodderomyces metapsilosis	PROVISIONAL_ZYGOSITY	done 37, single 37, both 0	15	15	8	0	7	alpha: 12, A: 10	planned	L1 11 loci: 3 a / 8 alpha; L2 1 loci: 1 a / 0 alpha
+lodderomyces_orthopsilosis	Lodderomyces orthopsilosis	HOLD:panel_build_failed		11	11	11	0	0	A: 6, alpha: 5	held:panel_build_failed	L1 6 loci: 6 a / 0 alpha
+metschnikowia_pulcherrima	Metschnikowia pulcherrima	UNVALIDATED:cause_unchecked+both_0.50	done 12, single 5, both 6	17	17	4	0	13	A: 16, alpha: 14	planned	L1 14 loci: 14 a / 0 alpha; L2 10 loci: 0 a / 10 alpha; L3 1 loci: 0 a / 1 alpha; L4 1 loci: 1 a / 0 alpha
+mucor_hiemalis	Mucor hiemalis	HOLD:panel_build_failed		1	1	1	0	0	Minus: 1	held:panel_build_failed	L1 1 loci: 0 Plus / 1 Minus
+neurospora_tetraspora	Neurospora tetraspora	UNVALIDATED:cause_unchecked+both_0.75	done 8, single 2, both 6	36	36	35	0	1	MAT1-2: 20, MAT1-1: 17	planned	L1 35 loci: 15 MAT1-1 / 20 MAT1-2
+ogataea_haglerorum	Ogataea haglerorum	NOT_TYPABLE:silent_cassettes	done 23, single 0, both 0	23	23	1	0	22	MATa: 23, MATalpha: 22	planned	L1 6 loci: 6 alpha / 0 a; L2 5 loci: 4 alpha / 1 a; L3 3 loci: 3 alpha / 0 a; L4 2 loci: 2 alpha / 0 a; L5 1 loci: 0 alpha / 1 a; L6 1 loci: 0 alpha / 1 a; L7 1 loci: 1 alpha / 0 a (dropped); L8 1 loci: 0 alpha / 1 a (dropped); L9 1 loci: 0 alpha / 1 a (dropped); L10 1 loci: 0 alpha / 1 a (dropped); L11 1 loci: 1 alpha / 0 a (dropped); L12 1 loci: 1 alpha / 0 a (dropped); L13 1 loci: 1 alpha / 0 a (dropped); L14 1 loci: 1 alpha / 0 a (dropped); L15 1 loci: 0 alpha / 1 a (dropped); L16 1 loci: 0 alpha / 1 a (dropped); L17 1 loci: 0 alpha / 1 a (dropped); L18 1 loci: 0 alpha / 1 a (dropped)
+pichia_kudriavzevii	Pichia kudriavzevii	PROVISIONAL_ZYGOSITY	done 475, single 470, both 0	56	54	22	0	32	MATa: 45, MATalpha: 41	planned	L1 41 loci: 29 a / 12 alpha
+saccharomyces_arboricola	Saccharomyces arboricola	NOT_TYPABLE:silent_cassettes	done 4, single 0, both 0	2	1	1	0	0	MATalpha: 1	planned	L1 5 loci: 3 alpha / 2 a
+saccharomyces_eubayanus	Saccharomyces eubayanus	NOT_TYPABLE:silent_cassettes	done 301, single 2, both 0	12	11	1	0	10	MATalpha: 11, MATa: 10	planned	L1 5 loci: 3 alpha / 2 a
+saccharomyces_kudriavzevii	Saccharomyces kudriavzevii	NOT_TYPABLE:silent_cassettes	done 22, single 0, both 20	25	19	15	0	4	MATalpha: 19, MATa: 4	planned	L1 4 loci: 2 a / 2 alpha
+saccharomyces_mikatae	Saccharomyces mikatae	NOT_TYPABLE:silent_cassettes	done 8, single 0, both 0	4	4	2	0	2	MATalpha: 3, MATa: 3	planned	L1 5 loci: 3 alpha / 2 a
+saccharomyces_paradoxus	Saccharomyces paradoxus	NOT_TYPABLE:silent_cassettes	done 299, single 0, both 0	55	49	11	0	38	MATalpha: 49, MATa: 38	planned	L1 5 loci: 3 alpha / 2 a
+saccharomyces_pastorianus	Saccharomyces pastorianus	NOT_TYPABLE:silent_cassettes	done 91, single 11, both 0	22	12	2	0	10	MATa: 12, MATalpha: 10	planned	L1 5 loci: 3 alpha / 2 a
+saccharomyces_uvarum	Saccharomyces uvarum	NOT_TYPABLE:silent_cassettes	done 294, single 263, both 0	38	23	9	0	14	MATalpha: 19, MATa: 18	planned	L1 5 loci: 3 alpha / 2 a
+schizosaccharomyces_japonicus	Schizosaccharomyces japonicus	NOT_TYPABLE:silent_cassettes		3	3	2	0	1	M: 3, P: 1	held:panel_build_failed	L1 9 loci: 9 P / 0 M; L2 1 loci: 1 P / 0 M; L3 1 loci: 1 P / 0 M
+schizosaccharomyces_pombe	Schizosaccharomyces pombe	NOT_TYPABLE:silent_cassettes		59	59	18	0	41	M: 58, P: 42	held:panel_L1_error	L1 18 loci: 9 P / 9 M; L2 2 loci: 1 P / 1 M
+sclerotinia_sclerotiorum	Sclerotinia sclerotiorum	NOT_TYPABLE:homothallic		36	36	15	20	1	MAT1-2: 16, MAT1-1: 1	held:panel_L1_error	L1 16 loci: 1 MAT1-1 / 15 MAT1-2; L2 1 loci: 0 MAT1-1 / 1 MAT1-2
+zygosaccharomyces_bailii	Zygosaccharomyces bailii	NOT_TYPABLE:silent_cassettes		18	18	18	0	0	MATalpha: 18	held:panel_build_failed	L1 12 loci: 0 a / 12 alpha
+zygosaccharomyces_favi	Zygosaccharomyces favi	NOT_TYPABLE:silent_cassettes		6	6	6	0	0	MATalpha: 6	held:panel_build_failed	L1 1 loci: 0 a / 1 alpha
+zygosaccharomyces_mellis	Zygosaccharomyces mellis	NOT_TYPABLE:silent_cassettes		17	17	17	0	0	MATalpha: 17	held:panel_build_failed	L1 1 loci: 0 a / 1 alpha
+zygosaccharomyces_parabailii	Zygosaccharomyces parabailii	NOT_TYPABLE:silent_cassettes		14	13	13	0	0	MATalpha: 13	held:panel_build_failed	L1 4 loci: 0 a / 4 alpha
+zygosaccharomyces_pseudobailii	Zygosaccharomyces pseudobailii	NOT_TYPABLE:silent_cassettes		6	5	5	0	0	MATalpha: 5	held:panel_build_failed	L1 3 loci: 0 a / 3 alpha
+zygosaccharomyces_rouxii	Zygosaccharomyces rouxii	NOT_TYPABLE:silent_cassettes		41	41	41	0	0	MATalpha: 41	held:panel_build_failed	L1 4 loci: 0 a / 4 alpha
+zygosaccharomyces_sapae	Zygosaccharomyces sapae	NOT_TYPABLE:silent_cassettes		5	4	4	0	0	MATalpha: 4	held:panel_build_failed	L1 19 loci: 0 a / 19 alpha; L2 4 loci: 0 a / 4 alpha; L3 4 loci: 0 a / 4 alpha
+zygosaccharomyces_siamensis	Zygosaccharomyces siamensis	NOT_TYPABLE:silent_cassettes		16	16	16	0	0	MATalpha: 16	held:panel_build_failed	L1 19 loci: 19 alpha / 0 ; L2 4 loci: 4 alpha / 0 ; L3 4 loci: 4 alpha / 0 

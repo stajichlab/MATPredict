@@ -39,6 +39,7 @@ PopSeq is the lab's shared catalog (`/bigdata/stajichlab/shared/projects/Fungi/P
 | `new_candidate` | not in a wave; records for the species or its genus | next wave (`wave_species.py`) |
 | `needs_reference` | not in a wave; no record in the genus | reference curation priority, ranked by isolates |
 | `homothallic` | passed as homothallic | none; no idiomorph frequency |
+| `not_typable` | NOT_TYPABLE: homothallic or silent cassettes (`causes.tsv`) | none until active-MAT typing (#322) |
 | `complete` | every eligible public isolate typed | none until the archive grows |
 
 Also per species: eligible, typed and untyped counts; studies and `largest_study_frac` (near 1 = one study dominates, often clonal outbreak sampling, so not a population frequency); the current calls; and a binomial (Wilson) 95% half-width for the minor idiomorph now and if every untyped isolate were typed at the species' current typing rate (`ci95_halfwidth_now`, `ci95_halfwidth_all`), which ranks where more typing changes an estimate most.

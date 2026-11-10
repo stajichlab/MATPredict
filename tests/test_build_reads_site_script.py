@@ -214,3 +214,11 @@ def test_no_population_reports_gives_an_empty_list(tmp_path):
     make_repo(tmp_path, {}, ["MAT1-1", "MAT1-2"])
     build(tmp_path, tmp_path.parent)
     assert json.load(open(tmp_path / "out" / "index.json"))["population"] == []
+def test_a_not_typable_species_shows_its_cause_and_evidence(tmp_path):
+    """NOT_TYPABLE:<cause> (causes.tsv, 2026-11-09): the page label, the plain reason and the evidence line from causes.tsv."""
+    wave = make_repo(tmp_path, {}, ["both"] * 6)
+    tsv(wave / "gates_final.tsv", ["slug", "species", "decision", "reasons"], [["sp_one", "Species one", "NOT_TYPABLE:silent_cassettes", "runs=6"]])
+    tsv(tmp_path / "datasets/reads/sra_survey/pilot/causes.tsv", ["species", "cause", "build_cause", "basis"], [["Species one", "silent_cassettes", "", "HML/HMR cassette genus"]])
+    d = build(tmp_path, tmp_path.parent)
+    assert d["confidence"] == "not typable by presence" and d["cause"] == "silent_cassettes" and d["cause_basis"] == "HML/HMR cassette genus"
+    assert d["why"] and "silent mating-type cassettes" in d["why"][0]

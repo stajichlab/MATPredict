@@ -269,7 +269,7 @@ def test_thin_evidence_caps_a_passing_species_at_unvalidated_with_the_reason_fir
     assert wd.decide_species("Species x", 2, 2, 2, 0, 0, 0, 9.0)[0] == "PROVISIONAL"                       # the numbers alone
     assert wd.decide_species("Species x", 2, 2, 2, 0, 0, 0, 9.0, ("few_runs_2",))[0] == "UNVALIDATED:few_runs_2"
     assert wd.decide_species("Species x", 20, 20, 20, 0, 10, 10, 9.0, ("single_locus",))[0] == "UNVALIDATED:single_locus"
-    assert wd.decide_species("Species x", 3, 3, 2, 0, 0, 0, 9.0, ("single_locus", "few_runs_3"))[0] == "UNVALIDATED:single_locus+few_runs_3+provisional_typed_0.67"
+    assert wd.decide_species("Species x", 3, 3, 2, 0, 0, 0, 9.0, ("single_locus", "few_runs_3"))[0] == "UNVALIDATED:single_locus+few_runs_3+typed_0.67+provisional_typed_0.67"
 
 
 def test_thin_evidence_leaves_a_hold_held_and_a_cause_alone(monkeypatch):

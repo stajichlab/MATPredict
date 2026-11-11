@@ -80,6 +80,10 @@ but never listed by name; `tables/candidates_public.tsv` has public isolates onl
 [`reports/aspergillus_fumigatus/starship/report.md`](reports/aspergillus_fumigatus/starship/report.md). Regenerate with `run_report.sh` in the
 results folder (HPCC), then copy `report_md/` into `reports/`.
 
+`starship_candidates.py` builds the per-isolate tables and the tiered bafA / Nebuchadnezzar-h1 candidate list from the screen
+(`--screen`, `--samples` from `mat_frequency.py`, `--out`). Its candidate table names local isolates, so it stays in the results folder;
+the report uses only its public rows.
+
 ## Site report
 
 `export_report.py --store STORE --matfreq MATFREQ_DIR --species "..." --slug <slug> --titles ../sra_survey/pilot/study_titles.tsv

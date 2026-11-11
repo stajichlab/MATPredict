@@ -209,6 +209,12 @@ def main(argv=None):
             if rep:
                 tips[c] = sample2tip[rep]
         summary.append(f"tree tips: {sum(1 for v in range(len(children)) if not children[v])}; clone groups with a tip in the tree: {len(tips)} of {len(clones)}")
+        rank, k = {}, 0
+        for v in range(len(children)):          # leaves in index order = left-to-right order of the drawn tree
+            if not children[v]:
+                rank[name[v]] = k; k += 1
+        write_tsv(f"{a.out}/tree_order.tsv", [dict(clone=c, tip=tips[c], rank=rank[tips[c]]) for c in sorted(tips, key=lambda c: rank[tips[c]])],
+                  ["clone", "tip", "rank"])
         par = []
         for t in targets:
             states = {tips[c]: (PRESENT if cstate[c][t] else ABSENT) for c in tips if cstate[c][t] is not None}

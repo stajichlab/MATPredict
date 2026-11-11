@@ -133,6 +133,8 @@ def test_end_to_end(tmp_path):
     assert par["A"]["fitch_score"] == "2" and par["A"]["clone_tips_present"] == "2" and par["A"]["clone_tips_typed"] == "4"
     for e in ("A", "B"):
         assert int(par[e]["gains_root_absent"]) + int(par[e]["losses_root_absent"]) == int(par[e]["fitch_score"])
+    order = tsv(out / "tree_order.tsv")                                # left-to-right tree order of the clone tips
+    assert [r["tip"] for r in order] == ["t1", "t3", "t4", "t5", "t8"] and [r["rank"] for r in order] == ["0", "2", "3", "4", "5"]
     co = [r for r in tsv(out / "cooccurrence.tsv") if (r["element_1"], r["element_2"]) == ("A", "B")]
     assert len(co) == 1 and co[0]["clones_typed"] == "4"
     sweep = {(r["element"], r["present_cut"]): r for r in tsv(out / "threshold_sweep.tsv")}

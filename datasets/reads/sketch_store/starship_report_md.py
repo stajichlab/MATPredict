@@ -228,9 +228,9 @@ def fig_baf_family(r, out):
     for i, (g, lab) in enumerate(genes):
         y = len(genes) - 1 - i; x = v["genes"][g][str(fam["cuts"][g])]; n = x["tp"] + x["fn"]
         b.plot(x["tp"] / n, y, "o", color=C["s1"], ms=8, mec="white", mew=1.2)
-        b.text(min(x["tp"] / n, 0.9) + 0.03, y, f"{x['tp']}/{n} found, {x['fp']} extra", va="center", fontsize=8.5, color=C["ink2"])
-    b.set_yticks(range(len(genes))); b.set_yticklabels([x[1] for x in genes][::-1], fontsize=8.5); b.set_xlim(0.5, 1.45); b.set_xticks([0.5, 0.75, 1.0])
-    b.xaxis.set_major_formatter(lambda t_, _: f"{100 * t_:.0f}%"); b.set_xlabel(f"assembly-positive strains found by the screen ({tname.replace('.tab', '')})"); b.grid(axis="x", color=C["soft"]); b.set_axisbelow(True)
+        b.text(1.015, y, f"{x['tp']}/{n} found, {x['fp']} extra", va="center", fontsize=8.5, color=C["ink2"])
+    b.set_yticks(range(len(genes))); b.set_yticklabels([x[1] for x in genes][::-1], fontsize=8.5); b.set_xlim(0.9, 1.3); b.set_xticks([0.9, 0.95, 1.0])
+    b.xaxis.set_major_formatter(lambda t_, _: f"{100 * t_:.0f}%"); b.set_xlabel("assembly-positive strains found by the screen\n(update table)"); b.grid(axis="x", color=C["soft"]); b.set_axisbelow(True)
     fig.tight_layout()
     save(fig, out, "fig7_baf_family")
 

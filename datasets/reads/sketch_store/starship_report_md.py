@@ -179,7 +179,7 @@ def fig_groups(r, out):
             ax.plot(min(x["frac_present"], 0.45), y, "o", color=C["s1"], ms=5.5, mec="white", mew=1)
             ax.text(min(x["ci95_hi"], 0.45) + 0.008, y, f"{pc(x['frac_present'], 0)} ({x['clones_present']}/{x['clones_typed']})", va="center", fontsize=7.5, color=C["mute"])
         ax.set_yticks(range(len(rows))); ax.set_yticklabels([str(x["group"]) for x in rows[::-1]], fontsize=8)
-        ax.axvline(baf["frac_present"], color=C["mute"], ls="--", lw=1); ax.set_xlim(0, 0.55); ax.xaxis.set_major_formatter(lambda v, _: f"{100 * v:.0f}%")
+        ax.axvline(baf["frac_present"], color=C["mute"], ls="--", lw=1, zorder=0); ax.set_xlim(0, 0.55); ax.xaxis.set_major_formatter(lambda v, _: f"{100 * v:.0f}%")
         ax.set_title(f"{title} (10 or more clone groups)", loc="left", fontsize=9, fontweight="bold"); ax.grid(axis="x", color=C["soft"]); ax.set_axisbelow(True)
     axs[0].text(baf["frac_present"] + 0.004, len(axs[0].get_yticks()) - 0.35, f"overall {pc(baf['frac_present'])}", fontsize=7.5, color=C["mute"])
     fig.supxlabel("clone groups carrying bafA (95% Wilson interval; dashed = overall)", fontsize=9)

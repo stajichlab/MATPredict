@@ -2,7 +2,7 @@
 """Collect the outputs of starship_dynamics.py (and the screen runs they came from) into one JSON for the Starship report page.
 
     starship_report_data.py --default DIR [--tuned DIR] --candidates TSV --before SUMMARY --after SUMMARY [--dropped TSV]
-                            [--meta key=value ...] --out report_data.json [--template report.html --html OUT.html]
+                            [--baf-family JSON] [--meta key=value ...] --out report_data.json [--template report.html --html OUT.html]
 
 Every table is read from a named file, nothing is recomputed except the 2x2 bafA / Nebuchadnezzar-h1 table and the heatmap order, so a
 number on the page can be traced to a file in DIR. --meta adds provenance strings (commit, job ids, paths) shown in the page footer.
@@ -55,6 +55,7 @@ def main(argv=None):
     ap.add_argument("--default", required=True); ap.add_argument("--tuned"); ap.add_argument("--candidates", required=True)
     ap.add_argument("--before", required=True); ap.add_argument("--after", required=True); ap.add_argument("--dropped")
     ap.add_argument("--meta", nargs="*", default=[]); ap.add_argument("--out", required=True)
+    ap.add_argument("--baf-family", help="baf_family_summary.json from baf_family.py summarize (adds the baf family section)")
     ap.add_argument("--pair", default="bafA,Nebuchadnezzar-h1", help="two elements for the clone-level 2x2 table")
     ap.add_argument("--template"); ap.add_argument("--html")
     a = ap.parse_args(argv)
@@ -82,6 +83,7 @@ def main(argv=None):
         meta=dict(kv.split("=", 1) for kv in a.meta), elements=elements, pair=[e1, e2], default=collect(a.default),
         tuned=collect(a.tuned) if a.tuned else None, heat=heat, baf_neb=two, sweep=sweep,
         cooccurrence=conv(tsv(f"{a.default}/cooccurrence.tsv")), candidates=conv(tsv(a.candidates)),
+        baf_family=json.load(open(a.baf_family)) if a.baf_family else None,
         rescreen=dict(before=screen_summary(a.before), after=screen_summary(a.after), dropped=conv(tsv(a.dropped)) if a.dropped else []))
     with open(a.out, "w") as fh:
         json.dump(data, fh, separators=(",", ":"))

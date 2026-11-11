@@ -42,7 +42,24 @@ def pick(rows, need, per_study):
     return out
 
 
-def main():
+def read_species_file(path):
+    """Species names, one per line (the first tab-separated field); blank lines and lines starting with # are skipped. None when no file is given."""
+    if not path:
+        return None
+    with open(path) as fh:
+        return {ln.split("\t")[0].strip() for ln in fh if ln.strip() and not ln.lstrip().startswith("#")}
+
+
+def select_untyped(rows, actions, species=None):
+    """{species: untyped rows} for the rows whose action is in `actions`, limited to `species` (a set) when given."""
+    out = collections.defaultdict(list)
+    for r in rows:
+        if r["action"] in actions and (species is None or r["species"] in species):
+            out[r["species"]].append(r)
+    return out
+
+
+def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--snapshot", required=True, help="a snapshot folder with species_availability.tsv and untyped_runs.tsv.gz")
     ap.add_argument("--waves-root", required=True, help="folder holding the wave directories (wave1, wave2, ...)")
@@ -50,13 +67,15 @@ def main():
     ap.add_argument("--cap", type=int, default=300, help="most runs per species in all, typed ones included")
     ap.add_argument("--per-study", type=int, default=25, help="most NEW runs from one study (a guard against clonal outbreak sets)")
     ap.add_argument("--actions", nargs="+", default=["expand", "unvalidated"])
-    a = ap.parse_args()
+    ap.add_argument("--species-file", help="only these species (one name per line, # comments); default: every species with one of --actions")
+    a = ap.parse_args(argv)
 
     sp = {r["species"]: r for r in read_tsv(os.path.join(a.snapshot, "species_availability.tsv"))}
-    untyped = collections.defaultdict(list)
-    for r in read_tsv(os.path.join(a.snapshot, "untyped_runs.tsv.gz")):
-        if r["action"] in a.actions:
-            untyped[r["species"]].append(r)
+    only = read_species_file(a.species_file)
+    untyped = select_untyped(read_tsv(os.path.join(a.snapshot, "untyped_runs.tsv.gz")), a.actions, only)
+    if only:
+        for name in sorted(only - set(untyped)):
+            print(f"{name}: no untyped run with an action in {a.actions} (gate {sp.get(name, {}).get('gate', 'not in the snapshot')})", file=sys.stderr)
     os.makedirs(a.out, exist_ok=True)
     lists, summary, missing = collections.defaultdict(list), [], []
     for name in sorted(untyped):

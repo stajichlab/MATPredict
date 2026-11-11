@@ -24,3 +24,14 @@ def test_round_robin_spreads_studies_and_respects_both_caps():
 def test_nearest_three_gigabases_first_inside_a_study():
     rows = [{"study_accession": "S", "run_accession": "far", "base_count": "9000000000"}, {"study_accession": "S", "run_accession": "near", "base_count": "3100000000"}]
     assert er.pick(rows, need=1, per_study=5)[0]["run_accession"] == "near"
+
+
+def test_species_file_limits_the_species_and_skips_comments(tmp_path):
+    f = tmp_path / "sp.txt"
+    f.write_text("# thin-evidence species\nMadurella mycetomatis\tsingle_locus\n\nFusarium sambucinum\n")
+    only = er.read_species_file(str(f))
+    assert only == {"Madurella mycetomatis", "Fusarium sambucinum"} and er.read_species_file(None) is None
+    rows = [{"species": "Madurella mycetomatis", "action": "unvalidated"}, {"species": "Fusarium sambucinum", "action": "held"},
+            {"species": "Botrytis cinerea", "action": "expand"}]
+    assert list(er.select_untyped(rows, ["expand", "unvalidated"], only)) == ["Madurella mycetomatis"]     # held is not an action asked for; Botrytis is not listed
+    assert sorted(er.select_untyped(rows, ["expand", "unvalidated"])) == ["Botrytis cinerea", "Madurella mycetomatis"]

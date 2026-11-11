@@ -55,11 +55,23 @@ cp ../sra_survey/pilot/genotype_mat_one_accession.sh ../sra_survey/pilot/screen_
 bash STORE/bin/submit.sh STORE [JOBS_TO_WAIT_FOR]      # self-feeding planner: rounds sized to the queue limit, retries, then run_queries.sh
 python sketch_query.py --store STORE screen --name mygenes --targets genes.fa     # any new question, any time
 python mat_frequency.py --store STORE --out OUTDIR      # MAT1-1 fraction per sample and per clone group, by study/country/lineage
+python starship_dynamics.py --store STORE --out OUTDIR --truth STORE/targets/truth_store.tsv   # Starship/bafA prevalence, co-occurrence, gain/loss
 ```
 
 `STORE/exclude.tsv` (sample_id, reason, decided) lists curator exclusions, for example a low-quality sequencing; `mat_frequency.py`
 leaves them out, together with samples of another species (mean ANI < 0.95) and QC-flagged mixtures, and says why in its
 `samples.tsv`. Its clone-corrected frequency gives each clone group (ANI 0.9995) one vote.
+
+### Starship presence and gain/loss (`starship_dynamics.py`)
+
+Reads the standing screen (`query/screen_starships_bafA/screen.tsv`: fraction of each target's specific hashes found), calls each
+target present (fraction >= 0.5), absent (< 0.2) or missing (between; partial hits are never read as loss), takes one vote per clone
+group like `mat_frequency.py`, and writes the clone-by-element matrix, prevalence (overall, by lineage and country, Wilson intervals),
+pairwise co-occurrence, and Fitch parsimony on the store's distance tree (one tip per clone group; score, and gains/losses for the
+root-absent and root-present reconstructions). `--set TARGET=FRACTION` changes the present cut for one target; `--truth` writes
+`threshold_sweep.tsv` (TP/FN/FP/TN per cut) to choose it. The tree is a sketch distance tree and Fitch resolves multifurcations left
+to right: read the counts as a pattern. Tests: `tests/test_sketch_store_starship_dynamics.py` (Newick parsing, Fitch against a
+Sankoff calculation on random trees, clone votes, thresholds, outputs).
 
 ## Site report
 

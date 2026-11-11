@@ -1,0 +1,408 @@
+<title>A. fumigatus Starship Survey</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a lab notebook. One reading column of 1040px; each result is a block: question, figure, how to read it, source line, caveat.
+   Colour: blue (slot 1) is the data colour, orange (slot 2) marks the thing that disagrees with the paper, aqua (slot 3) is the third group;
+   magnitude is blue opacity on the surface so it recedes to the page in both themes. */
+:root {
+  --bg: #f1f2f3; --card: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e; --mute: #6f6e69; --line: #dcdcd7; --soft: #eceae6;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --neg: #e34948; --good: #0ca30c; --warn: #fab219; --crit: #d03b3b;
+  --s1-ink: #1c5cab; --s2-ink: #b4430f; --good-ink: #0a7a0a; --warn-ink: #8a5a00;
+  --display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif; --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121211; --card: #1a1a19; --ink: #f0efec; --ink2: #c3c2b7; --mute: #9a998f; --line: #34342f; --soft: #242422;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --neg: #e66767; --s1-ink: #86b6ef; --s2-ink: #f0996f; --good-ink: #5fd35f; --warn-ink: #fab219; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #121211; --card: #1a1a19; --ink: #f0efec; --ink2: #c3c2b7; --mute: #9a998f; --line: #34342f; --soft: #242422;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --neg: #e66767; --s1-ink: #86b6ef; --s2-ink: #f0996f; --good-ink: #5fd35f; --warn-ink: #fab219; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; }
+main { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+h1 { font-size: 30px; line-height: 1.15; } h2 { font-size: 21px; } h3 { font-size: 15px; letter-spacing: 0; }
+p { margin: 0; max-width: 68ch; } a { color: var(--s1-ink); }
+code, .mono { font-family: var(--mono); font-size: 12.5px; }
+.eyebrow { font: 500 11px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mute); }
+header { display: flex; flex-direction: column; gap: 10px; }
+.sub { color: var(--ink2); max-width: 75ch; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 11.5px/1 var(--mono); padding: 5px 8px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink2); background: var(--card); }
+section { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 22px max(16px, 3vw); display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.q { color: var(--ink2); font-style: italic; }
+.how { color: var(--ink2); font-size: 13.5px; }
+.src { font: 12px/1.5 var(--mono); color: var(--mute); border-top: 1px dashed var(--line); padding-top: 9px; overflow-wrap: anywhere; }
+.src b { color: var(--ink2); font-weight: 500; }
+.cav { font-size: 13px; color: var(--ink2); border-left: 3px solid var(--warn); padding: 2px 0 2px 10px; max-width: 80ch; }
+.grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.stat { border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; min-width: 0; }
+.stat .n { font: 600 26px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.stat .l { font-size: 12.5px; color: var(--ink2); margin-top: 4px; }
+.find { display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; list-style: none; }
+.find li { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+.pill { font: 600 11px/1 var(--mono); padding: 5px 8px; border-radius: 4px; border: 1px solid; white-space: nowrap; }
+.pill.ok { color: var(--good-ink); border-color: var(--good-ink); } .pill.caution { color: var(--warn-ink); border-color: var(--warn-ink); } .pill.open { color: var(--mute); border-color: var(--mute); }
+.scroll { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: 5px 9px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font: 500 11px/1.2 var(--mono); text-transform: uppercase; letter-spacing: 0.05em; color: var(--mute); position: sticky; top: 0; background: var(--card); }
+th:first-child, td:first-child, td.l, th.l { text-align: left; }
+tr.hl td { background: var(--soft); }
+td.dn { color: var(--good-ink); } td.up { color: var(--s2-ink); }
+svg text { fill: var(--ink2); font: 11px var(--body); } svg .t2 { fill: var(--mute); font-size: 10px; } svg .b { fill: var(--ink); font-weight: 600; }
+svg .ax { stroke: var(--line); stroke-width: 1; } svg .gr { stroke: var(--soft); stroke-width: 1; }
+.leg { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--ink2); }
+.leg i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.flow { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.step { border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; font-size: 12.5px; min-width: 0; }
+.step b { display: block; font: 600 13px var(--display); margin-bottom: 3px; } .step span { color: var(--mute); font: 11.5px var(--mono); display: block; margin-top: 5px; overflow-wrap: anywhere; }
+.ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+input, select, button { font: 13px var(--body); color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 6px 9px; }
+button { cursor: pointer; } button:hover { background: var(--soft); } :focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
+.tip { position: fixed; z-index: 30; pointer-events: none; background: var(--ink); color: var(--bg); font: 12px/1.45 var(--body); padding: 6px 9px; border-radius: 4px; max-width: 280px; display: none; }
+.panels { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.panel { border: 1px solid var(--line); border-radius: 6px; padding: 8px 8px 4px; min-width: 0; }
+.two { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.tier-strong { color: var(--good-ink); } .tier-probable { color: var(--warn-ink); } .tier-discordant { color: var(--s2-ink); }
+footer { color: var(--mute); font: 12px/1.6 var(--mono); overflow-wrap: anywhere; }
+@media (max-width: 560px) { h1 { font-size: 24px; } .find li { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<main id="app"><p>Loading…</p></main>
+<div class="tip" id="tip"></div>
+
+<script>
+const D = /*__DATA__*/null;
+(function () {
+const app = document.getElementById("app"), tip = document.getElementById("tip");
+if (!D) { app.innerHTML = "<p>This template has no data. Build it with starship_report_data.py --template … --html …</p>"; return; }
+const NS = "http://www.w3.org/2000/svg";
+const $ = (t, a, kids) => { const e = document.createElement(t); for (const k in (a || {})) k === "html" ? e.innerHTML = a[k] : e.setAttribute(k, a[k]); (kids || []).forEach(c => e.append(c)); return e; };
+const S = (t, a, kids) => { const e = document.createElementNS(NS, t); for (const k in (a || {})) e.setAttribute(k, a[k]); (kids || []).forEach(c => e.append(c)); return e; };
+const T = (x, y, s, cls, anchor) => { const e = S("text", { x, y, class: cls || "", "text-anchor": anchor || "start" }); e.textContent = s; return e; };
+const f0 = x => Number(x).toLocaleString("en-US"), pc = (x, d = 1) => (100 * x).toFixed(d) + "%";
+const by = (arr, k) => Object.fromEntries(arr.map(r => [r[k], r]));
+function showTip(ev, html) { tip.innerHTML = html; tip.style.display = "block"; const w = tip.offsetWidth; tip.style.left = Math.min(innerWidth - w - 8, ev.clientX + 14) + "px"; tip.style.top = (ev.clientY + 14) + "px"; }
+const hideTip = () => { tip.style.display = "none"; };
+function hover(node, fn) { node.addEventListener("mousemove", e => showTip(e, fn(e))); node.addEventListener("mouseleave", hideTip); return node; }
+function table(cols, rows, opts) {
+  opts = opts || {};
+  const th = $("tr", {}, cols.map((c, i) => $("th", { class: c.left ? "l" : "" , html: c.h })));
+  const body = rows.map(r => { const tr = $("tr", opts.hl && opts.hl(r) ? { class: "hl" } : {}); cols.forEach(c => { const v = c.f(r); const td = $("td", { class: (c.left ? "l " : "") + (c.cls ? c.cls(r) : "") }); if (v instanceof Node) td.append(v); else td.innerHTML = v; tr.append(td); }); return tr; });
+  return $("div", { class: "scroll" }, [$("table", {}, [$("thead", {}, [th]), $("tbody", {}, body)])]);
+}
+function block(id, eyebrow, title, parts) { return $("section", { id }, [ $("div", { class: "eyebrow", html: eyebrow }), $("h2", { html: title }), ...parts ]); }
+const src = html => $("div", { class: "src", html: "<b>Source</b> " + html });
+const how = html => $("p", { class: "how", html });
+const cav = html => $("p", { class: "cav", html });
+const qn = html => $("p", { class: "q", html });
+
+// ---------- data
+const E = D.elements, M = D.meta, P = by(D.default.prevalence, "element"), PT = D.tuned ? by(D.tuned.prevalence, "element") : null;
+const PS = by(D.default.parsimony, "element"), PST = D.tuned ? by(D.tuned.parsimony, "element") : null;
+const before = D.rescreen.before, after = D.rescreen.after;
+const m1 = /samples in the screen: (\d+); kept (\d+); excluded (\{.*\})/.exec(D.default.summary[0] || "") || [];
+const m2 = /clone groups at ANI ([\d.]+): (\d+)/.exec(D.default.summary[1] || "") || [];
+const m3 = /clone groups with a tip in the tree: (\d+) of (\d+)/.exec(D.default.summary.find(s => /tip in the tree/.test(s)) || "") || [];
+const nScreen = +m1[1], nKept = +m1[2], nClones = +m2[2], nTree = +m3[1];
+const fam = e => e.split("-")[0];
+const truthStat = e => { const t = after[e] && after[e].truth; return t ? { ...t, prec: t.TP / (t.TP + t.FP), rec: t.TP / (t.TP + t.FN) } : null; };
+const status = e => { const t = truthStat(e); if (!t) return "none"; return t.FP >= 9 ? "over" : "ok"; };
+const cutOf = e => { const o = (D.tuned && D.tuned.summary[1] || "").match(new RegExp(e.replace("-", "\\-") + "=([\\d.]+)")); return o ? +o[1] : null; };
+const sweepAt = (e, c) => (D.sweep[e] || []).find(r => Math.abs(r.present_cut - c) < 1e-9);
+const baf = P["bafA"], neb = P["Nebuchadnezzar-h1"], bafp = PS["bafA"], nebp = PS["Nebuchadnezzar-h1"];
+const strong = D.candidates.filter(c => c.tier === "strong"), strongKept = strong.filter(c => !c.excluded);
+const strongClones = new Set(strongKept.map(c => c.clone || "solo:" + c.sample_id)).size;
+const tierN = t => D.candidates.filter(c => c.tier === t).length;
+
+// ---------- header + summary
+const head = $("header", {}, [
+  $("div", { class: "eyebrow", html: "Sketch-store analysis · " + (M.date || "2026-11-11") }),
+  $("h1", { html: "Starships and bafA across " + f0(nScreen) + " <i>Aspergillus fumigatus</i> isolates" }),
+  $("p", { class: "sub", html: "Which isolates carry a Nebuchadnezzar-h1-type Starship with bafA, how common the other 20 defined Starship haplotypes are, and how their presence is spread over the population tree. Every figure and table below names the file, job and commit it came from." }),
+  $("div", { class: "chips", html: ["code " + (M.code_commit || "?"), "PR #" + (M.pr || "?"), "rescreen job " + (M.rescreen_job || "?"), "default run " + (M.default_job || "?"), "tuned run " + (M.tuned_job || "?")].map(x => `<span class="chip">${x}</span>`).join("") })
+]);
+
+const sum = block("summary", "Summary", "What we found", [
+  $("div", { class: "grid" }, [
+    ["" + f0(nKept), "isolates kept of " + f0(nScreen) + " sketched"], ["" + f0(nClones), "clone groups (ANI " + m2[1] + "), one vote each"],
+    [pc(baf.frac_present), "of clone groups carry bafA (" + baf.clones_present + " of " + f0(baf.clones_typed) + ")"],
+    ["" + f0(strongKept.length), "isolates in the strong bafA + Nebuchadnezzar-h1 list (" + strongClones + " clone groups)"]
+  ].map(([n, l]) => $("div", { class: "stat" }, [$("div", { class: "n", html: n }), $("div", { class: "l", html: l })]))),
+  $("ul", { class: "find" }, [
+    ["ok", "Solid", `bafA is present in ${pc(baf.frac_present)} of clone groups and almost always sits with Nebuchadnezzar-h1 (${f0(D.baf_neb["11"])} of ${f0(D.baf_neb["11"] + D.baf_neb["10"] + D.baf_neb["01"])} clone groups with either one carry both). The list of strong candidates is in section 9.`],
+    ["ok", "Solid", `The solo-hash rule removed ${f0(before["bafA"].partial)} ambiguous "partial" bafA calls without changing agreement with the paper (${after["bafA"].truth.TP} true positives, ${after["bafA"].truth.FN} missed).`],
+    ["caution", "Caution", `bafA presence is <b>scattered</b> over the tree: ${bafp.fitch_score} changes for ${bafp.clone_tips_present} present clone groups (ratio ${bafp.score_per_present}). Nebuchadnezzar-h1 behaves the same (${nebp.score_per_present}). That fits repeated gain or transfer, or a coarse tree; it does not by itself show either.`],
+    ["caution", "Caution", `Janus-h2, Janus-h4 and Osiris-h3 call more isolates than the paper does. Raising the cut for Osiris-h3 (0.5 → ${cutOf("Osiris-h3") || "0.7"}) removes most of the extra calls; Janus-h3, Janus-h5 and bafA keep theirs at every cut, with hash fraction near 1.0.`],
+    ["open", "Open", "The cuts were picked on the same 226 truth samples (no hold-out yet). Only the 20 haplotypes of the NII pangenome study are screened; the Starbase / Gluck-Thaler set is not."]
+  ].map(([k, l, t]) => $("li", {}, [$("span", { class: "pill " + k, html: l }), $("span", { html: t })])))
+]);
+
+// ---------- 1 method
+const meth = block("method", "1 · Data and method", "From reads to a presence call", [
+  qn("What exactly was screened, and what was left out?"),
+  $("div", { class: "flow" }, [
+    ["Read sketches", "k21 and k31, scaled 100, abundance kept (≥ 2), 30× subsample per isolate", "sketch_store/aspergillus_fumigatus/sigs/"],
+    ["Clone groups", "average-linkage groups at ANI " + m2[1] + " from the sketch distances → " + f0(nClones) + " groups", "query/distances/samples_qc.tsv"],
+    ["Screen", "fraction of each target's specific hashes found in each isolate, 21 targets (bafA + 20 haplotypes)", "query/screen_starships_bafA/screen.tsv"],
+    ["Solo-hash rule", f0(D.rescreen.dropped.length) + " hashes dropped that appear alone in > 1% of isolates (shared with other sequence)", "dropped_hashes.tsv · job " + M.rescreen_job],
+    ["Call", "present ≥ 0.5, absent < 0.2, otherwise missing; clone vote = majority of its members", "starship_dynamics.py"],
+    ["Tree", "Fitch parsimony on the FastME distance tree, one tip per clone group (" + f0(nTree) + " of " + f0(nClones) + " have a tip)", "query/distances/tree_fastme.nwk"]
+  ].map(([a, b, c]) => $("div", { class: "step" }, [$("b", { html: a }), document.createTextNode(b), $("span", { html: c })]))),
+  how(`Left out of every frequency: ${m1[3] ? m1[3].replace(/[{}']/g, "").replace(/_/g, " ") : ""} isolates (other species, k-mer mixtures, one curator exclusion). Partial hits (0.2 to 0.5) count as <i>missing</i>, never as loss.`),
+  src(`<code>${M.results || ""}/out_default/summary.txt</code> · code <code>starship_dynamics.py</code> at <code>${M.code_commit || "?"}</code>, tests in <code>tests/test_sketch_store_starship_dynamics.py</code>`)
+]);
+
+// ---------- 2 rescreen
+const rows2 = E.map(e => ({ e, b: before[e], a: after[e] }));
+const arrow = (x, y) => x === y ? f0(y) : `${f0(x)} → ${f0(y)}`;
+const rescreen = block("rescreen", "2 · Effect of the solo-hash rule", "Did dropping non-specific hashes change the calls?", [
+  qn("A hash seen alone in many isolates is shared with other sequence. Does removing it help?"),
+  table([
+    { h: "Element", f: r => r.e, left: true }, { h: "Specific hashes", f: r => arrow(r.b.specific, r.a.specific) },
+    { h: "Present", f: r => arrow(r.b.present, r.a.present) }, { h: "Partial", f: r => arrow(r.b.partial, r.a.partial), cls: r => r.a.partial < r.b.partial ? "dn" : "" },
+    { h: "Paper TP", f: r => r.a.truth ? arrow(r.b.truth.TP, r.a.truth.TP) : "" }, { h: "Paper FP", f: r => r.a.truth ? arrow(r.b.truth.FP, r.a.truth.FP) : "" },
+    { h: "Paper FN", f: r => r.a.truth ? arrow(r.b.truth.FN, r.a.truth.FN) : "" }
+  ], rows2, { hl: r => r.e === "bafA" || r.e === "Nebuchadnezzar-h1" }),
+  how(`The rule only helps where the extra hash was a single non-specific one: bafA partials fall from ${f0(before["bafA"].partial)} to ${f0(after["bafA"].partial)}. False positives against the paper do not fall for Janus or Osiris-h3 (compare the Paper FP column), because their overcall comes from hashes shared across the family, not single stray hashes. "Paper TP / FP / FN" use the ${f0(Object.values(after).find(x => x.truth).truth.TP + Object.values(after).find(x => x.truth).truth.FN + Object.values(after).find(x => x.truth).truth.FP + Object.values(after).find(x => x.truth).truth.TN)}-sample truth table, where a sample is called present at fraction ≥ 0.5.`),
+  src(`before <code>query_2026-11-09_n4834/screen_starships_bafA_before_solo_rule/summary.txt</code> · after <code>query/screen_starships_bafA/summary.txt</code> · job <code>${M.rescreen_job}</code> (script <code>bin/rescreen.sh</code>)`)
+]);
+
+// ---------- 3 prevalence
+function prevalenceChart() {
+  const rows = E.map(e => P[e]).sort((a, b) => b.frac_present - a.frac_present);
+  const W = 860, rh = 24, L = 150, R = 90, top = 24, H = top + rows.length * rh + 34, x = v => L + v * (W - L - R) / 0.7;
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img", "aria-label": "Share of clone groups carrying each element, with 95% intervals" });
+  [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7].forEach(v => { svg.append(S("line", { x1: x(v), x2: x(v), y1: top - 6, y2: H - 30, class: "gr" }), T(x(v), H - 14, pc(v, 0), "t2", "middle")); });
+  rows.forEach((r, i) => {
+    const y = top + i * rh + rh / 2, st = status(r.element), col = st === "over" ? "var(--s2)" : "var(--s1)", key = r.element === "bafA" || r.element === "Nebuchadnezzar-h1";
+    svg.append(T(L - 10, y + 4, r.element, key ? "b" : "", "end"), S("line", { x1: x(r.ci95_lo), x2: x(r.ci95_hi), y1: y, y2: y, stroke: col, "stroke-width": 2 }),
+      S("circle", { cx: x(r.frac_present), cy: y, r: 5.5, fill: col, stroke: "var(--card)", "stroke-width": 2 }), T(x(r.ci95_hi) + 8, y + 4, `${pc(r.frac_present)}  (${r.clones_present}/${f0(r.clones_typed)})`, "t2"));
+    const hit = S("rect", { x: 0, y: y - rh / 2, width: W, height: rh, fill: "transparent" });
+    hover(hit, () => { const t = truthStat(r.element); return `<b>${r.element}</b><br>${r.clones_present} of ${f0(r.clones_typed)} clone groups (${pc(r.frac_present)}; 95% CI ${pc(r.ci95_lo)}–${pc(r.ci95_hi)})<br>${f0(r.samples_present)} isolates present, ${f0(r.samples_missing)} missing<br>${t ? `vs paper: ${t.TP} TP, ${t.FP} FP, ${t.FN} FN` : "no paper calls"}`; });
+    svg.append(hit);
+  });
+  return svg;
+}
+const prev = block("prevalence", "3 · How common is each element", "Share of clone groups carrying each element", [
+  qn("Which elements are common in the population, and which are rare?"),
+  prevalenceChart(),
+  $("div", { class: "leg", html: `<span><i style="background:var(--s1)"></i>agrees with the paper's calls (≤ 8 extra calls)</span><span><i style="background:var(--s2)"></i>calls many more isolates than the paper (≥ 9 extra), treat as an upper bound</span><span>line = 95% Wilson interval, label = clone groups present / typed</span>` }),
+  how("One point is one clone group, so a study that sequenced one lineage fifty times counts once. Groups where most members are missing at this element are left out of the denominator."),
+  src(`<code>${M.results || ""}/out_default/prevalence.tsv</code> (columns clones_typed, clones_present, frac_present, ci95_lo, ci95_hi) · agreement colours from the paper truth in <code>sketch_store/.../targets/truth_store.tsv</code>`),
+  cav(`Gnosis-h1, Osiris-h4 and Tardis-h1 are in roughly half of all clone groups; bafA, Nebuchadnezzar-h1 and the Logos and Lamia haplotypes are in a small minority. Orange rows are upper bounds only.`)
+]);
+
+// ---------- 4 validation / sweep
+function sweepPanel(e) {
+  const rows = D.sweep[e] || [], W = 260, H = 170, L = 34, Rr = 10, tp = 12, bt = 30, x = c => L + (c - 0.1) / 0.9 * (W - L - Rr), y = v => tp + (1 - v) * (H - tp - bt);
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img", "aria-label": `${e}: precision and recall against the paper by present cut` });
+  [0, 0.5, 1].forEach(v => svg.append(S("line", { x1: L, x2: W - Rr, y1: y(v), y2: y(v), class: "gr" }), T(L - 5, y(v) + 3, v, "t2", "end")));
+  [0.1, 0.5, 0.9].forEach(c => svg.append(T(x(c), H - 14, c, "t2", "middle")));
+  svg.append(T((L + W - Rr) / 2, H - 2, "present cut (hash fraction)", "t2", "middle"));
+  const line = (k, col) => svg.append(S("polyline", { points: rows.filter(r => r[k] !== "").map(r => `${x(r.present_cut)},${y(r[k])}`).join(" "), fill: "none", stroke: col, "stroke-width": 2 }));
+  line("precision", "var(--s1)"); line("recall", "var(--s2)");
+  svg.append(S("line", { x1: x(0.5), x2: x(0.5), y1: tp, y2: H - bt, stroke: "var(--mute)", "stroke-dasharray": "3 3" }));
+  const c = cutOf(e); if (c) svg.append(S("line", { x1: x(c), x2: x(c), y1: tp, y2: H - bt, stroke: "var(--ink)", "stroke-width": 1.5 }), T(x(c) + 3, tp + 9, "tuned " + c, "t2"));
+  rows.forEach(r => { const hit = S("rect", { x: x(r.present_cut) - 11, y: tp, width: 22, height: H - tp - bt, fill: "transparent" });
+    hover(hit, () => `<b>${e}</b> at cut ${r.present_cut}<br>TP ${r.TP}, FP ${r.FP}, FN ${r.FN}, TN ${r.TN}<br>precision ${r.precision === "" ? "–" : r.precision}, recall ${r.recall === "" ? "–" : r.recall}`); svg.append(hit); });
+  return $("div", { class: "panel" }, [$("h3", { html: e }), svg]);
+}
+const sweepEls = ["Osiris-h3", "Janus-h4", "Janus-h2", "Janus-h1", "Janus-h3", "Janus-h5", "bafA", "Nebuchadnezzar-h1"].filter(e => D.sweep[e]);
+const sweepBlock = block("validation", "4 · Agreement with the paper", "Which elements can be trusted, and what do the cuts buy?", [
+  qn("Do the sketch calls match the published Starship calls, and can a stricter cut fix the elements that do not?"),
+  $("div", { class: "leg", html: `<span><i style="background:var(--s1)"></i>precision</span><span><i style="background:var(--s2)"></i>recall</span><span>dashed = default cut 0.5, solid = cut used in the tuned run</span>` }),
+  $("div", { class: "panels" }, sweepEls.map(sweepPanel)),
+  table([
+    { h: "Element", f: r => r.e, left: true }, { h: "Cut", f: r => r.c }, { h: "False pos. at 0.5", f: r => r.a.FP }, { h: "False pos. at cut", f: r => r.b.FP, cls: r => r.b.FP < r.a.FP ? "dn" : "" },
+    { h: "True pos. at 0.5", f: r => r.a.TP }, { h: "True pos. at cut", f: r => r.b.TP, cls: r => r.b.TP < r.a.TP ? "up" : "" }
+  ], ["Osiris-h3", "Janus-h4"].filter(e => cutOf(e)).map(e => ({ e, c: cutOf(e), a: sweepAt(e, 0.5), b: sweepAt(e, cutOf(e)) }))),
+  how("Elements with only a handful of paper positives (Janus-h3, Janus-h5) cannot be tuned: precision stays low at every cut. For bafA and Janus-h3/h5 the extra calls have hash fraction near 1.0 and normal depth, so they look genuinely present; the paper's calls may be incomplete there (for bafA the paper table is mostly a Nebuchadnezzar-h1 proxy)."),
+  src(`<code>${M.results || ""}/out_default/threshold_sweep.tsv</code> (truth: <code>targets/truth_store.tsv</code>, 226 samples) · depth and fraction of true vs false positives: <code>explore_fp.out</code>, same folder`),
+  cav("The cuts for Osiris-h3 and Janus-h4 were read off this same truth table, so their gain is optimistic until tested on strains not used to choose them.")
+]);
+
+// ---------- 5 heatmap across tree
+function heatmap() {
+  const rows = D.heat.filter(h => h.in_tree), BIN = 6, nb = Math.ceil(rows.length / BIN), ord = E.slice().sort((a, b) => fam(a) === fam(b) ? a.localeCompare(b) : (a === "bafA" ? -1 : b === "bafA" ? 1 : fam(a).localeCompare(fam(b))));
+  const idx = Object.fromEntries(E.map((e, i) => [e, i]));
+  const lin = {}; rows.forEach(r => lin[r.lineage] = (lin[r.lineage] || 0) + 1);
+  const top3 = Object.entries(lin).filter(x => x[0] !== "none").sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0]), lc = ["var(--s1)", "var(--s2)", "var(--s3)"];
+  const L = 120, W = 900, cw = (W - L - 10) / nb, rh = 17, top = 28, H = top + ord.length * rh + 24;
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, style: "min-width:680px", width: "100%", role: "img", "aria-label": "Fraction of clone groups carrying each element in tree-ordered bins" });
+  const bins = [];
+  for (let b = 0; b < nb; b++) {
+    const seg = rows.slice(b * BIN, (b + 1) * BIN), cnt = {}; seg.forEach(r => cnt[r.lineage] = (cnt[r.lineage] || 0) + 1);
+    const dom = Object.entries(cnt).sort((a, c) => c[1] - a[1])[0][0], fr = ord.map(e => { const i = idx[e]; let p = 0, t = 0; seg.forEach(r => { const v = r.bits[i]; if (v !== "2") { t++; if (v === "1") p++; } }); return t ? p / t : null; });
+    bins.push({ seg, dom, fr });
+    const li = top3.indexOf(dom); svg.append(S("rect", { x: L + b * cw, y: 6, width: Math.max(cw - 0.2, 0.5), height: 8, fill: li >= 0 ? lc[li] : "var(--line)" }));
+    fr.forEach((v, k) => v !== null && v > 0 && svg.append(S("rect", { x: L + b * cw, y: top + k * rh, width: Math.max(cw - 0.2, 0.5), height: rh - 2, fill: "var(--s1)", "fill-opacity": 0.12 + 0.88 * v })));
+  }
+  ord.forEach((e, k) => { svg.append(T(L - 8, top + k * rh + 12, e, e === "bafA" || e === "Nebuchadnezzar-h1" ? "b" : "", "end")); if (k && fam(ord[k - 1]) !== fam(e)) svg.append(S("line", { x1: L, x2: W - 10, y1: top + k * rh - 1, y2: top + k * rh - 1, class: "gr" })); });
+  svg.append(T(L, H - 6, "← one end of the tree", "t2"), T(W - 10, H - 6, "other end →", "t2", "end"), T(L - 8, 13, "lineage", "t2", "end"));
+  const hit = S("rect", { x: L, y: 0, width: W - L, height: H - 20, fill: "transparent" });
+  hover(hit, ev => { const r = svg.getBoundingClientRect(), sx = W / r.width, b = Math.max(0, Math.min(nb - 1, Math.floor(((ev.clientX - r.left) * sx - L) / cw))), k = Math.floor(((ev.clientY - r.top) * sx - top) / rh), bn = bins[b];
+    const li = top3.indexOf(bn.dom); const base = `<b>tree bin ${b + 1} of ${nb}</b> (${bn.seg.length} clone groups, mostly lineage ${bn.dom})`;
+    return k >= 0 && k < ord.length ? `${base}<br>${ord[k]}: ${bn.fr[k] === null ? "no calls" : pc(bn.fr[k], 0) + " present"}` : base; });
+  svg.append(hit);
+  return { svg, top3, lc, n: rows.length, nb, BIN };
+}
+const H5 = heatmap();
+const heat = block("tree", "5 · Spread over the population tree", "Where on the tree does each element occur?", [
+  qn("Is each element confined to a clade, or does it turn up across the whole tree?"),
+  $("div", { class: "scroll" }, [H5.svg]),
+  $("div", { class: "leg", html: `<span>shade = share of clone groups in the bin that carry the element (white = none, dark blue = all)</span>` + H5.top3.map((l, i) => `<span><i style="background:${H5.lc[i]}"></i>lineage ${l}</span>`).join("") + `<span><i style="background:var(--line)"></i>other lineages</span>` }),
+  how(`The ${f0(H5.n)} clone groups that have a tip in the tree are laid out left to right in tree order and pooled ${H5.BIN} per column (${H5.nb} columns). A solid band means the element sits in one part of the tree; speckle means it appears here and there. The top strip shows which lineage dominates each column (lineage = group at ANI 0.998).`),
+  src(`<code>${M.results || ""}/out_default/clone_matrix.tsv</code> (1 / 0 / NA per clone group and element) and <code>tree_order.tsv</code> (position of each clone group's tip) · tree <code>query/distances/tree_fastme.nwk</code>`),
+  cav(`${f0(D.heat.length - H5.n)} clone groups have no tip in the tree and are not shown. The tree is built from sketch distances, so fine order inside a lineage is not reliable.`)
+]);
+
+// ---------- 6 parsimony scatter
+function scatter() {
+  const rows = D.default.parsimony, W = 760, H = 420, L = 56, Rr = 20, tp = 16, bt = 50, lx = v => L + (Math.log10(v) - Math.log10(8)) / (Math.log10(2000) - Math.log10(8)) * (W - L - Rr), ly = v => tp + (1 - (Math.log10(v) - Math.log10(3)) / (Math.log10(400) - Math.log10(3))) * (H - tp - bt);
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img", "aria-label": "Minimum changes on the tree against number of clone groups present" });
+  [10, 30, 100, 300, 1000].forEach(v => svg.append(S("line", { x1: lx(v), x2: lx(v), y1: tp, y2: H - bt, class: "gr" }), T(lx(v), H - bt + 16, f0(v), "t2", "middle")));
+  [5, 10, 30, 100, 300].forEach(v => svg.append(S("line", { x1: L, x2: W - Rr, y1: ly(v), y2: ly(v), class: "gr" }), T(L - 6, ly(v) + 3, v, "t2", "end")));
+  svg.append(T((L + W - Rr) / 2, H - 8, "clone groups carrying the element (log scale)", "t2", "middle"), T(14, H / 2, "minimum changes on the tree (log)", "t2", "middle"));
+  svg.lastChild.setAttribute("transform", `rotate(-90 14 ${H / 2})`);
+  svg.append(S("clipPath", { id: "plotclip" }, [S("rect", { x: L, y: tp, width: W - L - Rr, height: H - tp - bt })]));
+  [[1, "ratio 1: every clone group its own event"], [0.25, "0.25"], [0.1, "0.1"]].forEach(([k, lab]) => { const a = 8, b = Math.min(2000, 400 / k); svg.append(S("line", { x1: lx(a), y1: ly(a * k), x2: lx(b), y2: ly(b * k), "clip-path": "url(#plotclip)", stroke: "var(--mute)", "stroke-dasharray": k === 1 ? "none" : "4 4", "stroke-width": k === 1 ? 1.2 : 1 })); const px = Math.min(b, 1400); svg.append(T(lx(px * 0.9), ly(px * 0.9 * k) - 5, lab, "t2", "end")); });
+  const lab = new Set(["bafA", "Nebuchadnezzar-h1", "Lamia-h4", "Osiris-h4", "Janus-h1", "Osiris-h3", "Gnosis-h1", "Lamia-h3"]);
+  rows.forEach(r => { const key = r.element === "bafA" || r.element === "Nebuchadnezzar-h1", c = S("circle", { cx: lx(r.clone_tips_present), cy: ly(Math.max(r.fitch_score, 3)), r: key ? 7 : 5, fill: "var(--s1)", "fill-opacity": key ? 1 : 0.75, stroke: "var(--card)", "stroke-width": 2 });
+    hover(c, () => `<b>${r.element}</b><br>${r.clone_tips_present} of ${r.clone_tips_typed} clone tips present<br>${r.fitch_score} minimum changes (ratio ${r.score_per_present})<br>gains ${r.gains_root_absent}, losses ${r.losses_root_absent}`); svg.append(c);
+    const off = { "Janus-h1": [-9, -6, "end"], "Nebuchadnezzar-h1": [-11, 13, "end"], "bafA": [10, -3, "start"] }[r.element] || [9, 4, "start"];
+    if (lab.has(r.element)) svg.append(T(lx(r.clone_tips_present) + off[0], ly(Math.max(r.fitch_score, 3)) + off[1], r.element, key ? "b" : "t2", off[2])); });
+  return svg;
+}
+const pars = block("gainloss", "6 · Gains and losses on the tree", "How many separate events does each element need?", [
+  qn("If an element were inherited within clades it would need few changes; repeated gain would need about one per present clone group."),
+  $("div", { class: "scroll" }, [scatter()]),
+  table([
+    { h: "Element", f: r => r.element, left: true }, { h: "Present clones", f: r => f0(r.clone_tips_present) }, { h: "Min. changes", f: r => f0(r.fitch_score) },
+    { h: "Changes ÷ present", f: r => r.score_per_present }, { h: "Gains", f: r => r.gains_root_absent }, { h: "Losses", f: r => r.losses_root_absent },
+    { h: "Prevalence", f: r => pc(P[r.element].frac_present) }
+  ], D.default.parsimony.slice().sort((a, b) => b.score_per_present - a.score_per_present), { hl: r => r.element === "bafA" || r.element === "Nebuchadnezzar-h1" }),
+  how("Each point is one element. The solid diagonal is the scattered limit; points near the lower dashed lines sit mostly in a few clades. Gains and losses are Fitch parsimony counts (root state absent; the root state is fixed by the data, so root-present gives the same split here)."),
+  src(`<code>${M.results || ""}/out_default/parsimony.tsv</code> · method in <code>starship_dynamics.py</code> docstring; tested against a Sankoff dynamic program on 200 random trees`),
+  cav(`The tree is a distance tree from sketches, and multifurcations are resolved left to right, so read the numbers as a pattern. A scattered element can mean repeated gain, transfer, or noisy calls; overcalled elements (orange in section 3) are inflated.`)
+]);
+
+// ---------- 7 bafA focus
+function groupBars(rows, title) {
+  rows = rows.filter(r => r.clones_typed >= 10).sort((a, b) => b.frac_present - a.frac_present);
+  const W = 520, rh = 20, L = 130, R = 96, top = 22, H = top + rows.length * rh + 26, x = v => L + v * (W - L - R) / 0.4;
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img", "aria-label": title });
+  [0, 0.1, 0.2, 0.3, 0.4].forEach(v => svg.append(S("line", { x1: x(v), x2: x(v), y1: top - 6, y2: H - 22, class: "gr" }), T(x(v), H - 8, pc(v, 0), "t2", "middle")));
+  svg.append(S("line", { x1: x(baf.frac_present), x2: x(baf.frac_present), y1: top - 6, y2: H - 22, stroke: "var(--mute)", "stroke-dasharray": "4 3" }), T(x(baf.frac_present) + 4, 12, "overall " + pc(baf.frac_present), "t2"));
+  rows.forEach((r, i) => { const y = top + i * rh + rh / 2, hi = Math.min(r.ci95_hi, 0.4);
+    svg.append(T(L - 8, y + 4, r.group, "", "end"), S("line", { x1: x(Math.max(0, r.ci95_lo)), x2: x(hi), y1: y, y2: y, stroke: "var(--s1)", "stroke-width": 2 }), S("circle", { cx: x(Math.min(r.frac_present, 0.4)), cy: y, r: 5, fill: "var(--s1)", stroke: "var(--card)", "stroke-width": 2 }),
+      T(x(hi) + 7, y + 4, `${pc(r.frac_present, 0)} (${r.clones_present}/${r.clones_typed})`, "t2"));
+    const hit = S("rect", { x: 0, y: y - rh / 2, width: W, height: rh, fill: "transparent" }); hover(hit, () => `<b>${r.group}</b><br>${r.clones_present} of ${r.clones_typed} clone groups (${pc(r.frac_present)}; CI ${pc(Math.max(0, r.ci95_lo))}–${pc(r.ci95_hi)})`); svg.append(hit); });
+  return svg;
+}
+const wb = k => D.default[k].filter(r => r.element === "bafA");
+const bn = D.baf_neb, bnT = bn["11"] + bn["10"] + bn["01"] + bn["00"];
+const bafBlock = block("bafa", "7 · bafA and Nebuchadnezzar-h1", "Where does the bafA-carrying Starship occur?", [
+  qn("Which isolates carry bafA, is it always on a Nebuchadnezzar-h1 element, and where is it found?"),
+  $("div", { class: "two" }, [
+    $("div", {}, [$("h3", { html: "By country (≥ 10 clone groups)" }), groupBars(wb("by_country"), "bafA by country")]),
+    $("div", {}, [$("h3", { html: "By lineage (≥ 10 clone groups)" }), groupBars(wb("by_lineage"), "bafA by lineage")])
+  ]),
+  $("h3", { html: "bafA against Nebuchadnezzar-h1, clone groups typed for both" }),
+  table([{ h: "", f: r => r.k, left: true }, { h: "Neb-h1 present", f: r => r.a }, { h: "Neb-h1 absent", f: r => r.b }],
+    [{ k: "bafA present", a: f0(bn["11"]), b: f0(bn["10"]) }, { k: "bafA absent", a: f0(bn["01"]), b: f0(bn["00"]) }]),
+  how(`${f0(bnT)} clone groups are typed for both. ${bn["11"]} carry both, ${bn["10"]} carry bafA without a Nebuchadnezzar-h1 call and ${bn["01"]} carry the element without bafA. Calls use the default cuts, so the default screen's partial band (0.2 to 0.5) counts as missing.`),
+  src(`<code>${M.results || ""}/out_default/prevalence_by_country.tsv</code>, <code>prevalence_by_lineage.tsv</code>, <code>clone_matrix.tsv</code> (2×2 recomputed in <code>starship_report_data.py</code>)`),
+  cav(`Country and lineage are confounded: sampling is uneven (a large share of isolates have unknown country) and lineage 150 contributes many bafA-positive clone groups. Differences between countries are descriptive, not tests.`)
+]);
+
+// ---------- co-occurrence
+function cooc() {
+  const ord = E.slice().sort((a, b) => fam(a) === fam(b) ? a.localeCompare(b) : (a === "bafA" ? -1 : b === "bafA" ? 1 : fam(a).localeCompare(fam(b)))), n = ord.length, cs = 25, L = 130, top = 120, W = L + n * cs + 10, H = top + n * cs + 10;
+  const phi = {}; D.cooccurrence.forEach(r => { phi[r.element_1 + "|" + r.element_2] = r; phi[r.element_2 + "|" + r.element_1] = r; });
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, style: `min-width:${W}px`, width: "100%", role: "img", "aria-label": "Pairwise phi correlation of presence across clone groups" });
+  ord.forEach((e, i) => { svg.append(T(L - 6, top + i * cs + 16, e, e === "bafA" ? "b" : "", "end")); const t = T(L + i * cs + 14, top - 6, e, e === "bafA" ? "b" : ""); t.setAttribute("transform", `rotate(-60 ${L + i * cs + 14} ${top - 6})`); svg.append(t); });
+  ord.forEach((a, i) => ord.forEach((b, j) => { if (i === j) { svg.append(S("rect", { x: L + j * cs, y: top + i * cs, width: cs - 1, height: cs - 1, fill: "var(--soft)" })); return; }
+    const r = phi[a + "|" + b]; if (!r || r.phi === "") return; const v = +r.phi, rect = S("rect", { x: L + j * cs, y: top + i * cs, width: cs - 1, height: cs - 1, fill: v >= 0 ? "var(--s1)" : "var(--neg)", "fill-opacity": Math.min(1, Math.abs(v)) * 0.95 + 0.03 });
+    hover(rect, () => `<b>${a}</b> × <b>${b}</b><br>phi ${v.toFixed(2)} over ${f0(r.clones_typed)} clone groups<br>both ${r.both}, only ${r.element_1 === a ? a : b} ${r.element_1 === a ? r.only_1 : r.only_2}, only ${r.element_1 === a ? b : a} ${r.element_1 === a ? r.only_2 : r.only_1}, neither ${f0(r.neither)}`); svg.append(rect);
+    if (Math.abs(v) >= 0.5) { const nt = T(L + j * cs + cs / 2 - 0.5, top + i * cs + 16, v.toFixed(2).replace("0.", "."), "t2", "middle"); if (Math.abs(v) >= 0.7) nt.style.fill = "#fff"; svg.append(nt); } }));
+  return svg;
+}
+const co = block("cooccur", "8 · Which elements travel together", "Co-occurrence across clone groups", [
+  qn("Do elements share a genome more (or less) often than chance?"),
+  $("div", { class: "scroll" }, [cooc()]),
+  $("div", { class: "leg", html: `<span><i style="background:var(--s1)"></i>positive phi (found together)</span><span><i style="background:var(--neg)"></i>negative phi (avoid each other)</span><span>shade = |phi|; numbers shown where |phi| ≥ 0.5</span>` }),
+  how("Phi is the correlation of two presence/absence columns over the clone groups typed for both. Elements from the same family often look correlated because they share sequence, not because they travel together."),
+  src(`<code>${M.results || ""}/out_default/cooccurrence.tsv</code> (counts both / only_1 / only_2 / neither, phi, jaccard)`),
+  cav("Phi is computed on called clone groups only and has no significance test here. Treat strong pairs as leads for follow-up.")
+]);
+
+// ---------- candidate table
+const cands = D.candidates;
+const cbox = $("div", {});
+const state = { tier: "strong", q: "", ex: false, n: 40 };
+function renderCands() {
+  const q = state.q.toLowerCase(), rows = cands.filter(c => (state.tier === "all" || c.tier === state.tier) && (state.ex || !c.excluded) && (!q || [c.sample_id, c.strain, c.study, c.country].join(" ").toLowerCase().includes(q)));
+  cbox.innerHTML = ""; const shown = rows.slice(0, state.n);
+  cbox.append($("p", { class: "how", html: `${f0(rows.length)} isolates match${rows.length > shown.length ? `; showing ${shown.length}` : ""}.` }),
+    table([{ h: "Tier", f: r => `<span class="tier-${r.tier}">${r.tier}</span>`, left: true }, { h: "Sample", f: r => r.sample_id, left: true }, { h: "Strain", f: r => r.strain || "", left: true }, { h: "Study", f: r => r.study, left: true }, { h: "Country", f: r => r.country, left: true },
+      { h: "bafA frac", f: r => (+r.bafA_frac).toFixed(2) }, { h: "bafA", f: r => r.bafA_call }, { h: "Neb-h1 frac", f: r => (+r.neb_h1_frac).toFixed(2) }, { h: "Neb-h1", f: r => r.neb_h1_call }, { h: "Flag", f: r => r.excluded || "", left: true }, { h: "Clone", f: r => r.clone || "" }, { h: "Lineage", f: r => r.lineage || "" }], shown));
+  if (rows.length > shown.length) { const b = $("button", { id: "more", html: "Show 100 more" }); b.onclick = () => { state.n += 100; renderCands(); }; cbox.append(b); }
+  cbox._rows = rows;
+}
+const tsel = $("select", { id: "tier" }, ["strong", "probable", "discordant", "all"].map(t => $("option", { value: t, html: `${t} (${t === "all" ? cands.length : tierN(t)})` })));
+tsel.onchange = () => { state.tier = tsel.value; state.n = 40; renderCands(); };
+const qin = $("input", { id: "q", type: "search", placeholder: "search sample, strain, study, country" }); qin.oninput = () => { state.q = qin.value; state.n = 40; renderCands(); };
+const exc = $("input", { id: "ex", type: "checkbox" }); exc.onchange = () => { state.ex = exc.checked; renderCands(); };
+const cp = $("button", { id: "copy", html: "Copy matching sample IDs" }); cp.onclick = () => { const t = (cbox._rows || []).map(r => r.sample_id).join("\n"); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => cp.textContent = "Copied " + cbox._rows.length, () => cp.textContent = "Copy blocked; select the table instead"); };
+const cb = block("candidates", "9 · The strains", "Isolates likely to carry the bafA Nebuchadnezzar-h1 Starship", [
+  qn("Which isolates should be followed up?"),
+  $("p", { html: `<b>strong</b> = both bafA hashes found and Nebuchadnezzar-h1 present (${f0(tierN("strong"))}; ${f0(strongKept.length)} after flagged samples are removed, in ${strongClones} clone groups). <b>probable</b> = bafA present and Nebuchadnezzar-h1 partial (${tierN("probable")}). <b>discordant</b> = one of the two present without the other (${tierN("discordant")}); check read depth before counting these.` }),
+  $("div", { class: "ctl" }, [tsel, qin, $("label", {}, [exc, document.createTextNode(" include flagged samples")]), cp]), cbox,
+  src(`<code>results/2026-11-11_afum_bafA_nebuchadnezzar_list/bafA_neb_h1_candidates_v2.tsv</code> (all columns; built by <code>make_tables.py</code> from the rescreen output)`),
+  cav("Flagged = other species, k-mer mixture or curator exclusion. IFM_59359 (DRR015094-6) is a known mixture or mislabel with a low-depth Af293-type bafA; check it before use.")
+]);
+renderCands();
+
+// ---------- tuned vs default
+const tuned = PT ? block("tuned", "10 · Sensitivity", "Does the choice of cut change the conclusions?", [
+  qn(`Same pipeline with Osiris-h3 and Janus-h4 at ${cutOf("Osiris-h3") || "0.7"} instead of 0.5.`),
+  table([{ h: "Element", f: r => r.e, left: true }, { h: "Clones present (default)", f: r => `${r.d.clones_present} / ${f0(r.d.clones_typed)}` }, { h: "Prevalence", f: r => pc(r.d.frac_present) },
+    { h: "Clones present (tuned)", f: r => `${r.t.clones_present} / ${f0(r.t.clones_typed)}` }, { h: "Prevalence", f: r => pc(r.t.frac_present) },
+    { h: "Changes ÷ present (default)", f: r => r.pd.score_per_present }, { h: "Changes ÷ present (tuned)", f: r => r.pt.score_per_present }],
+    ["Osiris-h3", "Janus-h4"].filter(e => cutOf(e)).map(e => ({ e, d: P[e], t: PT[e], pd: PS[e], pt: PST[e] }))),
+  how("The cut moves the prevalence by a few points. The scatter ratio hardly changes, so the conclusion that Osiris-h3 is scattered and Janus-h4 is clade-structured does not depend on it. bafA, Nebuchadnezzar-h1 and every other element are unaffected."),
+  src(`<code>${M.results || ""}/out_default/</code> vs <code>out_tuned/</code> (<code>--set Osiris-h3=0.7 Janus-h4=0.7</code>; jobs ${M.default_job} and ${M.tuned_job})`)
+]) : null;
+
+// ---------- limits and traceability
+const lim = block("limits", "11 · Limits", "What this does not show", [
+  $("ul", { html: [
+    "The 20 haplotypes are those of the NII <i>A. fumigatus</i> pangenome study (Table S21). Starbase and the Gluck-Thaler set are not screened.",
+    "Presence means most of an element's specific 21-mers are in the read sketch at 30× depth. It does not give an insertion site, an intact element, or copy number.",
+    "The paper table used as truth covers 226 isolates, and for bafA it is mostly a Nebuchadnezzar-h1 proxy. Agreement is a check, not proof.",
+    "Cuts for Osiris-h3 and Janus-h4 were chosen on the same truth table. They need a hold-out check.",
+    "Gain/loss counts come from a sketch distance tree with " + f0(nTree) + " of " + f0(nClones) + " clone groups. They describe a pattern."
+  ].map(t => `<li>${t}</li>`).join("") })
+]);
+const trace = block("trace", "12 · Traceability", "Where every number comes from", [
+  table([{ h: "What", f: r => r[0], left: true }, { h: "File or job", f: r => `<code>${r[1]}</code>`, left: true }, { h: "Made by", f: r => r[2], left: true }], [
+    ["Read sketches, QC, clone groups, tree", (M.store || "sketch_store/aspergillus_fumigatus") + "/{sigs,query/qc,query/distances}", "store build (PR #315), queries job 31975386"],
+    ["Starship screen (21 targets)", "query/screen_starships_bafA/screen.tsv, summary.txt, dropped_hashes.tsv", "rescreen job " + M.rescreen_job],
+    ["Screen before the solo-hash rule", "query_2026-11-09_n4834/screen_starships_bafA_before_solo_rule/", "same store, 2026-11-09"],
+    ["Prevalence, matrix, parsimony, co-occurrence, sweep", (M.results || "") + "/out_default/", "starship_dynamics.py at " + (M.code_commit || "?") + ", job " + M.default_job],
+    ["Tuned cuts", (M.results || "") + "/out_tuned/", "same script, --set Osiris-h3=0.7 Janus-h4=0.7, job " + M.tuned_job],
+    ["Candidate strains", "results/2026-11-11_afum_bafA_nebuchadnezzar_list/bafA_neb_h1_candidates_v2.tsv", "make_tables.py from the rescreen output"],
+    ["This page's data", (M.results || "") + "/report_data.json", "starship_report_data.py at " + (M.code_commit || "?")],
+    ["Paper truth", "sketch_store/.../targets/truth_store.tsv", "NII Afumigatus_pangenome Table S21, joined to the store"]
+  ]),
+  $("p", { class: "how", html: "Regenerate: <code>sbatch run_dynamics.sh; sbatch run_tuned.sh; sbatch run_report.sh</code> in the results folder. Code and tests are on branch <code>" + (M.branch || "starship-dynamics") + "</code> (PR #" + (M.pr || "?") + "); run <code>pixi run -e test python -m pytest tests -k sketch_store</code> from a worktree." })
+]);
+
+const foot = $("footer", { html: "Store: " + (M.store || "") + "<br>Results: " + (M.results || "") + "<br>Page template: datasets/reads/sketch_store/reports/starship_report.html" });
+app.innerHTML = ""; [head, sum, meth, rescreen, prev, sweepBlock, heat, pars, bafBlock, co, cb, tuned, lim, trace, foot].filter(Boolean).forEach(x => app.append(x));
+})();
+</script>

@@ -73,6 +73,13 @@ root-absent and root-present reconstructions). `--set TARGET=FRACTION` changes t
 to right: read the counts as a pattern. Tests: `tests/test_sketch_store_starship_dynamics.py` (Newick parsing, Fitch against a
 Sankoff calculation on random trees, clone votes, thresholds, outputs).
 
+**Reports are archived in the repo as markdown.** `starship_report_data.py` collects a run into one JSON; `starship_report.html` (page) and
+`starship_report_md.py` (markdown) both read it. The markdown goes to `reports/<species>/starship/`: `report.md` embeds each figure as a
+PNG that links to its PDF, `figures/` holds both formats, `tables/` the tables behind them. Local (Population_Genomics) isolates are counted
+but never listed by name; `tables/candidates_public.tsv` has public isolates only. Current report:
+[`reports/aspergillus_fumigatus/starship/report.md`](reports/aspergillus_fumigatus/starship/report.md). Regenerate with `run_report.sh` in the
+results folder (HPCC), then copy `report_md/` into `reports/`.
+
 ## Site report
 
 `export_report.py --store STORE --matfreq MATFREQ_DIR --species "..." --slug <slug> --titles ../sra_survey/pilot/study_titles.tsv

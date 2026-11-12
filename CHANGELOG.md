@@ -6,9 +6,21 @@ release completed.
 
 ## [Unreleased]
 
+### Fixed
+- An EMPTY taxonomy answer is now recorded (#324): when the lineage and phylum lookups return nothing (no exception, for example a cache miss on a compute node without network) the report's `routing_error` says so and the not-searched reason reads "taxonomy lookup failed (...)", where it said only "no taxid, or no phylum could be resolved". Seven *C. fimbriata* assemblies (taxid 5158, a valid taxon) were left unsearched this way in the v0.9.0 run. Routing is unchanged. The panel script's taxonomy warm-up now counts an empty answer as a failure, warns, and stops the job when `TAXONOMY_WARMUP_STRICT=1` (default `0`: warn only). Tests: `tests/detect/test_empty_taxonomy_lookup.py`, `tests/test_clade_panel_warmup.py`.
+- `genes_found` listed optional genes of different slots (GAP1 and BGL1 in *Cochliobolus*) in hash-seed order, so the same genome could report them in either order from run to run (found 2026-11-12 in the 60-genome determinism check of the v0.9.0 run: 1 genome). They now follow the roster order. Output order only; no call, tier, label or coordinate changes. Test: `tests/detect/test_genes_found_order.py`.
+
 ## [0.9.0] — TBD — `v0.9.0`
 
 > DRAFT release prep (do not tag until the definitive run is integrated). The entries below are those of the merged pull requests of the v0.9.0 cycle; the definitive run is `--preset v0.9.1 --withheld-detail-policy on` with the `tblastn` outlier policy (`MATPREDICT_TBLASTN_SEG=yes`, `MATPREDICT_TBLASTN_SEG_GENES=SLA2,APN2,MAT1-1-1`) and its counts are filled in once the tables are built. Rules that exist but are in no preset: `--weak-fragment-cap-policy`, `--weak-coverage-noise-policy`, `--strong-single-gene-policy`, `--confidence-cap-policy`.
+
+### The definitive run (the 372 genomes that moved under the `tblastn` outlier policy are taken from reruns with it OFF; curator's choice, 2026-11-12)
+Frozen commit `7d73be5`, `--preset v0.9.1 --withheld-detail-policy on`, no weak-fragment cap. 23,579 reports (19,343 Ascomycota, 3,263 Basidiomycota, 973 Mucoromycotina), every one stamped with the same commit, database hash and preset. Against v0.8.1:
+- Mucoromycotina: 973 of 973 identical.
+- Basidiomycota: 202 loci `high` to `medium` (#167), 10 scope labels (#170), one extra `kept_both` locus (GCA_017654745.1); no coordinate changes.
+- Ascomycota: 108 loci become `undetermined` by the short-fragment vote (#138), 23 `high` to `medium` by the weak-flank cap (#129; the approved list), one extra `kept_both` locus (GCA_003706235.2), three *Pneumocystis* genomes gain `matMi` from the corrected record (#302), and GCA_052323795.1 moves its outer span by 16.7 kb from that same record (core and supported spans unchanged; traced by code/database split on 2026-11-12); approved by the curator, 2026-11-12). With the `tblastn` outlier policy off for the 372 genomes it moved, every other span and gene set equals v0.8.1.
+- Calls: 17,618 Ascomycota, 2,995 Basidiomycota and 868 Mucoromycotina genomes called; 20,844, 5,994 and 914 loci.
+- Determinism: 60 genomes run twice agree as sets; the order of `genes_found` can differ with the Python hash seed (one genome in 60).
 
 ### Added
 - `--preset v0.9.1` (curator's ruling 2026-11-07): v0.9 plus three rules that lower a tier or withhold an idiomorph label: `--weak-flank-cap-policy on` (#129: 23 loci in the v0.8.1 run go from `high` to `medium`), `--short-fragment-vote-policy undetermined` (#138: 107 loci become `undetermined`) and `--single-region-cap-policy on` (#167: 202 Basidiomycota loci go from `high` to `medium`). The weak-coverage rule (#149: 109 loci `medium` to `high`) is held out for the curator's review. It is the preset of the v0.9.0 full run.

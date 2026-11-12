@@ -135,7 +135,10 @@ def score_cluster(
         for g in expected_genes:
             if g.get("slot") and g["name"] in optional and g["name"] in found:
                 members_found.setdefault(g["slot"], []).append(g["name"])
-        slots_hit = {slot for slot, names in members_found.items() if len(names) == 1}
+        # A list in roster order, not a set: iterating a set of slot names put the
+        # genes of two different slots in hash-seed order, so `genes_found`
+        # (GAP1/BGL1 in Cochliobolus) changed between runs of the same genome.
+        slots_hit = [slot for slot, names in members_found.items() if len(names) == 1]
         slot_found = [n for slot in slots_hit for n in members_found[slot]]
         optional_found = [
             g["name"] for g in expected_genes

@@ -36,7 +36,7 @@ locus:
       as HMPREF1120_08862 (XP_009161380.1, 379 aa, HMG-box_ROX1-like domain, single
       exon 1140 bp, NCBI Gene 20313501): this identification is by the curator-side
       reading of the RefSeq annotation (HMG-box domain, position between SLA2 and
-      APN2), not stated by locus tag in the paper. Flank genes: SLA2 = HMPREF1120_08859
+      APN2), not stated by locus tag in the paper. It is consistent with the paper by elimination (checked 2026-11-12 against the full text of Metin et al. 2019, doi:10.1016/j.fgb.2018.12.011, section 3.1): besides the HMG gene the paper lists three genes between SLA2 and APN2 (HMPREF1120_08860, HMPREF1120_08861 and a 5S rRNA gene), and with SLA2 = HMPREF1120_08859 and APN2 = HMPREF1120_08863 the only other annotated gene in that interval is HMPREF1120_08862 (this assumes consecutive locus tags are adjacent genes, which the gene coordinates in this record support). Still an inference, not a statement by the authors. Flank genes: SLA2 = HMPREF1120_08859
       (annotated huntingtin interacting protein 1, XP_009161377.1) and APN2 = HMPREF1120_08863
       (AP endonuclease 2, XP_009161381.1). Between SLA2 and MAT1-2-1 lie HMPREF1120_08860
       (+5S rRNA region) and HMPREF1120_08861, both non-MAT (the paper places the MAT

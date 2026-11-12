@@ -56,6 +56,18 @@ Of the 111, 13 are at least 150 aa, polished by both tools (`polished_agree`) an
 
 *C. tropicalis* MTLA2 at 50% identity is the weakest of these and the one to read first.
 
+### Do the 47 short, weak genes (class D) carry a call?
+
+Class D is the largest group of the 111: genes under about 150 aa that are single-tool, unpolished or tools-disagree (rule-based class, `novel_partial_review_v090_classed.tsv`). For each I looked at the other core genes of the same locus (`classD_support_v090.tsv`, HPCC):
+
+| Support in the locus | Genes | Tier of the locus |
+|---|---|---|
+| another core gene is annotated by FungiDB | 38 | 30 high, 8 medium |
+| other core genes exist, none annotated | 8 | medium |
+| the gene is the locus's only core gene | 1 | medium |
+
+So 38 of 47 sit in loci whose call an annotated core gene already supports; the short gene is a secondary piece. The other 9 genes are in 5 loci, **all `medium`**, where nothing independent supports the call: *B. graminis tritici* THUN-12 (MAT1-1; MAT1-1-1 128 aa 40%, MAT1-1-3 96 aa 25%, MAT1-2-1 45 aa), *C. immunda* CBS 834.96 (called MAT1-2, with a MAT1-1-3 piece), *F. odoratissimum* race 4 (MAT1-1, with a MAT1-2-7 piece), *S. ludwigii* UTAD17 (MATa; MATA1 86 aa, MATA2 86 aa) and *M. guilliermondii* ATCC 6260 (MTLA2 84 aa, the only core gene, tools disagree). No `high` locus in class D lacks an annotated core gene. This is a triage of where the evidence is thin, not a ruling on any call; the genes of the other idiomorph inside a call (for example MAT1-1-3 in a MAT1-2 call) are worth a curator's look.
+
 ## What this does and does not show
 
 It supports the v0.9.0 changes at gene level on these 313 genomes: the tier and label rules moved tiers but no gene-level agreement. It says nothing about genomes outside FungiDB, and the disagreements have not been looked at one by one; the list is `results/2026-11-12_290_annotation_check/v090_rows.tsv` (HPCC). The one-by-one look at the 111 disagreements and step 5 stay open on #290.

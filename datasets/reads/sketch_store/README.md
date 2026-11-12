@@ -106,3 +106,7 @@ Several sessions build sketches on the HPCC; `/bigdata/stajichlab/jstajich/proje
 who builds which species or run list with which parameters. Add a row before starting a build.
 
 `validation/` holds the scripts of the 136-strain test that chose these settings (run from the HPCC results folder named in its README).
+
+### Starship table for a named strain set
+
+`strain_starship_table.py` writes one row per isolate whose strain name starts with a prefix, with the call for every screened Starship target, the all-alleles bafA hit count and the bafA class (cluster-linked, standalone divergent, none). Local isolates are counted, never named. Example output for the eAF strains (PRJNA991533) is in `reports/aspergillus_fumigatus/starship/eAF/` (`table.md`, `calls.tsv`, `fractions.tsv`, `summary.tsv`), built at `3f9f813` (job 32031675).

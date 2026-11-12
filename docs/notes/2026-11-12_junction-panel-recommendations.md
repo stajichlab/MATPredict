@@ -1,6 +1,6 @@
-# Recommendations on the open questions of the junction-panel design (#321)
+# Decisions and recommendations on the open questions of the junction-panel design (#321)
 
-Date 2026-11-12. These are recommendations for the curator on the six questions in section 5 of `docs/notes/2026-11-09_junction-panel-design.md`. They are **not decisions**. The same text is posted as a comment on PR #321.
+Date 2026-11-12. The curator answered all six questions in section 5 of `docs/notes/2026-11-09_junction-panel-design.md` on 2026-11-12, accepting each of the recommendations below (Q2 wording as drafted; Q3 relabel the three now, check the other two later; Q5 controls approved, C. albicans source to be verified first, #343). The recommendations were also posted as a comment on PR #321. Follow-ups: #195 (hand-off for the reads pages), #343 (truth sets).
 
 1. **Active mating type for switching (HO+) species.** No. For wild *Saccharomyces* the honest output is "silent cassettes: not typable" (or "a/alpha or switching"), not a frequency. That also means steps 4-7 of the design are not needed for v0.9.0.
 2. **Site wording.** Approve the wording table in section 2 once it has been read. It is the curator's to edit; there is no evidence here that changes it.

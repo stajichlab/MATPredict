@@ -10,11 +10,11 @@ release completed.
 
 > DRAFT release prep (do not tag until the definitive run is integrated). The entries below are those of the merged pull requests of the v0.9.0 cycle; the definitive run is `--preset v0.9.1 --withheld-detail-policy on` with the `tblastn` outlier policy (`MATPREDICT_TBLASTN_SEG=yes`, `MATPREDICT_TBLASTN_SEG_GENES=SLA2,APN2,MAT1-1-1`) and its counts are filled in once the tables are built. Rules that exist but are in no preset: `--weak-fragment-cap-policy`, `--weak-coverage-noise-policy`, `--strong-single-gene-policy`, `--confidence-cap-policy`.
 
-### The definitive run (DRAFT counts; valid only if the 372 SEG-off reruns replace the SEG-on Ascomycota reports)
+### The definitive run (the 372 genomes that moved under the `tblastn` outlier policy are taken from reruns with it OFF; curator's choice, 2026-11-12)
 Frozen commit `7d73be5`, `--preset v0.9.1 --withheld-detail-policy on`, no weak-fragment cap. 23,579 reports (19,343 Ascomycota, 3,263 Basidiomycota, 973 Mucoromycotina), every one stamped with the same commit, database hash and preset. Against v0.8.1:
 - Mucoromycotina: 973 of 973 identical.
 - Basidiomycota: 202 loci `high` to `medium` (#167), 10 scope labels (#170), one extra `kept_both` locus (GCA_017654745.1); no coordinate changes.
-- Ascomycota: 108 loci become `undetermined` by the short-fragment vote (#138), 23 `high` to `medium` by the weak-flank cap (#129; the approved list), one extra `kept_both` locus (GCA_003706235.2), three *Pneumocystis* genomes gain `matMi` from the corrected record (#302), and GCA_052323795.1 moves its outer span by 16.7 kb from that same record (core and supported spans unchanged; traced by code/database split on 2026-11-12). With the `tblastn` outlier policy off for the 372 genomes it moved, every other span and gene set equals v0.8.1.
+- Ascomycota: 108 loci become `undetermined` by the short-fragment vote (#138), 23 `high` to `medium` by the weak-flank cap (#129; the approved list), one extra `kept_both` locus (GCA_003706235.2), three *Pneumocystis* genomes gain `matMi` from the corrected record (#302), and GCA_052323795.1 moves its outer span by 16.7 kb from that same record (core and supported spans unchanged; traced by code/database split on 2026-11-12); approved by the curator, 2026-11-12). With the `tblastn` outlier policy off for the 372 genomes it moved, every other span and gene set equals v0.8.1.
 - Calls: 17,618 Ascomycota, 2,995 Basidiomycota and 868 Mucoromycotina genomes called; 20,844, 5,994 and 914 loci.
 - Determinism: 60 genomes run twice agree as sets; the order of `genes_found` can differ with the Python hash seed (one genome in 60).
 

@@ -6,6 +6,9 @@ release completed.
 
 ## [Unreleased]
 
+### Fixed
+- `genes_found` listed optional genes of different slots (GAP1 and BGL1 in *Cochliobolus*) in hash-seed order, so the same genome could report them in either order from run to run (found 2026-11-12 in the 60-genome determinism check of the v0.9.0 run: 1 genome). They now follow the roster order. Output order only; no call, tier, label or coordinate changes. Test: `tests/detect/test_genes_found_order.py`.
+
 ## [0.9.0] — TBD — `v0.9.0`
 
 > DRAFT release prep (do not tag until the definitive run is integrated). The entries below are those of the merged pull requests of the v0.9.0 cycle; the definitive run is `--preset v0.9.1 --withheld-detail-policy on` with the `tblastn` outlier policy (`MATPREDICT_TBLASTN_SEG=yes`, `MATPREDICT_TBLASTN_SEG_GENES=SLA2,APN2,MAT1-1-1`) and its counts are filled in once the tables are built. Rules that exist but are in no preset: `--weak-fragment-cap-policy`, `--weak-coverage-noise-policy`, `--strong-single-gene-policy`, `--confidence-cap-policy`.

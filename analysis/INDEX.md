@@ -85,5 +85,5 @@ in yet; superseded = replaced by a later study. `results/` = main checkout.
 | Date | Report | Status | Key numbers |
 |---|---|---|---|
 | 10-08 | [Why a curation edit changes withheld spans; core_span, supported_span, tie-break](2026-10-08_cinerea-b43-trace.md) | decided; code in PR #59 | 86 of 89 changed cluster spans leave the supported span unchanged (noise); floor 33; 0 call differences on 144 genomes |
-| 10-12 | [tblastn-fast as localize engine](2026-10-12_tblastn-fast-engine.md) | closed; not adopted (curator 2026-11-11) | 4.7x faster search; 41/44 truth placements both modes; 86.6% of default best hits kept (445 lost); panel: 2 calls lost, 21 core models changed |
+| 10-12 | [tblastn-fast as localize engine](2026-10-12_tblastn-fast-engine.md) | closed; tblastn-fast and mmseqs not adopted (curator 2026-11-11) | 4.7x faster search; 41/44 truth placements both modes; 86.6% of default best hits kept (445 lost); panel: 2 calls lost, 21 core models changed |
 | 10-07 | [Per-genome HTML/PDF report: design review](2026-10-07_report-design-review.md) | decided; PR #48 | 3 review rounds; round 1 6 P0, round 2 1 P0; Chrome and WeasyPrint PDFs; 30 tests |

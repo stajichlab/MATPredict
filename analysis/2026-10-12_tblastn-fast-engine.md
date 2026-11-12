@@ -1,5 +1,5 @@
 # tblastn-fast as the localize engine: speed, sensitivity and call changes
-Status: closed. `tblastn-fast` is not adopted as the default localize engine (curator, 2026-11-11; see Curator decisions). The measurements below are from 2026-10-12.
+Status: closed. `tblastn-fast` and mmseqs are not adopted as the default localize engine (curator, 2026-11-11; see Curator decisions). The measurements below are from 2026-10-12.
 
 ## Question
 Does `tblastn -task tblastn-fast` change speed, hit sensitivity or final calls
@@ -110,7 +110,7 @@ for this experiment only.
 - The panel has 163 genomes and 46 Zygo 23 call rows. Two lost calls is a count on
   this panel, not a rate for the BFD/NCBI cohort.
 - No ground truth was used for the two lost calls or for the 107 unrecovered hits.
-- mmseqs is not measured in this note, and no ruling on it is recorded here. Its outputs (`analysis/tblastn_fast/out_mmseqs/`, 14 MB) and scripts are not part of this commit.
+- mmseqs is not measured in this note. The curator closed it on 2026-11-11 without a recorded reason (see Curator decisions). Its outputs (`analysis/tblastn_fast/out_mmseqs/`, 14 MB) and scripts are not part of this commit.
 - The Opus review `engine_scoring_implications.md` is model output. Its findings
   are not all re-verified. Treat its line references as leads.
 - Short precursor queries (25-43 aa) may be the weakest case for the larger word
@@ -119,7 +119,7 @@ for this experiment only.
 ## Curator decisions
 - 2026-11-11: `tblastn-fast` is not adopted as the default localize engine. The curator's reason: it dropped too many hits. The measurements here point the same way: 445 of 3,326 default best hits (13.4%) are not reproduced, 107 of them by no same-gene query, and 2 calls are lost on the 163-genome panel. This note does not show that any lost hit or either lost call was a true MAT locus (see Limits), so the decision rests on the curator's judgement, not on a measured loss of true loci.
 - The speed problem that motivated this study was handled separately: opt-in `tblastn` SEG filtering for the slowest genomes (#276, PR #284, `MATPREDICT_TBLASTN_SEG_GENES`).
-- Not decided here: mmseqs as a localize engine.
+- 2026-11-11: mmseqs as a localize engine is closed too, not adopted. The curator gave no reason in the record. This note holds no mmseqs measurements, so no number here supports or opposes that decision.
 
 ## Files
 - `analysis/tblastn_fast/` (`run_bench.sh`, `analyze.py`, `lost_hits.py`,

@@ -11,6 +11,13 @@ a call's confidence although nothing about the evidence got worse (three Serinal
 With the policy `on`, a gene whose every hit covers under `MIN_COVERAGE` percent of its reference is also noise, whatever its bitscore. The
 line is the same 30% as the weak-flank cap (#129). A hit with unknown coverage never qualifies. Only the tier can change (`medium` to
 `high`, never the reverse); the idiomorph, the locus and the coordinates never do.
+
+Two gates, curator's decision of 2026-11-11 (issue #149 review; the reference work is tracked in #331). The rule applies to a locus only when
+(1) its called idiomorph is not `undetermined`, and (2) its best core-gene coverage is at least `MIN_BEST_CORE_COVERAGE` percent. Reason: the
+109 loci the first version promoted included 59 *Pyrenophora tritici-repentis* loci (`undetermined`, no Pyrenophora reference in `db/`) and a
+group of loci whose core genes all model short because the clade has no close reference. Both wait for better references. "Best core
+coverage" is the highest `coverage` over every core gene's evidence at the locus, including a gene set aside as a cross-hit. A locus with no
+known core coverage does not qualify.
 """
 from __future__ import annotations
 
@@ -21,6 +28,24 @@ DEFAULT_WEAK_COVERAGE_NOISE_POLICY = POLICY_OFF
 
 #: A gene whose every hit covers less than this percent of its reference is noise.
 MIN_COVERAGE = 30.0
+
+
+#: The rule applies only to a locus whose best core-gene coverage is at least this percent (`<` fails; exactly 50.0 passes).
+MIN_BEST_CORE_COVERAGE = 50.0
+
+#: The idiomorph value that switches the rule off for a locus.
+UNDETERMINED = "undetermined"
+
+
+def applies(called_idiomorph: str | None, core_coverages, min_best: float = MIN_BEST_CORE_COVERAGE) -> bool:
+    """Whether the weak-coverage noise rule may act on a locus (`--weak-coverage-noise-policy on`).
+
+    False for an `undetermined` idiomorph, and when the best known core-gene coverage in `core_coverages` is under `min_best` percent
+    (or none is known)."""
+    if called_idiomorph == UNDETERMINED:
+        return False
+    known = [float(c) for c in core_coverages if c is not None]
+    return bool(known) and max(known) >= min_best
 
 
 def check_policy(policy: str) -> str:

@@ -890,6 +890,12 @@ def _route(
     except Exception as exc:
         query_phylum = None
         errors.append(f"phylum lookup failed: {type(exc).__name__}: {str(exc)[:160]}")
+    if not query_phylum and not ancestors and not errors:
+        # Both lookups answered, with nothing: not an exception, so nothing was recorded and the report said only
+        # "no taxid, or no phylum could be resolved". That is what a cache miss on a compute node without network gives
+        # (#324: taxid 5158 is a valid taxon whose document was not in the shared cache). Say so in the report.
+        errors.append(f"taxonomy lookup returned no lineage and no phylum for taxid {taxid} "
+                      "(an empty answer, for example a cache miss with no network)")
     if query_phylum:
         # Scope-only families (fallback_searchable: false) are never searched
         # outside their scope (curator ruling 2026-10-01).

@@ -7,6 +7,7 @@ release completed.
 ## [Unreleased]
 
 ### Fixed
+- An EMPTY taxonomy answer is now recorded (#324): when the lineage and phylum lookups return nothing (no exception, for example a cache miss on a compute node without network) the report's `routing_error` says so and the not-searched reason reads "taxonomy lookup failed (...)", where it said only "no taxid, or no phylum could be resolved". Seven *C. fimbriata* assemblies (taxid 5158, a valid taxon) were left unsearched this way in the v0.9.0 run. Routing is unchanged. The panel script's taxonomy warm-up now counts an empty answer as a failure, warns, and stops the job when `TAXONOMY_WARMUP_STRICT=1` (default `0`: warn only). Tests: `tests/detect/test_empty_taxonomy_lookup.py`, `tests/test_clade_panel_warmup.py`.
 - `genes_found` listed optional genes of different slots (GAP1 and BGL1 in *Cochliobolus*) in hash-seed order, so the same genome could report them in either order from run to run (found 2026-11-12 in the 60-genome determinism check of the v0.9.0 run: 1 genome). They now follow the roster order. Output order only; no call, tier, label or coordinate changes. Test: `tests/detect/test_genes_found_order.py`.
 
 ## [0.9.0] — TBD — `v0.9.0`

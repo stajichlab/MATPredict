@@ -56,6 +56,7 @@ def test_summarize(tmp_path):
     cl = p["classes"]                                                                           # A1 is cluster-linked (old target), A2 only the all-alleles screen sees
     assert cl["cluster_linked"]["isolates"] == 1 and cl["cluster_linked"]["neb_h1_present"] == 1 and cl["cluster_linked"]["neb_h1_absent"] == 0
     assert cl["standalone_divergent"]["isolates"] == 1 and cl["standalone_divergent"]["neb_h1_present"] == 0 and cl["standalone_divergent"]["neb_h1_absent"] == 1
+    assert cl["cluster_linked"]["clone_groups_any_member"] == 1 and cl["cluster_linked"]["largest_clone_group"] == 1 and cl["standalone_divergent"]["isolates_in_groups_over_1"] == 0
     assert p["placement"]["standalone_divergent"]["hrmA_or_cgnA_in_genome"] == 0
     detail = (tmp_path / "d" / "concordance_counts.tsv").read_text()
     assert "A1" in detail and "EX" not in detail                                                # detail names strains; JSON has none

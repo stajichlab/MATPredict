@@ -126,7 +126,9 @@ def cmd_summarize(a):
         groups = collections.defaultdict(list)
         for r in kept:
             groups[r["clone"] or "solo:" + r["sample_id"]].append(sel(r))
+        sizes = collections.Counter(r["clone"] or "solo:" + r["sample_id"] for r in rows)
         classes[name] = dict(isolates=len(rows), clone_groups=sum(1 for x in groups.values() if sum(x) * 2 > len(x)), clone_groups_total=len(groups),
+                             clone_groups_any_member=len(sizes), largest_clone_group=max(sizes.values(), default=0), isolates_in_groups_over_1=sum(n for n in sizes.values() if n > 1),
                              neb_h1_present=sum(neb(r) for r in rows), neb_h1_absent=sum(not neb(r) for r in rows))
     pop["classes"] = classes
     if a.placement:

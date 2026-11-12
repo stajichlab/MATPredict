@@ -395,6 +395,11 @@ def main(argv=None):
                        ["l", "r", "r", "r", "r"]) + "\n")
             w(f"Cluster-linked is **not the same as** Nebuchadnezzar-h1: {cl['neb_h1_present']:,} of {cl['isolates']:,} cluster-linked isolates have Nebuchadnezzar-h1 present and {cl['neb_h1_absent']:,} do not, "
               f"and {nv['neb_only']} isolates have Nebuchadnezzar-h1 without any bafA. The two travel together, which fits the hrmA cluster being on that Starship, but this is a co-occurrence in sketches, not a placement in genomes.\n")
+            if "largest_clone_group" in cl:
+                w(f"**Repeats of the same strain.** The clone groups (ANI 0.9995) collapse repeated strains and aliases, so the isolate counts overstate independent strains. "
+                  f"Cluster-linked: {cl['isolates']:,} isolates fall in {cl['clone_groups_any_member']} clone groups, the largest holds {cl['largest_clone_group']} isolates and {cl['isolates_in_groups_over_1']:,} isolates sit in groups of two or more. "
+                  f"Standalone divergent: {sd['isolates']:,} isolates in {sd['clone_groups_any_member']} clone groups, the largest holds {sd['largest_clone_group']} and {sd['isolates_in_groups_over_1']:,} sit in groups of two or more. "
+                  "Clone-group counts here include any group with at least one member, so they are a little higher than the majority-rule counts in the table above.\n")
             if plc:
                 s_, c_ = plc["standalone_divergent"], plc["cluster_linked"]
                 w(f"**Check in assemblies** (blastn of the bafA haplotypes, hrmA and cgnA; only strains with an assembly in the shared baf folder): the {s_['genomes']} standalone divergent isolates with an assembly all have a bafA copy "

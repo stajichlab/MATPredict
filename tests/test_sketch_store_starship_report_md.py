@@ -31,8 +31,8 @@ def family():
                 population=dict(kept=110, genes={g: dict(cut=c, isolates=20 + i, clone_groups=9 + i, clone_groups_total=100) for i, (g, c) in enumerate(cuts.items())},
                                 old_vs_new_bafA=dict(both=4, new_only=3, old_only=1, neither=102), bafA_all_vs_neb_h1=dict(both=4, bafA_only=3, neb_only=0, neither=103),
                                 newly_called=dict(isolates=3, neb_h1_present=0),
-                                classes=dict(cluster_linked=dict(isolates=5, clone_groups=4, clone_groups_total=100, neb_h1_present=4, neb_h1_absent=1),
-                                             standalone_divergent=dict(isolates=3, clone_groups=3, clone_groups_total=100, neb_h1_present=0, neb_h1_absent=3)),
+                                classes=dict(cluster_linked=dict(isolates=5, clone_groups=4, clone_groups_total=100, neb_h1_present=4, neb_h1_absent=1, clone_groups_any_member=5, largest_clone_group=3, isolates_in_groups_over_1=4),
+                                             standalone_divergent=dict(isolates=3, clone_groups=3, clone_groups_total=100, neb_h1_present=0, neb_h1_absent=3, clone_groups_any_member=3, largest_clone_group=1, isolates_in_groups_over_1=0)),
                                 placement=dict(standalone_divergent=dict(genomes=2, bafA_hit=2, hrmA_or_cgnA_in_genome=0), cluster_linked=dict(genomes=4, bafA_hit=4, bafA_within_1_1kb_of_hrmA_cgnA=4)),
                                 bafA_hits_histogram={"2": 5}, by_source=dict(public=dict(present=5, total=90), local=dict(present=2, total=20))))
 
@@ -74,6 +74,7 @@ def test_markdown_report(tmp_path):
     assert "`abc1234`" in text and "bafA" in text and "2026-11-11" in text
     assert "AF293-type bafA" in text and "counting divergent alleles" in text and (out / "tables" / "baf_family_summary.json").exists()
     assert "Two classes of bafA" in text and "| standalone divergent (all-alleles screen only) | 3 | 3 of 100 (3.0%) | 0 | 3 |" in text and "not the same as** Nebuchadnezzar-h1" in text
+    assert "Repeats of the same strain" in text and "the largest holds 3 isolates and 4 isolates sit" in text
     assert "have hrmA or cgnA anywhere in the genome" in text
     assert "| older.tab | bafA | 2 | 5 / 6 | 0 | 83% |" in text                 # validation table row from the family summary
     # local isolates counted, never named

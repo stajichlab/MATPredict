@@ -68,6 +68,13 @@ R = os.path.join(REPO, "results")
 # The result folders behind each published release (relative to results/). Edit HERE when a campaign folder
 # changes; build_locus_shards.py reads the same table.
 RELEASES = {
+    # DRAFT (v0.9.0 results PR): listed so the folders can be checked with --release v090; NOT the default release.
+    "v090": {
+        "code": "v0.9.0 (7d73be5, November 2026)",
+        "asco": "2026-11-09_v090_ascomycota",
+        "basidio": "2026-11-09_v090_basidiomycota",
+        "mucoro": "2026-11-09_v090_mucoromycotina",
+    },
     "v081": {
         "code": "v0.8.1 (50bc950, November 2026)",
         "asco": "2026-11-05_v081_ascomycota",

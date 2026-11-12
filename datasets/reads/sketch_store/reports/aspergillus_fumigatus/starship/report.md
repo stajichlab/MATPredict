@@ -4,7 +4,7 @@ Sketch-store analysis, 2026-11-11. Which isolates carry a Nebuchadnezzar-h1-type
 
 | Provenance |  |
 | :--- | :--- |
-| code | `41c4adc` on branch `starship-dynamics` (PR #329) |
+| code | `1f3fcfd` on branch `baf-family` (PR #330) |
 | rescreen job | `31993754` |
 | default run | `31995348` |
 | tuned run | `31995349` |
@@ -17,13 +17,14 @@ Sketch-store analysis, 2026-11-11. Which isolates carry a Nebuchadnezzar-h1-type
 | ---: | :--- |
 | 4,736 | isolates kept of 4,849 sketched |
 | 2,154 | clone groups (ANI 0.9995), one vote each |
-| 5.1% | of clone groups carry bafA (110 of 2,153) |
+| 5.1% | of clone groups carry the AF293-type bafA (110 of 2,153); 9.5% counting divergent alleles (section 8) |
 | 371 | isolates in the strong bafA + Nebuchadnezzar-h1 list (95 clone groups) |
 
-- **Solid.** bafA is present in 5.1% of clone groups and almost always sits with Nebuchadnezzar-h1 (94 of 97 clone groups with either one carry both).
+- **Solid.** The AF293-type bafA is present in 5.1% of clone groups and almost always sits with Nebuchadnezzar-h1 (94 of 97 clone groups with either one carry both).
 - **Solid.** The solo-hash rule removed 782 ambiguous partial bafA calls without changing agreement with the paper (17 true positives, 2 missed).
-- **Caution.** bafA presence is scattered over the tree: 62 changes for 100 present clone groups (ratio 0.62); Nebuchadnezzar-h1 behaves the same (0.62). That fits repeated gain or transfer, or a coarse tree; it does not by itself show either.
-- **Caution.** Janus-h2, Janus-h4 and Osiris-h3 call more isolates than the paper does. Raising the cut for Osiris-h3 (0.5 to 0.7) removes most of the extra calls; Janus-h3, Janus-h5 and bafA keep theirs at every cut, with hash fraction near 1.0.
+- **Solid.** A screen of the whole baf family (one target per gene, built from assembly haplotypes) matches the assembly counts: bafA 53 of 55 assembly-positive strains found with 0 extra calls (the single AF293-type target found 41 of 55). Counting divergent alleles, bafA is in 204 of 2,154 clone groups; 212 isolates are newly called and 0 of them have Nebuchadnezzar-h1 present.
+- **Caution.** AF293-type bafA presence is scattered over the tree: 62 changes for 100 present clone groups (ratio 0.62); Nebuchadnezzar-h1 behaves the same (0.62). That fits repeated gain or transfer, or a coarse tree; it does not by itself show either.
+- **Caution.** Janus-h2, Janus-h4 and Osiris-h3 call more isolates than the paper does. Raising the cut for Osiris-h3 (0.5 to 0.7) removes most of the extra calls; Janus-h3, Janus-h5 and the AF293-type bafA keep theirs at every cut, with hash fraction near 1.0.
 - **Open.** The cuts were picked on the same 226 truth samples (no hold-out yet). Only the 20 haplotypes of the NII pangenome study are screened; the Starbase / Gluck-Thaler set is not.
 
 ## 1. Data and method
@@ -77,7 +78,7 @@ Source: `tables/rescreen_before_after.tsv`; `query_2026-11-09_n4834/screen_stars
 
 *Figure: Share of clone groups carrying each element. Click the image for the vector PDF.*
 
-One point is one clone group, so a study that sequenced one lineage fifty times counts once. Orange rows are upper bounds only.
+One point is one clone group, so a study that sequenced one lineage fifty times counts once. Orange rows are upper bounds only. In this and the following sections `bafA` is the AF293-type allele (the 2-hash genomic target of the Starship screen); section 8 counts all bafA alleles.
 
 | Element | Clone groups present / typed | Share | 95% CI | Isolates present | Paper TP / FP / FN |
 | :--- | ---: | ---: | ---: | ---: | ---: |
@@ -175,11 +176,63 @@ Source: `tables/parsimony.tsv`; method in the `starship_dynamics.py` docstring, 
 | bafA present | 94 | 3 |
 | bafA absent | 0 | 2041 |
 
-2,138 clone groups are typed for both. Country and lineage are confounded (sampling is uneven; lineage 150 contributes many bafA-positive clone groups), so differences are descriptive, not tests.
+`bafA` here is the AF293-type allele; divergent alleles are in section 8. 2,138 clone groups are typed for both. Country and lineage are confounded (sampling is uneven; lineage 150 contributes many bafA-positive clone groups), so differences are descriptive, not tests.
 
 Source: `tables/prevalence_by_country.tsv`, `tables/prevalence_by_lineage.tsv`, `out_default/clone_matrix.tsv`.
 
-## 8. Which elements travel together
+## 8. bafA beyond the AF293-type allele (baf family)
+
+The Starship screen's bafA target is the AF293-type genomic copy and has 2 usable hashes, so a divergent allele can be invisible to it. Assembly counts for the baf genes (`/bigdata/stajichlab/shared/projects/A_fumigatus/baf/strain_gene_counts*.tab`; the `bafD` column is bafA, 96% of its 21-mers) show this, so the family was screened with one target per gene, built from the assembly hit sequences (12 bafA, 6 bafB, 36 bafC and 67 Pseudobaf haplotypes, joined with N gaps). Gene presence = hit count at or above a cut (2 specific hashes for bafA, bafC and Pseudobaf; bafB has a single specific hash, so 1). The gene family is described in Kowalski et al. 2021, [mBio 12(1)](https://doi.org/10.1128/mBio.03579-20).
+
+[![baf family prevalence by clone group, and strains with an assembly copy that the screen finds](figures/fig7_baf_family.png)](figures/fig7_baf_family.pdf)
+
+*Figure: baf family prevalence by clone group, and strains with an assembly copy that the screen finds. Click the image for the vector PDF.*
+
+Agreement with the assembly counts (strains in the store that are not flagged):
+
+| Counts table | Gene | Cut (hits) | Assembly-positive found | Extra calls | Recall |
+| :--- | :--- | ---: | ---: | ---: | ---: |
+| strain_gene_counts.tab | bafA | 2 | 42 / 43 | 2 | 98% |
+| strain_gene_counts.tab | bafB | 1 | 49 / 50 | 0 | 98% |
+| strain_gene_counts.tab | bafC | 2 | 69 / 69 | 0 | 100% |
+| strain_gene_counts.tab | Pseudobaf | 2 | 106 / 107 | 3 | 99% |
+| strain_gene_counts.tab | bafA, single AF293-type target (before) |  | 35 / 43 | 0 | 81% |
+| strain_gene_counts_update.tab | bafA | 2 | 53 / 55 | 0 | 96% |
+| strain_gene_counts_update.tab | bafB | 1 | 59 / 60 | 1 | 98% |
+| strain_gene_counts_update.tab | bafC | 2 | 78 / 78 | 1 | 100% |
+| strain_gene_counts_update.tab | Pseudobaf | 2 | 141 / 142 | 6 | 99% |
+| strain_gene_counts_update.tab | bafA, single AF293-type target (before) |  | 41 / 55 | 0 | 75% |
+
+The extra bafA calls against the older table are strains the newer table lists as carrying bafA. The bafA misses are IFM_59359 (its read sets and assembly disagree, see the earlier mixup) and one more strain that is not explained yet. Relative depth separates 2-copy from 1-copy strains only weakly, so it is not a copy-number estimate.
+
+Across the 4,736 kept isolates:
+
+| Gene | Cut (hits) | Isolates | Share | Clone groups | Share |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| bafA, AF293-type (Starship screen) |  | 405 | 8.6% | 110 of 2,153 | 5.1% |
+| bafA, all alleles | 2 | 605 | 12.8% | 204 of 2,154 | 9.5% |
+| bafB | 1 | 1,160 | 24.5% | 432 of 2,154 | 20.1% |
+| bafC | 2 | 1,168 | 24.7% | 511 of 2,154 | 23.7% |
+| Pseudobaf | 2 | 2,336 | 49.3% | 1008 of 2,154 | 46.8% |
+
+**Two classes of bafA.** The AF293-type target sits in the hrmA cluster (next to hrmA and cgnA), so a call by that target is called *cluster-linked*. A call made only by the all-alleles screen is called *standalone divergent*:
+
+| Class | Isolates | Clone groups | Nebuchadnezzar-h1 present | Nebuchadnezzar-h1 absent |
+| :--- | ---: | ---: | ---: | ---: |
+| cluster-linked (AF293-type target present) | 405 | 110 of 2,154 (5.1%) | 373 | 32 |
+| standalone divergent (all-alleles screen only) | 212 | 100 of 2,154 (4.6%) | 0 | 212 |
+
+Cluster-linked is **not the same as** Nebuchadnezzar-h1: 373 of 405 cluster-linked isolates have Nebuchadnezzar-h1 present and 32 do not, and 2 isolates have Nebuchadnezzar-h1 without any bafA. The two travel together, which fits the hrmA cluster being on that Starship, but this is a co-occurrence in sketches, not a placement in genomes.
+
+**Repeats of the same strain.** The clone groups (ANI 0.9995) collapse repeated strains and aliases, so the isolate counts overstate independent strains. Cluster-linked: 405 isolates fall in 119 clone groups, the largest holds 166 isolates and 341 isolates sit in groups of two or more. Standalone divergent: 212 isolates in 116 clone groups, the largest holds 30 and 132 sit in groups of two or more. Clone-group counts here include any group with at least one member, so they are a little higher than the majority-rule counts in the table above.
+
+**Check in assemblies** (blastn of the bafA haplotypes, hrmA and cgnA; only strains with an assembly in the shared baf folder): the 12 standalone divergent isolates with an assembly all have a bafA copy (12 of 12) and 0 have hrmA or cgnA anywhere in the genome, so the copy is not in the hrmA cluster. Of 40 cluster-linked isolates with an assembly, 38 have the bafA copy, all of those have hrmA/cgnA, and 37 have it within about 1.1 kb of them on one contig. Only 12 of the 212 standalone isolates have an assembly, so the other 200 are inferred from the sketch. The locus of the standalone copies is not mapped yet.
+
+Isolates: the AF293-type target and the all-alleles call agree on 393 present and 4,119 absent; 212 are called only by the all-alleles screen and 12 only by the old target (one hash in common). Against Nebuchadnezzar-h1: 372 isolates have both, 233 have bafA without Nebuchadnezzar-h1, 2 have Nebuchadnezzar-h1 without bafA. None of the 212 newly called isolates has Nebuchadnezzar-h1 present, so these are bafA copies that are not on that Starship. The strong candidate list in section 10 uses the cluster-linked call and is unchanged.
+
+Source: `tables/baf_family_summary.json` (`baf_family.py summarize`), screen `query/screen_baf_family/` in the store (job `31996411`, `--max-solo 0`), counts from the shared folder above. The strain-level comparison names local strains and stays in the results folder.
+
+## 9. Which elements travel together
 
 [![Pairwise phi of presence across clone groups](figures/fig6_cooccurrence.png)](figures/fig6_cooccurrence.pdf)
 
@@ -204,7 +257,7 @@ Elements from the same family look correlated because they share sequence. Phi h
 
 Source: `tables/cooccurrence.tsv`.
 
-## 9. The strains
+## 10. The strains
 
 | Tier | All | After flagged removed | Public | Local |
 | :--- | ---: | ---: | ---: | ---: |
@@ -238,7 +291,7 @@ Strong public candidates by study (top 15):
 
 Source: `tables/candidates_public.tsv` (from `bafA_neb_h1_candidates_v2.tsv`, public rows only).
 
-## 10. Sensitivity to the cuts
+## 11. Sensitivity to the cuts
 
 | Element | Clones present (default) | Share | Clones present (tuned) | Share | Changes / present (default) | Changes / present (tuned) |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -247,7 +300,7 @@ Source: `tables/candidates_public.tsv` (from `bafA_neb_h1_candidates_v2.tsv`, pu
 
 The cut moves the prevalence by a few points. The scatter ratio hardly changes, so the conclusion that Osiris-h3 is scattered and Janus-h4 is clade-structured does not depend on it. bafA, Nebuchadnezzar-h1 and every other element are unaffected.
 
-## 11. Limits
+## 12. Limits
 
 - The 20 haplotypes are those of the NII *A. fumigatus* pangenome study (Table S21). Starbase and the Gluck-Thaler set are not screened.
 - Presence means most of an element's specific 21-mers are in the read sketch at 30x depth. It does not give an insertion site, an intact element, or copy number.
@@ -255,15 +308,16 @@ The cut moves the prevalence by a few points. The scatter ratio hardly changes, 
 - Cuts for Osiris-h3 and Janus-h4 were chosen on the same truth table. They need a hold-out check.
 - Gain/loss counts come from a sketch distance tree with 1,971 of 2,154 clone groups. They describe a pattern.
 
-## 12. Traceability and regeneration
+## 13. Traceability and regeneration
 
 | What | File or job | Made by |
 | :--- | :--- | :--- |
 | Sketches, QC, clone groups, tree | `/bigdata/stajichlab/jstajich/projects/MATPredict/sketch_store/aspergillus_fumigatus/{sigs,query}` | store build (PR #315), queries job 31975386 |
 | Starship screen (21 targets) | `query/screen_starships_bafA/` | rescreen job `31993754` |
-| Prevalence, matrix, parsimony, co-occurrence, sweep | `/bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-11_afum_starship_dynamics/out_default/` | `starship_dynamics.py` at `41c4adc`, job `31995348` |
+| Prevalence, matrix, parsimony, co-occurrence, sweep | `/bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-11_afum_starship_dynamics/out_default/` | `starship_dynamics.py` at `1f3fcfd`, job `31995348` |
 | Tuned cuts | `/bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-11_afum_starship_dynamics/out_tuned/` | `--set Osiris-h3=0.7 Janus-h4=0.7`, job `31995349` |
-| Report data | `/bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-11_afum_starship_dynamics/report_data.json` | `starship_report_data.py` at `41c4adc` |
+| Report data | `/bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-11_afum_starship_dynamics/report_data.json` | `starship_report_data.py` at `1f3fcfd` |
+| baf family screen | `query/screen_baf_family/`, `tables/baf_family_summary.json` | `baf_family.py` (targets, summarize), job `31996411` |
 | This file, figures, tables | `report.md`, `figures/`, `tables/` | `starship_report_md.py` |
 
 Regenerate on the HPCC, from the results folder: `sbatch run_dynamics.sh; sbatch run_tuned.sh; sbatch run_report.sh` (runs both the page and this markdown). Tests: `pixi run -e test python -m pytest tests -k sketch_store`.

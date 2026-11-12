@@ -118,6 +118,8 @@ const strong = D.candidates.filter(c => c.tier === "strong"), strongKept = stron
 const strongClones = new Set(strongKept.map(c => c.clone || "solo:" + c.sample_id)).size;
 const tierN = t => D.candidates.filter(c => c.tier === t).length;
 
+const BF = D.baf_family;
+const BFP = BF ? BF.population : null;
 // ---------- header + summary
 const head = $("header", {}, [
   $("div", { class: "eyebrow", html: "Sketch-store analysis · " + (M.date || "2026-11-11") }),
@@ -129,14 +131,15 @@ const head = $("header", {}, [
 const sum = block("summary", "Summary", "What we found", [
   $("div", { class: "grid" }, [
     ["" + f0(nKept), "isolates kept of " + f0(nScreen) + " sketched"], ["" + f0(nClones), "clone groups (ANI " + m2[1] + "), one vote each"],
-    [pc(baf.frac_present), "of clone groups carry bafA (" + baf.clones_present + " of " + f0(baf.clones_typed) + ")"],
+    [pc(baf.frac_present), "of clone groups carry the AF293-type bafA (" + baf.clones_present + " of " + f0(baf.clones_typed) + ")" + (BFP ? "; " + pc(BFP.genes.bafA.clone_groups / BFP.genes.bafA.clone_groups_total) + " counting divergent alleles (section 8)" : "")],
     ["" + f0(strongKept.length), "isolates in the strong bafA + Nebuchadnezzar-h1 list (" + strongClones + " clone groups)"]
   ].map(([n, l]) => $("div", { class: "stat" }, [$("div", { class: "n", html: n }), $("div", { class: "l", html: l })]))),
   $("ul", { class: "find" }, [
-    ["ok", "Solid", `bafA is present in ${pc(baf.frac_present)} of clone groups and almost always sits with Nebuchadnezzar-h1 (${f0(D.baf_neb["11"])} of ${f0(D.baf_neb["11"] + D.baf_neb["10"] + D.baf_neb["01"])} clone groups with either one carry both). The list of strong candidates is in section 9.`],
+    ["ok", "Solid", `The AF293-type bafA is present in ${pc(baf.frac_present)} of clone groups and almost always sits with Nebuchadnezzar-h1 (${f0(D.baf_neb["11"])} of ${f0(D.baf_neb["11"] + D.baf_neb["10"] + D.baf_neb["01"])} clone groups with either one carry both). The list of strong candidates is in section 10.`],
     ["ok", "Solid", `The solo-hash rule removed ${f0(before["bafA"].partial)} ambiguous "partial" bafA calls without changing agreement with the paper (${after["bafA"].truth.TP} true positives, ${after["bafA"].truth.FN} missed).`],
-    ["caution", "Caution", `bafA presence is <b>scattered</b> over the tree: ${bafp.fitch_score} changes for ${bafp.clone_tips_present} present clone groups (ratio ${bafp.score_per_present}). Nebuchadnezzar-h1 behaves the same (${nebp.score_per_present}). That fits repeated gain or transfer, or a coarse tree; it does not by itself show either.`],
-    ["caution", "Caution", `Janus-h2, Janus-h4 and Osiris-h3 call more isolates than the paper does. Raising the cut for Osiris-h3 (0.5 → ${cutOf("Osiris-h3") || "0.7"}) removes most of the extra calls; Janus-h3, Janus-h5 and bafA keep theirs at every cut, with hash fraction near 1.0.`],
+    ...(BF ? [["ok", "Solid", (v => `A screen of the whole baf family (one target per gene, built from assembly haplotypes) matches the assembly counts: bafA ${v.tp} of ${v.tp + v.fn} assembly-positive strains found with ${v.fp} extra calls (the single AF293-type target found 41 of 55). Counting divergent alleles, bafA is in ${BFP.genes.bafA.clone_groups} of ${f0(BFP.genes.bafA.clone_groups_total)} clone groups; ${BFP.newly_called.isolates} isolates are newly called and ${BFP.newly_called.neb_h1_present} of them have Nebuchadnezzar-h1 present.`)(Object.values(BF.validation).slice(-1)[0].genes.bafA["2"])]] : []),
+    ["caution", "Caution", `AF293-type bafA presence is <b>scattered</b> over the tree: ${bafp.fitch_score} changes for ${bafp.clone_tips_present} present clone groups (ratio ${bafp.score_per_present}). Nebuchadnezzar-h1 behaves the same (${nebp.score_per_present}). That fits repeated gain or transfer, or a coarse tree; it does not by itself show either.`],
+    ["caution", "Caution", `Janus-h2, Janus-h4 and Osiris-h3 call more isolates than the paper does. Raising the cut for Osiris-h3 (0.5 → ${cutOf("Osiris-h3") || "0.7"}) removes most of the extra calls; Janus-h3, Janus-h5 and the AF293-type bafA keep theirs at every cut, with hash fraction near 1.0.`],
     ["open", "Open", "The cuts were picked on the same 226 truth samples (no hold-out yet). Only the 20 haplotypes of the NII pangenome study are screened; the Starbase / Gluck-Thaler set is not."]
   ].map(([k, l, t]) => $("li", {}, [$("span", { class: "pill " + k, html: l }), $("span", { html: t })])))
 ]);
@@ -193,7 +196,7 @@ const prev = block("prevalence", "3 · How common is each element", "Share of cl
   $("div", { class: "leg", html: `<span><i style="background:var(--s1)"></i>agrees with the paper's calls (≤ 8 extra calls)</span><span><i style="background:var(--s2)"></i>calls many more isolates than the paper (≥ 9 extra), treat as an upper bound</span><span>line = 95% Wilson interval, label = clone groups present / typed</span>` }),
   how("One point is one clone group, so a study that sequenced one lineage fifty times counts once. Groups where most members are missing at this element are left out of the denominator."),
   src(`<code>${M.results || ""}/out_default/prevalence.tsv</code> (columns clones_typed, clones_present, frac_present, ci95_lo, ci95_hi) · agreement colours from the paper truth in <code>sketch_store/.../targets/truth_store.tsv</code>`),
-  cav(`Gnosis-h1, Osiris-h4 and Tardis-h1 are in roughly half of all clone groups; bafA, Nebuchadnezzar-h1 and the Logos and Lamia haplotypes are in a small minority. Orange rows are upper bounds only.`)
+  cav(`Gnosis-h1, Osiris-h4 and Tardis-h1 are in roughly half of all clone groups; bafA, Nebuchadnezzar-h1 and the Logos and Lamia haplotypes are in a small minority. Orange rows are upper bounds only. In this and the following sections bafA is the AF293-type allele (the 2-hash genomic target of the Starship screen); section 8 counts all bafA alleles.`)
 ]);
 
 // ---------- 4 validation / sweep
@@ -314,7 +317,7 @@ const bafBlock = block("bafa", "7 · bafA and Nebuchadnezzar-h1", "Where does th
   $("h3", { html: "bafA against Nebuchadnezzar-h1, clone groups typed for both" }),
   table([{ h: "", f: r => r.k, left: true }, { h: "Neb-h1 present", f: r => r.a }, { h: "Neb-h1 absent", f: r => r.b }],
     [{ k: "bafA present", a: f0(bn["11"]), b: f0(bn["10"]) }, { k: "bafA absent", a: f0(bn["01"]), b: f0(bn["00"]) }]),
-  how(`${f0(bnT)} clone groups are typed for both. ${bn["11"]} carry both, ${bn["10"]} carry bafA without a Nebuchadnezzar-h1 call and ${bn["01"]} carry the element without bafA. Calls use the default cuts, so the default screen's partial band (0.2 to 0.5) counts as missing.`),
+  how(`bafA here is the AF293-type allele; divergent alleles are in section 8. ${f0(bnT)} clone groups are typed for both. ${bn["11"]} carry both, ${bn["10"]} carry bafA without a Nebuchadnezzar-h1 call and ${bn["01"]} carry the element without bafA. Calls use the default cuts, so the default screen's partial band (0.2 to 0.5) counts as missing.`),
   src(`<code>${M.results || ""}/out_default/prevalence_by_country.tsv</code>, <code>prevalence_by_lineage.tsv</code>, <code>clone_matrix.tsv</code> (2×2 recomputed in <code>starship_report_data.py</code>)`),
   cav(`Country and lineage are confounded: sampling is uneven (a large share of isolates have unknown country) and lineage 150 contributes many bafA-positive clone groups. Differences between countries are descriptive, not tests.`)
 ]);
@@ -331,7 +334,37 @@ function cooc() {
     if (Math.abs(v) >= 0.5) { const nt = T(L + j * cs + cs / 2 - 0.5, top + i * cs + 16, v.toFixed(2).replace("0.", "."), "t2", "middle"); if (Math.abs(v) >= 0.7) nt.style.fill = "#fff"; svg.append(nt); } }));
   return svg;
 }
-const co = block("cooccur", "8 · Which elements travel together", "Co-occurrence across clone groups", [
+// ---------- baf family
+const FG = ["bafA", "bafB", "bafC", "Pseudobaf"], FGN = { bafA: "bafA, all alleles", bafB: "bafB", bafC: "bafC", Pseudobaf: "Pseudobaf" };
+function famBars() {
+  const pop = BFP, rows = [{ n: "bafA, AF293-type (Starship screen)", v: baf.frac_present, c: "var(--s2)", k: `${baf.clones_present} of ${f0(baf.clones_typed)}` }]
+    .concat(FG.map(g => ({ n: FGN[g], v: pop.genes[g].clone_groups / pop.genes[g].clone_groups_total, c: "var(--s1)", k: `${pop.genes[g].clone_groups} of ${f0(pop.genes[g].clone_groups_total)}` })));
+  const W = 780, L = 230, R = 150, rh = 30, top = 12, H = top + rows.length * rh + 34, x = v => L + v * (W - L - R) / 0.6;
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img", "aria-label": "Share of clone groups carrying each baf gene" });
+  [0, 0.2, 0.4, 0.6].forEach(v => svg.append(S("line", { x1: x(v), x2: x(v), y1: top - 4, y2: H - 28, class: "gr" }), T(x(v), H - 12, pc(v, 0), "t2", "middle")));
+  rows.forEach((r, i) => { const y = top + i * rh + rh / 2;
+    svg.append(T(L - 10, y + 4, r.n, i < 2 ? "b" : "", "end"), S("rect", { x: x(0), y: y - 9, width: x(r.v) - x(0), height: 18, fill: r.c }), T(x(r.v) + 8, y + 4, `${pc(r.v)}  (${r.k})`, "t2"));
+    const hit = S("rect", { x: 0, y: y - rh / 2, width: W, height: rh, fill: "transparent" }); hover(hit, () => `<b>${r.n}</b><br>${r.k} clone groups (${pc(r.v)})`); svg.append(hit); });
+  return svg;
+}
+const famBlock = BF ? block("baffamily", "8 · bafA beyond the AF293-type allele", "How many isolates carry bafA once divergent alleles count?", [
+  qn("The Starship screen's bafA target is one allele with two usable hashes. Do assembly counts for the baf genes show it missing real copies?"),
+  $("p", { html: `The assembly counts (<code>/bigdata/stajichlab/shared/projects/A_fumigatus/baf/strain_gene_counts*.tab</code>) have columns bafB, bafC, bafD and bafPseudo. The <b>bafD column is bafA</b>: it holds 96% of bafA's 21-mers (bafB 17%, bafC 0%). The family was screened with one target per gene, built from the assembly hit sequences (12 bafA, 6 bafB, 36 bafC and 67 Pseudobaf haplotypes, joined with N gaps). A gene is called present at this many specific hashes: ${FG.map(g => g + " " + BF.cuts[g]).join(", ")} (bafB has a single specific hash). Family described in Kowalski et al. 2021, <a href="https://doi.org/10.1128/mBio.03579-20" target="_blank" rel="noopener">mBio 12(1)</a>.` }),
+  famBars(),
+  $("h3", { html: "Agreement with the assembly counts" }),
+  table([{ h: "Counts table", f: r => r.t, left: true }, { h: "Gene", f: r => r.g, left: true }, { h: "Cut (hits)", f: r => r.k }, { h: "Assembly-positive found", f: r => `${r.x.tp} / ${r.x.tp + r.x.fn}` }, { h: "Extra calls", f: r => r.x.fp }, { h: "Recall", f: r => pc(r.x.tp / Math.max(r.x.tp + r.x.fn, 1), 0) }],
+    Object.entries(BF.validation).flatMap(([t, v]) => FG.map(g => ({ t, g, k: BF.cuts[g], x: v.genes[g][BF.cuts[g]] })).concat([{ t, g: "bafA, single AF293-type target (before)", k: "", x: v.previous_single_target_bafA }])), { hl: r => r.g === "bafA" }),
+  how("The extra bafA calls against the older table are strains the newer table lists as carrying bafA. The bafA misses are IFM_59359 (its read sets and assembly disagree, see the earlier mixup) and one more strain that is not explained yet. Relative depth separates 2-copy from 1-copy strains only weakly, so it is not a copy-number estimate."),
+  $("h3", { html: `Across the ${f0(BFP.kept)} kept isolates` }),
+  table([{ h: "Gene", f: r => r.n, left: true }, { h: "Cut (hits)", f: r => r.cut }, { h: "Isolates", f: r => r.i }, { h: "Share", f: r => r.is }, { h: "Clone groups", f: r => r.c }, { h: "Share", f: r => r.cs }],
+    [{ n: "bafA, AF293-type (Starship screen)", cut: "", i: f0(baf.samples_present), is: pc(baf.samples_present / BFP.kept), c: `${baf.clones_present} of ${f0(baf.clones_typed)}`, cs: pc(baf.frac_present) }]
+      .concat(FG.map(g => { const x = BFP.genes[g]; return { n: FGN[g], cut: x.cut, i: f0(x.isolates), is: pc(x.isolates / BFP.kept), c: `${x.clone_groups} of ${f0(x.clone_groups_total)}`, cs: pc(x.clone_groups / x.clone_groups_total) }; }))),
+  how(`The AF293-type target and the all-alleles call agree on ${f0(BFP.old_vs_new_bafA.both)} present and ${f0(BFP.old_vs_new_bafA.neither)} absent isolates; ${f0(BFP.old_vs_new_bafA.new_only)} are called only by the all-alleles screen and ${BFP.old_vs_new_bafA.old_only} only by the old target (one hash in common). Against Nebuchadnezzar-h1: ${f0(BFP.bafA_all_vs_neb_h1.both)} isolates have both, ${f0(BFP.bafA_all_vs_neb_h1.bafA_only)} have bafA without Nebuchadnezzar-h1, ${BFP.bafA_all_vs_neb_h1.neb_only} have Nebuchadnezzar-h1 without bafA. None of the ${BFP.newly_called.isolates} newly called isolates has Nebuchadnezzar-h1 present, so these look like bafA copies that are not on that Starship. The strong candidate list in section 10 is unchanged.`),
+  src(`<code>${M.results ? M.results.replace(/results\/.*/, "") : ""}results/2026-11-11_afum_baf_assembly_vs_sketch/</code> · screen <code>query/screen_baf_family/</code> in the store (job 31996411, <code>--max-solo 0</code>) · summary <code>baf_family_summary.json</code> from <code>baf_family.py summarize</code> · the strain-level comparison names local strains and stays in the results folder`),
+  cav("The copies called only by the all-alleles screen are a pattern in sketches. They have not been placed in genomes, so they may sit at other loci than the hrmA cluster.")
+]) : null;
+
+const co = block("cooccur", "9 · Which elements travel together", "Co-occurrence across clone groups", [
   qn("Do elements share a genome more (or less) often than chance?"),
   $("div", { class: "scroll" }, [cooc()]),
   $("div", { class: "leg", html: `<span><i style="background:var(--s1)"></i>positive phi (found together)</span><span><i style="background:var(--neg)"></i>negative phi (avoid each other)</span><span>shade = |phi|; numbers shown where |phi| ≥ 0.5</span>` }),
@@ -358,7 +391,7 @@ tsel.onchange = () => { state.tier = tsel.value; state.n = 40; renderCands(); };
 const qin = $("input", { id: "q", type: "search", placeholder: "search sample, strain, study, country" }); qin.oninput = () => { state.q = qin.value; state.n = 40; renderCands(); };
 const exc = $("input", { id: "ex", type: "checkbox" }); exc.onchange = () => { state.ex = exc.checked; renderCands(); };
 const cp = $("button", { id: "copy", html: "Copy matching sample IDs" }); cp.onclick = () => { const t = (cbox._rows || []).map(r => r.sample_id).join("\n"); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => cp.textContent = "Copied " + cbox._rows.length, () => cp.textContent = "Copy blocked; select the table instead"); };
-const cb = block("candidates", "9 · The strains", "Isolates likely to carry the bafA Nebuchadnezzar-h1 Starship", [
+const cb = block("candidates", "10 · The strains", "Isolates likely to carry the bafA Nebuchadnezzar-h1 Starship", [
   qn("Which isolates should be followed up?"),
   $("p", { html: `<b>strong</b> = both bafA hashes found and Nebuchadnezzar-h1 present (${f0(tierN("strong"))}; ${f0(strongKept.length)} after flagged samples are removed, in ${strongClones} clone groups). <b>probable</b> = bafA present and Nebuchadnezzar-h1 partial (${tierN("probable")}). <b>discordant</b> = one of the two present without the other (${tierN("discordant")}); check read depth before counting these.` }),
   $("div", { class: "ctl" }, [tsel, qin, $("label", {}, [exc, document.createTextNode(" include flagged samples")]), cp]), cbox,
@@ -368,7 +401,7 @@ const cb = block("candidates", "9 · The strains", "Isolates likely to carry the
 renderCands();
 
 // ---------- tuned vs default
-const tuned = PT ? block("tuned", "10 · Sensitivity", "Does the choice of cut change the conclusions?", [
+const tuned = PT ? block("tuned", "11 · Sensitivity", "Does the choice of cut change the conclusions?", [
   qn(`Same pipeline with Osiris-h3 and Janus-h4 at ${cutOf("Osiris-h3") || "0.7"} instead of 0.5.`),
   table([{ h: "Element", f: r => r.e, left: true }, { h: "Clones present (default)", f: r => `${r.d.clones_present} / ${f0(r.d.clones_typed)}` }, { h: "Prevalence", f: r => pc(r.d.frac_present) },
     { h: "Clones present (tuned)", f: r => `${r.t.clones_present} / ${f0(r.t.clones_typed)}` }, { h: "Prevalence", f: r => pc(r.t.frac_present) },
@@ -379,7 +412,7 @@ const tuned = PT ? block("tuned", "10 · Sensitivity", "Does the choice of cut c
 ]) : null;
 
 // ---------- limits and traceability
-const lim = block("limits", "11 · Limits", "What this does not show", [
+const lim = block("limits", "12 · Limits", "What this does not show", [
   $("ul", { html: [
     "The 20 haplotypes are those of the NII <i>A. fumigatus</i> pangenome study (Table S21). Starbase and the Gluck-Thaler set are not screened.",
     "Presence means most of an element's specific 21-mers are in the read sketch at 30× depth. It does not give an insertion site, an intact element, or copy number.",
@@ -388,9 +421,10 @@ const lim = block("limits", "11 · Limits", "What this does not show", [
     "Gain/loss counts come from a sketch distance tree with " + f0(nTree) + " of " + f0(nClones) + " clone groups. They describe a pattern."
   ].map(t => `<li>${t}</li>`).join("") })
 ]);
-const trace = block("trace", "12 · Traceability", "Where every number comes from", [
+const trace = block("trace", "13 · Traceability", "Where every number comes from", [
   table([{ h: "What", f: r => r[0], left: true }, { h: "File or job", f: r => `<code>${r[1]}</code>`, left: true }, { h: "Made by", f: r => r[2], left: true }], [
     ["Read sketches, QC, clone groups, tree", (M.store || "sketch_store/aspergillus_fumigatus") + "/{sigs,query/qc,query/distances}", "store build (PR #315), queries job 31975386"],
+    ...(BF ? [["baf family screen", "query/screen_baf_family/ (store), tables/baf_family_summary.json (repo)", "baf_family.py (targets, summarize), job 31996411"]] : []),
     ["Starship screen (21 targets)", "query/screen_starships_bafA/screen.tsv, summary.txt, dropped_hashes.tsv", "rescreen job " + M.rescreen_job],
     ["Screen before the solo-hash rule", "query_2026-11-09_n4834/screen_starships_bafA_before_solo_rule/", "same store, 2026-11-09"],
     ["Prevalence, matrix, parsimony, co-occurrence, sweep", (M.results || "") + "/out_default/", "starship_dynamics.py at " + (M.code_commit || "?") + ", job " + M.default_job],
@@ -403,6 +437,6 @@ const trace = block("trace", "12 · Traceability", "Where every number comes fro
 ]);
 
 const foot = $("footer", { html: "Store: " + (M.store || "") + "<br>Results: " + (M.results || "") + "<br>Page template: datasets/reads/sketch_store/reports/starship_report.html" });
-app.innerHTML = ""; [head, sum, meth, rescreen, prev, sweepBlock, heat, pars, bafBlock, co, cb, tuned, lim, trace, foot].filter(Boolean).forEach(x => app.append(x));
+app.innerHTML = ""; [head, sum, meth, rescreen, prev, sweepBlock, heat, pars, bafBlock, famBlock, co, cb, tuned, lim, trace, foot].filter(Boolean).forEach(x => app.append(x));
 })();
 </script>

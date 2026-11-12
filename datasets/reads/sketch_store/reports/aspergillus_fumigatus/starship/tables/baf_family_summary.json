@@ -1,0 +1,384 @@
+{
+ "screen": {
+  "bafA_all": {
+   "hashes": 13,
+   "specific": 12
+  },
+  "bafB_all": {
+   "hashes": 2,
+   "specific": 1
+  },
+  "bafC_all": {
+   "hashes": 52,
+   "specific": 52
+  },
+  "Pseudobaf_all": {
+   "hashes": 44,
+   "specific": 42
+  }
+ },
+ "cuts": {
+  "bafA": 2,
+  "bafB": 1,
+  "bafC": 2,
+  "Pseudobaf": 2
+ },
+ "validation": {
+  "strain_gene_counts.tab": {
+   "taxa": 180,
+   "matched_taxa": 175,
+   "pairs": 179,
+   "genes": {
+    "bafA": {
+     "1": {
+      "tp": 42,
+      "fn": 1,
+      "fp": 2,
+      "tn": 134
+     },
+     "2": {
+      "tp": 42,
+      "fn": 1,
+      "fp": 2,
+      "tn": 134
+     },
+     "3": {
+      "tp": 14,
+      "fn": 29,
+      "fp": 2,
+      "tn": 134
+     },
+     "4": {
+      "tp": 9,
+      "fn": 34,
+      "fp": 2,
+      "tn": 134
+     }
+    },
+    "bafB": {
+     "1": {
+      "tp": 49,
+      "fn": 1,
+      "fp": 0,
+      "tn": 129
+     },
+     "2": {
+      "tp": 0,
+      "fn": 50,
+      "fp": 0,
+      "tn": 129
+     },
+     "3": {
+      "tp": 0,
+      "fn": 50,
+      "fp": 0,
+      "tn": 129
+     },
+     "4": {
+      "tp": 0,
+      "fn": 50,
+      "fp": 0,
+      "tn": 129
+     }
+    },
+    "bafC": {
+     "1": {
+      "tp": 69,
+      "fn": 0,
+      "fp": 1,
+      "tn": 109
+     },
+     "2": {
+      "tp": 69,
+      "fn": 0,
+      "fp": 0,
+      "tn": 110
+     },
+     "3": {
+      "tp": 67,
+      "fn": 2,
+      "fp": 0,
+      "tn": 110
+     },
+     "4": {
+      "tp": 67,
+      "fn": 2,
+      "fp": 0,
+      "tn": 110
+     }
+    },
+    "Pseudobaf": {
+     "1": {
+      "tp": 107,
+      "fn": 0,
+      "fp": 5,
+      "tn": 67
+     },
+     "2": {
+      "tp": 106,
+      "fn": 1,
+      "fp": 3,
+      "tn": 69
+     },
+     "3": {
+      "tp": 106,
+      "fn": 1,
+      "fp": 3,
+      "tn": 69
+     },
+     "4": {
+      "tp": 106,
+      "fn": 1,
+      "fp": 3,
+      "tn": 69
+     }
+    }
+   },
+   "previous_single_target_bafA": {
+    "tp": 35,
+    "fn": 8,
+    "fp": 0,
+    "tn": 136
+   },
+   "bafA_rel_abund_by_copy_number": {
+    "1": {
+     "n": 37,
+     "median": 1.09
+    },
+    "2": {
+     "n": 5,
+     "median": 1.28
+    }
+   }
+  },
+  "strain_gene_counts_update.tab": {
+   "taxa": 319,
+   "matched_taxa": 273,
+   "pairs": 280,
+   "genes": {
+    "bafA": {
+     "1": {
+      "tp": 53,
+      "fn": 2,
+      "fp": 1,
+      "tn": 224
+     },
+     "2": {
+      "tp": 53,
+      "fn": 2,
+      "fp": 0,
+      "tn": 225
+     },
+     "3": {
+      "tp": 19,
+      "fn": 36,
+      "fp": 0,
+      "tn": 225
+     },
+     "4": {
+      "tp": 11,
+      "fn": 44,
+      "fp": 0,
+      "tn": 225
+     }
+    },
+    "bafB": {
+     "1": {
+      "tp": 59,
+      "fn": 1,
+      "fp": 1,
+      "tn": 219
+     },
+     "2": {
+      "tp": 0,
+      "fn": 60,
+      "fp": 0,
+      "tn": 220
+     },
+     "3": {
+      "tp": 0,
+      "fn": 60,
+      "fp": 0,
+      "tn": 220
+     },
+     "4": {
+      "tp": 0,
+      "fn": 60,
+      "fp": 0,
+      "tn": 220
+     }
+    },
+    "bafC": {
+     "1": {
+      "tp": 78,
+      "fn": 0,
+      "fp": 3,
+      "tn": 199
+     },
+     "2": {
+      "tp": 78,
+      "fn": 0,
+      "fp": 1,
+      "tn": 201
+     },
+     "3": {
+      "tp": 76,
+      "fn": 2,
+      "fp": 0,
+      "tn": 202
+     },
+     "4": {
+      "tp": 76,
+      "fn": 2,
+      "fp": 0,
+      "tn": 202
+     }
+    },
+    "Pseudobaf": {
+     "1": {
+      "tp": 142,
+      "fn": 0,
+      "fp": 10,
+      "tn": 128
+     },
+     "2": {
+      "tp": 141,
+      "fn": 1,
+      "fp": 6,
+      "tn": 132
+     },
+     "3": {
+      "tp": 141,
+      "fn": 1,
+      "fp": 5,
+      "tn": 133
+     },
+     "4": {
+      "tp": 140,
+      "fn": 2,
+      "fp": 4,
+      "tn": 134
+     }
+    }
+   },
+   "previous_single_target_bafA": {
+    "tp": 41,
+    "fn": 14,
+    "fp": 0,
+    "tn": 225
+   },
+   "bafA_rel_abund_by_copy_number": {
+    "1": {
+     "n": 46,
+     "median": 1.13
+    },
+    "2": {
+     "n": 7,
+     "median": 1.28
+    }
+   }
+  }
+ },
+ "population": {
+  "kept": 4736,
+  "genes": {
+   "bafA": {
+    "cut": 2,
+    "isolates": 605,
+    "clone_groups": 204,
+    "clone_groups_total": 2154
+   },
+   "bafB": {
+    "cut": 1,
+    "isolates": 1160,
+    "clone_groups": 432,
+    "clone_groups_total": 2154
+   },
+   "bafC": {
+    "cut": 2,
+    "isolates": 1168,
+    "clone_groups": 511,
+    "clone_groups_total": 2154
+   },
+   "Pseudobaf": {
+    "cut": 2,
+    "isolates": 2336,
+    "clone_groups": 1008,
+    "clone_groups_total": 2154
+   }
+  },
+  "old_vs_new_bafA": {
+   "both": 393,
+   "new_only": 212,
+   "old_only": 12,
+   "neither": 4119
+  },
+  "bafA_all_vs_neb_h1": {
+   "both": 372,
+   "bafA_only": 233,
+   "neb_only": 2,
+   "neither": 4129
+  },
+  "newly_called": {
+   "isolates": 212,
+   "neb_h1_present": 0
+  },
+  "classes": {
+   "cluster_linked": {
+    "isolates": 405,
+    "clone_groups": 110,
+    "clone_groups_total": 2154,
+    "clone_groups_any_member": 119,
+    "largest_clone_group": 166,
+    "isolates_in_groups_over_1": 341,
+    "neb_h1_present": 373,
+    "neb_h1_absent": 32
+   },
+   "standalone_divergent": {
+    "isolates": 212,
+    "clone_groups": 100,
+    "clone_groups_total": 2154,
+    "clone_groups_any_member": 116,
+    "largest_clone_group": 30,
+    "isolates_in_groups_over_1": 132,
+    "neb_h1_present": 0,
+    "neb_h1_absent": 212
+   }
+  },
+  "placement": {
+   "standalone_divergent": {
+    "genomes": 12,
+    "bafA_hit": 12,
+    "hrmA_or_cgnA_in_genome": 0,
+    "bafA_within_1_1kb_of_hrmA_cgnA": 0
+   },
+   "cluster_linked": {
+    "genomes": 40,
+    "bafA_hit": 38,
+    "hrmA_or_cgnA_in_genome": 38,
+    "bafA_within_1_1kb_of_hrmA_cgnA": 37
+   }
+  },
+  "bafA_hits_histogram": {
+   "1": 17,
+   "2": 351,
+   "3": 104,
+   "4": 14,
+   "5": 118,
+   "6": 4,
+   "7": 8,
+   "8": 5,
+   "9": 1
+  },
+  "by_source": {
+   "public": {
+    "present": 513,
+    "total": 4194
+   },
+   "local": {
+    "present": 92,
+    "total": 542
+   }
+  }
+ }
+}

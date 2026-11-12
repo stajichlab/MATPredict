@@ -10,7 +10,7 @@ idiomorph or mating type it is (for example Plus/Minus, MAT1-1/MAT1-2, HD/PR
 alleles). Every reference record traces to a publication or a validated
 deposit, and every call reports the evidence behind it.
 
-Current release: [`v0.8.1`](https://github.com/stajichlab/MATPredict/releases/tag/v0.8.1) (detection code, database and the data, calls and counts shown on the site are those of the v0.8.1 run).
+Current release: [`v0.9.0`](https://github.com/stajichlab/MATPredict/releases/tag/v0.9.0) (detection code, database and the data, calls and counts shown on the site are those of the v0.9.0 run).
 Changes: [CHANGELOG.md](CHANGELOG.md).
 
 ## Contents
@@ -245,7 +245,7 @@ not an independent test.
 
 ### `matpredict detect`
 
-Every option, policy, preset (`--preset v0.8.1` is what the v0.8.1 run used) and environment variable is listed in [`docs/detect-options.md`](docs/detect-options.md).
+Every option, policy, preset (`--preset v0.9.1` is what the v0.9.0 run used) and environment variable is listed in [`docs/detect-options.md`](docs/detect-options.md).
 
 ```
 matpredict detect --genome GENOME [--proteins PROTEINS] [--taxid TAXID]
@@ -507,28 +507,28 @@ pixi run -e test pytest -q
 ## Validation and known limits
 
 Measured results (details in [analysis/INDEX.md](analysis/INDEX.md)). The NCBI public genomes and held-out rows are detection (call) rates from
-the v0.8.1 definitive run, not accuracy: no truth set exists for the NCBI public genomes. Subphylum rates count the classes of each subphylum;
+the v0.9.0 definitive run, not accuracy: no truth set exists for the NCBI public genomes. Subphylum rates count the classes of each subphylum;
 the 12 Basidiomycota genomes suppressed by the shared list (no report) are counted as not called; the nine rust genomes of the allow list (#165) are searched. The ground-truth, typing and hold-out rows are
-older measurements and were not repeated for v0.8.1. How each campaign was judged is in
+older measurements and were not repeated for v0.9.0. How each campaign was judged is in
 [results/2026-10_cleanrun_preparation/](results/2026-10_cleanrun_preparation/).
 
 | Test | Result |
 |---|---|
 | Zygomycete ground-truth set (23 genomes) | 23/23 loci and idiomorphs |
-| Held-out LCG Mucoromycotina genomes (never used in curation) | 549/621 called (v0.8.1 run) |
-| Held-out Jena Mucoromycotina genomes | 61/64 called (v0.8.1 run) |
+| Held-out LCG Mucoromycotina genomes (never used in curation) | 549/621 called (v0.9.0 run) |
+| Held-out Jena Mucoromycotina genomes | 61/64 called (v0.9.0 run) |
 | Idiomorph typing validation | 0/540 typed wrong |
 | Pezizomycotina hold-out, order radius | 7/7 |
-| Ascomycota, 19,415 NCBI public genomes (v0.8.1 run) | 17,618 called (90.7%) |
-| Basidiomycota, 3,275 NCBI public genomes (v0.8.1 run) | 2,995 called (91.5%): Agaricomycotina 92.6%, Ustilaginomycotina 97.7%, Pucciniomycotina 86.3% |
-| Mucoromycotina, 289 NCBI public genomes (v0.8.1 run) | 258 called (89.3%) |
+| Ascomycota, 19,415 NCBI public genomes (v0.9.0 run) | 17,618 called (90.7%) |
+| Basidiomycota, 3,275 NCBI public genomes (v0.9.0 run) | 2,995 called (91.5%): Agaricomycotina 92.6%, Ustilaginomycotina 97.7%, Pucciniomycotina 86.3% |
+| Mucoromycotina, 289 NCBI public genomes (v0.9.0 run) | 258 called (89.3%) |
 
 Known limits (open items in [analysis/open-questions.md](analysis/open-questions.md)):
 
 - Only three phyla have curated families.
 - A genome far from every reference often fails the evidence bar, so an
   uncalled genome is weak evidence that the genome has no MAT locus. The full
-  Ascomycota run (19,415 genomes, v0.8.1) leaves 1,725 uncalled and 72 not run.
+  Ascomycota run (19,415 genomes, v0.9.0) leaves 1,725 uncalled and 72 not run.
 - Fragmented assemblies can split a locus or lose its flanking genes.
 - In Mucoromycota, *Absidia* flanking genes are often off-scaffold, and the
   gene order of the Lichtheimiaceae is not yet known.

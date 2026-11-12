@@ -1,0 +1,8 @@
+v0.9.0 definitive run, mucoromycotina campaign
+commit: 7d73be58826620107fc0ea17436572ad4b2ff160
+worktree: /bigdata/stajichlab/jstajich/projects/MATPredict/.claude/worktrees/run-7d73be5
+DETECT_ARGS: --preset v0.9.1 --withheld-detail-policy on
+tblastn SEG outlier policy: yes
+allow list: db/allow.txt (rust genomes searched; large chunk GENOME_TIMEOUT=14400, epyc 8:00:00)
+pixi.lock sha256: 675a15123d22857564dbb020592db9075cd60c8bb82f9cbb53a077abb31f4ac9
+compute: throttled, 3 chains x 16 CPUs = 48 CPUs in flight (submit_throttled.py); jobs: results/2026-11-09_v090_submit/jobs.tsv; submitted 2026-11-08

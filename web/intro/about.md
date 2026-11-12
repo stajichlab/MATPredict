@@ -82,9 +82,9 @@ The database, the reports and the calls carry the names as the references use th
 
 - **NCBI public genomes**: the public NCBI Ascomycota, Basidiomycota and Mucoromycotina genomes of this [fungal
   genome collection](https://github.com/stajichlab/Fungi_BFD/), as frozen in September 2026 (see also the
-  [2026 run documentation](https://github.com/1KFG/Fungi_BFD_run2026/)). The v0.8.1 run searched 19,415 Ascomycota,
-  3,275 Basidiomycota and 974 Mucoromycotina genomes in November 2026, on release commit `50bc950` with the
-  `--preset v0.8.1` policy set.
+  [2026 run documentation](https://github.com/1KFG/Fungi_BFD_run2026/)). The v0.9.0 run searched 19,415 Ascomycota,
+  3,275 Basidiomycota and 974 Mucoromycotina genomes in November 2026, on release commit `7d73be5` with the
+  `--preset v0.9.1 --withheld-detail-policy on` policy set.
 - **ZyGoLife**: the LCG and Jena Mucoromycotina genome sets, held out from training and curation.
 - Numbers on the landing page and the explorer come from committed result tables in the
   [results folder](https://github.com/stajichlab/MATPredict/tree/main/results); they are detection counts, not ground truth.
@@ -123,7 +123,7 @@ The calls on this site are the output of one release, with its gaps stated here 
   *Lodderomyces parapsilosis* *MTLA1*, 97 of 97 loci); an assembly error shows in few.
 - **A two-idiomorph result is a flag for review.** It can be homothallism, a mixed culture or a duplication; the
   `homothallic_candidate` class is a candidate, not a statement of homothallism.
-- **Policies are a preset.** The v0.8.1 results use `--preset v0.8.1` (the v0.8 policies, which are the v0.7 policies plus the cross-family policy, plus `--fallback-after-withheld-policy on`); the code defaults are unchanged, so a run without
+- **Policies are a preset.** The v0.9.0 results use `--preset v0.9.1` (v0.8.1 plus the report-only rules of `--preset v0.9` and three rules that lower a tier or withhold an idiomorph label: the weak-flank cap, the short-fragment vote and the single-region cap) with `--withheld-detail-policy on`; the code defaults are unchanged, so a run without
   the preset gives different calls.
 
 Held-out items and what each needs for the next release are tracked in
@@ -131,7 +131,7 @@ Held-out items and what each needs for the next release are tracked in
 
 ## Assessments and further reading
 
-The v0.7.0 results were judged campaign by campaign before release; for v0.8.1 the comparison against v0.8.0 and the attribution of every difference are in "The definitive run" in the changelog. These notes say what changed against the previous
+The v0.7.0 results were judged campaign by campaign before release; for v0.9.0 the comparison against v0.8.1 and the attribution of every difference are in "The definitive run" in the changelog. These notes say what changed against the previous
 release, what was checked and what was not, and which decisions are still open. Read them for what the calls can and cannot support.
 
 - **Ascomycota:** [judgement](https://github.com/stajichlab/MATPredict/blob/main/results/2026-10_cleanrun_preparation/v070_ascomycota_judgement.md) (changes against v0.6.0, the truth checks and the reason for each confidence change).

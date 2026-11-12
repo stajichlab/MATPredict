@@ -68,6 +68,12 @@ R = os.path.join(REPO, "results")
 # The result folders behind each published release (relative to results/). Edit HERE when a campaign folder
 # changes; build_locus_shards.py reads the same table.
 RELEASES = {
+    "v090": {
+        "code": "v0.9.0 (7d73be5, November 2026)",
+        "asco": "2026-11-09_v090_ascomycota",
+        "basidio": "2026-11-09_v090_basidiomycota",
+        "mucoro": "2026-11-09_v090_mucoromycotina",
+    },
     "v081": {
         "code": "v0.8.1 (50bc950, November 2026)",
         "asco": "2026-11-05_v081_ascomycota",
@@ -99,9 +105,9 @@ RELEASES = {
         "mucoro": "2026-10-03_mucoromycotina_mat",
     },
 }
-# The release the Pages build publishes. v0.8.1 data: the definitive run on commit 50bc950 (--preset v0.8.1).
-# To roll back, set it to "v080" (the v0.8.0 folders stay in RELEASES) and re-tag.
-DEFAULT_RELEASE = "v081"
+# The release the Pages build publishes. v0.9.0 data: the definitive run on commit 7d73be5 (--preset v0.9.1).
+# To roll back, set it to "v081" (the v0.8.1 folders stay in RELEASES) and re-tag.
+DEFAULT_RELEASE = "v090"
 
 NOT_A_GENUS = {"Ascomycota", "Basidiomycota", "Mucoromycota", "Fungal", "Fungi", "uncultured", "Candidatus", "unidentified"}
 GENUS_RE = re.compile(r"^[A-Z][a-z-]+$")

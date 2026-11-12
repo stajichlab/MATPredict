@@ -323,6 +323,36 @@
    "isolates": 212,
    "neb_h1_present": 0
   },
+  "classes": {
+   "cluster_linked": {
+    "isolates": 405,
+    "clone_groups": 110,
+    "clone_groups_total": 2154,
+    "neb_h1_present": 373,
+    "neb_h1_absent": 32
+   },
+   "standalone_divergent": {
+    "isolates": 212,
+    "clone_groups": 100,
+    "clone_groups_total": 2154,
+    "neb_h1_present": 0,
+    "neb_h1_absent": 212
+   }
+  },
+  "placement": {
+   "standalone_divergent": {
+    "genomes": 12,
+    "bafA_hit": 12,
+    "hrmA_or_cgnA_in_genome": 0,
+    "bafA_within_1_1kb_of_hrmA_cgnA": 0
+   },
+   "cluster_linked": {
+    "genomes": 40,
+    "bafA_hit": 38,
+    "hrmA_or_cgnA_in_genome": 38,
+    "bafA_within_1_1kb_of_hrmA_cgnA": 37
+   }
+  },
   "bafA_hits_histogram": {
    "1": 17,
    "2": 351,

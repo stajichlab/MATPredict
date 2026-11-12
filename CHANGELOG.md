@@ -6,9 +6,9 @@ release completed.
 
 ## [Unreleased]
 
-## [0.9.0] — TBD — `v0.9.0`
+## [0.9.0] — 2026-11-12 — `v0.9.0`
 
-> Not yet tagged: the date is set when the tag is cut. The entries below are those of the merged pull requests of the v0.9.0 cycle. The definitive run is described in the next section: it is the frozen commit `7d73be5` with `--preset v0.9.1 --withheld-detail-policy on`, and the 372 genomes that moved under the `tblastn` outlier policy come from reruns with it off. Rules that exist but are in no preset: `--weak-fragment-cap-policy`, `--weak-coverage-noise-policy`, `--strong-single-gene-policy`, `--confidence-cap-policy`.
+> The entries below are those of the merged pull requests of the v0.9.0 cycle. The definitive run is described in the next section: it is the frozen commit `7d73be5` with `--preset v0.9.1 --withheld-detail-policy on`, and the 372 genomes that moved under the `tblastn` outlier policy come from reruns with it off. Rules that exist but are in no preset: `--weak-fragment-cap-policy`, `--weak-coverage-noise-policy`, `--strong-single-gene-policy`, `--confidence-cap-policy`.
 
 ### The definitive run (the 372 genomes that moved under the `tblastn` outlier policy are taken from reruns with it OFF; curator's choice, 2026-11-12)
 Frozen commit `7d73be5`, `--preset v0.9.1 --withheld-detail-policy on`, no weak-fragment cap. 23,579 reports (19,343 Ascomycota, 3,263 Basidiomycota, 973 Mucoromycotina), every one stamped with the same commit, database hash and preset. Against v0.8.1:

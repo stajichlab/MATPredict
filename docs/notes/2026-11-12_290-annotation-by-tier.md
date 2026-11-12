@@ -37,6 +37,25 @@ In all three the cap would pick a thin MAT1-2-1 fragment, a gene of the *other* 
 
 111 genes (85 novel, 26 partial): 107 are `core_MAT` genes (of 689 core genes, 16%) and 4 are flanking genes. The commonest are short ORFs that annotation pipelines often miss: MAT1-2-1 (11), MAT1-1-3 (9), MFalpha (8), MTLA2 (7), RPL39 (7), *Pneumocystis* matMi (6), MAT1-1-1 (5), MAT1-1-2 (4), MAT1-2-4 (4). By family: Ascomycota:MAT 47, Basidiomycota:MAT 23, Ascomycota:MTL 13, Ascomycota:PM 7. They have not been examined genome by genome.
 
+### The 13 long, well-modelled genes with no annotation (candidates for annotation gaps)
+
+Of the 111, 13 are at least 150 aa, polished by both tools (`polished_agree`) and have identity 50-100% at about 100% coverage, yet FungiDB has no overlapping gene (11) or only one on the opposite strand (2). These are the cases most likely to be gaps in the FungiDB annotation, not errors in our model. They are candidates for a curator's look, not a ruling:
+
+| Genome | Gene (tier) | aa, identity | FungiDB |
+|---|---|---|---|
+| *F. odoratissimum* race 4 | MAT1-1-1 (medium), MAT1-1-2 (medium) | 373 aa 98.9%; 407 aa 81.7% | none |
+| *A. lentulus* IFM54703 | MAT1-2-4 (high) | 278 aa 95.5% | none |
+| *C. auris* B11245 | MTLA1 (high) | 202 aa 98.8% | none |
+| *D. fabryi* CBS789 | MTLA1, MTLA2 (high) | 203 aa 79.1%; 273 aa 88.4% | none |
+| *C. tropicalis* MYA3404 | MTLA2 (high) | 220 aa 50.0% | none |
+| *P. jirovecii* SE8 | matMc (high) | 251 aa 100% | none |
+| *H. vastatrix* race XXXIII | bE, bW (high) | 556 aa 100%; 530 aa 99.2% | none |
+| *R. delemar* RA99-880 | sexP (high) | 313 aa 93.3% | none |
+| *C. auris* B8441 | MTLA1 (high) | 206 aa 100% | B9J08_001456, 8% overlap, opposite strand |
+| *C. auris* B11220 | MTLalpha1 (high) | 172 aa 99.4% | CJI96_0001190, 0% overlap, opposite strand |
+
+*C. tropicalis* MTLA2 at 50% identity is the weakest of these and the one to read first.
+
 ## What this does and does not show
 
 It supports the v0.9.0 changes at gene level on these 313 genomes: the tier and label rules moved tiers but no gene-level agreement. It says nothing about genomes outside FungiDB, and the disagreements have not been looked at one by one; the list is `results/2026-11-12_290_annotation_check/v090_rows.tsv` (HPCC). The one-by-one look at the 111 disagreements and step 5 stay open on #290.

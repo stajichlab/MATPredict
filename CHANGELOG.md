@@ -6,6 +6,9 @@ release completed.
 
 ## [Unreleased]
 
+### Fixed
+- An EMPTY taxonomy answer is now recorded (#324): when the lineage and phylum lookups return nothing (no exception, for example a cache miss on a compute node without network) the report's `routing_error` says so and the not-searched reason reads "taxonomy lookup failed (...)", where it said only "no taxid, or no phylum could be resolved". Seven *C. fimbriata* assemblies (taxid 5158, a valid taxon) were left unsearched this way in the v0.9.0 run. Routing is unchanged. The panel script's taxonomy warm-up now counts an empty answer as a failure, warns, and stops the job when `TAXONOMY_WARMUP_STRICT=1` (default `0`: warn only). Tests: `tests/detect/test_empty_taxonomy_lookup.py`, `tests/test_clade_panel_warmup.py`.
+
 ## [0.9.0] — TBD — `v0.9.0`
 
 > DRAFT release prep (do not tag until the definitive run is integrated). The entries below are those of the merged pull requests of the v0.9.0 cycle; the definitive run is `--preset v0.9.1 --withheld-detail-policy on` with the `tblastn` outlier policy (`MATPREDICT_TBLASTN_SEG=yes`, `MATPREDICT_TBLASTN_SEG_GENES=SLA2,APN2,MAT1-1-1`) and its counts are filled in once the tables are built. Rules that exist but are in no preset: `--weak-fragment-cap-policy`, `--weak-coverage-noise-policy`, `--strong-single-gene-policy`, `--confidence-cap-policy`.

@@ -163,6 +163,10 @@ export MATPREDICT_CACHE_DIR="${MATPREDICT_CACHE_DIR:-$REPO/.matpredict_cache}"
 # No per-genome report.html in batch runs (the YAML is the result; set MATPREDICT_HTML=1 to keep it).
 # An env var, not --no-html: an older frozen worktree would reject the flag and ignores the variable.
 export MATPREDICT_HTML="${MATPREDICT_HTML:-0}"
+# An EMPTY answer (no lineage and no phylum, no exception) counts as a failure too: on a node without network it is
+# what a cache miss gives, and it left taxid 5158 (7 C. fimbriata assemblies) not_searched in the v0.9.0 run (#324).
+# TAXONOMY_WARMUP_STRICT=1 stops the job when any taxid failed; the default (0) only warns, as before.
+warmup_rc=0
 cut -f2 "$WORK/panel.tsv" | sort -u | "$PY" -c '
 import sys, time
 from MATPredict.db.taxonomy import (default_genetic_code, default_lineage_phylum_name,
@@ -171,13 +175,21 @@ bad = 0
 for line in sys.stdin:
     t = int(line)
     try:
-        default_lineage_taxids(t); default_lineage_phylum_name(t); default_genetic_code(t)
+        lineage = default_lineage_taxids(t); phylum = default_lineage_phylum_name(t); default_genetic_code(t)
+        if not lineage and not phylum:
+            bad += 1
+            print(f"taxonomy warm-up: taxid {t} returned no lineage and no phylum (empty answer)", file=sys.stderr)
     except Exception as exc:
         bad += 1
         print(f"taxonomy warm-up: taxid {t} failed: {exc}", file=sys.stderr)
     time.sleep(0.35)
 print(f"taxonomy warm-up done, {bad} failed", file=sys.stderr)
-'
+sys.exit(3 if bad else 0)
+' || warmup_rc=$?
+if [[ "$warmup_rc" -ne 0 ]]; then
+    echo "WARNING: taxonomy warm-up left taxids without a lineage (see above); those genomes will be not_searched" >&2
+    [[ "${TAXONOMY_WARMUP_STRICT:-0}" == "1" ]] && exit 1
+fi
 
 TOTAL=$(wc -l < "$WORK/panel.tsv")
 if [[ "$TOTAL" -eq 0 ]]; then

@@ -4,7 +4,7 @@ Sketch-store analysis, 2026-11-11. Which isolates carry a Nebuchadnezzar-h1-type
 
 | Provenance |  |
 | :--- | :--- |
-| code | `5ea2d2d` on branch `baf-family` (PR #330) |
+| code | `1f3fcfd` on branch `baf-family` (PR #330) |
 | rescreen job | `31993754` |
 | default run | `31995348` |
 | tuned run | `31995349` |
@@ -224,6 +224,8 @@ Across the 4,736 kept isolates:
 
 Cluster-linked is **not the same as** Nebuchadnezzar-h1: 373 of 405 cluster-linked isolates have Nebuchadnezzar-h1 present and 32 do not, and 2 isolates have Nebuchadnezzar-h1 without any bafA. The two travel together, which fits the hrmA cluster being on that Starship, but this is a co-occurrence in sketches, not a placement in genomes.
 
+**Repeats of the same strain.** The clone groups (ANI 0.9995) collapse repeated strains and aliases, so the isolate counts overstate independent strains. Cluster-linked: 405 isolates fall in 119 clone groups, the largest holds 166 isolates and 341 isolates sit in groups of two or more. Standalone divergent: 212 isolates in 116 clone groups, the largest holds 30 and 132 sit in groups of two or more. Clone-group counts here include any group with at least one member, so they are a little higher than the majority-rule counts in the table above.
+
 **Check in assemblies** (blastn of the bafA haplotypes, hrmA and cgnA; only strains with an assembly in the shared baf folder): the 12 standalone divergent isolates with an assembly all have a bafA copy (12 of 12) and 0 have hrmA or cgnA anywhere in the genome, so the copy is not in the hrmA cluster. Of 40 cluster-linked isolates with an assembly, 38 have the bafA copy, all of those have hrmA/cgnA, and 37 have it within about 1.1 kb of them on one contig. Only 12 of the 212 standalone isolates have an assembly, so the other 200 are inferred from the sketch. The locus of the standalone copies is not mapped yet.
 
 Isolates: the AF293-type target and the all-alleles call agree on 393 present and 4,119 absent; 212 are called only by the all-alleles screen and 12 only by the old target (one hash in common). Against Nebuchadnezzar-h1: 372 isolates have both, 233 have bafA without Nebuchadnezzar-h1, 2 have Nebuchadnezzar-h1 without bafA. None of the 212 newly called isolates has Nebuchadnezzar-h1 present, so these are bafA copies that are not on that Starship. The strong candidate list in section 10 uses the cluster-linked call and is unchanged.
@@ -312,9 +314,9 @@ The cut moves the prevalence by a few points. The scatter ratio hardly changes, 
 | :--- | :--- | :--- |
 | Sketches, QC, clone groups, tree | `/bigdata/stajichlab/jstajich/projects/MATPredict/sketch_store/aspergillus_fumigatus/{sigs,query}` | store build (PR #315), queries job 31975386 |
 | Starship screen (21 targets) | `query/screen_starships_bafA/` | rescreen job `31993754` |
-| Prevalence, matrix, parsimony, co-occurrence, sweep | `/bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-11_afum_starship_dynamics/out_default/` | `starship_dynamics.py` at `5ea2d2d`, job `31995348` |
+| Prevalence, matrix, parsimony, co-occurrence, sweep | `/bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-11_afum_starship_dynamics/out_default/` | `starship_dynamics.py` at `1f3fcfd`, job `31995348` |
 | Tuned cuts | `/bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-11_afum_starship_dynamics/out_tuned/` | `--set Osiris-h3=0.7 Janus-h4=0.7`, job `31995349` |
-| Report data | `/bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-11_afum_starship_dynamics/report_data.json` | `starship_report_data.py` at `5ea2d2d` |
+| Report data | `/bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-11_afum_starship_dynamics/report_data.json` | `starship_report_data.py` at `1f3fcfd` |
 | baf family screen | `query/screen_baf_family/`, `tables/baf_family_summary.json` | `baf_family.py` (targets, summarize), job `31996411` |
 | This file, figures, tables | `report.md`, `figures/`, `tables/` | `starship_report_md.py` |
 

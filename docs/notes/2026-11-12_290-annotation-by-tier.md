@@ -68,6 +68,34 @@ Class D is the largest group of the 111: genes under about 150 aa that are singl
 
 So 38 of 47 sit in loci whose call an annotated core gene already supports; the short gene is a secondary piece. The other 9 genes are in 5 loci, **all `medium`**, where nothing independent supports the call: *B. graminis tritici* THUN-12 (MAT1-1; MAT1-1-1 128 aa 40%, MAT1-1-3 96 aa 25%, MAT1-2-1 45 aa), *C. immunda* (sample `CimmundaCBS83496`) (called MAT1-2, with a MAT1-1-3 piece), *F. odoratissimum* race 4 (MAT1-1, with a MAT1-2-7 piece), *S. ludwigii* UTAD17 (MATa; MATA1 86 aa, MATA2 86 aa) and *M. guilliermondii* ATCC 6260 (MTLA2 84 aa, the only core gene, tools disagree). No `high` locus in class D lacks an annotated core gene. This is a triage of where the evidence is thin, not a ruling on any call; the genes of the other idiomorph inside a call (for example MAT1-1-3 in a MAT1-2 call) are worth a curator's look.
 
+### Proposed action for each of the 111 genes (recommendations, not rulings)
+
+From the class and the locus support above: **61** no action; **17** note as a likely annotation gap (no action on our call); **19** for a curator's look (table below); **14** low priority (9 unpolished, 5 one-tool models). No `high`-tier gene needs a look. Per-gene file with the reason: `novel_partial_proposed_actions_v090.tsv` (HPCC, `results/2026-11-12_290_annotation_check`).
+
+The 19 for a curator's look (10 where the two tools disagree on the model, 9 where the call rests on thin evidence):
+
+| Genome (sample id) | Family, tier | Gene | Length, identity, polish | Why |
+|---|---|---|---|---|
+| `BgraministriticaleTHUN-12` | Ascomycota:MAT, medium | MAT1-1-1 | 128 aa, 40.48%, polished_single | thin evidence |
+| `BgraministriticaleTHUN-12` | Ascomycota:MAT, medium | MAT1-1-3 | 96 aa, 25.0%, not_polish_candidate | thin evidence |
+| `CimmundaCBS83496` | Ascomycota:MAT, medium | MAT1-1-3 | 75 aa, 33.33%, polished_single | thin evidence |
+| `Fodoratissimumrace4` | Ascomycota:MAT, medium | MAT1-1-3 | 196 aa, 88.75%, polished_disagree | tools disagree |
+| `PbrasiliensisPb18` | Ascomycota:MAT, medium | MAT1-1-4 | 1435 aa, 54.65%, polished_disagree | tools disagree |
+| `BgraministriticaleTHUN-12` | Ascomycota:MAT, medium | MAT1-2-1 | 45 aa, 37.778%, unpolished | thin evidence |
+| `CimmundaCBS83496` | Ascomycota:MAT, medium | MAT1-2-1 | 103 aa, 54.37%, polished_disagree | thin evidence |
+| `Fodoratissimumrace4` | Ascomycota:MAT, medium | MAT1-2-7 | 73 aa, 30.38%, not_polish_candidate | thin evidence |
+| `SludwigiiUTAD17` | Ascomycota:MATsc, medium | MATA1 | 86 aa, 43.1%, polished_single | thin evidence |
+| `SludwigiiUTAD17` | Ascomycota:MATsc, medium | MATA2 | 86 aa, 30.233%, unpolished | thin evidence |
+| `Cauris6684` | Ascomycota:MTL, high | MTLA2 | 204 aa, 98.68%, polished_disagree | tools disagree |
+| `CaurisB11245` | Ascomycota:MTL, high | MTLA2 | 204 aa, 100.0%, polished_disagree | tools disagree |
+| `CaurisB8441` | Ascomycota:MTL, high | MTLA2 | 204 aa, 98.68%, polished_disagree | tools disagree |
+| `CpseudohaemuloniiB12108` | Ascomycota:MTL, high | MTLA2 | 206 aa, 52.0%, polished_disagree | tools disagree |
+| `MguilliermondiiATCC6260` | Ascomycota:MTL, medium | MTLA2 | 84 aa, 37.14%, polished_disagree | thin evidence |
+| `KheveanensisCBS569` | Basidiomycota:MAT, high | RPL39 | 187 aa, 90.0%, polished_disagree | tools disagree |
+| `HvastatrixRaceXXXIII` | Basidiomycota:rustHD, high | bE | 568 aa, 63.17%, polished_disagree | tools disagree |
+| `HvastatrixRaceXXXIII` | Basidiomycota:rustHD, high | bW | 383 aa, 69.87%, polished_disagree | tools disagree |
+| `MrestrictaCBS7877` | Basidiomycota:aLocus, high | pra1 | 229 aa, 24.07%, polished_disagree | tools disagree |
+
 ## What this does and does not show
 
 It supports the v0.9.0 changes at gene level on these 313 genomes: the tier and label rules moved tiers but no gene-level agreement. It says nothing about genomes outside FungiDB, and the disagreements have not been looked at one by one; the list is `results/2026-11-12_290_annotation_check/v090_rows.tsv` (HPCC). The one-by-one look at the 111 disagreements and step 5 stay open on #290.

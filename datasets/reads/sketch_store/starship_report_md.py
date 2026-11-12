@@ -384,10 +384,27 @@ def main(argv=None):
                    + [[("bafA, all alleles" if g == "bafA" else g), x["cut"], f"{x['isolates']:,}", pc(x["isolates"] / pop["kept"]), f"{x['clone_groups']} of {x['clone_groups_total']:,}", pc(x["clone_groups"] / x["clone_groups_total"])] for g, x in pg.items()],
                    ["l", "r", "r", "r", "r", "r"]) + "\n")
         ov, nv = pop["old_vs_new_bafA"], pop["bafA_all_vs_neb_h1"]
+        cls = pop.get("classes")
+        if cls:
+            cl, sd, plc = cls["cluster_linked"], cls["standalone_divergent"], pop.get("placement", {})
+            w("**Two classes of bafA.** The AF293-type target sits in the hrmA cluster (next to hrmA and cgnA), so a call by that target is called *cluster-linked*. "
+              "A call made only by the all-alleles screen is called *standalone divergent*:\n")
+            w(md_table(["Class", "Isolates", "Clone groups", "Nebuchadnezzar-h1 present", "Nebuchadnezzar-h1 absent"],
+                       [["cluster-linked (AF293-type target present)", f"{cl['isolates']:,}", f"{cl['clone_groups']} of {cl['clone_groups_total']:,} ({pc(cl['clone_groups'] / cl['clone_groups_total'])})", f"{cl['neb_h1_present']:,}", f"{cl['neb_h1_absent']:,}"],
+                        ["standalone divergent (all-alleles screen only)", f"{sd['isolates']:,}", f"{sd['clone_groups']} of {sd['clone_groups_total']:,} ({pc(sd['clone_groups'] / sd['clone_groups_total'])})", f"{sd['neb_h1_present']:,}", f"{sd['neb_h1_absent']:,}"]],
+                       ["l", "r", "r", "r", "r"]) + "\n")
+            w(f"Cluster-linked is **not the same as** Nebuchadnezzar-h1: {cl['neb_h1_present']:,} of {cl['isolates']:,} cluster-linked isolates have Nebuchadnezzar-h1 present and {cl['neb_h1_absent']:,} do not, "
+              f"and {nv['neb_only']} isolates have Nebuchadnezzar-h1 without any bafA. The two travel together, which fits the hrmA cluster being on that Starship, but this is a co-occurrence in sketches, not a placement in genomes.\n")
+            if plc:
+                s_, c_ = plc["standalone_divergent"], plc["cluster_linked"]
+                w(f"**Check in assemblies** (blastn of the bafA haplotypes, hrmA and cgnA; only strains with an assembly in the shared baf folder): the {s_['genomes']} standalone divergent isolates with an assembly all have a bafA copy "
+                  f"({s_['bafA_hit']} of {s_['genomes']}) and {s_['hrmA_or_cgnA_in_genome']} have hrmA or cgnA anywhere in the genome, so the copy is not in the hrmA cluster. "
+                  f"Of {c_['genomes']} cluster-linked isolates with an assembly, {c_['bafA_hit']} have the bafA copy, all of those have hrmA/cgnA, and {c_['bafA_within_1_1kb_of_hrmA_cgnA']} have it within about 1.1 kb of them on one contig. "
+                  f"Only {s_['genomes']} of the {sd['isolates']} standalone isolates have an assembly, so the other {sd['isolates'] - s_['genomes']} are inferred from the sketch. The locus of the standalone copies is not mapped yet.\n")
         w(f"Isolates: the AF293-type target and the all-alleles call agree on {ov['both']:,} present and {ov['neither']:,} absent; {ov['new_only']:,} are called only by the all-alleles screen and {ov['old_only']:,} only by the old target (one hash in common). "
           f"Against Nebuchadnezzar-h1: {nv['both']:,} isolates have both, {nv['bafA_only']:,} have bafA without Nebuchadnezzar-h1, {nv['neb_only']} have Nebuchadnezzar-h1 without bafA. "
-          f"None of the {pop['newly_called']['isolates']} newly called isolates has Nebuchadnezzar-h1 present, so these look like bafA copies that are not on that Starship. "
-          "That is a pattern in sketches: the copies have not been placed in genomes. The strong candidate list in section 10 is unchanged.\n")
+          f"None of the {pop['newly_called']['isolates']} newly called isolates has Nebuchadnezzar-h1 present, so these are bafA copies that are not on that Starship. "
+          "The strong candidate list in section 10 uses the cluster-linked call and is unchanged.\n")
         w("Source: `tables/baf_family_summary.json` (`baf_family.py summarize`), screen `query/screen_baf_family/` in the store (job `31996411`, `--max-solo 0`), counts from the shared folder above. "
           "The strain-level comparison names local strains and stays in the results folder.\n")
     w("## 9. Which elements travel together\n")

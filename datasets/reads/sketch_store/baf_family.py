@@ -119,6 +119,18 @@ def cmd_summarize(a):
     pop["bafA_all_vs_neb_h1"] = dict(both=c[(True, True)], bafA_only=c[(True, False)], neb_only=c[(False, True)], neither=c[(False, False)])
     extra = [r for r in kept if new(r) and not old(r)]
     pop["newly_called"] = dict(isolates=len(extra), neb_h1_present=sum(neb(r) for r in extra))
+    # two classes: cluster-linked = the AF293-type target (hrmA-cluster allele) is present; standalone divergent = only the all-alleles screen sees bafA
+    classes = {}
+    for name, sel in (("cluster_linked", old), ("standalone_divergent", lambda r: new(r) and not old(r))):
+        rows = [r for r in kept if sel(r)]
+        groups = collections.defaultdict(list)
+        for r in kept:
+            groups[r["clone"] or "solo:" + r["sample_id"]].append(sel(r))
+        classes[name] = dict(isolates=len(rows), clone_groups=sum(1 for x in groups.values() if sum(x) * 2 > len(x)), clone_groups_total=len(groups),
+                             neb_h1_present=sum(neb(r) for r in rows), neb_h1_absent=sum(not neb(r) for r in rows))
+    pop["classes"] = classes
+    if a.placement:
+        pop["placement"] = json.load(open(a.placement))
     pop["bafA_hits_histogram"] = {str(k): n for k, n in sorted(collections.Counter(hit(r, "bafA") for r in kept if hit(r, "bafA") > 0).items())}
     pop["by_source"] = {s: dict(present=sum(new(r) for r in kept if r["source"] == s), total=sum(1 for r in kept if r["source"] == s)) for s in ("public", "local")}
     out["population"] = pop
@@ -131,7 +143,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0]); sub = ap.add_subparsers(dest="cmd", required=True)
     t = sub.add_parser("targets"); t.add_argument("--hits", required=True); t.add_argument("--out", required=True); t.add_argument("--tsv"); t.add_argument("--gap", type=int, default=25)
     s = sub.add_parser("summarize"); s.add_argument("--screen", required=True); s.add_argument("--calls", required=True); s.add_argument("--counts", nargs="+", required=True)
-    s.add_argument("--out", required=True); s.add_argument("--detail")
+    s.add_argument("--out", required=True); s.add_argument("--detail"); s.add_argument("--placement", help="optional counts-only JSON from the assembly check (blastn of bafA, hrmA, cgnA)")
     a = ap.parse_args(argv)
     return cmd_targets(a) if a.cmd == "targets" else cmd_summarize(a)
 

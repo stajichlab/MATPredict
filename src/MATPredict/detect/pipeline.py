@@ -3267,6 +3267,7 @@ def run_pipeline(
     def _any_gene_unpolished(
         cluster_ids: set[int], family_key: FamilyKey,
         exclude: frozenset[str] = frozenset(),
+        weak_coverage_applies: bool = True,
     ) -> bool:
         """True when ANY of this family's own genes, in these exact clusters,
         was localized but neither polishing tool could model it.
@@ -3293,7 +3294,8 @@ def run_pipeline(
             family_key, families_by_key[family_key].flank_carried_min_bitscore,
         )
         # `--weak-coverage-noise-policy on` (#149): a gene whose every hit covers < 30% of its reference is noise too.
-        if weak_coverage_noise_policy == weak_coverage_noise.POLICY_ON:
+        # It acts only where `weak_coverage_noise.applies` says so (a determined idiomorph and best core coverage >= 50%).
+        if weak_coverage_noise_policy == weak_coverage_noise.POLICY_ON and weak_coverage_applies:
             noise = noise | weak_coverage_noise.low_coverage_genes(
                 [h for c in clusters if id(c) in cluster_ids for h in c.hits], family_key)
         return any(
@@ -3489,6 +3491,8 @@ def run_pipeline(
             score, family, member_clusters[0],
             any_gene_unpolished=_any_gene_unpolished(
                 {id(c) for c in member_clusters}, score.family_key, exclude=tier_ignored,
+                weak_coverage_applies=weak_coverage_noise.applies(
+                    called_idiomorph, [e.coverage for e in evidence if e.role == "core_MAT"]),
             ),
             fragmented=fragmented,
             ignore_genes=tier_ignored,

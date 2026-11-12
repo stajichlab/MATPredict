@@ -78,3 +78,33 @@ def test_cli_default_and_passthrough(monkeypatch, tmp_path):
 
 def test_no_preset_sets_the_policy():
     assert all("weak_coverage_noise_policy" not in v for v in detect_cli.PRESETS.values())
+
+
+# --- the two gates (curator's decision of 2026-11-11; #149 review, references tracked in #331) ---
+
+def test_applies_to_a_determined_idiomorph_with_a_well_covered_core_gene():
+    assert wc.applies("MAT1-2", [68.8, 18.0]) is True
+
+
+def test_an_undetermined_idiomorph_switches_the_rule_off_whatever_the_coverage():
+    assert wc.applies("undetermined", [100.0]) is False
+
+
+def test_best_core_coverage_under_the_floor_switches_the_rule_off():
+    assert wc.applies("MAT1-1", [49.9, 20.0]) is False
+    assert wc.applies("MAT1-1", [24.6, 15.4]) is False  # a Pseudohalonectria-type locus
+
+
+def test_exactly_at_the_floor_passes():
+    assert wc.MIN_BEST_CORE_COVERAGE == 50.0
+    assert wc.applies("MATa", [50.0]) is True  # Torulaspora-type boundary: `<` fails, 50.0 passes
+
+
+def test_unknown_or_missing_core_coverage_does_not_qualify():
+    assert wc.applies("MAT1-2", []) is False
+    assert wc.applies("MAT1-2", [None, None]) is False
+    assert wc.applies("MAT1-2", [None, 60.0]) is True
+
+
+def test_the_best_coverage_may_come_from_any_core_gene():
+    assert wc.applies("MAT1-1", [12.0, 51.0, 30.0]) is True

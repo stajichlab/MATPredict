@@ -19,7 +19,7 @@
   <p><a class="cta" href="page/index.html">Run MATPredict in Browser</a><a class="cta secondary" href="results.html">Explore results by taxon</a></p>
 
   <div class="notice"><strong>Experimental.</strong> The browser tool is a spike: same detection logic as the command-line tool, not yet checked on every platform or against the full benchmark.
-  Counts below describe committed campaign runs (code <span id="code">v0.8.1, November 2026</span>). A call is detection, not proof: most clades have no curated reference yet, so an uncalled genome is a reference gap until shown otherwise.</div>
+  Counts below describe committed campaign runs (code <span id="code">v0.9.0, November 2026</span>). A call is detection, not proof: most clades have no curated reference yet, so an uncalled genome is a reference gap until shown otherwise.</div>
 
   <div class="cards" id="cards"></div>
 
@@ -79,6 +79,7 @@
     <tr><td>ZyGoLife Jena (held out)</td><td class="n">64</td><td>61 called</td><td>Scaffold and contig input gave the same call in 63/63.</td></tr>
     <tr><td>ZyGoLife LCG (held out)</td><td class="n">621</td><td>548 called (88%)</td><td>Strains with curator labels: see held-out notes for tiers and disputed labels.</td></tr>
     <tr><td>Classifier typing (Mucoromycota)</td><td class="n">540</td><td>0 wrong</td><td>Full-protein score of 100 bits or more separated MAT genes from paralogs (96/108 vs 9/189).</td></tr>
+    <tr><td>Definitive run against v0.8.1 (v0.9.0, commit <code>7d73be5</code>)</td><td class="n">23,579</td><td>Calls, loci and gene models unchanged except where noted: 1 locus span (GCA_052323795.1, outer span +16.7 kb), 3 <i>Pneumocystis</i> genomes gain <code>matMi</code>, 2 genomes keep both calls at one locus</td><td>Tier and label changes come from the new report rules and are listed per genome: 108 loci become <code>undetermined</code> by the short-fragment vote (#138), 23 <code>high</code> to <code>medium</code> by the weak-flank cap (#129), 202 Basidiomycota <code>high</code> to <code>medium</code> by the single-region cap (#167), 10 scope labels (#170). A 60-genome sample run twice agreed as gene sets.</td></tr>
     <tr><td>Definitive run against v0.8.0 (v0.8.1, commit <code>50bc950</code>)</td><td class="n">23,570</td><td>23,214 identical in calls, confidence and gene models; 356 differ</td><td>Every difference traced by a control run to a v0.8.1 change: the <i>S. pombe</i> silent-pair split (37 genomes), the <i>Hyphopichia</i> <code>MTLA1</code> record (302 genomes: 190 with a changed span, tier or call, 112 with gene models only) and the fallback after withheld hits (17 genomes, each newly called: 7 Ascomycota, 10 Basidiomycota). The nine rust genomes newly searched are not counted. A 58-genome sample run twice gave 0 differences.</td></tr>
     <tr><td><i>A. fumigatus</i> assemblies, <code>detect</code></td><td class="n">297</td><td>288 agree (97.0%)</td><td>Truth = BLAST of idiomorph regions. Reports one idiomorph for the 8 assemblies holding both.</td></tr>
   </table></div>

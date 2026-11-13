@@ -1,0 +1,152 @@
+record_id: 588596_daom-197198_HD_unresolved
+record_version: 1
+taxonomy:
+  taxid: 588596
+  lineage: k__Fungi;p__Glomeromycota;c__Glomeromycetes;o__Glomerales;f__Glomeraceae;g__Rhizophagus;s__Rhizophagus_irregularis
+  lineage_resolved_date: '2026-11-13'
+organism:
+  species: Rhizophagus irregularis
+  strain:
+    name: DAOM-197198
+    known: true
+    culture_collection_ids:
+    - DAOM-197198
+    differs_from_sequenced: false
+mating_type:
+  locus_name: HD
+  idiomorphs:
+  - unresolved
+  system: unknown
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  assembly_accession: GCF_026210795.1
+  core:
+    completeness: complete
+    reference_orientation: PGAM_like(-)->HD2(-)<-|->HD1like(+)->CTL_like(+)
+    definition_note: 'DRAFT candidate, not a curated record. Putative AMF HD locus of Ropars et al. 2016,
+      Nat Microbiol 1:16033 (PMID 27572831): HD1-like and HD2 in opposite orientation, flanked by a P-glycerate
+      mutase gene and a choline transporter gene. The authors state a role in mating has not been shown
+      functionally. Gene models are the BFD funannotate models on RefSeq NC_089440.1 (locus tags FDB574B3_*);
+      they are not NCBI annotations and have no protein accession here. HD1-like has no Pfam homeodomain
+      hit; HD2 has one (Pfam 38.2 GA cutoff). Idiomorph (allele/mating type) is unresolved: DAOM-197198
+      is homokaryotic with one genotype in the paper, and its allele has not been matched to the paper''s
+      six putative mating types. Evidence tiers below are provisional; the curator assigns them. Same
+      arrangement in 27 of 29 BFD Rhizophagus genomes and in 8 other Glomeromycota genomes (docs/notes/2026-11-13_amf-hd-locus.md).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: assembly
+        accession: GCF_026210795.1
+        seq_region: NC_089440.1
+      start: 2088179
+      end: 2094379
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: HD2
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: FDB574B3_015420
+  segment_index: 0
+  start: 2089480
+  end: 2090913
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 2089480
+    end: 2090913
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: HD1
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: FDB574B3_015421
+  segment_index: 0
+  start: 2091097
+  end: 2092023
+  strand: +
+  order_in_locus: 2
+  exons:
+  - start: 2091097
+    end: 2092023
+  codon_start: 1
+  transl_table: 1
+- gene_index: 2
+  name: PGAM_like
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: FDB574B3_015419
+  segment_index: 0
+  start: 2088179
+  end: 2089205
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 2089179
+    end: 2089205
+  - start: 2088872
+    end: 2089113
+  - start: 2088179
+    end: 2088563
+  codon_start: 1
+  transl_table: 1
+- gene_index: 3
+  name: CTL_like
+  protein_accession: null
+  role: flanking_conserved
+  present: true
+  locus_tag: FDB574B3_015422
+  segment_index: 0
+  start: 2092390
+  end: 2094379
+  strand: +
+  order_in_locus: 3
+  exons:
+  - start: 2092390
+    end: 2092627
+  - start: 2092716
+    end: 2093038
+  - start: 2093109
+    end: 2093308
+  - start: 2093390
+    end: 2093835
+  - start: 2093904
+    end: 2094157
+  - start: 2094236
+    end: 2094379
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 2
+    experimental_method: Region found at half coverage in heterokaryon-like isolates and confirmed by
+      PCR on single nuclei (Ropars et al. 2016); not tested for mating function.
+    citations: &id001
+    - pmid: '27572831'
+      doi: 10.1038/nmicrobiol.2016.33
+  boundaries:
+    tier: 3
+    experimental_method: Boundaries are the BFD gene models of the four genes (HD2, HD1-like, one flank
+      each side); not from the paper.
+    citations: *id001
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: Not assigned. Allele identity between R. irregularis isolates is 44% to 85% (paper);
+      this isolate's allele is not matched to a mating type.
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+curation:
+  proposed_by: claude-flank-first-scan
+  proposal_dedupe_key: 27572831|588596|HD|unresolved
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

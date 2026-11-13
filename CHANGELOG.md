@@ -6,6 +6,8 @@ release completed.
 
 ## [Unreleased]
 
+- Site: genomes whose recorded name starts with a phylum name or a qualifier (`Ascomycota sp. Antarctolithica obscura`, `uncultured Alectoria`, `cf. Caloplaca sp. 1`) get a genus where the name carries one (`curated_name`, new `name_status` column); 22 genomes move out of "(unassigned)". The results search matches any rank and the recorded name, counts how many genomes matched through another field, and a list shows the genomes with no usable genus. See `docs/notes/2026-11-12_unassigned-species-names.md`.
+
 ## [0.9.0] — 2026-11-12 — `v0.9.0`
 
 > The entries below are those of the merged pull requests of the v0.9.0 cycle. The definitive run is described in the next section: it is the frozen commit `7d73be5` with `--preset v0.9.1 --withheld-detail-policy on`, and the 372 genomes that moved under the `tblastn` outlier policy come from reruns with it off. Rules that exist but are in no preset: `--weak-fragment-cap-policy`, `--weak-coverage-noise-policy`, `--strong-single-gene-policy`, `--confidence-cap-policy`.

@@ -16,6 +16,7 @@ export async function loadData() {
     o.alleles = Object.fromEntries(Object.entries(r[12]).map(([k, v]) => [S[k], v]));
     o.types = Object.fromEntries(Object.entries(r[13]).map(([k, v]) => [S[k], v]));
     o.label_alleles = Object.fromEntries(Object.entries(r[16] || {}).map(([k, v]) => [S[k], v]));     // the same genomes counted by idiomorph label
+    o.recorded = (r[17] || []).map(k => S[k]);     // recorded species names that were changed or not used for the genus (searchable)
     return o;
   });
   return { rows, summary };

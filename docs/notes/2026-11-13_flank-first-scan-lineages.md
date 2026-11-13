@@ -1,5 +1,5 @@
 # Flank-first MAT scan: architectures in lineages with no defined MAT
-Status: stage 1 done on 496 BFD genomes; stage 2 (flank conservation) running on Rhizophagus only
+Status: stage 1 done on 496 BFD genomes; stage 2 (RBH flank collinearity) run on Rhizophagus only and did not recover the control
 
 ## Question
 Do lineages with no curated MAT locus carry gene architectures like known MAT loci?
@@ -20,6 +20,9 @@ Do lineages with no curated MAT locus carry gene architectures like known MAT lo
 5. Basidiobolomycota: two adjacent Homeodomain genes in 15 of 18 genomes (5.3 expected), all Basidiobolus. All 19 pairs are convergent, not divergent.
 6. Chytridiomycota: isolated divergent adjacent Homeodomain pairs in 10 of 83 genomes (Chytriomyces 9 pairs, Entophlyctis 4); several genomes have two pairs. Other chytrid homeodomain adjacency comes from large same-strand arrays (1,207 pairs in 28 genomes). sexP/sexM+rnhA/glrA within 5 genes in 4 genomes (3 Chytriomyces hyalinus, 1 Boothiomyces), against 2.0 expected.
 7. Zoopagomycota (11 genomes): 3 genomes (Cochlonema, Piptocephalis, Thamnocephalis) have two adjacent Homeodomain genes; 2 of 3 are convergent. Blastocladiomycota (14): nothing above chance.
+
+8. Known flank genes next to the HD pair (stage 1, window 10 genes). In Rhizophagus genomes with an HD hit (28), a choline transporter-like gene is within 10 genes in 26 and a phosphoglycerate mutase gene in 23. Chance expectation is 0.05 and 0.02 genomes. In other AMF with an HD hit (22), choline 11 (0.04 expected) and PGAM 4 (0.01 expected). Genera with the choline neighbour: Ambispora 2/2, Diversispora 2/2, Glomus 2/2 (plus PGAM 2/2), Geosiphon 1/1 (plus PGAM), Oehlia 1/1, Paraglomus 2/2 (PGAM 1), Gigaspora 1/3. None in Acaulospora, Cetraspora, Dentiscutata, Entrophospora, Racocetra, Scutellospora. The chance model is the single-copy approximation 1-(1-21/N)^n; the choline-like control is a gene family (all 100 Mortierellomycota genomes have a hit), so these odds are approximate.
+9. Stage 2 (job 32062611, Rhizophagus, reference DAOM-197198, RBH E<=1e-10, 5-gene window). It did NOT recover the control locus. The 31 HD1+HD2 loci have collinear blocks of 0 to 5 flank genes in 28 of 31 (3 loci reach 10); the null percentile median is 0.21. Across all loci, 42% have a block >= 6. The metric therefore does not separate the control locus and I do not use it to rank candidates. Likely causes (not tested): fragmented assemblies, 31,000 to 52,000 gene models per genome, and one reference for 29 isolates. Flank-first search with known flank genes (item 8) worked; unbiased flank conservation did not.
 
 ## Limits
 - Hits to HD1/HD2 show sequence similarity to the AMF proteins. They do not show a mating function. The authors call the Rhizophagus locus putative; no source I read tests it.

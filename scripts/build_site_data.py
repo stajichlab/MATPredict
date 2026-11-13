@@ -123,18 +123,51 @@ def clean(v):
     return "" if v in ("NA", "None") else v
 
 
+UNASSIGNED = "(unassigned)"
+# Words that start a recorded name without being a genus: a qualifier, or a higher taxon used as a placeholder.
+QUALIFIERS = {"cf.", "aff.", "uncultured", "candidatus", "unidentified", "fungal", "fungus"}
+RANK_SUFFIXES = ("mycota", "mycotina", "mycetes", "mycetidae", "myceta", "ales", "aceae", "ineae", "oideae")
+SP_TOKENS = {"sp.", "sp"}
+EPITHET_RE = re.compile(r"^[a-z][a-z-]+$")
+
+
+def _is_higher_taxon(word):
+    return word in NOT_A_GENUS or word.lower().endswith(RANK_SUFFIXES)
+
+
+def curated_name(recorded):
+    """(genus, species, name_status) for a genome's recorded species name.
+
+    name_status: `ok` (a normal name, unchanged from before), `stripped` (a qualifier such as `uncultured`, `cf.`
+    or `aff.` was dropped and a genus is left), `provisional` (`<higher taxon> sp. <Genus-like> <epithet>`: the
+    submitter's own name, kept because it is the only name there is, and not a validated genus), `unassigned`
+    (nothing usable: a bare placeholder, a rank name, an identifier or an empty name).
+    The rule is written up in docs/notes/2026-11-12_unassigned-species-names.md."""
+    tok = (recorded or "").replace("[", "").replace("]", "").replace("'", "").replace('"', "").split()
+    if not tok:
+        return UNASSIGNED, UNASSIGNED, "unassigned"
+    # <higher taxon> sp. <Genus-like> <epithet>
+    if len(tok) >= 4 and _is_higher_taxon(tok[0]) and tok[1] in SP_TOKENS and GENUS_RE.match(tok[2]) and EPITHET_RE.match(tok[3]):
+        return tok[2], f"{tok[2]} {tok[3]}", "provisional"
+    stripped = False
+    while tok and tok[0].lower() in QUALIFIERS:
+        tok, stripped = tok[1:], True
+    # A rank name counts as "not a genus" only after a qualifier was dropped (`uncultured Hypocreales`) or when it is a
+    # listed placeholder. An unqualified family name such as `Boletaceae sp. X` keeps its old reading (genus = that word);
+    # changing it would move genomes that are findable today, and is left for a curator decision.
+    if not tok or tok[0] in NOT_A_GENUS or (stripped and _is_higher_taxon(tok[0])) or not GENUS_RE.match(tok[0]):
+        return UNASSIGNED, UNASSIGNED, "unassigned"
+    genus = tok[0]
+    species = f"{genus} {tok[1]}" if len(tok) >= 2 else UNASSIGNED
+    return genus, species, "stripped" if stripped else "ok"
+
+
 def genus_of(species):
-    tok = (species or "").replace("[", "").replace("]", "").split()
-    if not tok or tok[0] in NOT_A_GENUS or not GENUS_RE.match(tok[0]):
-        return "(unassigned)"
-    return tok[0]
+    return curated_name(species)[0]
 
 
 def species_of(species):
-    tok = (species or "").replace("[", "").replace("]", "").split()
-    if len(tok) < 2 or genus_of(species) == "(unassigned)":
-        return "(unassigned)"
-    return f"{tok[0]} {tok[1]}"
+    return curated_name(species)[1]
 
 
 class Agg:
@@ -145,10 +178,12 @@ class Agg:
 
     def __init__(self):
         self.rows = defaultdict(lambda: {"n": 0, "called": 0, "undet": 0, "two": 0, "unsupported": 0, "alleles": Counter(), "types": Counter(),
-                                         "high_outside": Counter(), "label_alleles": Counter()})
+                                         "high_outside": Counter(), "label_alleles": Counter(), "recorded": set()})
 
-    def add(self, key, called, alleles, types, unsupported=False, high_outside=(), labels=()):
+    def add(self, key, called, alleles, types, unsupported=False, high_outside=(), labels=(), recorded=""):
         r = self.rows[key]
+        if recorded and curated_name(recorded)[2] != "ok":      # the recorded name stays searchable when it was changed or not used
+            r["recorded"].add(recorded)
         for b in high_outside:
             r["high_outside"][b] += 1
         r["n"] += 1
@@ -203,7 +238,7 @@ def resolve_labels(alleles, counter):
 
 GENOME_COLS = ["dataset", "genome", "species", "species_recorded", "phylum", "class", "order", "family", "genus", "status", "call", "alleles",
                "locus_types", "n_loci", "best_confidence", "loci", "n_label_unsupported", "tier_notes", "high_basis",
-               "loci_baseline_confidence", "locus_notes", "n_defective_loci", "call_label", "alleles_label", "label_status", "label_reasons", "registry_version"]
+               "loci_baseline_confidence", "locus_notes", "n_defective_loci", "call_label", "alleles_label", "label_status", "label_reasons", "registry_version", "name_status"]
 _CONF = {"high": 3, "medium": 2, "low": 1}
 NOTE_COLS = ("tier_note", "label_unsupported_reason", "high_basis", "baseline_confidence", "high_basis_outside_scope",
              "defective_genes")
@@ -232,7 +267,7 @@ def genome_row(ds_id, genome, species, phylum, cls, order, family, status, calle
     row = [ds_id, genome, species_of(species), species, phylum, cls, order, family, genus_of(species), status, call, ",".join(sorted(alleles)),
            ",".join(sorted(set(types))), len(loci), best, ";".join(f"{c}:{a}-{b}|{i or 'undetermined'}|{cf}|{lc}" for c, a, b, i, cf, lc in loci)]
     call_label = "+".join(sorted(labels)) if called and alleles and labels else call
-    tail = [call_label, ",".join(sorted(labels)), label_state[0], label_state[1], LABELS.registry_version()]
+    tail = [call_label, ",".join(sorted(labels)), label_state[0], label_state[1], LABELS.registry_version(), curated_name(species)[2]]
     if notes is None:
         return row + ["", "", "", "", "", ""] + tail
     return row + [sum(bool(n[1]) for n in notes), "|".join(sorted({n[0] for n in notes if n[0]})),
@@ -504,7 +539,7 @@ def main(argv=None):
             notes = locus_notes(ls, noted)
             key = ("BFD", phylum, clean(g["class_"]), clean(g["order"]), clean(g["family"]), genus_of(g["species"]), species_of(g["species"]))
             labels = resolve_labels(alleles, locus_labels(ls, class_value=clean(g["class_"])))
-            agg.add(key, called, alleles, types, any(n[1] for n in notes or ()), [n[4] for n in notes or () if n[4]], labels)
+            agg.add(key, called, alleles, types, any(n[1] for n in notes or ()), [n[4] for n in notes or () if n[4]], labels, g["species"])
             grows[ds_id].append(genome_row(ds_id, g["genome"], g["species"], phylum, clean(g["class_"]), clean(g["order"]), clean(g["family"]),
                                            g["status"], called, alleles, types,
                                            [(l["contig"], l["start"], l["end"], l["idiomorph"], l["confidence"], l["locus_class"]) for l in ls], notes, labels,
@@ -543,7 +578,7 @@ def main(argv=None):
         LOCI_LABELS.label_rows(muc)
         for l in muc:
             LABEL_STATUS[l["idiomorph_label"]][l["label_status"]] += 1
-        agg.add(key, called, alleles, ["sexP/sexM MAT locus"] if called else [], any(n[1] for n in notes or ()), (), labels)
+        agg.add(key, called, alleles, ["sexP/sexM MAT locus"] if called else [], any(n[1] for n in notes or ()), (), labels, name)
         grows[ds_id].append(genome_row(ds_id, genome, name, phylum, "Mucoromycotina", order, family, "called" if called else "uncalled", called, alleles,
                                        ["sexP/sexM MAT locus"] if called else [],
                                        [(l["contig"], l["locus_start"], l["locus_end"], l["idiomorph"], l["confidence"], l["locus_class"]) for l in loc],
@@ -567,9 +602,10 @@ def main(argv=None):
         cohort = key[7] if len(key) > 7 else ""
         rows.append([enc(x) for x in key[:7]] + [enc(cohort), r["n"], r["called"], r["undet"], r["two"],
                      {enc(a): n for a, n in r["alleles"].items() if n}, {enc(a): n for a, n in r["types"].items()}, r["unsupported"],
-                     dict(sorted(r["high_outside"].items())), {enc(a): n for a, n in r["label_alleles"].items() if n}])
+                     dict(sorted(r["high_outside"].items())), {enc(a): n for a, n in r["label_alleles"].items() if n},
+                     [enc(x) for x in sorted(r["recorded"])]])
     taxa = {"fields": ["dataset", "phylum", "class", "order", "family", "genus", "species", "cohort", "n", "called", "undet", "two", "alleles", "types",
-                       "unsupported", "high_basis_outside_scope", "label_alleles"],
+                       "unsupported", "high_basis_outside_scope", "label_alleles", "recorded"],
             "strings": strings, "rows": rows}
     with open(os.path.join(out, "taxa.json"), "w") as fh:
         json.dump(taxa, fh, separators=(",", ":"))

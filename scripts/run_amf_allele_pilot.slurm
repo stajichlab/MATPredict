@@ -27,7 +27,9 @@ for spec in $RUNS; do
   minimap2 -ax $preset -t 8 --secondary=no "$OUT/locus_refs.fa" "$fq" 2> "$OUT/minimap_$run.log" | samtools sort -@ 4 -o "$W/$run.bam" - 
   samtools index "$W/$run.bam"
   python3 "$SRC/scripts/amf_allele_read_count.py" "$W/$run.bam" 0.8 > "$OUT/counts_${label}_${run}.tsv"
+  python3 "$SRC/scripts/amf_allele_read_count.py" "$W/$run.bam" 0.5 > "$OUT/counts50_${label}_${run}.tsv"
+  samtools view -F 0x904 "$W/$run.bam" | awk '{print $1"\t"$3"\t"$4"\t"$6"\t"$12"\t"$13}' | cut -c1-200 > "$OUT/primary_${label}_${run}.tsv"
   echo "$run $label reads=$nreads mapped_primary=$(samtools view -c -F 0x904 "$W/$run.bam")" | tee -a "$OUT/summary.txt"
-  rm -f "$W"/${run}*.fastq "$W/$run.bam"*
+  [[ "${KEEP:-0}" == 1 ]] && cp "$W/$run.bam" "$W/$run.bam.bai" "$OUT/" ; rm -f "$W"/${run}*.fastq "$W/$run.bam"*
 done
 echo done

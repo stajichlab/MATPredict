@@ -1,0 +1,465 @@
+{
+ "note": "Labels are computed on output from scripts/idiomorph_label_registry.json; raw names are unchanged in the tables.",
+ "registry_version": "2026-10-30+5c01ddd5",
+ "status_order": [
+  "family_unconfirmed",
+  "cross_call",
+  "no_reference",
+  "similarity_only",
+  "undetermined",
+  "ok"
+ ],
+ "labels": {
+  "Basid__CryDen_a": {
+   "raw": [
+    "a (Basidiomycota:MAT)"
+   ],
+   "lineage": "Basidiomycota",
+   "reference": "Cryptococcus deneoformans",
+   "status": {
+    "ok": 68
+   }
+  },
+  "Basid__CryDen_alpha": {
+   "raw": [
+    "alpha (Basidiomycota:MAT)"
+   ],
+   "lineage": "Basidiomycota",
+   "reference": "Cryptococcus deneoformans",
+   "status": {
+    "cross_call": 1,
+    "ok": 270
+   }
+  },
+  "Basid__RhoTor_PR-A1": {
+   "raw": [
+    "A1 (Basidiomycota:redPR)"
+   ],
+   "lineage": "Basidiomycota",
+   "reference": "Rhodotorula toruloides",
+   "status": {
+    "ok": 59
+   }
+  },
+  "Basid__RhoTor_PR-A2": {
+   "raw": [
+    "A2 (Basidiomycota:redPR)"
+   ],
+   "lineage": "Basidiomycota",
+   "reference": "Rhodotorula toruloides",
+   "status": {
+    "ok": 191
+   }
+  },
+  "Basid__WalMel_MAT-v1": {
+   "raw": [
+    "v1 (Basidiomycota:wallMAT)"
+   ],
+   "lineage": "Basidiomycota",
+   "reference": "Wallemia mellicola",
+   "status": {
+    "ok": 33
+   }
+  },
+  "Basid__WalMel_MAT-v2": {
+   "raw": [
+    "v2 (Basidiomycota:wallMAT)"
+   ],
+   "lineage": "Basidiomycota",
+   "reference": "Wallemia mellicola",
+   "status": {
+    "ok": 18
+   }
+  },
+  "Mucor__PhyBla_minus": {
+   "raw": [
+    "Minus (Mucoromycota:MAT)"
+   ],
+   "lineage": "Mucoromycotina",
+   "reference": "Phycomyces blakesleeanus",
+   "status": {
+    "ok": 428
+   }
+  },
+  "Mucor__PhyBla_plus": {
+   "raw": [
+    "Plus (Mucoromycota:MAT)"
+   ],
+   "lineage": "Mucoromycotina",
+   "reference": "Phycomyces blakesleeanus",
+   "status": {
+    "ok": 485
+   }
+  },
+  "Peziz__AspFum_MAT1-1": {
+   "raw": [
+    "MAT1-1 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Aspergillus fumigatus",
+   "status": {
+    "ok": 1649
+   }
+  },
+  "Peziz__AspFum_MAT1-2": {
+   "raw": [
+    "MAT1-2 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Aspergillus fumigatus",
+   "status": {
+    "ok": 1636
+   }
+  },
+  "Peziz__BipMay_MAT1-1": {
+   "raw": [
+    "MAT1-1 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Bipolaris maydis",
+   "status": {
+    "ok": 1412
+   }
+  },
+  "Peziz__BipMay_MAT1-2": {
+   "raw": [
+    "MAT1-2 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Bipolaris maydis",
+   "status": {
+    "ok": 1149
+   }
+  },
+  "Peziz__BotCin_MAT1-1": {
+   "raw": [
+    "MAT1-1 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Botrytis cinerea",
+   "status": {
+    "ok": 203
+   }
+  },
+  "Peziz__BotCin_MAT1-2": {
+   "raw": [
+    "MAT1-2 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Botrytis cinerea",
+   "status": {
+    "ok": 173
+   }
+  },
+  "Peziz__NeuCra_MAT1-1": {
+   "raw": [
+    "MAT1-1 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Neurospora crassa",
+   "status": {
+    "ok": 2487
+   }
+  },
+  "Peziz__NeuCra_MAT1-2": {
+   "raw": [
+    "MAT1-2 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Neurospora crassa",
+   "status": {
+    "ok": 2778
+   }
+  },
+  "Peziz__NoRef_MAT1-1": {
+   "raw": [
+    "MAT1-1 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "no curated reference for the class yet (placeholder)",
+   "status": {
+    "no_reference": 31
+   }
+  },
+  "Peziz__NoRef_MAT1-2": {
+   "raw": [
+    "MAT1-2 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "no curated reference for the class yet (placeholder)",
+   "status": {
+    "no_reference": 31
+   }
+  },
+  "Peziz__TubMel_MAT1-1": {
+   "raw": [
+    "MAT1-1 (Ascomycota:MAT)",
+    "MAT1-1 (Ascomycota:MATtub)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Tuber melanosporum",
+   "status": {
+    "ok": 79
+   }
+  },
+  "Peziz__TubMel_MAT1-2": {
+   "raw": [
+    "MAT1-2 (Ascomycota:MAT)",
+    "MAT1-2 (Ascomycota:MATtub)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Tuber melanosporum",
+   "status": {
+    "ok": 62
+   }
+  },
+  "Peziz__XanPar_MAT1-1": {
+   "raw": [
+    "MAT1-1 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Xanthoria parietina",
+   "status": {
+    "ok": 213
+   }
+  },
+  "Peziz__XanPar_MAT1-2": {
+   "raw": [
+    "MAT1-2 (Ascomycota:MAT)"
+   ],
+   "lineage": "Pezizomycotina",
+   "reference": "Xanthoria parietina",
+   "status": {
+    "ok": 216
+   }
+  },
+  "Sacch__BarCal_a": {
+   "raw": [
+    "MATa (Ascomycota:MATbz)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Barnettozyma californica",
+   "status": {
+    "ok": 2
+   }
+  },
+  "Sacch__BarCal_alpha": {
+   "raw": [
+    "MATalpha (Ascomycota:MATbz)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Barnettozyma californica",
+   "status": {
+    "ok": 10
+   }
+  },
+  "Sacch__CanAlb_a": {
+   "raw": [
+    "A (Ascomycota:MTL)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Candida albicans",
+   "status": {
+    "cross_call": 6,
+    "ok": 1444
+   }
+  },
+  "Sacch__CanAlb_alpha": {
+   "raw": [
+    "alpha (Ascomycota:MTL)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Candida albicans",
+   "status": {
+    "cross_call": 7,
+    "ok": 1113
+   }
+  },
+  "Sacch__GeoCan_A": {
+   "raw": [
+    "A (Ascomycota:MATdc)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Geotrichum candidum",
+   "status": {
+    "ok": 20
+   }
+  },
+  "Sacch__GeoCan_B": {
+   "raw": [
+    "B (Ascomycota:MATdc)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Geotrichum candidum",
+   "status": {
+    "ok": 49
+   }
+  },
+  "Sacch__KomPha_a": {
+   "raw": [
+    "MATa (Ascomycota:MATkp)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Komagataella phaffii",
+   "status": {
+    "ok": 183
+   }
+  },
+  "Sacch__KomPha_alpha": {
+   "raw": [
+    "MATalpha (Ascomycota:MATkp)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Komagataella phaffii",
+   "status": {
+    "ok": 17
+   }
+  },
+  "Sacch__OgaPol_a": {
+   "raw": [
+    "MATa (Ascomycota:MATog)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Ogataea polymorpha",
+   "status": {
+    "ok": 90
+   }
+  },
+  "Sacch__OgaPol_alpha": {
+   "raw": [
+    "MATalpha (Ascomycota:MATog)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Ogataea polymorpha",
+   "status": {
+    "ok": 112
+   }
+  },
+  "Sacch__PetFab_a": {
+   "raw": [
+    "MATa (Ascomycota:MATpf)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Petasospora fabianii",
+   "status": {
+    "ok": 6
+   }
+  },
+  "Sacch__PetFab_alpha": {
+   "raw": [
+    "MATalpha (Ascomycota:MATpf)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Petasospora fabianii",
+   "status": {
+    "ok": 3
+   }
+  },
+  "Sacch__PicKud_a": {
+   "raw": [
+    "MATa (Ascomycota:MATpk)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Pichia kudriavzevii",
+   "status": {
+    "ok": 46
+   }
+  },
+  "Sacch__PicKud_alpha": {
+   "raw": [
+    "MATalpha (Ascomycota:MATpk)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Pichia kudriavzevii",
+   "status": {
+    "ok": 42
+   }
+  },
+  "Sacch__SacCer_a": {
+   "raw": [
+    "MATa (Ascomycota:MATsc)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Saccharomyces cerevisiae",
+   "status": {
+    "cross_call": 5,
+    "ok": 1743
+   }
+  },
+  "Sacch__SacCer_alpha": {
+   "raw": [
+    "MATalpha (Ascomycota:MATsc)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Saccharomyces cerevisiae",
+   "status": {
+    "cross_call": 7,
+    "ok": 2598
+   }
+  },
+  "Sacch__SacSch_a": {
+   "raw": [
+    "MATa (Ascomycota:MATss)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Saccharomycopsis schoenii",
+   "status": {
+    "ok": 6
+   }
+  },
+  "Sacch__SacSch_alpha": {
+   "raw": [
+    "MATalpha (Ascomycota:MATss)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Saccharomycopsis schoenii",
+   "status": {
+    "ok": 9
+   }
+  },
+  "Sacch__YarLip_A": {
+   "raw": [
+    "A (Ascomycota:MATyl)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Yarrowia lipolytica",
+   "status": {
+    "ok": 46
+   }
+  },
+  "Sacch__YarLip_B": {
+   "raw": [
+    "B (Ascomycota:MATyl)"
+   ],
+   "lineage": "Saccharomycotina",
+   "reference": "Yarrowia lipolytica",
+   "status": {
+    "ok": 33
+   }
+  },
+  "Taphr__SchPom_M": {
+   "raw": [
+    "M (Ascomycota:PM)",
+    "M (Ascomycota:mat1)",
+    "M (Ascomycota:mat3)"
+   ],
+   "lineage": "Taphrinomycotina",
+   "reference": "Schizosaccharomyces pombe",
+   "status": {
+    "ok": 84
+   }
+  },
+  "Taphr__SchPom_P": {
+   "raw": [
+    "P (Ascomycota:PM)",
+    "P (Ascomycota:mat1)",
+    "P (Ascomycota:mat2)"
+   ],
+   "lineage": "Taphrinomycotina",
+   "reference": "Schizosaccharomyces pombe",
+   "status": {
+    "ok": 66
+   }
+  }
+ }
+}

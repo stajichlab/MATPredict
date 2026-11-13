@@ -10,7 +10,7 @@ Can adjacent-gene (flank) conservation find MAT loci in Mortierellomycotina and 
   - HD2: 41 (7 titled "hd2", 34 "HD2 AMF mating type protein").
   - HD1-like: 39.
   - Flank genes: choline transporter-like 6, phosphoglycerate mutase family 7.
-- I did not read the paper text (not in PMC, publisher page needs login). Gene roles come from the GenBank titles only.
+- The full paper text was read on 2026-11-13 after the control set was built (see 2026-11-13_amf-hd-locus.md).
 
 ## Method
 `hmmsearch --cut_ga` of the 93 proteins against the three models. Second run with E <= 1.

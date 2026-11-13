@@ -74,6 +74,8 @@ def run(cmd, **kw):
 
 def control_class(header):
     h = header.lower()
+    if "|" in header:  # curated Mucoromycota MAT set: >id|gene|class
+        return header.strip().split("|")[-1].split()[0]
     if "hd1" in h:
         return "HD1"
     if "hd2" in h:

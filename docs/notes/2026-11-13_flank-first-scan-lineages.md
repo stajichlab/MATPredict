@@ -14,7 +14,7 @@ Do lineages with no curated MAT locus carry gene architectures like known MAT lo
 
 ## Results
 1. Control (Rhizophagus): HD1+HD2 within 5 genes in 27 of 29 genomes. In 31 of 31 pairs the two genes are divergent (-/+) and 0 genes apart. Chance expectation is 0.0.
-2. Other Glomeromycota (30 genomes, 14 genera): 9 have the same adjacent divergent pair (Ambispora 2/2, Diversispora 2/2, Glomus 2/2, Entrophospora 1/3, Geosiphon 1/1, Oehlia 1/1). In 12 more, HD2 or HD1 is present but not as a pair (Acaulospora and Gigaspora: both genes, on different contigs; Cetraspora, Dentiscutata, Paraglomus, Racocetra, Scutellospora, Entrophospora: HD2 only). Funneliformis (0/4) and one Paraglomus have no hit. Hits are strong (E 1e-30 to 0).
+2. Other Glomeromycota (30 genomes, 14 genera): 9 have the same adjacent divergent pair; 8 after the contamination check in 2026-11-13_amf-hd-locus.md, which removes Oehlia diaphana SD1 (its locus contig is a copy of Rhizophagus sp. MUCL 43196 sequence) (Ambispora 2/2, Diversispora 2/2, Glomus 2/2, Entrophospora 1/3, Geosiphon 1/1, Oehlia 1/1). In 12 more, HD2 or HD1 is present but not as a pair (Acaulospora and Gigaspora: both genes, on different contigs; Cetraspora, Dentiscutata, Paraglomus, Racocetra, Scutellospora, Entrophospora: HD2 only). Funneliformis (0/4) and one Paraglomus have no hit. Hits are strong (E 1e-30 to 0).
 3. Mortierellomycota (100 genomes): no HD1/HD2 hit, no adjacent Homeodomain pair, no HMG+Homeodomain pair, no sexM/sexP+flank locus. Chance expected 3.9, 11.4 and 3.3 genomes respectively.
 4. Kickxellomycota: HMG+Homeodomain adjacent in 71 of 177 genomes (27.1 expected by chance); 63 of the 71 are Coemansia.
 5. Basidiobolomycota: two adjacent Homeodomain genes in 15 of 18 genomes (5.3 expected), all Basidiobolus. All 19 pairs are convergent, not divergent.
@@ -29,4 +29,4 @@ Do lineages with no curated MAT locus carry gene architectures like known MAT lo
 - sexM/sexP diamond hits occur in almost every genome (HMG-box family). They are not specific.
 - The Basidiobolus, Coemansia and Chytriomyces patterns are genus-wide. They could be conserved gene pairs unrelated to mating.
 - No phenotype or mating data were used.
-- Stage 2 (flank conservation against a gene-neighbourhood baseline) has not been read yet.
+- Stage 2 (RBH flank collinearity) did not recover the control locus; see item 9.

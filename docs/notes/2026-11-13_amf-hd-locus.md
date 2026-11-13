@@ -31,7 +31,16 @@ Is the Rhizophagus HD1-like/HD2 locus of Ropars et al. 2016 found in other Glome
 ## Data for genotyping and expression (ENA metadata, queried 2026-11-13; not downloaded)
 - WGS: 148 Rhizophagus runs from 22 isolates (largest DAOM197198 193 Gb Illumina; HR1, C3, 4401 also have Illumina). Most isolates are the assembled isolates themselves, so this is not a population sample. PopSeq (catalog of 10 species) has no AMF species.
 - RNA-Seq: 644 runs, 34 taxa; Rhizophagus irregularis 382 + 122 (DAOM 181602/197198) + 29 (197198w). BFD samples.rnaseq_sra.csv lists no AMF run.
-- Plan, not run: map reads to the locus, with each allele as a reference, to count alleles per isolate (half coverage and allele ratio, as in the paper); quantify the four locus genes from RNA-Seq.
+- Genotyping pilot (jobs 32068957, 32069485; scripts amf_allele_refs.py, amf_allele_read_count.py, run_amf_allele_pilot.slurm). Three public runs were downloaded with prefetch and converted with fasterq-dump; read counts match the ENA read_count exactly (416,000; 630,498; 663,132). Reads were mapped with minimap2 to 10 locus references (HD1+HD2 span +/- 500 bp) cut from the A4, A5, C2, A1, DAOM-197198, DAOM-240409 and B3 assemblies, one primary alignment per read.
+
+| Isolate (run, platform, Gb) | Reads on allele refs (primary alignments) | Reading |
+|---|---|---|
+| A4 (SRR25740179, PacBio, 7.6) | A4 allele 1: 29; A4 allele 2: 27; 2 others | Both alleles present, about 1:1. Matches the paper (heterokaryon-like). |
+| A5 (SRR25740180, PacBio, 8.8) | A1 allele: 24; A5 allele 1: 27; A5 allele 2: 0; 3 others | One allele group only (A1 and A5 allele 1 are 99.9% identical to the reads). The second assembled A5 allele gets no reads. Not the 1:1 pattern. |
+| C2 (SRR15539353, ONT, 1.2) | C2 allele: 3 reads spanning >= 80% | One allele, as in a homokaryon; coverage is too low to say more. |
+
+  A5 caveat: the cause is not known. Possibilities not tested: a different culture or DNA prep from the one assembled, loss of a nucleus type, or a reference problem for A5 allele 2 (A4 allele 2, built the same way, works). Expected spanning reads per allele from coverage are about 17 (A4) and 20 (A5). The pilot is 3 runs; it is not a population survey.
+- Not run: quantification of the four locus genes from RNA-Seq, and a larger genotyping panel (22 isolates have WGS; most have only one assembled isolate each).
 
 ## Limits
 - Pairwise identity uses funannotate gene models; allele protein sequences were not checked against the Ropars GenBank proteins.

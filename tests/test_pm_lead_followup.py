@@ -37,3 +37,13 @@ def test_layout_row_flank_and_domains():
     assert [r[1] for r in rows] == ["g1", "g2", "g3"]
     assert rows[1][5] == "HMG_box"
     assert pm.layout_row([0], GENES["c1"], {}, 5)[0][0] == 0  # clipped at contig start
+
+
+def test_augustus_proteins_blocks(tmp_path):
+    spec2 = importlib.util.spec_from_file_location("augustus_proteins", SCRIPTS / "augustus_proteins.py")
+    ap = importlib.util.module_from_spec(spec2)
+    spec2.loader.exec_module(ap)
+    lines = ["# start gene g1\n", "c1\tAUGUSTUS\tgene\t1\t90\t.\t+\t.\tID=g1\n",
+             "# protein sequence = [MKVL\n", "# AAGG]\n", "# end gene g1\n",
+             "# start gene g2\n", "# protein sequence = [MSS]\n", "# end gene g2\n"]
+    assert list(ap.proteins(lines)) == [("g1", "MKVLAAGG"), ("g2", "MSS")]

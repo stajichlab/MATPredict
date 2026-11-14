@@ -188,7 +188,7 @@ Validation of the strategy: step 2 (structural verification) was applied in 5 li
 ## Genome-level matPi search: the PM-like pair is present in 6 of 17 genomes (added 2026-11-14; corrects statements above)
 The BFD gene models do not include the homeodomain gene of this locus (the record of *T. deformans* says the same). The curated *T. deformans* matPi is a 181 aa partial protein from the old assembly, and its homeodomain region has no gene model in the BFD annotation either. So an annotation-based search misses it. I searched the assemblies directly.
 
-Scripts: `matpi_tblastn.py` (tblastn of the 4 curated matPi proteins against each assembly), `region_pfam_check.py` (six-frame translation of a region and Pfam), `matpi_hmg_adjacency.py` (distance of every HMG-box gene to the homeodomain-like regions, with a permutation null). Jobs: tblastn and region checks run on the HPCC 2026-11-14; tests in `tests/test_region_pfam_check.py` (4 tests). Tables: `matpi_genome_search_hits.tsv`, `matpi_region_pfam.tsv`, `matpi_hmg_adjacency_pairs.tsv`, `matpi_hmg_adjacency_summary.tsv`, `matpi_hmg_adjacency_null.tsv`. 17 genomes searched (4 *T. deformans*, other *Taphrina* 5, *Protomyces* 7, Savitreella, Saitoella; *T. deformans* JCM22205 has no genome file in the library).
+Scripts: `matpi_tblastn.py` (tblastn of the 4 curated matPi proteins against each assembly), `region_pfam_check.py` (six-frame translation of a region and Pfam), `matpi_hmg_adjacency.py` (distance of every HMG-box gene to the homeodomain-like regions, with a permutation null). Jobs: tblastn and region checks run on the HPCC 2026-11-14; tests in `tests/test_region_pfam_check.py` (4 tests). Tables: `matpi_genome_search_hits.tsv`, `matpi_region_pfam.tsv`, `matpi_hmg_adjacency_pairs.tsv`, `matpi_hmg_adjacency_summary.tsv`, `matpi_hmg_adjacency_null.tsv`. 17 genomes gave hits (3 *T. deformans*, other *Taphrina* 5, *Protomyces* 7, *Savitreella*, *Saitoella*); *T. deformans* JCM22205 has no genome file in the library, and *Schizosaccharomyces lindneri* gave no hit.
 
 - Positive control: in all three *T. deformans* genomes with a genome file the curated matPi matches an unannotated region at 100% identity (E 1e-119). In A2 it lies on the same scaffold as the matMc gene, 40,370 bp away (RHGF01000006.1: matPi 51,688 to 52,236, matMc 92,606 to 93,298). In CBS 355.35 and PYCC 5710 the two sit on different contigs.
 - The top-ranked matPi-like region lies on the same contig as an HMG-box gene in:
@@ -199,7 +199,7 @@ Scripts: `matpi_tblastn.py` (tblastn of the 4 curated matPi proteins against eac
 | *P. lactucae-debilis* NRRL YB-4353 | F21A9957_003986 | 45.2%, 2e-18 | 7,164 bp | Homeodomain, 151 aa, E 1e-10 |
 | *P. lactucae-debilis* 12-1054 | F003EF48_006292 | 45.2%, 2e-18 | 7,152 bp | Homeodomain, 151 aa, E 1e-10 |
 | *Taphrina confusa* | F57803F5_005977 | 46.5%, 2e-46 | 14,057 bp | Homeodomain, 168 aa, E 1.1e-8 |
-| *T. communis* | F8DCC00A_005608 | 52.4%, 8e-54 | 18,060 bp | Homeodomain, 184 aa, E 1.5e-9 (checked in the first pass, not as the adjacent pair) |
+| *T. communis* | F8DCC00A_005608 | 52.4%, 8e-54 | 18,060 bp | Homeodomain, 184 aa, E 1.5e-9 |
 | *T. betulina* | FC6B0312_004634 | 43.0%, 2e-26 | 10,297 bp | no Pfam ORF of 40 aa or more in the region: weaker |
 | *T. deformans* A2 (control) | F891DC7E_001655 | 100%, 1e-119 | 40,370 bp | Homeodomain, 189 aa, E 1.5e-9 |
 Negative control, a 549 bp stretch 20 kb from the A2 hit: no Pfam ORF. *Savitreella* has a pair at 39 kb (not within 20 kb).

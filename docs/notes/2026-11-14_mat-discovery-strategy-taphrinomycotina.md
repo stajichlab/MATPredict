@@ -139,15 +139,14 @@ Chance test (`scripts/adjacent_pair_null.py`, 500 random placements per genome; 
 Open: a curator check of the matPi reference of the *T. deformans* record; any test of the *Paramicrosporidium* pair needs a second genome of that clade.
 
 ## Genomes that were not in any scan, and what was done (added 2026-11-14)
-The first survey left 65 genomes (target phyla only) outside the 496 + 141 scanned genomes. A name-matching fix and a look at each folder (table `unscanned_genomes_status.tsv`) gave:
+The first survey left 65 genomes (target phyla only) outside the 496 + 141 scanned genomes. A name-matching fix and a look at each folder (table `unscanned_genomes_status.tsv`) gave (65 genomes: 3 annotated + 48 skipped + 10 without folder + 4 without proteome; 58 stay unscanned):
 
 | status | genomes | action |
 |---|---|---|
 | annotated, scannable | 3 | stage 1 run (job 32091100): *Homolaphlyctis polyrhiza*, *Vavraia culicis*, *Rhizophagus irregularis* DAOM_181602. Only the Rhizophagus genome has an HD1+HD2 locus: the known AMF locus, so it works as a positive control |
-| BFD annotation skipped (`skipped_too_small`) | 45 | 4 assemblies of 11 to 24 Mb in 44 to 983 contigs got Augustus gene prediction and stage 1 (below). The other 41 are fragments of hundreds to thousands of contigs (13 Kickxellomycota at about 8 Mb in 1,600 to 2,000 contigs; Microsporidia 0.7 to 7.5 Mb in 278 to 2,245 contigs; Sanchytriomycota 4.2 and 6.3 Mb in 549 and 897 contigs) and were not scanned. A flank-first scan needs several genes per contig |
-| no annotation folder | 9 (Chytridiomycota 4, Entomophthoromycota 2, Glomeromycota 2, Microsporidia 1, one unclassified) | not scanned: no gene models. Includes a *Batrachochytrium dendrobatidis* genome, *Entomophthora muscae*, *Massospora cicadina*, *Gigaspora margarita*, *Mitosporidium daphniae* |
+| BFD annotation skipped (`skipped_too_small`) | 48 | 4 assemblies of 11 to 24 Mb in 44 to 983 contigs got Augustus gene prediction and stage 1 (below). The other 44 are fragments of hundreds to thousands of contigs (13 Kickxellomycota at about 8 Mb in 1,600 to 2,000 contigs; Microsporidia 0.7 to 7.5 Mb in 278 to 2,245 contigs; Sanchytriomycota 4.2 and 6.3 Mb in 549 and 897 contigs) and were not scanned. A flank-first scan needs several genes per contig |
+| no annotation folder | 10 (Chytridiomycota 4, Entomophthoromycota 2, Glomeromycota 2, Microsporidia 1, one unclassified) | not scanned: no gene models. Includes a *Batrachochytrium dendrobatidis* genome, *Entomophthora muscae*, *Massospora cicadina*, *Gigaspora margarita*, *Mitosporidium daphniae* |
 | folder without proteome | 4 (Entomophthoromycota 1, Microsporidia 3) | not scanned |
-| annotated, other | 4 | included in the 3 above or the 141-genome scan |
 
 Augustus gene prediction (`scripts/augustus_gene_predict.slurm`, `scripts/augustus_proteins.py`, model `rhizopus_oryzae`, not trained on these lineages; jobs 32092338, stage 1 job 32092954; table `augustus_genomes_candidates.tsv`):
 | genome | contigs | genes predicted | HMG/Homeodomain candidates | result |
@@ -156,6 +155,6 @@ Augustus gene prediction (`scripts/augustus_gene_predict.slurm`, `scripts/august
 | *A. protococcarum* X5 | 155 | 9,397 | 5 | same |
 | *Rozella allomycis* CSF55 | 495 | 3,527 | 9 | same |
 | *Synchytrium endobioticum* 18_T1 | not recorded | 821 | 2 | gene set too small to test |
-The summary count for the four genomes: HD1+HD2 0, HMG+flank 0, 2xHomeo 0, HMG+Homeo 0, sexM/sexP control hits in 2 genomes. The candidate counts (2 to 9) are lower than in BFD-annotated genomes of related lineages (for example 19 to 47 in other chytrid and aphelid genomes), which is what a mismatched Augustus model gives: the numbers show that these predicted gene sets miss domain genes, so a negative here is weak evidence. The *Synchytrium* set (821 genes) is too small to say anything. A proper test needs BFD-style annotation of these assemblies (funannotate) or RNA-based gene models.
+The summary count for the four genomes: HD1+HD2 0, HMG+flank 0, 2xHomeo 0, HMG+Homeo 0, sexM/sexP control hits in 2 genomes. The total candidate counts in stage 1 (domain hits plus control hits; 11, 17, 15 and 2) are lower than in BFD-annotated genomes of related lineages (13 to 71: *Olpidium bornovanus* 13, *Aphelidium insulamus* 19, *Gonapodya* 31 and 47, *Calcarisporiella thermophila* 71). That is what a mismatched Augustus model would give, but I did not test it. It suggests that these predicted gene sets miss domain genes, so a negative here is weak evidence. The *Synchytrium* set (821 genes) is too small to say anything. A proper test needs BFD-style annotation of these assemblies (funannotate) or RNA-based gene models.
 
-Coverage conclusion: of the genomes in the target phyla that I could map, every one with gene models has been through at least one stage-1 scan, apart from those listed as not scanned above (about 58). The lineage conclusions stand only for those. In particular, for Sanchytriomycota, Kickxellomycota fragments, Microsporidia fragments and the Entomophthoromycota without annotation, nothing was tested.
+Coverage conclusion: of the genomes in the target phyla that I could map, every one with gene models has been through at least one stage-1 scan, apart from those listed as not scanned above (58). The lineage conclusions stand only for those. In particular, for Sanchytriomycota, Kickxellomycota fragments, Microsporidia fragments and the Entomophthoromycota without annotation, nothing was tested.

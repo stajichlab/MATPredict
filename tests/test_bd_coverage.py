@@ -98,3 +98,31 @@ def test_summarise_run_het_and_depth(tmp_path):
     assert row["median_depth"] == 45.0
     assert len(wrows) == 40
     assert seqs[0][3] == 1.0  # one sequence: its median is the genome median
+
+
+im = _load("bd_idiomorph_scan")
+
+
+def test_idiomorph_classify():
+    assert [im.classify(x) for x in (0.0, 0.1, 0.5, 1.0, 1.3, 0.7)] == [im.LOW, im.LOW, im.HALF, im.FULL, im.OTHER, im.OTHER]
+
+
+def test_idiomorph_candidate_flags_and_merge():
+    F, H, L = im.FULL, im.HALF, im.LOW
+    # 4 isolates, 5 windows: windows 1-2 have 2 FULL and 2 variant isolates
+    cls = [[F, F, F, F, F], [F, F, F, F, F], [F, H, H, F, F], [F, L, H, F, F]]
+    flags = im.candidate_flags(cls, min_full=2, min_var=2)
+    assert flags == [False, True, True, False, False]
+    assert im.merge_regions(flags, [0, 10000, 20000, 30000, 40000], 10000, 2) == [(10000, 30000)]
+    assert im.merge_regions(flags, [0, 10000, 20000, 30000, 40000], 10000, 3) == []
+
+
+def test_idiomorph_merge_breaks_on_gap():
+    flags = [True, True, True]
+    assert im.merge_regions(flags, [0, 10000, 30000], 10000, 2) == [(0, 20000)]
+
+
+def test_idiomorph_covered_fraction():
+    iv = {"S": [[0, 5000], [8000, 20000]]}
+    assert im.covered(iv, "S", 0, 10000) == 0.7
+    assert im.covered(iv, "X", 0, 10000) == 0.0

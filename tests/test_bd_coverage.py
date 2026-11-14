@@ -158,3 +158,19 @@ def test_hetrich_window_classes(tmp_path):
         fo.write("R1\tS2\t0\t30\t20\t0.6\t0.5\tHET\n")
     out = hr.window_classes(str(p), "R1", {"S1": 900000, "S2": 100}, 500000)
     assert out == {"S1": {"HET": 2, "CLFT": 1}}
+
+
+pca = _load("bd_snp_pca")
+
+
+def test_pca_thinned_sites_filters(tmp_path):
+    p = tmp_path / "s.tsv.gz"
+    with gzip.open(p, "wt") as fo:
+        fo.write("S1\t100\tA\tG\t50\t30\t10,20\n")   # kept: pos % 10 == 0, DP 30 in range, alt fraction 20/30
+        fo.write("S1\t101\tA\tG\t50\t30\t10,20\n")   # dropped by thinning
+        fo.write("S2\t100\tA\tG\t50\t30\t10,20\n")   # dropped: sequence not in the big set
+        fo.write("S1\t110\tA\tG,T\t50\t30\t10,10,10\n")  # dropped: multiallelic
+        fo.write("S1\t120\tA\tG\t50\t5\t2,3\n")      # dropped: DP below 10
+        fo.write("S1\t130\tA\tG\t50\t100\t50,50\n")  # dropped: DP above 2x the median
+    out = pca.thinned_sites(str(p), 15, 60, 10, {"S1"})
+    assert list(out) == [("S1", 100)] and abs(out[("S1", 100)] - 2 / 3) < 1e-9

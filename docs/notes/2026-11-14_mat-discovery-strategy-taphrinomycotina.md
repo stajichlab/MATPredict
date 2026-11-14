@@ -25,15 +25,15 @@ Allomyces, then other lineages not yet searched. Do not repeat taxa already foun
 5. **Record unsearched lineages before scanning**: compare the BFD phylum/class list with the lists already scanned, scan only the gaps.
 
 ## Taphrinomycotina probe
-33 genomes searched (one of 34 was suppressed): Taphrina 13, Schizosaccharomyces 9 (not S. pombe, which has curated records),
+33 genomes searched (one of 34 was suppressed): Taphrina 13, Schizosaccharomyces 8 searched, 9 listed (not S. pombe, which has curated records),
 Protomyces 8, Saitoella 2, Neolecta 1, Savitreella 1. Pneumocystis is not in `samples.csv` by class and was not run.
 
 | result | genomes |
 |---|---|
-| `mat1` family (Schizosaccharomyces curated), mat1-Mc/Pc/Pi found | 8 of 9 Schizosaccharomyces; none in *S. lindneri* |
+| `mat1` family (Schizosaccharomyces curated), mat1-Mc/Pc/Pi found | 7 of the 8 Schizosaccharomyces genomes searched; none in *S. lindneri* |
 | `PM` family, matMc + matPi (curated from *Taphrina deformans*), idiomorph M, gene only | 5 Protomyces genomes, *Taphrina confusa* |
 | `MAT` family (Pezizomycotina references) | 16 calls across Taphrina, Protomyces, Saitoella, Neolecta |
-| no call at all | 14 genomes, including *Taphrina betulina*, *T. communis*, *T.* sp. SM11, *T. wiesneri* (one genome), *Protomyces arabidopsidicola*, *P. gravidus*, *P. pachydermus*, *Saitoella complicata*, *Savitreella*, *S. lindneri* |
+| no call at all | 10 genomes: *Taphrina betulina*, *T. communis*, *T.* sp. SM11, *T. wiesneri* (one genome), *Protomyces arabidopsidicola*, *P. gravidus*, *P. pachydermus*, *Saitoella complicata*, *Savitreella*, *S. lindneri* |
 
 Strength of the evidence (identity / coverage to the reference, from `detection_report.yaml`):
 - `PM` calls: matMc 44 to 69% identity at 74% coverage; matPi 42 to 59% at 33 to 89% coverage. Strongest: *Taphrina confusa*
@@ -43,9 +43,9 @@ Strength of the evidence (identity / coverage to the reference, from `detection_
 - `mat1` calls agree with the curated *S. pombe* family; they are not an independent check.
 
 Not verified: that the `PM` hits contain the HMG domain, that the two genes are adjacent in the same layout as *T. deformans*,
-and that the 14 empty genomes lack a locus (the detector recall for distant lineages is limited: see the holdout notes).
+and that the 10 empty genomes lack a locus (the detector recall for distant lineages is limited: see the holdout notes).
 
 ## Next
-- Pfam and gene-order check of the `PM` leads (Protomyces x5, *T. confusa*), then a second look at the 14 empty genomes with the
+- Pfam and gene-order check of the `PM` leads (Protomyces x5, *T. confusa*), then a second look at the 10 empty genomes with the
   flank-first scan using matMc/matPi as controls.
 - Draft candidate records only after a curator reads the structural check.

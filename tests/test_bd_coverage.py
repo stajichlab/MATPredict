@@ -126,3 +126,20 @@ def test_idiomorph_covered_fraction():
     iv = {"S": [[0, 5000], [8000, 20000]]}
     assert im.covered(iv, "S", 0, 10000) == 0.7
     assert im.covered(iv, "X", 0, 10000) == 0.0
+
+
+an = _load("bd_aneuploidy")
+an_af = _load("bd_aneuploidy_af")
+
+
+def test_aneuploidy_normalise_and_flag():
+    med, norm = an.normalise({"A": {"r1": 1.0, "r2": 1.0, "r3": 1.5}})
+    assert med["A"] == 1.0 and norm[("A", "r3")] == 1.5
+    assert an.flag(1.5, 0.25) and not an.flag(1.1, 0.25) and an.flag(0.5, 0.25)
+
+
+def test_aneuploidy_af_fold_and_shares():
+    assert abs(an_af.fold(0.7) - 0.3) < 1e-9 and an_af.fold(0.2) == 0.2
+    n, third, half = an_af.shares([0.5, 0.48, 0.33, 0.35, 0.05, 0.4])
+    assert n == 5  # 0.05 is not a het site
+    assert abs(third - 3 / 5) < 1e-9 and abs(half - 2 / 5) < 1e-9

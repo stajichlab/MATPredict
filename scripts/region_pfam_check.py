@@ -9,7 +9,8 @@ Input  --regions TSV: name, genome fasta, contig, start, end (1-based, inclusive
 Method: the region is widened by --pad bp each side; all six frames are translated; stop-free stretches of at least
         --min-aa residues are kept as ORFs (a spliced gene can be split over several ORFs; no intron model is used);
         hmmsearch --cut_ga on the ORFs.
-Output --out: region_pfam.tsv (name, region, orf_frame, orf_start, orf_end, aa_len, domain, evalue)
+Output --out: region_pfam.tsv (name, region, orf_frame, orf_start, orf_end, aa_len, domain, evalue); orf_start/orf_end are
+        1-based and inclusive on the forward strand of the contig
 """
 import argparse
 import os
@@ -88,7 +89,7 @@ def main():
         with open(faa, "w") as fh:
             for i, (fr, o0, o1, prot) in enumerate(orfs(seq, a.min_aa)):
                 fh.write(f">o{i}\n{prot}\n")
-                meta[f"o{i}"] = (fr, s + o0, s + o1, len(prot))
+                meta[f"o{i}"] = (fr, s + o0, s + o1 - 1, len(prot))  # 1-based, inclusive
         tbl = os.path.join(a.tmp, "orfs.tbl")
         subprocess.run(["hmmsearch", "--cut_ga", "--domtblout", tbl, "-o", "/dev/null", a.hmm, faa], check=True)
         hits = {}

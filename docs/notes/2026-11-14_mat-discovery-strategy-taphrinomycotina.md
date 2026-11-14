@@ -31,7 +31,7 @@ Protomyces 8, Saitoella 2, Neolecta 1, Savitreella 1. Pneumocystis is not in `sa
 | result | genomes |
 |---|---|
 | `mat1` family (Schizosaccharomyces curated), mat1-Mc/Pc/Pi found | 7 of the 8 Schizosaccharomyces genomes searched; none in *S. lindneri* |
-| `PM` family, matMc + matPi (curated from *Taphrina deformans*), idiomorph M, gene only | 5 Protomyces genomes, *Taphrina confusa* |
+| `PM` family, matMc + matPi (curated from *Taphrina deformans*), idiomorph M, gene only | 4 Protomyces genomes (inouyei, macrosporus, two lactucae-debilis), *Taphrina confusa* |
 | `MAT` family (Pezizomycotina references) | 16 calls across Taphrina, Protomyces, Saitoella, Neolecta |
 | no call at all | 10 genomes: *Taphrina betulina*, *T. communis*, *T.* sp. SM11, *T. wiesneri* (one genome), *Protomyces arabidopsidicola*, *P. gravidus*, *P. pachydermus*, *Saitoella complicata*, *Savitreella*, *S. lindneri* |
 
@@ -46,7 +46,7 @@ Not verified: that the `PM` hits contain the HMG domain, that the two genes are 
 and that the 10 empty genomes lack a locus (the detector recall for distant lineages is limited: see the holdout notes).
 
 ## Next
-- Pfam and gene-order check of the `PM` leads (Protomyces x5, *T. confusa*), then a second look at the 10 empty genomes with the
+- (Done, see the follow-up section) Pfam and gene-order check of the `PM` leads (Protomyces x4, *T. confusa*), then a second look at the 10 empty genomes with the
   flank-first scan using matMc/matPi as controls.
 - Draft candidate records only after a curator reads the structural check.
 
@@ -77,3 +77,29 @@ HMG/Homeodomain gene, or missing.
   With a 0.37 background rate these are expected by chance; none is a call. F5BE82F7_000331 (*A. macrogynus*, HMG_box with a weak sexP hit, E 9.3e-8) was not
   singled out by the test.
 - Not tested: gene order beyond 25 genes, divergent alleles that fall below diamond E 1e-5, and assembly gaps. No new Allomyces candidate. Allomyces results are negative.
+
+## Structural follow-up of the PM leads and rescan of the 10 empty genomes (added 2026-11-14)
+Correction: the `PM` calls are in 4 Protomyces genomes plus *T. confusa* (5 genomes), not 5 Protomyces genomes plus *T. confusa* as written above before this edit.
+
+Script `scripts/pm_lead_followup.py` (tests in `tests/test_pm_lead_followup.py`); job 32091035; tables in `2026-11-14_mat-discovery-tables/`
+(`pm_lead_summary.tsv`, `pm_lead_genes.tsv`, `empty_scan_genes.tsv`, `empty_scan_pairs.tsv`). Pfam is `hmg_homeo.hmm` (HMG_box, HMG_box_2, Homeodomain, GA cutoff).
+
+PM leads (gene under each detector hit, tested with Pfam):
+| genome | matMc gene | HMG-box | matPi gene | homeodomain |
+|---|---|---|---|---|
+| *Protomyces inouyei* | F7C0A940_005637 | yes | no gene under the hit | n/a |
+| *P. lactucae-debilis* NRRL YB-4353 | F21A9957_003986 | yes | no gene under the hit | n/a |
+| *P. lactucae-debilis* 12-1054 | F003EF48_006292 | yes | no gene under the hit | n/a |
+| *P. macrosporus* | no gene under the hit | n/a | FCFD2032_003005 | no |
+| *Taphrina confusa* | F57803F5_005977 | yes | no gene under the hit | n/a |
+- In no genome do a matMc gene and a matPi gene sit next to each other. The two-gene `PM` structure is not confirmed anywhere. The matMc genes are HMG-box genes; the matPi hit has no Pfam homeodomain in *P. macrosporus* and no predicted gene in the other four.
+- The Protomyces hits are not specific. The matMc hits are 44% identical, and the ten genomes with no call also have HMG genes that match the curated mat1-Mc at 46 to 49% (for example *P. gravidus* 46.1%, *P. pachydermus* 48.6%). The Protomyces `PM` calls are indistinguishable from background HMG genes in the same genomes.
+- *T. confusa* is different: its matMc gene is 69.2% identical to the curated *T. deformans* matMc.
+
+Rescan of the 10 genomes with no call (Pfam plus diamond, E 1e-3, against the 14 curated PM and mat1 proteins):
+- Each genome has 5 to 7 HMG-box genes and 2 to 7 homeodomain genes (domain genes per genome 7 to 14). No genome has an HMG and a homeodomain gene, or two domain genes, within 5 genes of each other (`scan_pairs` is empty).
+- *Taphrina wiesneri* CBS 275.28 has a strong matMc-like gene (72.5% identity, E 7.6e-110) that the detector did not report as a locus, because no second gene was found next to it. No other genome has a hit above 50% identity to matMc.
+- Best matPi hits (31 to 55% identity) are generic homeodomain genes that every genome has; they carry no locus information.
+
+Conclusion, with limits: no Taphrinomycotina genome tested shows a two-gene PM locus. A matMc-like gene (about 70% identity to *T. deformans*) is present in *T. confusa* and *T. wiesneri* CBS 275.28 with no partner nearby; the 3 other *Taphrina* genomes with no call have no such gene. I did not look for a matPi that sits far from matMc (the curated record places matMc and matPi on separate contigs of the old assembly), and the layout
+test cannot see a locus split over contigs. The probe finds no new candidate to curate; the only lead worth keeping is the matMc-like gene in the two *Taphrina* genomes.

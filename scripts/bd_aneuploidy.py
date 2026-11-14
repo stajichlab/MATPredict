@@ -9,6 +9,7 @@ Method : sequences of at least --min-len bp. For each class with at least --min-
          chromosome). Normalised ratio = ratio / class median. An isolate-sequence is flagged when the normalised ratio is outside
          1 +/- --delta. Only isolates with median depth >= --min-depth are flagged (low depth is noisy). Expected values for one extra
          or one missing copy in a diploid are 1.5 and 0.5; values near 1.33/0.67 fit a 3n or 1n state of a 4n/2n genome.
+With --fallback-class the isolates of small classes are compared with the median of that class (labelled with a star).
 Output : aneuploidy_flags.tsv (run, isolate, class, seq, length, ratio, class_median, normalised, het_per_mb, median_depth) and
          aneuploidy_by_sequence.tsv (seq, length, per class median ratio and number of flagged isolates).
 Limit  : depth ratio is relative to the genome median, so a change of one chromosome shifts the others slightly; a whole-genome ploidy
@@ -47,6 +48,7 @@ def main():
     ap.add_argument("--min-class", type=int, default=10)
     ap.add_argument("--min-depth", type=float, default=20.0)
     ap.add_argument("--max-class-median-dev", type=float, default=0.5)
+    ap.add_argument("--fallback-class", help="class whose median is the reference level for isolates of classes with fewer than --min-class isolates (for example JEL-type for the two HET-rich isolates); such flags are labelled with the class name plus '*'")
     a = ap.parse_args()
     cls = {r["run"]: r for r in csv.DictReader(open(a.classes), delimiter="\t")}
     depth = {r["run"]: float(r["median_depth"]) for r in csv.DictReader(open(a.summary), delimiter="\t")}
@@ -63,6 +65,18 @@ def main():
                 per[cls[r["run"]]["class"]][r["run"]] = float(r["depth_ratio"])
                 info[r["run"]] = (r["length"], r["het_per_mb"])
         med, norm = normalise(per)
+        if a.fallback_class and a.fallback_class in med:
+            small = collections.defaultdict(dict)
+            for r in rows:
+                c = cls[r["run"]]["class"]
+                if r["seq"] == s and c not in usable:
+                    small[c + "*"][r["run"]] = float(r["depth_ratio"])
+                    info[r["run"]] = (r["length"], r["het_per_mb"])
+            for c, d in small.items():
+                med[c] = med[a.fallback_class]
+                for run, v in d.items():
+                    norm[(c, run)] = v / med[a.fallback_class]
+                    per[c] = d
         nflag = collections.Counter()
         for (c, run), v in norm.items():
             if abs(med[c] - 1.0) > a.max_class_median_dev:

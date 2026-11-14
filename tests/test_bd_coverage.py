@@ -143,3 +143,18 @@ def test_aneuploidy_af_fold_and_shares():
     n, third, half = an_af.shares([0.5, 0.48, 0.33, 0.35, 0.05, 0.4])
     assert n == 5  # 0.05 is not a het site
     assert abs(third - 3 / 5) < 1e-9 and abs(half - 2 / 5) < 1e-9
+
+
+hr = _load("bd_hetrich_check")
+
+
+def test_hetrich_window_classes(tmp_path):
+    p = tmp_path / "w.tsv.gz"
+    with gzip.open(p, "wt") as fo:
+        fo.write("run\tseq\tstart\tusable\tcalled\trecovery\thet_share\tclass\n")
+        for i, c in enumerate(["HET", "HET", "CLFT"]):
+            fo.write(f"R1\tS1\t{i * 50000}\t30\t20\t0.6\t0.5\t{c}\n")
+        fo.write("R2\tS1\t0\t30\t20\t0.6\t0.5\tJELHOM\n")
+        fo.write("R1\tS2\t0\t30\t20\t0.6\t0.5\tHET\n")
+    out = hr.window_classes(str(p), "R1", {"S1": 900000, "S2": 100}, 500000)
+    assert out == {"S1": {"HET": 2, "CLFT": 1}}

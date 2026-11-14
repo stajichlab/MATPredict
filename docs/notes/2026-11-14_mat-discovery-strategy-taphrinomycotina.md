@@ -103,3 +103,37 @@ Rescan of the 10 genomes with no call (Pfam plus diamond, E 1e-3, against the 14
 
 Conclusion, with limits: no Taphrinomycotina genome tested shows a two-gene PM locus. A matMc-like gene (about 70% identity to *T. deformans*) is present in *T. confusa* and *T. wiesneri* CBS 275.28 with no partner nearby; the 3 other *Taphrina* genomes with no call have no such gene. I did not look for a matPi that sits far from matMc (the curated record places matMc and matPi on separate contigs of the old assembly), and the layout
 test cannot see a locus split over contigs. The probe finds no new candidate to curate; the only lead worth keeping is the matMc-like gene in the two *Taphrina* genomes.
+
+## matPi search and positive control (added 2026-11-14)
+Scan of the 5 PM-lead genomes, the 10 no-call genomes and the 4 *T. deformans* genomes for homeodomain genes similar to the curated matPi (job 32091046, 32091068; tables `pm_genomes_scan_genes.tsv`, `taphrina_deformans_scan_genes.tsv`, `empty_scan_genes.tsv`).
+- Positive control: in all 4 *T. deformans* genomes the curated matMc matches an HMG-box gene at 100% identity. The curated matPi matches no gene better than 49.2%, a generic homeodomain gene on a different contig from the matMc gene. The curated *T. deformans* matPi has no exact match in any *T. deformans* genome. The record already says matPi is unresolved; this is a second reason to review it. I did not trace where the curated matPi sequence comes from.
+- Every *Taphrina* genome has one homeodomain gene at 47.6 to 50.0% identity to the curated matPi, including the 3 genomes with no matMc-like gene. *T. confusa* (50.0%) and *T. wiesneri* CBS 275.28 (50.0%) have it on a different contig from the matMc-like gene, as in *T. deformans*. Identity cannot tell a matPi ortholog from the other homeodomain genes (the top hit stays within 2 points of the *T. deformans* value), so I cannot say whether these genes are matPi. No homeodomain gene is closer than 55.2% to the curated matPi in any genome tested (*Protomyces arabidopsidicola* 55.2%).
+- Protomyces genomes with a PM call have no homeodomain gene above the scan threshold for matPi (E 1e-3), apart from the *P. arabidopsidicola* hit above.
+
+## Follow-up of the leads in the other lineages (added 2026-11-14)
+Chance test (`scripts/adjacent_pair_null.py`, 500 random placements per genome; `gap_adjacent_pair_null.tsv`). With 6 lineages and 3 pair types, 18 tests were run: one p of 0.05 or below is expected by chance.
+
+| lineage | pair type | observed genomes | expected mean (max) | p |
+|---|---|---|---|---|
+| Microsporidia (132) | 2xHomeo | 65 | 19.0 (30) | 0.002 (floor of 500 draws) |
+| Microsporidia | HMG+Homeo | 0 | 4.5 (10) | 1.0 |
+| Monoblepharomycota (3) | 2xHMG | 2 | 0.2 (2) | 0.014 |
+| Rozellomycota clade (1) | HMG+Homeo | 1 | 0.0 (1) | 0.050 |
+| Calcarisporiellomycota (1) | HMG+Homeo | 1 | 0.5 (1) | 0.46 |
+| Aphelidiomycota (2), Olpidiomycota (1) | all | 0 | 0.0 to 0.0 | 1.0 |
+
+- **Microsporidia 2xHomeo** is a real excess (65 against 19.0). 55.4% of the pairs are on the same strand and 104 of 154 neighbours have no gene between them. This fits a tandem-duplicated family and not one locus per genome. Not followed further.
+- **Monoblepharomycota 2xHMG** comes from *Hyaloraphidium curvatum* (one adjacent same-strand HMG pair) and *Gonapodya prolifera* (4 separate HMG pairs on 4 contigs). Four pairs in one genome point to a repeated family, not one MAT locus. All genes are annotated as hypothetical proteins. The other *Gonapodya* genome has no pair.
+- **Rozellomycota clade (*Paramicrosporidium saccamoebae* KSL3)**: HMG-box gene FE6F46FC_001951 and homeodomain gene FE6F46FC_001954 on MTSL01000117.1 with two genes between them (the HMG gene on `-`, the homeodomain gene on `+`, divergent). Neither has a hit to the AMF HD1/HD2 or the Mucorales sexM/sexP controls at E 1e-5. This is the only compact HMG+homeodomain arrangement among the new lineages; it is one genome, uncorrected p = 0.05, and cannot be tested across genomes. Not a candidate record.
+- **Calcarisporiella**: pair not above chance.
+- **Aphelidiomycota, Olpidiomycota**: no pair.
+
+## Strategy status (checked against the five steps above)
+| step | status |
+|---|---|
+| 1. Detector probe with curated families | done for Taphrinomycotina (33 genomes) and Antarctolithica earlier |
+| 2. Structural verification of leads | done for PM leads (Pfam, gene order, positive control) and for the new-lineage leads (gene order, products, chance test). Result: no lead survives except the matMc-like gene in two *Taphrina* genomes and the single *Paramicrosporidium* pair |
+| 3. Population signal | done for Bd (negative) |
+| 4. Small-genome-count lineages | done for Allomyces (negative against a random-gene baseline) |
+| 5. Record unsearched lineages | done; small phyla and Microsporidia scanned, a few genomes could not be mapped |
+Open: a curator check of the matPi reference of the *T. deformans* record; any test of the *Paramicrosporidium* pair needs a second genome of that clade.

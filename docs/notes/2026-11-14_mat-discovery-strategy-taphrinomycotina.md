@@ -49,3 +49,31 @@ and that the 10 empty genomes lack a locus (the detector recall for distant line
 - Pfam and gene-order check of the `PM` leads (Protomyces x5, *T. confusa*), then a second look at the 10 empty genomes with the
   flank-first scan using matMc/matPi as controls.
 - Draft candidate records only after a curator reads the structural check.
+
+## Lineage coverage survey (added 2026-11-14)
+BFD \`samples.csv\` (23,679 rows) was matched to the genomes in the flank-first scan (496). Scanned: Basidiobolomycota 18, Blastocladiomycota 14,
+Chytridiomycota 83, Entomophthoromycota 9, Glomeromycota 59, Kickxellomycota 177, Mortierellomycota 100, Neocallimastigomycota 25, Zoopagomycota 11.
+Not scanned before and now scanned with the same stage 1 (job 32090926, 141 genomes): Aphelidiomycota 2, Calcarisporiellomycota 1,
+Monoblepharomycota 3, Olpidiomycota 1, Rozellomycota 1, one unclassified, Microsporidia 132. Not scanned because the BFD sample name did not map
+to an annotation folder (name matching is imperfect, so counts are approximate): some Chytridiomycota, Entomophthoromycota, Kickxellomycota and
+Neocallimastigomycota genomes, Sanchytriomycota 2, 31 Microsporidia and 2 Aphelidiomycota. Mucoromycota (Mucoromycotina) has curated MAT records and was not part of this survey.
+
+Result table: \`2026-11-14_mat-discovery-tables/gap_lineages_summary.tsv\` (same columns as the lineage note of PR #351).
+- Small phyla (9 genomes): no HD1+HD2 locus and no 2xHomeo locus. One \`HMG+Homeo\` locus each in the Calcarisporiella genome and the Rozella genome, and
+  \`sexM/sexP\` control hits in 4 genomes. A single genome per lineage; not tested against chance.
+- Microsporidia (132 genomes): 65 genomes have two Pfam Homeodomain genes within 5 genes. Random placement of the same number of genes gives a mean of
+  18.8 genomes (maximum 28 in 200 shuffles), so the adjacency is more than chance. The median genome has 8 Homeodomain-hit genes, 79 of 154
+  neighbouring pairs are on the same strand, and 104 pairs have no gene between them. That fits a tandem-duplicated family, not a MAT locus. No further test done.
+
+## Allomyces probe (added 2026-11-14)
+\`scripts/flank_idiomorph_probe.py\` (tests in \`tests/test_flank_idiomorph_probe.py\`). Stage 1 had found 35, 45 and 63 HMG/Homeodomain candidate genes in
+*A. arbusculus* Burma 1F, *A. javanicus* California 12 and *A. macrogynus* ATCC 38327, all as single-gene loci (no adjacent pair). The new test asks, for each
+candidate, whether its flanking genes form a syntenic block in the other genomes and whether the candidate is conserved there, replaced by another
+HMG/Homeodomain gene, or missing.
+- 84 candidate genes; 152 gene-by-genome comparisons were testable. Not conserved (absent or replaced): 56 of 152 = 0.37.
+- Baseline, random non-candidate genes through the same test: 944 of 2,529 = 0.37. The candidates are not more often non-conserved than ordinary genes
+  (per pair 0.19 to 0.48 against 0.13 to 0.54).
+- 15 genes are absent or replaced in both other genomes, for example F5BE82F7_007902 (HMG_box, *A. macrogynus*; absent in both others, 4 flank genes each in a syntenic block).
+  With a 0.37 background rate these are expected by chance; none is a call. F5BE82F7_000331 (*A. macrogynus*, HMG_box with a weak sexP hit, E 9.3e-8) was not
+  singled out by the test.
+- Not tested: gene order beyond 25 genes, divergent alleles that fall below diamond E 1e-5, and assembly gaps. No new Allomyces candidate. Allomyces results are negative.

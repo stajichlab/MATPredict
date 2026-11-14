@@ -92,8 +92,8 @@ PM leads (gene under each detector hit, tested with Pfam):
 | *P. lactucae-debilis* 12-1054 | F003EF48_006292 | yes | no gene under the hit | n/a |
 | *P. macrosporus* | no gene under the hit | n/a | FCFD2032_003005 | no |
 | *Taphrina confusa* | F57803F5_005977 | yes | no gene under the hit | n/a |
-- In no genome do a matMc gene and a matPi gene sit next to each other. The two-gene `PM` structure is not confirmed anywhere. The matMc genes are HMG-box genes; the matPi hit has no Pfam homeodomain in *P. macrosporus* and no predicted gene in the other four.
-- The Protomyces hits are not specific. The matMc hits are 44% identical, and the ten genomes with no call also have HMG genes that match the curated mat1-Mc at 46 to 49% (for example *P. gravidus* 46.1%, *P. pachydermus* 48.6%). The Protomyces `PM` calls are indistinguishable from background HMG genes in the same genomes.
+- In no genome do a matMc gene and a matPi gene sit next to each other. The two-gene `PM` structure is not confirmed anywhere. The matMc genes are HMG-box genes; the matPi hit has no Pfam homeodomain in *P. macrosporus* and no predicted gene in the other four. **[RETRACTED 2026-11-14, see the genome-level matPi search below: matPi is unannotated, not absent; a homeodomain region lies 7 to 14 kb from the matMc-like gene in 4 of these genomes]**
+- The Protomyces hits are not specific. The matMc hits are 44% identical, and the ten genomes with no call also have HMG genes that match the curated mat1-Mc at 46 to 49% (for example *P. gravidus* 46.1%, *P. pachydermus* 48.6%). The Protomyces `PM` calls are indistinguishable from background HMG genes in the same genomes. **[RETRACTED 2026-11-14, see the genome-level matPi search below: the HMG gene is generic, but its adjacency to a homeodomain region is not background]**
 - *T. confusa* is different: its matMc gene is 69.2% identical to the curated *T. deformans* matMc.
 
 Rescan of the 10 genomes with no call (Pfam plus diamond, E 1e-3, against the 14 curated PM and mat1 proteins):
@@ -101,8 +101,8 @@ Rescan of the 10 genomes with no call (Pfam plus diamond, E 1e-3, against the 14
 - *Taphrina wiesneri* CBS 275.28 has a strong matMc-like gene (72.5% identity, E 7.6e-110) that the detector did not report as a locus, because no second gene was found next to it. No other genome has a hit above 50% identity to matMc.
 - Best matPi hits (31 to 55% identity) are generic homeodomain genes that every genome has; they carry no locus information.
 
-Conclusion, with limits: no Taphrinomycotina genome tested shows a two-gene PM locus. A matMc-like gene (about 70% identity to *T. deformans*) is present in *T. confusa* and *T. wiesneri* CBS 275.28 with no partner nearby; the 3 other *Taphrina* genomes with no call have no such gene. I did not look for a matPi that sits far from matMc (the curated record places matMc and matPi on separate contigs of the old assembly), and the layout
-test cannot see a locus split over contigs. The probe finds no new candidate to curate; the only lead worth keeping is the matMc-like gene in the two *Taphrina* genomes.
+Conclusion, with limits: no Taphrinomycotina genome tested shows a two-gene PM locus. A matMc-like gene (about 70% identity to *T. deformans*) is present in *T. confusa* and *T. wiesneri* CBS 275.28 with no partner nearby; the 3 other *Taphrina* genomes with no call have no such gene. I did not look for a matPi that sits far from matMc (the curated record places matMc and matPi on separate contigs of the old assembly), and the layout **[RETRACTED 2026-11-14, see the genome-level matPi search below: a matMc-like HMG gene with a homeodomain region next to it exists in 6 genomes]**
+test cannot see a locus split over contigs. The probe finds no new candidate to curate; the only lead worth keeping is the matMc-like gene in the two *Taphrina* genomes. **[RETRACTED 2026-11-14, see the genome-level matPi search below: the leads are the HMG + homeodomain pairs below]**
 
 ## matPi search and positive control (added 2026-11-14)
 Scan of the 5 PM-lead genomes, the 10 no-call genomes and the 4 *T. deformans* genomes for homeodomain genes similar to the curated matPi (job 32091046, 32091068; tables `pm_genomes_scan_genes.tsv`, `taphrina_deformans_scan_genes.tsv`, `empty_scan_genes.tsv`).
@@ -184,3 +184,28 @@ Validation of the strategy: step 2 (structural verification) was applied in 5 li
 
 ### Why the last 50 genomes are not scanned (checked 2026-11-14)
 `unscanned_assembly_stats.tsv`: of the 50 genomes not run, the median N50 is 5.4 kb (maximum 41 kb) and the median assembly has 938 contigs; one has no genome file. Only three have an N50 above 15 kb: a 0.5 Mb *Vairimorpha* sp. fragment (12 contigs), the *Pleurotus ostreatus* x *Saccharomyces cerevisiae* fusant (not a lineage without a defined MAT) and *Metchnikovella incurvata* (4.6 Mb, N50 17.6 kb). A flank-first scan needs about 11 genes on one contig (a window of 5 on each side), which is a contig of 20 kb or more in these gene-poor genomes. Annotating these assemblies (funannotate or otherwise) would give gene models but not the contiguity the method needs. This is a limit of the assemblies, so the coverage statement stays: no usable result for these 50 genomes.
+
+## Genome-level matPi search: the PM-like pair is present in 6 of 17 genomes (added 2026-11-14; corrects statements above)
+The BFD gene models do not include the homeodomain gene of this locus (the record of *T. deformans* says the same). The curated *T. deformans* matPi is a 181 aa partial protein from the old assembly, and its homeodomain region has no gene model in the BFD annotation either. So an annotation-based search misses it. I searched the assemblies directly.
+
+Scripts: `matpi_tblastn.py` (tblastn of the 4 curated matPi proteins against each assembly), `region_pfam_check.py` (six-frame translation of a region and Pfam), `matpi_hmg_adjacency.py` (distance of every HMG-box gene to the homeodomain-like regions, with a permutation null). Jobs: tblastn and region checks run on the HPCC 2026-11-14; tests in `tests/test_region_pfam_check.py` (4 tests). Tables: `matpi_genome_search_hits.tsv`, `matpi_region_pfam.tsv`, `matpi_hmg_adjacency_pairs.tsv`, `matpi_hmg_adjacency_summary.tsv`, `matpi_hmg_adjacency_null.tsv`. 17 genomes searched (4 *T. deformans*, other *Taphrina* 5, *Protomyces* 7, Savitreella, Saitoella; *T. deformans* JCM22205 has no genome file in the library).
+
+- Positive control: in all three *T. deformans* genomes with a genome file the curated matPi matches an unannotated region at 100% identity (E 1e-119). In A2 it lies on the same scaffold as the matMc gene, 40,370 bp away (RHGF01000006.1: matPi 51,688 to 52,236, matMc 92,606 to 93,298). In CBS 355.35 and PYCC 5710 the two sit on different contigs.
+- The top-ranked matPi-like region lies on the same contig as an HMG-box gene in:
+
+| genome | HMG gene | region (identity, E) | distance | Pfam in the region (six-frame ORF) |
+|---|---|---|---|---|
+| *Protomyces inouyei* | F7C0A940_005637 | 45.2%, 2e-18 | 7,165 bp | Homeodomain, 167 aa, E 1.1e-10 |
+| *P. lactucae-debilis* NRRL YB-4353 | F21A9957_003986 | 45.2%, 2e-18 | 7,164 bp | Homeodomain, 151 aa, E 1e-10 |
+| *P. lactucae-debilis* 12-1054 | F003EF48_006292 | 45.2%, 2e-18 | 7,152 bp | Homeodomain, 151 aa, E 1e-10 |
+| *Taphrina confusa* | F57803F5_005977 | 46.5%, 2e-46 | 14,057 bp | Homeodomain, 168 aa, E 1.1e-8 |
+| *T. communis* | F8DCC00A_005608 | 52.4%, 8e-54 | 18,060 bp | Homeodomain, 184 aa, E 1.5e-9 (checked in the first pass, not as the adjacent pair) |
+| *T. betulina* | FC6B0312_004634 | 43.0%, 2e-26 | 10,297 bp | no Pfam ORF of 40 aa or more in the region: weaker |
+| *T. deformans* A2 (control) | F891DC7E_001655 | 100%, 1e-119 | 40,370 bp | Homeodomain, 189 aa, E 1.5e-9 |
+Negative control, a 549 bp stretch 20 kb from the A2 hit: no Pfam ORF. *Savitreella* has a pair at 39 kb (not within 20 kb).
+- Permutation null (`matpi_hmg_adjacency_null.tsv`): an HMG gene within 20 kb of a matPi-like region in 6 of 17 genomes; random placement of the same number of HMG genes at random gene positions gives a mean of 0.71 genomes (maximum 5 in 2,000 draws), p = 0.0005 (the floor with 2,000 draws). The genomes are not independent: there are two *P. lactucae-debilis* assemblies, and the three Protomyces offsets are the same (7.15 to 7.17 kb), which is what a conserved locus would give but also what one lineage would give.
+- The 20 kb result includes genomes with no detector call (*T. communis*, *T. betulina*): the detector missed them because only one of the two genes had a model.
+- Not adjacent: *P. macrosporus*, *P. arabidopsidicola*, *P. gravidus*, *P. pachydermus*, *Taphrina* sp. SM11, *T. wiesneri*, *Saitoella*, and two *T. deformans* assemblies (contigs may be broken at the locus).
+
+What this means, with limits. A homeodomain gene is present in these genomes whether or not an HMG gene is next to it (for example *P. gravidus*, *T. communis* have unannotated homeodomain ORFs), so the homeodomain gene alone is not MAT evidence. The evidence is the conserved physical pairing of an HMG-box gene and a homeodomain gene, which is the arrangement of the curated *T. deformans* locus (matMc plus matPi) and of the Pneumocystis PM locus. The HMG genes in Protomyces are only 44 to 49% identical to the curated matMc and could be any HMG gene; the pairing, not the HMG identity, carries the evidence. I did not test that the HMG genes are orthologous across genomes, I did not look at expression, and the mating-type role of this locus in these species is not shown. The candidate set, for a curator: *P. inouyei*, *P. lactucae-debilis* (two assemblies), *T. confusa*, *T. communis*, and *T. betulina* (weaker).
+Next test: proper gene models of both genes in these genomes (for example exonerate of the curated matPi/matMc against the 100 kb region, or the Pfam ORFs of the table), then a check that the homeodomain genes of the locus are orthologous across the genomes and differ between the two *P. lactucae-debilis* strains if they are alleles.

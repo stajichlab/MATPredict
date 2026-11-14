@@ -114,6 +114,7 @@ def main():
     ap.add_argument("--span", type=int, default=25)
     ap.add_argument("--evalue", type=float, default=1e-5)
     ap.add_argument("--threads", type=int, default=4)
+    ap.add_argument("--ann", default=ANN, help="folder holding <genome>/predict_results/<genome>.proteins.fa.gz")
     ap.add_argument("--baseline", type=int, default=500, help="random non-candidate genes per genome pair for the baseline")
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--tmp", default=os.environ.get("SCRATCH", "/tmp"))
@@ -129,7 +130,7 @@ def main():
                 continue
             tmp = os.path.join(a.tmp, f"fip_{os.getpid()}_{a.genomes.index(ga)}_{a.genomes.index(gb)}")
             os.makedirs(tmp, exist_ok=True)
-            orth = rbh(f"{ANN}/{ga}/predict_results/{ga}.proteins.fa.gz", f"{ANN}/{gb}/predict_results/{gb}.proteins.fa.gz",
+            orth = rbh(f"{a.ann}/{ga}/predict_results/{ga}.proteins.fa.gz", f"{a.ann}/{gb}/predict_results/{gb}.proteins.fa.gz",
                        tmp, a.evalue, a.threads)
             genes_a, idx_a = G[ga]
             by_contig = collections.defaultdict(dict)

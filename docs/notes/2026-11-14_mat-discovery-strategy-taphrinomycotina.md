@@ -135,7 +135,7 @@ Chance test (`scripts/adjacent_pair_null.py`, 500 random placements per genome; 
 | 2. Structural verification of leads | done for PM leads (Pfam, gene order, positive control) and for the new-lineage leads (gene order, products, chance test). Result: no lead survives except the matMc-like gene in two *Taphrina* genomes and the single *Paramicrosporidium* pair |
 | 3. Population signal | done for Bd (negative) |
 | 4. Small-genome-count lineages | done for Allomyces (negative against a random-gene baseline) |
-| 5. Record unsearched lineages | done to the limit set by the data (see the next section); 58 genomes remain unscanned, all listed in `unscanned_genomes_status.tsv` |
+| 5. Record unsearched lineages | done to the limit set by the data (see the coverage recount at the end); 50 genomes remain unscanned and 4 more have gene sets too small to test |
 Open: a curator check of the matPi reference of the *T. deformans* record; any test of the *Paramicrosporidium* pair needs a second genome of that clade.
 
 ## Genomes that were not in any scan, and what was done (added 2026-11-14)
@@ -158,3 +158,26 @@ Augustus gene prediction (`scripts/augustus_gene_predict.slurm`, `scripts/august
 The summary count for the four genomes: HD1+HD2 0, HMG+flank 0, 2xHomeo 0, HMG+Homeo 0, sexM/sexP control hits in 2 genomes. The total candidate counts in stage 1 (domain hits plus control hits; 11, 17, 15 and 2) are lower than in BFD-annotated genomes of related lineages (13 to 71: *Olpidium bornovanus* 13, *Aphelidium insulamus* 19, *Gonapodya* 31 and 47, *Calcarisporiella thermophila* 71). That is what a mismatched Augustus model would give, but I did not test it. It suggests that these predicted gene sets miss domain genes, so a negative here is weak evidence. The *Synchytrium* assembly is only 1.9 Mb, so it says nothing about the species. A proper test needs BFD-style annotation of these assemblies (funannotate) or RNA-based gene models.
 
 Coverage conclusion: of the genomes in the target phyla that I could map, every one with gene models has been through at least one stage-1 scan, apart from those listed as not scanned above (58). The lineage conclusions stand only for those. In particular, for Sanchytriomycota, Kickxellomycota fragments, Microsporidia fragments and the Entomophthoromycota without annotation, nothing was tested.
+
+## Coverage recount and final status (added 2026-11-14; supersedes the counts of the two sections above)
+Recount by locus tag (the `LOCUSTAG` column of `samples.csv` against the gene IDs in all stage-1 outputs), which does not depend on folder names. The earlier name-based counts (58 unscanned; 10 genomes without an annotation folder) were partly a naming artefact: for example *Entomophthora muscae*, *Massospora cicadina*, *Gigaspora margarita* and a *Chytridiomycetes* sp. had been scanned in the first run under another folder name.
+- Target phyla in `samples.csv`: 699 samples. After the first two scans, 61 had no stage-1 output by locus tag; 4 of these were the Augustus genomes of the previous section, so 57 were truly unscanned. All 57 lack BFD gene models (`unscanned_by_locustag.tsv`). Every target-phylum genome that has BFD gene models has been through stage 1.
+- Contiguity of the 57 (`unscanned_assembly_stats.tsv`): N50 of 50 kb or more in 5, 20 kb or more in 9; one has no genome file.
+- Seven more assemblies were given Augustus gene models (same caveat: `rhizopus_oryzae` model, not trained on these lineages) and stage 1: both *Globomyces* assemblies (chytrids), two *Mitosporidium daphniae* assemblies and three *Spraguea lophii* assemblies (jobs 32093014, 32093248; stage 1 jobs 32093239, 32093330).
+
+| genome | contigs / N50 | genes | candidates | result |
+|---|---|---|---|---|
+| *Globomyces pollinis-pini* Arg68 | 983 / 51 kb | 8,406 | 17 HMG, 3 Homeodomain | 2xHMG pairs, conserved HMG cluster (below) |
+| *Globomyces* sp. JEL0801 | 800 / 46 kb | 5,960 | 10 HMG, 2 Homeodomain | 2xHMG pairs, same cluster |
+| *Mitosporidium daphniae* (ASM5257605) | 10 / 864 kb | 2,420 | 4 Homeodomain | no HMG gene, no pair |
+| *M. daphniae* UGP1 | 273 / 35 kb | 2,359 | 7 | no pair |
+| *Spraguea lophii* x3 | 143 to 158 / 97 to 99 kb | 356 to 362 | 0 | gene sets far too small (a microsporidian of 5.6 Mb should have about 2,000 genes); not testable |
+
+Globomyces (chytrid) follow-up, with the one genus where two genomes can be compared (`flank_idiomorph_probe.py --ann`, tables `globomyces_probe.tsv`, `globomyces_baseline.tsv`):
+- 32 HMG/Homeodomain candidates; 21 testable; 6 not conserved (0.29) against 112 of 728 random genes (0.15). Six against about 3 expected; I did not compute an exact p (a rough binomial tail is about 0.1), so this is not significant.
+- The 2xHMG excess (2 of 3 genomes, p 0.008 in `adjacent_pair_null_aug2.tsv`) rests on 3 genomes and several tests and is not taken as evidence.
+- The conserved block with an HMG cluster (Glopol1 MU621598.1 genes 7540 to 7545; JEL0801 JADGIX010000364.1 genes 5331 to 5335) holds two HMG gene types. The long type (263 aa) is 99.2% identical between the species and in the same position. The short type (138 aa) is 76.8% identical between the species and occurs as two copies 97.8% identical to each other in Glopol1 and one copy in JEL0801: a species-specific tandem duplication. Both species carry both genes. The cluster is not idiomorph-like. Two of its genes have a weak sexM hit (E about 1e-7); I do not treat that as MAT evidence.
+
+Final coverage: 50 target-phylum genomes remain unscanned (fragmentary assemblies, no genome file, or small N50) and 3 more (*Spraguea* sets) were run but are untestable: 53 genomes with no usable result, and the 1.9 Mb *Synchytrium* assembly (11 genomes in total went through Augustus). The unscanned set is mostly Microsporidia (about 30), 13 Kickxellomycota fragments, and a few Entomophthoromycota, Chytridiomycota and Sanchytriomycota genomes. The lineage conclusions of this note hold for scanned genomes only. A test of the rest needs BFD-style annotation (funannotate) or RNA-based gene models, and assemblies with an N50 below 20 kb are unlikely to help even then.
+
+Validation of the strategy: step 2 (structural verification) was applied in 5 lineages. In Taphrinomycotina it removed the Protomyces leads, in Allomyces it found no excess against a random baseline, in *Globomyces* it explained an apparent difference as a tandem duplication, and in the other new lineages (Rozellomycota, Monoblepharomycota, Microsporidia, Calcarisporiellomycota) it could not test the leads across genomes, because each lineage has one genome or the arrangement looks like a tandem family. For those lineages the claims stay "no evidence", not "absent".

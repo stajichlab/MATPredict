@@ -32,3 +32,16 @@ def test_locus_transcripts_helpers(tmp_path):
     assert list(r) == ["t1"] and r["t1"]["strand"] == "-" and r["t1"]["exons"] == [(100, 200), (400, 500)]
     assert lt.overlaps(r["t1"]["exons"], 450, 600)
     assert not lt.overlaps(r["t1"]["exons"], 600, 700)
+
+
+def test_strandedness_helpers():
+    spec3 = importlib.util.spec_from_file_location("infer_strandedness", SCRIPTS / "infer_strandedness.py")
+    st = importlib.util.module_from_spec(spec3)
+    spec3.loader.exec_module(st)
+    assert st.classify(900, 100) == "forward-stranded"
+    assert st.classify(80, 920) == "reverse-stranded"
+    assert st.classify(520, 480) == "unstranded"
+    assert st.classify(0, 0) == "no_reads"
+    assert st.implied_strand(90, 10, "forward-stranded") == "+"
+    assert st.implied_strand(90, 10, "reverse-stranded") == "-"
+    assert st.implied_strand(90, 10, "unstranded") == "unknown"

@@ -37,7 +37,7 @@ Protomyces 8, Saitoella 2, Neolecta 1, Savitreella 1. Pneumocystis is not in `sa
 
 Strength of the evidence (identity / coverage to the reference, from `detection_report.yaml`):
 - `PM` calls: matMc 44 to 69% identity at 74% coverage; matPi 42 to 59% at 33 to 89% coverage. Strongest: *Taphrina confusa*
-  (matMc 69.2% / 74.5%, matPi 42.2% / 89.0%). Confidence `medium`. These are the leads worth following.
+  (matMc 69.2% / 74.5%, matPi 42.2% / 89.0%). Confidence `medium`. Retracted after the structural follow-up below: the Protomyces calls are not distinguishable from background HMG genes; only the *T. confusa* matMc gene stays a lead.
 - `MAT` family calls: identity 17 to 55%, coverage mostly 10 to 79%, references from Pezizomycotina. I do not treat them as
   mating-type calls. The 5 *T. deformans* genomes repeat one MAT1-2-1 hit at 44.9% identity and 17.9% coverage.
 - `mat1` calls agree with the curated *S. pombe* family; they are not an independent check.

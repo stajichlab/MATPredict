@@ -174,3 +174,37 @@ def test_pca_thinned_sites_filters(tmp_path):
         fo.write("S1\t130\tA\tG\t50\t100\t50,50\n")  # dropped: DP above 2x the median
     out = pca.thinned_sites(str(p), 15, 60, 10, {"S1"})
     assert list(out) == [("S1", 100)] and abs(out[("S1", 100)] - 2 / 3) < 1e-9
+
+
+sc = _load("bd_site_allele_counts")
+
+
+def test_count_bases_pileup_syntax():
+    # 3 ref reads (. . ,), 2 JEL reads (G g), a read start mark with mapq char, an end mark, an insertion and a deletion marker
+    assert sc.count_bases("..,Gg", "G") == (3, 2)
+    assert sc.count_bases("^]A.$,+2ACG*", "A") == (2, 1)  # ^] skips the mapq char; +2ACG skips 'AC'; the final G is in the insertion? no: skipped by length
+    assert sc.count_bases("-1N..", "G") == (2, 0)
+    assert sc.count_bases("AAT", "G") == (0, 0)
+
+
+def test_classify_site():
+    assert sc.classify(10, 0) == "clft" and sc.classify(0, 10) == "jel" and sc.classify(5, 5) == "het"
+    assert sc.classify(2, 1) is None
+
+
+ss = _load("bd_site_summary")
+
+
+def test_site_summary_shares(tmp_path):
+    p = tmp_path / "r.counts.tsv.gz"
+    with gzip.open(p, "wt") as fo:
+        fo.write("contig\tpos\tn_clft\tn_jel\n")
+        fo.write("S1\t1\t10\t0\n")    # clft
+        fo.write("S1\t2\t5\t5\n")     # het
+        fo.write("S1\t3\t0\t10\n")    # jel
+        fo.write("S2\t4\t10\t1\n")    # f = 0.09: clft
+        fo.write("S2\t5\t2\t1\n")     # too few reads
+    n, sh, per = ss.shares_from_counts(str(p))
+    assert n == 4
+    assert abs(sh["clft"] - 0.5) < 1e-9 and abs(sh["het"] - 0.25) < 1e-9 and abs(sh["jel"] - 0.25) < 1e-9
+    assert per["S2"][0] == 1 and per["S2"][1]["clft"] == 1.0

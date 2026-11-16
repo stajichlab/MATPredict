@@ -18,7 +18,7 @@
   <p class="lede">How many genomes got a MAT call, and which alleles were found, at every rank. Click a row to drill into that taxon.</p>
   <div class="controls">
     <label>Rank <select id="rank"><option>phylum</option><option>class</option><option>order</option><option>family</option><option>genus</option><option>species</option></select></label>
-    <label>Search <input id="q" type="search" placeholder="taxon name"></label>
+    <label>Search <input id="q" type="search" placeholder="any rank, or a recorded species name" title="Matches the selected rank, the other ranks and the recorded species name (3 or more characters for the last two)"></label>
     <label>Min genomes <input id="minn" type="number" min="1" value="1" style="width:5em"></label>
     <label>Allele names <select id="names"><option value="raw">raw names as reported</option><option value="label">labels (Lineage__System_Cell)</option></select></label>
     <button id="up" title="Back out of the last taxon you clicked into">◀ Up one level</button> <button id="reset">Reset</button>
@@ -30,6 +30,10 @@
     <th data-k="name">Taxon</th><th class="n" data-k="n">Genomes</th><th class="n" data-k="rate">Called</th><th>Alleles among called genomes (count, share)</th><th class="n" data-k="two">Two alleles</th>
   </tr></thead><tbody></tbody></table></div>
   <p class="muted" id="foot"></p>
+  <h2>Genomes without a usable genus</h2>
+  <p>A recorded name such as <code>Ascomycota sp.</code> or <code>uncultured Hypocreales</code> gives no genus, so the genome is grouped under “(unassigned)” in the table. This list shows each of them by assembly with the name it was submitted under. The search box applies to it. Names of the form <code>Ascomycota sp. Antarctolithica obscura</code> are listed under the submitter's genus, marked provisional in the genome table (<code>name_status</code>).</p>
+  <p><button id="showun">List genomes without a usable genus</button> <span class="muted" id="unmsg"></span></p>
+  <div id="unout"></div>
   <h2>Locus maps for this view</h2>
   <p>Gene map of every called locus among the genomes in the current view, with the contig accession linked to NCBI (genomes with GenBank or RefSeq contigs; lab scaffold names are shown as text). Pick a taxon in the table, then press the button; clicking a species row opens its maps directly.</p>
   <p><button id="showloci">Show locus maps for the current view</button> <span class="muted" id="locimsg"></span></p>
@@ -80,8 +84,9 @@ function applyHash() {
   for (const r of RANKS) if (p.has(r)) filt[r] = p.get(r);
   st.filt = filt; st.rank = RANKS.includes(p.get("rank")) ? p.get("rank") : "phylum"; st.q = ""; $("q").value = ""; $("rank").value = st.rank;
 }
-function go(filt, rank) {          // move to a view; clears the locus maps, which belong to the previous one
-  st.filt = filt; st.rank = rank; st.q = ""; $("q").value = ""; $("rank").value = rank;
+function go(filt, rank, keepq = false) {          // move to a view; clears the locus maps, which belong to the previous one
+  st.filt = filt; st.rank = rank; $("rank").value = rank;
+  if (!keepq) { st.q = ""; $("q").value = ""; }
   $("lociout").innerHTML = ""; $("locimsg").textContent = "";
   history.pushState(null, "", hashFor()); render();
 }
@@ -91,18 +96,37 @@ $("up").onclick = () => { const e = Object.entries(st.filt); if (e.length) go(up
 addEventListener("popstate", () => { applyHash(); $("lociout").innerHTML = ""; render(); });
 document.querySelectorAll("th[data-k]").forEach(th => th.onclick = () => { const k = th.dataset.k; st.dir = st.sort === k ? -st.dir : (k === "name" ? 1 : -1); st.sort = k; render(); });
 
+// Search. A row matches when the text is in its name at the selected rank ("direct"), or, for 3 or more characters, in
+// another rank or in the recorded species name the genome was submitted under ("via"). The second path is what finds
+// a genome that has no usable genus: its recorded name is searchable even where the rank cell reads "(unassigned)".
+const OTHER = ["phylum", "class", "order", "family", "genus", "species"];
+const hit = (v, q) => String(v || "").toLowerCase().includes(q);
+function matchRow(r) {
+  if (!st.q) return "all";
+  if (hit(r[st.rank] || "(none)", st.q)) return "direct";
+  if (st.q.length < 3) return "";
+  return OTHER.some(k => hit(r[k], st.q)) || (r.recorded || []).some(n => hit(n, st.q)) ? "via" : "";
+}
+function matchGenome(r) {     // the same rule for a row of a per-genome table
+  if (!st.q) return true;
+  if (hit(r[st.rank] || "(none)", st.q)) return true;
+  return st.q.length >= 3 && (OTHER.some(k => hit(r[k], st.q)) || hit(r.species_recorded, st.q));
+}
+
 function render() {
   const g = {};
   for (const r of rows) {
     if (!st.ds.has(r.dataset)) continue;
     if (Object.entries(st.filt).some(([k, v]) => (r[k] || "(none)") !== v)) continue;
+    const m = matchRow(r); if (!m) continue;
     const name = r[st.rank] || "(none)";
-    const x = g[name] ??= { name, n: 0, c: 0, two: 0, undet: 0, al: {} };
+    const x = g[name] ??= { name, n: 0, c: 0, two: 0, undet: 0, al: {}, via: 0 };
+    if (m === "via") x.via += r.n;
     x.n += r.n; x.c += r.called; x.two += r.two; x.undet += r.undet;
     const src = st.names === "label" && Object.keys(r.label_alleles || {}).length ? r.label_alleles : r.alleles;      // labels count the same genomes as the raw names
     for (const [a, v] of Object.entries(src)) if (!a.startsWith("two:")) x.al[a] = (x.al[a] || 0) + v;
   }
-  let list = Object.values(g).filter(x => x.n >= st.minn && x.name.toLowerCase().includes(st.q));
+  let list = Object.values(g).filter(x => x.n >= st.minn);
   list.forEach(x => x.rate = x.n ? x.c / x.n : 0);
   list.sort((a, b) => st.sort === "name" ? st.dir * a.name.localeCompare(b.name) : st.dir * (a[st.sort] - b[st.sort]));
   const shown = list.slice(0, 400);
@@ -112,7 +136,9 @@ function render() {
     : "All taxa";
   $("up").disabled = !trail.length;
   if (location.hash !== hashFor()) history.replaceState(null, "", hashFor());
-  $("foot").textContent = `${fmt(list.length)} ${st.rank} groups${list.length > shown.length ? " (first 400 shown; narrow the search)" : ""}; ${fmt(list.reduce((a, x) => a + x.n, 0))} genomes.`;
+  const via = list.reduce((a, x) => a + x.via, 0);
+  $("foot").textContent = `${fmt(list.length)} ${st.rank} groups${list.length > shown.length ? " (first 400 shown; narrow the search)" : ""}; ${fmt(list.reduce((a, x) => a + x.n, 0))} genomes.` +
+    (st.q ? ` With a search, only the genomes that match are counted${via ? `; ${fmt(via)} of them match through another rank or a recorded name, not the ${st.rank} name` : ""}.` : "");
 
   // chart: top 15 by genomes, called-genome composition
   const top = [...list].sort((a, b) => b.n - a.n).slice(0, 15);
@@ -129,14 +155,14 @@ function render() {
   $("tbl").tBodies[0].innerHTML = shown.map(x => {
     const al = Object.entries(x.al).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([a, v]) => `<span title="${tip(a)}">${a}</span>${mark(a)} ${fmt(v)} (${pct(v, x.c, 0)})`).join(" · ");
     const drill = " click";
-    return `<tr class="${drill.trim()}" data-name="${x.name.replace(/"/g, "&quot;")}"><td>${x.name}</td><td class="n">${fmt(x.n)}</td><td class="n">${pct(x.c, x.n)}</td><td>${al || '<span class="muted">none</span>'}${x.undet ? ` <span class="muted">· undetermined ${fmt(x.undet)}</span>` : ""}</td><td class="n">${x.two ? fmt(x.two) : ""}</td></tr>`;
+    return `<tr class="${drill.trim()}" data-name="${x.name.replace(/"/g, "&quot;")}"><td>${x.name}</td><td class="n">${fmt(x.n)}${x.via ? ` <span class="muted" title="${x.via} of these genomes matched through another rank or a recorded species name">(${fmt(x.via)} via other field)</span>` : ""}</td><td class="n">${pct(x.c, x.n)}</td><td>${al || '<span class="muted">none</span>'}${x.undet ? ` <span class="muted">· undetermined ${fmt(x.undet)}</span>` : ""}</td><td class="n">${x.two ? fmt(x.two) : ""}</td></tr>`;
   }).join("");
 }
 const GTAB = {};   // dataset id -> parsed genome rows (loaded on demand)
 const SHARDS = {}; // dataset id -> {genome: [loci]}
 $("dl").innerHTML = Object.entries(summary.datasets).filter(([, d]) => d.genome_table).map(([id, d]) =>
   `<li><a href="${d.genome_table}" download>${d.label}</a> <span class="muted">· ${fmt(d.genomes)} genomes</span></li>`).join("");
-async function viewGenomes() { // genome rows of the selected datasets that match the current filter and search
+async function allGenomes() { // genome rows of the selected datasets (tables load on demand)
   const out = [];
   for (const [id, d] of Object.entries(summary.datasets)) {
     if (!d.genome_table || !st.ds.has(d.source === "BFD" ? "BFD" : "ZyGoLife")) continue;
@@ -144,14 +170,22 @@ async function viewGenomes() { // genome rows of the selected datasets that matc
       const lines = (await (await fetch(d.genome_table)).text()).trimEnd().split("\n"), cols = lines[0].split("\t");
       GTAB[id] = { head: lines[0], rows: lines.slice(1).map(ln => { const f = ln.split("\t"); return { raw: ln, ...Object.fromEntries(cols.map((c, i) => [c, f[i] || ""])) }; }) };
     }
-    for (const r of GTAB[id].rows) {
-      if (Object.entries(st.filt).some(([k, v]) => (r[k] || "(none)") !== v)) continue;
-      if (st.q && !(r[st.rank] || "(none)").toLowerCase().includes(st.q)) continue;
-      out.push({ ...r, dataset: id });
-    }
+    for (const r of GTAB[id].rows) out.push({ ...r, dataset: id });
   }
   return out;
 }
+async function viewGenomes() { // genome rows that match the current filter and search
+  return (await allGenomes()).filter(r => !Object.entries(st.filt).some(([k, v]) => (r[k] || "(none)") !== v) && matchGenome(r));
+}
+$("showun").onclick = async () => {   // genomes with no usable genus, listed by assembly, with the name they were submitted under
+  $("unmsg").textContent = "Loading…";
+  try {
+    const rows = (await allGenomes()).filter(r => r.genus === "(unassigned)" && matchGenome(r));
+    $("unmsg").textContent = `${fmt(rows.length)} genomes${st.q ? " match the search" : ""}`;
+    $("unout").innerHTML = rows.length ? `<div class="tablewrap"><table><thead><tr><th>Assembly</th><th>Recorded name</th><th>Phylum</th><th>Class / order</th><th>Call</th></tr></thead><tbody>` +
+      rows.map(r => `<tr><td>${esc(r.genome)}</td><td>${esc(r.species_recorded || "(no name)")}</td><td>${esc(r.phylum)}</td><td>${esc([r.class, r.order].filter(Boolean).join(" / "))}</td><td>${esc(r.call)}</td></tr>`).join("") + "</tbody></table></div>" : "";
+  } catch (e) { $("unmsg").textContent = "Could not load the genome tables: " + e.message; }
+};
 $("dlview").onclick = async () => {
   $("dlmsg").textContent = "Preparing…";
   const rows = await viewGenomes(), head = Object.values(GTAB)[0]?.head || "";
@@ -180,7 +214,7 @@ $("tbl").tBodies[0].addEventListener("click", e => {
   const tr = e.target.closest("tr"); if (!tr) return;
   const filt = { ...st.filt, [st.rank]: tr.dataset.name };
   if (st.rank === "species") { go(filt, "species"); showLoci(); $("showloci").scrollIntoView({ behavior: "smooth" }); return; }
-  go(filt, RANKS[RANKS.indexOf(st.rank) + 1]);
+  go(filt, RANKS[RANKS.indexOf(st.rank) + 1], true);   // a search stays on while drilling, so a recorded-name match can be followed down
 });
 applyHash();
 render();

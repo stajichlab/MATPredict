@@ -376,3 +376,56 @@ def test_curated_reads_tables_fola_afum(tmp_path):
     assert a["read_sets"] == 332 and a["with_reads"] == 331
     assert len((tmp_path / "reads_fola.tsv").read_text().splitlines()) == 149
     assert len((tmp_path / "reads_afum.tsv").read_text().splitlines()) == 333
+
+
+# ---- curated species name rule (docs/notes/2026-11-12_unassigned-species-names.md)
+
+@pytest.mark.parametrize("recorded, expected", [
+    ("Aureobasidium pullulans", ("Aureobasidium", "Aureobasidium pullulans", "ok")),
+    ("[Candida] auris", ("Candida", "Candida auris", "ok")),
+    ("Fusarium sp.", ("Fusarium", "Fusarium sp.", "ok")),
+    ("Boletaceae sp. KM206666", ("Boletaceae", "Boletaceae sp.", "ok")),     # old reading kept: not changed by this rule
+    # <higher taxon> sp. <genus-like word> <lowercase epithet>: the submitter's name, kept as provisional
+    ("Ascomycota sp. Antarctolithica obscura", ("Antarctolithica", "Antarctolithica obscura", "provisional")),
+    ("Ascomycota sp. 'Antarctolithica obscura'", ("Antarctolithica", "Antarctolithica obscura", "provisional")),
+    # qualifiers are dropped and the genus stays
+    ("uncultured Alectoria", ("Alectoria", "(unassigned)", "stripped")),
+    ("uncultured Sordaria", ("Sordaria", "(unassigned)", "stripped")),
+    ("cf. Caloplaca sp. 1 TL-2023", ("Caloplaca", "Caloplaca sp.", "stripped")),
+    ("aff. Porphyrellus sp. UT-M0000030", ("Porphyrellus", "Porphyrellus sp.", "stripped")),
+    # nothing usable: a rank name, a bare placeholder, an identifier, an empty name
+    ("uncultured Hypocreales", ("(unassigned)", "(unassigned)", "unassigned")),
+    ("uncultured Pleosporineae", ("(unassigned)", "(unassigned)", "unassigned")),
+    ("uncultured Arthrodermataceae", ("(unassigned)", "(unassigned)", "unassigned")),
+    ("uncultured Lecanoromycetes", ("(unassigned)", "(unassigned)", "unassigned")),
+    ("uncultured Leotiomyceta", ("(unassigned)", "(unassigned)", "unassigned")),
+    ("leotiomyceta sp.", ("(unassigned)", "(unassigned)", "unassigned")),
+    ("Ascomycota sp.", ("(unassigned)", "(unassigned)", "unassigned")),
+    ("Ascomycota sp. Tripp 6053", ("(unassigned)", "(unassigned)", "unassigned")),
+    ("fungal sp. IPV F-433", ("(unassigned)", "(unassigned)", "unassigned")),
+    ("", ("(unassigned)", "(unassigned)", "unassigned")),
+])
+def test_curated_name_rule(recorded, expected):
+    assert bsd.curated_name(recorded) == expected
+    assert (bsd.genus_of(recorded), bsd.species_of(recorded)) == expected[:2]
+
+
+def test_unassigned_names_stay_searchable_in_the_taxa_rows_and_the_genome_table(tmp_path):
+    out = tmp_path / "out"
+    camps = _campaigns(tmp_path, notes=True, manifest=MANIFEST)
+    g = Path(camps[camps.index("--asco") + 1]) / "genomes.tsv"
+    with open(g, "a") as fh:
+        fh.write("A3\tAscomycota sp. Antarctolithica obscura\t\t\t\tcalled\tlineage\t0\t\t\n"
+                 "A4\tAscomycota sp.\t\t\t\tuncalled\tlineage\t0\t\t\n")
+    bsd.main(["--release", "cleanrun", "--out", str(out)] + camps)
+    taxa = json.loads((out / "taxa.json").read_text())
+    S, i = taxa["strings"], {k: n for n, k in enumerate(taxa["fields"])}
+    by_genus = {S[r[i["genus"]]]: r for r in taxa["rows"]}
+    assert "Antarctolithica" in by_genus                       # a genus-rank search finds it
+    assert [S[x] for x in by_genus["Antarctolithica"][i["recorded"]]] == ["Ascomycota sp. Antarctolithica obscura"]
+    assert [S[x] for x in by_genus["(unassigned)"][i["recorded"]]] == ["Ascomycota sp."]
+    assert by_genus["Aureobasidium"][i["recorded"]] == []      # a normal name adds nothing to the file
+    gt = _genomes(out / "genomes_bfd_asco.tsv")
+    assert (gt["A3"]["genus"], gt["A3"]["name_status"]) == ("Antarctolithica", "provisional")
+    assert (gt["A4"]["genus"], gt["A4"]["name_status"]) == ("(unassigned)", "unassigned")
+    assert gt["A1"]["name_status"] == "ok"

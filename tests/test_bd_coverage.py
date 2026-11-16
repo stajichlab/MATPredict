@@ -208,3 +208,14 @@ def test_site_summary_shares(tmp_path):
     assert n == 4
     assert abs(sh["clft"] - 0.5) < 1e-9 and abs(sh["het"] - 0.25) < 1e-9 and abs(sh["jel"] - 0.25) < 1e-9
     assert per["S2"][0] == 1 and per["S2"][1]["clft"] == 1.0
+
+
+def test_site_summary_keep_filter(tmp_path):
+    p = tmp_path / "r.counts.tsv.gz"
+    with gzip.open(p, "wt") as fo:
+        fo.write("contig\tpos\tn_clft\tn_jel\n")
+        fo.write("S1\t1\t10\t0\n")
+        fo.write("S1\t3\t0\t10\n")
+    n, sh, _ = ss.shares_from_counts(str(p), 5, {("S1", 3)})
+    assert n == 1 and sh["jel"] == 1.0
+    assert ss.shares_from_counts(str(p), 5, None)[0] == 2

@@ -7,7 +7,7 @@
 #SBATCH --output=/bigdata/stajichlab/jstajich/projects/MATPredict/logs/rnabatch_%A_%a.log
 # Several RNA-seq runs of one strain mapped to one genome; one table row per run. Read-only discovery job.
 # Env: SRC (worktree), OUT (folder; .sra files under $OUT/sra/<RUN>/<RUN>.sra), RUNS (TSV: run, ena_read_pairs, label), FASTA, GFF3,
-#      LOCI (TSV name, contig, start, end; 1-based inclusive), REPORT (names to report), GENE_PREFIX, SPLIT_REGIONS (space list name:contig:start:end for splice-strand counts),
+#      LOCI (TSV name, contig, start, end; 1-based inclusive), REPORT (names to report), GENE_PREFIX, SPLIT_REGIONS (space list name:contig:start-end for splice-strand counts),
 #      CHUNK (runs per array task; the task takes lines SLURM_ARRAY_TASK_ID*CHUNK+1 ..).
 # Per run: fasterq-dump, read-count check against ENA (a mismatch skips the run and is logged), hisat2 --dta, depth percentile of the loci among
 # annotated genes (locus_expression.py), strandedness (infer_strandedness.py), spliced reads by splice-motif strand (XS tag) in each split region.
@@ -35,11 +35,11 @@ sed -n "$((T*CHUNK+1)),$(((T+1)*CHUNK))p" "$RUNS" | while IFS=$'\t' read -r RUN 
   line="$RUN\t$LABEL\t$ENA\t$rate"
   for tag in $REPORT; do d=$(awk -F'\t' -v n=$tag '$1==n{print $3"\t"$4}' le_$RUN.tsv); line="$line\t$d"; done
   for reg in $SPLIT_REGIONS; do
-    IFS=: read -r rn rc rs re <<< "$reg"
-    xs=$(samtools view $RUN.bam $rc:$rs-$re | awk '$6 ~ /N/ {x="none"; for(i=12;i<=NF;i++) if($i ~ /^XS:A:/) x=substr($i,6); c[x]++} END{printf "%d\t%d", c["+"], c["-"]}')
+    IFS=: read -r rn rc rs <<< "$reg"
+    xs=$(samtools view $RUN.bam "$rc:$rs" | awk '$6 ~ /N/ {x="none"; for(i=12;i<=NF;i++) if($i ~ /^XS:A:/) x=substr($i,6); c[x]++} END{printf "%d\t%d", c["+"], c["-"]}')
     line="$line\t$xs"
   done
-  printf "$line\t$st\n" > "$OUT/rows/$RUN.row.tsv"
+  printf '%b\n' "$line\t$st" > "$OUT/rows/$RUN.row.tsv"
   rm -f ${RUN}_*.fastq $RUN.bam $RUN.bam.bai
 done
 echo done

@@ -112,3 +112,11 @@ not match the genome's name:
 | Fola: 15/19 assemblies not readable (permissions) | ask N. L. for group read; re-run `results/2026-10-05_fola_detect/run.slurm` | same |
 | Unreadable genome gives a BLAST database error, not a clear input error | check the genome is readable before makeblastdb | `src/MATPredict/detect/` |
 | MAT1-2-3 has no reference model: the vocabulary entry exists (2026-10-12) but the only deposit found (F. sacchari JF776855.1) has a partial CDS open at the 3' end | needs more curation: find a complete MAT1-2-3 CDS in a published deposit, then add it to a record | `analysis/2026-10-12_verticillium-records-call-changes.md` |
+
+## Added 2026-11-15 (MAT discovery session)
+| Item | Waits on | Where |
+|---|---|---|
+| Taphrinomycotina PM-like HMG + homeodomain locus (*P. inouyei*, *P. lactucae-debilis*, *T. confusa*): draft candidate record filed 2026-11-15 (`db/candidates/Ascomycota/2754530_12-1054_PM_unresolved`) | curator review of the draft; for *T. deformans* A2 the homeodomain ORF is on the plus strand beside an expressed minus-strand gene, so no expressed homeodomain gene is shown there | `docs/notes/2026-11-14_mat-discovery-strategy-taphrinomycotina.md` (last section) |
+| Curated *T. deformans* matPi record (`db/Ascomycota/Taphrinales/5011_unknown-1_PM_combined`) is a translated tblastn region (181 aa, no stop) | curator: relabel as region-derived, replace, or keep | same note |
+| Bd isolates CLFT160 and CLFT039: heterozygous for the Brazil and other-lineage alleles at equal depth (also on 52,555 lineage-diagnostic sites) | a decision on how to describe them; a third-lineage assembly was not needed, CLFT067 carries the JEL423 base at 39.7% of the sites and was not examined | `datasets/reads/sketch_store/reports/batrachochytrium_dendrobatidis/coverage_heterozygosity/multiref_lineage_sites.md` |
+| Other *T. deformans* RNA-seq (29 PYCC 5710 runs, two single-end A2 runs) | not mapped; map only if the expressed state of the plus-strand homeodomain ORF in A2 matters | same note |

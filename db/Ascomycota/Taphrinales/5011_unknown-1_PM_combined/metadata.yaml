@@ -149,7 +149,16 @@ validation:
       appears in this record''s proteins.faa. matPi''s recorded coordinates remain
       unverified (locus.core.coordinate_provenance: not_available at the locus level,
       pending matPi''s own re-derivation) -- see locus.core.definition_note and
-      evidence.boundaries.'
+      evidence.boundaries. 2026-11-16 RNA-seq check (curator-approved note only; no coordinate
+      or status change): 29 T. deformans PYCC 5710 runs (PRJNA1047971) and the A2 runs (PRJNA299790)
+      were mapped to GCA_005281805.1. The region RHGF01000006.1:51694-52191 has read depth 110-342
+      per base (24th to 62nd percentile of annotated genes) in every PYCC 5710 library and no intron
+      in the 3 libraries checked for junctions. An expressed minus-strand gene (52192-52790, 5 exons,
+      98 percent of its spliced reads with minus-strand motifs, longest ORF 89 aa, no HMG-box or
+      homeodomain hit) overlaps the end of the region by 45 bp. The recorded matPi coordinates are a
+      tblastn translation, and these data show no expressed gene model for it. They do not show it is
+      silent: one strain, one experiment, unstranded reads. Details: docs/notes/2026-11-14_mat-discovery-strategy-taphrinomycotina.md
+      (PR 353).'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search

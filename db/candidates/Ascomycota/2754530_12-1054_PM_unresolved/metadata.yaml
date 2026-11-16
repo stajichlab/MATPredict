@@ -1,0 +1,129 @@
+record_id: 2754530_12-1054_PM_unresolved
+record_version: 1
+taxonomy:
+  taxid: 2754530
+  lineage: k__Fungi;p__Ascomycota;subphylum__Taphrinomycotina;c__Taphrinomycetes;o__Taphrinales;f__Protomycetaceae;g__Protomyces;s__Protomyces_lactucae-debilis
+  lineage_resolved_date: '2026-11-15'
+organism:
+  species: Protomyces lactucae-debilis
+  strain:
+    name: 12-1054
+    known: true
+    culture_collection_ids: []
+    differs_from_sequenced: false
+mating_type:
+  locus_name: PM
+  idiomorphs:
+  - unresolved
+  system: unknown
+locus:
+  coordinate_provenance: curator_derived
+  excluded_from_coordinate_benchmark: true
+  assembly_accession: GCF_002105105.1
+  core:
+    completeness: partial
+    reference_orientation: matMc(-)->matPi_region(-)
+    definition_note: 'DRAFT candidate, not a curated record (proposed 2026-11-15,
+      MAT discovery session; evidence in docs/notes/2026-11-14_mat-discovery-strategy-taphrinomycotina.md).
+      An HMG-box gene that is the reciprocal best hit of the curated Taphrina deformans
+      matMc, and a homeodomain-encoding region that matches the curated T. deformans
+      matPi, lie 7,146 bp apart on NW_024468021.1 of Protomyces lactucae-debilis 12-1054
+      (both on the minus strand). Two annotated genes (F003EF48_006293 on +, F003EF48_006294
+      on -) lie between them, so the two are not adjacent genes. The HMG gene is the
+      BFD funannotate model F003EF48_006292 (2 exons, 30356-31000). The homeodomain
+      gene has no BFD model; the entry here is the tblastn region (38146-38599), not
+      a gene model. Gene models: none for the homeodomain gene; its exons, start and
+      protein are unresolved. The same arrangement (HMG ortholog and homeodomain-like
+      region 7 to 14 kb apart, same contig) is present in P. inouyei NRRL YB-4354
+      (QXDQ01000433.1, contig 36.8 kb and cut 0.5 kb past the HMG gene), the second
+      P. lactucae-debilis assembly NRRL YB-4353 (not independent) and Taphrina confusa
+      CBS 375.39. A mating role has not been shown in any of them. This genome was
+      chosen because it has a reverse-stranded RNA-seq library (SRR5576147).'
+    segments:
+    - segment_index: 0
+      sequence_source:
+        type: assembly
+        accession: GCF_002105105.1
+        seq_region: NW_024468021.1
+      start: 30356
+      end: 38599
+      contig_edge_distance: null
+      sequence_checksum: null
+  extended_flank: []
+genes:
+- gene_index: 0
+  name: matMc
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: F003EF48_006292
+  segment_index: 0
+  start: 30356
+  end: 31000
+  strand: '-'
+  order_in_locus: 0
+  exons:
+  - start: 30572
+    end: 31000
+  - start: 30356
+    end: 30532
+  codon_start: 1
+  transl_table: 1
+- gene_index: 1
+  name: matPi
+  protein_accession: null
+  role: core_MAT
+  present: true
+  locus_tag: null
+  segment_index: 0
+  start: 38146
+  end: 38599
+  strand: '-'
+  order_in_locus: 1
+  exons:
+  - start: 38146
+    end: 38599
+  codon_start: 1
+  transl_table: 1
+evidence:
+  locus_existence:
+    tier: 3
+    experimental_method: 'Sequence similarity and gene order only. The HMG gene is
+      a reciprocal best hit of the curated T. deformans matMc (44 to 45% identity
+      in Protomyces); the homeodomain region matches the curated matPi and has a Pfam
+      Homeodomain hit. Transcribed: depth 1,388x (HMG gene) and 1,432x (homeodomain
+      ORF) in a reverse-stranded library, minus strand. Not tested for mating function.'
+    citations: &id001
+    - pmid: '23631913'
+      doi: 10.1128/mBio.00055-13
+    - pmid: '25587012'
+      doi: 10.1128/mBio.02250-14
+  boundaries:
+    tier: 3
+    experimental_method: 'HMG gene: BFD funannotate model. Homeodomain region: tblastn
+      hit range; the gene model is not resolved. The citations are those of the curated
+      T. deformans PM record and were not re-read for this draft.'
+    citations: *id001
+  idiomorph_assignment:
+    tier: 3
+    experimental_method: Not assigned. No second isolate with the other idiomorph
+      was examined.
+    citations: *id001
+validation:
+  status: needs_review
+  rejection_reason: null
+  accession_resolved: null
+  accession_resolved_date: null
+  accession_resolved_version: null
+  sequence_match:
+    status: not_applicable
+    per_gene: []
+    notes: ''
+  taxonomy_current: true
+  taxonomy_error: taxonkit is not on PATH
+curation:
+  proposed_by: claude-mat-discovery
+  proposal_dedupe_key: 2754530|PM|12-1054|unresolved
+  reviewed_by: null
+  reviewed_date: null
+model_provenance: null

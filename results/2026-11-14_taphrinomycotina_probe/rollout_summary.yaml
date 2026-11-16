@@ -1,0 +1,901 @@
+total_genomes: 33
+confidence_tally:
+  Ascomycota:MAT:
+    medium: 12
+    high: 4
+  Ascomycota:PM:
+    medium: 5
+  Ascomycota:MATtub:
+    high: 1
+  Ascomycota:mat1:
+    high: 9
+locus_class_tally:
+  Ascomycota:MAT:
+    partial_locus: 6
+    mat_locus: 9
+    idiomorph_gene_only: 1
+  Ascomycota:PM:
+    idiomorph_gene_only: 5
+  Ascomycota:MATtub:
+    mat_locus: 1
+  Ascomycota:mat1:
+    idiomorph_gene_only: 9
+not_detected:
+- genome: GCA_000312925.2_ASM31292v2
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000312925.2_ASM31292v2
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000312925.2_ASM31292v2
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000312925.2_ASM31292v2
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_000312925.2_ASM31292v2
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000312925.2_ASM31292v2
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000312925.2_ASM31292v2
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836135.1_Tw_assembly_v1.1
+  family: Ascomycota:PM
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836135.1_Tw_assembly_v1.1
+  family: Ascomycota:mat1
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000836135.1_Tw_assembly_v1.1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836135.1_Tw_assembly_v1.1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_000836135.1_Tw_assembly_v1.1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000836135.1_Tw_assembly_v1.1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000836155.1_Td_assembly_v1.1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000836155.1_Td_assembly_v1.1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836155.1_Td_assembly_v1.1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836155.1_Td_assembly_v1.1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_000836155.1_Td_assembly_v1.1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836155.1_Td_assembly_v1.1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000836155.1_Td_assembly_v1.1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836175.1_Tf_assembly_v1.1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000836175.1_Tf_assembly_v1.1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836175.1_Tf_assembly_v1.1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836175.1_Tf_assembly_v1.1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_000836175.1_Tf_assembly_v1.1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000836175.1_Tf_assembly_v1.1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836195.1_Tp_assembly_v1.1
+  family: Ascomycota:PM
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836195.1_Tp_assembly_v1.1
+  family: Ascomycota:mat1
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000836195.1_Tp_assembly_v1.1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_000836195.1_Tp_assembly_v1.1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_000836195.1_Tp_assembly_v1.1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_000836195.1_Tp_assembly_v1.1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_001929475.1_NeoIirr1.0
+  family: Ascomycota:PM
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_001929475.1_NeoIirr1.0
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_001929475.1_NeoIirr1.0
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_001929475.1_NeoIirr1.0
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_001929475.1_NeoIirr1.0
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_001929475.1_NeoIirr1.0
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003568695.1_ASM356869v1
+  family: Ascomycota:MAT
+  reason: best cluster was flank-carried -- no core gene could be modelled -- and
+    its strongest core hit scores below 39 bits or lies outside the flank span (+-20000
+    bp)
+- genome: GCA_003568695.1_ASM356869v1
+  family: Ascomycota:PM
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003568695.1_ASM356869v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003568695.1_ASM356869v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003568695.1_ASM356869v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_003568695.1_ASM356869v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003568695.1_ASM356869v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003568695.1_ASM356869v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717155.1_ASM371715v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717155.1_ASM371715v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717155.1_ASM371715v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_003717155.1_ASM371715v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717165.1_ASM371716v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717165.1_ASM371716v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717165.1_ASM371716v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717165.1_ASM371716v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_003717165.1_ASM371716v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717165.1_ASM371716v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717175.1_ASM371717v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717175.1_ASM371717v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717175.1_ASM371717v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_003717175.1_ASM371717v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717175.1_ASM371717v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717235.1_ASM371723v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717235.1_ASM371723v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717235.1_ASM371723v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_003717235.1_ASM371723v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717255.1_ASM371725v1
+  family: Ascomycota:MAT
+  reason: best cluster was flank-carried -- no core gene could be modelled -- and
+    its strongest core hit scores below 39 bits or lies outside the flank span (+-20000
+    bp)
+- genome: GCA_003717255.1_ASM371725v1
+  family: Ascomycota:PM
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717255.1_ASM371725v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717255.1_ASM371725v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717255.1_ASM371725v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_003717255.1_ASM371725v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717255.1_ASM371725v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717255.1_ASM371725v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717275.1_ASM371727v1
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717275.1_ASM371727v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_003717275.1_ASM371727v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717275.1_ASM371727v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717275.1_ASM371727v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_003717275.1_ASM371727v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717275.1_ASM371727v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_003717275.1_ASM371727v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_004000165.1_ASM400016v1
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_004000165.1_ASM400016v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_004000165.1_ASM400016v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_004000165.1_ASM400016v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_004000165.1_ASM400016v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_004000165.1_ASM400016v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_004000165.1_ASM400016v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_004000165.1_ASM400016v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281515.1_ASM528151v1
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281515.1_ASM528151v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281515.1_ASM528151v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281515.1_ASM528151v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281515.1_ASM528151v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_005281515.1_ASM528151v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281515.1_ASM528151v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281515.1_ASM528151v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281525.1_ASM528152v1
+  family: Ascomycota:MAT
+  reason: best cluster was flank-carried -- no core gene could be modelled -- and
+    its strongest core hit scores below 39 bits or lies outside the flank span (+-20000
+    bp)
+- genome: GCA_005281525.1_ASM528152v1
+  family: Ascomycota:PM
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281525.1_ASM528152v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281525.1_ASM528152v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281525.1_ASM528152v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_005281525.1_ASM528152v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281525.1_ASM528152v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281525.1_ASM528152v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281535.1_ASM528153v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281535.1_ASM528153v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281535.1_ASM528153v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_005281535.1_ASM528153v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281535.1_ASM528153v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281535.1_ASM528153v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281575.1_ASM528157v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281575.1_ASM528157v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281575.1_ASM528157v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281575.1_ASM528157v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_005281575.1_ASM528157v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281575.1_ASM528157v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281575.1_ASM528157v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281585.1_ASM528158v1
+  family: Ascomycota:PM
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281585.1_ASM528158v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281585.1_ASM528158v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281585.1_ASM528158v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_005281585.1_ASM528158v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281585.1_ASM528158v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281585.1_ASM528158v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281805.1_ASM528180v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281805.1_ASM528180v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281805.1_ASM528180v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281805.1_ASM528180v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_005281805.1_ASM528180v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_005281805.1_ASM528180v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_005281805.1_ASM528180v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_008802775.1_ASM880277v1
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_008802775.1_ASM880277v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_008802775.1_ASM880277v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_008802775.1_ASM880277v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_008802775.1_ASM880277v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_008802775.1_ASM880277v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_008802775.1_ASM880277v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_008802775.1_ASM880277v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_019702855.1_Sjap_CBS5679_MinION_1.0
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_019702855.1_Sjap_CBS5679_MinION_1.0
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_019702855.1_Sjap_CBS5679_MinION_1.0
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_019702855.1_Sjap_CBS5679_MinION_1.0
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_019702855.1_Sjap_CBS5679_MinION_1.0
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_019702855.1_Sjap_CBS5679_MinION_1.0
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_029532395.1_ASM2953239v1
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_029532395.1_ASM2953239v1
+  family: Ascomycota:PM
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_029532395.1_ASM2953239v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_029532395.1_ASM2953239v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_029532395.1_ASM2953239v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_029532395.1_ASM2953239v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_029532395.1_ASM2953239v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_029532395.1_ASM2953239v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_032882995.1_ASM3288299v1
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_032882995.1_ASM3288299v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_032882995.1_ASM3288299v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_032882995.1_ASM3288299v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_032882995.1_ASM3288299v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_032882995.1_ASM3288299v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_032883015.1_ASM3288301v1
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_032883015.1_ASM3288301v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_032883015.1_ASM3288301v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_032883015.1_ASM3288301v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_032883015.1_ASM3288301v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_032883015.1_ASM3288301v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_051599415.1_Sav_pha_PYCC9005_v1
+  family: Ascomycota:MAT
+  reason: best cluster was flank-carried -- no core gene could be modelled -- and
+    its strongest core hit scores below 39 bits or lies outside the flank span (+-20000
+    bp)
+- genome: GCA_051599415.1_Sav_pha_PYCC9005_v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_051599415.1_Sav_pha_PYCC9005_v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_051599415.1_Sav_pha_PYCC9005_v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_051599415.1_Sav_pha_PYCC9005_v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_051599415.1_Sav_pha_PYCC9005_v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_051599415.1_Sav_pha_PYCC9005_v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_051599415.1_Sav_pha_PYCC9005_v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_051599425.1_Sai_col_YB2330_v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_051599425.1_Sai_col_YB2330_v1
+  family: Ascomycota:mat1
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_051599425.1_Sai_col_YB2330_v1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_051599425.1_Sai_col_YB2330_v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_051599425.1_Sai_col_YB2330_v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_051599425.1_Sai_col_YB2330_v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_958267425.1_S._versatalis_EI_1.0
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_958267425.1_S._versatalis_EI_1.0
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_958267425.1_S._versatalis_EI_1.0
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCA_958267425.1_S._versatalis_EI_1.0
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCA_958267425.1_S._versatalis_EI_1.0
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCA_958267425.1_S._versatalis_EI_1.0
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCF_000004155.1_SCY4
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_000004155.1_SCY4
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_000004155.1_SCY4
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCF_000004155.1_SCY4
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCF_000004155.1_SCY4
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_000004155.1_SCY4
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCF_000150505.1_SO6
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_000150505.1_SO6
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_000150505.1_SO6
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCF_000150505.1_SO6
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCF_000150505.1_SO6
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_000150505.1_SO6
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCF_001661265.1_Saico1
+  family: Ascomycota:MAT
+  reason: best cluster was flank-carried -- no core gene could be modelled -- and
+    its strongest core hit scores below 39 bits or lies outside the flank span (+-20000
+    bp)
+- genome: GCF_001661265.1_Saico1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_001661265.1_Saico1
+  family: Ascomycota:mat1
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_001661265.1_Saico1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCF_001661265.1_Saico1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCF_001661265.1_Saico1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_001661265.1_Saico1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_001661265.1_Saico1
+  family: Ascomycota:MATtub
+  reason: best cluster was flank-carried -- no core gene could be modelled -- and
+    its strongest core hit scores below 39 bits or lies outside the flank span (+-20000
+    bp)
+- genome: GCF_002105105.1_Prola1
+  family: Ascomycota:mat1
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_002105105.1_Prola1
+  family: Ascomycota:mat2
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCF_002105105.1_Prola1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCF_002105105.1_Prola1
+  family: Ascomycota:MTL
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCF_027921745.1_ASM2792174v1
+  family: Ascomycota:MAT
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_027921745.1_ASM2792174v1
+  family: Ascomycota:PM
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_027921745.1_ASM2792174v1
+  family: Ascomycota:mat3
+  reason: no reference protein for this family is in the search set (none curated,
+    or all withheld)
+- genome: GCF_027921745.1_ASM2792174v1
+  family: Ascomycota:MATsc
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+- genome: GCF_027921745.1_ASM2792174v1
+  family: Ascomycota:MTL
+  reason: best cluster carried 1 modelled gene(s), below the 2 required to report
+    a locus; only 1 of its genes could be modelled
+- genome: GCF_027921745.1_ASM2792174v1
+  family: Ascomycota:MATtub
+  reason: best cluster carried 0 modelled gene(s), below the 2 required to report
+    a locus; none of its genes could be modelled
+anomalies: []
+genome_errors: []
+not_searched: []
+assembly_gap_at_locus:
+- GCA_000312925.2_ASM31292v2
+- GCF_001661265.1_Saico1
+zygosity_unknown: []
+unverified_calls: {}

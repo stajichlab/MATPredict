@@ -1,0 +1,2291 @@
+IQ-TREE version 3.0.1 for Linux x86 64-bit built May 14 2025
+Developed by Bui Quang Minh, Thomas Wong, Nhan Ly-Trong, Huaiyan Ren
+Contributed by Lam-Tung Nguyen, Dominik Schrempf, Chris Bielow,
+Olga Chernomor, Michael Woodhams, Diep Thi Hoang, Heiko Schmidt
+
+Host:    r39 (AVX2, FMA3, 1007 GB RAM)
+Command: iqtree3 -s hd_trim.afa -m MFP -B 1000 -T 8 --prefix hd_tree -redo
+Seed:    627173 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Fri Nov 13 08:57:29 2026
+Kernel:  AVX+FMA - 8 threads (8 CPU cores detected)
+
+Reading alignment file hd_trim.afa ... Fasta format detected
+Reading fasta file: done in 0.00113456 secs using 44.16% CPU
+Alignment most likely contains protein sequences
+Constructing alignment: done in 0.000513653 secs using 90.92% CPU
+Alignment has 455 sequences with 55 columns, 55 distinct patterns
+55 parsimony-informative, 0 singleton sites, 0 constant sites
+                                                                      Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 0.0448807 secs using 196.2% CPU
+   1  CHY_pairsame|Rhizoclosmatium_sp._JEL0117_JEL0117|F1760C57_008356        5.45%    passed     93.49%
+   2  CHY_pairsame|Podochytrium_sp._JEL0797_JEL0797|F5C6AA96_011614           0.00%    passed     29.01%
+   3  CHY_pairsame|Rhizoclosmatium_sp._JEL0117_JEL0117|F1760C57_008358        5.45%    passed     18.66%
+   4  CHY_pairsame|Chytriomyces_hyalinus_JEL0176|F45CC3EA_012228              1.82%    passed     86.46%
+   5  CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_008834   14.55%    passed     98.74%
+   6  CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_012656   14.55%    passed     99.73%
+   7  CHY_pairsame|Chytriomyces_hyalinus_JEL0345|F02BEDAE_005357             16.36%    passed     83.76%
+   8  AMFbg|Rhizophagus_irregularis_DAOM-197198|FDB574B3_007696               0.00%    passed     95.92%
+   9  AMFbg|Rhizophagus_irregularis_DAOM-197198|FDB574B3_006633               0.00%    passed     96.41%
+  10  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_006690               0.00%    passed     61.10%
+  11  AMFbg|Rhizophagus_irregularis_DAOM-197198|FDB574B3_032870               0.00%    passed     73.62%
+  12  CHY_pairdiv|Irineochytrium_annulatum_JEL0729|F9537470_007994            1.82%    passed     97.06%
+  13  ENT_pairdiv|Entomophthora_muscae_Berkeley|FE5E6180_012450               1.82%    passed     93.49%
+  14  ZOO_all|Syncephalis_fuscata_S228|FB5167BD_002723                        0.00%    passed     80.54%
+  15  ZOO_all|Syncephalis_pseudoplumigaleata_Benny_S71-1|F8BDDC36_003035      0.00%    passed     14.42%
+  16  ENT_pairconv|Conidiobolus_incongruus_B7586|FBB08B1E_014414              1.82%    passed     45.26%
+  17  MORbg|Actinomortierella_ambigua_BC1065|F9D4E4C8_003212                  0.00%    passed     97.87%
+  18  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_020282                         1.82%    passed     30.97%
+  19  ENT_pairdiv|Neoconidiobolus_thromboides_FSU_785|FC345CF7_008584         1.82%    passed     30.97%
+  20  MORbg|Actinomortierella_ambigua_BC1065|F9D4E4C8_006002                  1.82%    passed     97.95%
+  21  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_020080                         1.82%    passed     30.97%
+  22  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_000084                        0.00%    passed     95.67%
+  23  ENT_pairsame|Capillidium_heterosporum_CGMCC_3.15857|FDAC0301_004505     1.82%    passed     90.04%
+  24  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_024876              0.00%    passed     80.68%
+  25  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_009836               1.82%    passed     98.26%
+  26  ENT_pairconv|Conidiobolus_incongruus_B7586|FBB08B1E_014412              1.82%    passed     41.61%
+  27  ENT_pairsame|Capillidium_heterosporum_CGMCC_3.15857|FDAC0301_004503     0.00%    passed     89.28%
+  28  MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_001377                       0.00%    passed     95.07%
+  29  ENT_pairsame|Entomophthora_muscae_Berkeley|FE5E6180_007369              0.00%    passed     61.88%
+  30  ZOO_all|Thamnocephalis_sphaerospora_RSA_1356|F9368871_001220            3.64%    passed     46.72%
+  31  ENT_pairsame|Entomophthora_muscae_Berkeley|FE5E6180_007370              0.00%    passed     94.91%
+  32  CHY_pairsame|Chytriomyces_sp._MP71_MP71|F65A18B5_005125                 0.00%    passed     92.73%
+  33  AMFbg|Rhizophagus_irregularis_DAOM-197198|FDB574B3_033656               1.82%    passed     87.36%
+  34  MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_011846                  0.00%    passed     95.67%
+  35  ENT_pairdiv|Conidiobolus_incongruus_B7586|FBB08B1E_006507               7.27%    passed     89.08%
+  36  ENT_pairsame|Batkoa_obscura_7217|F67353AC_017923                        1.82%    passed     96.97%
+  37  ENT_pairsame|Batkoa_obscura_7217|F67353AC_018868                        1.82%    passed     96.97%
+  38  ENT_pairsame|Neoconidiobolus_thromboides_FSU_785|FC345CF7_002654        1.82%    passed     96.97%
+  39  ZOO_all|Syncephalis_pseudoplumigaleata_Benny_S71-1|F8BDDC36_005145      0.00%    passed     93.59%
+  40  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_005235                         1.82%    passed     21.23%
+  41  MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_001869                       0.00%    passed     84.50%
+  42  ENT_pairsame|Conidiobolus_coronatus_NRRL_28638|FDBD982D_008941          1.82%    passed     43.48%
+  43  MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_002344                  1.82%    passed     97.64%
+  44  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_010981                        1.82%    passed     97.64%
+  45  ENT_pairsame|Entomophthora_muscae_Berkeley|FE5E6180_018217              0.00%    passed     84.13%
+  46  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_001092               0.00%    passed     91.91%
+  47  MORbg|Mortierella_alpina_AD071|F740ECF2_000743                          0.00%    passed     95.07%
+  48  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_010709               0.00%    passed     95.07%
+  49  MORbg|Mortierella_alpina_AD071|F740ECF2_002135                          1.82%    passed     98.26%
+  50  ENT_pairdiv|Conidiobolus_incongruus_B7586|FBB08B1E_006508               7.27%    passed     78.05%
+  51  ENT_pairsame|Conidiobolus_coronatus_NRRL_28638|FDBD982D_008940          1.82%    passed     49.39%
+  52  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_008912               0.00%    passed     91.80%
+  53  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_006301               0.00%    passed     91.80%
+  54  ZOO_all|Piptocephalis_cylindrospora_RSA_2659|F1942C05_004252            0.00%    passed     90.31%
+  55  ZOO_all|Syncephalis_fuscata_S228|FB5167BD_008486                        0.00%    passed     69.68%
+  56  MORbg|Mortierella_alpina_AD071|F740ECF2_003517                          0.00%    passed     92.23%
+  57  ZOO_all|Syncephalis_fuscata_S228|FB5167BD_003482                        3.64%    passed     98.34%
+  58  ENT_pairsame|Batkoa_obscura_7217|F67353AC_005204                        1.82%    passed     85.09%
+  59  ZOO_all|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_000523              0.00%    passed     94.59%
+  60  KIC_pairconv|Zancudomyces_culisetae_HAW-14-8|F23D95F9_000833            0.00%    passed     97.78%
+  61  CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_017448            7.27%    passed     50.09%
+  62  KIC_pairconv|Zancudomyces_culisetae_COL-18-3|F9D66AC0_000806            0.00%    passed     97.78%
+  63  CHY_pairdiv|Polychytrium_aggregatum_JEL109|F7609CBB_005776              0.00%    passed     99.89%
+  64  CHY_pairdiv|Polychytrium_aggregatum_JEL109|F7609CBB_015050              0.00%    passed     99.89%
+  65  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_007821                        0.00%    passed     96.96%
+  66  AMFbg|Rhizophagus_irregularis_DAOM-197198|FDB574B3_015185               0.00%    passed     99.67%
+  67  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_024874              0.00%    passed     95.23%
+  68  AMF_HD2|Ambispora_leptoticha_FL130A|F71D2AD7_009863                     1.82%    passed     92.64%
+  69  ZOO_all|Thamnocephalis_sphaerospora_RSA_1356|F9368871_003153            1.82%    passed     58.76%
+  70  MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_006544                       1.82%    passed     85.26%
+  71  CHY_pairsame|Chytriomyces_sp._MP71_MP71|F65A18B5_005126                 0.00%    passed     99.73%
+  72  ENT_pairsame|Entomophthora_muscae_Berkeley|FE5E6180_018219              0.00%    passed     96.85%
+  73  DIK_HD2|5346_a43-b43-okayama-7_HD_A43                                   1.82%    passed     60.01%
+  74  CHY_pairsame|Blyttiomyces_helicus_Perch_Fen|FFC03817_004641             0.00%    passed     53.85%
+  75  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_019163                0.00%    passed     89.66%
+  76  ZOO_all|Acaulopage_tetraceros_T-All|F46AF962_003870                     3.64%    passed     98.93%
+  77  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_009102                0.00%    passed     89.66%
+  78  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_005234                         3.64%    passed     77.34%
+  79  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_020081                         3.64%    passed     77.34%
+  80  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_020283                         3.64%    passed     77.34%
+  81  ENT_pairdiv|Neoconidiobolus_thromboides_FSU_785|FC345CF7_008585         3.64%    passed     77.34%
+  82  MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_005200                  0.00%    passed     96.96%
+  83  KIC_pairconv|Capniomyces_stellatus_MIS-10-108|F3D937C5_002581           0.00%    passed     89.21%
+  84  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_024290              1.82%    passed     93.32%
+  85  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_004142                         0.00%    passed     99.17%
+  86  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_007641               0.00%    passed     97.91%
+  87  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_008604               0.00%    passed     97.91%
+  88  ZOO_all|Syncephalis_pseudoplumigaleata_Benny_S71-1|F8BDDC36_003474      3.64%    passed     99.04%
+  89  ZOO_all|Zoophagus_insidians_Zi-All|F9A17E9D_001270                      0.00%    passed     74.25%
+  90  ZOO_all|Syncephalis_pseudoplumigaleata_Benny_S71-1|F8BDDC36_004020      1.82%    passed     85.22%
+  91  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_003993               3.64%    passed     99.39%
+  92  ZOO_all|Stylopage_hadra_SOG|F186E471_003268                             0.00%    passed     84.79%
+  93  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_009101                0.00%    passed     97.84%
+  94  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_019162                0.00%    passed     97.84%
+  95  CHY_pairdiv|Polychytrium_aggregatum_JEL109|F7609CBB_005778              0.00%    passed     79.92%
+  96  CHY_pairdiv|Polychytrium_aggregatum_JEL109|F7609CBB_015052              0.00%    passed     79.92%
+  97  CHY_pairsame|Podochytrium_sp._JEL0797_JEL0797|F5C6AA96_010620           0.00%    passed     99.16%
+  98  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_003453                1.82%    passed     97.70%
+  99  ZOO_all|Stylopage_hadra_SOG|F186E471_002046                             0.00%    passed     94.69%
+ 100  DIK_HD2|2822231_sb25_HD_A1                                              1.82%    passed     96.52%
+ 101  MORbg|Mortierella_alpina_AD071|F740ECF2_007988                          0.00%    passed     80.57%
+ 102  ZOO_all|Thamnocephalis_sphaerospora_RSA_1356|F9368871_000761            0.00%    passed     80.20%
+ 103  ENT_pairsame|Capillidium_heterosporum_CGMCC_3.15857|FDAC0301_007474     0.00%    passed     96.22%
+ 104  ZOO_all|Stylopage_hadra_SOG|F186E471_001219                             1.82%    passed     57.90%
+ 105  ZOO_all|Acaulopage_tetraceros_T-All|F46AF962_004855                     0.00%    passed     34.02%
+ 106  MORbg|Mortierella_alpina_AD071|F740ECF2_010539                          0.00%    passed     98.09%
+ 107  CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_010236    3.64%    passed     94.49%
+ 108  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_019802              5.45%    passed     97.45%
+ 109  ZOO_all|Cochlonema_odontosperma_E-All|FE0E7C3D_006215                   0.00%    passed     16.90%
+ 110  CHY_pairsame|Chytriomyces_confervae_CBS_675.73|F88BBF7D_014552          1.82%    passed     45.17%
+ 111  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_010853               0.00%    passed     77.87%
+ 112  ZOO_all|Piptocephalis_cylindrospora_RSA_2659|F1942C05_001014            1.82%    passed     48.53%
+ 113  BAS_pairconv|Basidiobolus_sp._ARSEF_9894_ARSEF_9894|F0F939A4_010291     0.00%    passed     92.41%
+ 114  MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_012102                  0.00%    passed     77.87%
+ 115  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_004134                        0.00%    passed     77.87%
+ 116  MORbg|Actinomortierella_ambigua_BC1065|F9D4E4C8_005910                  0.00%    passed     11.96%
+ 117  CHY_pairsame|Chytriomyces_hyalinus_JEL0176|F45CC3EA_012457              0.00%    passed     53.63%
+ 118  BAS_pairconv|Basidiobolus_sp._ARSEF_9894_ARSEF_9894|F0F939A4_010312     0.00%    passed     91.00%
+ 119  ZOO_all|Syncephalis_fuscata_S228|FB5167BD_005023                        1.82%    passed     97.83%
+ 120  ENT_pairsame|Batkoa_obscura_7217|F67353AC_005203                        3.64%    passed     32.38%
+ 121  CHY_pairsame|Entophlyctis_luteolus_JEL0120|F09F2859_009855              1.82%    passed     25.36%
+ 122  ZOO_all|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_000222              0.00%    passed     92.83%
+ 123  ZOO_pairsame|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_000222         0.00%    passed     92.83%
+ 124  ZOO_all|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_004839              1.82%    passed     70.51%
+ 125  ENT_pairsame|Batkoa_obscura_7217|F67353AC_018869                        3.64%    passed     37.40%
+ 126  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_012238               0.00%    passed     79.08%
+ 127  BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688     0.00%    passed     72.28%
+ 128  BAS_pairconv|Basidiobolus_sp._ARSEF_9912_ARSEF_9912|F6DCEF1C_000239     0.00%    passed     72.28%
+ 129  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_000227               1.82%    passed     90.26%
+ 130  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_010628               1.82%    passed     90.26%
+ 131  BAS_pairconv|Basidiobolus_sp._MH_8.1_MH_8.1|F3025612_002353             0.00%    passed     72.28%
+ 132  BAS_pairconv|Basidiobolus_meristosporus_B9252|F5E080B1_009657           0.00%    passed     93.21%
+ 133  BAS_pairconv|Basidiobolus_sp._ARSEF_9894_ARSEF_9894|F0F939A4_010290     0.00%    passed     72.28%
+ 134  BAS_pairconv|Basidiobolus_heterosporus_B8920|F4D8AF16_003945            0.00%    passed     72.28%
+ 135  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_012237               0.00%    passed     53.40%
+ 136  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_009835                        1.82%    passed     64.66%
+ 137  BAS_pairconv|Basidiobolus_ranarum_AG-B5|F7F3090E_004076                 0.00%    passed     72.28%
+ 138  BAS_pairconv|Basidiobolus_sp._MH_6.3_MH_6.3|F00F927D_001289             0.00%    passed     72.28%
+ 139  BAS_pairconv|Basidiobolus_sp._MH_9.1_MH_9.1|F29CF79F_001436             0.00%    passed     72.28%
+ 140  CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_002064           0.00%    passed     49.80%
+ 141  BAS_pairconv|Basidiobolus_sp._ARSEF_9908_ARSEF_9908|F41217C2_016214     0.00%    passed     72.28%
+ 142  ZOO_all|Cochlonema_odontosperma_E-All|FE0E7C3D_005553                   0.00%    passed     58.84%
+ 143  ZOO_all|Cochlonema_odontosperma_E-All|FE0E7C3D_005555                   0.00%    passed     58.84%
+ 144  ZOO_pairconv|Cochlonema_odontosperma_E-All|FE0E7C3D_005553              0.00%    passed     58.84%
+ 145  ZOO_pairconv|Cochlonema_odontosperma_E-All|FE0E7C3D_005555              0.00%    passed     58.84%
+ 146  MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_001443                       0.00%    passed     83.47%
+ 147  ENT_pairsame|Neoconidiobolus_thromboides_FSU_785|FC345CF7_003261        3.64%    passed     91.12%
+ 148  BAS_pairconv|Basidiobolus_sp._ARSEF_270_ARSEF_270|FDCA49FA_000163       0.00%    passed     72.28%
+ 149  BAS_pairconv|Basidiobolus_heterosporus_B8920|F4D8AF16_003946            0.00%    passed     93.21%
+ 150  CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_006795           7.27%    passed     92.71%
+ 151  BAS_pairconv|Basidiobolus_meristosporus_CBS_931.73|F9147518_009076      0.00%    passed     72.28%
+ 152  BAS_pairconv|Basidiobolus_sp._ARSEF_9891_ARSEF_9891|FCDD8027_001128     0.00%    passed     93.21%
+ 153  BAS_pairconv|Basidiobolus_meristosporus_B9252|F5E080B1_009656           0.00%    passed     72.28%
+ 154  ENT_pairsame|Neoconidiobolus_thromboides_FSU_785|FC345CF7_002653        3.64%    passed     34.67%
+ 155  ENT_pairsame|Batkoa_obscura_7217|F67353AC_017924                        3.64%    passed     34.67%
+ 156  BAS_pairconv|Basidiobolus_sp._B_8.4_B_8.4|FAF1E8C7_001661               0.00%    passed     72.28%
+ 157  BAS_pairconv|Basidiobolus_sp._ARSEF_270_ARSEF_270|FDCA49FA_000825       0.00%    passed     72.28%
+ 158  BAS_pairconv|Basidiobolus_sp._ARSEF_9903_ARSEF_9903|F81690E9_001218     0.00%    passed     72.28%
+ 159  BAS_pairconv|Basidiobolus_sp._ARSEF_9891_ARSEF_9891|FCDD8027_001129     0.00%    passed     72.28%
+ 160  BAS_pairconv|Basidiobolus_sp._ARSEF_9903_ARSEF_9903|F81690E9_001219     0.00%    passed     93.21%
+ 161  ENT_pairdiv|Entomophthora_muscae_Berkeley|FE5E6180_012448               5.45%    passed     36.82%
+ 162  BAS_pairconv|Basidiobolus_meristosporus_CBS_931.73|F9147518_009075      0.00%    passed     93.21%
+ 163  ZOO_all|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_000221              0.00%    passed     98.07%
+ 164  ZOO_pairsame|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_000221         0.00%    passed     98.07%
+ 165  CHY_pairdiv|Entophlyctis_sp._JEL0112_JEL0112|FED79EE9_009493            0.00%    passed     87.11%
+ 166  BAS_pairconv|Basidiobolus_sp._ARSEF_270_ARSEF_270|FDCA49FA_000162       0.00%    passed     93.21%
+ 167  CHY_pairdiv|Entophlyctis_luteolus_JEL0129|F8D640A0_006794               0.00%    passed     87.11%
+ 168  CHY_pairdiv|Entophlyctis_luteolus_JEL0120|F09F2859_009331               0.00%    passed     87.11%
+ 169  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_003454                3.64%    passed     75.29%
+ 170  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_024291              5.45%    passed     85.29%
+ 171  BAS_pairconv|Basidiobolus_sp._MH_6.3_MH_6.3|F00F927D_001290             0.00%    passed     96.93%
+ 172  BAS_pairconv|Basidiobolus_sp._MH_9.1_MH_9.1|F29CF79F_001435             0.00%    passed     96.93%
+ 173  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_014151                        1.82%    passed     55.00%
+ 174  BAS_pairconv|Basidiobolus_sp._MH_8.1_MH_8.1|F3025612_002352             0.00%    passed     96.93%
+ 175  BAS_pairconv|Basidiobolus_ranarum_AG-B5|F7F3090E_004077                 0.00%    passed     96.93%
+ 176  BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000687     0.00%    passed     96.93%
+ 177  BAS_pairconv|Basidiobolus_sp._ARSEF_9912_ARSEF_9912|F6DCEF1C_000238     0.00%    passed     96.93%
+ 178  BAS_pairconv|Basidiobolus_sp._ARSEF_9908_ARSEF_9908|F41217C2_016215     0.00%    passed     96.93%
+ 179  CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_002062           0.00%    passed     68.59%
+ 180  BAS_pairconv|Basidiobolus_sp._B_8.4_B_8.4|FAF1E8C7_001662               0.00%    passed     93.21%
+ 181  MORbg|Mortierella_alpina_AD071|F740ECF2_010037                          0.00%    passed     83.50%
+ 182  BAS_pairconv|Basidiobolus_sp._ARSEF_9894_ARSEF_9894|F0F939A4_010313     0.00%    passed     65.67%
+ 183  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_019800              1.82%    passed     84.94%
+ 184  BAS_pairconv|Basidiobolus_sp._ARSEF_270_ARSEF_270|FDCA49FA_000826       0.00%    passed     93.21%
+ 185  CHY_pairconv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_007857          3.64%    passed     99.30%
+ 186  CHY_pairconv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_001522              3.64%    passed     99.30%
+ 187  ZOO_all|Zoophagus_insidians_Zi-All|F9A17E9D_002274                      1.82%    passed     99.50%
+ 188  CHY_pairconv|Physocladia_obscura_JEL0513|F3EFA7DF_001296                3.64%    passed     93.40%
+ 189  CHY_pairconv|Rhizoclosmatium_globosum_JEL800|F87CC697_022608            3.64%    passed     98.31%
+ 190  CHY_pairconv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_011171    3.64%    passed     99.78%
+ 191  ZOO_all|Acaulopage_tetraceros_T-All|F46AF962_002269                     0.00%    passed     88.15%
+ 192  CHY_pairconv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_006689    3.64%    passed     99.76%
+ 193  MORbg|Actinomortierella_ambigua_BC1065|F9D4E4C8_001670                  0.00%    passed     58.30%
+ 194  CHY_pairdiv|Entophlyctis_sp._JEL0112_JEL0112|FED79EE9_009494            0.00%    passed     27.28%
+ 195  CHY_pairconv|Chytriomyces_hyalinus_ARG085|F20F1B5E_007711               3.64%    passed     99.78%
+ 196  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_010485              3.64%    passed     29.65%
+ 197  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_010484              3.64%    passed     29.65%
+ 198  AMFbg|Rhizophagus_irregularis_DAOM-197198|FDB574B3_030123               0.00%    passed     91.53%
+ 199  ZOO_all|Zoopage_sp._CT-All_CT-All|FF98D640_000228                       0.00%    passed     64.99%
+ 200  CHY_pairconv|Chytriomyces_hyalinus_ARG121|F891E5C5_005849               3.64%    passed     99.78%
+ 201  ZOO_all|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_005234              0.00%    passed     70.65%
+ 202  ZOO_all|Zoophagus_insidians_Zi-All|F9A17E9D_000692                      0.00%    passed     91.31%
+ 203  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_021006              0.00%    passed     78.25%
+ 204  CHY_pairdiv|Entophlyctis_luteolus_JEL0129|F8D640A0_006795               0.00%    passed     27.28%
+ 205  CHY_pairdiv|Entophlyctis_luteolus_JEL0120|F09F2859_009332               0.00%    passed     27.28%
+ 206  CHY_pairsame|Chytriomyces_hyalinus_JEL0176|F45CC3EA_003794              0.00%    passed     44.39%
+ 207  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_025153              0.00%    passed     60.24%
+ 208  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_021007              0.00%    passed     60.24%
+ 209  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_025152              0.00%    passed     78.25%
+ 210  MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_009449                  1.82%    passed     86.78%
+ 211  CHY_pairsame|Chytriomyces_hyalinus_JEL0345|F02BEDAE_000135              0.00%    passed     44.39%
+ 212  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_000094               0.00%    passed     44.39%
+ 213  CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_004572    0.00%    passed     44.39%
+ 214  CHY_pairsame|Chytriomyces_sp._MP71_MP71|F65A18B5_000253                 3.64%    passed     96.05%
+ 215  CHY_pairsame|Chytriomyces_hyalinus_ARG121|F891E5C5_003498               0.00%    passed     44.39%
+ 216  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_004144                         1.82%    passed      6.74%
+ 217  CHY_pairconv|Rhizoclosmatium_sp._JEL0117_JEL0117|F1760C57_005670        3.64%    passed     98.31%
+ 218  MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_007088                       1.82%    passed     98.26%
+ 219  ZOO_all|Syncephalis_fuscata_S228|FB5167BD_002340                        3.64%    passed     50.79%
+ 220  ZOO_all|Thamnocephalis_sphaerospora_RSA_1356|F9368871_000267            3.64%    passed     50.79%
+ 221  ZOO_pairconv|Thamnocephalis_sphaerospora_RSA_1356|F9368871_000267       3.64%    passed     50.79%
+ 222  CHY_pairsame|Blyttiomyces_helicus_Perch_Fen|FFC03817_004643             0.00%    passed     83.66%
+ 223  CHY_pairdiv|Irineochytrium_annulatum_JEL0729|F9537470_007996            0.00%    passed     91.96%
+ 224  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_000968               1.82%    passed     99.02%
+ 225  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_002579               3.64%    passed     50.79%
+ 226  CHY_pairconv|Chytriomyces_hyalinus_JEL0345|F02BEDAE_006501              3.64%    passed     99.78%
+ 227  CHY_pairconv|Obelidium_mucronatum_JEL802|FC3A2542_018066                3.64%    passed     91.12%
+ 228  ENT_pairsame|Neoconidiobolus_thromboides_FSU_785|FC345CF7_003915        1.82%    passed     25.81%
+ 229  CHY_pairsame|Podochytrium_sp._JEL0797_JEL0797|F5C6AA96_011615           0.00%    passed     86.53%
+ 230  AMF_HD2|Diversispora_eburnea_AZ414A|F8BFD527_004712                     7.27%    passed     95.06%
+ 231  MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_001946                       0.00%    passed     84.14%
+ 232  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_002153               0.00%    passed     99.29%
+ 233  MORbg|Actinomortierella_ambigua_BC1065|F9D4E4C8_007632                  0.00%    passed     87.82%
+ 234  CHY_pairsame|Chytriomyces_sp._MP71_MP71|F65A18B5_000252                 5.45%    passed     99.16%
+ 235  ENT_pairsame|Neoconidiobolus_thromboides_FSU_785|FC345CF7_003262        3.64%    passed     58.38%
+ 236  CHY_pairsame|Chytriomyces_sp._MP71_MP71|F65A18B5_012820                 0.00%    passed     90.75%
+ 237  ZOO_all|Syncephalis_pseudoplumigaleata_Benny_S71-1|F8BDDC36_003693      3.64%    passed     50.79%
+ 238  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_002393                        0.00%    passed     99.32%
+ 239  MORbg|Mortierella_alpina_AD071|F740ECF2_003818                          0.00%    passed     99.32%
+ 240  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_009534               0.00%    passed     99.32%
+ 241  MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_012095                  0.00%    passed     99.32%
+ 242  MORbg|Actinomortierella_ambigua_BC1065|F9D4E4C8_008098                  0.00%    passed     69.23%
+ 243  DIK_HD2|86836_ls11_redHD_B74                                            9.09%    passed     27.75%
+ 244  ZOO_all|Syncephalis_fuscata_S228|FB5167BD_004867                        0.00%    passed     79.13%
+ 245  MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_005105                       0.00%    passed     99.32%
+ 246  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_003221               0.00%    passed     80.26%
+ 247  MORbg|Mortierella_alpina_AD071|F740ECF2_000121                          0.00%    passed     80.26%
+ 248  DIK_HD2|5286_cbs-14_redHD_B41                                           9.09%    passed     33.84%
+ 249  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_013015                        0.00%    passed     80.26%
+ 250  CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_010237    7.27%    passed     87.14%
+ 251  MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_010296                  0.00%    passed     80.26%
+ 252  DIK_HD2|5286_nbrc-0880_redHD_B39                                        9.09%    passed     33.84%
+ 253  DIK_HD2|192523_h97_HD_A1                                                3.64%    passed     39.10%
+ 254  CHY_pairsame|Chytriomyces_confervae_CBS_675.73|F88BBF7D_014551          0.00%    passed      8.95%
+ 255  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_005123                        0.00%    passed     99.05%
+ 256  MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_001629                       0.00%    passed     80.26%
+ 257  CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_005059           9.09%    passed     62.70%
+ 258  MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_008067                  0.00%    passed     99.96%
+ 259  CHY_pairdiv|Chytriomyces_hyalinus_ARG085|F20F1B5E_008454                0.00%    passed     50.31%
+ 260  CHY_pairdiv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_012420               0.00%    passed     50.31%
+ 261  AMF_HD2|Acaulospora_morrowiae_CL551|FD1E6533_033833                     9.09%    passed     11.92%
+ 262  CHY_pairsame|Synchytrium_microbalum_JEL517|F3253B6A_001827              9.09%    passed     98.80%
+ 263  CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_005060           9.09%    passed     38.68%
+ 264  AMF_HD2|Rhizophagus_prolifer_CMCC-AM-1901|FE9449CC_001742               9.09%    passed     16.13%
+ 265  ZOO_all|Zoopage_sp._CT-All_CT-All|FF98D640_005240                      38.18%    passed     75.67%
+ 266  AMF_HD2|Acaulospora_colombiana_CL356|F7D7056F_008312                    9.09%    passed     73.93%
+ 267  CHY_pairsame|Synchytrium_microbalum_JEL517|F3253B6A_001826             10.91%    passed     97.42%
+ 268  CHY_pairdiv|Chytriomyces_hyalinus_JEL0345|F02BEDAE_006550               0.00%    passed     50.31%
+ 269  CHY_pairdiv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_004477     0.00%    passed     50.31%
+ 270  CHY_pairdiv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_004320           0.00%    passed     50.31%
+ 271  CHY_pairsame|Chytriomyces_hyalinus_JEL0345|F02BEDAE_005359              0.00%    passed     66.99%
+ 272  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_007618               0.00%    passed     66.99%
+ 273  CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_012658    0.00%    passed     66.99%
+ 274  MORbg|Mortierella_alpina_AD071|F740ECF2_002288                          0.00%    passed     69.49%
+ 275  MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_004274                       0.00%    passed     36.37%
+ 276  AMF_HD2|Rhizophagus_irregularis_CHC2|F7D3F482_010939                    7.27%    passed     18.54%
+ 277  AMF_HD2|Rhizophagus_irregularis_CHC5|F07E82A1_036849                    7.27%    passed     18.54%
+ 278  MORbg|Actinomortierella_ambigua_BC1065|F9D4E4C8_005428                  5.45%    passed     97.32%
+ 279  AMF_HD2|Rhizophagus_irregularis_C2|F510ABE3_020338                      7.27%    passed     18.54%
+ 280  AMF_HD2|Glomus_cerebriforme_DAOM_227022|F5C9B3FE_010400                 9.09%    passed     62.96%
+ 281  AMF_HD2|Glomus_cerebriforme_JS1|F9C77A76_000337                         9.09%    passed     62.96%
+ 282  CHY_pairsame|Chytriomyces_hyalinus_JEL0176|F45CC3EA_012229              1.82%    passed     90.14%
+ 283  MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_001744                       3.64%    passed     73.53%
+ 284  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_013378                0.00%    passed     78.09%
+ 285  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_007060                0.00%    passed     78.09%
+ 286  CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_009140            1.82%    passed     85.05%
+ 287  CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_017447            1.82%    passed     85.05%
+ 288  CHY_pairdiv|Chytriomyces_hyalinus_ARG121|F891E5C5_004756                0.00%    passed     13.95%
+ 289  CHY_pairdiv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_001250               0.00%    passed     13.95%
+ 290  CHY_pairdiv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_003393           0.00%    passed     13.95%
+ 291  CHY_pairconv|Physocladia_obscura_JEL0513|F3EFA7DF_001295                1.82%    passed     99.26%
+ 292  CHY_pairdiv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_002415     0.00%    passed     12.91%
+ 293  AMF_HD2|Rhizophagus_irregularis_4401|F4DB07BF_017737                    7.27%    passed     21.11%
+ 294  AMF_HD2|Rhizophagus_irregularis_A5|F96EBDDE_022884                      7.27%    passed     21.11%
+ 295  CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_008832    0.00%    passed     66.99%
+ 296  CHY_pairsame|Entophlyctis_luteolus_JEL0120|F09F2859_009856              0.00%    passed     17.13%
+ 297  AMF_HD2|Rhizophagus_irregularis_DAOM_240409|FAC88CC3_031158             9.09%    passed     63.27%
+ 298  AMF_HD2|Rhizophagus_irregularis_A4|F2DB102C_011461                      9.09%    passed     63.27%
+ 299  AMF_HD2|Rhizophagus_irregularis_CHC3|F9C71CB2_025459                    9.09%    passed     63.27%
+ 300  DIK_HD2|90004_unknown_HD_A1                                             9.09%    passed     40.33%
+ 301  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_007616               3.64%    passed     60.27%
+ 302  CHY_pairsame|Chytriomyces_hyalinus_JEL0176|F45CC3EA_012456              1.82%    passed     82.31%
+ 303  AMF_HD2|Rhizophagus_irregularis_DAOM-197198|FDB574B3_015420             9.09%    passed     81.62%
+ 304  AMF_HD2|Rhizophagus_irregularis_DAOM197198|F2F363F2_020732              9.09%    passed     81.62%
+ 305  AMF_HD2|Rhizophagus_irregularis_DAOM_181602|FB4C4372_002471             9.09%    passed     81.62%
+ 306  AMF_HD2|Rhizophagus_irregularis_DAOM_197198w|F15AB5E1_009363            9.09%    passed     81.62%
+ 307  AMF_HD2|Rhizophagus_irregularis_DAOM_197198|F61C387F_015922             9.09%    passed     81.62%
+ 308  AMF_HD2|Paraglomus_occultum_Uo1|F61DA72E_002175                         5.45%    passed     72.38%
+ 309  AMF_HD2|Paraglomus_brasilianum_BR232B|F5931C4A_008866                   5.45%    passed     86.86%
+ 310  AMF_HD2|Rhizophagus_irregularis_A2_3_AMF|FFB46957_013536                7.27%    passed     21.11%
+ 311  AMF_HD2|Rhizophagus_irregularis_A2_4_AMF|FA5BF1FD_013682                7.27%    passed     21.11%
+ 312  AMF_HD2|Rhizophagus_irregularis_A2_6_AMF|FC970975_013543                7.27%    passed     21.11%
+ 313  AMF_HD2|Rhizophagus_irregularis_A2_WG_AMF|F7C3302F_013918               7.27%    passed     21.11%
+ 314  AMF_HD2|Rhizophagus_irregularis_A1|FDCD0227_016129                      9.09%    passed     48.48%
+ 315  AMF_HD2|Rhizophagus_irregularis_A5|F96EBDDE_027692                      9.09%    passed     48.48%
+ 316  AMF_HD2|Rhizophagus_irregularis_B3|F85BDFBC_023077                      9.09%    passed     48.48%
+ 317  AMF_HD2|Rhizophagus_irregularis_CHA1|F40C96A8_019703                    9.09%    passed     48.48%
+ 318  AMF_HD2|Rhizophagus_irregularis_CHB12|F776D6BB_023370                   9.09%    passed     48.48%
+ 319  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_007059                1.82%    passed     98.89%
+ 320  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_013377                1.82%    passed     98.89%
+ 321  AMF_HD2|Rhizophagus_clarus_HR1|F4166311_019156                         10.91%    passed     49.44%
+ 322  CHY_pairsame|Physocladia_obscura_JEL0513|F3EFA7DF_012062                0.00%    passed     93.79%
+ 323  CHY_pairsame|Chytriomyces_hyalinus_ARG121|F891E5C5_003497               0.00%    passed     44.64%
+ 324  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_000093               0.00%    passed     44.64%
+ 325  AMF_HD2|Rhizophagus_sp._LPA8_1_AMF_LPA8_1_AMF|F104509E_015240           9.09%    passed     79.11%
+ 326  AMF_HD2|Rhizophagus_sp._LPA8_3_AMF_LPA8_3_AMF|FFE1A4F3_015070           9.09%    passed     79.11%
+ 327  AMF_HD2|Rhizophagus_sp._LPA8_4_AMF_LPA8_4_AMF|F98F21B5_017284           9.09%    passed     79.11%
+ 328  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_010205               1.82%    passed     95.40%
+ 329  AMF_HD2|Geosiphon_pyriformis_uo1|FC303ED2_016799                       10.91%    passed     82.34%
+ 330  MORbg|Mortierella_alpina_AD071|F740ECF2_005278                          1.82%    passed     86.37%
+ 331  CHY_pairconv|Rhizoclosmatium_globosum_JEL800|F87CC697_022607            1.82%    passed     82.49%
+ 332  AMF_HD2|Diversispora_epigaea_IT104|F359FEE0_030303                     14.55%    passed     40.96%
+ 333  AMF_HD2|Rhizophagus_irregularis_A4|F2DB102C_030226                      9.09%    passed     31.44%
+ 334  AMF_HD2|Rhizophagus_irregularis_CHC3|F9C71CB2_051752                    9.09%    passed     31.44%
+ 335  ZOO_all|Thamnocephalis_sphaerospora_RSA_1356|F9368871_000266            0.00%    passed     77.65%
+ 336  ZOO_pairconv|Thamnocephalis_sphaerospora_RSA_1356|F9368871_000266       0.00%    passed     77.65%
+ 337  CHY_pairconv|Obelidium_mucronatum_JEL802|FC3A2542_018067                1.82%    passed     87.98%
+ 338  DIK_HD2|5535_cbs-20_redHD_B63                                           9.09%    passed     22.22%
+ 339  CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_013323    7.27%    failed      1.95%
+ 340  ENT_pairsame|Capillidium_heterosporum_CGMCC_3.15857|FDAC0301_007476    10.91%    passed     13.95%
+ 341  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_024927              9.09%    passed     60.12%
+ 342  CHY_pairconv|Chytriomyces_hyalinus_JEL0345|F02BEDAE_006500              1.82%    passed     64.95%
+ 343  AMF_HD2|Rhizophagus_irregularis_DAOM_240409|FAC88CC3_031178             9.09%    passed     95.97%
+ 344  CHY_pairsame|Chytriomyces_hyalinus_JEL0176|F45CC3EA_003793              0.00%    passed     48.79%
+ 345  AMF_HD2|Dentiscutata_erythropus_MA453B|F232E018_005460                  5.45%    passed     57.65%
+ 346  ENT_pairsame|Neoconidiobolus_thromboides_FSU_785|FC345CF7_003916        5.45%    failed      0.54%
+ 347  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_008042                        1.82%    passed     68.07%
+ 348  AMF_HD2|Ambispora_leptoticha_FL130A|F71D2AD7_003615                    10.91%    passed     80.99%
+ 349  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_011890               7.27%    failed      4.86%
+ 350  CHY_pairconv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_011172    1.82%    passed     64.95%
+ 351  CHY_pairconv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_007858          1.82%    passed     50.55%
+ 352  CHY_pairconv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_001521              1.82%    passed     50.55%
+ 353  CHY_pairconv|Rhizoclosmatium_sp._JEL0117_JEL0117|F1760C57_005669        1.82%    passed     82.49%
+ 354  AMF_HD2|Entrophospora_sp._SA101_SA101|F1815028_002201                   5.45%    passed     59.08%
+ 355  AMF_HD2|Ambispora_leptoticha_FL130A|F71D2AD7_003611                    10.91%    passed     80.99%
+ 356  CHY_pairsame|Podochytrium_sp._JEL0797_JEL0797|F5C6AA96_006560           0.00%    passed     31.38%
+ 357  CHY_pairconv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_006690    1.82%    passed     50.55%
+ 358  MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_010758                  1.82%    passed     79.73%
+ 359  CHY_pairsame|Chytriomyces_hyalinus_JEL0345|F02BEDAE_000134              0.00%    passed     38.11%
+ 360  CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_004573    0.00%    passed     26.44%
+ 361  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_002197               3.64%    passed     90.34%
+ 362  CHY_pairconv|Chytriomyces_hyalinus_ARG085|F20F1B5E_007710               1.82%    passed     64.95%
+ 363  CHY_pairconv|Chytriomyces_hyalinus_ARG121|F891E5C5_005850               1.82%    passed     64.95%
+ 364  AMF_HD2|Racocetra_fulgida_IN212|FBDE6CDC_000237                         5.45%    passed     25.13%
+ 365  MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_007231                 12.73%    passed     94.86%
+ 366  AMF_HD2|Ambispora_gerdemannii_MT106|F9F7649B_008998                    10.91%    passed     64.61%
+ 367  AMF_HD2|Oehlia_diaphana_SD1|F3A2FF18_023360                             9.09%    passed     82.46%
+ 368  AMF_HD2|Rhizophagus_sp._MUCL_43196_MUCL_43196|F4AB221D_015058           9.09%    passed     82.46%
+ 369  AMF_HD2|Gigaspora_margarita_BEG34|FA186146_073520                       5.45%    passed     63.25%
+ 370  AMF_HD2|Gigaspora_rosea_DAOM_194757|FD3A14F2_021842                     5.45%    passed     57.65%
+ 371  AMF_HD2|Gigaspora_rosea_FL105|FF0F4086_002766                           5.45%    passed     57.65%
+ 372  AMF_HD2|Cetraspora_pellucida_FL966|F2D4453A_001056                      7.27%    passed     42.08%
+ 373  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_006357                       14.55%    passed     95.87%
+ 374  CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_007363            0.00%    passed     92.93%
+ 375  DIK_HD2|5537_jy1105_redHD_B8                                            9.09%    passed     22.32%
+ 376  ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_024929              7.27%    passed     98.83%
+ 377  CHY_pairsame|Rhizoclosmatium_sp._JEL0117_JEL0117|F1760C57_001816        0.00%    passed     92.93%
+ 378  CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_022967            0.00%    passed     92.93%
+ 379  CHY_pairdiv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_002414     3.64%    passed     41.56%
+ 380  CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_001610           0.00%    passed     92.93%
+ 381  CHY_pairdiv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_003392           3.64%    passed     38.78%
+ 382  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_010815                         0.00%    passed     61.36%
+ 383  ENT_pairdiv|Neoconidiobolus_thromboides_FSU_785|FC345CF7_004485         0.00%    passed     61.36%
+ 384  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_008265                         0.00%    passed     61.36%
+ 385  CHY_pairdiv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_001251               3.64%    passed     38.78%
+ 386  CHY_pairdiv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_012419               3.64%    passed     36.15%
+ 387  CHY_pairdiv|Chytriomyces_hyalinus_JEL0345|F02BEDAE_006551               3.64%    passed     36.35%
+ 388  AMF_HD2|Racocetra_persica_MA461A|F18B2F03_001108                        7.27%    passed     71.80%
+ 389  CHY_pairdiv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_004476     3.64%    passed     36.15%
+ 390  CHY_pairconv|Rhizoclosmatium_globosum_JEL800|F87CC697_009893            9.09%    passed     74.86%
+ 391  CHY_pairdiv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_004321           3.64%    passed     36.15%
+ 392  CHY_pairsame|Podochytrium_sp._JEL0797_JEL0797|F5C6AA96_006561           1.82%    passed     98.05%
+ 393  CHY_pairdiv|Chytriomyces_hyalinus_ARG085|F20F1B5E_008455                3.64%    passed     36.15%
+ 394  CHY_pairdiv|Chytriomyces_hyalinus_ARG121|F891E5C5_004757                3.64%    passed     22.50%
+ 395  CHY_pairsame|Boothiomyces_sp._JEL0866_JEL0866|F2D1A5D6_006794           3.64%    passed     80.21%
+ 396  ZOO_all|Cochlonema_odontosperma_E-All|FE0E7C3D_001297                  10.91%    passed     10.48%
+ 397  CHY_pairsame|Boothiomyces_macroporosus_PLAUS21|F22B2D3A_006589          3.64%    passed     75.01%
+ 398  CHY_pairsame|Boothiomyces_sp._JEL0838_JEL0838|F18DB08B_006408           3.64%    passed     75.01%
+ 399  AMF_HD2|Scutellospora_calospora_AU212A|F37C7C9A_011902                  9.09%    passed     47.83%
+ 400  CHY_pairsame|Chytriomyces_sp._MP71_MP71|F65A18B5_012819                 1.82%    passed     17.55%
+ 401  ENT_pairdiv|Entomophthora_muscae_Berkeley|FE5E6180_003096              21.82%    failed      0.00%
+ 402  ENT_pairdiv|Entomophthora_muscae_Berkeley|FE5E6180_003097              21.82%    failed      0.00%
+ 403  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_005759                0.00%    passed     73.11%
+ 404  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_010333               9.09%    failed      1.71%
+ 405  CHY_pairsame|Chytriomyces_sp._MP71_MP71|F65A18B5_010287                16.36%    passed     78.32%
+ 406  CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_006794          10.91%    passed     41.15%
+ 407  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_010817                         9.09%    passed     13.51%
+ 408  ENT_pairdiv|Neoconidiobolus_thromboides_FSU_785|FC345CF7_004483         9.09%    passed     13.51%
+ 409  ENT_pairdiv|Batkoa_obscura_7217|F67353AC_008263                         9.09%    passed     13.51%
+ 410  CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_001611           3.64%    passed     19.51%
+ 411  ZOO_all|Zoopage_sp._CT-All_CT-All|FF98D640_004396                      20.00%    passed     40.55%
+ 412  CHY_pairsame|Rhizoclosmatium_sp._JEL0117_JEL0117|F1760C57_001815        3.64%    passed     19.51%
+ 413  CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_022966            3.64%    passed     19.51%
+ 414  CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_007362            3.64%    passed     19.51%
+ 415  CHY_pairsame|Physocladia_obscura_JEL0513|F3EFA7DF_012061               20.00%    passed     42.93%
+ 416  AMFbg|Rhizophagus_irregularis_DAOM-197198|FDB574B3_015763              23.64%    passed     10.36%
+ 417  CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_005758                5.45%    passed     85.70%
+ 418  AMF_HD2|Entrophospora_candida_NC172|F847B481_008627                    12.73%    passed     75.89%
+ 419  ZOO_all|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_003295             38.18%    passed     78.47%
+ 420  CHY_pairsame|Boothiomyces_sp._JEL0866_JEL0866|F2D1A5D6_006793           3.64%    passed     63.52%
+ 421  ZOO_all|Thamnocephalis_sphaerospora_RSA_1356|F9368871_002392            0.00%    passed     77.18%
+ 422  MORbg|Mortierella_alpina_AD071|F740ECF2_007842                          3.64%    passed     87.82%
+ 423  CHY_pairsame|Boothiomyces_sp._JEL0838_JEL0838|F18DB08B_006409           3.64%    passed     55.79%
+ 424  CHY_pairsame|Boothiomyces_macroporosus_PLAUS21|F22B2D3A_006588          3.64%    passed     55.79%
+ 425  ENT_pairdiv|Conidiobolus_coronatus_20220622F|F0AFF821_000875            3.64%    passed     11.85%
+ 426  CHY_pairdiv|Entophlyctis_helioformis_JEL805|F277D783_000500            14.55%    passed     22.65%
+ 427  ZOO_all|Zoophagus_insidians_Zi-All|F9A17E9D_002283                     14.55%    passed      6.30%
+ 428  MORbg|Actinomortierella_ambigua_BC1065|F9D4E4C8_005973                  3.64%    passed     93.43%
+ 429  ZOO_all|Zoopage_sp._CT-All_CT-All|FF98D640_000808                      12.73%    passed      8.18%
+ 430  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_001597               3.64%    passed     94.92%
+ 431  ZOO_all|Syncephalis_pseudoplumigaleata_Benny_S71-1|F8BDDC36_002301      0.00%    passed     57.23%
+ 432  MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_011282                       3.64%    passed     97.46%
+ 433  CHY_pairsame|Podochytrium_sp._JEL0797_JEL0797|F5C6AA96_010621          18.18%    passed     86.39%
+ 434  MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_008294              34.55%    passed     86.03%
+ 435  CHY_pairsame|Chytriomyces_sp._MP71_MP71|F65A18B5_010286                14.55%    failed      3.91%
+ 436  MORbg|Linnemannia_elongata_NVP64|F1B87CF3_003841                        3.64%    passed     96.44%
+ 437  ZOO_all|Cochlonema_odontosperma_E-All|FE0E7C3D_002770                  40.00%    passed     95.94%
+ 438  MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_006199                  3.64%    passed     96.44%
+ 439  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_002022               1.82%    passed     49.02%
+ 440  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_000730               7.27%    passed     81.69%
+ 441  ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_010440               7.27%    passed     81.69%
+ 442  ENT_pairdiv|Conidiobolus_coronatus_20220622F|F0AFF821_000877            3.64%    passed     39.56%
+ 443  ZOO_all|Syncephalis_fuscata_S228|FB5167BD_001786                        0.00%    passed     79.68%
+ 444  ZOO_all|Syncephalis_fuscata_S228|FB5167BD_009030                        0.00%    passed     79.68%
+ 445  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_011226              38.18%    passed     88.81%
+ 446  ZOO_all|Stylopage_hadra_SOG|F186E471_000928                            40.00%    passed     45.58%
+ 447  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_011224              38.18%    passed     91.61%
+ 448  CHY_pairdiv|Entophlyctis_helioformis_JEL805|F277D783_000499             7.27%    passed     95.18%
+ 449  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_010332              18.18%    passed     10.94%
+ 450  CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_011891              18.18%    passed     10.94%
+ 451  CHY_pairsame|Quaeritorhiza_haematococci_JEL0916|F30D4C03_001457        32.73%    passed     86.52%
+ 452  CHY_pairsame|Quaeritorhiza_haematococci_JEL0916|F30D4C03_001458        32.73%    passed     86.52%
+ 453  CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_009141           20.00%    passed     33.29%
+ 454  MORbg|Actinomortierella_ambigua_BC1065|F9D4E4C8_004039                 38.18%    passed     84.40%
+ 455  CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_013322   18.18%    passed     20.68%
+****  TOTAL                                                                   4.08%  7 sequences failed composition chi2 test (p-value<5%; df=19)
+NOTE: ENT_pairdiv|Neoconidiobolus_thromboides_FSU_785|FC345CF7_008584 is identical to ENT_pairdiv|Batkoa_obscura_7217|F67353AC_020282 but kept for subsequent analysis
+NOTE: MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_011846 is identical to MORbg|Linnemannia_elongata_NVP64|F1B87CF3_000084 but kept for subsequent analysis
+NOTE: MORbg|Mortierella_alpina_AD071|F740ECF2_002135 is identical to MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_009836 but kept for subsequent analysis
+NOTE: MORbg|Mortierella_alpina_AD071|F740ECF2_000743 is identical to MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_001377 but kept for subsequent analysis
+NOTE: ENT_pairsame|Batkoa_obscura_7217|F67353AC_018868 is identical to ENT_pairsame|Batkoa_obscura_7217|F67353AC_017923 but kept for subsequent analysis
+NOTE: MORbg|Linnemannia_elongata_NVP64|F1B87CF3_010981 is identical to MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_002344 but kept for subsequent analysis
+NOTE: ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_006301 is identical to ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_008912 but kept for subsequent analysis
+NOTE: KIC_pairconv|Zancudomyces_culisetae_COL-18-3|F9D66AC0_000806 is identical to KIC_pairconv|Zancudomyces_culisetae_HAW-14-8|F23D95F9_000833 but kept for subsequent analysis
+NOTE: CHY_pairdiv|Polychytrium_aggregatum_JEL109|F7609CBB_015050 is identical to CHY_pairdiv|Polychytrium_aggregatum_JEL109|F7609CBB_005776 but kept for subsequent analysis
+NOTE: MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_005200 is identical to MORbg|Linnemannia_elongata_NVP64|F1B87CF3_007821 but kept for subsequent analysis
+NOTE: CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_009102 is identical to CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_019163 but kept for subsequent analysis
+NOTE: ENT_pairdiv|Batkoa_obscura_7217|F67353AC_020081 is identical to ENT_pairdiv|Batkoa_obscura_7217|F67353AC_005234 but kept for subsequent analysis
+NOTE: ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_008604 is identical to ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_007641 but kept for subsequent analysis
+NOTE: CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_019162 is identical to CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_009101 but kept for subsequent analysis
+NOTE: CHY_pairdiv|Polychytrium_aggregatum_JEL109|F7609CBB_015052 is identical to CHY_pairdiv|Polychytrium_aggregatum_JEL109|F7609CBB_005778 but kept for subsequent analysis
+NOTE: MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_012102 is identical to MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_010853 but kept for subsequent analysis
+NOTE: ZOO_pairsame|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_000222 is identical to ZOO_all|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_000222 but kept for subsequent analysis
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_9912_ARSEF_9912|F6DCEF1C_000239 is identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688 but kept for subsequent analysis
+NOTE: ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_010628 is identical to ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_000227 but kept for subsequent analysis
+NOTE: BAS_pairconv|Basidiobolus_heterosporus_B8920|F4D8AF16_003946 is identical to BAS_pairconv|Basidiobolus_meristosporus_B9252|F5E080B1_009657 but kept for subsequent analysis
+NOTE: ZOO_all|Cochlonema_odontosperma_E-All|FE0E7C3D_005555 is identical to ZOO_all|Cochlonema_odontosperma_E-All|FE0E7C3D_005553 but kept for subsequent analysis
+NOTE: ENT_pairsame|Batkoa_obscura_7217|F67353AC_017924 is identical to ENT_pairsame|Neoconidiobolus_thromboides_FSU_785|FC345CF7_002653 but kept for subsequent analysis
+NOTE: ZOO_pairsame|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_000221 is identical to ZOO_all|Piptocephalis_tieghemiana_RSA_1565|FEB493EF_000221 but kept for subsequent analysis
+NOTE: CHY_pairdiv|Entophlyctis_luteolus_JEL0129|F8D640A0_006794 is identical to CHY_pairdiv|Entophlyctis_sp._JEL0112_JEL0112|FED79EE9_009493 but kept for subsequent analysis
+NOTE: BAS_pairconv|Basidiobolus_sp._MH_9.1_MH_9.1|F29CF79F_001435 is identical to BAS_pairconv|Basidiobolus_sp._MH_6.3_MH_6.3|F00F927D_001290 but kept for subsequent analysis
+NOTE: CHY_pairconv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_001522 is identical to CHY_pairconv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_007857 but kept for subsequent analysis
+NOTE: CHY_pairconv|Rhizoclosmatium_sp._JEL0117_JEL0117|F1760C57_005670 is identical to CHY_pairconv|Rhizoclosmatium_globosum_JEL800|F87CC697_022608 but kept for subsequent analysis
+NOTE: CHY_pairconv|Chytriomyces_hyalinus_ARG085|F20F1B5E_007711 is identical to CHY_pairconv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_011171 but kept for subsequent analysis
+NOTE: CHY_pairdiv|Entophlyctis_luteolus_JEL0129|F8D640A0_006795 is identical to CHY_pairdiv|Entophlyctis_sp._JEL0112_JEL0112|FED79EE9_009494 but kept for subsequent analysis
+NOTE: ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_010484 is identical to ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_010485 but kept for subsequent analysis
+NOTE: ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_025152 is identical to ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_021006 but kept for subsequent analysis
+NOTE: CHY_pairsame|Chytriomyces_hyalinus_JEL0345|F02BEDAE_000135 is identical to CHY_pairsame|Chytriomyces_hyalinus_JEL0176|F45CC3EA_003794 but kept for subsequent analysis
+NOTE: ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_021007 is identical to ENT_pairconv|Entomophthora_muscae_Berkeley|FE5E6180_025153 but kept for subsequent analysis
+NOTE: ZOO_all|Thamnocephalis_sphaerospora_RSA_1356|F9368871_000267 is identical to ZOO_all|Syncephalis_fuscata_S228|FB5167BD_002340 but kept for subsequent analysis
+NOTE: MORbg|Mortierella_alpina_AD071|F740ECF2_003818 is identical to MORbg|Linnemannia_elongata_NVP64|F1B87CF3_002393 but kept for subsequent analysis
+NOTE: MORbg|Mortierella_alpina_AD071|F740ECF2_000121 is identical to MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_003221 but kept for subsequent analysis
+NOTE: DIK_HD2|5286_nbrc-0880_redHD_B39 is identical to DIK_HD2|5286_cbs-14_redHD_B41 but kept for subsequent analysis
+NOTE: CHY_pairdiv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_012420 is identical to CHY_pairdiv|Chytriomyces_hyalinus_ARG085|F20F1B5E_008454 but kept for subsequent analysis
+NOTE: CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_007618 is identical to CHY_pairsame|Chytriomyces_hyalinus_JEL0345|F02BEDAE_005359 but kept for subsequent analysis
+NOTE: AMF_HD2|Rhizophagus_irregularis_CHC5|F07E82A1_036849 is identical to AMF_HD2|Rhizophagus_irregularis_CHC2|F7D3F482_010939 but kept for subsequent analysis
+NOTE: AMF_HD2|Glomus_cerebriforme_JS1|F9C77A76_000337 is identical to AMF_HD2|Glomus_cerebriforme_DAOM_227022|F5C9B3FE_010400 but kept for subsequent analysis
+NOTE: CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_007060 is identical to CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_013378 but kept for subsequent analysis
+NOTE: CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_017447 is identical to CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_009140 but kept for subsequent analysis
+NOTE: CHY_pairdiv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_001250 is identical to CHY_pairdiv|Chytriomyces_hyalinus_ARG121|F891E5C5_004756 but kept for subsequent analysis
+NOTE: AMF_HD2|Rhizophagus_irregularis_A5|F96EBDDE_022884 is identical to AMF_HD2|Rhizophagus_irregularis_4401|F4DB07BF_017737 but kept for subsequent analysis
+NOTE: AMF_HD2|Rhizophagus_irregularis_A4|F2DB102C_011461 is identical to AMF_HD2|Rhizophagus_irregularis_DAOM_240409|FAC88CC3_031158 but kept for subsequent analysis
+NOTE: AMF_HD2|Rhizophagus_irregularis_DAOM197198|F2F363F2_020732 is identical to AMF_HD2|Rhizophagus_irregularis_DAOM-197198|FDB574B3_015420 but kept for subsequent analysis
+NOTE: AMF_HD2|Rhizophagus_irregularis_A5|F96EBDDE_027692 is identical to AMF_HD2|Rhizophagus_irregularis_A1|FDCD0227_016129 but kept for subsequent analysis
+NOTE: CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_013377 is identical to CHY_pairsame|Obelidium_mucronatum_JEL802|FC3A2542_007059 but kept for subsequent analysis
+NOTE: CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_000093 is identical to CHY_pairsame|Chytriomyces_hyalinus_ARG121|F891E5C5_003497 but kept for subsequent analysis
+NOTE: AMF_HD2|Rhizophagus_sp._LPA8_3_AMF_LPA8_3_AMF|FFE1A4F3_015070 is identical to AMF_HD2|Rhizophagus_sp._LPA8_1_AMF_LPA8_1_AMF|F104509E_015240 but kept for subsequent analysis
+NOTE: CHY_pairconv|Rhizoclosmatium_sp._JEL0117_JEL0117|F1760C57_005669 is identical to CHY_pairconv|Rhizoclosmatium_globosum_JEL800|F87CC697_022607 but kept for subsequent analysis
+NOTE: AMF_HD2|Rhizophagus_irregularis_CHC3|F9C71CB2_051752 is identical to AMF_HD2|Rhizophagus_irregularis_A4|F2DB102C_030226 but kept for subsequent analysis
+NOTE: ZOO_pairconv|Thamnocephalis_sphaerospora_RSA_1356|F9368871_000266 is identical to ZOO_all|Thamnocephalis_sphaerospora_RSA_1356|F9368871_000266 but kept for subsequent analysis
+NOTE: CHY_pairconv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_011172 is identical to CHY_pairconv|Chytriomyces_hyalinus_JEL0345|F02BEDAE_006500 but kept for subsequent analysis
+NOTE: AMF_HD2|Ambispora_leptoticha_FL130A|F71D2AD7_003611 is identical to AMF_HD2|Ambispora_leptoticha_FL130A|F71D2AD7_003615 but kept for subsequent analysis
+NOTE: CHY_pairconv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_001521 is identical to CHY_pairconv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_007858 but kept for subsequent analysis
+NOTE: AMF_HD2|Rhizophagus_sp._MUCL_43196_MUCL_43196|F4AB221D_015058 is identical to AMF_HD2|Oehlia_diaphana_SD1|F3A2FF18_023360 but kept for subsequent analysis
+NOTE: AMF_HD2|Gigaspora_rosea_FL105|FF0F4086_002766 is identical to AMF_HD2|Gigaspora_rosea_DAOM_194757|FD3A14F2_021842 but kept for subsequent analysis
+NOTE: CHY_pairsame|Rhizoclosmatium_sp._JEL0117_JEL0117|F1760C57_001816 is identical to CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_007363 but kept for subsequent analysis
+NOTE: CHY_pairdiv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_001251 is identical to CHY_pairdiv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_003392 but kept for subsequent analysis
+NOTE: ENT_pairdiv|Neoconidiobolus_thromboides_FSU_785|FC345CF7_004485 is identical to ENT_pairdiv|Batkoa_obscura_7217|F67353AC_010815 but kept for subsequent analysis
+NOTE: CHY_pairdiv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_004476 is identical to CHY_pairdiv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_012419 but kept for subsequent analysis
+NOTE: CHY_pairsame|Boothiomyces_sp._JEL0838_JEL0838|F18DB08B_006408 is identical to CHY_pairsame|Boothiomyces_macroporosus_PLAUS21|F22B2D3A_006589 but kept for subsequent analysis
+NOTE: ENT_pairdiv|Entomophthora_muscae_Berkeley|FE5E6180_003097 is identical to ENT_pairdiv|Entomophthora_muscae_Berkeley|FE5E6180_003096 but kept for subsequent analysis
+NOTE: ENT_pairdiv|Neoconidiobolus_thromboides_FSU_785|FC345CF7_004483 is identical to ENT_pairdiv|Batkoa_obscura_7217|F67353AC_010817 but kept for subsequent analysis
+NOTE: CHY_pairsame|Rhizoclosmatium_sp._JEL0117_JEL0117|F1760C57_001815 is identical to CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_001611 but kept for subsequent analysis
+NOTE: CHY_pairsame|Boothiomyces_macroporosus_PLAUS21|F22B2D3A_006588 is identical to CHY_pairsame|Boothiomyces_sp._JEL0838_JEL0838|F18DB08B_006409 but kept for subsequent analysis
+NOTE: MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_006199 is identical to MORbg|Linnemannia_elongata_NVP64|F1B87CF3_003841 but kept for subsequent analysis
+NOTE: ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_010440 is identical to ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_000730 but kept for subsequent analysis
+NOTE: ZOO_all|Syncephalis_fuscata_S228|FB5167BD_009030 is identical to ZOO_all|Syncephalis_fuscata_S228|FB5167BD_001786 but kept for subsequent analysis
+NOTE: CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_011891 is identical to CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_010332 but kept for subsequent analysis
+NOTE: CHY_pairsame|Quaeritorhiza_haematococci_JEL0916|F30D4C03_001458 is identical to CHY_pairsame|Quaeritorhiza_haematococci_JEL0916|F30D4C03_001457 but kept for subsequent analysis
+Checking for duplicate sequences: done in 0.026454 secs using 183.2% CPU
+Identifying sites to remove: done in 0.000299966 secs using 99.34% CPU
+NOTE: 79 identical sequences (see below) will be ignored for subsequent analysis
+NOTE: ENT_pairdiv|Batkoa_obscura_7217|F67353AC_020080 (identical to ENT_pairdiv|Batkoa_obscura_7217|F67353AC_020282) is ignored but added at the end
+NOTE: MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_010709 (identical to MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_001377) is ignored but added at the end
+NOTE: ENT_pairsame|Neoconidiobolus_thromboides_FSU_785|FC345CF7_002654 (identical to ENT_pairsame|Batkoa_obscura_7217|F67353AC_017923) is ignored but added at the end
+NOTE: ENT_pairdiv|Batkoa_obscura_7217|F67353AC_020283 (identical to ENT_pairdiv|Batkoa_obscura_7217|F67353AC_005234) is ignored but added at the end
+NOTE: ENT_pairdiv|Neoconidiobolus_thromboides_FSU_785|FC345CF7_008585 (identical to ENT_pairdiv|Batkoa_obscura_7217|F67353AC_005234) is ignored but added at the end
+NOTE: MORbg|Linnemannia_elongata_NVP64|F1B87CF3_004134 (identical to MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_010853) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._MH_8.1_MH_8.1|F3025612_002353 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_9894_ARSEF_9894|F0F939A4_010290 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_heterosporus_B8920|F4D8AF16_003945 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_ranarum_AG-B5|F7F3090E_004076 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._MH_6.3_MH_6.3|F00F927D_001289 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._MH_9.1_MH_9.1|F29CF79F_001436 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_9908_ARSEF_9908|F41217C2_016214 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_270_ARSEF_270|FDCA49FA_000163 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_meristosporus_CBS_931.73|F9147518_009076 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_meristosporus_B9252|F5E080B1_009656 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._B_8.4_B_8.4|FAF1E8C7_001661 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_270_ARSEF_270|FDCA49FA_000825 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_9903_ARSEF_9903|F81690E9_001218 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_9891_ARSEF_9891|FCDD8027_001129 (identical to BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000688) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_9891_ARSEF_9891|FCDD8027_001128 (identical to BAS_pairconv|Basidiobolus_meristosporus_B9252|F5E080B1_009657) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_9903_ARSEF_9903|F81690E9_001219 (identical to BAS_pairconv|Basidiobolus_meristosporus_B9252|F5E080B1_009657) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_meristosporus_CBS_931.73|F9147518_009075 (identical to BAS_pairconv|Basidiobolus_meristosporus_B9252|F5E080B1_009657) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_270_ARSEF_270|FDCA49FA_000162 (identical to BAS_pairconv|Basidiobolus_meristosporus_B9252|F5E080B1_009657) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._B_8.4_B_8.4|FAF1E8C7_001662 (identical to BAS_pairconv|Basidiobolus_meristosporus_B9252|F5E080B1_009657) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_270_ARSEF_270|FDCA49FA_000826 (identical to BAS_pairconv|Basidiobolus_meristosporus_B9252|F5E080B1_009657) is ignored but added at the end
+NOTE: ZOO_pairconv|Cochlonema_odontosperma_E-All|FE0E7C3D_005553 (identical to ZOO_all|Cochlonema_odontosperma_E-All|FE0E7C3D_005553) is ignored but added at the end
+NOTE: ZOO_pairconv|Cochlonema_odontosperma_E-All|FE0E7C3D_005555 (identical to ZOO_all|Cochlonema_odontosperma_E-All|FE0E7C3D_005553) is ignored but added at the end
+NOTE: CHY_pairdiv|Entophlyctis_luteolus_JEL0120|F09F2859_009331 (identical to CHY_pairdiv|Entophlyctis_sp._JEL0112_JEL0112|FED79EE9_009493) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._MH_8.1_MH_8.1|F3025612_002352 (identical to BAS_pairconv|Basidiobolus_sp._MH_6.3_MH_6.3|F00F927D_001290) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_ranarum_AG-B5|F7F3090E_004077 (identical to BAS_pairconv|Basidiobolus_sp._MH_6.3_MH_6.3|F00F927D_001290) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_9900_ARSEF_9900|F5BA5F3F_000687 (identical to BAS_pairconv|Basidiobolus_sp._MH_6.3_MH_6.3|F00F927D_001290) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_9912_ARSEF_9912|F6DCEF1C_000238 (identical to BAS_pairconv|Basidiobolus_sp._MH_6.3_MH_6.3|F00F927D_001290) is ignored but added at the end
+NOTE: BAS_pairconv|Basidiobolus_sp._ARSEF_9908_ARSEF_9908|F41217C2_016215 (identical to BAS_pairconv|Basidiobolus_sp._MH_6.3_MH_6.3|F00F927D_001290) is ignored but added at the end
+NOTE: CHY_pairconv|Chytriomyces_hyalinus_ARG121|F891E5C5_005849 (identical to CHY_pairconv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_011171) is ignored but added at the end
+NOTE: CHY_pairconv|Chytriomyces_hyalinus_JEL0345|F02BEDAE_006501 (identical to CHY_pairconv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_011171) is ignored but added at the end
+NOTE: CHY_pairdiv|Entophlyctis_luteolus_JEL0120|F09F2859_009332 (identical to CHY_pairdiv|Entophlyctis_sp._JEL0112_JEL0112|FED79EE9_009494) is ignored but added at the end
+NOTE: CHY_pairsame|Chytriomyces_hyalinus_ARG085|F20F1B5E_000094 (identical to CHY_pairsame|Chytriomyces_hyalinus_JEL0176|F45CC3EA_003794) is ignored but added at the end
+NOTE: CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_004572 (identical to CHY_pairsame|Chytriomyces_hyalinus_JEL0176|F45CC3EA_003794) is ignored but added at the end
+NOTE: CHY_pairsame|Chytriomyces_hyalinus_ARG121|F891E5C5_003498 (identical to CHY_pairsame|Chytriomyces_hyalinus_JEL0176|F45CC3EA_003794) is ignored but added at the end
+NOTE: ZOO_pairconv|Thamnocephalis_sphaerospora_RSA_1356|F9368871_000267 (identical to ZOO_all|Syncephalis_fuscata_S228|FB5167BD_002340) is ignored but added at the end
+NOTE: ZOO_all|Syncephalis_plumigaleata_NRRL_S24|FB2A68C7_002579 (identical to ZOO_all|Syncephalis_fuscata_S228|FB5167BD_002340) is ignored but added at the end
+NOTE: ZOO_all|Syncephalis_pseudoplumigaleata_Benny_S71-1|F8BDDC36_003693 (identical to ZOO_all|Syncephalis_fuscata_S228|FB5167BD_002340) is ignored but added at the end
+NOTE: MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_009534 (identical to MORbg|Linnemannia_elongata_NVP64|F1B87CF3_002393) is ignored but added at the end
+NOTE: MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_012095 (identical to MORbg|Linnemannia_elongata_NVP64|F1B87CF3_002393) is ignored but added at the end
+NOTE: MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_005105 (identical to MORbg|Linnemannia_elongata_NVP64|F1B87CF3_002393) is ignored but added at the end
+NOTE: MORbg|Linnemannia_elongata_NVP64|F1B87CF3_013015 (identical to MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_003221) is ignored but added at the end
+NOTE: MORbg|Mortierella_hygrophila_NRRL_2591|F76A0DE1_010296 (identical to MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_003221) is ignored but added at the end
+NOTE: MORbg|Mortierella_sp._NVP85_NVP85|F4AA2B5F_001629 (identical to MORbg|Gamsiella_multidivaricata_NRRL_6456|FE2791BD_003221) is ignored but added at the end
+NOTE: CHY_pairdiv|Chytriomyces_hyalinus_JEL0345|F02BEDAE_006550 (identical to CHY_pairdiv|Chytriomyces_hyalinus_ARG085|F20F1B5E_008454) is ignored but added at the end
+NOTE: CHY_pairdiv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_004477 (identical to CHY_pairdiv|Chytriomyces_hyalinus_ARG085|F20F1B5E_008454) is ignored but added at the end
+NOTE: CHY_pairdiv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_004320 (identical to CHY_pairdiv|Chytriomyces_hyalinus_ARG085|F20F1B5E_008454) is ignored but added at the end
+NOTE: CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_012658 (identical to CHY_pairsame|Chytriomyces_hyalinus_JEL0345|F02BEDAE_005359) is ignored but added at the end
+NOTE: CHY_pairsame|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_008832 (identical to CHY_pairsame|Chytriomyces_hyalinus_JEL0345|F02BEDAE_005359) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_C2|F510ABE3_020338 (identical to AMF_HD2|Rhizophagus_irregularis_CHC2|F7D3F482_010939) is ignored but added at the end
+NOTE: CHY_pairdiv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_003393 (identical to CHY_pairdiv|Chytriomyces_hyalinus_ARG121|F891E5C5_004756) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_A2_3_AMF|FFB46957_013536 (identical to AMF_HD2|Rhizophagus_irregularis_4401|F4DB07BF_017737) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_A2_4_AMF|FA5BF1FD_013682 (identical to AMF_HD2|Rhizophagus_irregularis_4401|F4DB07BF_017737) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_A2_6_AMF|FC970975_013543 (identical to AMF_HD2|Rhizophagus_irregularis_4401|F4DB07BF_017737) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_A2_WG_AMF|F7C3302F_013918 (identical to AMF_HD2|Rhizophagus_irregularis_4401|F4DB07BF_017737) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_CHC3|F9C71CB2_025459 (identical to AMF_HD2|Rhizophagus_irregularis_DAOM_240409|FAC88CC3_031158) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_DAOM_181602|FB4C4372_002471 (identical to AMF_HD2|Rhizophagus_irregularis_DAOM-197198|FDB574B3_015420) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_DAOM_197198w|F15AB5E1_009363 (identical to AMF_HD2|Rhizophagus_irregularis_DAOM-197198|FDB574B3_015420) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_DAOM_197198|F61C387F_015922 (identical to AMF_HD2|Rhizophagus_irregularis_DAOM-197198|FDB574B3_015420) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_B3|F85BDFBC_023077 (identical to AMF_HD2|Rhizophagus_irregularis_A1|FDCD0227_016129) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_CHA1|F40C96A8_019703 (identical to AMF_HD2|Rhizophagus_irregularis_A1|FDCD0227_016129) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_irregularis_CHB12|F776D6BB_023370 (identical to AMF_HD2|Rhizophagus_irregularis_A1|FDCD0227_016129) is ignored but added at the end
+NOTE: AMF_HD2|Rhizophagus_sp._LPA8_4_AMF_LPA8_4_AMF|F98F21B5_017284 (identical to AMF_HD2|Rhizophagus_sp._LPA8_1_AMF_LPA8_1_AMF|F104509E_015240) is ignored but added at the end
+NOTE: CHY_pairconv|Chytriomyces_hyalinus_ARG085|F20F1B5E_007710 (identical to CHY_pairconv|Chytriomyces_hyalinus_JEL0345|F02BEDAE_006500) is ignored but added at the end
+NOTE: CHY_pairconv|Chytriomyces_hyalinus_ARG121|F891E5C5_005850 (identical to CHY_pairconv|Chytriomyces_hyalinus_JEL0345|F02BEDAE_006500) is ignored but added at the end
+NOTE: CHY_pairconv|Chytriomyces_cf._hyalinus_JEL632_JEL632|F9BFD60F_006690 (identical to CHY_pairconv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_007858) is ignored but added at the end
+NOTE: CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_022967 (identical to CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_007363) is ignored but added at the end
+NOTE: CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_001610 (identical to CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_007363) is ignored but added at the end
+NOTE: ENT_pairdiv|Batkoa_obscura_7217|F67353AC_008265 (identical to ENT_pairdiv|Batkoa_obscura_7217|F67353AC_010815) is ignored but added at the end
+NOTE: CHY_pairdiv|Chytriomyces_confervae_CBS_675.73|F88BBF7D_004321 (identical to CHY_pairdiv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_012419) is ignored but added at the end
+NOTE: CHY_pairdiv|Chytriomyces_hyalinus_ARG085|F20F1B5E_008455 (identical to CHY_pairdiv|Chytriomyces_hyalinus_JEL0176|F45CC3EA_012419) is ignored but added at the end
+NOTE: ENT_pairdiv|Batkoa_obscura_7217|F67353AC_008263 (identical to ENT_pairdiv|Batkoa_obscura_7217|F67353AC_010817) is ignored but added at the end
+NOTE: CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_022966 (identical to CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_001611) is ignored but added at the end
+NOTE: CHY_pairsame|Rhizoclosmatium_globosum_JEL800|F87CC697_007362 (identical to CHY_pairsame|Rhizoclosmatium_hyalinum_JEL0917|FF0D8030_001611) is ignored but added at the end
+Alignment was printed to hd_tree.uniqueseq.phy
+
+For your convenience alignment with unique sequences printed to hd_tree.uniqueseq.phy
+
+WARNING: 8 threads for alignment length 55 will slow down analysis
+
+Create initial parsimony tree by phylogenetic likelihood library (PLL)... 0.128 seconds
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+Perform fast likelihood tree search using LG+G model...
+Estimate model parameters (epsilon = 5.000)
+Perform nearest neighbor interchange...
+Optimizing NNI: done in 3.25871 secs using 588.3% CPU
+Estimate model parameters (epsilon = 1.000)
+1. Initial log-likelihood: -17611.800
+2. Current log-likelihood: -17610.068
+Optimal log-likelihood: -17609.609
+Gamma shape alpha: 0.934
+Parameters optimization took 2 rounds (0.388 sec)
+Time for fast ML tree search: 4.432 seconds
+
+NOTE: ModelFinder requires 44 MB RAM!
+ModelFinder will test up to 616 protein models (sample size: 55 epsilon: 0.100) ...
+ No. Model         -LnL         df  AIC          AICc         BIC
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  1  LG            18572.195    749 38642.390    1162142.390  40145.883
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  2  LG+G4         17609.587    750 36719.173    1163219.173  38224.673
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  3  LG+R2         17821.677    751 37145.354    1166649.354  38652.861
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  4  LG+R3         17701.013    753 36908.025    1172432.025  38419.547
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  5  LG+R4         17611.671    755 36733.341    1178293.341  38248.878
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  6  LG+R5         17589.562    757 36693.125    1184305.125  38212.676
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  7  LG+R6         17584.917    759 36687.835    1190367.835  38211.401
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  8  LG+R7         17584.729    761 36691.458    1196455.458  38219.039
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 17  LG+F+R5       17788.862    776 37129.725    1243033.725  38687.415
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 18  LG+F+R6       17781.820    778 37119.641    1249243.641  38681.346
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 19  LG+F+R7       17781.730    780 37123.461    1255483.461  38689.180
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 28  WAG+R5        17765.832    757 37045.664    1184657.664  38565.215
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 29  WAG+R6        17761.567    759 37041.134    1190721.134  38564.700
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 30  WAG+R7        17761.535    761 37045.071    1196809.071  38572.651
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 39  WAG+F+R5      17940.781    776 37433.561    1243337.561  38991.252
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 40  WAG+F+R6      17933.977    778 37423.953    1249547.953  38985.658
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 41  WAG+F+R7      17933.974    780 37427.949    1255787.949  38993.669
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 50  JTT+R5        17790.805    757 37095.610    1184707.610  38615.161
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 51  JTT+R6        17785.020    759 37088.041    1190768.041  38611.607
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 52  JTT+R7        17782.629    761 37087.258    1196851.258  38614.838
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 61  JTT+F+R5      17882.259    776 37316.517    1243220.517  38874.208
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 62  JTT+F+R6      17871.408    778 37298.817    1249422.817  38860.522
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 63  JTT+F+R7      17868.250    780 37296.501    1255656.501  38862.221
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 72  Q.PFAM+R5     17610.555    757 36735.111    1184347.111  38254.662
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 73  Q.PFAM+R6     17608.163    759 36734.326    1190414.326  38257.892
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 83  Q.PFAM+F+R5   17756.394    776 37064.787    1242968.787  38622.478
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 84  Q.PFAM+F+R6   17750.131    778 37056.262    1249180.262  38617.967
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 85  Q.PFAM+F+R7   17746.417    780 37052.834    1255412.834  38618.554
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 94  Q.BIRD+R5     18103.954    757 37721.908    1185333.908  39241.459
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 95  Q.BIRD+R6     18091.826    759 37701.652    1191381.652  39225.218
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 96  Q.BIRD+R7     18084.844    761 37691.688    1197455.688  39219.269
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+105  Q.BIRD+F+R5   18181.668    776 37915.336    1243819.336  39473.027
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+106  Q.BIRD+F+R6   18165.872    778 37887.745    1250011.745  39449.450
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+107  Q.BIRD+F+R7   18156.119    780 37872.238    1256232.238  39437.958
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+116  Q.MAMMAL+R5   17952.465    757 37418.930    1185030.930  38938.481
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+117  Q.MAMMAL+R6   17942.496    759 37402.993    1191082.993  38926.559
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+118  Q.MAMMAL+R7   17937.028    761 37396.056    1197160.056  38923.637
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+127  Q.MAMMAL+F+R5 18014.411    776 37580.822    1243484.822  39138.513
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+128  Q.MAMMAL+F+R6 18000.794    778 37557.587    1249681.587  39119.292
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+129  Q.MAMMAL+F+R7 17992.082    780 37544.164    1255904.164  39109.884
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+138  Q.INSECT+R5   17551.026    757 36616.053    1184228.053  38135.604
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+139  Q.INSECT+R6   17543.053    759 36604.105    1190284.105  38127.671
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+140  Q.INSECT+R7   17536.157    761 36594.313    1196358.313  38121.894
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+149  Q.INSECT+F+R5 17667.781    776 36887.562    1242791.562  38445.252
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+150  Q.INSECT+F+R6 17660.304    778 36876.608    1249000.608  38438.313
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+151  Q.INSECT+F+R7 17652.042    780 36864.084    1255224.084  38429.804
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+160  Q.PLANT+R5    17765.697    757 37045.394    1184657.394  38564.945
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+161  Q.PLANT+R6    17760.532    759 37039.063    1190719.063  38562.629
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+162  Q.PLANT+R7    17751.470    761 37024.940    1196788.940  38552.520
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+171  Q.PLANT+F+R5  17887.248    776 37326.497    1243230.497  38884.187
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+172  Q.PLANT+F+R6  17875.360    778 37306.720    1249430.720  38868.426
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+173  Q.PLANT+F+R7  17871.892    780 37303.785    1255663.785  38869.505
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+182  Q.YEAST+R5    17620.359    757 36754.718    1184366.718  38274.269
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+183  Q.YEAST+R6    17613.929    759 36745.859    1190425.859  38269.424
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+184  Q.YEAST+R7    17611.391    761 36744.783    1196508.783  38272.363
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+193  Q.YEAST+F+R5  17698.113    776 36948.226    1242852.226  38505.916
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+194  Q.YEAST+F+R6  17688.259    778 36932.519    1249056.519  38494.224
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+195  Q.YEAST+F+R7  17684.663    780 36929.325    1255289.325  38495.045
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+204  JTTDCMUT+R5   17786.666    757 37087.332    1184699.332  38606.884
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+205  JTTDCMUT+R6   17781.068    759 37080.137    1190760.137  38603.703
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+206  JTTDCMUT+R7   17777.892    761 37077.784    1196841.784  38605.365
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+215  JTTDCMUT+F+R5 17880.042    776 37312.085    1243216.085  38869.775
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+216  JTTDCMUT+F+R6 17869.793    778 37295.587    1249419.587  38857.292
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+217  JTTDCMUT+F+R7 17863.926    780 37287.851    1255647.851  38853.571
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+226  DCMUT+R5      17929.948    757 37373.897    1184985.897  38893.448
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+227  DCMUT+R6      17925.231    759 37368.461    1191048.461  38892.027
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+228  DCMUT+R7      17922.670    761 37367.340    1197131.340  38894.921
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+237  DCMUT+F+R5    17905.507    776 37363.015    1243267.015  38920.705
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+238  DCMUT+F+R6    17895.200    778 37346.400    1249470.400  38908.105
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+239  DCMUT+F+R7    17892.939    780 37345.877    1255705.877  38911.597
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+248  VT+R5         17742.837    757 36999.673    1184611.673  38519.225
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+249  VT+R6         17740.983    759 36999.965    1190679.965  38523.531
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+259  VT+F+R5       17900.721    776 37353.443    1243257.443  38911.133
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+260  VT+F+R6       17897.971    778 37351.941    1249475.941  38913.646
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+270  PMB+R5        17875.768    757 37265.536    1184877.536  38785.087
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+271  PMB+R6        17875.098    759 37268.196    1190948.196  38791.762
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+281  PMB+F+R5      18068.155    776 37688.310    1243592.310  39246.001
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+282  PMB+F+R6      18066.484    778 37688.967    1249812.967  39250.672
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+292  BLOSUM62+R5   17844.204    757 37202.409    1184814.409  38721.960
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+293  BLOSUM62+R6   17843.885    759 37205.770    1190885.770  38729.336
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+303  BLOSUM62+F+R5 18041.196    776 37634.391    1243538.391  39192.082
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+304  BLOSUM62+F+R6 18039.555    778 37635.109    1249759.109  39196.815
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+314  DAYHOFF+R5    17929.448    757 37372.895    1184984.895  38892.446
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+315  DAYHOFF+R6    17925.139    759 37368.277    1191048.277  38891.843
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+316  DAYHOFF+R7    17921.812    761 37365.625    1197129.625  38893.205
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+325  DAYHOFF+F+R5  17905.590    776 37363.180    1243267.180  38920.870
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+326  DAYHOFF+F+R6  17895.405    778 37346.810    1249470.810  38908.516
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+327  DAYHOFF+F+R7  17892.874    780 37345.748    1255705.748  38911.468
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+336  MTREV+R5      18720.914    757 38955.828    1186567.828  40475.379
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+337  MTREV+R6      18698.974    759 38915.949    1192595.949  40439.515
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+338  MTREV+R7      18693.227    761 38908.455    1198672.455  40436.035
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+347  MTREV+F+R5    18092.981    776 37737.962    1243641.962  39295.653
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+348  MTREV+F+R6    18085.425    778 37726.850    1249850.850  39288.556
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+349  MTREV+F+R7    18077.228    780 37714.457    1256074.457  39280.177
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+358  MTART+R5      18945.196    757 39404.392    1187016.392  40923.943
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+359  MTART+R6      18936.285    759 39390.569    1193070.569  40914.135
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+360  MTART+R7      18925.751    761 39373.503    1199137.503  40901.084
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+369  MTART+F+R5    18107.554    776 37767.109    1243671.109  39324.799
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+370  MTART+F+R6    18086.901    778 37729.803    1249853.803  39291.508
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+371  MTART+F+R7    18077.745    780 37715.489    1256075.489  39281.209
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+380  MTZOA+R5      18462.562    757 38439.123    1186051.123  39958.675
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+381  MTZOA+R6      18457.858    759 38433.716    1192113.716  39957.282
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+382  MTZOA+R7      18453.238    761 38428.477    1198192.477  39956.057
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+391  MTZOA+F+R5    17978.094    776 37508.188    1243412.188  39065.879
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+392  MTZOA+F+R6    17970.951    778 37497.902    1249621.902  39059.607
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+393  MTZOA+F+R7    17960.792    780 37481.584    1255841.584  39047.303
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+402  MTMET+R5      18767.540    757 39049.081    1186661.081  40568.632
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+403  MTMET+R6      18765.178    759 39048.356    1192728.356  40571.921
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+413  MTMET+F+R5    18072.904    776 37697.809    1243601.809  39255.499
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
++R6 reinitialized from +R5 with factor 0.500
+414  MTMET+F+R6    18068.689    778 37693.378    1249817.378  39255.083
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+415  MTMET+F+R7    18062.304    780 37684.608    1256044.608  39250.328
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+424  MTVER+R5      18939.071    757 39392.143    1187004.143  40911.694
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+425  MTVER+R6      18934.198    759 39386.395    1193066.395  40909.961
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+426  MTVER+R7      18932.860    761 39387.719    1199151.719  40915.300
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+435  MTVER+F+R5    18348.813    776 38249.627    1244153.627  39807.317
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+436  MTVER+F+R6    18339.890    778 38235.779    1250359.779  39797.484
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+437  MTVER+F+R7    18337.135    780 38234.270    1256594.270  39799.990
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+446  MTINV+R5      18886.343    757 39286.686    1186898.686  40806.237
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+447  MTINV+R6      18853.791    759 39225.582    1192905.582  40749.148
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+448  MTINV+R7      18851.340    761 39224.680    1198988.680  40752.260
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+457  MTINV+F+R5    17947.335    776 37446.670    1243350.670  39004.360
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+458  MTINV+F+R6    17940.268    778 37436.535    1249560.535  38998.240
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+459  MTINV+F+R7    17936.298    780 37432.595    1255792.595  38998.315
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+468  MTMAM+R5      19096.163    757 39706.325    1187318.325  41225.876
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+469  MTMAM+R6      19084.882    759 39687.763    1193367.763  41211.329
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+470  MTMAM+R7      19078.657    761 39679.314    1199443.314  41206.895
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+479  MTMAM+F+R5    18357.676    776 38267.353    1244171.353  39825.043
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+480  MTMAM+F+R6    18349.595    778 38255.189    1250379.189  39816.894
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+481  MTMAM+F+R7    18341.228    780 38242.456    1256602.456  39808.176
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+490  FLAVI+R5      18620.357    757 38754.715    1186366.715  40274.266
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+491  FLAVI+R6      18588.679    759 38695.357    1192375.357  40218.923
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+492  FLAVI+R7      18584.776    761 38691.552    1198455.552  40219.132
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+501  FLAVI+F+R5    18616.705    776 38785.410    1244689.410  40343.101
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+502  FLAVI+F+R6    18604.631    778 38765.261    1250889.261  40326.966
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+503  FLAVI+F+R7    18603.498    780 38766.996    1257126.996  40332.716
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+512  HIVB+R5       18215.319    757 37944.637    1185556.637  39464.188
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+513  HIVB+R6       18196.506    759 37911.013    1191591.013  39434.579
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+514  HIVB+R7       18196.023    761 37914.045    1197678.045  39441.626
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+523  HIVB+F+R5     18286.404    776 38124.809    1244028.809  39682.499
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+524  HIVB+F+R6     18269.893    778 38095.786    1250219.786  39657.491
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+525  HIVB+F+R7     18269.889    780 38099.778    1256459.778  39665.498
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+534  HIVW+R5       19064.129    757 39642.258    1187254.258  41161.809
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+535  HIVW+R6       19048.860    759 39615.719    1193295.719  41139.285
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+536  HIVW+R7       19045.075    761 39612.150    1199376.150  41139.730
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+545  HIVW+F+R5     18839.777    776 39231.555    1245135.555  40789.246
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+546  HIVW+F+R6     18824.856    778 39205.711    1251329.711  40767.417
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+547  HIVW+F+R7     18823.189    780 39206.377    1257566.377  40772.097
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+556  FLU+R5        18147.973    757 37809.945    1185421.945  39329.497
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+557  FLU+R6        18136.022    759 37790.044    1191470.044  39313.610
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+558  FLU+R7        18133.625    761 37789.249    1197553.249  39316.830
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+567  FLU+F+R5      18271.514    776 38095.029    1243999.029  39652.719
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+568  FLU+F+R6      18259.889    778 38075.778    1250199.778  39637.483
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+569  FLU+F+R7      18257.616    780 38075.233    1256435.233  39640.953
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+578  RTREV+R5      17751.827    757 37017.654    1184629.654  38537.205
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+579  RTREV+R6      17748.200    759 37014.400    1190694.400  38537.966
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+589  RTREV+F+R5    17802.593    776 37157.186    1243061.186  38714.877
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+590  RTREV+F+R6    17799.360    778 37154.720    1249278.720  38716.426
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+600  CPREV+R5      17925.771    757 37365.543    1184977.543  38885.094
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+601  CPREV+R6      17919.097    759 37356.193    1191036.193  38879.759
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+602  CPREV+R7      17910.861    761 37343.723    1197107.723  38871.303
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+611  CPREV+F+R5    18187.234    776 37926.468    1243830.468  39484.158
+WARNING: 8 threads for alignment length 55 will slow down analysis
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+612  CPREV+F+R6    18183.616    778 37923.233    1250047.233  39484.938
+Akaike Information Criterion:           Q.INSECT+R7
+Corrected Akaike Information Criterion: LG
+Bayesian Information Criterion:         Q.INSECT+R7
+Best-fit model: Q.INSECT+R7 chosen according to BIC
+
+All model information printed to hd_tree.model.gz
+CPU time for ModelFinder: 5165.583 seconds (1h:26m:5s)
+Wall-clock time for ModelFinder: 872.241 seconds (0h:14m:32s)
+Generating 1000 samples for ultrafast bootstrap (seed: 627173)...
+WARNING: 8 threads for alignment length 55 will slow down analysis
+
+NOTE: 31 MB RAM (0 GB) is required!
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+Estimate model parameters (epsilon = 0.100)
+1. Initial log-likelihood: -17599.345
+2. Current log-likelihood: -17542.582
+3. Current log-likelihood: -17537.246
+4. Current log-likelihood: -17536.713
+Optimal log-likelihood: -17536.635
+Site proportion and rates:  (0.127,0.080) (0.098,0.285) (0.248,0.456) (0.131,0.837) (0.179,1.155) (0.157,2.144) (0.061,3.211)
+Parameters optimization took 4 rounds (5.809 sec)
+Wrote distance file to... 
+Computing ML distances based on estimated model parameters...
+Calculating distance matrix: done in 8.02873 secs using 779.1% CPU
+Computing ML distances took 8.078674 sec (of wall-clock time) 62.807408 sec (of CPU time)
+WARNING: Some pairwise ML distances are too long (saturated)
+Setting up auxiliary I and S matrices: done in 0.00484823 secs using 184.9% CPU
+Constructing RapidNJ tree: done in 1.00158 secs using 43.27% CPU
+Computing RapidNJ tree took 1.006745 sec (of wall-clock time) 0.442743 sec (of CPU time)
+Log-likelihood of RapidNJ tree: -17541.158
+--------------------------------------------------------------------
+|             INITIALIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Generating 98 parsimony trees... 9.605 second
+Computing log-likelihood of 98 initial trees ... 10.301 seconds
+Current best score: -17536.635
+
+Do NNI search on 20 best initial trees
+Optimizing NNI: done in 10.8065 secs using 595.8% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 1: -17532.447
+Optimizing NNI: done in 6.35857 secs using 586.7% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 2: -17389.823
+Optimizing NNI: done in 9.12146 secs using 587.1% CPU
+Optimizing NNI: done in 9.17721 secs using 584.2% CPU
+Optimizing NNI: done in 9.86918 secs using 583.7% CPU
+Optimizing NNI: done in 8.36706 secs using 587.6% CPU
+Optimizing NNI: done in 13.7609 secs using 586.8% CPU
+Optimizing NNI: done in 8.88765 secs using 584.5% CPU
+Optimizing NNI: done in 10.1621 secs using 584% CPU
+Optimizing NNI: done in 9.82877 secs using 584.5% CPU
+Iteration 10 / LogL: -17530.748 / Time: 0h:16m:51s
+Optimizing NNI: done in 11.4987 secs using 584.6% CPU
+Optimizing NNI: done in 11.2294 secs using 584.5% CPU
+Optimizing NNI: done in 18.0642 secs using 518.8% CPU
+Optimizing NNI: done in 12.7937 secs using 594.6% CPU
+Optimizing NNI: done in 9.7497 secs using 585.8% CPU
+Optimizing NNI: done in 24.3255 secs using 578.2% CPU
+Optimizing NNI: done in 11.1732 secs using 585.1% CPU
+Optimizing NNI: done in 15.5811 secs using 585.2% CPU
+Optimizing NNI: done in 15.4435 secs using 584.9% CPU
+Optimizing NNI: done in 9.13821 secs using 586.9% CPU
+Iteration 20 / LogL: -17456.862 / Time: 0h:19m:10s
+Finish initializing candidate tree set (20)
+Current best tree score: -17389.823 / CPU time: 261.330
+Number of iterations: 20
+--------------------------------------------------------------------
+|               OPTIMIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Optimizing NNI: done in 4.41813 secs using 591.2% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 21: -17388.082
+Optimizing NNI: done in 4.43843 secs using 591.7% CPU
+Optimizing NNI: done in 6.50185 secs using 591.6% CPU
+Optimizing NNI: done in 4.72051 secs using 591.6% CPU
+Optimizing NNI: done in 4.72908 secs using 591.8% CPU
+Optimizing NNI: done in 3.54436 secs using 592% CPU
+Optimizing NNI: done in 3.74999 secs using 594.1% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 27: -17382.520
+Optimizing NNI: done in 4.21675 secs using 592.5% CPU
+Optimizing NNI: done in 3.97404 secs using 591.4% CPU
+Optimizing NNI: done in 5.49426 secs using 591.4% CPU
+Iteration 30 / LogL: -17386.794 / Time: 0h:20m:0s (0h:18m:19s left)
+Optimizing NNI: done in 5.88475 secs using 592.2% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 31: -17352.122
+Optimizing NNI: done in 4.09017 secs using 591.8% CPU
+Optimizing NNI: done in 4.75201 secs using 592.4% CPU
+Optimizing NNI: done in 4.26866 secs using 592.2% CPU
+Optimizing NNI: done in 4.20402 secs using 592.4% CPU
+Optimizing NNI: done in 5.04112 secs using 593.4% CPU
+Optimizing NNI: done in 4.55324 secs using 593.7% CPU
+Optimizing NNI: done in 4.53981 secs using 591.9% CPU
+Optimizing NNI: done in 5.15016 secs using 592.5% CPU
+Optimizing NNI: done in 5.27854 secs using 591.2% CPU
+Iteration 40 / LogL: -17356.074 / Time: 0h:20m:51s (0h:14m:43s left)
+Optimizing NNI: done in 4.9466 secs using 592.6% CPU
+Optimizing NNI: done in 3.83865 secs using 593.4% CPU
+Optimizing NNI: done in 5.93891 secs using 593.2% CPU
+Optimizing NNI: done in 11.4026 secs using 623.2% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 44: -17350.182
+Optimizing NNI: done in 7.39119 secs using 598.3% CPU
+Optimizing NNI: done in 6.08229 secs using 589.4% CPU
+Optimizing NNI: done in 5.06322 secs using 590.6% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 47: -17347.249
+Optimizing NNI: done in 5.1315 secs using 591% CPU
+Optimizing NNI: done in 6.07929 secs using 589.1% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 49: -17346.628
+Optimizing NNI: done in 5.02873 secs using 590.3% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 50: -17342.475
+Iteration 50 / LogL: -17342.475 / Time: 0h:22m:0s (0h:15m:15s left)
+Log-likelihood cutoff on original alignment: -17479.912
+Optimizing NNI: done in 5.46567 secs using 589.3% CPU
+Optimizing NNI: done in 8.02258 secs using 586.5% CPU
+Optimizing NNI: done in 6.02068 secs using 586.7% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 53: -17340.512
+Optimizing NNI: done in 5.41523 secs using 587.9% CPU
+Optimizing NNI: done in 6.43739 secs using 586.8% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 55: -17333.261
+Optimizing NNI: done in 5.28159 secs using 586.3% CPU
+Optimizing NNI: done in 8.26859 secs using 590.1% CPU
+Optimizing NNI: done in 5.88386 secs using 587.3% CPU
+Optimizing NNI: done in 5.70387 secs using 591.3% CPU
+Optimizing NNI: done in 4.8706 secs using 586.4% CPU
+Iteration 60 / LogL: -17364.494 / Time: 0h:23m:6s (0h:13m:48s left)
+Optimizing NNI: done in 6.25621 secs using 586.6% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 61: -17329.611
+Optimizing NNI: done in 4.91443 secs using 587.9% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 62: -17321.620
+Optimizing NNI: done in 6.87957 secs using 590.1% CPU
+Optimizing NNI: done in 6.37828 secs using 586.2% CPU
+Optimizing NNI: done in 6.03225 secs using 591.9% CPU
+Optimizing NNI: done in 4.24125 secs using 586.8% CPU
+Optimizing NNI: done in 8.69679 secs using 587.8% CPU
+Optimizing NNI: done in 7.61159 secs using 587.8% CPU
+Optimizing NNI: done in 6.12076 secs using 586.7% CPU
+Optimizing NNI: done in 5.87489 secs using 586.9% CPU
+Iteration 70 / LogL: -17346.273 / Time: 0h:24m:15s (0h:12m:57s left)
+Optimizing NNI: done in 7.58871 secs using 623.5% CPU
+Optimizing NNI: done in 7.72526 secs using 586.8% CPU
+Optimizing NNI: done in 5.77514 secs using 586.6% CPU
+Optimizing NNI: done in 5.79584 secs using 586% CPU
+Optimizing NNI: done in 6.69205 secs using 586% CPU
+Optimizing NNI: done in 10.9128 secs using 596.7% CPU
+Optimizing NNI: done in 6.591 secs using 587.1% CPU
+Optimizing NNI: done in 6.06244 secs using 586.4% CPU
+Optimizing NNI: done in 5.98358 secs using 586.4% CPU
+Optimizing NNI: done in 5.25283 secs using 587.9% CPU
+Iteration 80 / LogL: -17329.845 / Time: 0h:25m:24s (0h:11m:16s left)
+Optimizing NNI: done in 5.51835 secs using 588.6% CPU
+Optimizing NNI: done in 5.52451 secs using 588.6% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 82: -17320.918
+Optimizing NNI: done in 5.726 secs using 586.1% CPU
+Optimizing NNI: done in 6.02389 secs using 587.9% CPU
+Optimizing NNI: done in 6.70833 secs using 589.1% CPU
+Optimizing NNI: done in 4.87787 secs using 587.8% CPU
+Optimizing NNI: done in 5.6839 secs using 587.8% CPU
+Optimizing NNI: done in 4.77049 secs using 588.1% CPU
+Optimizing NNI: done in 7.97468 secs using 590.9% CPU
+Optimizing NNI: done in 6.06601 secs using 588.2% CPU
+Iteration 90 / LogL: -17328.256 / Time: 0h:26m:26s (0h:12m:18s left)
+Optimizing NNI: done in 6.95714 secs using 587% CPU
+Optimizing NNI: done in 5.39916 secs using 588.2% CPU
+Optimizing NNI: done in 6.5601 secs using 588.1% CPU
+Optimizing NNI: done in 7.09103 secs using 588.2% CPU
+Optimizing NNI: done in 6.76255 secs using 587.8% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 95: -17315.568
+Optimizing NNI: done in 6.18644 secs using 588.4% CPU
+Optimizing NNI: done in 5.36291 secs using 588.4% CPU
+Optimizing NNI: done in 7.7657 secs using 588% CPU
+Optimizing NNI: done in 5.45901 secs using 590.1% CPU
+Optimizing NNI: done in 6.21408 secs using 590.8% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 100: -17314.057
+Iteration 100 / LogL: -17314.057 / Time: 0h:27m:34s (0h:13m:10s left)
+Log-likelihood cutoff on original alignment: -17462.889
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.935
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Optimizing NNI: done in 5.9777 secs using 591.9% CPU
+Optimizing NNI: done in 6.00155 secs using 592.2% CPU
+Optimizing NNI: done in 5.41907 secs using 592.5% CPU
+Optimizing NNI: done in 5.56357 secs using 592% CPU
+Optimizing NNI: done in 6.00353 secs using 591.4% CPU
+Optimizing NNI: done in 5.5726 secs using 592% CPU
+Optimizing NNI: done in 5.56378 secs using 592.1% CPU
+Optimizing NNI: done in 5.14875 secs using 591.6% CPU
+Optimizing NNI: done in 5.29168 secs using 591.2% CPU
+Optimizing NNI: done in 5.53818 secs using 591.1% CPU
+Iteration 110 / LogL: -17317.634 / Time: 0h:28m:32s (0h:11m:34s left)
+Optimizing NNI: done in 4.92032 secs using 590.4% CPU
+Optimizing NNI: done in 5.8884 secs using 591% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 112: -17313.539
+Optimizing NNI: done in 5.56383 secs using 590.1% CPU
+Optimizing NNI: done in 4.83102 secs using 590.8% CPU
+Optimizing NNI: done in 5.70234 secs using 591.5% CPU
+Optimizing NNI: done in 4.61383 secs using 590.1% CPU
+Optimizing NNI: done in 5.77804 secs using 590.1% CPU
+Optimizing NNI: done in 6.3879 secs using 590.3% CPU
+Optimizing NNI: done in 5.84065 secs using 590.6% CPU
+Optimizing NNI: done in 6.29133 secs using 589.9% CPU
+Iteration 120 / LogL: -17352.096 / Time: 0h:29m:31s (0h:11m:35s left)
+Optimizing NNI: done in 5.86874 secs using 592.7% CPU
+Optimizing NNI: done in 5.2571 secs using 589.7% CPU
+Optimizing NNI: done in 5.96284 secs using 591.2% CPU
+Optimizing NNI: done in 5.16201 secs using 590% CPU
+Optimizing NNI: done in 6.02414 secs using 594.3% CPU
+Optimizing NNI: done in 5.00753 secs using 591.6% CPU
+Optimizing NNI: done in 5.2999 secs using 590.3% CPU
+Optimizing NNI: done in 6.11269 secs using 590.3% CPU
+Optimizing NNI: done in 5.51569 secs using 590.4% CPU
+Optimizing NNI: done in 5.59957 secs using 591.4% CPU
+Iteration 130 / LogL: -17338.029 / Time: 0h:30m:28s (0h:10m:7s left)
+Optimizing NNI: done in 6.03971 secs using 589.8% CPU
+Optimizing NNI: done in 4.96252 secs using 589.9% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 132: -17312.522
+Optimizing NNI: done in 5.85319 secs using 590% CPU
+Optimizing NNI: done in 5.21994 secs using 588.6% CPU
+Optimizing NNI: done in 5.93609 secs using 589.7% CPU
+Optimizing NNI: done in 6.26642 secs using 590.2% CPU
+Optimizing NNI: done in 5.18481 secs using 589.7% CPU
+Optimizing NNI: done in 4.80872 secs using 589.4% CPU
+Optimizing NNI: done in 5.87889 secs using 590.8% CPU
+Optimizing NNI: done in 5.08628 secs using 589.3% CPU
+Iteration 140 / LogL: -17318.899 / Time: 0h:31m:26s (0h:11m:11s left)
+Optimizing NNI: done in 5.24082 secs using 590.1% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 141: -17311.829
+Optimizing NNI: done in 5.51515 secs using 591.4% CPU
+Optimizing NNI: done in 4.5551 secs using 590.6% CPU
+Optimizing NNI: done in 4.15135 secs using 590.2% CPU
+Optimizing NNI: done in 7.74715 secs using 614.1% CPU
+Optimizing NNI: done in 12.8944 secs using 599% CPU
+Optimizing NNI: done in 5.85357 secs using 591.4% CPU
+Optimizing NNI: done in 4.27997 secs using 590.4% CPU
+Optimizing NNI: done in 5.70184 secs using 588.9% CPU
+Optimizing NNI: done in 5.25994 secs using 590.5% CPU
+Iteration 150 / LogL: -17319.838 / Time: 0h:32m:30s (0h:10m:58s left)
+Log-likelihood cutoff on original alignment: -17462.889
+Optimizing NNI: done in 6.14509 secs using 591.3% CPU
+Optimizing NNI: done in 4.68618 secs using 590.6% CPU
+Optimizing NNI: done in 9.03975 secs using 621.6% CPU
+Optimizing NNI: done in 5.32968 secs using 589.6% CPU
+Optimizing NNI: done in 6.10565 secs using 592% CPU
+Optimizing NNI: done in 5.40384 secs using 590% CPU
+Optimizing NNI: done in 6.72955 secs using 590% CPU
+Optimizing NNI: done in 5.05151 secs using 589.8% CPU
+Optimizing NNI: done in 6.02047 secs using 590.8% CPU
+Optimizing NNI: done in 6.37125 secs using 590.1% CPU
+Iteration 160 / LogL: -17329.207 / Time: 0h:33m:33s (0h:9m:41s left)
+Optimizing NNI: done in 5.6132 secs using 589.7% CPU
+Optimizing NNI: done in 5.50044 secs using 591.5% CPU
+Optimizing NNI: done in 5.02243 secs using 593.3% CPU
+Optimizing NNI: done in 7.33446 secs using 608.4% CPU
+Optimizing NNI: done in 6.27599 secs using 591.4% CPU
+Optimizing NNI: done in 5.37949 secs using 590% CPU
+Optimizing NNI: done in 4.86915 secs using 591.7% CPU
+Optimizing NNI: done in 5.62646 secs using 590.7% CPU
+Optimizing NNI: done in 4.78905 secs using 593.1% CPU
+Optimizing NNI: done in 5.32022 secs using 590.1% CPU
+Iteration 170 / LogL: -17320.701 / Time: 0h:34m:29s (0h:8m:23s left)
+Optimizing NNI: done in 8.77832 secs using 603.8% CPU
+Optimizing NNI: done in 4.59762 secs using 591.9% CPU
+Optimizing NNI: done in 5.25445 secs using 591% CPU
+Optimizing NNI: done in 4.86643 secs using 590.2% CPU
+Optimizing NNI: done in 4.48264 secs using 592.3% CPU
+Optimizing NNI: done in 5.3656 secs using 590.6% CPU
+Optimizing NNI: done in 5.82728 secs using 590% CPU
+Optimizing NNI: done in 5.05906 secs using 591% CPU
+Optimizing NNI: done in 5.0713 secs using 589.3% CPU
+Optimizing NNI: done in 5.77306 secs using 590.4% CPU
+Iteration 180 / LogL: -17328.861 / Time: 0h:35m:25s (0h:7m:7s left)
+Optimizing NNI: done in 5.4333 secs using 593.3% CPU
+Optimizing NNI: done in 4.67846 secs using 591.4% CPU
+Optimizing NNI: done in 4.63279 secs using 590% CPU
+Optimizing NNI: done in 5.60111 secs using 590.9% CPU
+Optimizing NNI: done in 4.61663 secs using 590.1% CPU
+Optimizing NNI: done in 5.2632 secs using 590.2% CPU
+Optimizing NNI: done in 5.23695 secs using 589.4% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 187: -17310.084
+Optimizing NNI: done in 4.46099 secs using 601% CPU
+Optimizing NNI: done in 5.69428 secs using 589.8% CPU
+Optimizing NNI: done in 4.85732 secs using 590.4% CPU
+Iteration 190 / LogL: -17334.221 / Time: 0h:36m:17s (0h:11m:9s left)
+Optimizing NNI: done in 6.34041 secs using 591.5% CPU
+Optimizing NNI: done in 5.28749 secs using 590.8% CPU
+Optimizing NNI: done in 5.33233 secs using 590.2% CPU
+Optimizing NNI: done in 5.60183 secs using 590.8% CPU
+Optimizing NNI: done in 5.08488 secs using 590.7% CPU
+Optimizing NNI: done in 4.58851 secs using 592.5% CPU
+Optimizing NNI: done in 5.57275 secs using 591.3% CPU
+Optimizing NNI: done in 5.39698 secs using 590.9% CPU
+Optimizing NNI: done in 5.4461 secs using 591.5% CPU
+Optimizing NNI: done in 4.93898 secs using 590.7% CPU
+Iteration 200 / LogL: -17312.965 / Time: 0h:37m:11s (0h:9m:54s left)
+Log-likelihood cutoff on original alignment: -17462.889
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.991
+Optimizing NNI: done in 10.5789 secs using 623.3% CPU
+Optimizing NNI: done in 5.85707 secs using 591.8% CPU
+Optimizing NNI: done in 5.65162 secs using 590.3% CPU
+Optimizing NNI: done in 5.72322 secs using 591.1% CPU
+Optimizing NNI: done in 5.28641 secs using 590.4% CPU
+Optimizing NNI: done in 6.26139 secs using 590.5% CPU
+Optimizing NNI: done in 5.66943 secs using 590.4% CPU
+Optimizing NNI: done in 4.94682 secs using 591.1% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 208: -17309.985
+Optimizing NNI: done in 5.57674 secs using 591.6% CPU
+Optimizing NNI: done in 6.0574 secs using 590.7% CPU
+Iteration 210 / LogL: -17331.911 / Time: 0h:38m:16s (0h:11m:7s left)
+Optimizing NNI: done in 11.5866 secs using 621.6% CPU
+Optimizing NNI: done in 5.65008 secs using 590.3% CPU
+Optimizing NNI: done in 5.91391 secs using 592.2% CPU
+Optimizing NNI: done in 5.99519 secs using 591.5% CPU
+Optimizing NNI: done in 5.16459 secs using 589.7% CPU
+Optimizing NNI: done in 11.1394 secs using 622.8% CPU
+Optimizing NNI: done in 4.13842 secs using 591% CPU
+Optimizing NNI: done in 4.81297 secs using 590.3% CPU
+Optimizing NNI: done in 5.75682 secs using 590.6% CPU
+Optimizing NNI: done in 6.1636 secs using 591.8% CPU
+Iteration 220 / LogL: -17323.964 / Time: 0h:39m:23s (0h:9m:59s left)
+Optimizing NNI: done in 5.29853 secs using 590.4% CPU
+Optimizing NNI: done in 4.94482 secs using 590.9% CPU
+Optimizing NNI: done in 5.89485 secs using 590.5% CPU
+Optimizing NNI: done in 5.24637 secs using 591% CPU
+Optimizing NNI: done in 5.68256 secs using 591% CPU
+Optimizing NNI: done in 5.41324 secs using 591.5% CPU
+Optimizing NNI: done in 5.94924 secs using 590.5% CPU
+Optimizing NNI: done in 4.41456 secs using 589.7% CPU
+Optimizing NNI: done in 5.69178 secs using 591.4% CPU
+Optimizing NNI: done in 4.85614 secs using 592.3% CPU
+Iteration 230 / LogL: -17319.985 / Time: 0h:40m:18s (0h:8m:46s left)
+Optimizing NNI: done in 6.68318 secs using 590.7% CPU
+Optimizing NNI: done in 5.45554 secs using 591.2% CPU
+Optimizing NNI: done in 5.92118 secs using 591.5% CPU
+Optimizing NNI: done in 7.06508 secs using 590.7% CPU
+Optimizing NNI: done in 5.83533 secs using 590.8% CPU
+Optimizing NNI: done in 5.40005 secs using 591.3% CPU
+Optimizing NNI: done in 5.70626 secs using 592.4% CPU
+Optimizing NNI: done in 5.73188 secs using 591.1% CPU
+Optimizing NNI: done in 5.64137 secs using 591% CPU
+Optimizing NNI: done in 5.60578 secs using 592.4% CPU
+Iteration 240 / LogL: -17311.699 / Time: 0h:41m:17s (0h:7m:36s left)
+Optimizing NNI: done in 5.63383 secs using 592.1% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 241: -17308.847
+Optimizing NNI: done in 5.45315 secs using 591.1% CPU
+Optimizing NNI: done in 5.33501 secs using 590.9% CPU
+Optimizing NNI: done in 5.23694 secs using 590.6% CPU
+Optimizing NNI: done in 6.14023 secs using 591% CPU
+Optimizing NNI: done in 5.11875 secs using 591.1% CPU
+Optimizing NNI: done in 6.20993 secs using 590.2% CPU
+Optimizing NNI: done in 4.20282 secs using 590.7% CPU
+Optimizing NNI: done in 5.17669 secs using 591.7% CPU
+Optimizing NNI: done in 6.02408 secs using 591.1% CPU
+Iteration 250 / LogL: -17314.831 / Time: 0h:42m:14s (0h:10m:7s left)
+Log-likelihood cutoff on original alignment: -17462.889
+Optimizing NNI: done in 5.91707 secs using 590.2% CPU
+Optimizing NNI: done in 5.81957 secs using 591.8% CPU
+Optimizing NNI: done in 5.20536 secs using 591.8% CPU
+Optimizing NNI: done in 5.11519 secs using 590.3% CPU
+Optimizing NNI: done in 6.28483 secs using 591.1% CPU
+Optimizing NNI: done in 5.80093 secs using 591.6% CPU
+Optimizing NNI: done in 5.19334 secs using 591.2% CPU
+Optimizing NNI: done in 5.20889 secs using 590.8% CPU
+Optimizing NNI: done in 4.9586 secs using 589.3% CPU
+Optimizing NNI: done in 9.784 secs using 612.1% CPU
+Iteration 260 / LogL: -17317.444 / Time: 0h:43m:16s (0h:8m:59s left)
+Optimizing NNI: done in 5.13879 secs using 590.3% CPU
+Optimizing NNI: done in 4.5091 secs using 591% CPU
+Optimizing NNI: done in 5.98469 secs using 588.9% CPU
+Optimizing NNI: done in 6.95847 secs using 591.1% CPU
+Optimizing NNI: done in 5.42204 secs using 592% CPU
+Optimizing NNI: done in 5.54049 secs using 591% CPU
+Optimizing NNI: done in 4.41058 secs using 591.2% CPU
+Optimizing NNI: done in 5.64267 secs using 590.6% CPU
+Optimizing NNI: done in 7.17312 secs using 591.1% CPU
+Optimizing NNI: done in 5.61509 secs using 589.3% CPU
+Iteration 270 / LogL: -17311.876 / Time: 0h:44m:13s (0h:7m:50s left)
+Optimizing NNI: done in 5.5596 secs using 590.6% CPU
+Optimizing NNI: done in 4.3469 secs using 590.1% CPU
+Optimizing NNI: done in 4.47777 secs using 591.6% CPU
+Optimizing NNI: done in 5.35744 secs using 590.8% CPU
+Optimizing NNI: done in 9.50974 secs using 626.7% CPU
+Optimizing NNI: done in 5.10314 secs using 590.1% CPU
+Optimizing NNI: done in 5.57939 secs using 591% CPU
+Optimizing NNI: done in 6.08467 secs using 590.7% CPU
+Optimizing NNI: done in 5.16337 secs using 590.7% CPU
+Optimizing NNI: done in 4.46204 secs using 589.7% CPU
+Iteration 280 / LogL: -17361.553 / Time: 0h:45m:9s (0h:6m:41s left)
+Optimizing NNI: done in 4.68192 secs using 590.5% CPU
+Optimizing NNI: done in 5.39116 secs using 591.9% CPU
+Optimizing NNI: done in 9.15184 secs using 588.6% CPU
+Optimizing NNI: done in 4.39222 secs using 589.4% CPU
+Optimizing NNI: done in 4.66971 secs using 591.5% CPU
+Optimizing NNI: done in 5.12434 secs using 590.5% CPU
+Optimizing NNI: done in 4.71622 secs using 589.2% CPU
+Optimizing NNI: done in 5.4527 secs using 591.3% CPU
+Optimizing NNI: done in 4.76776 secs using 592.7% CPU
+Optimizing NNI: done in 5.81496 secs using 591.9% CPU
+Iteration 290 / LogL: -17313.858 / Time: 0h:46m:4s (0h:5m:33s left)
+Optimizing NNI: done in 5.94461 secs using 591.5% CPU
+Optimizing NNI: done in 4.57907 secs using 593% CPU
+Optimizing NNI: done in 5.10835 secs using 590.7% CPU
+Optimizing NNI: done in 4.65609 secs using 590.4% CPU
+Optimizing NNI: done in 4.94254 secs using 591.7% CPU
+Optimizing NNI: done in 6.08925 secs using 592% CPU
+Optimizing NNI: done in 5.66187 secs using 595.9% CPU
+Optimizing NNI: done in 5.01776 secs using 588.7% CPU
+Optimizing NNI: done in 5.47624 secs using 590.5% CPU
+Optimizing NNI: done in 5.67323 secs using 589.1% CPU
+Iteration 300 / LogL: -17336.516 / Time: 0h:46m:58s (0h:4m:26s left)
+Log-likelihood cutoff on original alignment: -17462.889
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.989
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Optimizing NNI: done in 5.92225 secs using 590.2% CPU
+Optimizing NNI: done in 5.22312 secs using 590.3% CPU
+Optimizing NNI: done in 5.28583 secs using 588.9% CPU
+Optimizing NNI: done in 4.79066 secs using 590.1% CPU
+Optimizing NNI: done in 4.93312 secs using 591.2% CPU
+Optimizing NNI: done in 5.39886 secs using 588.6% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 306: -17308.392
+Optimizing NNI: done in 6.42726 secs using 601% CPU
+Optimizing NNI: done in 7.09839 secs using 618.6% CPU
+Optimizing NNI: done in 4.73681 secs using 589.1% CPU
+Optimizing NNI: done in 4.29967 secs using 592.3% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 310: -17308.176
+Iteration 310 / LogL: -17308.176 / Time: 0h:47m:57s (0h:10m:49s left)
+Optimizing NNI: done in 6.76368 secs using 605% CPU
+Optimizing NNI: done in 5.99039 secs using 597.2% CPU
+Optimizing NNI: done in 7.08955 secs using 590.9% CPU
+Optimizing NNI: done in 5.44649 secs using 590.6% CPU
+Optimizing NNI: done in 5.47293 secs using 589.9% CPU
+Optimizing NNI: done in 4.26657 secs using 591.1% CPU
+Optimizing NNI: done in 7.78987 secs using 591.3% CPU
+Optimizing NNI: done in 5.60238 secs using 590.9% CPU
+Optimizing NNI: done in 5.31901 secs using 589.7% CPU
+Optimizing NNI: done in 4.67946 secs using 590.3% CPU
+Iteration 320 / LogL: -17323.937 / Time: 0h:48m:57s (0h:9m:42s left)
+Optimizing NNI: done in 3.93693 secs using 589.4% CPU
+Optimizing NNI: done in 5.48064 secs using 595.8% CPU
+Optimizing NNI: done in 5.24923 secs using 591.1% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 323: -17306.616
+Optimizing NNI: done in 4.79138 secs using 591% CPU
+Optimizing NNI: done in 4.52425 secs using 590.2% CPU
+Optimizing NNI: done in 4.66995 secs using 590.9% CPU
+Optimizing NNI: done in 5.52739 secs using 591.2% CPU
+Optimizing NNI: done in 5.5998 secs using 590.8% CPU
+Optimizing NNI: done in 6.80344 secs using 601.5% CPU
+Optimizing NNI: done in 5.82298 secs using 591.9% CPU
+Iteration 330 / LogL: -17320.329 / Time: 0h:49m:52s (0h:9m:59s left)
+Optimizing NNI: done in 4.43882 secs using 592.1% CPU
+Optimizing NNI: done in 4.27003 secs using 590.1% CPU
+Optimizing NNI: done in 4.86304 secs using 589.6% CPU
+Optimizing NNI: done in 5.22887 secs using 590.6% CPU
+Optimizing NNI: done in 4.94416 secs using 591.3% CPU
+Optimizing NNI: done in 5.13112 secs using 591.1% CPU
+Optimizing NNI: done in 7.4303 secs using 605.9% CPU
+Optimizing NNI: done in 7.44642 secs using 601.8% CPU
+Optimizing NNI: done in 4.9434 secs using 591% CPU
+Optimizing NNI: done in 4.45988 secs using 589.9% CPU
+Iteration 340 / LogL: -17307.799 / Time: 0h:50m:47s (0h:8m:52s left)
+Optimizing NNI: done in 5.52666 secs using 596.4% CPU
+Optimizing NNI: done in 5.3855 secs using 590.7% CPU
+Optimizing NNI: done in 5.0834 secs using 589.8% CPU
+Optimizing NNI: done in 5.57347 secs using 590.5% CPU
+Optimizing NNI: done in 5.74595 secs using 589.9% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 345: -17305.053
+Optimizing NNI: done in 6.25051 secs using 589.4% CPU
+Optimizing NNI: done in 4.20306 secs using 590.9% CPU
+Optimizing NNI: done in 4.55779 secs using 592.5% CPU
+Optimizing NNI: done in 4.86316 secs using 592.5% CPU
+Optimizing NNI: done in 4.49085 secs using 590.2% CPU
+Iteration 350 / LogL: -17339.912 / Time: 0h:51m:41s (0h:10m:6s left)
+Log-likelihood cutoff on original alignment: -17462.889
+Optimizing NNI: done in 4.82421 secs using 590.8% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 351: -17298.459
+Optimizing NNI: done in 4.99559 secs using 591.4% CPU
+Optimizing NNI: done in 5.19638 secs using 589.4% CPU
+Optimizing NNI: done in 5.11996 secs using 589.8% CPU
+Optimizing NNI: done in 4.45353 secs using 591.5% CPU
+Optimizing NNI: done in 7.56991 secs using 590.9% CPU
+Optimizing NNI: done in 8.15321 secs using 592.9% CPU
+Optimizing NNI: done in 5.59281 secs using 590.1% CPU
+Optimizing NNI: done in 4.29322 secs using 589.6% CPU
+Optimizing NNI: done in 4.49689 secs using 590.6% CPU
+Iteration 360 / LogL: -17311.694 / Time: 0h:52m:39s (0h:9m:39s left)
+Optimizing NNI: done in 6.04549 secs using 590.3% CPU
+Optimizing NNI: done in 4.63616 secs using 590.1% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 362: -17298.250
+Optimizing NNI: done in 6.78743 secs using 613.4% CPU
+Optimizing NNI: done in 4.51619 secs using 590% CPU
+Optimizing NNI: done in 5.64439 secs using 599.4% CPU
+Optimizing NNI: done in 8.14008 secs using 606.7% CPU
+Optimizing NNI: done in 5.32488 secs using 596.8% CPU
+Optimizing NNI: done in 5.86583 secs using 598% CPU
+Optimizing NNI: done in 5.30515 secs using 589.9% CPU
+Optimizing NNI: done in 4.72411 secs using 590.3% CPU
+Iteration 370 / LogL: -17316.192 / Time: 0h:53m:38s (0h:9m:45s left)
+Optimizing NNI: done in 4.34108 secs using 590.3% CPU
+Optimizing NNI: done in 5.15592 secs using 590.9% CPU
+Optimizing NNI: done in 4.54352 secs using 591% CPU
+Optimizing NNI: done in 5.50866 secs using 590.8% CPU
+Optimizing NNI: done in 5.10063 secs using 591.4% CPU
+Optimizing NNI: done in 5.50572 secs using 599.2% CPU
+Optimizing NNI: done in 5.00842 secs using 591.1% CPU
+Optimizing NNI: done in 5.35454 secs using 591.5% CPU
+Optimizing NNI: done in 5.44078 secs using 590.5% CPU
+Optimizing NNI: done in 4.78532 secs using 588.9% CPU
+Iteration 380 / LogL: -17312.427 / Time: 0h:54m:30s (0h:8m:38s left)
+Optimizing NNI: done in 4.29731 secs using 590.7% CPU
+Optimizing NNI: done in 4.71798 secs using 591.5% CPU
+Optimizing NNI: done in 4.72616 secs using 590.8% CPU
+Optimizing NNI: done in 4.3289 secs using 591.9% CPU
+Optimizing NNI: done in 4.65769 secs using 590.7% CPU
+Optimizing NNI: done in 5.53038 secs using 591.7% CPU
+Optimizing NNI: done in 4.69629 secs using 588.7% CPU
+Optimizing NNI: done in 4.99242 secs using 591.2% CPU
+Optimizing NNI: done in 5.45769 secs using 590.5% CPU
+Optimizing NNI: done in 4.58504 secs using 590% CPU
+Iteration 390 / LogL: -17314.151 / Time: 0h:55m:19s (0h:7m:33s left)
+Optimizing NNI: done in 4.99399 secs using 590.5% CPU
+Optimizing NNI: done in 4.70306 secs using 590.7% CPU
+Optimizing NNI: done in 6.52774 secs using 589.8% CPU
+Optimizing NNI: done in 5.04871 secs using 591.6% CPU
+Optimizing NNI: done in 5.57333 secs using 592% CPU
+Optimizing NNI: done in 4.92461 secs using 590.4% CPU
+Optimizing NNI: done in 5.69394 secs using 590% CPU
+Optimizing NNI: done in 5.20847 secs using 589.9% CPU
+Optimizing NNI: done in 4.75345 secs using 590.1% CPU
+Optimizing NNI: done in 4.88455 secs using 591.4% CPU
+Iteration 400 / LogL: -17325.125 / Time: 0h:56m:13s (0h:6m:28s left)
+Log-likelihood cutoff on original alignment: -17462.889
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.973
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Optimizing NNI: done in 5.88388 secs using 601.1% CPU
+Optimizing NNI: done in 5.51971 secs using 589.9% CPU
+Optimizing NNI: done in 4.39893 secs using 590.1% CPU
+Optimizing NNI: done in 5.18383 secs using 589.5% CPU
+Optimizing NNI: done in 4.57683 secs using 593.8% CPU
+Optimizing NNI: done in 4.92347 secs using 591.9% CPU
+Optimizing NNI: done in 5.08864 secs using 591.5% CPU
+Optimizing NNI: done in 5.44082 secs using 591.7% CPU
+Optimizing NNI: done in 5.31692 secs using 590.8% CPU
+Optimizing NNI: done in 4.58947 secs using 590.8% CPU
+Iteration 410 / LogL: -17313.116 / Time: 0h:57m:6s (0h:9m:22s left)
+Optimizing NNI: done in 4.73674 secs using 590.2% CPU
+Optimizing NNI: done in 5.81856 secs using 590.1% CPU
+Optimizing NNI: done in 4.7535 secs using 589.3% CPU
+Optimizing NNI: done in 5.29269 secs using 592.2% CPU
+Optimizing NNI: done in 5.22467 secs using 590% CPU
+Optimizing NNI: done in 4.95329 secs using 589.3% CPU
+Optimizing NNI: done in 4.4415 secs using 588.8% CPU
+Optimizing NNI: done in 4.86909 secs using 591.5% CPU
+Optimizing NNI: done in 4.92003 secs using 591.1% CPU
+Optimizing NNI: done in 5.35875 secs using 588% CPU
+Iteration 420 / LogL: -17317.653 / Time: 0h:57m:58s (0h:8m:17s left)
+Optimizing NNI: done in 6.40102 secs using 589% CPU
+Optimizing NNI: done in 5.35217 secs using 588.5% CPU
+Optimizing NNI: done in 6.04134 secs using 587.9% CPU
+Optimizing NNI: done in 7.16913 secs using 587.6% CPU
+Optimizing NNI: done in 5.15528 secs using 590.3% CPU
+Optimizing NNI: done in 4.82832 secs using 588.8% CPU
+Optimizing NNI: done in 4.95059 secs using 589% CPU
+Optimizing NNI: done in 5.05121 secs using 589.1% CPU
+Optimizing NNI: done in 5.87675 secs using 588.8% CPU
+Optimizing NNI: done in 4.90561 secs using 588% CPU
+Iteration 430 / LogL: -17415.491 / Time: 0h:58m:55s (0h:7m:14s left)
+Optimizing NNI: done in 6.13248 secs using 589.1% CPU
+Optimizing NNI: done in 4.83855 secs using 587.8% CPU
+Optimizing NNI: done in 5.72677 secs using 588.6% CPU
+Optimizing NNI: done in 5.93739 secs using 588.3% CPU
+Optimizing NNI: done in 5.82416 secs using 588.1% CPU
+Optimizing NNI: done in 6.0815 secs using 588% CPU
+Optimizing NNI: done in 5.99738 secs using 588.2% CPU
+Optimizing NNI: done in 4.23326 secs using 590.9% CPU
+Optimizing NNI: done in 5.25771 secs using 589.3% CPU
+Optimizing NNI: done in 5.26746 secs using 588.4% CPU
+Iteration 440 / LogL: -17303.618 / Time: 0h:59m:52s (0h:6m:11s left)
+Optimizing NNI: done in 5.71993 secs using 588.9% CPU
+Optimizing NNI: done in 6.37889 secs using 599.2% CPU
+Optimizing NNI: done in 5.19874 secs using 592% CPU
+Optimizing NNI: done in 6.64536 secs using 589.5% CPU
+Optimizing NNI: done in 5.87771 secs using 591.5% CPU
+Optimizing NNI: done in 5.84044 secs using 589.1% CPU
+Optimizing NNI: done in 4.96239 secs using 588.6% CPU
+Optimizing NNI: done in 5.58279 secs using 590.6% CPU
+Optimizing NNI: done in 4.5922 secs using 589.3% CPU
+Optimizing NNI: done in 4.97549 secs using 589.4% CPU
+Iteration 450 / LogL: -17306.681 / Time: 1h:0m:49s (0h:5m:9s left)
+Log-likelihood cutoff on original alignment: -17462.889
+Optimizing NNI: done in 5.51141 secs using 590.3% CPU
+Optimizing NNI: done in 5.69145 secs using 587.7% CPU
+Optimizing NNI: done in 5.98618 secs using 590.3% CPU
+BETTER TREE FOUND at iteration 453: -17298.244
+Optimizing NNI: done in 4.97331 secs using 589.8% CPU
+Optimizing NNI: done in 5.67206 secs using 595.4% CPU
+Optimizing NNI: done in 5.36402 secs using 586.5% CPU
+Optimizing NNI: done in 5.66286 secs using 601% CPU
+Optimizing NNI: done in 5.14441 secs using 591% CPU
+Optimizing NNI: done in 5.73271 secs using 589.5% CPU
+Optimizing NNI: done in 5.65375 secs using 590.4% CPU
+Iteration 460 / LogL: -17314.997 / Time: 1h:1m:47s (0h:9m:34s left)
+Optimizing NNI: done in 4.68178 secs using 590.4% CPU
+Optimizing NNI: done in 6.00249 secs using 589.2% CPU
+Optimizing NNI: done in 5.83607 secs using 590.4% CPU
+Optimizing NNI: done in 5.13164 secs using 592.5% CPU
+Optimizing NNI: done in 6.01718 secs using 591.3% CPU
+Optimizing NNI: done in 5.6317 secs using 591.9% CPU
+Optimizing NNI: done in 8.11655 secs using 609.9% CPU
+Optimizing NNI: done in 4.97379 secs using 590.2% CPU
+Optimizing NNI: done in 5.57648 secs using 589.4% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 469: -17297.283
+Optimizing NNI: done in 5.65187 secs using 589% CPU
+Iteration 470 / LogL: -17311.230 / Time: 1h:2m:47s (0h:10m:11s left)
+Optimizing NNI: done in 5.03872 secs using 588.1% CPU
+Optimizing NNI: done in 5.74454 secs using 590.6% CPU
+Optimizing NNI: done in 5.52322 secs using 589.5% CPU
+Optimizing NNI: done in 6.41195 secs using 590.3% CPU
+Optimizing NNI: done in 4.96366 secs using 589.6% CPU
+Optimizing NNI: done in 5.12948 secs using 590.1% CPU
+Optimizing NNI: done in 6.43688 secs using 592.1% CPU
+Optimizing NNI: done in 6.09958 secs using 589.3% CPU
+Optimizing NNI: done in 6.09665 secs using 590.4% CPU
+Optimizing NNI: done in 7.76375 secs using 590.1% CPU
+Iteration 480 / LogL: -17311.306 / Time: 1h:3m:48s (0h:9m:9s left)
+Optimizing NNI: done in 5.14593 secs using 592.8% CPU
+Optimizing NNI: done in 5.53925 secs using 590.1% CPU
+Optimizing NNI: done in 5.43384 secs using 589.9% CPU
+Optimizing NNI: done in 6.16836 secs using 590.1% CPU
+Optimizing NNI: done in 5.84837 secs using 588.8% CPU
+Optimizing NNI: done in 6.56873 secs using 588.8% CPU
+Optimizing NNI: done in 5.90492 secs using 588.4% CPU
+Optimizing NNI: done in 6.15254 secs using 588.6% CPU
+Optimizing NNI: done in 5.18521 secs using 588.9% CPU
+Optimizing NNI: done in 5.11883 secs using 589.1% CPU
+Iteration 490 / LogL: -17299.665 / Time: 1h:4m:46s (0h:8m:6s left)
+Optimizing NNI: done in 5.29255 secs using 588.9% CPU
+Optimizing NNI: done in 6.80199 secs using 589% CPU
+Optimizing NNI: done in 8.57463 secs using 608% CPU
+Optimizing NNI: done in 5.58739 secs using 588.9% CPU
+Optimizing NNI: done in 5.82122 secs using 589.1% CPU
+Optimizing NNI: done in 4.91633 secs using 588% CPU
+Optimizing NNI: done in 4.47941 secs using 589.6% CPU
+Optimizing NNI: done in 5.8416 secs using 590.6% CPU
+Optimizing NNI: done in 5.80809 secs using 589.4% CPU
+Optimizing NNI: done in 5.45106 secs using 591.7% CPU
+Iteration 500 / LogL: -17313.123 / Time: 1h:5m:46s (0h:7m:5s left)
+Log-likelihood cutoff on original alignment: -17462.889
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.976
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Optimizing NNI: done in 5.14292 secs using 591.3% CPU
+Optimizing NNI: done in 5.83059 secs using 589.7% CPU
+Optimizing NNI: done in 5.25619 secs using 589.6% CPU
+Optimizing NNI: done in 6.25516 secs using 590.8% CPU
+Optimizing NNI: done in 5.43035 secs using 589.3% CPU
+Optimizing NNI: done in 5.31447 secs using 590.4% CPU
+Optimizing NNI: done in 5.59815 secs using 589.3% CPU
+Optimizing NNI: done in 6.14783 secs using 589.6% CPU
+Optimizing NNI: done in 6.11626 secs using 589.9% CPU
+Optimizing NNI: done in 6.28808 secs using 589.6% CPU
+Iteration 510 / LogL: -17322.546 / Time: 1h:6m:47s (0h:9m:14s left)
+Optimizing NNI: done in 6.40718 secs using 590.1% CPU
+Optimizing NNI: done in 5.24404 secs using 589.3% CPU
+Optimizing NNI: done in 5.98793 secs using 589.6% CPU
+Optimizing NNI: done in 4.94125 secs using 589.6% CPU
+Optimizing NNI: done in 5.45491 secs using 589.5% CPU
+Optimizing NNI: done in 5.00991 secs using 588.5% CPU
+Optimizing NNI: done in 5.15812 secs using 589.8% CPU
+Optimizing NNI: done in 5.81262 secs using 589.1% CPU
+Optimizing NNI: done in 4.28901 secs using 590.7% CPU
+Optimizing NNI: done in 4.59007 secs using 589.9% CPU
+Iteration 520 / LogL: -17300.981 / Time: 1h:7m:41s (0h:8m:11s left)
+Optimizing NNI: done in 5.02088 secs using 590.8% CPU
+Optimizing NNI: done in 5.66887 secs using 588.7% CPU
+Optimizing NNI: done in 5.79873 secs using 589.3% CPU
+Optimizing NNI: done in 5.72586 secs using 589.7% CPU
+Optimizing NNI: done in 8.56399 secs using 600.8% CPU
+Optimizing NNI: done in 8.05615 secs using 609.4% CPU
+Optimizing NNI: done in 5.07738 secs using 589% CPU
+Optimizing NNI: done in 5.25635 secs using 589% CPU
+Optimizing NNI: done in 5.13083 secs using 588.9% CPU
+Optimizing NNI: done in 5.79086 secs using 589.6% CPU
+Iteration 530 / LogL: -17312.348 / Time: 1h:8m:43s (0h:7m:10s left)
+Optimizing NNI: done in 5.05283 secs using 590.3% CPU
+Optimizing NNI: done in 4.64165 secs using 590.5% CPU
+Optimizing NNI: done in 5.25808 secs using 591.1% CPU
+Optimizing NNI: done in 5.12041 secs using 591.7% CPU
+Optimizing NNI: done in 6.18734 secs using 591.1% CPU
+Optimizing NNI: done in 4.91459 secs using 590.9% CPU
+Optimizing NNI: done in 4.87498 secs using 590.9% CPU
+Optimizing NNI: done in 4.57117 secs using 592.9% CPU
+Optimizing NNI: done in 4.58761 secs using 592.5% CPU
+Optimizing NNI: done in 4.22556 secs using 591.3% CPU
+Iteration 540 / LogL: -17300.405 / Time: 1h:9m:33s (0h:6m:7s left)
+Optimizing NNI: done in 5.68217 secs using 591% CPU
+Optimizing NNI: done in 5.51291 secs using 589.6% CPU
+Optimizing NNI: done in 5.86122 secs using 591.5% CPU
+Optimizing NNI: done in 4.51806 secs using 590.6% CPU
+Optimizing NNI: done in 4.43319 secs using 590.4% CPU
+Optimizing NNI: done in 3.87167 secs using 590.1% CPU
+Optimizing NNI: done in 5.20737 secs using 587.9% CPU
+Optimizing NNI: done in 4.36873 secs using 588.4% CPU
+Optimizing NNI: done in 5.96301 secs using 588.5% CPU
+Optimizing NNI: done in 4.08069 secs using 590.1% CPU
+Iteration 550 / LogL: -17315.735 / Time: 1h:10m:24s (0h:5m:5s left)
+Log-likelihood cutoff on original alignment: -17462.889
+Optimizing NNI: done in 5.50985 secs using 599.7% CPU
+Optimizing NNI: done in 5.7808 secs using 590.7% CPU
+Optimizing NNI: done in 5.258 secs using 589.7% CPU
+Optimizing NNI: done in 4.76987 secs using 591.8% CPU
+Optimizing NNI: done in 5.54634 secs using 591.1% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 555: -17296.651
+Optimizing NNI: done in 4.7856 secs using 591.8% CPU
+Optimizing NNI: done in 4.90955 secs using 590.6% CPU
+Optimizing NNI: done in 4.49338 secs using 590% CPU
+Optimizing NNI: done in 5.06799 secs using 588.6% CPU
+Optimizing NNI: done in 6.21954 secs using 589.4% CPU
+Iteration 560 / LogL: -17307.163 / Time: 1h:11m:21s (0h:9m:39s left)
+Optimizing NNI: done in 4.85283 secs using 588.4% CPU
+Optimizing NNI: done in 5.00841 secs using 588.4% CPU
+Optimizing NNI: done in 5.15708 secs using 590.6% CPU
+Optimizing NNI: done in 5.76702 secs using 589.4% CPU
+Optimizing NNI: done in 5.99716 secs using 588.6% CPU
+Optimizing NNI: done in 6.4874 secs using 588% CPU
+Optimizing NNI: done in 5.57861 secs using 589.5% CPU
+Optimizing NNI: done in 5.73797 secs using 588% CPU
+Optimizing NNI: done in 5.83211 secs using 587.7% CPU
+Optimizing NNI: done in 5.35733 secs using 589.1% CPU
+Iteration 570 / LogL: -17309.654 / Time: 1h:12m:18s (0h:8m:37s left)
+Optimizing NNI: done in 4.85328 secs using 588.6% CPU
+Optimizing NNI: done in 7.27315 secs using 605.8% CPU
+Optimizing NNI: done in 4.82892 secs using 588.2% CPU
+Optimizing NNI: done in 5.02116 secs using 590% CPU
+Optimizing NNI: done in 5.02879 secs using 588% CPU
+Optimizing NNI: done in 4.96518 secs using 588.1% CPU
+Optimizing NNI: done in 5.52497 secs using 589.2% CPU
+Optimizing NNI: done in 4.18901 secs using 587.8% CPU
+Optimizing NNI: done in 5.47796 secs using 591.2% CPU
+Optimizing NNI: done in 6.19882 secs using 590.8% CPU
+Iteration 580 / LogL: -17335.674 / Time: 1h:13m:13s (0h:7m:36s left)
+Optimizing NNI: done in 4.68635 secs using 590.7% CPU
+Optimizing NNI: done in 5.21682 secs using 589.9% CPU
+Optimizing NNI: done in 4.40443 secs using 591.5% CPU
+Optimizing NNI: done in 5.43884 secs using 594.8% CPU
+Optimizing NNI: done in 4.40503 secs using 591.4% CPU
+Optimizing NNI: done in 4.14597 secs using 591.7% CPU
+Optimizing NNI: done in 6.11737 secs using 591.2% CPU
+Optimizing NNI: done in 5.00794 secs using 590.8% CPU
+Optimizing NNI: done in 5.24384 secs using 592.2% CPU
+Optimizing NNI: done in 5.38688 secs using 590.4% CPU
+Iteration 590 / LogL: -17320.638 / Time: 1h:14m:5s (0h:6m:34s left)
+Optimizing NNI: done in 5.05147 secs using 593% CPU
+Optimizing NNI: done in 4.65866 secs using 589.7% CPU
+Optimizing NNI: done in 5.10744 secs using 589.8% CPU
+Optimizing NNI: done in 5.74781 secs using 591.5% CPU
+Optimizing NNI: done in 5.01605 secs using 593.4% CPU
+Optimizing NNI: done in 4.95411 secs using 592.3% CPU
+Optimizing NNI: done in 5.32904 secs using 593% CPU
+Optimizing NNI: done in 5.27474 secs using 591.5% CPU
+Optimizing NNI: done in 4.51329 secs using 592.1% CPU
+Optimizing NNI: done in 4.92537 secs using 591.2% CPU
+Iteration 600 / LogL: -17313.610 / Time: 1h:14m:57s (0h:5m:32s left)
+Log-likelihood cutoff on original alignment: -17462.889
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.977
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Optimizing NNI: done in 6.54005 secs using 591.7% CPU
+Optimizing NNI: done in 4.78364 secs using 590.8% CPU
+Optimizing NNI: done in 5.6622 secs using 591.9% CPU
+Optimizing NNI: done in 4.99535 secs using 592% CPU
+Optimizing NNI: done in 5.73013 secs using 589.7% CPU
+Optimizing NNI: done in 5.41176 secs using 589.4% CPU
+Optimizing NNI: done in 4.85044 secs using 590.3% CPU
+Optimizing NNI: done in 5.24568 secs using 589.9% CPU
+Optimizing NNI: done in 5.61599 secs using 590.4% CPU
+Optimizing NNI: done in 5.42124 secs using 590.3% CPU
+Iteration 610 / LogL: -17307.047 / Time: 1h:15m:54s (0h:9m:4s left)
+Optimizing NNI: done in 5.02588 secs using 590.6% CPU
+Optimizing NNI: done in 4.6767 secs using 589.8% CPU
+Optimizing NNI: done in 4.7125 secs using 590.1% CPU
+Optimizing NNI: done in 4.93371 secs using 589.3% CPU
+Optimizing NNI: done in 4.23354 secs using 590.1% CPU
+Optimizing NNI: done in 5.0326 secs using 590.3% CPU
+Optimizing NNI: done in 5.4177 secs using 592.1% CPU
+Optimizing NNI: done in 5.01816 secs using 592.2% CPU
+Optimizing NNI: done in 5.24333 secs using 590.4% CPU
+Optimizing NNI: done in 6.40197 secs using 590.2% CPU
+Iteration 620 / LogL: -17306.914 / Time: 1h:16m:47s (0h:8m:2s left)
+Optimizing NNI: done in 5.89007 secs using 589.5% CPU
+Optimizing NNI: done in 7.25032 secs using 590% CPU
+Optimizing NNI: done in 5.66176 secs using 589.2% CPU
+Optimizing NNI: done in 4.87222 secs using 589.5% CPU
+Optimizing NNI: done in 5.00427 secs using 589.2% CPU
+Optimizing NNI: done in 5.99271 secs using 589.9% CPU
+Optimizing NNI: done in 4.43324 secs using 589.9% CPU
+Optimizing NNI: done in 4.99423 secs using 589.1% CPU
+Optimizing NNI: done in 5.89803 secs using 589.4% CPU
+Optimizing NNI: done in 5.36805 secs using 590% CPU
+Iteration 630 / LogL: -17310.557 / Time: 1h:17m:44s (0h:7m:2s left)
+Optimizing NNI: done in 4.96447 secs using 589.8% CPU
+Optimizing NNI: done in 5.63579 secs using 588.8% CPU
+Optimizing NNI: done in 6.08154 secs using 602.6% CPU
+Optimizing NNI: done in 5.5152 secs using 589.7% CPU
+Optimizing NNI: done in 4.74178 secs using 590.2% CPU
+Optimizing NNI: done in 5.50016 secs using 591.1% CPU
+Optimizing NNI: done in 5.82235 secs using 591.1% CPU
+Optimizing NNI: done in 5.84803 secs using 598.3% CPU
+Optimizing NNI: done in 7.22139 secs using 593.9% CPU
+Optimizing NNI: done in 4.50304 secs using 591.8% CPU
+Iteration 640 / LogL: -17314.007 / Time: 1h:18m:41s (0h:6m:1s left)
+Optimizing NNI: done in 6.03467 secs using 592.6% CPU
+Optimizing NNI: done in 5.899 secs using 593.3% CPU
+Optimizing NNI: done in 6.51641 secs using 597.5% CPU
+Optimizing NNI: done in 7.99962 secs using 588.1% CPU
+Optimizing NNI: done in 8.12093 secs using 598.3% CPU
+Optimizing NNI: done in 7.65334 secs using 596.3% CPU
+Optimizing NNI: done in 7.99994 secs using 603.6% CPU
+Optimizing NNI: done in 8.22051 secs using 592% CPU
+Optimizing NNI: done in 7.50565 secs using 607.9% CPU
+Optimizing NNI: done in 8.259 secs using 605.2% CPU
+Iteration 650 / LogL: -17307.580 / Time: 1h:19m:57s (0h:5m:2s left)
+Log-likelihood cutoff on original alignment: -17462.889
+Optimizing NNI: done in 4.63918 secs using 603.5% CPU
+Optimizing NNI: done in 5.81267 secs using 607.8% CPU
+Optimizing NNI: done in 4.40137 secs using 592.3% CPU
+Optimizing NNI: done in 4.43702 secs using 592.4% CPU
+Optimizing NNI: done in 4.3258 secs using 593.9% CPU
+Optimizing NNI: done in 3.26634 secs using 592.8% CPU
+Optimizing NNI: done in 4.13686 secs using 592.7% CPU
+Optimizing NNI: done in 4.99877 secs using 597.6% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 658: -17295.680
+Optimizing NNI: done in 4.70188 secs using 591.8% CPU
+Optimizing NNI: done in 3.70321 secs using 593.2% CPU
+Iteration 660 / LogL: -17307.111 / Time: 1h:20m:46s (0h:9m:50s left)
+Optimizing NNI: done in 5.46113 secs using 594.1% CPU
+Optimizing NNI: done in 4.85585 secs using 594.4% CPU
+Optimizing NNI: done in 4.87925 secs using 594.1% CPU
+Optimizing NNI: done in 4.65459 secs using 593.6% CPU
+Optimizing NNI: done in 4.06159 secs using 592.7% CPU
+Optimizing NNI: done in 4.90208 secs using 594.3% CPU
+Optimizing NNI: done in 4.94528 secs using 591.9% CPU
+Optimizing NNI: done in 5.26706 secs using 592.1% CPU
+Optimizing NNI: done in 4.68504 secs using 592.5% CPU
+Optimizing NNI: done in 5.00039 secs using 593.7% CPU
+Iteration 670 / LogL: -17315.559 / Time: 1h:21m:36s (0h:8m:49s left)
+Optimizing NNI: done in 3.78191 secs using 591.6% CPU
+Optimizing NNI: done in 4.01845 secs using 592.1% CPU
+Optimizing NNI: done in 4.60378 secs using 591.8% CPU
+Optimizing NNI: done in 5.61513 secs using 593.3% CPU
+Optimizing NNI: done in 4.27183 secs using 593% CPU
+Optimizing NNI: done in 4.65629 secs using 592.9% CPU
+Optimizing NNI: done in 4.27536 secs using 591.1% CPU
+Optimizing NNI: done in 4.7321 secs using 593.8% CPU
+Optimizing NNI: done in 4.33299 secs using 593.9% CPU
+Optimizing NNI: done in 7.73692 secs using 619.5% CPU
+Iteration 680 / LogL: -17304.288 / Time: 1h:22m:26s (0h:7m:47s left)
+Optimizing NNI: done in 3.97595 secs using 593.3% CPU
+Optimizing NNI: done in 5.29244 secs using 594.2% CPU
+Optimizing NNI: done in 4.48353 secs using 593.6% CPU
+Optimizing NNI: done in 3.98888 secs using 593.2% CPU
+Optimizing NNI: done in 4.34961 secs using 593% CPU
+Optimizing NNI: done in 4.22364 secs using 593.6% CPU
+Optimizing NNI: done in 4.40324 secs using 595.3% CPU
+Optimizing NNI: done in 8.2871 secs using 609.2% CPU
+Optimizing NNI: done in 4.78019 secs using 591.3% CPU
+Optimizing NNI: done in 4.11547 secs using 593.7% CPU
+Iteration 690 / LogL: -17312.057 / Time: 1h:23m:15s (0h:6m:46s left)
+Optimizing NNI: done in 5.50978 secs using 603.7% CPU
+Optimizing NNI: done in 3.9449 secs using 594.9% CPU
+Optimizing NNI: done in 4.38028 secs using 592.6% CPU
+Optimizing NNI: done in 5.22596 secs using 593.2% CPU
+Optimizing NNI: done in 4.45899 secs using 593.1% CPU
+Optimizing NNI: done in 4.80695 secs using 592.6% CPU
+Optimizing NNI: done in 5.45183 secs using 593.8% CPU
+Optimizing NNI: done in 4.52664 secs using 593.6% CPU
+Optimizing NNI: done in 4.99981 secs using 600.2% CPU
+Optimizing NNI: done in 7.76179 secs using 609.3% CPU
+Iteration 700 / LogL: -17311.684 / Time: 1h:24m:8s (0h:5m:46s left)
+Log-likelihood cutoff on original alignment: -17462.889
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.982
+NOTE: UFBoot does not converge, continue at least 100 more iterations
+Optimizing NNI: done in 4.45393 secs using 591.7% CPU
+Optimizing NNI: done in 5.08889 secs using 594.3% CPU
+Optimizing NNI: done in 4.52822 secs using 594.6% CPU
+Optimizing NNI: done in 4.60178 secs using 592.9% CPU
+Optimizing NNI: done in 4.76887 secs using 594.1% CPU
+Optimizing NNI: done in 3.9179 secs using 593.6% CPU
+Optimizing NNI: done in 4.63228 secs using 593.4% CPU
+Optimizing NNI: done in 4.90161 secs using 592.8% CPU
+Optimizing NNI: done in 4.41963 secs using 592.4% CPU
+Optimizing NNI: done in 3.85199 secs using 592.6% CPU
+Iteration 710 / LogL: -17303.907 / Time: 1h:24m:56s (0h:8m:56s left)
+Optimizing NNI: done in 4.89476 secs using 593.2% CPU
+Optimizing NNI: done in 4.44756 secs using 593.8% CPU
+Optimizing NNI: done in 5.12751 secs using 593.9% CPU
+Optimizing NNI: done in 3.94901 secs using 592.7% CPU
+Optimizing NNI: done in 9.02137 secs using 601.8% CPU
+Optimizing NNI: done in 4.58607 secs using 593.4% CPU
+Optimizing NNI: done in 4.29855 secs using 595.6% CPU
+Optimizing NNI: done in 4.2795 secs using 592.3% CPU
+Optimizing NNI: done in 4.32144 secs using 594.5% CPU
+Optimizing NNI: done in 4.38196 secs using 593.5% CPU
+Iteration 720 / LogL: -17324.377 / Time: 1h:25m:47s (0h:7m:55s left)
+Optimizing NNI: done in 13.3725 secs using 619.3% CPU
+Optimizing NNI: done in 4.82992 secs using 593% CPU
+Optimizing NNI: done in 4.27258 secs using 593.9% CPU
+Optimizing NNI: done in 4.99168 secs using 592.4% CPU
+Optimizing NNI: done in 8.6911 secs using 617% CPU
+Optimizing NNI: done in 6.78918 secs using 596.8% CPU
+Optimizing NNI: done in 3.88582 secs using 593.9% CPU
+Optimizing NNI: done in 4.61138 secs using 592.5% CPU
+Optimizing NNI: done in 4.35499 secs using 594.5% CPU
+Optimizing NNI: done in 4.46723 secs using 593.5% CPU
+Iteration 730 / LogL: -17296.436 / Time: 1h:26m:49s (0h:6m:56s left)
+Optimizing NNI: done in 4.31289 secs using 591.9% CPU
+Optimizing NNI: done in 5.51509 secs using 592.3% CPU
+Optimizing NNI: done in 4.82211 secs using 592.2% CPU
+Optimizing NNI: done in 4.73417 secs using 592.1% CPU
+Optimizing NNI: done in 4.49705 secs using 592.9% CPU
+Optimizing NNI: done in 4.9134 secs using 593.9% CPU
+Optimizing NNI: done in 4.16553 secs using 592.2% CPU
+Optimizing NNI: done in 4.58263 secs using 593% CPU
+Optimizing NNI: done in 6.56591 secs using 612.1% CPU
+Optimizing NNI: done in 7.21824 secs using 618.2% CPU
+Iteration 740 / LogL: -17314.413 / Time: 1h:27m:42s (0h:5m:56s left)
+Optimizing NNI: done in 4.45871 secs using 591.5% CPU
+Optimizing NNI: done in 3.97422 secs using 593.3% CPU
+Optimizing NNI: done in 4.81635 secs using 593% CPU
+Optimizing NNI: done in 4.14796 secs using 594.2% CPU
+Optimizing NNI: done in 4.00929 secs using 592.9% CPU
+Optimizing NNI: done in 4.5506 secs using 593.3% CPU
+Optimizing NNI: done in 4.61531 secs using 594.4% CPU
+Optimizing NNI: done in 4.75086 secs using 592.8% CPU
+Optimizing NNI: done in 4.43369 secs using 593.1% CPU
+Optimizing NNI: done in 4.4949 secs using 591.8% CPU
+Iteration 750 / LogL: -17304.770 / Time: 1h:28m:28s (0h:4m:56s left)
+Log-likelihood cutoff on original alignment: -17462.889
+Optimizing NNI: done in 5.10356 secs using 595.1% CPU
+Optimizing NNI: done in 4.50146 secs using 594.2% CPU
+Optimizing NNI: done in 4.62407 secs using 596.8% CPU
+Optimizing NNI: done in 3.92853 secs using 592.4% CPU
+Optimizing NNI: done in 4.43446 secs using 593.2% CPU
+Optimizing NNI: done in 3.89463 secs using 593.6% CPU
+Optimizing NNI: done in 5.44929 secs using 593.2% CPU
+Optimizing NNI: done in 4.90572 secs using 593.8% CPU
+Optimizing NNI: done in 3.72131 secs using 594.4% CPU
+Optimizing NNI: done in 5.1182 secs using 590.9% CPU
+Iteration 760 / LogL: -17302.087 / Time: 1h:29m:17s (0h:3m:56s left)
+Optimizing NNI: done in 4.52221 secs using 593.8% CPU
+Optimizing NNI: done in 5.90068 secs using 593.5% CPU
+Optimizing NNI: done in 6.13623 secs using 614.9% CPU
+Optimizing NNI: done in 4.73113 secs using 592.8% CPU
+Optimizing NNI: done in 4.7991 secs using 590.9% CPU
+Optimizing NNI: done in 4.50798 secs using 594.5% CPU
+Optimizing NNI: done in 4.53434 secs using 594.2% CPU
+Optimizing NNI: done in 5.15212 secs using 593.5% CPU
+Optimizing NNI: done in 5.44539 secs using 609.8% CPU
+Optimizing NNI: done in 4.18739 secs using 594.4% CPU
+Iteration 770 / LogL: -17315.331 / Time: 1h:30m:8s (0h:2m:56s left)
+Optimizing NNI: done in 5.88352 secs using 597.3% CPU
+Optimizing NNI: done in 4.66029 secs using 594.1% CPU
+Optimizing NNI: done in 4.72917 secs using 592.9% CPU
+Optimizing NNI: done in 4.70234 secs using 593.6% CPU
+Optimizing NNI: done in 4.99882 secs using 594.3% CPU
+Optimizing NNI: done in 4.82837 secs using 593.6% CPU
+Optimizing NNI: done in 4.70841 secs using 593.4% CPU
+Optimizing NNI: done in 5.12779 secs using 593.3% CPU
+Optimizing NNI: done in 5.3303 secs using 594.5% CPU
+Optimizing NNI: done in 5.3776 secs using 594.5% CPU
+Iteration 780 / LogL: -17306.875 / Time: 1h:31m:0s (0h:1m:57s left)
+Optimizing NNI: done in 5.82487 secs using 606% CPU
+Optimizing NNI: done in 7.91762 secs using 619.1% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 782: -17295.528
+Optimizing NNI: done in 4.69976 secs using 592.5% CPU
+Optimizing NNI: done in 4.49817 secs using 593% CPU
+Optimizing NNI: done in 4.87077 secs using 592.9% CPU
+Optimizing NNI: done in 4.29492 secs using 592.9% CPU
+Optimizing NNI: done in 4.9544 secs using 592.4% CPU
+Optimizing NNI: done in 4.79937 secs using 593.3% CPU
+Optimizing NNI: done in 5.11246 secs using 592.3% CPU
+Optimizing NNI: done in 4.96013 secs using 595% CPU
+Iteration 790 / LogL: -17310.670 / Time: 1h:31m:55s (0h:9m:1s left)
+Optimizing NNI: done in 4.78172 secs using 592.4% CPU
+Optimizing NNI: done in 5.26744 secs using 593.7% CPU
+Optimizing NNI: done in 7.6738 secs using 605.1% CPU
+Optimizing NNI: done in 4.98712 secs using 593.2% CPU
+Optimizing NNI: done in 4.10662 secs using 592.7% CPU
+Optimizing NNI: done in 4.26104 secs using 594.6% CPU
+Optimizing NNI: done in 5.49065 secs using 593.6% CPU
+Optimizing NNI: done in 4.58745 secs using 593.4% CPU
+Optimizing NNI: done in 4.08779 secs using 594.3% CPU
+Optimizing NNI: done in 5.03171 secs using 594.6% CPU
+Iteration 800 / LogL: -17326.255 / Time: 1h:32m:48s (0h:8m:1s left)
+Log-likelihood cutoff on original alignment: -17462.889
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.993
+Optimizing NNI: done in 5.62434 secs using 593.4% CPU
+Optimizing NNI: done in 4.7023 secs using 594.7% CPU
+Optimizing NNI: done in 4.28887 secs using 592.2% CPU
+Optimizing NNI: done in 4.48229 secs using 593.3% CPU
+Optimizing NNI: done in 4.67881 secs using 593.5% CPU
+Optimizing NNI: done in 6.97267 secs using 592.2% CPU
+Optimizing NNI: done in 4.62763 secs using 594.2% CPU
+Optimizing NNI: done in 3.88445 secs using 594.3% CPU
+Optimizing NNI: done in 4.8307 secs using 594.1% CPU
+Optimizing NNI: done in 4.53309 secs using 594.3% CPU
+Iteration 810 / LogL: -17320.378 / Time: 1h:33m:39s (0h:8m:48s left)
+Optimizing NNI: done in 6.66406 secs using 593.6% CPU
+Optimizing NNI: done in 5.81164 secs using 612.1% CPU
+Optimizing NNI: done in 4.4135 secs using 593% CPU
+Optimizing NNI: done in 6.1153 secs using 595.4% CPU
+Optimizing NNI: done in 4.33938 secs using 593.6% CPU
+Optimizing NNI: done in 4.97016 secs using 594.6% CPU
+Optimizing NNI: done in 4.0664 secs using 593.1% CPU
+Optimizing NNI: done in 4.4632 secs using 593% CPU
+Optimizing NNI: done in 4.13226 secs using 592.5% CPU
+Optimizing NNI: done in 5.46845 secs using 593.4% CPU
+Iteration 820 / LogL: -17308.983 / Time: 1h:34m:32s (0h:7m:48s left)
+Optimizing NNI: done in 5.12252 secs using 593.5% CPU
+Optimizing NNI: done in 7.26979 secs using 590.9% CPU
+Optimizing NNI: done in 5.48902 secs using 599% CPU
+Optimizing NNI: done in 4.62893 secs using 593.3% CPU
+Optimizing NNI: done in 5.04672 secs using 593.6% CPU
+Optimizing NNI: done in 4.14353 secs using 593.4% CPU
+Optimizing NNI: done in 4.68412 secs using 594.4% CPU
+Optimizing NNI: done in 4.15212 secs using 593.4% CPU
+Optimizing NNI: done in 5.27273 secs using 593.2% CPU
+Optimizing NNI: done in 5.07663 secs using 592.9% CPU
+Iteration 830 / LogL: -17309.563 / Time: 1h:35m:24s (0h:6m:49s left)
+Optimizing NNI: done in 4.57715 secs using 592.7% CPU
+Optimizing NNI: done in 4.81515 secs using 593.7% CPU
+Optimizing NNI: done in 9.34748 secs using 592.6% CPU
+Optimizing NNI: done in 4.57492 secs using 594% CPU
+Optimizing NNI: done in 6.96106 secs using 622.5% CPU
+Optimizing NNI: done in 4.29852 secs using 592.8% CPU
+Optimizing NNI: done in 5.24433 secs using 594.5% CPU
+Optimizing NNI: done in 4.57943 secs using 593.6% CPU
+Optimizing NNI: done in 4.72527 secs using 592.9% CPU
+Optimizing NNI: done in 4.70566 secs using 594.1% CPU
+Iteration 840 / LogL: -17303.907 / Time: 1h:36m:20s (0h:5m:51s left)
+Optimizing NNI: done in 4.53828 secs using 593.4% CPU
+Optimizing NNI: done in 4.34698 secs using 593.6% CPU
+Optimizing NNI: done in 4.94793 secs using 592.6% CPU
+Optimizing NNI: done in 5.02638 secs using 594% CPU
+Optimizing NNI: done in 4.93029 secs using 593.4% CPU
+Optimizing NNI: done in 4.06461 secs using 593.7% CPU
+Optimizing NNI: done in 3.9397 secs using 592.6% CPU
+Optimizing NNI: done in 5.40887 secs using 593.3% CPU
+Optimizing NNI: done in 5.86131 secs using 593.2% CPU
+Optimizing NNI: done in 4.20368 secs using 593.4% CPU
+Iteration 850 / LogL: -17301.586 / Time: 1h:37m:9s (0h:4m:51s left)
+Log-likelihood cutoff on original alignment: -17462.889
+Optimizing NNI: done in 4.70371 secs using 593.3% CPU
+Optimizing NNI: done in 5.45766 secs using 609.8% CPU
+Optimizing NNI: done in 4.49251 secs using 594% CPU
+Optimizing NNI: done in 3.82569 secs using 593.4% CPU
+Optimizing NNI: done in 4.42369 secs using 593.6% CPU
+Optimizing NNI: done in 4.0824 secs using 593.7% CPU
+Optimizing NNI: done in 4.51148 secs using 594.2% CPU
+Optimizing NNI: done in 4.97038 secs using 596.6% CPU
+Optimizing NNI: done in 4.65496 secs using 593.6% CPU
+Optimizing NNI: done in 4.19963 secs using 594.3% CPU
+Iteration 860 / LogL: -17299.224 / Time: 1h:37m:58s (0h:3m:53s left)
+Optimizing NNI: done in 4.36779 secs using 592.5% CPU
+Optimizing NNI: done in 11.986 secs using 617.4% CPU
+Optimizing NNI: done in 5.43695 secs using 593.1% CPU
+Optimizing NNI: done in 6.2795 secs using 612.4% CPU
+Optimizing NNI: done in 4.40774 secs using 593.5% CPU
+Optimizing NNI: done in 4.39255 secs using 593.4% CPU
+Optimizing NNI: done in 3.93115 secs using 594% CPU
+Optimizing NNI: done in 3.56994 secs using 593.1% CPU
+Optimizing NNI: done in 4.80344 secs using 593.3% CPU
+Optimizing NNI: done in 4.65862 secs using 594.4% CPU
+Iteration 870 / LogL: -17296.015 / Time: 1h:38m:54s (0h:2m:54s left)
+Optimizing NNI: done in 4.30146 secs using 594.4% CPU
+Optimizing NNI: done in 4.06309 secs using 595.4% CPU
+Optimizing NNI: done in 7.99963 secs using 596.1% CPU
+Optimizing NNI: done in 4.34004 secs using 594.5% CPU
+Optimizing NNI: done in 4.05107 secs using 592.2% CPU
+Optimizing NNI: done in 4.00124 secs using 594% CPU
+Optimizing NNI: done in 4.886 secs using 593.6% CPU
+Optimizing NNI: done in 4.7976 secs using 601.3% CPU
+Optimizing NNI: done in 13.2363 secs using 627.4% CPU
+Optimizing NNI: done in 4.71288 secs using 593.6% CPU
+Iteration 880 / LogL: -17298.547 / Time: 1h:39m:52s (0h:1m:56s left)
+Optimizing NNI: done in 5.55588 secs using 594.2% CPU
+Optimizing NNI: done in 4.3924 secs using 593.2% CPU
+Optimizing NNI: done in 4.81988 secs using 592.2% CPU
+TREE SEARCH COMPLETED AFTER 883 ITERATIONS / Time: 1h:40m:8s
+
+--------------------------------------------------------------------
+|                    FINALIZING TREE SEARCH                        |
+--------------------------------------------------------------------
+Performs final model parameters optimization
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -17295.528
+Optimal log-likelihood: -17295.520
+Site proportion and rates:  (0.127,0.071) (0.078,0.271) (0.176,0.401) (0.128,0.571) (0.255,1.016) (0.163,2.068) (0.074,3.137)
+Parameters optimization took 1 rounds (0.598 sec)
+BEST SCORE FOUND : -17295.520
+Creating bootstrap support values...
+Split supports printed to NEXUS file hd_tree.splits.nex
+Total tree length: 143.871
+
+Total number of iterations: 883
+CPU time used for tree search: 29720.434 sec (8h:15m:20s)
+Wall-clock time used for tree search: 5118.774 sec (1h:25m:18s)
+Total CPU time used: 34999.591 sec (9h:43m:19s)
+Total wall-clock time used: 6010.091 sec (1h:40m:10s)
+
+Computing bootstrap consensus tree...
+Reading input file hd_tree.splits.nex...
+376 taxa and 2858 splits.
+Consensus tree written to hd_tree.contree
+Reading input trees file hd_tree.contree
+Log-likelihood of consensus tree: -17295.622
+
+Analysis results written to: 
+  IQ-TREE report:                hd_tree.iqtree
+  Maximum-likelihood tree:       hd_tree.treefile
+  Likelihood distances:          hd_tree.mldist
+
+Ultrafast bootstrap approximation results written to:
+  Split support values:          hd_tree.splits.nex
+  Consensus tree:                hd_tree.contree
+  Screen log file:               hd_tree.log
+
+Date and Time: Fri Nov 13 10:37:41 2026

@@ -1,0 +1,27 @@
+[M::mm_idx_gen::0.015*0.84] collected minimizers
+[M::mm_idx_gen::0.017*1.06] sorted minimizers
+[M::main::0.017*1.05] loaded/built the index for 10 target sequence(s)
+[M::mm_mapopt_update::0.017*1.05] mid_occ = 11
+[M::mm_idx_stat] kmer size: 19; skip: 10; is_hpc: 1; #seq: 10
+[M::mm_idx_stat::0.017*1.05] distinct minimizers: 1852 (50.59% are singletons); average occurrences: 2.143; average spacing: 8.311; total length: 32988
+[M::worker_pipeline::8.034*2.90] mapped 37060 sequences
+[M::worker_pipeline::13.625*4.25] mapped 37753 sequences
+[M::worker_pipeline::14.330*4.14] mapped 37506 sequences
+[M::worker_pipeline::18.847*4.16] mapped 37620 sequences
+[M::worker_pipeline::40.363*2.77] mapped 37789 sequences
+[M::worker_pipeline::41.063*2.76] mapped 37819 sequences
+[M::worker_pipeline::44.948*2.93] mapped 37863 sequences
+[M::worker_pipeline::48.122*3.12] mapped 37858 sequences
+[M::worker_pipeline::69.740*2.61] mapped 37916 sequences
+[M::worker_pipeline::70.553*2.60] mapped 38048 sequences
+[M::worker_pipeline::74.806*2.71] mapped 37846 sequences
+[M::worker_pipeline::77.991*2.82] mapped 37863 sequences
+[M::worker_pipeline::100.402*2.50] mapped 37963 sequences
+[M::worker_pipeline::101.223*2.50] mapped 37862 sequences
+[M::worker_pipeline::106.072*2.57] mapped 37857 sequences
+[M::worker_pipeline::109.413*2.65] mapped 37766 sequences
+[M::worker_pipeline::113.328*2.78] mapped 37683 sequences
+[M::worker_pipeline::132.947*2.37] mapped 21060 sequences
+[M::main] Version: 2.30-r1287
+[M::main] CMD: minimap2 -ax map-pb -t 8 --secondary=no /bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-13_flank_first_scan/amf_reads/allele_pilot2/locus_refs.fa /scratch/jstajich/32069485/amfallele/SRR25740180.fastq
+[M::main] Real time: 133.084 sec; CPU: 315.720 sec; Peak RSS: 1.905 GB

@@ -1,0 +1,12 @@
+[M::mm_idx_gen::0.004*1.95] collected minimizers
+[M::mm_idx_gen::0.006*2.35] sorted minimizers
+[M::main::0.006*2.33] loaded/built the index for 10 target sequence(s)
+[M::mm_mapopt_update::0.006*2.29] mid_occ = 14
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 10
+[M::mm_idx_stat::0.006*2.26] distinct minimizers: 2399 (43.43% are singletons); average occurrences: 2.551; average spacing: 5.391; total length: 32988
+[M::worker_pipeline::5.139*4.08] mapped 168274 sequences
+[M::worker_pipeline::9.498*5.10] mapped 165958 sequences
+[M::worker_pipeline::9.827*4.96] mapped 81768 sequences
+[M::main] Version: 2.30-r1287
+[M::main] CMD: minimap2 -ax map-ont -t 8 --secondary=no /bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-13_flank_first_scan/amf_reads/allele_pilot/locus_refs.fa /scratch/jstajich/32068957/amfallele/SRR15539353.fastq
+[M::main] Real time: 9.915 sec; CPU: 48.873 sec; Peak RSS: 1.931 GB

@@ -71,10 +71,21 @@ Results (f = JEL reads / all reads; "mid" = 0.3 <= f <= 0.7).
 | CLFT160 (12x) | 57,555 | 12,070 (21.0%) | 51.0% | 85.1% |
 | CLFT039 (12x) | 59,041 | 11,302 (19.1%) | 52.6% | 86.0% |
 1. All 172,706 divergent sites, CLFT067 reads (at least 5 reads, 151,114 sites): 83.1% carry the CLFT044 base, 14.8% are mixed (f 0.2 to 0.8), 2.1% carry the JEL423 base.
-2. The CLFT067 reads look like the Brazil lineage at most diagnostic sites. They do not show the genome-wide mid-range peak that CLFT160 and CLFT039 show. In 240 of 240 100-kb windows (at least 20 sites) the median f is 0.000. In CLFT160, 177 of 232 windows have a median f between 0.3 and 0.7.
+2. At the diagnostic sites defined without CLFT067, the CLFT067 reads look like the Brazil lineage at most sites. They do not show the genome-wide mid-range peak that CLFT160 and CLFT039 show. In 240 of 240 100-kb windows (at least 20 sites) the median f is 0.000. In CLFT160, 177 of 232 windows have a median f between 0.3 and 0.7.
 3. CLFT067 has more mid-range sites than CLFT044 (10.3% against 6.6%; the depths differ, 51x against 12x, so the two values are not exactly comparable). 65 windows have a mid share above 0.2 and none above 0.5 (maximum 0.42). A minor fraction, a few regions or a small mixed component are possible; I did not test which.
 What this means.
-- The reads of SRR6375565 do not support a genome-wide Brazil x GPL hybrid (an F1 would give a peak at f = 0.5 at most sites). The earlier "30%" figure was a SNP-table detection fraction and is replaced by this test.
+- The reads of SRR6375565 do not give an F1-like pattern (a peak at f = 0.5 at most sites). This statement is narrowed in the follow-up below: the reads do carry a minority JEL signal at the sites where the assembly has the JEL base. The earlier "30%" figure was a SNP-table detection fraction and is replaced by this test.
 - The assembly and the reads disagree: the assembly has the JEL base at 39.7% of sites; the reads have it at 2.1%. The cause is undetermined. Candidates: the assembly includes other-lineage sequence (mis-assembly or contamination), the assembly and SRR6375565 come from different cultures of CLFT067, or the mapping to CLFT044 hides those sites. I did not test them.
 - CLFT067 stays in the Brazil set only on the strength of its reads. The assembly alone would not support that.
 Limits. One read set per isolate; depths differ between CLFT067 (51x) and the controls (12x); 12x-downsampled CLFT067 was not run.
+
+Follow-up, same day: reads split by the state of the CLFT067 assembly (corrects the summary above).
+The diagnostic set above is defined by other assemblies. A second split uses the CLFT067 assembly's own base at each of the 172,706 divergent sites (same reads, at least 8 reads per site).
+| CLFT067 assembly base at the site | Sites with reads | Reads with JEL base (pooled) | f < 0.1 | f 0.1-0.9 | f > 0.9 |
+|---|---|---|---|---|---|
+| JEL423 base | 63,916 | 17.3% | 42,260 | 19,330 (30%) | 2,326 |
+| CLFT044 base | 63,992 | 2.9% | 59,719 | 3,950 (6%) | 323 |
+- At sites where the assembly has the JEL base, 30% of sites are mixed in the reads and 17.3% of reads carry the JEL base. At sites where the assembly has the CLFT044 base, 6% of sites are mixed. So the reads do contain a minority JEL component that the assembly sits on.
+- By 100-kb window (237 windows with at least 20 such sites) the pooled JEL read share at assembly-JEL sites has median 0.19 (quartiles 0.05 and 0.28, range 0.00 to 0.73). 77 windows are below 0.1, 85 are at least 0.25 and 11 are at least 0.4. The highest windows are on JAQIHF010000002.1 and JAQIHF010000001.1.
+- This pattern fits a mixed or heterozygous component at a minority fraction in some regions, with the assembly carrying the JEL base. It does not fit a clean F1 (peak at 0.5 everywhere) and it does not fit a pure Brazil genome. A hybrid or recombinant origin, a mixed culture and a haplotype choice in the assembly all remain possible; these data do not separate them.
+- The earlier PR comment of 2026-11-16 said the reads "do not show a genome-wide Brazil x GPL mix". That is correct for the diagnostic set and for an F1-like pattern, but incomplete: see this follow-up.

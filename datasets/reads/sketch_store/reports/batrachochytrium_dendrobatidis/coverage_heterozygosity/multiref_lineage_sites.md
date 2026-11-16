@@ -56,7 +56,9 @@ Why does the CLFT067 assembly carry the JEL423 base at 39.7% of the divergent si
    So the reads and the CLFT067 assembly agree in direction (5.7 times more JEL alleles where the assembly has one), but at 70% of the assembly's JEL-base sites the reads show no JEL allele. The SNP table has no row for sites without a confident variant, so "no JEL allele" means "none called", not "none present".
 3. Cause: not determined. Candidates are an assembly that picks one haplotype at random per site in a heterozygous isolate, calls lost to the QUAL and mapping filters, and a different isolate. This analysis cannot choose between them.
 4. Sensitivity: with CLFT067 removed from the Brazil set (CLFT071 only), 89,866 sites are diagnostic. Het share (table `tables/site_genotype_diagnostic_no067.tsv`): CLFT160 0.571, CLFT039 0.576; CLFT044 0.079, CLFT165 0.292; five JEL-type 0.092 to 0.124. The CLFT160 and CLFT039 result does not depend on CLFT067.
-Wording used in the report: "heterozygous for Brazil-lineage and other-lineage alleles" (measured het share); not "hybrid" and no mixture proportion.
+Decisions of the curator (J. Stajich, 2026-11-16, answered in the session):
+- Primary diagnostic set: the 89,866 sites defined without CLFT067 (`diagnostic_sites_no067.tsv`; table `site_genotype_diagnostic_no067.tsv`). The 52,555-site set (with CLFT067) is the sensitivity check. The CLFT067 assembly disagrees with its own reads (see the allele-fraction section), so it does not define diagnostic sites.
+- Wording for CLFT160 and CLFT039: "heterozygous for Brazil-lineage and other-lineage alleles" (measured: 51.0% and 52.6% of diagnostic sites have a JEL allele fraction of 0.3 to 0.7; CLFT044 control 6.6%). A mixed culture of two isolates is not excluded by these data, because it would also give a peak near 0.5. No "hybrid", no mixture proportion, no ploidy claim.
 
 ## CLFT067 allele-fraction test (added 2026-11-16; answers "is CLFT067 a Brazil x GPL hybrid?")
 Question. The assembly CLFT067 (GCA_036289345.1) carries the JEL423 base at 68,558 of 172,706 divergent sites (39.7%), in 240 of 243 100-kb windows. Do the reads of CLFT067 show the same mix?

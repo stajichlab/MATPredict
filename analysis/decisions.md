@@ -294,3 +294,8 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
   - The 50 target-phylum genomes with no gene models (median N50 5.4 kb, median 938 contigs) are not annotated or flank-scanned. The annotation-free tblastn of 48 of them found no HMG plus homeodomain pair on one contig; that is weak evidence, not absence. Reopen only with a better assembly or long reads for one of them.
   - Single-genome lineages (Rozellomycota, Monoblepharomycota, Microsporidia, Calcarisporiellomycota) are "not testable in this way": a cross-genome gene-order or synteny test needs at least two genomes of the lineage. Reopen when a second genome exists.
 - Curation of the discovery leads goes through the sign-off process (questions asked by the main session; answers recorded below only when given).
+- Sign-off answers recorded 2026-11-15 (asked by the main session; J. Stajich):
+  1. Curated *T. deformans* matPi record (`db/Ascomycota/Taphrinales/5011_unknown-1_PM_combined`): defer. Map the other 29 PYCC 5710 RNA-seq runs first (job array, `scripts/rnaseq_locus_batch.slurm`). `db/` not changed.
+  2. PM-like HMG + homeodomain locus (*P. inouyei*, *P. lactucae-debilis*, *T. confusa*): file as a candidate record. Done as a draft: `db/candidates/Ascomycota/2754530_12-1054_PM_unresolved` (validated, `needs_review`).
+  3. AMF HD locus draft (`db/candidates/Glomeromycota/588596_daom-197198_HD_unresolved`, PR #351): keep as candidate.
+  4. Bd CLFT160 and CLFT039 wording: examine CLFT067 first. Done (`multiref_lineage_sites.md`): the result holds without CLFT067. The final wording is not yet confirmed by the curator; the report uses "heterozygous for Brazil-lineage and other-lineage alleles", not "hybrid".

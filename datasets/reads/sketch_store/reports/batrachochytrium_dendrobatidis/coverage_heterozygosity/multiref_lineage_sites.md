@@ -91,7 +91,7 @@ The diagnostic set above is defined by other assemblies. A second split uses the
 - The earlier PR comment of 2026-11-16 said the reads "do not show a genome-wide Brazil x GPL mix". That is correct for the diagnostic set and for an F1-like pattern, but incomplete: see this follow-up.
 
 ## CLFT067 reads mapped to the CLFT067 assembly (added 2026-11-16, job 32114411; decision 7)
-Test: SRR6375565 (ENA read count matched) mapped with bwa-mem2 to its own assembly (GCA_030 series, 264 windows of 100 kb). Flagstat: 97.77% mapped (`tables/clft067_selfmap_flagstat.txt`). Script `scripts/bd_self_map_windows.slurm`; comparison `scripts/bd_selfmap_vs_jel_share.py` (sites moved from CLFT044 to assembly coordinates by linear interpolation inside primary PAF blocks; approximate).
+Test: SRR6375565 (ENA read count matched) mapped with bwa-mem2 to its own assembly (contigs JAZDSG01..., 264 windows of 100 kb). Flagstat: 97.77% mapped (`tables/clft067_selfmap_flagstat.txt`). Script `scripts/bd_self_map_windows.slurm`; comparison `scripts/bd_selfmap_vs_jel_share.py` (sites moved from CLFT044 to assembly coordinates by linear interpolation inside primary PAF blocks; approximate).
 Results (233 windows with at least 50 diagnostic-state sites; `tables/clft067_selfmap_windows_vs_jel_share.tsv`):
 - Median window depth 77.6x (10th to 90th percentile 68.7-151x). This is higher than the 51x quoted earlier, which came from the CLFT044 mapping; I did not resolve the difference.
 - Read mismatch (edit distance per aligned base, MAPQ >= 20): genome 0.0076, window median 0.0068, range 0.0029-0.053.

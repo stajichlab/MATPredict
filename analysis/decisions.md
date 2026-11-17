@@ -299,3 +299,13 @@ Evidence: `results/2026-09-29_*/NOTE.md`, `results/2026-09-28_umbelopsis_rebased
   2. PM-like HMG + homeodomain locus (*P. inouyei*, *P. lactucae-debilis*, *T. confusa*): file as a candidate record. Done as a draft: `db/candidates/Ascomycota/2754530_12-1054_PM_unresolved` (validated, `needs_review`).
   3. AMF HD locus draft (`db/candidates/Glomeromycota/588596_daom-197198_HD_unresolved`, PR #351): keep as candidate.
   4. Bd CLFT160 and CLFT039 wording: examine CLFT067 first. Done (`multiref_lineage_sites.md`): the result holds without CLFT067. The final wording is not yet confirmed by the curator; the report uses "heterozygous for Brazil-lineage and other-lineage alleles", not "hybrid".
+
+## 2026-11-16 (J. Stajich, answered in the session)
+- Bd primary diagnostic set: the 89,866 sites defined without CLFT067; the 52,555-site set is the sensitivity check (the CLFT067 assembly and its reads disagree).
+- Bd wording for CLFT160 and CLFT039 (closes the 2026-11-15 open question): "heterozygous for Brazil-lineage and other-lineage alleles", with one sentence that a mixed culture is not excluded. No "hybrid", no mixture proportion, no ploidy claim.
+- *T. deformans* matPi record 5011: db unchanged apart from a review note (PR #354). Revisit with stranded RNA-seq or a long-read assembly.
+- *P. lactucae* 12-1054 candidate record: test the exon-level homeodomain model first (job `scripts/plact_hd_exon_model.slurm`), then update the draft notes.
+- AMF reads under `results/2026-11-13_flank_first_scan/amf_reads`: `.sra` files deleted; the two BAMs are kept.
+- Candidate ORFs: search against the local nr DIAMOND database (`/bigdata/operations/pkgadmin/srv/projects/db/ncbi/diamond/20260128/nr_cluster_seq.dmnd`, 2026-01-28 build; job `scripts/candidate_orfs_diamond.slurm`). A hit says nothing about MAT function.
+- CLFT067 assembly/read mismatch: map SRR6375565 to its own assembly and compare depth and read mismatch by window (job `scripts/bd_self_map_windows.slurm`).
+- The two single-end A2 runs (SRR8132815, SRR8132817) stay unmapped (default; not discussed further).

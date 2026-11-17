@@ -1,0 +1,14 @@
+#                                                                            --- full sequence --- -------------- this domain -------------   hmm coord   ali coord   env coord
+# target name        accession   tlen query name           accession   qlen   E-value  score  bias   #  of  c-Evalue  i-Evalue  score  bias  from    to  from    to  from    to  acc description of target
+#------------------- ---------- ----- -------------------- ---------- ----- --------- ------ ----- --- --- --------- --------- ------ ----- ----- ----- ----- ----- ----- ----- ---- ---------------------
+PL.3273.1|sense|f1   -            225 Homeodomain          PF00046.36    57   3.5e-10   31.1   0.2   1   1   1.7e-11   7.2e-10   30.1   0.2    20    54    77   111    62   112 0.88 -
+#
+# Program:         hmmsearch
+# Version:         3.4 (Aug 2023)
+# Pipeline mode:   SEARCH
+# Query file:      /bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-13_flank_first_scan/stage1_all/pfam/hmg_homeo.hmm
+# Target file:     /bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-16_decisions_followup/plact_hd/region_tx_6frame.faa
+# Option settings: hmmsearch -o /dev/null --domtblout /bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-16_decisions_followup/plact_hd/region_tx_6frame.dom -E 1 /bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-13_flank_first_scan/stage1_all/pfam/hmg_homeo.hmm /bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-16_decisions_followup/plact_hd/region_tx_6frame.faa 
+# Current dir:     /scratch/jstajich/32114739/plact_hd
+# Date:            Mon Nov 16 12:24:09 2026
+# [ok]

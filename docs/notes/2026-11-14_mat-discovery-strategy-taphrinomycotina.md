@@ -302,6 +302,6 @@ Junction check, third library (SRR27065919, added 2026-11-15): same pattern as t
 ## Exon-level check of the P. lactucae 12-1054 homeodomain region (added 2026-11-16, job 32114739)
 SRR5576147 (reverse-stranded, 79,174,280 pairs, ENA count matched) mapped to GCF_002105105.1: 56.18% overall alignment. Files: `results/2026-11-16_decisions_followup/plact_hd/`.
 - StringTie `--rf` built a two-exon minus-strand transcript PL.3273.1 (NW_024468021.1:37,873-38,595) over the region. Its intron 38,372-38,419 has 145 minus-motif reads and 1 plus-motif read.
-- Strand-resolved depth over 38,146-38,599 is about 1,200-1,700x on the minus strand and 5-210x on the plus strand.
+- Strand-resolved depth over 38,146-38,599 is 1,208-1,562x on the minus strand and 25-207x on the plus strand (100 bp bins, 38,146-38,546).
 - Six-frame Pfam: the 225 aa product has a Homeodomain hit (PF00046, ali 77-111, E 3.5e-10). It carries the WFxNxR motif of helix 3. No HMG-box hit. DIAMOND nr: best hits are KN-type homeobox proteins (see `candidate_orfs/README.md`).
 - Result: the region is transcribed, spliced and encodes a KN/TALE-type homeodomain on the minus strand. This supports the draft record's "both on the minus strand" statement. It does not show a mating-type role. The draft record is unchanged.

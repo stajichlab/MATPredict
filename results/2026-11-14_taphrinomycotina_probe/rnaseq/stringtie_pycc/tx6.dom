@@ -1,0 +1,13 @@
+#                                                                            --- full sequence --- -------------- this domain -------------   hmm coord   ali coord   env coord
+# target name        accession   tlen query name           accession   qlen   E-value  score  bias   #  of  c-Evalue  i-Evalue  score  bias  from    to  from    to  from    to  acc description of target
+#------------------- ---------- ----- -------------------- ---------- ----- --------- ------ ----- --- --- --------- --------- ------ ----- ----- ----- ----- ----- ----- ----- ---- ---------------------
+#
+# Program:         hmmsearch
+# Version:         3.4 (Aug 2023)
+# Pipeline mode:   SEARCH
+# Query file:      /bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-13_flank_first_scan/stage1_all/pfam/hmg_homeo.hmm
+# Target file:     tx_6frame.faa
+# Option settings: hmmsearch -o /dev/null --domtblout tx6.dom -E 1 /bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-13_flank_first_scan/stage1_all/pfam/hmg_homeo.hmm tx_6frame.faa 
+# Current dir:     /bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-14_taphrinomycotina_probe/rnaseq/stringtie_pycc
+# Date:            Mon Nov 16 06:26:46 2026
+# [ok]

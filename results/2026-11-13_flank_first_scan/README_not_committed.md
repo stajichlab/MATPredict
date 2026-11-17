@@ -1,0 +1,1 @@
+Not committed (size, regenerable): `stage1_all/per_genome/` (1,823 per-genome candidate, flank, gene and locus tables for the 496 BFD genomes), all job logs, BAMs and `.sra` files. The summary tables and the homeodomain tree files in this folder keep the derived results. Regenerate the per-genome tables with the flank-first scan scripts under `scripts/` (stage 1).

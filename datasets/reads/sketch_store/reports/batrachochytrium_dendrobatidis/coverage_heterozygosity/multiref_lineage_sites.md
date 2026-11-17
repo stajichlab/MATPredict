@@ -89,3 +89,13 @@ The diagnostic set above is defined by other assemblies. A second split uses the
 - By 100-kb window (237 windows with at least 20 such sites) the pooled JEL read share at assembly-JEL sites has median 0.19 (quartiles 0.05 and 0.28, range 0.00 to 0.73). 77 windows are below 0.1, 85 are at least 0.25 and 11 are at least 0.4. The highest windows are on JAQIHF010000002.1 and JAQIHF010000001.1.
 - This pattern fits a mixed or heterozygous component at a minority fraction in some regions, with the assembly carrying the JEL base. It does not fit a clean F1 (peak at 0.5 everywhere) and it does not fit a pure Brazil genome. A hybrid or recombinant origin, a mixed culture and a haplotype choice in the assembly all remain possible; these data do not separate them.
 - The earlier PR comment of 2026-11-16 said the reads "do not show a genome-wide Brazil x GPL mix". That is correct for the diagnostic set and for an F1-like pattern, but incomplete: see this follow-up.
+
+## CLFT067 reads mapped to the CLFT067 assembly (added 2026-11-16, job 32114411; decision 7)
+Test: SRR6375565 (ENA read count matched) mapped with bwa-mem2 to its own assembly (GCA_030 series, 264 windows of 100 kb). Flagstat: 97.77% mapped (`tables/clft067_selfmap_flagstat.txt`). Script `scripts/bd_self_map_windows.slurm`; comparison `scripts/bd_selfmap_vs_jel_share.py` (sites moved from CLFT044 to assembly coordinates by linear interpolation inside primary PAF blocks; approximate).
+Results (233 windows with at least 50 diagnostic-state sites; `tables/clft067_selfmap_windows_vs_jel_share.tsv`):
+- Median window depth 77.6x (10th to 90th percentile 68.7-151x). This is higher than the 51x quoted earlier, which came from the CLFT044 mapping; I did not resolve the difference.
+- Read mismatch (edit distance per aligned base, MAPQ >= 20): genome 0.0076, window median 0.0068, range 0.0029-0.053.
+- The assembly's JEL-base share by window has median 0.51 (range 0.13-0.94). Only one window has share > 0.9 and none < 0.1. So the JEL-state sites are spread through all windows, not held in a few JEL-like blocks.
+- Spearman: JEL share vs depth 0.20, JEL share vs edit rate 0.18, depth vs edit rate 0.59. The depth-mismatch link points to collapsed or repeat windows; the JEL-share links are weak.
+Reading: a window-level mix of two haplotypes would show higher depth and edit rate where the assembly holds the JEL haplotype. Only weak correlations are seen. The test does not separate a hybrid, a mixed culture and an assembly of mixed haplotypes. Open.
+Limit: the interpolation lift and the 100 kb window are coarse; the window JEL share of 0.51 here differs from the 39.7% genome share quoted above because it is the median of windows with at least 50 sites.

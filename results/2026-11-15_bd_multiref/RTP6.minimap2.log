@@ -1,0 +1,10 @@
+[M::mm_idx_gen::0.496*0.90] collected minimizers
+[M::mm_idx_gen::0.575*1.31] sorted minimizers
+[M::main::0.575*1.31] loaded/built the index for 75 target sequence(s)
+[M::mm_mapopt_update::0.603*1.29] mid_occ = 68
+[M::mm_idx_stat] kmer size: 19; skip: 19; is_hpc: 0; #seq: 75
+[M::mm_idx_stat::0.624*1.28] distinct minimizers: 1919099 (88.35% are singletons); average occurrences: 1.361; average spacing: 9.987; total length: 26092456
+[M::worker_pipeline::17.314*3.68] mapped 63 sequences
+[M::main] Version: 2.30-r1287
+[M::main] CMD: minimap2 -x asm10 -c --cs=short -t 4 /bigdata/stajichlab/jstajich/projects/MATPredict/results/2026-11-13_bd_coverage/ref/CLFT044.fa RTP6.fa
+[M::main] Real time: 17.327 sec; CPU: 63.767 sec; Peak RSS: 2.080 GB

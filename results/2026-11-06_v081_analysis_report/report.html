@@ -1,0 +1,225 @@
+<title>v0.8.1 Analysis Report</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,600&display=swap">
+<style>
+/* Layout: one reading column, summary first, then one section per question; wide tables scroll inside their own box. */
+:root {
+  --bg: #f6f7f5; --surface: #ffffff; --fg: #1d2623; --muted: #5d6a66; --line: #d9dfdc;
+  --accent: #1d6b5c; --accent-soft: #dcefe9; --good: #1e7a46; --warn: #a76100; --bad: #b3322a;
+  --good-soft: #dff1e5; --warn-soft: #f8ebd2; --bad-soft: #f7dedb; --bar: #1d6b5c; --bar2: #b9c7c2;
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121816; --surface: #1a2220; --fg: #e4ebe8; --muted: #9aa8a3; --line: #2d3a36;
+  --accent: #6fcdb7; --accent-soft: #1b3a33; --good: #62c68a; --warn: #e3ac55; --bad: #f08a80;
+  --good-soft: #17301f; --warn-soft: #3a2d12; --bad-soft: #3b1d1a; --bar: #6fcdb7; --bar2: #3a4a45; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #121816; --surface: #1a2220; --fg: #e4ebe8; --muted: #9aa8a3; --line: #2d3a36;
+  --accent: #6fcdb7; --accent-soft: #1b3a33; --good: #62c68a; --warn: #e3ac55; --bad: #f08a80;
+  --good-soft: #17301f; --warn-soft: #3a2d12; --bad-soft: #3b1d1a; --bar: #6fcdb7; --bar2: #3a4a45; color-scheme: dark; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 880px; margin: 0 auto; padding-block: 28px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-family: var(--display); font-weight: 600; font-size: 2rem; line-height: 1.15; margin: 0 0 6px; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 600; font-size: 1.35rem; margin: 40px 0 10px; text-wrap: balance; }
+h3 { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 8px; font-weight: 600; }
+p { margin: 0 0 10px; max-width: 68ch; }
+.meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 18px; }
+.mono, code { font-family: var(--mono); font-size: 0.86em; }
+nav { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.85rem; margin: 14px 0 6px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+nav a { color: var(--accent); text-decoration: none; }
+nav a:hover { text-decoration: underline; }
+.summary { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 6px; padding: 14px 18px; margin: 16px 0; }
+.summary ul { margin: 6px 0 0; padding-left: 18px; }
+.summary li { margin-bottom: 5px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin: 12px 0; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; min-width: 0; }
+.stat b { display: block; font-size: 1.5rem; font-variant-numeric: tabular-nums; font-family: var(--display); }
+.stat span { color: var(--muted); font-size: 0.8rem; }
+.scroll { overflow-x: auto; margin: 8px 0 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.86rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 0.74rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--bg); position: sticky; top: 0; }
+tr:last-child td { border-bottom: 0; }
+td.n, th.n { text-align: right; white-space: nowrap; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: 0.74rem; font-weight: 600; white-space: nowrap; }
+.good { background: var(--good-soft); color: var(--good); } .warn { background: var(--warn-soft); color: var(--warn); } .bad { background: var(--bad-soft); color: var(--bad); } .info { background: var(--accent-soft); color: var(--accent); }
+.bars { display: grid; gap: 7px; margin: 10px 0 14px; }
+.bar { display: grid; grid-template-columns: minmax(110px, 190px) 1fr 74px; gap: 10px; align-items: center; font-size: 0.84rem; }
+.bar > div:first-child { min-width: 0; overflow-wrap: anywhere; }
+.track { height: 14px; background: var(--bar2); border-radius: 3px; position: relative; overflow: hidden; }
+.fill { position: absolute; inset: 0 auto 0 0; background: var(--bar); border-radius: 3px; }
+.fill.slow { background: var(--bad); } .fill.mid { background: var(--warn); }
+.bar .v { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); font-size: 0.8rem; }
+.note { color: var(--muted); font-size: 0.84rem; }
+.callout { background: var(--warn-soft); border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; margin: 10px 0; font-size: 0.9rem; }
+footer { margin-top: 44px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.82rem; }
+a { color: var(--accent); }
+@media (max-width: 520px) { h1 { font-size: 1.6rem; } .bar { grid-template-columns: 1fr 64px; } .bar .track { grid-column: 1 / -1; grid-row: 2; } .bar .v { grid-row: 1; grid-column: 2; } }
+</style>
+
+<div class="wrap">
+<h1>v0.8.1 Analysis Report</h1>
+<div class="meta">MATPredict, 5–6 November 2026. Written from the session's measurements; every figure comes from the files named in each section (HPCC paths under <span class="mono">results/2026-11-0*</span>). All planned checks are complete.</div>
+<nav>
+  <a href="#summary">Summary</a><a href="#release">Release</a><a href="#pilot">Assembly-rescue pilot</a><a href="#runtime">Runtime</a><a href="#seg">tblastn -seg</a><a href="#genomes">Contested genomes</a><a href="#issues">Issues</a><a href="#data">Read data handoff</a>
+</nav>
+
+<div class="summary" id="summary">
+<strong>What was found</strong>
+<ul>
+<li><strong>v0.8.1 is released and verified.</strong> 23,214 of 23,570 genomes are identical to v0.8.0; all 356 differences trace to a listed change, none unexplained.</li>
+<li><strong>The slow genomes were a search-setting problem.</strong> <span class="mono">tblastn -seg no</span> costs minutes on a few reference proteins (SLA2, APN2, MAT1-1-1). Soft-masked SEG for those three gene groups only (<span class="mono">MATPREDICT_TBLASTN_SEG_GENES</span>) takes the two outlier genomes from 3,063 s and 1,685 s to 468 s and 288 s with identical loci, and leaves 296 of 300 Ascomycota and all 120 Basidiomycota genomes identical. It gives no speed-up on typical genomes (same-node ratio 1.05).</li>
+<li><strong>Old nodes explain most of the production slowdown.</strong> Chunks on the Opteron node <span class="mono">c01</span> ran about 2.15 times slower than on the EPYC nodes. Job structure explains little.</li>
+<li><strong>Weak idiomorph calls are fragile.</strong> Where a call rests on one unpolished fragment under about 50 bits, small search changes flip it (#275). Reads agree with the baseline for XylFL0594 and PYCC9313; sequence models show two loci are real but their idiomorph is undetermined.</li>
+</ul>
+</div>
+
+<h2 id="release">1. The v0.8.1 release</h2>
+<p>110 jobs, all completed. Frozen commit <span class="mono">50bc950</span>, <span class="mono">--preset v0.8.1</span>. Released as tag <span class="mono">v0.8.1</span> (<span class="mono">3a62e63</span>) after PRs #277 (results) and #278 (release date). The Pages and Docker workflows both succeeded.</p>
+<div class="grid">
+  <div class="stat"><b>23,214</b><span>identical to v0.8.0 (of 23,570)</span></div>
+  <div class="stat"><b>356</b><span>differ, all attributed</span></div>
+  <div class="stat"><b>0</b><span>calls lost, idiomorph flips, unexplained</span></div>
+  <div class="stat"><b>0</b><span>differences in 60-genome determinism check</span></div>
+</div>
+<div class="scroll"><table>
+<thead><tr><th>Campaign</th><th class="n">Listed</th><th class="n">Called</th><th class="n">Uncalled</th><th class="n">No report</th><th class="n">Loci</th><th>High / medium / low</th></tr></thead>
+<tbody>
+<tr><td>Ascomycota</td><td class="n">19,415</td><td class="n">17,618</td><td class="n">1,725</td><td class="n">72</td><td class="n">20,843</td><td class="mono">14,623 / 6,120 / 100</td></tr>
+<tr><td>Basidiomycota</td><td class="n">3,275</td><td class="n">2,995</td><td class="n">268</td><td class="n">12</td><td class="n">5,993</td><td class="mono">3,822 / 2,161 / 10</td></tr>
+<tr><td>Mucoromycotina</td><td class="n">974</td><td class="n">868</td><td class="n">105</td><td class="n">1</td><td class="n">914</td><td class="mono">unchanged from v0.8.0</td></tr>
+</tbody></table></div>
+<h3>Attribution of the 356 differences</h3>
+<div class="scroll"><table>
+<thead><tr><th>Cause</th><th class="n">Genomes</th><th>Effect</th></tr></thead>
+<tbody>
+<tr><td><em>S. pombe</em> silent pair (#274)</td><td class="n">37</td><td>mat1 M call becomes mat2 P plus mat3 M</td></tr>
+<tr><td><em>Hyphopichia</em> MTLA1 record (#273)</td><td class="n">302</td><td>190 change a call field: 4 new calls, 160 span changes, 36 loci up and 14 down in tier; 112 only in gene models. A run without the record reproduces v0.8.0 exactly.</td></tr>
+<tr><td>Fallback after withheld hits (#228)</td><td class="n">17</td><td>7 Ascomycota and 10 Basidiomycota newly called; <span class="mono">--preset v0.8</span> reproduces v0.8.0 for the 7</td></tr>
+<tr><td>Rust allow list (#269)</td><td class="n">9</td><td>8 called (14 rustHD loci), 1 uncalled; no v0.8.0 report</td></tr>
+<tr><td>Report-only (#257, #271, #264)</td><td class="n">n/a</td><td>resolution_flags on 15,582 loci; two_idiomorphs in 9 Basidiomycota genomes; cassette labels changed no call</td></tr>
+</tbody></table></div>
+<p class="note">Two Ascomycota genomes (<em>P. ulei</em> IBUN, DampeI2T2) hit the 3,600 s per-genome limit on an Opteron node and were rerun on an EPYC node with a 14,400 s limit (3,063 s and 1,685 s), same code and preset. One interplay: <em>Cephaloascus</em> GCA_030575015.1 is called MTL A through the new record; without it the fallback would call MATsc.</p>
+
+<h2 id="pilot">2. Assembly-rescue pilot</h2>
+<p>For read sets the k-mer panel could not type, 2M-spot subsamples were recruited with <span class="mono">diamond blastx</span> against 541 reference proteins, assembled with SPAdes, then run through <span class="mono">detect</span>.</p>
+<div class="grid">
+  <div class="stat"><b>27 / 48</b><span>runs gave a call</span></div>
+  <div class="stat"><b>8 / 9</b><span>calls with a known answer agree (controls 3/4; untyped 5/5)</span></div>
+  <div class="stat"><b>1</b><span>wrong call: <em>T. viride</em> SRR30921444</span></div>
+</div>
+<div class="scroll"><table>
+<thead><tr><th>Failure</th><th>Cause found</th></tr></thead>
+<tbody>
+<tr><td><em>Trichophyton</em>, <em>Histoplasma</em>, <em>Blastomyces</em></td><td>no reference proteins from these taxa; 1,445–3,178 recruited spots; assemblies of 13–27 kb; no gene models</td></tr>
+<tr><td><em>Venturia inaequalis</em></td><td>51-bp reads and a roughly 70 Mb genome; 572 and 677 recruited spots; no references</td></tr>
+<tr><td><em>Coccidioides posadasii</em></td><td>pilot-script bug: single-end run passed to SPAdes as interleaved</td></tr>
+<tr><td><em>T. viride</em> (wrong call)</td><td>a 32-aa MAT1-2-1 window (9% coverage, 47 bits) outranked a polished MAT1-1-3 model; the real MAT1-1 locus was assembled but withheld (fraction floor, flank-carried rule). Truth label confirmed.</td></tr>
+<tr><td><em>Bipolaris</em> control</td><td>no call despite 4,521 recruited spots; not diagnosed</td></tr>
+</tbody></table></div>
+<p class="note">A deeper (8M-spot) rerun was cancelled: depth was not the cause of most failures. Filed as #275.</p>
+
+<h2 id="runtime">3. Where the runtime goes</h2>
+<p>Pezizomycotina genomes take about 150 s each (138 s median lineage-routed, 37 s for the yeast fallback families, 27 s for Mucoromycotina), and they hold about 88% of the compute. <span class="mono">--taxid</span> is already passed for every genome, so routing is already phylum-scoped; the phylum-fallback genomes are the fast ones.</p>
+<h3>Serial profile, two Pezizomycotina genomes (EPYC node, polish workers = 1)</h3>
+<div class="scroll"><table>
+<thead><tr><th>Step</th><th class="n">GCA_047717325.1</th><th class="n">GCA_024180945.1</th><th class="n">Share of wall</th></tr></thead>
+<tbody>
+<tr><td><span class="mono">tblastn</span> (one batched call, 114 proteins, one thread)</td><td class="n">34.0 s</td><td class="n">39.3 s</td><td class="n">62–64%</td></tr>
+<tr><td><span class="mono">exonerate</span> (53 and 42 calls)</td><td class="n">9.4 s</td><td class="n">14.5 s</td><td class="n">18–23%</td></tr>
+<tr><td><span class="mono">miniprot</span> (56 and 46 calls)</td><td class="n">1.7 s</td><td class="n">1.6 s</td><td class="n">2–3%</td></tr>
+<tr><td>Python and other (includes 196 YAML loads, about 4.4 s)</td><td class="n">7.3 s</td><td class="n">8.1 s</td><td class="n">13–14%</td></tr>
+<tr><td><strong>Wall</strong></td><td class="n"><strong>52.9 s</strong></td><td class="n"><strong>64.0 s</strong></td><td class="n"></td></tr>
+</tbody></table></div>
+<h3>Production against standalone: node type, not job structure</h3>
+<p>The same 32 genomes were run through the production script (16 genomes at once on 16 CPUs):</p>
+<div class="bars">
+  <div class="bar"><div>v0.8.1 production run</div><div class="track"><div class="fill slow" style="width:100%"></div></div><div class="v">180 s</div></div>
+  <div class="bar"><div>c01, Opteron 6376</div><div class="track"><div class="fill slow" style="width:94%"></div></div><div class="v">169 s</div></div>
+  <div class="bar"><div>r11, EPYC 7713</div><div class="track"><div class="fill" style="width:47%"></div></div><div class="v">84 s</div></div>
+  <div class="bar"><div>r11, one polish worker</div><div class="track"><div class="fill" style="width:42%"></div></div><div class="v">76 s</div></div>
+</div>
+<p class="note">Median seconds per genome. <span class="mono">c01</span> is 2.15 times slower than <span class="mono">r11</span> per genome; the polish-worker setting made no difference (ratio 1.01); detection calls were identical in all three configurations. In the full run, per-genome CPU-seconds were 179 on <span class="mono">c01</span> (51 jobs) against 92 on <span class="mono">r11</span> (17 jobs). Use <span class="mono">--constraint=milan</span> for timing runs and the benchmark in #276.</p>
+
+<h2 id="seg">4. The tblastn <span class="mono">-seg</span> finding</h2>
+<p>Production runs <span class="mono">tblastn -seg no</span>. For <span class="mono">tblastn</span> the stock default is <span class="mono">-seg 12 2.2 2.5</span> (filtering on), so the production call does less filtering than stock. Two genomes took more than 90 minutes in the rerun. Per reference gene group, one CPU on an EPYC node, <span class="mono">-seg no</span>:</p>
+<div class="bars">
+  <div class="bar"><div>SLA2, <em>P. ulei</em> IBUN</div><div class="track"><div class="fill slow" style="width:100%"></div></div><div class="v">&gt;1,500 s</div></div>
+  <div class="bar"><div>SLA2, DampeI2T2</div><div class="track"><div class="fill slow" style="width:73%"></div></div><div class="v">1,090 s</div></div>
+  <div class="bar"><div>MAT1-1-1, IBUN</div><div class="track"><div class="fill mid" style="width:46%"></div></div><div class="v">687 s</div></div>
+  <div class="bar"><div>MAT1-1-1, DampeI2T2</div><div class="track"><div class="fill mid" style="width:26%"></div></div><div class="v">386 s</div></div>
+  <div class="bar"><div>APN2, IBUN</div><div class="track"><div class="fill mid" style="width:22%"></div></div><div class="v">334 s</div></div>
+  <div class="bar"><div>APN2, DampeI2T2</div><div class="track"><div class="fill" style="width:12%"></div></div><div class="v">184 s</div></div>
+  <div class="bar"><div>MAT1-2-1, either genome</div><div class="track"><div class="fill" style="width:1%"></div></div><div class="v">7–11 s</div></div>
+  <div class="bar"><div>Median-speed control, any gene</div><div class="track"><div class="fill" style="width:1%"></div></div><div class="v">&le;11 s</div></div>
+</div>
+<p class="note">MAT1-1-1 and MAT1-2-1 are almost the same total length (8,602 and 8,566 aa) yet differ 55-fold on DampeI2T2: the cost is in particular proteins with low-complexity regions, not in size or hit count. The other nine gene groups take 0–4 s.</p>
+<h3>One query, three settings (DampeI2T2, A1163 SLA2, 1,172 aa)</h3>
+<div class="scroll"><table>
+<thead><tr><th>Setting</th><th class="n">Seconds</th><th class="n">Hits</th><th class="n">Top bitscore</th></tr></thead>
+<tbody>
+<tr><td><span class="mono">-seg no</span> (production)</td><td class="n">176</td><td class="n">7</td><td class="n">1424</td></tr>
+<tr><td><span class="mono">-seg yes</span></td><td class="n">1</td><td class="n">4</td><td class="n">1175</td></tr>
+<tr><td><span class="mono">-seg yes -soft_masking true</span></td><td class="n">1</td><td class="n">7</td><td class="n">1424</td></tr>
+</tbody></table></div>
+<p>Soft-masking uses the masked regions only to find seeds; alignments are scored and extended through them, so the top hit and bitscore match production.</p>
+<h3>300-genome call comparison against the v0.8.1 reports</h3>
+<p>Stratified panel (high, medium, low confidence, uncalled, multi-locus, slowest, MATsc, MTL, MATtub, MATkp, fallback, partial, homothallic, unsupported-label), frozen v0.8.1 code and preset, EPYC nodes.</p>
+<div class="scroll"><table>
+<thead><tr><th>Outcome</th><th class="n">Plain <span class="mono">-seg yes</span></th><th class="n"><span class="mono">-seg yes -soft_masking true</span></th></tr></thead>
+<tbody>
+<tr><td>Identical loci (family, idiomorph, confidence, contig, start, end)</td><td class="n">231 (77.0%)</td><td class="n"><strong>282 (94.0%)</strong></td></tr>
+<tr><td>Same family, idiomorph and contig; coordinates or confidence differ</td><td class="n">62</td><td class="n">18</td></tr>
+<tr><td>Family, idiomorph or contig differs</td><td class="n">7</td><td class="n"><strong>0</strong></td></tr>
+<tr><td>Loci with a changed confidence</td><td class="n">3</td><td class="n"><strong>0</strong></td></tr>
+<tr><td>Wall time against the v0.8.1 run (not comparable: the baseline ran mostly on older nodes; see the correction below)</td><td class="n">n/a</td><td class="n">n/a</td></tr>
+</tbody></table></div>
+<p class="note">The 18 span differences have a median change of 3.2 kb (maximum 19.9 kb); in 6 a gene is absent compared with the baseline (MAT1-1-5 four times, MAT1-2-1 once, MTLalpha1 once); none changes a call or tier. At hit level on three genomes the best hit sits at the same locus for 93–98% of queries and 0–2 HSPs of 50 bits or more are lost. On the two outlier genomes the batched <span class="mono">tblastn</span> takes 26 s and 33 s with SEG on, against 1,282 s and at least 2,129 s for SEG off one query at a time.</p>
+<h3>Correction: same-node timing, the other panels and the per-query policies</h3>
+<p>The wall-time ratios of 0.47x and 0.48x reported earlier compared new runs on EPYC nodes with baseline runs that were mostly on the older <span class="mono">c01</span> nodes, so they did not measure SEG. On one node (60 Ascomycota genomes, 16 at a time on <span class="mono">r12</span>) SEG off took a median of 82 s (total 4,564 s) and soft-masked SEG 86 s (4,815 s): <strong>no speed-up on typical genomes (1.05x)</strong>. The SEG-off run reproduces the v0.8.1 baseline exactly (60 of 60 genomes). The benefit is confined to outlier genomes. On Basidiomycota, soft-masked SEG on every query loses the short pheromone precursors (MFalpha, pheromone_B43, fungal_mating_type_pheromone), the reason <span class="mono">-seg no</span> was chosen, so it is applied per query:</p>
+<div class="scroll"><table>
+<thead><tr><th>Policy</th><th class="n">Ascomycota 300 identical</th><th class="n">Basidiomycota 120 identical</th><th class="n">Mucoromycotina 90 identical</th><th class="n">Outliers IBUN / DampeI2T2</th></tr></thead>
+<tbody>
+<tr><td>Production (<span class="mono">-seg no</span>)</td><td class="n">300</td><td class="n">120</td><td class="n">90</td><td class="n">3,063 s / 1,685 s</td></tr>
+<tr><td>Soft-masked SEG on every query</td><td class="n">282, 0 call changes</td><td class="n">96, <strong>2 call changes</strong></td><td class="n">89, 0</td><td class="n">not run</td></tr>
+<tr><td>Length rule: queries under 250 aa keep <span class="mono">-seg no</span></td><td class="n">290, 0 call changes</td><td class="n">105, 0 call changes</td><td class="n">90</td><td class="n">468 s / 271 s, loci identical</td></tr>
+<tr><td><strong>Gene list: only SLA2, APN2, MAT1-1-1 filtered</strong></td><td class="n"><strong>296</strong>, 0 call, confidence or gene-set changes</td><td class="n"><strong>120</strong></td><td class="n">not run</td><td class="n"><strong>468 s / 288 s</strong>, loci identical</td></tr>
+</tbody></table></div>
+<p class="note">With the gene list, the four remaining Ascomycota differences are span changes: two of 9 and 27 bp, and two of 12 to 20 kb at a locus edge (a flank-gene hit that shortens under filtering). The fraction of a query that is low-complexity does not predict its time (slow queries 6–17% masked, fast ones up to 40%), so a rule by gene name, measured per gene, is used instead.</p>
+<div class="callout"><strong>Status:</strong> a v0.9.0 candidate, not part of v0.8.1: <span class="mono">MATPREDICT_TBLASTN_SEG=yes</span> with <span class="mono">MATPREDICT_TBLASTN_SEG_GENES=SLA2,APN2,MAT1-1-1</span>. It protects outlier genomes without changing any call on 510 test genomes. Still open: other lineages could have their own slow proteins, so the gene list needs a timing check per family. Experimental branch <span class="mono">seg-switch</span> (local, not pushed).</div>
+
+<h2 id="genomes">5. The contested genomes</h2>
+<p>Seven genomes changed call under plain <span class="mono">-seg yes</span>. Fable reviewed the gene evidence of each; further checks were run where data allowed. With soft-masking all seven keep their v0.8.1 calls.</p>
+<div class="scroll"><table>
+<thead><tr><th>Genome</th><th>v0.8.1 → plain SEG</th><th>Fable (hits in window)</th><th>Independent check</th></tr></thead>
+<tbody>
+<tr><td>XylFL0594<br><span class="mono">GCA_022385605.1</span></td><td>MAT1-2 → MAT1-1</td><td>baseline likelier; call should be low, not medium</td><td><span class="pill good">reads agree with baseline</span> 2M spots: MAT1-2-1 33 spots, MAT1-1-1/1-2/1-3 0, SLA2 166</td></tr>
+<tr><td><em>Microdochium nivale</em><br><span class="mono">GCA_977970205.2</span></td><td>MAT1-1 low → MAT1-2 low</td><td>plain-SEG call likelier</td><td><span class="pill warn">undetermined</span> miniprot models only SLA2, APN2, COX13; no core gene. No reads found.</td></tr>
+<tr><td><span class="mono">GCA_029294875.1</span></td><td>MAT1-2 high → MAT1-1 medium</td><td>baseline (SEG cut MAT1-2-1 from 181 to 159 bits, under MAT1-1-2's 166)</td><td><span class="pill good">supports baseline</span> miniprot models MAT1-2-1 (272 aa, 37% id), no MAT1-1 model. No reads found.</td></tr>
+<tr><td><em>Yamadazyma diddensiae</em><br><span class="mono">GCA_980652965.1</span></td><td>MTL A low → no locus</td><td>baseline (MTL A, low)</td><td><span class="pill warn">locus real, idiomorph undetermined</span> PIK1, PAP1, OBP1 modelled (55–71%); no MTLA1 or MTLA2 model. The A call rests on a 40-bit fragment (cutoff 39). No reads found.</td></tr>
+<tr><td><em>Z. sapae</em> PYCC9313<br><span class="mono">GCA_979515055.1</span></td><td>two MATalpha loci → none</td><td>baseline more faithful: the two lost loci are short fragments; SEG shrinks a 100%-identity hit under the 90-bp floor</td><td><span class="pill good">reads agree with baseline</span> ERR16146529 is not at NCBI; first 1.5M reads of mate 1 from ENA: alpha2 708 and alpha1 583 reads (81–87% id), no MATA1 or MATA2 hits; single-copy flanks sla2 406 and PIK1 489. The strain carries MATalpha, in more than one copy. The reads do not resolve the two lost fragment loci.</td></tr>
+<tr><td><em>Williopsis sargentensis</em><br><span class="mono">GCA_030557365.1</span></td><td>MATsc MATa → MATalpha + MTL A</td><td>neither: window hits identical; baseline merges a 37-kb locus</td><td>not checked</td></tr>
+<tr><td><em>S. fibuligera</em><br><span class="mono">GCA_031126225.1</span></td><td>none → MATsc undetermined</td><td>baseline (the new call is one homeodomain on a 698-bp contig)</td><td>not checked</td></tr>
+</tbody></table></div>
+<p>The flips come from two fragile steps, not from the raw hits (for <em>Microdochium</em> the best MAT1-2-1 hit is 59.3 bits with SEG off and 58.9 on). The overlap resolver compares the identity of single short HMG-box hits (<span class="mono">first_pass_identity</span>), and the bitscore vote compares bitscores across different genes. The same weakness produced the <em>T. viride</em> error in the pilot. Both <em>Microdochium</em> and <em>Yamadazyma</em> are flank-carried loci whose idiomorph was never well supported.</p>
+<p class="note">The miniprot checks use the same assembly and reference proteins as detection: an independent model, not independent evidence. Only the XylFL0594 and PYCC9313 checks use reads (first reads of mate 1 for PYCC9313, so a head-of-run sample).</p>
+
+<h2 id="issues">6. Issues and decisions</h2>
+<div class="scroll"><table>
+<thead><tr><th>Item</th><th>State</th></tr></thead>
+<tbody>
+<tr><td>#277, #278, tag, release, site, image</td><td><span class="pill good">done</span> tag <span class="mono">v0.8.1</span>; live site shows v0.8.1 (50bc950); image tags 0.8.1, 0.8, latest; v0.8.1 milestone closed</td></tr>
+<tr><td>#228 fallback after withheld hits</td><td><span class="pill good">closed</span> implemented through <span class="mono">--preset v0.8.1</span>; making it the code default is a separate v0.9.0 decision</td></tr>
+<tr><td>#275 short unpolished hit beats a polished model</td><td><span class="pill info">v0.9.0</span> comment added with the resolver finding and the XylFL0594 read result; proposed fix: rank genes by best bitscore or model basis, cap the tier when an idiomorph rests on one fragment under about 50 bits</td></tr>
+<tr><td>#276 Pezizomycotina speed-up</td><td><span class="pill info">v0.9.0</span> step-0 profile, <span class="mono">-seg</span> finding, concurrency test and 300-genome comparisons posted</td></tr>
+<tr><td>#259, #260, #261, #262</td><td><span class="pill info">v0.9.0</span> milestone assigned</td></tr>
+<tr><td>PYCC9313 read check</td><td><span class="pill good">done</span> job 31784744: MATalpha genes only, no MATa genes</td></tr>
+</tbody></table></div>
+
+<h2 id="data">7. Read data handoff</h2>
+<p>A handoff of how MATPredict identified and fetched fungal read data, and the replies to the PopSeq agent, are in <span class="mono">/bigdata/stajichlab/shared/projects/Fungi/PopSeq/specifications/</span> (<span class="mono">MATpredict_spec_handoff.md</span>, <span class="mono">MATpredict_reply_to_004.md</span>, <span class="mono">MATpredict_feedback_on_002_005.md</span>). Measured from 4,548 run records: AWS Open Data median 10.3 MB/s per task (p10 3.2, p90 20.1) over 4,211 runs and 6,343 GB; <span class="mono">unavailable_at_ncbi</span> in 25 runs (0.55%), and the NCBI fallback rescued none of 26. Reads are never cached by MATPredict: the <span class="mono">.sra</span> and the subsample go to <span class="mono">$SCRATCH</span> and are deleted on exit.</p>
+
+<footer>Generated by Claude Code for the MATPredict curator. Unverified items are marked as such; nothing here enters the curated database.</footer>
+</div>

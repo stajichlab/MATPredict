@@ -1,0 +1,139 @@
+<title>v0.9.0 Issue Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&family=Source+Sans+3:wght@400;500;600&display=swap">
+<style>
+/* Layout: one column; a short brief on top, then one table per kind of work. Rows carry the plain description, the effect on results and my suggestion. */
+:root {
+  --bg: #f5f6f8; --surface: #ffffff; --fg: #1c2230; --muted: #5b6577; --line: #d8dde6;
+  --accent: #2c4a8a; --accent-soft: #e3e9f6; --keep: #1d6b45; --keep-soft: #dcf0e4; --move: #8a5a14; --move-soft: #f6e8cf; --note-soft: #eef0f4;
+  --display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11151d; --surface: #1a2030; --fg: #e6eaf2; --muted: #9aa5ba; --line: #2b3347;
+  --accent: #8fb0f0; --accent-soft: #1c2742; --keep: #6fd29c; --keep-soft: #16332a; --move: #e6b563; --move-soft: #3a2d14; --note-soft: #202738; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #11151d; --surface: #1a2030; --fg: #e6eaf2; --muted: #9aa5ba; --line: #2b3347;
+  --accent: #8fb0f0; --accent-soft: #1c2742; --keep: #6fd29c; --keep-soft: #16332a; --move: #e6b563; --move-soft: #3a2d14; --note-soft: #202738; color-scheme: dark; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-family: var(--display); font-size: 2rem; line-height: 1.15; margin: 0 0 6px; text-wrap: balance; }
+h2 { font-family: var(--display); font-size: 1.25rem; margin: 34px 0 4px; text-wrap: balance; }
+p { margin: 0 0 10px; max-width: 72ch; }
+.meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 16px; }
+.brief { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 18px; margin: 14px 0; }
+.brief ul { margin: 6px 0 0; padding-left: 18px; } .brief li { margin-bottom: 5px; }
+.counts { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+.count { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 8px 14px; min-width: 0; }
+.count b { display: block; font-family: var(--display); font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.count span { color: var(--muted); font-size: 0.82rem; }
+.lead { color: var(--muted); font-size: 0.9rem; margin: 0 0 8px; max-width: 80ch; }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; min-width: 760px; }
+th, td { text-align: left; padding: 9px 11px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--note-soft); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+td.n { white-space: nowrap; font-weight: 600; font-variant-numeric: tabular-nums; }
+td.n a { color: var(--accent); text-decoration: none; } td.n a:hover { text-decoration: underline; }
+.pill { display: inline-block; padding: 1px 9px; border-radius: 99px; font-size: 0.74rem; font-weight: 600; white-space: nowrap; }
+.keep { background: var(--keep-soft); color: var(--keep); } .move { background: var(--move-soft); color: var(--move); } .info { background: var(--accent-soft); color: var(--accent); }
+.mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.88em; }
+.why { color: var(--muted); font-size: 0.82rem; display: block; margin-top: 3px; }
+.note { background: var(--note-soft); border-radius: 6px; padding: 10px 14px; font-size: 0.88rem; margin: 12px 0; max-width: 80ch; }
+footer { margin-top: 40px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.82rem; }
+@media (max-width: 520px) { h1 { font-size: 1.6rem; } }
+</style>
+
+<div class="wrap">
+<h1>v0.9.0 Issue Review</h1>
+<div class="meta">MATPredict, 7 November 2026. All 30 issues now open on the v0.9.0 milestone, read from GitHub. Nothing has been moved or changed.</div>
+
+<div class="brief">
+<strong>What you decided so far</strong>
+<ul>
+<li>The v0.9.0 full run happens <b>once</b>, after the speed work (#287) has passed the "no change at all" test.</li>
+<li>Besides the decided work, the <b>call-and-confidence group</b> belongs in that run, because it changes what the run reports.</li>
+<li>Issues that leave v0.9.0 go to a new <b>v0.10.0</b> milestone. You want to review every issue first and may keep some of the raw-read typing ones on v0.9.0.</li>
+</ul>
+<p style="margin-top:8px">This page is the review. Each row says what the issue is in plain words, whether it can change <span class="mono">detect</span> results, and my suggestion under your answer. <b>Reply with the issue numbers you want on v0.9.0</b> (or the ones you want moved), and I will move exactly those.</p>
+</div>
+
+<div class="counts">
+  <div class="count"><b>9</b><span>suggested to stay on v0.9.0</span></div>
+  <div class="count"><b>21</b><span>suggested for v0.10.0</span></div>
+  <div class="count"><b>11</b><span>of the 30 may change calls or tiers (9 clearly, 2 possibly)</span></div>
+</div>
+<div class="note">I suggest 9 stay, one more than your answer implied: <b>#204</b> (the reads scripts that exist only on the cluster) is cheap and protects work, so I put it with the keepers. Your call.</div>
+
+<h2>Calls and confidence</h2>
+<p class="lead">These change what a run reports, so they are best done before the full run. Suggestion for all: stay on v0.9.0.</p>
+<div class="scroll"><table>
+<thead><tr><th>Issue</th><th>What it is</th><th>Changes results?</th><th>State</th><th>Suggestion</th></tr></thead>
+<tbody>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/129">#129</a></td><td>A weak extra gene can lift a call from medium to high. A lone core gene plus noise (a 5-6% coverage APN2 fragment, or a cross-hit of the opposite idiomorph) is counted as a second gene.</td><td>Yes: tiers</td><td>updated 31 Oct, 1 comment</td><td><span class="pill keep">stay v0.9.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/135">#135</a></td><td>A curated record (<span class="mono">4754_b80_PM_combined</span>, gene matMi) has its span off by one: it starts with a stop codon, so no protein is derived. Shifting one base gives a clean 71-aa ORF.</td><td>One database record; needs your sign-off</td><td>updated 30 Oct</td><td><span class="pill keep">stay v0.9.0</span><span class="why">small data fix</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/138">#138</a></td><td>Idiomorph calls flip on short fragments with tiny margins (0.4 to 17 bits): four <i>Aureobasidium</i> genomes (homothallic) and <i>Xylaria</i>. How to report them is pending your decision.</td><td>Yes: labels and tiers</td><td>updated 31 Oct, 1 comment</td><td><span class="pill keep">stay v0.9.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/145">#145</a></td><td>For loci with a single candidate gene, the reported "margin" is an identity gap, not bits. 3,736 loci in the Ascomycota run fall under the 20-point line, mostly ordinary calls.</td><td>Yes: how margin and tier are reported</td><td>updated 31 Oct</td><td><span class="pill keep">stay v0.9.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/149">#149</a></td><td>A better MTLA1 hit can lower a call's confidence because of a hard 39-bit noise floor. This is the cliff behind the <i>Hyphopichia</i> tier drops.</td><td>Yes: tiers</td><td>updated 5 Nov, 3 comments</td><td><span class="pill keep">stay v0.9.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/151">#151</a></td><td>Flag polished models with a frameshift or internal stop as defective (a <i>Lodderomyces</i> pseudogene case). The v0.8.1 tables already carry a defective count, so check what is left to do.</td><td>Report only</td><td>updated 30 Oct, 2 comments</td><td><span class="pill keep">stay v0.9.0</span><span class="why">may be closeable</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/261">#261</a></td><td>Before the "strong single-gene" rule can ever be turned on, check 12 loci by sequence. The rule is off in every preset.</td><td>Only if you turn the rule on</td><td>updated 6 Nov</td><td><span class="pill keep">stay v0.9.0</span><span class="why">can slip if the rule stays off</span></td></tr>
+</tbody></table></div>
+
+<h2>Speed and housekeeping</h2>
+<div class="scroll"><table>
+<thead><tr><th>Issue</th><th>What it is</th><th>Changes results?</th><th>State</th><th>Suggestion</th></tr></thead>
+<tbody>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/287">#287</a></td><td>The two-stage search and cached records, plus the broad Basidiomycota cost. Decided: do both, caching first, and nothing may change in any call.</td><td>Must not</td><td>decided 7 Nov</td><td><span class="pill keep">stay v0.9.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/204">#204</a></td><td>About 50 helper scripts used for reads waves 1 and 2 exist only in a cluster folder, not in the repo. Archive them with a manifest.</td><td>No</td><td>updated 30 Oct</td><td><span class="pill keep">stay v0.9.0</span><span class="why">cheap, and the scripts are at risk</span></td></tr>
+</tbody></table></div>
+
+<h2>Basidiomycota</h2>
+<p class="lead">A separate project with its own results. Suggestion for all: v0.10.0. The two with the strongest case to stay are #255 and #167, because they change calls and tiers in a run you are about to do.</p>
+<div class="scroll"><table>
+<thead><tr><th>Issue</th><th>What it is</th><th>Changes results?</th><th>State</th><th>Suggestion</th></tr></thead>
+<tbody>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/255">#255</a></td><td>One genome (GCA_017654745.1) loses its MAT alpha label to a PR call under the cross-family policy that the v0.8.1 preset turns on.</td><td>Yes: one label</td><td>updated 5 Nov, 1 comment</td><td><span class="pill move">v0.10.0</span><span class="why">strong case to stay</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/167">#167</a></td><td>198 high HD loci rest on one homeodomain region that both HD1 and HD2 hit, with no polished flank gene. Should "high" need two distinct core regions?</td><td>Yes: tiers</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span><span class="why">strong case to stay</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/166">#166</a></td><td>v0.7.0 admits 102 pheromone-receptor loci (94 genomes, mostly Agaricales, all medium) through pheromone proteins of the B43 record. Accepted as a known issue; a check is pending.</td><td>Possibly: tiers</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/170">#170</a></td><td>14 loci of the Tremellomycetes-type MAT family are called in other classes (<i>Ceratobasidium</i> 7, <i>Thecaphora</i> 4 and others), resting on STE3 plus PAN6 or RPL39. Keep, demote or label as unverified?</td><td>Yes: tiers or labels</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/168">#168</a></td><td>The defective flag marks 1,038 of 5,986 Basidiomycota loci; 18 of 51 <i>Wallemia</i> genomes carry the same STE3 model with one internal stop. Real pseudogene-like features, or a splice-site mis-model?</td><td>Report only</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/154">#154</a></td><td>The b-locus intron cap of 10 kb was accepted as a trade-off (3 real b-locus calls restored). Revisit once measured across all Basidiomycota genomes.</td><td>Possibly: some b-locus calls</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+</tbody></table></div>
+
+<h2>Curation and naming</h2>
+<p class="lead">New records and labels. Suggestion for all: v0.10.0, except that #260 overlaps #149 (tiers of CTG yeasts), so it has the strongest case to stay.</p>
+<div class="scroll"><table>
+<thead><tr><th>Issue</th><th>What it is</th><th>Changes results?</th><th>State</th><th>Suggestion</th></tr></thead>
+<tbody>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/260">#260</a></td><td>55 CTG-clade yeasts lost their MTLA1 polished model and their confidence dropped. Investigate why.</td><td>Yes: tiers (overlaps #149)</td><td>updated 6 Nov</td><td><span class="pill move">v0.10.0</span><span class="why">strong case to stay</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/189">#189</a></td><td>80 yeast genomes carry a second MAT locus at another position (a copy, a silent cassette or a cross-call). Your decisions are recorded; the curation itself remains.</td><td>Yes: labels, after curation</td><td>updated 5 Nov, 5 comments</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/202">#202</a></td><td>Candidate MAT records for Taphrinomycotina (<i>Saitoella</i>, <i>Protomyces</i>, <i>Neolecta</i>). The evidence is partial.</td><td>Only when records are added</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/200">#200</a></td><td>A <span class="mono">nearest_reference</span> column, and counts for loci without a reference (63 <span class="mono">NoRef</span> loci in v0.7.0).</td><td>Labels and a new column</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/182">#182</a></td><td>A discovery project: can HMG-box genes and their flanks find candidate MAT loci in chytrids and other lineages with no known locus? Changes no record or call.</td><td>No</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+</tbody></table></div>
+
+<h2>Raw-read typing</h2>
+<p class="lead">A separate pipeline from <span class="mono">detect</span>: none of these changes a <span class="mono">detect</span> call. Suggestion under your answer: v0.10.0, but this is the group you said you may want on v0.9.0, so decide per issue.</p>
+<div class="scroll"><table>
+<thead><tr><th>Issue</th><th>What it is</th><th>Changes results?</th><th>State</th><th>Suggestion</th></tr></thead>
+<tbody>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/173">#173</a></td><td>The parent project: type the MAT idiomorph from raw reads for public read sets of species with at least 4 strains, and report them on the site.</td><td>No (reads site)</td><td>updated 30 Oct, 5 comments</td><td><span class="pill move">v0.10.0</span><span class="why">the umbrella for the rest</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/172">#172</a></td><td>Draw the <i>Fusarium oxysporum</i> f. sp. <i>lactucae</i> and <i>A. fumigatus</i> read-typing results on the landing page like <i>Coccidioides</i>. Both analyses are finished; only the charts are missing.</td><td>No (site)</td><td>updated 30 Oct, 1 comment</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/194">#194</a></td><td>79 species are withheld on the reads pages (30 in wave 1, 49 in wave 2). Why each panel failed or runs gave <span class="mono">none</span> or <span class="mono">low_depth</span> was not diagnosed.</td><td>No</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/195">#195</a></td><td>Species where presence typing cannot work: silent cassettes, homothallic species and switching yeasts (for example <i>S. pombe</i>). What should the gate say?</td><td>No</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/196">#196</a></td><td>Yeast panels: flank depth under 2x for four <i>Saccharomyces</i> species; <i>C. albicans</i> gives <span class="mono">both</span> in 40% of runs (expected for heterozygous diploids).</td><td>No</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/197">#197</a></td><td>Clone-aware reporting: open decisions and tests for the clone groups (k=21 read sketches).</td><td>No</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/198">#198</a></td><td>Design for Basidiomycota raw-read typing (<i>Cryptococcus</i> a/alpha first). Many are tetrapolar, so the two-idiomorph panel does not apply directly. Not started.</td><td>No</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/199">#199</a></td><td>Can the browser tool type a run (up to 2 million read pairs) locally in Pyodide? A timing test and a go or no-go threshold. Not done.</td><td>No</td><td>updated 30 Oct</td><td><span class="pill move">v0.10.0</span></td></tr>
+</tbody></table></div>
+
+<h2>Packaging and analysis</h2>
+<div class="scroll"><table>
+<thead><tr><th>Issue</th><th>What it is</th><th>Changes results?</th><th>State</th><th>Suggestion</th></tr></thead>
+<tbody>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/259">#259</a></td><td>A plan for distributing <span class="mono">matpredict</span> on PyPI and bioconda: package name, which tools come from conda, how the database is shipped, who publishes.</td><td>No</td><td>updated 6 Nov</td><td><span class="pill move">v0.10.0</span></td></tr>
+<tr><td class="n"><a href="https://github.com/stajichlab/MATPredict/issues/262">#262</a></td><td>A census of MAT1-1-1 introns and splice-site classes, to see whether they explain why gene predictors fail on MAT genes.</td><td>No (analysis)</td><td>updated 6 Nov</td><td><span class="pill move">v0.10.0</span></td></tr>
+</tbody></table></div>
+
+<footer>Read from the open issues of the v0.9.0 milestone on GitHub, 7 November 2026. "Changes results?" is my reading of each issue's text, not a measurement. Suggestions follow your answer B and are yours to change.</footer>
+</div>

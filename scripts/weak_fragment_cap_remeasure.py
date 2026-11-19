@@ -1,7 +1,7 @@
 """Re-measure the weak-fragment cap (#275) under the old and the redefined (#341) 'strongest core gene'.
 
 Reads the `detection_report.yaml` files of a frozen run from a tar stream (`zstd -dc reports_all.tar.zst | python
-weak_fragment_cap_remeasure.py - OUTDIR`), applies `weak_fragment_cap.evaluate` twice to every `Ascomycota:MAT` locus of the reports
+weak_fragment_cap_remeasure.py - OUTDIR`, or a directory of reports instead of `-`), applies `weak_fragment_cap.evaluate` twice to every `Ascomycota:MAT` locus of the reports
 and writes:
 
 * `summary.tsv`  one row per rule (old: every MAT1-* gene ranked; new: only the genes of the called idiomorph): loci in scope,
@@ -90,10 +90,18 @@ def _iter_tar(stream):
                 yield Path(m.name).parent.name, yaml.safe_load(tf.extractfile(m).read()) or {}
 
 
+def _iter_dir(root: Path):
+    for report in sorted(root.rglob("detection_report.yaml")):
+        yield report.parent.name, yaml.safe_load(report.read_text()) or {}
+
+
 def main(argv: list[str]) -> int:
     src, out = argv
-    stream = sys.stdin.buffer if src == "-" else open(src, "rb")
-    run(_iter_tar(stream), Path(out))
+    if src != "-" and Path(src).is_dir():
+        docs = _iter_dir(Path(src))
+    else:
+        docs = _iter_tar(sys.stdin.buffer if src == "-" else open(src, "rb"))
+    run(docs, Path(out))
     return 0
 
 

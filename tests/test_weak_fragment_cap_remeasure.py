@@ -37,3 +37,12 @@ def test_the_rules_differ_when_the_other_idiomorph_gene_is_polished():
     old, new = mod.evaluate_both(locus("MAT1-1", "high", [ev("MAT1-1-1", "unpolished", 300.0), ev("MAT1-2-1", "polished_single", 40.0)]))
     assert old is not None and old["strongest_core_gene"] == "MAT1-2-1"
     assert new is None
+
+
+def test_a_directory_of_reports_is_read(tmp_path):
+    import yaml
+    d = tmp_path / "runs" / "g2"
+    d.mkdir(parents=True)
+    (d / "detection_report.yaml").write_text(yaml.safe_dump({"detected": [locus("MAT1-1", "medium", [ev("MAT1-1-1", "unpolished", 41.0)])]}))
+    assert mod.main([str(tmp_path / "runs"), str(tmp_path / "out")]) == 0
+    assert (tmp_path / "out" / "changes.tsv").read_text().splitlines()[1].startswith("g2\t")

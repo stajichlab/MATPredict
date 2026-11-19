@@ -6,6 +6,8 @@ release completed.
 
 ## [Unreleased]
 
+- `--weak-fragment-cap-policy` (opt-in, in no preset): the "strongest core gene" is now the strongest gene of the CALLED idiomorph (`MAT1-1-*` for a MAT1-1 call, `MAT1-2-*` for MAT1-2), not of every `MAT1-*` gene (#341; curator 2026-11-12). A thin fragment of the other idiomorph no longer lowers a call; a call with no live gene of its own idiomorph is not capped. On the v0.9.0 FungiDB run the three loci the old rule capped (*A. terreus* NIH2624, *C. geophilum* 1.58, *S. schenckii* 1099-18) are kept; on the 11,906 `medium`/`high` `Ascomycota:MAT` loci of the v0.9.0 Ascomycota run the rule matches the same 66 loci either way (one, *Xylaria* XylFL0594, now names MAT1-2-1 rather than MAT1-1-3 as the deciding gene). Default off, so no run changes. `docs/notes/2026-11-19_weak-fragment-cap-idiomorph.md`.
+
 - Site: genomes whose recorded name starts with a phylum name or a qualifier (`Ascomycota sp. Antarctolithica obscura`, `uncultured Alectoria`, `cf. Caloplaca sp. 1`) get a genus where the name carries one (`curated_name`, new `name_status` column); 22 genomes move out of "(unassigned)". The results search matches any rank and the recorded name, counts how many genomes matched through another field, and a list shows the genomes with no usable genus. See `docs/notes/2026-11-12_unassigned-species-names.md`.
 
 ## [0.9.0] — 2026-11-12 — `v0.9.0`

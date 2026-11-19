@@ -32,11 +32,11 @@ def test_review_ranks_only_the_called_idiomorph_and_classifies():
     locus = {"idiomorph": "MAT1-1", "gene_evidence": [ev("MAT1-1-1", "polished_single", 41.0, 150, 350), ev("MAT1-2-1", "polished_agree", 300.0, 500, 900)],
              "genes_found": ["MAT1-1-1", "MAT1-2-1"]}
     r = mod.review_locus(locus, GENES)
-    assert r["strongest_own_gene"] == "MAT1-1-1" and r["review"] == "cap_contradicted"
+    assert r["strongest_own_gene"] == "MAT1-1-1" and r["review"] == "annotated_gene_present"
     assert "MAT1-2-1:polished_agree:300.0:novel" in r["other_idiomorph_genes"]
     assert mod.review_locus(locus, None)["review"] == "no_annotation"
     locus["gene_evidence"][0]["start"], locus["gene_evidence"][0]["end"] = 500, 900
-    assert mod.review_locus(locus, GENES)["review"] == "cap_consistent"
+    assert mod.review_locus(locus, GENES)["review"] == "no_annotated_gene"
 
 
 def test_run_end_to_end(tmp_path):
@@ -49,5 +49,5 @@ def test_run_end_to_end(tmp_path):
     mk = lambda: {"detected": [{"family": "Ascomycota:MAT", "contig": "c1", "start": 100, "end": 400, "idiomorph": "MAT1-1", "confidence": "high",
                                 "gene_evidence": [ev("MAT1-1-1", "unpolished", 41.0, 150, 350)], "genes_found": ["MAT1-1-1"]}]}
     counts = mod.run([("G1", mk()), ("G2", mk())], tmp_path / "changes.tsv", tmp_path / "samples.csv", tmp_path / "ann", tmp_path / "out")
-    assert counts == {"cap_contradicted": 1, "no_annotation": 1}
+    assert counts == {"annotated_gene_present": 1, "no_annotation": 1}
     assert (tmp_path / "out" / "review.tsv").read_text().count("\n") == 3

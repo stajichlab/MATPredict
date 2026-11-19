@@ -10,8 +10,9 @@ For each capped locus: the core genes of the called idiomorph (the genes the cap
 bitscore and polish status, and the verdict of the annotation over the gene model: `annotated` (an annotated gene covers at least 50%
 of the model), `partial` (overlaps, under 50%), `novel` (no annotated gene), or `no_annotation` (no annotation folder for the genome).
 The annotation is a cross-check, not the truth: `novel` does not make the call wrong (the predictor may miss the gene), and `annotated`
-does not make it right. A locus is `cap_contradicted` when the called idiomorph's strongest core gene is `annotated`, `cap_consistent`
-when it is `novel`, else `cap_unclear`; `no_annotation` stays `no_annotation`.
+does not make it right. In particular an annotated gene over a 40-bit model only says the region is inside a predicted gene: an HMG-box
+paralog would be annotated too, so it cannot tell a real MAT1-2-1 from a paralog. The `review` column says only what was measured, for
+the called idiomorph's strongest core gene: `annotated_gene_present`, `no_annotated_gene`, `annotation_partial`, or `no_annotation`.
 """
 from __future__ import annotations
 
@@ -60,7 +61,7 @@ def verdict(genes: dict, contig: str, start: int, end: int) -> str:
 
 
 def classify(core_verdict: str | None) -> str:
-    return {"annotated": "cap_contradicted", "novel": "cap_consistent", None: "no_annotation"}.get(core_verdict, "cap_unclear")
+    return {"annotated": "annotated_gene_present", "novel": "no_annotated_gene", None: "no_annotation"}.get(core_verdict, "annotation_partial")
 
 
 def review_locus(locus: dict, genes: dict | None) -> dict:

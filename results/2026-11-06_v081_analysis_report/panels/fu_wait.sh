@@ -1,0 +1,2 @@
+while true; do n=$(ssh -o ConnectTimeout=20 hpcc "bash -l -c 'squeue -j 31784821,31784822,31784823,31784824 -h | wc -l'" 2>/dev/null | grep -E '^[0-9]+$' | tail -1); if [ -n "$n" ] && [ "$n" -eq 0 ]; then echo FU_DONE; break; fi; sleep 120; done
+ssh hpcc "python3 -" < /Users/jstajich/projects/MATPredict/results/2026-11-06_v081_analysis_report/panels/fu_ana.py 2>&1 | grep -v -E "WARNING|vulnerable|upgraded|X11|Pseudo" | cut -c1-300

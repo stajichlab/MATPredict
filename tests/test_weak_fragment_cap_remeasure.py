@@ -24,11 +24,11 @@ def test_old_caps_a_call_with_a_thin_other_idiomorph_fragment_and_new_does_not(t
         ("g3", {"detected": [locus("MAT1-2", "low", [ev("MAT1-2-1", "unpolished", 41.0)])]}),
         ("g4", {"detected": [{"family": "Ascomycota:MATsc", "idiomorph": "MAT1-1", "confidence": "high", "gene_evidence": []}]}),
     ]
-    # g1: the old rule ranks MAT1-2-1 40 bits as strongest only when it is polished-or-stronger; here MAT1-1-1 agrees, so neither caps.
+    # g1: MAT1-1-1 agrees and is the strongest gene under both rules, so neither caps; g2: both cap; g3 is already low.
     c = mod.run(docs, tmp_path)
     rows = (tmp_path / "changes.tsv").read_text().splitlines()
     assert [r.split("\t")[0] for r in rows[1:]] == ["g2"]
-    assert c["old"]["matched"] == c["new"]["matched"] == 2 or c["old"]["matched"] >= c["new"]["matched"]
+    assert c["old"]["matched"] == 1 and c["new"]["matched"] == 1
     assert c["old"]["loci"] == 3 and c["new"]["loci"] == 3          # MATsc is out of scope
 
 

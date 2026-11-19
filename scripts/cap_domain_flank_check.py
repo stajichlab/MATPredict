@@ -72,12 +72,17 @@ def find_genome(genome_dir: Path, asm: str) -> Path | None:
     return None
 
 
+def _text(x) -> str:
+    """pyhmmer returns names and accessions as str (0.12) or bytes (older versions)."""
+    return x.decode() if isinstance(x, bytes) else (x or "")
+
+
 def load_hmms(pfam: Path):
     import pyhmmer
     keep = []
     with pyhmmer.plan7.HMMFile(str(pfam)) as hf:
         for hmm in hf:
-            acc = (hmm.accession or b"").decode().split(".")[0]
+            acc = _text(hmm.accession).split(".")[0]
             if acc in DOMAIN_ACCESSIONS:
                 keep.append((acc, hmm))
     return keep
@@ -96,7 +101,7 @@ def domain_hits(seq: str, offset: int, hmms, min_aa: int) -> list[dict]:
             for h in hits:
                 if not h.included:
                     continue
-                fr, o0, o1, prot = orf_list[int(h.name.decode()[1:])]
+                fr, o0, o1, prot = orf_list[int(_text(h.name)[1:])]
                 out.append({"acc": acc, "domain": DOMAIN_ACCESSIONS[acc], "score": round(h.score, 1), "evalue": h.evalue,
                             "orf_start": offset + o0, "orf_end": offset + o1 - 1, "aa": len(prot)})
     return out

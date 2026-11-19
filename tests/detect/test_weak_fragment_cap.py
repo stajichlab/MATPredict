@@ -59,12 +59,27 @@ def test_fifty_bits_or_more_is_not_weak():
     assert wfc.evaluate("high", "MAT1-2", FAM, [C(bits=49.9)]) is not None
 
 
-def test_the_strongest_core_gene_decides_not_the_weakest():
-    stats = [C("MAT1-1-3", "polished_single", 30.0), C("MAT1-2-1", "polished_agree", 210.0)]
+def test_the_strongest_gene_of_the_called_idiomorph_decides_not_the_weakest():
+    stats = [C("MAT1-2-10", "polished_single", 30.0), C("MAT1-2-1", "polished_agree", 210.0)]
     assert wfc.evaluate("high", "MAT1-2", FAM, stats) is None            # an agreeing, strong gene is the strongest
-    stats = [C("MAT1-1-3", "unpolished", 90.0), C("MAT1-2-1", "polished_single", 44.0)]
+    stats = [C("MAT1-2-10", "unpolished", 90.0), C("MAT1-2-1", "polished_single", 44.0)]
     d = wfc.evaluate("high", "MAT1-2", FAM, stats)                        # polished beats unpolished first, then the bitscore
-    assert d.note["strongest_core_gene"] == "MAT1-2-1"
+    assert d.note["strongest_core_gene"] == "MAT1-2-1" and d.note["ranked_idiomorph"] == "MAT1-2"
+
+
+def test_a_thin_fragment_of_the_other_idiomorph_does_not_cap_the_call_issue_341():
+    # A. terreus NIH2624, C. geophilum 1.58, S. schenckii 1099-18: called MAT1-1, a thin MAT1-2-1 fragment beside it.
+    stats = [C("MAT1-1-1", "polished_agree", 300.0), C("MAT1-2-1", "unpolished", 40.0)]
+    assert wfc.evaluate("high", "MAT1-1", FAM, stats) is None
+    stats = [C("MAT1-1-1", "unpolished", 300.0), C("MAT1-2-1", "polished_single", 40.0)]
+    assert wfc.evaluate("high", "MAT1-1", FAM, stats) is None            # the other idiomorph's polished status does not outrank
+    # the called idiomorph's own gene is thin: still capped, and the note names it
+    d = wfc.evaluate("high", "MAT1-1", FAM, [C("MAT1-1-1", "unpolished", 41.0), C("MAT1-2-1", "polished_agree", 300.0)])
+    assert d.note["strongest_core_gene"] == "MAT1-1-1"
+
+
+def test_no_live_gene_of_the_called_idiomorph_means_no_cap():
+    assert wfc.evaluate("high", "MAT1-1", FAM, [C("MAT1-2-1", "unpolished", 40.0)]) is None
 
 
 def test_flank_genes_are_not_core_genes():
@@ -106,6 +121,7 @@ def _run(tmp_path, monkeypatch, *, policy, bits=200.0, both_tools=True, aa=290, 
     monkeypatch.setattr(wfc, "SCOPE_FAMILY", ("P", "MATX"))
     monkeypatch.setattr(wfc, "CALLED_IDIOMORPHS", ("alpha", "a"))
     monkeypatch.setattr(wfc, "CORE_GENE_PREFIX", "ALPHA")
+    monkeypatch.setattr(wfc, "idiomorph_gene_prefix", lambda idiomorph: "ALPHA")
     _write_records(tmp_path)
     (tmp_path / "genome.fa").write_text(">c1\n" + "A" * 60000 + "\n")
     monkeypatch.setattr(pipeline_module, "_translate_model", lambda *a, **k: "MKV")

@@ -4,9 +4,10 @@ Curator's decisions, 2026-11-06 (issue #275), behind `--weak-fragment-cap-policy
 release-prep pull request):
 
 * Scope: `Ascomycota:MAT` only, the family it was measured on. Other families keep their behaviour until someone measures them.
-* Trigger: the STRONGEST core gene of the locus (a `MAT1-*` gene that is not `lost_to`, best by polish status -- both tools agree,
-  then one tool or the tools disagree, then unpolished -- and then by bitscore) is not a both-tools-agree model and scores under
-  `MAX_BITSCORE` bits.
+* Trigger: the STRONGEST core gene OF THE CALLED IDIOMORPH (a `MAT1-1-*` gene for a MAT1-1 call, a `MAT1-2-*` gene for MAT1-2, not
+  `lost_to`; best by polish status -- both tools agree, then one tool or the tools disagree, then unpolished -- and then by bitscore)
+  is not a both-tools-agree model and scores under `MAX_BITSCORE` bits. A thin fragment of the OTHER idiomorph's gene does not count
+  (#341, curator 2026-11-12: it capped three FungiDB-supported calls); a call with no live gene of its own idiomorph is not capped.
 * Effect: the tier is lowered to `low`; the idiomorph label, the locus and the class are never changed. A call already at `low` is
   untouched, and nothing is ever raised.
 
@@ -55,6 +56,11 @@ class CapDecision:
     note: dict
 
 
+def idiomorph_gene_prefix(idiomorph: str) -> str:
+    """`MAT1-1` -> `MAT1-1-`: the name prefix of the core genes of that idiomorph (#341)."""
+    return f"{idiomorph}-"
+
+
 def _strength(stat: CoreStat) -> tuple[int, float]:
     status = stat.status or ""
     rank = 2 if status == STATUS_AGREE else 1 if status.startswith("polished") else 0
@@ -76,7 +82,8 @@ def evaluate(
     if family != SCOPE_FAMILY or idiomorph not in CALLED_IDIOMORPHS:
         return None
     limit = MAX_BITSCORE if max_bitscore is None else max_bitscore
-    core = [s for s in stats if s.gene.startswith(CORE_GENE_PREFIX)]
+    prefix = idiomorph_gene_prefix(idiomorph)
+    core = [s for s in stats if s.gene.startswith(CORE_GENE_PREFIX) and s.gene.startswith(prefix)]
     if not core:
         return None
     strongest = max(core, key=_strength)
@@ -85,5 +92,5 @@ def evaluate(
     return CapDecision({
         "rule": "weak_fragment_cap", "from": confidence, "to": "low",
         "strongest_core_gene": strongest.gene, "strongest_core_status": strongest.status,
-        "strongest_core_bitscore": strongest.bitscore, "threshold_bitscore": limit,
+        "strongest_core_bitscore": strongest.bitscore, "threshold_bitscore": limit, "ranked_idiomorph": idiomorph,
     })

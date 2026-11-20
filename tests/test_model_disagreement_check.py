@@ -90,3 +90,17 @@ def test_run_end_to_end(tmp_path):
     assert rows[0]["only_primary_introns"] == 1 and rows[0]["only_alternate_introns"] == 1
     assert (tmp_path / "out" / "introns.tsv").read_text().count("\n") == 3
     assert (tmp_path / "out" / "models.faa").read_text().startswith(">S1|MAT1-1-3|primary|c1\nMAAKAKG")
+
+
+def test_reference_conflict_turns_a_motif_recommendation_into_a_conflict():
+    good = mod.analyse_model(GENOME, GOOD, "+")          # 7 aa, clean
+    bad = mod.analyse_model(GENOME, SHIFTED, "+")        # noncanonical, 7 aa
+    # same length: no conflict whatever the identities
+    assert mod.recommend(bad, good, 7, 99.0, 80.0)[0] == "alternate model"
+    longer = dict(good, aa=12)
+    assert mod.recommend(bad, longer, 7, 99.0, 90.0)[0] == "conflict"            # alternate is 9 points lower AND 5 aa farther
+    assert mod.recommend(bad, longer, 7, 99.0, 96.0)[0] == "alternate model"     # within the 5-point margin
+    assert mod.recommend(bad, longer, 7, None, 90.0)[0] == "alternate model"     # no identity: no conflict
+    assert mod.recommend(good, dict(bad, aa=12), 7, 99.0, 90.0)[0] == "primary model"   # chosen = the primary, which is also better: no conflict
+    far = dict(good, aa=12)
+    assert mod.recommend(far, bad, 7, 80.0, 99.0)[0] == "conflict"               # primary clean but worse; alternate (noncanonical) is better: symmetric

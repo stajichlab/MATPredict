@@ -12,7 +12,9 @@ A gene with `status: polished_disagree` carries two models in the report: the pr
 
 A recommendation per gene follows from fixed rules (see `recommend`): a model is CLEAN when it has no internal stop, a length that is a
 multiple of 3 and only canonical introns of at least 30 bp. One clean model -> that model; both clean -> both plausible (the one closer to
-the reference length is named, but the choice needs RNA-seq or a curator); neither -> neither clean. It is a recommendation, not a ruling:
+the reference length is named, but the choice needs RNA-seq or a curator); neither -> neither clean. When the model the motifs favour has an
+identity more than 5 points lower AND is farther from the reference length than the other, the answer is `conflict` (see `reference_conflict`).
+It is a recommendation, not a ruling:
 a canonical splice site is necessary, not sufficient (a wrong junction can sit on another GT...AG), and an unusual intron can be real.
 
 Usage: model_disagreement_check.py GENES.tsv RUNS_DIR GENOME_DIR GENOME_TEMPLATE DB_ROOT OUT
@@ -115,12 +117,29 @@ def shared_introns(a: dict, b: dict) -> tuple[list, list, list]:
     return sorted(ka & kb), sorted(ka - kb), sorted(kb - ka)
 
 
-def recommend(primary: dict, alt: dict, ref_aa: int | None = None) -> tuple[str, str]:
+IDENTITY_MARGIN = 5.0
+
+
+def reference_conflict(chosen: dict, other: dict, chosen_identity, other_identity, ref_aa) -> bool:
+    """True when the model the splice motifs favour is clearly worse against the reference: lower identity by more than
+    IDENTITY_MARGIN points AND farther from the reference length. Identity comes from the tool that made the model (exonerate aligns
+    against the reference, so it favours its own model); the length test is the less biased of the two, so both must point the same way."""
+    if None in (chosen_identity, other_identity) or not ref_aa:
+        return False
+    return chosen_identity < other_identity - IDENTITY_MARGIN and abs(chosen["aa"] - ref_aa) > abs(other["aa"] - ref_aa)
+
+
+def recommend(primary: dict, alt: dict, ref_aa: int | None = None, primary_identity=None, alt_identity=None) -> tuple[str, str]:
     """(recommendation, reason). A recommendation, not a ruling."""
     ip, ia = issues(primary), issues(alt)
     if not ip and ia:
+        if reference_conflict(primary, alt, primary_identity, alt_identity, ref_aa):
+            return "conflict", "motifs favour the primary (the alternate has: " + "; ".join(ia) + ") but the primary is clearly worse against the reference"
         return "primary model", "the alternate has: " + "; ".join(ia)
     if ip and not ia:
+        if reference_conflict(alt, primary, alt_identity, primary_identity, ref_aa):
+            return "conflict", ("motifs favour the alternate (the primary has: " + "; ".join(ip) + f") but identity ({primary_identity} against {alt_identity}) and length "
+                                f"({primary['aa']} aa against {alt['aa']}, reference {ref_aa}) favour the primary")
         return "alternate model", "the primary has: " + "; ".join(ip)
     if ip and ia:
         return "neither clean", "primary: " + "; ".join(ip) + " | alternate: " + "; ".join(ia)
@@ -159,7 +178,7 @@ def check_gene(entry: dict, seq: str, table: int, ref_aa: int | None) -> dict:
     p = analyse_model(seq, model_exons(entry), entry["strand"], table, ref_aa)
     a = analyse_model(seq, model_exons(alt), alt.get("strand", entry["strand"]), table, ref_aa)
     shared, only_p, only_a = shared_introns(p, a)
-    rec, why = recommend(p, a, ref_aa)
+    rec, why = recommend(p, a, ref_aa, entry.get("identity"), alt.get("identity"))
     return {"primary": p, "alternate": a, "shared": shared, "only_primary": only_p, "only_alternate": only_a, "recommendation": rec, "reason": why}
 
 

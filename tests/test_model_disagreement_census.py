@@ -43,7 +43,7 @@ def test_run_classifies_and_flags_the_noncanonical_trigger(tmp_path):
     docs = [("A", doc(entry(SHIFTED, GOOD))), ("B", doc(entry(GOOD, SHIFTED))), ("C", doc(entry(GOOD, GOOD))), ("D", doc(entry(GOOD, GOOD)))]
     rows = mod.run(docs, tmp_path / "g", tmp_path / "db", tmp_path / "out" / "t", "t")
     by = {r["sample"]: r for r in rows}
-    assert by["A"]["class"] == "primary_issue_alt_clean" and by["A"]["trigger_noncanonical"] is True and by["A"]["d_aa"] == 0 or by["A"]["class"] == "primary_issue_alt_clean"
+    assert by["A"]["class"] == "primary_issue_alt_clean" and by["A"]["trigger_noncanonical"] is True and by["A"]["d_aa"] == 0 and by["A"]["d_end"] == 0
     assert by["B"]["class"] == "primary_clean_alt_issue" and not by["B"]["trigger_noncanonical"]
     assert by["C"]["class"] == "both_clean"
     assert by["D"]["class"] == "not_checked"                 # no genome file for D

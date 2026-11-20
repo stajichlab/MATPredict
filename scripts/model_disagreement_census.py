@@ -15,7 +15,9 @@ plus `trigger_noncanonical` (the primary has a noncanonical intron and the alter
 span (`d_start`, `d_end`, `d_aa`, `alt_outside_locus`: the alternate model lies partly outside the reported locus span).
 `summary.tsv` counts the classes by run, family, gene and tier. Nothing here changes a report.
 
-Usage: model_disagreement_census.py REPORTS_TAR|- GENOME_DIR DB_ROOT OUT_PREFIX
+Usage: model_disagreement_census.py REPORTS_TAR|- GENOME_DIR DB_ROOT OUT_PREFIX [LABEL] [--inputs inputs.tsv]
+  --inputs  a campaign's `inputs.tsv` (columns `source`, `id`, `genome`): a sample named `<source>__<id>` is read from that genome path
+            instead of being looked up by name in GENOME_DIR (the Mucoromycotina campaign names its samples this way)
 """
 from __future__ import annotations
 
@@ -37,6 +39,12 @@ def find_genome(genome_dir: Path, asm: str) -> Path | None:
         if p.name.endswith((".fasta.gz", ".fa.gz", ".fna.gz", ".fasta", ".fa", ".fna")) and ".masked" not in p.name:
             return p
     return None
+
+
+def read_inputs(path: Path) -> dict[str, Path]:
+    """{`<source>__<id>`: genome path} from a campaign's inputs.tsv."""
+    with path.open() as fh:
+        return {f'{r["source"]}__{r["id"]}': Path(r["genome"]) for r in csv.DictReader(fh, delimiter="\t")}
 
 
 def classify(p_issues: list[str], a_issues: list[str]) -> str:
@@ -87,7 +95,7 @@ COLS = ["sample", "family", "tier", "gene", "role", "contig", "strand", "primary
         "d_start", "d_end", "d_aa", "alt_outside_locus", "primary_issues", "alternate_issues", "note"]
 
 
-def run(docs, genome_dir: Path, db_root: Path, out: Path, label: str = "run") -> list[dict]:
+def run(docs, genome_dir: Path, db_root: Path, out: Path, label: str = "run", inputs: dict[str, Path] | None = None) -> list[dict]:
     @lru_cache(maxsize=None)
     def ref_len(record, gene):
         return mdc.reference_aa(db_root, record, gene)
@@ -99,7 +107,7 @@ def run(docs, genome_dir: Path, db_root: Path, out: Path, label: str = "run") ->
                  if e.get("status") == "polished_disagree" and e.get("alternate_model")]
         if not genes:
             continue
-        fa = find_genome(genome_dir, sample)
+        fa = (inputs or {}).get(sample) or find_genome(genome_dir, sample)
         contigs: dict[str, str | None] = {}
         for locus, e in genes:
             if fa is not None and e["contig"] not in contigs:
@@ -133,10 +141,15 @@ def run(docs, genome_dir: Path, db_root: Path, out: Path, label: str = "run") ->
 
 
 def main(argv: list[str]) -> int:
+    inputs = None
+    if "--inputs" in argv:
+        i = argv.index("--inputs")
+        inputs = read_inputs(Path(argv[i + 1]))
+        argv = argv[:i] + argv[i + 2:]
     src, gdir, db, out = argv[:4]
     label = argv[4] if len(argv) > 4 else Path(out).name
     stream = sys.stdin.buffer if src == "-" else open(src, "rb")
-    rows = run(_iter_tar(stream), Path(gdir), Path(db), Path(out), label)
+    rows = run(_iter_tar(stream), Path(gdir), Path(db), Path(out), label, inputs)
     print(label, dict(Counter(r["class"] for r in rows)))
     return 0
 

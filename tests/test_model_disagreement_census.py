@@ -72,3 +72,14 @@ def test_tar_stream_reader():
     buf.seek(0)
     got = list(mod._iter_tar(buf))
     assert [g[0] for g in got] == ["S1"] and got[0][1]["genetic_code"] == 1
+
+
+def test_inputs_tsv_maps_prefixed_samples_to_genome_paths(tmp_path):
+    fa = tmp_path / "somewhere" / "G.sorted.fasta"
+    fa.parent.mkdir()
+    fa.write_text(">c1\n" + GENOME + "\n")
+    (tmp_path / "inputs.tsv").write_text(f"source\tid\tgenome\torder\nLCG\tG1\t{fa}\tMucorales\n")
+    inputs = mod.read_inputs(tmp_path / "inputs.tsv")
+    assert inputs == {"LCG__G1": fa}
+    rows = mod.run([("LCG__G1", doc(entry(GOOD, GOOD)))], tmp_path / "none", tmp_path / "db", tmp_path / "o", "t", inputs)
+    assert rows[0]["class"] == "both_clean"

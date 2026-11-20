@@ -1,5 +1,5 @@
 record_id: 498019_b11243_MTL_A
-record_version: 3
+record_version: 4
 taxonomy:
   taxid: 498019
   lineage: k__Fungi;p__Ascomycota;subphylum__Saccharomycotina;c__Pichiomycetes;o__Serinales;f__Metschnikowiaceae;g__Candidozyma;s__Candidozyma_auris
@@ -24,7 +24,7 @@ locus:
     completeness: complete
     reference_orientation: PAP1->OBP1->PIK1->MTLA2->MTLA1
     definition_note: 'Candidozyma auris B11243 (clade IV) MTLa, GenBank assembly GCA_003014415.1,
-      annotated by the depositors as ''mating_type_MTLa2'' (PSK75931.1, 152 aa) and
+      annotated by the depositors as ''mating_type_MTLa2'' (PSK75931.1, 152 aa; recorded here as the 160-aa model with the 134-bp GT-AG intron, record_version 4) and
       ''mating_type_MTLa1'' (PSK75932.1, 99 aa). Gene order PAP1 (PSK75928.1) - OBP1
       (PSK75929.1) - PIK1 (PSK75930.1) - MTLa2 - MTLa1, the C. lusitaniae arrangement.
       MTLa1 is recorded as the full-length three-exon model (15538-15669, 15718-16020,
@@ -89,7 +89,7 @@ genes:
   transl_table: 12
 - gene_index: 0
   name: MTLA2
-  protein_accession: ncbi_protein:PSK75931.1
+  protein_accession: null
   role: core_MAT
   present: true
   locus_tag: CJJ07_005606
@@ -101,8 +101,8 @@ genes:
   transl_table: 12
   exons:
   - start: 14845
-    end: 15087
-  - start: 15246
+    end: 15081
+  - start: 15216
     end: 15461
 - gene_index: 1
   name: MTLA1
@@ -192,14 +192,13 @@ validation:
       percent_identity: 100.0
       coverage: 100.0
       status: pass
-    - gene_index: 0
-      percent_identity: 100.0
-      coverage: 100.0
-      status: pass
     notes: 'MTLA1 (gene_index 1) has no protein_accession since 2026-10-22, so it
       has no per_gene entry (the removed 98.99% entry compared the old 99-aa model with
       PSK75932.1). Its 166-aa protein is the independent translation (table 12) of the
-      recorded exons, verified in curation.notes.'
+      recorded exons, verified in curation.notes. MTLA2 (gene_index 0) has none either
+      since record_version 4 (the removed 100% entry compared the depositors'' 152-aa
+      model PSK75931.1 with itself); its 160-aa protein is the translation (table 12)
+      of the recorded exons, verified in curation.notes.'
   taxonomy_current: true
 curation:
   proposed_by: claude-literature-search
@@ -238,5 +237,33 @@ curation:
     Verified 2026-10-22 by Claude Code (claude-opus-5-5, branch curation-corrections):
     NCBI efetch of PYGM01000086.1, CP060341.1:190001-200000, WZC25182.1 and PSK75932.1;
     Biopython translation (tables 1 and 12) and global alignment to WZC25182.1; miniprot
-    and exonerate on a compute node.'
+    and exonerate on a compute node.
+
+    record_version 3 -> 4, PROPOSED 2026-11-19 (issue #349 item 2; a curator accepts or
+    rejects): MTLA2 exon structure corrected from the depositors'' model (PSK75931.1,
+    CJJ07_005606; exons 14845-15087, 15246-15461; intron 15088-15245, 158 bp, TG..GG)
+    to exons 14845-15081 and 15216-15461 (+), 483 bp, 160 aa from an ATG to a TGA with
+    no internal stop (table 12); intron 15082-15215, 134 bp, GTATGT..CCAG. Evidence:
+    (1) the depositors'' 158-bp intron is noncanonical in every genome that has this
+    locus (TG..GG here; TT..AG in B8441, 6684 and B11245); the 134-bp intron is GT-AG
+    in all four, and is the intron miniprot 0.18 models in B8441, 6684 and B11245
+    (results/2026-11-19_model_disagreement_290/introns.tsv). (2) RNA-seq (one-off ENA
+    lookup, 2026-11-19; results/2026-11-19_model_disagreement_290/rnaseq_oneoff/):
+    alignments cross the 134-bp intron in every run of B8441 (3 runs: 10, 8, 4), 6684
+    (3, 11, 6) and, with other-strain reads, B11245 (10, 1), and none crosses the 158-bp
+    intron in any run. Counts are low (MTLA2 is lowly expressed) and no B11243 RNA-seq
+    was checked, so the direction is strong and the depth weak. (3) The recorded 152-aa
+    protein reproduced the deposit by construction, so identity to it was circular. The
+    new protein keeps residues 1-79 and the last 71 of the deposit, and replaces the 2
+    residues between them (VC) with 10 (IWHTGNNIFR); it is identical to the 160-aa
+    miniprot model of B11245 (CP043444) and differs from those of B8441 and 6684 at
+    two residues (24 and 33). protein_accession is null as for MTLA1, because the protein is no longer
+    the deposit''s; locus_tag still names the deposit gene. The gene span (14845-15461)
+    and the locus segment are unchanged. A GT-AG placement was chosen: the intron
+    positions 0 to 4 bases downstream give the same protein but noncanonical motifs
+    (TA..GA, AT..AT, TG..TT, GT..TT, TT..TG). No other C. auris record carries MTLA2
+    (498019_b11205_MTL_A and 498019_b11221_MTL_alpha do not); other Serinales MTLA2
+    records were not checked. Verified 2026-11-19 by Claude Code (claude-sonnet-5-5,
+    branch curation-cauris-mtla2): NCBI efetch of PYGM01000086.1 and Biopython
+    translation (table 12) on the HPCC.'
 model_provenance: null

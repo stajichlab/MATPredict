@@ -56,5 +56,12 @@ def test_end_to_end_verdicts(tmp_path):
     by = {r["sample"]: r for r in rows}
     assert by["A"]["annotation"] == "alternate_matches" and by["A"]["class"] == "primary_issue_alt_clean" and by["A"]["trigger_noncanonical"] is True
     assert by["B"]["annotation"] == "primary_matches" and by["B"]["class"] == "primary_clean_alt_issue"
-    assert by["N"]["annotation"] == "no_annotation"
+    assert by["N"]["annotation"] == "no_gff"
+    # an annotated gene on the other strand overlaps nothing: no_overlap
+    write_gff(tmp_path / "S.gff.gz")
+    with gzip.open(tmp_path / "S_g.fa.gz", "wt") as fh:
+        fh.write(">c1\n" + GENOME + "\n")
+    e = entry(GOOD, SHIFTED)
+    e["strand"] = e["alternate_model"]["strand"] = "-"
+    assert mod.run([("S", doc(e))], str(tmp_path / "{sample}_g.fa.gz"), str(tmp_path / "{sample}.gff.gz"), tmp_path / "db", tmp_path / "o" / "s")[0]["annotation"] in ("no_overlap", "not_checked")
     assert "all\tprimary_issue_alt_clean\talternate_matches\t1" in (tmp_path / "o" / "t.summary.tsv").read_text()

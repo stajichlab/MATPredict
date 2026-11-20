@@ -5,7 +5,8 @@ run), the gene's two models are compared with the annotated mRNA that overlaps t
 inside the model's span are collected and compared with the model's own introns. A model `matches` when its intron set equals the annotated
 intron set inside its span (a single-exon model matches when the annotation has no intron there). Per gene:
 
-  primary_matches / alternate_matches / both_match / neither_matches / no_annotation
+  primary_matches / alternate_matches / both_match / neither_matches / no_overlap (no annotated gene overlaps the models) / no_gff (the genome
+  has no annotation file) / not_checked (no genome sequence or unsupported genetic code)
 
 and the splice-motif class of the same gene from the census (`model_disagreement_census.classify`), so the rule "prefer the alternate when
 the primary has an issue and the alternate is clean" can be scored against the annotation. The annotation is a cross-check, not the truth:
@@ -107,14 +108,14 @@ def run(docs, genome_tmpl: str, gff_tmpl: str, db_root: Path, out: Path) -> list
             row = {k: r.get(k, "") for k in ("sample", "family", "tier", "gene", "role", "trigger_noncanonical")}
             row["class"] = r["class"]
             if r["class"] == "not_checked" or mrnas is None:
-                row["annotation"] = "no_annotation" if mrnas is None else "not_checked"
+                row["annotation"] = "no_gff" if mrnas is None else "not_checked"
                 rows.append(row)
                 continue
             alt = e["alternate_model"]
             pe, ae = mdc.model_exons(e), mdc.model_exons(alt)
             m = best_mrna(mrnas, e["contig"], e["strand"], pe + ae)
             if m is None:
-                row["annotation"] = "no_annotation"
+                row["annotation"] = "no_overlap"
             else:
                 pm, am = matches(pe, m), matches(ae, m)
                 row["annotation"] = verdict(pm, am)

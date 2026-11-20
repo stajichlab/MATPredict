@@ -11,7 +11,7 @@ Every gene of every detected locus in the three v0.9.0 definitive campaigns (`re
 ## Count
 | Campaign | `polished_agree` genes | with an internal stop | stop within 10 nt of a junction |
 |---|---|---|---|
-| Ascomycota | 29,169 | 128 | 10 (1 not checked: contig missing) |
+| Ascomycota | 29,169 | 128 | 10 (plus 1 not checked: MTLA1 of GCA_003706265.2, genetic code 26, which the check does not support) |
 | Basidiomycota | 3,399 | 23 | 19 |
 | Mucoromycotina | 1,806 | 6 | 2 |
 | All | 34,374 | 157 (0.46%) | 31 (0.09%) |
@@ -36,4 +36,4 @@ The five SLA2 models translate with 66 to 70 stops because miniprot reports `Fra
 ## Recommendation (not a ruling)
 1. Do not shrink the agreement tolerance. It is untested, and the targeted case is 0.09% of the label.
 2. If the 24 genes are worth fixing, add an opt-in re-test: when a `polished_agree` model has an internal stop within 10 nt of a junction, run miniprot directly and take its model only if it is stop-free with canonical introns, and label the gene `junction_artifact`. Default off, in no preset, described in `docs/detect-options.md`, with the usual before/after on the 510 panel genomes and the 313 FungiDB genomes (CLAUDE.md). I would not build it for 31 genes in 34,374 unless the *Wallemia* STE3 case matters to a call or a table.
-3. For *Wallemia* STE3 itself the cheaper route may be the reference record: the stored model matches the reference at about 65% identity and the direct model is 3 nt longer than the stored one in every genome. A curator can look at `671144_cbs-633-66_wallMAT_v1` (STE3 366 aa in the record).
+3. For *Wallemia* STE3 itself the cheaper route may be the reference record: the stored model matches the reference at about 65% identity and the direct model is 3 aa longer than the stored one (360 against 357) in every genome. A curator can look at `671144_cbs-633-66_wallMAT_v1` (STE3 366 aa in the record).

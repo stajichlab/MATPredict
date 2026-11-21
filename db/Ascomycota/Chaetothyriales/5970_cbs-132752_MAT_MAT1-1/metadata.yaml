@@ -112,7 +112,7 @@ evidence:
       in the sequenced isolate, per Metin et al. 2019.
     citations: *id001
 validation:
-  status: needs_review
+  status: accepted
   rejection_reason: null
   accession_resolved: true
   accession_resolved_date: null
@@ -134,11 +134,13 @@ validation:
 curation:
   proposed_by: claude-orbilio-chaeto-literature
   proposal_dedupe_key: 30611834|5970|MAT|MAT1-1
-  reviewed_by: null
-  reviewed_date: null
+  reviewed_by: 'J. Stajich (ruling 2026-11-20: accept, issue #344 option C)'
+  reviewed_date: '2026-11-20'
   notes: 'Proposed 2026-11-08 (Claude Code). MH341450.1 is annotated by the paper
     authors as MAT1-1-4, MAT1-1-1 (alpha-box), two hypothetical proteins and a 5S
     rRNA. Neither SLA2 nor APN2 is annotated on the deposit, so no flank gene is in
     the record. mating_type.system is unknown: heterothallism is the authors'' inference
-    from structure and ~1:1 isolate distribution.'
+    from structure and ~1:1 isolate distribution.
+
+    Accepted 2026-11-20 (curator ruling, J. Stajich; issue #344, option C). Before/after on the 223 Chaetothyriales genomes of the v0.9.0 Ascomycota campaign with this record and its pair accepted (PR #367): 58 genomes newly called, none lost, 14 loci medium to high, two idiomorph labels changed. There is no independent check of the new calls, and one locus of one species is the reference for the whole order. Known-ambiguous loci (PR #368): GCA_030247915.1_UCR_JES112 (called MAT1-1, was MAT1-2) and GCA_056513255.1_ASM5651325v1 (called MAT1-2 at high, was undetermined) each encode both an alpha-box (PF04769) and an HMG-box (PF00505) gene within a few kb, so their idiomorph labels are unconfirmed; GCF_000585565.1 and GCF_000585585.1 (Capronia, undetermined) encode both as well. locus.gbk and locus.gff3 are not built yet (build-gff needs an NCBI contact address); proteins.faa was fetched by plain efetch of the recorded protein accessions.'
 model_provenance: null

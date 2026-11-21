@@ -73,7 +73,9 @@ New per-locus columns (loci.tsv):
   defective_isolates  beside `defective_genes` (#291): for each listed defective gene, `gene:k/n`, the number of genomes of the SAME SPECIES
                      (BFD species, as in genomes.tsv) in which that gene is flagged, over the number of those genomes whose locus of the same family
                      lists the gene; genes `|`-joined, blank when the locus has no defective gene or the species is unknown. A real pseudogene reads
-                     like `MTLA1:97/97`; an assembly indel like `MTLA2:1/60`. A read of the counts, not a call: nothing uses it, tiers are unchanged.
+                     like `MTLA1:97/97`; an assembly indel like `MTLA2:1/60`. A gene that every isolate models the same wrong way (a splice junction, a low-identity
+                     flank gene) reads like a pseudogene too, so the count tells an assembly indel from a shared feature, not a pseudogene from a
+                     mis-model. A read of the counts, not a call: nothing uses it, tiers are unchanged.
                      The same counts, one row per species, family and flagged gene, are in `defective_by_species.tsv` (species, family_called,
                      gene, genomes_with_gene, genomes_flagged, fraction_flagged); for Basidiomycota `k` counts the genes the model check lists.
   core_reference    the matched curated record of each live core gene of the locus (#200, curator 2026-11-07: both core genes are listed):

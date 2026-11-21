@@ -41,7 +41,7 @@ Per intron, the exact intron is in the best-overlapping annotated mRNA: GT-AG 96
 By lineage (`census262.by_order.tsv`, `census262.by_genus.tsv`, the n per class is in the tables):
 - *Pyrenophora* MAT1-1-1: all 76 models have one intron, 62 of them GC-AG, and the annotation has exactly the same intron in 67 of 67 annotated genes. The funannotate gene set recovers the GC-AG 53 bp intron that miniprot cannot place (#262's example); the failure is miniprot's, not the annotation's.
 - *Aureobasidium* MAT1-1-1: 40 of 133 introns are `other` (the TA-donor models of the issue) and the intron set matches the annotation in 46% of 139 annotated genes.
-- Lineage-wide mismatches with both sides carrying an intron: *Zymoseptoria* MAT1-1-1 and Chaetothyriales MAT1-1-1 (0% same intron set), Magnaporthales and Botryosphaeriales MAT1-2-1 (0.0% and 0.2%), Glomerellales MAT1-2-1 (11.0%). Botryosphaeriales MAT1-2-1 is where the GC-AG count comes from (137 of 179), so our GC-AG models there are not in the annotation.
+- Lineage-wide mismatches (our models carry introns; how many the annotation carries was not tabulated): *Zymoseptoria* MAT1-1-1 and Chaetothyriales MAT1-1-1 (0% same intron set), Magnaporthales and Botryosphaeriales MAT1-2-1 (0.0% and 0.2%), Glomerellales MAT1-2-1 (11.0%). Botryosphaeriales MAT1-2-1 is where the GC-AG count comes from (137 of 179), so our GC-AG models there are not in the annotation.
 - Close agreement: Aspergillus (96.9% and 96.0%), Magnaporthales MAT1-1-1 (98.8%), Neurospora (98.9% and 98.7%), Parastagonospora (100%).
 
 ## Reading

@@ -280,6 +280,10 @@ def test_end_to_end_tables(tmp_path):
     assert loci["G5"]["high_basis"] == "" and loci["G5"]["high_basis_outside_scope"] == "tie_break"
     # defective genes (#151): the locus lists them `|`-joined, the genome counts loci, an intact locus stays blank/zero
     assert loci["G4"]["defective_genes"] == "GAP1|MAT1-1-1" and G["G4"]["n_defective_loci"] == "1"
+    # per-species isolate count beside the flag (#291): one genome of the species, so every flagged gene reads 1/1; blank when nothing is flagged
+    assert loci["G4"]["defective_isolates"] == "GAP1:1/1|MAT1-1-1:1/1" and loci["G1"]["defective_isolates"] == ""
+    assert [(r["species"], r["gene"], r["genomes_with_gene"], r["genomes_flagged"]) for r in _rows(out / "defective_by_species.tsv")] == [
+        ("Curvularia lunata", "GAP1", "1", "1"), ("Curvularia lunata", "MAT1-1-1", "1", "1")]
     assert all(loci[g]["defective_genes"] == "" for g in ("G1", "G2", "G5"))
     assert [G[g]["n_defective_loci"] for g in ("G1", "G2", "G3", "G5")] == ["0", "0", "0", "0"]    # G3 failed: a count of 0
     by = _rows(out / "by_class.tsv")
@@ -303,6 +307,35 @@ def test_by_rank_counts_loci_with_a_defective_gene_not_genes():
     assert {r[0]: r[-1] for r in rows} == {"C1": 2, "C2": 0}
 
 
+def _row(genome, family="Ascomycota:MTL", genes="MTLA1|MTLA2", defective=""):
+    return dict(genome=genome, family_called=family, genes_found=genes, defective_genes=defective)
+
+
+def test_defective_isolates_tells_a_pseudogene_from_an_assembly_indel():
+    """#291: `gene:k/n` over the genomes of the same species whose locus of the same family lists the gene."""
+    G = [dict(genome=f"P{i}", species="Lodderomyces parapsilosis") for i in range(3)] \
+        + [dict(genome=f"A{i}", species="Candidozyma auris") for i in range(4)] + [dict(genome="U1", species="NA"), dict(genome="U2", species="")]
+    Lr = [_row(f"P{i}", defective="MTLA1") for i in range(3)]                        # flagged in every isolate: a pseudogene
+    Lr += [_row("A0", defective="MTLA2")] + [_row(f"A{i}") for i in (1, 2, 3)]       # flagged in one of four: an indel
+    Lr += [_row("U1", defective="MTLA1"), _row("U2", defective="MTLA1")]            # unknown species: blank
+    rows = bct.annotate_defective_isolates(G, Lr)
+    by = {r["genome"]: r["defective_isolates"] for r in Lr}
+    assert by["P0"] == "MTLA1:3/3" and by["A0"] == "MTLA2:1/4" and by["A1"] == "" and by["U1"] == "" and by["U2"] == ""
+    assert rows == [["Lodderomyces parapsilosis", "Ascomycota:MTL", "MTLA1", 3, 3, "1.000"],
+                    ["Candidozyma auris", "Ascomycota:MTL", "MTLA2", 4, 1, "0.250"]]
+
+
+def test_defective_isolates_keeps_families_apart_and_counts_a_flagged_gene_as_present():
+    G = [dict(genome="a", species="S x"), dict(genome="b", species="S x"), dict(genome="c", species="S x")]
+    Lr = [_row("a", family="Ascomycota:MAT", genes="MAT1-1-1", defective="MAT1-1-1"),
+          _row("b", family="Ascomycota:MAT", genes="MAT1-1-1"),
+          _row("c", family="Ascomycota:MTL", genes="MTLA1", defective=""),
+          _row("b", family="Ascomycota:MTL", genes="", defective="MTLA1")]            # flagged but not in genes_found: still present
+    bct.annotate_defective_isolates(G, Lr)
+    assert Lr[0]["defective_isolates"] == "MAT1-1-1:1/2"      # c's MTL locus does not enter the MAT count
+    assert Lr[3]["defective_isolates"] == "MTLA1:1/2"         # b (flagged) and c (lists it): two genomes with the gene in that family
+
+
 def test_output_is_deterministic_and_a_tarball_reads_like_the_folder(tmp_path):
     new, old, samples = _tree(tmp_path)
     tar = tmp_path / "old.tar.gz"
@@ -311,7 +344,7 @@ def test_output_is_deterministic_and_a_tarball_reads_like_the_folder(tmp_path):
     a, b = tmp_path / "a", tmp_path / "b"
     bct.main(["--campaign", str(new), "--baseline", str(old), "--samples", str(samples), "--out", str(a)])
     bct.main(["--campaign", str(new), "--baseline", str(tar), "--samples", str(samples), "--out", str(b)])
-    for f in ("genomes.tsv", "loci.tsv", "by_class.tsv"):
+    for f in ("genomes.tsv", "loci.tsv", "by_class.tsv", "defective_by_species.tsv"):
         assert (a / f).read_bytes() == (b / f).read_bytes()
 
 

@@ -70,6 +70,14 @@ New per-locus columns (loci.tsv):
                      only a core gene at >= 60% identity and >= 80% coverage is listed; the other flagged genes move to
                      `low_confidence_model_genes` (on the v0.8.1 run 18 Wallemia STE3 stops are a splice-junction mis-model,
                      and about 90% of the flagged Boletales HD1 loci are below 50% identity, a divergent gene poorly modelled).
+  defective_isolates  beside `defective_genes` (#291): for each listed defective gene, `gene:k/n`, the number of genomes of the SAME SPECIES
+                     (BFD species, as in genomes.tsv) in which that gene is flagged, over the number of those genomes whose locus of the same family
+                     lists the gene; genes `|`-joined, blank when the locus has no defective gene or the species is unknown. A real pseudogene reads
+                     like `MTLA1:97/97`; an assembly indel like `MTLA2:1/60`. A gene that every isolate models the same wrong way (a splice junction, a low-identity
+                     flank gene) reads like a pseudogene too, so the count tells an assembly indel from a shared feature, not a pseudogene from a
+                     mis-model. A read of the counts, not a call: nothing uses it, tiers are unchanged.
+                     The same counts, one row per species, family and flagged gene, are in `defective_by_species.tsv` (species, family_called,
+                     gene, genomes_with_gene, genomes_flagged, fraction_flagged); for Basidiomycota `k` counts the genes the model check lists.
   core_reference    the matched curated record of each live core gene of the locus (#200, curator 2026-11-07: both core genes are listed):
                      `gene:record_id:identity:bitscore`, genes `|`-joined, one entry per gene (the entry with the highest identity, then the
                      higher bitscore, then the smaller record_id), blank when the locus has no live core gene with a matched record. The
@@ -131,7 +139,7 @@ LOCUS_COLS = ["genome", "class_", "order", "family_called", "contig", "start", "
               "detection_pass", "genes_found", "verification",
               "genus", "family", "polished_genes", "idiomorph_margin", "margin_basis", "n_candidates", "baseline_confidence",
               "tier_note", "label_unsupported", "label_unsupported_reason", "high_basis", "high_basis_outside_scope",
-              "defective_genes", "low_confidence_model_genes", "core_reference"]
+              "defective_genes", "low_confidence_model_genes", "core_reference", "defective_isolates"]
 
 
 # ----------------------------------------------------------------------------------------------- reading reports
@@ -573,6 +581,37 @@ def build(new, base, listed, samples, mucoro_names, inputs_rows, scope, mucoro=F
     return G, L, tally
 
 
+def annotate_defective_isolates(G, L):
+    """Add `defective_isolates` to each locus row and return the per-species table rows (#291).
+
+    For a species (genomes.tsv), a family and a gene: `genomes_with_gene` is the number of distinct genomes of the species whose locus of that
+    family lists the gene (`genes_found`, or the gene is flagged), `genomes_flagged` the number with the gene in `defective_genes`. A species
+    that is blank or `NA` is left out. Rows are sorted by genomes_flagged, then fraction. Report-only; nothing reads the counts."""
+    species = {r["genome"]: (r.get("species") or "") for r in G}
+    seen, flag = defaultdict(set), defaultdict(set)
+    for x in L:
+        sp = species.get(x["genome"], "")
+        if not sp or sp == "NA":
+            continue
+        for gn in filter(None, str(x["genes_found"]).split("|")):
+            seen[(sp, x["family_called"], gn)].add(x["genome"])
+        for gn in filter(None, str(x["defective_genes"]).split("|")):
+            seen[(sp, x["family_called"], gn)].add(x["genome"])
+            flag[(sp, x["family_called"], gn)].add(x["genome"])
+    for x in L:
+        sp = species.get(x["genome"], "")
+        parts = []
+        if sp and sp != "NA":
+            for gn in filter(None, str(x["defective_genes"]).split("|")):
+                k = (sp, x["family_called"], gn)
+                parts.append(f"{gn}:{len(flag[k])}/{len(seen[k])}")
+        x["defective_isolates"] = "|".join(parts)
+    rows = [[sp, fam, gn, len(seen[(sp, fam, gn)]), len(f), f"{len(f) / len(seen[(sp, fam, gn)]):.3f}"]
+            for (sp, fam, gn), f in flag.items()]
+    rows.sort(key=lambda r: (-r[4], -float(r[5]), r[0], r[1], r[2]))
+    return rows
+
+
 def by_rank(G, L, rank):
     """Per-class (or per-order) table: the v0.6.0 columns, then locus counts for the new columns."""
     col = "class_" if rank == "class" else rank
@@ -666,6 +705,7 @@ def main(argv=None):
     G, L, tally = build(new, base, listed, load_samples(a.samples), load_mucoro_names(a.baseline_calls), inputs_rows, scope,
                      a.layout == "mucoro", load_genus_lineage(a.genus_lineage) if a.layout == "mucoro" else None)
 
+    sp_rows = annotate_defective_isolates(G, L)
     os.makedirs(a.out, exist_ok=True)
     genome_cols, locus_cols = list(GENOME_COLS), list(LOCUS_COLS)
     if a.layout == "mucoro":   # the run folder is SOURCE__id; split it back out for the site
@@ -677,6 +717,8 @@ def main(argv=None):
         locus_cols.insert(0, "source")
     write_tsv(os.path.join(a.out, "genomes.tsv"), genome_cols, G)
     write_tsv(os.path.join(a.out, "loci.tsv"), locus_cols, L)
+    write_tsv(os.path.join(a.out, "defective_by_species.tsv"),
+              ["species", "family_called", "gene", "genomes_with_gene", "genomes_flagged", "fraction_flagged"], sp_rows)
     head, rows = by_rank(G, L, a.rank)
     write_tsv(os.path.join(a.out, f"by_{a.rank}.tsv"), head, rows)
 

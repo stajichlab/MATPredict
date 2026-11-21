@@ -159,36 +159,38 @@ mv "$WORK/panel.kept.tsv" "$WORK/panel.tsv"
 # widened routing (one taxid routed three different ways in one pilot, several
 # genomes ran `exhaustive` at ~30 min each). The cache dir is pinned so every
 # job shares it regardless of where it was submitted from.
+# Offline taxonomy (curator decision 2026-11-12, #342): a campaign never depends on the network for a lookup. MATPREDICT_OFFLINE
+# defaults to 1; MATPREDICT_TAXONOMY must then name the table (build it with `matpredict curate-db build-taxonomy`; for example
+# /bigdata/stajichlab/jstajich/projects/FungiDB_MATpredict/tools/taxonomy/ncbi_taxonomy.tsv.zst, snapshot 2026-10-01). A taxid that the
+# snapshot lacks fails the warm-up and stops the job. MATPREDICT_OFFLINE=0 turns this off for an exploratory run (NCBI E-utilities again).
+export MATPREDICT_OFFLINE="${MATPREDICT_OFFLINE:-1}"
+if [[ "$MATPREDICT_OFFLINE" =~ ^(1|true|yes)$ ]]; then
+    if [[ -z "${MATPREDICT_TAXONOMY:-}" || ! -f "$MATPREDICT_TAXONOMY" ]]; then
+        echo "MATPREDICT_OFFLINE is on but MATPREDICT_TAXONOMY='${MATPREDICT_TAXONOMY:-}' is not a file on $(hostname)" >&2
+        echo "  set MATPREDICT_TAXONOMY to the taxonomy table, or MATPREDICT_OFFLINE=0 for an exploratory run" >&2
+        exit 1
+    fi
+    export MATPREDICT_TAXONOMY
+    TAXONOMY_WARMUP_STRICT="${TAXONOMY_WARMUP_STRICT:-1}"
+else
+    TAXONOMY_WARMUP_STRICT="${TAXONOMY_WARMUP_STRICT:-0}"
+fi
+[[ -f "$REPO/scripts/taxonomy_warmup.py" ]] || { echo "$REPO/scripts/taxonomy_warmup.py is missing (pull the repository checkout)" >&2; exit 1; }
+"$PY" "$REPO/scripts/taxonomy_warmup.py" --describe > "$OUT_DIR/TAXONOMY.txt" || { echo "could not describe the taxonomy source" >&2; exit 1; }
+echo "taxonomy: $(head -1 "$OUT_DIR/TAXONOMY.txt")  (record: $OUT_DIR/TAXONOMY.txt)"
 export MATPREDICT_CACHE_DIR="${MATPREDICT_CACHE_DIR:-$REPO/.matpredict_cache}"
 # No per-genome report.html in batch runs (the YAML is the result; set MATPREDICT_HTML=1 to keep it).
 # An env var, not --no-html: an older frozen worktree would reject the flag and ignores the variable.
 export MATPREDICT_HTML="${MATPREDICT_HTML:-0}"
 # An EMPTY answer (no lineage and no phylum, no exception) counts as a failure too: on a node without network it is
 # what a cache miss gives, and it left taxid 5158 (7 C. fimbriata assemblies) not_searched in the v0.9.0 run (#324).
-# TAXONOMY_WARMUP_STRICT=1 stops the job when any taxid failed; the default (0) only warns, as before.
+# TAXONOMY_WARMUP_STRICT=1 stops the job when any taxid failed. Its default is 1 when the run is offline (the default, #342) and 0
+# with MATPREDICT_OFFLINE=0, where the old behaviour (warn and go on) is kept.
 warmup_rc=0
-cut -f2 "$WORK/panel.tsv" | sort -u | "$PY" -c '
-import sys, time
-from MATPredict.db.taxonomy import (default_genetic_code, default_lineage_phylum_name,
-                                    default_lineage_taxids)
-bad = 0
-for line in sys.stdin:
-    t = int(line)
-    try:
-        lineage = default_lineage_taxids(t); phylum = default_lineage_phylum_name(t); default_genetic_code(t)
-        if not lineage and not phylum:
-            bad += 1
-            print(f"taxonomy warm-up: taxid {t} returned no lineage and no phylum (empty answer)", file=sys.stderr)
-    except Exception as exc:
-        bad += 1
-        print(f"taxonomy warm-up: taxid {t} failed: {exc}", file=sys.stderr)
-    time.sleep(0.35)
-print(f"taxonomy warm-up done, {bad} failed", file=sys.stderr)
-sys.exit(3 if bad else 0)
-' || warmup_rc=$?
+cut -f2 "$WORK/panel.tsv" | sort -u | "$PY" "$REPO/scripts/taxonomy_warmup.py" || warmup_rc=$?
 if [[ "$warmup_rc" -ne 0 ]]; then
-    echo "WARNING: taxonomy warm-up left taxids without a lineage (see above); those genomes will be not_searched" >&2
-    [[ "${TAXONOMY_WARMUP_STRICT:-0}" == "1" ]] && exit 1
+    echo "WARNING: taxonomy warm-up left taxids without a lineage (listed above); those genomes would be not_searched" >&2
+    [[ "$TAXONOMY_WARMUP_STRICT" == "1" ]] && exit 1
 fi
 
 TOTAL=$(wc -l < "$WORK/panel.tsv")

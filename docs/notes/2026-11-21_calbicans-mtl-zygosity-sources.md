@@ -1,0 +1,26 @@
+# C. albicans MTL zygosity: what exists for a truth set (#343)
+
+Date 2026-11-21. The check #343 asks for before any *C. albicans* truth set is used for the copy-number ratio test (#322, yeast panels #195, #196). Method: PubMed searches and abstracts through the NCBI PubMed connector, the full texts of Ropars et al. 2018 (PMC5993739) and Hirakawa et al. 2015 (PMC4352881), and a look at the PopSeq species summary. Supplementary tables were not opened (the connector returns article text only), so per-strain tables are named, not read. No data was downloaded.
+
+## Sources
+| Source (PubMed, DOI) | Isolates | MTL zygosity result | Per-isolate typing that maps to sequenced strains |
+|---|---|---|---|
+| Lockhart et al. 2002, Genetics 162:737 ([PMID 12399384](https://pubmed.ncbi.nlm.nih.gov/12399384/), [10.1093/genetics/162.2.737](https://doi.org/10.1093/genetics/162.2.737)); the issue calls it "Pujol et al."; Pujol is the second author | 220 clinical isolates, five clades | 3.2% homozygous (7), 96.8% heterozygous | Not seen (abstract only); no link to sequenced strains found |
+| Rustad et al. 2002, Microbiology 148:1061 ([PMID 11932451](https://pubmed.ncbi.nlm.nih.gov/11932451/), [10.1099/00221287-148-4-1061](https://doi.org/10.1099/00221287-148-4-1061)) | 96 clinical isolates, PCR for MTLa1 and MTLalpha1 | 12 homozygous (6 a, 6 alpha); correlated with azole resistance | Not seen |
+| Tavanti et al. 2005, J Clin Microbiol 43:5601 ([PMID 16272493](https://pubmed.ncbi.nlm.nih.gov/16272493/), [10.1128/JCM.43.11.5601-5613.2005](https://doi.org/10.1128/JCM.43.11.5601-5613.2005)); Odds et al. 2006 ([PMID 17021093](https://pubmed.ncbi.nlm.nih.gov/17021093/), [10.1128/JCM.00934-06](https://doi.org/10.1128/JCM.00934-06)) | 416 and 165 isolates by MLST | MTL homozygosity tested per isolate and related to clade and azole resistance | Not seen; the 416-isolate study is the "416-isolate MLST study" of the issue |
+| Hirakawa et al. 2015, Genome Res 25:413 ([PMID 25504520](https://pubmed.ncbi.nlm.nih.gov/25504520/), [10.1101/gr.174623.114](https://doi.org/10.1101/gr.174623.114)) | **21 sequenced clinical isolates** (reads: BioProject PRJNA193498) | Each isolate typed MTL heterozygous or homozygous (Figure 7A, "typed as either"); **12 homozygous** (3 with all of chromosome 5 homozygous, 9 with partial LOH), 9 heterozygous; Ropars et al. read it the same way (12 of 21) | **Yes, in the figure and its supplement (not read here)**; the text does not list strain names |
+| Ropars et al. 2018, Nat Commun 9:2253 ([PMID 29884848](https://pubmed.ncbi.nlm.nih.gov/29884848/), [10.1038/s41467-018-04787-4](https://doi.org/10.1038/s41467-018-04787-4)) | **182 sequenced isolates** (reads: BioProject PRJNA432884) | **4 homozygous (2.2%)**, the rest heterozygous | Per-strain data are in Supplementary Data 1 (strain, cluster, ploidy, aneuploidy; whether an MTL column is there I could not confirm) |
+
+Not found: the Magee et al. 2004 survey of 120 isolates (108 heterozygous) named in the issue; it was not opened or located in PubMed, so I make no use of it.
+
+## What this gives for a truth set
+- **Two sequenced sets have per-isolate zygosity: Hirakawa (21 isolates, 12 homozygous) and Ropars (182 isolates, 4 homozygous).** Together they hold the homozygous positives a ratio test needs (about 16) and 200 or so heterozygous negatives, in the public reads of two BioProjects. Hirakawa's set is enriched for homozygous isolates (57%, against 2.2 to 8.5% in surveys): Ropars et al. suggest antifungal exposure of those isolates explains it, as it does their aneuploidies.
+- **The labels in both are derived from sequence of the same reads**, not from a separate assay. A read-based ratio test scored against them is not independent of how they were typed unless the two methods differ (coverage ratio of MTLa and MTLalpha against SNP heterozygosity flanking the locus, which is how Hirakawa describes the typing: "all a/alpha isolates were heterozygous surrounding the MTL locus"). Independent labels (PCR typing, Lockhart, Rustad, Tavanti, Odds) exist for other isolate sets; I found no table linking them to sequenced strains.
+- **Hirakawa's own text is easy to misread**: the abstract's "all strains were also heterozygous" is genome-wide heterozygosity, not MTL; the MTL typing is a separate figure.
+- **PopSeq** (the metadata source of truth) lists *C. albicans* with 3,516 runs, 3,358 isolates and 201 studies; I did not check whether it carries PRJNA193498 and PRJNA432884 (a recursive search of its cache timed out and was stopped).
+
+## What to do next (nothing is done)
+1. Get the two per-strain tables: Hirakawa Figure 7A source data or its supplement, and Ropars Supplementary Data 1, from the journals (public), and confirm each strain's MTL zygosity and that its reads are in PRJNA193498 or PRJNA432884.
+2. Check the PopSeq records for the two BioProjects, and open a PopSeq issue if a run or an isolate label is missing (CLAUDE.md: metadata comes from PopSeq).
+3. Treat the 4 plus 12 homozygous isolates as the positives and the rest as negatives only for a test that does not use the same signal that typed them; otherwise use them to calibrate, not to score.
+4. Until then: no *C. albicans* truth set. #343 stays open for the table check.

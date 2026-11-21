@@ -24,6 +24,7 @@ Rules for any agent (or person) working in this repository. They are short on pu
 - Compute nodes cannot reach GitHub over SSH. Fetch on the login node (`git fetch`, then `git rev-parse FETCH_HEAD`, then `git worktree add --detach`).
 - Use `--constraint=milan` (EPYC 7713) for timing-sensitive jobs. The `c01`-`c03` Opteron nodes are about 2.15x slower, so never compare timings across node types.
 - Do not run more than one copy of a submit command. A hung SSH call has once duplicated a job into the same output folder.
+- **Campaigns use the offline taxonomy snapshot** (#342): set `MATPREDICT_TAXONOMY` (for example the FungiDB project's `tools/taxonomy/ncbi_taxonomy.tsv.zst`, snapshot 2026-10-01) before `sbatch scripts/run_clade_panel.slurm` or `submit_binned_panel.py`; the script writes `TAXONOMY.txt` (snapshot date, sha256) to the run folder, so copy that into the MANIFEST. A taxid missing from the snapshot stops the job. `MATPREDICT_OFFLINE=0` is for exploratory runs only.
 - Another session may be running reads work from `run-wave3` and `run-expand300` (jobs named `wave-*`, `genus-*`). Do not move those worktrees.
 
 ## Detector rules

@@ -9,7 +9,7 @@ Date 2026-11-21. Tables in `results/2026-11-21_ctg_mtla1_260/`. The 2026-10-23 d
 
 ## The 220 unpolished entries
 - 85 species. *Lodderomyces* 104 (96 *L. parapsilosis*, 8 *L. metapsilosis*, so many genomes of one species), *Metschnikowia* 29, *Sungouiella* 15, *Yamadazyma* 13, *Scheffersomyces* 12, *Kurtzmaniella* 7.
-- Their hits are weak: median identity 31.1% and median coverage 31.0%, against 100% and 100% for `polished_agree`. Tiers: 177 medium, 35 high, 8 low. None is `defective`.
+- Their hits are weak: median identity 31.1% and median coverage 31.0%, against 100% and 100% for `polished_agree`. Tiers: 177 medium, 35 high, 8 low. The `defective` field is blank for all of them (there is no model to check).
 - These genera have almost no `polished_agree` at all, even where a model exists: *Lodderomyces* 0 agree / 27 single / 104 unpolished; *Metschnikowia* 0 / 84 / 29; *Kodamaea* 0 / 18 / 1 (`mtla1_status_by_genus.tsv`). Against *Candidozyma* 680 of 690 agree. So the 220 are the weak end of a lineage where the references fit badly.
 
 ## Probe: is there a model the pipeline missed?

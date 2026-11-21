@@ -23,3 +23,10 @@ Compared per locus: outer span, tier, idiomorph, and per gene status, span, exon
 - Calls are unaffected: 0 changes of tier, idiomorph or family in 313 genomes. The change is confined to the reported gene model of MTLA2 in four genomes and the span of one.
 - It covers the 313 FungiDB genomes only; the 510 panel genomes were not rerun. Other genomes that use this record as a reference could move too.
 - The *D. fabryi* span change needs a decision (approve as a legitimate extension, or trace and reverse). Nothing was changed in the repository for it.
+
+## Addendum, 2026-11-20: the *D. fabryi* CBS789 span change traced
+Curator asked for a trace (option B). Three reruns of `DfabryiCBS789` on the same frozen code, with the v0.9.0 db and with the db plus the corrected MTLA2 record (twice), and `--evidence-diagnostics` on one of each (HPCC `results/2026-11-20_cauris_mtla2_rerun/dfab_trace/`):
+- Deterministic and caused by the db: the v0.9.0 db gives the locus 86090-89485 in the one run, the new db gives 86090-102372 in both runs.
+- The cluster of the locus has **14 hits with the new db and 13 with the old**; the gene count is 3 in both (MTLA1, MTLA2, MTLalpha1), `best_identity` is 90.2 in both, and no gene is added. One more weak hit joined the cluster and stretched its outer span by 12.9 kb. `core_span` (the gene models) is unchanged (86090-89485), and the report states the stretch as `beyond_core_bp` 12,887.
+- The db differs only in the three files of `498019_b11243_MTL_A`, and only `proteins.faa` feeds the search, so the extra hit comes from the changed MTLA2 query protein (160 aa in place of 152 aa); I did not identify the hit's coordinates or which cluster member it is. Several other weak single hits elsewhere in this genome also appear or change length (for example contigs LMYN01000018, 26, 30 and 37, 27 to 37% identity), none of them admitted.
+- This is the behaviour the `core_span` docstring describes: the cluster span is built from every hit of every family, so a weak hit can stretch it without adding a gene. It does not change the call, tier, idiomorph or gene set. Nothing was changed in the repository for it.

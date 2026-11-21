@@ -19,9 +19,9 @@ All five are `low`, `idiomorph_gene_only`, and uncalled in the v0.9.0 run withou
 - **The gate reads no `defective` flag**: the *N. discreta* model passes the rule's 85% identity and 90% coverage gates and has a frameshift. A defective-model gate is the only change the rule needs before use, as the agent said.
 
 ## What it adds
-- **Two of the five are the same locus twice**: GCA_003497985.1 and GCA_003503065.1 are two *P. nodorum* assemblies with an identical 345 aa, 100% identity model. The rule recovers four independent observations (four species-level loci, one species twice), not five.
+- **Two of the five may be one observation**: GCA_003497985.1 and GCA_003503065.1 are two *P. nodorum* assemblies with an identical 345 aa, 100% identity model (two isolates of a clonal species can carry one allele; I did not compare the assemblies). The rule recovers four species, not five.
 - **Species**: *P. avenae*, *P. nodorum*, *F. oxysporum*, *N. discreta*; the agent did not tabulate taxonomy.
-- All five sit on a contig edge or a small contig: three within 2.2 kb of an end, and the *N. discreta* locus starts at base 2. They look like assembly fragments of a MAT gene whose flanks are missing, which is also why the call has no synteny.
+- Four of the five loci lie within 2.2 kb of a contig end (the *N. discreta* locus starts at base 2) and the fifth is 3.6 kb from one. They look like assembly fragments of a MAT gene whose flanks are missing, which is also why the call has no synteny.
 
 ## What it does not settle
 - Truth: there is no label for any of the five, so a correct idiomorph call is unverified; the HMG-box is not specific to MAT1-2-1, though the alpha-box (MAT1-1-1) is more so.

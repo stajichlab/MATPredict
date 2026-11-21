@@ -114,7 +114,7 @@ evidence:
       is identified by the curator from the RefSeq annotation.
     citations: *id001
 validation:
-  status: needs_review
+  status: accepted
   rejection_reason: null
   accession_resolved: true
   accession_resolved_date: null
@@ -140,10 +140,12 @@ validation:
 curation:
   proposed_by: claude-orbilio-chaeto-literature
   proposal_dedupe_key: 30611834|858893|MAT|MAT1-2
-  reviewed_by: null
-  reviewed_date: null
+  reviewed_by: 'J. Stajich (ruling 2026-11-20: accept, issue #344 option C)'
+  reviewed_date: '2026-11-20'
   notes: 'Proposed 2026-11-08 (Claude Code). Heterothallism inferred by the authors
     from idiomorph structure and ~1:1 distribution, not from a mating observation,
     so mating_type.system is unknown. First Chaetothyriales record: no order directory
-    exists yet under db/Ascomycota (it would be created on acceptance).'
+    exists yet under db/Ascomycota (it would be created on acceptance).
+
+    Accepted 2026-11-20 (curator ruling, J. Stajich; issue #344, option C). Before/after on the 223 Chaetothyriales genomes of the v0.9.0 Ascomycota campaign with this record and its pair accepted (PR #367): 58 genomes newly called, none lost, 14 loci medium to high, two idiomorph labels changed. There is no independent check of the new calls, and one locus of one species is the reference for the whole order. Known-ambiguous loci (PR #368): GCA_030247915.1_UCR_JES112 (called MAT1-1, was MAT1-2) and GCA_056513255.1_ASM5651325v1 (called MAT1-2 at high, was undetermined) each encode both an alpha-box (PF04769) and an HMG-box (PF00505) gene within a few kb, so their idiomorph labels are unconfirmed; GCF_000585565.1 and GCF_000585585.1 (Capronia, undetermined) encode both as well. locus.gbk and locus.gff3 are not built yet (build-gff needs an NCBI contact address); proteins.faa was fetched by plain efetch of the recorded protein accessions.'
 model_provenance: null
